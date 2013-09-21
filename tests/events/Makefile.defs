@@ -1,0 +1,39 @@
+## Variable that points to SystemC installation path
+#SYSTEMC = $(SYSTEMC)
+
+# If you want the original version
+SYSTEMC = $(SYSTEMCORIG)
+
+# If you want the parallel version
+#SYSTEMC = $(SYSTEMCPAR)
+
+
+# GPU Root dir
+
+INCDIR = -I. -I.. -I$(SYSTEMC)/include 
+LIBDIR = -L. -L.. -L$(SYSTEMC)/lib-$(TARGET_ARCH) 
+LIBS   =  -lsystemc -lm $(EXTRA_LIBS) -lpthread
+EXE    = $(MODULE).x
+
+.SUFFIXES: .cu .cc .cpp .o .x
+
+$(EXE): $(OBJS) $(SYSTEMC)/lib-$(TARGET_ARCH)/libsystemc.a 
+	$(CC) $(CFLAGS) $(INCDIR) $(LIBDIR) -o $@ $(OBJS) $(LIBS)>&1 | c++filt
+
+.cpp.o:
+	$(CC) $(CFLAGS) $(INCDIR) -c $<
+
+.cc.o:
+	$(CC) $(CFLAGS) $(INCDIR) -c $<
+
+
+clean::
+	rm -f $(OBJS) *~ $(EXE) core
+
+ultraclean: clean
+	rm -f Makefile.deps
+
+Makefile.deps:
+#	$(CC) $(CFLAGS) $(INCDIR) -M $(SRCS) >> Makefile.deps
+
+#include Makefile.deps

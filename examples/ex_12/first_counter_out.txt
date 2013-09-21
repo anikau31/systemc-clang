@@ -1,0 +1,75 @@
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x37c3770 first_counter CXXRecordDecl 0x3681cc0
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x2e895a0 'clock' FindTemplateTypes 0x2fb6030 - sc_in, type ptr: 0x3681f10
+
+     PortDecl 0x288f290 'enable' FindTemplateTypes 0x29496c0 - sc_in, type ptr: 0x36820b0
+ - _Bool, type ptr: 0x2355a70
+
+     PortDecl 0x350e3f0 'reset' FindTemplateTypes 0x2b3e730 - sc_in, type ptr: 0x3681fa0
+ - _Bool, type ptr: 0x2355a70
+
+ 
+    Output ports:
+     PortDecl 0x2e74820 'counter_out' FindTemplateTypes 0x2b84b90 - sc_out, type ptr: 0x3682480
+ - sc_uint, type ptr: 0x36822d0
+ - 4, type ptr: 0x2355af0
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x30eab10 'clock' FieldDecl 0x3681f40
+
+    ClassDataMembers 0x3585760 'count' FieldDecl 0x36a30c0
+
+    ClassDataMembers 0x36e34f0 'counter_out' FieldDecl 0x369c260
+
+    ClassDataMembers 0x37e6950 'enable' FieldDecl 0x3682160
+
+    ClassDataMembers 0x2b98fc0 'reset' FieldDecl 0x3682050
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x30efa40 'incr_count' 0x36a3130 SC_THREAD Constructor 0x36a8ad8
+     EntryFunctionContainer 'incr_count' processType 'SC_THREAD'  CXXMethodDecl '0x36a3130
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+    ClassMemberFunctions 0x30ed720 'operator unsigned long long' CXXMethodecl* 0x31e1b80
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x2f90300
+   Event: non_event  VarDecl: 0x2d4fca0
+   Event: sc_non_event  VarDecl: 0x2d82dd0
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+

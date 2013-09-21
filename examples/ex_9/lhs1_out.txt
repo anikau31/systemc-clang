@@ -1,0 +1,64 @@
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x558a170 consumer CXXRecordDecl 0x5466b00
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x4640030 'value' FindTemplateTypes 0x523c3b0 - sc_in, type ptr: 0x5466e90
+ - int, type ptr: 0x413aab0
+
+ 
+    Output ports:
+     PortDecl 0x4d4b900 'outResult' FindTemplateTypes 0x4f87a80 - sc_out, type ptr: 0x547e6c0
+ - double, type ptr: 0x413abd0
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x41e16d0 'outResult' FieldDecl 0x5498470
+
+    ClassDataMembers 0x4c59590 'value' FieldDecl 0x547e560
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x4d9b040 'consumer_entry' 0x5498760 SC_THREAD Constructor 0x549a478
+     EntryFunctionContainer 'consumer_entry' processType 'SC_THREAD'  CXXMethodDecl '0x5498760
+      WaitContainer numargs: 1  arglist: 'cwait' 
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: cwait  VarDecl: 0x47a98f0
+   Event: m_never_notified  VarDecl: 0x48fe970
+   Event: non_event  VarDecl: 0x5343860
+   Event: pwait  VarDecl: 0x4ed23f0
+   Event: sc_non_event  VarDecl: 0x4b37150
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
