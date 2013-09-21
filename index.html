@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="systemc-clang" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>systemc-clang: An open-source SystemC parser using clang</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/anikau31/systemc-clang/">View on GitHub</a>
+
+          <h1 id="project_title">systemc-clang</h1>
+          <h2 id="project_tagline">An open-source static analysis framework for SystemC using clang</h2>
+
+          <!--
+          <section id="downloads">
+            <a class="zip_download_link" href="#">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="#">Download this project as a tar.gz file</a>
+          </section>
+          !-->
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>systemc-clang: An open-source static analysis framework for SystemC</h3>
+        <p>systemc-clang is a revamp of an earlier <a href="http://systemc.org">SystemC</a> Parser called <a href="http://systemcxml.sourceforge.net">SystemCXML</a>. The purpose of this project is to provide researchers and individuals with a parser for SystemC. This SystemC parser uses the <a href="http://clang.llvm.org">clang</a> front-end. 
+
+        The public release will only allow parsing and representation of structural information of SystemC models at the RTL.  This implementation will provide a reflection data structure that a designer can use to extract this information. 
+
+        Internally, we are developing methods to represent behavioural information of the SystemC models.  In addition, we plan to support TLM 2.0 models as well.  Stay tuned for more updates and releases. 
+
+        As always, please feel free to provide issues, and feature requests.
+        </p>
+
+        <h3>Requirements</h3>
+				<ul class="a">
+					<li> <a href="http://llvm.org/">llvm</a> (trunk: svn version 171237) </li>
+					<li> <a href="http://clang.llvm.org/">clang</a> (trunk: svn version 171237) </li>
+					<li> <a href="http://www.accellera.org/home/">SystemC</a> version 2.2.0 </li>
+					<li> Please see <a 
+          href="https://github.com/anikau31/systemc-clang/master/doc/systemc-install.mkd">SystemC Installation Notes</a> </li> 
+
+				<h3>Installation</h3>
+				<p> Please see the instruction <a href 
+        ="https://github.com/anikau31/systemc-clang/blob/master/INSTALL.mkd">here</a></p>
+		
+				<h3> Plugging into systemc-clang </h3>
+				<p> Write a simple <a 
+        href="https://github.com/anikau31/systemc-clang/blob/master/doc/plugins.mkd">plugin</a> to access the parsed information </a>
+
+				<h3> Contact </h3>
+				<ul class ="a">
+					<li> <a href="">Anirudh M. Kaushik</a> </li>
+
+				<h3> License </h3>
+				<p> systemc-clang follows the same licensing as clang. Please look at <a 
+        href="https://github.com/anikau31/systemc-clang/blob/master/LICENSE.mkd">LICENSE</a> 
+
+				<h3> Other Tools </h3>
+				<p> There are several other SystemC parsers that are available. If you try them, and have some feedback for us, please let us know. </p>
+				<ul class="a">
+					<li> <a href="http://systemcxml.sourceforge.net/">SystemCXML</a> </li>
+					<li> <a href="http://greensocs.sourceforge.net/pinapa/">Pinapa: A SystemC Front-end</a></li>
+					<li> <a href="http://www.fzi.de/index.php/de/component/content/article/238-ispe-sim/4350-sim-tools-kascpar-examples">KaSCPar: Karlsruhe SystemC Parser Suite</a></li>
+			</section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Slate theme maintained by <a href="https://github.com/jsncostello">Jason Costello</a></p>
+      </footer>
+    </div>
+
+  </body>
+</html>
