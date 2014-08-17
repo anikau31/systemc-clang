@@ -1,0 +1,69 @@
+
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/arth_ctrl/result.cpp:76:7: error: redefinition of 'Component'
+class Component : public sc_module
+      ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/arth_ctrl/result.cpp:3:11: note: previous definition is here
+SC_MODULE(Component)
+          ^
+/usr/local/systemc//include/sysc/kernel/sc_module.h:468:12: note: expanded from macro 'SC_MODULE'
+    struct user_module_name : ::sc_core::sc_module
+           ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/arth_ctrl/result.cpp:119:17: error: out-of-line definition of 'essaiwrite' does not match any declaration in 'Component'
+void Component::essaiwrite()
+                ^~~~~~~~~~
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/arth_ctrl/result.cpp:124:5: error: redefinition of 'sc_main'
+int sc_main (int argc , char *argv[])
+    ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/arth_ctrl/result.cpp:37:5: note: previous definition is here
+int sc_main (int argc , char *argv[])
+    ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/arth_ctrl/result.cpp:154:7: error: redefinition of 'Component'
+class Component : public sc_module
+      ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/arth_ctrl/result.cpp:3:11: note: previous definition is here
+SC_MODULE(Component)
+          ^
+/usr/local/systemc//include/sysc/kernel/sc_module.h:468:12: note: expanded from macro 'SC_MODULE'
+    struct user_module_name : ::sc_core::sc_module
+           ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/arth_ctrl/result.cpp:179:17: error: out-of-line definition of 'main' does not match any declaration in 'Component'
+void Component::main() {
+                ^~~~
+Stack dump:
+0.	<eof> parser at end of file
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 0
+Global Events:
+   Event: m_never_notified  VarDecl: 0x5044c40
+   Event: non_event  VarDecl: 0x456dea0
+   Event: sc_non_event  VarDecl: 0x4742150
+
+Signals:
+ SignalInstanceContainer 'NONE' Type: 'sc_core::sc_signal<_Bool>'  CXXConstructExpr 0x5230c40
+ - sc_signal, type ptr: 0x5230a30
+ - sc_signal, type ptr: 0x52309e0
+ - _Bool, type ptr: 0x3efea70
+
+Port bindings:
+ PortBindContainer 'out' module 'C1' signal 's1'
+ PortBindContainer 'in' module 'C1' signal 's2'
+ PortBindContainer 'out' module 'C2' signal 's2'
+ PortBindContainer 'in' module 'C2' signal 's1'
+
+Netlist :
+ ======================= Begin netlist ====================
+ Module Name : C1( s1 s2 )
+ Module Name : C2( s2 s1 )
+
+ Module : C1	 Signal Name: s1	 Signal Type : sc_out
+ Module : C1	 Signal Name: s2	 Signal Type : sc_in
+ Module : C2	 Signal Name: s1	 Signal Type : sc_in
+ Module : C2	 Signal Name: s2	 Signal Type : sc_out
+ ======================= End netlist ====================
+Simulation Time : 200 SC_NS
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/pinavm/arth_ctrl/main.cpp.

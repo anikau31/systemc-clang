@@ -1,0 +1,97 @@
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x55f2590 first_counter CXXRecordDecl 0x5467f00
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x4a7bbb0 'clock' FindTemplateTypes 0x4ed2840 - sc_in, type ptr: 0x5468150
+
+     PortDecl 0x4c59f30 'enable' FindTemplateTypes 0x44eab60 - sc_in, type ptr: 0x54682f0
+ - _Bool, type ptr: 0x413ba60
+
+     PortDecl 0x4d5fc90 'reset' FindTemplateTypes 0x452ad10 - sc_in, type ptr: 0x54681e0
+ - _Bool, type ptr: 0x413ba60
+
+ 
+    Output ports:
+     PortDecl 0x4c5bee0 'counter_out' FindTemplateTypes 0x4c73350 - sc_out, type ptr: 0x54686c0
+ - sc_uint, type ptr: 0x5468510
+ - 4, type ptr: 0x413bae0
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x49b8cb0 'clock' FieldDecl 0x5468180
+
+    ClassDataMembers 0x4888f30 'count' FieldDecl 0x5489300
+
+    ClassDataMembers 0x4a0cfd0 'counter_out' FieldDecl 0x54824a0
+
+    ClassDataMembers 0x4159a30 'enable' FieldDecl 0x54683a0
+
+    ClassDataMembers 0x4ed5510 'reset' FieldDecl 0x5468290
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x531abb0 'incr_count' 0x5489370 SC_THREAD Constructor 0x548ed08
+     EntryFunctionContainer 'incr_count' processType 'SC_THREAD'  CXXMethodDecl '0x5489370
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+    ClassMemberFunctions 0x4afc8f0 'operator unsigned long long' CXXMethodecl* 0x4fc7390
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x44e9c20
+   Event: non_event  VarDecl: 0x4921580
+   Event: sc_non_event  VarDecl: 0x4a3bca0
+
+Signals:
+ SignalInstanceContainer 'clock_sig' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x548f038
+ - sc_signal, type ptr: 0x548ef30
+ - _Bool, type ptr: 0x413ba60
+ SignalInstanceContainer 'counter_out' Type: 'sc_signal<sc_uint<4> >'  CXXConstructExpr 0x5493b78
+ - sc_signal, type ptr: 0x548f510
+ - sc_uint, type ptr: 0x548f360
+ - 4, type ptr: 0x413bae0
+ SignalInstanceContainer 'enable' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x548f2f8
+ - sc_signal, type ptr: 0x548f1f0
+ - _Bool, type ptr: 0x413ba60
+ SignalInstanceContainer 'reset' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x548f198
+ - sc_signal, type ptr: 0x548f090
+ - _Bool, type ptr: 0x413ba60
+
+Port bindings:
+ PortBindContainer 'clock' module 'counter' signal 'clock_sig'
+ PortBindContainer 'reset' module 'counter' signal 'reset'
+ PortBindContainer 'enable' module 'counter' signal 'enable'
+ PortBindContainer 'counter_out' module 'counter' signal 'counter_out'
+
+Netlist :
+ ======================= Begin netlist ====================
+ Module Name : counter( clock_sig reset enable counter_out )
+
+ Module : counter	 Signal Name: clock_sig	 Signal Type : sc_in
+ Module : counter	 Signal Name: counter_out	 Signal Type : sc_out
+ Module : counter	 Signal Name: enable	 Signal Type : sc_in
+ Module : counter	 Signal Name: reset	 Signal Type : sc_in
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/asic-world/first_counter_tb.cpp.

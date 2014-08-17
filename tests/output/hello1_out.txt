@@ -1,0 +1,75 @@
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/hello/hello.cpp:13:9: error: unknown type name 'uint32_t'
+  const uint32_t in;
+        ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/hello/hello.cpp:14:3: error: unknown type name 'uint32_t'
+  uint32_t out;
+  ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/hello/hello.cpp:16:42: error: unknown type name 'uint32_t'
+  MyModule(sc_core::sc_module_name name, uint32_t data):
+                                         ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/hello/hello.cpp:30:12: error: no matching constructor for initialization of 'MyModule'
+  MyModule my_module("MY_MODULE",12);
+           ^         ~~~~~~~~~~~~~~
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/hello/hello.cpp:12:8: note: candidate constructor (the implicit default constructor) not viable: requires 0 arguments, but 2 were provided
+struct MyModule: sc_core::sc_module {
+       ^
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/hello/hello.cpp:12:8: note: candidate constructor (the implicit copy constructor) not viable: requires 1 argument, but 2 were provided
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x3a60eb0 MyModule CXXRecordDecl 0x3abcfc0
+  Port Declaration:>
+    Input ports:
+    <<<NULL>>>
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x2f88920 'in' FieldDecl 0x3abd2d0
+
+    ClassDataMembers 0x3179800 'out' FieldDecl 0x3abd330
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x33f2dd0 'compute' 0x3abd6f0 SC_METHOD Constructor 0x3abe898
+     EntryFunctionContainer 'compute' processType 'SC_METHOD'  CXXMethodDecl '0x3abd6f0
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x2a004a0
+   Event: non_event  VarDecl: 0x2a20b60
+   Event: sc_non_event  VarDecl: 0x399f8d0
+
+Signals:
+
+Port bindings:
+ PortBindContainer 'NONE' module 'NONE' signal 'NONE'
+ PortBindContainer 'NONE' module 'NONE' signal 'NONE'
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+4 errors generated.
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/pinavm/hello/hello.cpp.

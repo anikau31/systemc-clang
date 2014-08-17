@@ -1,0 +1,24 @@
+Error while processing /home/anirudh/sw-updat/systemc-clang/tests/pinavm/hello/hello.cpp.
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/basic-complexaddr/main.cpp:17:10: fatal error: 'basic.h' file not found
+#include "basic.h"
+         ^
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 0
+Global Events:
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+1 error generated.
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/pinavm/basic-complexaddr/main.cpp.

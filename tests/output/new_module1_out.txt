@@ -1,0 +1,95 @@
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x4560fb0 producer CXXRecordDecl 0x43f5a20
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x3f3cbc0 'clock' FindTemplateTypes 0x3f0fb80 - sc_in, type ptr: 0x43f5c80
+ - _Bool, type ptr: 0x30caa30
+
+     PortDecl 0x40c2720 'in1' FindTemplateTypes 0x38d3de0 - sc_in, type ptr: 0x43f5e90
+ - int, type ptr: 0x30caab0
+
+ 
+    Output ports:
+     PortDecl 0x3cd7e90 'out' FindTemplateTypes 0x38b42f0 - sc_out, type ptr: 0x440ff90
+ - int, type ptr: 0x30caab0
+
+ 
+    PortDecl 0x3c19860 'ready' FindTemplateTypes 0x3eeee50 - sc_out, type ptr: 0x440d720
+ - _Bool, type ptr: 0x30caa30
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3d26fa0 'clock' FieldDecl 0x43f5d30
+
+    ClassDataMembers 0x3d74190 'in1' FieldDecl 0x440d6c0
+
+    ClassDataMembers 0x39999d0 'out' FieldDecl 0x4429760
+
+    ClassDataMembers 0x42d1cc0 'ready' FieldDecl 0x440fe30
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x3f0f9d0 'p' 0x44297d0 SC_THREAD Constructor 0x442cd38
+     EntryFunctionContainer 'p' processType 'SC_THREAD'  CXXMethodDecl '0x44297d0
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x3e634b0
+   Event: non_event  VarDecl: 0x33c8eb0
+   Event: sc_non_event  VarDecl: 0x3f10f40
+
+Signals:
+ SignalInstanceContainer 'in' Type: 'sc_signal<int *>'  CXXConstructExpr 0x443ab18
+ - sc_signal, type ptr: 0x442d250
+ - int, type ptr: 0x30caab0
+ SignalInstanceContainer 'out' Type: 'sc_signal<int *>'  CXXConstructExpr 0x443ade8
+ - sc_signal, type ptr: 0x443ace0
+ - int, type ptr: 0x30caab0
+ SignalInstanceContainer 'ready' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x443ac78
+ - sc_signal, type ptr: 0x443ab70
+ - _Bool, type ptr: 0x30caa30
+
+Port bindings:
+ PortBindContainer 'clock' module 'p1' signal 'CLOCK'
+ PortBindContainer 'in1' module 'p1' signal 'in'
+ PortBindContainer 'ready' module 'p1' signal 'ready'
+ PortBindContainer 'out' module 'p1' signal 'out'
+
+Netlist :
+ ======================= Begin netlist ====================
+ Module Name : p1( CLOCK in ready out )
+
+ Module : p1	 Signal Name: CLOCK	 Signal Type : sc_in
+ Module : p1	 Signal Name: in	 Signal Type : sc_in
+ Module : p1	 Signal Name: out	 Signal Type : sc_out
+ Module : p1	 Signal Name: ready	 Signal Type : sc_out
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests//new_module1.hpp.

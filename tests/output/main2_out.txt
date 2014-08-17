@@ -1,0 +1,57 @@
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x5567680 mytop CXXRecordDecl 0x5452a90
+  Port Declaration:>
+    Input ports:
+    <<<NULL>>>
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x48fa3f0 'e' FieldDecl 0x5452d80
+
+    ClassDataMembers 0x4b698e0 'res' FieldDecl 0x5452d20
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x4e99bf0 'myFctQ' 0x5453130 SC_THREAD Constructor 0x54554f0
+     EntryFunctionContainer 'myFctQ' processType 'SC_THREAD'  CXXMethodDecl '0x5453130
+      WaitContainer numargs: 2  arglist: '10' 'SC_NS' 
+
+
+  Events:>
+    EventDecl 0x470f4f0 'e' FieldDecl 0x5452d80
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x4ec0420
+   Event: non_event  VarDecl: 0x4ebe0d0
+   Event: sc_non_event  VarDecl: 0x4f4b550
+
+Signals:
+
+Port bindings:
+ PortBindContainer 'NONE' module 'NONE' signal 'NONE'
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/pinavm/events/main.cpp.

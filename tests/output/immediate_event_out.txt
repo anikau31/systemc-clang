@@ -1,0 +1,99 @@
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 2
+Model 0
+=======================================================
+ ModuleDecl 0x37cf370 consumer CXXRecordDecl 0x3724170
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x2f2c740 'clk' FindTemplateTypes 0x2e3c1e0 - sc_in, type ptr: 0x3721a90
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3267a50 'clk' FieldDecl 0x37243a0
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x280b930 'consumerEntry' 0x3724630 SC_THREAD Constructor 0x3725948
+     EntryFunctionContainer 'consumerEntry' processType 'SC_THREAD'  CXXMethodDecl '0x3724630
+      WaitContainer numargs: 1  arglist: 'ce' 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Model 1
+=======================================================
+ ModuleDecl 0x387bc20 producer CXXRecordDecl 0x3721840
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x2e586a0 'clk' FindTemplateTypes 0x2ddd870 - sc_in, type ptr: 0x3721a90
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x2bc9800 'clk' FieldDecl 0x3721ac0
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x3167580 'prodEntry' 0x3721db0 SC_THREAD Constructor 0x37235b8
+     EntryFunctionContainer 'prodEntry' processType 'SC_THREAD'  CXXMethodDecl '0x3721db0
+      WaitContainer numargs: 0 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: ce  VarDecl: 0x2cf4dd0
+   Event: m_never_notified  VarDecl: 0x34f8100
+   Event: non_event  VarDecl: 0x2f98790
+   Event: pe  VarDecl: 0x309ea40
+   Event: sc_non_event  VarDecl: 0x2e4dc30
+
+Signals:
+
+Port bindings:
+ PortBindContainer 'clk' module 'c' signal 'clk'
+ PortBindContainer 'clk' module 'p' signal 'clk'
+
+Netlist :
+ ======================= Begin netlist ====================
+ Module Name : c( clk )
+ Module Name : p( clk )
+
+ Module : c	 Signal Name: clk	 Signal Type : sc_in
+ Module : p	 Signal Name: clk	 Signal Type : sc_in
+ ======================= End netlist ====================
+Simulation Time : 10 SC_NS
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/immediateEvent/immediateEvent.cpp.

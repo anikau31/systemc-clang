@@ -1,0 +1,4 @@
+sc_fifo.cpp : Program to check if tool identifies fifo interfaces
+test1.cpp : Program to check if netlist declared in sc_main is identified by tool
+test2.cpp : Program to check if event notifications are processed.
+test5.cpp : Check if GPU macro and associated parameters can be identified

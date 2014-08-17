@@ -1,0 +1,81 @@
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x45c75f0 top CXXRecordDecl 0x43f51e0
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x3d79a20 'clk' FindTemplateTypes 0x3e647d0 - sc_in, type ptr: 0x43f5430
+
+     PortDecl 0x39c5a90 'int_port' FindTemplateTypes 0x36028b0 - sc_in, type ptr: 0x43f55c0
+ - int, type ptr: 0x30c9ab0
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3eee210 'clk' FieldDecl 0x43f5460
+
+    ClassDataMembers 0x34ee8a0 'int_port' FieldDecl 0x440cc90
+
+    ClassDataMembers 0x4436410 'var' FieldDecl 0x440d260
+
+    ClassDataMembers 0x3c70220 'x' FieldDecl 0x440d2c0
+
+    ClassDataMembers 0x3645410 'y' FieldDecl 0x440d320
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x3ddd320 'topEntry' 0x440d180 SC_THREAD Constructor 0x440ea58
+     EntryFunctionContainer 'topEntry' processType 'SC_THREAD'  CXXMethodDecl '0x440d180
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+      WaitContainer numargs: 0 
+      WaitContainer numargs: 0 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+    ClassMemberFunctions 0x38d2f90 'f' CXXMethodecl* 0x440ce30
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x3d04580
+   Event: non_event  VarDecl: 0x3b0cbc0
+   Event: sc_non_event  VarDecl: 0x3d15d30
+   Event: zen  VarDecl: 0x3a9d1c0
+
+Signals:
+ SignalInstanceContainer 'bogus' Type: 'sc_signal<int>'  CXXConstructExpr 0x4414328
+ - sc_signal, type ptr: 0x4414220
+ - int, type ptr: 0x30c9ab0
+ SignalInstanceContainer 'input' Type: 'sc_signal<int>'  CXXConstructExpr 0x44141c8
+ - sc_signal, type ptr: 0x440fb20
+ - int, type ptr: 0x30c9ab0
+
+Port bindings:
+ PortBindContainer 'clk' module 't1' signal 'CLOCK'
+ PortBindContainer 'int_port' module 't1' signal 'input'
+
+Netlist :
+ ======================= Begin netlist ====================
+ Module Name : t1( CLOCK input )
+
+ Module : t1	 Signal Name: CLOCK	 Signal Type : sc_in
+ Module : t1	 Signal Name: input	 Signal Type : sc_in
+ ======================= End netlist ====================
+Simulation Time : 10 SC_NS
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+

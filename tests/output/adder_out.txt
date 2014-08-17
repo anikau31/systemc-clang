@@ -1,0 +1,74 @@
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x3a0ae80 Adder CXXRecordDecl 0x3838270
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x2b02950 'XYZ' FindTemplateTypes 0x31832b0 - sc_in, type ptr: 0x3838790
+ - sc_uint, type ptr: 0x38385e0
+ - 22, type ptr: 0x250caf0
+
+     PortDecl 0x30c27f0 'a' FindTemplateTypes 0x2d3e660 - sc_in, type ptr: 0x38502e0
+ - sc_uint, type ptr: 0x3850130
+ - 8, type ptr: 0x250caf0
+
+     PortDecl 0x26fe7e0 'b' FindTemplateTypes 0x32a8530 - sc_in, type ptr: 0x38502e0
+ - sc_uint, type ptr: 0x3850130
+ - 8, type ptr: 0x250caf0
+
+ 
+    Output ports:
+     PortDecl 0x3355480 'c' FindTemplateTypes 0x36c43e0 - sc_out, type ptr: 0x3867e00
+ - sc_uint, type ptr: 0x3867c50
+ - 8, type ptr: 0x250caf0
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x2fec120 'XYZ' FieldDecl 0x384ffc0
+
+    ClassDataMembers 0x32a8630 'a' FieldDecl 0x3867b50
+
+    ClassDataMembers 0x32f0560 'b' FieldDecl 0x3867bd0
+
+    ClassDataMembers 0x38c83b0 'c' FieldDecl 0x3887050
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    <<<NULL>>>
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x303ee20
+   Event: non_event  VarDecl: 0x302c680
+   Event: sc_non_event  VarDecl: 0x30d7700
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/pinavm/adder/adder.hpp.

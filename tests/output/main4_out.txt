@@ -1,0 +1,142 @@
+/home/anirudh/sw-updat/systemc-clang/tests/pinavm/ram/main.cpp:2:10: fatal error: 'sysc/utils/verif.h' file not found
+#include <sysc/utils/verif.h>
+         ^
+
+ Array size 
+ value : 512
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 2
+Model 0
+=======================================================
+ ModuleDecl 0x3966af0 CPU CXXRecordDecl 0x36e0370
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x2f1be60 'Port_MemDone' FindTemplateTypes 0x30fb6a0 - sc_in, type ptr: 0x36e0740
+ - Memory, type ptr: 0x3666a40
+
+ 
+    Output ports:
+     PortDecl 0x2357eb0 'Port_MemAddr' FindTemplateTypes 0x2eb70b0 - sc_out, type ptr: 0x3719d90
+ - int, type ptr: 0x233aab0
+
+ 
+    PortDecl 0x2f49ec0 'Port_MemFunc' FindTemplateTypes 0x2e6ec40 - sc_out, type ptr: 0x37004a0
+ - Memory, type ptr: 0x3666a40
+
+ 
+    Inout ports:
+     PortDecl 0x2f1a900 'Port_MemData' FindTemplateTypes 0x2e71f00 - Stack dump:
+0.	<eof> parser at end of file
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 2
+Model 0
+=======================================================
+ ModuleDecl 0x44de410 compteur CXXRecordDecl 0x457da60
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x37ce4f0 'clock' FindTemplateTypes 0x3686560 - sc_in, type ptr: 0x457dcc0
+ - _Bool, type ptr: 0x3251a70
+
+     PortDecl 0x3999b00 'reset' FindTemplateTypes 0x4538030 - sc_in, type ptr: 0x457ddd0
+ - _Bool, type ptr: 0x3251a70
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3c66cc0 'clock' FieldDecl 0x457dd70
+
+    ClassDataMembers 0x3b385b0 'reset' FieldDecl 0x457de80
+
+    ClassDataMembers 0x3844030 'value' FieldDecl 0x457dee0
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x322a090 'compte' 0x457df50 SC_METHOD Constructor 0x4581138
+     EntryFunctionContainer 'compte' processType 'SC_METHOD'  CXXMethodDecl '0x457df50
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+    ClassMemberFunctions 0x3d6fb00 'event' CXXMethodecl* 0x3e59120
+
+
+=======================================================
+
+Model 1
+=======================================================
+ ModuleDecl 0x4670680 resetter CXXRecordDecl 0x4581170
+  Port Declaration:>
+    Input ports:
+    <<<NULL>>>
+    Output ports:
+     PortDecl 0x3c63b90 'reset' FindTemplateTypes 0x41ffea0 - sc_out, type ptr: 0x45813a0
+ - _Bool, type ptr: 0x3251a70
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3acf910 'reset' FieldDecl 0x4583ab0
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x3c95d70 'process' 0x4583d40 SC_THREAD Constructor 0x4585050
+     EntryFunctionContainer 'process' processType 'SC_THREAD'  CXXMethodDecl '0x4583d40
+      WaitContainer numargs: 2  arglist: '30' 'SC_NS' 
+      WaitContainer numargs: 2  arglist: '60' 'SC_NS' 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x3fc0470
+   Event: non_event  VarDecl: 0x3c93250
+   Event: sc_non_event  VarDecl: 0x3a58740
+
+Signals:
+ SignalInstanceContainer 'reset' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4586cb8
+ - sc_signal, type ptr: 0x4586bb0
+ - _Bool, type ptr: 0x3251a70
+
+Port bindings:
+ PortBindContainer 'clock' module 'cpt' signal 'clk'
+ PortBindContainer 'reset' module 'cpt' signal 'reset'
+ PortBindContainer 'reset' module 'res' signal 'reset'
+
+Netlist :
+ ======================= Begin netlist ====================
+ Module Name : cpt( clk reset )
+ Module Name : res( reset )
+
+ Module : cpt	 Signal Name: clk	 Signal Type : sc_in
+ Module : cpt	 Signal Name: reset	 Signal Type : sc_in
+ Module : res	 Signal Name: reset	 Signal Type : sc_out
+ ======================= End netlist ====================
+Simulation Time : 300 SC_NS
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/pinavm/sc_clock/main.cpp.

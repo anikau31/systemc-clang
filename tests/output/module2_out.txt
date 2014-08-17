@@ -1,0 +1,62 @@
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x55f2400 top CXXRecordDecl 0x5475ef0
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x414b9d0 'clk' FindTemplateTypes 0x4ebb8f0 - sc_in, type ptr: 0x5476140
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x47fe390 'clk' FieldDecl 0x5476170
+
+    ClassDataMembers 0x4812cd0 'var' FieldDecl 0x5476600
+
+    ClassDataMembers 0x5351f60 'x' FieldDecl 0x5476660
+
+    ClassDataMembers 0x4d419e0 'y' FieldDecl 0x54766c0
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x4f2e110 'secondEntry' 0x5476460 SC_THREAD Constructor 0x54788c0
+     EntryFunctionContainer 'secondEntry' processType 'SC_THREAD'  CXXMethodDecl '0x5476460
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x48cf0b0
+   Event: non_event  VarDecl: 0x4ee6c00
+   Event: sc_non_event  VarDecl: 0x4448800
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests//module2.hpp.

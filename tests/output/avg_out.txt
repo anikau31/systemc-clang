@@ -1,0 +1,115 @@
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x3cdb760 avg CXXRecordDecl 0x3b0a540
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x36266a0 'clk' FindTemplateTypes 0x2cb2960 - sc_in, type ptr: 0x3b0a7a0
+ - _Bool, type ptr: 0x27dda30
+
+     PortDecl 0x3528270 'i_data' FindTemplateTypes 0x2fc6d70 - sc_in, type ptr: 0x3b0ab70
+ - sc_bv, type ptr: 0x3b0a9c0
+ - 8, type ptr: 0x27ddab0
+
+ 
+    Output ports:
+     PortDecl 0x38434d0 'o_data' FindTemplateTypes 0x30dcff0 - sc_out, type ptr: 0x3b225c0
+ - sc_bv, type ptr: 0x3b22410
+ - 8, type ptr: 0x27ddab0
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x337ef30 'clk' FieldDecl 0x3b0a850
+
+    ClassDataMembers 0x33115b0 'coef1' FieldDecl 0x3b4ab10
+
+    ClassDataMembers 0x326c590 'coef2' FieldDecl 0x3b4ab70
+
+    ClassDataMembers 0x2f25fe0 'coef3' FieldDecl 0x3b4abd0
+
+    ClassDataMembers 0x3a3eae0 'i_data' FieldDecl 0x3b223a0
+
+    ClassDataMembers 0x359b610 'o_data' FieldDecl 0x3b3bda0
+
+    ClassDataMembers 0x354bf90 'prod1' FieldDecl 0x3b4ac50
+
+    ClassDataMembers 0x2c15620 'prod2' FieldDecl 0x3b4acb0
+
+    ClassDataMembers 0x3627100 'prod3' FieldDecl 0x3b4ad10
+
+    ClassDataMembers 0x27f7060 'sum2' FieldDecl 0x3b4af00
+
+    ClassDataMembers 0x2f25840 'sum3' FieldDecl 0x3b4af80
+
+    ClassDataMembers 0x3572ba0 'tap0' FieldDecl 0x3b4a910
+
+    ClassDataMembers 0x3417b70 'tap1' FieldDecl 0x3b4a990
+
+    ClassDataMembers 0x319f130 'tap2' FieldDecl 0x3b4aa10
+
+    ClassDataMembers 0x29f30d0 'tap3' FieldDecl 0x3b4aa90
+
+
+  Signal Declaration:>
+    Signal 0x3626510 'sum2' FindTemplateTypes 0x343bb50' FieldDecl' 0x3b4af00    - sc_signal, type ptr: 0x3b4ae50
+    - sc_bv, type ptr: 0x3b4ada0
+    - 8, type ptr: 0x27ddab0
+
+    Signal 0x343a660 'sum3' FindTemplateTypes 0x2fc76b0' FieldDecl' 0x3b4af80    - sc_signal, type ptr: 0x3b4ae50
+    - sc_bv, type ptr: 0x3b4ada0
+    - 8, type ptr: 0x27ddab0
+
+    Signal 0x3240560 'tap0' FindTemplateTypes 0x2a2e990' FieldDecl' 0x3b4a910    - sc_signal, type ptr: 0x3b3bfc0
+    - sc_bv, type ptr: 0x3b3be10
+    - 8, type ptr: 0x27ddab0
+
+    Signal 0x3a35350 'tap1' FindTemplateTypes 0x300c620' FieldDecl' 0x3b4a990    - sc_signal, type ptr: 0x3b3bfc0
+    - sc_bv, type ptr: 0x3b3be10
+    - 8, type ptr: 0x27ddab0
+
+    Signal 0x2bfdcb0 'tap2' FindTemplateTypes 0x2f0f130' FieldDecl' 0x3b4aa10    - sc_signal, type ptr: 0x3b3bfc0
+    - sc_bv, type ptr: 0x3b3be10
+    - 8, type ptr: 0x27ddab0
+
+    Signal 0x2be40b0 'tap3' FindTemplateTypes 0x30201f0' FieldDecl' 0x3b4aa90    - sc_signal, type ptr: 0x3b3bfc0
+    - sc_bv, type ptr: 0x3b3be10
+    - 8, type ptr: 0x27ddab0
+
+
+  Processes:>
+    ProcessDecl 0x30af2e0 'third_function' 0x3b4b550 SC_METHOD Constructor 0x3b4f8c8
+     EntryFunctionContainer 'third_function' processType 'SC_METHOD'  CXXMethodDecl '0x3b4b550
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+    ClassMemberFunctions 0x36270a0 'to_int' CXXMethodecl* 0x38ce440
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x3419990
+   Event: non_event  VarDecl: 0x30547e0
+   Event: sc_non_event  VarDecl: 0x3577310
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/filter/avg.cpp.

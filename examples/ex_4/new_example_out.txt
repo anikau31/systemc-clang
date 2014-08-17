@@ -1,0 +1,174 @@
+
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x4cea9d0 fa CXXRecordDecl 0x4f13af0
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x4d51d60 'a' FindTemplateTypes 0x3c2b770 - sc_in, type ptr: 0x4f13d50
+ - _Bool, type ptr: 0x3be7a30
+
+     PortDecl 0x4bdb0e0 'b' FindTemplateTypes 0x4e6c710 - sc_in, type ptr: 0x4f13e60
+ - _Bool, type ptr: 0x3be7a30
+
+     PortDecl 0x47f8ed0 'cin' FindTemplateTypes 0x47f6710 - sc_in, type ptr: 0x4f13f70
+ - _Bool, type ptr: 0x3be7a30
+
+ 
+    Output ports:
+     PortDecl 0x3ee6ce0 'cout' FindTemplateTypes 0x497e9d0 - sc_out, type ptr: 0x4f167f0
+ - _Bool, type ptr: 0x3be7a30
+
+ 
+    PortDecl 0x49835f0 's' FindTemplateTypes 0x3c2b6d0 - sc_out, type ptr: 0x4f14080
+ - _Bool, type ptr: 0x3be7a30
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x4e17b70 'a' FieldDecl 0x4f13e00
+
+    ClassDataMembers 0x462a720 'b' FieldDecl 0x4f13f10
+
+    ClassDataMembers 0x4870ae0 'cin' FieldDecl 0x4f14020
+
+    ClassDataMembers 0x45e1d80 'cout' FieldDecl 0x4f168a0
+
+    ClassDataMembers 0x4e19110 's' FieldDecl 0x4f16790
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x49822c0 'adder' 0x4f16b90 SC_THREAD Constructor 0x4f18d48
+     EntryFunctionContainer 'adder' processType 'SC_THREAD'  CXXMethodDecl '0x4f16b90
+      WaitContainer numargs: 2  arglist: '5' 'SC_NS' 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+    ClassMemberFunctions 0x45fce00 'operator const _Bool &' CXXMethodecl* 0x47ef160
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x3ff6500
+   Event: non_event  VarDecl: 0x4955160
+   Event: sc_non_event  VarDecl: 0x432fdf0
+
+Signals:
+ SignalInstanceContainer 'a0' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1b348
+ - sc_signal, type ptr: 0x4f1b240
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'a1' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1b4a8
+ - sc_signal, type ptr: 0x4f1b3a0
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'a2' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1b608
+ - sc_signal, type ptr: 0x4f1b500
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'a3' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1b768
+ - sc_signal, type ptr: 0x4f1b660
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'b0' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1b8c8
+ - sc_signal, type ptr: 0x4f1b7c0
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'b1' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1ba28
+ - sc_signal, type ptr: 0x4f1b920
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'b2' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1bb88
+ - sc_signal, type ptr: 0x4f1ba80
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'b3' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1bce8
+ - sc_signal, type ptr: 0x4f1bbe0
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'c0' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1c3c8
+ - sc_signal, type ptr: 0x4f1c2c0
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'c1' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1c528
+ - sc_signal, type ptr: 0x4f1c420
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'c2' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1c688
+ - sc_signal, type ptr: 0x4f1c580
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'cin' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1b1e8
+ - sc_signal, type ptr: 0x4f1b0e0
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 'cout' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1c7e8
+ - sc_signal, type ptr: 0x4f1c6e0
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 's0' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1be48
+ - sc_signal, type ptr: 0x4f1bd40
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 's1' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1bfa8
+ - sc_signal, type ptr: 0x4f1bea0
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 's2' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1c108
+ - sc_signal, type ptr: 0x4f1c000
+ - _Bool, type ptr: 0x3be7a30
+ SignalInstanceContainer 's3' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4f1c268
+ - sc_signal, type ptr: 0x4f1c160
+ - _Bool, type ptr: 0x3be7a30
+
+Port bindings:
+ PortBindContainer 'a' module 'ad0' signal 'a0'
+ PortBindContainer 'b' module 'ad0' signal 'b0'
+ PortBindContainer 'cin' module 'ad0' signal 'cin'
+ PortBindContainer 's' module 'ad0' signal 's0'
+ PortBindContainer 'cout' module 'ad0' signal 'c0'
+ PortBindContainer 'a' module 'ad1' signal 'a1'
+ PortBindContainer 'b' module 'ad1' signal 'b1'
+ PortBindContainer 'cin' module 'ad1' signal 'c0'
+ PortBindContainer 's' module 'ad1' signal 's1'
+ PortBindContainer 'cout' module 'ad1' signal 'c1'
+ PortBindContainer 'a' module 'ad2' signal 'a2'
+ PortBindContainer 'b' module 'ad2' signal 'b2'
+ PortBindContainer 'cin' module 'ad2' signal 'c1'
+ PortBindContainer 's' module 'ad2' signal 's2'
+ PortBindContainer 'cout' module 'ad2' signal 'c2'
+ PortBindContainer 'a' module 'ad3' signal 'a3'
+ PortBindContainer 'b' module 'ad3' signal 'b3'
+ PortBindContainer 'cin' module 'ad3' signal 'c2'
+ PortBindContainer 's' module 'ad3' signal 's3'
+ PortBindContainer 'cout' module 'ad3' signal 'cout'
+
+Netlist :
+ ======================= Begin netlist ====================
+ Module Name : ad0( a0 b0 cin s0 c0 )
+ Module Name : ad1( a1 b1 c0 s1 c1 )
+ Module Name : ad2( a2 b2 c1 s2 c2 )
+ Module Name : ad3( a3 b3 c2 s3 cout )
+
+ Module : ad0	 Signal Name: a0	 Signal Type : sc_in
+ Module : ad0	 Signal Name: b0	 Signal Type : sc_in
+ Module : ad0	 Signal Name: c0	 Signal Type : sc_out
+ Module : ad0	 Signal Name: cin	 Signal Type : sc_in
+ Module : ad0	 Signal Name: s0	 Signal Type : sc_out
+ Module : ad1	 Signal Name: a1	 Signal Type : sc_in
+ Module : ad1	 Signal Name: b1	 Signal Type : sc_in
+ Module : ad1	 Signal Name: c0	 Signal Type : sc_in
+ Module : ad1	 Signal Name: c1	 Signal Type : sc_out
+ Module : ad1	 Signal Name: s1	 Signal Type : sc_out
+ Module : ad2	 Signal Name: a2	 Signal Type : sc_in
+ Module : ad2	 Signal Name: b2	 Signal Type : sc_in
+ Module : ad2	 Signal Name: c1	 Signal Type : sc_in
+ Module : ad2	 Signal Name: c2	 Signal Type : sc_out
+ Module : ad2	 Signal Name: s2	 Signal Type : sc_out
+ Module : ad3	 Signal Name: a3	 Signal Type : sc_in
+ Module : ad3	 Signal Name: b3	 Signal Type : sc_in
+ Module : ad3	 Signal Name: c2	 Signal Type : sc_in
+ Module : ad3	 Signal Name: cout	 Signal Type : sc_out
+ Module : ad3	 Signal Name: s3	 Signal Type : sc_out
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+

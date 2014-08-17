@@ -1,0 +1,78 @@
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x3940030 top CXXRecordDecl 0x374cfb0
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x31946e0 'clk' FindTemplateTypes 0x32683e0 - sc_in, type ptr: 0x374d200
+
+     PortDecl 0x2f57a20 'int_port' FindTemplateTypes 0x3168690 - sc_in, type ptr: 0x374d390
+ - int, type ptr: 0x2420ab0
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x2fc3160 'SIGNAL1' FieldDecl 0x3769280
+
+    ClassDataMembers 0x3268380 'SIGNAL2' FieldDecl 0x3774c30
+
+    ClassDataMembers 0x29aa100 'clk' FieldDecl 0x374d230
+
+    ClassDataMembers 0x318e7b0 'int_port' FieldDecl 0x3764a60
+
+    ClassDataMembers 0x38b1530 'var' FieldDecl 0x3775000
+
+    ClassDataMembers 0x34f8b10 'x' FieldDecl 0x3775060
+
+    ClassDataMembers 0x318ec70 'y' FieldDecl 0x37750c0
+
+
+  Signal Declaration:>
+    Signal 0x2d073b0 'SIGNAL1' FindTemplateTypes 0x2e61f70' FieldDecl' 0x3769280    - sc_signal, type ptr: 0x3764bc0
+    - int, type ptr: 0x2420ab0
+
+    Signal 0x2f6d590 'SIGNAL2' FindTemplateTypes 0x2f72030' FieldDecl' 0x3774c30    - sc_signal, type ptr: 0x37695a0
+    - sc_int, type ptr: 0x37693f0
+    - 16, type ptr: 0x2420ab0
+
+
+  Processes:>
+    ProcessDecl 0x37aee40 'topEntry' 0x3774f20 SC_THREAD Constructor 0x37767b8
+     EntryFunctionContainer 'topEntry' processType 'SC_THREAD'  CXXMethodDecl '0x3774f20
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+      WaitContainer numargs: 0 
+      WaitContainer numargs: 0 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+    ClassMemberFunctions 0x30fa870 'operator long long' CXXMethodecl* 0x32dcc00
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x2e642f0
+   Event: non_event  VarDecl: 0x3169160
+   Event: sc_non_event  VarDecl: 0x2d09610
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+

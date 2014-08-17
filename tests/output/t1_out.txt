@@ -1,0 +1,65 @@
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x494e8d0 top CXXRecordDecl 0x4a19540
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x44831c0 'clk' FindTemplateTypes 0x3fbef80 - sc_in, type ptr: 0x4a19790
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x4433080 'clk' FieldDecl 0x4a197c0
+
+    ClassDataMembers 0x3e83c00 'var' FieldDecl 0x4a19b90
+
+    ClassDataMembers 0x40e7220 'x' FieldDecl 0x4a19bf0
+
+    ClassDataMembers 0x38cd120 'y' FieldDecl 0x4a19c50
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x40feb20 'topEntry' 0x4a19ab0 SC_THREAD Constructor 0x4a1b218
+     EntryFunctionContainer 'topEntry' processType 'SC_THREAD'  CXXMethodDecl '0x4a19ab0
+      WaitContainer numargs: 0 
+      WaitContainer numargs: 0 
+      WaitContainer numargs: 0 
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x4177c70
+   Event: non_event  VarDecl: 0x4130300
+   Event: sc_non_event  VarDecl: 0x40d6430
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/l1/t1.hpp.

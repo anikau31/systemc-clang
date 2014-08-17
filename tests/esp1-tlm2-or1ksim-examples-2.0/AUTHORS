@@ -1,0 +1,18 @@
+  Example Programs for "Building a Loosely Timed SoC Model with OSCI TLM 2.0"
+  ===========================================================================
+
+
+AUTHORS
+=======
+
+This program was written by Jeremy Bennett <jeremy.bennett@embecosm.com>.
+
+Jeremy Bennett is founder and Chief Executive of Embecosm Limited, a company
+providing services, models and open source tools for embedded software
+development.
+
+COPYING
+=======
+
+This software is licensed under the GNU General Public License (GPL). Full
+details of the GPL can be found in the file COPYING

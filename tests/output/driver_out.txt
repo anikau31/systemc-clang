@@ -1,0 +1,64 @@
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x476d140 driver CXXRecordDecl 0x459b450
+  Port Declaration:>
+    Input ports:
+    <<<NULL>>>
+    Output ports:
+     PortDecl 0x3cb4c60 'filter_clk' FindTemplateTypes 0x402e910 - sc_out, type ptr: 0x45b57b0
+ - _Bool, type ptr: 0x326fa30
+
+ 
+    PortDecl 0x3a588b0 'filter_input' FindTemplateTypes 0x3da2090 - sc_out, type ptr: 0x459b970
+ - sc_bv, type ptr: 0x459b7c0
+ - 8, type ptr: 0x326fab0
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3cb6410 'filter_clk' FieldDecl 0x45b7f00
+
+    ClassDataMembers 0x361df50 'filter_input' FieldDecl 0x45b5750
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x44f8850 'filter_clk_driver' 0x45b8030 SC_METHOD Constructor 0x45ba570
+     EntryFunctionContainer 'filter_clk_driver' processType 'SC_METHOD'  CXXMethodDecl '0x45b8030
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x3c41850
+   Event: non_event  VarDecl: 0x3aed8f0
+   Event: sc_non_event  VarDecl: 0x3a44df0
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/filter/driver.cpp.

@@ -1,0 +1,225 @@
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 3
+Model 0
+=======================================================
+ ModuleDecl 0x4526d70 avg CXXRecordDecl 0x4533200
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x3f00840 'clk' FindTemplateTypes 0x3981e00 - sc_in, type ptr: 0x4533430
+ - _Bool, type ptr: 0x31b7a30
+
+     PortDecl 0x3afe210 'i_data' FindTemplateTypes 0x3e15cf0 - sc_in, type ptr: 0x4533600
+ - sc_bv, type ptr: 0x4533550
+ - 8, type ptr: 0x31b7ab0
+
+ 
+    Output ports:
+     PortDecl 0x39a6e90 'o_data' FindTemplateTypes 0x393dd10 - sc_out, type ptr: 0x45337d0
+ - sc_bv, type ptr: 0x4533720
+ - 8, type ptr: 0x31b7ab0
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3bfb5a0 'clk' FieldDecl 0x45334e0
+
+    ClassDataMembers 0x3ab3e50 'coef1' FieldDecl 0x4537530
+
+    ClassDataMembers 0x36f0670 'coef2' FieldDecl 0x4537590
+
+    ClassDataMembers 0x3fdbfb0 'coef3' FieldDecl 0x45375f0
+
+    ClassDataMembers 0x4442710 'i_data' FieldDecl 0x45336b0
+
+    ClassDataMembers 0x3e958d0 'o_data' FieldDecl 0x4533880
+
+    ClassDataMembers 0x4441da0 'prod1' FieldDecl 0x4537670
+
+    ClassDataMembers 0x3dc8d80 'prod2' FieldDecl 0x45376d0
+
+    ClassDataMembers 0x42b7dc0 'prod3' FieldDecl 0x4537730
+
+    ClassDataMembers 0x4440cc0 'sum2' FieldDecl 0x4537920
+
+    ClassDataMembers 0x4001c30 'sum3' FieldDecl 0x45379a0
+
+    ClassDataMembers 0x3b706a0 'tap0' FieldDecl 0x4537330
+
+    ClassDataMembers 0x4290640 'tap1' FieldDecl 0x45373b0
+
+    ClassDataMembers 0x4443d30 'tap2' FieldDecl 0x4537430
+
+    ClassDataMembers 0x454a560 'tap3' FieldDecl 0x45374b0
+
+
+  Signal Declaration:>
+    Signal 0x3d5b120 'sum2' FindTemplateTypes 0x3f54710' FieldDecl' 0x4537920    - sc_signal, type ptr: 0x4537870
+    - sc_bv, type ptr: 0x45377c0
+    - 8, type ptr: 0x31b7ab0
+
+    Signal 0x325f0d0 'sum3' FindTemplateTypes 0x368dd50' FieldDecl' 0x45379a0    - sc_signal, type ptr: 0x4537870
+    - sc_bv, type ptr: 0x45377c0
+    - 8, type ptr: 0x31b7ab0
+
+    Signal 0x3f27af0 'tap0' FindTemplateTypes 0x3bcd110' FieldDecl' 0x4537330    - sc_signal, type ptr: 0x4533aa0
+    - sc_bv, type ptr: 0x45338f0
+    - 8, type ptr: 0x31b7ab0
+
+    Signal 0x3d988e0 'tap1' FindTemplateTypes 0x43bfea0' FieldDecl' 0x45373b0    - sc_signal, type ptr: 0x4533aa0
+    - sc_bv, type ptr: 0x45338f0
+    - 8, type ptr: 0x31b7ab0
+
+    Signal 0x4672600 'tap2' FindTemplateTypes 0x3602100' FieldDecl' 0x4537430    - sc_signal, type ptr: 0x4533aa0
+    - sc_bv, type ptr: 0x45338f0
+    - 8, type ptr: 0x31b7ab0
+
+    Signal 0x368ce20 'tap3' FindTemplateTypes 0x3f02480' FieldDecl' 0x45374b0    - sc_signal, type ptr: 0x4533aa0
+    - sc_bv, type ptr: 0x45338f0
+    - 8, type ptr: 0x31b7ab0
+
+
+  Processes:>
+    ProcessDecl 0x35d9540 'third_function' 0x4537f10 SC_METHOD Constructor 0x453bac8
+     EntryFunctionContainer 'third_function' processType 'SC_METHOD'  CXXMethodDecl '0x4537f10
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+    ClassMemberFunctions 0x39e9e50 'to_int' CXXMethodecl* 0x42a7b30
+
+
+=======================================================
+
+Model 1
+=======================================================
+ ModuleDecl 0x4721590 driver CXXRecordDecl 0x44e3c20
+  Port Declaration:>
+    Input ports:
+    <<<NULL>>>
+    Output ports:
+     PortDecl 0x3f4f2c0 'filter_clk' FindTemplateTypes 0x3d34ae0 - sc_out, type ptr: 0x44fdf80
+ - _Bool, type ptr: 0x31b7a30
+
+ 
+    PortDecl 0x3d5e5d0 'filter_input' FindTemplateTypes 0x4441300 - sc_out, type ptr: 0x44e4140
+ - sc_bv, type ptr: 0x44e3f90
+ - 8, type ptr: 0x31b7ab0
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x4028b70 'filter_clk' FieldDecl 0x45006d0
+
+    ClassDataMembers 0x399fe50 'filter_input' FieldDecl 0x44fdf20
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x3f78480 'filter_clk_driver' 0x4500800 SC_METHOD Constructor 0x4502d40
+     EntryFunctionContainer 'filter_clk_driver' processType 'SC_METHOD'  CXXMethodDecl '0x4500800
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Model 2
+=======================================================
+ ModuleDecl 0x4720a40 monitor CXXRecordDecl 0x452a380
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x36f0750 'filter_input' FindTemplateTypes 0x3d982d0 - sc_in, type ptr: 0x452a770
+ - sc_bv, type ptr: 0x452a5c0
+ - 8, type ptr: 0x31b7ab0
+
+     PortDecl 0x31d89a0 'filter_output' FindTemplateTypes 0x4004ff0 - sc_in, type ptr: 0x452a770
+ - sc_bv, type ptr: 0x452a5c0
+ - 8, type ptr: 0x31b7ab0
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3bc9140 'filter_input' FieldDecl 0x452e250
+
+    ClassDataMembers 0x3c16140 'filter_output' FieldDecl 0x452e2d0
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x464f3e0 'prc_monitor' 0x452e350 SC_METHOD Constructor 0x45331d0
+     EntryFunctionContainer 'prc_monitor' processType 'SC_METHOD'  CXXMethodDecl '0x452e350
+
+
+  Events:>
+     <<<NULL>>>
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: m_never_notified  VarDecl: 0x35d9400
+   Event: non_event  VarDecl: 0x3f008a0
+   Event: sc_non_event  VarDecl: 0x32b3a10
+
+Signals:
+ SignalInstanceContainer 'NONE' Type: 'sc_signal<sc_bv<8> >'  CXXConstructExpr 0x4540158
+ - sc_signal, type ptr: 0x4540050
+ - sc_bv, type ptr: 0x453ffa0
+ - 8, type ptr: 0x31b7ab0
+ SignalInstanceContainer 'clk' Type: 'sc_signal<_Bool>'  CXXConstructExpr 0x4540398
+ - sc_signal, type ptr: 0x4540290
+ - _Bool, type ptr: 0x31b7a30
+
+Port bindings:
+ PortBindContainer 'NONE' module 'NONE' signal 'endl'
+ PortBindContainer 'NONE' module 'NONE' signal 'NONE'
+ PortBindContainer 'clk' module 'newAvg' signal 'clk'
+ PortBindContainer 'i_data' module 'newAvg' signal 'input'
+ PortBindContainer 'o_data' module 'newAvg' signal 'output'
+ PortBindContainer 'filter_input' module 'newDriver' signal 'input'
+ PortBindContainer 'filter_clk' module 'newDriver' signal 'clk'
+ PortBindContainer 'filter_input' module 'newMonitor' signal 'input'
+ PortBindContainer 'filter_output' module 'newMonitor' signal 'output'
+
+Netlist :
+ ======================= Begin netlist ====================
+ Module Name : newAvg( clk input output )
+ Module Name : newDriver( input clk )
+ Module Name : newMonitor( input output )
+
+ Module : newAvg	 Signal Name: clk	 Signal Type : sc_in
+ Module : newAvg	 Signal Name: input	 Signal Type : sc_in
+ Module : newAvg	 Signal Name: output	 Signal Type : sc_out
+ Module : newDriver	 Signal Name: clk	 Signal Type : sc_out
+ Module : newDriver	 Signal Name: input	 Signal Type : sc_out
+ Module : newMonitor	 Signal Name: input	 Signal Type : sc_in
+ Module : newMonitor	 Signal Name: output	 Signal Type : sc_in
+ ======================= End netlist ====================
+Simulation Time : 50 SC_NS
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[ Destructor Model ]]
+Processing: /home/anirudh/sw-updat/systemc-clang/tests/filter/main_sc.cpp.
