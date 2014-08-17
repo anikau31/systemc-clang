@@ -17,15 +17,15 @@ Requirements
 * [llvm](http://llvm.org) 
 * [clang](http://clang.llvm.org) (version 3.4)
 * [SystemC](http://systemc.org) version 2.3
-* Please see [SystemC Installation notes](https://github.com/anikau31/systemc-clang/blob/revamp/doc/systemc-install.mkd)
+* Please see [SystemC Installation notes](https://github.com/anikau31/systemc-clang/blob/master/doc/systemc-install.mkd)
 
 Installation
 ------------
-Please see the instruction [here](https://github.com/anikau31/systemc-clang/blob/revamp/INSTALL.mkd)
+Please see the instruction [here](https://github.com/anikau31/systemc-clang/blob/master/INSTALL.mkd)
 
 Plugging into systemc-clang
 ---------------------------
-Write a simple [plugin](https://github.com/anikau31/systemc-clang/blob/revamp/doc/plugins.mkd) to access the parsed information. 
+Write a simple [plugin](https://github.com/anikau31/systemc-clang/blob/master/doc/plugins.mkd) to access the parsed information. 
 
 Contact
 -------
@@ -33,7 +33,7 @@ Contact
 
 License
 --------
-* systemc-clang follows the same licensing as clang.  Please look at [LICENSE]( https://github.com/anikau31/systemc-clang/blob/revamp/LICENSE.mkd).
+* systemc-clang follows the same licensing as clang.  Please look at [LICENSE]( https://github.com/anikau31/systemc-clang/master/revamp/LICENSE.mkd).
 
 Other Tools
 ------------
