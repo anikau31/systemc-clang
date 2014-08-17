@@ -4,7 +4,7 @@
 export LLVM_BUILD_DIR=/usr/local/
 
 # The path where you are building systemc-clang
-export SYSTEMC_CLANG_BUILD_DIR=/home/anirudh/systemc-clang-build
+export SYSTEMC_CLANG_BUILD_DIR=/home/anirudh/Programs/systemc-clang-dev/build
 LLVMCOMPONENT=cppbackend
 RTTIFLAG=-fno-rtti 
 LLVMCONFIG=$LLVM_BUILD_DIR/bin/llvm-config
