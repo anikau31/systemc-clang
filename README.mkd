@@ -33,7 +33,7 @@ Contact
 
 License
 --------
-* systemc-clang follows the same licensing as clang.  Please look at [LICENSE]( https://github.com/anikau31/systemc-clang/master/revamp/LICENSE.mkd).
+* systemc-clang follows the same licensing as clang.  Please look at [LICENSE]( https://github.com/anikau31/systemc-clang/master/master/LICENSE.mkd).
 
 Other Tools
 ------------
