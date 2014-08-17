@@ -8,6 +8,12 @@ Mutable errors
 
 - Please see: [http://stackoverflow.com/questions/7285049/installing-systemc-2-2-0-compilation-with-gcc-4-6-and-package-for-fedora](http://stackoverflow.com/questions/7285049/installing-systemc-2-2-0-compilation-with-gcc-4-6-and-package-for-fedora)
 
+Ubuntu Installation
+-------------------
+
+I recommend following the instructions [here](http://vinaydvd.wordpress.com/2012/05/30/installing-systemc-in-ubuntu/) for SystemC installation on Ubuntu OS. 
+
+
 Mac OSX errors
 --------------
 
