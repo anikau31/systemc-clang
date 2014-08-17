@@ -57,8 +57,7 @@ bool SystemCConsumer::fire()
 		FindEntryFunctions findEntries(mit->second, _os);
 		FindEntryFunctions::entryFunctionVectorType * entryFunctions =
 			findEntries.getEntryFunctions();
-		findEntries.dump();
-
+  
   md->addProcess(entryFunctions);
 
 		for (unsigned int i = 0; i < entryFunctions->size(); i++)
@@ -81,9 +80,6 @@ bool SystemCConsumer::fire()
 			FindNotify findNotify(ef->_entryMethodDecl, _os);
 			ef->addNotifys(findNotify);
    
-   //FindGPUMacro findGPUMacro(ef->_entryMethodDecl, _os);
-   //findGPUMacro.dump(); 
-
    SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(), ef->getEntryMethod(), &_context, llvm::errs());
    suspensionAutomata.initialize();
    suspensionAutomata.genSusCFG();
@@ -109,6 +105,8 @@ bool SystemCConsumer::fire()
 	FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
  _systemcModel->addNetlist(findNetlist); 
  
+ _os <<"\n SystemC model dump\n";
+ _systemcModel->dump(_os); 
  return true;
 }
 

@@ -49,7 +49,6 @@ using namespace clang::tooling;
 #include "FindArgument.h"
 #include "Utility.h"
 #include "SuspensionAutomata.h"
-#include "GlobalSuspensionAutomata.h"
 
 using namespace clang;
 

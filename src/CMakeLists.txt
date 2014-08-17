@@ -13,14 +13,12 @@ add_library (libsystemc-clang
 	FindNotify.cpp	
 	FindSignals.cpp
 	FindSimTime.cpp
-	FindConstructor.cpp
-	FindGPUMacro.cpp
+	FindConstructor.cpp	
 	SystemCClang.cpp
 	FindNetlist.cpp
 	FindArgument.cpp
 	Automata.cpp 
-	SuspensionAutomata.cpp
-	GlobalSuspensionAutomata.cpp
+	SuspensionAutomata.cpp	
 ####################################
 #From here the files are for the reflection database
 ####################################

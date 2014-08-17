@@ -163,7 +163,7 @@ void FindNetlist::dump()
 				 pit != pite; pit++)
 			{
      llvm::errs() << "\n Port : " << pit->
-					first << " bound to signal " << pit->second;
+					first << " ------> " << pit->second;
 			}
 		}
 		else

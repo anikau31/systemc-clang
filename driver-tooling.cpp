@@ -4,8 +4,6 @@
 
 using namespace scpar;
 //using namespace clang::tooling;
-
-#include "TimeAnalysis.h"
 int main(int argc, const char **argv)
 {
   
