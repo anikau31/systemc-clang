@@ -944,8 +944,7 @@ SuspensionAutomata::transitionVectorType SuspensionAutomata::getSauto()
 
 void SuspensionAutomata::dumpSusCFG()
 {
-
-  _os << "\n#############################################";
+  
   susCFGVectorType susCFGVector = _susCFGVector;
 
   for (unsigned int i = 0; i < susCFGVector.size(); i++) {
@@ -987,8 +986,6 @@ void SuspensionAutomata::dumpSauto()
 
     t->dump(_os);
   }
-  _os << "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
-
 }
 
 //////////////////////////////////////////////////////////////////////////////

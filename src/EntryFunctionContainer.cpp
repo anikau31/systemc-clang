@@ -162,11 +162,9 @@ void EntryFunctionContainer::dumpSauto(raw_ostream & os)
     os << "\n Size of transitionVector : " << transitionVector.size();
     for (unsigned int i = 0; i < transitionVector.size(); i++) {
       Transition *t = transitionVector.at(i);
-
       t->dump(os);
     }
-    os << "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
-  
+     
 }
 
 
@@ -212,8 +210,12 @@ void EntryFunctionContainer::dump (raw_ostream & os, int tabn)
   (*it)->dump(os, newTabn);
  }
   
- os <<" Suspension CFG \n";
+ os <<"\n Suspension CFG";
+ os <<"\n ###############";
  dumpSusCFG(os);
- os <<" Suspension Automaton \n";
+ os <<"\n ###############";
+ os <<"\n Suspension Automaton";
+ os <<"\n @@@@@@@@@@@@@@@@";
  dumpSauto(os); 
+ os <<"\n @@@@@@@@@@@@@@@@";
 }
