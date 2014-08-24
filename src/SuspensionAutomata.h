@@ -112,6 +112,12 @@ namespace scpar {
 
     typedef vector < SusCFG * >susCFGVectorType;
     typedef vector <Transition *> transitionVectorType;
+    
+    typedef pair<SusCFG*, int> susCFGSuccIDPairType;
+    typedef map<SusCFG*, int> susCFGSuccIDMapType;
+    
+    typedef pair < SusCFG *, State * >susCFGStatePairType;
+    typedef map < SusCFG *, State * >susCFGStateMapType;
 
     SuspensionAutomata(FindWait::waitListType, CXXMethodDecl *, ASTContext *,
                         raw_ostream &);
@@ -119,9 +125,10 @@ namespace scpar {
 
     bool isFound(vector < SusCFG * >, SusCFG *);  
     bool isFound(vector < Transition * >, Transition *);
-    void initialize();
+    bool initialize();
     void genSusCFG();
     void genSauto();
+    vector<SusCFG*> modifDFS(SusCFG*, State*);
     bool isWaitCall(const CFGStmt * cs);
     bool isTimedWait(Stmt * stmt);
     bool isDeltaWait(Stmt * stmt);
@@ -139,12 +146,13 @@ namespace scpar {
   private:
     CXXMethodDecl *_d;
     FindWait::waitListType _waitCalls;
+    susCFGSuccIDMapType susCFGSuccIDMap;
+    susCFGStateMapType susCFGStateMap;
     CFG *_cfg;
     ASTContext *_a;
     raw_ostream & _os;
     susCFGVectorType _susCFGVector;
     transitionVectorType _transitionVector;
   };                            // End class SplitWaitBlocks
-
 }                               // End namespace scpar
 #endif

@@ -79,15 +79,20 @@ bool SystemCConsumer::fire()
 
 			FindNotify findNotify(ef->_entryMethodDecl, _os);
 			ef->addNotifys(findNotify);
+    
    
    SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(), ef->getEntryMethod(), &_context, llvm::errs());
-   suspensionAutomata.initialize();
-   suspensionAutomata.genSusCFG();
-   suspensionAutomata.genSauto();
+   if (suspensionAutomata.initialize()) {
+    suspensionAutomata.genSusCFG();
+    suspensionAutomata.dumpSusCFG();
+    suspensionAutomata.genSauto();    
+    suspensionAutomata.dumpSauto();
+    ef->addSusCFGAuto(suspensionAutomata); 
+   }
    
-   ef->addSusCFGAuto(suspensionAutomata); 
 			_entryFunctionContainerVector.push_back(ef);
-		}
+		
+  }
 		_systemcModel->addModuleDecl(md);
 
 	}

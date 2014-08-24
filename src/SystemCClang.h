@@ -55,8 +55,7 @@ using namespace clang;
 namespace scpar
 {
 
-  class SystemCConsumer:public ASTConsumer,
-		public RecursiveASTVisitor < SystemCConsumer >
+  class SystemCConsumer:public ASTConsumer, public RecursiveASTVisitor < SystemCConsumer >
 	{
 
 	  private:
@@ -64,8 +63,6 @@ namespace scpar
 	  public:
 		llvm::raw_ostream & _os;
 		SourceManager & _sm;
-
-
 
 		SystemCConsumer(CompilerInstance &);
 		~SystemCConsumer();

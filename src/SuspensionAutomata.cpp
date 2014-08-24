@@ -252,8 +252,8 @@ vector < SusCFG * >Transition::returnCodeBlocks()
 void Transition::dump(raw_ostream & os)
 {
   os << "\n ####### Transition #######";
-  os << "\n Initial State : " << _initialState->
-    returnSusCFGBlock()->getBlockID();
+  os << "\n Initial State : " << _initialState->returnSusCFGBlock()->
+    getBlockID();
   os << "\n Final State : " << _finalState->returnSusCFGBlock()->getBlockID();
   os << "\n Transition Blocks : ";
   for (unsigned int i = 0; i < _codeBlockVector.size(); i++) {
@@ -273,13 +273,17 @@ SuspensionAutomata::~SuspensionAutomata()
 {
 }
 
-void
- SuspensionAutomata::initialize()
+bool SuspensionAutomata::initialize()
 {
   const CFG::BuildOptions & b = CFG::BuildOptions();
 
   _cfg = CFG::buildCFG(cast < Decl > (_d), _d->getBody(), _a, b);
 
+  if (_cfg != NULL) {
+    return true;
+  }
+
+  return false;
 }
 
 
@@ -356,10 +360,11 @@ void SuspensionAutomata::genSusCFG()
     bool foundWait = false;
 
     vector < CFGBlock * >splitBlocksVector;
+    /*
     _os << "==========================================================\n";
     _os << "Dump CFG Block\n";
     b->dump(_cfg, LO, false);
-
+   */
     unsigned int prevCFGBlockID;
 
     for (CFGBlock::const_iterator bit = b->begin(), bite = b->end();
@@ -541,171 +546,108 @@ void SuspensionAutomata::genSusCFG()
 
 }
 
-/*
-void SuspensionAutomata::genSauto()
+vector<SusCFG*> SuspensionAutomata::modifDFS(SusCFG * block, State *initialState)
 {
-  typedef map<SusCFG*, vector<SusCFG*> > stateCommonBlocksMapType;
-  typedef pair<SusCFG*, vector<SusCFG*> > stateCommonBlocksPairType;
+  deque < SusCFG * >traversedBlocks;
+  vector < SusCFG * >visitedBlocks;
 
-  typedef map < SusCFG *, State * > susCFGBlockStateMapType;
-  typedef pair < SusCFG *, State * > susCFGBlockStatePairType;
+  traversedBlocks.push_front(block);
+  
+  vector < SusCFG * >transitionBlocks;
+  while (traversedBlocks.size() != 0) {
+    SusCFG *currentBlock = traversedBlocks.front();
+    //_os <<"\n ModifDFS current block : " <<currentBlock->getBlockID();
+    traversedBlocks.pop_front();
+    if (currentBlock->isWaitBlock()) {
+      float timeInNs;
+      string eventName;
 
-    deque < SusCFG * >stateQueue;
-    vector < SusCFG * >visitedStates;
-    vector < SusCFG * >visitedWaitStates;
-    deque < SusCFG * >waitStates;
+      susCFGStateMapType::iterator stateFound =
+        susCFGStateMap.find(currentBlock);
+      State *finalState = stateFound->second;
 
-    susCFGVectorType susCFGVector = _susCFGVector;
+      if (isTimedWait(currentBlock->getWaitStmt())) {
+        finalState->setTimed();
+        timeInNs = getTime(currentBlock->getWaitStmt());
+      } else if (isEventWait(currentBlock->getWaitStmt())) {
 
-    susCFGBlockStateMapType susCFGBlockStateMap;
-    stateCommonBlocksMapType stateCommonBlocksMap; 
-    waitStates.push_back(susCFGVector.at(0));
-    while (!waitStates.empty()) {
-      stateQueue.clear();
-      visitedStates.clear();
-      vector < SusCFG * >tmpCodeBlocks;
-      State *initial;
-      State *finalState;
-      visitedWaitStates.push_back(waitStates.back());
-      if (waitStates.back()->getParentSusCFGBlock()) {
-        visitedWaitStates.push_back(waitStates.back()->getParentSusCFGBlock());
-      }
-      if (susCFGBlockStateMap.find(waitStates.back()) ==
-          susCFGBlockStateMap.end()) {
-        initial = new State(waitStates.back(), false, false, true, false);
-        susCFGBlockStateMap.insert(susCFGBlockStatePairType
-                                   (waitStates.back(), initial));
+        finalState->setEvent();
+        eventName = getEvent(currentBlock->getWaitStmt());
+      } else if (isDeltaWait(currentBlock->getWaitStmt())) {
+        finalState->setDelta();
       } else {
-        susCFGBlockStateMapType::iterator stateFound =
-          susCFGBlockStateMap.find(waitStates.back());
-        initial = stateFound->second;
-      }
-      vector < SusCFG * >succBlocks = waitStates.back()->getSuccBlocks();
-      for (unsigned int i = 0; i < succBlocks.size(); i++) {
+        finalState->setInitial();
+      }      
+            
+      Transition *t = new Transition();
+      finalState->addEventName(eventName);
+      finalState->addSimTime(timeInNs);
+      t->addInitialState(initialState);
+      t->addFinalState(finalState);
+      t->addCodeBlocks(transitionBlocks);
+      _transitionVector.push_back(t);
+      return transitionBlocks;
 
-        stateQueue.push_front(succBlocks.at(i));
-        visitedStates.push_back(succBlocks.at(i));
-      }
-
-      while (!stateQueue.empty()) {
-        SusCFG *currentState = stateQueue.front();
-
-        stateQueue.pop_front();
-        if (currentState->isParentBlock()) {    // has a wait statement        
-          vector < SusCFG * >childListBlock = currentState->getChildBlockList();
-          SusCFG *finalWaitBlock;
-          State *initialTmp = initial;
-
-          for (unsigned int i = 0; i < childListBlock.size(); i++) {
-            if (childListBlock.at(i)->isWaitBlock()) {
-              bool isTimed = false;
-              bool isDelta = false;
-              bool isEvent = false;
-              bool isInitial = false;
-              float timeInNs;
-              string eventName;
-
-              if (isTimedWait(childListBlock.at(i)->getWaitStmt())){
-                isTimed = true;
-                timeInNs = getTime(childListBlock.at(i)->getWaitStmt());
-              }
-              else if (isEventWait(childListBlock.at(i)->getWaitStmt())){
-                isEvent = true;
-                eventName = getEvent(childListBlock.at(i)->getWaitStmt());
-              }
-              else if (isDeltaWait(childListBlock.at(i)->getWaitStmt()))
-                isDelta = true;
-              Transition *t = new Transition();
-              //State *finalState;
-
-              if (susCFGBlockStateMap.find(childListBlock.at(i))
-                  == susCFGBlockStateMap.end()) {
-                finalState =
-                  new State(childListBlock.at(i), isTimed,
-                            isDelta, isInitial, isEvent);
-                susCFGBlockStateMap.insert
-                  (susCFGBlockStatePairType(childListBlock.at(i), finalState));
-              } else {
-                susCFGBlockStateMapType::iterator stateFound =
-                  susCFGBlockStateMap.find(childListBlock.at(i));
-                finalState = stateFound->second;
-              }
-              finalState->addEventName(eventName);
-              finalState->addSimTime(timeInNs);
-              t->addInitialState(initialTmp);
-              t->addFinalState(finalState);
-              t->addCodeBlocks(tmpCodeBlocks);
-              _transitionVector.push_back(t);
-               tmpCodeBlocks.clear();
-              initialTmp = finalState;
-              finalWaitBlock = childListBlock.at(i);
-              //break; // this break statement will cause wait blocks in a sequence to be under detected.... 
-            } else {
-              tmpCodeBlocks.push_back(childListBlock.at(i));
+    } else {      
+      // When adding blocks to traversed blocks, check if the last node prior to the wait call has which branch discovered. 
+      // Also need to check terminator block or block 0
+      if (susCFGSuccIDMap.find(currentBlock) == susCFGSuccIDMap.end()) {
+          // currentBlock is not our concern yet, so insert the 0th successive block
+          //_os <<"\n Current Block : " <<currentBlock->getBlockID()<<" not of concern";
+        if (currentBlock->getSuccBlocks().at(0)->isParentBlock()) {
+          if (!isFound(visitedBlocks, currentBlock->getSuccBlocks().at(0)->getChildBlockList().at(0))) {
+              traversedBlocks.push_front(currentBlock->getSuccBlocks().at(0)->getChildBlockList().at(0));
+          }
+        } 
+        else {
+          if (!isFound(visitedBlocks, currentBlock->getSuccBlocks().at(0))) {
+            if (currentBlock->getSuccBlocks().at(0)->getBlockID() != 0) {
+              traversedBlocks.push_front(currentBlock->getSuccBlocks().at(0));
             }
           }
-          if (!isFound(visitedWaitStates, finalWaitBlock)) {
-            waitStates.push_front(finalWaitBlock);
-          }
-        } else {
-          tmpCodeBlocks.push_back(currentState);
-
-          vector < SusCFG * >succCurrentBlocks = currentState->getSuccBlocks();
-          for (unsigned int i = 0; i < succCurrentBlocks.size(); i++) {
-            if (!isFound(visitedStates, succCurrentBlocks.at(i))) {
-
-              stateQueue.push_front(succCurrentBlocks.at(i));
-              visitedStates.push_back(succCurrentBlocks.at(i));
-            }
-          }
-        }
+        }  
       }
-      if (tmpCodeBlocks.size() != 0) {
-       if (stateCommonBlocksMap.find(finalState->returnSusCFGBlock()) != stateCommonBlocksMap.end()) { 
-         stateCommonBlocksMapType::iterator stateFound = stateCommonBlocksMap.find(finalState->returnSusCFGBlock());
-         vector<SusCFG*> susCFGVec = stateFound->second;
-         for (int i = 0; i<tmpCodeBlocks.size(); i++) {
-          if (!isFound(susCFGVec, tmpCodeBlocks.at(i))) {
-           susCFGVec.push_back(tmpCodeBlocks.at(i));
-          }
-         }
-        stateCommonBlocksMap.erase(finalState->returnSusCFGBlock());
-        stateCommonBlocksMap.insert(stateCommonBlocksPairType(finalState->returnSusCFGBlock(), susCFGVec)); 
+      else {
+       // currentBlock has a previous entry in the map, so take the other succesive block if it exists
+       //_os <<"\n Current block : " <<currentBlock->getBlockID()<<" is of concern";
+       susCFGSuccIDMapType::iterator susCFGFound = susCFGSuccIDMap.find(currentBlock);
+       if (susCFGFound->second == currentBlock->getSuccBlocks().size() - 1) {
+         // All the child branches of this node have been discovered. So, there is nothing to discover
+         //_os <<"\n Current block : " <<currentBlock->getBlockID()<<" has all children accounted for";
+         break;
        }
        else {
-        stateCommonBlocksMap.insert(stateCommonBlocksPairType(finalState->returnSusCFGBlock(), tmpCodeBlocks));
+         if (currentBlock->getSuccBlocks().at(susCFGFound->second + 1)->isParentBlock()) {
+           if (!isFound(visitedBlocks, currentBlock->getSuccBlocks().at(susCFGFound->second + 1)->getChildBlockList().at(0))) {
+             traversedBlocks.push_front(currentBlock->getSuccBlocks().at(susCFGFound->second + 1)->
+                                   getChildBlockList().at(0));
+           }
+         } 
+         else {
+           if (!isFound(visitedBlocks, currentBlock->getSuccBlocks().at(susCFGFound->second + 1))) {
+             if (currentBlock->getSuccBlocks().at(susCFGFound->second + 1)->getBlockID() != 0) {
+               traversedBlocks.push_front(currentBlock->getSuccBlocks().at(susCFGFound->second + 1));
+             }
+           }
+         }   
        }
       }
-      waitStates.pop_back();
-    }    
-  
-   
-    
-    for (int i = 0; i<_transitionVector.size(); i++) {
-     
-      Transition *t = _transitionVector.at(i);
-      if (stateCommonBlocksMap.find(t->returnFinalState()->returnSusCFGBlock()) != stateCommonBlocksMap.end()) {
-       stateCommonBlocksMapType::iterator stateFound = stateCommonBlocksMap.find(t->returnFinalState()->returnSusCFGBlock());
-       vector<SusCFG*> remainingBlocks = stateFound->second;
-       t->addCodeBlocks(remainingBlocks);
-      }
-    }    
+      visitedBlocks.push_back(currentBlock);
+      transitionBlocks.push_back(currentBlock);
+    }
+  }
+  return transitionBlocks;
 }
-*/
+
 
 void SuspensionAutomata::genSauto()
 {
-
-  typedef pair < SusCFG *, State * >susCFGStatePairType;
-  typedef map < SusCFG *, State * >susCFGStateMapType;
-
-  susCFGStateMapType susCFGStateMap;
 
   susCFGVectorType susCFGVector = _susCFGVector;
   susCFGVectorType waitBlocks;
   for (int i = 0; i < susCFGVector.size(); i++) {
     if (susCFGVector.at(i)->isWaitBlock() || i == 0) {
-      waitBlocks.push_back(susCFGVector.at(i));      
+      waitBlocks.push_back(susCFGVector.at(i));
       State *state = new State(susCFGVector.at(i), false, false, false, false);
       if (i == 0) {
         state->setInitial();
@@ -713,106 +655,96 @@ void SuspensionAutomata::genSauto()
       susCFGStateMap.insert(susCFGStatePairType(susCFGVector.at(i), state));
     }
   }
+  
   for (int i = 0; i < waitBlocks.size(); i++) {
 
-    SusCFG *waitBlock = waitBlocks.at(i);    
-    deque < SusCFG * >susCodeBlocks;
-    vector < SusCFG * >codeBlocks;      // transtion code blocks distinct for a wait block
-    vector < SusCFG * >commonBlocks;    // common code blocks for all destination wait calls
-    susCFGVectorType succBlocks = waitBlock->getSuccBlocks();
-    susCFGStateMapType::iterator stateFound =
-      susCFGStateMap.find(waitBlocks.at(i));
+    SusCFG *waitBlock = waitBlocks.at(i);
+    State *initial = new State(waitBlock, false, false, false, false);  // create initial state 
+    
+    //_os <<"\n Looking at Wait Block : " <<waitBlock->getBlockID();
+
+    susCFGStateMapType::iterator stateFound =susCFGStateMap.find(waitBlocks.at(i));
     State *initialState = stateFound->second;
-    for (int j = 0; j < succBlocks.size(); j++) {
-      susCodeBlocks.push_back(succBlocks.at(j));      
-    }
-    while (susCodeBlocks.size() != 0) {
-      SusCFG *currentBlock = susCodeBlocks.front();
-      susCodeBlocks.pop_front();
-      if (currentBlock->isWaitBlock()) {
-        float timeInNs;
-        string eventName;
 
-        susCFGStateMapType::iterator stateFound =
-          susCFGStateMap.find(currentBlock);
-        State *finalState = stateFound->second;
-        
-        if (isTimedWait(currentBlock->getWaitStmt())) {
-          finalState->setTimed();
-          timeInNs = getTime(currentBlock->getWaitStmt());
-        } else if (isEventWait(currentBlock->getWaitStmt())) {
-
-          finalState->setEvent();
-          eventName = getEvent(currentBlock->getWaitStmt());
-        } else if (isDeltaWait(currentBlock->getWaitStmt())) {
-          finalState->setDelta();
-        } else {
-          finalState->setInitial();
-        }
-        vector < SusCFG * >transitionBlocks;
-        transitionBlocks.insert(transitionBlocks.end(), commonBlocks.begin(),
-                                commonBlocks.end());
-        transitionBlocks.insert(transitionBlocks.end(), codeBlocks.begin(),
-                                codeBlocks.end());
-        codeBlocks.clear();
-        Transition *t = new Transition();
-        finalState->addEventName(eventName);
-        finalState->addSimTime(timeInNs);
-        t->addInitialState(initialState);
-        t->addFinalState(finalState);
-        t->addCodeBlocks(transitionBlocks);
-        _transitionVector.push_back(t);
-        break;
-      } else if (currentBlock->isParentBlock()) {
-        susCFGVectorType childBlockList = currentBlock->getChildBlockList();
-        for (int j = 0; j < childBlockList.size(); j++) {
-          if (childBlockList.at(j)->isWaitBlock()) {
-            float timeInNs;
-            string eventName;
-
-            susCFGStateMapType::iterator stateFound =
-              susCFGStateMap.find(childBlockList.at(j));
-            State *finalState = stateFound->second;
-            
-            if (isTimedWait(childBlockList.at(j)->getWaitStmt())) {
-              finalState->setTimed();
-              timeInNs = getTime(childBlockList.at(j)->getWaitStmt());
-            } else if (isEventWait(childBlockList.at(j)->getWaitStmt())) {              
-              finalState->setEvent();
-              eventName = getEvent(childBlockList.at(j)->getWaitStmt());
-            } else if (isDeltaWait(childBlockList.at(j)->getWaitStmt())) {
-              finalState->setDelta();
-            } else {
-              finalState->setInitial();
-            }
-            vector < SusCFG * >transitionBlocks;
-            transitionBlocks.insert(transitionBlocks.end(),
-                                    commonBlocks.begin(), commonBlocks.end());
-            transitionBlocks.insert(transitionBlocks.end(), codeBlocks.begin(),
-                                    codeBlocks.end());
-            codeBlocks.clear();
-            Transition *t = new Transition();
-            finalState->addEventName(eventName);
-            finalState->addSimTime(timeInNs);
-            t->addInitialState(initialState);
-            t->addFinalState(finalState);
-            t->addCodeBlocks(transitionBlocks);
-            _transitionVector.push_back(t);
-            break;
-          } else {
-            codeBlocks.push_back(childBlockList.at(j));
-          }
-        }
-      } else {
-        commonBlocks.push_back(currentBlock);
-        for (int j = 0; j < currentBlock->getSuccBlocks().size(); j++) {
-          susCodeBlocks.push_front(currentBlock->getSuccBlocks().at(j));
-        }
+    vector<SusCFG*> backTrackCodeBlocks;
+    SusCFG* lastBlock; 
+    susCFGSuccIDMap.clear(); // For each new initial state, start fresh...
+    // Left child.. do the same for the right child
+    do {
+      SusCFG *initialInsertBlock;
+      if (waitBlock->getSuccBlocks().at(0)->isParentBlock()) {
+       initialInsertBlock = waitBlock->getSuccBlocks().at(0)->getChildBlockList().at(0);
       }
-    }
+      
+      else {
+        initialInsertBlock = waitBlock->getSuccBlocks().at(0);
+      }
+      vector<SusCFG*> transitionCodeBlocks = modifDFS(initialInsertBlock, initial);
+      //_os <<"\n Transition Blocks : "; 
+      backTrackCodeBlocks.clear();
+      for (int j = 0; j<transitionCodeBlocks.size(); j++) {
+        backTrackCodeBlocks.push_back(transitionCodeBlocks.at(j));
+        //_os <<" "<<transitionCodeBlocks.at(j)->getBlockID();;
+      }
+      int j;
+      for (j = backTrackCodeBlocks.size()-2; j >=0; j--) {      
+        if (backTrackCodeBlocks.at(j)->getSuccBlocks().size() > 1) {
+         //_os <<"\n Block : " <<backTrackCodeBlocks.at(j)->getBlockID()<<" has more than one successor";
+         SusCFG* backBlock = backTrackCodeBlocks.at(j);
+         if (backBlock->getSuccBlocks().at(0)->isParentBlock()) {
+          if (backBlock->getSuccBlocks().at(0)->getChildBlockList().at(0) == backTrackCodeBlocks.at(j+1)) {
+           //_os <<"\n Block : " <<backBlock->getBlockID()<<" used the first successor";
+           susCFGSuccIDMap.insert(susCFGSuccIDPairType(backBlock, 0));
+           //_os <<"\n Map value : " <<susCFGSuccIDMap[backBlock];
+           break;
+          }
+         }
+         else if (backBlock->getSuccBlocks().at(1)->isParentBlock()) {
+          if (backBlock->getSuccBlocks().at(1)->getChildBlockList().at(0) == backTrackCodeBlocks.at(j+1)) {
+           //_os <<"\n Block : " <<backBlock->getBlockID()<<" used the second successor";
+           susCFGSuccIDMap.erase(backBlock);
+           susCFGSuccIDMap.insert(susCFGSuccIDPairType(backBlock, 1));
+           break;
+          }
+         }
+                 
+         else if (backBlock->getSuccBlocks().at(0) == backTrackCodeBlocks.at(j+1)) {
+           //_os <<"\n Block : " <<backBlock->getBlockID()<<" used the first successor";
+           susCFGSuccIDMap.insert(susCFGSuccIDPairType(backBlock, 0));
+           break;
+         }
+         else if (backBlock->getSuccBlocks().at(1) == backTrackCodeBlocks.at(j+1)){
+           //_os <<"\n Block : " <<backBlock->getBlockID()<<" used the second successor";
+           susCFGSuccIDMap.erase(backBlock);
+           susCFGSuccIDMap.insert(susCFGSuccIDPairType(backBlock, 1));
+           break;
+         }
+        } 
+      }
+      //_os <<"\n J value : " <<j; 
+      if (j == -1) {
+       if (susCFGSuccIDMap.find(backTrackCodeBlocks.back()) == susCFGSuccIDMap.end()) {       
+         susCFGSuccIDMap.insert(susCFGSuccIDPairType(backTrackCodeBlocks.back(), 0));
+       }
+       else {
+        if (susCFGSuccIDMap[backTrackCodeBlocks.back()] == 0) {
+         susCFGSuccIDMap.erase(backTrackCodeBlocks.back()); 
+         susCFGSuccIDMap.insert(susCFGSuccIDPairType(backTrackCodeBlocks.back(), 1));
+        }
+        else {
+        }
+       }
+      }
+
+
+      // delete the blocks from the back to j
+      if (backTrackCodeBlocks.size() != 0) { 
+       backTrackCodeBlocks.pop_back();
+      }
+      
+    }while(backTrackCodeBlocks.size() != 0);
   }
 }
-
 
 // need a utility class and this should be a template function
 bool SuspensionAutomata::isFound(vector < SusCFG * >visitedState,
@@ -944,7 +876,7 @@ SuspensionAutomata::transitionVectorType SuspensionAutomata::getSauto()
 
 void SuspensionAutomata::dumpSusCFG()
 {
-  
+
   susCFGVectorType susCFGVector = _susCFGVector;
 
   for (unsigned int i = 0; i < susCFGVector.size(); i++) {
