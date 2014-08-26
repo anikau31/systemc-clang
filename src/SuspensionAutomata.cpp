@@ -649,8 +649,10 @@ void SuspensionAutomata::genSauto()
     if (susCFGVector.at(i)->isWaitBlock() || i == 0) {
       waitBlocks.push_back(susCFGVector.at(i));
       State *state = new State(susCFGVector.at(i), false, false, false, false);
-      if (i == 0) {
+      if (i == 0) {        
         state->setInitial();
+        _os <<"\n State susblock set to initial : " <<state->returnSusCFGBlock()->getBlockID();
+        _os <<"\n State : " <<state->isTimed()<<" " <<state->isInitial()<<" " <<state->isDelta();
       }
       susCFGStateMap.insert(susCFGStatePairType(susCFGVector.at(i), state));
     }
@@ -659,8 +661,7 @@ void SuspensionAutomata::genSauto()
   for (int i = 0; i < waitBlocks.size(); i++) {
 
     SusCFG *waitBlock = waitBlocks.at(i);
-    State *initial = new State(waitBlock, false, false, false, false);  // create initial state 
-    
+ 
     //_os <<"\n Looking at Wait Block : " <<waitBlock->getBlockID();
 
     susCFGStateMapType::iterator stateFound =susCFGStateMap.find(waitBlocks.at(i));
@@ -679,7 +680,7 @@ void SuspensionAutomata::genSauto()
       else {
         initialInsertBlock = waitBlock->getSuccBlocks().at(0);
       }
-      vector<SusCFG*> transitionCodeBlocks = modifDFS(initialInsertBlock, initial);
+      vector<SusCFG*> transitionCodeBlocks = modifDFS(initialInsertBlock, initialState);
       //_os <<"\n Transition Blocks : "; 
       backTrackCodeBlocks.clear();
       for (int j = 0; j<transitionCodeBlocks.size(); j++) {
