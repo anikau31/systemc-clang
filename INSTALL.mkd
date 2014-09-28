@@ -7,7 +7,7 @@ Installation
 Steps (Linux OS)
 ===========
 * Follow the instructions to install clang: [Get Started](http://clang.llvm.org/get_started.html). Notice that you should also install LLVM as it is needed for compilation of the stand-along program. A suggestion is to install LLVM/clang in a location that is accessible by the user.
-Note that the clang-llvm version systemc-clang supports is version 3.4. So, when following the instructions posted at [Get Started], please substitute the phrase "trunk" with "tags/RELEASE_34/final".
+Note that the clang-llvm version systemc-clang supports is version 3.4. So, when following the instructions posted at [Get Started](http://clang.llvm.org/get_started.html). please substitute the phrase "trunk" with "tags/RELEASE_34/final".
  
 * Clone systemc-clang repository.
 
@@ -59,11 +59,11 @@ We tested this installation on OS X.
 
 * systemc-clang requires llvm-config and by default does not come with the llvm package preinstalled on MacOS. 
 
-* Download the clang pre built binaries from (here)[http://llvm.org/releases/download.html#3.3] for LLVM 3.4. 
+* Download the clang pre built binaries from [here](http://llvm.org/releases/download.html#3.3) for LLVM 3.4. 
 
 * Untar the package into a suitable location, and modify the path.sh bash script in the systemc-clang folder to point to llvm-config, which will be found in the bin directory of the uncompressed binary. 
 
-* Follow the steps listed for previously from prepping the environment (source ~/path-to-systemc-clang-repo/paths.sh) and systemc-clang binary build should be smooth.  
+* Proceed with the steps for Linux OS, and systemc-clang binary build should be smooth.
 
 Testing on a small example
 ==========================
