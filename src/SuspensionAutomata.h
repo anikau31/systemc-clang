@@ -118,11 +118,15 @@ namespace scpar {
     
     typedef pair < SusCFG *, State * >susCFGStatePairType;
     typedef map < SusCFG *, State * >susCFGStateMapType;
+	
+    typedef pair<State*, vector<SusCFG*> > stateCommonCodeBlockPairType;
+    typedef map<State *, vector<SusCFG*> > stateCommonCodeBlockMapType;
 
     SuspensionAutomata(FindWait::waitListType, CXXMethodDecl *, ASTContext *,
                         raw_ostream &);
     ~SuspensionAutomata();
-
+    void addRemainingBlocks(State*, vector<SusCFG*>&);
+    void checkInsert(vector<SusCFG*>, vector<SusCFG*>&);
     bool isFound(vector < SusCFG * >, SusCFG *);  
     bool isFound(vector < Transition * >, Transition *);
     bool initialize();
@@ -153,6 +157,7 @@ namespace scpar {
     raw_ostream & _os;
     susCFGVectorType _susCFGVector;
     transitionVectorType _transitionVector;
+    stateCommonCodeBlockMapType _stateCommonCodeBlockMap;
   };                            // End class SplitWaitBlocks
 }                               // End namespace scpar
 #endif

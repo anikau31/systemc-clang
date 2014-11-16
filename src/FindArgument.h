@@ -1,5 +1,5 @@
 #ifndef _FIND_ARGUMENT_
-#define _FIND_ARGUEMNT_
+#define _FIND_ARGUMENT_
 
 #include "clang/AST/DeclCXX.h"
 #include "llvm/Support/raw_ostream.h"

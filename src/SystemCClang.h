@@ -49,7 +49,8 @@ using namespace clang::tooling;
 #include "FindArgument.h"
 #include "Utility.h"
 #include "SuspensionAutomata.h"
-
+#include "SCuitable/GlobalSuspensionAutomata.h"
+#include "SCuitable/FindGPUMacro.h"
 using namespace clang;
 
 namespace scpar

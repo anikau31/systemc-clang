@@ -107,8 +107,12 @@ bool SystemCConsumer::fire()
 		_systemcModel->addSimulationTime(scstart.returnSimTime());
 
 	}
+	else {
+		_os <<"\n Could not find SCMain";
+	}
 	FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
- _systemcModel->addNetlist(findNetlist); 
+ 	findNetlist.dump();
+	_systemcModel->addNetlist(findNetlist); 
  
  _os <<"\n SystemC model dump\n";
  _systemcModel->dump(_os); 

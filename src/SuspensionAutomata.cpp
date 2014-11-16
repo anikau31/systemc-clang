@@ -360,11 +360,11 @@ void SuspensionAutomata::genSusCFG()
     bool foundWait = false;
 
     vector < CFGBlock * >splitBlocksVector;
-    /*
+    /* 
     _os << "==========================================================\n";
     _os << "Dump CFG Block\n";
     b->dump(_cfg, LO, false);
-   */
+    */
     unsigned int prevCFGBlockID;
 
     for (CFGBlock::const_iterator bit = b->begin(), bite = b->end();
@@ -546,22 +546,30 @@ void SuspensionAutomata::genSusCFG()
 
 }
 
+void SuspensionAutomata::addRemainingBlocks(State *initialState, vector<SusCFG*>& transitionBlocks){
+ bool duplicate = false;
+ if (_stateCommonCodeBlockMap.find(initialState) != _stateCommonCodeBlockMap.end()) {
+		stateCommonCodeBlockMapType::iterator stateFound = _stateCommonCodeBlockMap.find(initialState);
+  	checkInsert(stateFound->second, transitionBlocks);
+	}
+}
+
 vector<SusCFG*> SuspensionAutomata::modifDFS(SusCFG * block, State *initialState)
 {
   deque < SusCFG * >traversedBlocks;
   vector < SusCFG * >visitedBlocks;
 
   traversedBlocks.push_front(block);
-  
+  bool isWaitEncounter = false; 
   vector < SusCFG * >transitionBlocks;
   while (traversedBlocks.size() != 0) {
     SusCFG *currentBlock = traversedBlocks.front();
-    //_os <<"\n ModifDFS current block : " <<currentBlock->getBlockID();
+
     traversedBlocks.pop_front();
     if (currentBlock->isWaitBlock()) {
       float timeInNs;
-      string eventName;
-
+      string eventName; 
+      isWaitEncounter = true;
       susCFGStateMapType::iterator stateFound =
         susCFGStateMap.find(currentBlock);
       State *finalState = stateFound->second;
@@ -584,7 +592,9 @@ vector<SusCFG*> SuspensionAutomata::modifDFS(SusCFG * block, State *initialState
       finalState->addSimTime(timeInNs);
       t->addInitialState(initialState);
       t->addFinalState(finalState);
+      addRemainingBlocks(initialState, transitionBlocks);
       t->addCodeBlocks(transitionBlocks);
+
       _transitionVector.push_back(t);
       return transitionBlocks;
 
@@ -636,12 +646,40 @@ vector<SusCFG*> SuspensionAutomata::modifDFS(SusCFG * block, State *initialState
       transitionBlocks.push_back(currentBlock);
     }
   }
-  return transitionBlocks;
+    if (isWaitEncounter == false) {
+     // we found a path that does not end in a wait block. So, 
+     // it will be in all paths from this initial state to all final wait states
+     if(_stateCommonCodeBlockMap.find(initialState) == _stateCommonCodeBlockMap.end()) {
+      _stateCommonCodeBlockMap.insert(stateCommonCodeBlockPairType(initialState, transitionBlocks));
+     }
+     else {
+      stateCommonCodeBlockMapType::iterator stateFound = _stateCommonCodeBlockMap.find(initialState);
+      vector<SusCFG*> remainingCodeBlocks = stateFound->second;
+      checkInsert(transitionBlocks, remainingCodeBlocks);  
+     }
+    }
+    return transitionBlocks;
 }
 
+void SuspensionAutomata::checkInsert(vector<SusCFG*> source, vector<SusCFG*>& target) {
+ 		bool duplicate;
+  	for (int i = 0; i<source.size(); i++) {
+   	 duplicate = false;
+	 	 for (int j = 0; j<target.size(); j++) {
+   	   if (source.at(i) == target.at(j)) {
+   	   	duplicate = true;
+	 	    break;
+   	   }
+   	 }
+  	  if (duplicate == false) {  
+   	  	 target.push_back(source.at(i));
+   	 	}
+ 	 	}	
+}
 
 void SuspensionAutomata::genSauto()
 {
+
 
   susCFGVectorType susCFGVector = _susCFGVector;
   susCFGVectorType waitBlocks;
@@ -651,8 +689,8 @@ void SuspensionAutomata::genSauto()
       State *state = new State(susCFGVector.at(i), false, false, false, false);
       if (i == 0) {        
         state->setInitial();
-        _os <<"\n State susblock set to initial : " <<state->returnSusCFGBlock()->getBlockID();
-        _os <<"\n State : " <<state->isTimed()<<" " <<state->isInitial()<<" " <<state->isDelta();
+        //_os <<"\n State susblock set to initial : " <<state->returnSusCFGBlock()->getBlockID();
+        //_os <<"\n State : " <<state->isTimed()<<" " <<state->isInitial()<<" " <<state->isDelta();
       }
       susCFGStateMap.insert(susCFGStatePairType(susCFGVector.at(i), state));
     }
@@ -681,6 +719,7 @@ void SuspensionAutomata::genSauto()
         initialInsertBlock = waitBlock->getSuccBlocks().at(0);
       }
       vector<SusCFG*> transitionCodeBlocks = modifDFS(initialInsertBlock, initialState);
+       
       //_os <<"\n Transition Blocks : "; 
       backTrackCodeBlocks.clear();
       for (int j = 0; j<transitionCodeBlocks.size(); j++) {
@@ -693,7 +732,8 @@ void SuspensionAutomata::genSauto()
          //_os <<"\n Block : " <<backTrackCodeBlocks.at(j)->getBlockID()<<" has more than one successor";
          SusCFG* backBlock = backTrackCodeBlocks.at(j);
          if (backBlock->getSuccBlocks().at(0)->isParentBlock()) {
-          if (backBlock->getSuccBlocks().at(0)->getChildBlockList().at(0) == backTrackCodeBlocks.at(j+1)) {
+
+	  if (backBlock->getSuccBlocks().at(0)->getChildBlockList().at(0) == backTrackCodeBlocks.at(j+1)) {
            //_os <<"\n Block : " <<backBlock->getBlockID()<<" used the first successor";
            susCFGSuccIDMap.insert(susCFGSuccIDPairType(backBlock, 0));
            //_os <<"\n Map value : " <<susCFGSuccIDMap[backBlock];
@@ -701,6 +741,7 @@ void SuspensionAutomata::genSauto()
           }
          }
          else if (backBlock->getSuccBlocks().at(1)->isParentBlock()) {
+
           if (backBlock->getSuccBlocks().at(1)->getChildBlockList().at(0) == backTrackCodeBlocks.at(j+1)) {
            //_os <<"\n Block : " <<backBlock->getBlockID()<<" used the second successor";
            susCFGSuccIDMap.erase(backBlock);
@@ -709,13 +750,15 @@ void SuspensionAutomata::genSauto()
           }
          }
                  
-         else if (backBlock->getSuccBlocks().at(0) == backTrackCodeBlocks.at(j+1)) {
+	 else if (backBlock->getSuccBlocks().at(0) == backTrackCodeBlocks.at(j+1)) {
            //_os <<"\n Block : " <<backBlock->getBlockID()<<" used the first successor";
+
            susCFGSuccIDMap.insert(susCFGSuccIDPairType(backBlock, 0));
            break;
          }
          else if (backBlock->getSuccBlocks().at(1) == backTrackCodeBlocks.at(j+1)){
            //_os <<"\n Block : " <<backBlock->getBlockID()<<" used the second successor";
+
            susCFGSuccIDMap.erase(backBlock);
            susCFGSuccIDMap.insert(susCFGSuccIDPairType(backBlock, 1));
            break;
@@ -916,7 +959,6 @@ void SuspensionAutomata::dumpSauto()
   _os << "\n Size of transitionVector : " << transitionVector.size();
   for (unsigned int i = 0; i < transitionVector.size(); i++) {
     Transition *t = transitionVector.at(i);
-
     t->dump(_os);
   }
 }
