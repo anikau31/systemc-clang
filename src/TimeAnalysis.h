@@ -34,10 +34,10 @@ public:
 		model->dump(llvm::errs());
   
   GlobalSuspensionAutomata gsauto(model, _os, &_context);
-  gsauto.initialise();
+  gsauto.initialise(); 
   gsauto.genGSauto();
-  gsauto.dump();	 
-  
+  gsauto.initializeGpuMap();
+  gsauto.dump();
   return true;
 	}
 };

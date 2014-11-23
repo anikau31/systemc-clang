@@ -29,10 +29,13 @@ namespace scpar {
     void setParentBlock();
     void addChildBlockList(SusCFG *);
     void addChildBlockList(vector < SusCFG * >);
+		void addGPUFit();
+		void denyGPUFit();
 
     bool isWaitBlock();
     bool isParentBlock();
     bool isParentWaitBlock(); 
+		bool isGPUFit();
 
     unsigned int getBlockID();
     unsigned int getParentBlockID();
@@ -49,9 +52,11 @@ namespace scpar {
     SusCFG *_parentSusCFGBlock;
     vector < SusCFG * >_predBlocks;
     vector < SusCFG * >_succBlocks;
-    bool _isWaitBlock;
+    // need to add a isTranslateCUDA field here
+		bool _isWaitBlock;
     bool _isParentBlock;
-    Stmt *_waitStmt;
+    bool _isGPUFit;
+		Stmt *_waitStmt;
      vector < SusCFG * >_childBlockList;
   };
   ////////////////////////////////////////////////////////////////////////////////////////

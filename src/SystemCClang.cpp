@@ -84,9 +84,9 @@ bool SystemCConsumer::fire()
    SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(), ef->getEntryMethod(), &_context, llvm::errs());
    if (suspensionAutomata.initialize()) {
     suspensionAutomata.genSusCFG();
-    suspensionAutomata.dumpSusCFG();
+    //suspensionAutomata.dumpSusCFG();
     suspensionAutomata.genSauto();    
-    suspensionAutomata.dumpSauto();
+    //suspensionAutomata.dumpSauto();
     ef->addSusCFGAuto(suspensionAutomata); 
    }
    

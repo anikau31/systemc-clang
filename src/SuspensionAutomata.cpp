@@ -4,7 +4,7 @@ using namespace scpar;
 
 SusCFG::SusCFG(CFGBlock * block):_block(block),
 _parentCFGBlock(NULL),
-_parentSusCFGBlock(NULL), _isWaitBlock(false), _isParentBlock(false)
+_parentSusCFGBlock(NULL), _isWaitBlock(false), _isParentBlock(false), _isGPUFit(false)
 {
 
 }
@@ -31,6 +31,16 @@ void SusCFG::addPredBlocks(SusCFG * block)
 void SusCFG::addSuccBlocks(SusCFG * block)
 {
   _succBlocks.push_back(block);
+}
+
+void SusCFG::addGPUFit()
+{
+	_isGPUFit = true;
+}
+
+void SusCFG::denyGPUFit()
+{
+	_isGPUFit = false;
 }
 
 void SusCFG::addChildBlockList(SusCFG * block)
@@ -88,6 +98,11 @@ bool SusCFG::isWaitBlock()
 bool SusCFG::isParentBlock()
 {
   return _isParentBlock;
+}
+
+bool SusCFG::isGPUFit()
+{
+	return _isGPUFit;
 }
 
 unsigned int SusCFG::getParentBlockID()
