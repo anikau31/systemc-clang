@@ -34,9 +34,15 @@ namespace scpar {
 	public:
 		// typedefs
 		typedef vector < WaitContainer * >waitContainerListType;
-  typedef vector < NotifyContainer *> notifyContainerListType;
+  	typedef vector < NotifyContainer *> notifyContainerListType;
    
-  EntryFunctionContainer ();
+		typedef pair<int, SuspensionAutomata::transitionVectorType> instanceSautoPairType;
+		typedef map<int, SuspensionAutomata::transitionVectorType> instanceSautoMapType;
+
+		typedef pair <int, SuspensionAutomata::susCFGVectorType> instanceSusCFGPairType;
+		typedef map <int, SuspensionAutomata::susCFGVectorType> instanceSusCFGMapType;
+  	
+		EntryFunctionContainer ();
 		EntryFunctionContainer (string, PROCESS_TYPE, CXXMethodDecl *, Stmt *);
 		EntryFunctionContainer (const EntryFunctionContainer &);
 	 ~EntryFunctionContainer ();
@@ -48,36 +54,39 @@ namespace scpar {
 		PROCESS_TYPE getProcessType ();
 
 		waitContainerListType getWaitCalls ();
-  notifyContainerListType getNotifyCalls();
-  FindSensitivity::senseMapType getSenseMap();
-  SuspensionAutomata::susCFGVectorType getSusCFG();
-  SuspensionAutomata::transitionVectorType getSusAuto();
+  	notifyContainerListType getNotifyCalls();
+  	FindSensitivity::senseMapType getSenseMap();
+  	SuspensionAutomata::susCFGVectorType getSusCFG(int);
+  	SuspensionAutomata::transitionVectorType getSusAuto(int);
+		instanceSautoMapType getInstanceSautoMap();
+		instanceSusCFGMapType getInstanceSusCFGMap();
 
 		// Add waits.
 		void addSensitivityInfo(FindSensitivity &);
-  void addWaits (FindWait &);
+  	void addWaits (FindWait &);
 		void addNotifys(FindNotify &);   
-		void addSusCFGAuto(SuspensionAutomata &);
+		void addSusCFGAuto(SuspensionAutomata &, int);
   
   //void setConstructorStmt (Stmt *);
 		void setName (string);
 		void setProcessType (PROCESS_TYPE);
 		void setEntryMethod (CXXMethodDecl *);
 		void dumpSusCFG(raw_ostream &);
-  void dumpSauto(raw_ostream &);
-  void dump (raw_ostream &, int);
+  	void dumpSauto(raw_ostream &);
+  	void dump (raw_ostream &, int);
 
 
 		//private:    
 		string _entryName;
 		PROCESS_TYPE _procType;
 		CXXMethodDecl *_entryMethodDecl;
-  SuspensionAutomata::susCFGVectorType _susCFG;
-  SuspensionAutomata::transitionVectorType _susAuto;
+
 		// Hold all the waits.
 		waitContainerListType _waitCalls;
-  notifyContainerListType _notifyCalls;
+  	notifyContainerListType _notifyCalls;
 	 FindSensitivity::senseMapType _senseMap;
+	 instanceSautoMapType _instanceSautoMap;
+	 instanceSusCFGMapType _instanceSusCFGMap;
  };
 }
 #endif

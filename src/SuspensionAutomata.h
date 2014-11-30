@@ -8,7 +8,7 @@
 #include "clang/AST/ParentMap.h"
 #include <map>
 #include "Utility.h"
-#include "FindWait.h"
+#include "WaitContainer.h"
 #include "Automata.h"
 namespace scpar {
 
@@ -127,7 +127,7 @@ namespace scpar {
     typedef pair<State*, vector<SusCFG*> > stateCommonCodeBlockPairType;
     typedef map<State *, vector<SusCFG*> > stateCommonCodeBlockMapType;
 
-    SuspensionAutomata(FindWait::waitListType, CXXMethodDecl *, ASTContext *,
+    SuspensionAutomata(vector<WaitContainer*>, CXXMethodDecl *, ASTContext *,
                         raw_ostream &);
     ~SuspensionAutomata();
     void addRemainingBlocks(State*, vector<SusCFG*>&);
@@ -154,7 +154,7 @@ namespace scpar {
     void dumpSauto();
   private:
     CXXMethodDecl *_d;
-    FindWait::waitListType _waitCalls;
+    vector<CallExpr*> _waitCalls;
     susCFGSuccIDMapType susCFGSuccIDMap;
     susCFGStateMapType susCFGStateMap;
     CFG *_cfg;

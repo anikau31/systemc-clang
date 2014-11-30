@@ -277,11 +277,16 @@ void Transition::dump(raw_ostream & os)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-SuspensionAutomata::SuspensionAutomata(FindWait::waitListType waitCalls, CXXMethodDecl * d, ASTContext * a, raw_ostream & os):_d(d), _a(a), _os(os),
+SuspensionAutomata::SuspensionAutomata(vector<WaitContainer*> waitCalls, CXXMethodDecl * d, ASTContext * a, raw_ostream & os):_d(d), _a(a), _os(os),
 _cfg
 (NULL)
 {
-  _waitCalls = waitCalls;
+  
+	for (int i = 0; i<waitCalls.size(); i++) {
+		WaitContainer *wc = waitCalls.at(i);
+		_waitCalls.push_back(wc->getASTNode());
+	}
+	//_waitCalls = waitCalls;
 }
 
 SuspensionAutomata::~SuspensionAutomata()
@@ -343,10 +348,7 @@ void SuspensionAutomata::genSusCFG()
   PrintingPolicy Policy(LO);
 
   vector < Optional < CFGStmt > >pre;
-
-
   vector < unsigned int >waitBlockIDVector;
-
   vector < const CFGBlock *>CFGBlockVector;;
 
   typedef map < CFGBlock *, SusCFG * >susCFGBlockMapType;
@@ -694,8 +696,6 @@ void SuspensionAutomata::checkInsert(vector<SusCFG*> source, vector<SusCFG*>& ta
 
 void SuspensionAutomata::genSauto()
 {
-
-
   susCFGVectorType susCFGVector = _susCFGVector;
   susCFGVectorType waitBlocks;
   for (int i = 0; i < susCFGVector.size(); i++) {

@@ -264,7 +264,7 @@ void GlobalSuspensionAutomata::initialise()
     for (int i = 0; i < instanceList.size(); i++) {
       for (int j = 0; j < vef.size(); j++) {
         SuspensionAutomata::transitionVectorType sauto =
-          vef.at(j)->getSusAuto();
+          vef.at(j)->getSusAuto(i);
         _instanceFunctionSautoMap.
           insert(instanceFunctionSautoPairType
                  (instanceEntryFunctionPairType
@@ -573,6 +573,7 @@ void GlobalSuspensionAutomata::dump()
 
     vector < Transition * >sauto = it->second;
     for (int i = 0; i < sauto.size(); i++) {
+			_os<<"\n Transition : " <<sauto.at(i);
       sauto.at(i)->dump(_os);
       // Scheduled time-stamps for execution
       if (_transitionTimeMap.find(sauto.at(i)) != _transitionTimeMap.end()) {

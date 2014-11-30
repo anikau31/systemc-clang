@@ -36,7 +36,8 @@ bool SystemCConsumer::fire()
 	{
 
 		ModuleDecl *md = new ModuleDecl(mit->first, mit->second);
-	 vector < EntryFunctionContainer * >_entryFunctionContainerVector;
+	 	_os <<"\n Number of instances in this module : " <<md->getNumInstances();
+		vector < EntryFunctionContainer * >_entryFunctionContainerVector;
 		
   FindConstructor constructor(mit->second, _os);
 		md->addConstructor(constructor.returnConstructorStmt());
@@ -80,7 +81,7 @@ bool SystemCConsumer::fire()
 			FindNotify findNotify(ef->_entryMethodDecl, _os);
 			ef->addNotifys(findNotify);
     
-   
+   /*
    SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(), ef->getEntryMethod(), &_context, llvm::errs());
    if (suspensionAutomata.initialize()) {
     suspensionAutomata.genSusCFG();
@@ -89,7 +90,7 @@ bool SystemCConsumer::fire()
     //suspensionAutomata.dumpSauto();
     ef->addSusCFGAuto(suspensionAutomata); 
    }
-   
+  	*/ 
 			_entryFunctionContainerVector.push_back(ef);
 		
   }
@@ -113,7 +114,31 @@ bool SystemCConsumer::fire()
 	FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
  	findNetlist.dump();
 	_systemcModel->addNetlist(findNetlist); 
- 
+	
+	// Generate SAUTO
+	// Placing it here so that unique SAUTO for each instance
+	Model::moduleMapType moduleMap = _systemcModel->getModuleDecl();
+	for (Model::moduleMapType::iterator it = moduleMap.begin(), eit = moduleMap.end();
+									it != eit;
+									it++) {
+		ModuleDecl *moduleDecl = it->second;
+		int numInstances = moduleDecl->getNumInstances();
+		for (int i = 0; i<numInstances; i++) {
+			vector<EntryFunctionContainer*> entryFunctionContainer = moduleDecl->getEntryFunctionContainer();
+			for (int j = 0; j<entryFunctionContainer.size(); j++) {
+		
+   			SuspensionAutomata suspensionAutomata(entryFunctionContainer.at(j)->getWaitCalls(), entryFunctionContainer.at(j)->getEntryMethod(), &_context, llvm::errs());
+   			if (suspensionAutomata.initialize()) {
+    			suspensionAutomata.genSusCFG();
+    			//suspensionAutomata.dumpSusCFG();
+    			suspensionAutomata.genSauto();    
+    			//suspensionAutomata.dumpSauto();
+    			entryFunctionContainer.at(j)->addSusCFGAuto(suspensionAutomata, i); 
+   			}		
+			}
+		}
+	}
+
  _os <<"\n SystemC model dump\n";
  _systemcModel->dump(_os); 
  return true;
