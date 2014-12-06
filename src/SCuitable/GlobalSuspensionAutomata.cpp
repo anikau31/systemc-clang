@@ -6,25 +6,12 @@ GlobalSuspensionAutomata::GlobalSuspensionAutomata(Model * systemCmodel,
                                                    ASTContext * a)
 :_systemcModel(systemCmodel), _os(os), _a(a)
 {
-
+	u = new Utility();
 }
 
 GlobalSuspensionAutomata::~GlobalSuspensionAutomata()
 {
 }
-
-// ANI : Needs to be a template class
-
-bool GlobalSuspensionAutomata::notInVector(vector<SusCFG*> vec, SusCFG* cand){
-
-	for (int i = 0; i<vec.size(); i++) {
-		if (vec.at(i) == cand) {
-			return 0;
-		}
-	}
-	return 1;
-}
-
 
 
 void GlobalSuspensionAutomata::initializeGpuMap() {
@@ -80,7 +67,7 @@ void GlobalSuspensionAutomata::initializeGpuMap() {
 		    	for (int k = 0; k<bCodeBlocks.size(); k++) {
 	     			if (_susCFGBlockGPUMacroMap.find(bCodeBlocks.at(k)) != _susCFGBlockGPUMacroMap.end()) {
 	       		// DP segment found										
-	       			if(notInVector(tmpVec, bCodeBlocks.at(k))) {
+	       			if(!isElementPresent(tmpVec, bCodeBlocks.at(k))) {
 								susCFGBlockList.push_back(bCodeBlocks.at(k));
 							}
 	     			}
@@ -96,7 +83,17 @@ void GlobalSuspensionAutomata::initializeGpuMap() {
 
 // Actual gpu map algo starts here....
 // use _commonTimeDPMap and for each timePair with more than one DP segment, do pseudo-knapsacking algo
- 
+for (commonTimeDPMapType::iterator cit = _commonTimeDPMap.begin(), cite = _commonTimeDPMap.end(); 
+								cit != cite;
+								cit++) {
+	_os <<"\n Time : " <<cit->first.first<<" " <<cit->first.second<<"\n";
+	for (int i = 0; i<cit->second.size(); i++) {
+		_os <<" "<<cit->second.at(i)<<" " <<cit->second.at(i)->getBlockID();
+	}
+}
+
+
+
  for (commonTimeDPMapType::iterator cit = _commonTimeDPMap.begin(), cite = _commonTimeDPMap.end(); 
 		 cit != cite;
 		 cit++) {

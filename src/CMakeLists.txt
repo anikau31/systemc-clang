@@ -24,7 +24,7 @@ add_library (libsystemc-clang
 ####################################
 #From here the files are for the reflection database
 ####################################
-	Utility.cpp
+	#Utility.cpp
 	EntryFunctionContainer.cpp
 	WaitContainer.cpp
 	NotifyContainer.cpp

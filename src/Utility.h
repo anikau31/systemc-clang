@@ -24,18 +24,77 @@ namespace scpar {
 	using namespace std;
 	class Utility {
 	public:
-		Utility (
-		);
+		Utility (){
+		
+		}
 
+		/*
 		void tabit (llvm::raw_ostream &, int tabn);
 		string strip (string, string);
+	
+		template < typename vec > vec removeDuplicate (vec);
+		template < typename vec, typename element > bool isElementPresent (vec, element);
+		template < typename element > string getArgumentName (element *);
+		*/	
+		void tabit (raw_ostream & os, int tabn)
+		{
+			for (int i = 0; i < tabn; i++) {
+				os << " ";
+			}
+		}
 
-		  template < typename vec > vec removeDuplicate (vec);
+		string strip (string s, string sub) {
+			// sub has "struct "
+			size_t pos = s.find (sub);
 
-		  template < typename vec, typename element > bool isElementPresent (vec, element);
+			if (pos == string::npos) {
+				return s;
+			}
 
-		  template < typename element > string getArgumentName (element *);
+			return s.erase (pos, sub.length ());
+		}
 
+		template < typename vec > vec removeDuplicate (vec vecInput) {
+			for (unsigned int i = 0; i < vecInput.size (); i++) {
+				for (unsigned int j = 0; j < vecInput.size (); j++)
+				{
+					if (i != j && vecInput.at (i) == vecInput.at (j))
+						{
+							vecInput.erase (vecInput.begin () + j);
+						}
+				}
+			}
+			return vecInput;
+		}
+
+		template < typename vec, typename element >
+			bool isElementPresent (vec vecInput, element elemInput) {
+				for (unsigned int i = 0; i < vecInput.size (); i++) {
+					if (elemInput == vecInput.at (i)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		template < typename expressionArg > string getArgumentName (expressionArg * exp)
+{
+			if (exp == NULL) {
+				return string ("NULL");
+			}
+
+			clang::LangOptions LangOpts;
+			LangOpts.CPlusPlus = true;
+			clang::PrintingPolicy Policy (LangOpts);
+
+			string TypeS;
+
+			llvm::raw_string_ostream s (TypeS);
+
+			exp->printPretty (s, 0, Policy);
+
+			return s.str ();
+			}
 	};
 }
 #endif

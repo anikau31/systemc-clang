@@ -884,7 +884,7 @@ bool SuspensionAutomata::isTimedWait(Stmt * stmt)
   }
   return false;
 }
-
+/*
 string SuspensionAutomata::getArgumentName(Expr * arg)
 {
   if (arg == NULL)
@@ -902,6 +902,7 @@ string SuspensionAutomata::getArgumentName(Expr * arg)
   //  _os << ", argument: " << s.str() << "\n";
   return s.str();
 }
+*/
 
 bool SuspensionAutomata::isDeltaWait(Stmt * stmt)
 {

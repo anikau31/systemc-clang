@@ -6,28 +6,23 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/PrettyPrinter.h"
 #include <map>
-
+#include "Utility.h"
 namespace scpar {
 
 	using namespace clang;
 	using namespace std;
 
-	class FindSimTime:public RecursiveASTVisitor < FindSimTime > {
+	class FindSimTime:public RecursiveASTVisitor < FindSimTime >, public Utility {
 	public:
 
 		typedef pair < string, string > simulationTimePairType;
 		typedef map < string, string > simulationTimeMapType;
 
-		  FindSimTime (FunctionDecl *, llvm::raw_ostream &
-		);
-		 ~FindSimTime (
-		);
-		virtual bool VisitCallExpr (CallExpr * C
-		);
-		string getArgumentName (Expr * arg
-		);
-		simulationTimeMapType returnSimTime (
-		);
+		  FindSimTime (FunctionDecl *, llvm::raw_ostream &);
+		 ~FindSimTime ();
+		virtual bool VisitCallExpr (CallExpr * C);
+
+		simulationTimeMapType returnSimTime ();
 
 	private:
 		  llvm::raw_ostream & _os;

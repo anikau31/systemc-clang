@@ -3,11 +3,12 @@
 
 #include "Model.h"
 #include "FindGPUMacro.h"
+#include "Utility.h"
 namespace scpar {
  using namespace clang;
  using namespace std;
 
- class GlobalSuspensionAutomata {
+ class GlobalSuspensionAutomata : public Utility{
   public:
     GlobalSuspensionAutomata (Model *, raw_ostream &, ASTContext *);
     ~GlobalSuspensionAutomata();
@@ -42,7 +43,6 @@ namespace scpar {
     typedef pair<timePairType, vector<SusCFG*> > commonTimeDPPairType;
     typedef map<timePairType, vector<SusCFG*> > commonTimeDPMapType;
 
-		bool notInVector(vector<SusCFG*>, SusCFG*);
     bool updateTransitionTime(Transition*);
     void updateEventNotificationTime(Transition*);    
     void getTransportType();
@@ -86,7 +86,7 @@ namespace scpar {
     entryFunctionMacroMapType _entryFunctionGPUMacroMap;
     susCFGBlockGPUMacroMapType _susCFGBlockGPUMacroMap;
     commonTimeDPMapType _commonTimeDPMap;
-
+		Utility *u;
  };
 }
 #endif

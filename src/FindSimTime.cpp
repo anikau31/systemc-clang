@@ -37,6 +37,7 @@ bool FindSimTime::VisitCallExpr (CallExpr * c)
 	return true;
 }
 
+/*
 string FindSimTime::getArgumentName (Expr * arg)
 {
 	if (arg == NULL)
@@ -55,6 +56,7 @@ string FindSimTime::getArgumentName (Expr * arg)
 	//  _os << ", argument: " << s.str() << "\n";
 	return s.str ();
 }
+*/
 
 FindSimTime::simulationTimeMapType FindSimTime::returnSimTime ()
 {
