@@ -98,13 +98,16 @@ namespace scpar {
     void addFinalState(State *);
     void addCodeBlocks(SusCFG *);
     void addCodeBlocks(vector < SusCFG * >);
+		void addInstanceId(int);
 
     State *returnInitialState();
     State *returnFinalState();
     vector < SusCFG * >returnCodeBlocks();
+		int returnInstanceId();
 
     void dump(raw_ostream &);
   private:
+		int _instanceId;
     vector < SusCFG * >_codeBlockVector;
     State *_initialState;
     State *_finalState;

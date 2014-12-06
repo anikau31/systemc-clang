@@ -72,9 +72,10 @@ void GPUMacro::dump(raw_ostream& os) {
 }
 
 ///////////////////////////////////////////////////////
-FindGPUMacro::FindGPUMacro(CXXMethodDecl* entryFunction, llvm::raw_ostream& os):
-  _entryFunction(entryFunction), 
-  _os(os)
+FindGPUMacro::FindGPUMacro(CXXMethodDecl* entryFunction, int instanceNum, llvm::raw_ostream& os):
+  _entryFunction(entryFunction),
+  _instanceNum(instanceNum),
+	_os(os)
 {
  TraverseDecl(_entryFunction);
 }
@@ -86,7 +87,7 @@ FindGPUMacro::~FindGPUMacro()
 bool FindGPUMacro::VisitForStmt(ForStmt *fstmt) {
  
   Stmt *body = fstmt->getBody();
-  int tx = 1, ty = 1, tz = 1 , bx = 1, by = 1, bz = 1, gpu_time = 0, cpu_time = 0;
+  int tx = 1, ty = 1, tz = 1 , bx = 1, by = 1, bz = 1, gpu_time = 0, cpu_time = 0, instanceNum = 0;
   for (Stmt::child_iterator it = body->child_begin(), eit = body->child_end();
       it != eit;
       it++) {
@@ -96,46 +97,69 @@ bool FindGPUMacro::VisitForStmt(ForStmt *fstmt) {
     if (DeclStmt *ds = dyn_cast<DeclStmt>(s)){
       if (VarDecl *vd = dyn_cast<VarDecl>(ds->getSingleDecl())){
         string className = vd->getTypeSourceInfo()->getType().getBaseTypeIdentifier()->getName();
+				if (className == "profile_time") {
+	 				if (CXXConstructExpr *ce = dyn_cast<CXXConstructExpr>(vd->getInit()->IgnoreImpCasts())) {					 
+	 	 				if (MaterializeTemporaryExpr *me = dyn_cast<MaterializeTemporaryExpr>(ce->getArg(0)->IgnoreImpCasts())) {
+							if (CXXTemporaryObjectExpr *co = dyn_cast<CXXTemporaryObjectExpr>(me->GetTemporaryExpr()->IgnoreImpCasts())) {
 
-	if (className == "profile_time") {
-	 if (CXXConstructExpr *ce = dyn_cast<CXXConstructExpr>(vd->getInit()->IgnoreImpCasts())) {
-	  IntegerLiteral *x = dyn_cast<IntegerLiteral>(ce->getArg(0));
-	  IntegerLiteral *y = dyn_cast<IntegerLiteral>(ce->getArg(1));
+								IntegerLiteral *x = dyn_cast<IntegerLiteral>(co->getArg(0));
+								IntegerLiteral *y = dyn_cast<IntegerLiteral>(co->getArg(1));
+	  						IntegerLiteral *z = dyn_cast<IntegerLiteral>(co->getArg(2));
 
-	  gpu_time = x->getValue().getSExtValue();
-	  cpu_time = y->getValue().getSExtValue();
-	 }	 
-	}
-        if (className == "sc_gpu_thread_hierarchy") {   
-         if (CXXConstructExpr *ce = dyn_cast<CXXConstructExpr>(vd->getInit()->IgnoreImpCasts())) {
-
-          IntegerLiteral *x = dyn_cast<IntegerLiteral>(ce->getArg(0)); 
-          IntegerLiteral *y = dyn_cast<IntegerLiteral>(ce->getArg(1));
-          IntegerLiteral *z = dyn_cast<IntegerLiteral>(ce->getArg(2)); 
-          tx = x->getValue().getSExtValue();
-          ty = y->getValue().getSExtValue();
-          tz = z->getValue().getSExtValue();          
-         }        
+								instanceNum = x->getValue().getSExtValue();
+	  						gpu_time = y->getValue().getSExtValue();
+	  						cpu_time = z->getValue().getSExtValue();
+	 						}	 
+						}
+				}
+		}	
+		
+    if (className == "sc_gpu_thread_hierarchy") {   
+    	if (CXXConstructExpr *ce = dyn_cast<CXXConstructExpr>(vd->getInit()->IgnoreImpCasts())) {
+				if (MaterializeTemporaryExpr *me = dyn_cast<MaterializeTemporaryExpr>(ce->getArg(0)->IgnoreImpCasts())) {
+					if (CXXTemporaryObjectExpr *co = dyn_cast<CXXTemporaryObjectExpr>(me->GetTemporaryExpr()->IgnoreImpCasts())) {
+          	IntegerLiteral *x = dyn_cast<IntegerLiteral>(co->getArg(1)); 
+          	IntegerLiteral *y = dyn_cast<IntegerLiteral>(co->getArg(2));
+          	IntegerLiteral *z = dyn_cast<IntegerLiteral>(co->getArg(3)); 
+						IntegerLiteral *w = dyn_cast<IntegerLiteral>(co->getArg(4));
+          	instanceNum = x->getValue().getSExtValue();
+						tx = x->getValue().getSExtValue();
+          	ty = y->getValue().getSExtValue();
+          	tz = z->getValue().getSExtValue();          
+         	}        
         }
-        if (className == "sc_gpu_block_hierarchy") {   
-         if (CXXConstructExpr *ce = dyn_cast<CXXConstructExpr>(vd->getInit()->IgnoreImpCasts())) {
-
-          IntegerLiteral *x = dyn_cast<IntegerLiteral>(ce->getArg(0)); 
-          IntegerLiteral *y = dyn_cast<IntegerLiteral>(ce->getArg(1));
-          IntegerLiteral *z = dyn_cast<IntegerLiteral>(ce->getArg(2)); 
-          bx = x->getValue().getSExtValue();
-          by = y->getValue().getSExtValue();
-          bz = z->getValue().getSExtValue();           
-         }        
-        }      
-      }
-    }
-  }
-  if (tx && ty && tz && bx && by && bz && gpu_time && cpu_time) {
-
-    GPUMacro *gm = new GPUMacro(bx, by, bz, tx, ty, tz, gpu_time, cpu_time);
-    _forStmtGPUMacroMap.insert(forStmtGPUMacroPairType(fstmt, gm));  
-  }
+			}
+		}
+    if (className == "sc_gpu_block_hierarchy") {   
+    	if (CXXConstructExpr *ce = dyn_cast<CXXConstructExpr>(vd->getInit()->IgnoreImpCasts())) {
+				if (MaterializeTemporaryExpr *me = dyn_cast<MaterializeTemporaryExpr>(ce->getArg(0)->IgnoreImpCasts())) {
+					if (CXXTemporaryObjectExpr *co = dyn_cast<CXXTemporaryObjectExpr>(me->GetTemporaryExpr()->IgnoreImpCasts())) {
+          	IntegerLiteral *x = dyn_cast<IntegerLiteral>(co->getArg(1)); 
+          	IntegerLiteral *y = dyn_cast<IntegerLiteral>(co->getArg(2));
+          	IntegerLiteral *z = dyn_cast<IntegerLiteral>(co->getArg(3)); 
+          	IntegerLiteral *w = dyn_cast<IntegerLiteral>(co->getArg(4));
+				  
+						instanceNum = x->getValue().getSExtValue();	
+						bx = y->getValue().getSExtValue();
+          	by = z->getValue().getSExtValue();
+          	bz = w->getValue().getSExtValue();           
+         			}        
+        		}
+					}
+				}
+  		}
+		}
+	
+		//_os <<"\n gpu_time : " <<gpu_time<<" cpu_time : " <<cpu_time<<" instanceNum : " <<_instanceNum<<" " <<instanceNum;
+  	if (tx && ty && tz && bx && by && bz && gpu_time && cpu_time && (_instanceNum == instanceNum)) {
+			//_os <<"\n instance num : " <<_instanceNum<<" " <<instanceNum;
+  	  GPUMacro *gm = new GPUMacro(bx, by, bz, tx, ty, tz, gpu_time, cpu_time);
+			//_os <<"\n for stmt : " <<fstmt;
+			forStmtInstanceIdPairType forStmtInstanceId = make_pair(_instanceNum, fstmt);
+			_forStmtGPUMacroMap.insert(forStmtGPUMacroPairType(forStmtInstanceId, gm)); 			
+			break;
+		}
+	}
   return true;
 }
 
@@ -150,7 +174,7 @@ void FindGPUMacro::dump(){
      it != eit;
      it++) {
   
-   _os <<"\n For Stmt : " <<it->first;
+   _os <<"\n For Stmt : " <<it->first.second;
    _os <<"\n GPU kernel parameters \n";
    it->second->dump(_os);
  }

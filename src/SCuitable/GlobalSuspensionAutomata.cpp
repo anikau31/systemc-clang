@@ -13,6 +13,20 @@ GlobalSuspensionAutomata::~GlobalSuspensionAutomata()
 {
 }
 
+// ANI : Needs to be a template class
+
+bool GlobalSuspensionAutomata::notInVector(vector<SusCFG*> vec, SusCFG* cand){
+
+	for (int i = 0; i<vec.size(); i++) {
+		if (vec.at(i) == cand) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
+
+
 void GlobalSuspensionAutomata::initializeGpuMap() {
  // GPU map algorithm. 
  // Input is the global sauto
@@ -20,6 +34,7 @@ void GlobalSuspensionAutomata::initializeGpuMap() {
  // Need data structures of the form <time-stamp, vector of dp segments>
  // Using the above data structure, for each time-stamp set, we identify which ones will go on the gpu.
  //_os <<"\n Initialize gpu map\n";
+
  for (int i = 0; i<_globalSauto.size(); i++) {
   Transition *aTransition = _globalSauto.at(i); 
   for (int j = 0; j<_globalSauto.size(); j++) {
@@ -36,31 +51,49 @@ void GlobalSuspensionAutomata::initializeGpuMap() {
 	    vector<SusCFG*> bCodeBlocks = bTransition->returnCodeBlocks();
 	    vector<SusCFG*> susCFGBlockList;
 	    // iterate through each code block set and accumulate DP blocks.    
-	    for (int k = 0; k<aCodeBlocks.size(); k++) { 
-	     if (_susCFGBlockGPUMacroMap.find(aCodeBlocks.at(k)) != _susCFGBlockGPUMacroMap.end()) {
-	       // DP segment found
-			 	susCFGBlockList.push_back(aCodeBlocks.at(k));
-	     }    
-	    }
-	    for (int k = 0; k<bCodeBlocks.size(); k++) {
-	     if (_susCFGBlockGPUMacroMap.find(bCodeBlocks.at(k)) != _susCFGBlockGPUMacroMap.end()) {
-	       // DP segment found
-	       susCFGBlockList.push_back(bCodeBlocks.at(k));
-	     }
-	    }	    
-	    if (susCFGBlockList.size() != 0) {
+	    // debug susCFGBlockGPUMacroMap
+	    
+
 	     timePairType timePair = make_pair(aTimePair.first, aTimePair.second);
 	     if (_commonTimeDPMap.find(timePair) == _commonTimeDPMap.end()) {
-	       _commonTimeDPMap.insert(commonTimeDPPairType(timePair, susCFGBlockList));
+					for (int k = 0; k<aCodeBlocks.size(); k++) { 
+	     			if (_susCFGBlockGPUMacroMap.find(aCodeBlocks.at(k)) != _susCFGBlockGPUMacroMap.end()) {
+	       		// DP segment found										
+							//if (notInVector(susCFGBlockList, aCodeBlocks.at(k))){
+							susCFGBlockList.push_back(aCodeBlocks.at(k));
+							//}
+	     			}    
+	    		}
+	    		for (int k = 0; k<bCodeBlocks.size(); k++) {
+	     			if (_susCFGBlockGPUMacroMap.find(bCodeBlocks.at(k)) != _susCFGBlockGPUMacroMap.end()) {
+	       		// DP segment found										
+	       		//if(notInVector(susCFGBlockList, bCodeBlocks.at(k))) {
+							susCFGBlockList.push_back(bCodeBlocks.at(k));
+						//}
+	     		}
+	    	}
+	      _commonTimeDPMap.insert(commonTimeDPPairType(timePair, susCFGBlockList));
 	     }
 	     else {
-	       //_os <<"\n Else path taken";
-	     }
-	    }
+					commonTimeDPMapType::iterator commonTimeFound = _commonTimeDPMap.find(timePair);
+					vector<SusCFG*> tmpVec = commonTimeFound->second;
+		    	for (int k = 0; k<bCodeBlocks.size(); k++) {
+	     			if (_susCFGBlockGPUMacroMap.find(bCodeBlocks.at(k)) != _susCFGBlockGPUMacroMap.end()) {
+	       		// DP segment found										
+	       			if(notInVector(tmpVec, bCodeBlocks.at(k))) {
+								susCFGBlockList.push_back(bCodeBlocks.at(k));
+							}
+	     			}
+	    		}														
+					tmpVec.insert(tmpVec.end(), susCFGBlockList.begin(), susCFGBlockList.end());
+					_commonTimeDPMap.erase(timePair);					
+					_commonTimeDPMap.insert(commonTimeDPPairType(timePair, tmpVec));
+	     }	   
     }
    }
   }
  }
+
 // Actual gpu map algo starts here....
 // use _commonTimeDPMap and for each timePair with more than one DP segment, do pseudo-knapsacking algo
  
@@ -80,10 +113,10 @@ void GlobalSuspensionAutomata::initializeGpuMap() {
    for (int i = 0; i<susCFGBlockList.size(); i++) {
    	if (_susCFGBlockGPUMacroMap.find(susCFGBlockList.at(i)) != _susCFGBlockGPUMacroMap.end()) {
     	// Found a DP segment
-    	//_os <<"\n Found a DP segment\n";
 			susCFGBlockGPUMacroMapType::iterator gpuMacroFound = _susCFGBlockGPUMacroMap.find(susCFGBlockList.at(i));
+			
 			GPUMacro *gpuMacro = gpuMacroFound->second;
-		  u = u + max(gpuMacro->getGPUTime(), gpuMacro->getCPUTime());	
+			u = u + max(gpuMacro->getGPUTime(), gpuMacro->getCPUTime());	
 			//_os <<"\n Value of u : " <<u;
 		}
    } 
@@ -100,8 +133,7 @@ void GlobalSuspensionAutomata::initializeGpuMap() {
 		 	l = c_actual;
 		 }
 	 }
- }
- 
+ } 
 }
 
 bool GlobalSuspensionAutomata::GPUMap(float c_ideal, vector<SusCFG*> susCFGBlockList, float& c_actual) {
@@ -111,9 +143,11 @@ bool GlobalSuspensionAutomata::GPUMap(float c_ideal, vector<SusCFG*> susCFGBlock
 			susCFGBlockGPUMacroMapType::iterator gpuMacroFound = _susCFGBlockGPUMacroMap.find(susCFGBlockList.at(i));
 			GPUMacro *gpuMacro = gpuMacroFound->second;
 			//_os <<"\n GPU macro gpu time : " <<gpuMacro->getGPUTime()<<" CPU time : " <<gpuMacro->getCPUTime();
-		  if (gpuMacro->getGPUTime() <= c_ideal) {
+		 	 
+
+			if (gpuMacro->getGPUTime() <= c_ideal) {
 			  susCFGBlockList.at(i)->addGPUFit();
-				//_os <<"\n Pushing block : " <<susCFGBlockList.at(i)<<" into gpuFitSusCFGVector";
+					//_os <<"\n Pushing block : " <<susCFGBlockList.at(i)<<" into gpuFitSusCFGVector";
 				gpuFitSusCFGVector.push_back(susCFGBlockList.at(i));
 			}			
 		}
@@ -223,7 +257,7 @@ int GlobalSuspensionAutomata::max(int a, int b) {
 		return a;
 }
 
-void GlobalSuspensionAutomata::annotateTransitionsDPSeg(Transition * t)
+void GlobalSuspensionAutomata::annotateTransitionsDPSeg(Transition * t, int instanceId)
 {
 
   vector < SusCFG * >codeBlockVector = t->returnCodeBlocks();
@@ -239,47 +273,59 @@ void GlobalSuspensionAutomata::annotateTransitionsDPSeg(Transition * t)
              _entryFunctionGPUMacroMap.begin(), eit =
              _entryFunctionGPUMacroMap.end(); it != eit; it++) {
           FindGPUMacro::forStmtGPUMacroMapType gpuMacroMap = it->second;
-          if (gpuMacroMap.find(fs) != gpuMacroMap.end()) {
-            FindGPUMacro::forStmtGPUMacroMapType::iterator gpuMacroFound =
-              gpuMacroMap.find(fs);
-            _susCFGBlockGPUMacroMap.
-              insert(susCFGBlockGPUMacroPairType
-                     (susCFGBlock, gpuMacroFound->second));
-          }
+
+					for (FindGPUMacro::forStmtGPUMacroMapType::iterator fit = gpuMacroMap.begin(), 
+													fite = gpuMacroMap.end();
+													fit != fite;
+													fit++) {
+						FindGPUMacro::forStmtInstanceIdPairType forStmtInstanceIdPair = fit->first;
+						
+						if (forStmtInstanceIdPair.first == instanceId && forStmtInstanceIdPair.second == fs) {
+							_susCFGBlockGPUMacroMap.insert(susCFGBlockGPUMacroPairType(susCFGBlock, fit->second));
+
+							break;
+						}
+					}
         }
       }
     }
   }
+
 }
 
 void GlobalSuspensionAutomata::initialise()
 {
 
-  _moduleMap = _systemcModel->getModuleDecl();
-  for (Model::moduleMapType::iterator it = _moduleMap.begin(), eit =
-       _moduleMap.end(); it != eit; it++) {
-    ModuleDecl *md = it->second;
-    vector < EntryFunctionContainer * >vef = md->getEntryFunctionContainer();
-    vector < string > instanceList = md->getInstanceList();
-    for (int i = 0; i < instanceList.size(); i++) {
-      for (int j = 0; j < vef.size(); j++) {
-        SuspensionAutomata::transitionVectorType sauto =
-          vef.at(j)->getSusAuto(i);
-        _instanceFunctionSautoMap.
+  _moduleInstanceMap = _systemcModel->getModuleInstanceMap();
+ 
+	for (Model::moduleInstanceMapType::iterator it = _moduleInstanceMap.begin(), eit =
+       _moduleInstanceMap.end(); it != eit; it++) {
+    vector<ModuleDecl*> mdVec = it->second;
+		
+		for (int i = 0; i<mdVec.size(); i++) {
+			ModuleDecl *md = mdVec.at(i);			
+    	vector < EntryFunctionContainer * >vef = md->getEntryFunctionContainer();
+
+			for (int j = 0; j < vef.size(); j++) {
+      	SuspensionAutomata::transitionVectorType sauto =
+        	vef.at(j)->getSusAuto();
+				
+				entryFunctionInstanceIdPairType entryFunctionInstanceIdPair = make_pair(vef.at(j), i);
+				_instanceFunctionSautoMap.
           insert(instanceFunctionSautoPairType
-                 (instanceEntryFunctionPairType
-                  (instanceList.at(i), vef.at(j)->getName()), sauto));
-      }
-    }
+                 (entryFunctionInstanceIdPair, sauto));
+      }	
+			
+		  for (int j = 0; j < vef.size(); j++) {
+    		CXXMethodDecl *entryFunctionDecl = vef.at(j)->getEntryMethod();
 
-    for (int i = 0; i < vef.size(); i++) {
-      CXXMethodDecl *entryFunctionDecl = vef.at(i)->getEntryMethod();
-      FindGPUMacro findGPUMacro(entryFunctionDecl, _os);
-      _entryFunctionGPUMacroMap.insert(entryFunctionMacroPairType(vef.at(i), findGPUMacro.getForStmtGPUMacroMap()));
-      
-    }
+				FindGPUMacro findGPUMacro(entryFunctionDecl, i, _os);
 
+				_entryFunctionGPUMacroMap.insert(entryFunctionMacroPairType(vef.at(j), findGPUMacro.getForStmtGPUMacroMap()));   
+    	}			
+		}
   }
+	
   instanceFunctionSautoMapType::iterator it = _instanceFunctionSautoMap.begin();
   vector < Transition * >transitionVec = it->second;
   State *initialState;
@@ -297,9 +343,10 @@ void GlobalSuspensionAutomata::initialise()
        it != eit; it++) {
 
     vector < Transition * >sauto = it->second;
+		entryFunctionInstanceIdPairType entryFunctionIdPair = it->first;
     for (int i = 0; i < sauto.size(); i++) {
       Transition *t = sauto.at(i);
-
+			t->addInstanceId(entryFunctionIdPair.second);
       if (t->returnInitialState()->isInitial()) {
         t->addInitialState(initialState);
       }
@@ -310,8 +357,8 @@ void GlobalSuspensionAutomata::initialise()
 
   for (int i = 0; i < _globalSauto.size(); i++) {
     Transition *t = _globalSauto.at(i);
-
-    annotateTransitionsDPSeg(t);
+				
+    annotateTransitionsDPSeg(t, t->returnInstanceId());
     State *initState = t->returnInitialState();
 
     vector < Transition * >incomingTransitions;
@@ -569,7 +616,7 @@ void GlobalSuspensionAutomata::dump()
        it != eit; it++) {
     _os << "\n ############################################\n";
     _os << "\n Instance Name : " << it->first.first;
-    _os << "\n Function Name : " << it->first.second;
+    _os << "\n Function Name : " << it->first.first->getName();
 
     vector < Transition * >sauto = it->second;
     for (int i = 0; i < sauto.size(); i++) {
@@ -599,7 +646,7 @@ void GlobalSuspensionAutomata::dump()
 	    gpuMacro->dump(_os);
     	}			
 			if (susCFGList.at(j)->isGPUFit()) {
-				_os <<"\n SusCFG Block : " <<susCFGList.at(j)->getBlockID()<<" is marked for GPU execution";
+				_os <<"\n SusCFG Block : " <<susCFGList.at(j)->getBlockID()<<" is marked for GPU execution\n";
 			}			
   	}
   }

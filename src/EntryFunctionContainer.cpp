@@ -56,14 +56,14 @@ PROCESS_TYPE EntryFunctionContainer::getProcessType ()
 	return _procType;
 }
 
-SuspensionAutomata::susCFGVectorType EntryFunctionContainer::getSusCFG(int numInstance) {
-  //return _susCFG;
-	return _instanceSusCFGMap[numInstance];
+SuspensionAutomata::susCFGVectorType EntryFunctionContainer::getSusCFG() {
+  return _susCFG;
+	//return _instanceSusCFGMap[numInstance];
 }
 
-SuspensionAutomata::transitionVectorType EntryFunctionContainer::getSusAuto(int numInstance) {
- //return _susAuto;
-	return _instanceSautoMap[numInstance];
+SuspensionAutomata::transitionVectorType EntryFunctionContainer::getSusAuto() {
+ return _susAuto;
+ //return _instanceSautoMap[numInstance];
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void EntryFunctionContainer::setName (string n)
@@ -103,15 +103,17 @@ void EntryFunctionContainer::addWaits (FindWait & f)
 
 }
 
-void EntryFunctionContainer::addSusCFGAuto(SuspensionAutomata &s, int numInstance) {
- //_susCFG = s.getSusCFG();
- //_susAuto = s.getSauto();
+void EntryFunctionContainer::addSusCFGAuto(SuspensionAutomata &s) {
+ _susCFG = s.getSusCFG();
+ _susAuto = s.getSauto();
 
+ /*
  if (_instanceSusCFGMap.find(numInstance) == _instanceSusCFGMap.end() && _instanceSautoMap.find(numInstance) == _instanceSautoMap.end()) {
  		
  		_instanceSusCFGMap.insert(instanceSusCFGPairType(numInstance, s.getSusCFG()));
 		_instanceSautoMap.insert(instanceSautoPairType(numInstance, s.getSauto()));
  }
+ */
 }
 
 void EntryFunctionContainer::addNotifys( FindNotify& f) {
@@ -131,53 +133,47 @@ void EntryFunctionContainer::addNotifys( FindNotify& f) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void EntryFunctionContainer::dumpSusCFG(raw_ostream & os)
 {
-	for (instanceSusCFGMapType::iterator it = _instanceSusCFGMap.begin(), eit = _instanceSusCFGMap.end(); 
-										it != eit;
-										it++)  {
-		os << "\n#############################################";    
-    SuspensionAutomata::susCFGVectorType susCFGVector = it->second;
 
-    for (unsigned int i = 0; i < susCFGVector.size(); i++) {
-     	os << "\n Block ID : " << susCFGVector.at(i)->getBlockID();
-     	os << "\n Is Wait Block : " << susCFGVector.at(i)->isWaitBlock();
-     	if (susCFGVector.at(i)->getParentBlockID()) {
-     	  os << "\n Parent ID : " << susCFGVector.at(i)->getParentBlockID();
-     	  SusCFG *parentBlock = susCFGVector.at(i)->getParentSusCFGBlock();
+	os << "\n#############################################";    
+  SuspensionAutomata::susCFGVectorType susCFGVector = _susCFG;
 
-     	  os << "\n Parent Block ID : " << parentBlock->getBlockID();
-        os << "\n Size of Children : " << parentBlock->getChildBlockList().size();
+  for (unsigned int i = 0; i < susCFGVector.size(); i++) {
+  	os << "\n Block ID : " << susCFGVector.at(i)->getBlockID();
+    os << "\n Is Wait Block : " << susCFGVector.at(i)->isWaitBlock();
+    if (susCFGVector.at(i)->getParentBlockID()) {
+    	os << "\n Parent ID : " << susCFGVector.at(i)->getParentBlockID();
+     	SusCFG *parentBlock = susCFGVector.at(i)->getParentSusCFGBlock();
+
+     	os << "\n Parent Block ID : " << parentBlock->getBlockID();
+      os << "\n Size of Children : " << parentBlock->getChildBlockList().size();
+    }
+    vector < SusCFG * >predBlocks = susCFGVector.at(i)->getPredBlocks();
+    vector < SusCFG * >succBlocks = susCFGVector.at(i)->getSuccBlocks();
+    os << "\n Predecessor Blocks : ";
+    for (unsigned int j = 0; j < predBlocks.size(); j++) {
+    	if (predBlocks.at(j)) {
+      	os << predBlocks.at(j)->getBlockID() << " ";
       }
-      vector < SusCFG * >predBlocks = susCFGVector.at(i)->getPredBlocks();
-      vector < SusCFG * >succBlocks = susCFGVector.at(i)->getSuccBlocks();
-      os << "\n Predecessor Blocks : ";
-      for (unsigned int j = 0; j < predBlocks.size(); j++) {
-        if (predBlocks.at(j)) {
-          os << predBlocks.at(j)->getBlockID() << " ";
-        }
+    }
+    os << "\n Successor Blocks : ";
+    for (unsigned int j = 0; j < succBlocks.size(); j++) {
+    	if (succBlocks.at(j)) {
+      	os << succBlocks.at(j)->getBlockID() << " ";
       }
-      os << "\n Successor Blocks : ";
-      for (unsigned int j = 0; j < succBlocks.size(); j++) {
-        if (succBlocks.at(j)) {
-          os << succBlocks.at(j)->getBlockID() << " ";
-        }
-      }    
-    } 
-	}
+    }    
+  } 	
 }
 
 void EntryFunctionContainer::dumpSauto(raw_ostream & os)
 {
-	for (instanceSautoMapType::iterator it = _instanceSautoMap.begin(), eit = _instanceSautoMap.end(); 
-									it != eit;
-									it++) {
-    vector < Transition * >transitionVector = it->second; 
-    os << "\n Size of transitionVector : " << transitionVector.size();
-    for (unsigned int i = 0; i < transitionVector.size(); i++) {
-      Transition *t = transitionVector.at(i);
-      t->dump(os);
-    }
-	}     
-}
+   vector < Transition * >transitionVector = _susAuto; 
+   os << "\n Size of transitionVector : " << transitionVector.size();
+   for (unsigned int i = 0; i < transitionVector.size(); i++) {
+     Transition *t = transitionVector.at(i);
+     t->dump(os);
+   }
+}     
+
 
 
 void EntryFunctionContainer::dump (raw_ostream & os, int tabn)

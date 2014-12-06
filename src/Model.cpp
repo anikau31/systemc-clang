@@ -31,6 +31,10 @@ void Model::addModuleDecl(ModuleDecl * md)
   _modules.insert(Model::modulePairType(md->getName(), md));
 }
 
+void Model::addModuleDeclInstances(ModuleDecl* md, vector<ModuleDecl*> mdVec){
+	_moduleInstanceMap.insert(moduleInstancePairType(md, mdVec));
+}
+
 void Model::addSimulationTime(FindSimTime::simulationTimeMapType simTime)
 {
   _simTime = simTime;
@@ -104,6 +108,10 @@ void Model::addSCModules(SCModules * m)
 Model::moduleMapType Model::getModuleDecl()
 {
   return _modules;
+}
+
+Model::moduleInstanceMapType Model::getModuleInstanceMap() {
+	return _moduleInstanceMap;
 }
 
 Model::eventMapType Model::getEventMapType()

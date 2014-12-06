@@ -13,12 +13,13 @@ namespace scpar {
     ~GlobalSuspensionAutomata();
 
     typedef pair<float, int> timePairType;
-    typedef vector<Transition*> transitionVectorType;
+    typedef vector<Transition*> transitionVectorType;		
+   	
+		typedef pair<EntryFunctionContainer*, int> entryFunctionInstanceIdPairType;
+		typedef map<EntryFunctionContainer*, int> entryFunctionInstanceIdMapType;
 
-    typedef pair <string, string> instanceEntryFunctionPairType;
-    
-    typedef pair <instanceEntryFunctionPairType, transitionVectorType> instanceFunctionSautoPairType;
-    typedef map <instanceEntryFunctionPairType, transitionVectorType> instanceFunctionSautoMapType;
+    typedef pair <entryFunctionInstanceIdPairType, transitionVectorType> instanceFunctionSautoPairType;
+    typedef map <entryFunctionInstanceIdPairType, transitionVectorType> instanceFunctionSautoMapType;
     
     typedef pair <Transition *, timePairType> transitionTimePairType;
     typedef map <Transition*, timePairType> transitionTimeMapType;
@@ -31,20 +32,21 @@ namespace scpar {
    
     typedef pair<Transition*, bool> visitTransitionPairType;
     typedef map<Transition*, bool> visitTransitionMapType;
- 
+		
     typedef pair<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionMacroPairType;
     typedef map<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionMacroMapType;
 	
-    typedef pair<SusCFG*, GPUMacro*> susCFGBlockGPUMacroPairType;
-    typedef map<SusCFG*, GPUMacro*> susCFGBlockGPUMacroMapType;
+    typedef pair<SusCFG*, GPUMacro* > susCFGBlockGPUMacroPairType;
+    typedef map<SusCFG*, GPUMacro* > susCFGBlockGPUMacroMapType;
     
     typedef pair<timePairType, vector<SusCFG*> > commonTimeDPPairType;
     typedef map<timePairType, vector<SusCFG*> > commonTimeDPMapType;
 
+		bool notInVector(vector<SusCFG*>, SusCFG*);
     bool updateTransitionTime(Transition*);
     void updateEventNotificationTime(Transition*);    
     void getTransportType();
-    void annotateTransitionsDPSeg(Transition*);
+    void annotateTransitionsDPSeg(Transition*, int);
     void initializeGpuMap();
     bool GPUMap(float, vector<SusCFG*>, float&);
 		vector<SusCFG*> arrangeGPUSusCFGBlocks(vector<SusCFG*>);
@@ -73,7 +75,7 @@ namespace scpar {
     ASTContext *_a;
     transitionVectorType _globalSauto;
     Model * _systemcModel;    
-    Model::moduleMapType _moduleMap;    
+    Model::moduleInstanceMapType _moduleInstanceMap;    
     stateTransitionsMapType _incomingTransitionsMap;
     stateTransitionsMapType _outgoingTransitionsMap;
     instanceFunctionSautoMapType _instanceFunctionSautoMap;

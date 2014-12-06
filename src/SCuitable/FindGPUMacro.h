@@ -17,7 +17,7 @@ namespace scpar {
       GPUMacro(int, int, int, int, int, int, int, int);
       GPUMacro();
       ~GPUMacro();
-
+					
       int getBlockIdx();
       int getBlockIdy();
       int getBlockIdz();
@@ -29,6 +29,7 @@ namespace scpar {
       void dump(raw_ostream&);      
 
     private:
+			
       int _blockIdx;
       int _blockIdy;
       int _blockIdz;
@@ -42,12 +43,14 @@ namespace scpar {
 
   class FindGPUMacro:public RecursiveASTVisitor <FindGPUMacro> {
     public:
-      
-      typedef pair <ForStmt*, GPUMacro*> forStmtGPUMacroPairType;
-      typedef map<ForStmt*, GPUMacro*> forStmtGPUMacroMapType; 
-      
+			
+			typedef pair<int, ForStmt*> forStmtInstanceIdPairType;
+			typedef map<int, ForStmt*> forStmtInstanceIdMapType;
 
-      FindGPUMacro(CXXMethodDecl*, raw_ostream&);
+			typedef pair <forStmtInstanceIdPairType, GPUMacro* > forStmtGPUMacroPairType;
+      typedef map	 <forStmtInstanceIdPairType, GPUMacro* > forStmtGPUMacroMapType; 
+      
+      FindGPUMacro(CXXMethodDecl*, int, raw_ostream&);
       ~FindGPUMacro();
       // ANI : Need to add other loops as well.....       
       virtual bool VisitForStmt(ForStmt *);
@@ -59,8 +62,10 @@ namespace scpar {
 
     private:
      forStmtGPUMacroMapType _forStmtGPUMacroMap; 
-     CXXMethodDecl* _entryFunction;
-     raw_ostream& _os; 
+     CXXMethodDecl* _entryFunction;		 
+		 int _instanceNum;
+		 raw_ostream& _os;
+
   };
 }
 #endif

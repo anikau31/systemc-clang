@@ -25,13 +25,16 @@ namespace scpar {
 
     typedef pair < string, EventContainer * >eventPairType;
     typedef map < string, EventContainer * >eventMapType;
-    
+		
+		typedef pair<ModuleDecl*, vector<ModuleDecl*> >moduleInstancePairType;
+		typedef map<ModuleDecl*, vector<ModuleDecl*> >moduleInstanceMapType;
 
      Model();
     ~Model();
 
     void addSCModules(SCModules *);
-    void addModuleDecl(ModuleDecl *);        
+    void addModuleDecl(ModuleDecl *);
+		void addModuleDeclInstances(ModuleDecl*, vector<ModuleDecl*>);
     void addSimulationTime(FindSimTime::simulationTimeMapType);
     void addGlobalEvents(FindGlobalEvents::globalEventMapType);    
     void addNetlist(FindNetlist &);
@@ -40,6 +43,7 @@ namespace scpar {
 
     moduleMapType getModuleDecl();
     eventMapType getEventMapType();
+		moduleInstanceMapType getModuleInstanceMap();
     unsigned int getNumEvents();
 
     void dump(raw_ostream &);
@@ -49,6 +53,7 @@ namespace scpar {
 
   protected:
      moduleMapType _modules;
+		 moduleInstanceMapType _moduleInstanceMap;
      FindSimTime::simulationTimeMapType _simTime;
      eventMapType _eventMap;     
      FunctionDecl *_scmainFcDecl;

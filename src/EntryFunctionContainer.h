@@ -56,8 +56,8 @@ namespace scpar {
 		waitContainerListType getWaitCalls ();
   	notifyContainerListType getNotifyCalls();
   	FindSensitivity::senseMapType getSenseMap();
-  	SuspensionAutomata::susCFGVectorType getSusCFG(int);
-  	SuspensionAutomata::transitionVectorType getSusAuto(int);
+  	SuspensionAutomata::susCFGVectorType getSusCFG();
+  	SuspensionAutomata::transitionVectorType getSusAuto();
 		instanceSautoMapType getInstanceSautoMap();
 		instanceSusCFGMapType getInstanceSusCFGMap();
 
@@ -65,7 +65,7 @@ namespace scpar {
 		void addSensitivityInfo(FindSensitivity &);
   	void addWaits (FindWait &);
 		void addNotifys(FindNotify &);   
-		void addSusCFGAuto(SuspensionAutomata &, int);
+		void addSusCFGAuto(SuspensionAutomata &);
   
   //void setConstructorStmt (Stmt *);
 		void setName (string);
@@ -85,8 +85,8 @@ namespace scpar {
 		waitContainerListType _waitCalls;
   	notifyContainerListType _notifyCalls;
 	 FindSensitivity::senseMapType _senseMap;
-	 instanceSautoMapType _instanceSautoMap;
-	 instanceSusCFGMapType _instanceSusCFGMap;
+	 vector<Transition*> _susAuto;
+	 vector<SusCFG*> _susCFG;
  };
 }
 #endif

@@ -226,6 +226,10 @@ Transition::~Transition()
   delete _finalState;
 }
 
+void Transition::addInstanceId(int instanceId) {
+	_instanceId = instanceId;
+}
+
 void
  Transition::addInitialState(State * state)
 {
@@ -247,6 +251,10 @@ void Transition::addCodeBlocks(vector < SusCFG * >susCFG)
   for (unsigned int i = 0; i < susCFG.size(); i++) {
     _codeBlockVector.push_back(susCFG.at(i));
   }
+}
+
+int Transition::returnInstanceId() {
+	return _instanceId;
 }
 
 State *Transition::returnInitialState()

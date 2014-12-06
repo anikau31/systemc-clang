@@ -31,7 +31,7 @@ public:
   
 		// Just dump the model traits.
 		llvm::errs () << "\n TimeAnalysis plugin is active\n";
-		model->dump(llvm::errs());
+		//model->dump(llvm::errs());
   
   GlobalSuspensionAutomata gsauto(model, _os, &_context);
   gsauto.initialise(); 
