@@ -26,6 +26,10 @@ Model::Model(const Model & from)
   _modules = from._modules;
 }
 
+void Model::addGSauto(vector<Transition*> gsauto) {
+	_gSauto = gsauto;
+}
+
 void Model::addModuleDecl(ModuleDecl * md)
 {
   _modules.insert(Model::modulePairType(md->getName(), md));
@@ -108,6 +112,10 @@ void Model::addSCModules(SCModules * m)
 Model::moduleMapType Model::getModuleDecl()
 {
   return _modules;
+}
+
+vector<Transition*> Model::getGSauto() {
+	return _gSauto;
 }
 
 Model::moduleInstanceMapType Model::getModuleInstanceMap() {

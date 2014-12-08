@@ -40,11 +40,13 @@ namespace scpar {
     void addNetlist(FindNetlist &);
     void addSCMain(FunctionDecl*);
     void updateModuleDecl();
+		void addGSauto(vector<Transition*>);
 
     moduleMapType getModuleDecl();
     eventMapType getEventMapType();
 		moduleInstanceMapType getModuleInstanceMap();
     unsigned int getNumEvents();
+		vector<Transition*> getGSauto();
 
     void dump(raw_ostream &);
 
@@ -61,6 +63,7 @@ namespace scpar {
      FindNetlist::portSignalMapType _portSignalMap;
      FindNetlist::instancePortSignalMapType _instancePortSignalMap;
      FindNetlist::instanceListModuleMapType _instanceListModuleMap;
-  };
+  		vector<Transition*> _gSauto;
+	};
 }
 #endif
