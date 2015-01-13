@@ -25,20 +25,27 @@ public:
    SystemCConsumer (ci) {
 
 	}
- 
-		bool postFire () {
+	
+	GlobalSuspensionAutomata *_gsauto;
+
+	bool postFire () {
 		Model *model = getSystemCModel ();
   
 		// Just dump the model traits.
 		llvm::errs () << "\n TimeAnalysis plugin is active\n";
 		//model->dump(llvm::errs());
   
-  GlobalSuspensionAutomata gsauto(model, _os, &_context);
-  gsauto.initialise(); 
-  gsauto.genGSauto();
-  gsauto.initializeGpuMap();
-  gsauto.dump();
-  return true;
+  	_gsauto = new GlobalSuspensionAutomata(model, _os, &_context);
+  	_gsauto->initialise(); 
+  	_gsauto->genGSauto();
+  	_gsauto->initializeGpuMap();
+  	_gsauto->dump();
+
+		return true;
+	}
+
+	GlobalSuspensionAutomata* getGSauto(){
+		return _gsauto;
 	}
 };
 

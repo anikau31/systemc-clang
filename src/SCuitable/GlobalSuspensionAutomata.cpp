@@ -6,7 +6,6 @@ GlobalSuspensionAutomata::GlobalSuspensionAutomata(Model * systemCmodel,
                                                    ASTContext * a)
 :_systemcModel(systemCmodel), _os(os), _a(a)
 {
-	u = new Utility();
 }
 
 GlobalSuspensionAutomata::~GlobalSuspensionAutomata()
@@ -83,17 +82,16 @@ void GlobalSuspensionAutomata::initializeGpuMap() {
 
 // Actual gpu map algo starts here....
 // use _commonTimeDPMap and for each timePair with more than one DP segment, do pseudo-knapsacking algo
-for (commonTimeDPMapType::iterator cit = _commonTimeDPMap.begin(), cite = _commonTimeDPMap.end(); 
+/*
+	for (commonTimeDPMapType::iterator cit = _commonTimeDPMap.begin(), cite = _commonTimeDPMap.end(); 
 								cit != cite;
 								cit++) {
-	_os <<"\n Time : " <<cit->first.first<<" " <<cit->first.second<<"\n";
+	_os <<"\nTime : " <<cit->first.first<<" " <<cit->first.second<<"\n";
 	for (int i = 0; i<cit->second.size(); i++) {
-		_os <<" "<<cit->second.at(i)<<" " <<cit->second.at(i)->getBlockID();
+		_os <<"\n Block ID: "<<cit->second.at(i)<<" " <<cit->second.at(i)->getBlockID();
 	}
 }
-
-
-
+*/
  for (commonTimeDPMapType::iterator cit = _commonTimeDPMap.begin(), cite = _commonTimeDPMap.end(); 
 		 cit != cite;
 		 cit++) {
@@ -122,11 +120,11 @@ for (commonTimeDPMapType::iterator cit = _commonTimeDPMap.begin(), cite = _commo
 	   c_ideal = (u+l)/2;
 		 //_os <<"\n Value of c_ideal : " <<c_ideal;		 
 		 if (GPUMap(c_ideal, susCFGBlockList, c_actual)) {
-			//_os <<"\n Changing value of u'";
+			//_os <<"\n Changing value of u to : "<<c_actual;
 		 	u = c_actual;
 		 }
 		 else {
-			//_os <<"\n Changing value of l'";
+			//_os <<"\n Changing value of l to : "<<c_actual;
 		 	l = c_actual;
 		 }
 	 }
@@ -135,6 +133,7 @@ for (commonTimeDPMapType::iterator cit = _commonTimeDPMap.begin(), cite = _commo
 
 bool GlobalSuspensionAutomata::GPUMap(float c_ideal, vector<SusCFG*> susCFGBlockList, float& c_actual) {
 	vector<SusCFG*> gpuFitSusCFGVector;
+	vector<SusCFG*> gpuUnfitSusCFGVector;
 	for (int i = 0; i<susCFGBlockList.size(); i++) {
 		if (_susCFGBlockGPUMacroMap.find(susCFGBlockList.at(i)) != _susCFGBlockGPUMacroMap.end()) {
 			susCFGBlockGPUMacroMapType::iterator gpuMacroFound = _susCFGBlockGPUMacroMap.find(susCFGBlockList.at(i));
@@ -143,27 +142,45 @@ bool GlobalSuspensionAutomata::GPUMap(float c_ideal, vector<SusCFG*> susCFGBlock
 		 	 
 
 			if (gpuMacro->getGPUTime() <= c_ideal) {
-			  susCFGBlockList.at(i)->addGPUFit();
-					//_os <<"\n Pushing block : " <<susCFGBlockList.at(i)<<" into gpuFitSusCFGVector";
+			  //susCFGBlockList.at(i)->addGPUFit();
+				//gpuMacro->addGPUFit();
+				//_os <<"\n Pushing block : " <<susCFGBlockList.at(i)<<" into gpuFitSusCFGVector";
 				gpuFitSusCFGVector.push_back(susCFGBlockList.at(i));
 			}			
+			else {
+				//susCFGBlockList.at(i)->denyGPUFit();
+				//gpuMacro->denyGPUFit();
+				gpuUnfitSusCFGVector.push_back(susCFGBlockList.at(i));
+			}
 		}
 	}
 	//_os <<"\n arranging susCFGblocks";
   vector<SusCFG*> orderedSusCFGList = arrangeGPUSusCFGBlocks(gpuFitSusCFGVector);
-	//_os <<"\n done arranging";
+	///_os <<"\n done arranging block list ==>";
+	/*
+	for (int i = 0; i<orderedSusCFGList.size(); i++) {
+		_os <<" "<<orderedSusCFGList.at(i)->getBlockID()<<" "<<orderedSusCFGList.at(i);
+	}
+	
+	_os <<"\n";
+	*/
 	for (int i = 0; i<orderedSusCFGList.size(); i++) {
 		GPUMacro *gpuMacro = _susCFGBlockGPUMacroMap[orderedSusCFGList.at(i)];
-		int gpuTime = gpuMacro->getGPUTime();
+		float gpuTime = gpuMacro->getGPUTime();
+		//_os <<"\n gpuTime : " <<gpuTime;
+		//_os <<"\n c_ideal : " <<c_ideal;
 		if (gpuTime <= c_ideal){
 			c_ideal = c_ideal - gpuTime;
 		}
 		else {
-			orderedSusCFGList.at(i)->denyGPUFit();
+			//orderedSusCFGList.at(i)->denyGPUFit();
+			gpuUnfitSusCFGVector.push_back(gpuFitSusCFGVector.at(i));
+			gpuFitSusCFGVector.erase(gpuFitSusCFGVector.begin()+i-1);
 		}
 	}
-	int newGPUTime = 0;
-	int newCPUTime = 0;
+	float newGPUTime = 0;
+	float newCPUTime = 0;
+	/*
 	for (int i = 0; i<susCFGBlockList.size(); i++) {
 		if (susCFGBlockList.at(i)->isGPUFit()) {
 			// On GPU
@@ -178,8 +195,29 @@ bool GlobalSuspensionAutomata::GPUMap(float c_ideal, vector<SusCFG*> susCFGBlock
 			}
 		}
 	}
+	*/
+	for (int i = 0; i<gpuFitSusCFGVector.size(); i++) {
+		GPUMacro *gpuMacro = _susCFGBlockGPUMacroMap[gpuFitSusCFGVector.at(i)];
+		newGPUTime += gpuMacro->getGPUTime();
+	}
+	for (int i = 0; i<gpuUnfitSusCFGVector.size(); i++) {
+		GPUMacro *gpuMacro = _susCFGBlockGPUMacroMap[gpuUnfitSusCFGVector.at(i)];
+		if (newCPUTime < gpuMacro->getCPUTime()) {
+			newCPUTime = gpuMacro->getCPUTime();
+		}
+	}
+
+	//_os <<"\n new GPUTime : " <<newGPUTime<<" newCPUTime : " <<newCPUTime;
 	if (c_actual > max(newGPUTime, newCPUTime)) {
 		c_actual = max(newGPUTime, newCPUTime);
+		for (int i = 0; i<gpuFitSusCFGVector.size(); i++) {
+			gpuFitSusCFGVector.at(i)->addGPUFit();
+			_susCFGBlockGPUMacroMap[gpuFitSusCFGVector.at(i)]->addGPUFit();
+		}
+		for (int i = 0; i<gpuUnfitSusCFGVector.size(); i++) {
+			gpuUnfitSusCFGVector.at(i)->denyGPUFit();
+			_susCFGBlockGPUMacroMap[gpuUnfitSusCFGVector.at(i)]->denyGPUFit();
+		}
 		return true;
 	}
 	return false;
@@ -243,7 +281,7 @@ vector<SusCFG*> GlobalSuspensionAutomata::merge_sort(vector<SusCFG*> leftList, v
 
 
 // This needs to be a utility function
-int GlobalSuspensionAutomata::max(int a, int b) {
+float GlobalSuspensionAutomata::max(float a, float b) {
   if (a > b) {
 		return a;
 	}
@@ -396,8 +434,48 @@ getSusCFGBlockGPUMacroMap()
 }
 
 
+vector<Transition*>GlobalSuspensionAutomata::getGlobalSauto() {
+	return _globalSauto;
+}
+
+GlobalSuspensionAutomata::entryFunctionMacroMapType GlobalSuspensionAutomata::getEntryFunctionMacroMap() {
+	return _entryFunctionGPUMacroMap;
+}
+
+
+vector<Transition*> GlobalSuspensionAutomata::getTransitionsAtTime(timePairType tp) {
+	vector<Transition*> transitionVec;
+	for (transitionTimeMapType::iterator it = _transitionTimeMap.begin(), eit = _transitionTimeMap.end();
+									it != eit;
+									it++) {
+			timePairType timePair = it->second;
+			if (timePair.first == tp.first && timePair.second == tp.second) {
+				transitionVec.push_back(it->first);
+			}
+	}
+	return transitionVec;
+}
+
+GlobalSuspensionAutomata::transitionTimeMapType GlobalSuspensionAutomata::getTransitionTimeMap() {
+	return _transitionTimeMap;
+}
+
+GlobalSuspensionAutomata::timePairType GlobalSuspensionAutomata::getTimeForTransition(Transition *t) {
+	if (_transitionTimeMap.find(t) != _transitionTimeMap.end()) {
+		return _transitionTimeMap[t];
+	}
+	else {
+		_os <<"\n Cannot find time of transition : " <<t;
+		return make_pair(0, 0);
+	}
+}
+
+
+
 vector <
-  Transition * >GlobalSuspensionAutomata::getIncomingTransitions(State * state)
+  Transition * >GlobalSuspensionAutomata::
+
+getIncomingTransitions(State * state)
 {
   if (_incomingTransitionsMap.find(state) != _incomingTransitionsMap.end()) {
     stateTransitionsMapType::iterator stateFound =
@@ -648,3 +726,5 @@ void GlobalSuspensionAutomata::dump()
   	}
   }
 }
+
+

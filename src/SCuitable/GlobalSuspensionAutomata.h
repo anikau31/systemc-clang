@@ -36,7 +36,7 @@ namespace scpar {
 		
     typedef pair<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionMacroPairType;
     typedef map<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionMacroMapType;
-	
+
     typedef pair<SusCFG*, GPUMacro* > susCFGBlockGPUMacroPairType;
     typedef map<SusCFG*, GPUMacro* > susCFGBlockGPUMacroMapType;
     
@@ -51,7 +51,7 @@ namespace scpar {
     bool GPUMap(float, vector<SusCFG*>, float&);
 		vector<SusCFG*> arrangeGPUSusCFGBlocks(vector<SusCFG*>);
 		float maxTime(vector<SusCFG*>, unsigned int);
-		int max(int, int);
+		float max(float, float);
 		vector<SusCFG*> merge_sort(vector<SusCFG*>, vector<SusCFG*>);
     void initialise();
     string getArgumentName(Expr *);
@@ -69,6 +69,7 @@ namespace scpar {
     instanceFunctionSautoMapType getInstanceFunctionSautoMap();
     transitionTimeMapType getTransitionTimeMap();
     susCFGBlockGPUMacroMapType getSusCFGBlockGPUMacroMap();
+		entryFunctionMacroMapType getEntryFunctionMacroMap();
 
   private: 
     raw_ostream &_os;
@@ -86,7 +87,7 @@ namespace scpar {
     entryFunctionMacroMapType _entryFunctionGPUMacroMap;
     susCFGBlockGPUMacroMapType _susCFGBlockGPUMacroMap;
     commonTimeDPMapType _commonTimeDPMap;
-		Utility *u;
+		
  };
 }
 #endif

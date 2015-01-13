@@ -17,7 +17,9 @@ namespace scpar {
       GPUMacro(int, int, int, int, int, int, int, int);
       GPUMacro();
       ~GPUMacro();
-					
+			
+			void addGPUFit();
+			void denyGPUFit();
       int getBlockIdx();
       int getBlockIdy();
       int getBlockIdz();
@@ -26,7 +28,8 @@ namespace scpar {
       int getThreadIdz();
       int getGPUTime();
       int getCPUTime(); 
-      void dump(raw_ostream&);      
+      bool isGPUFit();
+			void dump(raw_ostream&);      
 
     private:
 			
@@ -38,6 +41,7 @@ namespace scpar {
       int _threadIdz;
       int _gpuTime;
       int _cpuTime; 
+			bool _gpuFit;
   };
   
 

@@ -9,7 +9,8 @@ GPUMacro::GPUMacro(int blockIdx, int blockIdy, int blockIdz, int threadIdx, int 
   _threadIdy(threadIdy),
   _threadIdz(threadIdz),
   _gpuTime(gpuTime),
-  _cpuTime(cpuTime){
+  _cpuTime(cpuTime),
+	_gpuFit(false){
   }
 
 GPUMacro::GPUMacro():
@@ -20,11 +21,25 @@ GPUMacro::GPUMacro():
   _threadIdy(1),
   _threadIdz(1),
   _gpuTime(0),
-  _cpuTime(0){
+  _cpuTime(0),
+	_gpuFit(false){
+					
   
   }
 
 GPUMacro::~GPUMacro() {
+}
+
+void GPUMacro::addGPUFit() {
+	_gpuFit = true;
+}
+
+void GPUMacro::denyGPUFit() {
+	_gpuFit = false;
+}
+
+bool GPUMacro::isGPUFit() {
+	return _gpuFit;
 }
 
 int GPUMacro::getBlockIdx(){

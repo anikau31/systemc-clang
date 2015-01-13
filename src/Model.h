@@ -11,8 +11,8 @@
 #include "FindGlobalEvents.h"
 #include "FindSimTime.h"
 #include "EntryFunctionContainer.h"
-#include "SuspensionAutomata.h"
 #include "FindNetlist.h"
+
 namespace scpar {
   using namespace clang;
   using namespace std;
@@ -40,14 +40,12 @@ namespace scpar {
     void addNetlist(FindNetlist &);
     void addSCMain(FunctionDecl*);
     void updateModuleDecl();
-		void addGSauto(vector<Transition*>);
 
     moduleMapType getModuleDecl();
     eventMapType getEventMapType();
 		moduleInstanceMapType getModuleInstanceMap();
     unsigned int getNumEvents();
 		vector<Transition*> getGSauto();
-
     void dump(raw_ostream &);
 
   private:
@@ -62,8 +60,7 @@ namespace scpar {
      FindNetlist::instanceModuleMapType _instanceModuleMap;
      FindNetlist::portSignalMapType _portSignalMap;
      FindNetlist::instancePortSignalMapType _instancePortSignalMap;
-     FindNetlist::instanceListModuleMapType _instanceListModuleMap;
-  		vector<Transition*> _gSauto;
+     FindNetlist::instanceListModuleMapType _instanceListModuleMap; 
 	};
 }
 #endif
