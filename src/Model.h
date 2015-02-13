@@ -12,7 +12,7 @@
 #include "FindSimTime.h"
 #include "EntryFunctionContainer.h"
 #include "FindNetlist.h"
-
+#include "SCuitable/FindGPUMacro.h"
 namespace scpar {
   using namespace clang;
   using namespace std;
@@ -29,6 +29,9 @@ namespace scpar {
 		typedef pair<ModuleDecl*, vector<ModuleDecl*> >moduleInstancePairType;
 		typedef map<ModuleDecl*, vector<ModuleDecl*> >moduleInstanceMapType;
 
+		typedef pair<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroPairType;
+		typedef map<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroMapType;
+
      Model();
     ~Model();
 
@@ -39,9 +42,11 @@ namespace scpar {
     void addGlobalEvents(FindGlobalEvents::globalEventMapType);    
     void addNetlist(FindNetlist &);
     void addSCMain(FunctionDecl*);
+		void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
     void updateModuleDecl();
 
     moduleMapType getModuleDecl();
+		entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
     eventMapType getEventMapType();
 		moduleInstanceMapType getModuleInstanceMap();
     unsigned int getNumEvents();
@@ -61,6 +66,7 @@ namespace scpar {
      FindNetlist::portSignalMapType _portSignalMap;
      FindNetlist::instancePortSignalMapType _instancePortSignalMap;
      FindNetlist::instanceListModuleMapType _instanceListModuleMap; 
+		 entryFunctionGPUMacroMapType _entryFunctionGPUMacroMap;
 	};
 }
 #endif

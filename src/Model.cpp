@@ -41,6 +41,13 @@ void Model::addSimulationTime(FindSimTime::simulationTimeMapType simTime)
   _simTime = simTime;
 }
 
+void Model::addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType e) {
+	//_entryFunctionGPUMacroMap.insert(e.begin(), e.end());
+	_entryFunctionGPUMacroMap = e;	
+	llvm::errs()<<" \n Size : " <<_entryFunctionGPUMacroMap.size()<<" " <<e.size();
+}
+
+
 void Model::addGlobalEvents(FindGlobalEvents::globalEventMapType eventMap)
 {
   for (FindGlobalEvents::globalEventMapType::iterator it = eventMap.begin();
@@ -110,6 +117,10 @@ Model::moduleMapType Model::getModuleDecl()
   return _modules;
 }
 
+Model::entryFunctionGPUMacroMapType Model::getEntryFunctionGPUMacroMap() {
+	llvm::errs()<<"\n return Size : " <<_entryFunctionGPUMacroMap.size();
+	return _entryFunctionGPUMacroMap;
+}
 
 Model::moduleInstanceMapType Model::getModuleInstanceMap() {
 	return _moduleInstanceMap;
@@ -136,8 +147,12 @@ void Model::dump(raw_ostream & os)
        mit != _modules.end(); mit++) {
     // Second is the ModuleDecl type.
 
-    os << "\nModel " << counterModel++;
-    mit->second->dump(os);
+    os << "\nModel " << mit->first<<"\n";
+		vector<ModuleDecl*> instanceVec = _moduleInstanceMap[mit->second];
+		for (int i = 0; i<instanceVec.size(); i++) {
+			os <<"\n Instance : "<<i + 1;
+			instanceVec.at(i)->dump(os);
+		}
   }
   os << "\nGlobal Events:\n";
   for (Model::eventMapType::iterator it = _eventMap.begin(), ite =
