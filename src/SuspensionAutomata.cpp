@@ -1,5 +1,8 @@
 #include "SuspensionAutomata.h"
 #include "FindArgument.h"
+
+#include <algorithm>
+
 using namespace scpar;
 
 SusCFG::SusCFG(CFGBlock * block):_block(block),
@@ -813,35 +816,37 @@ void SuspensionAutomata::genSauto()
   }
 }
 
+template <typename Node>
+bool is_found(Node n1, Node n2)
+{
+    return n1 == n2;
+}
+
+template <template <typename, typename> class Container, typename Node, typename Allocator>
+bool generic_isFound(Container<Node, Allocator> &container, Node node)
+{
+    bool foundBlock = false;
+
+    typename Container<Node, Allocator>::iterator itr = std::find_if(
+        container.begin(),
+        container.end(),
+        std::bind1st(std::ptr_fun<Node, Node, bool>(is_found), node)
+    );
+
+    return itr != container.end();
+}
+
 // need a utility class and this should be a template function
 bool SuspensionAutomata::isFound(vector < SusCFG * >visitedState,
                                  SusCFG * block)
 {
-  bool foundBlock = false;
-
-//  _os <<"\n Comparing : " <<block->getBlockID();
-  for (unsigned int i = 0; i < visitedState.size(); i++) {
-    if (visitedState.at(i) == block) {
-      foundBlock = true;
-      break;
-    }
-  }
-  return foundBlock;
+    return generic_isFound(visitedState, block);
 }
 
 bool SuspensionAutomata::isFound(vector < Transition * >visitedState,
                                  Transition * block)
 {
-  bool foundBlock = false;
-
-//  _os <<"\n Comparing : " <<block->getBlockID();
-  for (unsigned int i = 0; i < visitedState.size(); i++) {
-    if (visitedState.at(i) == block) {
-      foundBlock = true;
-      break;
-    }
-  }
-  return foundBlock;
+    return generic_isFound(visitedState, block);
 }
 
 
