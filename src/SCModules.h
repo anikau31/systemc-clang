@@ -20,6 +20,22 @@ namespace scpar {
     virtual bool VisitCXXRecordDecl(CXXRecordDecl *);
     moduleMapType getSystemCModulesMap();
     void printSystemCModulesMap();
+
+    // ===
+    // Analyze the simple for loop
+    //
+    // int a[5];
+    // for (int i = 0; i < 5; ++i) {
+    //     a[i] = i;
+    // }
+    // ===
+    bool VisitForStmt(ForStmt *stmt);
+    void analyze_data_struct(Stmt *stmtList);
+    void analyze_expr(Expr *expr);
+    void analyze_lhs(Expr *expr);
+    void analyze_rhs(Expr *expr);
+    void analyze_array_base(Expr *base);
+    void analyze_decl_ref_expr(DeclRefExpr *declRef);
   
   private:
     llvm::raw_ostream & _os;
