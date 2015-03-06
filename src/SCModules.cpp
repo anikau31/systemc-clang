@@ -74,16 +74,29 @@ void SCModules::analyze_lhs(Expr *expr) {
 
         _os << "base name: " << base->getStmtClassName() << "\n";
         analyze_array_base(base);
-        base->dump();
 
         _os << "idx name: " << idx->getStmtClassName() << "\n";
     }
 }
 
 void SCModules::analyze_rhs(Expr *expr) {
+    if (ArraySubscriptExpr *array = dyn_cast<ArraySubscriptExpr>(expr)) {
+        Expr *base = array->getBase();
+        Expr *idx = array->getIdx();
+
+        _os << "base name: " << base->getStmtClassName() << "\n";
+        analyze_array_base(base);
+
+        _os << "idx name: " << idx->getStmtClassName() << "\n";
+    }
+    else if (CastExpr *cast = dyn_cast<CastExpr>(expr)) {
+        analyze_rhs(cast->getSubExpr());
+    }
 }
 
 void SCModules::analyze_expr(Expr *expr) {
+    expr->dump();
+
     if (BinaryOperator *binOp = dyn_cast<BinaryOperator>(expr)) {
         if (binOp->isAssignmentOp()) {
             analyze_lhs(binOp->getLHS());
