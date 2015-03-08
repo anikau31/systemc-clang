@@ -5,6 +5,7 @@
 #include "llvm/Support/raw_ostream.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include <map>
+#include <set>
 
 namespace scpar {
  
@@ -63,12 +64,29 @@ namespace scpar {
 
       void dump();
 
-
+    // ===
+    // Analyze the simple for loop
+    //
+    // int a[5];
+    // for (int i = 0; i < 5; ++i) {
+    //     a[i] = i;
+    // }
+    // ===
+    void analyze_data_struct(Stmt *stmtList);
+    void analyze_expr(Expr *expr);
+    void analyze_lhs(Expr *expr);
+    void analyze_rhs(Expr *expr);
+    void analyze_array_base(Expr *base, bool isLHS);
+    void analyze_decl_ref_expr(DeclRefExpr *declRef);
+ 
     private:
      forStmtGPUMacroMapType _forStmtGPUMacroMap; 
      CXXMethodDecl* _entryFunction;		 
 		 int _instanceNum;
 		 raw_ostream& _os;
+
+    std::set<ValueDecl*> lhs_decls;
+    std::set<ValueDecl*> rhs_decls;
 
   };
 }

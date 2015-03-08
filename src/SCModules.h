@@ -22,28 +22,9 @@ namespace scpar {
     moduleMapType getSystemCModulesMap();
     void printSystemCModulesMap();
 
-    // ===
-    // Analyze the simple for loop
-    //
-    // int a[5];
-    // for (int i = 0; i < 5; ++i) {
-    //     a[i] = i;
-    // }
-    // ===
-    bool VisitForStmt(ForStmt *stmt);
-    void analyze_data_struct(Stmt *stmtList);
-    void analyze_expr(Expr *expr);
-    void analyze_lhs(Expr *expr);
-    void analyze_rhs(Expr *expr);
-    void analyze_array_base(Expr *base, bool isLHS);
-    void analyze_decl_ref_expr(DeclRefExpr *declRef);
-  
   private:
     llvm::raw_ostream & _os;
     moduleMapType _moduleMap;
-
-    std::set<ValueDecl*> lhs_decls;
-    std::set<ValueDecl*> rhs_decls;
   };
 }
 #endif
