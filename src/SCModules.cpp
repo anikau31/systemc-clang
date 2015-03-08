@@ -55,15 +55,31 @@ void SCModules::analyze_decl_ref_expr(DeclRefExpr *declRef) {
         << "\n";
 }
 
-void SCModules::analyze_array_base(Expr *base) {
+void SCModules::analyze_array_base(Expr *base, bool isLHS) {
     if (CastExpr *cast = dyn_cast<CastExpr>(base)) {
         Expr *subExpr = cast->getSubExpr();
 
-        _os << "base subexpr name: " << subExpr->getStmtClassName() << "\n";
-
         if (DeclRefExpr *declRef = dyn_cast<DeclRefExpr>(subExpr)) {
+            if (isLHS) {
+                lhs_decls.insert(declRef->getDecl());
+                _os << "LHS: ";
+            }
+            else {
+                rhs_decls.insert(declRef->getDecl());
+                _os << "RHS: ";
+            }
             analyze_decl_ref_expr(declRef);
         }
+        else {
+            _os << "Type not a DeclRefExpr"
+                << cast->getStmtClassName()
+                << "\n";
+        }
+    }
+    else {
+        _os << "Type not a CastExpr"
+            << cast->getStmtClassName()
+            << "\n";
     }
 }
 
@@ -72,10 +88,28 @@ void SCModules::analyze_lhs(Expr *expr) {
         Expr *base = array->getBase();
         Expr *idx = array->getIdx();
 
-        _os << "base name: " << base->getStmtClassName() << "\n";
-        analyze_array_base(base);
-
-        _os << "idx name: " << idx->getStmtClassName() << "\n";
+        analyze_array_base(base, true /* isLHS */);
+    }
+    else if (CastExpr *cast = dyn_cast<CastExpr>(expr)) {
+        analyze_lhs(cast->getSubExpr());
+    }
+    else if (ParenExpr *paren = dyn_cast<ParenExpr>(expr)) {
+        analyze_lhs(paren->getSubExpr());
+    }
+    else if (BinaryOperator *binOp = dyn_cast<BinaryOperator>(expr)) {
+        if (binOp->isAssignmentOp()) {
+            analyze_lhs(binOp->getLHS());
+            analyze_rhs(binOp->getRHS());
+        }
+        else if (binOp->isCompoundAssignmentOp()) {
+            analyze_lhs(binOp->getLHS());
+            analyze_rhs(binOp->getRHS());
+        }
+        else {
+            _os << "Operation without effects on LHS: "
+                << binOp->getStmtClassName()
+                << "\n";
+        }
     }
 }
 
@@ -84,25 +118,44 @@ void SCModules::analyze_rhs(Expr *expr) {
         Expr *base = array->getBase();
         Expr *idx = array->getIdx();
 
-        _os << "base name: " << base->getStmtClassName() << "\n";
-        analyze_array_base(base);
-
-        _os << "idx name: " << idx->getStmtClassName() << "\n";
+        analyze_array_base(base, false /* isLHS */);
     }
     else if (CastExpr *cast = dyn_cast<CastExpr>(expr)) {
         analyze_rhs(cast->getSubExpr());
     }
+    else if (ParenExpr *paren = dyn_cast<ParenExpr>(expr)) {
+        analyze_rhs(paren->getSubExpr());
+    }
+    else if (BinaryOperator *binOp = dyn_cast<BinaryOperator>(expr)) {
+        if (binOp->isAssignmentOp()) {
+            analyze_lhs(binOp->getLHS());
+            analyze_rhs(binOp->getRHS());
+        }
+        else if (binOp->isCompoundAssignmentOp()) {
+            analyze_lhs(binOp->getLHS());
+            analyze_rhs(binOp->getRHS());
+        }
+        else {
+            analyze_rhs(binOp->getLHS());
+            analyze_rhs(binOp->getRHS());
+        }
+    }
 }
 
 void SCModules::analyze_expr(Expr *expr) {
-    expr->dump();
-
     if (BinaryOperator *binOp = dyn_cast<BinaryOperator>(expr)) {
         if (binOp->isAssignmentOp()) {
             analyze_lhs(binOp->getLHS());
             analyze_rhs(binOp->getRHS());
         }
         else if (binOp->isCompoundAssignmentOp()) {
+            analyze_lhs(binOp->getLHS());
+            analyze_rhs(binOp->getRHS());
+        }
+        else {
+            _os << "Operation without effects: "
+                << binOp->getStmtClassName()
+                << "\n";
         }
     }
 }
@@ -121,8 +174,22 @@ void SCModules::analyze_data_struct(Stmt *stmtList) {
         Expr *expr = dyn_cast<Expr>(stmt);
         if (!expr) continue;
 
-        _os << "expr name: " << expr->getStmtClassName() << "\n";
+        // Dump out the AST tree
+        expr->dump();
+
         analyze_expr(expr);
+    }
+
+    for (std::set<ValueDecl*>::iterator itr = lhs_decls.begin();
+         itr != lhs_decls.end();
+         ++itr) {
+        _os << "LHS ValueDecl AST Node: " << *itr << "\n";
+    }
+
+    for (std::set<ValueDecl*>::iterator itr = rhs_decls.begin();
+         itr != rhs_decls.end();
+         ++itr) {
+        _os << "RHS ValueDecl AST Node: " << *itr << "\n";
     }
 
     _os << "NEW FORLOOP END\n";

@@ -2,6 +2,7 @@
 #define _SC_MODULES_H_
 #include <map>
 #include <string>
+#include <set>
 #include "clang/AST/DeclCXX.h"
 #include "llvm/Support/raw_ostream.h"
 #include "clang/AST/RecursiveASTVisitor.h"
@@ -34,13 +35,15 @@ namespace scpar {
     void analyze_expr(Expr *expr);
     void analyze_lhs(Expr *expr);
     void analyze_rhs(Expr *expr);
-    void analyze_array_base(Expr *base);
+    void analyze_array_base(Expr *base, bool isLHS);
     void analyze_decl_ref_expr(DeclRefExpr *declRef);
   
   private:
     llvm::raw_ostream & _os;
     moduleMapType _moduleMap;
 
+    std::set<ValueDecl*> lhs_decls;
+    std::set<ValueDecl*> rhs_decls;
   };
 }
 #endif
