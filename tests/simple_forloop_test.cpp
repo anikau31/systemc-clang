@@ -4,6 +4,10 @@ sc_event e1;
 
 SC_MODULE(consumer) {
 	sc_in<int> in;
+
+    int field1[25];
+    int field2[30];
+
 	void f2() {
 		int x;
 		while(true) {
@@ -22,6 +26,10 @@ SC_MODULE(consumer) {
                 a[i] = c[i * 3] % (b[i * 2] + i);
 
                 d[i * 4] = a[i] % (c[i * 3] + i);
+
+                field1[i * 5] = a[i];
+
+                field2[i * 6] = a[i];
             }
 
 		}

@@ -199,9 +199,7 @@ void FindGPUMacro::dump(){
  }
 }
 
-void FindGPUMacro::analyze_decl_ref_expr(DeclRefExpr *declRef) {
-    ValueDecl *val = declRef->getDecl();
-
+void FindGPUMacro::analyze_value_decl(ValueDecl *val) {
     QualType type = val->getType();
 
     std::pair<uint64_t, unsigned> fieldInfo =
@@ -210,8 +208,8 @@ void FindGPUMacro::analyze_decl_ref_expr(DeclRefExpr *declRef) {
     unsigned fieldAlign = fieldInfo.second;
 
     _os << "base type: " << type.getCanonicalType().getAsString()
-        << " size (bits): " << typeSize
-        << " align (bits): " << fieldAlign
+        << ", size (bits): " << typeSize
+        << ", align (bits): " << fieldAlign
         << "\n";
 }
 
@@ -228,7 +226,18 @@ void FindGPUMacro::analyze_array_base(Expr *base, bool isLHS) {
                 rhs_decls.insert(declRef->getDecl());
                 _os << "RHS: ";
             }
-            analyze_decl_ref_expr(declRef);
+            analyze_value_decl(declRef->getDecl());
+        }
+        else if (MemberExpr *member = dyn_cast<MemberExpr>(subExpr)) {
+            if (isLHS) {
+                lhs_decls.insert(member->getMemberDecl());
+                _os << "LHS: ";
+            }
+            else {
+                rhs_decls.insert(member->getMemberDecl());
+                _os << "RHS: ";
+            }
+            analyze_value_decl(member->getMemberDecl());
         }
         else {
             _os << "Type not a DeclRefExpr"
@@ -343,13 +352,17 @@ void FindGPUMacro::analyze_data_struct(Stmt *stmtList) {
     for (std::set<ValueDecl*>::iterator itr = lhs_decls.begin();
          itr != lhs_decls.end();
          ++itr) {
-        _os << "LHS ValueDecl AST Node: " << *itr << "\n";
+        _os << "LHS ValueDecl AST Node: " << *itr
+            << ", Name: '" << (*itr)->getNameAsString() << "', ";
+        analyze_value_decl(*itr);
     }
 
     for (std::set<ValueDecl*>::iterator itr = rhs_decls.begin();
          itr != rhs_decls.end();
          ++itr) {
-        _os << "RHS ValueDecl AST Node: " << *itr << "\n";
+        _os << "RHS ValueDecl AST Node: " << *itr
+            << ", Name: '" << (*itr)->getNameAsString() << "', ";
+        analyze_value_decl(*itr);
     }
 
     _os << "NEW FORLOOP END\n";

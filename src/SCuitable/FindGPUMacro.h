@@ -77,7 +77,7 @@ namespace scpar {
     void analyze_lhs(Expr *expr);
     void analyze_rhs(Expr *expr);
     void analyze_array_base(Expr *base, bool isLHS);
-    void analyze_decl_ref_expr(DeclRefExpr *declRef);
+    void analyze_value_decl(ValueDecl *val);
  
     private:
      forStmtGPUMacroMapType _forStmtGPUMacroMap; 
