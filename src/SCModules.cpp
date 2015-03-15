@@ -1,5 +1,6 @@
 #include "SCModules.h"
 #include "FindModule.h"
+#include "clang/AST/ASTContext.h"
 using namespace scpar;
 
 SCModules::SCModules(TranslationUnitDecl * tuDecl, llvm::raw_ostream & os):
