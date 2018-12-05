@@ -91,10 +91,10 @@ namespace scpar
 	{
 	  protected:
 
-		virtual ASTConsumer * CreateASTConsumer(CompilerInstance & ci,
-												StringRef)
-		{
-			return new A(ci);
+   	  virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(CompilerInstance & ci,	llvm::StringRef inFile) {
+	//	virtual ASTConsumer * CreateASTConsumer(CompilerInstance & ci, StringRef) {
+          		  return std::unique_ptr<clang::ASTConsumer>(new SystemCConsumer(ci));
+			//return new A(ci);
 		};
 
 	};							// End class LightsCameraAction

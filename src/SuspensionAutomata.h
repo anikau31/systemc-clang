@@ -160,7 +160,7 @@ namespace scpar {
     vector<CallExpr*> _waitCalls;
     susCFGSuccIDMapType susCFGSuccIDMap;
     susCFGStateMapType susCFGStateMap;
-    CFG *_cfg;
+    unique_ptr<CFG> _cfg;
     ASTContext *_a;
     raw_ostream & _os;
     susCFGVectorType _susCFGVector;

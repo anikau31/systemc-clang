@@ -288,9 +288,7 @@ void Transition::dump(raw_ostream & os)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-SuspensionAutomata::SuspensionAutomata(vector<WaitContainer*> waitCalls, CXXMethodDecl * d, ASTContext * a, raw_ostream & os):_d(d), _a(a), _os(os),
-_cfg
-(NULL)
+SuspensionAutomata::SuspensionAutomata(vector<WaitContainer*> waitCalls, CXXMethodDecl * d, ASTContext * a, raw_ostream & os):_d(d), _a(a), _os(os)
 {
   
 	for (int i = 0; i<waitCalls.size(); i++) {

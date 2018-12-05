@@ -58,7 +58,7 @@ endif(USE_SAUTO)
 				clangAnalysis
 				clangARCMigrate
 				clangRewriteFrontend
-				clangRewriteCore
+				clangRewrite
 				clangEdit
 				clangAST
 				clangLex

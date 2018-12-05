@@ -202,6 +202,7 @@ void FindGPUMacro::dump(){
 void FindGPUMacro::analyze_value_decl(ValueDecl *val) {
     QualType type = val->getType();
 
+    /*
     std::pair<uint64_t, unsigned> fieldInfo =
         val->getASTContext().getTypeInfo(val->getType());
     uint64_t typeSize = fieldInfo.first;
@@ -211,6 +212,7 @@ void FindGPUMacro::analyze_value_decl(ValueDecl *val) {
         << ", size (bits): " << typeSize
         << ", align (bits): " << fieldAlign
         << "\n";
+        */
 }
 
 void FindGPUMacro::analyze_array_base(Expr *base, bool isLHS) {
