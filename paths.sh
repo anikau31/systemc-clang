@@ -10,11 +10,14 @@ LLVMCOMPONENT=cppbackend
 RTTIFLAG=-fno-rtti 
 LLVMCONFIG=$LLVM_BUILD_DIR/bin/llvm-config
 
+# Alternatively, you can use gcc and g++.
+export CC=clang
+export CXX=clang++
 
-#export LLVM_CXX_FLAGS=`$LLVMCONFIG --cxxflags`
+export LLVM_CXX_FLAGS=`$LLVMCONFIG --cxxflags`
 
 # The flags have changed 
-export LLVM_CXX_FLAGS='-I/home/twiga/$LLVM_BUILD_DIR/include -fPIC -fvisibility-inlines-hidden -Werror=date-time -std=c++11 -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -pedantic -Wno-long-long -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -ffunction-sections -fdata-sections -O3 -DNDEBUG  -fno-exceptions -fno-rtti -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS'
+#export LLVM_CXX_FLAGS='-I/home/twiga/$LLVM_BUILD_DIR/include -fPIC -fvisibility-inlines-hidden -Werror=date-time -std=c++11 -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -pedantic -Wno-long-long -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -ffunction-sections -fdata-sections -O3 -DNDEBUG  -fno-exceptions -fno-rtti -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS'
 
 export LLVM_CXX_FLAGS="$LLVM_CXX_FLAGS -fvisibility-inlines-hidden"
 export LLVM_LIBS=`$LLVMCONFIG --libs` 
