@@ -22,7 +22,7 @@ FindWait::~FindWait() {
 
 bool FindWait::VisitCallExpr (CallExpr *e) {
 
-	bool duplicateWait = false;
+  //	bool duplicateWait = false;
 
 	clang::LangOptions LangOpts;
 	LangOpts.CPlusPlus = true;

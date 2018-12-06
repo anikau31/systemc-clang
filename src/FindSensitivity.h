@@ -16,8 +16,8 @@ namespace scpar {
 	class FindSensitivity : public RecursiveASTVisitor < FindSensitivity > {
   public:
 
-		typedef map < string, MemberExpr * >senseMapType;
-		typedef pair < string, MemberExpr * >kvType;
+		typedef map < string, MemberExpr * > senseMapType;
+		typedef pair < string, MemberExpr * > kvType;
 
 		FindSensitivity(Stmt *d, llvm::raw_ostream &os);
     virtual ~FindSensitivity();

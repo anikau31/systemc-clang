@@ -4,7 +4,7 @@ using namespace scpar;
 FindSCMain::FindSCMain (TranslationUnitDecl * tuDecl, llvm::raw_ostream & os):
   _os (os),
   _scmainFunctionDecl(nullptr) {
-	assert (!(tuDecl == NULL));
+	assert (!(tuDecl == nullptr));
 	TraverseDecl (tuDecl);
 }
 
@@ -12,7 +12,7 @@ FindSCMain::~FindSCMain() {
   _scmainFunctionDecl = nullptr;
 }
 
-bool FindSCMain::VisitFunctionDecl (FunctionDecl * fdecl) {
+bool FindSCMain::VisitFunctionDecl(FunctionDecl *fdecl) {
 
 	//_os << "Print the name: " << fdecl->getNameInfo().getAsString() << "has body: " << fdecl->hasBody() << "\n";
 	//  _os << "Is first declaration: " << fdecl->isFirstDeclaration() << "\n";
@@ -23,8 +23,7 @@ bool FindSCMain::VisitFunctionDecl (FunctionDecl * fdecl) {
 	/// 2. Must have a body
 	/// 3. Must *not* be a first declaration. (This is becuase systemc.h includes a null definition of sc_main.
 	if ((fdecl->getNameInfo ().getAsString () != "sc_main")
-			|| (!fdecl->hasBody ()) || (fdecl->isMain ()))
-		{
+			|| (!fdecl->hasBody ()) || (fdecl->isMain ()))	{
 			return true;
 		}
 
@@ -36,11 +35,11 @@ bool FindSCMain::VisitFunctionDecl (FunctionDecl * fdecl) {
 }
 
 FunctionDecl *FindSCMain::getSCMainFunctionDecl() {
-	assert (!(_scmainFunctionDecl == NULL));
+	assert (!(_scmainFunctionDecl == nullptr));
 
 	return _scmainFunctionDecl;
 }
 
-bool FindSCMain::isSCMainFound () {
-	return (_scmainFunctionDecl != NULL);
+bool FindSCMain::isSCMainFound() {
+	return (_scmainFunctionDecl != nullptr);
 }

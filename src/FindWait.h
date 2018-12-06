@@ -32,8 +32,8 @@ namespace scpar {
 
     CXXMethodDecl *_entryMethodDecl;
     llvm::raw_ostream & _os;
-		CallExpr *_waitCall;
-		Expr *_firstArg;
+    CallExpr *_waitCall;
+    Expr *_firstArg;
 		bool _foundWait;
 		waitListType _waitCalls;
 

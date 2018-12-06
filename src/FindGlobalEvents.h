@@ -15,11 +15,11 @@ namespace scpar {
   class FindGlobalEvents:public RecursiveASTVisitor < FindGlobalEvents > {
   public:
     
-    typedef map < string, VarDecl * >globalEventMapType;
-    typedef pair < string, VarDecl * >kvType;
+    typedef map < string, VarDecl * > globalEventMapType;
+    typedef pair < string, VarDecl * > kvType;
 
     FindGlobalEvents(TranslationUnitDecl *, llvm::raw_ostream &);
-    ~FindGlobalEvents();
+    virtual ~FindGlobalEvents();
     
     virtual bool VisitVarDecl(VarDecl *);
     

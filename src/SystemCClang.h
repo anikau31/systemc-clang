@@ -76,11 +76,11 @@ namespace scpar
 		Model *getSystemCModel();
 
 		virtual void HandleTranslationUnit(ASTContext & context);  
-		ASTContext & _context;
+    ASTContext & _context;
 
 	  private:
 		CompilerInstance & _ci;
-		// ASTContext& _context;
+		//ASTContext& _context;
 		Model *_systemcModel;
 
 		// Rewriter _rewrite; 

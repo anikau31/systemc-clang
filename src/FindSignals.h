@@ -59,8 +59,8 @@ namespace scpar {
 	class FindSignals : public RecursiveASTVisitor < FindSignals > {
 	public:
 		/// typedefs
-		typedef pair < string, SignalContainer * >signalPairType;
-		typedef map < string, SignalContainer * >signalMapType;
+		typedef pair < string, SignalContainer* > signalPairType;
+		typedef map < string, SignalContainer * > signalMapType;
 
     FindSignals(CXXRecordDecl *, llvm::raw_ostream &	);
     virtual ~FindSignals();
@@ -68,8 +68,8 @@ namespace scpar {
 		virtual bool VisitFieldDecl (FieldDecl *);
 		//    virtual bool VisitMemberExpr(MemberExpr* ) ;
 
-		signalMapType *getSignals (	);
-		void dump ();
+		signalMapType *getSignals();
+		void dump();
 
 	private:
     llvm::raw_ostream & _os;
