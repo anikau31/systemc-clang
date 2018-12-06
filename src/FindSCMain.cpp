@@ -2,14 +2,17 @@
 using namespace scpar;
 
 FindSCMain::FindSCMain (TranslationUnitDecl * tuDecl, llvm::raw_ostream & os):
-_os (os), _scmainFunctionDecl (NULL)
-{
+  _os (os),
+  _scmainFunctionDecl(nullptr) {
 	assert (!(tuDecl == NULL));
 	TraverseDecl (tuDecl);
 }
 
-bool FindSCMain::VisitFunctionDecl (FunctionDecl * fdecl)
-{
+FindSCMain::~FindSCMain() {
+  _scmainFunctionDecl = nullptr;
+}
+
+bool FindSCMain::VisitFunctionDecl (FunctionDecl * fdecl) {
 
 	//_os << "Print the name: " << fdecl->getNameInfo().getAsString() << "has body: " << fdecl->hasBody() << "\n";
 	//  _os << "Is first declaration: " << fdecl->isFirstDeclaration() << "\n";
@@ -32,16 +35,12 @@ bool FindSCMain::VisitFunctionDecl (FunctionDecl * fdecl)
 	return true;
 }
 
-FunctionDecl *
-FindSCMain::getSCMainFunctionDecl (
-)
-{
+FunctionDecl *FindSCMain::getSCMainFunctionDecl() {
 	assert (!(_scmainFunctionDecl == NULL));
 
 	return _scmainFunctionDecl;
 }
 
-bool FindSCMain::isSCMainFound ()
-{
+bool FindSCMain::isSCMainFound () {
 	return (_scmainFunctionDecl != NULL);
 }

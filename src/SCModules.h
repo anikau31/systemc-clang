@@ -18,6 +18,7 @@ namespace scpar {
     typedef pair < string, CXXRecordDecl * >modulePairType;
     
     SCModules(TranslationUnitDecl *, llvm::raw_ostream &);
+    virtual ~SCModules();
     virtual bool VisitCXXRecordDecl(CXXRecordDecl *);
     moduleMapType getSystemCModulesMap();
     void printSystemCModulesMap();

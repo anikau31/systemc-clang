@@ -2,10 +2,13 @@
 
 using namespace scpar;
 
-FindArgument::FindArgument (Expr * e):_e (e)
-{
+FindArgument::FindArgument (Expr * e):_e (e) {
 	TraverseStmt (e);
 
+}
+
+FindArgument::~FindArgument() {
+  _e = nullptr;
 }
 
 bool FindArgument::VisitMemberExpr (MemberExpr * me)

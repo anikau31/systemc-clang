@@ -93,7 +93,7 @@ bool SystemCConsumer::fire()
 	  
 	  	md->addProcess(entryFunctions);
 	
-			for (unsigned int i = 0; i < entryFunctions->size(); i++)
+			for (size_t i = 0; i < entryFunctions->size(); i++)
 			{
 				EntryFunctionContainer *ef = (*entryFunctions)[i];
 	
@@ -160,10 +160,10 @@ bool SystemCConsumer::fire()
 									it != eit;
 									it++) {					
 		vector<ModuleDecl*> moduleDeclVec = it->second;
-		for (int i = 0; i<moduleDeclVec.size(); i++) {
+		for (size_t i = 0; i < moduleDeclVec.size(); i++) {
 			ModuleDecl *moduleDecl = moduleDeclVec.at(i);
 			vector<EntryFunctionContainer*> entryFunctionContainer = moduleDecl->getEntryFunctionContainer();
-			for (int j = 0; j<entryFunctionContainer.size(); j++) {
+			for (size_t j = 0; j < entryFunctionContainer.size(); j++) {
 		
    			SuspensionAutomata suspensionAutomata(entryFunctionContainer.at(j)->getWaitCalls(), entryFunctionContainer.at(j)->getEntryMethod(), &_context, llvm::errs());
    			if (suspensionAutomata.initialize()) {

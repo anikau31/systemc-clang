@@ -2,35 +2,29 @@
 #include "FindTemplateTypes.h"
 using namespace scpar;
 
-FindSensitivity::FindSensitivity (Stmt * s, llvm::raw_ostream & os):_os (os),
-	_foundSensitiveNode
-	(false)
-{
+FindSensitivity::FindSensitivity (Stmt * s, llvm::raw_ostream & os):
+  _os (os),
+	_foundSensitiveNode(false) {
 
 	/// Pass 1
 	/// Find the ASTNode CXXOperatorCallExpr
-	TraverseStmt (s);
+	TraverseStmt(s);
 }
 
-bool FindSensitivity::VisitCXXOperatorCallExpr (CXXOperatorCallExpr * e)
-{
+bool FindSensitivity::VisitCXXOperatorCallExpr (CXXOperatorCallExpr *e) {
 	return true;
 }
 
-bool FindSensitivity::VisitMemberExpr (MemberExpr * e)
-{
+bool FindSensitivity::VisitMemberExpr (MemberExpr *e) {
 
-	QualType
-		q = e->getType ();
+	QualType q = e->getType ();
 
 	if (!_foundSensitiveNode)
 		{
-			string
-				memberName = e->getMemberDecl ()->getNameAsString ();
+			string memberName = e->getMemberDecl ()->getNameAsString ();
 
 			if ((q.getAsString () != "class sc_core::sc_sensitive")
-					|| (memberName != "sensitive"))
-				{
+					|| (memberName != "sensitive"))	{
 					return true;
 				}
 		}
@@ -52,10 +46,8 @@ bool FindSensitivity::VisitMemberExpr (MemberExpr * e)
 		return true;
 
 	/// Is it a port type
-	if (!
-			(ait->first == "sc_in" || ait->first == "sc_out"
-			 || ait->first == "sc_inout"))
-		{
+	if (!	(ait->first == "sc_in" || ait->first == "sc_out"
+			 || ait->first == "sc_inout"))	{
 			return true;
 		}
 
@@ -67,10 +59,7 @@ bool FindSensitivity::VisitMemberExpr (MemberExpr * e)
 	return true;
 }
 
-void
-  FindSensitivity::dump (
-)
-{
+void  FindSensitivity::dump() {
 	_os << "\n ==================== Find Sensitivity ===================";
 	_os << "\n:> Print Sensitive Ports";
 	for (senseMapType::iterator mit = _sensitivePorts.begin (), mitend =
@@ -83,4 +72,8 @@ void
 
 FindSensitivity::senseMapType FindSensitivity::getSenseMap() {
  return _sensitivePorts;
+}
+
+FindSensitivity::~FindSensitivity() {
+
 }

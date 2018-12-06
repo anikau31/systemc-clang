@@ -19,6 +19,7 @@ namespace scpar {
     typedef pair < string, VarDecl * >kvType;
 
     FindGlobalEvents(TranslationUnitDecl *, llvm::raw_ostream &);
+    ~FindGlobalEvents();
     
     virtual bool VisitVarDecl(VarDecl *);
     

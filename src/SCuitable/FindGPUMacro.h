@@ -56,7 +56,7 @@ namespace scpar {
       typedef map	 <forStmtInstanceIdPairType, GPUMacro* > forStmtGPUMacroMapType; 
       
       FindGPUMacro(CXXMethodDecl*, int, raw_ostream&);
-      ~FindGPUMacro();
+      virtual ~FindGPUMacro();
       // ANI : Need to add other loops as well.....       
       virtual bool VisitForStmt(ForStmt *);
 

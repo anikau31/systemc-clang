@@ -17,10 +17,10 @@ add_library (libsystemc-clang
 	SystemCClang.cpp
 	FindNetlist.cpp
 	FindArgument.cpp
-	Automata.cpp 
-	SuspensionAutomata.cpp
-	SCuitable/GlobalSuspensionAutomata.cpp	
-	SCuitable/FindGPUMacro.cpp	
+    Automata.cpp 
+    SuspensionAutomata.cpp
+#	SCuitable/GlobalSuspensionAutomata.cpp	
+#	SCuitable/FindGPUMacro.cpp	
 ####################################
 #From here the files are for the reflection database
 ####################################

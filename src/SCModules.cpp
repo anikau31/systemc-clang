@@ -3,15 +3,16 @@
 #include "clang/AST/ASTContext.h"
 using namespace scpar;
 
-SCModules::SCModules(TranslationUnitDecl * tuDecl, llvm::raw_ostream & os):
-_os(os)
-{
-  assert(!(tuDecl == NULL));
+SCModules::SCModules(TranslationUnitDecl *tuDecl, llvm::raw_ostream & os):
+_os(os) {
+  assert(!(tuDecl == nullptr));
   TraverseDecl(tuDecl);
 }
 
-bool SCModules::VisitCXXRecordDecl(CXXRecordDecl * cxxDecl)
-{
+SCModules::~SCModules() {
+}
+
+bool SCModules::VisitCXXRecordDecl(CXXRecordDecl *cxxDecl) {
   FindModule mod(cxxDecl, _os);
 
   if (!mod.isSystemCModule()) {
@@ -22,13 +23,11 @@ bool SCModules::VisitCXXRecordDecl(CXXRecordDecl * cxxDecl)
   return true;
 }
 
-SCModules::moduleMapType SCModules::getSystemCModulesMap()
-{
+SCModules::moduleMapType SCModules::getSystemCModulesMap() {
   return _moduleMap;
 }
 
-void SCModules::printSystemCModulesMap()
-{
+void SCModules::printSystemCModulesMap() {
   _os << "\n================= SCModules ================";
   _os << "\n Print SystemC Module Map";
   for (moduleMapType::iterator mit = _moduleMap.begin();

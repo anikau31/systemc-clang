@@ -18,25 +18,17 @@ namespace scpar {
 		typedef pair < string, FindTemplateTypes * >kvType;
 
 
-		  FindPorts (CXXRecordDecl *, llvm::raw_ostream &
-		);
-		 ~FindPorts (
-		);
-		virtual bool VisitFieldDecl (FieldDecl *
-		);
+    FindPorts(CXXRecordDecl *, llvm::raw_ostream &	);
+    virtual ~FindPorts();
+		virtual bool VisitFieldDecl (FieldDecl *);
 
-		portType getInputPorts (
-		);
-		portType getOutputPorts (
-		);
-		portType getInputOutputPorts (
-		);
-
-		void dump (
-		);
+		portType getInputPorts();
+		portType getOutputPorts();
+		portType getInputOutputPorts();
+		void dump ();
 
 	private:
-		  llvm::raw_ostream & _os;
+    llvm::raw_ostream & _os;
 		portType _inPorts;
 		portType _outPorts;
 		portType _inoutPorts;
