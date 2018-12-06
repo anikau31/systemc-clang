@@ -63,6 +63,7 @@ endif(USE_SAUTO)
 				clangAST
 				clangLex
 				clangBasic
+                clangASTMatchers
    )
 
 

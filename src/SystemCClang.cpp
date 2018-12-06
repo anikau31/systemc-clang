@@ -19,6 +19,7 @@ bool SystemCConsumer::fire() {
 
 	TranslationUnitDecl *tu = _context.getTranslationUnitDecl();
 
+
 	_systemcModel = new Model();
 
 	SCModules scmod(tu, _os);

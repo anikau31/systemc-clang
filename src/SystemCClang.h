@@ -51,6 +51,9 @@ using namespace clang::tooling;
 #include "SuspensionAutomata.h"
 #include "SCuitable/GlobalSuspensionAutomata.h"
 #include "SCuitable/FindGPUMacro.h"
+
+#include "matchers/sc_module.h"
+
 using namespace clang;
 
 namespace scpar
@@ -85,6 +88,11 @@ namespace scpar
 
 		// Rewriter _rewrite; 
 	};							// End class SystemCConsumer
+
+  class SystemCClang : public SystemCConsumer {
+
+  };
+
 
   template < typename A > class LightsCameraAction:
 	public clang::ASTFrontendAction
