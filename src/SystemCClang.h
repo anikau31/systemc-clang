@@ -26,7 +26,6 @@
 #include "clang/Tooling/Tooling.h"
 
 using namespace clang::driver;
-
 using namespace clang::tooling;
 
 // / This is the include files we add to parse SystemC
@@ -52,15 +51,15 @@ using namespace clang::tooling;
 #include "SCuitable/GlobalSuspensionAutomata.h"
 #include "SCuitable/FindGPUMacro.h"
 
-#include "matchers/sc_module.h"
+//#include "matchers/sc_module.h"
 
 using namespace clang;
 
-namespace scpar
-{
+namespace scpar {
 
-  class SystemCConsumer:public ASTConsumer, public RecursiveASTVisitor < SystemCConsumer >
-	{
+  class SystemCConsumer :
+    public ASTConsumer,
+    public RecursiveASTVisitor < SystemCConsumer > {
 
 	  private:
      
@@ -95,8 +94,7 @@ namespace scpar
 
 
   template < typename A > class LightsCameraAction:
-	public clang::ASTFrontendAction
-	{
+	public clang::ASTFrontendAction {
 	  protected:
 
    	  virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(CompilerInstance & ci,	llvm::StringRef inFile) {
