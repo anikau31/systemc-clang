@@ -87,4 +87,3 @@ $ $LLVM_BUILD_DIR/bin/systemc-clang ../systemc-clang/tests/module1.hpp -- \
 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS  -I/usr/include  \
 -I$SYSTEMC/include  -x c++ -w -c
 ```
-
