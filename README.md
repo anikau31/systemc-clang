@@ -12,8 +12,6 @@ As always, please feel free to provide issues, and feature requests.
 Requirements
 ------------
 
-
-
 * [llvm](http://llvm.org) 
 * [clang](http://clang.llvm.org) (version 3.4)
 * [SystemC](http://systemc.org) version 2.3

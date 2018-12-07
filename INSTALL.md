@@ -12,7 +12,7 @@ Note that the clang-llvm version systemc-clang supports is version 3.4. So, when
 * Clone systemc-clang repository.
 
 ```bash  
-$ git clone git@github.com:anikau31/systemc-clang.git
+$ git clone git@github.com:rseac/systemc-clang.git
 ```
 
 * Create a build directory for this stand-alone program.
