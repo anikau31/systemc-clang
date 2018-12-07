@@ -1,24 +1,33 @@
-# The path where you have installed LLVM/CLANG.
-# This is where make install put the executables.
+##===================================================================
+## 
+## It is important to use this script to set all the necessary paths.
+## 
 
-export LLVM_BUILD_DIR=/home/twiga/clang-7.0.0/ 
 
-# The path where you are building systemc-clang
-export SYSTEMC=/home/twiga/sw/systemc-2.3.3/
-export SYSTEMC_CLANG_BUILD_DIR=/home/twiga/code/systemc-clang-build/
+# Path for where the binaries are for clang
+# SET this.
+export LLVM_BUILD_DIR=/home/$USER/clang-7.0.0/ 
+
+# Path where SystemC is installed
+# SET this.
+export SYSTEMC=/home/$USER/sw/systemc-2.3.3/
+
+# Path for the systemc-clang build directory
+# SET this.
+export SYSTEMC_CLANG_BUILD_DIR=/home/$USER/code/systemc-clang-build/
+##===================================================================
+
 LLVMCOMPONENT=cppbackend
 RTTIFLAG=-fno-rtti 
 LLVMCONFIG=$LLVM_BUILD_DIR/bin/llvm-config
 
-# Alternatively, you can use gcc and g++.
+# New llvm/clang uses flags that are different than GNU gcc's
+# Alternatively, you can use gcc and g++, but some flags don't work.
 export CC=clang
 export CXX=clang++
-
 export LLVM_CXX_FLAGS=`$LLVMCONFIG --cxxflags`
 
-# The flags have changed 
-#export LLVM_CXX_FLAGS='-I/home/twiga/$LLVM_BUILD_DIR/include -fPIC -fvisibility-inlines-hidden -Werror=date-time -std=c++11 -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -pedantic -Wno-long-long -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -ffunction-sections -fdata-sections -O3 -DNDEBUG  -fno-exceptions -fno-rtti -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS'
-
+# Generate all the flags.
 export LLVM_CXX_FLAGS="$LLVM_CXX_FLAGS -fvisibility-inlines-hidden"
 export LLVM_LIBS=`$LLVMCONFIG --libs` 
 export LLVM_LD_FLAGS=`$LLVMCONFIG --ldflags`
