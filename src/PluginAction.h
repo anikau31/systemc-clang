@@ -21,16 +21,15 @@ using namespace scpar;
 template < typename A > class PluginAction
 {
 public:
-	PluginAction (int argc, const char **argv
-	) {
-		CommonOptionsParser OptionsParser (argc, argv
-		);
+	PluginAction (int argc, const char **argv ) {
+      llvm::cl::OptionCategory category("systemc-clang options");
+		CommonOptionsParser OptionsParser (argc, argv, category );
 		ClangTool Tool (OptionsParser.getCompilations (),
 										OptionsParser.getSourcePathList ()
 		);
-		FrontendActionFactory *fe =
-			newFrontendActionFactory < LightsCameraAction < A > >();
-		Tool.run (fe);
+		//FrontendActionFactory *fe = newFrontendActionFactory < LightsCameraAction < A > >();
+		//Tool.run (fe);
+		Tool.run ( newFrontendActionFactory< LightsCameraAction<SystemCConsumer> >().get());
 
 	};
 

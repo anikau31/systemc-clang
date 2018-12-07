@@ -17,6 +17,7 @@ namespace scpar {
   public:
 
     FindConstructor(CXXRecordDecl * d, llvm::raw_ostream & os);
+    virtual ~FindConstructor();
 
     virtual bool VisitCXXMethodDecl(CXXMethodDecl * d);
 
@@ -24,8 +25,8 @@ namespace scpar {
     void dump();
 
   private:
-    CXXRecordDecl * _d;
     llvm::raw_ostream & _os;
+    CXXRecordDecl * _d;
     Stmt *_constructorStmt;
     int pass;
 

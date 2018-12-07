@@ -12,7 +12,7 @@ Note that the clang-llvm version systemc-clang supports is version 3.4. So, when
 * Clone systemc-clang repository.
 
 ```bash  
-$ git clone git@github.com:rseac/systemc-clang.git
+$ git clone git@github.com:anikau31/systemc-clang.git
 ```
 
 * Create a build directory for this stand-alone program.
@@ -87,4 +87,3 @@ $ $LLVM_BUILD_DIR/bin/systemc-clang ../systemc-clang/tests/module1.hpp -- \
 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS  -I/usr/include  \
 -I$SYSTEMC/include  -x c++ -w -c
 ```
-

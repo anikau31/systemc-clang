@@ -18,14 +18,14 @@ namespace scpar {
 		typedef pair < string, string > simulationTimePairType;
 		typedef map < string, string > simulationTimeMapType;
 
-		  FindSimTime (FunctionDecl *, llvm::raw_ostream &);
-		 ~FindSimTime ();
-		virtual bool VisitCallExpr (CallExpr * C);
+    FindSimTime (FunctionDecl *, llvm::raw_ostream &);
+		virtual ~FindSimTime();
+		virtual bool VisitCallExpr(CallExpr * C);
 
 		simulationTimeMapType returnSimTime ();
 
 	private:
-		  llvm::raw_ostream & _os;
+    llvm::raw_ostream & _os;
 		FunctionDecl *_sigInst;
 		simulationTimeMapType _simTime;
 		CallExpr *_callexpr;

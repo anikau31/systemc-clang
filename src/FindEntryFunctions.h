@@ -13,45 +13,36 @@ namespace scpar {
 	using namespace clang;
 	using namespace std;
 
-	class FindEntryFunctions:public RecursiveASTVisitor < FindEntryFunctions > {
+	class FindEntryFunctions : public RecursiveASTVisitor < FindEntryFunctions > {
 	public:
 
 		/// Typedefs
-		typedef vector < EntryFunctionContainer * >entryFunctionVectorType;
+		typedef vector < EntryFunctionContainer * > entryFunctionVectorType;
 
-		typedef pair < string, vector < string > >entryFunctionLHSPairType;
-		typedef map < string, vector < string > >entryFunctionLHSMapType;
+		typedef pair < string, vector < string > > entryFunctionLHSPairType;
+		typedef map < string, vector < string > > entryFunctionLHSMapType;
 
-		  FindEntryFunctions (CXXRecordDecl * d, llvm::raw_ostream & os
-		);
+    FindEntryFunctions(CXXRecordDecl * d, llvm::raw_ostream & os);
+    virtual ~FindEntryFunctions();
 
 		/// Virtual methods from RecursiveASTVisitor
-		virtual bool VisitStringLiteral (StringLiteral * l
-		);
-		virtual bool VisitCXXMethodDecl (CXXMethodDecl * d
-		);
-		virtual bool VisitMemberExpr (MemberExpr * e
-		);
+		virtual bool VisitStringLiteral (StringLiteral * l);
+		virtual bool VisitCXXMethodDecl (CXXMethodDecl * d);
+		virtual bool VisitMemberExpr (MemberExpr * e);
 
 		// Access Methods
-		CXXRecordDecl *getEntryCXXRecordDecl (
-		);
-		CXXMethodDecl *getEntryMethodDecl (
-		);
-		string getEntryName (
-		);
-		entryFunctionVectorType *getEntryFunctions (
-		);
-		  vector < CXXMethodDecl * >getOtherFunctions (
-		);
+		CXXRecordDecl *getEntryCXXRecordDecl();
+		CXXMethodDecl *getEntryMethodDecl();
+		string getEntryName();
+		entryFunctionVectorType *getEntryFunctions();
+    vector < CXXMethodDecl * > getOtherFunctions();
 
-		void dump (
-		);
+		void dump ();
 
 	private:
 
-		  CXXRecordDecl * _d;
-		  llvm::raw_ostream & _os;
+    llvm::raw_ostream & _os;
+    CXXRecordDecl * _d;
 		bool _isEntryFunction;
 		PROCESS_TYPE _procType;
 		string _entryName;
@@ -63,11 +54,11 @@ namespace scpar {
 		int pass;
 		entryFunctionVectorType _entryFunctions;
 		entryFunctionLHSMapType _entryFunctionLHSMap;
-		  vector < CXXMethodDecl * >_otherFunctions;
+    vector < CXXMethodDecl * >_otherFunctions;
   
 		// Disallow constructor with no argument
-		  FindEntryFunctions (llvm::raw_ostream & os
-		);
+    FindEntryFunctions (llvm::raw_ostream & os
+                        );
 
 	};
 }

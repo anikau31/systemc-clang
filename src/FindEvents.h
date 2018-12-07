@@ -13,36 +13,29 @@ namespace scpar {
 	using namespace clang;
 	using namespace std;
 
-	class FindEvents:public RecursiveASTVisitor < FindEvents > {
+	class FindEvents : public RecursiveASTVisitor < FindEvents > {
 	public:
 		/// typedefs
-		typedef map < string, FieldDecl * >classEventMapType;
-		typedef pair < string, FieldDecl * >kvType;
+		typedef map < string, FieldDecl * > classEventMapType;
+		typedef pair < string, FieldDecl * > kvType;
 
-		  FindEvents (CXXRecordDecl *, llvm::raw_ostream &
-		);
-		  FindEvents (const FindEvents &
-		);
-		 ~FindEvents (
-		);
+    FindEvents(CXXRecordDecl *, llvm::raw_ostream &);
+    FindEvents(const FindEvents &);
+    virtual ~FindEvents();
 		/// RecursiveASTVisitor methods
-		virtual bool VisitFieldDecl (FieldDecl *
-		);
+		virtual bool VisitFieldDecl (FieldDecl *);
 
 		/// Access methods
-		classEventMapType getInClassEvents (
-		);
-		  vector < string > getEventNames (
-		);
+		classEventMapType getInClassEvents();
+    vector < string > getEventNames();
 
 		/// Print methods
-		void dump (
-		);
+		void dump();
 
 	private:
-		  llvm::raw_ostream & _os;
+    llvm::raw_ostream & _os;
 		classEventMapType _inClassEvents;
-//    reflectionDataStructure * _reflectionMap;
+    //    reflectionDataStructure * _reflectionMap;
 	};
 
 }

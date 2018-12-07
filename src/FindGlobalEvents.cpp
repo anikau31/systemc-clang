@@ -8,6 +8,9 @@ _os
   TraverseDecl(d);
 }
 
+FindGlobalEvents::~FindGlobalEvents() {
+}
+
 bool FindGlobalEvents::VisitVarDecl(VarDecl * vd)
 {
   QualType q = vd->getType();

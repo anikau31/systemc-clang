@@ -1,16 +1,34 @@
-# The path where you have installed LLVM/CLANG.
-# This is where make install put the executables.
+##===================================================================
+## 
+## It is important to use this script to set all the necessary paths.
+## 
 
-export LLVM_BUILD_DIR=/usr/local/
 
-# The path where you are building systemc-clang
-export SYSTEMC_CLANG_BUILD_DIR=/home/anirudh/Programs/systemc-clang-dev/build
+# Path for where the binaries are for clang
+# SET this.
+export LLVM_BUILD_DIR=/home/$USER/clang-7.0.0/ 
+
+# Path where SystemC is installed
+# SET this.
+export SYSTEMC=/home/$USER/sw/systemc-2.3.3/
+
+# Path for the systemc-clang build directory
+# SET this.
+export SYSTEMC_CLANG_BUILD_DIR=/home/$USER/code/systemc-clang-build/
+##===================================================================
+
 LLVMCOMPONENT=cppbackend
 RTTIFLAG=-fno-rtti 
 LLVMCONFIG=$LLVM_BUILD_DIR/bin/llvm-config
 
+# New llvm/clang uses flags that are different than GNU gcc's
+# Alternatively, you can use gcc and g++, but some flags don't work.
+export CC=clang
+export CXX=clang++
 export LLVM_CXX_FLAGS=`$LLVMCONFIG --cxxflags`
+
+# Generate all the flags.
 export LLVM_CXX_FLAGS="$LLVM_CXX_FLAGS -fvisibility-inlines-hidden"
-export LLVM_LIBS=`$LLVMCONFIG --libs`
+export LLVM_LIBS=`$LLVMCONFIG --libs` 
 export LLVM_LD_FLAGS=`$LLVMCONFIG --ldflags`
 export LLVM_LD_FLAGS=`echo $LLVM_LD_FLAGS | sed 's/ *$//g'`

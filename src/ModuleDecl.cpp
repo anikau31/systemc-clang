@@ -6,19 +6,18 @@ using namespace scpar;
 using std::string;
 
 ModuleDecl::ModuleDecl():
-_moduleName("NONE"), _classdecl(NULL)
-{
+_moduleName("NONE"),
+_classdecl(nullptr) {
+}
+
+ModuleDecl::ModuleDecl(const string &name,
+                       CXXRecordDecl *decl):
+  _moduleName(name),
+  _classdecl(decl) {
 
 }
 
-ModuleDecl::ModuleDecl(const string & name,
-                       CXXRecordDecl * decl):_moduleName(name), _classdecl(decl)
-{
-
-}
-
-ModuleDecl::~ModuleDecl()
-{
+ModuleDecl::~ModuleDecl() {
 
   // Delete all pointers in ports.
   for (ModuleDecl::portMapType::iterator mit = _iports.begin();
@@ -246,7 +245,7 @@ CXXRecordDecl *ModuleDecl::getModuleClassDecl()
 
 void ModuleDecl::dumpInstances(raw_ostream & os, int tabn) {
 
- for (int i = 0; i<_instanceList.size(); i++) {
+ for (size_t i = 0; i < _instanceList.size(); i++) {
   os <<_instanceList.at(i)<<" ";
  }
 }

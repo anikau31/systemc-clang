@@ -51,6 +51,9 @@ using namespace clang::tooling;
 #include "SuspensionAutomata.h"
 #include "SCuitable/GlobalSuspensionAutomata.h"
 #include "SCuitable/FindGPUMacro.h"
+
+#include "matchers/sc_module.h"
+
 using namespace clang;
 
 namespace scpar
@@ -76,25 +79,30 @@ namespace scpar
 		Model *getSystemCModel();
 
 		virtual void HandleTranslationUnit(ASTContext & context);  
-		ASTContext & _context;
+    ASTContext & _context;
 
 	  private:
 		CompilerInstance & _ci;
-		// ASTContext& _context;
+		//ASTContext& _context;
 		Model *_systemcModel;
 
 		// Rewriter _rewrite; 
 	};							// End class SystemCConsumer
+
+  class SystemCClang : public SystemCConsumer {
+
+  };
+
 
   template < typename A > class LightsCameraAction:
 	public clang::ASTFrontendAction
 	{
 	  protected:
 
-		virtual ASTConsumer * CreateASTConsumer(CompilerInstance & ci,
-												StringRef)
-		{
-			return new A(ci);
+   	  virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(CompilerInstance & ci,	llvm::StringRef inFile) {
+	//	virtual ASTConsumer * CreateASTConsumer(CompilerInstance & ci, StringRef) {
+          		  return std::unique_ptr<clang::ASTConsumer>(new SystemCConsumer(ci));
+			//return new A(ci);
 		};
 
 	};							// End class LightsCameraAction

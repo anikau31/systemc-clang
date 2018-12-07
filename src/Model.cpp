@@ -84,7 +84,7 @@ void Model::updateModuleDecl() {
    if (_instanceListModuleMap.find(moduleName) != _instanceListModuleMap.end()) {
      FindNetlist::instanceListModuleMapType::iterator instanceListModuleMapFind = _instanceListModuleMap.find(moduleName);
      md->addInstances(instanceListModuleMapFind->second);   
-     for (int i = 0 ; i<instanceListModuleMapFind->second.size(); i++) {
+     for (size_t i = 0 ; i < instanceListModuleMapFind->second.size(); i++) {
       if (_instancePortSignalMap.find(instanceListModuleMapFind->second.at(i)) != _instancePortSignalMap.end()) {
        FindNetlist::instancePortSignalMapType::iterator portSignalMapFound = _instancePortSignalMap.find(instanceListModuleMapFind->second.at(i));
        FindNetlist::portSignalMapType portSignalMap = portSignalMapFound->second;
@@ -149,7 +149,7 @@ void Model::dump(raw_ostream & os)
 
     os << "\nModel " << mit->first<<"\n";
 		vector<ModuleDecl*> instanceVec = _moduleInstanceMap[mit->second];
-		for (int i = 0; i<instanceVec.size(); i++) {
+		for (size_t i = 0; i < instanceVec.size(); i++) {
 			os <<"\n Instance : "<<i + 1;
 			instanceVec.at(i)->dump(os);
 		}

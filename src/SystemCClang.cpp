@@ -15,10 +15,10 @@ bool SystemCConsumer::postFire() {
 	return true;
 }
 
-bool SystemCConsumer::fire()
-{
+bool SystemCConsumer::fire() {
 
 	TranslationUnitDecl *tu = _context.getTranslationUnitDecl();
+
 
 	_systemcModel = new Model();
 
@@ -31,23 +31,23 @@ bool SystemCConsumer::fire()
 
 	SCModules::moduleMapType scmodules = scmod.getSystemCModulesMap();
 		
-		for (SCModules::moduleMapType::iterator mit = scmodules.begin(),
-		 mitend = scmodules.end(); mit != mitend; mit++)
-	{
-		ModuleDecl *md = new ModuleDecl(mit->first, mit->second);		
-		_systemcModel->addModuleDecl(md);		
-	}
+  for (SCModules::moduleMapType::iterator mit = scmodules.begin(),
+         mitend = scmodules.end(); mit != mitend; mit++)
+    {
+      ModuleDecl *md = new ModuleDecl(mit->first, mit->second);		
+      _systemcModel->addModuleDecl(md);		
+    }
 	////////////////////////////////////////////////////////////////
 	FindSCMain scmain(tu, _os);
 
 	if (scmain.isSCMainFound())
-	{
-		FunctionDecl *fnDecl = scmain.getSCMainFunctionDecl();
+    {
+      FunctionDecl *fnDecl = scmain.getSCMainFunctionDecl();
 
-		FindSimTime scstart(fnDecl, _os);
-		_systemcModel->addSimulationTime(scstart.returnSimTime());
+      FindSimTime scstart(fnDecl, _os);
+      _systemcModel->addSimulationTime(scstart.returnSimTime());
 
-	}
+    }
 	else {
 		_os <<"\n Could not find SCMain";
 	}
@@ -59,8 +59,8 @@ bool SystemCConsumer::fire()
 	Model::moduleMapType moduleMap = _systemcModel->getModuleDecl();
 	
 	for (Model::moduleMapType::iterator mit = moduleMap.begin(), mitend = moduleMap.end(); 
-			mit != mitend;
-			mit++) {
+       mit != mitend;
+       mit++) {
 			
 		ModuleDecl *mainmd = mit->second;
 		int numInstances = mainmd->getNumInstances();
@@ -93,61 +93,61 @@ bool SystemCConsumer::fire()
 	  
 	  	md->addProcess(entryFunctions);
 	
-			for (unsigned int i = 0; i < entryFunctions->size(); i++)
-			{
-				EntryFunctionContainer *ef = (*entryFunctions)[i];
+			for (size_t i = 0; i < entryFunctions->size(); i++)
+        {
+          EntryFunctionContainer *ef = (*entryFunctions)[i];
 	
-				FindSensitivity
-					findSensitivity(constructor.returnConstructorStmt(), _os);
-				ef->addSensitivityInfo(findSensitivity);
+          FindSensitivity
+            findSensitivity(constructor.returnConstructorStmt(), _os);
+          ef->addSensitivityInfo(findSensitivity);
 	
-				if (ef->getEntryMethod() == NULL)
-				{
-					_os << "ERROR";
-					continue;
-				}
+          if (ef->getEntryMethod() == nullptr)
+            {
+              _os << "ERROR";
+              continue;
+            }
 
-				FindWait findWaits(ef->getEntryMethod(), _os);
-				ef->addWaits(findWaits);
+          FindWait findWaits(ef->getEntryMethod(), _os);
+          ef->addWaits(findWaits);
 
-				FindNotify findNotify(ef->_entryMethodDecl, _os);
-				ef->addNotifys(findNotify);
+          FindNotify findNotify(ef->_entryMethodDecl, _os);
+          ef->addNotifys(findNotify);
     
-   /*
-   SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(), ef->getEntryMethod(), &_context, llvm::errs());
-   if (suspensionAutomata.initialize()) {
-    suspensionAutomata.genSusCFG();
-    //suspensionAutomata.dumpSusCFG();
-    suspensionAutomata.genSauto();    
-    //suspensionAutomata.dumpSauto();
-    ef->addSusCFGAuto(suspensionAutomata); 
-   }
-  	*/ 
-				_entryFunctionContainerVector.push_back(ef);
+          /*
+            SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(), ef->getEntryMethod(), &_context, llvm::errs());
+            if (suspensionAutomata.initialize()) {
+            suspensionAutomata.genSusCFG();
+            //suspensionAutomata.dumpSusCFG();
+            suspensionAutomata.genSauto();    
+            //suspensionAutomata.dumpSauto();
+            ef->addSusCFGAuto(suspensionAutomata); 
+            }
+          */ 
+          _entryFunctionContainerVector.push_back(ef);
 			
-  		}
+        }
 			moduleDeclVec.push_back(md);
 		}
-			_systemcModel->addModuleDeclInstances(mainmd, moduleDeclVec);
+    _systemcModel->addModuleDeclInstances(mainmd, moduleDeclVec);
 	}
 	
 	/*
-	FindSCMain scmain(tu, _os);
+    FindSCMain scmain(tu, _os);
 
-	if (scmain.isSCMainFound())
-	{
+    if (scmain.isSCMainFound())
+    {
 		FunctionDecl *fnDecl = scmain.getSCMainFunctionDecl();
 
 		FindSimTime scstart(fnDecl, _os);
 		_systemcModel->addSimulationTime(scstart.returnSimTime());
 
-	}
-	else {
+    }
+    else {
 		_os <<"\n Could not find SCMain";
-	}
-	FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
- 	findNetlist.dump();
-	_systemcModel->addNetlist(findNetlist); 
+    }
+    FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
+    findNetlist.dump();
+    _systemcModel->addNetlist(findNetlist); 
 	*/
 	
 	
@@ -157,13 +157,13 @@ bool SystemCConsumer::fire()
 	Model::moduleInstanceMapType moduleInstanceMap = _systemcModel->getModuleInstanceMap();
 	
 	for (Model::moduleInstanceMapType::iterator it = moduleInstanceMap.begin(), eit = moduleInstanceMap.end();
-									it != eit;
-									it++) {					
+       it != eit;
+       it++) {					
 		vector<ModuleDecl*> moduleDeclVec = it->second;
-		for (int i = 0; i<moduleDeclVec.size(); i++) {
+		for (size_t i = 0; i < moduleDeclVec.size(); i++) {
 			ModuleDecl *moduleDecl = moduleDeclVec.at(i);
 			vector<EntryFunctionContainer*> entryFunctionContainer = moduleDecl->getEntryFunctionContainer();
-			for (int j = 0; j<entryFunctionContainer.size(); j++) {
+			for (size_t j = 0; j < entryFunctionContainer.size(); j++) {
 		
    			SuspensionAutomata suspensionAutomata(entryFunctionContainer.at(j)->getWaitCalls(), entryFunctionContainer.at(j)->getEntryMethod(), &_context, llvm::errs());
    			if (suspensionAutomata.initialize()) {
@@ -177,13 +177,12 @@ bool SystemCConsumer::fire()
 		}
 	}
 
- _os <<"\n SystemC model dump\n";
- _systemcModel->dump(_os); 
- return true;
+  _os <<"\n SystemC model dump\n";
+  _systemcModel->dump(_os); 
+  return true;
 }
 
-void SystemCConsumer::HandleTranslationUnit(ASTContext & context)
-{
+void SystemCConsumer::HandleTranslationUnit(ASTContext & context) {
 	// ///////////////////////////////////////////////////////////////
 	// / Pass 1: Find the necessary information.
 	// ///////////////////////////////////////////////////////////////
@@ -192,8 +191,7 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext & context)
 
 	pre = preFire();
 
-	if (!pre)
-	{
+	if (!pre) {
 		return;
 	}
 
@@ -201,24 +199,25 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext & context)
 
 	f = fire();
 
-	if (!f)
-	{
+	if (!f) 	{
 		return;
 	}
 	postFire();
 }
 
-SystemCConsumer::SystemCConsumer(CompilerInstance & ci):_os(llvm::errs()), _sm(ci.getSourceManager()), _ci(ci),
-_context(ci.getASTContext()),
-_systemcModel(NULL)
-{
+SystemCConsumer::SystemCConsumer(CompilerInstance & ci):
+  _os(llvm::errs()),
+  _sm(ci.getSourceManager()),
+  _ci(ci),
+  _context(ci.getASTContext()),
+  _systemcModel(nullptr) {
 
 }
 
 SystemCConsumer::~SystemCConsumer()
 {
-	if (_systemcModel != NULL)
-	{
+	if (_systemcModel != nullptr)	{
 		delete _systemcModel;
+    _systemcModel = nullptr;
 	}
 }

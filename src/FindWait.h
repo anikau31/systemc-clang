@@ -18,24 +18,22 @@ namespace scpar {
 		typedef pair < CXXMethodDecl *,vector < string > >processWaitEventPairType;
 		typedef map < CXXMethodDecl *, vector < string > >processWaitEventMapType;
 
-		  FindWait (CXXMethodDecl *, llvm::raw_ostream &);
-		 ~FindWait ();
+    FindWait (CXXMethodDecl *, llvm::raw_ostream &);
+    virtual ~FindWait();
 
-		virtual bool VisitCallExpr (CallExpr * expr);
+		virtual bool VisitCallExpr(CallExpr *expr);
 
 
-		CXXMethodDecl *getEntryMethod ();
-		waitListType getWaitCalls ();
-
-		void dump ();
+		CXXMethodDecl* getEntryMethod();
+		waitListType getWaitCalls();
+		void dump();
 
 	private:
 
-		  CXXMethodDecl * _entryMethodDecl;
-
-		  llvm::raw_ostream & _os;
-		CallExpr *_waitCall;
-		Expr *_firstArg;
+    CXXMethodDecl *_entryMethodDecl;
+    llvm::raw_ostream & _os;
+    CallExpr *_waitCall;
+    Expr *_firstArg;
 		bool _foundWait;
 		waitListType _waitCalls;
 

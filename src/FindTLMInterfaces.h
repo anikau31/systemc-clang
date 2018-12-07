@@ -14,26 +14,26 @@ namespace scpar
 
 	class FindTLMInterfaces:public RecursiveASTVisitor < FindTLMInterfaces >
 	{
-	  public:
+  public:
 		// / typedefs
 		typedef map < string, FindTemplateTypes * >interfaceType;
 		typedef pair < string, FindTemplateTypes * >kvType;
 
 		FindTLMInterfaces(CXXRecordDecl *, llvm::raw_ostream &);
-	 ~FindTLMInterfaces();
+    virtual ~FindTLMInterfaces();
 		
-  virtual bool VisitFieldDecl(FieldDecl *);
+    virtual bool VisitFieldDecl(FieldDecl *);
   
-  // ANI : Identifying only FIFO interfaces. 
-  // Need to add the other interfaces
+    // ANI : Identifying only FIFO interfaces. 
+    // Need to add the other interfaces
 		interfaceType getInputInterfaces();
 		interfaceType getOutputInterfaces();
 		interfaceType getInputOutputInterfaces();
 
 		void dump();
 
-	  private:
-		  llvm::raw_ostream & _os;
+  private:
+    llvm::raw_ostream & _os;
 		interfaceType _inInterfaces;
 		interfaceType _outInterfaces;
 		interfaceType _inoutInterfaces;

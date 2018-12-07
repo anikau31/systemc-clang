@@ -12,45 +12,41 @@ namespace scpar {
 	using namespace std;
 
 	struct SignalContainer {
-		SignalContainer (string n, FindTemplateTypes * tt, FieldDecl * fd
-		):_name (n
-		), _template (tt
-		), _astNode (fd
-		) {
-		} ~SignalContainer (
-		) {
+		SignalContainer (string n, FindTemplateTypes * tt, FieldDecl * fd) :
+    _name (n),
+      _template (tt),
+      _astNode (fd) {
+		}
+    ~SignalContainer () {
 			// Only thing I create is FindTemplateType. Rest should be deleted by clang.
 			llvm::errs () << "[[ Destructor SignalContainer ]]\n";
 			delete _template;
-		} SignalContainer (const SignalContainer & from
-		) {
+		}
+
+    SignalContainer (const SignalContainer & from) {
 			_name = from._name;
 			_template = new FindTemplateTypes (*(from._template));
 			_astNode = from._astNode;
 		}
 
-		void dump (raw_ostream & os
-		) {
+		void dump (raw_ostream & os	) {
 			os << "[SignalContainer " << _name << " FindTemplateType " << _template
-				<< " FieldDecl " << _astNode << "\n";
+         << " FieldDecl " << _astNode << "\n";
 			_template->printTemplateArguments (os);
 			os << "]\n";
 		}
 
-		FindTemplateTypes *getTemplateTypes (
-		) {
+		FindTemplateTypes *getTemplateTypes() {
 			assert (!(_template == NULL));
 			return _template;
 		}
 
-		FieldDecl *getASTNode (
-		) {
+		FieldDecl *getASTNode() {
 			assert (!(_astNode == NULL));
 			return _astNode;
 		}
 
-		string getName (
-		) {
+		string getName () {
 			return _name;
 		}
 
@@ -60,28 +56,23 @@ namespace scpar {
 		FieldDecl *_astNode;
 	};
 
-	class FindSignals:public RecursiveASTVisitor < FindSignals > {
+	class FindSignals : public RecursiveASTVisitor < FindSignals > {
 	public:
 		/// typedefs
-		typedef pair < string, SignalContainer * >signalPairType;
-		typedef map < string, SignalContainer * >signalMapType;
+		typedef pair < string, SignalContainer* > signalPairType;
+		typedef map < string, SignalContainer * > signalMapType;
 
-		  FindSignals (CXXRecordDecl *, llvm::raw_ostream &
-		);
-		 ~FindSignals (
-		);
+    FindSignals(CXXRecordDecl *, llvm::raw_ostream &	);
+    virtual ~FindSignals();
 
-		virtual bool VisitFieldDecl (FieldDecl *
-		);
+		virtual bool VisitFieldDecl (FieldDecl *);
 		//    virtual bool VisitMemberExpr(MemberExpr* ) ;
 
-		signalMapType *getSignals (
-		);
-		void dump (
-		);
+		signalMapType *getSignals();
+		void dump();
 
 	private:
-		  llvm::raw_ostream & _os;
+    llvm::raw_ostream & _os;
 		int state;
 		signalMapType *_signals;
 	};

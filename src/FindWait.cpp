@@ -7,49 +7,43 @@
 using namespace scpar;
 using namespace std;
 
-FindWait::FindWait (CXXMethodDecl * d, llvm::raw_ostream & os):
-_entryMethodDecl (d), _os (os), _waitCall (NULL), _firstArg (NULL),
-_foundWait (false)
-{
-	TraverseDecl (d);
+FindWait::FindWait (CXXMethodDecl *d, llvm::raw_ostream &os):
+_entryMethodDecl(d),
+_os(os),
+_waitCall(nullptr),
+_firstArg(nullptr),
+_foundWait (false) {
+	TraverseDecl(d);
 }
 
-FindWait::~FindWait ()
-{
-
+FindWait::~FindWait() {
 	_waitCalls.clear ();
-
 }
 
-bool FindWait::VisitCallExpr (CallExpr * e)
-{
+bool FindWait::VisitCallExpr (CallExpr *e) {
 
-	bool duplicateWait = false;
+  //	bool duplicateWait = false;
 
 	clang::LangOptions LangOpts;
 	LangOpts.CPlusPlus = true;
 	clang::PrintingPolicy Policy (LangOpts);
 
-	if (e->getDirectCallee ()->getNameInfo ().getAsString () == string ("wait"))
-		{
+	if (e->getDirectCallee ()->getNameInfo ().getAsString () == string ("wait"))	{
 			_waitCalls.push_back (e);
 		}
 	return true;
 }
 
-FindWait::waitListType FindWait::getWaitCalls ()
-{
+FindWait::waitListType FindWait::getWaitCalls() {
 	return _waitCalls;
 }
 
-CXXMethodDecl *FindWait::getEntryMethod ()
-{
+CXXMethodDecl* FindWait::getEntryMethod() {
 	return _entryMethodDecl;
 }
 
 
-void FindWait::dump ()
-{
+void FindWait::dump() {
 	/*
 	   _os << "\n ============== FindWait ===============";
 	   _os << "\n:> Print 'wait' statement informtion\n";

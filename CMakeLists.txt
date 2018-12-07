@@ -32,7 +32,7 @@ endif(USE_SAUTO)
 
 
   set (LLVM_LD_FLAGS
-      $ENV{LLVM_LD_FLAGS}
+      "$ENV{LLVM_LD_FLAGS} -lpthread"
       )
 
   set (LLVM_LIBS
@@ -58,11 +58,12 @@ endif(USE_SAUTO)
 				clangAnalysis
 				clangARCMigrate
 				clangRewriteFrontend
-				clangRewriteCore
+				clangRewrite
 				clangEdit
 				clangAST
 				clangLex
 				clangBasic
+                clangASTMatchers
    )
 
 
@@ -110,12 +111,13 @@ endif (USE_SAUTO)
     target_link_libraries( ${TARGET} ${clang_lib} )
   endforeach()
 
+  foreach (ld_flag ${LLVM_LD_FLAGS})
+    target_link_libraries( ${TARGET} ${ld_flag} )
+  endforeach()
+
   foreach (llvm_lib ${LLVM_LIBS})
     target_link_libraries( ${TARGET} ${llvm_lib} )
   endforeach()
 
-  foreach (ld_flag ${LLVM_LD_FLAGS})
-    target_link_libraries( ${TARGET} ${ld_flag} )
-  endforeach()
 
 

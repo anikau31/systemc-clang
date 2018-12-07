@@ -6,9 +6,9 @@ FindEntryFunctions::FindEntryFunctions (CXXRecordDecl * d, llvm::raw_ostream & o
 _d (d),
 _isEntryFunction (false),
 _procType (NONE),
-_entryCXXRecordDecl (NULL),
-_entryMethodDecl (NULL),
-_foundEntryDeclaration (false), _constructorStmt (NULL), pass (1)
+_entryCXXRecordDecl (nullptr),
+_entryMethodDecl (nullptr),
+_foundEntryDeclaration (false), _constructorStmt (nullptr), pass (1)
 {
 
 	/// Pass 1:
@@ -31,6 +31,12 @@ _foundEntryDeclaration (false), _constructorStmt (NULL), pass (1)
 	TraverseDecl (_d);
 	pass = 4;
 
+}
+
+FindEntryFunctions::~FindEntryFunctions() {
+  _entryCXXRecordDecl = nullptr;
+  _entryMethodDecl = nullptr;
+  _constructorStmt = nullptr;
 }
 
 bool FindEntryFunctions::VisitMemberExpr (MemberExpr * e)
@@ -145,7 +151,7 @@ bool FindEntryFunctions::VisitCXXMethodDecl (CXXMethodDecl * md)
 			{
 				/// Check if name is the same as _entryFunction.
 				//_os <<"\n md name : " <<md->getNameAsString();
-				for (int i = 0; i < _entryFunctions.size (); i++)
+				for (size_t i = 0; i < _entryFunctions.size (); i++)
 					{
 						if (md->getNameAsString () == _entryFunctions.at (i)->getName ())
 							{
@@ -190,10 +196,9 @@ void
 	_os << "\n ============== FindEntryFunction ===============\n";
 	_os << "\n:> Print Entry Function informtion for : " <<
 		_d->getNameAsString () << "\n";
-	for (unsigned int i = 0; i < _entryFunctions.size (); i++)
+	for (size_t i = 0; i < _entryFunctions.size (); i++)
 		{
-			EntryFunctionContainer *
-				ef = _entryFunctions[i];
+			EntryFunctionContainer * ef = _entryFunctions[i];
 
 			_os << "\n:> Entry function name: " << ef->getName () <<
 				", process type: ";
