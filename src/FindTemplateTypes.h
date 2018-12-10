@@ -1,8 +1,8 @@
 #ifndef _FIND_TYPE_H_
 #define _FIND_TYPE_H_
 
-#include<set>
-#include<vector>
+#include <set>
+#include <vector>
 #include <string>
 #include "clang/AST/DeclCXX.h"
 #include "llvm/Support/raw_ostream.h"
@@ -10,150 +10,117 @@
 #include "clang/AST/DeclTemplate.h"
 #include "clang/AST/Type.h"
 
+#include <iostream>
+
 namespace scpar {
 	using namespace clang;
 	using namespace std;
 
-	class FindTemplateTypes:public RecursiveASTVisitor < FindTemplateTypes > {
+  // This class is going to find the arguments from templates
+	class FindTemplateTypes : public RecursiveASTVisitor < FindTemplateTypes > {
 	public:
 		/// Typedefs
-		typedef vector < pair < string, const Type *> >vector_t;
-		typedef pair < string, const Type *>kvVector_t;
-		typedef vector < pair < string, const Type *> >argVectorType;
+		typedef vector < pair < string, const Type *> > type_vector_t;
+		typedef vector < pair < string, const Type *> > argVectorType;
 
+    // Constructor
+    FindTemplateTypes() {	}
 
-		  FindTemplateTypes (
-		) {
-		}
-		/// Copy constructor 
-  FindTemplateTypes (const FindTemplateTypes & rhs ) {
+		/// Copy constructor
+    FindTemplateTypes( const FindTemplateTypes &rhs ) {
 			copy (rhs._templateTypes.begin (), rhs._templateTypes.end (),
-						back_inserter (_templateTypes)
-		);
-	} string getTemplateType (
-	) {
-		string s;
+						back_inserter (_templateTypes) );
+    }
 
-		for (vector_t::iterator mit = _templateTypes.begin ();
-				 mit != _templateTypes.end (); mit++)
-			{
-				if (mit != _templateTypes.begin ())
-					{
-						s += "<";
-					}
-				s += mit->first;
-				if (mit != _templateTypes.begin ())
-					{
-						s += ">";
-					}
-			}
-		return s;
-	}
+    string getTemplateType() {
+      string s{};
 
-	vector_t Enumerate (const Type * type
-	) {
-		_templateTypes.clear ();
-		if (!type)
-			{
-				return _templateTypes;
-			}
+      // type_vector_t::iterator
+      for (auto mit = _templateTypes.begin (); mit != _templateTypes.end (); ++mit)  {
+          if (mit != _templateTypes.begin())  {
+              s += "<";
+            }
+          s += mit->first;
+          if (mit != _templateTypes.begin())  {
+              s += ">";
+            }
+        }
+      return s;
+    }
 
-		TraverseType (QualType (type, 0));
-		return _templateTypes;
-	}
+    type_vector_t Enumerate( const Type *type ) {
+      _templateTypes.clear();
+      if ( !type ) {
+          return _templateTypes;
+        }
 
-	bool VisitType (Type * type
-	) {
-		QualType q = type->getCanonicalTypeInternal ();
+      TraverseType( QualType (type, 0) );
+      return _templateTypes;
+    }
 
-//            _os << "\n###### Type: " << q.getAsString() << " \n" ;
+    bool VisitType( Type *type ) {
+      QualType q{type->getCanonicalTypeInternal()};
+      //      cout << "\n###### Type: " << q.getAsString() << " \n" ;
+      if ( type->isBuiltinType() )  {
+          _templateTypes.push_back( pair < string, const Type * >(q.getAsString(), type) );
+          return true;
+        }
 
-		if (type->isBuiltinType ())
-			{
+      CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
+      if ( p_cxx_record != nullptr )  {
+        IdentifierInfo *info{p_cxx_record->getIdentifier()};
+        if ( info != nullptr )  {
+          _templateTypes.push_back(pair < string, const Type * >(info->getNameStart(), type) );
+        }
+      }
+      return true;
+    }
 
-				_templateTypes.push_back (pair < string,
-																	const Type * >(q.getAsString (), type)
-				);
+    bool VisitIntegerLiteral( IntegerLiteral *l ) {
+      //_os << "\n####### IntegerLiteral: " << l->getValue().toString(10,true) << "\n";
+      //_os << "== type ptr: " << l->getType().getTypePtr() << "\n";
+      //_os << "== type name: " << l->getType().getAsString() << "\n";
+      _templateTypes.push_back (pair < string, const Type * >(l->getValue ().toString (10, true),
+                                  l->getType().getTypePtr()));
 
-				return true;
-			}
+      return true;
+    }
 
-		CXXRecordDecl *crType = type->getAsCXXRecordDecl ();
+    type_vector_t getTemplateArgumentsType() {
+      return _templateTypes;
+    }
 
-		if (crType != NULL)
-			{
-				IdentifierInfo *info = crType->getIdentifier ();
+    void printTemplateArguments( llvm::raw_ostream &os, int tabn = 0 )	{
 
-				if (info != NULL)
-					{
-						_templateTypes.push_back (pair < string,
-																			const Type * >(info->getNameStart (),
-																										 type)
-						);
-					}
-			}
+      // type_vector_t::iterator
+      for (auto mit = _templateTypes.begin(); mit != _templateTypes.end(); mit++)   {
+        for ( auto i{0}; i < tabn; ++i)  {
+          os << " ";
+        }
+          os << "- " << mit->first << ", type ptr: " << mit->second;
+          os << "\n";
+        }
+    }
 
-		return true;
-	}
+    vector < string > getTemplateArguments() {
+      vector < string > args;
+      // type_vector_t::iterator
+      for ( auto mit = _templateTypes.begin(); mit != _templateTypes.end(); ++mit )  {
+          if ( mit->first == "sc_in" || mit->first == "sc_out"  || mit->first == "sc_inout" )  {
+              break;
+            }
+          args.push_back(mit->first);
+        }
+      return args;
+    }
 
-	bool VisitIntegerLiteral (IntegerLiteral * l
-	) {
-		//_os << "\n####### IntegerLiteral: " << l->getValue().toString(10,true) << "\n";
-		//_os << "== type ptr: " << l->getType().getTypePtr() << "\n";
-		//_os << "== type name: " << l->getType().getAsString() << "\n";
-		_templateTypes.push_back (pair < string,
-															const Type *
-															>(l->getValue ().toString (10, true),
-																l->getType ().getTypePtr ()));
+    size_t size() {
+      return _templateTypes.size();
+    }
+  
+  private:
+    type_vector_t _templateTypes;
 
-		return true;
-	}
-
-	vector_t getTemplateArgumentsType (
-	) {
-		return _templateTypes;
-	}
-
-	void printTemplateArguments (llvm::raw_ostream & os, int tabn = 0)
-	{
-
-		for (vector_t::iterator mit = _templateTypes.begin ();
-				 mit != _templateTypes.end (); mit++)
-			{
-				for (int i = 0; i < tabn; i++)
-					{
-						os << " ";
-					}
-				os << "- " << mit->first << ", type ptr: " << mit->second;
-				os << "\n";
-			}
-	}
-
-	vector < string > getTemplateArguments ()
-	{
-		vector < string > args;
-		for (vector_t::iterator mit = _templateTypes.begin ();
-				 mit != _templateTypes.end (); mit++)
-			{
-				if (mit->first == "sc_in" || mit->first == "sc_out"
-						|| mit->first == "sc_inout")
-					{
-						break;
-					}
-
-				args.push_back (mit->first);
-				//  _os << "\n:>> " << mit->first << ", type ptr: " << mit->second;
-			}
-		return args;
-	}
-
-	unsigned int size (
-	) {
-		return _templateTypes.size ();
-	}
-private:
-	vector_t _templateTypes;
-
-};
+  };
 }
 #endif

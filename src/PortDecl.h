@@ -1,9 +1,10 @@
 #ifndef _PORT_DECL_H_
 #define _PORT_DECL_H_
 
-#include "clang/AST/DeclCXX.h"
 #include <string>
 #include <map>
+
+#include "clang/AST/DeclCXX.h"
 #include "FindTemplateTypes.h"
 
 namespace scpar {
@@ -22,7 +23,7 @@ namespace scpar {
     void setModuleName(const string &);
 
     /// Get parameters
-    string getName();
+    string getName() const;
     FindTemplateTypes *getTemplateType();
 
     // Print
