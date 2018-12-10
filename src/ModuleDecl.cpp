@@ -345,7 +345,9 @@ void ModuleDecl::dumpPorts(raw_ostream & os, int tabn)
     for (ModuleDecl::portMapType::iterator mit = _iports.begin();
          mit != _iports.end(); mit++) {
 
+      os << "Print Port\n" << mit->first << "\n";
       mit->second->dump(os, tabn);
+      os << "End print\n";
       os << "\n ";
     }
     os << "\n";

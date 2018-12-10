@@ -21,30 +21,28 @@ namespace scpar {
   class ModuleDecl {
   public:
 
-    typedef pair < string, Signal * >signalPairType;
-    typedef map < string, Signal * >signalMapType;
+    typedef pair < string, Signal * > signalPairType;
+    typedef map < string, Signal * > signalMapType;
 
-    typedef pair < string, PortDecl * >portPairType;
-    typedef map < string, PortDecl * >portMapType;
+    typedef pair < string, PortDecl * > portPairType;
+    typedef map < string, PortDecl * > portMapType;
 
-    typedef pair <string, InterfaceDecl *>interfacePairType;
+    typedef pair <string, InterfaceDecl *> interfacePairType;
     typedef map <string, InterfaceDecl *> interfaceMapType;
 
-    typedef pair < string, ProcessDecl * >processPairType;
-    typedef map < string, ProcessDecl * >processMapType;
+    typedef pair < string, ProcessDecl * > processPairType;
+    typedef map < string, ProcessDecl * > processMapType;
 
     typedef pair < string, string > moduleProcessPairType;
-    
 
-
-    typedef vector<string> instanceName;
-    
     typedef pair<string, string> portSignalPairType;
     typedef map<string, string> portSignalMapType;
-    
+
+    // Why is this a not a Type?
+    typedef vector<string> instanceName;
+
   public:
-    
-    ModuleDecl();     
+    ModuleDecl();
     ModuleDecl(const string &, CXXRecordDecl *);
 
     ~ModuleDecl();
@@ -57,8 +55,6 @@ namespace scpar {
     void addOutputInterfaces(FindTLMInterfaces::interfaceType);
     void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
     void addProcess(FindEntryFunctions::entryFunctionVectorType *);
-    
-    
     void addInstances(vector<string>);
     void addSignalBinding(map<string, string>);
     void setModuleName(const string &);
