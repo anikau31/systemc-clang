@@ -19,15 +19,13 @@
 #include "clang/Basic/SourceManager.h"
 #include "clang/AST/PrettyPrinter.h"
 #include <string>
+
 namespace scpar {
 	using namespace clang;
 	using namespace std;
 	class Utility {
 	public:
-		Utility (){
-		
-		}
-
+		Utility();
 		/*
 		void tabit (llvm::raw_ostream &, int tabn);
 		string strip (string, string);
