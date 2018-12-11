@@ -25,7 +25,7 @@ namespace scpar {
 	using namespace std;
 	class Utility {
 	public:
-		Utility();
+		Utility() { };
 		/*
 		void tabit (llvm::raw_ostream &, int tabn);
 		string strip (string, string);
