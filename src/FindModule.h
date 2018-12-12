@@ -12,19 +12,18 @@ namespace scpar {
 
 	class FindModule: public RecursiveASTVisitor < FindModule > {
 	public:
-		FindModule(CXXRecordDecl *, llvm::raw_ostream &);
-		virtual bool VisitCXXRecordDecl(CXXRecordDecl *decl);
-
+		FindModule( CXXRecordDecl *, llvm::raw_ostream & );
+		virtual bool VisitCXXRecordDecl( CXXRecordDecl *decl );
     virtual ~FindModule();
-    
+
 		void printSystemCModuleInformation();
 		string getModuleName();
 
  		bool isSystemCModule() const;
-    
+
 	private:
-    CXXRecordDecl * _decl;
-    llvm::raw_ostream & _os;
+    CXXRecordDecl *_decl;
+    llvm::raw_ostream &_os;
 		bool _isSystemCModule;
 		string _moduleName;
 

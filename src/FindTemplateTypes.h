@@ -32,6 +32,11 @@ namespace scpar {
 						back_inserter (_templateTypes) );
     }
 
+    FindTemplateTypes( const FindTemplateTypes *rhs ) {
+			copy (rhs->_templateTypes.begin(), rhs->_templateTypes.end(),
+						back_inserter (_templateTypes) );
+    }
+
     string getTemplateType() {
       string s{};
 
@@ -92,22 +97,22 @@ namespace scpar {
     }
 
     void printTemplateArguments( llvm::raw_ostream &os, int tabn = 0 )	{
-      vector < string > template_arguments{ getTemplateArguments() };
+      vector < string > template_arguments; //{ getTemplateArguments() };
       // type_vector_t::iterator
       //      for (auto mit = _templateTypes.begin(); mit != _templateTypes.end(); mit++)   {
-      //      for ( auto const &mit: _templateTypes ) {
-        /* for ( auto i{0}; i < tabn; ++i)  { */
-        /*   os << " "; */
-        /* } */
-        /*   os << "- " << mit.first << ", type ptr: " << mit.second; */
-        /*   os << "\n"; */
-        //  template_arguments.push_back( mit.first );
-      //        }
+      for ( auto const &mit: _templateTypes ) {
+        for ( auto i{0}; i < tabn; ++i)  {
+          os << " ";
+        }
+        os << "- " << mit.first << ", type ptr: " << mit.second;
+        os << "\n";
+        template_arguments.push_back( mit.first );
+      }
 
       // Print the template arguments to the output stream
       os << "= ";
       for ( auto const &targ: template_arguments ) {
-              os << targ << "  ";
+        os << targ << "  ";
       }
     }
 
