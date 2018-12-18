@@ -66,7 +66,7 @@ void ModuleDecl::addSignals( FindSignals::signalMapType *signal_map ) {
   }
 }
 
-void ModuleDecl::addInputPorts( FindPorts::portType p ) {
+void ModuleDecl::addInputPorts( FindPorts::PortType p ) {
   for ( auto mit: p ) {
     string name = mit.first;
     FindTemplateTypes *template_type = new FindTemplateTypes(mit.second);
@@ -76,7 +76,7 @@ void ModuleDecl::addInputPorts( FindPorts::portType p ) {
   }
 }
 
-void ModuleDecl::addOutputPorts(FindPorts::portType p) {
+void ModuleDecl::addOutputPorts(FindPorts::PortType p) {
   for ( auto mit: p ) {
     string n = mit.first;
     FindTemplateTypes *tt = new FindTemplateTypes( mit.second );
@@ -86,7 +86,7 @@ void ModuleDecl::addOutputPorts(FindPorts::portType p) {
   }
 }
 
-void ModuleDecl::addInputOutputPorts( FindPorts::portType p ) {
+void ModuleDecl::addInputOutputPorts( FindPorts::PortType p ) {
   for ( auto mit: p ) {
     _ioports.insert(portPairType( mit.first, new PortDecl(mit.first, mit.second ) ) );
   }

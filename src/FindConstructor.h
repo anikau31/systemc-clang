@@ -2,12 +2,14 @@
 #define _FIND_CONSTRUCTOR_H_
 
 #include <vector>
+#include <map>
 #include <string>
+
 #include "clang/AST/DeclCXX.h"
 #include "llvm/Support/raw_ostream.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "EntryFunctionContainer.h"
-#include <map>
+
 namespace scpar {
 
   using namespace clang;

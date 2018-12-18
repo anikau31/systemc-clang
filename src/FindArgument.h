@@ -12,19 +12,17 @@ namespace scpar {
 	class FindArgument:public RecursiveASTVisitor < FindArgument > {
 
 	public:
-		FindArgument(Expr * ce);
+		FindArgument( Expr * );
     virtual ~FindArgument();
 		virtual bool VisitMemberExpr (MemberExpr * me);
 		virtual bool VisitDeclRefExpr (DeclRefExpr * de);
 		virtual bool VisitIntegerLiteral (IntegerLiteral * il);
 		virtual bool VisitCXXBoolLiteralExpr (CXXBoolLiteralExpr * bl);
 
-		string getArgumentName (
-		);
-
+		string getArgumentName();
 	private:
-	  Expr * _e;
-		string _argumentName;
+	  Expr * expression_;
+		string argument_name_;
 	};
 }
 #endif
