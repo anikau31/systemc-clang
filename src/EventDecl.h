@@ -13,36 +13,30 @@ namespace scpar {
 	class EventDecl {
 	public:
 		// Typedefs.
-		typedef pair < string, FieldDecl * >eventPairType;
-		typedef map < string, FieldDecl * >eventMapType;
+    //		typedef pair < string, FieldDecl * >eventPairType;
+    //		typedef map < string, FieldDecl * >eventMapType;
 
 		// Constructors.
-		  EventDecl (
-		);
-		  EventDecl (const string &, FieldDecl *
-		);
+    EventDecl();
+    EventDecl( const string &, FieldDecl * );
 
 		// Copy constructor.
-		  EventDecl (const EventDecl &
-		);
+    EventDecl( const EventDecl & );
 
 		// Destructor.
-		 ~EventDecl (
-		);
+    ~EventDecl();
 
 		/// Get parameters
-		string getName (
-		);
-		FieldDecl *getASTNode (
-		);
+		string getName();
+		FieldDecl *getASTNode();
 		// Print
 		void dump (raw_ostream &, int tabn = 0);
 
 	private:
-		void ptrCheck (
-		);
+		void ptrCheck();
+
 	private:
-		  string _name;
+    string _name;
 		FieldDecl *_astNode;
 	};
 }

@@ -2,240 +2,195 @@
 
 using namespace scpar;
 
-FindEntryFunctions::FindEntryFunctions (CXXRecordDecl * d, llvm::raw_ostream & os):_os (os),
-_d (d),
-_isEntryFunction (false),
-_procType (NONE),
-_entryCXXRecordDecl (nullptr),
-_entryMethodDecl (nullptr),
-_foundEntryDeclaration (false), _constructorStmt (nullptr), pass (1)
-{
+FindEntryFunctions::FindEntryFunctions( CXXRecordDecl * d, llvm::raw_ostream & os ) :
+  os_{os},
+  _d{d},
+  is_entry_function_{false},
+  proc_type_{NONE},
+  entry_cxx_record_decl_{nullptr},
+  entry_method_decl_{nullptr},
+  found_entry_decl_{false},
+  constructor_stmt_{nullptr},
+  pass_{1} {
 
-	/// Pass 1:
-	/// Find the constructor definition, and the Stmt* that has the code for it.
-	/// Set the _constructorStmt pointer.
-	//  _os << "\n>>>> PASS 1\n";
+    /// Pass_ 1:
+    /// Find the constructor definition, and the Stmt* that has the code for it.
+    /// Set the constructor_stmt_ pointer.
+    //  os_ << "\n>>>> PASS 1\n";
 
-	TraverseDecl (_d);
-	//  _os << "\n EntryFunctions found: " << _entryFunctions.size() << "\n";
-	pass = 2;
+    TraverseDecl( _d );
+    //  os_ << "\n EntryFunctions found: " << entry_function_list_.size() << "\n";
+    pass_ = 2;
 
-	//    _os << "\n>>>> PASS 2\n";
-	/// Pass 2:
-	/// Get the entry function name from constructor
-	TraverseStmt (_constructorStmt);
-	pass = 3;
+    //    os_ << "\n>>>> PASS 2\n";
+    /// Pass 2:
+    /// Get the entry function name from constructor
+    TraverseStmt( constructor_stmt_ );
+    pass_ = 3;
 
-	/// Pass 3:
-	/// Find the CXXMethodDecl* to the entry function
-	TraverseDecl (_d);
-	pass = 4;
+    /// Pass 3:
+    /// Find the CXXMethodDecl* to the entry function
+    TraverseDecl( _d );
+    pass_ = 4;
 
-}
+  }
 
 FindEntryFunctions::~FindEntryFunctions() {
-  _entryCXXRecordDecl = nullptr;
-  _entryMethodDecl = nullptr;
-  _constructorStmt = nullptr;
+  entry_cxx_record_decl_ = nullptr;
+  entry_method_decl_ = nullptr;
+  constructor_stmt_ = nullptr;
 }
 
-bool FindEntryFunctions::VisitMemberExpr (MemberExpr * e)
-{
-	//_os << "\tVisitMemberExpr";
-	switch (pass)
-		{
-		case 2:
-			{
+bool FindEntryFunctions::VisitMemberExpr (MemberExpr * e) {
+	//os_ << "\tVisitMemberExpr";
+	switch( pass_ ) {
+  case 2:	{
+    string memberName = e->getMemberDecl ()->getNameAsString ();
 
-				string
-					memberName = e->getMemberDecl ()->getNameAsString ();
+    // os_ <<"\n member name : " <<memberName;
 
-				// _os <<"\n member name : " <<memberName;
-
-				//_os << "####: MemberExpr -- " << memberName << "\n";
-				if (memberName == "create_method_process")
-					{
-						_procType = METHOD;
-					}
-				else if (memberName == "create_thread_process")
-					{
-						_procType = THREAD;
-					}
-				else if (memberName == "create_cthread_process")
-					{
-						_procType = CTHREAD;
-					}
-
-				break;
-			}
-		default:
-			break;
-		}
-
+    //os_ << "####: MemberExpr -- " << memberName << "\n";
+    if ( memberName == "create_method_process" ) {
+      proc_type_ = METHOD;
+    }
+    else if ( memberName == "create_thread_process" )	{
+      proc_type_ = THREAD;
+    }
+    else if ( memberName == "create_cthread_process" ) {
+      proc_type_ = CTHREAD;
+    }
+    break;
+  }
+  default:
+    break;
+  }
 	return true;
 }
 
-bool FindEntryFunctions::VisitStringLiteral (StringLiteral * s)
-{
-	//_os << "\t\tVisitStringLiteral\n";
-	switch (pass)
-		{
-		case 2:
-			{
-				//_os << "\nVisitStringLiteral\n";
-				_entryName = s->getString ();
+bool FindEntryFunctions::VisitStringLiteral( StringLiteral * s ) {
+	//os_ << "\t\tVisitStringLiteral\n";
+	switch( pass_ )	{
+  case 2: {
+    //os_ << "\nVisitStringLiteral\n";
+    entry_name_ = s->getString();
 
+    /// FIXME: Where do we erase these?
+    /// Create the object to handle multiple entry functions.
 
-				/// FIXME: Where do we erase these?
-				/// Create the object to handle multiple entry functions.
+    //  EntryFunctionType* ef = new EntryFunctionType();
 
-				//  EntryFunctionType* ef = new EntryFunctionType();
+    ef = new EntryFunctionContainer();
+    //ef->setConstructorStmt (constructor_stmt_);
+    ef->setName( entry_name_ );
+    ef->setProcessType( proc_type_ );
 
-				ef = new EntryFunctionContainer ();
-				//ef->setConstructorStmt (_constructorStmt);
-				ef->setName (_entryName);
-				ef->setProcessType (_procType);
-
-				if (_procType != 0)
-					{
-						_entryFunctions.push_back (ef);
-					}
-/*    ef->_constructorStmt = _constructorStmt;
-    ef->_entryName = _entryName;
-    ef->_procType = _procType;
- */
-
-
-				break;
-			}
-		case 3:
-			{
-				break;
-			}
-		default:
-			break;
-		}
+    if ( proc_type_ != 0 ) {
+      entry_function_list_.push_back( ef );
+    }
+    /*    ef->constructor_stmt_ = constructor_stmt_;
+          ef->entry_name_ = entry_name_;
+          ef->proc_type_ = proc_type_;
+    */
+    break;
+  }
+  case 3:	{
+    break;
+  }
+  default:
+    break;
+  }
 	return true;
 }
 
-bool FindEntryFunctions::VisitCXXMethodDecl (CXXMethodDecl * md)
-{
-	// _os << "\nVisitCXXMethodDecl: " << pass << ", " << md->getNameAsString() << "\n";  
-	_otherFunctions.push_back (md);
-	switch (pass)
-		{
-		case 1:
-			{
-				//    _os << "\n\nPass 1 of VisitCXXMethodDecl\n\n";
-				/// Check if method is a constructor
-				if (CXXConstructorDecl * cd = dyn_cast < CXXConstructorDecl > (md))
-					{
-						const FunctionDecl *
-							fd = NULL;
+bool FindEntryFunctions::VisitCXXMethodDecl( CXXMethodDecl * md ) {
+	// os_ << "\nVisitCXXMethodDecl: " << pass_ << ", " << md->getNameAsString() << "\n";
+	other_function_list_.push_back( md );
+	switch( pass_ )	{
+  case 1:	{
+    //    os_ << "\n\nPass_ 1 of VisitCXXMethodDecl\n\n";
+    /// Check if method is a constructor
+    if (CXXConstructorDecl *cd {dyn_cast< CXXConstructorDecl >(md)} )	{
+      const FunctionDecl * fd{nullptr};
+      cd->getBody(fd);
 
-						cd->getBody (fd);
-
-						if (cd->hasBody ())
-							{
-								_constructorStmt = cd->getBody ();
-							}
-					}
-				break;
-			}
-		case 2:
-			{
-				//    _os << "\n\nPass 2 of VisitCXXMethodDecl\n\n";
-				break;
-			}
-		case 3:
-			{
-				/// Check if name is the same as _entryFunction.
-				//_os <<"\n md name : " <<md->getNameAsString();
-				for (size_t i = 0; i < _entryFunctions.size (); i++)
-					{
-						if (md->getNameAsString () == _entryFunctions.at (i)->getName ())
-							{
-								EntryFunctionContainer *
-									tmp = _entryFunctions.at (i);
-
-								_entryMethodDecl = md;
-								if (_entryMethodDecl != NULL)
-									{
-										tmp->setEntryMethod (_entryMethodDecl);
-										//ef->_entryMethodDecl = _entryMethodDecl;
-									}
-							}
-					}
-				//    _os << "\n case 3: " << md->getNameAsString() << ", " << _entryName << "\n";
-				break;
-			}
-		}
+      if ( cd->hasBody() )	{
+        constructor_stmt_ = cd->getBody();
+      }
+    }
+    break;
+  }
+  case 2:	{
+    //    os_ << "\n\nPass_ 2 of VisitCXXMethodDecl\n\n";
+    break;
+  }
+  case 3:	{
+    /// Check if name is the same as _entryFunction.
+    //os_ <<"\n md name : " <<md->getNameAsString();
+    for ( size_t i = 0; i < entry_function_list_.size(); ++i ) {
+      if ( md->getNameAsString() == entry_function_list_.at(i)->getName() )	{
+        EntryFunctionContainer *tmp{ entry_function_list_.at(i) };
+        entry_method_decl_ = md;
+        if ( entry_method_decl_ != nullptr )	{
+          tmp->setEntryMethod( entry_method_decl_ );
+          //ef->entry_method_decl_ = entry_method_decl_;
+        }
+      }
+    }
+    //    os_ << "\n case 3: " << md->getNameAsString() << ", " << entry_name_ << "\n";
+    break;
+  }
+  }
 	return true;
 }
-
-CXXRecordDecl *
-FindEntryFunctions::getEntryCXXRecordDecl (
-)
-{
-	assert (!(_entryCXXRecordDecl == NULL));
-	return _entryCXXRecordDecl;
+// 
+CXXRecordDecl *FindEntryFunctions::getEntryCXXRecordDecl() {
+	assert (entry_cxx_record_decl_ != nullptr );
+	return entry_cxx_record_decl_;
 }
 
-CXXMethodDecl *
-FindEntryFunctions::getEntryMethodDecl (
-)
-{
-	assert (!(_entryMethodDecl == NULL));
-	return _entryMethodDecl;
+CXXMethodDecl *FindEntryFunctions::getEntryMethodDecl() {
+	assert ( entry_method_decl_ != nullptr );
+	return entry_method_decl_;
 }
 
-void
-  FindEntryFunctions::dump (
-)
-{
-	_os << "\n ============== FindEntryFunction ===============\n";
-	_os << "\n:> Print Entry Function informtion for : " <<
-		_d->getNameAsString () << "\n";
-	for (size_t i = 0; i < _entryFunctions.size (); i++)
-		{
-			EntryFunctionContainer * ef = _entryFunctions[i];
+void FindEntryFunctions::dump() {
+	os_ << "\n ============== FindEntryFunction ===============\n";
+	os_ << "\n:> Print Entry Function informtion for : " <<
+		_d->getNameAsString() << "\n";
+	for ( size_t i = 0; i < entry_function_list_.size(); ++i ) {
+			EntryFunctionContainer * ef = entry_function_list_[i];
 
-			_os << "\n:> Entry function name: " << ef->getName () <<
+			os_ << "\n:> Entry function name: " << ef->getName() <<
 				", process type: ";
-			switch (ef->getProcessType ())
-				{
+			switch ( ef->getProcessType() ) {
 				case THREAD:
-					_os << " SC_THREAD\n";
+					os_ << " SC_THREAD\n";
 					break;
 				case METHOD:
-					_os << " SC_METHOD\n";
+					os_ << " SC_METHOD\n";
 					break;
 				case CTHREAD:
-					_os << " SC_CTHREAD\n";
+					os_ << " SC_CTHREAD\n";
 					break;
 				default:
-					_os << " NONE\n";
+					os_ << " NONE\n";
 					break;
 				}
-			_os << ":> CXXMethodDecl addr: " << ef->getEntryMethod () << "\n";
-			//ef->_entryMethodDecl->dump();
+			os_ << ":> CXXMethodDecl addr: " << ef->getEntryMethod() << "\n";
+			//ef->entry_method_decl_->dump();
 		}
-	_os << "\n ============== END FindEntryFunction ===============\n";
-	_os << "\n";
+	os_ << "\n ============== END FindEntryFunction ===============\n";
+	os_ << "\n";
 }
 
-FindEntryFunctions::entryFunctionVectorType *
-	FindEntryFunctions::getEntryFunctions ()
-{
-	return new entryFunctionVectorType (_entryFunctions);
+FindEntryFunctions::entryFunctionVectorType * FindEntryFunctions::getEntryFunctions() {
+	return new entryFunctionVectorType( entry_function_list_ );
 }
 
-vector < CXXMethodDecl * >FindEntryFunctions::getOtherFunctions ()
-{
-	return _otherFunctions;
+vector < CXXMethodDecl * > FindEntryFunctions::getOtherFunctions() {
+	return other_function_list_;
 }
 
-string FindEntryFunctions::getEntryName ()
-{
-	return _entryName;
+string FindEntryFunctions::getEntryName() {
+	return entry_name_;
 }

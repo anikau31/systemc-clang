@@ -7,20 +7,20 @@
 using namespace scpar;
 using namespace std;
 
-FindWait::FindWait (CXXMethodDecl *d, llvm::raw_ostream &os):
-_entryMethodDecl(d),
-_os(os),
-_waitCall(nullptr),
-_firstArg(nullptr),
-_foundWait (false) {
-	TraverseDecl(d);
+FindWait::FindWait( CXXMethodDecl *d, llvm::raw_ostream &os ) :
+  entry_method_decl_{d},
+  os_{os},
+  wait_call_{nullptr} { //},
+  //  first_arg_{nullptr},
+  //  found_wait_{false} {
+    TraverseDecl(d);
 }
 
 FindWait::~FindWait() {
-	_waitCalls.clear ();
+	wait_calls_list_.clear();
 }
 
-bool FindWait::VisitCallExpr (CallExpr *e) {
+bool FindWait::VisitCallExpr ( CallExpr *e ) {
 
   //	bool duplicateWait = false;
 
@@ -28,55 +28,54 @@ bool FindWait::VisitCallExpr (CallExpr *e) {
 	LangOpts.CPlusPlus = true;
 	clang::PrintingPolicy Policy (LangOpts);
 
-	if (e->getDirectCallee ()->getNameInfo ().getAsString () == string ("wait"))	{
-			_waitCalls.push_back (e);
-		}
+	if (e->getDirectCallee()->getNameInfo().getAsString() == string("wait"))	{
+    wait_calls_list_.push_back (e);
+  }
 	return true;
 }
 
 FindWait::waitListType FindWait::getWaitCalls() {
-	return _waitCalls;
+	return wait_calls_list_;
 }
 
-CXXMethodDecl* FindWait::getEntryMethod() {
-	return _entryMethodDecl;
+CXXMethodDecl* FindWait::getEntryMethod() const {
+	return entry_method_decl_;
 }
-
 
 void FindWait::dump() {
 	/*
-	   _os << "\n ============== FindWait ===============";
-	   _os << "\n:> Print 'wait' statement informtion\n";
-	   for (unsigned int i = 0; i < _waitCalls.size(); i++) {
-	   if(_waitCalls.size() > 2) {
-	   _os << ":> wait pointer: " <<  _waitCalls[i] << "num. of args: " << _waitCalls[i]->getNumArgs()-1 << "\n";
+    os_ << "\n ============== FindWait ===============";
+    os_ << "\n:> Print 'wait' statement informtion\n";
+    for (unsigned int i = 0; i < wait_calls_list_.size(); i++) {
+    if(wait_calls_list_.size() > 2) {
+    os_ << ":> wait pointer: " <<  wait_calls_list_[i] << "num. of args: " << wait_calls_list_[i]->getNumArgs()-1 << "\n";
 
-	   for (unsigned int j = 0; j < _waitCalls[i]->getNumArgs()-1; j++) {
-	   _os << "- arg " << j << ": " << getArgumentName(_waitCalls[i]->getArg(j)) << "\n";
-	   }
-	   }
-	   else {
-	   _os << ":> wait pointer: " <<  _waitCalls[i] << "num. of args: " << _waitCalls[i]->getNumArgs() << "\n";
+    for (unsigned int j = 0; j < wait_calls_list_[i]->getNumArgs()-1; j++) {
+    os_ << "- arg " << j << ": " << getArgumentName(wait_calls_list_[i]->getArg(j)) << "\n";
+    }
+    }
+    else {
+    os_ << ":> wait pointer: " <<  wait_calls_list_[i] << "num. of args: " << wait_calls_list_[i]->getNumArgs() << "\n";
 
-	   for (unsigned int j = 0; j < _waitCalls[i]->getNumArgs(); j++) {
-	   _os << "- arg " << j << ": " << getArgumentName(_waitCalls[i]->getArg(j)) << "\n";
-	   }  
-	   }
-	   }
+    for (unsigned int j = 0; j < wait_calls_list_[i]->getNumArgs(); j++) {
+    os_ << "- arg " << j << ": " << getArgumentName(wait_calls_list_[i]->getArg(j)) << "\n";
+    }  
+    }
+    }
 
-	   _os << "\n ============== END FindWait ===============";
+    os_ << "\n ============== END FindWait ===============";
 
-	   _os <<"\n Process and waiting on events ";
-	   for (processWaitEventMapType::iterator it = _processWaitEventMap.begin(), eit = _processWaitEventMap.end();
-	   it != eit;
-	   it++) {
-	   _os <<"\n Process :" <<it->first->getDeclName().getAsString();
+    os_ <<"\n Process and waiting on events ";
+    for (processWaitEventMapType::iterator it = _processWaitEventMap.begin(), eit = _processWaitEventMap.end();
+    it != eit;
+    it++) {
+    os_ <<"\n Process :" <<it->first->getDeclName().getAsString();
 
-	   _os <<"\n Waiting on event(s) : ";
-	   vector<string> tmp = it->second;
-	   for (int i = 0; i<tmp.size(); i++) {
-	   _os <<tmp.at(i)<<" ";
-	   }
-	   }
-	 */
+    os_ <<"\n Waiting on event(s) : ";
+    vector<string> tmp = it->second;
+    for (int i = 0; i<tmp.size(); i++) {
+    os_ <<tmp.at(i)<<" ";
+    }
+    }
+  */
 }

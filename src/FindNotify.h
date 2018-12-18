@@ -12,22 +12,21 @@ namespace scpar {
 
 	class FindNotify:public RecursiveASTVisitor < FindNotify > {
 	public:
-		typedef vector < CallExpr * > notifyCallListType;
+		typedef vector < CallExpr * > NotifyCallListType;
 
-
-    FindNotify(CXXMethodDecl *, raw_ostream &);
+    FindNotify( CXXMethodDecl *, raw_ostream & );
     virtual ~FindNotify();
-		virtual bool VisitCallExpr (CallExpr *expr);
+		virtual bool VisitCallExpr ( CallExpr *expr );
 
-		notifyCallListType getNotifyCallList ();
-    CXXMethodDecl * getEntryMethod();
-		void dump();
+		NotifyCallListType getNotifyCallList() const;
+    CXXMethodDecl * getEntryMethod() const;
+		void dump() const;
 
 	private:
-    CXXMethodDecl * _entryMethodDecl;
-    raw_ostream & _os;
-		CallExpr *_notifyCall;
-		notifyCallListType _notifyCalls;
+    CXXMethodDecl *entry_method_decl_;
+    llvm::raw_ostream &os_;
+		CallExpr *notify_call_;
+		NotifyCallListType notify_call_list_;
 	};
 }
 #endif

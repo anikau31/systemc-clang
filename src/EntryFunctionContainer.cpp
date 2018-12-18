@@ -117,8 +117,8 @@ void EntryFunctionContainer::addSusCFGAuto(SuspensionAutomata &s) {
 }
 
 void EntryFunctionContainer::addNotifys( FindNotify& f) {
-  FindNotify::notifyCallListType ncalls = f.getNotifyCallList();
-  for (FindNotify::notifyCallListType::iterator it = ncalls.begin(), eit = ncalls.end();
+  FindNotify::NotifyCallListType ncalls = f.getNotifyCallList();
+  for (FindNotify::NotifyCallListType::iterator it = ncalls.begin(), eit = ncalls.end();
        it != eit;
        it++) {
     // 'it' points to CXXMembercallExpr type.

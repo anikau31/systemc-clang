@@ -1,55 +1,51 @@
 #include "FindConstructor.h"
+
 using namespace scpar;
 
-FindConstructor::FindConstructor(CXXRecordDecl * d, llvm::raw_ostream & os):_os(os),
-_d(d),
-_constructorStmt(nullptr),
-pass(1) {
+FindConstructor::FindConstructor(CXXRecordDecl *declaration, llvm::raw_ostream &os) :
+  os_{os},
+  declaration_{declaration},
+  constructor_stmt_{nullptr},
+  pass_{1} {
 
-  TraverseDecl(_d);
-  pass = 2;
-  TraverseStmt(_constructorStmt);
-}
+    TraverseDecl( declaration_ );
+    pass_ = 2;
+    TraverseStmt( constructor_stmt_ );
+  }
 
 FindConstructor::~FindConstructor() {
-  _d = nullptr;
-  _constructorStmt = nullptr;
+  declaration_ = nullptr;
+  constructor_stmt_ = nullptr;
 }
 
-bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl * md) {
-
-  switch (pass) {
-    case 1:
-      {
-        if (CXXConstructorDecl * cd = dyn_cast < CXXConstructorDecl > (md)) {
-          const FunctionDecl *fd = NULL;
-
-          cd->getBody(fd);
-
-          if (cd->hasBody()) {
-            _constructorStmt = cd->getBody();
-          }
-        }
-        break;
+bool FindConstructor::VisitCXXMethodDecl( CXXMethodDecl *method_declaration ) {
+  switch (pass_) {
+  case 1:  {
+    if (CXXConstructorDecl *cd = dyn_cast< CXXConstructorDecl >(method_declaration)) {
+      const FunctionDecl *fd{nullptr};
+      cd->getBody(fd);
+      if ( cd->hasBody() ) {
+        constructor_stmt_ = cd->getBody();
       }
-    case 2:
-      {
-        //    _os << "\n\nPass 2 of VisitCXXMethodDecl\n\n";
-        break;
-      }
-    case 3:
-      {
-        break;
-      }
+    }
+    break;
+  }
+  case 2: {
+    //    os_ << "\n\nPass 2 of VisitCXXMethodDecl\n\n";
+    break;
+  }
+  case 3: {
+    break;
+  }
   }
   return true;
 }
 
-Stmt *FindConstructor::returnConstructorStmt() {
-  return _constructorStmt;
+Stmt * FindConstructor::returnConstructorStmt() const {
+  return constructor_stmt_;
 }
 
-void FindConstructor::dump() {
-  _os << "\n Module constructor statement dump ";
-  _constructorStmt->dump();
+void FindConstructor::dump() const {
+  os_ << "\n Module constructor statement dump ";
+  constructor_stmt_->dump();
 }

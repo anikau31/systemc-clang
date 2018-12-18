@@ -19,43 +19,34 @@
 #include <map>
 #include "Utility.h"
 #include "FindNotify.h"
+
 namespace scpar {
 	using namespace clang;
 	using namespace std;
 
 	class NotifyCalls {
 	public:
-
 		// Constructors.
-		NotifyCalls (
-		);
-		NotifyCalls (const string &, FindNotify::notifyCallListType
-		);
+		NotifyCalls();
+		NotifyCalls( const string &, FindNotify::NotifyCallListType );
 
 		// Copy constructor.
-		  NotifyCalls (const NotifyCalls &
-		);
+    NotifyCalls( const NotifyCalls & );
 
 		// Destructor.
-		 ~NotifyCalls (
-		);
+    ~NotifyCalls();
 
 		/// Get parameters
-		string getName (
-		);
-		  FindNotify::notifyCallListType getNotifyCallList (
-		);
+		string getName() const;
+    FindNotify::NotifyCallListType getNotifyCallList();
 
-		unsigned int getNumNotifyCalls (
-		);
+		unsigned int getNumNotifyCalls();
 		// Print
-		void dump (raw_ostream &, int
-		);
+		void dump ( llvm::raw_ostream &, int );
 
 	private:
-		  string _name;
-		  FindNotify::notifyCallListType _notifyCallList;
-
+    string name_;
+    FindNotify::NotifyCallListType notify_call_list_;
 	};
 }
 #endif

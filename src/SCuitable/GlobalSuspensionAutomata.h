@@ -82,7 +82,7 @@ namespace scpar {
     instanceFunctionSautoMapType _instanceFunctionSautoMap;
     eventNotificationTimeMapType _eventNotificationTimeMap;
     transitionTimeMapType _transitionTimeMap;
-    FindNotify::notifyCallListType _notifyCalls;
+    FindNotify::NotifyCallListType _notifyCalls;
     visitTransitionMapType _visitTransitionMap;     
     entryFunctionMacroMapType _entryFunctionGPUMacroMap;
     susCFGBlockGPUMacroMapType _susCFGBlockGPUMacroMap;

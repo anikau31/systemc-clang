@@ -47,13 +47,13 @@ namespace scpar {
 
     ~ModuleDecl();
 
-    void addSignals(FindSignals::signalMapType *);
-    void addInputPorts(FindPorts::portType);
-    void addOutputPorts(FindPorts::portType);
-    void addInputOutputPorts(FindPorts::portType);
-    void addInputInterfaces(FindTLMInterfaces::interfaceType);
-    void addOutputInterfaces(FindTLMInterfaces::interfaceType);
-    void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
+    void addSignals( FindSignals::signalMapType * );
+    void addInputPorts( FindPorts::PortType );
+    void addOutputPorts( FindPorts::PortType );
+    void addInputOutputPorts( FindPorts::PortType );
+    void addInputInterfaces( FindTLMInterfaces::interfaceType );
+    void addOutputInterfaces( FindTLMInterfaces::interfaceType );
+    void addInputOutputInterfaces( FindTLMInterfaces::interfaceType );
     void addProcess(FindEntryFunctions::entryFunctionVectorType *);
     void addInstances(vector<string>);
     void addSignalBinding(map<string, string>);
