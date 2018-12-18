@@ -1,45 +1,40 @@
 #include "FindSCMain.h"
+
 using namespace scpar;
 
-FindSCMain::FindSCMain (TranslationUnitDecl * tuDecl, llvm::raw_ostream & os):
-  _os (os),
-  _scmainFunctionDecl(nullptr) {
-	assert (!(tuDecl == nullptr));
-	TraverseDecl (tuDecl);
+FindSCMain::FindSCMain ( TranslationUnitDecl *tuDecl, llvm::raw_ostream &os ):
+  os_{os},
+  sc_main_function_declaration_{nullptr} {
+	assert (!( tuDecl == nullptr ));
+	TraverseDecl( tuDecl );
 }
 
 FindSCMain::~FindSCMain() {
-  _scmainFunctionDecl = nullptr;
+  sc_main_function_declaration_ = nullptr;
 }
 
-bool FindSCMain::VisitFunctionDecl(FunctionDecl *fdecl) {
-
-	//_os << "Print the name: " << fdecl->getNameInfo().getAsString() << "has body: " << fdecl->hasBody() << "\n";
-	//  _os << "Is first declaration: " << fdecl->isFirstDeclaration() << "\n";
+bool FindSCMain::VisitFunctionDecl( FunctionDecl *function_declaration ) {
 
 	/// Find sc_main.
 	/// There are three conditions to satisfy this:
 	/// 1. Must have sc_main in its name.
 	/// 2. Must have a body
 	/// 3. Must *not* be a first declaration. (This is becuase systemc.h includes a null definition of sc_main.
-	if ((fdecl->getNameInfo ().getAsString () != "sc_main")
-			|| (!fdecl->hasBody ()) || (fdecl->isMain ()))	{
+	if ((function_declaration->getNameInfo ().getAsString () != "sc_main")
+			|| (!function_declaration->hasBody ()) || (function_declaration->isMain ()))	{
 			return true;
 		}
 
-//  _os << "Found the sc_main\n";
-	//fdecl->dump();
-
-	_scmainFunctionDecl = fdecl;
+	sc_main_function_declaration_ = function_declaration;
 	return true;
 }
 
-FunctionDecl *FindSCMain::getSCMainFunctionDecl() {
-	assert (!(_scmainFunctionDecl == nullptr));
+FunctionDecl *FindSCMain::getSCMainFunctionDecl() const {
+	assert ( sc_main_function_declaration_ != nullptr );
 
-	return _scmainFunctionDecl;
+	return sc_main_function_declaration_;
 }
 
-bool FindSCMain::isSCMainFound() {
-	return (_scmainFunctionDecl != nullptr);
+bool FindSCMain::isSCMainFound() const {
+	return ( sc_main_function_declaration_ != nullptr );
 }
