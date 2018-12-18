@@ -10,16 +10,15 @@ namespace scpar {
 	using namespace clang;
 	class FindSCMain:public RecursiveASTVisitor < FindSCMain > {
 	public:
-		FindSCMain (TranslationUnitDecl *, llvm::raw_ostream &);
-
+		FindSCMain ( TranslationUnitDecl *, llvm::raw_ostream & );
     virtual ~FindSCMain();
-		virtual bool VisitFunctionDecl (FunctionDecl * decl);
+		virtual bool VisitFunctionDecl ( FunctionDecl *decl );
 
-		FunctionDecl *getSCMainFunctionDecl();
-		bool isSCMainFound ();
+		FunctionDecl *getSCMainFunctionDecl() const;
+		bool isSCMainFound() const;
 	private:
-		llvm::raw_ostream & _os;
-		FunctionDecl *_scmainFunctionDecl;
+		llvm::raw_ostream &os_;
+		FunctionDecl *sc_main_function_declaration_;
 
 	};
 }

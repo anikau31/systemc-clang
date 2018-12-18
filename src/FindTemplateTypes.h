@@ -1,5 +1,5 @@
-#ifndef _FIND_TYPE_H_
-#define _FIND_TYPE_H_
+#ifndef _FIND_TEMPLATE_TYPES_H_
+#define _FIND_TEMPLATE_TYPES_H_
 
 #include <set>
 #include <vector>
@@ -28,7 +28,12 @@ namespace scpar {
 
 		/// Copy constructor
     FindTemplateTypes( const FindTemplateTypes &rhs ) {
-			copy (rhs._templateTypes.begin (), rhs._templateTypes.end (),
+			copy (rhs._templateTypes.begin(), rhs._templateTypes.end(),
+						back_inserter (_templateTypes) );
+    }
+
+    FindTemplateTypes( const FindTemplateTypes *rhs ) {
+			copy (rhs->_templateTypes.begin(), rhs->_templateTypes.end(),
 						back_inserter (_templateTypes) );
     }
 
@@ -36,12 +41,13 @@ namespace scpar {
       string s{};
 
       // type_vector_t::iterator
-      for (auto mit = _templateTypes.begin (); mit != _templateTypes.end (); ++mit)  {
-          if (mit != _templateTypes.begin())  {
+       for (auto mit = _templateTypes.begin (); mit != _templateTypes.end (); ++mit)  {
+      //for ( auto const &mit: _templateTypes ) {
+          if ( mit != _templateTypes.begin() )  {
               s += "<";
             }
           s += mit->first;
-          if (mit != _templateTypes.begin())  {
+          if ( mit != _templateTypes.begin() )  {
               s += ">";
             }
         }
@@ -91,27 +97,36 @@ namespace scpar {
     }
 
     void printTemplateArguments( llvm::raw_ostream &os, int tabn = 0 )	{
-
+      vector < string > template_arguments; //{ getTemplateArguments() };
       // type_vector_t::iterator
-      for (auto mit = _templateTypes.begin(); mit != _templateTypes.end(); mit++)   {
+      //      for (auto mit = _templateTypes.begin(); mit != _templateTypes.end(); mit++)   {
+      for ( auto const &mit: _templateTypes ) {
         for ( auto i{0}; i < tabn; ++i)  {
           os << " ";
         }
-          os << "- " << mit->first << ", type ptr: " << mit->second;
-          os << "\n";
-        }
+        os << "- " << mit.first << ", type ptr: " << mit.second;
+        os << "\n";
+        template_arguments.push_back( mit.first );
+      }
+
+      // Print the template arguments to the output stream
+      os << "= ";
+      for ( auto const &targ: template_arguments ) {
+        os << targ << "  ";
+      }
     }
 
     vector < string > getTemplateArguments() {
-      vector < string > args;
+      vector < string > template_arguments;
       // type_vector_t::iterator
-      for ( auto mit = _templateTypes.begin(); mit != _templateTypes.end(); ++mit )  {
-          if ( mit->first == "sc_in" || mit->first == "sc_out"  || mit->first == "sc_inout" )  {
+      //      for ( auto mit = _templateTypes.begin(); mit != _templateTypes.end(); ++mit )  {
+      for ( auto const &mit: _templateTypes ) {
+          if ( mit.first == "sc_in" || mit.first == "sc_out"  || mit.first == "sc_inout" )  {
               break;
             }
-          args.push_back(mit->first);
+          template_arguments.push_back( mit.first );
         }
-      return args;
+      return template_arguments;
     }
 
     size_t size() {
