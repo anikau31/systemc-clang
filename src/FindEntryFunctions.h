@@ -22,13 +22,13 @@ namespace scpar {
 		typedef pair < string, vector < string > > entryFunctionLHSPairType;
 		typedef map < string, vector < string > > entryFunctionLHSMapType;
 
-    FindEntryFunctions(CXXRecordDecl * d, llvm::raw_ostream & os);
+    FindEntryFunctions( CXXRecordDecl * d, llvm::raw_ostream & os );
     virtual ~FindEntryFunctions();
 
 		/// Virtual methods from RecursiveASTVisitor
-		virtual bool VisitStringLiteral (StringLiteral * l);
-		virtual bool VisitCXXMethodDecl (CXXMethodDecl * d);
-		virtual bool VisitMemberExpr (MemberExpr * e);
+		virtual bool VisitStringLiteral( StringLiteral * l );
+		virtual bool VisitCXXMethodDecl( CXXMethodDecl * d );
+		virtual bool VisitMemberExpr( MemberExpr * e );
 
 		// Access Methods
 		CXXRecordDecl *getEntryCXXRecordDecl();
@@ -37,28 +37,27 @@ namespace scpar {
 		entryFunctionVectorType *getEntryFunctions();
     vector < CXXMethodDecl * > getOtherFunctions();
 
-		void dump ();
+		void dump();
 
 	private:
 
-    llvm::raw_ostream & _os;
+    llvm::raw_ostream &os_;
     CXXRecordDecl * _d;
-		bool _isEntryFunction;
-		PROCESS_TYPE _procType;
-		string _entryName;
-		CXXRecordDecl *_entryCXXRecordDecl;
-		CXXMethodDecl *_entryMethodDecl;
-		bool _foundEntryDeclaration;
-		Stmt *_constructorStmt;
+		bool is_entry_function_;
+		PROCESS_TYPE proc_type_;
+		string entry_name_;
+		CXXRecordDecl *entry_cxx_record_decl_;
+		CXXMethodDecl *entry_method_decl_;
+		bool found_entry_decl_;
+		Stmt *constructor_stmt_;
 		EntryFunctionContainer *ef;
-		int pass;
-		entryFunctionVectorType _entryFunctions;
-		entryFunctionLHSMapType _entryFunctionLHSMap;
-    vector < CXXMethodDecl * >_otherFunctions;
-  
+		int pass_;
+		entryFunctionVectorType entry_function_list_;
+		entryFunctionLHSMapType entry_function_map_;
+    vector< CXXMethodDecl * > other_function_list_;
+ 
 		// Disallow constructor with no argument
-    FindEntryFunctions (llvm::raw_ostream & os
-                        );
+    FindEntryFunctions( llvm::raw_ostream &os );
 
 	};
 }
