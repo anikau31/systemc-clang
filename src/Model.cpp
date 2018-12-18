@@ -139,7 +139,7 @@ unsigned int Model::getNumEvents()
 void Model::dump(raw_ostream & os)
 {
 
-  int counterModel = 0;
+  //  int counterModel = 0;
 
   os << "\nNumber of Models : " << _modules.size();
 

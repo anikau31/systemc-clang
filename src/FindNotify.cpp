@@ -7,62 +7,55 @@
 using namespace scpar;
 using namespace std;
 
-FindNotify::FindNotify (CXXMethodDecl * d, llvm::raw_ostream & os):
-_entryMethodDecl (d), _os (os), _notifyCall (NULL)
-{
-	TraverseDecl (d);
+FindNotify::FindNotify( CXXMethodDecl *d, llvm::raw_ostream &os ) :
+  entry_method_decl_(d),
+  os_(os),
+  notify_call_{nullptr} {
+	TraverseDecl(d);
 }
 
-FindNotify::~FindNotify ()
-{
-	_notifyCalls.clear ();
-
+FindNotify::~FindNotify() {
+	notify_call_list_.clear();
 }
 
-bool FindNotify::VisitCallExpr (CallExpr * e)
-{
+bool FindNotify::VisitCallExpr( CallExpr * e ) {
 	//  e->dumpAll();
-	LangOptions
-		LangOpts;
+	LangOptions	LangOpts;
 
 	LangOpts.CPlusPlus = true;
-	PrintingPolicy
-	Policy (LangOpts
-	);
+	PrintingPolicy	Policy(LangOpts);
 
-	if (e->getDirectCallee ()->getNameInfo ().getAsString () ==
-			string ("notify") && e->getNumArgs () <= 2)
-		{														// need a better checking.....
-			_notifyCalls.push_back (e);
-			// To get the 'x' from x.f(5) I must use getImplicitObjectArgument. 
+	if (e->getDirectCallee()->getNameInfo().getAsString() == string ("notify") && e->getNumArgs () <= 2)		{														// need a better checking.....
+    notify_call_list_.push_back(e);
+    // To get the 'x' from x.f(5) I must use getImplicitObjectArgument. 
 
-			/*
-			   string exprName; 
-			   if(MemberExpr *me = dyn_cast<MemberExpr>(e->getCallee())) {
-			   exprName = getArgumentName(me->getBase()->IgnoreImpCasts());
-			   if(_processNotifyEventMap.find(_entryMethodDecl) != _processNotifyEventMap.end()){
+    /*
+      string exprName; 
+      if(MemberExpr *me = dyn_cast<MemberExpr>(e->getCallee())) {
+      exprName = getArgumentName(me->getBase()->IgnoreImpCasts());
+      if(_processNotifyEventMap.find(entry_method_decl_) != _processNotifyEventMap.end()){
 
-			   processNotifyEventMapType::iterator processFound = _processNotifyEventMap.find(_entryMethodDecl);
-			   vector<string> tmp = processFound->second; 
-			   tmp.push_back(exprName);
-			   _processNotifyEventMap.erase(_entryMethodDecl);
-			   _processNotifyEventMap.insert(processNotifyEventPairType(_entryMethodDecl, tmp));
-			   }
-			   else {
-			   vector<string> tmp;
-			   tmp.push_back(exprName);
-			   _processNotifyEventMap.insert(processNotifyEventPairType(_entryMethodDecl, tmp));
-			   }
-			   }
-			 */
-		}
+      processNotifyEventMapType::iterator processFound = _processNotifyEventMap.find(entry_method_decl_);
+      vector<string> tmp = processFound->second; 
+      tmp.push_back(exprName);
+      _processNotifyEventMap.erase(entry_method_decl_);
+      _processNotifyEventMap.insert(processNotifyEventPairType(entry_method_decl_, tmp));
+      }
+      else {
+      vector<string> tmp;
+      tmp.push_back(exprName);
+      _processNotifyEventMap.insert(processNotifyEventPairType(entry_method_decl_, tmp));
+      }
+      }
+    */
+  }
 	return true;
 }
 
 /*
-string FindNotify::getArgumentName(Expr* arg) {
+  string FindNotify::getArgumentName(Expr* arg) {
   if (arg  == NULL) {
-    return string("NULL");
+  return string("NULL");
   }
 
   LangOptions LangOpts;
@@ -74,42 +67,38 @@ string FindNotify::getArgumentName(Expr* arg) {
 
   arg->printPretty(s, 0, Policy);
   return s.str();
-}
+  }
 */
 
-CXXMethodDecl * FindNotify::getEntryMethod() {
- return _entryMethodDecl; 
+CXXMethodDecl * FindNotify::getEntryMethod() const {
+  return entry_method_decl_;
 }
 
-FindNotify::notifyCallListType FindNotify::getNotifyCallList ()
-{
-	return _notifyCalls;
+FindNotify::NotifyCallListType FindNotify::getNotifyCallList() const {
+	return notify_call_list_;
 }
 
-void
-  FindNotify::dump (
-)
-{
-/*  
-  _os << "\n ============== FindNotify ===============";
-  _os << "\n:> Print 'notify' statement informtion\n";
-  for (unsigned int i = 0; i < _notifyCalls.size(); i++) {
-    _os << ":> notify pointer: " <<  _notifyCalls[i] << ", implicit arg: " << \
-      getArgumentName(_notifyCalls[i]->getCallee()) << "\n";
+void FindNotify::dump() const {
+  /*  
+      os_ << "\n ============== FindNotify ===============";
+      os_ << "\n:> Print 'notify' statement informtion\n";
+      for (unsigned int i = 0; i < notify_call_list_.size(); i++) {
+      os_ << ":> notify pointer: " <<  notify_call_list_[i] << ", implicit arg: " << \
+      getArgumentName(notify_call_list_[i]->getCallee()) << "\n";
 
-  }
-  _os << "\n ============== END FindNotify ===============";
-	_os <<"\n Process and events they notify";
+      }
+      os_ << "\n ============== END FindNotify ===============";
+      os_ <<"\n Process and events they notify";
 	
-	for(processNotifyEventMapType::iterator it = _processNotifyEventMap.begin(), eit = _processNotifyEventMap.end();
+      for(processNotifyEventMapType::iterator it = _processNotifyEventMap.begin(), eit = _processNotifyEventMap.end();
 			it != eit;
 			it++) {
-			_os <<"\n Process : " <<it->first->getDeclName().getAsString();
-			_os <<"\n Event Notification: ";
+			os_ <<"\n Process : " <<it->first->getDeclName().getAsString();
+			os_ <<"\n Event Notification: ";
 			vector<string> tmp = it->second;
 			for (int i =0; i<tmp.size(); i++) {
-				_os <<tmp.at(i)<<" ";
+      os_ <<tmp.at(i)<<" ";
 			}
-	}
-*/
+      }
+  */
 }
