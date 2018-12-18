@@ -1,4 +1,3 @@
-#include <string>
 #include "NotifyCalls.h"
 
 using namespace scpar;
@@ -11,35 +10,33 @@ NotifyCalls::~NotifyCalls() {
 }
 
 NotifyCalls::NotifyCalls() :
-  _name{"NONE"} {
+  name_{"NONE"} {
 }
 
-NotifyCalls::NotifyCalls(const string & name, FindNotify::NotifyCallListType notifyCallList ) :
-  _name{name},
-  _notifyCallList{notifyCallList} {
-
-}
+NotifyCalls::NotifyCalls(const string & name, FindNotify::NotifyCallListType notify_list ) :
+  name_{name},
+  notify_call_list_{notify_list} {
+  }
 
 NotifyCalls::NotifyCalls( const NotifyCalls & from ) {
-	_name = from._name;
-	_notifyCallList = from._notifyCallList;
+	name_ = from.name_;
+	notify_call_list_ = from.notify_call_list_;
 }
 
 string NotifyCalls::getName() const {
-	return _name;
+	return name_;
 }
 
 FindNotify::NotifyCallListType NotifyCalls::getNotifyCallList() {
-	return _notifyCallList;
+	return notify_call_list_;
 }
 
-
 unsigned int NotifyCalls::getNumNotifyCalls() {
-	return _notifyCallList.size ();
+	return notify_call_list_.size();
 }
 
 void NotifyCalls::dump ( llvm::raw_ostream & os, int tabn ) {
-	for ( auto i{0}; i < _notifyCallList.size (); ++i ) {
-    os << "\n     Notify Call: " << _notifyCallList.at (i);
+	for ( size_t i{0}; i < notify_call_list_.size(); ++i ) {
+    os << "\n     Notify Call: " << notify_call_list_.at(i);
   }
 }

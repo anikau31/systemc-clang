@@ -34,7 +34,7 @@ namespace scpar {
     NotifyCalls (const NotifyCalls & );
 
 		// Destructor.
-		 ~NotifyCalls();
+    ~NotifyCalls();
 
 		/// Get parameters
 		string getName() const;
@@ -45,8 +45,8 @@ namespace scpar {
 		void dump ( llvm::raw_ostream &, int );
 
 	private:
-		  string _name;
-		  FindNotify::NotifyCallListType _notifyCallList;
+    string name_;
+    FindNotify::NotifyCallListType notify_call_list_;
 	};
 }
 #endif
