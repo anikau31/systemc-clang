@@ -31,7 +31,7 @@ namespace scpar {
 		NotifyCalls( const string &, FindNotify::NotifyCallListType );
 
 		// Copy constructor.
-    NotifyCalls (const NotifyCalls & );
+    NotifyCalls( const NotifyCalls & );
 
 		// Destructor.
     ~NotifyCalls();

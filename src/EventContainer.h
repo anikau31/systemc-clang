@@ -25,31 +25,23 @@ namespace scpar {
 
 	class EventContainer {
 	public:
-		EventContainer (
-		);
-		EventContainer (string, VarDecl *
-		);
+		EventContainer();
+		EventContainer( string, VarDecl * );
 
-		~EventContainer (
-		);
+		~EventContainer();
 
 		// Copy constructor.
-		EventContainer (const EventContainer &
-		);
+		EventContainer( const EventContainer & );
 
-		string getEventName (
-		);
+		string getEventName() const;
+    VarDecl *getASTNode() const;
 
-		VarDecl *getASTNode (
-		);
-
-		void dump (raw_ostream & os, int tabn = 0);
+		void dump ( llvm::raw_ostream & os, int tabn = 0 );
 
 	private:
 		// Name of port on which the binding happens.
-		  string _eventName;
-
-		VarDecl *_astNode;
+    string event_name_;
+		VarDecl *ast_node_;
 	};
 }
 #endif
