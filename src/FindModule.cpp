@@ -6,43 +6,42 @@
 
 using namespace scpar;
 
-string FindModule::getModuleName() {
-	return _moduleName;
+string FindModule::getModuleName() const {
+	return module_name_;
 }
 
-FindModule::FindModule(CXXRecordDecl *d, llvm::raw_ostream &os):
-  _decl{d},
-  _os{os},
-  _isSystemCModule{false} {
-	if ( d->hasDefinition () == true ) {
-    TraverseDecl(d);
+FindModule::FindModule( CXXRecordDecl *declaration, llvm::raw_ostream &os ):
+  declaration_{declaration},
+  os_{os},
+  is_systemc_module_{false} {
+	if ( declaration->hasDefinition() == true ) {
+    TraverseDecl( declaration );
   }
 }
 
-bool FindModule::VisitCXXRecordDecl( CXXRecordDecl *d ) {
-	if ( _decl->getNumBases () <= 0 ) {
+bool FindModule::VisitCXXRecordDecl( CXXRecordDecl *declaration ) {
+	if ( declaration_->getNumBases() <= 0 ) {
     return true;
   }
 
-  for (CXXRecordDecl::base_class_iterator bi = _decl->bases_begin(),
-           be = _decl->bases_end(); bi != be; ++bi)		{
-    QualType q = bi->getType();
-    string baseName = q.getAsString();
+  // CXXRecordDecl::base_class_iterator
+  for ( auto bi = declaration_->bases_begin(),
+           be = declaration_->bases_end(); bi != be; ++bi )		{
+    string base_name = bi->getType().getAsString();
 
-    if (baseName == "::sc_core::sc_module"
-        || baseName == "sc_core::sc_module"
-        || baseName == "class sc_core::sc_module")		{
+    if (base_name == "::sc_core::sc_module"
+        || base_name == "sc_core::sc_module"
+        || base_name == "class sc_core::sc_module")		{
 
-      _isSystemCModule = true;
-      IdentifierInfo *info = _decl->getIdentifier();
+      is_systemc_module_ = true;
 
-      if ( info != nullptr )	{
-        _moduleName = info->getNameStart();
+      if ( IdentifierInfo *info = declaration_->getIdentifier() ) {
+        module_name_ = info->getNameStart();
       }
     }
   }
 
-	if ( _isSystemCModule == false )	{
+	if ( is_systemc_module_ == false )	{
     return true;
   }
 
@@ -50,19 +49,16 @@ bool FindModule::VisitCXXRecordDecl( CXXRecordDecl *d ) {
 }
 
 FindModule::~FindModule() {
-  _decl = nullptr;
+  declaration_ = nullptr;
 }
-
-
-// Member functions
 
 bool FindModule::isSystemCModule() const {
-  return _isSystemCModule;
+  return is_systemc_module_;
 }
 
-void FindModule::printSystemCModuleInformation() {
-	_os << "\n ============== FindModule ===============";
-	_os << "\n:> module name: " << _moduleName << ", CXXRecordDecl*: " <<
-		_decl << ", isSCModule: " << _isSystemCModule;
-	_os << "\n ============== END FindModule ===============";
+void FindModule::dump() {
+	os_ << "\n ============== FindModule ===============";
+	os_ << "\n:> module name: " << module_name_ << ", CXXRecordDecl*: "
+      << declaration_ << ", isSCModule: " << is_systemc_module_;
+	os_ << "\n ============== END FindModule ===============";
 }

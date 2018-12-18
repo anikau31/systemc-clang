@@ -16,16 +16,15 @@ namespace scpar {
 		virtual bool VisitCXXRecordDecl( CXXRecordDecl *decl );
     virtual ~FindModule();
 
-		void printSystemCModuleInformation();
-		string getModuleName();
-
+		void dump();
+		string getModuleName() const;
  		bool isSystemCModule() const;
 
 	private:
-    CXXRecordDecl *_decl;
-    llvm::raw_ostream &_os;
-		bool _isSystemCModule;
-		string _moduleName;
+    CXXRecordDecl *declaration_;
+    llvm::raw_ostream &os_;
+		bool is_systemc_module_;
+		string module_name_;
 
 	};
 }
