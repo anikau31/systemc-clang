@@ -16,21 +16,21 @@ namespace scpar {
   class FindConstructor:public RecursiveASTVisitor < FindConstructor > {
   public:
 
-    FindConstructor(CXXRecordDecl * d, llvm::raw_ostream & os);
+    FindConstructor( CXXRecordDecl *, llvm::raw_ostream & );
     virtual ~FindConstructor();
+    virtual bool VisitCXXMethodDecl( CXXMethodDecl * );
 
-    virtual bool VisitCXXMethodDecl(CXXMethodDecl * d);
-
-    Stmt *returnConstructorStmt();
-    void dump();
+    Stmt * returnConstructorStmt() const;
+    void dump() const;
 
   private:
-    llvm::raw_ostream & _os;
-    CXXRecordDecl * _d;
-    Stmt *_constructorStmt;
-    int pass;
+    llvm::raw_ostream &os_;
+    CXXRecordDecl *declaration_;
+    Stmt *constructor_stmt_;
+    unsigned int pass_;
 
-    FindConstructor(llvm::raw_ostream & os);
+    // Private constructor
+    FindConstructor( llvm::raw_ostream & );
 
   };
 }
