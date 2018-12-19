@@ -9,7 +9,7 @@ Model::Model() {
 }
 
 Model::~Model() {
-  llvm::errs() << "\n[[ Destructor Model ]]\n";
+  //  llvm::errs() << "\n[[ Destructor Model ]]\n";
   // Delete all ModuleDecl pointers.
   for (Model::moduleMapType::iterator mit = _modules.begin();
        mit != _modules.end(); mit++) {
@@ -19,16 +19,15 @@ Model::~Model() {
   _modules.clear();
 }
 
-Model::Model(const Model & from) { 
+Model::Model( const Model & from ) {
   _modules = from._modules;
 }
 
-
-void Model::addModuleDecl(ModuleDecl * md) {
-  _modules.insert(Model::modulePairType(md->getName(), md));
+void Model::addModuleDecl( ModuleDecl * md ) {
+  _modules.insert( Model::modulePairType( md->getName(), md ) );
 }
 
-void Model::addModuleDeclInstances(ModuleDecl* md, vector<ModuleDecl*> mdVec){
+void Model::addModuleDeclInstances( ModuleDecl* md, vector<ModuleDecl*> mdVec ) {
 	_moduleInstanceMap.insert(moduleInstancePairType(md, mdVec));
 }
 
@@ -38,13 +37,12 @@ void Model::addSimulationTime(FindSimTime::simulationTimeMapType simTime) {
 
 void Model::addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType e) {
 	//_entryFunctionGPUMacroMap.insert(e.begin(), e.end());
-	_entryFunctionGPUMacroMap = e;	
+	_entryFunctionGPUMacroMap = e;
 	llvm::errs()<<" \n Size : " <<_entryFunctionGPUMacroMap.size()<<" " <<e.size();
 }
 
 
-void Model::addGlobalEvents(FindGlobalEvents::globalEventMapType eventMap)
-{
+void Model::addGlobalEvents(FindGlobalEvents::globalEventMapType eventMap) {
   for (FindGlobalEvents::globalEventMapType::iterator it = eventMap.begin();
        it != eventMap.end(); it++) {
     string eventName = it->first;
@@ -54,8 +52,8 @@ void Model::addGlobalEvents(FindGlobalEvents::globalEventMapType eventMap)
   }
 }
 
-void Model::addSCMain(FunctionDecl *fnDecl){
- _scmainFcDecl = fnDecl;
+void Model::addSCMain(FunctionDecl *fnDecl) {
+  _scmainFcDecl = fnDecl;
 }
 
 void Model::addNetlist( FindNetlist &n ) {
@@ -70,35 +68,35 @@ void Model::addNetlist( FindNetlist &n ) {
 void Model::updateModuleDecl() {
 
   for (moduleMapType::iterator it = _modules.begin(), eit = _modules.end();
-     it != eit;  it++) {
-   string moduleName = it->first;
-   ModuleDecl *md = it->second;
-   vector<string> instanceList;
+       it != eit;  it++) {
+    string moduleName = it->first;
+    ModuleDecl *md = it->second;
+    vector<string> instanceList;
 
-   llvm::errs() << "Finding instances for " << moduleName << " declaration: ";
-   if ( _instanceListModuleMap.find(moduleName) != _instanceListModuleMap.end() ) {
-     FindNetlist::instanceListModuleMapType::iterator instanceListModuleMapFind = _instanceListModuleMap.find(moduleName);
-     md->addInstances(instanceListModuleMapFind->second);
+    llvm::errs() << "Finding instances for " << moduleName << " declaration: ";
+    if ( _instanceListModuleMap.find(moduleName) != _instanceListModuleMap.end() ) {
+      FindNetlist::instanceListModuleMapType::iterator instanceListModuleMapFind = _instanceListModuleMap.find(moduleName);
+      md->addInstances(instanceListModuleMapFind->second);
 
-     // Print the names of all the instances
-     for ( auto instance : instanceListModuleMapFind->second ) {
-       llvm::errs() << instance << " ";
-     }
-     llvm::errs() << "\n";
+      // Print the names of all the instances
+      for ( auto instance : instanceListModuleMapFind->second ) {
+        llvm::errs() << instance << " ";
+      }
+      llvm::errs() << "\n";
 
-     for (size_t i = 0 ; i < instanceListModuleMapFind->second.size(); i++) {
-       if (_instancePortSignalMap.find(instanceListModuleMapFind->second.at(i)) != _instancePortSignalMap.end()) {
-         FindNetlist::instancePortSignalMapType::iterator portSignalMapFound = _instancePortSignalMap.find(instanceListModuleMapFind->second.at(i));
-         FindNetlist::portSignalMapType portSignalMap = portSignalMapFound->second;
+      for (size_t i = 0 ; i < instanceListModuleMapFind->second.size(); i++) {
+        if (_instancePortSignalMap.find(instanceListModuleMapFind->second.at(i)) != _instancePortSignalMap.end()) {
+          FindNetlist::instancePortSignalMapType::iterator portSignalMapFound = _instancePortSignalMap.find(instanceListModuleMapFind->second.at(i));
+          FindNetlist::portSignalMapType portSignalMap = portSignalMapFound->second;
 
-         md->addSignalBinding(portSignalMap);
-       }  else {
-         llvm::errs() <<"\n Could not find instance and signal";
-       }
-     }
-   } else {
-     llvm::errs() <<"NONE.";
-   }
+          md->addSignalBinding(portSignalMap);
+        }  else {
+          llvm::errs() <<"\n Could not find instance and signal";
+        }
+      }
+    } else {
+      llvm::errs() <<"NONE.";
+    }
   }
 }
 
@@ -131,69 +129,60 @@ Model::eventMapType Model::getEventMapType()
   return _eventMap;
 }
 
-unsigned int Model::getNumEvents()
-{
-  return (_eventMap.size() - 3);          
+unsigned int Model::getNumEvents() {
+  return (_eventMap.size() - 3);
 }
 
-void Model::dump(raw_ostream & os)
-{
+void Model::dump( llvm::raw_ostream & os ) {
 
-  //  int counterModel = 0;
-
-  os << "\nNumber of modules : " << _modules.size();
+  os << "\n# Number of modules : " << _modules.size();
 
   for (Model::moduleMapType::iterator mit = _modules.begin();
        mit != _modules.end(); mit++) {
     // Second is the ModuleDecl type.
 
-    os << "\n# Module " << mit->first; 
-		vector<ModuleDecl*> instanceVec = _moduleInstanceMap[mit->second];
+    vector<ModuleDecl*> instanceVec = _moduleInstanceMap[mit->second];
+    os << "\n# Module " << mit->first << ": " << instanceVec.size() << " instances.";
 		for (size_t i = 0; i < instanceVec.size(); i++) {
-			os <<", instance: " << i + 1 << " ";
+      //			os <<", instance: " << i + 1 << " ";
 			instanceVec.at(i)->dump(os);
 		}
   }
-  os << "\nGlobal Events:\n";
+  os << "\n\n";
+  os << "# Global events:\n";
   for (Model::eventMapType::iterator it = _eventMap.begin(), ite =
-       _eventMap.end(); it != ite; it++) {
-
+         _eventMap.end(); it != ite; it++) {
     os << "   Event: " << it->first << "  VarDecl: " << it->second << "\n";
   }
 
-
-  os << "\nSimulation Time : ";
+  os << "\n";
+  os << "# Simulation time: ";
   for (FindSimTime::simulationTimeMapType::iterator it =
-       _simTime.begin(), eit = _simTime.end(); it != eit; it++) {
-    os << it->first << " " << it->second;    
+         _simTime.begin(), eit = _simTime.end(); it != eit; it++) {
+    os << it->first << " " << it->second;
   }
 
-  os <<"\n Netlist : " ;
-   for (FindNetlist::instanceModuleMapType::iterator it = _instanceModuleMap.begin(), eit =
-		 _instanceModuleMap.end(); it != eit; it++)
-	{
-   llvm::errs() << "\n Instance Name : " << it->first << " Module Name : " << it->
-			second;
+  os << "\n\n";
+  os <<"# Netlist: " ;
+  for (FindNetlist::instanceModuleMapType::iterator it = _instanceModuleMap.begin(), eit = _instanceModuleMap.end(); it != eit; it++) {
+    os << "\n";
+    os << "Instance Name: " << it->first << ", module name : " << it->second;
 		string instanceName = it->first;
 		if (_instancePortSignalMap.find(instanceName) !=
-			_instancePortSignalMap.end())
-		{
-    FindNetlist::instancePortSignalMapType::iterator instancePortSignalMapFound =
+        _instancePortSignalMap.end())	{
+      FindNetlist::instancePortSignalMapType::iterator instancePortSignalMapFound =
 				_instancePortSignalMap.find(instanceName);
-    FindNetlist::portSignalMapType portSignalMap =
+      FindNetlist::portSignalMapType portSignalMap =
 				instancePortSignalMapFound->second;
 			for (FindNetlist::portSignalMapType::iterator pit =
-				 portSignalMap.begin(), pite = portSignalMap.end();
-				 pit != pite; pit++)
-			{
-     llvm::errs() << "\n Port : " << pit->
-					first << " bound to signal " << pit->second;
+             portSignalMap.begin(), pite = portSignalMap.end();
+           pit != pite; pit++)	{
+        os << "\n";
+        os << "Port: " << pit->first << " bound to signal " << pit->second;
 			}
+		}	else	{
+      os << "\n No instance name found ////// weird.";
 		}
-		else
-		{
-    llvm::errs() << "\n No instance name found ////// weird.";
-		}
-  llvm::errs() << "\n ------------------------------------------------------\n";
+    os << "\n ------------------------------------------------------\n";
 	}
 }

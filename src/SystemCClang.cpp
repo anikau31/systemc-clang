@@ -96,7 +96,6 @@ bool SystemCConsumer::fire() {
 
 			FindEntryFunctions findEntries(mainmd->getModuleClassDecl(), _os);
 			FindEntryFunctions::entryFunctionVectorType * entryFunctions = findEntries.getEntryFunctions();
-
 	  	md->addProcess(entryFunctions);
 
 			for (size_t i = 0; i < entryFunctions->size(); i++)  {
@@ -176,7 +175,8 @@ bool SystemCConsumer::fire() {
 		}
 	}
 
-  _os <<"\n SystemC model dump\n";
+  _os <<"\n";
+  _os << "\n## SystemC model\n";
   _systemcModel->dump(_os); 
   return true;
 }

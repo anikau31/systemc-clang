@@ -230,6 +230,11 @@ void ModuleDecl::dumpInstances(raw_ostream & os, int tabn) {
 }
 
 void ModuleDecl::dumpSignalBinding(raw_ostream & os ,int tabn) {
+  if ( _portSignalMap.empty() ) {
+    os << " none\n";
+    return;
+  }
+
   for ( auto it: _portSignalMap ) {
     os <<"\nPort : " <<it.first<<" bound to signal : " <<it.second;
   }
@@ -250,7 +255,7 @@ void ModuleDecl::dumpProcesses(raw_ostream & os, int tabn) {
 
 void ModuleDecl::dumpInterfaces(raw_ostream & os, int tabn) {
 
-  os << "+ Input interfaces:\n ";
+  os << "Input interfaces: " << _iinterfaces.size() << "\n";
 
   if (_iinterfaces.size() == 0) {
     os << " none\n";
@@ -262,7 +267,7 @@ void ModuleDecl::dumpInterfaces(raw_ostream & os, int tabn) {
     os << "\n";
   }
 
-  os << "+ Output interfaces:\n ";
+  os << "Output interfaces: " << _ointerfaces.size() << "\n";
   if (_ointerfaces.size() == 0) {
     os << "none \n";
   } else {
@@ -273,7 +278,7 @@ void ModuleDecl::dumpInterfaces(raw_ostream & os, int tabn) {
     os << "\n";
   }
 
-  os << "+ Inout interfaces: ";
+  os << "Inout interfaces: " << _iointerfaces.size() << "\n";
   if (_iointerfaces.size() == 0) {
     os << "none \n";
   } else {
@@ -289,7 +294,7 @@ void ModuleDecl::dumpPorts(raw_ostream & os, int tabn) {
   os << "Input ports: " << _iports.size();
 
   if (_iports.size() == 0) {
-    os << " none \n";
+    os << "\n none \n";
   } else {
     os << "\n ";
     for ( auto mit: _iports ) {
@@ -301,7 +306,7 @@ void ModuleDecl::dumpPorts(raw_ostream & os, int tabn) {
 
   os << "Output ports: " << _oports.size();
   if ( _oports.size() == 0 ) {
-    os << " none \n";
+    os << "\n none \n";
   } else {
     os << "\n ";
     for ( auto mit: _oports ) {
@@ -312,7 +317,7 @@ void ModuleDecl::dumpPorts(raw_ostream & os, int tabn) {
 
   os << "Inout ports: " << _ioports.size();
   if ( _ioports.size() == 0 ) {
-    os << " none \n";
+    os << "\n none \n";
   } else {
     os << "\n ";
     for ( auto mit: _oports ) {
@@ -338,9 +343,10 @@ void ModuleDecl::dumpSignals( raw_ostream & os, int tabn ) {
 
 
 void ModuleDecl::dump(raw_ostream & os) {
-  os << "ModuleDecl " << this << " " << _moduleName
-     << " CXXRecordDecl " << _classdecl << "\n";
+  //  os << "ModuleDecl " << this << " " << _moduleName
+  //     << " CXXRecordDecl " << _classdecl << "\n";
 
+  os << "\n";
   os << "# Port Declaration:\n";
   dumpPorts(os, 4);
   os << "# Signal Declaration:\n";
