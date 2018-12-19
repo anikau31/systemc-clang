@@ -8,6 +8,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "EntryFunctionContainer.h"
 #include <map>
+
 namespace scpar {
 
 	using namespace clang;
@@ -55,7 +56,7 @@ namespace scpar {
 		entryFunctionVectorType entry_function_list_;
 		entryFunctionLHSMapType entry_function_map_;
     vector< CXXMethodDecl * > other_function_list_;
- 
+
 		// Disallow constructor with no argument
     FindEntryFunctions( llvm::raw_ostream &os );
 

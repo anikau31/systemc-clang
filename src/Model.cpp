@@ -4,13 +4,11 @@
 using namespace scpar;
 using namespace std;
 
-Model::Model()
-{
-  
+Model::Model() {
+ 
 }
 
-Model::~Model()
-{
+Model::~Model() {
   llvm::errs() << "\n[[ Destructor Model ]]\n";
   // Delete all ModuleDecl pointers.
   for (Model::moduleMapType::iterator mit = _modules.begin();
@@ -18,17 +16,15 @@ Model::~Model()
     // Second is the ModuleDecl type.
     delete mit->second;
   }
-  _modules.clear(); 
+  _modules.clear();
 }
 
-Model::Model(const Model & from)
-{  
+Model::Model(const Model & from) { 
   _modules = from._modules;
 }
 
 
-void Model::addModuleDecl(ModuleDecl * md)
-{
+void Model::addModuleDecl(ModuleDecl * md) {
   _modules.insert(Model::modulePairType(md->getName(), md));
 }
 
@@ -36,8 +32,7 @@ void Model::addModuleDeclInstances(ModuleDecl* md, vector<ModuleDecl*> mdVec){
 	_moduleInstanceMap.insert(moduleInstancePairType(md, mdVec));
 }
 
-void Model::addSimulationTime(FindSimTime::simulationTimeMapType simTime)
-{
+void Model::addSimulationTime(FindSimTime::simulationTimeMapType simTime) {
   _simTime = simTime;
 }
 
@@ -63,43 +58,48 @@ void Model::addSCMain(FunctionDecl *fnDecl){
  _scmainFcDecl = fnDecl;
 }
 
-void Model::addNetlist(FindNetlist &n) {
+void Model::addNetlist( FindNetlist &n ) {
   _instanceModuleMap = n.getInstanceModuleMap();
   _portSignalMap = n.getPortSignalMap();
   _instancePortSignalMap = n.getInstancePortSignalMap();
   _instanceListModuleMap = n.getInstanceListModuleMap();
-  
+
   updateModuleDecl();
 }
 
 void Model::updateModuleDecl() {
 
   for (moduleMapType::iterator it = _modules.begin(), eit = _modules.end();
-     it != eit;
-     it++) {
+     it != eit;  it++) {
    string moduleName = it->first;
-
-   ModuleDecl* md = it->second;
+   ModuleDecl *md = it->second;
    vector<string> instanceList;
-   if (_instanceListModuleMap.find(moduleName) != _instanceListModuleMap.end()) {
-     FindNetlist::instanceListModuleMapType::iterator instanceListModuleMapFind = _instanceListModuleMap.find(moduleName);
-     md->addInstances(instanceListModuleMapFind->second);   
-     for (size_t i = 0 ; i < instanceListModuleMapFind->second.size(); i++) {
-      if (_instancePortSignalMap.find(instanceListModuleMapFind->second.at(i)) != _instancePortSignalMap.end()) {
-       FindNetlist::instancePortSignalMapType::iterator portSignalMapFound = _instancePortSignalMap.find(instanceListModuleMapFind->second.at(i));
-       FindNetlist::portSignalMapType portSignalMap = portSignalMapFound->second;
 
-       md->addSignalBinding(portSignalMap);
-      }
-      else {
-        llvm::errs() <<"\n Could not find instance and signal";
-      }
+   llvm::errs() << "Finding instances for " << moduleName << " declaration: ";
+   if ( _instanceListModuleMap.find(moduleName) != _instanceListModuleMap.end() ) {
+     FindNetlist::instanceListModuleMapType::iterator instanceListModuleMapFind = _instanceListModuleMap.find(moduleName);
+     md->addInstances(instanceListModuleMapFind->second);
+
+     // Print the names of all the instances
+     for ( auto instance : instanceListModuleMapFind->second ) {
+       llvm::errs() << instance << " ";
      }
+     llvm::errs() << "\n";
+
+     for (size_t i = 0 ; i < instanceListModuleMapFind->second.size(); i++) {
+       if (_instancePortSignalMap.find(instanceListModuleMapFind->second.at(i)) != _instancePortSignalMap.end()) {
+         FindNetlist::instancePortSignalMapType::iterator portSignalMapFound = _instancePortSignalMap.find(instanceListModuleMapFind->second.at(i));
+         FindNetlist::portSignalMapType portSignalMap = portSignalMapFound->second;
+
+         md->addSignalBinding(portSignalMap);
+       }  else {
+         llvm::errs() <<"\n Could not find instance and signal";
+       }
+     }
+   } else {
+     llvm::errs() <<"NONE.";
    }
-   else {
-     llvm::errs() <<"\n ERROR: Could not find module";
-   }
- }
+  }
 }
 
 void Model::addSCModules(SCModules * m)
@@ -141,16 +141,16 @@ void Model::dump(raw_ostream & os)
 
   //  int counterModel = 0;
 
-  os << "\nNumber of Models : " << _modules.size();
+  os << "\nNumber of modules : " << _modules.size();
 
   for (Model::moduleMapType::iterator mit = _modules.begin();
        mit != _modules.end(); mit++) {
     // Second is the ModuleDecl type.
 
-    os << "\nModel " << mit->first<<"\n";
+    os << "\n# Module " << mit->first; 
 		vector<ModuleDecl*> instanceVec = _moduleInstanceMap[mit->second];
 		for (size_t i = 0; i < instanceVec.size(); i++) {
-			os <<"\n Instance : "<<i + 1;
+			os <<", instance: " << i + 1 << " ";
 			instanceVec.at(i)->dump(os);
 		}
   }

@@ -16,12 +16,12 @@ namespace scpar {
 
     typedef map < string, CXXRecordDecl * >moduleMapType;
     typedef pair < string, CXXRecordDecl * >modulePairType;
-    
+
     SCModules(TranslationUnitDecl *, llvm::raw_ostream &);
     virtual ~SCModules();
     virtual bool VisitCXXRecordDecl(CXXRecordDecl *);
     moduleMapType getSystemCModulesMap();
-    void printSystemCModulesMap();
+    void dump();
 
   private:
     llvm::raw_ostream & _os;
