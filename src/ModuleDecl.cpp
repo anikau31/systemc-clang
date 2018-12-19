@@ -220,6 +220,10 @@ CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
 
 void ModuleDecl::dumpInstances(raw_ostream & os, int tabn) {
 
+  if ( _instanceList.empty() ) {
+    os << " none \n";
+  }
+
   for (size_t i = 0; i < _instanceList.size(); i++) {
     os <<_instanceList.at(i)<<" ";
   }
@@ -227,32 +231,29 @@ void ModuleDecl::dumpInstances(raw_ostream & os, int tabn) {
 
 void ModuleDecl::dumpSignalBinding(raw_ostream & os ,int tabn) {
   for ( auto it: _portSignalMap ) {
-    os <<"\n Port : " <<it.first<<" bound to signal : " <<it.second;
+    os <<"\nPort : " <<it.first<<" bound to signal : " <<it.second;
   }
 }
 
-  void ModuleDecl::dumpProcesses(raw_ostream & os, int tabn) {
-    if (_processes.size() == 0) {
-      os << "    <<<NULL>>>\n";
-    } else {
-      for ( auto pit: _processes ) {
-        ProcessDecl *pd = pit.second;
-        pd->dump(os, tabn);
-        os << "\n";
-      }
+void ModuleDecl::dumpProcesses(raw_ostream & os, int tabn) {
+  if ( _processes.size() == 0 ) {
+    os << "none \n";
+  } else {
+    for ( auto pit: _processes ) {
+      ProcessDecl *pd = pit.second;
+      pd->dump(os, tabn);
+      os << "\n";
     }
-    os << "\n";
   }
+  os << "\n";
+}
 
 void ModuleDecl::dumpInterfaces(raw_ostream & os, int tabn) {
 
-  for ( auto i = 0; i < tabn; ++i ) {
-    os << " ";
-  }
-  os << "Input interfaces:\n ";
+  os << "+ Input interfaces:\n ";
 
   if (_iinterfaces.size() == 0) {
-    os << "   <<<NULL>>>\n";
+    os << " none\n";
   } else {
     for ( auto mit: _iinterfaces ) {
       mit.second->dump(os, tabn);
@@ -261,29 +262,60 @@ void ModuleDecl::dumpInterfaces(raw_ostream & os, int tabn) {
     os << "\n";
   }
 
-  for ( auto  i = 0; i < tabn; ++i ) {
-    os << " ";
-  }
-  os << "Output interfaces:\n ";
+  os << "+ Output interfaces:\n ";
   if (_ointerfaces.size() == 0) {
-    os << "   <<<NULL>>>\n";
+    os << "none \n";
   } else {
     for ( auto mit: _ointerfaces ) {
       mit.second->dump(os, tabn);
       os << "\n ";
+    }
+    os << "\n";
+  }
+
+  os << "+ Inout interfaces: ";
+  if (_iointerfaces.size() == 0) {
+    os << "none \n";
+  } else {
+    for ( auto mit: _iointerfaces ) {
+      mit.second->dump(os, tabn);
+      os << "\n ";
+    }
+    os << "\n";
+  }
+}
+
+void ModuleDecl::dumpPorts(raw_ostream & os, int tabn) {
+  os << "Input ports: " << _iports.size();
+
+  if (_iports.size() == 0) {
+    os << " none \n";
+  } else {
+    os << "\n ";
+    for ( auto mit: _iports ) {
+      mit.second->dump(os);
+      os << "\n ";
+    }
+    os << "\n";
+  }
+
+  os << "Output ports: " << _oports.size();
+  if ( _oports.size() == 0 ) {
+    os << " none \n";
+  } else {
+    os << "\n ";
+    for ( auto mit: _oports ) {
+      mit.second->dump(os, tabn);
       os << "\n";
     }
   }
 
-  for ( auto i = 0; i < tabn; ++i ) {
-    os << " ";
-  }
-  os << "Inout interfaces:\n ";
-
-  if (_iointerfaces.size() == 0) {
-    os << "    <<<NULL>>>\n";
+  os << "Inout ports: " << _ioports.size();
+  if ( _ioports.size() == 0 ) {
+    os << " none \n";
   } else {
-    for ( auto mit: _iointerfaces ) {
+    os << "\n ";
+    for ( auto mit: _oports ) {
       mit.second->dump(os, tabn);
       os << "\n ";
     }
@@ -291,82 +323,33 @@ void ModuleDecl::dumpInterfaces(raw_ostream & os, int tabn) {
   os << "\n";
 }
 
-void ModuleDecl::dumpPorts(raw_ostream & os, int tabn) {
-  for ( auto i = 0; i < tabn; ++i ) {
-    os << " ";
-  }
-  os << "Input ports:\n ";
-
-  if (_iports.size() == 0) {
-    os << "   <<<NULL>>>\n";
+void ModuleDecl::dumpSignals( raw_ostream & os, int tabn ) {
+  if ( _signals.size() == 0 ) {
+    os << "none \n";
   } else {
-    for ( auto mit: _iports ) {
-      os << "Print Port\n" << mit.first << "\n";
-                                           mit.second->dump(os, tabn);
-                                           os << "End print\n";
-                                                 os << "\n ";
+    for ( auto sit: _signals ) {
+      Signal *s = sit.second;
+      s->dump(os, tabn);
+      os << "\n";
     }
-        os << "\n";
   }
-
-    for ( auto i = 0; i < tabn; ++i ) {
-      os << " ";
-    }
-    os << "Output ports:\n ";
-    if (_oports.size() == 0) {
-      os << "   <<<NULL>>>\n";
-    } else {
-      for ( auto mit: _oports ) {
-        mit.second->dump(os, tabn);
-        os << "\n ";
-        os << "\n";
-      }
-    }
-
-    for ( auto i = 0; i < tabn; ++i ) {
-      os << " ";
-    }
-    os << "Inout ports:\n ";
-
-    if ( _ioports.size() == 0 ) {
-      os << "    <<<NULL>>>\n";
-    } else {
-      for ( auto mit: _oports ) {
-        mit.second->dump(os, tabn);
-        os << "\n ";
-      }
-    }
-    os << "\n";
+  os << "\n";
 }
-
-  void ModuleDecl::dumpSignals( raw_ostream & os, int tabn ) {
-    if ( _signals.size() == 0 ) {
-      os << "     <<<NULL>>>\n";
-    } else {
-      for ( auto sit: _signals ) {
-        Signal *s = sit.second;
-        s->dump(os, tabn);
-        os << "\n";
-      }
-    }
-    os << "\n";
-  }
 
 
 void ModuleDecl::dump(raw_ostream & os) {
-  os << "\n=======================================================\n";
-  os << " ModuleDecl " << this << " " << _moduleName << " CXXRecordDecl " <<
-    _classdecl << "\n";
+  os << "ModuleDecl " << this << " " << _moduleName
+     << " CXXRecordDecl " << _classdecl << "\n";
 
-  os << "  Port Declaration:>\n";
+  os << "# Port Declaration:\n";
   dumpPorts(os, 4);
-  os << "  Signal Declaration:>\n";
+  os << "# Signal Declaration:\n";
   dumpSignals(os, 4);
-  os << "  Processes:>\n";
+  os << "# Processes:\n";
   dumpProcesses(os, 4);
-  os <<" Instances:>\n";
+  os <<"# Instances:\n";
   dumpInstances(os, 4);
-  os <<" Signal binding:>\n";
+  os <<"# Signal binding:\n";
   dumpSignalBinding(os, 4);
   os << "\n=======================================================\n";
 }

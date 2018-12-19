@@ -27,7 +27,7 @@ SCModules::moduleMapType SCModules::getSystemCModulesMap() {
   return _moduleMap;
 }
 
-void SCModules::printSystemCModulesMap() {
+void SCModules::dump() {
   _os << "\n================= SCModules ================";
   _os << "\n Print SystemC Module Map";
   for (moduleMapType::iterator mit = _moduleMap.begin();
