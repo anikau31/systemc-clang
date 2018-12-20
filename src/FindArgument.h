@@ -17,7 +17,7 @@ namespace scpar {
 		virtual bool VisitMemberExpr (MemberExpr * me);
 		virtual bool VisitDeclRefExpr (DeclRefExpr * de);
 		virtual bool VisitIntegerLiteral (IntegerLiteral * il);
-		virtual bool VisitCXXBoolLiteralExpr (CXXBoolLiteralExpr * bl);
+    virtual bool VisitCXXBoolLiteralExpr (CXXBoolLiteralExpr * bl);
 
 		string getArgumentName();
 	private:
