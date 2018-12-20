@@ -26,11 +26,11 @@ namespace scpar {
     typedef pair < string, EventContainer * >eventPairType;
     typedef map < string, EventContainer * >eventMapType;
 
-		typedef pair<ModuleDecl*, vector<ModuleDecl*> >moduleInstancePairType;
-		typedef map<ModuleDecl*, vector<ModuleDecl*> >moduleInstanceMapType;
+    typedef pair<ModuleDecl*, vector<ModuleDecl*> >moduleInstancePairType;
+    typedef map<ModuleDecl*, vector<ModuleDecl*> >moduleInstanceMapType;
 
-		typedef pair<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroPairType;
-		typedef map<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroMapType;
+    typedef pair<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroPairType;
+    typedef map<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroMapType;
 
     Model();
     ~Model();
@@ -39,7 +39,7 @@ namespace scpar {
     void addModuleDecl(ModuleDecl *);
 		void addModuleDeclInstances(ModuleDecl*, vector<ModuleDecl*>);
     void addSimulationTime(FindSimTime::simulationTimeMapType);
-    void addGlobalEvents(FindGlobalEvents::globalEventMapType);    
+    void addGlobalEvents(FindGlobalEvents::globalEventMapType);
     void addNetlist(FindNetlist &);
     void addSCMain(FunctionDecl*);
 		void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
@@ -60,7 +60,7 @@ namespace scpar {
     moduleMapType _modules;
     moduleInstanceMapType _moduleInstanceMap;
     FindSimTime::simulationTimeMapType _simTime;
-    eventMapType _eventMap;     
+    eventMapType _eventMap;
     FunctionDecl *_scmainFcDecl;
     FindNetlist::instanceModuleMapType _instanceModuleMap;
     FindNetlist::portSignalMapType _portSignalMap;
