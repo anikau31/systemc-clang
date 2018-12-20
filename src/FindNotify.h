@@ -7,26 +7,26 @@
 #include <map>
 namespace scpar {
 
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class FindNotify:public RecursiveASTVisitor < FindNotify > {
-	public:
-		typedef vector < CallExpr * > NotifyCallListType;
+  class FindNotify:public RecursiveASTVisitor < FindNotify > {
+  public:
+    typedef vector < CallExpr * > NotifyCallListType;
 
     FindNotify( CXXMethodDecl *, raw_ostream & );
     virtual ~FindNotify();
-		virtual bool VisitCallExpr ( CallExpr *expr );
+    virtual bool VisitCallExpr ( CallExpr *expr );
 
-		NotifyCallListType getNotifyCallList() const;
+    NotifyCallListType getNotifyCallList() const;
     CXXMethodDecl * getEntryMethod() const;
-		void dump() const;
+    void dump() const;
 
-	private:
+  private:
     CXXMethodDecl *entry_method_decl_;
     llvm::raw_ostream &os_;
-		CallExpr *notify_call_;
-		NotifyCallListType notify_call_list_;
-	};
+    CallExpr *notify_call_;
+    NotifyCallListType notify_call_list_;
+  };
 }
 #endif

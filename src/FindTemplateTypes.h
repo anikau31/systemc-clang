@@ -13,52 +13,52 @@
 #include <iostream>
 
 namespace scpar {
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
   // This class is going to find the arguments from templates
-	class FindTemplateTypes : public RecursiveASTVisitor < FindTemplateTypes > {
-	public:
-		/// Typedefs
-		typedef vector < pair < string, const Type *> > type_vector_t;
-		typedef vector < pair < string, const Type *> > argVectorType;
+  class FindTemplateTypes : public RecursiveASTVisitor < FindTemplateTypes > {
+  public:
+    /// Typedefs
+    typedef vector < pair < string, const Type *> > type_vector_t;
+    typedef vector < pair < string, const Type *> > argVectorType;
 
     // Constructor
-    FindTemplateTypes() {	}
+    FindTemplateTypes() { }
 
-		/// Copy constructor
+    /// Copy constructor
     FindTemplateTypes( const FindTemplateTypes &rhs ) {
-			copy (rhs._templateTypes.begin(), rhs._templateTypes.end(),
-						back_inserter (_templateTypes) );
+      copy (rhs._templateTypes.begin(), rhs._templateTypes.end(),
+            back_inserter (_templateTypes) );
     }
 
     FindTemplateTypes( const FindTemplateTypes *rhs ) {
-			copy (rhs->_templateTypes.begin(), rhs->_templateTypes.end(),
-						back_inserter (_templateTypes) );
+      copy (rhs->_templateTypes.begin(), rhs->_templateTypes.end(),
+            back_inserter (_templateTypes) );
     }
 
     string getTemplateType() {
       string s{};
 
       // type_vector_t::iterator
-       for (auto mit = _templateTypes.begin (); mit != _templateTypes.end (); ++mit)  {
-      //for ( auto const &mit: _templateTypes ) {
-          if ( mit != _templateTypes.begin() )  {
-              s += "<";
-            }
-          s += mit->first;
-          if ( mit != _templateTypes.begin() )  {
-              s += ">";
-            }
+      for (auto mit = _templateTypes.begin (); mit != _templateTypes.end (); ++mit)  {
+        //for ( auto const &mit: _templateTypes ) {
+        if ( mit != _templateTypes.begin() )  {
+          s += "<";
         }
+        s += mit->first;
+        if ( mit != _templateTypes.begin() )  {
+          s += ">";
+        }
+      }
       return s;
     }
 
     type_vector_t Enumerate( const Type *type ) {
       _templateTypes.clear();
       if ( !type ) {
-          return _templateTypes;
-        }
+        return _templateTypes;
+      }
 
       TraverseType( QualType (type, 0) );
       return _templateTypes;
@@ -68,9 +68,9 @@ namespace scpar {
       QualType q{type->getCanonicalTypeInternal()};
       //      cout << "\n###### Type: " << q.getAsString() << " \n" ;
       if ( type->isBuiltinType() )  {
-          _templateTypes.push_back( pair < string, const Type * >(q.getAsString(), type) );
-          return true;
-        }
+        _templateTypes.push_back( pair < string, const Type * >(q.getAsString(), type) );
+        return true;
+      }
 
       CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
       if ( p_cxx_record != nullptr )  {
@@ -87,7 +87,7 @@ namespace scpar {
       //_os << "== type ptr: " << l->getType().getTypePtr() << "\n";
       //_os << "== type name: " << l->getType().getAsString() << "\n";
       _templateTypes.push_back (pair < string, const Type * >(l->getValue ().toString (10, true),
-                                  l->getType().getTypePtr()));
+                                                              l->getType().getTypePtr()));
 
       return true;
     }
@@ -96,7 +96,7 @@ namespace scpar {
       return _templateTypes;
     }
 
-    void printTemplateArguments( llvm::raw_ostream &os, int tabn = 0 )	{
+    void printTemplateArguments( llvm::raw_ostream &os, int tabn = 0 )  {
       vector < string > template_arguments; //{ getTemplateArguments() };
       // type_vector_t::iterator
       //      for (auto mit = _templateTypes.begin(); mit != _templateTypes.end(); mit++)   {
@@ -121,11 +121,11 @@ namespace scpar {
       // type_vector_t::iterator
       //      for ( auto mit = _templateTypes.begin(); mit != _templateTypes.end(); ++mit )  {
       for ( auto const &mit: _templateTypes ) {
-          if ( mit.first == "sc_in" || mit.first == "sc_out"  || mit.first == "sc_inout" )  {
-              break;
-            }
-          template_arguments.push_back( mit.first );
+        if ( mit.first == "sc_in" || mit.first == "sc_out"  || mit.first == "sc_inout" )  {
+          break;
         }
+        template_arguments.push_back( mit.first );
+      }
       return template_arguments;
     }
 

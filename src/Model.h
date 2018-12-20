@@ -25,48 +25,48 @@ namespace scpar {
 
     typedef pair < string, EventContainer * >eventPairType;
     typedef map < string, EventContainer * >eventMapType;
-		
-		typedef pair<ModuleDecl*, vector<ModuleDecl*> >moduleInstancePairType;
-		typedef map<ModuleDecl*, vector<ModuleDecl*> >moduleInstanceMapType;
 
-		typedef pair<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroPairType;
-		typedef map<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroMapType;
+    typedef pair<ModuleDecl*, vector<ModuleDecl*> >moduleInstancePairType;
+    typedef map<ModuleDecl*, vector<ModuleDecl*> >moduleInstanceMapType;
 
-     Model();
+    typedef pair<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroPairType;
+    typedef map<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroMapType;
+
+    Model();
     ~Model();
 
     void addSCModules(SCModules *);
     void addModuleDecl(ModuleDecl *);
-		void addModuleDeclInstances(ModuleDecl*, vector<ModuleDecl*>);
+    void addModuleDeclInstances(ModuleDecl*, vector<ModuleDecl*>);
     void addSimulationTime(FindSimTime::simulationTimeMapType);
-    void addGlobalEvents(FindGlobalEvents::globalEventMapType);    
+    void addGlobalEvents(FindGlobalEvents::globalEventMapType);
     void addNetlist(FindNetlist &);
     void addSCMain(FunctionDecl*);
-		void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
+    void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
     void updateModuleDecl();
 
     moduleMapType getModuleDecl();
-		entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
+    entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
     eventMapType getEventMapType();
-		moduleInstanceMapType getModuleInstanceMap();
+    moduleInstanceMapType getModuleInstanceMap();
     unsigned int getNumEvents();
-		vector<Transition*> getGSauto();
+    vector<Transition*> getGSauto();
     void dump(raw_ostream &);
 
   private:
-     Model(const Model &);
+    Model(const Model &);
 
   protected:
-     moduleMapType _modules;
-		 moduleInstanceMapType _moduleInstanceMap;
-     FindSimTime::simulationTimeMapType _simTime;
-     eventMapType _eventMap;     
-     FunctionDecl *_scmainFcDecl;
-     FindNetlist::instanceModuleMapType _instanceModuleMap;
-     FindNetlist::portSignalMapType _portSignalMap;
-     FindNetlist::instancePortSignalMapType _instancePortSignalMap;
-     FindNetlist::instanceListModuleMapType _instanceListModuleMap; 
-		 entryFunctionGPUMacroMapType _entryFunctionGPUMacroMap;
+    moduleMapType _modules;
+    moduleInstanceMapType _moduleInstanceMap;
+    FindSimTime::simulationTimeMapType _simTime;
+    eventMapType _eventMap;
+    FunctionDecl *_scmainFcDecl;
+    FindNetlist::instanceModuleMapType _instanceModuleMap;
+    FindNetlist::portSignalMapType _portSignalMap;
+    FindNetlist::instancePortSignalMapType _instancePortSignalMap;
+    FindNetlist::instanceListModuleMapType _instanceListModuleMap; 
+    entryFunctionGPUMacroMapType _entryFunctionGPUMacroMap;
 	};
 }
 #endif

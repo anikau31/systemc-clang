@@ -144,7 +144,7 @@ bool FindEntryFunctions::VisitCXXMethodDecl( CXXMethodDecl * md ) {
 }
 // 
 CXXRecordDecl *FindEntryFunctions::getEntryCXXRecordDecl() {
-	assert (entry_cxx_record_decl_ != nullptr );
+	assert( entry_cxx_record_decl_ != nullptr );
 	return entry_cxx_record_decl_;
 }
 

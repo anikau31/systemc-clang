@@ -20,28 +20,28 @@
 #include "llvm/Support/raw_ostream.h"
 
 namespace scpar {
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class EventContainer {
-	public:
-		EventContainer();
-		EventContainer( string, VarDecl * );
+  class EventContainer {
+  public:
+    EventContainer();
+    EventContainer( string, VarDecl * );
 
-		~EventContainer();
+    ~EventContainer();
 
-		// Copy constructor.
-		EventContainer( const EventContainer & );
+    // Copy constructor.
+    EventContainer( const EventContainer & );
 
-		string getEventName() const;
+    string getEventName() const;
     VarDecl *getASTNode() const;
 
-		void dump ( llvm::raw_ostream & os, int tabn = 0 );
+    void dump ( llvm::raw_ostream & os, int tabn = 0 );
 
-	private:
-		// Name of port on which the binding happens.
+  private:
+    // Name of port on which the binding happens.
     string event_name_;
-		VarDecl *ast_node_;
-	};
+    VarDecl *ast_node_;
+  };
 }
 #endif

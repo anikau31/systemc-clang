@@ -10,33 +10,33 @@
 //#include "ReflectionContainerClass.h"
 
 namespace scpar {
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class FindEvents : public RecursiveASTVisitor < FindEvents > {
-	public:
-		/// typedefs
-		typedef map < string, FieldDecl * > classEventMapType;
-		typedef pair < string, FieldDecl * > kvType;
+  class FindEvents : public RecursiveASTVisitor < FindEvents > {
+  public:
+    /// typedefs
+    typedef map < string, FieldDecl * > classEventMapType;
+    typedef pair < string, FieldDecl * > kvType;
 
     FindEvents(CXXRecordDecl *, llvm::raw_ostream &);
     FindEvents(const FindEvents &);
     virtual ~FindEvents();
-		/// RecursiveASTVisitor methods
-		virtual bool VisitFieldDecl (FieldDecl *);
+    /// RecursiveASTVisitor methods
+    virtual bool VisitFieldDecl (FieldDecl *);
 
-		/// Access methods
-		classEventMapType getInClassEvents();
+    /// Access methods
+    classEventMapType getInClassEvents();
     vector < string > getEventNames();
 
-		/// Print methods
-		void dump();
+    /// Print methods
+    void dump();
 
-	private:
-    llvm::raw_ostream & _os;
-		classEventMapType _inClassEvents;
+  private:
+    llvm::raw_ostream & os_;
+    classEventMapType _inClassEvents;
     //    reflectionDataStructure * _reflectionMap;
-	};
+  };
 
 }
 #endif

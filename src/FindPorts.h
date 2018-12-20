@@ -8,32 +8,32 @@
 #include "FindTemplateTypes.h"
 
 namespace scpar {
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class FindPorts : public RecursiveASTVisitor < FindPorts > {
-	public:
-		/// typedefs
-		typedef map < string, FindTemplateTypes * > PortType;
-		typedef pair < string, FindTemplateTypes * >kvType;
+  class FindPorts : public RecursiveASTVisitor < FindPorts > {
+  public:
+    /// typedefs
+    typedef map < string, FindTemplateTypes * > PortType;
+    typedef pair < string, FindTemplateTypes * >kvType;
 
 
     FindPorts( CXXRecordDecl *, llvm::raw_ostream &);
     virtual ~FindPorts();
-		virtual bool VisitFieldDecl( FieldDecl * );
+    virtual bool VisitFieldDecl( FieldDecl * );
 
-		PortType getInputPorts() const;
-		PortType getOutputPorts() const;
-		PortType getInputOutputPorts() const;
-		void dump();
+    PortType getInputPorts() const;
+    PortType getOutputPorts() const;
+    PortType getInputOutputPorts() const;
+    void dump();
 
-	private:
+  private:
     llvm::raw_ostream & os_;
-		PortType _inPorts;
-		PortType _outPorts;
-		PortType _inoutPorts;
+    PortType _inPorts;
+    PortType _outPorts;
+    PortType _inoutPorts;
 
-	};
+  };
 
 }
 #endif

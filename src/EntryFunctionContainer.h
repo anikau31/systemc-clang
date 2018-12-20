@@ -27,66 +27,65 @@
 #include "SuspensionAutomata.h"
 namespace scpar {
 
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class EntryFunctionContainer {
-	public:
-		// typedefs
-		typedef vector < WaitContainer * >waitContainerListType;
-  	typedef vector < NotifyContainer *> notifyContainerListType;
-   
-		typedef pair<int, SuspensionAutomata::transitionVectorType> instanceSautoPairType;
-		typedef map<int, SuspensionAutomata::transitionVectorType> instanceSautoMapType;
+  class EntryFunctionContainer {
+  public:
+    // typedefs
+    typedef vector < WaitContainer * >waitContainerListType;
+    typedef vector < NotifyContainer *> notifyContainerListType;
 
-		typedef pair <int, SuspensionAutomata::susCFGVectorType> instanceSusCFGPairType;
-		typedef map <int, SuspensionAutomata::susCFGVectorType> instanceSusCFGMapType;
-  	
-		EntryFunctionContainer ();
-		EntryFunctionContainer (string, PROCESS_TYPE, CXXMethodDecl *, Stmt *);
-		EntryFunctionContainer (const EntryFunctionContainer &);
-	 ~EntryFunctionContainer ();
+    typedef pair<int, SuspensionAutomata::transitionVectorType> instanceSautoPairType;
+    typedef map<int, SuspensionAutomata::transitionVectorType> instanceSautoMapType;
 
-		// Accessors.
-		string getName ();
-		CXXMethodDecl *getEntryMethod ();
-		//Stmt *getConstructorStmt ();
-		PROCESS_TYPE getProcessType ();
+    typedef pair <int, SuspensionAutomata::susCFGVectorType> instanceSusCFGPairType;
+    typedef map <int, SuspensionAutomata::susCFGVectorType> instanceSusCFGMapType;
 
-		waitContainerListType getWaitCalls ();
-  	notifyContainerListType getNotifyCalls();
-  	FindSensitivity::senseMapType getSenseMap();
-  	SuspensionAutomata::susCFGVectorType getSusCFG();
-  	SuspensionAutomata::transitionVectorType getSusAuto();
-		instanceSautoMapType getInstanceSautoMap();
-		instanceSusCFGMapType getInstanceSusCFGMap();
+    EntryFunctionContainer();
+    EntryFunctionContainer(string, PROCESS_TYPE, CXXMethodDecl *, Stmt *);
+    EntryFunctionContainer(const EntryFunctionContainer &);
+    ~EntryFunctionContainer();
 
-		// Add waits.
-		void addSensitivityInfo(FindSensitivity &);
-  	void addWaits (FindWait &);
-		void addNotifys(FindNotify &);   
-		void addSusCFGAuto(SuspensionAutomata &);
-  
-  //void setConstructorStmt (Stmt *);
-		void setName (string);
-		void setProcessType (PROCESS_TYPE);
-		void setEntryMethod (CXXMethodDecl *);
-		void dumpSusCFG(raw_ostream &);
-  	void dumpSauto(raw_ostream &);
-  	void dump (raw_ostream &, int);
+    // Accessors.
+    string getName();
+    CXXMethodDecl *getEntryMethod();
+    //Stmt *getConstructorStmt ();
+    PROCESS_TYPE getProcessType();
+
+    waitContainerListType getWaitCalls();
+    notifyContainerListType getNotifyCalls();
+    FindSensitivity::senseMapType getSenseMap();
+    SuspensionAutomata::susCFGVectorType getSusCFG();
+    SuspensionAutomata::transitionVectorType getSusAuto();
+    instanceSautoMapType getInstanceSautoMap();
+    instanceSusCFGMapType getInstanceSusCFGMap();
+
+    // Add waits.
+    void addSensitivityInfo(FindSensitivity &);
+    void addWaits (FindWait &);
+    void addNotifys(FindNotify &);
+    void addSusCFGAuto(SuspensionAutomata &);
+    //void setConstructorStmt (Stmt *);
+    void setName (string);
+    void setProcessType (PROCESS_TYPE);
+    void setEntryMethod (CXXMethodDecl *);
+    void dumpSusCFG(raw_ostream &);
+    void dumpSauto(raw_ostream &);
+    void dump (raw_ostream &, int);
 
 
-		//private:    
-		string _entryName;
-		PROCESS_TYPE _procType;
-		CXXMethodDecl *_entryMethodDecl;
+    //private:
+    string _entryName;
+    PROCESS_TYPE _procType;
+    CXXMethodDecl *_entryMethodDecl;
 
-		// Hold all the waits.
-		waitContainerListType _waitCalls;
-  	notifyContainerListType _notifyCalls;
-	 FindSensitivity::senseMapType _senseMap;
-	 vector<Transition*> _susAuto;
-	 vector<SusCFG*> _susCFG;
- };
+    // Hold all the waits.
+    waitContainerListType _waitCalls;
+    notifyContainerListType _notifyCalls;
+    FindSensitivity::senseMapType _senseMap;
+    vector<Transition*> _susAuto;
+    vector<SusCFG*> _susCFG;
+  };
 }
 #endif

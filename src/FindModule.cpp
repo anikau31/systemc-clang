@@ -25,8 +25,8 @@ bool FindModule::VisitCXXRecordDecl( CXXRecordDecl *declaration ) {
   }
 
   // CXXRecordDecl::base_class_iterator
-  for ( auto bi = declaration_->bases_begin(),
-           be = declaration_->bases_end(); bi != be; ++bi )		{
+  for ( auto bi = begin(declaration_->bases()), be = end(declaration_->bases());
+        bi != be; ++bi )		{
     string base_name = bi->getType().getAsString();
 
     if (base_name == "::sc_core::sc_module"

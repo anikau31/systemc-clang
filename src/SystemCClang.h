@@ -61,32 +61,32 @@ namespace scpar {
     public ASTConsumer,
     public RecursiveASTVisitor < SystemCConsumer > {
 
-	  private:
+  private:
 
-	  public:
-		llvm::raw_ostream & _os;
-		SourceManager & _sm;
+  public:
+      llvm::raw_ostream & _os;
+      SourceManager & _sm;
 
-		SystemCConsumer(CompilerInstance &);
-		~SystemCConsumer();
+      SystemCConsumer(CompilerInstance &);
+      ~SystemCConsumer();
 
-		// Virtual methods that plugins may override. 
-		virtual bool preFire();
-		virtual bool postFire();
-		virtual bool fire();
+      // Virtual methods that plugins may override. 
+      virtual bool preFire();
+      virtual bool postFire();
+      virtual bool fire();
 
-		Model *getSystemCModel();
+      Model *getSystemCModel();
 
-		virtual void HandleTranslationUnit(ASTContext & context);  
-    ASTContext & _context;
+      virtual void HandleTranslationUnit(ASTContext & context);  
+      ASTContext & _context;
 
-	  private:
-		CompilerInstance & _ci;
-		//ASTContext& _context;
-		Model *_systemcModel;
+  private:
+      CompilerInstance & _ci;
+      //ASTContext& _context;
+      Model *_systemcModel;
 
-		// Rewriter _rewrite; 
-	};							// End class SystemCConsumer
+      // Rewriter _rewrite; 
+    };              // End class SystemCConsumer
 
   class SystemCClang : public SystemCConsumer {
 
@@ -94,17 +94,17 @@ namespace scpar {
 
 
   template < typename A > class LightsCameraAction:
-	public clang::ASTFrontendAction {
-	  protected:
+    public clang::ASTFrontendAction {
+  protected:
 
-   	  virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(CompilerInstance & ci,	llvm::StringRef inFile) {
-	//	virtual ASTConsumer * CreateASTConsumer(CompilerInstance & ci, StringRef) {
-          		  return std::unique_ptr<clang::ASTConsumer>(new SystemCConsumer(ci));
-			//return new A(ci);
-		};
+    virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(CompilerInstance & ci,  llvm::StringRef inFile) {
+      //  virtual ASTConsumer * CreateASTConsumer(CompilerInstance & ci, StringRef) {
+      return std::unique_ptr<clang::ASTConsumer>(new SystemCConsumer(ci));
+      //return new A(ci);
+    };
 
-	};							// End class LightsCameraAction
+  };              // End class LightsCameraAction
 
-}								// End namespace scpar
+}               // End namespace scpar
 
 #endif

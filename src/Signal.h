@@ -9,39 +9,31 @@
 #include "FindSignals.h"
 
 namespace scpar {
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class Signal {
-	public:
-		Signal (
-		);
-		Signal (const string &, SignalContainer *
-		);
+  class Signal {
+  public:
+    Signal();
+    Signal(const string &, SignalContainer * );
 
-		// Set parameters
-		void setModuleName (const string &
-		);
+    // Set parameters
+    void setModuleName (const string & );
 
-		/// Get parameters
-		string getName (
-		);
-		FindTemplateTypes *getTemplateTypes (
-		);
-		FieldDecl *getASTNode (
-		);
+    /// Get parameters
+    string getName();
+    FindTemplateTypes *getTemplateTypes();
+    FieldDecl *getASTNode();
 
-		// Print
-		void dump (raw_ostream &, int tabn
-		);
+    // Print
+    void dump(raw_ostream &, int tabn );
 
-	private:
-		void check (
-		);
+  private:
+    void check();
 
-	private:
-		  string _name;
-		SignalContainer *_sig;
-	};
+  private:
+    string _name;
+    SignalContainer *_sig;
+  };
 }
 #endif

@@ -33,7 +33,7 @@ ModuleDecl::~ModuleDecl() {
 
   for ( auto io_port: _ioports ) {
     // Second is the PortDecl*.
-    delete io_port.second; 
+    delete io_port.second;
   }
   _ioports.clear();
 
@@ -62,7 +62,6 @@ void ModuleDecl::addSignals( FindSignals::signalMapType *signal_map ) {
     Signal *sig = new Signal(name, sc);
 
     _signals.insert( ModuleDecl::signalPairType( name, sig ) );
-
   }
 }
 
@@ -102,8 +101,7 @@ void ModuleDecl::addInputInterfaces( FindTLMInterfaces::interfaceType p ) {
   }
 }
 
-void ModuleDecl::addOutputInterfaces(FindTLMInterfaces::interfaceType p)
-{
+void ModuleDecl::addOutputInterfaces( FindTLMInterfaces::interfaceType p ) {
   for ( auto mit: p ) {
     string name = mit.first;
     FindTemplateTypes *tt = new FindTemplateTypes(*mit.second);
@@ -128,7 +126,7 @@ void ModuleDecl::addConstructor( Stmt *constructor ) {
 
 void ModuleDecl::addProcess( FindEntryFunctions::entryFunctionVectorType * efv ) {
   _vef = *efv;
-  for (unsigned int i = 0; i < efv->size(); i++) {
+  for ( unsigned int i = 0; i < efv->size(); ++i ) {
 
     EntryFunctionContainer *ef = (*efv)[i];
 

@@ -7,25 +7,25 @@
 
 namespace scpar {
 
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class FindModule: public RecursiveASTVisitor < FindModule > {
-	public:
-		FindModule( CXXRecordDecl *, llvm::raw_ostream & );
-		virtual bool VisitCXXRecordDecl( CXXRecordDecl *decl );
+  class FindModule: public RecursiveASTVisitor <FindModule> {
+  public:
+    FindModule( CXXRecordDecl *, llvm::raw_ostream & );
+    virtual bool VisitCXXRecordDecl( CXXRecordDecl *decl );
     virtual ~FindModule();
 
-		void dump();
-		string getModuleName() const;
- 		bool isSystemCModule() const;
+    void dump();
+    string getModuleName() const;
+    bool isSystemCModule() const;
 
-	private:
+  private:
     CXXRecordDecl *declaration_;
     llvm::raw_ostream &os_;
-		bool is_systemc_module_;
-		string module_name_;
+    bool is_systemc_module_;
+    string module_name_;
 
-	};
+  };
 }
 #endif
