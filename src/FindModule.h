@@ -10,7 +10,7 @@ namespace scpar {
 	using namespace clang;
 	using namespace std;
 
-	class FindModule: public RecursiveASTVisitor < FindModule > {
+	class FindModule: public RecursiveASTVisitor <FindModule> {
 	public:
 		FindModule( CXXRecordDecl *, llvm::raw_ostream & );
 		virtual bool VisitCXXRecordDecl( CXXRecordDecl *decl );

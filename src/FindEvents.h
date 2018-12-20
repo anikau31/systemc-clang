@@ -33,7 +33,7 @@ namespace scpar {
 		void dump();
 
 	private:
-    llvm::raw_ostream & _os;
+    llvm::raw_ostream & os_;
 		classEventMapType _inClassEvents;
     //    reflectionDataStructure * _reflectionMap;
 	};

@@ -2,7 +2,7 @@
 
 using namespace scpar;
 
-FindConstructor::FindConstructor(CXXRecordDecl *declaration, llvm::raw_ostream &os) :
+FindConstructor::FindConstructor( CXXRecordDecl *declaration, llvm::raw_ostream &os ) :
   os_{os},
   declaration_{declaration},
   constructor_stmt_{nullptr},
@@ -19,11 +19,11 @@ FindConstructor::~FindConstructor() {
 }
 
 bool FindConstructor::VisitCXXMethodDecl( CXXMethodDecl *method_declaration ) {
-  switch (pass_) {
+  switch ( pass_ ) {
   case 1:  {
     if (CXXConstructorDecl *cd = dyn_cast< CXXConstructorDecl >(method_declaration)) {
       const FunctionDecl *fd{nullptr};
-      cd->getBody(fd);
+      cd->getBody( fd );
       if ( cd->hasBody() ) {
         constructor_stmt_ = cd->getBody();
       }

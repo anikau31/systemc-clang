@@ -204,7 +204,7 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext & context) {
 	postFire();
 }
 
-SystemCConsumer::SystemCConsumer(CompilerInstance & ci):
+SystemCConsumer::SystemCConsumer(CompilerInstance & ci) :
   _os(llvm::errs()),
   _sm(ci.getSourceManager()),
   _ci(ci),
@@ -213,9 +213,8 @@ SystemCConsumer::SystemCConsumer(CompilerInstance & ci):
 
 }
 
-SystemCConsumer::~SystemCConsumer()
-{
-	if (_systemcModel != nullptr)	{
+SystemCConsumer::~SystemCConsumer() {
+	if ( _systemcModel != nullptr )	{
 		delete _systemcModel;
     _systemcModel = nullptr;
 	}
