@@ -8,39 +8,39 @@
 #include "clang/AST/PrettyPrinter.h"
 
 namespace scpar {
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class WaitContainer {
-	public:
-		// typedefs
-		typedef vector < string > waitArgVectorType;
+  class WaitContainer {
+  public:
+    // typedefs
+    typedef vector < string > waitArgVectorType;
 
-		  WaitContainer ();
-		  WaitContainer (CXXMethodDecl *, CallExpr *);
+    WaitContainer ();
+    WaitContainer (CXXMethodDecl *, CallExpr *);
 
-		 ~WaitContainer ();
+    ~WaitContainer ();
 
-		// Copy constructor.
-		  WaitContainer (const WaitContainer &);
+    // Copy constructor.
+    WaitContainer (const WaitContainer &);
 
-		unsigned int getNumArgs ();
-		CXXMethodDecl *getEntryMethod ();
-		CallExpr *getASTNode ();
-		waitArgVectorType getArgList ();
+    unsigned int getNumArgs ();
+    CXXMethodDecl *getEntryMethod ();
+    CallExpr *getASTNode ();
+    waitArgVectorType getArgList ();
 
-		void dump (raw_ostream &, int tabn = 0);
+    void dump (raw_ostream &, int tabn = 0);
 
-	private:
-		void populateArgMap ();
-		string getArgString (Expr * e);
+  private:
+    void populateArgMap ();
+    string getArgString (Expr * e);
 
-	private:
-		  CXXMethodDecl * _entryMethodDecl;
-		CallExpr *_astNode;
-		unsigned int _numArgs;
+  private:
+    CXXMethodDecl * _entryMethodDecl;
+    CallExpr *_astNode;
+    unsigned int _numArgs;
 
-		waitArgVectorType _args;
-	};
+    waitArgVectorType _args;
+  };
 }
 #endif

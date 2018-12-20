@@ -7,20 +7,20 @@
 #include <map>
 namespace scpar {
 
-	using namespace clang;
-	using namespace std;
-  
-	class FindNetlist : public RecursiveASTVisitor < FindNetlist > {
-	public:
-	  // Removed Model::moduleMapType from constructor
+  using namespace clang;
+  using namespace std;
+
+  class FindNetlist : public RecursiveASTVisitor < FindNetlist > {
+  public:
+    // Removed Model::moduleMapType from constructor
     // Have to think of a way to include building 
     // netlist from module constructors. Right now I am not 
-    // doing it.	
+    // doing it.
     FindNetlist(FunctionDecl *);
     FindNetlist(const FindNetlist &);
     virtual ~FindNetlist();
 
-  public: 
+  public:
     typedef pair <string, string> instanceModulePairType;
     typedef map <string, string> instanceModuleMapType;
 
@@ -34,7 +34,7 @@ namespace scpar {
     typedef map <string, vector<string> > instanceListModuleMapType;
 
     virtual bool VisitCXXOperatorCallExpr(CXXOperatorCallExpr *ce);
-  
+ 
     void updateInstanceListModuleMap(string, string);
 
     instanceModuleMapType getInstanceModuleMap();
@@ -44,7 +44,7 @@ namespace scpar {
     int getNumInstances(string);
     void dump();
 
-	private:
+  private:
     int _pass;
     instanceModuleMapType _instanceModuleMap;
     portSignalMapType _portSignalMap;

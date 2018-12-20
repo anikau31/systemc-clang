@@ -7,37 +7,37 @@
 #include "Utility.h"
 
 namespace scpar {
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class EventDecl {
-	public:
-		// Typedefs.
-    //		typedef pair < string, FieldDecl * >eventPairType;
-    //		typedef map < string, FieldDecl * >eventMapType;
+  class EventDecl {
+  public:
+    // Typedefs.
+    //    typedef pair < string, FieldDecl * >eventPairType;
+    //    typedef map < string, FieldDecl * >eventMapType;
 
-		// Constructors.
+    // Constructors.
     EventDecl();
     EventDecl( const string &, FieldDecl * );
 
-		// Copy constructor.
+    // Copy constructor.
     EventDecl( const EventDecl & );
 
-		// Destructor.
+    // Destructor.
     ~EventDecl();
 
-		/// Get parameters
-		string getName();
-		FieldDecl *getASTNode();
-		// Print
-		void dump (raw_ostream &, int tabn = 0);
+    /// Get parameters
+    string getName();
+    FieldDecl *getASTNode();
+    // Print
+    void dump (raw_ostream &, int tabn = 0);
 
-	private:
-		void ptrCheck();
+  private:
+    void ptrCheck();
 
-	private:
+  private:
     string _name;
-		FieldDecl *_astNode;
-	};
+    FieldDecl *_astNode;
+  };
 }
 #endif

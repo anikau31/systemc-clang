@@ -7,34 +7,34 @@
 #include <map>
 namespace scpar {
 
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class FindWait:public RecursiveASTVisitor < FindWait > {
-	public:
+  class FindWait:public RecursiveASTVisitor < FindWait > {
+  public:
 
-		typedef vector < CallExpr * >waitListType;
+    typedef vector < CallExpr * >waitListType;
 
-		typedef pair < CXXMethodDecl *,vector < string > >processWaitEventPairType;
-		typedef map < CXXMethodDecl *, vector < string > >processWaitEventMapType;
+    typedef pair < CXXMethodDecl *,vector < string > >processWaitEventPairType;
+    typedef map < CXXMethodDecl *, vector < string > >processWaitEventMapType;
 
     FindWait( CXXMethodDecl *, llvm::raw_ostream & );
     virtual ~FindWait();
 
-		virtual bool VisitCallExpr( CallExpr *expr );
+    virtual bool VisitCallExpr( CallExpr *expr );
 
-		CXXMethodDecl* getEntryMethod() const;
-		waitListType getWaitCalls();
-		void dump();
+    CXXMethodDecl* getEntryMethod() const;
+    waitListType getWaitCalls();
+    void dump();
 
-	private:
+  private:
     CXXMethodDecl *entry_method_decl_;
     llvm::raw_ostream & os_;
     CallExpr *wait_call_;
     //    Expr *first_arg_;
-    //		bool found_wait_;
-		waitListType wait_calls_list_;
+    //    bool found_wait_;
+    waitListType wait_calls_list_;
 
-	};
+  };
 }
 #endif

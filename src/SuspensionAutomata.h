@@ -29,13 +29,13 @@ namespace scpar {
     void setParentBlock();
     void addChildBlockList(SusCFG *);
     void addChildBlockList(vector < SusCFG * >);
-		void addGPUFit();
-		void denyGPUFit();
+    void addGPUFit();
+    void denyGPUFit();
 
     bool isWaitBlock();
     bool isParentBlock();
     bool isParentWaitBlock(); 
-		bool isGPUFit();
+    bool isGPUFit();
 
     unsigned int getBlockID();
     unsigned int getParentBlockID();
@@ -53,11 +53,11 @@ namespace scpar {
     vector < SusCFG * >_predBlocks;
     vector < SusCFG * >_succBlocks;
     // need to add a isTranslateCUDA field here
-		bool _isWaitBlock;
+    bool _isWaitBlock;
     bool _isParentBlock;
     bool _isGPUFit;
-		Stmt *_waitStmt;
-     vector < SusCFG * >_childBlockList;
+    Stmt *_waitStmt;
+    vector < SusCFG * >_childBlockList;
   };
   ////////////////////////////////////////////////////////////////////////////////////////
   class State {
@@ -98,16 +98,16 @@ namespace scpar {
     void addFinalState(State *);
     void addCodeBlocks(SusCFG *);
     void addCodeBlocks(vector < SusCFG * >);
-		void addInstanceId(int);
+    void addInstanceId(int);
 
     State *returnInitialState();
     State *returnFinalState();
     vector < SusCFG * >returnCodeBlocks();
-		int returnInstanceId();
+    int returnInstanceId();
 
     void dump(raw_ostream &);
   private:
-		int _instanceId;
+    int _instanceId;
     vector < SusCFG * >_codeBlockVector;
     State *_initialState;
     State *_finalState;
@@ -126,12 +126,12 @@ namespace scpar {
     
     typedef pair < SusCFG *, State * >susCFGStatePairType;
     typedef map < SusCFG *, State * >susCFGStateMapType;
-	
+  
     typedef pair<State*, vector<SusCFG*> > stateCommonCodeBlockPairType;
     typedef map<State *, vector<SusCFG*> > stateCommonCodeBlockMapType;
 
     SuspensionAutomata(vector<WaitContainer*>, CXXMethodDecl *, ASTContext *,
-                        raw_ostream &);
+                       raw_ostream &);
     ~SuspensionAutomata();
     void addRemainingBlocks(State*, vector<SusCFG*>&);
     void checkInsert(vector<SusCFG*>, vector<SusCFG*>&);

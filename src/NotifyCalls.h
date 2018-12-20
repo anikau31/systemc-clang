@@ -21,32 +21,32 @@
 #include "FindNotify.h"
 
 namespace scpar {
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class NotifyCalls {
-	public:
-		// Constructors.
-		NotifyCalls();
-		NotifyCalls( const string &, FindNotify::NotifyCallListType );
+  class NotifyCalls {
+  public:
+    // Constructors.
+    NotifyCalls();
+    NotifyCalls( const string &, FindNotify::NotifyCallListType );
 
-		// Copy constructor.
+    // Copy constructor.
     NotifyCalls( const NotifyCalls & );
 
-		// Destructor.
+    // Destructor.
     ~NotifyCalls();
 
-		/// Get parameters
-		string getName() const;
+    /// Get parameters
+    string getName() const;
     FindNotify::NotifyCallListType getNotifyCallList();
 
-		unsigned int getNumNotifyCalls();
-		// Print
-		void dump ( llvm::raw_ostream &, int );
+    unsigned int getNumNotifyCalls();
+    // Print
+    void dump ( llvm::raw_ostream &, int );
 
-	private:
+  private:
     string name_;
     FindNotify::NotifyCallListType notify_call_list_;
-	};
+  };
 }
 #endif

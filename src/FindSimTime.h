@@ -9,26 +9,26 @@
 #include "Utility.h"
 namespace scpar {
 
-	using namespace clang;
-	using namespace std;
+  using namespace clang;
+  using namespace std;
 
-	class FindSimTime:public RecursiveASTVisitor < FindSimTime >, public Utility {
-	public:
+  class FindSimTime:public RecursiveASTVisitor < FindSimTime >, public Utility {
+  public:
 
-		typedef pair < string, string > simulationTimePairType;
-		typedef map < string, string > simulationTimeMapType;
+    typedef pair < string, string > simulationTimePairType;
+    typedef map < string, string > simulationTimeMapType;
 
     FindSimTime (FunctionDecl *, llvm::raw_ostream &);
-		virtual ~FindSimTime();
-		virtual bool VisitCallExpr(CallExpr * C);
+    virtual ~FindSimTime();
+    virtual bool VisitCallExpr(CallExpr * C);
 
-		simulationTimeMapType returnSimTime ();
+    simulationTimeMapType returnSimTime ();
 
-	private:
+  private:
     llvm::raw_ostream & _os;
-		FunctionDecl *_sigInst;
-		simulationTimeMapType _simTime;
-		CallExpr *_callexpr;
-	};
+    FunctionDecl *_sigInst;
+    simulationTimeMapType _simTime;
+    CallExpr *_callexpr;
+  };
 }
 #endif

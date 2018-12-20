@@ -7,37 +7,35 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "FindTemplateTypes.h"
 
-namespace scpar
-{
-	using namespace clang;
-	using namespace std;
+namespace scpar {
+  using namespace clang;
+  using namespace std;
 
-	class FindTLMInterfaces:public RecursiveASTVisitor < FindTLMInterfaces >
-	{
+  class FindTLMInterfaces:public RecursiveASTVisitor < FindTLMInterfaces > {
   public:
-		// / typedefs
-		typedef map < string, FindTemplateTypes * >interfaceType;
-		typedef pair < string, FindTemplateTypes * >kvType;
+    // / typedefs
+    typedef map < string, FindTemplateTypes * >interfaceType;
+    typedef pair < string, FindTemplateTypes * >kvType;
 
-		FindTLMInterfaces(CXXRecordDecl *, llvm::raw_ostream &);
+    FindTLMInterfaces(CXXRecordDecl *, llvm::raw_ostream &);
     virtual ~FindTLMInterfaces();
-		
+
     virtual bool VisitFieldDecl(FieldDecl *);
-  
+
     // ANI : Identifying only FIFO interfaces. 
     // Need to add the other interfaces
-		interfaceType getInputInterfaces();
-		interfaceType getOutputInterfaces();
-		interfaceType getInputOutputInterfaces();
+    interfaceType getInputInterfaces();
+    interfaceType getOutputInterfaces();
+    interfaceType getInputOutputInterfaces();
 
-		void dump();
+    void dump();
 
   private:
     llvm::raw_ostream & _os;
-		interfaceType _inInterfaces;
-		interfaceType _outInterfaces;
-		interfaceType _inoutInterfaces;
+    interfaceType _inInterfaces;
+    interfaceType _outInterfaces;
+    interfaceType _inoutInterfaces;
 
-	};
+  };
 }
 #endif
