@@ -25,14 +25,14 @@ namespace scpar {
 
     typedef pair < string, EventContainer * >eventPairType;
     typedef map < string, EventContainer * >eventMapType;
-		
+
 		typedef pair<ModuleDecl*, vector<ModuleDecl*> >moduleInstancePairType;
 		typedef map<ModuleDecl*, vector<ModuleDecl*> >moduleInstanceMapType;
 
 		typedef pair<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroPairType;
 		typedef map<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroMapType;
 
-     Model();
+    Model();
     ~Model();
 
     void addSCModules(SCModules *);
@@ -54,19 +54,19 @@ namespace scpar {
     void dump(raw_ostream &);
 
   private:
-     Model(const Model &);
+    Model(const Model &);
 
   protected:
-     moduleMapType _modules;
-		 moduleInstanceMapType _moduleInstanceMap;
-     FindSimTime::simulationTimeMapType _simTime;
-     eventMapType _eventMap;     
-     FunctionDecl *_scmainFcDecl;
-     FindNetlist::instanceModuleMapType _instanceModuleMap;
-     FindNetlist::portSignalMapType _portSignalMap;
-     FindNetlist::instancePortSignalMapType _instancePortSignalMap;
-     FindNetlist::instanceListModuleMapType _instanceListModuleMap; 
-		 entryFunctionGPUMacroMapType _entryFunctionGPUMacroMap;
+    moduleMapType _modules;
+    moduleInstanceMapType _moduleInstanceMap;
+    FindSimTime::simulationTimeMapType _simTime;
+    eventMapType _eventMap;     
+    FunctionDecl *_scmainFcDecl;
+    FindNetlist::instanceModuleMapType _instanceModuleMap;
+    FindNetlist::portSignalMapType _portSignalMap;
+    FindNetlist::instancePortSignalMapType _instancePortSignalMap;
+    FindNetlist::instanceListModuleMapType _instanceListModuleMap; 
+    entryFunctionGPUMacroMapType _entryFunctionGPUMacroMap;
 	};
 }
 #endif
