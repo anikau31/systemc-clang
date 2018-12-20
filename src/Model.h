@@ -37,20 +37,20 @@ namespace scpar {
 
     void addSCModules(SCModules *);
     void addModuleDecl(ModuleDecl *);
-		void addModuleDeclInstances(ModuleDecl*, vector<ModuleDecl*>);
+    void addModuleDeclInstances(ModuleDecl*, vector<ModuleDecl*>);
     void addSimulationTime(FindSimTime::simulationTimeMapType);
     void addGlobalEvents(FindGlobalEvents::globalEventMapType);
     void addNetlist(FindNetlist &);
     void addSCMain(FunctionDecl*);
-		void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
+    void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
     void updateModuleDecl();
 
     moduleMapType getModuleDecl();
-		entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
+    entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
     eventMapType getEventMapType();
-		moduleInstanceMapType getModuleInstanceMap();
+    moduleInstanceMapType getModuleInstanceMap();
     unsigned int getNumEvents();
-		vector<Transition*> getGSauto();
+    vector<Transition*> getGSauto();
     void dump(raw_ostream &);
 
   private:
