@@ -1,11 +1,15 @@
 #include <string>
 #include "Model.h"
 #include "SCModules.h"
+
 using namespace scpar;
 using namespace std;
 
+//#include "json.hpp"
+//using json = nlohmann:json;
+
 Model::Model() {
- 
+
 }
 
 Model::~Model() {
