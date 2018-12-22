@@ -1,35 +1,31 @@
 #include "FindSimTime.h"
+
 using namespace scpar;
 
-FindSimTime::FindSimTime (FunctionDecl * tuDecl, llvm::raw_ostream & os):
-_os (os), _sigInst (NULL), _callexpr (NULL)
-{
-	assert (!(tuDecl == NULL));
+FindSimTime::FindSimTime ( FunctionDecl * tuDecl, llvm::raw_ostream & os ) :
+  os_ (os) {
+  //  _sigInst{nullptr},
+  //  call_expr_{nullptr} {
 
-	TraverseDecl (tuDecl);
+    assert (!(tuDecl == nullptr ));
+    TraverseDecl (tuDecl);
 }
 
-FindSimTime::~FindSimTime ()
-{
-	_simTime.clear ();
+FindSimTime::~FindSimTime() {
+	simulation_time_.clear ();
 }
 
-bool FindSimTime::VisitCallExpr (CallExpr * c)
-{
-
-	if (c->getDirectCallee ()->getNameInfo ().getAsString () != "sc_start")
-		{
+bool FindSimTime::VisitCallExpr( CallExpr * c ) {
+	if (c->getDirectCallee ()->getNameInfo ().getAsString () != "sc_start") {
 			return true;
 		}
 
-//  _os << "Found sc_start";
-	if (c->getNumArgs () > 0)
-		{
-//    _os <<"\n Simulation time is :" << getArgumentName(c->getArg(0));
-			if (c->getNumArgs () > 1)
-				{
-					//    _os << " " << getArgumentName(c->getArg(1));
-					_simTime.insert (simulationTimePairType
+  //  os_ << "Found sc_start";
+	if (c->getNumArgs () > 0)	{
+      //    os_ <<"\n Simulation time is :" << getArgumentName(c->getArg(0));
+			if (c->getNumArgs () > 1)	{
+					//    os_ << " " << getArgumentName(c->getArg(1));
+					simulation_time_.insert (simulationTimePairType
 													 (getArgumentName (c->getArg (0)),
 														getArgumentName (c->getArg (1))));
 				}
@@ -38,27 +34,25 @@ bool FindSimTime::VisitCallExpr (CallExpr * c)
 }
 
 /*
-string FindSimTime::getArgumentName (Expr * arg)
-{
+  string FindSimTime::getArgumentName (Expr * arg)
+  {
 	if (arg == NULL)
-		return string ("NULL");
+  return string ("NULL");
 
 	clang::LangOptions LangOpts;
 	LangOpts.CPlusPlus = true;
 	clang::PrintingPolicy Policy (LangOpts);
 
 	string
-		TypeS;
+  TypeS;
 
 	llvm::raw_string_ostream s (TypeS);
-
 	arg->printPretty (s, 0, Policy);
-	//  _os << ", argument: " << s.str() << "\n";
+	//  os_ << ", argument: " << s.str() << "\n";
 	return s.str ();
-}
+  }
 */
 
-FindSimTime::simulationTimeMapType FindSimTime::returnSimTime ()
-{
-	return _simTime;
+FindSimTime::simulationTimeMapType FindSimTime::returnSimTime() {
+	return simulation_time_;
 }

@@ -12,23 +12,25 @@ namespace scpar {
   using namespace clang;
   using namespace std;
 
-  class FindSimTime:public RecursiveASTVisitor < FindSimTime >, public Utility {
+  class FindSimTime :
+    public RecursiveASTVisitor < FindSimTime >,
+    public Utility {
   public:
 
-    typedef pair < string, string > simulationTimePairType;
-    typedef map < string, string > simulationTimeMapType;
+    typedef pair <string, string> simulationTimePairType;
+    typedef map <string, string> simulationTimeMapType;
 
-    FindSimTime (FunctionDecl *, llvm::raw_ostream &);
+    FindSimTime( FunctionDecl *, llvm::raw_ostream & );
     virtual ~FindSimTime();
-    virtual bool VisitCallExpr(CallExpr * C);
+    virtual bool VisitCallExpr( CallExpr * c );
 
-    simulationTimeMapType returnSimTime ();
+    simulationTimeMapType returnSimTime();
 
   private:
-    llvm::raw_ostream & _os;
-    FunctionDecl *_sigInst;
-    simulationTimeMapType _simTime;
-    CallExpr *_callexpr;
+    llvm::raw_ostream & os_;
+    //    FunctionDecl *_sigInst;
+    simulationTimeMapType simulation_time_;
+    //    CallExpr *call_expr_;
   };
 }
 #endif
