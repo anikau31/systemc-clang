@@ -51,8 +51,6 @@ using namespace clang::tooling;
 #include "SCuitable/GlobalSuspensionAutomata.h"
 #include "SCuitable/FindGPUMacro.h"
 
-//#include "matchers/sc_module.h"
-
 using namespace clang;
 
 namespace scpar {
@@ -60,9 +58,6 @@ namespace scpar {
   class SystemCConsumer :
     public ASTConsumer,
     public RecursiveASTVisitor < SystemCConsumer > {
-
-  private:
-
   public:
       llvm::raw_ostream & _os;
       SourceManager & _sm;
@@ -77,7 +72,7 @@ namespace scpar {
 
       Model *getSystemCModel();
 
-      virtual void HandleTranslationUnit(ASTContext & context);  
+      virtual void HandleTranslationUnit(ASTContext & context); 
       ASTContext & _context;
 
   private:
@@ -89,22 +84,23 @@ namespace scpar {
     };              // End class SystemCConsumer
 
   class SystemCClang : public SystemCConsumer {
+  public:
+  SystemCClang( CompilerInstance &ci) :
+    SystemCConsumer(ci) {
+    }
 
+    bool postFire() {
+      return true;
+    }
   };
 
-
-  template < typename A > class LightsCameraAction:
+  template <typename A> class LightsCameraAction:
     public clang::ASTFrontendAction {
   protected:
-
     virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(CompilerInstance & ci,  llvm::StringRef inFile) {
-      //  virtual ASTConsumer * CreateASTConsumer(CompilerInstance & ci, StringRef) {
-      return std::unique_ptr<clang::ASTConsumer>(new SystemCConsumer(ci));
-      //return new A(ci);
+      return std::unique_ptr<clang::ASTConsumer>(new A(ci));
     };
-
   };              // End class LightsCameraAction
-
 }               // End namespace scpar
 
 #endif

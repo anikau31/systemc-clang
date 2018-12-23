@@ -29,7 +29,8 @@ public:
 		);
 		//FrontendActionFactory *fe = newFrontendActionFactory < LightsCameraAction < A > >();
 		//Tool.run (fe);
-		Tool.run ( newFrontendActionFactory< LightsCameraAction<SystemCConsumer> >().get());
+		//Tool.run ( newFrontendActionFactory< LightsCameraAction<SystemCConsumer> >().get());
+    Tool.run ( newFrontendActionFactory< LightsCameraAction<A> >().get());
 
 	};
 
