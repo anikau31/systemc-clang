@@ -6,7 +6,7 @@
 
 # Path for where the binaries are for clang
 # SET this.
-export LLVM_BUILD_DIR=/home/$USER/bin/clang-7.0.0/ 
+export LLVM_BUILD_DIR=/home/$USER/clang-7.0.0/ 
 
 # Path where SystemC is installed
 # SET this.
