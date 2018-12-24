@@ -1,3 +1,4 @@
+#!/bin/bash
 ##===================================================================
 ## 
 ## It is important to use this script to set all the necessary paths.
