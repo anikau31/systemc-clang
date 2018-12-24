@@ -1,3 +1,4 @@
+#!/bin/bash
 ##===================================================================
 ## 
 ## It is important to use this script to set all the necessary paths.
@@ -10,7 +11,7 @@ export LLVM_BUILD_DIR=/home/$USER/clang-7.0.0/
 
 # Path where SystemC is installed
 # SET this.
-export SYSTEMC=/home/$USER/sw/systemc-2.3.3/
+export SYSTEMC=/home/$USER/code/systemc-2.3.3/systemc/
 
 # Path for the systemc-clang build directory
 # SET this.

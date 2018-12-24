@@ -20,14 +20,14 @@ namespace scpar {
   class Model {
   public:
 
-    typedef pair < string, ModuleDecl * >modulePairType;
-    typedef map < string, ModuleDecl * >moduleMapType;
+    typedef pair < string, ModuleDecl * > modulePairType;
+    typedef map < string, ModuleDecl * > moduleMapType;
 
-    typedef pair < string, EventContainer * >eventPairType;
-    typedef map < string, EventContainer * >eventMapType;
+    typedef pair < string, EventContainer * > eventPairType;
+    typedef map < string, EventContainer * > eventMapType;
 
-    typedef pair<ModuleDecl*, vector<ModuleDecl*> >moduleInstancePairType;
-    typedef map<ModuleDecl*, vector<ModuleDecl*> >moduleInstanceMapType;
+    typedef pair<ModuleDecl*, vector<ModuleDecl*> > moduleInstancePairType;
+    typedef map<ModuleDecl*, vector<ModuleDecl*> > moduleInstanceMapType;
 
     typedef pair<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroPairType;
     typedef map<EntryFunctionContainer*, FindGPUMacro::forStmtGPUMacroMapType> entryFunctionGPUMacroMapType;
@@ -57,16 +57,16 @@ namespace scpar {
     Model(const Model &);
 
   protected:
-    moduleMapType _modules;
-    moduleInstanceMapType _moduleInstanceMap;
-    FindSimTime::simulationTimeMapType _simTime;
-    eventMapType _eventMap;
-    FunctionDecl *_scmainFcDecl;
-    FindNetlist::instanceModuleMapType _instanceModuleMap;
-    FindNetlist::portSignalMapType _portSignalMap;
-    FindNetlist::instancePortSignalMapType _instancePortSignalMap;
-    FindNetlist::instanceListModuleMapType _instanceListModuleMap; 
-    entryFunctionGPUMacroMapType _entryFunctionGPUMacroMap;
+    moduleMapType modules_;
+    moduleInstanceMapType module_instance_map_;
+    FindSimTime::simulationTimeMapType simulation_time_;
+    eventMapType event_map_;
+    FunctionDecl *scmain_function_decl_;
+    FindNetlist::instanceModuleMapType instance_module_map_;
+    FindNetlist::portSignalMapType port_signal_map_;
+    FindNetlist::instancePortSignalMapType port_signal_instance_map_;
+    FindNetlist::instanceListModuleMapType module_instance_list_; 
+    entryFunctionGPUMacroMapType entry_function_gpu_macro_map_;
 	};
 }
 #endif
