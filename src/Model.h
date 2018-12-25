@@ -13,6 +13,7 @@
 #include "EntryFunctionContainer.h"
 #include "FindNetlist.h"
 #include "SCuitable/FindGPUMacro.h"
+
 namespace scpar {
   using namespace clang;
   using namespace std;

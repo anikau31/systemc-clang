@@ -101,8 +101,7 @@ void Model::updateModuleDecl() {
   }
 }
 
-void Model::addSCModules(SCModules * m)
-{
+void Model::addSCModules(SCModules * m) {
   SCModules::moduleMapType mods = m->getSystemCModulesMap();
 
   for (SCModules::moduleMapType::iterator mit = mods.begin();
@@ -111,8 +110,7 @@ void Model::addSCModules(SCModules * m)
   }
 }
 
-Model::moduleMapType Model::getModuleDecl()
-{
+Model::moduleMapType Model::getModuleDecl() {
   return modules_;
 }
 
@@ -125,8 +123,7 @@ Model::moduleInstanceMapType Model::getModuleInstanceMap() {
 	return module_instance_map_;
 }
 
-Model::eventMapType Model::getEventMapType()
-{
+Model::eventMapType Model::getEventMapType() {
   return event_map_;
 }
 
