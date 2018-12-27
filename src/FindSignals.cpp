@@ -33,19 +33,19 @@ bool FindSignals::VisitFieldDecl( FieldDecl * fd ) {
 			const Type *tp = q.getTypePtr();
 			FindTemplateTypes *te = new FindTemplateTypes ();
 
-			te->Enumerate (tp);
+			te->Enumerate(tp);
 			// te->printTemplateArguments(_os);
 
-			string tt = te->getTemplateType ();
+			string tt = te->getTemplateType();
 
 //    _os << "OUTPUT ============ " << tt << "\n";
 			if ((signed) tt.find ("sc_signal") == -1) {
 					delete te;
 					return true;
       }
-			SignalContainer *sc = new SignalContainer (fd->getNameAsString (), te, fd);
+			SignalContainer *sc = new SignalContainer (fd->getNameAsString(), te, fd);
 
-			_signals->insert (FindSignals::signalPairType (fd->getNameAsString (), sc));
+			_signals->insert (FindSignals::signalPairType (fd->getNameAsString(), sc));
 		}
 	return true;
 }
