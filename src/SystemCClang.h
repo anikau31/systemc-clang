@@ -76,7 +76,7 @@ namespace scpar {
       ASTContext & _context;
 
   private:
-      CompilerInstance & _ci;
+      CompilerInstance &_ci;
       //ASTContext& _context;
       Model *_systemcModel;
 

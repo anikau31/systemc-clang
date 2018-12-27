@@ -207,8 +207,8 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext & context) {
 SystemCConsumer::SystemCConsumer(CompilerInstance & ci) :
   _os(llvm::errs()),
   _sm(ci.getSourceManager()),
-  _ci(ci),
   _context(ci.getASTContext()),
+  _ci(ci),
   _systemcModel(nullptr) {
 
 }

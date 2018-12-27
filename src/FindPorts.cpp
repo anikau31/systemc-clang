@@ -29,7 +29,7 @@ bool FindPorts::VisitFieldDecl( FieldDecl *fd ) {
     //     os_ << "\n+ Name: " << info->getNameStart();
     //   os_ << "\n+ Type: " << q.getAsString();
   }
-  // 
+  //
 	/// FIXME: We have to delete these somewhere.  Who is responsible of doing this?
 
 	/// We are going to store these.  So use pointers.
@@ -41,7 +41,8 @@ bool FindPorts::VisitFieldDecl( FieldDecl *fd ) {
 
 	/// Check if we have sc_in/sc_out/sc_inout ports.
 	/// The vector is organized such that the first element is the port type.
-	FindTemplateTypes::argVectorType args{ te->getTemplateArgumentsType() };
+  //	FindTemplateTypes::argVectorType
+  auto args{ te->getTemplateArgumentsType() };
 	FindTemplateTypes::argVectorType::iterator ait{ args.begin() };
 	if ( args.size() == 0 )	{
     return true;
