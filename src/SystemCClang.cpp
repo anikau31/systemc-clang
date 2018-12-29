@@ -111,7 +111,7 @@ bool SystemCConsumer::fire() {
           FindNotify findNotify{ ef->_entryMethodDecl, _os };
           ef->addNotifys(findNotify);
 
-          /*
+          /*          
             SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(), ef->getEntryMethod(), &_context, llvm::errs());
             if (suspensionAutomata.initialize()) {
             suspensionAutomata.genSusCFG();
