@@ -30,8 +30,8 @@ namespace scpar {
     void dump(raw_ostream &, int tabn = 0);
 
   private:
-    string _name;
-    FindTemplateTypes *_templateType;
+    string port_name_;
+    FindTemplateTypes *template_type_;
   };
 }
 #endif

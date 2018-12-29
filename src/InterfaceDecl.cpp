@@ -53,5 +53,5 @@ void InterfaceDecl::dump(raw_ostream & os, int tabn)
   }
   os << "InterfaceDecl " << this << " '" << _name << "' FindTemplateTypes " <<
     _templateType;
-  _templateType->printTemplateArguments(os, 1);
+  _templateType->printTemplateArguments(os );
 }

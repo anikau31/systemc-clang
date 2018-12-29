@@ -96,23 +96,19 @@ namespace scpar {
       return template_types_;
     }
 
-    void printTemplateArguments( llvm::raw_ostream &os, int tabn = 0 )  {
-      vector < string > template_arguments; //{ getTemplateArguments() };
-      // type_vector_t::iterator
-      //      for (auto mit = template_types_.begin(); mit != template_types_.end(); mit++)   {
+    void printTemplateArguments( llvm::raw_ostream &os )  {
+      vector < string > template_arguments;
       for ( auto const &mit: template_types_ ) {
-        for ( auto i{0}; i < tabn; ++i)  {
-          os << " ";
-        }
-        os << "- " << mit.first << ", type ptr: " << mit.second;
-        os << "\n";
+        //os << "\n port type: " << mit.first << "  ";
+        //<< ", type ptr: " << mit.second;
+        //os << "\n";
         template_arguments.push_back( mit.first );
       }
 
       // Print the template arguments to the output stream
-      os << "= ";
+      os << ", " << template_arguments.size() << " arguments, ";
       for ( auto const &targ: template_arguments ) {
-        os << targ << "  ";
+        os << targ << " ";
       }
     }
 

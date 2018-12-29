@@ -66,5 +66,5 @@ void
 		}
 	os << "Signal " << this << " '" << _name << "' FindTemplateTypes " <<
 		_sig->getTemplateTypes () << "' FieldDecl' " << _sig->getASTNode ();
-	_sig->getTemplateTypes ()->printTemplateArguments (os, tabn);
+	_sig->getTemplateTypes ()->printTemplateArguments ( os );
 }
