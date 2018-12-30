@@ -112,8 +112,8 @@ namespace scpar {
       }
     }
 
-    vector < string > getTemplateArguments() {
-      vector < string > template_arguments;
+    vector<string> getTemplateArguments() {
+      vector<string> template_arguments;
       // type_vector_t::iterator
       //      for ( auto mit = template_types_.begin(); mit != template_types_.end(); ++mit )  {
       for ( auto const &mit: template_types_ ) {
