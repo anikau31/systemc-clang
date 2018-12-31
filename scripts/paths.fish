@@ -28,7 +28,8 @@ set -x CXX clang++
 set -x LLVM_CXX_FLAGS (eval $LLVMCONFIG --cxxflags)
 
 # Generate all the flags.
-set -x LLVM_CXX_FLAGS "$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -faligned-allocation"
+# -fno-aligned-allocation needed for c++17
+set -x LLVM_CXX_FLAGS "$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -fno-aligned-allocation"
 set -x LLVM_LIBS (eval $LLVMCONFIG --libs)
 set -x LLVM_LD_FLAGS (eval $LLVMCONFIG --ldflags)
 set -x LLVM_LD_FLAGS (echo $LLVM_LD_FLAGS | sed 's/ *$//g')

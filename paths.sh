@@ -25,11 +25,11 @@ LLVMCONFIG=$LLVM_BUILD_DIR/bin/llvm-config
 # Alternatively, you can use gcc and g++, but some flags don't work.
 export CC=clang
 export CXX=clang++
-export LLVM_CXX_FLAGS=`$LLVMCONFIG --cxxflags`
+export LLVM_CXX_FLAGS="`$LLVMCONFIG --cxxflags` -fno-aligned-allocation"
 
 # Generate all the flags.
 export LLVM_CXX_FLAGS="$LLVM_CXX_FLAGS -fvisibility-inlines-hidden"
-export LLVM_LIBS=`$LLVMCONFIG --libs` 
+export LLVM_LIBS=`$LLVMCONFIG --libs`
 export LLVM_LD_FLAGS=`$LLVMCONFIG --ldflags`
 export LLVM_LD_FLAGS=`echo $LLVM_LD_FLAGS | sed 's/ *$//g'`
 
