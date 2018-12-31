@@ -130,8 +130,7 @@ namespace scpar {
     typedef pair<State*, vector<SusCFG*> > stateCommonCodeBlockPairType;
     typedef map<State *, vector<SusCFG*> > stateCommonCodeBlockMapType;
 
-    SuspensionAutomata(vector<WaitContainer*>, CXXMethodDecl *, ASTContext *,
-                       raw_ostream &);
+    SuspensionAutomata(vector<WaitContainer*>, CXXMethodDecl *, ASTContext *, llvm::raw_ostream &);
     ~SuspensionAutomata();
     void addRemainingBlocks(State*, vector<SusCFG*>&);
     void checkInsert(vector<SusCFG*>, vector<SusCFG*>&);

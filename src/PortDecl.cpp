@@ -5,41 +5,42 @@ using namespace scpar;
 using namespace std;
 
 PortDecl::~PortDecl() {
-  if ( _templateType != nullptr ) {
-    delete _templateType;
+  if ( template_type_ != nullptr ) {
+    delete template_type_;
   }
 }
 
-PortDecl::PortDecl():_name{"NONE"}, _templateType{nullptr} {
+PortDecl::PortDecl() :
+  port_name_{ "NONE" },
+  template_type_{ nullptr } {
 
 }
 
-PortDecl::PortDecl(const string &name, FindTemplateTypes *tt):_name{name}, _templateType{tt} {
+PortDecl::PortDecl( const string &name, FindTemplateTypes *tt ) :
+  port_name_{ name },
+  template_type_{ tt } {
 }
 
-PortDecl::PortDecl(const PortDecl &from) {
-  _name = from._name;
+PortDecl::PortDecl( const PortDecl &from ) {
+  port_name_ = from.port_name_;
   // This is necessary to allow FindPorts to go out of scope.
-  _templateType = new FindTemplateTypes(*from._templateType);
+  template_type_ = new FindTemplateTypes{ *from.template_type_ };
 }
 
-void PortDecl::setModuleName(const string &name) {
-  _name = name;
+void PortDecl::setModuleName( const string &name ) {
+  port_name_ = name;
 }
 
 string PortDecl::getName() const {
-  return _name;
+  return port_name_;
 }
 
 FindTemplateTypes *PortDecl::getTemplateType() {
-  return _templateType;
+  return template_type_;
 }
 
-void PortDecl::dump(raw_ostream & os, int tabn) {
-  for ( auto i = 0; i < tabn; ++i ) {
-    os << " ";
-  }
-  os << "PortDecl " << this << " '" << _name << "' FindTemplateTypes " <<
-    _templateType;
-  _templateType->printTemplateArguments(os, 1);
+void PortDecl::dump( llvm::raw_ostream & os, int tabn ) {
+  //os << "PortDecl " << this << " '" << port_name_ << "' FindTemplateTypes " << template_type_;
+  os << "Port name: " << port_name_ << " ";
+  template_type_->printTemplateArguments( os );
 }
