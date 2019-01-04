@@ -8,20 +8,19 @@ EntryFunctionContainer::~EntryFunctionContainer ()
 	// DO NOT free anything.
 }
 
-EntryFunctionContainer::EntryFunctionContainer ():_entryName ("NONE"), _procType (NONE), _entryMethodDecl (NULL)
-{
+EntryFunctionContainer::EntryFunctionContainer () :
+  _entryName ("NONE"),
+  _procType (PROCESS_TYPE::NONE),
+  _entryMethodDecl (nullptr) {
 
 }
 
 EntryFunctionContainer::EntryFunctionContainer (string n, PROCESS_TYPE p, CXXMethodDecl * d, Stmt * s)
-:_entryName (n), _procType (p), _entryMethodDecl (d)
-{
+:_entryName (n), _procType (p), _entryMethodDecl (d) {
 
 }
 
-
-EntryFunctionContainer::EntryFunctionContainer (const EntryFunctionContainer & from)
-{
+EntryFunctionContainer::EntryFunctionContainer (const EntryFunctionContainer & from) {
 	_entryName = from._entryName;
 	_procType = from._procType;
 	_entryMethodDecl = from._entryMethodDecl;
@@ -187,13 +186,13 @@ void EntryFunctionContainer::dump (raw_ostream & os, int tabn)
 	os << "EntryFunctionContainer '" << getName () << "' processType '";
 	switch (getProcessType ())
 		{
-		case THREAD:
+		case PROCESS_TYPE::THREAD:
 			os << "SC_THREAD' ";
 			break;
-		case METHOD:
+		case PROCESS_TYPE::METHOD:
 			os << "SC_METHOD' ";
 			break;
-		case CTHREAD:
+		case PROCESS_TYPE::CTHREAD:
 			os << "SC_CTHREAD' ";
 			break;
 		default:

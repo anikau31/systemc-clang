@@ -136,15 +136,15 @@ void ModuleDecl::addProcess( FindEntryFunctions::entryFunctionVectorType * efv )
 
     // Set the process type
     switch (ef->_procType) {
-    case THREAD: {
+    case PROCESS_TYPE::THREAD: {
       entryType = "SC_THREAD";
       break;
     }
-    case METHOD: {
+    case PROCESS_TYPE::METHOD: {
       entryType = "SC_METHOD";
       break;
     }
-    case CTHREAD: {
+    case PROCESS_TYPE::CTHREAD: {
       entryType = "SC_CTHREAD";
       break;
     }
