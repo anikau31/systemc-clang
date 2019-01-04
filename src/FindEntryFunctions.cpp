@@ -6,7 +6,7 @@ FindEntryFunctions::FindEntryFunctions( CXXRecordDecl * d, llvm::raw_ostream & o
   os_{os},
   _d{d},
   is_entry_function_{false},
-  proc_type_{NONE},
+  proc_type_{PROCESS_TYPE::NONE},
   entry_cxx_record_decl_{nullptr},
   entry_method_decl_{nullptr},
   found_entry_decl_{false},
@@ -51,13 +51,13 @@ bool FindEntryFunctions::VisitMemberExpr (MemberExpr * e) {
 
     //os_ << "####: MemberExpr -- " << memberName << "\n";
     if ( memberName == "create_method_process" ) {
-      proc_type_ = METHOD;
+      proc_type_ = PROCESS_TYPE::METHOD;
     }
     else if ( memberName == "create_thread_process" )	{
-      proc_type_ = THREAD;
+      proc_type_ = PROCESS_TYPE::THREAD;
     }
     else if ( memberName == "create_cthread_process" ) {
-      proc_type_ = CTHREAD;
+      proc_type_ = PROCESS_TYPE::CTHREAD;
     }
     break;
   }
@@ -84,7 +84,7 @@ bool FindEntryFunctions::VisitStringLiteral( StringLiteral * s ) {
     ef->setName( entry_name_ );
     ef->setProcessType( proc_type_ );
 
-    if ( proc_type_ != 0 ) {
+    if ( proc_type_ != PROCESS_TYPE::NONE ) {
       entry_function_list_.push_back( ef );
     }
     /*    ef->constructor_stmt_ = constructor_stmt_;
@@ -163,13 +163,13 @@ void FindEntryFunctions::dump() {
 			os_ << "\n:> Entry function name: " << ef->getName() <<
 				", process type: ";
 			switch ( ef->getProcessType() ) {
-				case THREAD:
+      case PROCESS_TYPE::THREAD:
 					os_ << " SC_THREAD\n";
 					break;
-				case METHOD:
+      case PROCESS_TYPE::METHOD:
 					os_ << " SC_METHOD\n";
 					break;
-				case CTHREAD:
+      case PROCESS_TYPE::CTHREAD:
 					os_ << " SC_CTHREAD\n";
 					break;
 				default:
