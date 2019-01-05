@@ -12,10 +12,11 @@ Model::Model() {
 Model::~Model() {
   //  llvm::errs() << "\n[[ Destructor Model ]]\n";
   // Delete all ModuleDecl pointers.
-  for (Model::moduleMapType::iterator mit = modules_.begin();
-       mit != modules_.end(); mit++) {
+  //for (Model::moduleMapType::iterator mit = modules_.begin(); mit != modules_.end(); mit++) {
+  for (auto const & [it, module_decl] : modules_ ) {
     // Second is the ModuleDecl type.
-    delete mit->second;
+    //delete mit->second;
+    delete module_decl;
   }
   modules_.clear();
 }
