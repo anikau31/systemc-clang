@@ -56,7 +56,7 @@ $ ninja
 
 Testing on a small example
 ==========================
-* Copy the compiled binary in the bin folder of `LLVM_BUILD_DIR`
+* Copy the compiled binary in the bin folder of `LLVM_BUILD_DIR`.
 ```bash
 $ cp systemc-clang $LLVM_BUILD_DIR/bin
 ```
