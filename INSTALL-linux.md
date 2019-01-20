@@ -6,7 +6,7 @@ You can install LLVM and Clang via source or via binaries.
 ### LLVM/Clang from source 
 
 * Follow the instructions to install clang: [Get Started](http://clang.llvm.org/get_started.html). Notice that you should also install LLVM as it is needed for compilation of the stand-along program. A suggestion is to install LLVM/clang in a location that is accessible by the user.
-Note that the clang-llvm version systemc-clang supports is version 3.4. So, when following the instructions posted at [Get Started](http://clang.llvm.org/get_started.html). please substitute the phrase "trunk" with "tags/RELEASE_34/final".
+Note that the clang-llvm version systemc-clang supports is version 7.0.0. 
  
 * Clone systemc-clang repository.
 ```bash  
