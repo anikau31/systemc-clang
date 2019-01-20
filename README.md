@@ -1,31 +1,93 @@
-[systemc-clang](http://github.com/anikau31/systemc-clang): SystemC Parser using the Clang Front-end
-================================================================================================
+# [systemc-clang]: A SystemC Parser using the Clang Front-end
 
-[systemc-clang](https://github.com/anikau31/systemc-clang) is a revamp of an earlier [SystemC](http://systemc.org) Parser called [SystemCXML](http://systemcxml.sourceforge.net/).  The purpose of this project is to provide researchers and individuals with a parser for SystemC. This SystemC parser uses the [clang](http://clang.llvm.org) front-end. 
+[systemc-clang](https://git.uwaterloo.ca/caesr-pub//systemc-clang) parses SystemC 2.3. 
+It parses RTL constructs and some TLM 2.0 constructs. 
 
-The public release will only allow parsing and representation of structural information of SystemC models at the RTL.  This implementation will provide a reflection data structure that a designer can use to extract this information. 
-
-Internally, we are developing methods to represent behavioural information of the SystemC models.  In addition, we plan to support TLM 2.0 models as well.  Stay tuned for more updates and releases. 
-
-As always, please feel free to provide issues, and feature requests.
 
 Requirements
 ------------
-
-
-
 * [llvm](http://llvm.org) 
 * [clang](http://clang.llvm.org) (version 3.4)
 * [SystemC](http://systemc.org) version 2.3
 * Please see [SystemC Installation notes](https://github.com/anikau31/systemc-clang/blob/master/doc/systemc-install.mkd)
 
-Installation
-------------
-Please see the instruction [here](https://github.com/anikau31/systemc-clang/blob/master/INSTALL.mkd)
+## Installation 
 
-Plugging into systemc-clang
----------------------------
-Write a simple [plugin](https://github.com/anikau31/systemc-clang/blob/master/doc/plugins.mkd) to access the parsed information. 
+* This version of systemc-clang compiles as a dynamic library.  It requires LLVM and clang to be installed.   Please follow the directions below
+
+Linux
+===========
+* You can install LLVM and Clang via source or via binaries. 
+
+### LLVM/Clang from source 
+
+* Follow the instructions to install clang: [Get Started](http://clang.llvm.org/get_started.html). Notice that you should also install LLVM as it is needed for compilation of the stand-along program. A suggestion is to install LLVM/clang in a location that is accessible by the user.
+Note that the clang-llvm version systemc-clang supports is version 3.4. So, when following the instructions posted at [Get Started](http://clang.llvm.org/get_started.html). please substitute the phrase "trunk" with "tags/RELEASE_34/final".
+ 
+* Clone systemc-clang repository.
+
+```bash  
+$ git clone gitlab@git.uwaterloo.ca/caesr-pub/systemc-clang.git
+```
+
+* Create a build directory for this stand-alone program.
+
+```bash
+$ mkdir systemc-clang-build
+```
+
+* Enter the cloned repository folder.
+
+```bash
+$ cd systemc-clang
+```
+
+* Edit the path for the `LLVM_BUILD_DIR` in paths.sh, and set it to the appropriate path where LLVM/clang was installed.
+
+* Source the paths file (assuming bash shell).  This should setup certain environment variables that cmake will use.
+
+```bash
+$ source scripts/paths.sh
+```
+
+* Go to the build directory.
+
+```bash
+$ cd ../systemc-clang-build
+```
+
+* Create the makefiles using cmake.
+
+```bash
+$ cmake ../systemc-clang
+```
+
+* If there are no errors, then the compilation of Makefiles was successful.  So, you can go ahead and compile the stand-alone program.
+
+```bash
+$ make
+```
+
+Testing on a small example
+==========================
+
+* Copy the compiled binary in the bin folder of LLVM_BUILD_DIR
+```bash
+$ cp systemc-clang $LLVM_BUILD_DIR/bin
+```
+* Set the `SYSTEMC` variable.
+
+```bash
+$ export SYSTEMC=<path-to-systemc-install>
+```
+
+* Execute it on a simple example.  You should see some (debug) information print out on the screen.  Hope to make this more meaningful in the future.
+
+```bash 
+$ $LLVM_BUILD_DIR/bin/systemc-clang ../systemc-clang/tests/module1.hpp -- \
+-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS  -I/usr/include  \
+-I$SYSTEMC/include  -x c++ -w -c
+```
 
 Contact
 -------
@@ -33,12 +95,4 @@ Contact
 
 License
 --------
-* systemc-clang follows the same licensing as clang.  Please look at [LICENSE]( https://github.com/anikau31/systemc-clang/master/master/LICENSE.mkd).
-
-Other Tools
-------------
-
-There are several other SystemC parsers that are available.  If you try them, and have some feedback for us, please let us know. 
-* [SystemCXML:](http://systemcxml.sourceforge.net/)
-* [Pinapa: A SystemC Front-end](http://greensocs.sourceforge.net/pinapa/)
-* [KaSCPar: Karlsruhe SystemC Parser Suite](http://www.fzi.de/index.php/de/component/content/article/238-ispe-sim/4350-sim-tools-kascpar-examples)
+* systemc-clang follows the same licensing as clang.  Please look at [LICENSE]( https://git.uwaterloo.ca/caesr-pub/systemc-clang/master/master/LICENSE.md).
