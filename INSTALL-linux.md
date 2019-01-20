@@ -9,19 +9,16 @@ You can install LLVM and Clang via source or via binaries.
 Note that the clang-llvm version systemc-clang supports is version 3.4. So, when following the instructions posted at [Get Started](http://clang.llvm.org/get_started.html). please substitute the phrase "trunk" with "tags/RELEASE_34/final".
  
 * Clone systemc-clang repository.
-
 ```bash  
 $ git clone gitlab@git.uwaterloo.ca/caesr-pub/systemc-clang.git
 ```
 
 * Create a build directory for this stand-alone program.
-
 ```bash
 $ mkdir systemc-clang-build
 ```
 
 * Enter the cloned repository folder.
-
 ```bash
 $ cd systemc-clang
 ```
@@ -29,13 +26,11 @@ $ cd systemc-clang
 * Edit the path for the `LLVM_BUILD_DIR` in paths.sh, and set it to the appropriate path where LLVM/clang was installed.
 
 * Source the paths file (assuming bash shell).  This should setup certain environment variables that cmake will use.
-
 ```bash
 $ source scripts/paths.sh
 ```
 
 * Go to the build directory.
-
 ```bash
 $ cd ../systemc-clang-build
 ```
@@ -58,21 +53,19 @@ $ make
 ```bash
 $ ninja
 ```
+
 Testing on a small example
 ==========================
-
-* Copy the compiled binary in the bin folder of LLVM_BUILD_DIR
+* Copy the compiled binary in the bin folder of `LLVM_BUILD_DIR`
 ```bash
 $ cp systemc-clang $LLVM_BUILD_DIR/bin
 ```
 * Set the `SYSTEMC` variable.
-
 ```bash
 $ export SYSTEMC=<path-to-systemc-install>
 ```
 
 * Execute it on a simple example.  You should see some (debug) information print out on the screen.  Hope to make this more meaningful in the future.
-
 ```bash 
 $ $LLVM_BUILD_DIR/bin/systemc-clang ../systemc-clang/tests/module1.hpp -- \
 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS  -I/usr/include  \
