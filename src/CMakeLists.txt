@@ -37,7 +37,5 @@ add_library (libsystemc-clang
   WaitCalls.cpp
   NotifyCalls.cpp 
   EventContainer.cpp
-    # AST MATCHERS
-    # matchers/sc_module.cpp
     
   )
