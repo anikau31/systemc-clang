@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
   project(systemc-clang)
   # Use C++ standard version to c++17
-  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD 14)
   # Always keep it on
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
