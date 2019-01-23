@@ -53,7 +53,7 @@ void SusCFG::addChildBlockList(SusCFG * block)
 
 void SusCFG::addChildBlockList(vector < SusCFG * >blockList)
 {
-  for (unsigned int i = 0; i < blockList.size(); i++) {
+  for (size_t i = 0; i < blockList.size(); i++) {
     _childBlockList.push_back(blockList.at(i));
   }
 }
@@ -249,9 +249,8 @@ void Transition::addCodeBlocks(SusCFG * susCFG)
   _codeBlockVector.push_back(susCFG);
 }
 
-void Transition::addCodeBlocks(vector < SusCFG * >susCFG)
-{
-  for (unsigned int i = 0; i < susCFG.size(); i++) {
+void Transition::addCodeBlocks(vector < SusCFG * >susCFG) {
+  for (size_t i = 0; i < susCFG.size(); i++) {
     _codeBlockVector.push_back(susCFG.at(i));
   }
 }
@@ -282,7 +281,7 @@ void Transition::dump(raw_ostream & os)
     getBlockID();
   os << "\n Final State : " << _finalState->returnSusCFGBlock()->getBlockID();
   os << "\n Transition Blocks : ";
-  for (unsigned int i = 0; i < _codeBlockVector.size(); i++) {
+  for ( size_t i{0}; i < _codeBlockVector.size(); i++) {
     os << _codeBlockVector.at(i)->getBlockID() << " ";
   }
 }
@@ -291,7 +290,7 @@ void Transition::dump(raw_ostream & os)
 SuspensionAutomata::SuspensionAutomata(vector<WaitContainer*> waitCalls, CXXMethodDecl * d, ASTContext * a, raw_ostream & os):_d(d), _a(a), _os(os)
 {
   
-	for (int i = 0; i<waitCalls.size(); i++) {
+	for (size_t i{0}; i<waitCalls.size(); i++) {
 		WaitContainer *wc = waitCalls.at(i);
 		_waitCalls.push_back(wc->getASTNode());
 	}
@@ -305,7 +304,6 @@ SuspensionAutomata::~SuspensionAutomata()
 bool SuspensionAutomata::initialize()
 {
   const CFG::BuildOptions & b = CFG::BuildOptions();
-
   _cfg = CFG::buildCFG(cast < Decl > (_d), _d->getBody(), _a, b);
 
   if (_cfg != NULL) {
@@ -327,7 +325,7 @@ bool SuspensionAutomata::isWaitCall(const CFGStmt * cs)
   if (!m) {
     return f;
   }
-  for (int i = 0; i < _waitCalls.size(); i++) {
+  for (size_t i{0}; i < _waitCalls.size(); i++) {
     CallExpr *ce = _waitCalls.at(i);
     if (m == ce) {
       f = true;
@@ -365,7 +363,7 @@ void SuspensionAutomata::genSusCFG()
 
   susCFGBlockMapType susCFGBlockMap;
 
-  bool isFirstCFGBlockID = false;
+  //  bool isFirstCFGBlockID = false;
 
   for (CFG::iterator it = _cfg->end() - 1, eit = _cfg->begin(); it != eit; --it) {
 
@@ -391,7 +389,7 @@ void SuspensionAutomata::genSusCFG()
     _os << "Dump CFG Block\n";
     b->dump(_cfg, LO, false);
     */
-    unsigned int prevCFGBlockID;
+    //    unsigned int prevCFGBlockID;
 
     for (CFGBlock::const_iterator bit = b->begin(), bite = b->end();
          bit != bite; bit++) {
@@ -434,10 +432,9 @@ void SuspensionAutomata::genSusCFG()
       CFGBlock *prev = NULL;
       SusCFG *prevBlock = NULL;
 
-      for (unsigned int i = 0; i < splitBlocksVector.size(); i++) {
+      for (size_t i = 0; i < splitBlocksVector.size(); i++) {
         CFGBlock *current = splitBlocksVector.at(i);
-        SusCFG *splitBlock =
-          new SusCFG(const_cast < CFGBlock * >(splitBlocksVector.at(i)));
+        SusCFG *splitBlock =  new SusCFG(const_cast < CFGBlock * >(splitBlocksVector.at(i)));
         currBlock->addChildBlockList(splitBlock);
         if (current->getLabel()) {
           splitBlock->setWaitBlock();
@@ -446,7 +443,7 @@ void SuspensionAutomata::genSusCFG()
         if (pre.size() != 0) {
           // add trailing statements to post block wait stmt
           CFGBlock *newCFGBlock = _cfg->createBlock();
-          for (unsigned int j = 0; j < pre.size(); j++) {
+          for (size_t j = 0; j < pre.size(); j++) {
             newCFGBlock->appendStmt(const_cast < Stmt * >(pre.at(j)->getStmt()),
                                     _cfg->getBumpVectorContext());
           }
@@ -573,7 +570,7 @@ void SuspensionAutomata::genSusCFG()
 }
 
 void SuspensionAutomata::addRemainingBlocks(State *initialState, vector<SusCFG*>& transitionBlocks){
- bool duplicate = false;
+  // bool duplicate = false;
  if (_stateCommonCodeBlockMap.find(initialState) != _stateCommonCodeBlockMap.end()) {
 		stateCommonCodeBlockMapType::iterator stateFound = _stateCommonCodeBlockMap.find(initialState);
   	checkInsert(stateFound->second, transitionBlocks);
@@ -593,11 +590,10 @@ vector<SusCFG*> SuspensionAutomata::modifDFS(SusCFG * block, State *initialState
 
     traversedBlocks.pop_front();
     if (currentBlock->isWaitBlock()) {
-      float timeInNs;
-      string eventName; 
+      float timeInNs{};
+      string eventName{}; 
       isWaitEncounter = true;
-      susCFGStateMapType::iterator stateFound =
-        susCFGStateMap.find(currentBlock);
+      susCFGStateMapType::iterator stateFound =  susCFGStateMap.find(currentBlock);
       State *finalState = stateFound->second;
 
       if (isTimedWait(currentBlock->getWaitStmt())) {
@@ -688,10 +684,10 @@ vector<SusCFG*> SuspensionAutomata::modifDFS(SusCFG * block, State *initialState
 }
 
 void SuspensionAutomata::checkInsert(vector<SusCFG*> source, vector<SusCFG*>& target) {
- 		bool duplicate;
-  	for (int i = 0; i<source.size(); i++) {
+  bool duplicate{false};
+  	for (size_t i = 0; i<source.size(); i++) {
    	 duplicate = false;
-	 	 for (int j = 0; j<target.size(); j++) {
+	 	 for (size_t j = 0; j<target.size(); j++) {
    	   if (source.at(i) == target.at(j)) {
    	   	duplicate = true;
 	 	    break;
@@ -707,7 +703,7 @@ void SuspensionAutomata::genSauto()
 {
   susCFGVectorType susCFGVector = _susCFGVector;
   susCFGVectorType waitBlocks;
-  for (int i = 0; i < susCFGVector.size(); i++) {
+  for (size_t i = 0; i < susCFGVector.size(); i++) {
     if (susCFGVector.at(i)->isWaitBlock() || i == 0) {
       waitBlocks.push_back(susCFGVector.at(i));
       State *state = new State(susCFGVector.at(i), false, false, false, false);
@@ -720,7 +716,7 @@ void SuspensionAutomata::genSauto()
     }
   }
   
-  for (int i = 0; i < waitBlocks.size(); i++) {
+  for (size_t i = 0; i < waitBlocks.size(); i++) {
 
     SusCFG *waitBlock = waitBlocks.at(i);
  
@@ -730,7 +726,7 @@ void SuspensionAutomata::genSauto()
     State *initialState = stateFound->second;
 
     vector<SusCFG*> backTrackCodeBlocks;
-    SusCFG* lastBlock; 
+    //SusCFG* lastBlock; 
     susCFGSuccIDMap.clear(); // For each new initial state, start fresh...
     // Left child.. do the same for the right child
     do {
@@ -746,7 +742,7 @@ void SuspensionAutomata::genSauto()
        
       //_os <<"\n Transition Blocks : "; 
       backTrackCodeBlocks.clear();
-      for (int j = 0; j<transitionCodeBlocks.size(); j++) {
+      for (size_t j = 0; j<transitionCodeBlocks.size(); j++) {
         backTrackCodeBlocks.push_back(transitionCodeBlocks.at(j));
         //_os <<" "<<transitionCodeBlocks.at(j)->getBlockID();;
       }
@@ -823,7 +819,7 @@ bool is_found(Node n1, Node n2)
 template <template <typename, typename> class Container, typename Node, typename Allocator>
 bool generic_isFound(Container<Node, Allocator> &container, Node node)
 {
-    bool foundBlock = false;
+  //    bool foundBlock = false;
 
     typename Container<Node, Allocator>::iterator itr = std::find_if(
         container.begin(),
@@ -850,7 +846,7 @@ bool SuspensionAutomata::isFound(vector < Transition * >visitedState,
 
 float SuspensionAutomata::getTime(Stmt * stmt)
 {
-  float factor;
+  float factor{};
   if (CXXMemberCallExpr * ce = dyn_cast < CXXMemberCallExpr > (stmt)) {
     if (getArgumentName(ce->getArg(1)) == "SC_FS") {
       factor = 1000000;
@@ -867,6 +863,7 @@ float SuspensionAutomata::getTime(Stmt * stmt)
     }
     return (atof(getArgumentName(ce->getArg(0)).c_str()) * factor);
   }
+  return factor;
 }
 
 string SuspensionAutomata::getEvent(Stmt * stmt)
@@ -874,6 +871,8 @@ string SuspensionAutomata::getEvent(Stmt * stmt)
   if (CXXMemberCallExpr * ce = dyn_cast < CXXMemberCallExpr > (stmt)) {
     return (getArgumentName(ce->getArg(0)));
   }
+
+  return "Error: NONE";
 }
 
 

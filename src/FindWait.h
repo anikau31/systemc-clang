@@ -5,6 +5,8 @@
 #include "llvm/Support/raw_ostream.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include <map>
+#include "WaitContainer.h"
+
 namespace scpar {
 
   using namespace clang;
@@ -13,7 +15,7 @@ namespace scpar {
   class FindWait:public RecursiveASTVisitor < FindWait > {
   public:
 
-    typedef vector < CallExpr * > waitListType;
+    typedef vector < WaitContainer * > waitListType;
 
     typedef pair < CXXMethodDecl *,vector < string > >processWaitEventPairType;
     typedef map < CXXMethodDecl *, vector < string > >processWaitEventMapType;
