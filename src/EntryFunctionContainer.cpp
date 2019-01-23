@@ -90,13 +90,10 @@ void EntryFunctionContainer::addWaits (FindWait & f)
 {
 	FindWait::waitListType wcalls = f.getWaitCalls ();
 	for (FindWait::waitListType::iterator it = wcalls.begin (), eit =
-			 wcalls.end (); it != eit; it++)
-		{
+			 wcalls.end (); it != eit; it++) {
 			// 'it' points to CXXMembercallExpr type.
-			WaitContainer *
-				wc = new WaitContainer (f.getEntryMethod (), *it);
-
-			_waitCalls.push_back (wc);
+    WaitContainer * wc { new WaitContainer (f.getEntryMethod (), (*it)->getASTNode() )  };
+			_waitCalls.push_back(wc);
 		}
 	//_processWaitEventMap = f.getProcessWaitEventMap();
 

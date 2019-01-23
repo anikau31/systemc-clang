@@ -111,7 +111,7 @@ bool SystemCConsumer::fire() {
           FindNotify findNotify{ ef->_entryMethodDecl, _os };
           ef->addNotifys(findNotify);
 
-          /*          
+            /// Does not compile
             SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(), ef->getEntryMethod(), &_context, llvm::errs());
             if (suspensionAutomata.initialize()) {
             suspensionAutomata.genSusCFG();
@@ -120,7 +120,7 @@ bool SystemCConsumer::fire() {
             //suspensionAutomata.dumpSauto();
             ef->addSusCFGAuto(suspensionAutomata);
             }
-          */
+          
           _entryFunctionContainerVector.push_back(ef);
         }
 			moduleDeclVec.push_back(md);
@@ -142,10 +142,13 @@ bool SystemCConsumer::fire() {
     else {
 		_os <<"\n Could not find SCMain";
     }
+  
     FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
     findNetlist.dump();
-    _systemcModel->addNetlist(findNetlist); 
-	*/
+    _systemcModel->addNetlist(findNetlist);
+  */
+
+
 	// Generate SAUTO
 	// Placing it here so that unique SAUTO for each instance
 	//Model::moduleMapType moduleMap = _systemcModel->getModuleDecl();
@@ -162,9 +165,9 @@ bool SystemCConsumer::fire() {
    			SuspensionAutomata suspensionAutomata(entryFunctionContainer.at(j)->getWaitCalls(), entryFunctionContainer.at(j)->getEntryMethod(), &_context, llvm::errs());
    			if (suspensionAutomata.initialize()) {
     			suspensionAutomata.genSusCFG();
-    			//suspensionAutomata.dumpSusCFG();
-    			suspensionAutomata.genSauto();    
-    			//suspensionAutomata.dumpSauto();
+    			suspensionAutomata.dumpSusCFG();
+    			suspensionAutomata.genSauto();
+    			suspensionAutomata.dumpSauto();
     			entryFunctionContainer.at(j)->addSusCFGAuto(suspensionAutomata); 
    			}		
 			}

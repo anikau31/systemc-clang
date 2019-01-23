@@ -29,7 +29,7 @@ bool FindWait::VisitCallExpr ( CallExpr *e ) {
 	clang::PrintingPolicy Policy (LangOpts);
 
 	if (e->getDirectCallee()->getNameInfo().getAsString() == string("wait"))	{
-    wait_calls_list_.push_back (e);
+    wait_calls_list_.push_back( new WaitContainer(entry_method_decl_, e) );
   }
 	return true;
 }
