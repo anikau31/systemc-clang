@@ -25,8 +25,8 @@ Mac OSX errors
 `Assembler messages: qtmds.s:69: Error: suffix or operands invalid for push' qtmds.s:70: Error: suffix or operands invalid for push ... `
 
 You can fix this by doing the following:
-1. Remove the file xxxx/systemc-2.2.0/src/sysc/qt/qtmds.s 
-2. Go under xxxx/systemc-2.2.0/src/sysc/qt and execute this command:
+1. Remove the file xxxx/systemc-2.2.3/src/sysc/qt/qtmds.s 
+2. Go under xxxx/systemc-2.2.3/src/sysc/qt and execute this command:
 
 `ln -s md/iX86_64.s qtmds.s` to get the "qtmds.s" back but with the correct version (64 bits)
 3. Execute `make` again
