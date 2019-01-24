@@ -2,7 +2,7 @@
 
 [systemc-clang](https://git.uwaterloo.ca/caesr-pub//systemc-clang) parses SystemC 2.3.3.
 It parses RTL constructs and some TLM 2.0 constructs. 
-This is the maintained repository of an older version available at [systemc-clang](https://github.com/anikau31/systemc-clang).
+This is the maintained repository of an older version available on [github](https://github.com/anikau31/systemc-clang).
 
 ## Requirements
 * [llvm/clang](http://clang.llvm.org/download.html) (version 7.0.0)
