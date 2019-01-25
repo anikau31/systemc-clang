@@ -88,10 +88,7 @@ namespace scpar {
   SystemCClang( CompilerInstance &ci) :
     SystemCConsumer(ci) {
     }
-
-    bool postFire() {
-      return true;
-    }
+  
   };
 
   template <typename A> class LightsCameraAction:
