@@ -152,13 +152,9 @@ void ModuleDecl::addProcess( FindEntryFunctions::entryFunctionVectorType * efv )
       entryType = "ERROR";
       break;
     }
- 
-
-      _processes.
-        insert(processPairType
-               (entryName,
-                new ProcessDecl(entryType, entryName, ef->_entryMethodDecl, ef)));
     }
+    _processes.insert(processPairType (entryName,
+                                       new ProcessDecl(entryType, entryName, ef->_entryMethodDecl, ef)));
   }
 }
 
