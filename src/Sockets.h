@@ -1,36 +1,36 @@
 #ifndef _SOCKETS_H_
 #define _SOCKETS_H_
 
-#include "clang/AST/DeclCXX.h"
-#include <string>
-#include <map>
 #include "FindClassDataMembers.h"
+#include "clang/AST/DeclCXX.h"
+#include <map>
+#include <string>
 
 namespace scpar {
 
-  using namespace clang;
-  using namespace std;
+using namespace clang;
+using namespace std;
 
-  class Sockets {
+class Sockets {
 
-  public:
-    Sockets();
-    Sockets(const string &, const string &, vector < string > );
+public:
+  Sockets();
+  Sockets(const string &, const string &, vector<string>);
 
-    Sockets (const Sockets & );
+  Sockets(const Sockets &);
 
-    ~Sockets();
+  ~Sockets();
 
-    string getName();
-    string getSocketType();
-    vector < string > getRegisterCallbackMethods();
+  string getName();
+  string getSocketType();
+  vector<string> getRegisterCallbackMethods();
 
-    void dump (raw_ostream &, int );
+  void dump(raw_ostream &, int);
 
-  private:
-    string _name;
-    string _socketType;
-    vector < string > _registerCallbackMethods;
-  };
-}
+private:
+  string _name;
+  string _socketType;
+  vector<string> _registerCallbackMethods;
+};
+} // namespace scpar
 #endif

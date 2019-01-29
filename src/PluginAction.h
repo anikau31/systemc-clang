@@ -1,4 +1,5 @@
-//===-- src/PluginAction.h - systec-clang class definition -------*- C++ -*-===//
+//===-- src/PluginAction.h - systec-clang class definition -------*- C++
+//-*-===//
 //
 //                     systemc-clang: SystemC Parser
 //
@@ -18,25 +19,20 @@
 
 using namespace scpar;
 
-template < typename A > class PluginAction
-{
+template <typename A> class PluginAction {
 public:
-	PluginAction (int argc, const char **argv ) {
-      llvm::cl::OptionCategory category("systemc-clang options");
-		CommonOptionsParser OptionsParser (argc, argv, category );
-		ClangTool Tool (OptionsParser.getCompilations (),
-										OptionsParser.getSourcePathList ()
-		);
-		//FrontendActionFactory *fe = newFrontendActionFactory < LightsCameraAction < A > >();
-		//Tool.run (fe);
-		//Tool.run ( newFrontendActionFactory< LightsCameraAction<SystemCConsumer> >().get());
-    Tool.run ( newFrontendActionFactory< LightsCameraAction<A> >().get());
-
-	};
-
+  PluginAction(int argc, const char **argv) {
+    llvm::cl::OptionCategory category("systemc-clang options");
+    CommonOptionsParser OptionsParser(argc, argv, category);
+    ClangTool Tool(OptionsParser.getCompilations(),
+                   OptionsParser.getSourcePathList());
+    // FrontendActionFactory *fe = newFrontendActionFactory < LightsCameraAction
+    // < A > >(); Tool.run (fe); Tool.run ( newFrontendActionFactory<
+    // LightsCameraAction<SystemCConsumer> >().get());
+    Tool.run(newFrontendActionFactory<LightsCameraAction<A>>().get());
+  };
 
 private:
-
 };
 
 #endif /* _PLUGIN_ACTION_H_ */

@@ -14,39 +14,39 @@
 #ifndef _NOTIFY_CALLS_H_
 #define _NOTIFY_CALLS_H_
 
-#include "clang/AST/DeclCXX.h"
-#include <string>
-#include <map>
-#include "Utility.h"
 #include "FindNotify.h"
+#include "Utility.h"
+#include "clang/AST/DeclCXX.h"
+#include <map>
+#include <string>
 
 namespace scpar {
-  using namespace clang;
-  using namespace std;
+using namespace clang;
+using namespace std;
 
-  class NotifyCalls {
-  public:
-    // Constructors.
-    NotifyCalls();
-    NotifyCalls( const string &, FindNotify::NotifyCallListType );
+class NotifyCalls {
+public:
+  // Constructors.
+  NotifyCalls();
+  NotifyCalls(const string &, FindNotify::NotifyCallListType);
 
-    // Copy constructor.
-    NotifyCalls( const NotifyCalls & );
+  // Copy constructor.
+  NotifyCalls(const NotifyCalls &);
 
-    // Destructor.
-    ~NotifyCalls();
+  // Destructor.
+  ~NotifyCalls();
 
-    /// Get parameters
-    string getName() const;
-    FindNotify::NotifyCallListType getNotifyCallList();
+  /// Get parameters
+  string getName() const;
+  FindNotify::NotifyCallListType getNotifyCallList();
 
-    unsigned int getNumNotifyCalls();
-    // Print
-    void dump ( llvm::raw_ostream &, int );
+  unsigned int getNumNotifyCalls();
+  // Print
+  void dump(llvm::raw_ostream &, int);
 
-  private:
-    string name_;
-    FindNotify::NotifyCallListType notify_call_list_;
-  };
-}
+private:
+  string name_;
+  FindNotify::NotifyCallListType notify_call_list_;
+};
+} // namespace scpar
 #endif

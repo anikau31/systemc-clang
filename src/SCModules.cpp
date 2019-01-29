@@ -3,14 +3,13 @@
 #include "clang/AST/ASTContext.h"
 using namespace scpar;
 
-SCModules::SCModules(TranslationUnitDecl *tuDecl, llvm::raw_ostream & os):
-_os(os) {
+SCModules::SCModules(TranslationUnitDecl *tuDecl, llvm::raw_ostream &os)
+    : _os(os) {
   assert(!(tuDecl == nullptr));
   TraverseDecl(tuDecl);
 }
 
-SCModules::~SCModules() {
-}
+SCModules::~SCModules() {}
 
 bool SCModules::VisitCXXRecordDecl(CXXRecordDecl *cxxDecl) {
   FindModule mod(cxxDecl, _os);

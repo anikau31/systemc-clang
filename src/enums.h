@@ -15,17 +15,21 @@
 #define _ENUM_H_
 
 namespace scpar {
-	enum class ASTSTATE {
-		EMPTY, DECLSTMT, MEMBEREXPR, CXXOPERATORCALLEXPR, CXXCONSTRUCTEXPR
-	};														// End enum ASTSTATE
+enum class ASTSTATE {
+  EMPTY,
+  DECLSTMT,
+  MEMBEREXPR,
+  CXXOPERATORCALLEXPR,
+  CXXCONSTRUCTEXPR
+}; // End enum ASTSTATE
 
-	enum class ReadWrite {
-		RWINIT, READ, WRITE
-	};														// End enum ReadWrite
+enum class ReadWrite { RWINIT, READ, WRITE }; // End enum ReadWrite
 
-
-	enum class PROCESS_TYPE {
-		NONE, THREAD, CTHREAD, METHOD
-	};														// End enum PROCESS_TYPE
-}																// End namespace scpar
+enum class PROCESS_TYPE {
+  NONE,
+  THREAD,
+  CTHREAD,
+  METHOD
+}; // End enum PROCESS_TYPE
+} // End namespace scpar
 #endif

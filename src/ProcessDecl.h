@@ -1,43 +1,43 @@
 #ifndef _PROCESSDECL_H_
 #define _PROCESSDECL_H_
 
-#include <string>
-#include <map>
-#include "clang/AST/DeclCXX.h"
-#include "FindEntryFunctions.h"
 #include "EntryFunctionContainer.h"
+#include "FindEntryFunctions.h"
+#include "clang/AST/DeclCXX.h"
+#include <map>
+#include <string>
 
 namespace scpar {
 
-	using namespace std;
-	using namespace clang;
+using namespace std;
+using namespace clang;
 
-	class ProcessDecl {
-	public:
-		// typedef
-  
-		ProcessDecl (string, string, CXXMethodDecl *,EntryFunctionContainer *);
+class ProcessDecl {
+public:
+  // typedef
 
-		ProcessDecl (const ProcessDecl &);
-		 ~ProcessDecl ();
+  ProcessDecl(string, string, CXXMethodDecl *, EntryFunctionContainer *);
 
-		/// Accessor methods.
-		string getType ();
-		string getName ();
-		CXXMethodDecl *getEntryMethodDecl ();
+  ProcessDecl(const ProcessDecl &);
+  ~ProcessDecl();
 
+  /// Accessor methods.
+  string getType();
+  string getName();
+  CXXMethodDecl *getEntryMethodDecl();
 
-		// Dump.
-		void dump (raw_ostream &, int);
-	protected:
-		// Process information
-		  string _type;
-		string _entryName;
-		// Each process can have 1 entry function.
-		CXXMethodDecl *_entryMethodDecl;
+  // Dump.
+  void dump(raw_ostream &, int);
 
-		EntryFunctionContainer *_ef;
-	};														// End class ProcessDecl
+protected:
+  // Process information
+  string _type;
+  string _entryName;
+  // Each process can have 1 entry function.
+  CXXMethodDecl *_entryMethodDecl;
 
-}																// End namespace scpar
+  EntryFunctionContainer *_ef;
+}; // End class ProcessDecl
+
+} // End namespace scpar
 #endif

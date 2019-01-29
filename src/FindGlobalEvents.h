@@ -1,36 +1,35 @@
 #ifndef _FIND_GLOBAL_EVENTS_H_
 #define _FIND_GLOBAL_EVENTS_H_
 
-#include <map>
-#include <vector>
-#include <string>
 #include "clang/AST/Decl.h"
-#include "llvm/Support/raw_ostream.h"
 #include "clang/AST/RecursiveASTVisitor.h"
+#include "llvm/Support/raw_ostream.h"
+#include <map>
+#include <string>
+#include <vector>
 
 namespace scpar {
-  using namespace clang;
-  using namespace std;
+using namespace clang;
+using namespace std;
 
-  class FindGlobalEvents:public RecursiveASTVisitor < FindGlobalEvents > {
-  public:
+class FindGlobalEvents : public RecursiveASTVisitor<FindGlobalEvents> {
+public:
+  typedef map<string, VarDecl *> globalEventMapType;
+  typedef pair<string, VarDecl *> kvType;
 
-    typedef map < string, VarDecl * > globalEventMapType;
-    typedef pair < string, VarDecl * > kvType;
+  FindGlobalEvents(TranslationUnitDecl *, llvm::raw_ostream &);
+  virtual ~FindGlobalEvents();
 
-    FindGlobalEvents(TranslationUnitDecl *, llvm::raw_ostream &);
-    virtual ~FindGlobalEvents();
+  virtual bool VisitVarDecl(VarDecl *);
 
-    virtual bool VisitVarDecl(VarDecl *);
+  globalEventMapType getEventMap();
+  vector<string> getEventNames();
 
-    globalEventMapType getEventMap();
-    vector < string > getEventNames();
+  void dump();
 
-    void dump();
-
-  private:
-    llvm::raw_ostream & _os;
-    globalEventMapType _globalEvents;
-  };
-}
+private:
+  llvm::raw_ostream &_os;
+  globalEventMapType _globalEvents;
+};
+} // namespace scpar
 #endif
