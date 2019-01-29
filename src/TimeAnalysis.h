@@ -1,4 +1,5 @@
-//===-- src/TimeAnalysis.h - systec-clang class definition -------*- C++ -*-===//
+//===-- src/TimeAnalysis.h - systec-clang class definition -------*- C++
+//-*-===//
 //
 //                     systemc-clang: SystemC Parser
 //
@@ -18,35 +19,30 @@
 using namespace clang;
 using namespace scpar;
 
-class TimeAnalysis:public SystemCConsumer {
+class TimeAnalysis : public SystemCConsumer {
 
 public:
-	TimeAnalysis (CompilerInstance & ci):
-   SystemCConsumer (ci) {
+  TimeAnalysis(CompilerInstance &ci) : SystemCConsumer(ci) {}
 
-	}
-	
-	GlobalSuspensionAutomata *_gsauto;
+  GlobalSuspensionAutomata *_gsauto;
 
-	bool postFire () {
-		Model *model = getSystemCModel ();
-  
-		// Just dump the model traits.
-		llvm::errs () << "\n TimeAnalysis plugin is active\n";
-		//model->dump(llvm::errs());
-  
-  	_gsauto = new GlobalSuspensionAutomata(model, _os, &_context);
-  	_gsauto->initialise(); 
-  	_gsauto->genGSauto();
-  	_gsauto->initializeGpuMap();
-  	_gsauto->dump();
+  bool postFire() {
+    Model *model = getSystemCModel();
 
-		return true;
-	}
+    // Just dump the model traits.
+    llvm::errs() << "\n TimeAnalysis plugin is active\n";
+    // model->dump(llvm::errs());
 
-	GlobalSuspensionAutomata* getGSauto(){
-		return _gsauto;
-	}
+    _gsauto = new GlobalSuspensionAutomata(model, _os, &_context);
+    _gsauto->initialise();
+    _gsauto->genGSauto();
+    _gsauto->initializeGpuMap();
+    _gsauto->dump();
+
+    return true;
+  }
+
+  GlobalSuspensionAutomata *getGSauto() { return _gsauto; }
 };
 
 #endif /* _OoO_ANALYSIS_H_ */

@@ -14,41 +14,39 @@
 #ifndef _WAIT_CALLS_H_
 #define _WAIT_CALLS_H_
 
-#include "clang/AST/DeclCXX.h"
-#include <string>
-#include <map>
-#include "Utility.h"
 #include "FindWait.h"
+#include "Utility.h"
+#include "clang/AST/DeclCXX.h"
+#include <map>
+#include <string>
 
 namespace scpar {
-  using namespace clang;
-  using namespace std;
+using namespace clang;
+using namespace std;
 
-  class WaitCalls {
-  public:
+class WaitCalls {
+public:
+  // Constructors.
+  WaitCalls();
+  WaitCalls(const string &, FindWait::waitListType);
 
-    // Constructors.
-    WaitCalls ();
-    WaitCalls (const string &, FindWait::waitListType);
+  // Copy constructor.
+  WaitCalls(const WaitCalls &);
 
-    // Copy constructor.
-    WaitCalls (const WaitCalls &);
+  // Destructor.
+  ~WaitCalls();
 
-    // Destructor.
-    ~WaitCalls ();
+  /// Get parameters
+  string getName();
+  FindWait::waitListType getWaitList();
 
-    /// Get parameters
-    string getName ();
-    FindWait::waitListType getWaitList ();
+  unsigned int getTotalWaits();
+  // Print
+  void dump(raw_ostream &, int);
 
-
-    unsigned int getTotalWaits ();
-    // Print
-    void dump (raw_ostream &, int);
-
-  private:
-    string _name;
-    FindWait::waitListType _waitList;
-  };
-}
+private:
+  string _name;
+  FindWait::waitListType _waitList;
+};
+} // namespace scpar
 #endif

@@ -2,29 +2,28 @@
 
 using namespace scpar;
 
-FindConstructor::FindConstructor( CXXRecordDecl *declaration, llvm::raw_ostream &os ) :
-  os_{os},
-  declaration_{declaration},
-  constructor_stmt_{nullptr},
-  pass_{1} {
+FindConstructor::FindConstructor(CXXRecordDecl *declaration,
+                                 llvm::raw_ostream &os)
+    : os_{os}, declaration_{declaration}, constructor_stmt_{nullptr}, pass_{1} {
 
-    TraverseDecl( declaration_ );
-    pass_ = 2;
-    TraverseStmt( constructor_stmt_ );
-  }
+  TraverseDecl(declaration_);
+  pass_ = 2;
+  TraverseStmt(constructor_stmt_);
+}
 
 FindConstructor::~FindConstructor() {
   declaration_ = nullptr;
   constructor_stmt_ = nullptr;
 }
 
-bool FindConstructor::VisitCXXMethodDecl( CXXMethodDecl *method_declaration ) {
-  switch ( pass_ ) {
-  case 1:  {
-    if (CXXConstructorDecl *cd = dyn_cast< CXXConstructorDecl >(method_declaration)) {
+bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
+  switch (pass_) {
+  case 1: {
+    if (CXXConstructorDecl *cd =
+            dyn_cast<CXXConstructorDecl>(method_declaration)) {
       const FunctionDecl *fd{nullptr};
-      cd->getBody( fd );
-      if ( cd->hasBody() ) {
+      cd->getBody(fd);
+      if (cd->hasBody()) {
         constructor_stmt_ = cd->getBody();
       }
     }
@@ -41,7 +40,7 @@ bool FindConstructor::VisitCXXMethodDecl( CXXMethodDecl *method_declaration ) {
   return true;
 }
 
-Stmt * FindConstructor::returnConstructorStmt() const {
+Stmt *FindConstructor::returnConstructorStmt() const {
   return constructor_stmt_;
 }
 

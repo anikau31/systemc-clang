@@ -1,46 +1,46 @@
 #ifndef _NOTIFY_CONTAINER_H_
 #define _NOTIFY_CONTAINER_H_
 
+#include "clang/AST/DeclCXX.h"
+#include "clang/AST/PrettyPrinter.h"
+#include "llvm/Support/raw_ostream.h"
 #include <map>
 #include <string>
-#include "clang/AST/DeclCXX.h"
-#include "llvm/Support/raw_ostream.h"
-#include "clang/AST/PrettyPrinter.h"
 
 namespace scpar {
-  using namespace clang;
-  using namespace std;
+using namespace clang;
+using namespace std;
 
-  class NotifyContainer {
-  public:
-    // typedefs
-    typedef vector < string > waitArgVectorType;
+class NotifyContainer {
+public:
+  // typedefs
+  typedef vector<string> waitArgVectorType;
 
-    NotifyContainer ();
-    NotifyContainer (CXXMethodDecl *, CallExpr *);
+  NotifyContainer();
+  NotifyContainer(CXXMethodDecl *, CallExpr *);
 
-    ~NotifyContainer ();
+  ~NotifyContainer();
 
-    // Copy constructor.
-    NotifyContainer (const NotifyContainer &);
+  // Copy constructor.
+  NotifyContainer(const NotifyContainer &);
 
-    unsigned int getNumArgs ();
-    CXXMethodDecl *getEntryMethod ();
-    CallExpr *getASTNode ();
-    waitArgVectorType getArgList ();
+  unsigned int getNumArgs();
+  CXXMethodDecl *getEntryMethod();
+  CallExpr *getASTNode();
+  waitArgVectorType getArgList();
 
-    void dump (raw_ostream &, int tabn = 0);
+  void dump(raw_ostream &, int tabn = 0);
 
-  private:
-    void populateArgMap ();
-    string getArgString (Expr * e);
+private:
+  void populateArgMap();
+  string getArgString(Expr *e);
 
-  private:
-    CXXMethodDecl * _entryMethodDecl;
-    CallExpr *_astNode;
-    unsigned int _numArgs;
+private:
+  CXXMethodDecl *_entryMethodDecl;
+  CallExpr *_astNode;
+  unsigned int _numArgs;
 
-    waitArgVectorType _args;
-  };
-}
+  waitArgVectorType _args;
+};
+} // namespace scpar
 #endif

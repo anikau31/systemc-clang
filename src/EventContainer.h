@@ -1,4 +1,5 @@
-//===-- src/EventContainer.h - systec-clang class definition -------*- C++ -*-===//
+//===-- src/EventContainer.h - systec-clang class definition -------*- C++
+//-*-===//
 //
 //                     systemc-clang: SystemC Parser
 //
@@ -14,34 +15,34 @@
 #ifndef _EVENT_CONTAINER_H_
 #define _EVENT_CONTAINER_H_
 
-#include <map>
-#include <string>
 #include "clang/AST/DeclCXX.h"
 #include "llvm/Support/raw_ostream.h"
+#include <map>
+#include <string>
 
 namespace scpar {
-  using namespace clang;
-  using namespace std;
+using namespace clang;
+using namespace std;
 
-  class EventContainer {
-  public:
-    EventContainer();
-    EventContainer( string, VarDecl * );
+class EventContainer {
+public:
+  EventContainer();
+  EventContainer(string, VarDecl *);
 
-    ~EventContainer();
+  ~EventContainer();
 
-    // Copy constructor.
-    EventContainer( const EventContainer & );
+  // Copy constructor.
+  EventContainer(const EventContainer &);
 
-    string getEventName() const;
-    VarDecl *getASTNode() const;
+  string getEventName() const;
+  VarDecl *getASTNode() const;
 
-    void dump ( llvm::raw_ostream & os, int tabn = 0 );
+  void dump(llvm::raw_ostream &os, int tabn = 0);
 
-  private:
-    // Name of port on which the binding happens.
-    string event_name_;
-    VarDecl *ast_node_;
-  };
-}
+private:
+  // Name of port on which the binding happens.
+  string event_name_;
+  VarDecl *ast_node_;
+};
+} // namespace scpar
 #endif

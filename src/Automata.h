@@ -1,135 +1,134 @@
 #ifndef _AUTOMATA_H_
 #define _AUTOMATA_H_
 
-#include <vector>
-#include <deque>
-#include <map>
 #include "clang/AST/DeclCXX.h"
-#include "llvm/Support/raw_ostream.h"
-#include "clang/Analysis/CFG.h"
-#include "clang/Analysis/CFGStmtMap.h"
+#include "clang/AST/Expr.h"
 #include "clang/AST/ParentMap.h"
 #include "clang/AST/PrettyPrinter.h"
-#include "clang/AST/Expr.h"
+#include "clang/Analysis/CFG.h"
+#include "clang/Analysis/CFGStmtMap.h"
+#include "llvm/Support/raw_ostream.h"
+#include <deque>
+#include <map>
 #include <stdio.h>
+#include <vector>
 namespace scpar {
-  using namespace clang;
-  using namespace std;
+using namespace clang;
+using namespace std;
 
-  class Node {
-  public:
-    typedef pair < int, Node * >connectPairType;
-    typedef map < int, Node * >connectMapType;
+class Node {
+public:
+  typedef pair<int, Node *> connectPairType;
+  typedef map<int, Node *> connectMapType;
 
-    Node ( );
-    Node (int );
+  Node();
+  Node(int);
 
-    void addSuccessor (Node * );
-    void addPredecessor (Node * );
+  void addSuccessor(Node *);
+  void addPredecessor(Node *);
 
-    vector < int >getSuccessors (int );
-    vector < int >getPredecessors (int );
-    int getId( );
+  vector<int> getSuccessors(int);
+  vector<int> getPredecessors(int);
+  int getId();
 
-    void dump (raw_ostream &, int );
-  protected:
-    int _id;
-    connectMapType _preds;
-    connectMapType _succs;
+  void dump(raw_ostream &, int);
 
-  };
+protected:
+  int _id;
+  connectMapType _preds;
+  connectMapType _succs;
+};
 
-  class Edge {
-  public:
+class Edge {
+public:
+  typedef pair<unsigned int, unsigned int> timePairType;
+  typedef vector<timePairType> timeAdvanceVectorType;
 
-    typedef pair < unsigned int, unsigned int >timePairType;
-    typedef vector < timePairType > timeAdvanceVectorType;
+  Edge(Node *, Node *);
+  Edge(Node *, Node *, int);
 
-    Edge (Node *, Node * );
-    Edge (Node *, Node *, int );
+  void updateSuspensionTime(timePairType);
 
-    void updateSuspensionTime(timePairType );
+  int getId();
+  int getToId();
+  int getFromId();
+  timeAdvanceVectorType getTimeAdvanceVector();
 
-    int getId();
-    int getToId();
-    int getFromId();
-    timeAdvanceVectorType getTimeAdvanceVector();
+  void dump(raw_ostream &, int);
 
-    void dump (raw_ostream &, int);
+protected:
+  int _id;
+  timeAdvanceVectorType _timeAdvanceVector;
+  Node *_from;
+  Node *_to;
+};
 
-  protected:
-    int _id;
-    timeAdvanceVectorType _timeAdvanceVector;
-    Node *_from;
-    Node *_to;
-  };
+class Graph {
+public:
+  typedef vector<int> nodeIDVector;
+  typedef vector<int> edgeIDVector;
 
-  class Graph {
-  public:
+  typedef vector<Node *> nodeVector;
+  typedef vector<Edge *> edgeVector;
 
-    typedef vector < int >nodeIDVector;
-    typedef vector < int >edgeIDVector;
+  typedef map<int, Node *> nodeMapType;
+  typedef pair<int, Node *> nodePairType;
 
-    typedef vector < Node * >nodeVector;
-    typedef vector < Edge * >edgeVector;
+  typedef map<int, Edge *> edgeMapType;
+  typedef pair<int, Edge *> edgePairType;
 
-    typedef map < int, Node * >nodeMapType;
-    typedef pair < int, Node * >nodePairType;
+  typedef pair<int, int> twoNodePairType;
 
-    typedef map < int, Edge * >edgeMapType;
-    typedef pair < int, Edge * >edgePairType;
+  typedef pair<twoNodePairType, Edge *> adjPairType;
+  typedef map<twoNodePairType, Edge *> adjMapType;
 
-    typedef pair < int, int >twoNodePairType;
+  typedef pair<int, vector<Edge *>> adjEdgesPairType;
+  typedef map<int, vector<Edge *>> adjEdgesMapType;
 
-    typedef pair < twoNodePairType, Edge * >adjPairType;
-    typedef map < twoNodePairType, Edge * >adjMapType;
+  Graph();
+  ~Graph();
 
-    typedef pair < int, vector < Edge * > >adjEdgesPairType;
-    typedef map < int, vector < Edge * > >adjEdgesMapType;
+  Node *addNode();
+  Node *addNode(int);
+  Edge *addEdge(Node *, Node *);
+  Edge *addEdge(int, int);
 
-    Graph();
-    ~Graph();
+  int getEdgeID(Edge *);
+  int getEdgeID(Node *, Node *);
+  int getEdgeID(int, int);
+  int getNodeID(Node *);
 
-    Node *addNode();
-    Node *addNode(int );
-    Edge *addEdge(Node *, Node * );
-    Edge *addEdge(int, int );
+  Edge *getEdge(Node *, Node *);
+  Edge *getEdge(int, int);
+  Node *getNode(int);
 
-    int getEdgeID(Edge * );
-    int getEdgeID (Node *, Node * );
-    int getEdgeID (int, int );
-    int getNodeID (Node * );
+  vector<Edge *> getEdgesFromSource(int);
+  vector<Edge *> getEdgesFromSource(Node *);
+  vector<Edge *> getEdgesFromDest(int);
+  vector<Edge *> getEdgesFromDest(Node *);
 
-    Edge *getEdge (Node *, Node * );
-    Edge *getEdge (int, int );
-    Node *getNode (int );
+  adjMapType returnAdjList();
+  nodeIDVector returnNodeIDs();
+  edgeIDVector returnEdgeIDs();
+  nodeVector returnNodes();
+  edgeVector returnEdges();
+  edgeVector returnEdgeVector();
+  nodeVector returnNodeVector();
 
-    vector < Edge * >getEdgesFromSource (int  );
-    vector < Edge * >getEdgesFromSource (Node *  );
-    vector < Edge * >getEdgesFromDest (int );
-    vector < Edge * >getEdgesFromDest (Node * );
+  void dump(raw_ostream &, int tabn = 0);
+  void dumpSauto(raw_ostream &, int tabn = 0);
 
-    adjMapType returnAdjList();
-    nodeIDVector returnNodeIDs();
-    edgeIDVector returnEdgeIDs();
-    nodeVector returnNodes();
-    edgeVector returnEdges();
-    edgeVector returnEdgeVector();
-    nodeVector returnNodeVector();
-
-    void dump (raw_ostream &, int tabn = 0);
-    void dumpSauto (raw_ostream &, int tabn = 0);
-  protected:
-    adjMapType _adjList;
-    nodeMapType _nodeMap;
-    edgeMapType _edgeMap;
-    adjEdgesMapType _adjEdges;
-    int _nNodes;
-    int _nEdges;
-    nodeIDVector _nodeIDVector;
-    edgeIDVector _edgeIDVector;
-    nodeVector _nodeVector;
-    edgeVector _edgeVector;
-  };
-}
+protected:
+  adjMapType _adjList;
+  nodeMapType _nodeMap;
+  edgeMapType _edgeMap;
+  adjEdgesMapType _adjEdges;
+  int _nNodes;
+  int _nEdges;
+  nodeIDVector _nodeIDVector;
+  edgeIDVector _edgeIDVector;
+  nodeVector _nodeVector;
+  edgeVector _edgeVector;
+};
+} // namespace scpar
 #endif
