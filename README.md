@@ -7,6 +7,7 @@ This is the maintained repository of an older version available on [github](http
 ## Requirements
 * [llvm/clang](http://clang.llvm.org/download.html) (version 7.0.0)
 * [SystemC](http://systemc.org) version 2.3.3. Please see [SystemC Installation notes](https://github.com/anikau31/systemc-clang/blob/master/doc/systemc-install.mkd)
+* c++14 is required.  We are using some features that necessitate c++14.  Down-porting it is also possible, but not supported.
 
 ## Installation 
 * [Linux](INSTALL-linux.md)
