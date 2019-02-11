@@ -5,12 +5,17 @@ using namespace scpar;
 
 using std::string;
 
-ModuleDecl::ModuleDecl() : module_name_{"NONE"}, class_decl_{nullptr} {}
+ModuleDecl::ModuleDecl() : module_name_{"NONE"},
+                           class_decl_{nullptr},
+                           constructor_stmt_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
     : module_name_{name}, class_decl_{decl} {}
 
 ModuleDecl::~ModuleDecl() {
+
+  class_decl_ = nullptr;
+  constructor_stmt_ = nullptr;
 
   // Delete all pointers in ports.
   for (auto input_port : _iports) {
@@ -113,7 +118,7 @@ void ModuleDecl::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
 }
 
 void ModuleDecl::addConstructor(Stmt *constructor) {
-  _constructorStmt = constructor;
+  constructor_stmt_ = constructor;
 }
 
 void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {

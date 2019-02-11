@@ -84,6 +84,8 @@ public:
 private:
   string module_name_;
   CXXRecordDecl *class_decl_;
+  Stmt *constructor_stmt_;
+
   processMapType _processes;
   portMapType _iports;
   portMapType _oports;
@@ -92,7 +94,7 @@ private:
   interfaceMapType _ointerfaces;
   interfaceMapType _iointerfaces;
   signalMapType _signals;
-  Stmt *_constructorStmt;
+  
   vector<string> _instanceList;
   portSignalMapType _portSignalMap;
   vector<EntryFunctionContainer *> _vef;
