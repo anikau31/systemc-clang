@@ -5,10 +5,10 @@ using namespace scpar;
 
 using std::string;
 
-ModuleDecl::ModuleDecl() : _moduleName{"NONE"}, _classdecl{nullptr} {}
+ModuleDecl::ModuleDecl() : module_name_{"NONE"}, class_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
-    : _moduleName{name}, _classdecl{decl} {}
+    : module_name_{name}, class_decl_{decl} {}
 
 ModuleDecl::~ModuleDecl() {
 
@@ -32,7 +32,7 @@ ModuleDecl::~ModuleDecl() {
   _ioports.clear();
 }
 
-void ModuleDecl::setModuleName(const string &name) { _moduleName = name; }
+void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
 
 void ModuleDecl::addInstances(vector<string> instanceList) {
   _instanceList = instanceList;
@@ -179,13 +179,13 @@ ModuleDecl::interfaceMapType ModuleDecl::getIOInterfaces() {
   return _iointerfaces;
 }
 
-string ModuleDecl::getName() { return _moduleName; }
+string ModuleDecl::getName() { return module_name_; }
 
-bool ModuleDecl::isModuleClassDeclNull() { return (_classdecl == nullptr); }
+bool ModuleDecl::isModuleClassDeclNull() { return (class_decl_ == nullptr); }
 
 CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
-  assert(!(_classdecl == nullptr));
-  return _classdecl;
+  assert(!(class_decl_ == nullptr));
+  return class_decl_;
 }
 
 void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
@@ -312,8 +312,8 @@ void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dump(raw_ostream &os) {
-  //  os << "ModuleDecl " << this << " " << _moduleName
-  //     << " CXXRecordDecl " << _classdecl << "\n";
+  //  os << "ModuleDecl " << this << " " << module_name_
+  //     << " CXXRecordDecl " << class_decl_ << "\n";
 
   os << "\n";
   os << "# Port Declaration:\n";

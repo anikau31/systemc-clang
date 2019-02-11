@@ -82,8 +82,8 @@ public:
   void dumpSignalBinding(raw_ostream &, int);
 
 private:
-  string _moduleName;
-  CXXRecordDecl *_classdecl;
+  string module_name_;
+  CXXRecordDecl *class_decl_;
   processMapType _processes;
   portMapType _iports;
   portMapType _oports;
