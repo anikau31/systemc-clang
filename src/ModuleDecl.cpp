@@ -221,7 +221,7 @@ void ModuleDecl::dumpProcesses(raw_ostream &os, int tabn) {
   } else {
     for (auto pit : _processes) {
       ProcessDecl *pd = pit.second;
-      pd->dump(os, tabn);
+      pd->dump( os );
       os << "\n";
     }
   }

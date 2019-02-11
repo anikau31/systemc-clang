@@ -1,6 +1,8 @@
 #ifndef _PROCESSDECL_H_
 #define _PROCESSDECL_H_
 
+#include "systemc-clang.h"
+#include "json.hpp"
 #include "EntryFunctionContainer.h"
 #include "FindEntryFunctions.h"
 #include "clang/AST/DeclCXX.h"
@@ -11,6 +13,7 @@ namespace scpar {
 
 using namespace std;
 using namespace clang;
+using json = nlohmann::json;
 
 class ProcessDecl {
 public:
@@ -22,21 +25,22 @@ public:
   ~ProcessDecl();
 
   /// Accessor methods.
-  string getType();
-  string getName();
-  CXXMethodDecl *getEntryMethodDecl();
+  string getType() const;
+  string getName() const;
+  CXXMethodDecl *getEntryMethodDecl() const;
 
   // Dump.
-  void dump(raw_ostream &, int);
+  void dump(raw_ostream &);
+  json dump_json() const;
 
 protected:
   // Process information
-  string _type;
-  string _entryName;
+  string process_type_;
+  string entry_name_;
   // Each process can have 1 entry function.
-  CXXMethodDecl *_entryMethodDecl;
+  CXXMethodDecl *entry_method_decl_;
 
-  EntryFunctionContainer *_ef;
+  EntryFunctionContainer *entry_function_ptr_;
 }; // End class ProcessDecl
 
 } // End namespace scpar
