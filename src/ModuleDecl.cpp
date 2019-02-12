@@ -10,7 +10,7 @@ ModuleDecl::ModuleDecl() : module_name_{"NONE"},
                            constructor_stmt_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
-    : module_name_{name}, class_decl_{decl} {}
+  : module_name_{name}, class_decl_{decl} {}
 
 ModuleDecl::~ModuleDecl() {
 
@@ -84,7 +84,7 @@ void ModuleDecl::addOutputPorts(FindPorts::PortType p) {
 void ModuleDecl::addInputOutputPorts(FindPorts::PortType p) {
   for (auto mit : p) {
     _ioports.insert(
-        portPairType(mit.first, new PortDecl(mit.first, mit.second)));
+                    portPairType(mit.first, new PortDecl(mit.first, mit.second)));
   }
 }
 
@@ -113,7 +113,7 @@ void ModuleDecl::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   //  p.end();    mit != mite; mit++) {
   for (auto mit : p) {
     _iointerfaces.insert(
-        interfacePairType(mit.first, new InterfaceDecl(mit.first, mit.second)));
+                         interfacePairType(mit.first, new InterfaceDecl(mit.first, mit.second)));
   }
 }
 
@@ -150,9 +150,9 @@ void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
       break;
     }
     }
-    _processes.insert(
-        processPairType(entryName, new ProcessDecl(entryType, entryName,
-                                                   ef->_entryMethodDecl, ef)));
+    process_map_.insert(
+                        processPairType(entryName, new ProcessDecl(entryType, entryName,
+                                                                   ef->_entryMethodDecl, ef)));
   }
 }
 
@@ -164,7 +164,7 @@ vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
 
 int ModuleDecl::getNumInstances() { return _instanceList.size(); }
 
-ModuleDecl::processMapType ModuleDecl::getProcessMap() { return _processes; }
+ModuleDecl::processMapType ModuleDecl::getProcessMap() { return process_map_; }
 
 ModuleDecl::portMapType ModuleDecl::getOPorts() { return _oports; }
 
@@ -216,10 +216,10 @@ void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpProcesses(raw_ostream &os, int tabn) {
-  if (_processes.size() == 0) {
+  if ( process_map_.empty() ) {
     os << "none \n";
   } else {
-    for (auto pit : _processes) {
+    for (auto pit : process_map_) {
       ProcessDecl *pd = pit.second;
       pd->dump( os );
       os << "\n";

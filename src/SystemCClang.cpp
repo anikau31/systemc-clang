@@ -16,16 +16,16 @@ bool SystemCConsumer::fire() {
   _systemcModel = new Model{};
 
   // Find the sc_modules
-  SCModules scmod{tu, _os};
+  FindSCModules scmod{tu, _os};
 
   // ANI : Do we need FindGlobalEvents?
   FindGlobalEvents fglobals{tu, _os};
   FindGlobalEvents::globalEventMapType eventMap{fglobals.getEventMap()};
   _systemcModel->addGlobalEvents(eventMap);
 
-  SCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
+  FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
 
-  for (SCModules::moduleMapType::iterator mit = scmodules.begin(),
+  for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
                                           mitend = scmodules.end();
        mit != mitend; ++mit) {
     ModuleDecl *md = new ModuleDecl{mit->first, mit->second};

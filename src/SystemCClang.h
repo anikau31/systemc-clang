@@ -45,7 +45,7 @@ using namespace clang::tooling;
 #include "FindTLMInterfaces.h"
 #include "FindWait.h"
 #include "Model.h"
-#include "SCModules.h"
+#include "FindSCModules.h"
 #include "SCuitable/FindGPUMacro.h"
 #include "SCuitable/GlobalSuspensionAutomata.h"
 #include "SuspensionAutomata.h"

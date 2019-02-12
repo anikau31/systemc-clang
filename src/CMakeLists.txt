@@ -1,7 +1,7 @@
 add_library (libsystemc-clang
   ModuleDecl.cpp
   FindModule.cpp
-  SCModules.cpp
+  FindSCModules.cpp
   FindSCMain.cpp
   FindPorts.cpp
   FindTLMInterfaces.cpp

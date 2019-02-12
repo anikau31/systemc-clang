@@ -1,19 +1,20 @@
-//#include <string>
 #include "PortDecl.h"
 #include "FindTemplateTypes.h"
+
 using namespace scpar;
 using namespace std;
 
 PortDecl::~PortDecl() {
-  if (template_type_ != nullptr) {
+  if ( template_type_ != nullptr ) {
     delete template_type_;
+    template_type_ = nullptr;
   }
 }
 
 PortDecl::PortDecl() : port_name_{"NONE"}, template_type_{nullptr} {}
 
 PortDecl::PortDecl(const string &name, FindTemplateTypes *tt)
-    : port_name_{name}, template_type_{tt} {}
+  : port_name_{name}, template_type_{tt} {}
 
 PortDecl::PortDecl(const PortDecl &from) {
   port_name_ = from.port_name_;
@@ -32,4 +33,15 @@ void PortDecl::dump(llvm::raw_ostream &os, int tabn) {
   // << template_type_;
   os << "Port name: " << port_name_ << " ";
   template_type_->printTemplateArguments(os);
+
+  dump_json();
+}
+
+json PortDecl::dump_json() {
+
+  json port_j;
+  port_j["module_name"] = getName();
+  //port_j["template_type"]
+
+  return port_j;
 }
