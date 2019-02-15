@@ -20,7 +20,10 @@ namespace scpar {
   class TemplateType {
   public:
     TemplateType( string, const Type* );
-    string getTypeName();
+    ~TemplateType( );
+    TemplateType( const TemplateType& );
+
+    string getTypeName() const;
     const Type* getTypePtr();
 
   private:
@@ -32,7 +35,7 @@ namespace scpar {
   class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   public:
     /// Typedefs
-    typedef TemplateType* TemplateTypePtr;
+    typedef TemplateType TemplateTypePtr;
     //typedef vector< TemplateTypePtr > type_vector_t_new;
     //typedef vector<pair<string, const Type *>> type_vector_t;
     typedef vector< TemplateTypePtr > type_vector_t;
@@ -45,6 +48,8 @@ namespace scpar {
     /// Copy constructor
     FindTemplateTypes(const FindTemplateTypes &rhs);
     FindTemplateTypes(const FindTemplateTypes *rhs);
+
+    ~FindTemplateTypes();
     string getTemplateType();
     bool VisitType(Type *type);
     bool VisitIntegerLiteral(IntegerLiteral *l);

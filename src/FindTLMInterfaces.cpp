@@ -40,7 +40,7 @@ bool FindTLMInterfaces::VisitFieldDecl(FieldDecl *fd) {
   }
 
   // There could be more than one type though.  Are you only referring to the first one?
-  string template_type_name { (*ait)->getTypeName() };
+  string template_type_name { ait->getTypeName() };
   if ( template_type_name == "sc_fifo_in") {
     _inInterfaces.insert(kvType(fname, te));
   }

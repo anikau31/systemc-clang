@@ -43,7 +43,7 @@ bool FindPorts::VisitFieldDecl(FieldDecl *fd) {
   if (args.size() == 0) {
     return true;
   }
-  string port_type{ (*ait)->getTypeName()};
+  string port_type{ ait->getTypeName()};
   if (port_type == "sc_in") {
     //        os_ << "\n+ sc_in";
     _inPorts.insert(kvType(fname, te));
