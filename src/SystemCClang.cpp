@@ -171,9 +171,9 @@ _systemcModel->addNetlist(findNetlist);
             llvm::errs());
         if (suspensionAutomata.initialize()) {
           suspensionAutomata.genSusCFG();
-          suspensionAutomata.dumpSusCFG();
+          //suspensionAutomata.dumpSusCFG();
           suspensionAutomata.genSauto();
-          suspensionAutomata.dumpSauto();
+          //suspensionAutomata.dumpSauto();
           entryFunctionContainer.at(j)->addSusCFGAuto(suspensionAutomata);
         }
       }

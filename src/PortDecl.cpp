@@ -29,10 +29,8 @@ string PortDecl::getName() const { return port_name_; }
 FindTemplateTypes *PortDecl::getTemplateType() { return template_type_; }
 
 void PortDecl::dump(llvm::raw_ostream &os, int tabn) {
-  // os << "PortDecl " << this << " '" << port_name_ << "' FindTemplateTypes "
-  // << template_type_;
-  os << "Port name: " << port_name_ << " ";
-  template_type_->printTemplateArguments(os);
+  //os << "Port name: " << port_name_ << " ";
+  //template_type_->printTemplateArguments(os);
 
   dump_json();
 }
@@ -40,8 +38,17 @@ void PortDecl::dump(llvm::raw_ostream &os, int tabn) {
 json PortDecl::dump_json() {
 
   json port_j;
-  port_j["module_name"] = getName();
-  //port_j["template_type"]
+  port_j["port_name"] = getName();
 
+  // Template arguments
+  auto template_args{ template_type_->getTemplateArgumentsType() };
+  port_j["port_type"] = template_args[0].getTypeName();
+  template_args.erase( begin(template_args) );
+
+  for ( auto ait = begin(template_args); ait != end(template_args); ++ait ) {
+    port_j["port_arguments"].push_back( ait->getTypeName() );
+  }
+
+  std::cout << port_j.dump(4);
   return port_j;
 }

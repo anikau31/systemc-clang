@@ -34,9 +34,11 @@ public:
   void dump(raw_ostream &, int tabn = 0);
 
   json dump_json();
-  
+
 private:
+  // Name of the port
   string port_name_;
+  // This holds the types for the port
   FindTemplateTypes *template_type_;
 };
 } // namespace scpar

@@ -13,7 +13,7 @@ namespace scpar {
 
 using namespace std;
 using namespace clang;
-using json = nlohmann::json;
+ using json = nlohmann::json;
 
 class ProcessDecl {
 public:
@@ -36,10 +36,13 @@ public:
 protected:
   // Process information
   string process_type_;
+  // Name of the entry function
   string entry_name_;
   // Each process can have 1 entry function.
   CXXMethodDecl *entry_method_decl_;
 
+  // This is a container that holds information about the
+  // entry function. 
   EntryFunctionContainer *entry_function_ptr_;
 }; // End class ProcessDecl
 
