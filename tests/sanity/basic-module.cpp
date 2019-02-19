@@ -2,6 +2,7 @@
 SC_MODULE( test ){
    sc_in<int> in;
 	sc_out<int> out;
+    sc_signal<int> test_signal;
 	void entry_function_1() {
 		while(true) {
       // do nothing

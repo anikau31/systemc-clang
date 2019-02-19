@@ -68,7 +68,7 @@ public:
   void dump();
 
 private:
-  llvm::raw_ostream &_os;
+  llvm::raw_ostream &os_;
   //int state_;
   signalMapType signalcontainer_map_;
 };
