@@ -5,17 +5,18 @@ using namespace scpar;
 
 FindSignals::~FindSignals() {
   //  _os << "[[ Destructor FindSignals ]]\n";
-  for (FindSignals::signalMapType::iterator sit = _signals->begin();
-       sit != _signals->end(); sit++) {
-    delete sit->second;
+  //for (FindSignals::signalMapType::iterator sit = signalcontainer_map_->begin();
+  //sit != signalcontainer_map_->end(); sit++) {
+  for ( auto const & sit : signalcontainer_map_ ) {
+    delete sit.second;
   }
-  _signals->clear();
-  delete _signals;
+
+  signalcontainer_map_.clear();
+  //delete signalcontainer_map_;
 }
 
 FindSignals::FindSignals(CXXRecordDecl *d, llvm::raw_ostream &os) : _os(os) {
-  _signals = new FindSignals::signalMapType();
-  state = 0;
+  //signalcontainer_map_ = new FindSignals::signalMapType();
   TraverseDecl(d);
 }
 
@@ -44,20 +45,21 @@ bool FindSignals::VisitFieldDecl(FieldDecl *fd) {
     }
     SignalContainer *sc = new SignalContainer(fd->getNameAsString(), te, fd);
 
-    _signals->insert(FindSignals::signalPairType(fd->getNameAsString(), sc));
+    signalcontainer_map_.insert(FindSignals::signalPairType(fd->getNameAsString(), sc));
   }
   return true;
 }
 
-FindSignals::signalMapType *FindSignals::getSignals() { return _signals; }
+FindSignals::signalMapType FindSignals::getSignals() const { return signalcontainer_map_; }
 
 void FindSignals::dump() {
   _os << "\n================= Find Signals  ================\n";
 
-  for (FindSignals::signalMapType::iterator sit = _signals->begin();
-       sit != _signals->end(); sit++) {
-    _os << sit->second;
-    sit->second->dump(_os);
+  //for (FindSignals::signalMapType::iterator sit = signalcontainer_map_->begin();
+  //sit != signalcontainer_map_->end(); sit++) {
+  for (auto const & sit : signalcontainer_map_ ) {
+    _os << sit.second;
+    sit.second->dump(_os);
   }
   _os << "\n================= END Find Ports ================\n\n";
 }

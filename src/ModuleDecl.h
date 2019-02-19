@@ -1,5 +1,7 @@
 #ifndef _MODULE_DECL_H_
 #define _MODULE_DECL_H_
+#include "systemc-clang.h"
+#include "json.hpp"
 
 #include "FindConstructor.h"
 #include "FindEntryFunctions.h"
@@ -15,8 +17,9 @@
 #include <string>
 
 namespace scpar {
-using namespace clang;
-using namespace std;
+  using namespace clang;
+  using namespace std;
+  using json = nlohmann::json;
 
 class ModuleDecl {
 public:
@@ -50,7 +53,7 @@ public:
 
   ~ModuleDecl();
 
-  void addSignals(FindSignals::signalMapType *);
+  void addSignals(const FindSignals::signalMapType & );
   void addInputPorts(FindPorts::PortType);
   void addOutputPorts(FindPorts::PortType);
   void addInputOutputPorts(FindPorts::PortType);
@@ -84,6 +87,8 @@ public:
   void dump(raw_ostream &);
   void dumpInstances(raw_ostream &, int);
   void dumpSignalBinding(raw_ostream &, int);
+
+  json dump_json();
 
 private:
   string module_name_;

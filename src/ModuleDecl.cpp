@@ -47,8 +47,8 @@ void ModuleDecl::addSignalBinding(map<string, string> portSignalMap) {
   _portSignalMap.insert(portSignalMap.begin(), portSignalMap.end());
 }
 
-void ModuleDecl::addSignals(FindSignals::signalMapType *signal_map) {
-  for (auto sit : *signal_map) {
+void ModuleDecl::addSignals(const FindSignals::signalMapType & signal_map) {
+  for (auto sit : signal_map) {
     string name = sit.first;
 
     // It is important to create new objects.
@@ -57,7 +57,7 @@ void ModuleDecl::addSignals(FindSignals::signalMapType *signal_map) {
     SignalContainer *sc = new SignalContainer(*sit.second);
     Signal *sig = new Signal(name, sc);
 
-    _signals.insert(ModuleDecl::signalPairType(name, sig));
+    _signals.insert( ModuleDecl::signalPairType(name, sig) );
   }
 }
 
@@ -331,5 +331,20 @@ void ModuleDecl::dump(raw_ostream &os) {
   dumpInstances(os, 4);
   os << "# Signal binding:\n";
   dumpSignalBinding(os, 4);
+
+  dump_json();
   os << "\n=======================================================\n";
+
+  
+}
+
+json ModuleDecl::dump_json() {
+
+  json module_j;
+
+  module_j["module_name"] = module_name_;
+
+
+  std::cout << module_j.dump(4);
+  return module_j;
 }

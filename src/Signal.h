@@ -32,8 +32,8 @@ private:
   void check();
 
 private:
-  string _name;
-  SignalContainer *_sig;
+  string signal_name_;
+  SignalContainer * signal_container_;
 };
 } // namespace scpar
 #endif

@@ -11,45 +11,46 @@ namespace scpar {
 using namespace clang;
 using namespace std;
 
-struct SignalContainer {
+ struct SignalContainer  {
   SignalContainer(string n, FindTemplateTypes *tt, FieldDecl *fd)
-      : _name{n}, _template{tt}, _astNode{fd} {}
+      : signal_name_{n}, template_types_{tt}, ast_node_{fd} {}
 
   ~SignalContainer() {
     // Only thing I create is FindTemplateType. Rest should be deleted by clang.
     //      llvm::errs () << "[[ Destructor SignalContainer ]]\n";
-    delete _template;
+    delete template_types_;
   }
 
   SignalContainer(const SignalContainer &from) {
-    _name = from._name;
-    _template = new FindTemplateTypes(*(from._template));
-    _astNode = from._astNode;
+    signal_name_ = from.signal_name_;
+    template_types_ = new FindTemplateTypes(*(from.template_types_));
+    ast_node_ = from.ast_node_;
   }
 
   void dump(llvm::raw_ostream &os) {
-    os << "[SignalContainer " << _name << " FindTemplateType " << _template
-       << " FieldDecl " << _astNode << "\n";
-    _template->printTemplateArguments(os);
+    os << "[SignalContainer " << signal_name_ << " FindTemplateType " << template_types_
+       << " FieldDecl " << ast_node_ << "\n";
+    template_types_->printTemplateArguments(os);
     os << "]\n";
   }
 
   FindTemplateTypes *getTemplateTypes() {
-    assert(!(_template == nullptr));
-    return _template;
+    assert(!(template_types_ == nullptr));
+    return template_types_;
   }
 
   FieldDecl *getASTNode() {
-    assert(!(_astNode == nullptr));
-    return _astNode;
+    assert(!(ast_node_ == nullptr));
+    return ast_node_;
   }
 
-  string getName() { return _name; }
+  string getName() { return signal_name_; }
 
-  // FIXME: Make these protected.
-  string _name;
-  FindTemplateTypes *_template;
-  FieldDecl *_astNode;
+  
+ private: 
+  string signal_name_;
+  FindTemplateTypes *template_types_;
+  FieldDecl *ast_node_;
 };
 
 class FindSignals : public RecursiveASTVisitor<FindSignals> {
@@ -63,13 +64,13 @@ public:
 
   virtual bool VisitFieldDecl(FieldDecl *);
 
-  signalMapType *getSignals();
+  signalMapType getSignals() const ;
   void dump();
 
 private:
   llvm::raw_ostream &_os;
-  int state;
-  signalMapType *_signals;
+  //int state_;
+  signalMapType signalcontainer_map_;
 };
 
 } // namespace scpar

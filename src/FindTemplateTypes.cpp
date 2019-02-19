@@ -42,7 +42,6 @@ FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
 
 // Destructor
 FindTemplateTypes::~FindTemplateTypes() {
-  // TODO: We should convert these into objects.
   template_types_.clear();
 }
 

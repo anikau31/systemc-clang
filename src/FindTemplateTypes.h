@@ -16,7 +16,7 @@ namespace scpar {
   using namespace std;
 
   // This class holds the name of the type, and a pointer to the
-  // type object. 
+  // type object.
   class TemplateType {
   public:
     TemplateType( string, const Type* );

@@ -5,24 +5,24 @@
 using namespace scpar;
 using namespace std;
 
-void Signal::check() { assert(!(_sig == NULL)); }
+void Signal::check() { assert(!(signal_container_ == nullptr)); }
 
-Signal::Signal() : _name("NONE"), _sig(NULL) {}
+Signal::Signal() : signal_name_("NONE"), signal_container_(nullptr) {}
 
-Signal::Signal(const string &name, SignalContainer *s) : _name(name), _sig(s) {}
+Signal::Signal(const string &name, SignalContainer *s) : signal_name_(name), signal_container_(s) {}
 
-void Signal::setModuleName(const string &name) { _name = name; }
+void Signal::setModuleName(const string &name) { signal_name_ = name; }
 
-string Signal::getName() { return _name; }
+string Signal::getName() { return signal_name_; }
 
 FindTemplateTypes *Signal::getTemplateTypes() {
   check();
-  return _sig->getTemplateTypes();
+  return signal_container_->getTemplateTypes();
 }
 
 FieldDecl *Signal::getASTNode() {
   check();
-  return _sig->getASTNode();
+  return signal_container_->getASTNode();
 }
 
 void Signal::dump(raw_ostream &os, int tabn = 0) {
@@ -30,7 +30,7 @@ void Signal::dump(raw_ostream &os, int tabn = 0) {
   for (int i = 0; i < tabn; i++) {
     os << " ";
   }
-  os << "Signal " << this << " '" << _name << "' FindTemplateTypes "
-     << _sig->getTemplateTypes() << "' FieldDecl' " << _sig->getASTNode();
-  _sig->getTemplateTypes()->printTemplateArguments(os);
+  os << "Signal " << this << " '" << signal_name_ << "' FindTemplateTypes "
+     << signal_container_->getTemplateTypes() << "' FieldDecl' " << signal_container_->getASTNode();
+  signal_container_->getTemplateTypes()->printTemplateArguments(os);
 }
