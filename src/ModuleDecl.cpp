@@ -54,8 +54,8 @@ void ModuleDecl::addSignals(const FindSignals::signalMapType & signal_map) {
     // It is important to create new objects.
     // This is because the objects created during Find*
     // may go outside scope, and free up allocated memory.
-    SignalContainer *sc = new SignalContainer(*sit.second);
-    Signal *sig = new Signal(name, sc);
+    SignalContainer *sc{ new SignalContainer(*sit.second) };
+    Signal *sig { new Signal(name, sc) };
 
     _signals.insert( ModuleDecl::signalPairType(name, sig) );
   }
