@@ -26,8 +26,7 @@ bool SystemCConsumer::fire() {
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
 
   for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
-                                          mitend = scmodules.end();
-       mit != mitend; ++mit) {
+         mitend = scmodules.end();  mit != mitend; ++mit) {
     ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
     _systemcModel->addModuleDecl(md);
   }
@@ -59,8 +58,7 @@ bool SystemCConsumer::fire() {
   Model::moduleMapType moduleMap{_systemcModel->getModuleDecl()};
 
   for (Model::moduleMapType::iterator mit = moduleMap.begin(),
-                                      mitend = moduleMap.end();
-       mit != mitend; mit++) {
+         mitend = moduleMap.end();   mit != mitend; mit++) {
     ModuleDecl *mainmd{mit->second};
     int numInstances{mainmd->getNumInstances()};
     vector<ModuleDecl *> moduleDeclVec;
@@ -95,8 +93,7 @@ bool SystemCConsumer::fire() {
 
       for (size_t i = 0; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
-        FindSensitivity findSensitivity{constructor.returnConstructorStmt(),
-                                        _os};
+        FindSensitivity findSensitivity{constructor.returnConstructorStmt(), _os};
         ef->addSensitivityInfo(findSensitivity);
 
         if (ef->getEntryMethod() == nullptr) {

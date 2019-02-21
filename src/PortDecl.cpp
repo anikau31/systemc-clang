@@ -32,10 +32,10 @@ void PortDecl::dump(llvm::raw_ostream &os, int tabn) {
   //os << "Port name: " << port_name_ << " ";
   //template_type_->printTemplateArguments(os);
 
-  dump_json();
+  //dump_json();
 }
 
-json PortDecl::dump_json() {
+json PortDecl::dump_json(raw_ostream & os) {
 
   json port_j;
   port_j["port_name"] = getName();
@@ -49,6 +49,6 @@ json PortDecl::dump_json() {
     port_j["port_arguments"].push_back( ait->getTypeName() );
   }
 
-  std::cout << port_j.dump(4);
+  //os << port_j.dump(4);
   return port_j;
 }

@@ -33,7 +33,7 @@ public:
   // Print
   void dump(raw_ostream &, int tabn = 0);
 
-  json dump_json();
+  json dump_json(raw_ostream &);
 
 private:
   // Name of the port

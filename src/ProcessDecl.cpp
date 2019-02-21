@@ -38,10 +38,10 @@ void ProcessDecl::dump(raw_ostream &os) {
   os << "\nEntry function:\n";
     entry_function_ptr_->dump(os, 1);
 
-  dump_json();
+    //dump_json();
 }
 
-json ProcessDecl::dump_json() const {
+json ProcessDecl::dump_json(raw_ostream & os ) const {
 
   // These are the three fields that we need to extract from entry_function_ptr.
   json process_j;
@@ -49,6 +49,6 @@ json ProcessDecl::dump_json() const {
   process_j["procesS_type"] = getType();
   process_j["entry_method_declaration"] = to_string( getEntryMethodDecl() );
 
-  std::cout << process_j.dump(4);
+  //  os << process_j.dump(4);
   return process_j;
 }

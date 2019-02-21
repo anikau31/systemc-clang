@@ -61,7 +61,7 @@ public:
   void addOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addProcess(FindEntryFunctions::entryFunctionVectorType *);
-  void addInstances(vector<string>);
+  void addInstances(const vector<string> & );
   void addSignalBinding(map<string, string>);
   void setModuleName(const string &);
   void addConstructor(Stmt *);

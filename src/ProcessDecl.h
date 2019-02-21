@@ -31,7 +31,7 @@ public:
 
   // Dump.
   void dump(raw_ostream &);
-  json dump_json() const;
+  json dump_json(raw_ostream &) const;
 
 protected:
   // Process information
