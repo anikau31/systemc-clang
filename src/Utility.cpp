@@ -1,7 +1,7 @@
 #include "Utility.h"
 
 using namespace scpar;
-
+/*
 void Utility::tabit(raw_ostream &os, int tabn) {
   for (int i = 0; i < tabn; i++) {
     os << " ";
@@ -59,3 +59,4 @@ template <typename expressionArg> string getArgumentName(expressionArg *exp) {
 }
 
 Utility::Utility() {}
+*/

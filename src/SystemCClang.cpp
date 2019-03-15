@@ -13,7 +13,7 @@ bool SystemCConsumer::fire() {
 
   TranslationUnitDecl *tu{_context.getTranslationUnitDecl()};
   // Reflection database.
-  _systemcModel = new Model{};
+  _systemcModel = new Model{} ;
 
   // Find the sc_modules
   FindSCModules scmod{tu, _os};
