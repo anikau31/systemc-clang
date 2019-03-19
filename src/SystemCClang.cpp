@@ -15,13 +15,15 @@ bool SystemCConsumer::fire() {
   // Reflection database.
   _systemcModel = new Model{} ;
 
+  // ANI : Do we need FindGlobalEvents?
+  FindGlobalEvents globals{tu, _os};
+  FindGlobalEvents::globalEventMapType eventMap{globals.getEventMap()};
+  globals.dump_json();
+  _systemcModel->addGlobalEvents(eventMap);
+
   // Find the sc_modules
   FindSCModules scmod{tu, _os};
 
-  // ANI : Do we need FindGlobalEvents?
-  FindGlobalEvents fglobals{tu, _os};
-  FindGlobalEvents::globalEventMapType eventMap{fglobals.getEventMap()};
-  _systemcModel->addGlobalEvents(eventMap);
 
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
 

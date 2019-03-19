@@ -1,21 +1,21 @@
 #include "FindGlobalEvents.h"
 using namespace scpar;
 
-FindGlobalEvents::FindGlobalEvents(TranslationUnitDecl *d,
-                                   llvm::raw_ostream &os)
-    : _os(os) {
-  TraverseDecl(d);
+FindGlobalEvents::FindGlobalEvents(TranslationUnitDecl * declaration, llvm::raw_ostream &os)
+  : _os(os) {
+
+  TraverseDecl(declaration);
 }
 
 FindGlobalEvents::~FindGlobalEvents() {}
 
-bool FindGlobalEvents::VisitVarDecl(VarDecl *vd) {
-  QualType q = vd->getType();
+bool FindGlobalEvents::VisitVarDecl(VarDecl * variable_declaration) {
+  QualType variable_type { variable_declaration->getType() };
 
-  if (q.getAsString() == "class sc_core::sc_event") {
-    if (IdentifierInfo *info = vd->getIdentifier()) {
+  if (variable_type.getAsString() == "class sc_core::sc_event") {
+    if (IdentifierInfo *info = variable_declaration->getIdentifier()) {
 
-      _globalEvents.insert(kvType(info->getNameStart(), vd));
+      _globalEvents.insert( kvType(info->getNameStart(), variable_declaration) );
     }
   }
   return true;
@@ -34,3 +34,15 @@ void FindGlobalEvents::dump() {
   }
   _os << "\n ============== END FindGlobalEvents ===============";
 }
+
+json FindGlobalEvents::dump_json() {
+  json globals_j{};
+
+
+  for ( auto const & event : _globalEvents ) {
+    globals_j["global_declarations"].emplace_back( event.first ) ;
+  }
+  std::cout << globals_j.dump(4) << endl;
+  return globals_j;
+}
+
