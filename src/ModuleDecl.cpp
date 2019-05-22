@@ -164,6 +164,8 @@ vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
 
 int ModuleDecl::getNumInstances() { return _instanceList.size(); }
 
+ModuleDecl::signalMapType ModuleDecl::getSignals() { return _signals; }
+
 ModuleDecl::processMapType ModuleDecl::getProcessMap() { return process_map_; }
 
 ModuleDecl::portMapType ModuleDecl::getOPorts() { return _oports; }

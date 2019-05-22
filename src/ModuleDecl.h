@@ -79,6 +79,7 @@ public:
   vector<string> getInstanceList();
   vector<EntryFunctionContainer *> getEntryFunctionContainer();
   int getNumInstances();
+  signalMapType getSignals();
 
   void dumpPorts(raw_ostream &, int);
   void dumpInterfaces(raw_ostream &, int);
