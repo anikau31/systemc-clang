@@ -64,6 +64,8 @@ public:
   void addInstances(const vector<string> & );
   void addSignalBinding(map<string, string>);
   void setModuleName(const string &);
+  void setTemplateParameters(const vector<string> &);
+    vector<string> getTemplateParameters() const;
   void addConstructor(Stmt *);
   string getName();
   CXXRecordDecl *getModuleClassDecl();

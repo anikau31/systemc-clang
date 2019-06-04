@@ -37,6 +37,13 @@ ModuleDecl::~ModuleDecl() {
   _ioports.clear();
 }
 
+void ModuleDecl::setTemplateParameters(const vector<string> & parm_list) {
+    template_parameters_ = parm_list;
+}
+
+vector<string> ModuleDecl::getTemplateParameters() const {
+    return template_parameters_; }
+
 void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
 
 void ModuleDecl::addInstances(const vector<string> & instanceList) {
@@ -330,6 +337,11 @@ json ModuleDecl::dump_json() {
   json module_j;
 
   module_j["module_name"] = module_name_;
+  // Template parameters.
+  std::cout << "\nTEMPPARM: " << template_parameters_.size() << std::endl;
+  for (const auto & parm: template_parameters_) {
+      module_j["template_parameters"].push_back( parm );
+  }
 
 
   std::cout << module_j.dump(4);

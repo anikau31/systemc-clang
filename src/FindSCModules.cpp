@@ -19,7 +19,7 @@ bool FindSCModules::VisitCXXRecordDecl(CXXRecordDecl *cxxDecl) {
   }
   string modName = mod.getModuleName();
   _moduleMap.insert(modulePairType(modName, cxxDecl));
-  template_parameters_ = mod.getTemplateParameters();
+
   return true;
 }
 

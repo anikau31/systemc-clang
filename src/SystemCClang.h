@@ -50,6 +50,8 @@ using namespace clang::tooling;
 #include "SCuitable/GlobalSuspensionAutomata.h"
 #include "SuspensionAutomata.h"
 #include "Utility.h"
+#include "FindTemplateParameters.h"             \
+
 
 using namespace clang;
 

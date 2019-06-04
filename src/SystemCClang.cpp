@@ -24,12 +24,13 @@ bool SystemCConsumer::fire() {
   // Find the sc_modules
   FindSCModules scmod{tu, _os};
 
-
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
 
   for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
          mitend = scmodules.end();  mit != mitend; ++mit) {
     ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
+    //md->setTemplateParameters( scmod.getTemplateParameters() );
+//       _os << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
     _systemcModel->addModuleDecl(md);
   }
 
@@ -70,6 +71,15 @@ bool SystemCConsumer::fire() {
 
     for (unsigned int num{0}; num < numInstances; ++num) {
       ModuleDecl *md = new ModuleDecl{};
+
+      // Find the template arguments for the class.
+      FindTemplateParameters tparms{ mainmd->getModuleClassDecl(), _os};
+
+      md->setTemplateParameters( tparms.getTemplateParameters() );
+      _os << "@@# " << mainmd->getTemplateParameters().size() << "\n";
+      md->dump_json();
+
+
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{mainmd->getModuleClassDecl(), _os};
       md->addConstructor(constructor.returnConstructorStmt());

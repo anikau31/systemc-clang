@@ -18,6 +18,7 @@ add_library (libsystemc-clang
   SystemCClang.cpp
   FindNetlist.cpp
   FindArgument.cpp
+  FindTemplateParameters.cpp
   Automata.cpp
   SuspensionAutomata.cpp
   SCuitable/GlobalSuspensionAutomata.cpp
@@ -36,7 +37,7 @@ add_library (libsystemc-clang
   InterfaceDecl.cpp
   Model.cpp
   WaitCalls.cpp
-  NotifyCalls.cpp 
+  NotifyCalls.cpp
   EventContainer.cpp
-    
+
   )
