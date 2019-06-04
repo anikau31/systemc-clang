@@ -10,7 +10,7 @@ ModuleDecl::ModuleDecl() : module_name_{"NONE"},
                            constructor_stmt_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
-  : module_name_{name}, class_decl_{decl} {}
+    : module_name_{name}, class_decl_{decl} {}
 
 ModuleDecl::~ModuleDecl() {
 
@@ -218,7 +218,7 @@ void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpProcesses(raw_ostream &os, int tabn) {
-  
+
   json process_j;
   process_j["number_of_processes"] = process_map_.size();
   for (auto pit : process_map_) {

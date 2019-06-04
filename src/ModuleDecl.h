@@ -104,10 +104,13 @@ private:
   interfaceMapType _ointerfaces;
   interfaceMapType _iointerfaces;
   signalMapType _signals;
-  
+
   vector<string> _instanceList;
   portSignalMapType _portSignalMap;
   vector<EntryFunctionContainer *> _vef;
+
+    // Class template parameters.
+    vector<string> template_parameters_;
 };
 } // namespace scpar
 #endif

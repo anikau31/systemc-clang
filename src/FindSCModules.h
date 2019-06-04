@@ -25,6 +25,7 @@ public:
 private:
   llvm::raw_ostream &_os;
   moduleMapType _moduleMap;
+    vector<string> template_parameters_;
 };
 } // namespace scpar
 #endif

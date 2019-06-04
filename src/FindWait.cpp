@@ -24,6 +24,14 @@ bool FindWait::VisitCallExpr(CallExpr *e) {
   LangOpts.CPlusPlus = true;
   clang::PrintingPolicy Policy(LangOpts);
 
+  os_ << "===============\n";   //
+  e->dump();
+  os_ << e->getNumArgs();
+  Expr * arge{ e->getArg(0) };
+  os_ << "\n argument dump\n";
+  arge->dump();
+//  e->getDirectCallee()->dump();
+    os_ << "END===============\n";   //
   if (e->getDirectCallee()->getNameInfo().getAsString() == string("wait")) {
     wait_calls_list_.push_back(new WaitContainer(entry_method_decl_, e));
   }

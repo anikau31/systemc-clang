@@ -9,11 +9,12 @@ using namespace scpar;
 string FindModule::getModuleName() const { return module_name_; }
 
 FindModule::FindModule(CXXRecordDecl *declaration, llvm::raw_ostream &os)
-    : declaration_{declaration}, os_{os}, is_systemc_module_{false} {
+    : declaration_{declaration}, os_{os}, is_systemc_module_{false}, template_parameters_{nullptr} {
   if (declaration->hasDefinition() == true) {
     TraverseDecl(declaration);
   }
 }
+
 
 bool FindModule::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
   if (declaration_->getNumBases() <= 0) {
@@ -31,8 +32,19 @@ bool FindModule::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
 
       is_systemc_module_ = true;
 
+
       if (IdentifierInfo *info = declaration_->getIdentifier()) {
         module_name_ = info->getNameStart();
+
+        // Check if the class is a templated module class.
+      auto template_args{ declaration->getDescribedClassTemplate() };
+      if (template_args != nullptr) {
+          os_ << module_name_ << ": TEMPLATE ARGS YES \n";
+          template_parameters_ = template_args->getTemplateParameters();
+          //parms->getParam(0)->dump();
+//          parms->getParam(1)->dump();
+
+      }
       }
     }
   }
@@ -42,6 +54,20 @@ bool FindModule::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
   }
 
   return false;
+}
+
+vector<string> FindModule::getTemplateParameters() const {
+    vector<string> parm_list;
+    if ( (template_parameters_ == nullptr)
+        || (template_parameters_->size() <= 0) ) {
+        return parm_list;
+    }
+
+    for (auto parm : template_parameters_->asArray() ) {
+        parm_list.push_back( parm->getName() );
+        os_ << "Parm: " << parm->getName() << "\n";
+    }
+    return parm_list;
 }
 
 FindModule::~FindModule() { declaration_ = nullptr; }
