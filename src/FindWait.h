@@ -16,9 +16,10 @@ class FindWait : public RecursiveASTVisitor<FindWait> {
 public:
   typedef vector<WaitContainer *> waitListType;
 
+
   typedef pair<CXXMethodDecl *, vector<string>> processWaitEventPairType;
   typedef map<CXXMethodDecl *, vector<string>> processWaitEventMapType;
-
+    bool VisitUnresolvedMemberExpr(UnresolvedMemberExpr *e);
   FindWait(CXXMethodDecl *, llvm::raw_ostream &);
   virtual ~FindWait();
 
@@ -32,9 +33,11 @@ private:
   CXXMethodDecl *entry_method_decl_;
   llvm::raw_ostream &os_;
   CallExpr *wait_call_;
+//    UnresolvedMemberExpr *wait_unresolved_;
   //    Expr *first_arg_;
-  //    bool found_wait_;
+  bool found_wait_;
   waitListType wait_calls_list_;
+
 };
 } // namespace scpar
 #endif

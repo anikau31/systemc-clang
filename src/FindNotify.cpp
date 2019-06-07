@@ -21,7 +21,9 @@ bool FindNotify::VisitCallExpr(CallExpr *e) {
   LangOpts.CPlusPlus = true;
   PrintingPolicy Policy(LangOpts);
 
-  if (e->getDirectCallee()->getNameInfo().getAsString() == string("notify") &&
+  auto direct_callee{ e->getDirectCallee() };
+  if (direct_callee != nullptr ) {
+  if (direct_callee->getNameInfo().getAsString() == string("notify") &&
       e->getNumArgs() <= 2) { // need a better checking.....
     notify_call_list_.push_back(e);
     // To get the 'x' from x.f(5) I must use getImplicitObjectArgument.
@@ -48,6 +50,7 @@ bool FindNotify::VisitCallExpr(CallExpr *e) {
       }
       }
     */
+  }
   }
   return true;
 }

@@ -338,7 +338,6 @@ json ModuleDecl::dump_json() {
 
   module_j["module_name"] = module_name_;
   // Template parameters.
-  std::cout << "\nTEMPPARM: " << template_parameters_.size() << std::endl;
   for (const auto & parm: template_parameters_) {
       module_j["template_parameters"].push_back( parm );
   }
