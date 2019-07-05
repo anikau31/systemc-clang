@@ -30,7 +30,7 @@ bool SystemCConsumer::fire() {
          mitend = scmodules.end();  mit != mitend; ++mit) {
     ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
     //md->setTemplateParameters( scmod.getTemplateParameters() );
-//       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
+    //       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
     _systemcModel->addModuleDecl(md);
   }
 
@@ -73,7 +73,7 @@ bool SystemCConsumer::fire() {
       ModuleDecl *md = new ModuleDecl{};
 
       // Find the template arguments for the class.
-      FindTemplateParameters tparms{ mainmd->getModuleClassDecl(), os_};
+      FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
 
       md->setTemplateParameters( tparms.getTemplateParameters() );
       os_ << "@@# " << mainmd->getTemplateParameters().size() << "\n";
@@ -105,7 +105,8 @@ bool SystemCConsumer::fire() {
 
       for (size_t i = 0; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
-        FindSensitivity findSensitivity{constructor.returnConstructorStmt(), os_};
+        FindSensitivity findSensitivity{constructor.returnConstructorStmt(),
+                                        os_};
         ef->addSensitivityInfo(findSensitivity);
 
         if (ef->getEntryMethod() == nullptr) {
@@ -219,8 +220,11 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext &context) {
 }
 
 SystemCConsumer::SystemCConsumer(CompilerInstance &ci)
-    : os_{llvm::errs()}, _sm{ci.getSourceManager()},
-      _context{ci.getASTContext()}, _ci{ci}, _systemcModel{nullptr} {}
+    : os_{llvm::errs()},
+      _sm{ci.getSourceManager()},
+      _context{ci.getASTContext()},
+      _ci{ci},
+      _systemcModel{nullptr} {}
 
 SystemCConsumer::~SystemCConsumer() {
   if (_systemcModel != nullptr) {
