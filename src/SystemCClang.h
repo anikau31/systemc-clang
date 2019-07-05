@@ -60,7 +60,7 @@ namespace scpar {
 class SystemCConsumer : public ASTConsumer,
                         public RecursiveASTVisitor<SystemCConsumer> {
 public:
-  llvm::raw_ostream &_os;
+  llvm::raw_ostream &os_;
   SourceManager &_sm;
 
   SystemCConsumer(CompilerInstance &);
