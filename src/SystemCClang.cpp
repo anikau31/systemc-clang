@@ -29,7 +29,7 @@ bool SystemCConsumer::fire() {
   for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
          mitend = scmodules.end();  mit != mitend; ++mit) {
     ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
-    //md->setTemplateParameters( scmod.getTemplateParameters() );
+    // md->setTemplateParameters( scmod.getTemplateParameters() );
     //       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
     _systemcModel->addModuleDecl(md);
   }
