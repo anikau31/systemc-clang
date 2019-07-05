@@ -39,7 +39,7 @@ json FindGlobalEvents::dump_json() {
   json globals_j{};
 
 
-  for ( auto const & event : _globalEvents ) {
+  for ( auto const & event : globalEvents ) {
     globals_j["global_declarations"].emplace_back( event.first ) ;
   }
   std::cout << globals_j.dump(4) << endl;
