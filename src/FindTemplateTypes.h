@@ -6,132 +6,68 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/Type.h"
 #include "llvm/Support/raw_ostream.h"
-#include <set>
 #include <string>
 #include <vector>
 
 #include <iostream>
 
 namespace scpar {
-using namespace clang;
-using namespace std;
+  using namespace clang;
+  using namespace std;
 
-// This class is going to find the arguments from templates
-class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
-public:
-  /// Typedefs
-  typedef vector<pair<string, const Type *>> type_vector_t;
-  typedef vector<pair<string, const Type *>> argVectorType;
+  // This class holds the name of the type, and a pointer to the
+  // type object.
+  class TemplateType {
+  public:
+    TemplateType( string, const Type* );
+    ~TemplateType( );
+    TemplateType( const TemplateType& );
 
-  // Constructor
-  FindTemplateTypes() {}
+    string getTypeName() const;
+    const Type* getTypePtr();
 
-  /// Copy constructor
-  FindTemplateTypes(const FindTemplateTypes &rhs) {
-    copy(rhs.template_types_.begin(), rhs.template_types_.end(),
-         back_inserter(template_types_));
-  }
+  private:
+    string type_name_;
+    const Type * type_ptr_;
+  };
 
-  FindTemplateTypes(const FindTemplateTypes *rhs) {
-    copy(rhs->template_types_.begin(), rhs->template_types_.end(),
-         back_inserter(template_types_));
-  }
+  // This class is going to find the arguments from templates
+  class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
+  public:
+    /// Typedefs
+    typedef TemplateType TemplateTypePtr;
+    //typedef vector< TemplateTypePtr > type_vector_t_new;
+    //typedef vector<pair<string, const Type *>> type_vector_t;
+    typedef vector< TemplateTypePtr > type_vector_t;
+    typedef vector< TemplateTypePtr > argVectorType;
+    //typedef vector<pair<string, const Type *>> argVectorType;
 
-  string getTemplateType() {
-    string s{};
+    // Constructor
+    FindTemplateTypes();
 
-    // type_vector_t::iterator
-    for (auto mit = template_types_.begin(); mit != template_types_.end();
-         ++mit) {
-      // for ( auto const &mit: template_types_ ) {
-      if (mit != template_types_.begin()) {
-        s += "<";
-      }
-      s += mit->first;
-      if (mit != template_types_.begin()) {
-        s += ">";
-      }
-    }
-    return s;
-  }
+    /// Copy constructor
+    FindTemplateTypes(const FindTemplateTypes &rhs);
+    FindTemplateTypes(const FindTemplateTypes *rhs);
 
-  type_vector_t Enumerate(const Type *type) {
-    template_types_.clear();
-    if (!type) {
-      return template_types_;
-    }
+    ~FindTemplateTypes();
+    string getTemplateType();
+    bool VisitType(Type *type);
+    bool VisitIntegerLiteral(IntegerLiteral *l);
+    type_vector_t Enumerate(const Type *type);
+    type_vector_t getTemplateArgumentsType();
+    void printTemplateArguments(llvm::raw_ostream &os);
+    vector<string> getTemplateArguments();
+    size_t size();
 
-    TraverseType(QualType(type, 0));
-    return template_types_;
-  }
+  private:
+    // (string, Type*)
+    // Classes such as sc_port and sc_in can have nested types within it.
+    // For example: sc_in< sc_int<16> >
+    // The general way to handle this would be to have a vector starting from the
+    // outside type to the inside type. 
 
-  bool VisitType(Type *type) {
-    QualType q{type->getCanonicalTypeInternal()};
-    //      cout << "\n###### Type: " << q.getAsString() << " \n" ;
-    if (type->isBuiltinType()) {
-      template_types_.push_back(
-          pair<string, const Type *>(q.getAsString(), type));
-      return true;
-    }
-
-    CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
-    if (p_cxx_record != nullptr) {
-      IdentifierInfo *info{p_cxx_record->getIdentifier()};
-      if (info != nullptr) {
-        template_types_.push_back(
-            pair<string, const Type *>(info->getNameStart(), type));
-      }
-    }
-    return true;
-  }
-
-  bool VisitIntegerLiteral(IntegerLiteral *l) {
-    //_os << "\n####### IntegerLiteral: " << l->getValue().toString(10,true) <<
-    //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
-    //"== type name: " << l->getType().getAsString() << "\n";
-    template_types_.push_back(pair<string, const Type *>(
-        l->getValue().toString(10, true), l->getType().getTypePtr()));
-
-    return true;
-  }
-
-  type_vector_t getTemplateArgumentsType() { return template_types_; }
-
-  void printTemplateArguments(llvm::raw_ostream &os) {
-    vector<string> template_arguments;
-    for (auto const &mit : template_types_) {
-      // os << "\n port type: " << mit.first << "  ";
-      //<< ", type ptr: " << mit.second;
-      // os << "\n";
-      template_arguments.push_back(mit.first);
-    }
-
-    // Print the template arguments to the output stream
-    os << ", " << template_arguments.size() << " arguments, ";
-    for (auto const &targ : template_arguments) {
-      os << targ << " ";
-    }
-  }
-
-  vector<string> getTemplateArguments() {
-    vector<string> template_arguments;
-    // type_vector_t::iterator
-    //      for ( auto mit = template_types_.begin(); mit !=
-    //      template_types_.end(); ++mit )  {
-    for (auto const &mit : template_types_) {
-      if (mit.first == "sc_in" || mit.first == "sc_out" ||
-          mit.first == "sc_inout") {
-        break;
-      }
-      template_arguments.push_back(mit.first);
-    }
-    return template_arguments;
-  }
-
-  size_t size() { return template_types_.size(); }
-
-private:
-  type_vector_t template_types_;
-};
+    type_vector_t template_types_;
+    //type_vector_t_new template_types_new_;
+  };
 } // namespace scpar
 #endif

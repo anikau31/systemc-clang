@@ -33,21 +33,23 @@ bool FindTLMInterfaces::VisitFieldDecl(FieldDecl *fd) {
 
   te->Enumerate(tp);
 
-  FindTemplateTypes::argVectorType args = te->getTemplateArgumentsType();
+  FindTemplateTypes::type_vector_t args = te->getTemplateArgumentsType();
   FindTemplateTypes::argVectorType::iterator ait = args.begin();
   if (args.size() == 0) {
     return true;
   }
 
-  if (ait->first == "sc_fifo_in") {
+  // There could be more than one type though.  Are you only referring to the first one?
+  string template_type_name { ait->getTypeName() };
+  if ( template_type_name == "sc_fifo_in") {
     _inInterfaces.insert(kvType(fname, te));
   }
 
-  else if (ait->first == "sc_fifo_out") {
+  else if ( template_type_name == "sc_fifo_out") {
     _outInterfaces.insert(kvType(fname, te));
   }
 
-  else if (ait->first == "sc_fifo_inout") {
+  else if ( template_type_name == "sc_fifo_inout") {
     _inoutInterfaces.insert(kvType(fname, te));
   }
 

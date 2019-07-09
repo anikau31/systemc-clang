@@ -14,17 +14,20 @@ class FindModule : public RecursiveASTVisitor<FindModule> {
 public:
   FindModule(CXXRecordDecl *, llvm::raw_ostream &);
   virtual bool VisitCXXRecordDecl(CXXRecordDecl *decl);
+
   virtual ~FindModule();
 
   void dump();
   string getModuleName() const;
   bool isSystemCModule() const;
+    //  vector<string> getTemplateParameters() const;
 
 private:
   CXXRecordDecl *declaration_;
   llvm::raw_ostream &os_;
   bool is_systemc_module_;
   string module_name_;
+//  TemplateParameterList *template_parameters_;
 };
 } // namespace scpar
 #endif

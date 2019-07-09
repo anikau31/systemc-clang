@@ -45,8 +45,9 @@ bool FindSensitivity::VisitMemberExpr(MemberExpr *e) {
     return true;
 
   /// Is it a port type
-  if (!(ait->first == "sc_in" || ait->first == "sc_out" ||
-        ait->first == "sc_inout")) {
+  string port_type{ ait->getTypeName() };
+  if (!(port_type == "sc_in" || port_type == "sc_out" ||
+        port_type == "sc_inout")) {
     return true;
   }
 

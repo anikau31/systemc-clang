@@ -1,7 +1,7 @@
 add_library (libsystemc-clang
   ModuleDecl.cpp
   FindModule.cpp
-  SCModules.cpp
+  FindSCModules.cpp
   FindSCMain.cpp
   FindPorts.cpp
   FindTLMInterfaces.cpp
@@ -10,17 +10,19 @@ add_library (libsystemc-clang
   FindEntryFunctions.cpp
   FindSensitivity.cpp
   FindWait.cpp
-  FindNotify.cpp  
+  FindNotify.cpp
   FindSignals.cpp
   FindSimTime.cpp
-  FindConstructor.cpp 
+  FindTemplateTypes.cpp
+  FindConstructor.cpp
   SystemCClang.cpp
   FindNetlist.cpp
   FindArgument.cpp
-  Automata.cpp 
+  FindTemplateParameters.cpp
+  Automata.cpp
   SuspensionAutomata.cpp
-  SCuitable/GlobalSuspensionAutomata.cpp  
-  SCuitable/FindGPUMacro.cpp  
+  SCuitable/GlobalSuspensionAutomata.cpp
+  SCuitable/FindGPUMacro.cpp
 ####################################
 #From here the files are for the reflection database
 ####################################
@@ -35,7 +37,7 @@ add_library (libsystemc-clang
   InterfaceDecl.cpp
   Model.cpp
   WaitCalls.cpp
-  NotifyCalls.cpp 
+  NotifyCalls.cpp
   EventContainer.cpp
-    
+
   )

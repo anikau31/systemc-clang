@@ -4,60 +4,47 @@
 using namespace scpar;
 
 FindSignals::~FindSignals() {
-  //  _os << "[[ Destructor FindSignals ]]\n";
-  for (FindSignals::signalMapType::iterator sit = _signals->begin();
-       sit != _signals->end(); sit++) {
-    delete sit->second;
+  for ( auto const & sit : signalcontainer_map_ ) {
+    delete sit.second;
   }
-  _signals->clear();
-  delete _signals;
+
+  signalcontainer_map_.clear();
 }
 
-FindSignals::FindSignals(CXXRecordDecl *d, llvm::raw_ostream &os) : _os(os) {
-  _signals = new FindSignals::signalMapType();
-  state = 0;
+FindSignals::FindSignals(CXXRecordDecl *d, llvm::raw_ostream &os) : os_(os) {
   TraverseDecl(d);
 }
 
 bool FindSignals::VisitFieldDecl(FieldDecl *fd) {
-  QualType q = fd->getType();
+  QualType q {fd->getType() };
 
   if (IdentifierInfo *info = fd->getIdentifier()) {
-    //    fname = info->getNameStart();
-    //    _os << "\n+ Name: " << info->getNameStart();
-    //    _os << "\n+ Type: " << q.getAsString();
-    //   _os << "\n+ also name: " << fd->getNameAsString();
-
     /// We are going to store these.  So use pointers.
-    const Type *tp = q.getTypePtr();
-    FindTemplateTypes *te = new FindTemplateTypes();
+    const Type *tp{ q.getTypePtr() };
+    FindTemplateTypes *te { new FindTemplateTypes() };
 
     te->Enumerate(tp);
-    // te->printTemplateArguments(_os);
+    string tt{ te->getTemplateType() };
 
-    string tt = te->getTemplateType();
-
-    //    _os << "OUTPUT ============ " << tt << "\n";
-    if ((signed)tt.find("sc_signal") == -1) {
+    // If string is not found
+    if ( tt.find( "sc_signal") == string::npos ) {
       delete te;
       return true;
     }
-    SignalContainer *sc = new SignalContainer(fd->getNameAsString(), te, fd);
 
-    _signals->insert(FindSignals::signalPairType(fd->getNameAsString(), sc));
+    SignalContainer *sc = new SignalContainer(fd->getNameAsString(), te, fd);
+    signalcontainer_map_.insert(FindSignals::signalPairType(fd->getNameAsString(), sc));
   }
   return true;
 }
 
-FindSignals::signalMapType *FindSignals::getSignals() { return _signals; }
+FindSignals::signalMapType FindSignals::getSignals() const { return signalcontainer_map_; }
 
 void FindSignals::dump() {
-  _os << "\n================= Find Signals  ================\n";
-
-  for (FindSignals::signalMapType::iterator sit = _signals->begin();
-       sit != _signals->end(); sit++) {
-    _os << sit->second;
-    sit->second->dump(_os);
+  os_ << "\n================= Find Signals  ================\n";
+  for (auto const & sit : signalcontainer_map_ ) {
+    os_ << sit.second;
+    sit.second->dump(os_);
   }
-  _os << "\n================= END Find Ports ================\n\n";
+  os_ << "\n================= END Find Ports ================\n\n";
 }

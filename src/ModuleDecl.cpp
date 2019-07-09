@@ -5,12 +5,17 @@ using namespace scpar;
 
 using std::string;
 
-ModuleDecl::ModuleDecl() : _moduleName{"NONE"}, _classdecl{nullptr} {}
+ModuleDecl::ModuleDecl() : module_name_{"NONE"},
+                           class_decl_{nullptr},
+                           constructor_stmt_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
-    : _moduleName{name}, _classdecl{decl} {}
+    : module_name_{name}, class_decl_{decl} {}
 
 ModuleDecl::~ModuleDecl() {
+
+  class_decl_ = nullptr;
+  constructor_stmt_ = nullptr;
 
   // Delete all pointers in ports.
   for (auto input_port : _iports) {
@@ -32,9 +37,16 @@ ModuleDecl::~ModuleDecl() {
   _ioports.clear();
 }
 
-void ModuleDecl::setModuleName(const string &name) { _moduleName = name; }
+void ModuleDecl::setTemplateParameters(const vector<string> & parm_list) {
+    template_parameters_ = parm_list;
+}
 
-void ModuleDecl::addInstances(vector<string> instanceList) {
+vector<string> ModuleDecl::getTemplateParameters() const {
+    return template_parameters_; }
+
+void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
+
+void ModuleDecl::addInstances(const vector<string> & instanceList) {
   _instanceList = instanceList;
 }
 
@@ -42,17 +54,17 @@ void ModuleDecl::addSignalBinding(map<string, string> portSignalMap) {
   _portSignalMap.insert(portSignalMap.begin(), portSignalMap.end());
 }
 
-void ModuleDecl::addSignals(FindSignals::signalMapType *signal_map) {
-  for (auto sit : *signal_map) {
+void ModuleDecl::addSignals(const FindSignals::signalMapType & signal_map) {
+  for (auto sit : signal_map) {
     string name = sit.first;
 
     // It is important to create new objects.
     // This is because the objects created during Find*
     // may go outside scope, and free up allocated memory.
-    SignalContainer *sc = new SignalContainer(*sit.second);
-    Signal *sig = new Signal(name, sc);
+    SignalContainer *sc{ new SignalContainer(*sit.second) };
+    Signal *sig { new Signal(name, sc) };
 
-    _signals.insert(ModuleDecl::signalPairType(name, sig));
+    _signals.insert( ModuleDecl::signalPairType(name, sig) );
   }
 }
 
@@ -79,7 +91,7 @@ void ModuleDecl::addOutputPorts(FindPorts::PortType p) {
 void ModuleDecl::addInputOutputPorts(FindPorts::PortType p) {
   for (auto mit : p) {
     _ioports.insert(
-        portPairType(mit.first, new PortDecl(mit.first, mit.second)));
+                    portPairType(mit.first, new PortDecl(mit.first, mit.second)));
   }
 }
 
@@ -108,12 +120,12 @@ void ModuleDecl::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   //  p.end();    mit != mite; mit++) {
   for (auto mit : p) {
     _iointerfaces.insert(
-        interfacePairType(mit.first, new InterfaceDecl(mit.first, mit.second)));
+                         interfacePairType(mit.first, new InterfaceDecl(mit.first, mit.second)));
   }
 }
 
 void ModuleDecl::addConstructor(Stmt *constructor) {
-  _constructorStmt = constructor;
+  constructor_stmt_ = constructor;
 }
 
 void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
@@ -145,9 +157,9 @@ void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
       break;
     }
     }
-    _processes.insert(
-        processPairType(entryName, new ProcessDecl(entryType, entryName,
-                                                   ef->_entryMethodDecl, ef)));
+    process_map_.insert(
+                        processPairType(entryName, new ProcessDecl(entryType, entryName,
+                                                                   ef->_entryMethodDecl, ef)));
   }
 }
 
@@ -159,7 +171,9 @@ vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
 
 int ModuleDecl::getNumInstances() { return _instanceList.size(); }
 
-ModuleDecl::processMapType ModuleDecl::getProcessMap() { return _processes; }
+ModuleDecl::signalMapType ModuleDecl::getSignals() { return _signals; }
+
+ModuleDecl::processMapType ModuleDecl::getProcessMap() { return process_map_; }
 
 ModuleDecl::portMapType ModuleDecl::getOPorts() { return _oports; }
 
@@ -179,13 +193,13 @@ ModuleDecl::interfaceMapType ModuleDecl::getIOInterfaces() {
   return _iointerfaces;
 }
 
-string ModuleDecl::getName() { return _moduleName; }
+string ModuleDecl::getName() { return module_name_; }
 
-bool ModuleDecl::isModuleClassDeclNull() { return (_classdecl == nullptr); }
+bool ModuleDecl::isModuleClassDeclNull() { return (class_decl_ == nullptr); }
 
 CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
-  assert(!(_classdecl == nullptr));
-  return _classdecl;
+  assert(!(class_decl_ == nullptr));
+  return class_decl_;
 }
 
 void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
@@ -211,16 +225,16 @@ void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpProcesses(raw_ostream &os, int tabn) {
-  if (_processes.size() == 0) {
-    os << "none \n";
-  } else {
-    for (auto pit : _processes) {
-      ProcessDecl *pd = pit.second;
-      pd->dump(os, tabn);
-      os << "\n";
+
+  json process_j;
+  process_j["number_of_processes"] = process_map_.size();
+  for (auto pit : process_map_) {
+    ProcessDecl *pd { pit.second };
+    process_j[pit.first] = pd->dump_json( os );
     }
-  }
-  os << "\n";
+
+  os << "Processes\n";
+  os << process_j.dump(4) << "\n";
 }
 
 void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
@@ -261,70 +275,74 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
-  os << "Input ports: " << _iports.size();
+  //  os << "\nInput ports: " << _iports.size() << "\n";
 
-  if (_iports.size() == 0) {
-    os << "\n none \n";
-  } else {
-    os << "\n ";
+  json iport_j, oport_j, ioport_j;
+  iport_j["number_of_in_ports"] = _iports.size();
+
     for (auto mit : _iports) {
-      mit.second->dump(os);
-      os << "\n ";
+      iport_j[mit.first] = mit.second->dump_json(os);
     }
-    os << "\n";
-  }
 
-  os << "Output ports: " << _oports.size();
-  if (_oports.size() == 0) {
-    os << "\n none \n";
-  } else {
-    os << "\n ";
+    //    os << "\nOutput ports: " << _oports.size() << "\n";
+    oport_j["number_of_output_ports"] = _oports.size();
     for (auto mit : _oports) {
-      mit.second->dump(os, tabn);
-      os << "\n";
-    }
-  }
+      oport_j[mit.first] = mit.second->dump_json(os);
 
-  os << "Inout ports: " << _ioports.size();
-  if (_ioports.size() == 0) {
-    os << "\n none \n";
-  } else {
-    os << "\n ";
-    for (auto mit : _oports) {
-      mit.second->dump(os, tabn);
-      os << "\n ";
     }
-  }
-  os << "\n";
+
+    //    os << "\nInout ports: " << _ioports.size() << "\n";
+    ioport_j["number_of_inout_ports"] = _ioports.size();
+    for (auto mit : _ioports) {
+      ioport_j[mit.first] = mit.second->dump_json(os);
+    }
+
+    os << "Ports\n";
+    os << iport_j.dump(4) << "\n" << oport_j.dump(4) << "\n"
+       << ioport_j.dump(4)<< "\n";
 }
 
 void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
-  if (_signals.size() == 0) {
-    os << "none \n";
-  } else {
-    for (auto sit : _signals) {
-      Signal *s = sit.second;
-      s->dump(os, tabn);
-      os << "\n";
-    }
+  json signal_j;
+  signal_j["number_of_signals"] = _signals.size();
+  for (auto sit : _signals) {
+    Signal *s = sit.second;
+    signal_j[sit.first] = s->dump_json(os);
   }
-  os << "\n";
+
+  os << "Signals\n";
+  os << signal_j.dump(4) << "\n";
 }
 
 void ModuleDecl::dump(raw_ostream &os) {
-  //  os << "ModuleDecl " << this << " " << _moduleName
-  //     << " CXXRecordDecl " << _classdecl << "\n";
-
   os << "\n";
+  os << "\n# Instances:\n";
+  dumpInstances(os, 4);
   os << "# Port Declaration:\n";
   dumpPorts(os, 4);
-  os << "# Signal Declaration:\n";
+  os << "\n# Signal Declaration:\n";
   dumpSignals(os, 4);
-  os << "# Processes:\n";
+  os << "\n# Processes:\n";
   dumpProcesses(os, 4);
-  os << "# Instances:\n";
-  dumpInstances(os, 4);
   os << "# Signal binding:\n";
   dumpSignalBinding(os, 4);
+
+  dump_json();
   os << "\n=======================================================\n";
+
+}
+
+json ModuleDecl::dump_json() {
+
+  json module_j;
+
+  module_j["module_name"] = module_name_;
+  // Template parameters.
+  for (const auto & parm: template_parameters_) {
+      module_j["template_parameters"].push_back( parm );
+  }
+
+
+  std::cout << module_j.dump(4);
+  return module_j;
 }

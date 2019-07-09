@@ -89,6 +89,7 @@ public:
 
     return s.str();
   }
+
 };
 } // namespace scpar
 #endif

@@ -10,7 +10,7 @@ set -x LLVM_BUILD_DIR /home/$USER/bin/clang-7.0.0/
 
 # Path where SystemC is installed
 # SET this.
-set -x SYSTEMC /home/$USER/code/systemc-2.3.3/systemc/
+set -x SYSTEMC /home/$USER/code/systemc-2.3.3/systemc
 
 # Path for the systemc-clang build directory
 # SET this.
@@ -29,7 +29,7 @@ set -x LLVM_CXX_FLAGS (eval $LLVMCONFIG --cxxflags)
 
 # Generate all the flags.
 # -fno-aligned-allocation needed for c++17
-set -x LLVM_CXX_FLAGS "$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -fno-aligned-allocation"
+set -x LLVM_CXX_FLAGS "$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -fno-aligned-allocation -Wsign-compare"
 set -x LLVM_LIBS (eval $LLVMCONFIG --libs)
 set -x LLVM_LD_FLAGS (eval $LLVMCONFIG --ldflags)
 set -x LLVM_LD_FLAGS (echo $LLVM_LD_FLAGS | sed 's/ *$//g')

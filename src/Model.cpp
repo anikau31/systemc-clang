@@ -1,5 +1,5 @@
 #include "Model.h"
-#include "SCModules.h"
+//#include "FindSCModules.h"
 #include <string>
 
 using namespace scpar;
@@ -104,10 +104,10 @@ void Model::updateModuleDecl() {
   }
 }
 
-void Model::addSCModules(SCModules *m) {
-  SCModules::moduleMapType mods = m->getSystemCModulesMap();
+void Model::addSCModules(FindSCModules *m) {
+  FindSCModules::moduleMapType mods = m->getSystemCModulesMap();
 
-  for (SCModules::moduleMapType::iterator mit = mods.begin(); mit != mods.end();
+  for (FindSCModules::moduleMapType::iterator mit = mods.begin(); mit != mods.end();
        mit++) {
     addModuleDecl(new ModuleDecl(mit->first, mit->second));
   }

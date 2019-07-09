@@ -1,0 +1,45 @@
+#######################################################
+# Author: Hiren Patel
+# Adapted
+# Credit: https://gist.github.com/Kocha/1953411
+#
+########################################################
+SYSTEMC 	?=
+SYSTEMC_HOME    ?= $(SYSTEMC)
+TARGET_ARCH     = linux64
+
+SYSTEMC_INC_DIR = $(SYSTEMC_HOME)/include
+SYSTEMC_LIB_DIR = $(SYSTEMC_HOME)/lib-$(TARGET_ARCH)
+
+# LIBTOOL Setting
+SHELL           = /bin/bash
+LIBTOOL_DIR     = /usr/bin
+LIBTOOL         = $(SHELL) $(LIBTOOL_DIR)/libtool
+
+GXX             = g++
+GCC             = gcc
+LD              = g++
+
+FLAGS           = -g -Wall -pedantic -Wno-long-long \
+                 -DSC_INCLUDE_DYNAMIC_PROCESSES -fpermissive \
+                 -I$(SYSTEMC_INC_DIR)
+LDFLAGS         = -L$(SYSTEMC_LIB_DIR) -lsystemc -lm
+
+TESTS = .
+SRCS = $(wildcard $(TESTS)/*.cpp)
+OBJS=$(SRCS:.cpp=.o)
+TARGETS = $(SRCS:.cpp=.x)
+
+$(TARGETS) : $(OBJS)
+	$(LIBTOOL) --mode=link --tag=CXX g++ -o $@ $(OBJS) $(LDFLAGS)
+
+.cpp.o:
+	$(LIBTOOL) --mode=compile g++ -c $(FLAGS) $<
+
+%.o: %.c
+	$(LIBTOOL) --mode=compile gcc -Wall -c $<
+
+.PHONY: clean
+clean:
+	rm -f $(TESTS)/*.o $(TESTS)/*.lo
+	rm -rf $(TESTS)/.libs

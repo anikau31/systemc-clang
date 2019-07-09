@@ -45,11 +45,13 @@ using namespace clang::tooling;
 #include "FindTLMInterfaces.h"
 #include "FindWait.h"
 #include "Model.h"
-#include "SCModules.h"
+#include "FindSCModules.h"
 #include "SCuitable/FindGPUMacro.h"
 #include "SCuitable/GlobalSuspensionAutomata.h"
 #include "SuspensionAutomata.h"
 #include "Utility.h"
+#include "FindTemplateParameters.h"             
+
 
 using namespace clang;
 
@@ -58,7 +60,7 @@ namespace scpar {
 class SystemCConsumer : public ASTConsumer,
                         public RecursiveASTVisitor<SystemCConsumer> {
 public:
-  llvm::raw_ostream &_os;
+  llvm::raw_ostream &os_;
   SourceManager &_sm;
 
   SystemCConsumer(CompilerInstance &);
