@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Required packages
-find_package(nlohmann_json 3.2.0 REQUIRED)
+# TODO: Add the code to find library and/or the specific in-source file.
+# find_package(nlohmann_json 3.2.0 REQUIRED)
 
 
 option (USE_SAUTO
@@ -117,8 +118,8 @@ add_executable(
   ${TARGET}
   ${ROOT_CPP} )
 
-target_link_libraries(${TARGET} ${SRC_LIB} nlohmann_json::nlohmann_json)
-target_link_libraries(${TARGET} ${SAUTO_LIB} nlohmann_json::nlohmann_json)
+target_link_libraries(${TARGET} ${SRC_LIB}) #nlohmann_json::nlohmann_json)
+target_link_libraries(${TARGET} ${SAUTO_LIB}) # nlohmann_json::nlohmann_json)
 
 foreach (clang_lib ${CLANG_LIBS})
   target_link_libraries( ${TARGET} ${clang_lib} )
