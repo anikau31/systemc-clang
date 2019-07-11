@@ -5,27 +5,28 @@ set(CMAKE_CXX_STANDARD 17)
 # Always keep it on
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Required packages
+find_package(nlohmann_json 3.2.0 REQUIRED)
+
+
 option (USE_SAUTO
   "Use suspension-automata library." OFF
   )
-set (ROOT_CPP
-  driver-tooling.cpp
-  #      ToolingTest.cpp
-  #      ToolingTutorial.cpp
+
+option (USE_SILENT_BUILD
+  "Silent as many warnings as possible." OFF
   )
 
-#  set (CLANG_SRC_DIR
-#      $ENV{CLANG_SRC_DIR}
-#      )
-#  set (LLVM_SRC_DIR
-#      $ENV{LLVM_SRC_DIR}
-#      )
+set (ROOT_CPP
+  driver-tooling.cpp
+  )
 
 set (LLVM_BUILD_DIR
   $ENV{LLVM_BUILD_DIR}
   )
+
 set (CMAKE_CXX_FLAGS
-  "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -DUSE_SAUTO=off"
+  "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -DUSE_SAUTO=off "
   )
 
 if (USE_SAUTO)
@@ -33,6 +34,12 @@ if (USE_SAUTO)
     "-DUSE_SAUTO=on ${CMAKE_CXX_FLAGS}"
     )
 endif(USE_SAUTO)
+
+if (USE_SILENT_BUILD)
+  set (CMAKE_CXX_FLAGS
+    "-DUSE_SILENT_BUILD=on ${CMAKE_CXX_FLAGS} -Wcovered-switch-default"
+    )
+endif(USE_SILENT_BUILD)
 
 
 set (LLVM_LD_FLAGS
@@ -110,8 +117,8 @@ add_executable(
   ${TARGET}
   ${ROOT_CPP} )
 
-target_link_libraries(${TARGET} ${SRC_LIB})
-target_link_libraries(${TARGET} ${SAUTO_LIB})
+target_link_libraries(${TARGET} ${SRC_LIB} nlohmann_json::nlohmann_json)
+target_link_libraries(${TARGET} ${SAUTO_LIB} nlohmann_json::nlohmann_json)
 
 foreach (clang_lib ${CLANG_LIBS})
   target_link_libraries( ${TARGET} ${clang_lib} )
