@@ -4,6 +4,8 @@ project(systemc-clang)
 set(CMAKE_CXX_STANDARD 17)
 # Always keep it on
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#  Make verbose on?
+#set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
 # Required packages
 # TODO: Add the code to find library and/or the specific in-source file.
@@ -27,7 +29,7 @@ set (LLVM_BUILD_DIR
   )
 
 set (CMAKE_CXX_FLAGS
-  "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -DUSE_SAUTO=off "
+   "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -DUSE_SAUTO=off -Wcovered-switch-default"
   )
 
 if (USE_SAUTO)
