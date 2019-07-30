@@ -1,10 +1,11 @@
+
 #######################################################
 # Author: Hiren Patel
 # Adapted
-# Credit: https://gist.github.com/Kocha/1953411
+# Credit: https://stackoverflow.com/questions/5950395/makefile-to-compile-multiple-c-programs
 #
 ########################################################
-SYSTEMC 	?=
+SYSTEMC 				?=
 SYSTEMC_HOME    ?= $(SYSTEMC)
 TARGET_ARCH     = linux64
 
@@ -25,21 +26,81 @@ FLAGS           = -g -Wall -pedantic -Wno-long-long \
                  -I$(SYSTEMC_INC_DIR)
 LDFLAGS         = -L$(SYSTEMC_LIB_DIR) -lsystemc -lm
 
+############################################################################
+# 'A Generic Makefile for Building Multiple main() Targets in $PWD'
+# Author:  Robert A. Nader (2012)
+# Email: naderra at some g
+# Web: xiberix
+############################################################################
+#  The purpose of this makefile is to compile to executable all C source
+#  files in CWD, where each .c file has a main() function, and each object
+#  links with a common LDFLAG.
+#
+#  This makefile should suffice for simple projects that require building
+#  similar executable targets.  For example, if your CWD build requires
+#  exclusively this pattern:
+#
+#  cc -c $(CFLAGS) main_01.c
+#  cc main_01.o $(LDFLAGS) -o main_01
+#
+#  cc -c $(CFLAGS) main_2..c
+#  cc main_02.o $(LDFLAGS) -o main_02
+#
+#  etc, ... a common case when compiling the programs of some chapter,
+#  then you may be interested in using this makefile.
+#
+#  What YOU do:
+#
+#  Set PRG_SUFFIX_FLAG below to either 0 or 1 to enable or disable
+#  the generation of a .exe suffix on executables
+#
+#  Set CFLAGS and LDFLAGS according to your needs.
+#
+#  What this makefile does automagically:
+#
+#  Sets SRC to a list of *.c files in PWD using wildcard.
+#  Sets PRGS BINS and OBJS using pattern substitution.
+#  Compiles each individual .c to .o object file.
+#  Links each individual .o to its corresponding executable.
+#
+###########################################################################
+#
+PRG_SUFFIX_FLAG := 1
+#
+## ==================- NOTHING TO CHANGE BELOW THIS LINE ===================
+##
 TESTS = .
 SRCS = $(wildcard $(TESTS)/*.cpp)
-OBJS=$(SRCS:.cpp=.o)
-TARGETS = $(SRCS:.cpp=)
+PRGS := $(patsubst %.cpp,%,$(SRCS))
+PRG_SUFFIX=.x
+BINS := $(patsubst %,%$(PRG_SUFFIX),$(PRGS))
+## OBJS are automagically compiled by make.
+OBJS := $(patsubst %,%.o,$(PRGS))
+##
+all : $(BINS)
+##
+## For clarity sake we make use of:
+.SECONDEXPANSION:
+OBJ = $(patsubst %$(PRG_SUFFIX),%.o,$@)
+ifeq ($(PRG_SUFFIX_FLAG),0)
+        BIN = $(patsubst %$(PRG_SUFFIX),%,$@)
+else
+        BIN = $@
+endif
+## Compile the executables
+%$(PRG_SUFFIX) : $(OBJS)
+	$(LIBTOOL) --mode=link --tag=CXX g++ -o $(BIN) $< $(FLAGS) $(LDFLAGS) 
 
-$(TARGETS) : $(OBJS)
-	$(LIBTOOL) --mode=link --tag=CXX g++ -o $@ $@.o $(LDFLAGS)
-
-.cpp.o:
+%.o: %.cpp
 	$(LIBTOOL) --mode=compile g++ -c $(FLAGS) $<
 
-%.o: %.c
-	$(LIBTOOL) --mode=compile gcc -Wall -c $<
-
-.PHONY: clean
 clean:
-	rm -f $(TESTS)/*.o $(TESTS)/*.lo
-	rm -rf $(TESTS)/.libs
+ifeq ($(PRG_SUFFIX_FLAG),0)
+	$(RM) $(PRGS) *.lo 
+else
+	$(RM) $(BINS) *.lo 
+endif
+
+##
+rebuild: veryclean all
+
