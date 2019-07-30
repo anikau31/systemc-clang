@@ -28,10 +28,10 @@ LDFLAGS         = -L$(SYSTEMC_LIB_DIR) -lsystemc -lm
 TESTS = .
 SRCS = $(wildcard $(TESTS)/*.cpp)
 OBJS=$(SRCS:.cpp=.o)
-TARGETS = $(SRCS:.cpp=.x)
+TARGETS = $(SRCS:.cpp=)
 
 $(TARGETS) : $(OBJS)
-	$(LIBTOOL) --mode=link --tag=CXX g++ -o $@ $(OBJS) $(LDFLAGS)
+	$(LIBTOOL) --mode=link --tag=CXX g++ -o $@ $@.o $(LDFLAGS)
 
 .cpp.o:
 	$(LIBTOOL) --mode=compile g++ -c $(FLAGS) $<
