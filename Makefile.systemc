@@ -7,7 +7,7 @@
 ########################################################
 SYSTEMC 				?=
 SYSTEMC_HOME    ?= $(SYSTEMC)
-TARGET_ARCH     = linux64
+TARGET_ARCH     ?= linux64
 
 SYSTEMC_INC_DIR = $(SYSTEMC_HOME)/include
 SYSTEMC_LIB_DIR = $(SYSTEMC_HOME)/lib-$(TARGET_ARCH)
@@ -75,20 +75,21 @@ PRGS := $(patsubst %.cpp,%,$(SRCS))
 PRG_SUFFIX=.x
 BINS := $(patsubst %,%$(PRG_SUFFIX),$(PRGS))
 ## OBJS are automagically compiled by make.
-OBJS := $(patsubst %,%.o,$(PRGS))
+OBJ := $(patsubst %.cpp,%.o,$(SRCS))
 ##
 all : $(BINS)
 ##
 ## For clarity sake we make use of:
 .SECONDEXPANSION:
-OBJ = $(patsubst %$(PRG_SUFFIX),%.o,$@)
+#OBJ = $(patsubst %$(PRG_SUFFIX),%.o,$@)
 ifeq ($(PRG_SUFFIX_FLAG),0)
         BIN = $(patsubst %$(PRG_SUFFIX),%,$@)
 else
         BIN = $@
 endif
 ## Compile the executables
-%$(PRG_SUFFIX) : $(OBJS)
+#%$(PRG_SUFFIX) : $(OBJ)
+%.x : %.o
 	$(LIBTOOL) --mode=link --tag=CXX g++ -o $(BIN) $< $(FLAGS) $(LDFLAGS) 
 
 %.o: %.cpp
@@ -102,5 +103,5 @@ else
 endif
 
 ##
-rebuild: veryclean all
+#rebuild: veryclean all
 
