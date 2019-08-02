@@ -156,11 +156,10 @@ SuspensionAutomata::SuspensionAutomata(vector<WaitContainer *> waitCalls,
                                        raw_ostream &os)
     : _d(d), _a(a), _os(os) {
 
-  for (int i = 0; i < waitCalls.size(); i++) {
-    WaitContainer *wc = waitCalls.at(i);
+  for (std::size_t i {0}; i < waitCalls.size(); i++) {
+    WaitContainer *wc {waitCalls.at(i)}; 
     _waitCalls.push_back(wc->getASTNode());
   }
-  //_waitCalls = waitCalls;
 }
 
 SuspensionAutomata::~SuspensionAutomata() {}
@@ -187,8 +186,8 @@ bool SuspensionAutomata::isWaitCall(const CFGStmt *cs) {
   if (!m) {
     return f;
   }
-  for (int i = 0; i < _waitCalls.size(); i++) {
-    CallExpr *ce = _waitCalls.at(i);
+  for (std::size_t i {0}; i < _waitCalls.size(); i++) {
+    CallExpr *ce {_waitCalls.at(i)};
     if (m == ce) {
       f = true;
     }
@@ -291,7 +290,7 @@ void SuspensionAutomata::genSusCFG() {
       CFGBlock *prev = NULL;
       SusCFG *prevBlock = NULL;
 
-      for (unsigned int i = 0; i < splitBlocksVector.size(); i++) {
+      for (std::size_t i = 0; i < splitBlocksVector.size(); i++) {
         CFGBlock *current = splitBlocksVector.at(i);
         SusCFG *splitBlock =
             new SusCFG(const_cast<CFGBlock *>(splitBlocksVector.at(i)));
@@ -303,7 +302,7 @@ void SuspensionAutomata::genSusCFG() {
         if (pre.size() != 0) {
           // add trailing statements to post block wait stmt
           CFGBlock *newCFGBlock = _cfg->createBlock();
-          for (unsigned int j = 0; j < pre.size(); j++) {
+          for (std::size_t j{0}; j < pre.size(); j++) {
             newCFGBlock->appendStmt(const_cast<Stmt *>(pre.at(j)->getStmt()),
                                     _cfg->getBumpVectorContext());
           }
@@ -408,7 +407,7 @@ void SuspensionAutomata::genSusCFG() {
                                          site = b->succ_end();
            sit != site; sit++) {
         const CFGBlock *succBlock = *sit;
-        SusCFG *tmpBlock;
+        SusCFG *tmpBlock{nullptr};
 
         if (succBlock) {
           if (susCFGBlockMap.find(const_cast<CFGBlock *>(succBlock)) ==
@@ -488,11 +487,16 @@ vector<SusCFG *> SuspensionAutomata::modifDFS(SusCFG *block,
       // When adding blocks to traversed blocks, check if the last node prior to
       // the wait call has which branch discovered. Also need to check
       // terminator block or block 0
+      //
       if (susCFGSuccIDMap.find(currentBlock) == susCFGSuccIDMap.end()) {
         // currentBlock is not our concern yet, so insert the 0th successive
         // block
         //_os <<"\n Current Block : " <<currentBlock->getBlockID()<<" not of
         //concern";
+        //
+      // TODO: BUG: There is an issue here. 
+      // There exists a getSuccBlocks(), but it happens to be empty.
+      // This happens when there is a thread that uses a wait(), but no while loop.
         if (currentBlock->getSuccBlocks().at(0)->isParentBlock()) {
           if (!isFound(
                   visitedBlocks,
@@ -571,7 +575,7 @@ vector<SusCFG *> SuspensionAutomata::modifDFS(SusCFG *block,
 void SuspensionAutomata::checkInsert(vector<SusCFG *> source,
                                      vector<SusCFG *> &target) {
   bool duplicate;
-  for (int i = 0; i < source.size(); i++) {
+  for (std::size_t i {0}; i < source.size(); i++) {
     duplicate = false;
     for (int j = 0; j < target.size(); j++) {
       if (source.at(i) == target.at(j)) {
@@ -588,7 +592,7 @@ void SuspensionAutomata::checkInsert(vector<SusCFG *> source,
 void SuspensionAutomata::genSauto() {
   susCFGVectorType susCFGVector = _susCFGVector;
   susCFGVectorType waitBlocks;
-  for (int i = 0; i < susCFGVector.size(); i++) {
+  for (std::size_t i {0}; i < susCFGVector.size(); i++) {
     if (susCFGVector.at(i)->isWaitBlock() || i == 0) {
       waitBlocks.push_back(susCFGVector.at(i));
       State *state = new State(susCFGVector.at(i), false, false, false, false);
@@ -602,7 +606,7 @@ void SuspensionAutomata::genSauto() {
     }
   }
 
-  for (int i = 0; i < waitBlocks.size(); i++) {
+  for (std::size_t i {0}; i < waitBlocks.size(); i++) {
 
     SusCFG *waitBlock = waitBlocks.at(i);
 
@@ -631,11 +635,11 @@ void SuspensionAutomata::genSauto() {
 
       //_os <<"\n Transition Blocks : ";
       backTrackCodeBlocks.clear();
-      for (int j = 0; j < transitionCodeBlocks.size(); j++) {
+      for (std::size_t j {0}; j < transitionCodeBlocks.size(); j++) {
         backTrackCodeBlocks.push_back(transitionCodeBlocks.at(j));
         //_os <<" "<<transitionCodeBlocks.at(j)->getBlockID();;
       }
-      int j;
+      std::size_t j{};
       for (j = backTrackCodeBlocks.size() - 2; j >= 0; j--) {
         if (backTrackCodeBlocks.at(j)->getSuccBlocks().size() > 1) {
           //_os <<"\n Block : " <<backTrackCodeBlocks.at(j)->getBlockID()<<" has
@@ -765,9 +769,8 @@ bool SuspensionAutomata::isTimedWait(Stmt *stmt) {
   }
   return false;
 }
-/*
-string SuspensionAutomata::getArgumentName(Expr * arg)
-{
+
+string SuspensionAutomata::getArgumentName(Expr * arg) {
   if (arg == NULL)
     return string("NULL");
 
@@ -783,7 +786,6 @@ string SuspensionAutomata::getArgumentName(Expr * arg)
   //  _os << ", argument: " << s.str() << "\n";
   return s.str();
 }
-*/
 
 bool SuspensionAutomata::isDeltaWait(Stmt *stmt) {
 

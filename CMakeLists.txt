@@ -29,12 +29,12 @@ set (LLVM_BUILD_DIR
   )
 
 set (CMAKE_CXX_FLAGS
-   "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -DUSE_SAUTO=off -Wcovered-switch-default"
+   "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -Wcovered-switch-default -g"
   )
 
 if (USE_SAUTO)
   set (CMAKE_CXX_FLAGS
-    "-DUSE_SAUTO=on ${CMAKE_CXX_FLAGS}"
+    "-DUSE_SAUTO ${CMAKE_CXX_FLAGS}"
     )
 endif(USE_SAUTO)
 

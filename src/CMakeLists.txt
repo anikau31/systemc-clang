@@ -1,3 +1,12 @@
+if (USE_SAUTO)
+  add_library (libsystemc-clang 
+  Automata.cpp
+  SuspensionAutomata.cpp
+  SCuitable/GlobalSuspensionAutomata.cpp
+  SCuitable/FindGPUMacro.cpp
+    )
+endif (USE_SAUTO)
+
 add_library (libsystemc-clang
   ModuleDecl.cpp
   FindModule.cpp
@@ -19,11 +28,11 @@ add_library (libsystemc-clang
   FindNetlist.cpp
   FindArgument.cpp
   FindTemplateParameters.cpp
-  Automata.cpp
-  SuspensionAutomata.cpp
-  SCuitable/GlobalSuspensionAutomata.cpp
-  SCuitable/FindGPUMacro.cpp
-####################################
+  #  Automata.cpp
+  #  SuspensionAutomata.cpp
+  #  SCuitable/GlobalSuspensionAutomata.cpp
+  #  SCuitable/FindGPUMacro.cpp
+  #####################################
 #From here the files are for the reflection database
 ####################################
   #Utility.cpp

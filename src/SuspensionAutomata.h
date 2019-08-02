@@ -148,7 +148,7 @@ public:
   bool isEventWait(Stmt *stmt);
   float getTime(Stmt *stmt);
   string getEvent(Stmt *stmt);
-  // string getArgumentName(Expr * arg);
+  string getArgumentName(Expr * arg);
   void addEvent(string);
   void addSimTime(float);
   susCFGVectorType getSusCFG();

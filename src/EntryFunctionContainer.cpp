@@ -80,6 +80,7 @@ void EntryFunctionContainer::addWaits(FindWait &f) {
 }
 
 void EntryFunctionContainer::addSusCFGAuto(SuspensionAutomata &s) {
+#ifdef USE_SAUTO
   _susCFG = s.getSusCFG();
   _susAuto = s.getSauto();
 
@@ -92,6 +93,7 @@ void EntryFunctionContainer::addSusCFGAuto(SuspensionAutomata &s) {
   s.getSauto()));
   }
   */
+#endif 
 }
 
 void EntryFunctionContainer::addNotifys(FindNotify &f) {
@@ -110,6 +112,7 @@ void EntryFunctionContainer::addNotifys(FindNotify &f) {
 void EntryFunctionContainer::dumpSusCFG(raw_ostream &os) {
 
   os << "\n#############################################";
+#ifdef USE_SAUTO
   SuspensionAutomata::susCFGVectorType susCFGVector = _susCFG;
 
   for (unsigned int i = 0; i < susCFGVector.size(); i++) {
@@ -137,15 +140,18 @@ void EntryFunctionContainer::dumpSusCFG(raw_ostream &os) {
       }
     }
   }
+#endif 
 }
 
 void EntryFunctionContainer::dumpSauto(raw_ostream &os) {
+#ifdef USE_SAUTO
   vector<Transition *> transitionVector = _susAuto;
   os << "\n Size of transitionVector : " << transitionVector.size();
   for (unsigned int i = 0; i < transitionVector.size(); i++) {
     Transition *t = transitionVector.at(i);
     t->dump(os);
   }
+#endif 
 }
 
 void EntryFunctionContainer::dump(raw_ostream &os, int tabn) {

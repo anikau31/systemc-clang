@@ -120,17 +120,19 @@ bool SystemCConsumer::fire() {
         FindNotify findNotify{ef->_entryMethodDecl, os_};
         ef->addNotifys(findNotify);
 
+  #ifdef USE_SAUTO 
         /// Does not compile
         SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(),
                                               ef->getEntryMethod(), &_context,
                                               llvm::errs());
         if (suspensionAutomata.initialize()) {
           suspensionAutomata.genSusCFG();
-          // suspensionAutomata.dumpSusCFG();
+          suspensionAutomata.dumpSusCFG();
           suspensionAutomata.genSauto();
-          // suspensionAutomata.dumpSauto();
+          suspensionAutomata.dumpSauto();
           ef->addSusCFGAuto(suspensionAutomata);
         }
+#endif 
 
         _entryFunctionContainerVector.push_back(ef);
       }
@@ -159,6 +161,8 @@ findNetlist.dump();
 _systemcModel->addNetlist(findNetlist);
 */
 
+// Only do this if SAUTO flag is set.
+#ifdef USE_SAUTO
   // Generate SAUTO
   // Placing it here so that unique SAUTO for each instance
   // Model::moduleMapType moduleMap = _systemcModel->getModuleDecl();
@@ -188,7 +192,8 @@ _systemcModel->addNetlist(findNetlist);
         }
       }
     }
-  }
+  } 
+#endif 
 
   os_ << "\n";
   os_ << "\n## SystemC model\n";
