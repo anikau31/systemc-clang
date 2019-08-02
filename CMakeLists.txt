@@ -29,7 +29,7 @@ set (LLVM_BUILD_DIR
   )
 
 set (CMAKE_CXX_FLAGS
-   "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -Wcovered-switch-default -g"
+   "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -Wcovered-switch-default"
   )
 
 if (USE_SAUTO)
