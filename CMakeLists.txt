@@ -12,6 +12,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # find_package(nlohmann_json 3.2.0 REQUIRED)
 
 
+# Include the these flags whenever you compile.
+add_definitions (-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
+
+#add_definitions (-D_GNU_SOURCE -DHAVE_CLANG_CONFIG_H)
+
 option (USE_SAUTO
   "Use suspension-automata library." OFF
   )
