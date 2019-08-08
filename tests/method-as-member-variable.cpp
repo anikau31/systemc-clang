@@ -19,14 +19,14 @@ SC_MODULE( test ){
     sc_in<int> in;
     sc_out<int> out;
     sc_signal<int> test_signal;
-    member_variable mv;
+    member_variable mv_in_test;
 
     void entry_function_1() {
       std::cout << "ef1: " << std::endl;
  //     mv.print();
     }
 
-    SC_CTOR( test ): mv("mv") {
+    SC_CTOR( test ): mv_in_test("initialize_mv_in_test") {
         SC_METHOD(entry_function_1);
     }
 };
