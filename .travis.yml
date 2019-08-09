@@ -1,6 +1,6 @@
 sudo: false
 dist: trusty
-language: cpp 
+language: c++ 
 
 compiler: 
   - gcc
@@ -17,10 +17,37 @@ addons:
     - g++-6
     - cmake
 
+cache:
+  directories:
+    - DEPENDS
+
+  env:
+  - BUILD=RELEASE TARGET_ARCH=linux64 SYSTEMC=systemc-2.3.3
+
+install:
+  - mkdir -p DEPENDS && cd DEPENDS
+  - export SYSTEMC_HOME=`pwd`/$SYSTEMC
+  - | # Build SystemC
+      if [ ! -d $SYSTEMC_HOME ]; then
+          wget http://www.accellera.org/images/downloads/standards/systemc/$SYSTEMC.tar.gz
+          tar -xzf $SYSTEMC.tar.gz && cd $SYSTEMC
+          mkdir BUILD && cd BUILD
+          ../configure --enable-static CXXFLAGS="-std=c++11"
+          make -j 4 && make install
+          cd ../..
+          rm -rf $SYSTEMC.tar.gz $SYSTEMC/BUILD
+      fi
+  - cd ..
+
+before_script:
+  - mkdir BUILD && cd BUILD
+  - cmake .. -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=$BUILD
+
 script:
   # Link gcc-6 and g++-6 to their standard commands
   - ln -s /usr/bin/g++-6 /usr/local/bin/g++
   # Export CC and CXX to tell cmake which compiler to use
   - export CXX=/usr/bin/g++-6
+    export SYSTEMC=/usr/local/include/systemc
   - mkdir build; cd build;
   - cmake ../ && make 
