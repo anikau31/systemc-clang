@@ -5,16 +5,19 @@ language: cpp
 compiler: 
   - gcc
 
+branches:
+  only:
+    - master
+
 addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
     packages:
     - g++-6
-    - clang-7
     - cmake
 
-  script:
+script:
   # Link gcc-6 and g++-6 to their standard commands
   - ln -s /usr/bin/g++-6 /usr/local/bin/g++
   # Export CC and CXX to tell cmake which compiler to use
