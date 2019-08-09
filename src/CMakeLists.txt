@@ -28,6 +28,7 @@ add_library (libsystemc-clang
   FindNetlist.cpp
   FindArgument.cpp
   FindTemplateParameters.cpp
+  FindModuleInstance.cpp
   #  Automata.cpp
   #  SuspensionAutomata.cpp
   #  SCuitable/GlobalSuspensionAutomata.cpp

@@ -32,7 +32,14 @@ bool SystemCConsumer::fire() {
     // md->setTemplateParameters( scmod.getTemplateParameters() );
     //       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
     _systemcModel->addModuleDecl(md);
+
+    //
+    // TODO: find any instances in the module declarations
+    os_ << "=> Processing module: " << mit->first << "\n";
+    md->getModuleClassDecl()->dump();
+    FindModuleInstance module_instance{md->getModuleClassDecl(), os_};
   }
+
 
   ////////////////////////////////////////////////////////////////
   // Find the sc_main
@@ -41,6 +48,10 @@ bool SystemCConsumer::fire() {
 
   if (scmain.isSCMainFound()) {
     FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
+
+  // TODO: find any instances in sc_main.
+
+    //fnDecl->dump();
 
     FindSimTime scstart{fnDecl, os_};
     _systemcModel->addSimulationTime(scstart.returnSimTime());
