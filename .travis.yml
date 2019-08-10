@@ -22,7 +22,9 @@ cache:
     - DEPENDS
 
   env:
-  - BUILD=RELEASE TARGET_ARCH=linux64 SYSTEMC=systemc-2.3.3
+  - BUILD=RELEASE 
+  - TARGET_ARCH=linux64 
+  - SYSTEMC=systemc-2.3.3
 
 install:
   - mkdir -p DEPENDS && cd DEPENDS
