@@ -53,6 +53,6 @@ script:
   - ln -s /usr/bin/g++-6 /usr/local/bin/g++
   # Export CC and CXX to tell cmake which compiler to use
   - export CXX=/usr/bin/g++-6
-    export SYSTEMC=/usr/local/include/systemc
+    export SYSTEMC=$SYSTEMC_HOME/
   - mkdir build; cd build;
   - cmake ../ && make 
