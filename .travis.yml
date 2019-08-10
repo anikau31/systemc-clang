@@ -16,6 +16,7 @@ addons:
     packages:
     - g++-6
     - cmake
+    - libelf-dev 
 
 cache:
   directories:
@@ -28,6 +29,7 @@ cache:
 
 install:
   - mkdir -p DEPENDS && cd DEPENDS
+  - export SYSTEMC=systemc-2.3.3; export TARGET_ARCH=linux64; export BUILD=RELEASE
   - export SYSTEMC_HOME=`pwd`/$SYSTEMC
   - echo $SYSTEMC_HOME
   - | # Build SystemC
