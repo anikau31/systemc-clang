@@ -49,8 +49,8 @@ install:
   - cd ..
 
 before_script:
-  - mkdir BUILD && cd BUILD
-  - cmake .. -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=$BUILD
+  #  - mkdir BUILD && cd BUILD
+  # - cmake .. -DCMAKE_BUILD_TYPE=$BUILD
 
 script:
   # Link gcc-6 and g++-6 to their standard commands
