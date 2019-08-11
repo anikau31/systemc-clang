@@ -13,9 +13,10 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - llvm-toolchain-trusty-7
     packages:
     - g++-6
-    - llvm-7.0.0
+    - clang-8 
     - cmake
     - libelf-dev 
 
