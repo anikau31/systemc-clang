@@ -20,6 +20,7 @@ addons:
     - llvm
     - cmake
     - libelf-dev 
+    - ninja
 
 cache:
   directories:
@@ -30,6 +31,8 @@ cache:
   - BUILD=RELEASE 
   - TARGET_ARCH=linux64 
   - SYSTEMC=systemc-2.3.3
+  - LLVMCONFIG=llvm-config
+  - CXX=/usr/bin/g++-6
 
 install:
   - mkdir -p DEPENDS && cd DEPENDS
@@ -54,15 +57,14 @@ before_script:
 
 script:
   # Link gcc-6 and g++-6 to their standard commands
-  - ln -s /usr/bin/g++-6 /usr/local/bin/g++
+  #- ln -s /usr/bin/g++-6 /usr/local/bin/g++
   # Export CC and CXX to tell cmake which compiler to use
-  - export CXX=/usr/bin/g++-6
   - export SYSTEMC=$SYSTEMC_HOME/
-  - export LLVMCONFIG=llvm-config
   - export LLVM_CXX_FLAGS=(eval $LLVMCONFIG --cxxflags)
   - export LLVM_CXX_FLAGS="$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -fno-aligned-allocation -Wsign-compare"
   - export LLVM_LIBS=(eval $LLVMCONFIG --libs)
   - export LLVM_LD_FLAGS=(eval $LLVMCONFIG --ldflags)
   - export LLVM_LD_FLAGS=(echo $LLVM_LD_FLAGS | sed 's/ *$//g')
+  - echo $SYSTEMC
   - mkdir -p TEMP; cd TEMP;
   - cmake ../ && make 
