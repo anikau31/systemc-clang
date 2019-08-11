@@ -16,7 +16,8 @@ addons:
     - llvm-toolchain-trusty-7
     packages:
     - g++-6
-    - clang-8 
+    - clang 
+    - llvm
     - cmake
     - libelf-dev 
 
