@@ -39,7 +39,7 @@ install:
   - mkdir -p DEPENDS && cd DEPENDS
   - export SYSTEMC=systemc-2.3.3; export TARGET_ARCH=linux64; export BUILD=RELEASE
   - export SYSTEMC_HOME=`pwd`/$SYSTEMC
-  - LLVMCONFIG --ldflags
+  - $LLVMCONFIG --ldflags
   - echo $SYSTEMC_HOME
   - echo $LLVM_LD_FLAGS
   - | # Build SystemC
