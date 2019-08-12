@@ -16,7 +16,6 @@ addons:
     - llvm-toolchain-trusty-7
     packages:
     - g++-6
-    - clang 
     - llvm
     - cmake
     - libelf-dev 
@@ -31,15 +30,12 @@ cache:
   - BUILD=RELEASE 
   - TARGET_ARCH=linux64 
   - SYSTEMC=systemc-2.3.3
-  - LLVMCONFIG=llvm-config
-  - LLVM_LD_FLAGS=`$LLVMCONFIG --ldflags`
   - CXX=/usr/bin/g++-6
 
 install:
   - mkdir -p DEPENDS && cd DEPENDS
   - export SYSTEMC=systemc-2.3.3; export TARGET_ARCH=linux64; export BUILD=RELEASE
   - export SYSTEMC_HOME=`pwd`/$SYSTEMC
-  - $LLVMCONFIG --ldflags
   - echo $SYSTEMC_HOME
   - echo $LLVM_LD_FLAGS
   - | # Build SystemC
@@ -53,6 +49,18 @@ install:
           rm -rf $SYSTEMC.tar.gz $SYSTEMC/BUILD
       fi
   - cd ..
+  - | # Build clang 
+    cd DEPENDS
+    wget https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+    tar xvf clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+    mv clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz clang-7.1.0
+    export LLVMCONFIG=clang-7.1.0/bin/llvm-config
+    export LLVM_LD_FLAGS=`$LLVMCONFIG --ldflags`
+    export LLVM_CXX_FLAGS=`$LLVMCONFIG --cxxflags`
+    export LLVM_CXX_FLAGS="$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -fno-aligned-allocation -Wsign-compare"
+    export LLVM_LIBS=`$LLVMCONFIG --libs`
+    cd ..
+
 
 before_script:
   #  - mkdir BUILD && cd BUILD
@@ -63,10 +71,10 @@ script:
   - ln -s /usr/bin/g++-6 /usr/local/bin/g++
   # Export CC and CXX to tell cmake which compiler to use
   - export SYSTEMC=$SYSTEMC_HOME/
-  - export LLVM_CXX_FLAGS=(eval $LLVMCONFIG --cxxflags)
-  - export LLVM_CXX_FLAGS="$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -fno-aligned-allocation -Wsign-compare"
-  - export LLVM_LIBS=(eval $LLVMCONFIG --libs)
+  #- export LLVM_CXX_FLAGS=(eval $LLVMCONFIG --cxxflags)
+  #- export LLVM_CXX_FLAGS="$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -fno-aligned-allocation -Wsign-compare"
+  #- export LLVM_LIBS=(eval $LLVMCONFIG --libs)
     #- export LLVM_LD_FLAGS=(eval $LLVMCONFIG --ldflags)
     #- export LLVM_LD_FLAGS=(echo $LLVM_LD_FLAGS | sed 's/ *$//g')
   - mkdir -p TEMP; cd TEMP;
-  - cmake ../ && make 
+  - cmake ../ -G Ninja && ninja 
