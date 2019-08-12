@@ -52,16 +52,20 @@ install:
   - | # Build clang 
     cd DEPENDS
     wget https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-    tar xvf clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+    tar xf clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
     mv clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz clang-7.1.0
     export LLVMCONFIG=clang-7.1.0/bin/llvm-config
     export LLVM_LD_FLAGS=`$LLVMCONFIG --ldflags`
     export LLVM_CXX_FLAGS=`$LLVMCONFIG --cxxflags`
     # export LLVM_CXX_FLAGS="$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -fno-aligned-allocation -Wsign-compare"
     export LLVM_LIBS=`$LLVMCONFIG --libs`
+    echo "llvm-config"
     echo $LLVMCONFIG
+    echo "llvm_ld_flags"
     echo $LLVM_LD_FLAGS
+    echo "llvm_cxx_flags"
     echo $LLVM_CXX_FLAGS
+    echo "llvm_libs"
     echo $LLVM_LIBS
     cd ..
 
@@ -81,5 +85,5 @@ script:
     #- export LLVM_LD_FLAGS=(eval $LLVMCONFIG --ldflags)
     #- export LLVM_LD_FLAGS=(echo $LLVM_LD_FLAGS | sed 's/ *$//g')
   - mkdir -p TEMP; cd TEMP;
-  - cmake ../ && ninja 
+  - cmake ../ && make
   - cd ..; rm -rf TEMP
