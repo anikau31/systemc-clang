@@ -77,4 +77,5 @@ script:
     #- export LLVM_LD_FLAGS=(eval $LLVMCONFIG --ldflags)
     #- export LLVM_LD_FLAGS=(echo $LLVM_LD_FLAGS | sed 's/ *$//g')
   - mkdir -p TEMP; cd TEMP;
-  - cmake ../ -G Ninja && ninja 
+  - cmake ../ && ninja 
+  - cd ..; rm -rf TEMP
