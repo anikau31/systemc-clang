@@ -61,12 +61,7 @@ install:
 
     echo "llvm-config"
     echo $LLVMCONFIG
-    echo "llvm_ld_flags"
-    echo $LLVM_LD_FLAGS
-    echo "llvm_cxx_flags"
     echo $LLVM_CXX_FLAGS
-    echo "llvm_libs"
-    echo $LLVM_LIBS
     cd ..
 
 
