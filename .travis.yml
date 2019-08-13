@@ -51,7 +51,6 @@ install:
       fi
   - cd ..
   - | # Build clang 
-    rm -rf DEPENDS
     cd DEPENDS
     wget https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
     tar xf clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
