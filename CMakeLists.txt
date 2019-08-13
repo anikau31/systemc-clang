@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #  Make verbose on?
 #set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
+set(USE_SAUTO OFF)
 
 # Required packages
 # TODO: Add the code to find library and/or the specific in-source file.
