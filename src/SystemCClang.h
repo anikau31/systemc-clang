@@ -51,7 +51,7 @@ using namespace clang::tooling;
 #include "SuspensionAutomata.h"
 #include "Utility.h"
 #include "FindTemplateParameters.h"             
-#include "FindModuleInstance.h"
+//#include "FindModuleInstance.h"
 
 
 using namespace clang;
