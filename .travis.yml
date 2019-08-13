@@ -72,5 +72,5 @@ before_script:
 script:
   - export SYSTEMC=$SYSTEMC_HOME/
   - mkdir -p TEMP; cd TEMP;
-  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE && make
+  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on && make
   - cd ..; rm -rf TEMP
