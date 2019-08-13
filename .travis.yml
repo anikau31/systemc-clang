@@ -59,7 +59,7 @@ install:
     # Setup flags
     export LLVM_BUILD_DIR=`pwd`/clang-7.1.0
     export LLVMCONFIG=$LLVM_BUILD_DIR/bin/llvm-config
-    export LLVM_LD_FLAGS=-L$LLVM_BUILD_DIR/lib 
+    export LLVM_LD_FLAGS=-L$LLVM_BUILD_DIR/lib
     export LLVM_CXX_FLAGS="-I/home/travis/build/rseac/systemc-clang/DEPENDS/clang-7.1.0/include  -fPIC -fvisibility-inlines-hidden -std=c++11 -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -pedantic -Wno-long-long -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -ffunction-sections -fdata-sections -O3 -DNDEBUG  -fno-exceptions -fno-rtti -D_GNU_SOURCE -fvisibility-inlines-hidden -Wsign-compare"
     #export LLVM_BUILD_DIR=`pwd`/clang-7.1.0
     #export LLVMCONFIG=`pwd`/clang-7.1.0/bin/llvm-config
@@ -81,7 +81,7 @@ before_script:
 
 script:
   - export SYSTEMC=$SYSTEMC_HOME/
+  - export CXX=$LLVM_BUILD_DIR/bin/clang
   - mkdir -p TEMP; cd TEMP;
-  - echo $LLVM_CXX_FLAGS
   - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on && make
   - cd ..; rm -rf TEMP
