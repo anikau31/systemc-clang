@@ -34,7 +34,7 @@ set (LLVM_BUILD_DIR
   )
 
 set (CMAKE_CXX_FLAGS
-   "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -Wcovered-switch-default"
+   "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS}"
   )
 
 if (USE_SAUTO)
@@ -45,7 +45,7 @@ endif(USE_SAUTO)
 
 if (USE_SILENT_BUILD)
   set (CMAKE_CXX_FLAGS
-    "-DUSE_SILENT_BUILD=on ${CMAKE_CXX_FLAGS} -Wcovered-switch-default"
+    "-DUSE_SILENT_BUILD=on ${CMAKE_CXX_FLAGS}"
     )
 endif(USE_SILENT_BUILD)
 
