@@ -53,9 +53,10 @@ install:
     cd DEPENDS
     wget https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
     tar xf clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-    mv clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz clang-7.1.0
+    mv clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04 clang-7.1.0
 
     # Debug
+    ls -l 
     ls -l clang-7.1.0/
     # Setup flags
     export LLVM_BUILD_DIR=`pwd`/clang-7.1.0
