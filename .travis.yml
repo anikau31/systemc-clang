@@ -75,8 +75,10 @@ before_script:
 
 script:
   - export SYSTEMC=$SYSTEMC_HOME/
+  - export CC=$LLVM_BUILD_DIR/bin/clang
   - export CXX=$LLVM_BUILD_DIR/bin/clang++
   - echo $CXX
   - mkdir -p TEMP; cd TEMP;
-  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DCMAKE_CXX_COMPILER="/home/travis/build/anikau31/systemc-clang/DEPENDS/clang-7.0.0/bin/clang++" && make
+  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on && make
+    #- cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DCMAKE_CXX_COMPILER="/home/travis/build/anikau31/systemc-clang/DEPENDS/clang-7.0.0/bin/clang++" && make
   - cd ..; rm -rf TEMP
