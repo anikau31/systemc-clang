@@ -13,14 +13,14 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - llvm-toolchain-trusty-7
+      #- llvm-toolchain-trusty-7
     packages:
-    - g++-6
-    - llvm
+    - g++
+      #- llvm
     - cmake
     - libelf-dev 
-    - clang
-    - ninja
+      #- clang
+    - ninja-build
 
 cache:
   directories:
