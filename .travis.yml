@@ -77,5 +77,5 @@ script:
   - export SYSTEMC=$SYSTEMC_HOME/
   - export CXX=$LLVM_BUILD_DIR/bin/clang++
   - mkdir -p TEMP; cd TEMP;
-  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -D CMAKE_CXX_COMPILER $CXX && make
+  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DCMAKE_CXX_COMPILER=$CXX && make
   - cd ..; rm -rf TEMP
