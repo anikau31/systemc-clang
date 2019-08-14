@@ -52,7 +52,7 @@ install:
   - | # Build clang 
     cd DEPENDS
     wget https://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-    tar xf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz clang-7.0.0
+    tar xf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz 
     mv clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz clang-7.0.0
 
     # Debug
@@ -76,6 +76,7 @@ before_script:
 script:
   - export SYSTEMC=$SYSTEMC_HOME/
   - export CXX=$LLVM_BUILD_DIR/bin/clang++
+  - echo $CXX
   - mkdir -p TEMP; cd TEMP;
   - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DCMAKE_CXX_COMPILER=$CXX && make
   - cd ..; rm -rf TEMP
