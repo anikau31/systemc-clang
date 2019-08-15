@@ -1,25 +1,32 @@
+#
+# Credit should be awarded to sources.  
+# 
+# Credits:
+# https://github.com/andreasfertig/cppinsights/blob/master/CMakeLists.txt
+
 cmake_minimum_required(VERSION 2.6)
+
+# Project name
 project(systemc-clang)
-# Use C++ standard version to c++17
+
+# Use C++ standard version to c++14
 set(CMAKE_CXX_STANDARD 14)
+
 # Always keep it on
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 #  Make verbose on?
 #set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
+# SystemC-Clang versions
+set(SCC_MAJOR_VERSION 1)
+set(SCC_MINOR_VERSION ${SCC_MAJOR_VERSION}.1)
+
+set(SCC_LLVM_CONFIG "llvm-config" CACHE STRING "LLVM config executable to use")
+
 # Required packages
-# TODO: Add the code to find library and/or the specific in-source file.
-# find_package(nlohmann_json 3.2.0 REQUIRED)
-
-
 # Include the these flags whenever you compile.
 add_definitions (-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
-
-#add_definitions (-D_GNU_SOURCE -DHAVE_CLANG_CONFIG_H)
-
-option (USE_SAUTO
-  "Use suspension-automata library." OFF
-  )
 
 option (USE_SILENT_BUILD
   "Silent as many warnings as possible." OFF
@@ -29,38 +36,136 @@ set (ROOT_CPP
   driver-tooling.cpp
   )
 
-set (LLVM_BUILD_DIR
-  $ENV{LLVM_BUILD_DIR}
+# Set the path for where LLVM/clang is installed.
+set (LLVM_INSTALL_DIR
+  $ENV{LLVM_INSTALL_DIR}
   )
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    set(IS_GNU On)
+else()
+    set(IS_GNU Off)
+endif()
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(IS_CLANG On)
+else()
+    set(IS_CLANG Off)
+endif()
+
+
+# Find llvm-config to setup the remaining paths.
+# switch to the variable named VARNAME.
+#
+# Example usage: llvm_config(LLVM_CXXFLAGS "--cxxflags")
+function(llvm_config VARNAME switch)
+  set(CONFIG_COMMAND "${LLVM_CONFIG_EXE}" "${switch}")
+
+  execute_process(
+    COMMAND ${CONFIG_COMMAND} ${LIB_TYPE}
+    RESULT_VARIABLE HAD_ERROR
+    OUTPUT_VARIABLE CONFIG_OUTPUT
+    )
+  if (HAD_ERROR)
+    string(REPLACE ";" " " CONFIG_COMMAND_STR "${CONFIG_COMMAND}")
+    message(STATUS "${CONFIG_COMMAND_STR}")
+    message(FATAL_ERROR "llvm-config failed with status ${HAD_ERROR}")
+  endif()
+
+  # replace linebreaks with semicolon
+  string(REGEX REPLACE
+    "[ \t]*[\r\n]+[ \t]*" ";"
+    CONFIG_OUTPUT ${CONFIG_OUTPUT})
+
+  # make all includes system include to prevent the compiler to warn about issues in LLVM/Clang
+  if(NOT WIN32)
+    string(REGEX REPLACE "-I" "-isystem" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+  else()
+    if(IS_MSVC_CL)
+      # See https://devblogs.microsoft.com/cppblog/broken-warnings-theory/
+      string(REGEX REPLACE "-I" "/external:I" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    endif()
+  endif()
+
+  # remove certain options clang doesn't like
+  if(IS_CLANG)
+    string(REGEX REPLACE "-Wl,--no-keep-files-mapped" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    string(REGEX REPLACE "-Wl,--no-map-whole-files" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    string(REGEX REPLACE "-fuse-ld=gold" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+  elseif(IS_GNU)
+    string(REGEX REPLACE "-Wcovered-switch-default" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    string(REGEX REPLACE "-Wstring-conversion" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    string(REGEX REPLACE "-Werror=unguarded-availability-new" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    string(REGEX REPLACE "-Wno-unknown-warning-option" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    string(REGEX REPLACE "-Wno-unused-command-line-argument" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+  endif()
+
+  # make result available outside
+  set(${VARNAME} ${CONFIG_OUTPUT} PARENT_SCOPE)
+
+  # Optionally output the configured value
+  message(STATUS "llvm_config(${VARNAME})=>${CONFIG_OUTPUT}")
+
+  # cleanup
+  unset(CONFIG_COMMAND)
+endfunction(llvm_config)
+
+# Find llvm-config
+  find_program(LLVM_CONFIG_EXE
+    NAMES llvm-config
+    DOC "llvm-config executable"
+    PATHS ${LLVM_INSTALL_DIR}/bin/ NO_DEFAULT_PATH)
+
+  if(NOT LLVM_CONFIG_EXE)
+    message(FATAL_ERROR "llvm-config not found -- ${LLVM_CONFIG_EXE}: ${SCC_LLVM_CONFIG}")
+  endif()
+
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
+  execute_process(
+    COMMAND git log -1 --format=%H
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  execute_process(
+    COMMAND git config --get remote.origin.url
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_REPO_URL
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+else()
+  set(GIT_REPO_URL "")
+  set(GIT_COMMIT_HASH "")
+endif()
+
+
+  #################################################################################
+
+  # Set the corresponding LLVM flags using llvm-config
+  llvm_config(LLVM_CXX_FLAGS "--cxxflags")
+  llvm_config(LLVM_LD_FLAGS "--ldflags")
+  llvm_config(LLVM_LIBS "--libs")
 
 set (CMAKE_CXX_FLAGS
-   "$ENV{LLVM_CXX_FLAGS} $ENV{CMAKE_CXX_FLAGS} -Wcovered-switch-default"
+   "${LLVM_CXX_FLAGS}"
   )
-
-if (USE_SAUTO)
-  set (CMAKE_CXX_FLAGS
-    "-DUSE_SAUTO ${CMAKE_CXX_FLAGS}"
-    )
-endif(USE_SAUTO)
 
 if (USE_SILENT_BUILD)
   set (CMAKE_CXX_FLAGS
-    "-DUSE_SILENT_BUILD=on ${CMAKE_CXX_FLAGS} -Wcovered-switch-default"
+    "-DUSE_SILENT_BUILD=on ${CMAKE_CXX_FLAGS}"
     )
 endif(USE_SILENT_BUILD)
 
 
 set (LLVM_LD_FLAGS
-  "$ENV{LLVM_LD_FLAGS} -lpthread"
+  "${LLVM_LD_FLAGS} -lpthread"
   )
 
 set (LLVM_LIBS
-  $ENV{LLVM_LIBS}
+  ${LLVM_LIBS}
   )
-
-#set (LLVM_LD_LIBS LLVMCppBackendCodeGen LLVMCppBackendInfo LLVMTarget LLVMCore LLVMMC LLVMObject LLVMSupport)
-
-#LLVMJIT LLVMX86CodeGen LLVMX86AsmParser LLVMX86Disassembler LLVMExecutionEngine LLVMAsmPrinter LLVMSelectionDAG LLVMX86AsmPrinter LLVMX86Info LLVMMCParser LLVMCodeGen LLVMX86Utils LLVMScalarOpts LLVMInstCombine LLVMTransformUtils LLVMipa LLVMAnalysis LLVMTarget LLVMCore LLVMMC LLVMSupport
 
 set (CLANG_LIBS
   clangTooling
@@ -87,7 +192,7 @@ set (CLANG_LIBS
 
 
 set (CMAKE_MODULE_LINKER_FLAGS
-  $ENV{LLVM_LD_FLAGS}
+  ${LLVM_LD_FLAGS}
   )
 
 set (TARGET
@@ -96,37 +201,26 @@ set (TARGET
 
 
 include_directories(
-  "${LLVM_BUILD_DIR}/include"
+  "${LLVM_INSTALL_DIR}/include"
   src
-  if (USE_SAUTO)
-    sauto
-  endif (USE_SAUTO)
-
-  )
+ )
 
 
 link_directories(
-  ${LLVM_BUILD_DIR}/lib
+  ${LLVM_INSTALL_DIR}/lib
   )
 
 add_subdirectory(src)
 add_subdirectory(tests)
 
-if (USE_SAUTO)
-  add_subdirectory(sauto)
-endif (USE_SAUTO)
-
 
 set( SRC_LIB libsystemc-clang )
-if (USE_SAUTO)
-  set( SAUTO_LIB libsauto )
-endif (USE_SAUTO)
+
 add_executable(
   ${TARGET}
   ${ROOT_CPP} )
 
 target_link_libraries(${TARGET} ${SRC_LIB}) #nlohmann_json::nlohmann_json)
-target_link_libraries(${TARGET} ${SAUTO_LIB}) # nlohmann_json::nlohmann_json)
 
 foreach (clang_lib ${CLANG_LIBS})
   target_link_libraries( ${TARGET} ${clang_lib} )
@@ -139,3 +233,21 @@ endforeach()
 foreach (llvm_lib ${LLVM_LIBS})
   target_link_libraries( ${TARGET} ${llvm_lib} )
 endforeach()
+
+
+
+# Print the summary of the build. 
+message(STATUS "")
+message(STATUS "[ Build summary ]")
+message(STATUS "SystemC-Clang         : ${SCC_MINOR_VERSION}")
+message(STATUS "CMAKE_GENERATOR       : ${CMAKE_GENERATOR}")
+message(STATUS "Compiler ID           : ${CMAKE_CXX_COMPILER_ID}")
+message(STATUS "Compiler version      : ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "Compiler path         : ${CMAKE_CXX_COMPILER}")
+message(STATUS "llvm-config           : ${LLVM_CONFIG_EXE}")
+message(STATUS "Install path          : ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "CMAKE_SOURCE_DIR      : ${CMAKE_SOURCE_DIR}")
+message(STATUS "CMAKE_BINARY_DIR      : ${CMAKE_BINARY_DIR}")
+message(STATUS "Git repo url          : ${GIT_REPO_URL}")
+message(STATUS "Git commit hash       : ${GIT_COMMIT_HASH}")
+message(STATUS "")

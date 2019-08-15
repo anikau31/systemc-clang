@@ -29,6 +29,8 @@ cache:
   - SYSTEMC=systemc-2.3.3
   - CXX=clang++
 
+    # systemc compilation 
+    # credit: https://github.com/janweinstock/vcml/blob/master/.travis.yml
 install:
   - mkdir -p DEPENDS && cd DEPENDS
   - export SYSTEMC=systemc-2.3.3; export TARGET_ARCH=linux64; export BUILD=RELEASE
