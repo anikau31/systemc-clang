@@ -32,7 +32,7 @@ bool FindModuleInstance::VisitFieldDecl( FieldDecl *fdecl ) {
 
 bool FindModuleInstance::VisitCXXConstructExpr(CXXConstructExpr*expr) {
 
-  //os_ << "#### FOUND CONSTRUCTOR \n";
+  os_ << "#### FOUND CONSTRUCTOR \n";
   //expr->dump();
   return true;
 }

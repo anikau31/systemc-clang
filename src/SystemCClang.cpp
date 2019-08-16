@@ -24,6 +24,8 @@ bool SystemCConsumer::fire() {
   // Find the sc_modules
   FindSCModules scmod{tu, os_};
 
+  ModuleInstanceMatcher instance_matcher{};
+
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
 
   for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),

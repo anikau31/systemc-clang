@@ -52,6 +52,7 @@ using namespace clang::tooling;
 #include "Utility.h"
 #include "FindTemplateParameters.h"             
 #include "FindModuleInstance.h"
+#include "ModuleInstanceMatcher.h"
 
 
 using namespace clang;
@@ -98,6 +99,36 @@ protected:
     return std::unique_ptr<clang::ASTConsumer>(new A(ci));
   };
 }; // End class LightsCameraAction
+
+
+
+ class SCCMatchers : public ASTConsumer {
+  public:
+  SCCMatchers( CompilerInstance &ci ):
+    _ci(ci),
+    _context(ci.getASTContext()) {
+
+      cout << " Setting up matchers " << endl;
+      Matcher.addMatcher(cxxRecordDecl(isDerivedFrom("sc_module")).bind("sc_module"), &Handler);
+
+
+    }
+
+                virtual void HandleTranslationUnit(ASTContext & context) {
+      Matcher.matchAST(_context);
+    }
+
+    // Member variables
+
+    CompilerInstance & _ci;
+    ASTContext & _context;
+    ModuleInstanceMatcher Handler;
+    MatchFinder Matcher;
+  };
+
+
+
+
 } // End namespace scpar
 
 #endif
