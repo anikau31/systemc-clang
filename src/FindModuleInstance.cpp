@@ -16,24 +16,24 @@ FindModuleInstance::FindModuleInstance(CXXRecordDecl *declaration, llvm::raw_ost
 }
 
 bool FindModuleInstance::VisitFieldDecl( FieldDecl *fdecl ) {
-  os_ << "#### FOUND FIELD DECL\n";
+  //os_ << "#### FOUND FIELD DECL\n";
   QualType q{fdecl->getType()};
   string fname;
 
   if (IdentifierInfo *info = fdecl->getIdentifier()) {
     fname = info->getNameStart();
-    os_ << "\n+ Name: " << info->getNameStart();
-    os_ << "\n+ Type: " << q.getAsString();
+   // os_ << "\n+ Name: " << info->getNameStart();
+    //os_ << "\n+ Type: " << q.getAsString();
   }
 
-  fdecl->dump();
+  //fdecl->dump();
   return true;
 }
 
 bool FindModuleInstance::VisitCXXConstructExpr(CXXConstructExpr*expr) {
 
-  os_ << "#### FOUND CONSTRUCTOR \n";
-  expr->dump();
+  //os_ << "#### FOUND CONSTRUCTOR \n";
+  //expr->dump();
   return true;
 }
 

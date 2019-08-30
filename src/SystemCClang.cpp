@@ -36,7 +36,7 @@ bool SystemCConsumer::fire() {
     //
     // TODO: find any instances in the module declarations
     os_ << "=> Processing module: " << mit->first << "\n";
-    md->getModuleClassDecl()->dump();
+    //md->getModuleClassDecl()->dump();
     FindModuleInstance module_instance{md->getModuleClassDecl(), os_};
   }
 
