@@ -27,7 +27,8 @@ bool FindSignals::VisitFieldDecl(FieldDecl *fd) {
     string tt{ te->getTemplateType() };
 
     // If string is not found
-    if ( tt.find( "sc_signal") == string::npos ) {
+    if ( ( tt.find( "sc_signal") == string::npos ) &&
+      (tt.find( "sc_buffer") == string::npos ) ) {
       delete te;
       return true;
     }
