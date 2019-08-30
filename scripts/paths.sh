@@ -6,7 +6,7 @@
 
 # Path for where the binaries are for clang
 # SET this.
-export LLVM_BUILD_DIR=/home/$USER/bin/clang-7.0.0/ 
+export LLVM_INSTALL_DIR=/home/$USER/bin/clang-7.0.0/ 
 
 # Path where SystemC is installed
 # SET this.
@@ -19,7 +19,7 @@ export SYSTEMC_CLANG_BUILD_DIR=/home/$USER/code/systemc-clang-build/
 
 LLVMCOMPONENT=cppbackend
 RTTIFLAG=-fno-rtti 
-LLVMCONFIG=$LLVM_BUILD_DIR/bin/llvm-config
+LLVMCONFIG=$LLVM_INSTALL_DIR/bin/llvm-config
 
 # New llvm/clang uses flags that are different than GNU gcc's
 # Alternatively, you can use gcc and g++, but some flags don't work.
