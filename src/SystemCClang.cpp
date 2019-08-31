@@ -99,6 +99,7 @@ bool SystemCConsumer::fire() {
       md->addInputPorts(ports.getInputPorts());
       md->addOutputPorts(ports.getOutputPorts());
       md->addInputOutputPorts(ports.getInputOutputPorts());
+      md->addOtherVars(ports.getOtherVars()); 
 
       FindTLMInterfaces findTLMInterfaces{mainmd->getModuleClassDecl(), os_};
       md->addInputInterfaces(findTLMInterfaces.getInputInterfaces());

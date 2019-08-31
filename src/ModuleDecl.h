@@ -56,6 +56,8 @@ public:
   void addSignals(const FindSignals::signalMapType & );
   void addInputPorts(FindPorts::PortType);
   void addOutputPorts(FindPorts::PortType);
+
+void addOtherVars(FindPorts::PortType p);
   void addInputOutputPorts(FindPorts::PortType);
   void addInputInterfaces(FindTLMInterfaces::interfaceType);
   void addOutputInterfaces(FindTLMInterfaces::interfaceType);
@@ -102,6 +104,8 @@ private:
   portMapType _iports;
   portMapType _oports;
   portMapType _ioports;
+  portMapType _othervars;
+
   interfaceMapType _iinterfaces;
   interfaceMapType _ointerfaces;
   interfaceMapType _iointerfaces;

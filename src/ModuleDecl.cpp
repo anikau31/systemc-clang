@@ -68,6 +68,16 @@ void ModuleDecl::addSignals(const FindSignals::signalMapType & signal_map) {
   }
 }
 
+void ModuleDecl::addOtherVars(FindPorts::PortType p) {
+  for (auto mit : p) {
+    string n = mit.first;
+    FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
+    PortDecl *pd = new PortDecl(n, tt);
+
+    _othervars.insert(portPairType(n, pd));
+  }
+}
+
 void ModuleDecl::addInputPorts(FindPorts::PortType p) {
   for (auto mit : p) {
     string name = mit.first;
@@ -277,7 +287,7 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
 void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   //  os << "\nInput ports: " << _iports.size() << "\n";
 
-  json iport_j, oport_j, ioport_j;
+  json iport_j, oport_j, ioport_j, othervars_j;
   iport_j["number_of_in_ports"] = _iports.size();
 
     for (auto mit : _iports) {
@@ -297,9 +307,14 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
       ioport_j[mit.first] = mit.second->dump_json(os);
     }
 
+    othervars_j["number_of_other_vars"] = _othervars.size();
+    for (auto mit : _othervars) {
+      othervars_j[mit.first] = mit.second->dump_json(os);
+    }
+
     os << "Ports\n";
     os << iport_j.dump(4) << "\n" << oport_j.dump(4) << "\n"
-       << ioport_j.dump(4)<< "\n";
+       << ioport_j.dump(4)<< "\n" << othervars_j.dump(4) << "\n";
 }
 
 void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {

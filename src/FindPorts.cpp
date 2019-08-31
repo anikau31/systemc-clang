@@ -14,6 +14,10 @@ FindPorts::PortType FindPorts::getInputOutputPorts() const {
   return _inoutPorts;
 }
 
+FindPorts::PortType FindPorts::getOtherVars() const {
+  return _otherVars;
+}
+
 bool FindPorts::VisitFieldDecl(FieldDecl *fd) {
   //  os_ << "####################### VisitFieldDecl\n ";
   QualType q = fd->getType();
@@ -53,8 +57,11 @@ bool FindPorts::VisitFieldDecl(FieldDecl *fd) {
   } else if (port_type == "sc_inout") {
     //        os_ << "\n+ sc_inout";
     _inoutPorts.insert(kvType(fname, te));
-  } else {
+  } else if (port_type != "sc_signal") {
     /// This is sometype we don't know about.
+    _otherVars.insert(kvType(fname, te));
+  } else {
+  //_sc_signal handled in another pass
   }
 
   return true;
@@ -82,6 +89,16 @@ void FindPorts::dump() {
     os_ << "\n:>> " << mit->first;
     (mit->second)->printTemplateArguments(os_);
   }
+
+
+  os_ << "\n\n:> Number of other Vars: " << _otherVars.size();
+  for (PortType::iterator mit = _otherVars.begin(), mitend = _otherVars.end();
+       mit != mitend; mit++) {
+    os_ << "\n:>> " << mit->first;
+    (mit->second)->printTemplateArguments(os_);
+  }
+
+
   os_ << "\n================= END Find Ports ================\n\n";
 }
 
@@ -110,4 +127,12 @@ FindPorts::~FindPorts() {
     delete mit->second;
   }
   _inoutPorts.clear();
+
+  for (PortType::iterator mit = _otherVars.begin(), mitend = _otherVars.end();
+       mit != mitend; mit++) {
+    //  for ( auto mit : _otherVars ) {
+    //      os_ << "\n:>> " << mit->first;
+    delete mit->second;
+  }
+  _otherVars.clear();
 }

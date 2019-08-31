@@ -16,7 +16,5 @@ std::string to_string( T * pointer ) {
   address << pointer;
   return address.str();
 }
-
-};
-
+}
 #endif

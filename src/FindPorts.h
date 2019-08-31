@@ -24,6 +24,7 @@ public:
   PortType getInputPorts() const;
   PortType getOutputPorts() const;
   PortType getInputOutputPorts() const;
+  PortType getOtherVars() const;
   void dump();
 
 private:
@@ -31,6 +32,7 @@ private:
   PortType _inPorts;
   PortType _outPorts;
   PortType _inoutPorts;
+  PortType _otherVars;
 };
 
 } // namespace scpar
