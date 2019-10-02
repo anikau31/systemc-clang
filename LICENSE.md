@@ -4,7 +4,7 @@ systemc-clang Release License
 University of Illinois/NCSA
 Open Source License
 
-Copyright (c) 2012 University of Waterloo
+Copyright (c) 2012-2019 University of Waterloo
 All rights reserved.
 
 Developed by:
