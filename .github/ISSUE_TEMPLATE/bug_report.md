@@ -7,10 +7,10 @@ assignees: ''
 
 ---
 
-# Description**
+# Description
 A clear and concise description of what the bug is.
 
-** Reproducing the bug ***
+# Reproducing the bug 
 
 ## Versions 
 - systemc-clang: [i.e. 0.1]
@@ -28,12 +28,12 @@ int main() {
 }
 ```
 
-**Steps to Reproduce Bug**
+## Steps to Reproduce Bug
 1. Do this
 2. Do that
 3. Compile that
 
-### Expected behaviour**
+### Expected behaviour
 A clear and concise description of what you expected to happen.
 
 ### Actual behaviour
