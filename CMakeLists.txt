@@ -16,13 +16,11 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #  Make verbose on?
-#set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
+set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
 # SystemC-Clang versions
 set(SCC_MAJOR_VERSION 1)
 set(SCC_MINOR_VERSION ${SCC_MAJOR_VERSION}.1)
-
-set(SCC_LLVM_CONFIG "llvm-config" CACHE STRING "LLVM config executable to use")
 
 # Required packages
 # Include the these flags whenever you compile.
@@ -59,16 +57,16 @@ endif()
 #
 # Example usage: llvm_config(LLVM_CXXFLAGS "--cxxflags")
 function(llvm_config VARNAME switch)
-  set(CONFIG_COMMAND "${LLVM_CONFIG_EXE}" "${switch}")
+  set(CONFIG_COMMAND ${LLVM_CONFIG_EXE} ${switch})
 
   execute_process(
-    COMMAND ${CONFIG_COMMAND} ${LIB_TYPE}
+    COMMAND ${CONFIG_COMMAND} 
     RESULT_VARIABLE HAD_ERROR
     OUTPUT_VARIABLE CONFIG_OUTPUT
     )
+  
   if (HAD_ERROR)
     string(REPLACE ";" " " CONFIG_COMMAND_STR "${CONFIG_COMMAND}")
-    message(STATUS "${CONFIG_COMMAND_STR}")
     message(FATAL_ERROR "llvm-config failed with status ${HAD_ERROR}")
   endif()
 
@@ -103,9 +101,6 @@ function(llvm_config VARNAME switch)
   # make result available outside
   set(${VARNAME} ${CONFIG_OUTPUT} PARENT_SCOPE)
 
-  # Optionally output the configured value
-  message(STATUS "llvm_config(${VARNAME})=>${CONFIG_OUTPUT}")
-
   # cleanup
   unset(CONFIG_COMMAND)
 endfunction(llvm_config)
@@ -113,11 +108,12 @@ endfunction(llvm_config)
 # Find llvm-config
   find_program(LLVM_CONFIG_EXE
     NAMES llvm-config
+    HINTS ${LLVM_INSTALL_DIR}/bin/ 
     DOC "llvm-config executable"
     PATHS ${LLVM_INSTALL_DIR}/bin/ NO_DEFAULT_PATH)
 
   if(NOT LLVM_CONFIG_EXE)
-    message(FATAL_ERROR "llvm-config not found -- ${LLVM_CONFIG_EXE}: ${SCC_LLVM_CONFIG}")
+    message(FATAL_ERROR "llvm-config not found -- ${LLVM_CONFIG_EXE} ")
   endif()
 
   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
@@ -145,8 +141,14 @@ endif()
 
   # Set the corresponding LLVM flags using llvm-config
   llvm_config(LLVM_CXX_FLAGS "--cxxflags")
-  llvm_config(LLVM_LD_FLAGS "--ldflags")
   llvm_config(LLVM_LIBS "--libs")
+  llvm_config(LLVM_LD_FLAGS "--ldflags")
+  
+  # There was an issue with the system-libs not being added. Something seems to have changed from version 7+ 
+  # with respect to llvm-config --libs. 
+  #
+  # https://github.com/halide/Halide/issues/1112
+  llvm_config(LLVM_SYSTEM_LIBS "--system-libs")
 
 set (CMAKE_CXX_FLAGS
    "${LLVM_CXX_FLAGS}"
@@ -160,7 +162,7 @@ endif(USE_SILENT_BUILD)
 
 
 set (LLVM_LD_FLAGS
-  "${LLVM_LD_FLAGS} -lpthread"
+  "${LLVM_LD_FLAGS}"
   )
 
 set (LLVM_LIBS
@@ -226,13 +228,14 @@ foreach (clang_lib ${CLANG_LIBS})
   target_link_libraries( ${TARGET} ${clang_lib} )
 endforeach()
 
-foreach (ld_flag ${LLVM_LD_FLAGS})
-  target_link_libraries( ${TARGET} ${ld_flag} )
-endforeach()
-
 foreach (llvm_lib ${LLVM_LIBS})
   target_link_libraries( ${TARGET} ${llvm_lib} )
 endforeach()
+
+foreach (ld_flag ${LLVM_LD_FLAGS} ${LLVM_SYSTEM_LIBS})
+  target_link_libraries( ${TARGET} ${ld_flag} )
+endforeach()
+
 
 
 
