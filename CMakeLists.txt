@@ -26,29 +26,67 @@ set(SCC_MINOR_VERSION ${SCC_MAJOR_VERSION}.1)
 # Include the these flags whenever you compile.
 add_definitions (-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
 
+# Set the path for where LLVM/clang is installed.
+set( LLVM_INSTALL_DIR $ENV{LLVM_INSTALL_DIR} )
+
+# The package requires Clang_DIR.
+set( CLANG_DIR ${Clang_DIR} )
+
+set (search_paths
+  ${LLVM_INSTALL_DIR}
+  ${LLVM_INSTALL_DIR}/lib/cmake
+  ${LLVM_INSTALL_DIR}/lib/cmake/llvm
+  ${LLVM_INSTALL_DIR}/lib/cmake/clang
+  ${LLVM_INSTALL_DIR}/share/clang/cmake/
+  ${LLVM_INSTALL_DIR}/share/llvm/cmake/
+  ${CLANG_DIR}
+  ${CLANG_DIR}/lib/cmake
+  ${CLANG_DIR}/lib/cmake/llvm
+  ${CLANG_DIR}/lib/cmake/clang
+  ${CLANG_DIR}/share/clang/cmake/
+  ${CLANG_DIR}/share/llvm/cmake/
+
+  )
+
+# If the environment variable LLVM_INSTALL_DIR is not set, then try to look for the packages.
+# If they are found, then use the path for LLVM_INSTALL_DIR produced from the package.
+if ("${LLVM_INSTALL_DIR}" STREQUAL "")
+
+  message(STATUS "Attempting to find package for Clang.")
+  #find_package(LLVM REQUIRED CONFIG
+  #             PATHS ${search_paths}
+  #             NO_DEFAULT_PATH)
+  #
+  find_package(Clang REQUIRED CONFIG
+    PATHS ${search_paths}
+    NO_DEFAULT_PATH)
+
+  #message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+  #message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
+  message(STATUS "Found CLang ${CLANG_PACKAGE_VERSION}")
+  message(STATUS "Using ClangConfig.cmake in: ${CLANG_DIR}")
+
+  # Reset the LLVM_INSTALL_DIR environment variable once the package is found.
+  set( LLVM_INSTALL_DIR ${CLANG_DIR} )
+endif()
+
+
 option (USE_SILENT_BUILD
   "Silent as many warnings as possible." OFF
   )
 
-set (ROOT_CPP
-  driver-tooling.cpp
-  )
-
-# Set the path for where LLVM/clang is installed.
-set (LLVM_INSTALL_DIR
-  $ENV{LLVM_INSTALL_DIR}
-  )
+set( ROOT_CPP driver-tooling.cpp )
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(IS_GNU On)
+  set(IS_GNU On)
 else()
-    set(IS_GNU Off)
+  set(IS_GNU Off)
 endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(IS_CLANG On)
+  set(IS_CLANG On)
 else()
-    set(IS_CLANG Off)
+  set(IS_CLANG Off)
 endif()
 
 
@@ -64,7 +102,7 @@ function(llvm_config VARNAME switch)
     RESULT_VARIABLE HAD_ERROR
     OUTPUT_VARIABLE CONFIG_OUTPUT
     )
-  
+
   if (HAD_ERROR)
     string(REPLACE ";" " " CONFIG_COMMAND_STR "${CONFIG_COMMAND}")
     message(FATAL_ERROR "llvm-config failed with status ${HAD_ERROR}")
@@ -106,30 +144,30 @@ function(llvm_config VARNAME switch)
 endfunction(llvm_config)
 
 # Find llvm-config
-  find_program(LLVM_CONFIG_EXE
-    NAMES llvm-config
-    HINTS ${LLVM_INSTALL_DIR}/bin/ 
-    DOC "llvm-config executable"
-    PATHS ${LLVM_INSTALL_DIR}/bin/ NO_DEFAULT_PATH)
+find_program(LLVM_CONFIG_EXE
+  NAMES llvm-config
+  HINTS ${LLVM_INSTALL_DIR}/bin/ 
+  DOC "llvm-config executable"
+  PATHS ${LLVM_INSTALL_DIR}/bin/ NO_DEFAULT_PATH)
 
-  if(NOT LLVM_CONFIG_EXE)
-    message(FATAL_ERROR "llvm-config not found -- ${LLVM_CONFIG_EXE} ")
-  endif()
+if(NOT LLVM_CONFIG_EXE)
+  message(FATAL_ERROR "llvm-config not found -- ${LLVM_CONFIG_EXE} ")
+endif()
 
-  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
   execute_process(
     COMMAND git log -1 --format=%H
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     OUTPUT_VARIABLE GIT_COMMIT_HASH
     OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
+    )
 
   execute_process(
     COMMAND git config --get remote.origin.url
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     OUTPUT_VARIABLE GIT_REPO_URL
     OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
+    )
 
 else()
   set(GIT_REPO_URL "")
@@ -137,22 +175,21 @@ else()
 endif()
 
 
-  #################################################################################
+#################################################################################
 
-  # Set the corresponding LLVM flags using llvm-config
-  llvm_config(LLVM_CXX_FLAGS "--cxxflags")
-  llvm_config(LLVM_LIBS "--libs")
-  llvm_config(LLVM_LD_FLAGS "--ldflags")
-  
-  # There was an issue with the system-libs not being added. Something seems to have changed from version 7+ 
-  # with respect to llvm-config --libs. 
-  #
-  # https://github.com/halide/Halide/issues/1112
-  llvm_config(LLVM_SYSTEM_LIBS "--system-libs")
+# Set the corresponding LLVM flags using llvm-config
+llvm_config(LLVM_CXX_FLAGS "--cxxflags")
+llvm_config(LLVM_LIBS "--libs")
+llvm_config(LLVM_LD_FLAGS "--ldflags")
 
-set (CMAKE_CXX_FLAGS
-   "${LLVM_CXX_FLAGS}"
-  )
+#
+# There was an issue with the system-libs not being added. Something seems to have changed from version 7+ 
+# with respect to llvm-config --libs. 
+#
+# https://github.com/halide/Halide/issues/1112
+llvm_config(LLVM_SYSTEM_LIBS "--system-libs")
+
+set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}" )
 
 if (USE_SILENT_BUILD)
   set (CMAKE_CXX_FLAGS
@@ -161,15 +198,11 @@ if (USE_SILENT_BUILD)
 endif(USE_SILENT_BUILD)
 
 
-set (LLVM_LD_FLAGS
-  "${LLVM_LD_FLAGS}"
-  )
+set( LLVM_LD_FLAGS "${LLVM_LD_FLAGS}" )
 
-set (LLVM_LIBS
-  ${LLVM_LIBS}
-  )
+set( LLVM_LIBS ${LLVM_LIBS} )
 
-set (CLANG_LIBS
+set(CLANG_LIBS
   clangTooling
   clangFrontendTool
   clangFrontend
@@ -192,25 +225,20 @@ set (CLANG_LIBS
   clangASTMatchers
   )
 
-
-set (CMAKE_MODULE_LINKER_FLAGS
+set(CMAKE_MODULE_LINKER_FLAGS
   ${LLVM_LD_FLAGS}
   )
 
-set (TARGET
-  "systemc-clang"
-  )
+set( TARGET "systemc-clang" )
 
 
 include_directories(
   "${LLVM_INSTALL_DIR}/include"
   src
- )
-
-
-link_directories(
-  ${LLVM_INSTALL_DIR}/lib
   )
+
+
+link_directories( ${LLVM_INSTALL_DIR}/lib )
 
 add_subdirectory(src)
 add_subdirectory(tests)
@@ -220,7 +248,8 @@ set( SRC_LIB libsystemc-clang )
 
 add_executable(
   ${TARGET}
-  ${ROOT_CPP} )
+  ${ROOT_CPP} 
+  )
 
 target_link_libraries(${TARGET} ${SRC_LIB}) #nlohmann_json::nlohmann_json)
 
@@ -243,14 +272,18 @@ endforeach()
 message(STATUS "")
 message(STATUS "[ Build summary ]")
 message(STATUS "SystemC-Clang         : ${SCC_MINOR_VERSION}")
+message(STATUS "")
+message(STATUS "[ Environment ]")
 message(STATUS "CMAKE_GENERATOR       : ${CMAKE_GENERATOR}")
 message(STATUS "Compiler ID           : ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "Compiler version      : ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "Compiler path         : ${CMAKE_CXX_COMPILER}")
 message(STATUS "llvm-config           : ${LLVM_CONFIG_EXE}")
+message(STATUS "")
 message(STATUS "Install path          : ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "CMAKE_SOURCE_DIR      : ${CMAKE_SOURCE_DIR}")
 message(STATUS "CMAKE_BINARY_DIR      : ${CMAKE_BINARY_DIR}")
+message(STATUS "")
 message(STATUS "Git repo url          : ${GIT_REPO_URL}")
 message(STATUS "Git commit hash       : ${GIT_COMMIT_HASH}")
 message(STATUS "")
