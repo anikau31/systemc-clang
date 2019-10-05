@@ -32,6 +32,13 @@ set( LLVM_INSTALL_DIR $ENV{LLVM_INSTALL_DIR} )
 # The package requires Clang_DIR.
 set( CLANG_DIR ${Clang_DIR} )
 
+# Default plugin status 
+if ("${XLAT}" STREQUAL "")
+set( PLUGIN_XLAT OFF )
+else()
+set( PLUGIN_XLAT ${XLAT})
+endif()
+
 set (search_paths
   ${LLVM_INSTALL_DIR}
   ${LLVM_INSTALL_DIR}/lib/cmake
@@ -75,7 +82,11 @@ option (USE_SILENT_BUILD
   "Silent as many warnings as possible." OFF
   )
 
-set( ROOT_CPP driver-tooling.cpp )
+if(PLUGIN_XLAT)
+  set( ROOT_CPP driver-xlat.cpp )
+else() 
+  set( ROOT_CPP driver-tooling.cpp )
+endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   set(IS_GNU On)
@@ -235,16 +246,18 @@ set( TARGET "systemc-clang" )
 include_directories(
   "${LLVM_INSTALL_DIR}/include"
   src
+  xlat
   )
 
 
 link_directories( ${LLVM_INSTALL_DIR}/lib )
 
 add_subdirectory(src)
+add_subdirectory(xlat)
 add_subdirectory(tests)
 
 
-set( SRC_LIB libsystemc-clang )
+set( SRC_LIB libsystemc-clang libxlat )
 
 add_executable(
   ${TARGET}
@@ -272,6 +285,8 @@ endforeach()
 message(STATUS "")
 message(STATUS "[ Build summary ]")
 message(STATUS "SystemC-Clang         : ${SCC_MINOR_VERSION}")
+message(STATUS "")
+message(STATUS "Plugin Xlat           : ${PLUGIN_XLAT}")
 message(STATUS "")
 message(STATUS "[ Environment ]")
 message(STATUS "CMAKE_GENERATOR       : ${CMAKE_GENERATOR}")

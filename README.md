@@ -12,6 +12,10 @@ It parses RTL constructs and some TLM 2.0 constructs.
 * [Linux](INSTALL-linux.md)
 * [OSX](INSTALL-osx.md)
 
+## Plugin Xlat
+
+  To compile with the Xlat plugin, run cmake with the `-DXLAT=on` flag. 
+  
 ## Contact
 
 If you encounter problems, please create issues with a minimally working example that illustrates the issue.  
