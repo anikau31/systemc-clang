@@ -7,7 +7,7 @@
 using namespace scpar;
 using namespace std;
 
-#include "xlat/Xlat.h"
+#include "plugins/xlat/Xlat.h"
 
 //using namespace clang::tooling;
 int main(int argc, const char **argv) {

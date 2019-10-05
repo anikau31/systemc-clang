@@ -246,14 +246,14 @@ set( TARGET "systemc-clang" )
 include_directories(
   "${LLVM_INSTALL_DIR}/include"
   src
-  xlat
+  plugins/xlat
   )
 
 
 link_directories( ${LLVM_INSTALL_DIR}/lib )
 
 add_subdirectory(src)
-add_subdirectory(xlat)
+add_subdirectory(plugins)
 add_subdirectory(tests)
 
 
