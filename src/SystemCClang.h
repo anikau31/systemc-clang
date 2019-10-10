@@ -52,6 +52,7 @@ using namespace clang::tooling;
 #include "Utility.h"
 #include "FindTemplateParameters.h"             
 #include "FindModuleInstance.h"
+#include "Matchers.h"
 
 
 using namespace clang;
@@ -85,6 +86,7 @@ namespace scpar {
       Model* systemcModel_;
       ASTContext& context_;
       SourceManager& sm_;
+
   }; // End class SystemCConsumer
 
   //

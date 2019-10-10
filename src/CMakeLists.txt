@@ -50,4 +50,9 @@ add_library (libsystemc-clang
   NotifyCalls.cpp
   EventContainer.cpp
 
+  #
+  # AST Matchers
+  # 
+  Matchers.cpp
+
   )

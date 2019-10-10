@@ -1,4 +1,7 @@
 #include "SystemCClang.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
+#include "clang/ASTMatchers/ASTMatchFinder.h"
+
 using namespace scpar;
 using namespace clang;
 using namespace std;
@@ -21,7 +24,15 @@ bool SystemCConsumer::fire() {
   // A first pass should be made to collect all sc_module declarations.
   // This is important so that the top-level module can be found. 
   //
+  ModuleDeclarationMatcher moduleDeclarationHandler{}; 
+  MatchFinder matchRegistry{};
 
+  matchRegistry.addMatcher( matchModuleDeclarations, &moduleDeclarationHandler);
+
+  // Run all the matchers
+  matchRegistry.matchAST(getContext());
+
+  moduleDeclarationHandler.dump();
   // Find the sc_modules
   //
   FindSCModules scmod{tu, os_};
