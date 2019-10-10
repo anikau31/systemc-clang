@@ -16,8 +16,8 @@ using namespace hnode;
 class Xlat : public SystemCConsumer {
 
   public:
-  Xlat( CompilerInstance& ci)
-    : SystemCConsumer(ci) {
+  Xlat( CompilerInstance& ci, std::string topModule )
+    : SystemCConsumer( ci, topModule ) {
     }
 
   bool postFire();

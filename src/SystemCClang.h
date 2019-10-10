@@ -64,7 +64,7 @@ public:
   llvm::raw_ostream &os_;
   SourceManager &_sm;
 
-  SystemCConsumer(CompilerInstance &);
+  SystemCConsumer( CompilerInstance &, std::string top );
   ~SystemCConsumer();
 
   // Virtual methods that plugins may override.
@@ -79,23 +79,32 @@ public:
 
 private:
   CompilerInstance &_ci;
-  // ASTContext& _context;
+  std::string top_;
   Model *_systemcModel;
 
   // Rewriter _rewrite;
 }; // End class SystemCConsumer
 
+//
+// SystemCClang
+//
+//
+
 class SystemCClang : public SystemCConsumer {
 public:
-  SystemCClang(CompilerInstance &ci) : SystemCConsumer(ci) {}
+  SystemCClang( CompilerInstance &ci, std::string top ) : SystemCConsumer( ci, top ) {}
 };
 
 template <typename A>
 class LightsCameraAction : public clang::ASTFrontendAction {
+  public:
+  std::string top;
+  LightsCameraAction(std::string topModule ):top{topModule} { };
+
 protected:
-  virtual std::unique_ptr<clang::ASTConsumer>
-  CreateASTConsumer(CompilerInstance &ci, llvm::StringRef inFile) {
-    return std::unique_ptr<clang::ASTConsumer>(new A(ci));
+  virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer ( CompilerInstance &ci, 
+      llvm::StringRef inFile ) {
+    return std::unique_ptr<clang::ASTConsumer>(new A(ci, top));
   };
 }; // End class LightsCameraAction
 } // End namespace scpar

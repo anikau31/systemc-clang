@@ -1,18 +1,10 @@
-#include "PluginAction.h"
-
 #include "SystemCClang.h"
-//#include "TimeAnalysis.h"
-
-#include <iostream>
+#include "PluginAction.h"
 using namespace scpar;
 using namespace std;
 
-//using namespace clang::tooling;
+
 int main(int argc, const char **argv) {
-  cout << "args: " << argc << endl;
-    for(int i=0;i<argc-1;i++) {
-      cout << "argv[" << i << "]: " << argv[i] << endl;
-    }
-  PluginAction<SystemCClang> scc(argc, argv);  
+  PluginAction<SystemCClang> systemc_clang(argc, argv);
   return 0;
 }

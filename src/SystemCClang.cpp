@@ -11,6 +11,7 @@ bool SystemCConsumer::postFire() { return true; }
 
 bool SystemCConsumer::fire() {
 
+  std::cout << "Top module: " << top_ << std::endl;
   TranslationUnitDecl *tu{_context.getTranslationUnitDecl()};
   // Reflection database.
   _systemcModel = new Model{} ;
@@ -236,11 +237,12 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext &context) {
   postFire();
 }
 
-SystemCConsumer::SystemCConsumer(CompilerInstance &ci)
+SystemCConsumer::SystemCConsumer( CompilerInstance &ci, std::string top )
     : os_{llvm::errs()},
       _sm{ci.getSourceManager()},
       _context{ci.getASTContext()},
       _ci{ci},
+      top_{top},
       _systemcModel{nullptr} {}
 
 SystemCConsumer::~SystemCConsumer() {
