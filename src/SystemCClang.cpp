@@ -3,26 +3,27 @@ using namespace scpar;
 using namespace clang;
 using namespace std;
 
-Model *SystemCConsumer::getSystemCModel() { return _systemcModel; }
-
-bool SystemCConsumer::preFire() { return true; }
-
-bool SystemCConsumer::postFire() { return true; }
-
 bool SystemCConsumer::fire() {
 
-  std::cout << "Top module: " << top_ << std::endl;
-  TranslationUnitDecl *tu{_context.getTranslationUnitDecl()};
+  os_ << "Top module: " << getTopModule() << "\n";
+  TranslationUnitDecl *tu{getContext().getTranslationUnitDecl()};
   // Reflection database.
-  _systemcModel = new Model{} ;
+  systemcModel_ = new Model{} ;
 
   // ANI : Do we need FindGlobalEvents?
   FindGlobalEvents globals{tu, os_};
   FindGlobalEvents::globalEventMapType eventMap{globals.getEventMap()};
   globals.dump_json();
-  _systemcModel->addGlobalEvents(eventMap);
+  systemcModel_->addGlobalEvents(eventMap);
+
+  // 
+  // TODO: 
+  // A first pass should be made to collect all sc_module declarations.
+  // This is important so that the top-level module can be found. 
+  //
 
   // Find the sc_modules
+  //
   FindSCModules scmod{tu, os_};
 
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
@@ -32,7 +33,7 @@ bool SystemCConsumer::fire() {
     ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
     // md->setTemplateParameters( scmod.getTemplateParameters() );
     //       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
-    _systemcModel->addModuleDecl(md);
+    systemcModel_->addModuleDecl(md);
 
     //
     // TODO: find any instances in the module declarations
@@ -55,7 +56,7 @@ bool SystemCConsumer::fire() {
     //fnDecl->dump();
 
     FindSimTime scstart{fnDecl, os_};
-    _systemcModel->addSimulationTime(scstart.returnSimTime());
+    systemcModel_->addSimulationTime(scstart.returnSimTime());
   } else {
     os_ << "\n Could not find SCMain";
   }
@@ -65,12 +66,12 @@ bool SystemCConsumer::fire() {
   ////////////////////////////////////////////////////////////////
   FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
   findNetlist.dump();
-  _systemcModel->addNetlist(findNetlist);
+  systemcModel_->addNetlist(findNetlist);
 
   ////////////////////////////////////////////////////////////////
   // Figure out the module map.
   ////////////////////////////////////////////////////////////////
-  Model::moduleMapType moduleMap{_systemcModel->getModuleDecl()};
+  Model::moduleMapType moduleMap{systemcModel_->getModuleDecl()};
 
   for (Model::moduleMapType::iterator mit = moduleMap.begin(),
          mitend = moduleMap.end();   mit != mitend; mit++) {
@@ -136,7 +137,7 @@ bool SystemCConsumer::fire() {
   #ifdef USE_SAUTO 
         /// Does not compile
         SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(),
-                                              ef->getEntryMethod(), &_context,
+                                              ef->getEntryMethod(), &getContext(),
                                               llvm::errs());
         if (suspensionAutomata.initialize()) {
           suspensionAutomata.genSusCFG();
@@ -151,7 +152,7 @@ bool SystemCConsumer::fire() {
       }
       moduleDeclVec.push_back(md);
     }
-    _systemcModel->addModuleDeclInstances(mainmd, moduleDeclVec);
+    systemcModel_->addModuleDeclInstances(mainmd, moduleDeclVec);
   }
 
   /*
@@ -162,7 +163,7 @@ if (scmain.isSCMainFound())
           FunctionDecl *fnDecl = scmain.getSCMainFunctionDecl();
 
           FindSimTime scstart(fnDecl, os_);
-          _systemcModel->addSimulationTime(scstart.returnSimTime());
+          systemcModel_->addSimulationTime(scstart.returnSimTime());
 
 }
 else {
@@ -171,16 +172,16 @@ else {
 
 FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
 findNetlist.dump();
-_systemcModel->addNetlist(findNetlist);
+systemcModel_->addNetlist(findNetlist);
 */
 
 // Only do this if SAUTO flag is set.
 #ifdef USE_SAUTO
   // Generate SAUTO
   // Placing it here so that unique SAUTO for each instance
-  // Model::moduleMapType moduleMap = _systemcModel->getModuleDecl();
+  // Model::moduleMapType moduleMap = systemcModel_->getModuleDecl();
   Model::moduleInstanceMapType moduleInstanceMap =
-      _systemcModel->getModuleInstanceMap();
+      systemcModel_->getModuleInstanceMap();
 
   for (Model::moduleInstanceMapType::iterator it = moduleInstanceMap.begin(),
                                               eit = moduleInstanceMap.end();
@@ -194,7 +195,7 @@ _systemcModel->addNetlist(findNetlist);
 
         SuspensionAutomata suspensionAutomata(
             entryFunctionContainer.at(j)->getWaitCalls(),
-            entryFunctionContainer.at(j)->getEntryMethod(), &_context,
+            entryFunctionContainer.at(j)->getEntryMethod(), &getContext(),
             llvm::errs());
         if (suspensionAutomata.initialize()) {
           suspensionAutomata.genSusCFG();
@@ -210,7 +211,7 @@ _systemcModel->addNetlist(findNetlist);
 
   os_ << "\n";
   os_ << "\n## SystemC model\n";
-  _systemcModel->dump(os_);
+  systemcModel_->dump(os_);
   return true;
 }
 
@@ -219,35 +220,27 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext &context) {
   // / Pass 1: Find the necessary information.
   // ///////////////////////////////////////////////////////////////
 
-  bool pre = false;
-
-  pre = preFire();
-
-  if (!pre) {
-    return;
-  }
-
-  bool f = false;
-
-  f = fire();
-
-  if (!f) {
-    return;
-  }
-  postFire();
+  fire(); 
 }
 
 SystemCConsumer::SystemCConsumer( CompilerInstance &ci, std::string top )
-    : os_{llvm::errs()},
-      _sm{ci.getSourceManager()},
-      _context{ci.getASTContext()},
-      _ci{ci},
-      top_{top},
-      _systemcModel{nullptr} {}
+  : os_{llvm::errs()}, sm_{ci.getSourceManager()},
+  context_{ci.getASTContext()},
+  ci_{ci},
+  top_{top},
+  systemcModel_{nullptr} {}
 
-SystemCConsumer::~SystemCConsumer() {
-  if (_systemcModel != nullptr) {
-    delete _systemcModel;
-    _systemcModel = nullptr;
+  SystemCConsumer::~SystemCConsumer() {
+  if (systemcModel_ != nullptr) {
+    delete systemcModel_;
+    systemcModel_ = nullptr;
   }
 }
+
+Model *SystemCConsumer::getSystemCModel() { return systemcModel_; }
+
+std::string SystemCConsumer::getTopModule() const { return top_; }
+
+ASTContext& SystemCConsumer::getContext() const { return context_; }
+  
+SourceManager& SystemCConsumer::getSourceManager() const { return sm_; }

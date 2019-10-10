@@ -58,55 +58,59 @@ using namespace clang;
 
 namespace scpar {
 
-class SystemCConsumer : public ASTConsumer,
-                        public RecursiveASTVisitor<SystemCConsumer> {
-public:
-  llvm::raw_ostream &os_;
-  SourceManager &_sm;
+  class SystemCConsumer : public ASTConsumer,
+  public RecursiveASTVisitor<SystemCConsumer> {
 
-  SystemCConsumer( CompilerInstance &, std::string top );
-  ~SystemCConsumer();
+    // TODO: This should be made private at some point.
+    public:
+      llvm::raw_ostream& os_;
 
-  // Virtual methods that plugins may override.
-  virtual bool preFire();
-  virtual bool postFire();
-  virtual bool fire();
+    public: 
+      SystemCConsumer( CompilerInstance &, std::string top );
+      virtual ~SystemCConsumer();
 
-  Model *getSystemCModel();
+      Model *getSystemCModel();
+      std::string getTopModule() const;
+      ASTContext& getContext() const; 
+      SourceManager& getSourceManager() const;
 
-  virtual void HandleTranslationUnit(ASTContext &context);
-  ASTContext &_context;
+      // Virtual methods that plugins may override.
+      virtual bool fire();
 
-private:
-  CompilerInstance &_ci;
-  std::string top_;
-  Model *_systemcModel;
+      virtual void HandleTranslationUnit(ASTContext &context);
 
-  // Rewriter _rewrite;
-}; // End class SystemCConsumer
+    private:
+      CompilerInstance& ci_;
+      std::string top_;
+      Model* systemcModel_;
+      ASTContext& context_;
+      SourceManager& sm_;
+  }; // End class SystemCConsumer
 
-//
-// SystemCClang
-//
-//
+  //
+  // SystemCClang
+  //
+  //
 
-class SystemCClang : public SystemCConsumer {
-public:
-  SystemCClang( CompilerInstance &ci, std::string top ) : SystemCConsumer( ci, top ) {}
-};
-
-template <typename A>
-class LightsCameraAction : public clang::ASTFrontendAction {
-  public:
-  std::string top;
-  LightsCameraAction(std::string topModule ):top{topModule} { };
-
-protected:
-  virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer ( CompilerInstance &ci, 
-      llvm::StringRef inFile ) {
-    return std::unique_ptr<clang::ASTConsumer>(new A(ci, top));
+  class SystemCClang : public SystemCConsumer {
+    public:
+      SystemCClang( CompilerInstance &ci, std::string top ) : SystemCConsumer( ci, top ) {}
   };
-}; // End class LightsCameraAction
+
+  template <typename A>
+    class LightsCameraAction : public clang::ASTFrontendAction {
+      public:
+        LightsCameraAction( std::string topModule ):top_{topModule} { };
+
+      private: 
+        std::string top_;
+      protected:
+        virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer ( CompilerInstance &ci, 
+            llvm::StringRef inFile ) {
+          return std::unique_ptr<clang::ASTConsumer>( new A(ci, top_) );
+        };
+    }; 
+
 } // End namespace scpar
 
 #endif

@@ -11,8 +11,8 @@ bool Xlat::postFire()
   std::error_code ec;
   string outputfn;
 
-  FileID fileID = _sm.getMainFileID();
-  const FileEntry *fileentry = _sm.getFileEntryForID(fileID);
+  FileID fileID = getSourceManager().getMainFileID();
+  const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
   if (!fileentry) {
     outputfn = "xlatout";
     os_ << "Null file entry for tranlation unit for this astcontext\n";
