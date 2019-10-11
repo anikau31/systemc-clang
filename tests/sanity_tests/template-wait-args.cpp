@@ -59,7 +59,7 @@ int sc_main(int argc, char *argv[]) {
 
     sc_signal<int> s1;
 
-    producer<222,333> p1("producer");
+    producer<222,333> p1("producer_instance");
 //	consumer c1("consumer");
 
     p1.out(s1);

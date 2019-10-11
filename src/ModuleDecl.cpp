@@ -12,6 +12,10 @@ ModuleDecl::ModuleDecl() : module_name_{"NONE"},
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
     : module_name_{name}, class_decl_{decl} {}
 
+ModuleDecl::ModuleDecl(const std::tuple< const std::string& , CXXRecordDecl* >& element )
+    : module_name_{get<0>(element)}, class_decl_{get<1>(element)} {}
+
+
 ModuleDecl::~ModuleDecl() {
 
   class_decl_ = nullptr;

@@ -1,4 +1,5 @@
 #include "SystemCClang.h"
+#include "clang/AST/ASTImporter.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 
@@ -27,14 +28,53 @@ bool SystemCConsumer::fire() {
   ModuleDeclarationMatcher moduleDeclarationHandler{}; 
   MatchFinder matchRegistry{};
 
-  matchRegistry.addMatcher( matchModuleDeclarations, &moduleDeclarationHandler);
-
+  matchRegistry.addMatcher( matchModuleDeclarations, &moduleDeclarationHandler );
   // Run all the matchers
   matchRegistry.matchAST(getContext());
 
-  moduleDeclarationHandler.dump();
+  // Check if the top-level module one of the sc_module declarations?
+  //
+  auto foundModules{ moduleDeclarationHandler.getFoundModuleDeclarations() };
+  auto foundTopModule{ 
+    std::find_if(foundModules.begin(), foundModules.end(), 
+      [this]( std::tuple<std::string, CXXRecordDecl*>& element ) { 
+      return std::get<0>(element) == getTopModule();  }  ) 
+  }; 
+  if (foundTopModule != foundModules.end()) {
+    os_ << "Found the top module: " << get<0>(*foundTopModule) << ", " << get<1>(*foundTopModule) << "\n";
+  } 
+
+  // for ( auto const& element : foundModules ) {
+    // systemcModel_->addModuleDecl( new ModuleDecl{element} );
+    // os_ << "name: " << get<0>(element) << "\n";;
+  // }
+  TODO:
+  // IMPORTANT: DO NOT ERASE
+  // This code allows us to traverse using AST Matchers a node, and not the whole AST.
+  // The approach is to import a part of the AST into another ASTUnit, and then invoke matchers on it. 
+  // std::unique_ptr<ASTUnit> ToUnit = buildASTFromCode("", "to.cc");
+  // ASTImporter importer(ToUnit->getASTContext(), ToUnit->getFileManager(),
+  // tu->getASTContext(),ci_.getFileManager(), true );
+  // llvm::Expected<Decl *> ImportedOrErr = importer.Import(node);
+  //
+  // if (!ImportedOrErr) {
+  // llvm::Error Err = ImportedOrErr.takeError();
+  // llvm::errs() << "ERROR: " << Err << "\n";
+  // consumeError(std::move(Err));
+  // return 1;
+  // }
+  //
+  //
+  // Decl *Imported = *ImportedOrErr;
+  // Imported->getTranslationUnitDecl()->dump();
+  //
+  // matchRegistry.matchAST(ToUnit->getASTContext());
+  
   // Find the sc_modules
   //
+  // This code is no longer required. 
+  // This is because we are now using AST matchers to find all the nodes, and create the
+  // module declarations.
   FindSCModules scmod{tu, os_};
 
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
@@ -50,7 +90,7 @@ bool SystemCConsumer::fire() {
     // TODO: find any instances in the module declarations
     os_ << "=> Processing module: " << mit->first << "\n";
     //md->getModuleClassDecl()->dump();
-    FindModuleInstance module_instance{md->getModuleClassDecl(), os_};
+  //  FindModuleInstance module_instance{md->getModuleClassDecl(), os_};
   }
 
 

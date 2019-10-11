@@ -7,8 +7,9 @@ using namespace std;
 void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult& result ) {
   cout << "\n ########   ModuleInstanceMatcher ASTMatcher: called  ######### " <<  endl;
 
-  if ( const CXXRecordDecl* decl = result.Nodes.getNodeAs<clang::CXXRecordDecl>("sc_module") ) {
+  if ( CXXRecordDecl* decl = const_cast<CXXRecordDecl*>(result.Nodes.getNodeAs<clang::CXXRecordDecl>("sc_module")) ) {
     cout << " Found sc_module: " << decl->getIdentifier()->getNameStart() << endl;
+    //decl->dump();
     std::string name{ decl->getIdentifier()->getNameStart() };
     foundDeclarations_.push_back( std::make_tuple(name, decl) );
   }

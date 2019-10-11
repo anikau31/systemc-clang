@@ -50,6 +50,7 @@ public:
 public:
   ModuleDecl();
   ModuleDecl(const string &, CXXRecordDecl *);
+  ModuleDecl(const std::tuple< const std::string &, CXXRecordDecl* > & );
 
   ~ModuleDecl();
 
