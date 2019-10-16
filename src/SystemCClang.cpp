@@ -37,18 +37,83 @@ bool SystemCConsumer::fire() {
   auto foundModules{ moduleDeclarationHandler.getFoundModuleDeclarations() };
   auto foundTopModule{ 
     std::find_if(foundModules.begin(), foundModules.end(), 
-      [this]( std::tuple<std::string, CXXRecordDecl*>& element ) { 
-      return std::get<0>(element) == getTopModule();  }  ) 
+        [this]( std::tuple<std::string, CXXRecordDecl*>& element ) { 
+        return std::get<0>(element) == getTopModule();  }  ) 
   }; 
   if (foundTopModule != foundModules.end()) {
     os_ << "Found the top module: " << get<0>(*foundTopModule) << ", " << get<1>(*foundTopModule) << "\n";
   } 
 
-  // for ( auto const& element : foundModules ) {
-    // systemcModel_->addModuleDecl( new ModuleDecl{element} );
-    // os_ << "name: " << get<0>(element) << "\n";;
-  // }
-  TODO:
+  // =========================================================== 
+  // 1. Add every found module to the model. 
+  // =========================================================== 
+  // Every module that is found should be added to the model.
+  // We could do this in the AST matcher actually. 
+  for ( auto const& element : foundModules ) {
+    auto moduleDeclaration{ new ModuleDecl{ element } };
+    systemcModel_->addModuleDecl( moduleDeclaration );
+    os_ << "name: " << get<0>(element) << "\n";;
+
+    // =========================================================== 
+    // 2. Traverse every module, and get its member declarations.
+    // =========================================================== 
+    //
+    // This can be replaced with matchers, where all fields are 
+    // recognized in the matchers.
+
+    //
+    //  Find the entry functions.
+    //
+    vector< EntryFunctionContainer* > moduleEntryFunctions;
+    FindConstructor constructor{ moduleDeclaration->getModuleClassDecl(), os_ };
+    moduleDeclaration->addConstructor( constructor.returnConstructorStmt() );
+
+    //  
+    //  Find the ports
+    //
+    FindPorts foundPorts{ moduleDeclaration->getModuleClassDecl(), os_ };
+    moduleDeclaration->addInputPorts( foundPorts.getInputPorts());
+    moduleDeclaration->addOutputPorts( foundPorts.getOutputPorts());
+    moduleDeclaration->addInputOutputPorts( foundPorts.getInputOutputPorts() );
+    moduleDeclaration->addOtherVars( foundPorts.getOtherVars() ); 
+
+    // 
+    // Find the sc_signals within the module. 
+    //
+    FindSignals signals{moduleDeclaration->getModuleClassDecl(), os_};
+    moduleDeclaration->addSignals(signals.getSignals());
+
+    // 
+    // Find the entry functions (SC_METHOD should be the only one really)
+    //
+    FindEntryFunctions findEntries{ moduleDeclaration->getModuleClassDecl(), os_ };
+    auto entryFunctions{ findEntries.getEntryFunctions() };
+    moduleDeclaration->addProcess( entryFunctions );
+
+    // For every entry function, figure out its sensitivity list. 
+    for ( size_t i{0}; i < entryFunctions->size(); ++i ) {
+      EntryFunctionContainer *ef{ (*entryFunctions)[i] };
+
+      if (ef->getEntryMethod() == nullptr) { os_ << "ERROR"; }
+
+      FindSensitivity findSensitivity{ constructor.returnConstructorStmt(), os_ };
+      ef->addSensitivityInfo(findSensitivity);
+    }
+  }
+
+  //
+  // Print the contents of the model so far.  It should only have declarations.
+  //
+  os_ << "[Stage 1]: Discover sc_module declarations.\n";
+  auto stagedModules{ systemcModel_->getModuleDecl() };
+  for ( auto const& moduleDecl: stagedModules ) {
+    auto moduleDeclPtr{ moduleDecl.second };
+    moduleDeclPtr->dump( os_ );
+
+  }
+
+
+  // TODO:
   // IMPORTANT: DO NOT ERASE
   // This code allows us to traverse using AST Matchers a node, and not the whole AST.
   // The approach is to import a part of the AST into another ASTUnit, and then invoke matchers on it. 
@@ -69,30 +134,33 @@ bool SystemCConsumer::fire() {
   // Imported->getTranslationUnitDecl()->dump();
   //
   // matchRegistry.matchAST(ToUnit->getASTContext());
-  
+
   // Find the sc_modules
   //
   // This code is no longer required. 
   // This is because we are now using AST matchers to find all the nodes, and create the
   // module declarations.
-  FindSCModules scmod{tu, os_};
+  //
+  // FindSCModules scmod{tu, os_};
+  //
+  // FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
+  //
+  // for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
+  // mitend = scmodules.end();  mit != mitend; ++mit) {
+  // ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
+  //  md->setTemplateParameters( scmod.getTemplateParameters() );
+  //       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
+  // systemcModel_->addModuleDecl(md);
+  //
 
-  FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
-
-  for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
-         mitend = scmodules.end();  mit != mitend; ++mit) {
-    ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
-    // md->setTemplateParameters( scmod.getTemplateParameters() );
-    //       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
-    systemcModel_->addModuleDecl(md);
-
-    //
-    // TODO: find any instances in the module declarations
-    os_ << "=> Processing module: " << mit->first << "\n";
-    //md->getModuleClassDecl()->dump();
+  //TODO: find any instances in the module declarations
+  // os_ << "=> Processing module: " << mit->first << "\n";
+  //   md->getModuleClassDecl()->dump();
   //  FindModuleInstance module_instance{md->getModuleClassDecl(), os_};
-  }
-
+  // }
+  //
+  // You only need to look for the main() if a topModule is not found.  
+  // So, the CXXRecordDecl to be passed to the next stage should be topModule if found. 
 
   ////////////////////////////////////////////////////////////////
   // Find the sc_main
@@ -102,7 +170,7 @@ bool SystemCConsumer::fire() {
   if (scmain.isSCMainFound()) {
     FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
 
-  // TODO: find any instances in sc_main.
+    // TODO: find any instances in sc_main.
 
     //fnDecl->dump();
 
@@ -125,7 +193,7 @@ bool SystemCConsumer::fire() {
   Model::moduleMapType moduleMap{systemcModel_->getModuleDecl()};
 
   for (Model::moduleMapType::iterator mit = moduleMap.begin(),
-         mitend = moduleMap.end();   mit != mitend; mit++) {
+      mitend = moduleMap.end();   mit != mitend; mit++) {
     ModuleDecl *mainmd{mit->second};
     int numInstances{mainmd->getNumInstances()};
     vector<ModuleDecl *> moduleDeclVec;
@@ -165,13 +233,12 @@ bool SystemCConsumer::fire() {
 
       FindEntryFunctions findEntries{mainmd->getModuleClassDecl(), os_};
       FindEntryFunctions::entryFunctionVectorType *entryFunctions{
-          findEntries.getEntryFunctions()};
+        findEntries.getEntryFunctions()};
       md->addProcess(entryFunctions);
 
       for (size_t i = 0; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
-        FindSensitivity findSensitivity{constructor.returnConstructorStmt(),
-                                        os_};
+        FindSensitivity findSensitivity{constructor.returnConstructorStmt(), os_};
         ef->addSensitivityInfo(findSensitivity);
 
         if (ef->getEntryMethod() == nullptr) {
@@ -184,82 +251,12 @@ bool SystemCConsumer::fire() {
 
         FindNotify findNotify{ef->_entryMethodDecl, os_};
         ef->addNotifys(findNotify);
-
-  #ifdef USE_SAUTO 
-        /// Does not compile
-        SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(),
-                                              ef->getEntryMethod(), &getContext(),
-                                              llvm::errs());
-        if (suspensionAutomata.initialize()) {
-          suspensionAutomata.genSusCFG();
-          suspensionAutomata.dumpSusCFG();
-          suspensionAutomata.genSauto();
-          suspensionAutomata.dumpSauto();
-          ef->addSusCFGAuto(suspensionAutomata);
-        }
-#endif 
-
         _entryFunctionContainerVector.push_back(ef);
       }
       moduleDeclVec.push_back(md);
     }
     systemcModel_->addModuleDeclInstances(mainmd, moduleDeclVec);
   }
-
-  /*
-FindSCMain scmain(tu, os_);
-
-if (scmain.isSCMainFound())
-{
-          FunctionDecl *fnDecl = scmain.getSCMainFunctionDecl();
-
-          FindSimTime scstart(fnDecl, os_);
-          systemcModel_->addSimulationTime(scstart.returnSimTime());
-
-}
-else {
-          os_ <<"\n Could not find SCMain";
-}
-
-FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
-findNetlist.dump();
-systemcModel_->addNetlist(findNetlist);
-*/
-
-// Only do this if SAUTO flag is set.
-#ifdef USE_SAUTO
-  // Generate SAUTO
-  // Placing it here so that unique SAUTO for each instance
-  // Model::moduleMapType moduleMap = systemcModel_->getModuleDecl();
-  Model::moduleInstanceMapType moduleInstanceMap =
-      systemcModel_->getModuleInstanceMap();
-
-  for (Model::moduleInstanceMapType::iterator it = moduleInstanceMap.begin(),
-                                              eit = moduleInstanceMap.end();
-       it != eit; it++) {
-    vector<ModuleDecl *> moduleDeclVec = it->second;
-    for (size_t i = 0; i < moduleDeclVec.size(); i++) {
-      ModuleDecl *moduleDecl = moduleDeclVec.at(i);
-      vector<EntryFunctionContainer *> entryFunctionContainer =
-          moduleDecl->getEntryFunctionContainer();
-      for (size_t j = 0; j < entryFunctionContainer.size(); j++) {
-
-        SuspensionAutomata suspensionAutomata(
-            entryFunctionContainer.at(j)->getWaitCalls(),
-            entryFunctionContainer.at(j)->getEntryMethod(), &getContext(),
-            llvm::errs());
-        if (suspensionAutomata.initialize()) {
-          suspensionAutomata.genSusCFG();
-          //suspensionAutomata.dumpSusCFG();
-          suspensionAutomata.genSauto();
-          //suspensionAutomata.dumpSauto();
-          entryFunctionContainer.at(j)->addSusCFGAuto(suspensionAutomata);
-        }
-      }
-    }
-  } 
-#endif 
-
   os_ << "\n";
   os_ << "\n## SystemC model\n";
   systemcModel_->dump(os_);
@@ -282,16 +279,16 @@ SystemCConsumer::SystemCConsumer( CompilerInstance &ci, std::string top )
   systemcModel_{nullptr} {}
 
   SystemCConsumer::~SystemCConsumer() {
-  if (systemcModel_ != nullptr) {
-    delete systemcModel_;
-    systemcModel_ = nullptr;
+    if (systemcModel_ != nullptr) {
+      delete systemcModel_;
+      systemcModel_ = nullptr;
+    }
   }
-}
 
 Model *SystemCConsumer::getSystemCModel() { return systemcModel_; }
 
 std::string SystemCConsumer::getTopModule() const { return top_; }
 
 ASTContext& SystemCConsumer::getContext() const { return context_; }
-  
+
 SourceManager& SystemCConsumer::getSourceManager() const { return sm_; }

@@ -130,12 +130,13 @@ unsigned int Model::getNumEvents() { return (event_map_.size() - 3); }
 
 void Model::dump(llvm::raw_ostream &os) {
 
-  os << "\n# Number of modules : " << modules_.size();
+  os << "\n" << "# Number of modules: " << modules_.size();
 
   for (Model::moduleMapType::iterator mit = modules_.begin();
        mit != modules_.end(); mit++) {
     // Second is the ModuleDecl type.
 
+    // Get all the instances, and start to go through each of those. 
     vector<ModuleDecl *> instanceVec = module_instance_map_[mit->second];
     os << "\n# Module " << mit->first << ": " << instanceVec.size()
        << " instances.";
