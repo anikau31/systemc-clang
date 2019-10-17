@@ -83,7 +83,7 @@ namespace scpar {
     private:
       CompilerInstance& ci_;
       std::string top_;
-      Model* systemcModel_;
+      Model* systemc_model_;
       ASTContext& context_;
       SourceManager& sm_;
 

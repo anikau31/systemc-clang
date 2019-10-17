@@ -1,11 +1,16 @@
 #include "systemc.h"
 
 SC_MODULE(FIR) {
+  // Input ports
   sc_in_clk clk;
   sc_in<double> sample;       
+  // output ports
   sc_out<double> result;
-  sc_int<32> myint;
+  // sc_signal local variable
   sc_signal<int> mysignal;
+  // local variable
+  sc_int<32> myint;
+
   SC_CTOR(FIR) {      
     SC_METHOD(behavior);
     sensitive << clk.neg();
