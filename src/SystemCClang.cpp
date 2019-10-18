@@ -106,6 +106,7 @@ bool SystemCConsumer::fire() {
   os_ << "[Pass 1]: Discover sc_module declarations.\n";
   auto stagedModules{ systemc_model_->getModuleDecl() };
   for ( auto const& moduleDecl: stagedModules ) {
+    os_ << "[ module name ] " << moduleDecl.first << "\n";
     auto moduleDeclPtr{ moduleDecl.second };
     moduleDeclPtr->dump( os_ );
 
@@ -161,30 +162,54 @@ bool SystemCConsumer::fire() {
   // You only need to look for the main() if a topModule is not found.  
   // So, the CXXRecordDecl to be passed to the next stage should be topModule if found. 
 
+  //
+  // =========================================================== 
+  // 3. We have gone over all the sc_module declarations now.  
+  // =========================================================== 
+  // We can start to look for instances.  If a top module is specified 
+  // then we can start looking for instances there; otherwise, we look for 
+  // them in the main.
+  //
+
   ////////////////////////////////////////////////////////////////
   // Find the sc_main
   ////////////////////////////////////////////////////////////////
-  FindSCMain scmain{translation_unit, os_};
+  //
 
-  if (scmain.isSCMainFound()) {
-    FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
+  // There was no top-level module found or specified.
 
-    // TODO: find any instances in sc_main.
+  if (found_top_module == found_modules.end()) {
+    FindSCMain scmain{translation_unit, os_};
 
-    //fnDecl->dump();
+    if (scmain.isSCMainFound()) {
+      FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
 
-    FindSimTime scstart{fnDecl, os_};
-    systemc_model_->addSimulationTime(scstart.returnSimTime());
+      // TODO: find any instances in sc_main.
+
+      FindSimTime scstart{fnDecl, os_};
+      systemc_model_->addSimulationTime(scstart.returnSimTime());
+      ////////////////////////////////////////////////////////////////
+      // Find the netlist.
+      ////////////////////////////////////////////////////////////////
+      FindNetlist find_netlist{scmain.getSCMainFunctionDecl()};
+      find_netlist.dump();
+      systemc_model_->addNetlist( find_netlist );
+
+
+    } else {
+      os_ << "\n Could not find SCMain";
+    }
   } else {
-    os_ << "\n Could not find SCMain";
-  }
+    // There is a top-module specified.
 
-  ////////////////////////////////////////////////////////////////
-  // Find the netlist.
-  ////////////////////////////////////////////////////////////////
-  FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
-  findNetlist.dump();
-  systemc_model_->addNetlist(findNetlist);
+    // Get the functionDecl for the top-level module's function where
+    // the modules are bound.  
+    // TODO: Need an example of this.
+    //
+    // FindNetlist find_netlist{scmain.getSCMainFunctionDecl()};
+    // find_netlist.dump();
+    // systemc_model_->addNetlist( find_netlist );
+  }
 
   ////////////////////////////////////////////////////////////////
   // Figure out the module map.

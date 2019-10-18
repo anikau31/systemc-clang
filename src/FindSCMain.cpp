@@ -20,6 +20,7 @@ bool FindSCMain::VisitFunctionDecl(FunctionDecl *function_declaration) {
   /// a null definition of sc_main.
   if ((function_declaration->getNameInfo().getAsString() != "sc_main") ||
       (!function_declaration->hasBody()) || (function_declaration->isMain())) {
+    // Keep searching.
     return true;
   }
 
