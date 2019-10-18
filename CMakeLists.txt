@@ -22,6 +22,18 @@ set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 set(SCC_MAJOR_VERSION 1)
 set(SCC_MINOR_VERSION ${SCC_MAJOR_VERSION}.1)
 
+# Provide path for scripts
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+# Prepare "Catch" library for other executables
+set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
+
+add_library(Catch INTERFACE)
+target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
+# Prepare "Catch" library for other executables
+#find_package( Catch2 REQUIRED )
+include(CTest)
+include(Catch)
 # Required packages
 # Include the these flags whenever you compile.
 add_definitions (-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
@@ -40,7 +52,6 @@ set( PLUGIN_XLAT ${XLAT})
 endif()
 
 # Test package
-find_package( Catch2 REQUIRED )
 
 set (search_paths
   ${LLVM_INSTALL_DIR}
@@ -250,6 +261,7 @@ include_directories(
   "${LLVM_INSTALL_DIR}/include"
   src
   plugins/xlat
+  "${CATCH_INCLUDE_DIR}"
   )
 
 
@@ -281,7 +293,8 @@ foreach (ld_flag ${LLVM_LD_FLAGS} ${LLVM_SYSTEM_LIBS})
   target_link_libraries( ${TARGET} ${ld_flag} )
 endforeach()
 
-
+add_executable(catch-test tests/catch-test.cpp)
+enable_testing()
 
 
 # Print the summary of the build. 
