@@ -4,7 +4,7 @@
 # Credits:
 # https://github.com/andreasfertig/cppinsights/blob/master/CMakeLists.txt
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.8)
 
 # Project name
 project(systemc-clang)
@@ -25,15 +25,18 @@ set(SCC_MINOR_VERSION ${SCC_MAJOR_VERSION}.1)
 # Provide path for scripts
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+# 
+# This is the library to use for unit tests
+#
 # Prepare "Catch" library for other executables
 set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
 
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
-# Prepare "Catch" library for other executables
-#find_package( Catch2 REQUIRED )
 include(CTest)
 include(Catch)
+
+
 # Required packages
 # Include the these flags whenever you compile.
 add_definitions (-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
@@ -270,7 +273,7 @@ link_directories( ${LLVM_INSTALL_DIR}/lib )
 add_subdirectory(src)
 add_subdirectory(plugins)
 add_subdirectory(tests)
-
+enable_testing()
 
 set( SRC_LIB libsystemc-clang libxlat )
 
@@ -292,9 +295,6 @@ endforeach()
 foreach (ld_flag ${LLVM_LD_FLAGS} ${LLVM_SYSTEM_LIBS})
   target_link_libraries( ${TARGET} ${ld_flag} )
 endforeach()
-
-add_executable(catch-test tests/catch-test.cpp)
-enable_testing()
 
 
 # Print the summary of the build. 
