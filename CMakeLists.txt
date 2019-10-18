@@ -39,6 +39,9 @@ else()
 set( PLUGIN_XLAT ${XLAT})
 endif()
 
+# Test package
+find_package( Catch2 REQUIRED )
+
 set (search_paths
   ${LLVM_INSTALL_DIR}
   ${LLVM_INSTALL_DIR}/lib/cmake
