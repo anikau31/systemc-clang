@@ -19,9 +19,9 @@ SHELL           = /bin/bash
 LIBTOOL_DIR     = /usr/bin
 LIBTOOL         = $(SHELL) $(LIBTOOL_DIR)/libtool
 
-GXX             = g++
+CXX 						?= clang++
+GXX             = ${CXX}
 GCC             = gcc
-LD              = g++
 
 FLAGS           = -g -Wall -pedantic -Wno-long-long \
                  -DSC_INCLUDE_DYNAMIC_PROCESSES -fpermissive \
@@ -92,10 +92,10 @@ endif
 ## Compile the executables
 #%$(PRG_SUFFIX) : $(OBJ)
 %.x : %.o
-	$(LIBTOOL) --mode=link --tag=CXX g++ -o $(BIN) $< $(FLAGS) $(LDFLAGS) 
+	$(LIBTOOL) --mode=link --tag=CXX $(GXX) -o $(BIN) $< $(FLAGS) $(LDFLAGS) 
 
 %.o: %.cpp
-	$(LIBTOOL) --mode=compile g++ -c $(FLAGS) $<
+	$(LIBTOOL) --mode=compile $(GXX)-c $(FLAGS) $<
 
 clean:
 ifeq ($(PRG_SUFFIX_FLAG),0)

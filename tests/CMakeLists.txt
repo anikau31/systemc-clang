@@ -4,6 +4,7 @@ set(UNIT_TEST_LIST
   catch-test 
   catch-test2 
   model.test 
+  build-ast-code
   )
  
 include(CTest)
