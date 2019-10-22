@@ -11,6 +11,8 @@ auto checkMatch(const std::string &name, const MatchFinder::MatchResult &result 
 }
 
 auto makeFieldMatcher(const std::string &name ) { 
+
+// clang-format off
   return  cxxRecordDecl(
       isExpansionInMainFile(),
       isDerivedFrom(
@@ -20,6 +22,7 @@ auto makeFieldMatcher(const std::string &name ) {
         fieldDecl(hasType(cxxRecordDecl(hasName(name)))).bind(name)
         )
       );
+// clang-format on
 }
 
 
@@ -27,11 +30,7 @@ auto makeFieldMatcher(const std::string &name ) {
 void ModuleDeclarationMatcher::registerMatchers(MatchFinder &finder ) {
 // clang-format off
 //
-// Match sc_ports
-//
-// Match sc_modules
-//
-auto matchModuleDeclarations = 
+auto match_module_decls = 
   cxxRecordDecl(
       isExpansionInMainFile(),
       isDerivedFrom(
@@ -40,19 +39,7 @@ auto matchModuleDeclarations =
       );      
   //clang-format on
 
-/*
-auto matchPorts = 
-  cxxRecordDecl(
-      isExpansionInMainFile(),
-      isDerivedFrom(
-        hasName("::sc_core::sc_module")
-        ),
-      findAll(
-          fieldDecl(hasType(cxxRecordDecl(matchesName("sc_*")))).bind("sc_ports")
-        )
-      );
-      */
-
+  // clang-format off
 auto match_in_ports = 
   cxxRecordDecl(
       isExpansionInMainFile(),
@@ -66,8 +53,18 @@ auto match_in_ports =
  
 auto match_non_sc_types = cxxRecordDecl(
     isExpansionInMainFile(), 
-    isDerivedFrom(hasName("::sc_core::sc_module")), 
-    unless(isDerivedFrom(matchesName("sc_event_queue"))),  forEach(fieldDecl(unless(hasType(cxxRecordDecl(matchesName("sc*"))))).bind("other_fields")));
+    isDerivedFrom(hasName("::sc_core::sc_module")),
+    unless(isDerivedFrom(matchesName("sc_event_queue"))),
+    forEach(
+      fieldDecl(
+        unless(hasType(
+            cxxRecordDecl(matchesName("sc*"))
+            )
+          )
+        ).bind("other_fields")
+      )
+    );
+  // clang-format off
 
 auto match_out_ports = makeFieldMatcher("sc_out");
 auto match_in_out_ports = makeFieldMatcher("sc_inout");
@@ -75,7 +72,7 @@ auto match_internal_signal = makeFieldMatcher("sc_signal");
 auto matchClock = makeFieldMatcher("sc_clock");
 
 // add all the matchers.
-finder.addMatcher( matchModuleDeclarations.bind( "sc_module"), this );
+finder.addMatcher( match_module_decls.bind( "sc_module"), this );
 finder.addMatcher( match_in_ports, this );
 finder.addMatcher( match_out_ports, this );
 finder.addMatcher( match_in_out_ports, this );
@@ -121,7 +118,7 @@ void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
 const ModuleDeclarationMatcher::ModuleDeclarationTuple& ModuleDeclarationMatcher::getFoundModuleDeclarations() const { return found_declarations_; }
 
 void ModuleDeclarationMatcher::dump() {
-  for ( const auto& i : found_declarations_ ) {
+  for ( const auto &i: found_declarations_ ) {
     cout << "module name: " << get<0>(i) << ", " << get<1>(i) << std::endl;
   }
 }
