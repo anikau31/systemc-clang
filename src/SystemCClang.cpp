@@ -111,11 +111,11 @@ bool SystemCConsumer::fire() {
   // Print the contents of the model so far.  It should only have declarations.
   //
   os_ << "[Pass 1]: Discover sc_module declarations.\n";
-  auto stagedModules{ systemc_model_->getModuleDecl() };
-  for ( auto moduleDecl: stagedModules ) {
-    os_ << "[ module name ] " << moduleDecl.first << "\n";
-    auto moduleDeclPtr{ moduleDecl.second };
-    moduleDeclPtr->dump( os_ );
+  auto module_decls_sofar { systemc_model_->getModuleDecl() };
+  for ( auto md : module_decls_sofar ) {
+    os_ << "[ module name ] " << md.first << "\n";
+    auto md_ptr { md.second };
+    md_ptr->dump( os_ );
 
   }
 

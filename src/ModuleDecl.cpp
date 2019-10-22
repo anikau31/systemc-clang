@@ -104,8 +104,10 @@ void ModuleDecl::addOutputPorts(FindPorts::PortType p) {
 
 void ModuleDecl::addInputOutputPorts(FindPorts::PortType p) {
   for (auto mit : p) {
-    _ioports.insert(
-        portPairType(mit.first, new PortDecl(mit.first, mit.second)));
+    string n = mit.first;
+    FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
+    PortDecl *pd = new PortDecl(n, tt);
+    _ioports.insert( portPairType(n , pd));
   }
 }
 
@@ -294,24 +296,26 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   json iport_j, oport_j, ioport_j, othervars_j;
   iport_j["number_of_in_ports"] = _iports.size();
 
+  os <<"Start printing ports\n" ;
   for (auto mit : _iports) {
     os << "##second " <<mit.second;
     iport_j[mit.first] = mit.second->dump_json(os);
   }
 
-  //    os << "\nOutput ports: " << _oports.size() << "\n";
+  os << "\nOutput ports: " << _oports.size() << "\n";
   oport_j["number_of_output_ports"] = _oports.size();
   for (auto mit : _oports) {
     oport_j[mit.first] = mit.second->dump_json(os);
 
   }
 
-  //    os << "\nInout ports: " << _ioports.size() << "\n";
+   os << "\nInout ports: " << _ioports.size() << "\n";
   ioport_j["number_of_inout_ports"] = _ioports.size();
   for (auto mit : _ioports) {
     ioport_j[mit.first] = mit.second->dump_json(os);
   }
 
+   os << "\nother vars : " << _othervars.size() << "\n";
   othervars_j["number_of_other_vars"] = _othervars.size();
   for (auto mit : _othervars) {
     othervars_j[mit.first] = mit.second->dump_json(os);

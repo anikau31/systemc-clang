@@ -53,28 +53,35 @@ auto matchPorts =
       );
       */
 
-auto matchInPorts = 
+auto match_in_ports = 
   cxxRecordDecl(
       isExpansionInMainFile(),
       isDerivedFrom(
         hasName("::sc_core::sc_module")
         ),
       forEach(
-        fieldDecl(hasType(cxxRecordDecl(hasName("sc_in")))).bind("sc_in")
-        )
+          fieldDecl( hasType(cxxRecordDecl(hasName("sc_in"))) ).bind("sc_in")
+          )
       );
  
-auto matchOutPorts = makeFieldMatcher("sc_out");
-auto matchInOutPorts = makeFieldMatcher("sc_inout");
-auto matchInternalSignalMatcher = makeFieldMatcher("sc_signal");
+auto match_non_sc_types = cxxRecordDecl(
+    isExpansionInMainFile(), 
+    isDerivedFrom(hasName("::sc_core::sc_module")), 
+    unless(isDerivedFrom(matchesName("sc_event_queue"))),  forEach(fieldDecl(unless(hasType(cxxRecordDecl(matchesName("sc*"))))).bind("other_fields")));
+
+auto match_out_ports = makeFieldMatcher("sc_out");
+auto match_in_out_ports = makeFieldMatcher("sc_inout");
+auto match_internal_signal = makeFieldMatcher("sc_signal");
+auto matchClock = makeFieldMatcher("sc_clock");
 
 // add all the matchers.
 finder.addMatcher( matchModuleDeclarations.bind( "sc_module"), this );
-finder.addMatcher( matchInPorts, this );
-finder.addMatcher( matchOutPorts, this );
-finder.addMatcher( matchInOutPorts, this );
-finder.addMatcher( matchInternalSignalMatcher, this );
-
+finder.addMatcher( match_in_ports, this );
+finder.addMatcher( match_out_ports, this );
+finder.addMatcher( match_in_out_ports, this );
+finder.addMatcher( match_internal_signal, this );
+finder.addMatcher( matchClock, this );
+finder.addMatcher( match_non_sc_types, this );
 }
 
 void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
@@ -99,6 +106,15 @@ void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
   
   if ( auto signal = checkMatch<FieldDecl>("sc_signal", result) ) {
     cout <<" Found sc_signal: " << signal->getIdentifier()->getNameStart() << endl;
+  }
+
+  if ( auto otherFields = checkMatch<FieldDecl>("other_fields", result) ) {
+    cout <<" Found others: " << otherFields->getIdentifier()->getNameStart() << endl;
+  }
+
+  if (auto spec_decl = result.Nodes.getNodeAs<ClassTemplateSpecializationDecl*>("sp_dcl_bd_name_")) {
+    cout <<" Found template : \n";
+
   }
 }
 
