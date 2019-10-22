@@ -26,13 +26,19 @@ set output diag
 # 2. is not sc_event_queue
 # m cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")), unless(isDerivedFrom(matchesName("sc_event_queue"))), forEach(eachOf(fieldDecl(hasType(cxxRecordDecl(hasName("sc_in")))).bind("sc_in"), fieldDecl(hasType(cxxRecordDecl(hasName("sc_out")))).bind("sc_out"), fieldDecl(hasType(cxxRecordDecl(hasName("sc_inout")))).bind("sc_inout"), fieldDecl(hasType(cxxRecordDecl(hasName("sc_signal")))).bind("sc_signal")))).bind("sc_module")
 
+#
 # Match all sc_module field varialbes that are not systemc types 
+#
 # 1. derives from sc_module
 # 2. is not sc_event_queue
 # 3. for every field declaration, match only those that don't begin with "sc_"
 
-#m cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")), unless(isDerivedFrom(matchesName("sc_event_queue"))),  forEach(fieldDecl(unless(hasType(cxxRecordDecl(matchesName("sc*"))))).bind("non_sc")))
+#m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), unless(isDerivedFrom(matchesName("sc_event_queue"))),  forEach(fieldDecl(unless(hasType(cxxRecordDecl(matchesName("sc*"))))).bind("non_sc")))
 
-
+#
 # Match sc_in_clk
+#
+# Notice that we are using the namedDecl here because sc_in_clk is actually 
+# a typedef to sc_in<bool>.
+#
 m cxxRecordDecl(isDerivedFrom(hasName("sc_module")), forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk")))).bind("sc_in_clk")))
