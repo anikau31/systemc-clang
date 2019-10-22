@@ -26,11 +26,13 @@ bool SystemCConsumer::fire() {
   // A first pass should be made to collect all sc_module declarations.
   // This is important so that the top-level module can be found. 
   //
+  os_ <<"================ TESTMATCHER =============== \n";
   ModuleDeclarationMatcher module_declaration_handler{}; 
   MatchFinder matchRegistry{};
   module_declaration_handler.registerMatchers( matchRegistry );
   // Run all the matchers
   matchRegistry.matchAST(getContext());
+  os_ <<"================ END =============== \n";
 
   // Check if the top-level module one of the sc_module declarations?
   //
@@ -50,8 +52,7 @@ bool SystemCConsumer::fire() {
   // Every module that is found should be added to the model.
   // We could do this in the AST matcher actually. 
   for ( auto const& element : found_modules ) {
-    auto module_declaration{ new ModuleDecl{ element } };
-    systemc_model_->addModuleDecl( module_declaration );
+    auto module_declaration{ new ModuleDecl{get<0>(element), get<1>(element)} };
     os_ << "name: " << get<0>(element) << "\n";;
 
     // =========================================================== 
@@ -76,6 +77,9 @@ bool SystemCConsumer::fire() {
     module_declaration->addInputOutputPorts( found_ports.getInputOutputPorts() );
     module_declaration->addOtherVars( found_ports.getOtherVars() ); 
 
+    os_ << "Number of found ports" ;
+    found_ports.dump();
+  //  module_declaration->dumpPorts(os_, 4);
     // 
     // Find the sc_signals within the module. 
     //
@@ -98,6 +102,9 @@ bool SystemCConsumer::fire() {
       FindSensitivity find_sensitivity{ constructor.returnConstructorStmt(), os_ };
       ef->addSensitivityInfo( find_sensitivity );
     }
+
+    // Add into the model.
+    systemc_model_->addModuleDecl( module_declaration );
   }
 
   //
@@ -105,7 +112,7 @@ bool SystemCConsumer::fire() {
   //
   os_ << "[Pass 1]: Discover sc_module declarations.\n";
   auto stagedModules{ systemc_model_->getModuleDecl() };
-  for ( auto const& moduleDecl: stagedModules ) {
+  for ( auto moduleDecl: stagedModules ) {
     os_ << "[ module name ] " << moduleDecl.first << "\n";
     auto moduleDeclPtr{ moduleDecl.second };
     moduleDeclPtr->dump( os_ );

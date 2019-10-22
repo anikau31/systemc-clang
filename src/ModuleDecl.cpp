@@ -6,53 +6,53 @@ using namespace scpar;
 using std::string;
 
 ModuleDecl::ModuleDecl() : module_name_{"NONE"},
-                           class_decl_{nullptr},
-                           constructor_stmt_{nullptr} {}
+  class_decl_{nullptr},
+  constructor_stmt_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
-    : module_name_{name}, class_decl_{decl} {}
+  : module_name_{name}, class_decl_{decl} {}
 
 ModuleDecl::ModuleDecl(const std::tuple< const std::string& , CXXRecordDecl* >& element )
-    : module_name_{get<0>(element)}, class_decl_{get<1>(element)} {}
+  : module_name_{get<0>(element)}, class_decl_{get<1>(element)} {}
 
 
-ModuleDecl::~ModuleDecl() {
+  ModuleDecl::~ModuleDecl() {
 
-  class_decl_ = nullptr;
-  constructor_stmt_ = nullptr;
+    class_decl_ = nullptr;
+    constructor_stmt_ = nullptr;
 
-  // Delete all pointers in ports.
-  for (auto input_port : _iports) {
-    // Second is the PortDecl*.
-    delete input_port.second;
+    // Delete all pointers in ports.
+    for (auto input_port : _iports) {
+      // Second is the PortDecl*.
+      delete input_port.second;
+    }
+    _iports.clear();
+
+    for (auto output_port : _oports) {
+      // Second is the PortDecl*.
+      delete output_port.second;
+    }
+    _oports.clear();
+
+    for (auto io_port : _ioports) {
+      // Second is the PortDecl*.
+      delete io_port.second;
+    }
+    _ioports.clear();
   }
-  _iports.clear();
-
-  for (auto output_port : _oports) {
-    // Second is the PortDecl*.
-    delete output_port.second;
-  }
-  _oports.clear();
-
-  for (auto io_port : _ioports) {
-    // Second is the PortDecl*.
-    delete io_port.second;
-  }
-  _ioports.clear();
-}
 
 void ModuleDecl::setTemplateParameters(const vector<string> & parm_list) {
-    template_parameters_ = parm_list;
+  template_parameters_ = parm_list;
 }
 
 vector<string> ModuleDecl::getTemplateParameters() const {
-    return template_parameters_; }
+  return template_parameters_; }
 
-void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
+  void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
 
-void ModuleDecl::addInstances(const vector<string> & instanceList) {
-  _instanceList = instanceList;
-}
+  void ModuleDecl::addInstances(const vector<string> & instanceList) {
+    _instanceList = instanceList;
+  }
 
 void ModuleDecl::addSignalBinding(map<string, string> portSignalMap) {
   _portSignalMap.insert(portSignalMap.begin(), portSignalMap.end());
@@ -82,14 +82,14 @@ void ModuleDecl::addOtherVars(FindPorts::PortType p) {
   }
 }
 
-void ModuleDecl::addInputPorts(FindPorts::PortType p) {
-  for (auto mit : p) {
-    string name = mit.first;
-    FindTemplateTypes *template_type = new FindTemplateTypes(mit.second);
-    PortDecl *pd = new PortDecl(name, template_type);
-
-    _iports.insert(portPairType(mit.first, pd));
+void ModuleDecl::addInputPorts(FindPorts::PortType foundPorts) {
+  for ( auto mit : foundPorts ) {
+    auto name { mit.first };
+    FindTemplateTypes *template_type { new FindTemplateTypes(mit.second) };
+    PortDecl *portDecl { new PortDecl(name, template_type) };
+    _iports.insert( portPairType( mit.first, portDecl ) );
   }
+
 }
 
 void ModuleDecl::addOutputPorts(FindPorts::PortType p) {
@@ -105,7 +105,7 @@ void ModuleDecl::addOutputPorts(FindPorts::PortType p) {
 void ModuleDecl::addInputOutputPorts(FindPorts::PortType p) {
   for (auto mit : p) {
     _ioports.insert(
-                    portPairType(mit.first, new PortDecl(mit.first, mit.second)));
+        portPairType(mit.first, new PortDecl(mit.first, mit.second)));
   }
 }
 
@@ -134,7 +134,7 @@ void ModuleDecl::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   //  p.end();    mit != mite; mit++) {
   for (auto mit : p) {
     _iointerfaces.insert(
-                         interfacePairType(mit.first, new InterfaceDecl(mit.first, mit.second)));
+        interfacePairType(mit.first, new InterfaceDecl(mit.first, mit.second)));
   }
 }
 
@@ -154,26 +154,26 @@ void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
 
     // Set the process type
     switch (ef->_procType) {
-    case PROCESS_TYPE::THREAD: {
-      entryType = "SC_THREAD";
-      break;
-    }
-    case PROCESS_TYPE::METHOD: {
-      entryType = "SC_METHOD";
-      break;
-    }
-    case PROCESS_TYPE::CTHREAD: {
-      entryType = "SC_CTHREAD";
-      break;
-    }
-    default: {
-      entryType = "ERROR";
-      break;
-    }
+      case PROCESS_TYPE::THREAD: {
+                                   entryType = "SC_THREAD";
+                                   break;
+                                 }
+      case PROCESS_TYPE::METHOD: {
+                                   entryType = "SC_METHOD";
+                                   break;
+                                 }
+      case PROCESS_TYPE::CTHREAD: {
+                                    entryType = "SC_CTHREAD";
+                                    break;
+                                  }
+      default: {
+                 entryType = "ERROR";
+                 break;
+               }
     }
     process_map_.insert(
-                        processPairType(entryName, new ProcessDecl(entryType, entryName,
-                                                                   ef->_entryMethodDecl, ef)));
+        processPairType(entryName, new ProcessDecl(entryType, entryName,
+            ef->_entryMethodDecl, ef)));
   }
 }
 
@@ -245,7 +245,7 @@ void ModuleDecl::dumpProcesses(raw_ostream &os, int tabn) {
   for (auto pit : process_map_) {
     ProcessDecl *pd { pit.second };
     process_j[pit.first] = pd->dump_json( os );
-    }
+  }
 
   os << "Processes\n";
   os << process_j.dump(4) << "\n";
@@ -289,36 +289,37 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
-  //  os << "\nInput ports: " << _iports.size() << "\n";
+    os << "\nInput ports: " << _iports.size() << "\n";
 
   json iport_j, oport_j, ioport_j, othervars_j;
   iport_j["number_of_in_ports"] = _iports.size();
 
-    for (auto mit : _iports) {
-      iport_j[mit.first] = mit.second->dump_json(os);
-    }
+  for (auto mit : _iports) {
+    os << "##second " <<mit.second;
+    iport_j[mit.first] = mit.second->dump_json(os);
+  }
 
-    //    os << "\nOutput ports: " << _oports.size() << "\n";
-    oport_j["number_of_output_ports"] = _oports.size();
-    for (auto mit : _oports) {
-      oport_j[mit.first] = mit.second->dump_json(os);
+  //    os << "\nOutput ports: " << _oports.size() << "\n";
+  oport_j["number_of_output_ports"] = _oports.size();
+  for (auto mit : _oports) {
+    oport_j[mit.first] = mit.second->dump_json(os);
 
-    }
+  }
 
-    //    os << "\nInout ports: " << _ioports.size() << "\n";
-    ioport_j["number_of_inout_ports"] = _ioports.size();
-    for (auto mit : _ioports) {
-      ioport_j[mit.first] = mit.second->dump_json(os);
-    }
+  //    os << "\nInout ports: " << _ioports.size() << "\n";
+  ioport_j["number_of_inout_ports"] = _ioports.size();
+  for (auto mit : _ioports) {
+    ioport_j[mit.first] = mit.second->dump_json(os);
+  }
 
-    othervars_j["number_of_other_vars"] = _othervars.size();
-    for (auto mit : _othervars) {
-      othervars_j[mit.first] = mit.second->dump_json(os);
-    }
+  othervars_j["number_of_other_vars"] = _othervars.size();
+  for (auto mit : _othervars) {
+    othervars_j[mit.first] = mit.second->dump_json(os);
+  }
 
-    os << "Ports\n";
-    os << iport_j.dump(4) << "\n" << oport_j.dump(4) << "\n"
-       << ioport_j.dump(4)<< "\n" << othervars_j.dump(4) << "\n";
+  os << "Ports\n";
+  os << iport_j.dump(4) << "\n" << oport_j.dump(4) << "\n"
+    << ioport_j.dump(4)<< "\n" << othervars_j.dump(4) << "\n";
 }
 
 void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
@@ -358,7 +359,7 @@ json ModuleDecl::dump_json() {
   module_j["module_name"] = module_name_;
   // Template parameters.
   for (const auto & parm: template_parameters_) {
-      module_j["template_parameters"].push_back( parm );
+    module_j["template_parameters"].push_back( parm );
   }
 
 

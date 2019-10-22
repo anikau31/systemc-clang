@@ -113,7 +113,7 @@ void Model::addSCModules(FindSCModules *m) {
   }
 }
 
-Model::moduleMapType Model::getModuleDecl() { return modules_; }
+Model::moduleMapType Model::getModuleDecl() const { return modules_; }
 
 Model::entryFunctionGPUMacroMapType Model::getEntryFunctionGPUMacroMap() {
   llvm::errs() << "\n return Size : " << entry_function_gpu_macro_map_.size();

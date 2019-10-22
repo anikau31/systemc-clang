@@ -47,7 +47,7 @@ public:
   void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
   void updateModuleDecl();
 
-  moduleMapType getModuleDecl();
+  moduleMapType getModuleDecl() const;
   entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
   eventMapType getEventMapType();
   moduleInstanceMapType getModuleInstanceMap();
