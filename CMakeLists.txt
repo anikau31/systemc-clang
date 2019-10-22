@@ -54,6 +54,16 @@ else()
 set( PLUGIN_XLAT ${XLAT})
 endif()
 
+
+# Keep tests off by default
+if ("${ENABLE_TESTS}" STREQUAL "")
+set( TESTS_ON OFF )
+else()
+  set( TESTS_ON ${ENABLE_TESTS})
+endif()
+
+
+
 # Test package
 
 set (search_paths
@@ -274,8 +284,11 @@ link_directories( ${LLVM_INSTALL_DIR}/lib )
 
 add_subdirectory(src)
 add_subdirectory(plugins)
+
+if( TESTS_ON )
 add_subdirectory(tests)
 enable_testing()
+endif()
 
 set( SRC_LIB libsystemc-clang libxlat )
 
@@ -305,6 +318,7 @@ message(STATUS "[ Build summary ]")
 message(STATUS "SystemC-Clang         : ${SCC_MINOR_VERSION}")
 message(STATUS "")
 message(STATUS "Plugin Xlat           : ${PLUGIN_XLAT}")
+message(STATUS "TESTS                 : ${TESTS_ON}")
 message(STATUS "")
 message(STATUS "[ Environment ]")
 message(STATUS "CMAKE_GENERATOR       : ${CMAKE_GENERATOR}")
