@@ -7,6 +7,7 @@ using namespace scpar;
 using namespace clang;
 using namespace std;
 
+using namespace sc_ast_matchers;
 bool SystemCConsumer::fire() {
 
   os_ << "Top module: " << getTopModule() << "\n";
@@ -27,8 +28,7 @@ bool SystemCConsumer::fire() {
   //
   ModuleDeclarationMatcher module_declaration_handler{}; 
   MatchFinder matchRegistry{};
-
-  matchRegistry.addMatcher( matchModuleDeclarations, &module_declaration_handler );
+  module_declaration_handler.registerMatchers( matchRegistry );
   // Run all the matchers
   matchRegistry.matchAST(getContext());
 

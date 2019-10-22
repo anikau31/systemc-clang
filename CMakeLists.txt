@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 # Always keep it on
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(CMAKE_CXX_EXTENSIONS OFF)
 #  Make verbose on?
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
@@ -162,6 +162,8 @@ function(llvm_config VARNAME switch)
     string(REGEX REPLACE "-Werror=unguarded-availability-new" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
     string(REGEX REPLACE "-Wno-unknown-warning-option" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
     string(REGEX REPLACE "-Wno-unused-command-line-argument" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    # Replace llvm-config's c++11 generation
+    #string(REGEX REPLACE "-std=c++11" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
   endif()
 
   # make result available outside

@@ -9,19 +9,23 @@ using namespace clang;
 using namespace clang::ast_matchers;
 
 
+namespace sc_ast_matchers {
 // Static to make sure multiple definitions are not resulted. 
-static DeclarationMatcher matchModuleDeclarations = cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("sc_module");
+
 class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
+//
   public:
     typedef std::vector< std::tuple<std::string, CXXRecordDecl*> > ModuleDeclarationTuple;
 
   public:
-    virtual void run( const MatchFinder::MatchResult& result );
+    void registerMatchers( MatchFinder &finder );
+    virtual void run( const MatchFinder::MatchResult &result );
     const ModuleDeclarationTuple& getFoundModuleDeclarations() const;
     void dump();
   private:
-    ModuleDeclarationTuple foundDeclarations_;
+    ModuleDeclarationTuple found_declarations_;
 };
 
+}; // namespace sc_ast_matchers
 #endif
 
