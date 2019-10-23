@@ -14,6 +14,9 @@ PortDecl::~PortDecl() {
 
 PortDecl::PortDecl() : port_name_{"NONE"}, template_type_{nullptr}, field_decl_{nullptr} {}
 
+PortDecl::PortDecl(const string &name, FindTemplateTypes *tt)
+  : port_name_{name}, template_type_{tt} {}
+
 PortDecl::PortDecl(const string &name, const FieldDecl* fd, FindTemplateTypes *tt)
   : port_name_{name}, template_type_{tt}, field_decl_{const_cast<FieldDecl*>(fd)} {}
 

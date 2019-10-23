@@ -84,55 +84,53 @@ void ModuleDecl::addSignals(const FindSignals::signalMapType & signal_map) {
   }
 }
 
-void ModuleDecl::addOtherVars(const ModuleDecl::PortType &p) {
-  /*
+void ModuleDecl::addOtherVars(const FindPorts::PortType &p) {
   for (auto mit : p) {
     string n = mit.first;
     FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
     PortDecl *pd = new PortDecl(n, tt);
 
-    other_fields_.insert(portPairType(n, pd));
+    other_fields_.push_back(portPairType(n, pd));
   }
-  */
 }
 
 void ModuleDecl::addPorts( const ModuleDecl::PortType &found_ports, const std::string &port_type ) {
+  /*
   if ( port_type == "sc_in" ) { std::copy( begin(found_ports), end(found_ports), back_inserter(in_ports_ )); }
   if ( port_type == "sc_out" ) { std::copy( begin(found_ports), end(found_ports), back_inserter(out_ports_ )); }
   if ( port_type == "sc_inout" ) {  std::copy( begin(found_ports), end(found_ports), back_inserter(inout_ports_ )); }
   if ( port_type == "others" ) {  std::copy( begin(found_ports), end(found_ports), back_inserter(other_fields_ )); }
+  */
 
 }
 
-void ModuleDecl::addInputPorts(const ModuleDecl::PortType &foundPorts) {
-  // for ( auto mit : foundPorts ) {
-    // auto name { mit.first };
-    // FindTemplateTypes *template_type { new FindTemplateTypes(mit.second) };
-    // PortDecl *portDecl { new PortDecl(name, template_type) };
-    // in_ports_.insert( portPairType( mit.first, portDecl ) );
-  // }
-//
-}
+void ModuleDecl::addInputPorts(const FindPorts::PortType &foundPorts) {
+  for ( auto mit : foundPorts ) {
+    auto name { mit.first };
+    FindTemplateTypes *template_type { new FindTemplateTypes(mit.second) };
+    PortDecl *portDecl { new PortDecl(name, template_type) };
+    in_ports_.push_back( portPairType( mit.first, portDecl ) );
+  }
 
-void ModuleDecl::addOutputPorts(const ModuleDecl::PortType &p) {
-  // for (auto mit : p) {
-    // string n = mit.first;
-    // FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
-    // PortDecl *pd = new PortDecl(n, tt);
-//
-    // out_ports_.insert(portPairType(n, pd));
-  // }
  }
 
-void ModuleDecl::addInputOutputPorts(const ModuleDecl::PortType &p) {
-/*
+void ModuleDecl::addOutputPorts(const FindPorts::PortType &p) {
   for (auto mit : p) {
     string n = mit.first;
     FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
     PortDecl *pd = new PortDecl(n, tt);
-    inout_ports_.insert( portPairType(n , pd));
+
+    out_ports_.push_back(portPairType(n, pd));
   }
-  */
+}
+
+void ModuleDecl::addInputOutputPorts(const FindPorts::PortType &p) {
+  for (auto mit : p) {
+    string n = mit.first;
+    FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
+    PortDecl *pd = new PortDecl(n, tt);
+    inout_ports_.push_back( portPairType(n , pd));
+  }
 }
 
 void ModuleDecl::addInputInterfaces(FindTLMInterfaces::interfaceType p) {

@@ -58,10 +58,10 @@ public:
   ~ModuleDecl();
 
   void addSignals(const FindSignals::signalMapType & );
-  void addInputPorts(const PortType& );
-  void addOutputPorts(const PortType& );
-  void addInputOutputPorts(const PortType& );
-  void addOtherVars(const PortType&);
+  void addInputPorts(const FindPorts::PortType& );
+  void addOutputPorts(const FindPorts::PortType& );
+  void addInputOutputPorts(const FindPorts::PortType& );
+  void addOtherVars(const FindPorts::PortType&);
   void addPorts( const PortType& found_ports, const std::string & port_type );
 
   void addInputInterfaces(FindTLMInterfaces::interfaceType);

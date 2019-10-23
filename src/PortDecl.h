@@ -18,6 +18,7 @@ using namespace std;
 class PortDecl {
 public:
   PortDecl();
+  PortDecl(const string &, FindTemplateTypes *);
   PortDecl(const string &, const FieldDecl*, FindTemplateTypes *);
 
   PortDecl(const PortDecl &);
