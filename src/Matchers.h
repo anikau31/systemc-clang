@@ -6,6 +6,7 @@
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "FindTemplateTypes.h"
+#include "PortDecl.h"
 
 using namespace clang;
 using namespace clang::ast_matchers;
@@ -18,13 +19,14 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 //
   public:
     typedef std::vector< std::tuple<std::string, CXXRecordDecl*> > ModuleDeclarationTuple;
-    typedef std::map<std::string, FindTemplateTypes *> PortType;
-    typedef std::pair<std::string, FindTemplateTypes *> PortElementType;
+    typedef std::vector< std::tuple<std::string, PortDecl*> > PortType;
 
   public:
     void registerMatchers( MatchFinder &finder );
     virtual void run( const MatchFinder::MatchResult &result );
     const ModuleDeclarationTuple& getFoundModuleDeclarations() const;
+    const PortType& getFields( const std::string & port_type );
+
     void dump();
   private:
     ModuleDeclarationTuple found_declarations_;

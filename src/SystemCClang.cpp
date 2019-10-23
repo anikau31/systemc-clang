@@ -37,22 +37,26 @@ bool SystemCConsumer::fire() {
 
   // Check if the top-level module one of the sc_module declarations?
   //
-  auto found_modules{ module_declaration_handler.getFoundModuleDeclarations() };
+  auto found_module_declarations{ module_declaration_handler.getFoundModuleDeclarations() };
   auto found_top_module{ 
-    std::find_if(found_modules.begin(), found_modules.end(), 
+    std::find_if(found_module_declarations.begin(), found_module_declarations.end(), 
         [this]( std::tuple<std::string, CXXRecordDecl*>& element ) { 
         return std::get<0>(element) == getTopModule();  }  ) 
   }; 
-  if (found_top_module != found_modules.end()) {
+
+  if (found_top_module != found_module_declarations.end()) {
     os_ << "Found the top module: " << get<0>(*found_top_module) << ", " << get<1>(*found_top_module) << "\n";
   } 
+
+  // For every declaration, we will add the necessary ports to the ModuleDecl.
+
 
   // =========================================================== 
   // 1. Add every found module to the model. 
   // =========================================================== 
   // Every module that is found should be added to the model.
   // We could do this in the AST matcher actually. 
-  for ( auto const& element : found_modules ) {
+  for ( auto const& element : found_module_declarations ) {
     auto module_declaration{ new ModuleDecl{get<0>(element), get<1>(element)} };
     os_ << "name: " << get<0>(element) << "\n";;
 
@@ -72,15 +76,16 @@ bool SystemCConsumer::fire() {
     //  
     //  Find the ports
     //
-    FindPorts found_ports{ module_declaration->getModuleClassDecl(), os_ };
-    module_declaration->addInputPorts( found_ports.getInputPorts() );
-    module_declaration->addOutputPorts( found_ports.getOutputPorts() );
-    module_declaration->addInputOutputPorts( found_ports.getInputOutputPorts() );
-    module_declaration->addOtherVars( found_ports.getOtherVars() ); 
+    //FindPorts found_ports{ module_declaration->getModuleClassDecl(), os_ };
+    module_declaration->addPorts( module_declaration_handler.getFields("sc_in"), "sc_in" );
+    module_declaration->addPorts( module_declaration_handler.getFields("sc_out"), "sc_out" );
+    module_declaration->addPorts ( module_declaration_handler.getFields("sc_inout"), "sc_inout" );
+    module_declaration->addPorts ( module_declaration_handler.getFields("others"), "others" );
+    module_declaration->addPorts ( module_declaration_handler.getFields("sc_signal"), "others");
 
-    os_ << "Number of found ports" ;
-    found_ports.dump();
-    //  module_declaration->dumpPorts(os_, 4);
+    os_ <<" #########################################################\n";
+    module_declaration->dumpPorts(os_, 4);
+    os_ <<" #########################################################\n";
     // 
     // Find the sc_signals within the module. 
     //
@@ -186,7 +191,7 @@ bool SystemCConsumer::fire() {
 
   // There was no top-level module found or specified.
 
-  if (found_top_module == found_modules.end()) {
+  if (found_top_module == found_module_declarations.end()) {
     FindSCMain scmain{translation_unit, os_};
 
     if (scmain.isSCMainFound()) {
@@ -248,11 +253,15 @@ bool SystemCConsumer::fire() {
       FindConstructor constructor{mainmd->getModuleClassDecl(), os_};
       md->addConstructor(constructor.returnConstructorStmt());
 
+      /*
+       * This should be replaced with the ASTmatchers finding the ports 
+       *
       FindPorts ports{mainmd->getModuleClassDecl(), os_};
       md->addInputPorts(ports.getInputPorts());
       md->addOutputPorts(ports.getOutputPorts());
       md->addInputOutputPorts(ports.getInputOutputPorts());
       md->addOtherVars(ports.getOtherVars()); 
+      */
 
       FindTLMInterfaces findTLMInterfaces{mainmd->getModuleClassDecl(), os_};
       md->addInputInterfaces(findTLMInterfaces.getInputInterfaces());

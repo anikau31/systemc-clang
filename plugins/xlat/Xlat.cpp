@@ -73,12 +73,14 @@ bool Xlat::postFire()
 void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info)
 {
   static const std::set<std::string> sctypes = {"sc_in", "sc_out", "sc_inout"};
-  for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end(); mit++) {
-    h_info->child_list.push_back(new hNode(mit->first, h_op));
+  for (const auto & mit : pmap ) { //::iterator mit = pmap.begin(); mit != pmap.end(); mit++) {
+    auto port_name = get<0>(mit);
+    auto port_decl = get<1>(mit);
+    h_info->child_list.push_back(new hNode(port_name, h_op));
 
-    PortDecl *pd = mit->second;
+    //PortDecl *pd = mit->second;
     hNodep h_typeinfo = new hNode(false);
-    xlattype(pd->getTemplateType(), h_typeinfo); //sctypes, xlatout);//, os_);
+    xlattype(port_decl->getTemplateType(), h_typeinfo); //sctypes, xlatout);//, os_);
     h_info->child_list.push_back(h_typeinfo);
   }
 }

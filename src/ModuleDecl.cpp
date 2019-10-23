@@ -1,9 +1,11 @@
-#include "ModuleDecl.h"
 #include <string>
+#include <algorithm>
+#include <tuple>
+
+#include "ModuleDecl.h"
 
 using namespace scpar;
-
-using std::string;
+using namespace std;
 
 ModuleDecl::ModuleDecl() : module_name_{"NONE"},
   class_decl_{nullptr},
@@ -20,25 +22,35 @@ ModuleDecl::ModuleDecl(const std::tuple< const std::string& , CXXRecordDecl* >& 
 
     class_decl_ = nullptr;
     constructor_stmt_ = nullptr;
-
     // Delete all pointers in ports.
-    for (auto input_port : _iports) {
-      // Second is the PortDecl*.
-      delete input_port.second;
+    for (auto input_port : in_ports_) {
+      // It is a tuple 
+      // 0. string, 1. PortDecl*
+      // Only one to delete is (3)
+      //
+    //  delete input_port.second;
+      delete get<1>( input_port );
     }
-    _iports.clear();
+    in_ports_.clear();
 
-    for (auto output_port : _oports) {
-      // Second is the PortDecl*.
-      delete output_port.second;
+    for (auto output_port : out_ports_) {
+      delete get<1>( output_port );
     }
-    _oports.clear();
+    out_ports_.clear();
 
-    for (auto io_port : _ioports) {
+    for (auto io_port : inout_ports_) {
       // Second is the PortDecl*.
-      delete io_port.second;
+      delete get<1>( io_port );
     }
-    _ioports.clear();
+    inout_ports_.clear();
+
+    for (auto other : other_fields_ ) {
+      // Second is the PortDecl*.
+      delete get<1>( other );
+    }
+    other_fields_.clear();
+
+
   }
 
 void ModuleDecl::setTemplateParameters(const vector<string> & parm_list) {
@@ -72,43 +84,55 @@ void ModuleDecl::addSignals(const FindSignals::signalMapType & signal_map) {
   }
 }
 
-void ModuleDecl::addOtherVars(FindPorts::PortType p) {
+void ModuleDecl::addOtherVars(const ModuleDecl::PortType &p) {
+  /*
   for (auto mit : p) {
     string n = mit.first;
     FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
     PortDecl *pd = new PortDecl(n, tt);
 
-    _othervars.insert(portPairType(n, pd));
+    other_fields_.insert(portPairType(n, pd));
   }
+  */
 }
 
-void ModuleDecl::addInputPorts(FindPorts::PortType foundPorts) {
-  for ( auto mit : foundPorts ) {
-    auto name { mit.first };
-    FindTemplateTypes *template_type { new FindTemplateTypes(mit.second) };
-    PortDecl *portDecl { new PortDecl(name, template_type) };
-    _iports.insert( portPairType( mit.first, portDecl ) );
-  }
+void ModuleDecl::addPorts( const ModuleDecl::PortType &found_ports, const std::string &port_type ) {
+  if ( port_type == "sc_in" ) { std::copy( begin(found_ports), end(found_ports), back_inserter(in_ports_ )); }
+  if ( port_type == "sc_out" ) { std::copy( begin(found_ports), end(found_ports), back_inserter(out_ports_ )); }
+  if ( port_type == "sc_inout" ) {  std::copy( begin(found_ports), end(found_ports), back_inserter(inout_ports_ )); }
+  if ( port_type == "others" ) {  std::copy( begin(found_ports), end(found_ports), back_inserter(other_fields_ )); }
 
 }
 
-void ModuleDecl::addOutputPorts(FindPorts::PortType p) {
+void ModuleDecl::addInputPorts(const ModuleDecl::PortType &foundPorts) {
+  // for ( auto mit : foundPorts ) {
+    // auto name { mit.first };
+    // FindTemplateTypes *template_type { new FindTemplateTypes(mit.second) };
+    // PortDecl *portDecl { new PortDecl(name, template_type) };
+    // in_ports_.insert( portPairType( mit.first, portDecl ) );
+  // }
+//
+}
+
+void ModuleDecl::addOutputPorts(const ModuleDecl::PortType &p) {
+  // for (auto mit : p) {
+    // string n = mit.first;
+    // FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
+    // PortDecl *pd = new PortDecl(n, tt);
+//
+    // out_ports_.insert(portPairType(n, pd));
+  // }
+ }
+
+void ModuleDecl::addInputOutputPorts(const ModuleDecl::PortType &p) {
+/*
   for (auto mit : p) {
     string n = mit.first;
     FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
     PortDecl *pd = new PortDecl(n, tt);
-
-    _oports.insert(portPairType(n, pd));
+    inout_ports_.insert( portPairType(n , pd));
   }
-}
-
-void ModuleDecl::addInputOutputPorts(FindPorts::PortType p) {
-  for (auto mit : p) {
-    string n = mit.first;
-    FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
-    PortDecl *pd = new PortDecl(n, tt);
-    _ioports.insert( portPairType(n , pd));
-  }
+  */
 }
 
 void ModuleDecl::addInputInterfaces(FindTLMInterfaces::interfaceType p) {
@@ -191,11 +215,11 @@ ModuleDecl::signalMapType ModuleDecl::getSignals() { return _signals; }
 
 ModuleDecl::processMapType ModuleDecl::getProcessMap() { return process_map_; }
 
-ModuleDecl::portMapType ModuleDecl::getOPorts() { return _oports; }
+ModuleDecl::portMapType ModuleDecl::getOPorts() { return out_ports_; }
 
-ModuleDecl::portMapType ModuleDecl::getIPorts() { return _iports; }
+ModuleDecl::portMapType ModuleDecl::getIPorts() { return in_ports_; }
 
-ModuleDecl::portMapType ModuleDecl::getIOPorts() { return _ioports; }
+ModuleDecl::portMapType ModuleDecl::getIOPorts() { return inout_ports_; }
 
 ModuleDecl::interfaceMapType ModuleDecl::getOInterfaces() {
   return _ointerfaces;
@@ -291,39 +315,59 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
-    os << "\nInput ports: " << _iports.size() << "\n";
+    os << "\nInput ports: " << in_ports_.size() << "\n";
 
   json iport_j, oport_j, ioport_j, othervars_j;
-  iport_j["number_of_in_ports"] = _iports.size();
+  iport_j["number_of_in_ports"] = in_ports_.size();
 
   os <<"Start printing ports\n" ;
-  for (auto mit : _iports) {
-    os << "##second " <<mit.second;
-    iport_j[mit.first] = mit.second->dump_json(os);
+  for (auto mit : in_ports_) {
+    auto name = get<0>(mit);
+    auto pd = get<1>(mit);
+    auto template_type = pd->getTemplateType();
+    auto template_args{ template_type->getTemplateArgumentsType() };
+
+    iport_j[name] = pd->dump_json( os );
   }
 
-  os << "\nOutput ports: " << _oports.size() << "\n";
-  oport_j["number_of_output_ports"] = _oports.size();
-  for (auto mit : _oports) {
-    oport_j[mit.first] = mit.second->dump_json(os);
 
+  os << "\nOutput ports: " << out_ports_.size() << "\n";
+  oport_j["number_of_output_ports"] = out_ports_.size();
+  for (auto mit : out_ports_) {
+    auto name = get<0>(mit);
+    auto pd = get<1>(mit);
+    auto template_type = pd->getTemplateType();
+    auto template_args{ template_type->getTemplateArgumentsType() };
+
+    oport_j[name] = pd->dump_json(os);
   }
 
-   os << "\nInout ports: " << _ioports.size() << "\n";
-  ioport_j["number_of_inout_ports"] = _ioports.size();
-  for (auto mit : _ioports) {
-    ioport_j[mit.first] = mit.second->dump_json(os);
+
+   os << "\nInout ports: " << inout_ports_.size() << "\n";
+  ioport_j["number_of_inout_ports"] = inout_ports_.size();
+  for (auto mit : inout_ports_) {
+    auto name = get<0>(mit);
+    auto pd = get<1>(mit);
+    auto template_type = pd->getTemplateType();
+    auto template_args{ template_type->getTemplateArgumentsType() };
+
+    ioport_j[name] = pd->dump_json( os );
   }
 
-   os << "\nother vars : " << _othervars.size() << "\n";
-  othervars_j["number_of_other_vars"] = _othervars.size();
-  for (auto mit : _othervars) {
-    othervars_j[mit.first] = mit.second->dump_json(os);
+
+   os << "\nother vars : " << other_fields_.size() << "\n";
+   othervars_j["number_of_other_vars"] = other_fields_.size();
+  for (auto mit : other_fields_ ) {
+    auto name = get<0>(mit);
+    auto pd = get<1>(mit);
+    auto template_type = pd->getTemplateType();
+    auto template_args{ template_type->getTemplateArgumentsType() };
+
+    othervars_j[name] = pd->dump_json( os );
   }
 
-  os << "Ports\n";
-  os << iport_j.dump(4) << "\n" << oport_j.dump(4) << "\n"
-    << ioport_j.dump(4)<< "\n" << othervars_j.dump(4) << "\n";
+   os << "Ports\n";
+   os << iport_j.dump(4) << "\n" << oport_j.dump(4) << "\n" << ioport_j.dump(4) << "\n" << othervars_j.dump(4) << "\n";
 }
 
 void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {

@@ -29,7 +29,7 @@ public:
   // Maps the name of the port with a pointer to a structure that holds
   // information about the port.
   typedef pair<string, PortDecl* > portPairType;
-  typedef map<string, PortDecl* > portMapType;
+  //typedef map<string, PortDecl* > portMapType;
 
   typedef pair<string, InterfaceDecl* > interfacePairType;
   typedef map<string, InterfaceDecl* > interfaceMapType;
@@ -47,6 +47,9 @@ public:
   // Why is this a not a Type?
   typedef vector<string> instanceName;
 
+  // PortType
+    typedef std::vector< std::tuple<std::string, PortDecl*> > PortType;
+    typedef std::vector< std::tuple<std::string, PortDecl*> > portMapType;
 public:
   ModuleDecl();
   ModuleDecl(const string &, CXXRecordDecl *);
@@ -55,11 +58,12 @@ public:
   ~ModuleDecl();
 
   void addSignals(const FindSignals::signalMapType & );
-  void addInputPorts(FindPorts::PortType);
-  void addOutputPorts(FindPorts::PortType);
+  void addInputPorts(const PortType& );
+  void addOutputPorts(const PortType& );
+  void addInputOutputPorts(const PortType& );
+  void addOtherVars(const PortType&);
+  void addPorts( const PortType& found_ports, const std::string & port_type );
 
-void addOtherVars(FindPorts::PortType p);
-  void addInputOutputPorts(FindPorts::PortType);
   void addInputInterfaces(FindTLMInterfaces::interfaceType);
   void addOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
@@ -102,10 +106,10 @@ private:
   Stmt *constructor_stmt_;
 
   processMapType process_map_;
-  portMapType _iports;
-  portMapType _oports;
-  portMapType _ioports;
-  portMapType _othervars;
+  portMapType in_ports_;
+  portMapType out_ports_;
+  portMapType inout_ports_;
+  portMapType other_fields_;
 
   interfaceMapType _iinterfaces;
   interfaceMapType _ointerfaces;

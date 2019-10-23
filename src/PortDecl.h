@@ -18,7 +18,7 @@ using namespace std;
 class PortDecl {
 public:
   PortDecl();
-  PortDecl(const string &, FindTemplateTypes *);
+  PortDecl(const string &, const FieldDecl*, FindTemplateTypes *);
 
   PortDecl(const PortDecl &);
 
@@ -28,6 +28,7 @@ public:
 
   /// Get parameters
   string getName() const;
+  FieldDecl* getFieldDecl() const;
   FindTemplateTypes *getTemplateType();
 
   // Print
@@ -40,6 +41,7 @@ private:
   string port_name_;
   // This holds the types for the port
   FindTemplateTypes *template_type_;
+  FieldDecl *field_decl_;
 };
 } // namespace scpar
 #endif

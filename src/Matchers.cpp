@@ -12,8 +12,8 @@ using namespace sc_ast_matchers;
 void printTemplateArguments( ModuleDeclarationMatcher::PortType &found_ports ) {
 // Input ports
   for ( const auto &i: found_ports ) {
-    llvm::outs() << "name: " << i.first << " ";
-    (i.second)->printTemplateArguments(llvm::outs());
+    llvm::outs() << "name: " << get<0>(i) << ", FieldDecl*: " << get<1>(i)->getFieldDecl();
+    get<1>(i)->getTemplateType()->printTemplateArguments(llvm::outs());
     llvm::outs() << "\n";
   }
 }
@@ -114,48 +114,64 @@ void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
   }
 
   if ( auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in_clk") ) {
-    auto port_name { fd->getIdentifier()->getNameStart() };
+    std::string port_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found sc_in_clk: " << port_name << endl;
-    clock_ports_.insert( PortElementType(port_name, parseTemplateType(fd) ));
+    clock_ports_.push_back( std::make_tuple(port_name, 
+          new PortDecl(port_name, fd, parseTemplateType(fd)) 
+          )
+        );
   }
 
   if ( auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in") ) {
     auto port_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found sc_in: " << port_name << endl;
-    in_ports_.insert( PortElementType(port_name, parseTemplateType(fd) ));
+    in_ports_.push_back( std::make_tuple(port_name, new PortDecl( port_name, fd, parseTemplateType(fd)) ));
   }
 
   if ( auto fd = checkMatch<FieldDecl>("sc_out", result) ) {
     auto port_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found sc_out: " << port_name << endl;
-    out_ports_.insert( PortElementType(port_name, parseTemplateType(fd) ));
+    out_ports_.push_back( std::make_tuple(port_name, new PortDecl( port_name, fd, parseTemplateType(fd) ) ));
   }
 
   if ( auto fd = checkMatch<FieldDecl>("sc_inout", result) ) {
     auto port_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found sc_inout: " << port_name << endl;
-    inout_ports_.insert( PortElementType(port_name, parseTemplateType(fd) ));
+    inout_ports_.push_back( std::make_tuple(port_name, new PortDecl( port_name, fd, parseTemplateType(fd)) ));
   }
   
-  if ( auto signal = checkMatch<FieldDecl>("sc_signal", result) ) {
-    auto signal_name { signal->getIdentifier()->getNameStart() };
+  /*
+  if ( auto fd = checkMatch<FieldDecl>("sc_signal", result) ) {
+    auto signal_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found sc_signal: " << signal_name << endl;
-    signal_fields_.insert( PortElementType(signal_name, parseTemplateType(signal) ));
+    signal_fields_.push_back( std::make_tuple(signal_name, fd, parseTemplateType(fd) ));
   }
 
-  if ( auto otherFields = checkMatch<FieldDecl>("other_fields", result) ) {
-    auto field_name { otherFields->getIdentifier()->getNameStart() };
+  if ( auto fd = checkMatch<FieldDecl>("other_fields", result) ) {
+    auto field_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found others fields: " << field_name << endl;
-    other_fields_.insert( PortElementType(field_name, parseTemplateType(otherFields) ));
+    other_fields_.push_back( std::make_tuple(field_name, fd, parseTemplateType(fd) ));
   }
 
   if (auto spec_decl = result.Nodes.getNodeAs<ClassTemplateSpecializationDecl*>("sp_dcl_bd_name_")) {
     cout <<" Found template : \n";
 
   }
+  */
 }
 
 const ModuleDeclarationMatcher::ModuleDeclarationTuple& ModuleDeclarationMatcher::getFoundModuleDeclarations() const { return found_declarations_; }
+
+const ModuleDeclarationMatcher::PortType& ModuleDeclarationMatcher::getFields(const std::string & port_type ) {
+  if (port_type == "sc_in") { return in_ports_; }
+  if (port_type == "sc_inout") { return inout_ports_; }
+  if (port_type == "sc_out") { return out_ports_; }
+  if (port_type == "sc_signal") { return signal_fields_; }
+  if (port_type == "sc_in_clk") { return clock_ports_; }
+  if (port_type == "others") { return other_fields_; }
+  // You should never get here.
+  assert(true);
+}
 
 void ModuleDeclarationMatcher::dump() {
   for ( const auto &i: found_declarations_ ) {
@@ -178,4 +194,5 @@ void ModuleDeclarationMatcher::dump() {
   printTemplateArguments( signal_fields_ );
   printTemplateArguments( other_fields_ );
 }
+
 
