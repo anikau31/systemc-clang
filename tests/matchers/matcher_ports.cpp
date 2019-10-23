@@ -2,7 +2,7 @@
 
 SC_MODULE( test ){
 
-  sc_in_clk clk;
+  sc_in_clk clock;
   sc_in<int> in1;
   sc_in<int> in2;
   sc_inout<double> in_out;

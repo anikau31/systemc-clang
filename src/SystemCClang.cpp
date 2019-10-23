@@ -32,6 +32,7 @@ bool SystemCConsumer::fire() {
   module_declaration_handler.registerMatchers( matchRegistry );
   // Run all the matchers
   matchRegistry.matchAST(getContext());
+  module_declaration_handler.dump();
   os_ <<"================ END =============== \n";
 
   // Check if the top-level module one of the sc_module declarations?
@@ -79,7 +80,7 @@ bool SystemCConsumer::fire() {
 
     os_ << "Number of found ports" ;
     found_ports.dump();
-  //  module_declaration->dumpPorts(os_, 4);
+    //  module_declaration->dumpPorts(os_, 4);
     // 
     // Find the sc_signals within the module. 
     //
