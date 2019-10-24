@@ -38,18 +38,7 @@ TEST_CASE( "build AST from code", "[ast-from-code]") {
   std::unique_ptr<ASTUnit> FromAST = tooling::buildASTFromCodeWithArgs(
       code, 
       args );
-  //-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -I/home/twiga/bin/clang-9.0.0/include -I/home/twiga/code/github/systemc-clang/src -I/home/twiga/code/github/systemc-clang/plugins/xlat -I/home/twiga/code/github/systemc-clang/externals -isystem/home/twiga/bin/clang-9.0.0/include -std=c++11   -fno-exceptions -fno-rtti -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS   -std=gnu++14 -MD -MT CMakeFiles/systemc-clang.dir/driver-tooling.cpp.o 
 
-  // std::unique_ptr<ASTUnit> FromUnit = buildASTFromCodeWithArgs(
-      // R"(
-      // #include "systemc.h"
-      // class MyClass : public sc_module {
-        // int m1;
-        // int m2;
-      // };
-      // )",
-      // "from.cc");
-//
   SECTION( "is built from AST correct ") {
     // To print the AST.
     FromAST->getASTContext().getTranslationUnitDecl()->dump();
