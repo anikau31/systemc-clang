@@ -63,10 +63,10 @@ TEST_CASE( "Matchers and import of AST", "[matchers-import]") {
 SC_MODULE( test ){
 
   sc_in_clk clk;
-  /*
-   * Template imports seem to fail.  Still have to see.
   sc_in<int> in1;
   sc_in<int> in2;
+  /*
+   * Template imports seem to fail.  Still have to see.
   sc_inout<double> in_out;
   sc_out<int> out1;
   sc_out<int> out2;
@@ -190,6 +190,9 @@ std::unique_ptr<ASTUnit> to_unit = buildASTFromCode("", "to.cc");
 ASTImporter importer( to_unit->getASTContext(),  to_unit->getFileManager(), 
     from_ast->getASTContext(),  from_ast->getFileManager(), true );
 
+from_ast->enableSourceFileDiagnostics();
+to_unit->enableSourceFileDiagnostics();
+
   llvm::errs() << "Perform the import\n";
   llvm::Expected<Decl*> ImportedOrErr = 
     importer.Import( From );//module_declaration_handler.getFoundModule() );
@@ -211,6 +214,7 @@ ASTImporter importer( to_unit->getASTContext(),  to_unit->getFileManager(),
     llvm::errs() << "ERROR 2: " << Err << "\n";
     consumeError(std::move(Err));
   }
+  llvm::errs() << "################################### Imported definition.\n";
   llvm::errs() << "Imported definition.\n";
   Imported->getTranslationUnitDecl()->dump();
 
