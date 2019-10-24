@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 # Always keep it on
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(CMAKE_CXX_EXTENSIONS OFF)
 #  Make verbose on?
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
@@ -53,6 +53,16 @@ set( PLUGIN_XLAT OFF )
 else()
 set( PLUGIN_XLAT ${XLAT})
 endif()
+
+
+# Keep tests off by default
+if ("${ENABLE_TESTS}" STREQUAL "")
+set( TESTS_ON OFF )
+else()
+  set( TESTS_ON ${ENABLE_TESTS})
+endif()
+
+
 
 # Test package
 
@@ -162,6 +172,8 @@ function(llvm_config VARNAME switch)
     string(REGEX REPLACE "-Werror=unguarded-availability-new" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
     string(REGEX REPLACE "-Wno-unknown-warning-option" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
     string(REGEX REPLACE "-Wno-unused-command-line-argument" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    # Replace llvm-config's c++11 generation
+    #string(REGEX REPLACE "-std=c++11" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
   endif()
 
   # make result available outside
@@ -272,8 +284,11 @@ link_directories( ${LLVM_INSTALL_DIR}/lib )
 
 add_subdirectory(src)
 add_subdirectory(plugins)
+
+if( TESTS_ON )
 add_subdirectory(tests)
 enable_testing()
+endif()
 
 set( SRC_LIB libsystemc-clang libxlat )
 
@@ -303,6 +318,7 @@ message(STATUS "[ Build summary ]")
 message(STATUS "SystemC-Clang         : ${SCC_MINOR_VERSION}")
 message(STATUS "")
 message(STATUS "Plugin Xlat           : ${PLUGIN_XLAT}")
+message(STATUS "Build tests           : ${TESTS_ON}")
 message(STATUS "")
 message(STATUS "[ Environment ]")
 message(STATUS "CMAKE_GENERATOR       : ${CMAKE_GENERATOR}")
