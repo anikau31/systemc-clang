@@ -1,10 +1,11 @@
 # Test CMakeFile
 
 set(UNIT_TEST_LIST 
-  catch-test 
-  catch-test2 
-  model.test 
+  catch-test
+  catch-test2
+  model.test
   build-ast-code
+   import-ast-test
   )
  
 include(CTest)

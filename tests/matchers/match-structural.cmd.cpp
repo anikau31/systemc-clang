@@ -46,4 +46,7 @@ set output diag
 # Match entry function
 # 1. Find constructor
 # 2. Find method with the name
-m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), hasDescendant(cxxConstructorDecl().bind("constructor")))
+# m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), hasDescendant(cxxConstructorDecl().bind("constructor")))
+
+
+

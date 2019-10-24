@@ -126,8 +126,10 @@ bool SystemCConsumer::fire() {
   //
   // Print the contents of the model so far.  It should only have declarations.
   //
+  
   os_ << "[Pass 1]: Discover sc_module declarations.\n";
   auto module_decls_sofar { systemc_model_->getModuleDecl() };
+  CXXRecordDecl* node{ nullptr };
   for ( auto md : module_decls_sofar ) {
     os_ << "[ module name ] " << md.first << "\n";
     auto md_ptr { md.second };
@@ -140,24 +142,29 @@ bool SystemCConsumer::fire() {
   // IMPORTANT: DO NOT ERASE
   // This code allows us to traverse using AST Matchers a node, and not the whole AST.
   // The approach is to import a part of the AST into another ASTUnit, and then invoke matchers on it. 
-  // std::unique_ptr<ASTUnit> ToUnit = buildASTFromCode("", "to.cc");
-  // ASTImporter importer(ToUnit->getASTContext(), ToUnit->getFileManager(),
-  // tu->getASTContext(),ci_.getFileManager(), true );
-  // llvm::Expected<Decl *> ImportedOrErr = importer.Import(node);
-  //
-  // if (!ImportedOrErr) {
-  // llvm::Error Err = ImportedOrErr.takeError();
-  // llvm::errs() << "ERROR: " << Err << "\n";
-  // consumeError(std::move(Err));
-  // return 1;
-  // }
-  //
-  //
-  // Decl *Imported = *ImportedOrErr;
-  // Imported->getTranslationUnitDecl()->dump();
-  //
-  // matchRegistry.matchAST(ToUnit->getASTContext());
 
+  // os_ << " ####################### IMPORT #################### \n";
+   // std::unique_ptr<ASTUnit> ToUnit = buildASTFromCode("", "to.cc");
+//
+   // ASTImporter importer(ToUnit->getASTContext(), ToUnit->getFileManager(),
+   // translation_unit->getASTContext(), ci_.getFileManager(), true );
+//
+   // llvm::Expected<Decl *> ImportedOrErr = importer.Import(node);
+
+   // if (!ImportedOrErr) {
+   // llvm::Error Err = ImportedOrErr.takeError();
+   // llvm::errs() << "ERROR: " << Err << "\n";
+   // consumeError(std::move(Err));
+   // return 1;
+   // }
+
+
+  // Decl *Imported = *ImportedOrErr;
+   // Imported->getTranslationUnitDecl()->dump();
+
+  // matchRegistry.matchAST(ToUnit->getASTContext());
+//
+  // os_ << " ####################### END IMPORT #################### \n";
   // Find the sc_modules
   //
   // This code is no longer required. 

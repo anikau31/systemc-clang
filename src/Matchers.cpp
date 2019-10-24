@@ -125,6 +125,8 @@ void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
   if ( auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in") ) {
     auto port_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found sc_in: " << port_name << endl;
+    cout << fd->getParent()->getIdentifier()->getNameStart() << endl;
+
     in_ports_.push_back( std::make_tuple(port_name, new PortDecl( port_name, fd, parseTemplateType(fd)) ));
   }
 
