@@ -272,9 +272,10 @@ set(CMAKE_MODULE_LINKER_FLAGS
 set( TARGET "systemc-clang" )
 
 
+# catch2 may have headers colliding with other local files, so we can use -iquote instead of -I to include files in src folder
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -iquote ${PROJECT_SOURCE_DIR}/src")
 include_directories(
   "${LLVM_INSTALL_DIR}/include"
-  src
   plugins/xlat
   "${CATCH_INCLUDE_DIR}"
   )
