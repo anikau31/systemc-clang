@@ -100,9 +100,14 @@ void ModuleDecl::addOutputPorts(FindPorts::PortType p) {
 
 void ModuleDecl::addInputOutputPorts(FindPorts::PortType p) {
   for (auto mit : p) {
-    _ioports.insert(
-                    portPairType(mit.first, new PortDecl(mit.first, mit.second)));
+    //   _ioports.insert(
+    //      portPairType(mit.first, new PortDecl(mit.first, mit.second)));
+    string n = mit.first;
+    FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
+    PortDecl *pd = new PortDecl(n, tt);
+    _ioports.insert( portPairType(n , pd));
   }
+
 }
 
 void ModuleDecl::addInputInterfaces(FindTLMInterfaces::interfaceType p) {
