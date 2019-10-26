@@ -3,6 +3,10 @@ using namespace scpar;
 using namespace clang;
 using namespace std;
 
+bool SystemCConsumer::preFire() { return true; }
+
+bool SystemCConsumer::postFire() { return true; }
+
 bool SystemCConsumer::fire() {
 
   os_ << "Top module: " << getTopModule() << "\n";
@@ -220,7 +224,20 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext &context) {
   // / Pass 1: Find the necessary information.
   // ///////////////////////////////////////////////////////////////
 
-  fire(); 
+  bool pre = false;
+  pre = preFire();
+  
+  if (!pre) {
+    return;
+  }
+  
+  bool f = false;
+  f = fire();
+  
+  if (!f) {
+    return;
+  } 
+  postFire();      
 }
 
 SystemCConsumer::SystemCConsumer( CompilerInstance &ci, std::string top )

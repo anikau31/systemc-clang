@@ -76,7 +76,9 @@ namespace scpar {
 
       // Virtual methods that plugins may override.
       virtual bool fire();
-
+    virtual bool preFire();
+    virtual bool postFire();
+    
       virtual void HandleTranslationUnit(ASTContext &context);
 
     private:
