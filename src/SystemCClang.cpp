@@ -77,7 +77,7 @@ bool SystemCConsumer::fire() {
     //  Find the ports
     //
     //
-    /*
+    
     FindPorts found_ports{ module_declaration->getModuleClassDecl(), os_ };
     module_declaration->addPorts( module_declaration_handler.getFields("sc_in"), "sc_in" );
     module_declaration->addPorts( module_declaration_handler.getFields("sc_out"), "sc_out" );
@@ -88,14 +88,14 @@ bool SystemCConsumer::fire() {
     os_ <<" #########################################################\n";
     module_declaration->dumpPorts(os_, 4);
     os_ <<" #########################################################\n";
-    */
     
+    /*
     FindPorts found_ports{ module_declaration->getModuleClassDecl(), os_ };
     module_declaration->addInputPorts( found_ports.getInputPorts() );
     module_declaration->addOutputPorts( found_ports.getOutputPorts() );
     module_declaration->addInputOutputPorts( found_ports.getInputOutputPorts() );
     module_declaration->addOtherVars( found_ports.getOtherVars() ); 
-
+*/
     // 
     // Find the sc_signals within the module. 
     //

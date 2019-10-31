@@ -59,26 +59,22 @@ auto match_module_decls =
       isExpansionInMainFile(),
       isDerivedFrom(
         hasName("::sc_core::sc_module") 
-        )
+        ),
+      unless(isDerivedFrom(matchesName("sc_event_queue")))
       );      
   //clang-format on
 
   // clang-format off
 auto match_in_ports = 
   cxxRecordDecl(
-      isExpansionInMainFile(),
-      isDerivedFrom(
-        hasName("::sc_core::sc_module")
-        ),
+      match_module_decls,
       forEach(
           fieldDecl( hasType(cxxRecordDecl(hasName("sc_in"))) ).bind("sc_in")
           )
       );
  
 auto match_non_sc_types = cxxRecordDecl(
-    isExpansionInMainFile(), 
-    isDerivedFrom(hasName("::sc_core::sc_module")),
-    unless(isDerivedFrom(matchesName("sc_event_queue"))),
+    match_module_decls,
     forEach(
       fieldDecl(
         unless(hasType(
@@ -88,7 +84,25 @@ auto match_non_sc_types = cxxRecordDecl(
         ).bind("other_fields")
       )
     );
-  // clang-format off
+
+auto match_all_ports = 
+  cxxRecordDecl(
+      match_module_decls,
+      anyOf(
+        forEach(
+          fieldDecl( hasType(cxxRecordDecl(hasName("sc_in"))) ).bind("sc_in")
+          ), 
+        forEach( 
+          fieldDecl( hasType(cxxRecordDecl(hasName("sc_out"))) ).bind("sc_out")
+          )
+        )
+      )
+
+
+  ;
+ 
+
+// clang-format off
 
 auto match_clock_ports = makeFieldMatcher("sc_in_clk");
 auto match_out_ports = makeFieldMatcher("sc_out");
@@ -96,13 +110,15 @@ auto match_in_out_ports = makeFieldMatcher("sc_inout");
 auto match_internal_signal = makeFieldMatcher("sc_signal");
 
 // add all the matchers.
-finder.addMatcher( match_module_decls.bind( "sc_module"), this );
-finder.addMatcher( match_clock_ports, this );
+//finder.addMatcher( match_module_decls.bind( "sc_module"), this );
+finder.addMatcher( match_all_ports.bind( "sc_module"), this );
+/*finder.addMatcher( match_clock_ports, this );
 finder.addMatcher( match_in_ports, this );
 finder.addMatcher( match_out_ports, this );
 finder.addMatcher( match_in_out_ports, this );
 finder.addMatcher( match_internal_signal, this );
 finder.addMatcher( match_non_sc_types, this );
+*/
 }
 
 void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
@@ -125,7 +141,7 @@ void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
   if ( auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in") ) {
     auto port_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found sc_in: " << port_name << endl;
-    cout << fd->getParent()->getIdentifier()->getNameStart() << endl;
+    //cout << fd->getParent()->getIdentifier()->getNameStart() << endl;
 
     in_ports_.push_back( std::make_tuple(port_name, new PortDecl( port_name, fd, parseTemplateType(fd)) ));
   }
