@@ -75,6 +75,7 @@ void addOtherVars(FindPorts::PortType p);
   portMapType getOPorts();
   portMapType getIPorts();
   portMapType getIOPorts();
+  portMapType getOtherVars();
   processMapType getProcessMap();
   Stmt *getConstructorStmt();
   interfaceMapType getIInterfaces();
