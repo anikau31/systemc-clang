@@ -24,15 +24,19 @@ public:
   PortType getInputPorts() const;
   PortType getOutputPorts() const;
   PortType getInputOutputPorts() const;
+  PortType getInStreamPorts() const;
+  PortType getOutStreamPorts() const;
   PortType getOtherVars() const;
   void dump();
 
 private:
   llvm::raw_ostream &os_;
-  PortType _inPorts;
-  PortType _outPorts;
-  PortType _inoutPorts;
-  PortType _otherVars;
+  PortType inPorts_;
+  PortType outPorts_;
+  PortType inStreamPorts_;
+  PortType outStreamPorts_;
+  PortType inoutPorts_;
+  PortType otherVars_;
 };
 
 } // namespace scpar
