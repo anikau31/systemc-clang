@@ -8,6 +8,10 @@ using namespace clang;
 using namespace std;
 
 using namespace sc_ast_matchers;
+bool SystemCConsumer::preFire() { return true; }
+
+bool SystemCConsumer::postFire() { return true; }
+
 bool SystemCConsumer::fire() {
 
   os_ << "Top module: " << getTopModule() << "\n";
@@ -58,7 +62,7 @@ bool SystemCConsumer::fire() {
   // We could do this in the AST matcher actually. 
   for ( auto const& element : found_module_declarations ) {
     auto module_declaration{ new ModuleDecl{get<0>(element), get<1>(element)} };
-    os_ << "name: " << get<0>(element) << "\n";;
+    os_ << "@@@@@ name: " << get<0>(element) << "\n";;
 
     // =========================================================== 
     // 2. Traverse every module, and get its member declarations.
@@ -78,6 +82,7 @@ bool SystemCConsumer::fire() {
     //
     //
     
+    /*
     FindPorts found_ports{ module_declaration->getModuleClassDecl(), os_ };
     module_declaration->addPorts( module_declaration_handler.getFields("sc_in"), "sc_in" );
     module_declaration->addPorts( module_declaration_handler.getFields("sc_out"), "sc_out" );
@@ -88,14 +93,15 @@ bool SystemCConsumer::fire() {
     os_ <<" #########################################################\n";
     module_declaration->dumpPorts(os_, 4);
     os_ <<" #########################################################\n";
+    */
     
-    /*
     FindPorts found_ports{ module_declaration->getModuleClassDecl(), os_ };
     module_declaration->addInputPorts( found_ports.getInputPorts() );
     module_declaration->addOutputPorts( found_ports.getOutputPorts() );
     module_declaration->addInputOutputPorts( found_ports.getInputOutputPorts() );
     module_declaration->addOtherVars( found_ports.getOtherVars() ); 
-*/
+    module_declaration->addInputStreamPorts( found_ports.getInStreamPorts() );
+    module_declaration->addOutputStreamPorts( found_ports.getOutStreamPorts() );
     // 
     // Find the sc_signals within the module. 
     //
@@ -236,7 +242,6 @@ bool SystemCConsumer::fire() {
       FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
 
       md->setTemplateParameters( tparms.getTemplateParameters() );
-      os_ << "@@# " << mainmd->getTemplateParameters().size() << "\n";
       md->dump_json();
 
 
@@ -248,10 +253,13 @@ bool SystemCConsumer::fire() {
        * This should be replaced with the ASTmatchers finding the ports 
        *
       FindPorts ports{mainmd->getModuleClassDecl(), os_};
+//      ports.dump();
       md->addInputPorts(ports.getInputPorts());
       md->addOutputPorts(ports.getOutputPorts());
       md->addInputOutputPorts(ports.getInputOutputPorts());
       md->addOtherVars(ports.getOtherVars()); 
+      md->addInputStreamPorts( ports.getInStreamPorts() );
+      md->addOutputStreamPorts( ports.getOutStreamPorts() );
       */
 
       FindTLMInterfaces findTLMInterfaces{mainmd->getModuleClassDecl(), os_};
@@ -300,7 +308,20 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext &context) {
   // / Pass 1: Find the necessary information.
   // ///////////////////////////////////////////////////////////////
 
-  fire(); 
+  bool pre = false;
+  pre = preFire();
+  
+  if (!pre) {
+    return;
+  }
+  
+  bool f = false;
+  f = fire();
+  
+  if (!f) {
+    return;
+  } 
+  postFire();      
 }
 
 SystemCConsumer::SystemCConsumer( CompilerInstance &ci, std::string top )

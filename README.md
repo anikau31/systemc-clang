@@ -16,6 +16,9 @@ It parses RTL constructs and some TLM 2.0 constructs.
 
   To compile with the Xlat plugin, run cmake with the `-DXLAT=on` flag. 
   
+## Tests
+  To enable compilation of tests, run cmake with the `-DENABLE_TESTS=on` flag.
+
 ## Contact
 
 If you encounter problems, please create issues with a minimally working example that illustrates the issue.  

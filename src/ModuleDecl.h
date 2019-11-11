@@ -61,6 +61,9 @@ public:
   void addInputPorts(const FindPorts::PortType& );
   void addOutputPorts(const FindPorts::PortType& );
   void addInputOutputPorts(const FindPorts::PortType& );
+
+  void addInputStreamPorts(FindPorts::PortType);
+  void addOutputStreamPorts(FindPorts::PortType);
   void addOtherVars(const FindPorts::PortType&);
   void addPorts( const PortType& found_ports, const std::string & port_type );
 
@@ -80,6 +83,9 @@ public:
   portMapType getOPorts();
   portMapType getIPorts();
   portMapType getIOPorts();
+      portMapType getInputStreamPorts();
+      portMapType getOutputStreamPorts();
+
   processMapType getProcessMap();
   Stmt *getConstructorStmt();
   interfaceMapType getIInterfaces();
@@ -110,6 +116,9 @@ private:
   portMapType out_ports_;
   portMapType inout_ports_;
   portMapType other_fields_;
+
+  portMapType _istreamports;
+  portMapType _ostreamports;
 
   interfaceMapType _iinterfaces;
   interfaceMapType _ointerfaces;

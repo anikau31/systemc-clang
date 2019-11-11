@@ -17,7 +17,7 @@ class ModelDump
 : public SystemCConsumer {
 
 public:
-  ModelDump( CompilerInstance& ci)
+  ModelDump( CompilerInstance& ci, std::string top )
   : SystemCConsumer(ci) {
   
   }

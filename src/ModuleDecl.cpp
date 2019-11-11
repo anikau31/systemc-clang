@@ -57,10 +57,9 @@ void ModuleDecl::setTemplateParameters(const vector<string> & parm_list) {
   template_parameters_ = parm_list;
 }
 
-vector<string> ModuleDecl::getTemplateParameters() const {
-  return template_parameters_; }
+vector<string> ModuleDecl::getTemplateParameters() const { return template_parameters_; }
 
-  void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
+void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
 
   void ModuleDecl::addInstances(const vector<string> & instanceList) {
     _instanceList = instanceList;
@@ -130,7 +129,8 @@ void ModuleDecl::addInputOutputPorts(const FindPorts::PortType &p) {
     FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
     PortDecl *pd = new PortDecl(n, tt);
     inout_ports_.push_back( portPairType(n , pd));
-  }
+ }
+
 }
 
 void ModuleDecl::addInputInterfaces(FindTLMInterfaces::interfaceType p) {
@@ -152,6 +152,27 @@ void ModuleDecl::addOutputInterfaces(FindTLMInterfaces::interfaceType p) {
     _ointerfaces.insert(interfacePairType(name, pd));
   }
 }
+
+void ModuleDecl::addInputStreamPorts( FindPorts::PortType p ) {
+  for (auto mit : p) {
+    string name = mit.first;
+    FindTemplateTypes *template_type = new FindTemplateTypes(mit.second);
+    PortDecl *pd = new PortDecl(name, template_type);
+    _istreamports.push_back( portPairType(mit.first, pd) );
+  }
+}
+
+void ModuleDecl::addOutputStreamPorts(FindPorts::PortType p) {
+  for (auto mit : p) {
+    string name = mit.first;
+    FindTemplateTypes *template_type = new FindTemplateTypes(mit.second);
+    PortDecl *pd = new PortDecl(name, template_type);
+
+    _ostreamports.push_back(portPairType(mit.first, pd));
+  }
+}
+
+
 
 void ModuleDecl::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   //  for (FindTLMInterfaces::interfaceType::iterator mit = p.begin(), mite =
@@ -203,9 +224,7 @@ void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
 
 vector<string> ModuleDecl::getInstanceList() { return _instanceList; }
 
-vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
-  return _vef;
-}
+vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() { return _vef; }
 
 int ModuleDecl::getNumInstances() { return _instanceList.size(); }
 
@@ -219,17 +238,15 @@ ModuleDecl::portMapType ModuleDecl::getIPorts() { return in_ports_; }
 
 ModuleDecl::portMapType ModuleDecl::getIOPorts() { return inout_ports_; }
 
-ModuleDecl::interfaceMapType ModuleDecl::getOInterfaces() {
-  return _ointerfaces;
-}
+ModuleDecl::portMapType ModuleDecl::getInputStreamPorts() { return _istreamports; }
 
-ModuleDecl::interfaceMapType ModuleDecl::getIInterfaces() {
-  return _iinterfaces;
-}
+ModuleDecl::portMapType ModuleDecl::getOutputStreamPorts() { return _ostreamports; }
 
-ModuleDecl::interfaceMapType ModuleDecl::getIOInterfaces() {
-  return _iointerfaces;
-}
+ModuleDecl::interfaceMapType ModuleDecl::getOInterfaces() { return _ointerfaces; }
+
+ModuleDecl::interfaceMapType ModuleDecl::getIInterfaces() { return _iinterfaces; }
+
+ModuleDecl::interfaceMapType ModuleDecl::getIOInterfaces() { return _iointerfaces; }
 
 string ModuleDecl::getName() { return module_name_; }
 
@@ -315,7 +332,7 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
 void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
     os << "\nInput ports: " << in_ports_.size() << "\n";
 
-  json iport_j, oport_j, ioport_j, othervars_j;
+ json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j;
   iport_j["number_of_in_ports"] = in_ports_.size();
 
   os <<"Start printing ports\n" ;
@@ -366,6 +383,40 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
 
    os << "Ports\n";
    os << iport_j.dump(4) << "\n" << oport_j.dump(4) << "\n" << ioport_j.dump(4) << "\n" << othervars_j.dump(4) << "\n";
+    istreamport_j["number_of_instream_ports"] = _istreamports.size();
+    for (auto mit : _istreamports) {
+    auto name = get<0>(mit);
+    auto pd = get<1>(mit);
+    auto template_type = pd->getTemplateType();
+    auto template_args{ template_type->getTemplateArgumentsType() };
+      istreamport_j[name] = pd->dump_json( os );
+    }
+
+    ostreamport_j["number_of_outstream_ports"] = _ostreamports.size();
+    for (auto mit : _ostreamports) {
+    auto name = get<0>(mit);
+    auto pd = get<1>(mit);
+    auto template_type = pd->getTemplateType();
+    auto template_args{ template_type->getTemplateArgumentsType() };
+      ostreamport_j[name] = pd->dump_json( os );
+
+    }
+
+    othervars_j["number_of_other_vars"] = other_fields_.size();
+    for ( auto mit : other_fields_ ) {
+    auto name = get<0>(mit);
+    auto pd = get<1>(mit);
+    auto template_type = pd->getTemplateType();
+    auto template_args{ template_type->getTemplateArgumentsType() };
+    othervars_j[name] = pd->dump_json( os );
+
+    }
+
+    os << "Ports\n";
+    os << iport_j.dump(4) << "\n" << oport_j.dump(4) << "\n"
+       << ioport_j.dump(4)<< "\n" 
+       << istreamport_j.dump(4) << "\n" << ostreamport_j.dump(4) 
+       << othervars_j.dump(4) << "\n";
 }
 
 void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {

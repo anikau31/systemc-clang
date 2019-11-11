@@ -56,7 +56,7 @@ void ModuleDeclarationMatcher::registerMatchers(MatchFinder &finder ) {
 //
 auto match_module_decls = 
   cxxRecordDecl(
-      isExpansionInMainFile(),
+      //isExpansionInMainFile(),
       isDerivedFrom(
         hasName("::sc_core::sc_module") 
         ),
@@ -110,8 +110,8 @@ auto match_in_out_ports = makeFieldMatcher("sc_inout");
 auto match_internal_signal = makeFieldMatcher("sc_signal");
 
 // add all the matchers.
-//finder.addMatcher( match_module_decls.bind( "sc_module"), this );
-finder.addMatcher( match_all_ports.bind( "sc_module"), this );
+finder.addMatcher( match_module_decls.bind( "sc_module"), this );
+//finder.addMatcher( match_all_ports.bind( "sc_module"), this );
 /*finder.addMatcher( match_clock_ports, this );
 finder.addMatcher( match_in_ports, this );
 finder.addMatcher( match_out_ports, this );

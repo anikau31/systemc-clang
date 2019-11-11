@@ -67,7 +67,7 @@ namespace scpar {
       llvm::raw_ostream& os_;
 
     public: 
-      SystemCConsumer( CompilerInstance &, std::string top );
+      SystemCConsumer( CompilerInstance &, std::string top = "none" );
       virtual ~SystemCConsumer();
 
       Model *getSystemCModel();
@@ -77,7 +77,9 @@ namespace scpar {
 
       // Virtual methods that plugins may override.
       virtual bool fire();
-
+    virtual bool preFire();
+    virtual bool postFire();
+    
       virtual void HandleTranslationUnit(ASTContext &context);
 
     private:

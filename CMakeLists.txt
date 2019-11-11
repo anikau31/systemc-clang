@@ -49,9 +49,17 @@ set( CLANG_DIR ${Clang_DIR} )
 
 # Default plugin status 
 if ("${XLAT}" STREQUAL "")
-set( PLUGIN_XLAT OFF )
+  set( PLUGIN_XLAT OFF )
 else()
-set( PLUGIN_XLAT ${XLAT})
+  set( PLUGIN_XLAT ${XLAT})
+endif()
+
+
+# Keep tests off by default
+if ("${ENABLE_TESTS}" STREQUAL "")
+  set( TESTS_ON OFF )
+else()
+  set( TESTS_ON ${ENABLE_TESTS})
 endif()
 
 
@@ -272,9 +280,10 @@ set(CMAKE_MODULE_LINKER_FLAGS
 set( TARGET "systemc-clang" )
 
 
+# catch2 may have headers colliding with other local files, so we can use -iquote instead of -I to include files in src folder
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -iquote ${PROJECT_SOURCE_DIR}/src")
 include_directories(
   "${LLVM_INSTALL_DIR}/include"
-  src
   plugins/xlat
   "${CATCH_INCLUDE_DIR}"
   )
@@ -286,8 +295,8 @@ add_subdirectory(src)
 add_subdirectory(plugins)
 
 if( TESTS_ON )
-add_subdirectory(tests)
-enable_testing()
+  add_subdirectory(tests)
+  enable_testing()
 endif()
 
 set( SRC_LIB libsystemc-clang libxlat )
