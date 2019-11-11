@@ -213,6 +213,8 @@ ModuleDecl::portMapType ModuleDecl::getIPorts() { return _iports; }
 
 ModuleDecl::portMapType ModuleDecl::getIOPorts() { return _ioports; }
 
+ModuleDecl::portMapType ModuleDecl::getOtherVars() { return _othervars;}
+
 ModuleDecl::portMapType ModuleDecl::getInputStreamPorts() { return _istreamports; }
 
 ModuleDecl::portMapType ModuleDecl::getOutputStreamPorts() { return _ostreamports; }
