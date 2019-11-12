@@ -6,10 +6,9 @@
 #include "clang/Tooling/Tooling.h"
 #include "Matchers.h"
 
-using namespace scpar;
-using namespace tooling;
-using namespace ast_matchers;
-using namespace sc_ast_matchers;
+using namespace clang::tooling;
+using namespace clang::ast_matchers;
+//using namespace sc_ast_matchers;
 
 auto makeModuleMatcher( std::string name ) {
   auto match_module_decls = 
