@@ -41,7 +41,7 @@ TEST_CASE( "build AST from code", "[ast-from-code]") {
 
   SECTION( "is built from AST correct ") {
     // To print the AST.
-    FromAST->getASTContext().getTranslationUnitDecl()->dump();
+    //FromAST->getASTContext().getTranslationUnitDecl()->dump();
     REQUIRE( true );
   }
 

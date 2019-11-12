@@ -187,10 +187,12 @@ SECTION( "Test import of AST", "[import-ast]") {
 
 // Create an empty AST.
 std::unique_ptr<ASTUnit> to_unit = buildASTFromCode("", "to.cc");
+
 ASTImporter importer( to_unit->getASTContext(),  to_unit->getFileManager(), 
     from_ast->getASTContext(),  from_ast->getFileManager(), true );
 
 from_ast->enableSourceFileDiagnostics();
+
 to_unit->enableSourceFileDiagnostics();
 
   llvm::errs() << "Perform the import\n";
