@@ -35,6 +35,7 @@ namespace hnode {
   etype(hPortin), \
   etype(hPortout), \
   etype(hPortio), \
+  etype(hSensvar), \
   etype(hType), \
   etype(hInt), \
   etype(hSigdecl), \

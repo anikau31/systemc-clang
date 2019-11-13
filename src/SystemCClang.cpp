@@ -93,7 +93,6 @@ bool SystemCConsumer::fire() {
       FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
 
       md->setTemplateParameters( tparms.getTemplateParameters() );
-      os_ << "@@# " << mainmd->getTemplateParameters().size() << "\n";
       md->dump_json();
 
 
@@ -102,10 +101,13 @@ bool SystemCConsumer::fire() {
       md->addConstructor(constructor.returnConstructorStmt());
 
       FindPorts ports{mainmd->getModuleClassDecl(), os_};
+//      ports.dump();
       md->addInputPorts(ports.getInputPorts());
       md->addOutputPorts(ports.getOutputPorts());
       md->addInputOutputPorts(ports.getInputOutputPorts());
       md->addOtherVars(ports.getOtherVars()); 
+      md->addInputStreamPorts( ports.getInStreamPorts() );
+      md->addOutputStreamPorts( ports.getOutStreamPorts() );
 
       FindTLMInterfaces findTLMInterfaces{mainmd->getModuleClassDecl(), os_};
       md->addInputInterfaces(findTLMInterfaces.getInputInterfaces());

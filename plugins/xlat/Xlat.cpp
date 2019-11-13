@@ -47,8 +47,8 @@ bool Xlat::postFire()
       xlatport(instanceVec.at(i)->getOPorts(), hNode::hdlopsEnum::hPortout, h_ports); 
       xlatport(instanceVec.at(i)->getIOPorts(), hNode::hdlopsEnum::hPortio, h_ports);
 
-      // Other Variables -- disappeared in latest release
-      //xlatport(instanceVec.at(i)->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
+      // Other Variables
+      xlatport(instanceVec.at(i)->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
 
       // Signals
       xlatsig(instanceVec.at(i)->getSignals(), hNode::hdlopsEnum::hSigdecl, h_ports);
@@ -59,7 +59,7 @@ bool Xlat::postFire()
       h_top = new hNode(false);
 
       // Processes
-      xlatproc(instanceVec.at(i)->getProcessMap(), h_top, os_); 
+      xlatproc(instanceVec.at(i)->getEntryFunctionContainer(), h_top, os_); 
 
       h_module->child_list.push_back(h_top);
       h_module->print(xlatout);
@@ -108,25 +108,32 @@ void Xlat::xlattype(FindTemplateTypes * tt, hNodep & h_typeinfo)
     }
 }
 
-void Xlat::xlatproc(ModuleDecl::processMapType pmap, hNodep &h_top, llvm::raw_ostream &os) 
- {
-  for (ModuleDecl::processMapType::iterator pit = pmap.begin();
-         pit != pmap.end(); pit++) {
+//void Xlat::xlatproc(scpar::processMapType pmap, hNodep &h_top, llvm::raw_ostream &os) 
+void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *>efv, hNodep &h_top, llvm::raw_ostream &os) 
+{
+  for (auto efc:efv) {
+    if (efc->getProcessType()==PROCESS_TYPE::METHOD) {
 
-    ProcessDecl *pd = pit->second;
-    if (pd->getType() == "SC_METHOD") {
       hNodep h_process = new hNode(false);
       // [process name, process body]
-      h_process->child_list.push_back(new hNode(pit->first, hNode::hdlopsEnum::hProcess));
-      os_ << "process " << pit->first << "\n";
-      CXXMethodDecl * emd = pd->getEntryMethodDecl();
+      h_process->child_list.push_back(new hNode(efc->getName(), hNode::hdlopsEnum::hProcess));
+      os_ << "process " << efc->getName() << "\n";
+      // Sensitivity list
+      hNodep h_senslist = new hNode(false);
+      for (auto sensmap : efc->getSenseMap()) {
+	hNodep h_sensitem = new hNode(sensmap.first, hNode::hdlopsEnum::hSensvar);
+	sensmap.second->dump(os_);
+	h_senslist->child_list.push_back(h_sensitem);
+	os_ << "sensitivity item " << sensmap.first << "\n";
+      }
+      h_process->child_list.push_back(h_senslist);
+      CXXMethodDecl * emd = efc->getEntryMethod();
       hNodep h_body = new hNode(false);
       XlatMethod xmethod(emd, h_body, os_);//, xlatout);
       h_process->child_list.push_back(h_body);
       h_top->child_list.push_back(h_process);
     }
-    else os_ << "process " << pit->first << " not SC_METHOD, skipping\n";
-    //pd->getEntryMethodDecl()->dump(os_, n);
-    //  os << "\n";
+    else os_ << "process " << efc->getName() << " not SC_METHOD, skipping\n";
+
   }
- }
+}
