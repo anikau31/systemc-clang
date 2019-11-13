@@ -298,12 +298,28 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     return true;
 }
 
+bool isLogicalOp(clang::OverloadedOperatorKind opc) {
+  switch (opc) {
+  case OO_Less:
+  case OO_LessEqual:
+  case OO_Greater:
+  case OO_GreaterEqual:
+  case OO_ExclaimEqual:
+  case OO_EqualEqual:
+    return true;
+ 
+   default:
+     return false;
+  }
+}
+
 bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
 
   os_ << "In TraverseCXXOperatorCallExpr\n";
-  if (opcall->isAssignmentOp()) {
+  if ((opcall->isAssignmentOp())|| 
+      (isLogicalOp(opcall->getOperator()))) {
     if (opcall->getNumArgs() == 2) {
-      os_ << "assignment operator, 2 args\n";
+      os_ << "assignment or logical operator, 2 args\n";
       hNodep h_assignop = new hNode (false); // node to hold assignment expr
       h_assignop->child_list.push_back(new hNode("=", hNode::hdlopsEnum::hBinop));
       TRY_TO(TraverseStmt(opcall->getArg(0)));
@@ -316,7 +332,7 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
       return true;
     }
   }
-  os_ << "not yet implemented operator call expr, opc is " << opcall->getOperator() << "num argumetns " << opcall->getNumArgs() << " skipping\n";
+  os_ << "not yet implemented operator call expr, opc is " << clang::getOperatorSpelling(opcall->getOperator()) << "num argumetns " << opcall->getNumArgs() << " skipping\n";
   return true;
 }
 
