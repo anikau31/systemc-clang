@@ -122,7 +122,12 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *>efv, hNodep &h_top, l
       hNodep h_senslist = new hNode(false);
       for (auto sensmap : efc->getSenseMap()) {
 	hNodep h_sensitem = new hNode(sensmap.first, hNode::hdlopsEnum::hSensvar);
-	sensmap.second->dump(os_);
+  // HP: There is a change here. 
+  // Sensitivity map returns as its second argument a tuple.  
+  // The tuple has two parameters: the edge (pos/neg) and the second is the MemberExpr*.
+  // 
+  //
+	get<1>(sensmap.second)->dump(os_);
 	h_senslist->child_list.push_back(h_sensitem);
 	os_ << "sensitivity item " << sensmap.first << "\n";
       }

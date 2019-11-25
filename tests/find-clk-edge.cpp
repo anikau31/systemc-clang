@@ -10,7 +10,7 @@ SC_MODULE( test ){
 
     SC_CTOR( test ) {
         SC_METHOD(entry_function_1);
-        sensitive << clk1.pos();
+        sensitive << clk1.neg();
         sensitive << clk2.pos();
     }
 };

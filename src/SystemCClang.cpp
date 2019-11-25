@@ -8,11 +8,10 @@ bool SystemCConsumer::preFire() { return true; }
 bool SystemCConsumer::postFire() { return true; }
 
 bool SystemCConsumer::fire() {
-
   os_ << "Top module: " << getTopModule() << "\n";
   TranslationUnitDecl *tu{getContext().getTranslationUnitDecl()};
   // Reflection database.
-  systemcModel_ = new Model{} ;
+  systemcModel_ = new Model{};
 
   // ANI : Do we need FindGlobalEvents?
   FindGlobalEvents globals{tu, os_};
@@ -20,10 +19,10 @@ bool SystemCConsumer::fire() {
   globals.dump_json();
   systemcModel_->addGlobalEvents(eventMap);
 
-  // 
-  // TODO: 
+  //
+  // TODO:
   // A first pass should be made to collect all sc_module declarations.
-  // This is important so that the top-level module can be found. 
+  // This is important so that the top-level module can be found.
   //
 
   // Find the sc_modules
@@ -33,7 +32,8 @@ bool SystemCConsumer::fire() {
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
 
   for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
-         mitend = scmodules.end();  mit != mitend; ++mit) {
+                                              mitend = scmodules.end();
+       mit != mitend; ++mit) {
     ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
     // md->setTemplateParameters( scmod.getTemplateParameters() );
     //       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
@@ -42,10 +42,9 @@ bool SystemCConsumer::fire() {
     //
     // TODO: find any instances in the module declarations
     os_ << "=> Processing module: " << mit->first << "\n";
-    //md->getModuleClassDecl()->dump();
+    // md->getModuleClassDecl()->dump();
     FindModuleInstance module_instance{md->getModuleClassDecl(), os_};
   }
-
 
   ////////////////////////////////////////////////////////////////
   // Find the sc_main
@@ -55,9 +54,9 @@ bool SystemCConsumer::fire() {
   if (scmain.isSCMainFound()) {
     FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
 
-  // TODO: find any instances in sc_main.
+    // TODO: find any instances in sc_main.
 
-    //fnDecl->dump();
+    // fnDecl->dump();
 
     FindSimTime scstart{fnDecl, os_};
     systemcModel_->addSimulationTime(scstart.returnSimTime());
@@ -78,7 +77,8 @@ bool SystemCConsumer::fire() {
   Model::moduleMapType moduleMap{systemcModel_->getModuleDecl()};
 
   for (Model::moduleMapType::iterator mit = moduleMap.begin(),
-         mitend = moduleMap.end();   mit != mitend; mit++) {
+                                      mitend = moduleMap.end();
+       mit != mitend; mit++) {
     ModuleDecl *mainmd{mit->second};
     int numInstances{mainmd->getNumInstances()};
     vector<ModuleDecl *> moduleDeclVec;
@@ -92,22 +92,21 @@ bool SystemCConsumer::fire() {
       // Find the template arguments for the class.
       FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
 
-      md->setTemplateParameters( tparms.getTemplateParameters() );
+      md->setTemplateParameters(tparms.getTemplateParameters());
       md->dump_json();
-
 
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{mainmd->getModuleClassDecl(), os_};
       md->addConstructor(constructor.returnConstructorStmt());
 
       FindPorts ports{mainmd->getModuleClassDecl(), os_};
-//      ports.dump();
+      //      ports.dump();
       md->addInputPorts(ports.getInputPorts());
       md->addOutputPorts(ports.getOutputPorts());
       md->addInputOutputPorts(ports.getInputOutputPorts());
-      md->addOtherVars(ports.getOtherVars()); 
-      md->addInputStreamPorts( ports.getInStreamPorts() );
-      md->addOutputStreamPorts( ports.getOutStreamPorts() );
+      md->addOtherVars(ports.getOtherVars());
+      md->addInputStreamPorts(ports.getInStreamPorts());
+      md->addOutputStreamPorts(ports.getOutStreamPorts());
 
       FindTLMInterfaces findTLMInterfaces{mainmd->getModuleClassDecl(), os_};
       md->addInputInterfaces(findTLMInterfaces.getInputInterfaces());
@@ -140,11 +139,11 @@ bool SystemCConsumer::fire() {
         FindNotify findNotify{ef->_entryMethodDecl, os_};
         ef->addNotifys(findNotify);
 
-  #ifdef USE_SAUTO 
+#ifdef USE_SAUTO
         /// Does not compile
         SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(),
-                                              ef->getEntryMethod(), &getContext(),
-                                              llvm::errs());
+                                              ef->getEntryMethod(),
+                                              &getContext(), llvm::errs());
         if (suspensionAutomata.initialize()) {
           suspensionAutomata.genSusCFG();
           suspensionAutomata.dumpSusCFG();
@@ -152,7 +151,7 @@ bool SystemCConsumer::fire() {
           suspensionAutomata.dumpSauto();
           ef->addSusCFGAuto(suspensionAutomata);
         }
-#endif 
+#endif
 
         _entryFunctionContainerVector.push_back(ef);
       }
@@ -198,22 +197,21 @@ systemcModel_->addNetlist(findNetlist);
       vector<EntryFunctionContainer *> entryFunctionContainer =
           moduleDecl->getEntryFunctionContainer();
       for (size_t j = 0; j < entryFunctionContainer.size(); j++) {
-
         SuspensionAutomata suspensionAutomata(
             entryFunctionContainer.at(j)->getWaitCalls(),
             entryFunctionContainer.at(j)->getEntryMethod(), &getContext(),
             llvm::errs());
         if (suspensionAutomata.initialize()) {
           suspensionAutomata.genSusCFG();
-          //suspensionAutomata.dumpSusCFG();
+          // suspensionAutomata.dumpSusCFG();
           suspensionAutomata.genSauto();
-          //suspensionAutomata.dumpSauto();
+          // suspensionAutomata.dumpSauto();
           entryFunctionContainer.at(j)->addSusCFGAuto(suspensionAutomata);
         }
       }
     }
-  } 
-#endif 
+  }
+#endif
 
   os_ << "\n";
   os_ << "\n## SystemC model\n";
@@ -228,28 +226,29 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext &context) {
 
   bool pre = false;
   pre = preFire();
-  
+
   if (!pre) {
     return;
   }
-  
+
   bool f = false;
   f = fire();
-  
+
   if (!f) {
     return;
-  } 
-  postFire();      
+  }
+  postFire();
 }
 
-SystemCConsumer::SystemCConsumer( CompilerInstance &ci, std::string top )
-  : os_{llvm::errs()}, sm_{ci.getSourceManager()},
-  context_{ci.getASTContext()},
-  ci_{ci},
-  top_{top},
-  systemcModel_{nullptr} {}
+SystemCConsumer::SystemCConsumer(CompilerInstance &ci, std::string top)
+    : os_{llvm::errs()},
+      sm_{ci.getSourceManager()},
+      context_{ci.getASTContext()},
+      ci_{ci},
+      top_{top},
+      systemcModel_{nullptr} {}
 
-  SystemCConsumer::~SystemCConsumer() {
+SystemCConsumer::~SystemCConsumer() {
   if (systemcModel_ != nullptr) {
     delete systemcModel_;
     systemcModel_ = nullptr;
@@ -260,6 +259,6 @@ Model *SystemCConsumer::getSystemCModel() { return systemcModel_; }
 
 std::string SystemCConsumer::getTopModule() const { return top_; }
 
-ASTContext& SystemCConsumer::getContext() const { return context_; }
-  
-SourceManager& SystemCConsumer::getSourceManager() const { return sm_; }
+ASTContext &SystemCConsumer::getContext() const { return context_; }
+
+SourceManager &SystemCConsumer::getSourceManager() const { return sm_; }
