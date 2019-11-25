@@ -4,7 +4,6 @@ using namespace scpar;
 using namespace std;
 
 NotifyCalls::~NotifyCalls() {
-
   // _astNode does *NOT* need to be deleted because clang should
   // be responsible for freeing the memory.
 }

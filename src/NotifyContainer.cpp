@@ -5,7 +5,6 @@ using namespace scpar;
 using namespace llvm;
 
 NotifyContainer::~NotifyContainer() {
-
   // DO NOT free anything since nothing is dynamically allocated.
 
   // Clear _args.
@@ -14,7 +13,6 @@ NotifyContainer::~NotifyContainer() {
 
 NotifyContainer::NotifyContainer(CXXMethodDecl *m, CallExpr *c)
     : _entryMethodDecl(m), _astNode(c), _numArgs(c->getNumArgs()) {
-
   // Use CXXMemberCallExpr to populate the ARgMap.
   populateArgMap();
 }
@@ -65,7 +63,6 @@ void NotifyContainer::populateArgMap() {
 }
 
 void NotifyContainer::dump(raw_ostream &os, int tabn) {
-
   for (int i = 0; i < tabn; i++) {
     os << " ";
   }
