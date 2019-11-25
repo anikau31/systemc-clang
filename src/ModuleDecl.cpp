@@ -10,6 +10,9 @@ using namespace std;
 ModuleDecl::ModuleDecl()
     : module_name_{"NONE"}, class_decl_{nullptr}, constructor_stmt_{nullptr} {}
 
+ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
+    : module_name_{name}, class_decl_{decl} {}
+
 ModuleDecl::ModuleDecl(
     const std::tuple<const std::string &, CXXRecordDecl *> &element)
     : module_name_{get<0>(element)}, class_decl_{get<1>(element)} {}
@@ -233,7 +236,7 @@ ModuleDecl::portMapType ModuleDecl::getIPorts() { return in_ports_; }
 
 ModuleDecl::portMapType ModuleDecl::getIOPorts() { return inout_ports_; }
 
-ModuleDecl::portMapType ModuleDecl::getOtherVars() { return _othervars; }
+ModuleDecl::portMapType ModuleDecl::getOtherVars() { return other_fields_; }
 
 ModuleDecl::portMapType ModuleDecl::getInputStreamPorts() {
   return _istreamports;
@@ -339,7 +342,6 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j;
   iport_j["number_of_in_ports"] = in_ports_.size();
 
-<<<<<<< HEAD
   os << "Start printing ports\n";
   for (auto mit : in_ports_) {
     auto name = get<0>(mit);
