@@ -7,6 +7,7 @@ set(UNIT_TEST_LIST
   build-ast-code
   import-ast-test
   subtree-matcher-test
+  vardecls-in-method-test
   )
  
 include(CTest)

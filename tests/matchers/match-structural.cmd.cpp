@@ -48,5 +48,9 @@ set output diag
 # 2. Find method with the name
 # m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), hasDescendant(cxxConstructorDecl().bind("constructor")))
 
-
+set output dump
+# m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), hasDescendant(cxxConstructorDecl().bind("constructor")))
+#m varDecl(isExpansionInMainFile())
+# m cxxMethodDecl(isExpansionInMainFile())
+m declStmt(hasAncestor(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))), hasAncestor(cxxMethodDecl()), hasDescendant(varDecl(unless(hasType(cxxRecordDecl(hasName("sc_process_handle")))))))
 
