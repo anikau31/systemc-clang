@@ -1,7 +1,7 @@
 #ifndef _MODULE_DECL_H_
 #define _MODULE_DECL_H_
-#include "systemc-clang.h"
-#include "json.hpp"
+#include <map>
+#include <string>
 
 #include "FindConstructor.h"
 #include "FindEntryFunctions.h"
@@ -13,31 +13,31 @@
 #include "Signal.h"
 #include "Utility.h"
 #include "clang/AST/DeclCXX.h"
-#include <map>
-#include <string>
+#include "json.hpp"
+#include "systemc-clang.h"
 
 namespace scpar {
-  using namespace clang;
-  using namespace std;
-  using json = nlohmann::json;
+using namespace clang;
+using namespace std;
+using json = nlohmann::json;
 
 class ModuleDecl {
-public:
-  typedef pair<string, Signal* > signalPairType;
-  typedef map<string, Signal* > signalMapType;
+ public:
+  typedef pair<string, Signal *> signalPairType;
+  typedef map<string, Signal *> signalMapType;
 
   // Maps the name of the port with a pointer to a structure that holds
   // information about the port.
-  typedef pair<string, PortDecl* > portPairType;
-  //typedef map<string, PortDecl* > portMapType;
+  typedef pair<string, PortDecl *> portPairType;
+  // typedef map<string, PortDecl* > portMapType;
 
-  typedef pair<string, InterfaceDecl* > interfacePairType;
-  typedef map<string, InterfaceDecl* > interfaceMapType;
+  typedef pair<string, InterfaceDecl *> interfacePairType;
+  typedef map<string, InterfaceDecl *> interfaceMapType;
 
   // Maps the name of the process with a pointer to a structure that holds
   // information about the process.
-  typedef pair<string, ProcessDecl* > processPairType;
-  typedef map<string, ProcessDecl* > processMapType;
+  typedef pair<string, ProcessDecl *> processPairType;
+  typedef map<string, ProcessDecl *> processMapType;
 
   typedef pair<string, string> moduleProcessPairType;
 
@@ -48,34 +48,35 @@ public:
   typedef vector<string> instanceName;
 
   // PortType
-    typedef std::vector< std::tuple<std::string, PortDecl*> > PortType;
-    typedef std::vector< std::tuple<std::string, PortDecl*> > portMapType;
-public:
+  typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
+  typedef std::vector<std::tuple<std::string, PortDecl *> > portMapType;
+
+ public:
   ModuleDecl();
   ModuleDecl(const string &, CXXRecordDecl *);
-  ModuleDecl(const std::tuple< const std::string &, CXXRecordDecl* > & );
+  ModuleDecl(const std::tuple<const std::string &, CXXRecordDecl *> &);
 
   ~ModuleDecl();
 
-  void addSignals(const FindSignals::signalMapType & );
-  void addInputPorts(const FindPorts::PortType& );
-  void addOutputPorts(const FindPorts::PortType& );
-  void addInputOutputPorts(const FindPorts::PortType& );
+  void addSignals(const FindSignals::signalMapType &);
+  void addInputPorts(const FindPorts::PortType &);
+  void addOutputPorts(const FindPorts::PortType &);
+  void addInputOutputPorts(const FindPorts::PortType &);
 
   void addInputStreamPorts(FindPorts::PortType);
   void addOutputStreamPorts(FindPorts::PortType);
-  void addOtherVars(const FindPorts::PortType&);
-  void addPorts( const PortType& found_ports, const std::string & port_type );
+  void addOtherVars(const FindPorts::PortType &);
+  void addPorts(const PortType &found_ports, const std::string &port_type);
 
   void addInputInterfaces(FindTLMInterfaces::interfaceType);
   void addOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addProcess(FindEntryFunctions::entryFunctionVectorType *);
-  void addInstances(const vector<string> & );
+  void addInstances(const vector<string> &);
   void addSignalBinding(map<string, string>);
   void setModuleName(const string &);
   void setTemplateParameters(const vector<string> &);
-    vector<string> getTemplateParameters() const;
+  vector<string> getTemplateParameters() const;
   void addConstructor(Stmt *);
   string getName();
   CXXRecordDecl *getModuleClassDecl();
@@ -83,8 +84,8 @@ public:
   portMapType getOPorts();
   portMapType getIPorts();
   portMapType getIOPorts();
-      portMapType getInputStreamPorts();
-      portMapType getOutputStreamPorts();
+  portMapType getInputStreamPorts();
+  portMapType getOutputStreamPorts();
 
   processMapType getProcessMap();
   Stmt *getConstructorStmt();
@@ -106,7 +107,7 @@ public:
 
   json dump_json();
 
-private:
+ private:
   string module_name_;
   CXXRecordDecl *class_decl_;
   Stmt *constructor_stmt_;
@@ -129,8 +130,8 @@ private:
   portSignalMapType _portSignalMap;
   vector<EntryFunctionContainer *> _vef;
 
-    // Class template parameters.
-    vector<string> template_parameters_;
+  // Class template parameters.
+  vector<string> template_parameters_;
 };
-} // namespace scpar
+}  // namespace scpar
 #endif

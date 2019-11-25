@@ -21,36 +21,36 @@ bool FindNotify::VisitCallExpr(CallExpr *e) {
   LangOpts.CPlusPlus = true;
   PrintingPolicy Policy(LangOpts);
 
-  auto direct_callee{ e->getDirectCallee() };
-  if (direct_callee != nullptr ) {
-  if (direct_callee->getNameInfo().getAsString() == string("notify") &&
-      e->getNumArgs() <= 2) { // need a better checking.....
-    notify_call_list_.push_back(e);
-    // To get the 'x' from x.f(5) I must use getImplicitObjectArgument.
+  auto direct_callee{e->getDirectCallee()};
+  if (direct_callee != nullptr) {
+    if (direct_callee->getNameInfo().getAsString() == string("notify") &&
+        e->getNumArgs() <= 2) {  // need a better checking.....
+      notify_call_list_.push_back(e);
+      // To get the 'x' from x.f(5) I must use getImplicitObjectArgument.
 
-    /*
-      string exprName;
-      if(MemberExpr *me = dyn_cast<MemberExpr>(e->getCallee())) {
-      exprName = getArgumentName(me->getBase()->IgnoreImpCasts());
-      if(_processNotifyEventMap.find(entry_method_decl_) !=
-      _processNotifyEventMap.end()){
+      /*
+        string exprName;
+        if(MemberExpr *me = dyn_cast<MemberExpr>(e->getCallee())) {
+        exprName = getArgumentName(me->getBase()->IgnoreImpCasts());
+        if(_processNotifyEventMap.find(entry_method_decl_) !=
+        _processNotifyEventMap.end()){
 
-      processNotifyEventMapType::iterator processFound =
-      _processNotifyEventMap.find(entry_method_decl_); vector<string> tmp =
-      processFound->second; tmp.push_back(exprName);
-      _processNotifyEventMap.erase(entry_method_decl_);
-      _processNotifyEventMap.insert(processNotifyEventPairType(entry_method_decl_,
-      tmp));
-      }
-      else {
-      vector<string> tmp;
-      tmp.push_back(exprName);
-      _processNotifyEventMap.insert(processNotifyEventPairType(entry_method_decl_,
-      tmp));
-      }
-      }
-    */
-  }
+        processNotifyEventMapType::iterator processFound =
+        _processNotifyEventMap.find(entry_method_decl_); vector<string> tmp =
+        processFound->second; tmp.push_back(exprName);
+        _processNotifyEventMap.erase(entry_method_decl_);
+        _processNotifyEventMap.insert(processNotifyEventPairType(entry_method_decl_,
+        tmp));
+        }
+        else {
+        vector<string> tmp;
+        tmp.push_back(exprName);
+        _processNotifyEventMap.insert(processNotifyEventPairType(entry_method_decl_,
+        tmp));
+        }
+        }
+      */
+    }
   }
   return true;
 }

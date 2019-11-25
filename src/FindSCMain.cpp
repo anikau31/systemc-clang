@@ -11,7 +11,6 @@ FindSCMain::FindSCMain(TranslationUnitDecl *tuDecl, llvm::raw_ostream &os)
 FindSCMain::~FindSCMain() { sc_main_function_declaration_ = nullptr; }
 
 bool FindSCMain::VisitFunctionDecl(FunctionDecl *function_declaration) {
-
   /// Find sc_main.
   /// There are three conditions to satisfy this:
   /// 1. Must have sc_main in its name.

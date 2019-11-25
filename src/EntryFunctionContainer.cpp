@@ -1,4 +1,5 @@
 #include "EntryFunctionContainer.h"
+#include <iostream>
 #include "enums.h"
 
 using namespace scpar;
@@ -8,7 +9,8 @@ EntryFunctionContainer::~EntryFunctionContainer() {
 }
 
 EntryFunctionContainer::EntryFunctionContainer()
-    : _entryName("NONE"), _procType(PROCESS_TYPE::NONE),
+    : _entryName("NONE"),
+      _procType(PROCESS_TYPE::NONE),
       _entryMethodDecl(nullptr) {}
 
 EntryFunctionContainer::EntryFunctionContainer(string n, PROCESS_TYPE p,
@@ -93,7 +95,7 @@ void EntryFunctionContainer::addSusCFGAuto(SuspensionAutomata &s) {
   s.getSauto()));
   }
   */
-#endif 
+#endif
 }
 
 void EntryFunctionContainer::addNotifys(FindNotify &f) {
@@ -110,7 +112,6 @@ void EntryFunctionContainer::addNotifys(FindNotify &f) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void EntryFunctionContainer::dumpSusCFG(raw_ostream &os) {
-
   os << "\n#############################################";
 #ifdef USE_SAUTO
   SuspensionAutomata::susCFGVectorType susCFGVector = _susCFG;
@@ -140,7 +141,7 @@ void EntryFunctionContainer::dumpSusCFG(raw_ostream &os) {
       }
     }
   }
-#endif 
+#endif
 }
 
 void EntryFunctionContainer::dumpSauto(raw_ostream &os) {
@@ -151,7 +152,7 @@ void EntryFunctionContainer::dumpSauto(raw_ostream &os) {
     Transition *t = transitionVector.at(i);
     t->dump(os);
   }
-#endif 
+#endif
 }
 
 void EntryFunctionContainer::dump(raw_ostream &os, int tabn) {
@@ -162,18 +163,25 @@ void EntryFunctionContainer::dump(raw_ostream &os, int tabn) {
 
   os << "EntryFunctionContainer '" << getName() << "' processType '";
   switch (getProcessType()) {
-  case PROCESS_TYPE::THREAD:
-    os << "SC_THREAD' ";
-    break;
-  case PROCESS_TYPE::METHOD:
-    os << "SC_METHOD' ";
-    break;
-  case PROCESS_TYPE::CTHREAD:
-    os << "SC_CTHREAD' ";
-    break;
-  default:
-    os << "NONE' ";
-    break;
+    case PROCESS_TYPE::THREAD:
+      os << "SC_THREAD' ";
+      break;
+    case PROCESS_TYPE::METHOD:
+      os << "SC_METHOD' ";
+      break;
+    case PROCESS_TYPE::CTHREAD:
+      os << "SC_CTHREAD' ";
+      break;
+    default:
+      os << "NONE' ";
+      break;
+  }
+
+  // Print the sensitivity map.
+  for (auto const &sense : _senseMap) {
+    os << "sensitivity_signal: " << sense.first << ", "
+       << "edge: " << get<0>(sense.second)
+       << ", MemeberExpr*: " << get<1>(sense.second) << "\n";
   }
 
   os << " CXXMethodDecl '" << getEntryMethod() << "\n";
@@ -183,7 +191,6 @@ void EntryFunctionContainer::dump(raw_ostream &os, int tabn) {
   for (waitContainerListType::iterator it = _waitCalls.begin(),
                                        eit = _waitCalls.end();
        it != eit; it++) {
-
     (*it)->dump(os, newTabn);
   }
   os << " Notify Calls \n";

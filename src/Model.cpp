@@ -65,7 +65,6 @@ void Model::addNetlist(FindNetlist &n) {
 }
 
 void Model::updateModuleDecl() {
-
   for (moduleMapType::iterator it = modules_.begin(), eit = modules_.end();
        it != eit; it++) {
     string moduleName = it->first;
@@ -107,8 +106,8 @@ void Model::updateModuleDecl() {
 void Model::addSCModules(FindSCModules *m) {
   FindSCModules::moduleMapType mods = m->getSystemCModulesMap();
 
-  for (FindSCModules::moduleMapType::iterator mit = mods.begin(); mit != mods.end();
-       mit++) {
+  for (FindSCModules::moduleMapType::iterator mit = mods.begin();
+       mit != mods.end(); mit++) {
     addModuleDecl(new ModuleDecl(mit->first, mit->second));
   }
 }
@@ -129,14 +128,14 @@ Model::eventMapType Model::getEventMapType() { return event_map_; }
 unsigned int Model::getNumEvents() { return (event_map_.size() - 3); }
 
 void Model::dump(llvm::raw_ostream &os) {
-
-  os << "\n" << "# Number of modules: " << modules_.size();
+  os << "\n"
+     << "# Number of modules: " << modules_.size();
 
   for (Model::moduleMapType::iterator mit = modules_.begin();
        mit != modules_.end(); mit++) {
     // Second is the ModuleDecl type.
 
-    // Get all the instances, and start to go through each of those. 
+    // Get all the instances, and start to go through each of those.
     vector<ModuleDecl *> instanceVec = module_instance_map_[mit->second];
     os << "\n# Module " << mit->first << ": " << instanceVec.size()
        << " instances.";

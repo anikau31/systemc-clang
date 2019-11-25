@@ -2,7 +2,6 @@
 using namespace scpar;
 
 FindNetlist::FindNetlist(FunctionDecl *fnDecl) : _pass{1} {
-
   TraverseDecl(fnDecl);
   _pass = 2;
 }
@@ -40,7 +39,6 @@ void FindNetlist::updateInstanceListModuleMap(string instanceName,
 }
 
 bool FindNetlist::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *ce) {
-
   bool foundME = false;
 
   string moduleName;
