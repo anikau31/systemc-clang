@@ -240,11 +240,18 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext &context) {
   postFire();
 }
 
+SystemCConsumer::SystemCConsumer(ASTUnit *from_ast, std::string top)
+    : os_{llvm::errs()},
+      sm_{from_ast->getSourceManager()},
+      context_{from_ast->getASTContext()},
+      top_{top},
+      systemcModel_{nullptr} {}
+
+
 SystemCConsumer::SystemCConsumer(CompilerInstance &ci, std::string top)
     : os_{llvm::errs()},
       sm_{ci.getSourceManager()},
       context_{ci.getASTContext()},
-      ci_{ci},
       top_{top},
       systemcModel_{nullptr} {}
 

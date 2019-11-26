@@ -5,6 +5,7 @@ set(UNIT_TEST_LIST
   catch-test2 
   model.test 
   build-ast-code
+  sc-clang-test
   )
  
 include(CTest)
