@@ -1,0 +1,145 @@
+  [
+    (hModule Counter_0)
+    [
+      (hPortin pi_bClk)
+      [
+        (hType sc_in)
+        (hType _Bool)
+      ]
+      (hPortin pi_bReset)
+      [
+        (hType sc_in)
+        (hType _Bool)
+      ]
+      (hPortin pi_bUpDown)
+      [
+        (hType sc_in)
+        (hType _Bool)
+      ]
+      (hPortout po_Count)
+      [
+        (hType sc_out)
+        (hType sc_uint)
+        (hType 8)
+      ]
+      (hSigdecl m_Count)
+      [
+        (hType sc_signal)
+        (hType sc_uint)
+        (hType 8)
+      ]
+    ]
+    [
+      [
+        (hProcess main)
+        [
+          (hSensvar pi_bClk)
+        ]
+        [
+          (hCStmt )
+          [
+            (hIfStmt )
+            [
+              (hBinop ==)
+              [
+                (hSigAssignR read)
+                (hLiteral pi_bReset)
+              ]
+              (hLiteral 1)
+            ]
+            [
+              (hCStmt )
+              [
+                (hSigAssignL write)
+                (hLiteral m_Count)
+                (hLiteral 0)
+              ]
+            ]
+            [
+              (hCStmt )
+              [
+                (hIfStmt )
+                [
+                  (hBinop ==)
+                  [
+                    (hSigAssignR read)
+                    (hLiteral pi_bUpDown)
+                  ]
+                  (hLiteral 0)
+                ]
+                [
+                  (hCStmt )
+                  [
+                    (hSigAssignL write)
+                    (hLiteral m_Count)
+                    [
+                      (hBinop +)
+                      [
+                        (hSigAssignR read)
+                        (hLiteral m_Count)
+                      ]
+                      (hLiteral 1)
+                    ]
+                  ]
+                ]
+                [
+                  (hCStmt )
+                  [
+                    (hSigAssignL write)
+                    (hLiteral m_Count)
+                    [
+                      (hBinop -)
+                      [
+                        (hSigAssignR read)
+                        (hLiteral m_Count)
+                      ]
+                      (hLiteral 1)
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      [
+        (hProcess updateOutput)
+        [
+          (hSensvar pi_bClk)
+        ]
+        [
+          (hCStmt )
+          [
+            (hSigAssignL write)
+            (hLiteral po_Count)
+            [
+              (hSigAssignR read)
+              (hLiteral m_Count)
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+  [
+    (hModule Stimulus_0)
+    [
+      (hPortout po_bClk)
+      [
+        (hType sc_out)
+        (hType _Bool)
+      ]
+      (hPortout po_bReset)
+      [
+        (hType sc_out)
+        (hType _Bool)
+      ]
+      (hPortout po_bUpDown)
+      [
+        (hType sc_out)
+        (hType _Bool)
+      ]
+    ]
+    [
+    ]
+  ]

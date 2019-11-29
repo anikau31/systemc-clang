@@ -18,6 +18,30 @@
         (hType sc_bv)
         (hType 8)
       ]
+      (hVardecl coef1)
+      [
+        (hType int)
+      ]
+      (hVardecl coef2)
+      [
+        (hType int)
+      ]
+      (hVardecl coef3)
+      [
+        (hType int)
+      ]
+      (hVardecl prod1)
+      [
+        (hType int)
+      ]
+      (hVardecl prod2)
+      [
+        (hType int)
+      ]
+      (hVardecl prod3)
+      [
+        (hType int)
+      ]
       (hSigdecl sum2)
       [
         (hType sc_signal)
@@ -59,6 +83,10 @@
       [
         (hProcess first_function)
         [
+          (hSensvar clk)
+          (hSensvar i_data)
+        ]
+        [
           (hCStmt )
           [
             (hSigAssignL write)
@@ -72,6 +100,10 @@
       ]
       [
         (hProcess second_function)
+        [
+          (hSensvar clk)
+          (hSensvar i_data)
+        ]
         [
           (hCStmt )
           [
@@ -102,6 +134,10 @@
       ]
       [
         (hProcess third_function)
+        [
+          (hSensvar clk)
+          (hSensvar i_data)
+        ]
         [
           (hCStmt )
           [
@@ -280,6 +316,8 @@
       [
         (hProcess filter_clk_driver)
         [
+        ]
+        [
           (hCStmt )
           [
             (hBinop =)
@@ -335,6 +373,10 @@
     [
       [
         (hProcess prc_monitor)
+        [
+          (hSensvar filter_input)
+          (hSensvar filter_output)
+        ]
         [
           (hCStmt )
         ]
