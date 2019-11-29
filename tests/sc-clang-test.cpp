@@ -94,10 +94,20 @@ sc.HandleTranslationUnit(from_ast->getASTContext());
 
 // Run all the matchers
 
-SECTION( "Found sc_modules.") {
+SECTION( "Found sc_modules", "[modules]") {
+  auto model{ sc.getSystemCModel() };
+  model->dump(llvm::outs());
+  
+  auto module_decl{ model->getModuleDecl() };
 
-  // Two sc_modules should be found.
-  REQUIRE( true );
+
+  // There should be 2 modules identified.
+  REQUIRE( module_decl.size() == 2 );
+
+  // Check their names, and that their pointers are not nullptr.
+  REQUIRE( module_decl["test"] != nullptr );
+  REQUIRE( module_decl["simple_module"] != nullptr );
+
 }
 
 }

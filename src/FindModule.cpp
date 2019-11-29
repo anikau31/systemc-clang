@@ -25,25 +25,16 @@ bool FindModule::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
        bi != be; ++bi) {
     string base_name = bi->getType().getAsString();
 
-    if (base_name == "::sc_core::sc_module" ||
-        base_name == "sc_core::sc_module" ||
-        base_name == "class sc_core::sc_module") {
-      is_systemc_module_ = true;
-
       if (IdentifierInfo *info = declaration_->getIdentifier()) {
         module_name_ = info->getNameStart();
-
-        //         // Check if the class is a templated module class.
-        //       auto template_args{ declaration->getDescribedClassTemplate() };
-        //       if (template_args != nullptr) {
-        //           os_ << module_name_ << ": TEMPLATE ARGS YES \n";
-        //           template_parameters_ =
-        //           template_args->getTemplateParameters();
-        //           //parms->getParam(0)->dump();
-        // //          parms->getParam(1)->dump();
-
-        //       }
       }
+
+    if (( module_name_ != "sc_event_queue") && 
+       (base_name == "::sc_core::sc_module" ||
+        base_name == "sc_core::sc_module" ||
+        base_name == "class sc_core::sc_module"))  {
+      is_systemc_module_ = true;
+
     }
   }
 
