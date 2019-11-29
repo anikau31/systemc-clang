@@ -20,7 +20,6 @@ FindTLMInterfaces::interfaceType FindTLMInterfaces::getInputOutputInterfaces() {
 }
 
 bool FindTLMInterfaces::VisitFieldDecl(FieldDecl *fd) {
-
   QualType q = fd->getType();
   string fname;
 
@@ -39,17 +38,18 @@ bool FindTLMInterfaces::VisitFieldDecl(FieldDecl *fd) {
     return true;
   }
 
-  // There could be more than one type though.  Are you only referring to the first one?
-  string template_type_name { ait->getTypeName() };
-  if ( template_type_name == "sc_fifo_in") {
+  // There could be more than one type though.  Are you only referring to the
+  // first one?
+  string template_type_name{ait->getTypeName()};
+  if (template_type_name == "sc_fifo_in") {
     _inInterfaces.insert(kvType(fname, te));
   }
 
-  else if ( template_type_name == "sc_fifo_out") {
+  else if (template_type_name == "sc_fifo_out") {
     _outInterfaces.insert(kvType(fname, te));
   }
 
-  else if ( template_type_name == "sc_fifo_inout") {
+  else if (template_type_name == "sc_fifo_inout") {
     _inoutInterfaces.insert(kvType(fname, te));
   }
 
@@ -100,7 +100,6 @@ FindTLMInterfaces::~FindTLMInterfaces() {
   for (interfaceType::iterator mit = _outInterfaces.begin(),
                                mitend = _outInterfaces.end();
        mit != mitend; mit++) {
-
     delete mit->second;
   }
   _outInterfaces.clear();
@@ -108,7 +107,6 @@ FindTLMInterfaces::~FindTLMInterfaces() {
   for (interfaceType::iterator mit = _inoutInterfaces.begin(),
                                mitend = _inoutInterfaces.end();
        mit != mitend; mit++) {
-
     delete mit->second;
   }
   _inoutInterfaces.clear();

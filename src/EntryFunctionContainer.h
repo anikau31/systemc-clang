@@ -1,5 +1,5 @@
 //===-- src/EntryFunctionContainer.h - systec-clang class definition -------*-
-//C++ -*-===//
+// C++ -*-===//
 //
 //                     systemc-clang: SystemC Parser
 //
@@ -15,6 +15,8 @@
 #ifndef _ENTRY_FUNCTION_CONTAINER_H_
 #define _ENTRY_FUNCTION_CONTAINER_H_
 
+#include <map>
+#include <string>
 #include "FindNotify.h"
 #include "FindSensitivity.h"
 #include "FindWait.h"
@@ -22,17 +24,15 @@
 #include "SuspensionAutomata.h"
 #include "Utility.h"
 #include "WaitContainer.h"
-#include "enums.h"
 #include "clang/AST/DeclCXX.h"
-#include <map>
-#include <string>
+#include "enums.h"
 namespace scpar {
 
 using namespace clang;
 using namespace std;
 
 class EntryFunctionContainer {
-public:
+ public:
   // typedefs
   typedef vector<WaitContainer *> waitContainerListType;
   typedef vector<NotifyContainer *> notifyContainerListType;
@@ -90,5 +90,5 @@ public:
   vector<Transition *> _susAuto;
   vector<SusCFG *> _susCFG;
 };
-} // namespace scpar
+}  // namespace scpar
 #endif

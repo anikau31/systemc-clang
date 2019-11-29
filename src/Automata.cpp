@@ -20,7 +20,6 @@ void Node::addPredecessor(Node *p) {
 }
 
 vector<int> Node::getSuccessors(int fromId) {
-
   vector<int> tmpSuccs;
 
   for (Node::connectMapType::iterator it = _succs.begin(), eit = _succs.end();
@@ -33,7 +32,6 @@ vector<int> Node::getSuccessors(int fromId) {
 }
 
 vector<int> Node::getPredecessors(int toId) {
-
   vector<int> tmpPreds;
 
   for (Node::connectMapType::iterator it = _preds.begin(), eit = _preds.end();
@@ -270,12 +268,10 @@ vector<Edge *> Graph::getEdgesFromDest(Node *destNode) {
 }
 
 void Graph::dump(raw_ostream &os, int tabn) {
-
   // Print all nodes.
   os << "Node map: " << _nNodes << "\n";
   for (Graph::nodeMapType::iterator it = _nodeMap.begin(), eit = _nodeMap.end();
        it != eit; it++) {
-
     os << it->first << " " << it->second << " ";
     it->second->dump(os, tabn++);
   }
@@ -284,7 +280,6 @@ void Graph::dump(raw_ostream &os, int tabn) {
   os << "Edge map: " << _nEdges << "\n";
   for (Graph::edgeMapType::iterator it = _edgeMap.begin(), eit = _edgeMap.end();
        it != eit; it++) {
-
     os << it->first << " " << it->second << " ";
     //    it->second->dump(os, tabn++);
   }
@@ -308,7 +303,6 @@ void Graph::dump(raw_ostream &os, int tabn) {
 }
 
 void Graph::dumpSauto(raw_ostream &os, int tabn) {
-
   LangOptions LO;
 
   LO.CPlusPlus = true;
@@ -404,7 +398,6 @@ Graph::~Graph() {
   // Responsible for cleaning everything up.
   for (Graph::nodeMapType::iterator it = _nodeMap.begin(), eit = _nodeMap.end();
        it != eit; it++) {
-
     delete it->second;
 
     //    os <<  it->first << " " << it->second;

@@ -1,12 +1,11 @@
 #include "EventDecl.h"
-#include "FindTemplateTypes.h"
 #include <string>
+#include "FindTemplateTypes.h"
 
 using namespace scpar;
 using namespace std;
 
 EventDecl::~EventDecl() {
-
   // _astNode does *NOT* need to be deleted because clang should
   // be responsible for freeing the memory.
 }

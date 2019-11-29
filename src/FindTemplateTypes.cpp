@@ -6,21 +6,19 @@ using namespace scpar;
 // TemplateType
 //////////////////////////////////////////////////////////////////////
 
-TemplateType::TemplateType( string name, const Type* t ):
-  type_name_{ name }, type_ptr_{t} {}
+TemplateType::TemplateType(string name, const Type *t)
+    : type_name_{name}, type_ptr_{t} {}
 
-TemplateType::TemplateType( const TemplateType & from ) {
+TemplateType::TemplateType(const TemplateType &from) {
   type_name_ = from.type_name_;
-  type_ptr_  = from.type_ptr_;
+  type_ptr_ = from.type_ptr_;
 }
 
-TemplateType::~TemplateType() {
-  type_ptr_ = nullptr;
-}
+TemplateType::~TemplateType() { type_ptr_ = nullptr; }
 
 string TemplateType::getTypeName() const { return type_name_; }
 
-const Type* TemplateType::getTypePtr() { return type_ptr_; }
+const Type *TemplateType::getTypePtr() { return type_ptr_; }
 
 //////////////////////////////////////////////////////////////////////
 // FindTemplateTypes
@@ -41,9 +39,7 @@ FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
 }
 
 // Destructor
-FindTemplateTypes::~FindTemplateTypes() {
-  template_types_.clear();
-}
+FindTemplateTypes::~FindTemplateTypes() { template_types_.clear(); }
 
 string FindTemplateTypes::getTemplateType() {
   string s{};
@@ -63,7 +59,8 @@ string FindTemplateTypes::getTemplateType() {
   return s;
 }
 
-FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(const Type *type) {
+FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
+    const Type *type) {
   template_types_.clear();
   if (!type) {
     return template_types_;
@@ -73,61 +70,77 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(const Type *type) 
   return template_types_;
 }
 
-bool FindTemplateTypes::VisitType( Type *type ) {
-    QualType q{type->getCanonicalTypeInternal()};
-    //      cout << "\n###### Type: " << q.getAsString() << " \n" ;
-    if (type->isBuiltinType()) {
-      template_types_.push_back( TemplateType( q.getAsString(), type) );
-      //template_types_.push_back( pair<string, const Type *>(q.getAsString(), type) );
-      return true;
-    }
-
-    CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
-    if (p_cxx_record != nullptr) {
-      IdentifierInfo *info{p_cxx_record->getIdentifier()};
-      if (info != nullptr) {
-        template_types_.push_back( TemplateType( info->getNameStart(), type ) );
-        //template_types_.push_back( pair<string, const Type *>(info->getNameStart(), type) );
-      }
-    }
+bool FindTemplateTypes::VisitType(Type *type) {
+  QualType q{type->getCanonicalTypeInternal()};
+  // cout << "\n###### Type: " << q.getAsString() << " \n" ;
+  if (type->isBuiltinType()) {
+    template_types_.push_back(TemplateType(q.getAsString(), type));
+    // template_types_.push_back( pair<string, const Type *>(q.getAsString(),
+    // type) );
     return true;
   }
+
+  // Template for sc_stream_in and sc_stream_out
+  // These are types that are dependent on the parameter for the template.
+  if (type->isDependentType()) {
+    if (auto dp = type->getAs<TemplateSpecializationType>()) {
+      auto tn{dp->getTemplateName()};
+      auto tunder{tn.getUnderlying()};
+      auto name{tunder.getAsTemplateDecl()->getNameAsString()};
+      template_types_.push_back(TemplateType(name, type));
+    }
+  }
+
+  CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
+  if (p_cxx_record != nullptr) {
+    IdentifierInfo *info{p_cxx_record->getIdentifier()};
+    // cout << "##### info; " << info->getNameStart() << "\n";
+    if (info != nullptr) {
+      template_types_.push_back(TemplateType(info->getNameStart(), type));
+    }
+  }
+  return true;
+}
 
 bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
-    //_os << "\n####### IntegerLiteral: " << l->getValue().toString(10,true) <<
-    //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
-    //"== type name: " << l->getType().getAsString() << "\n";
-  template_types_.push_back( TemplateType( l->getValue().toString(10, true),  l->getType().getTypePtr() ) );
-  //template_types_.push_back(pair<string, const Type *>(l->getValue().toString(10, true), l->getType().getTypePtr()));
+  //_os << "\n####### IntegerLiteral: " << l->getValue().toString(10,true) <<
+  //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
+  //"== type name: " << l->getType().getAsString() << "\n";
+  template_types_.push_back(TemplateType(l->getValue().toString(10, true),
+                                         l->getType().getTypePtr()));
+  // template_types_.push_back(pair<string, const Type
+  // *>(l->getValue().toString(10, true), l->getType().getTypePtr()));
 
-    return true;
-  }
+  return true;
+}
 
-FindTemplateTypes::type_vector_t FindTemplateTypes::getTemplateArgumentsType() { return template_types_; }
+FindTemplateTypes::type_vector_t FindTemplateTypes::getTemplateArgumentsType() {
+  return template_types_;
+}
 
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
-    vector<string> template_arguments;
-    for (auto const &mit : template_types_) {
-      template_arguments.push_back( mit.getTypeName() );
-    }
-
-    // Print the template arguments to the output stream
-    os << ", " << template_arguments.size() << " arguments, ";
-    for (auto const &targ : template_arguments) {
-      os << targ << " ";
-    }
+  vector<string> template_arguments;
+  for (auto const &mit : template_types_) {
+    template_arguments.push_back(mit.getTypeName());
   }
+
+  // Print the template arguments to the output stream
+  os << ", " << template_arguments.size() << " arguments, ";
+  for (auto const &targ : template_arguments) {
+    os << targ << " ";
+  }
+}
 
 vector<string> FindTemplateTypes::getTemplateArguments() {
-    vector<string> template_arguments;
-    for (auto const &mit : template_types_) {
-      string name{ mit.getTypeName() };
-      if (name == "sc_in" || name == "sc_out" || name == "sc_inout") {
-        break;
-      }
-      template_arguments.push_back( name );
+  vector<string> template_arguments;
+  for (auto const &mit : template_types_) {
+    string name{mit.getTypeName()};
+    if (name == "sc_in" || name == "sc_out" || name == "sc_inout") {
+      break;
     }
-    return template_arguments;
+    template_arguments.push_back(name);
   }
+  return template_arguments;
+}
 
 size_t FindTemplateTypes::size() { return template_types_.size(); }

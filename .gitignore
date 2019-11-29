@@ -1,3 +1,4 @@
+./tests/llnl/
 ./paths.sh
 *.lo
 *.x 

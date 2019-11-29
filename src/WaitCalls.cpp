@@ -5,7 +5,6 @@ using namespace scpar;
 using namespace std;
 
 WaitCalls::~WaitCalls() {
-
   // _astNode does *NOT* need to be deleted because clang should
   // be responsible for freeing the memory.
 }

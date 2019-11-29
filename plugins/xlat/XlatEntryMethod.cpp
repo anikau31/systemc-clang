@@ -194,6 +194,7 @@ bool XlatMethod::TraverseUnaryOperator(UnaryOperator* expr)
   
   hNodep  h_unop = new hNode(false); // node to hold unop expr
     os_ << "in TraverseUnaryOperatory expr node is \n";
+    expr->dump(os_);
     auto opcstr = expr->getOpcode();
     h_unop->child_list.push_back(new hNode(expr->getOpcodeStr(opcstr), hNode::hdlopsEnum::hUnop));
   
@@ -258,8 +259,8 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     string methodname;
     CXXMethodDecl * methdcl = callexpr->getMethodDecl();
 
-    //os_ << "methoddecl follows\n";
-    //methdcl->dump();
+    // os_ << "methoddecl follows\n";
+    // methdcl->dump();
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {
 
 	methodname = methdcl->getNameAsString();
@@ -283,7 +284,11 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     // eg [write tap1]
     if (methodname == "read") opc = hNode::hdlopsEnum::hSigAssignR;
     else if (methodname == "write") opc = hNode::hdlopsEnum::hSigAssignL;
-    else opc = hNode::hdlopsEnum::hLiteral;
+    else {
+      os_ << "unknown method. methoddecl follows\n";
+      methdcl->dump();
+      opc = hNode::hdlopsEnum::hNoop;
+    }
 
     h_callp -> child_list.push_back(new hNode(methodname, opc));
     TRY_TO(TraverseStmt(arg)); // traverse the x in x.f(5)
@@ -298,12 +303,28 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     return true;
 }
 
+bool isLogicalOp(clang::OverloadedOperatorKind opc) {
+  switch (opc) {
+  case OO_Less:
+  case OO_LessEqual:
+  case OO_Greater:
+  case OO_GreaterEqual:
+  case OO_ExclaimEqual:
+  case OO_EqualEqual:
+    return true;
+ 
+   default:
+     return false;
+  }
+}
+
 bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
 
   os_ << "In TraverseCXXOperatorCallExpr\n";
-  if (opcall->isAssignmentOp()) {
+  if ((opcall->isAssignmentOp())|| 
+      (isLogicalOp(opcall->getOperator()))) {
     if (opcall->getNumArgs() == 2) {
-      os_ << "assignment operator, 2 args\n";
+      os_ << "assignment or logical operator, 2 args\n";
       hNodep h_assignop = new hNode (false); // node to hold assignment expr
       h_assignop->child_list.push_back(new hNode("=", hNode::hdlopsEnum::hBinop));
       TRY_TO(TraverseStmt(opcall->getArg(0)));
@@ -316,7 +337,7 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
       return true;
     }
   }
-  os_ << "not yet implemented operator call expr, opc is " << opcall->getOperator() << "num argumetns " << opcall->getNumArgs() << " skipping\n";
+  os_ << "not yet implemented operator call expr, opc is " << clang::getOperatorSpelling(opcall->getOperator()) << " num arguments " << opcall->getNumArgs() << " skipping\n";
   return true;
 }
 
