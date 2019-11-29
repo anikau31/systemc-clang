@@ -13,6 +13,7 @@ using namespace clang;
 using namespace clang::tooling;
 using namespace clang::ast_matchers;
 using namespace scpar;
+
 TEST_CASE( "Subtree matchers", "[subtree-matchers]") {
   std::string code = R"(
 #include "systemc.h"
@@ -92,14 +93,11 @@ ASTUnit *from_ast =  tooling::buildASTFromCodeWithArgs( code, args ).release();
 SystemCConsumer sc{from_ast};
 sc.HandleTranslationUnit(from_ast->getASTContext());
 
-// Run all the matchers
+auto model{ sc.getSystemCModel() };
+//model->dump(llvm::outs());
+auto module_decl{ model->getModuleDecl() };
 
 SECTION( "Found sc_modules", "[modules]") {
-  auto model{ sc.getSystemCModel() };
-  model->dump(llvm::outs());
-  
-  auto module_decl{ model->getModuleDecl() };
-
 
   // There should be 2 modules identified.
   REQUIRE( module_decl.size() == 2 );
@@ -108,6 +106,20 @@ SECTION( "Found sc_modules", "[modules]") {
   REQUIRE( module_decl["test"] != nullptr );
   REQUIRE( module_decl["simple_module"] != nullptr );
 
+}
+
+SECTION( "Checking member ports", "[ports]") {
+
+  auto test_module{ module_decl["test"] };
+  test_module->dumpPorts(llvm::outs(), 1);
+  // Check if the proper number of ports are found.
+  REQUIRE( test_module->getIPorts().size() ==  3 );
+  REQUIRE( test_module->getOPorts().size() ==  2 );
+  REQUIRE( test_module->getIOPorts().size() ==  1 );
+  REQUIRE( test_module->getSignals().size() ==  1 );
+  REQUIRE( test_module->getOtherVars().size() ==  1 );
+  REQUIRE( test_module->getInputStreamPorts().size() ==  0 );
+  REQUIRE( test_module->getOutputStreamPorts().size() ==  0 );
 }
 
 }
