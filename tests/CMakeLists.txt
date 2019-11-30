@@ -1,11 +1,11 @@
 # Test CMakeFile
 
 set(UNIT_TEST_LIST 
+  t1.cpp
   catch-test 
   catch-test2 
   model.test 
   build-ast-code
-  sc-clang-test
   )
  
 include(CTest)
