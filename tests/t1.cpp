@@ -9,6 +9,9 @@
 #include "SystemCClang.h"
 #include "PluginAction.h"
 
+// This is automatically generated from cmake.
+#include "ClangArgs.h"
+
 using namespace clang;
 using namespace clang::tooling;
 using namespace clang::ast_matchers;
@@ -83,18 +86,16 @@ int sc_main(int argc, char *argv[]) {
 }
      )";
 
-  std::vector<std::string> args{
-    // TODO: Generalize these includes.
-    // Perhaps there is a way for cmake to generate these.
-    "-D__STD_CONSTANT_MACROS", 
-      "-D__STDC_LIMIT_MACROS", 
-      "-I/home/twiga/bin/clang-9.0.0/include",
-      "-I/home/twiga/bin/clang-9.0.0/lib/clang/9.0.0/include", 
-      "-I/home/twiga/code/systemc-2.3.3/systemc/include/", 
-      "-I/home/twiga/bin/clang-9.0.0/include", 
-      "-std=c++14"
-  };
-
+  // std::vector<std::string> args{
+    // "-D__STD_CONSTANT_MACROS",
+      // "-D__STDC_LIMIT_MACROS",
+      // "-I/home/twiga/bin/clang-9.0.0/include",
+      // "-I/home/twiga/bin/clang-9.0.0/lib/clang/9.0.0/include",
+      // "-I/home/twiga/code/systemc-2.3.3/systemc/include/",
+      // "-I/home/twiga/bin/clang-9.0.0/include",
+      // "-std=c++14"
+  // };
+//
 ASTUnit *from_ast =  tooling::buildASTFromCodeWithArgs( code, args ).release();
 
 SystemCConsumer sc{from_ast};
