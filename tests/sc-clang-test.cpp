@@ -20,14 +20,19 @@ TEST_CASE( "Subtree matchers", "[subtree-matchers]") {
 
 SC_MODULE( test ){
 
+  // input ports
   sc_in_clk clk;
   sc_in<int> in1;
   sc_in<int> in2;
+  // inout ports
   sc_inout<double> in_out;
+  // output ports
   sc_out<int> out1;
   sc_out<int> out2;
+  //signals
   sc_signal<int> internal_signal;
 
+  // others
   int x;
 
   void entry_function_1() {
@@ -71,7 +76,9 @@ int sc_main(int argc, char *argv[]) {
   test_instance.in_out(double_sig);
   test_instance.out1(sig1);
 
-  simple_module simple("simple_second_module");
+  simple_module simple("simple_module");
+  simple.one(sig1);
+
   return 0;
 }
      )";
@@ -108,15 +115,38 @@ SECTION( "Found sc_modules", "[modules]") {
 
 }
 
-SECTION( "Checking member ports", "[ports]") {
+SECTION( "Checking member ports for test", "[ports]") {
 
-  auto test_module{ module_decl["test"] };
-  test_module->dumpPorts(llvm::outs(), 1);
+  // The module instances have all the information.
+  auto module_instances{ model->getModuleInstanceMap() };
+  auto p_module{ module_decl["test"] };
+  // There is only one module instance
+  auto test_module{ module_instances[p_module].front() };
+
   // Check if the proper number of ports are found.
   REQUIRE( test_module->getIPorts().size() ==  3 );
   REQUIRE( test_module->getOPorts().size() ==  2 );
   REQUIRE( test_module->getIOPorts().size() ==  1 );
   REQUIRE( test_module->getSignals().size() ==  1 );
+  REQUIRE( test_module->getOtherVars().size() ==  1 );
+  REQUIRE( test_module->getInputStreamPorts().size() ==  0 );
+  REQUIRE( test_module->getOutputStreamPorts().size() ==  0 );
+}
+
+SECTION( "Checking member ports for simple module", "[ports]") {
+
+  // The module instances have all the information.
+  auto module_instances{ model->getModuleInstanceMap() };
+  auto p_module{ module_decl["simple_module"] };
+  // There is only one module instance
+  auto test_module{ module_instances[p_module].front() };
+
+  test_module->dump(llvm::outs());
+  // Check if the proper number of ports are found.
+  REQUIRE( test_module->getIPorts().size() ==  3 );
+  REQUIRE( test_module->getOPorts().size() ==  1 );
+  REQUIRE( test_module->getIOPorts().size() ==  0 );
+  REQUIRE( test_module->getSignals().size() ==  0 );
   REQUIRE( test_module->getOtherVars().size() ==  1 );
   REQUIRE( test_module->getInputStreamPorts().size() ==  0 );
   REQUIRE( test_module->getOutputStreamPorts().size() ==  0 );
