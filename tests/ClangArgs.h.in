@@ -7,7 +7,7 @@ static std::vector<std::string> args{
     "-I${LLVM_INSTALL_DIR}/include",
     "-I${LLVM_INSTALL_DIR}/lib/clang/${CLANG_VERSION}/include",
     "-I${SYSTEMC_DIR}/systemc/include/", 
-    "-std=c++11"
+    "-std=c++14"
 };
 
 
