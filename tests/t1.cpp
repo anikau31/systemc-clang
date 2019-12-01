@@ -1,13 +1,13 @@
 #include "catch.hpp"
 
 #include "clang/AST/ASTImporter.h"
-#include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
-#include "clang/Tooling/Tooling.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/Parse/ParseAST.h"
+#include "clang/Tooling/Tooling.h"
 
-#include "SystemCClang.h"
 #include "PluginAction.h"
+#include "SystemCClang.h"
 
 // This is automatically generated from cmake.
 #include "ClangArgs.h"
@@ -17,7 +17,7 @@ using namespace clang::tooling;
 using namespace clang::ast_matchers;
 using namespace scpar;
 
-TEST_CASE( "Subtree matchers", "[subtree-matchers]") {
+TEST_CASE("Subtree matchers", "[subtree-matchers]") {
   std::string code = R"(
 #include "systemc.h"
 
@@ -86,71 +86,59 @@ int sc_main(int argc, char *argv[]) {
 }
      )";
 
-  // std::vector<std::string> args{
-    // "-D__STD_CONSTANT_MACROS",
-      // "-D__STDC_LIMIT_MACROS",
-      // "-I/home/twiga/bin/clang-9.0.0/include",
-      // "-I/home/twiga/bin/clang-9.0.0/lib/clang/9.0.0/include",
-      // "-I/home/twiga/code/systemc-2.3.3/systemc/include/",
-      // "-I/home/twiga/bin/clang-9.0.0/include",
-      // "-std=c++14"
-  // };
-//
-ASTUnit *from_ast =  tooling::buildASTFromCodeWithArgs( code, args ).release();
+  ASTUnit *from_ast =
+      tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
+          .release();
 
-SystemCConsumer sc{from_ast};
-sc.HandleTranslationUnit(from_ast->getASTContext());
+  SystemCConsumer sc{from_ast};
+  sc.HandleTranslationUnit(from_ast->getASTContext());
 
-auto model{ sc.getSystemCModel() };
-//model->dump(llvm::outs());
-auto module_decl{ model->getModuleDecl() };
+  auto model{sc.getSystemCModel()};
+  // model->dump(llvm::outs());
+  auto module_decl{model->getModuleDecl()};
 
-SECTION( "Found sc_modules", "[modules]") {
+  SECTION("Found sc_modules", "[modules]") {
+    // There should be 2 modules identified.
+    REQUIRE(module_decl.size() == 2);
 
-  // There should be 2 modules identified.
-  REQUIRE( module_decl.size() == 2 );
+    // Check their names, and that their pointers are not nullptr.
+    REQUIRE(module_decl["test"] != nullptr);
+    REQUIRE(module_decl["simple_module"] != nullptr);
+  }
 
-  // Check their names, and that their pointers are not nullptr.
-  REQUIRE( module_decl["test"] != nullptr );
-  REQUIRE( module_decl["simple_module"] != nullptr );
+  SECTION("Checking member ports for test", "[ports]") {
+    // The module instances have all the information.
+    auto module_instances{model->getModuleInstanceMap()};
+    auto p_module{module_decl["test"]};
+    // There is only one module instance
+    auto test_module{module_instances[p_module].front()};
 
-}
+    // Check if the proper number of ports are found.
+    REQUIRE(test_module->getIPorts().size() == 3);
+    REQUIRE(test_module->getOPorts().size() == 2);
+    REQUIRE(test_module->getIOPorts().size() == 1);
+    REQUIRE(test_module->getSignals().size() == 1);
+    REQUIRE(test_module->getOtherVars().size() == 1);
+    REQUIRE(test_module->getInputStreamPorts().size() == 0);
+    REQUIRE(test_module->getOutputStreamPorts().size() == 0);
+  }
 
-SECTION( "Checking member ports for test", "[ports]") {
+  SECTION("Checking member ports for simple module", "[ports]") {
+    // The module instances have all the information.
+    auto module_instances{model->getModuleInstanceMap()};
+    auto p_module{module_decl["simple_module"]};
+    // There is only one module instance
+    auto test_module{module_instances[p_module].front()};
 
-  // The module instances have all the information.
-  auto module_instances{ model->getModuleInstanceMap() };
-  auto p_module{ module_decl["test"] };
-  // There is only one module instance
-  auto test_module{ module_instances[p_module].front() };
+    test_module->dump(llvm::outs());
 
-  // Check if the proper number of ports are found.
-  REQUIRE( test_module->getIPorts().size() ==  3 );
-  REQUIRE( test_module->getOPorts().size() ==  2 );
-  REQUIRE( test_module->getIOPorts().size() ==  1 );
-  REQUIRE( test_module->getSignals().size() ==  1 );
-  REQUIRE( test_module->getOtherVars().size() ==  1 );
-  REQUIRE( test_module->getInputStreamPorts().size() ==  0 );
-  REQUIRE( test_module->getOutputStreamPorts().size() ==  0 );
-}
-
-SECTION( "Checking member ports for simple module", "[ports]") {
-
-  // The module instances have all the information.
-  auto module_instances{ model->getModuleInstanceMap() };
-  auto p_module{ module_decl["simple_module"] };
-  // There is only one module instance
-  auto test_module{ module_instances[p_module].front() };
-
-  test_module->dump(llvm::outs());
-  // Check if the proper number of ports are found.
-  REQUIRE( test_module->getIPorts().size() ==  3 );
-  REQUIRE( test_module->getOPorts().size() ==  1 );
-  REQUIRE( test_module->getIOPorts().size() ==  0 );
-  REQUIRE( test_module->getSignals().size() ==  0 );
-  REQUIRE( test_module->getOtherVars().size() ==  1 );
-  REQUIRE( test_module->getInputStreamPorts().size() ==  0 );
-  REQUIRE( test_module->getOutputStreamPorts().size() ==  0 );
-}
-
+    // Check if the proper number of ports are found.
+    REQUIRE(test_module->getIPorts().size() == 3);
+    REQUIRE(test_module->getOPorts().size() == 1);
+    REQUIRE(test_module->getIOPorts().size() == 0);
+    REQUIRE(test_module->getSignals().size() == 0);
+    REQUIRE(test_module->getOtherVars().size() == 1);
+    REQUIRE(test_module->getInputStreamPorts().size() == 0);
+    REQUIRE(test_module->getOutputStreamPorts().size() == 0);
+  }
 }

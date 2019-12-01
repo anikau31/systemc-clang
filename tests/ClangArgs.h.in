@@ -1,13 +1,22 @@
+/*
+ * This is used to automatically generate the arguments from cmake
+ * to use in executing tests. 
+ * 
+ */
+
 #include <vector>
 #include <string>
 
-static std::vector<std::string> args{
-  "-D__STD_CONSTANT_MACROS", 
-    "-D__STDC_LIMIT_MACROS", 
-    "-I${LLVM_INSTALL_DIR}/include",
-    "-I${LLVM_INSTALL_DIR}/lib/clang/${CLANG_VERSION}/include",
-    "-I${SYSTEMC_DIR}/systemc/include/", 
-    "-std=c++14"
+namespace systemc_clang { 
+
+  static std::vector<std::string> catch_test_args{
+    "-D__STD_CONSTANT_MACROS", 
+      "-D__STDC_LIMIT_MACROS", 
+      "-I${LLVM_INSTALL_DIR}/include",
+      "-I${LLVM_INSTALL_DIR}/lib/clang/${CLANG_VERSION}/include",
+      "-I${SYSTEMC_DIR}/systemc/include/", 
+      "-std=c++14"
+  };
 };
 
 

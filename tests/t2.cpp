@@ -1,13 +1,13 @@
 #include "catch.hpp"
 
 #include "clang/AST/ASTImporter.h"
-#include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
-#include "clang/Tooling/Tooling.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/Parse/ParseAST.h"
+#include "clang/Tooling/Tooling.h"
 
-#include "SystemCClang.h"
 #include "PluginAction.h"
+#include "SystemCClang.h"
 
 // This is automatically generated from cmake.
 #include "ClangArgs.h"
@@ -17,7 +17,8 @@ using namespace clang::tooling;
 using namespace clang::ast_matchers;
 using namespace scpar;
 
-TEST_CASE( "Failing: unbounded signals in modules identified", "[failing-tests]") {
+TEST_CASE("Failing: unbounded signals in modules identified",
+          "[failing-tests]") {
   std::string code = R"(
 #include "systemc.h"
 
@@ -55,23 +56,24 @@ int sc_main(int argc, char *argv[]) {
 }
      )";
 
-ASTUnit *from_ast =  tooling::buildASTFromCodeWithArgs( code, args ).release();
+  ASTUnit *from_ast =
+      tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
+          .release();
 
-SystemCConsumer sc{from_ast};
-sc.HandleTranslationUnit(from_ast->getASTContext());
-auto model{ sc.getSystemCModel() };
-auto module_decl{ model->getModuleDecl() };
+  SystemCConsumer sc{from_ast};
+  sc.HandleTranslationUnit(from_ast->getASTContext());
+  auto model{sc.getSystemCModel()};
+  auto module_decl{model->getModuleDecl()};
 
-SECTION( "No ports bound", "[ports]") {
+  SECTION("No ports bound", "[ports]") {
+    // The module instances have all the information.
+    auto module_instances{model->getModuleInstanceMap()};
+    auto p_module{module_decl["test"]};
+    // There is only one module instance
+    auto test_module{module_instances[p_module].front()};
 
-  // The module instances have all the information.
-  auto module_instances{ model->getModuleInstanceMap() };
-  auto p_module{ module_decl["test"] };
-  // There is only one module instance
-  auto test_module{ module_instances[p_module].front() };
-
-  // Check if the proper number of ports are found.
-  REQUIRE( test_module != nullptr );
-}
-
+    // Check if the proper number of ports are found.
+    INFO("FAIL_TEST: A module must have a port bound for it to be recognized.");
+    REQUIRE(test_module != nullptr);
+  }
 }
