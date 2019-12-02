@@ -1,11 +1,10 @@
 # Test CMakeFile
 
-set(UNIT_TEST_LIST 
-  catch-test 
-  catch-test2 
-  model.test 
-  build-ast-code
-  sc-clang-test
+configure_file( ClangArgs.h.in ClangArgs.h)
+
+set( UNIT_TEST_LIST 
+  t1
+  t2
   )
  
 include(CTest)
@@ -17,9 +16,10 @@ foreach(NAME IN LISTS UNIT_TEST_LIST)
     ${NAME}.cpp)
   set( TEST_SOURCE_NAME ${NAME})
   set(TARGET_NAME ${NAME})
-  add_executable(${TARGET_NAME} main.cpp ${TEST_SOURCE_NAME})
+  add_executable(${TARGET_NAME} main.cpp ${TEST_SOURCE_NAME} )
+    
   target_link_libraries(${TARGET_NAME} PUBLIC libsystemc-clang ${CLANG_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
-  target_include_directories(${TARGET_NAME} PUBLIC ../externals/catch2/)
+  target_include_directories(${TARGET_NAME} PUBLIC ../externals/catch2/ PUBLIC ../tests/ PUBLIC ${CMAKE_BINARY_DIR}/tests/ )
   add_test( NAME ${TARGET_NAME} COMMAND ${TARGET_NAME} )
 endforeach()
 

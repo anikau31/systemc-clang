@@ -17,7 +17,7 @@ It parses RTL constructs and some TLM 2.0 constructs.
   To compile with the Xlat plugin, run cmake with the `-DXLAT=on` flag. 
   
 ## Tests
-  To enable compilation of tests, run cmake with the `-DENABLE_TESTS=on` flag.
+  To enable compilation of tests, run cmake with the `-DENABLE_TESTS=on` flag and also the `-DSYSTEMC_DIR=<path>` flag to pass the location for SystemC.  Without specifying the `SYSTEMC_DIR` path, it will not be possible to run the unit tests.
 
 ## Contact
 
