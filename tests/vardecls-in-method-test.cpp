@@ -1,5 +1,6 @@
-#include "Matchers.h"
 #include "catch.hpp"
+
+#include "Matchers.h"
 #include "clang/AST/ASTImporter.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"

@@ -47,6 +47,9 @@ set( LLVM_INSTALL_DIR $ENV{LLVM_INSTALL_DIR} )
 # The package requires Clang_DIR.
 set( CLANG_DIR ${Clang_DIR} )
 
+# Set the SystemC path
+set( SYSTEMC_DIR $ENV{SYSTEMC} )
+
 # Default plugin status 
 if ("${XLAT}" STREQUAL "")
   set( PLUGIN_XLAT OFF )
@@ -60,8 +63,12 @@ if ("${ENABLE_TESTS}" STREQUAL "")
   set( TESTS_ON OFF )
 else()
   set( TESTS_ON ${ENABLE_TESTS})
-endif()
+  # Check that SYSTEMC_DIR is defined
+  if ("${SYSTEMC_DIR}" STREQUAL "")
+    message(FATAL_ERROR "SYSTEMC_DIR should specify path to SystemC. ${HAD_ERROR}")
+  endif()
 
+endif()
 
 # Keep tests off by default
 if ("${ENABLE_TESTS}" STREQUAL "")
@@ -229,6 +236,7 @@ endif()
 llvm_config(LLVM_CXX_FLAGS "--cxxflags")
 llvm_config(LLVM_LIBS "--libs")
 llvm_config(LLVM_LD_FLAGS "--ldflags")
+llvm_config(CLANG_VERSION "--version")
 
 #
 # There was an issue with the system-libs not being added. Something seems to have changed from version 7+ 
@@ -334,7 +342,12 @@ message(STATUS "CMAKE_GENERATOR       : ${CMAKE_GENERATOR}")
 message(STATUS "Compiler ID           : ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "Compiler version      : ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "Compiler path         : ${CMAKE_CXX_COMPILER}")
+message(STATUS "")
+message(STATUS "clang version         : ${CLANG_VERSION}")
+message(STATUS "clang path            : ${LLVM_INSTALL_DIR}")
 message(STATUS "llvm-config           : ${LLVM_CONFIG_EXE}")
+message(STATUS "")
+message(STATUS "SystemC path          : ${SYSTEMC_DIR}")
 message(STATUS "")
 message(STATUS "Install path          : ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "CMAKE_SOURCE_DIR      : ${CMAKE_SOURCE_DIR}")

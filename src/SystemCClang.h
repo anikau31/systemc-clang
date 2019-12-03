@@ -17,6 +17,7 @@
 
 #include "clang/AST/AST.h"
 #include "clang/AST/ASTConsumer.h"
+#include "clang/AST/ASTImporter.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/SourceManager.h"
 #include "clang/Frontend/CompilerInstance.h"
@@ -68,6 +69,7 @@ namespace scpar {
 
     public: 
       SystemCConsumer( CompilerInstance &, std::string top = "none" );
+      SystemCConsumer(ASTUnit *from_ast, std::string top = "none");
       virtual ~SystemCConsumer();
 
       Model *getSystemCModel();
@@ -77,13 +79,12 @@ namespace scpar {
 
       // Virtual methods that plugins may override.
       virtual bool fire();
-    virtual bool preFire();
-    virtual bool postFire();
-    
+      virtual bool preFire();
+      virtual bool postFire();
+
       virtual void HandleTranslationUnit(ASTContext &context);
 
     private:
-      CompilerInstance& ci_;
       std::string top_;
       Model* systemc_model_;
       ASTContext& context_;
