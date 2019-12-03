@@ -1,11 +1,11 @@
 /* Placeholder for further modules */
 // TODO: include example directory
-#include "../systemc-clang/examples/llnl-examples/sreg.h"
+#include "sreg.h"
 
 #include <systemc.h>
 
 SC_MODULE(test) {
-  sc_in_clk clk;
+  sc_in<bool> clk;
   
 
   void mc() {
@@ -17,7 +17,7 @@ SC_MODULE(test) {
 };
 
 int sc_main(int argc, char *argv[]) {
-  sc_clock clk;
+  sc_signal<bool> clk;
   test test_instance("testing");
   test_instance.clk(clk);
 

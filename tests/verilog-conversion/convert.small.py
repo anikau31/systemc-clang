@@ -32,7 +32,7 @@ l = Lark('''
 
         // can be just an empty statement
         hcstmt: "(" "hCStmt" ")" hlitdecl stmts
-              | "(" "hCStmt" ")"
+              | "(" "hCStmt" ")" hlitdecl
 
         ?stmts: stmt+
         ?stmt : exprwrapper
