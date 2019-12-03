@@ -36,6 +36,7 @@ namespace hnode {
   etype(hPortout), \
   etype(hPortio), \
   etype(hSensvar), \
+  etype(hSensedge), \
   etype(hType), \
   etype(hInt), \
   etype(hSigdecl), \
@@ -138,6 +139,7 @@ using namespace hnode;
 class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
  public:
   XlatMethod(CXXMethodDecl * emd, hNodep &h_top, llvm::raw_ostream & os);
+  XlatMethod(Expr * exp, hNodep &h_expr, hNodep & h_top, llvm::raw_ostream & os);
   virtual ~XlatMethod();
 
   bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
@@ -156,11 +158,11 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   bool TraverseIfStmt(IfStmt *ifs);
   bool TraverseForStmt(ForStmt *fors);
   bool TraverseWhileStmt(WhileStmt *whiles);
-  CXXMethodDecl *getEMD();
+  //CXXMethodDecl *getEMD();
   
  private:
   
-  CXXMethodDecl * _emd;
+  //CXXMethodDecl * _emd;
   llvm::raw_ostream & os_;
   //  size_t n;
   
