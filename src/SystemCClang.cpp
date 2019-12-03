@@ -337,8 +337,7 @@ SystemCConsumer::SystemCConsumer(ASTUnit *from_ast, std::string top)
       sm_{from_ast->getSourceManager()},
       context_{from_ast->getASTContext()},
       top_{top},
-      systemcModel_{nullptr} {}
-
+      systemc_model_{nullptr} {}
 
 SystemCConsumer::SystemCConsumer(CompilerInstance &ci, std::string top)
     : os_{llvm::errs()},
