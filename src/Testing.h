@@ -2,10 +2,14 @@
 #define _TESTING_H_
 
 // Includes
+#include <fstream>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 namespace systemc_clang {
 
+std::ifstream file{};
 // Open the file for reading
 std::string read_systemc_file(std::string const name) {
   // If the file is already open, close it

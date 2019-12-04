@@ -17,7 +17,7 @@ using namespace clang::ast_matchers;
 using namespace scpar;
 
 TEST_CASE("Read SystemC model from file", "[parsing]") {
-  std::string code{systemc_clang::read_systemc_file()};
+  std::string code{systemc_clang::read_systemc_file("basic-module-method.cpp")};
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
