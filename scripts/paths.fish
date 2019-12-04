@@ -10,7 +10,7 @@ set -x LLVM_INSTALL_DIR /home/$USER/bin/clang-9.0.0/
 
 # Path where SystemC is installed
 # SET this.
-set -x SYSTEMC /home/$USER/code/systemc-2.3.3/systemc
+set -x SYSTEMC /home/$USER/code/systemc-2.3.3/
 
 # Path for the systemc-clang build directory
 # SET this.

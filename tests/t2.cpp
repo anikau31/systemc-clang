@@ -65,12 +65,10 @@ int sc_main(int argc, char *argv[]) {
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
 
-  SECTION("No ports bound", "[ports]") {
+  SECTION("No ports bound for test declaration", "[ports]") {
     // The module instances have all the information.
-    auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl["test"]};
+    auto test_module{module_decl["test"]};
     // There is only one module instance
-    auto test_module{module_instances[p_module].front()};
 
     // Check if the proper number of ports are found.
     INFO("FAIL_TEST: A module must have a port bound for it to be recognized.");

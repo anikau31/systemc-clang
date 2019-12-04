@@ -10,6 +10,7 @@
 #include "SystemCClang.h"
 
 // This is automatically generated from cmake.
+#include <iostream>
 #include "ClangArgs.h"
 
 using namespace clang;
@@ -110,7 +111,6 @@ int sc_main(int argc, char *argv[]) {
     // These checks should be performed on the declarations.
 
     // The module instances have all the information.
-    auto declarations{model->getModuleDecl()};
     auto test_module{module_decl["test"]};
 
     // Check if the proper number of ports are found.
@@ -124,7 +124,6 @@ int sc_main(int argc, char *argv[]) {
   }
 
   SECTION("Checking member ports for simple module declaration", "[ports]") {
-    auto declarations{model->getModuleDecl()};
     auto test_module{module_decl["simple_module"]};
 
     // Check if the proper number of ports are found.
