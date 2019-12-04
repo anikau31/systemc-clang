@@ -38,7 +38,56 @@ TEST_CASE("sreg example",
 
   SECTION("Found sc_modules", "[modules]") {
     REQUIRE(module_decl.size() == 2);
+    REQUIRE(module_decl["test"] != nullptr);
+    REQUIRE(module_decl["sreg"] != nullptr);
+  }
 
+  SECTION("Found sreg instances", "[instances]") {
+    auto module_instances{model->getModuleInstanceMap()};
+    auto p_module{module_decl["sreg"]};
+    REQUIRE(module_instances[p_module].size() == 3);
+  }
+
+  SECTION("Checking sreg_bypass ports", "[ports]") {
+    auto module_instances{model->getModuleInstanceMap()};
+    auto p_module{module_decl["sreg"]};
+    auto sreg_bypass{module_instances[p_module][0]};
+
+    REQUIRE(sreg_bypass->getIPorts().size() == 2);
+    REQUIRE(sreg_bypass->getOPorts().size() == 0);
+    REQUIRE(sreg_bypass->getIOPorts().size() == 0);
+    REQUIRE(sreg_bypass->getSignals().size() == 0);
+    REQUIRE(sreg_bypass->getOtherVars().size() == 0);
+    REQUIRE(sreg_bypass->getInputStreamPorts().size() == 1);
+    REQUIRE(sreg_bypass->getOutputStreamPorts().size() == 1);
+  }
+
+  SECTION("Checking sreg_fwd ports", "[ports]") {
+    auto module_instances{model->getModuleInstanceMap()};
+    auto p_module{module_decl["sreg"]};
+    auto sreg_fwd{module_instances[p_module][1]};
+
+    REQUIRE(sreg_fwd->getIPorts().size() == 2);
+    REQUIRE(sreg_fwd->getOPorts().size() == 0);
+    REQUIRE(sreg_fwd->getIOPorts().size() == 0);
+    REQUIRE(sreg_fwd->getSignals().size() == 1);
+    REQUIRE(sreg_fwd->getOtherVars().size() == 0);
+    REQUIRE(sreg_fwd->getInputStreamPorts().size() == 1);
+    REQUIRE(sreg_fwd->getOutputStreamPorts().size() == 1);
+  }
+
+  SECTION("Checking sreg_fwd_rev ports", "[ports]") {
+    auto module_instances{model->getModuleInstanceMap()};
+    auto p_module{module_decl["sreg"]};
+    auto sreg_fwd_rev{module_instances[p_module][2]};
+
+    REQUIRE(sreg_fwd_rev->getIPorts().size() == 2);
+    REQUIRE(sreg_fwd_rev->getOPorts().size() == 0);
+    REQUIRE(sreg_fwd_rev->getIOPorts().size() == 0);
+    REQUIRE(sreg_fwd_rev->getSignals().size() == 7);
+    REQUIRE(sreg_fwd_rev->getOtherVars().size() == 0);
+    REQUIRE(sreg_fwd_rev->getInputStreamPorts().size() == 1);
+    REQUIRE(sreg_fwd_rev->getOutputStreamPorts().size() == 1);
   }
 
   // SECTION("No ports bound", "[ports]") {
