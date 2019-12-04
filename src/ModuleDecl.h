@@ -1,7 +1,7 @@
 #ifndef _MODULE_DECL_H_
 #define _MODULE_DECL_H_
-#include "systemc-clang.h"
-#include "json.hpp"
+#include <map>
+#include <string>
 
 #include "FindConstructor.h"
 #include "FindEntryFunctions.h"
@@ -13,120 +13,131 @@
 #include "Signal.h"
 #include "Utility.h"
 #include "clang/AST/DeclCXX.h"
-#include <map>
-#include <string>
+#include "json.hpp"
+#include "systemc-clang.h"
 
 namespace scpar {
-  using namespace clang;
-  using namespace std;
-  using json = nlohmann::json;
+using namespace clang;
+using namespace std;
+using json = nlohmann::json;
 
-  class ModuleDecl {
-    public:
-      typedef pair<string, Signal* > signalPairType;
-      typedef map<string, Signal* > signalMapType;
+class ModuleDecl {
+ public:
+  typedef pair<string, Signal *> signalPairType;
+  typedef map<string, Signal *> signalMapType;
 
-      // Maps the name of the port with a pointer to a structure that holds
-      // information about the port.
-      typedef pair<string, PortDecl* > portPairType;
-      typedef map<string, PortDecl* > portMapType;
+  // Maps the name of the port with a pointer to a structure that holds
+  // information about the port.
+  typedef pair<string, PortDecl *> portPairType;
+  // typedef map<string, PortDecl* > portMapType;
 
-      typedef pair<string, InterfaceDecl* > interfacePairType;
-      typedef map<string, InterfaceDecl* > interfaceMapType;
+  typedef pair<string, InterfaceDecl *> interfacePairType;
+  typedef map<string, InterfaceDecl *> interfaceMapType;
 
-      // Maps the name of the process with a pointer to a structure that holds
-      // information about the process.
-      typedef pair<string, ProcessDecl* > processPairType;
-      typedef map<string, ProcessDecl* > processMapType;
+  // Maps the name of the process with a pointer to a structure that holds
+  // information about the process.
+  typedef pair<string, ProcessDecl *> processPairType;
+  typedef map<string, ProcessDecl *> processMapType;
 
-      typedef pair<string, string> moduleProcessPairType;
+  typedef pair<string, string> moduleProcessPairType;
 
-      typedef pair<string, string> portSignalPairType;
-      typedef map<string, string> portSignalMapType;
+  typedef pair<string, string> portSignalPairType;
+  typedef map<string, string> portSignalMapType;
 
-      // Why is this a not a Type?
-      typedef vector<string> instanceName;
+  // Why is this a not a Type?
+  typedef vector<string> instanceName;
 
-    public:
-      ModuleDecl();
-      ModuleDecl(const string &, CXXRecordDecl *);
+  // PortType
+  typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
+  typedef std::vector<std::tuple<std::string, PortDecl *> > portMapType;
 
-      ~ModuleDecl();
+ public:
+  ModuleDecl();
+  ModuleDecl(const string &, CXXRecordDecl *);
+  ModuleDecl(const std::tuple<const std::string &, CXXRecordDecl *> &);
 
-      void addSignals(const FindSignals::signalMapType & );
-      void addInputPorts(FindPorts::PortType);
-      void addOutputPorts(FindPorts::PortType);
+  // Copy constructor.
+  ModuleDecl(const ModuleDecl &from);
 
-      void addOtherVars(FindPorts::PortType p);
-      void addInputOutputPorts(FindPorts::PortType);
-      void addInputStreamPorts(FindPorts::PortType);
-      void addOutputStreamPorts(FindPorts::PortType);
-      void addInputInterfaces(FindTLMInterfaces::interfaceType);
-      void addOutputInterfaces(FindTLMInterfaces::interfaceType);
-      void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
-      void addProcess(FindEntryFunctions::entryFunctionVectorType *);
-      void addInstances(const vector<string> & );
-      void addSignalBinding(map<string, string>);
-      void setModuleName(const string &);
-      void setTemplateParameters(const vector<string> &);
-      vector<string> getTemplateParameters() const;
-      void addConstructor(Stmt *);
-      string getName();
-      CXXRecordDecl *getModuleClassDecl();
-      bool isModuleClassDeclNull();
+  // Assignment operator.
+  ModuleDecl &operator=(const ModuleDecl &from);
+  ~ModuleDecl();
 
-      // Get port information.
-      portMapType getOPorts();
-      portMapType getIPorts();
-      portMapType getIOPorts();
-      portMapType getOtherVars();
-      portMapType getInputStreamPorts();
-      portMapType getOutputStreamPorts();
+  void addSignals(const FindSignals::signalMapType &);
+  void addInputPorts(const FindPorts::PortType &);
+  void addOutputPorts(const FindPorts::PortType &);
+  void addInputOutputPorts(const FindPorts::PortType &);
 
-      processMapType getProcessMap();
-      Stmt *getConstructorStmt();
-      interfaceMapType getIInterfaces();
-      interfaceMapType getOInterfaces();
-      interfaceMapType getIOInterfaces();
-      vector<string> getInstanceList();
-      vector<EntryFunctionContainer *> getEntryFunctionContainer();
-      int getNumInstances();
-      signalMapType getSignals();
+  void addInputStreamPorts(FindPorts::PortType);
+  void addOutputStreamPorts(FindPorts::PortType);
+  void addOtherVars(const FindPorts::PortType &);
+  void addPorts(const PortType &found_ports, const std::string &port_type);
 
-      void dumpPorts(raw_ostream &, int);
-      void dumpInterfaces(raw_ostream &, int);
-      void dumpProcesses(raw_ostream &, int);
-      void dumpSignals(raw_ostream &, int);
-      void dump(raw_ostream &);
-      void dumpInstances(raw_ostream &, int);
-      void dumpSignalBinding(raw_ostream &, int);
+  void addInputInterfaces(FindTLMInterfaces::interfaceType);
+  void addOutputInterfaces(FindTLMInterfaces::interfaceType);
+  void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
+  void addProcess(FindEntryFunctions::entryFunctionVectorType *);
+  void addInstances(const vector<string> &);
+  void addSignalBinding(map<string, string>);
+  void setModuleName(const string &);
+  void setTemplateParameters(const vector<string> &);
+  vector<string> getTemplateParameters() const;
+  void addConstructor(Stmt *);
+  string getName();
+  CXXRecordDecl *getModuleClassDecl();
+  bool isModuleClassDeclNull();
+  portMapType getOPorts();
+  portMapType getIPorts();
+  portMapType getIOPorts();
+  portMapType getOtherVars();
+  portMapType getInputStreamPorts();
+  portMapType getOutputStreamPorts();
 
-      json dump_json();
+  processMapType getProcessMap();
+  Stmt *getConstructorStmt();
+  interfaceMapType getIInterfaces();
+  interfaceMapType getOInterfaces();
+  interfaceMapType getIOInterfaces();
+  vector<string> getInstanceList();
+  vector<EntryFunctionContainer *> getEntryFunctionContainer();
+  int getNumInstances();
+  signalMapType getSignals();
 
-    private:
-      string module_name_;
-      CXXRecordDecl *class_decl_;
-      Stmt *constructor_stmt_;
+  void dumpPorts(raw_ostream &, int);
+  void dumpInterfaces(raw_ostream &, int);
+  void dumpProcesses(raw_ostream &, int);
+  void dumpSignals(raw_ostream &, int);
+  void dump(raw_ostream &);
+  void dumpInstances(raw_ostream &, int);
+  void dumpSignalBinding(raw_ostream &, int);
 
-      processMapType process_map_;
-      portMapType _iports;
-      portMapType _oports;
-      portMapType _ioports;
-      portMapType _othervars;
-      portMapType _istreamports;
-      portMapType _ostreamports;
+  json dump_json();
 
-      interfaceMapType _iinterfaces;
-      interfaceMapType _ointerfaces;
-      interfaceMapType _iointerfaces;
-      signalMapType _signals;
+ private:
+  string module_name_;
+  CXXRecordDecl *class_decl_;
+  Stmt *constructor_stmt_;
 
-      vector<string> _instanceList;
-      portSignalMapType _portSignalMap;
-      vector<EntryFunctionContainer *> _vef;
+  processMapType process_map_;
+  portMapType in_ports_;
+  portMapType out_ports_;
+  portMapType inout_ports_;
+  portMapType other_fields_;
 
-      // Class template parameters.
-      vector<string> template_parameters_;
-  };
-} // namespace scpar
+  portMapType istreamports_;
+  portMapType ostreamports_;
+
+  interfaceMapType iinterfaces_;
+  interfaceMapType ointerfaces_;
+  interfaceMapType iointerfaces_;
+  signalMapType signals_;
+
+  vector<string> instance_list_;
+  portSignalMapType _portSignalMap;
+  vector<EntryFunctionContainer *> _vef;
+
+  // Class template parameters.
+  vector<string> template_parameters_;
+};
+}  // namespace scpar
 #endif
