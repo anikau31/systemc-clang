@@ -11,9 +11,7 @@
 
 // This is automatically generated from cmake.
 #include "ClangArgs.h"
-
-#include <fstream>
-#include <sstream>
+#include "Testing.h"
 
 using namespace clang;
 using namespace clang::tooling;
@@ -22,23 +20,15 @@ using namespace scpar;
 
 TEST_CASE("sreg example",
           "[llnl-examples]") {
-  // read code from file
-  // TODO: Z: refactor into a function like read_from_file()
-  // TODO: Z: extract source folder name from systemc_clang::catch_test_args
-  std::ifstream code_file("../systemc-clang/tests/llnl-examples/sreg.cpp");
-  std::string code;
-  if(code_file) {
-    std::stringstream ss;
-    ss << code_file.rdbuf();
-    code = ss.str();
-  } else {
-    // failed to find the file
-    INFO("Cannot open file\n");
-    CHECK(false);
-  }
+  std::string code{systemc_clang::read_systemc_file(
+      systemc_clang::test_data_dir, "/llnl-examples/sreg.cpp")};
+  INFO(systemc_clang::test_data_dir);
+
+  auto catch_test_args = systemc_clang::catch_test_args;
+  catch_test_args.push_back("-I" + systemc_clang::test_data_dir + "/llnl-examples/");
 
   ASTUnit *from_ast =
-      tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
+      tooling::buildASTFromCodeWithArgs(code, catch_test_args)
           .release();
 
   SystemCConsumer sc{from_ast};
