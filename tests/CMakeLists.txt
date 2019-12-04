@@ -5,6 +5,7 @@ configure_file( ClangArgs.h.in ClangArgs.h)
 set( UNIT_TEST_LIST 
   t1
   t2
+  t3
   )
  
 include(CTest)
