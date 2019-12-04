@@ -17,7 +17,7 @@ using namespace clang::tooling;
 using namespace clang::ast_matchers;
 using namespace scpar;
 
-TEST_CASE("Subtree matchers", "[subtree-matchers]") {
+TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
 #include "systemc.h"
 
@@ -106,12 +106,12 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(module_decl["simple_module"] != nullptr);
   }
 
-  SECTION("Checking member ports for test", "[ports]") {
+  SECTION("Checking member ports for test in declarations", "[ports]") {
+    // These checks should be performed on the declarations.
+
     // The module instances have all the information.
-    auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl["test"]};
-    // There is only one module instance
-    auto test_module{module_instances[p_module].front()};
+    auto declarations{model->getModuleDecl()};
+    auto test_module{module_decl["test"]};
 
     // Check if the proper number of ports are found.
     REQUIRE(test_module->getIPorts().size() == 3);
@@ -123,14 +123,9 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module->getOutputStreamPorts().size() == 0);
   }
 
-  SECTION("Checking member ports for simple module", "[ports]") {
-    // The module instances have all the information.
-    auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl["simple_module"]};
-    // There is only one module instance
-    auto test_module{module_instances[p_module].front()};
-
-    test_module->dump(llvm::outs());
+  SECTION("Checking member ports for simple module declaration", "[ports]") {
+    auto declarations{model->getModuleDecl()};
+    auto test_module{module_decl["simple_module"]};
 
     // Check if the proper number of ports are found.
     REQUIRE(test_module->getIPorts().size() == 3);

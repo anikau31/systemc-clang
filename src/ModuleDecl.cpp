@@ -439,6 +439,7 @@ void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
 
 void ModuleDecl::dump(raw_ostream &os) {
   os << "\n";
+  os << "Module declaration name: " << module_name_;
   os << "\n# Instances:\n";
   dumpInstances(os, 4);
   os << "# Port Declaration:\n";

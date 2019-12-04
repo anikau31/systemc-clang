@@ -128,19 +128,22 @@ Model::eventMapType Model::getEventMapType() { return event_map_; }
 unsigned int Model::getNumEvents() { return (event_map_.size() - 3); }
 
 void Model::dump(llvm::raw_ostream &os) {
-  os << "\n"
-     << "# Number of modules: " << modules_.size();
+  os << "Number of modules: " << modules_.size();
 
-  for (Model::moduleMapType::iterator mit = modules_.begin();
-       mit != modules_.end(); mit++) {
+  for (Model::moduleMapType::iterator mit = begin(modules_);
+       mit != end(modules_); ++mit) {
     // Second is the ModuleDecl type.
 
+    // Dump the module declaration first.
+    auto module_name{mit->first};
+    auto module_decl{mit->second};
+    module_decl->dump(os);
+
     // Get all the instances, and start to go through each of those.
-    vector<ModuleDecl *> instanceVec = module_instance_map_[mit->second];
-    os << "\n# Module " << mit->first << ": " << instanceVec.size()
-       << " instances.";
-    for (size_t i = 0; i < instanceVec.size(); i++) {
-      //			os <<", instance: " << i + 1 << " ";
+    vector<ModuleDecl *> instanceVec{module_instance_map_[module_decl]};
+    os << "\nThe module " << module_name << " has " << instanceVec.size()
+       << " instances.\n";
+    for (size_t i{0}; i < instanceVec.size(); ++i) {
       instanceVec.at(i)->dump(os);
     }
   }

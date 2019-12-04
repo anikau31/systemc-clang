@@ -63,7 +63,6 @@ bool SystemCConsumer::fire() {
   for (auto const &element : found_module_declarations) {
     auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
     os_ << "@@@@@ name: " << get<0>(element) << "\n";
-    ;
 
     // ===========================================================
     // 2. Traverse every module, and get its member declarations.
@@ -148,26 +147,8 @@ bool SystemCConsumer::fire() {
   for (auto md : module_decls_sofar) {
     os_ << "[ module name ] " << md.first << "\n";
     auto md_ptr{md.second};
-    md_ptr->dump(os_);
+    // md_ptr->dump(os_);
   }
-
-  // Find the sc_modules
-  //
-  // This code is no longer required.
-  // This is because we are now using AST matchers to find all the nodes, and
-  // create the module declarations.
-  //
-  // FindSCModules scmod{tu, os_};
-  //
-  // FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
-  //
-  // for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
-  // mitend = scmodules.end();  mit != mitend; ++mit) {
-  // ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
-  //  md->setTemplateParameters( scmod.getTemplateParameters() );
-  //       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
-  // systemc_model_->addModuleDecl(md);
-  //
 
   // TODO: find any instances in the module declarations
   // os_ << "=> Processing module: " << mit->first << "\n";
@@ -227,85 +208,73 @@ bool SystemCConsumer::fire() {
     // systemc_model_->addNetlist( find_netlist );
   }
 
-  ////////////////////////////////////////////////////////////////
-  // Figure out the module map.
-  ////////////////////////////////////////////////////////////////
-  Model::moduleMapType moduleMap{systemc_model_->getModuleDecl()};
+  /*
+    ////////////////////////////////////////////////////////////////
+    // Figure out the module map.
+    ////////////////////////////////////////////////////////////////
+    Model::moduleMapType moduleMap{systemc_model_->getModuleDecl()};
 
-  for (Model::moduleMapType::iterator mit = moduleMap.begin(),
-                                      mitend = moduleMap.end();
-       mit != mitend; mit++) {
-    ModuleDecl *mainmd{mit->second};
-    int numInstances{mainmd->getNumInstances()};
-    vector<ModuleDecl *> moduleDeclVec;
+    for (Model::moduleMapType::iterator mit = moduleMap.begin(),
+                                        mitend = moduleMap.end();
+         mit != mitend; mit++) {
+      ModuleDecl *mainmd{mit->second};
+      int numInstances{mainmd->getNumInstances()};
+      vector<ModuleDecl *> moduleDeclVec;
 
-    os_ << "\n";
-    os_ << "For module: " << mit->first << " num instance : " << numInstances;
+      os_ << "\n";
+      os_ << "For module: " << mit->first << " num instance : " << numInstances;
 
-    for (unsigned int num{0}; num < numInstances; ++num) {
-      ModuleDecl *md = new ModuleDecl{};
+      for (unsigned int num{0}; num < numInstances; ++num) {
+        ModuleDecl *md = new ModuleDecl{};
 
-      // Find the template arguments for the class.
-      FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
+        // Find the template arguments for the class.
+        FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
 
-      md->setTemplateParameters(tparms.getTemplateParameters());
-      md->dump_json();
+        md->setTemplateParameters(tparms.getTemplateParameters());
+        md->dump_json();
 
-      vector<EntryFunctionContainer *> _entryFunctionContainerVector;
-      FindConstructor constructor{mainmd->getModuleClassDecl(), os_};
-      md->addConstructor(constructor.returnConstructorStmt());
+        vector<EntryFunctionContainer *> _entryFunctionContainerVector;
+        FindConstructor constructor{mainmd->getModuleClassDecl(), os_};
+        md->addConstructor(constructor.returnConstructorStmt());
 
-      /*
-       * This should be replaced with the ASTmatchers finding the ports
-       *
-      FindPorts ports{mainmd->getModuleClassDecl(), os_};
-      //      ports.dump();
-      md->addInputPorts(ports.getInputPorts());
-      md->addOutputPorts(ports.getOutputPorts());
-      md->addInputOutputPorts(ports.getInputOutputPorts());
-      md->addOtherVars(ports.getOtherVars());
-      md->addInputStreamPorts( ports.getInStreamPorts() );
-      md->addOutputStreamPorts( ports.getOutStreamPorts() );
-      */
 
-      FindTLMInterfaces findTLMInterfaces{mainmd->getModuleClassDecl(), os_};
-      md->addInputInterfaces(findTLMInterfaces.getInputInterfaces());
-      md->addOutputInterfaces(findTLMInterfaces.getOutputInterfaces());
-      md->addInputOutputInterfaces(
-          findTLMInterfaces.getInputOutputInterfaces());
+  FindTLMInterfaces findTLMInterfaces{mainmd->getModuleClassDecl(), os_};
+  md->addInputInterfaces(findTLMInterfaces.getInputInterfaces());
+  md->addOutputInterfaces(findTLMInterfaces.getOutputInterfaces());
+  md->addInputOutputInterfaces(findTLMInterfaces.getInputOutputInterfaces());
 
-      FindSignals signals{mainmd->getModuleClassDecl(), os_};
-      md->addSignals(signals.getSignals());
+  FindSignals signals{mainmd->getModuleClassDecl(), os_};
+  md->addSignals(signals.getSignals());
 
-      FindEntryFunctions findEntries{mainmd->getModuleClassDecl(), os_};
-      FindEntryFunctions::entryFunctionVectorType *entryFunctions{
-          findEntries.getEntryFunctions()};
-      md->addProcess(entryFunctions);
+  FindEntryFunctions findEntries{mainmd->getModuleClassDecl(), os_};
+  FindEntryFunctions::entryFunctionVectorType *entryFunctions{
+      findEntries.getEntryFunctions()};
+  md->addProcess(entryFunctions);
 
-      for (size_t i = 0; i < entryFunctions->size(); i++) {
-        EntryFunctionContainer *ef{(*entryFunctions)[i]};
-        FindSensitivity findSensitivity{constructor.returnConstructorStmt(),
-                                        os_};
-        ef->addSensitivityInfo(findSensitivity);
+  for (size_t i = 0; i < entryFunctions->size(); i++) {
+    EntryFunctionContainer *ef{(*entryFunctions)[i]};
+    FindSensitivity findSensitivity{constructor.returnConstructorStmt(), os_};
+    ef->addSensitivityInfo(findSensitivity);
 
-        if (ef->getEntryMethod() == nullptr) {
-          os_ << "ERROR";
-          continue;
-        }
-
-        FindWait findWaits{ef->getEntryMethod(), os_};
-        ef->addWaits(findWaits);
-
-        FindNotify findNotify{ef->_entryMethodDecl, os_};
-        ef->addNotifys(findNotify);
-
-        _entryFunctionContainerVector.push_back(ef);
-      }
-      moduleDeclVec.push_back(md);
+    if (ef->getEntryMethod() == nullptr) {
+      os_ << "ERROR";
+      continue;
     }
-    systemc_model_->addModuleDeclInstances(mainmd, moduleDeclVec);
+
+    FindWait findWaits{ef->getEntryMethod(), os_};
+    ef->addWaits(findWaits);
+
+    FindNotify findNotify{ef->_entryMethodDecl, os_};
+    ef->addNotifys(findNotify);
+
+    _entryFunctionContainerVector.push_back(ef);
   }
-  os_ << "\n";
+  moduleDeclVec.push_back(md);
+}
+systemc_model_->addModuleDeclInstances(mainmd, moduleDeclVec);
+}
+os_ << "\n";
+*/
   os_ << "\n## SystemC model\n";
   systemc_model_->dump(os_);
   return true;
