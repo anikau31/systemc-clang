@@ -118,9 +118,6 @@ int sc_main(int argc, char *argv[]) {
     auto test_module{module_instances[p_module].front()};
 
     // Check if the proper number of ports are found.
-    INFO(
-        "FAILING: Test will fail because instances and declarations are not "
-        "handled the same way.")
     REQUIRE(test_module->getIPorts().size() == 3);
     REQUIRE(test_module->getOPorts().size() == 2);
     REQUIRE(test_module->getIOPorts().size() == 1);
@@ -136,6 +133,9 @@ int sc_main(int argc, char *argv[]) {
     // The module instances have all the information.
     auto test_module{module_decl["test"]};
 
+    INFO(
+        "FAILING: Test will fail because instances and declarations are not "
+        "handled the same way.")
     // Check if the proper number of ports are found.
     REQUIRE(test_module->getIPorts().size() == 3);
     REQUIRE(test_module->getOPorts().size() == 2);
@@ -152,9 +152,6 @@ int sc_main(int argc, char *argv[]) {
     auto test_module{module_instances[p_module].front()};
 
     // Check if the proper number of ports are found.
-    INFO(
-        "FAILING: Test will fail because instances and declarations are not "
-        "handled the same way.")
     REQUIRE(test_module->getIPorts().size() == 3);
     REQUIRE(test_module->getOPorts().size() == 1);
     REQUIRE(test_module->getIOPorts().size() == 0);
@@ -167,6 +164,9 @@ int sc_main(int argc, char *argv[]) {
   SECTION("Checking member ports for simple module ", "[ports]") {
     auto test_module{module_decl["simple_module"]};
 
+    INFO(
+        "FAILING: Test will fail because instances and declarations are not "
+        "handled the same way.")
     // Check if the proper number of ports are found.
     REQUIRE(test_module->getIPorts().size() == 3);
     REQUIRE(test_module->getOPorts().size() == 1);
