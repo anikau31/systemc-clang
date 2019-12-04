@@ -20,18 +20,21 @@ XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & 
   os_(os){ 
   os_ << "Entering XlatMethod constructor, has body is " << emd->hasBody()<< "\n";
   
-  h_root = NULL;
   h_ret = NULL;
   bool ret1 = TraverseStmt(emd->getBody());
   h_top = h_ret;
   os_ << "Exiting XlatMethod constructor for method body\n";
 }
 
-XlatMethod::XlatMethod(Expr * exp, hNodep &h_expr, hNodep & h_top, llvm::raw_ostream & os):
+// leaving this in for the future in case 
+// we need to traverse starting at a lower point in the tree.
+
+XlatMethod::XlatMethod(Stmt * stmt, hNodep & h_top, llvm::raw_ostream & os):
   os_(os){
-  // bool ret1 = TraverseExpr(exp);
-  // h_top = h_ret;
-  // os_ << "Exiting XlatMethod constructor for expr\n";
+  h_ret = NULL;
+  bool ret1 = TraverseStmt(stmt);
+  h_top = h_ret;
+  os_ << "Exiting XlatMethod constructor for stmt\n";
 }
 
 XlatMethod::~XlatMethod() {

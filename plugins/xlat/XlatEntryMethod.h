@@ -139,7 +139,7 @@ using namespace hnode;
 class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
  public:
   XlatMethod(CXXMethodDecl * emd, hNodep &h_top, llvm::raw_ostream & os);
-  XlatMethod(Expr * exp, hNodep &h_expr, hNodep & h_top, llvm::raw_ostream & os);
+  XlatMethod(Stmt * stmt, hNodep & h_top, llvm::raw_ostream & os);
   virtual ~XlatMethod();
 
   bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
@@ -166,7 +166,6 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   llvm::raw_ostream & os_;
   //  size_t n;
   
-  hNodep h_root;  // list of expressions in a statement
   hNodep h_ret;   // value returned by each subexpression
 };
 
