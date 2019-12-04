@@ -107,6 +107,29 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(module_decl["simple_module"] != nullptr);
   }
 
+  SECTION("Checking member ports for test instance", "[ports]") {
+    // These checks should be performed on the declarations.
+
+    // The module instances have all the information.
+    // This is necessary until the parsing code is restructured.
+    // There is only one module instance
+    auto module_instances{model->getModuleInstanceMap()};
+    auto p_module{module_decl["test"]};
+    auto test_module{module_instances[p_module].front()};
+
+    // Check if the proper number of ports are found.
+    INFO(
+        "FAILING: Test will fail because instances and declarations are not "
+        "handled the same way.")
+    REQUIRE(test_module->getIPorts().size() == 3);
+    REQUIRE(test_module->getOPorts().size() == 2);
+    REQUIRE(test_module->getIOPorts().size() == 1);
+    REQUIRE(test_module->getSignals().size() == 1);
+    REQUIRE(test_module->getOtherVars().size() == 1);
+    REQUIRE(test_module->getInputStreamPorts().size() == 0);
+    REQUIRE(test_module->getOutputStreamPorts().size() == 0);
+  }
+
   SECTION("Checking member ports for test in declarations", "[ports]") {
     // These checks should be performed on the declarations.
 
@@ -123,7 +146,25 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module->getOutputStreamPorts().size() == 0);
   }
 
-  SECTION("Checking member ports for simple module declaration", "[ports]") {
+  SECTION("Checking member ports for simple module instance", "[ports]") {
+    auto module_instances{model->getModuleInstanceMap()};
+    auto p_module{module_decl["test"]};
+    auto test_module{module_instances[p_module].front()};
+
+    // Check if the proper number of ports are found.
+    INFO(
+        "FAILING: Test will fail because instances and declarations are not "
+        "handled the same way.")
+    REQUIRE(test_module->getIPorts().size() == 3);
+    REQUIRE(test_module->getOPorts().size() == 1);
+    REQUIRE(test_module->getIOPorts().size() == 0);
+    REQUIRE(test_module->getSignals().size() == 0);
+    REQUIRE(test_module->getOtherVars().size() == 1);
+    REQUIRE(test_module->getInputStreamPorts().size() == 0);
+    REQUIRE(test_module->getOutputStreamPorts().size() == 0);
+  }
+
+  SECTION("Checking member ports for simple module ", "[ports]") {
     auto test_module{module_decl["simple_module"]};
 
     // Check if the proper number of ports are found.

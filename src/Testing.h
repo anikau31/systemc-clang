@@ -11,7 +11,8 @@ namespace systemc_clang {
 
 std::ifstream file{};
 // Open the file for reading
-std::string read_systemc_file(std::string const name) {
+std::string read_systemc_file(std::string const data_dir,
+                              std::string const name) {
   // If the file is already open, close it
   //  - this is just in case the file changed since the last opening
   if (file.is_open()) {
@@ -19,7 +20,7 @@ std::string read_systemc_file(std::string const name) {
   }
 
   // Open the file and set the character position to zero
-  file.open(name);
+  file.open(data_dir + name);
 
   // If the file did not open, indicate an error occurred.
   if (!file.is_open()) {
