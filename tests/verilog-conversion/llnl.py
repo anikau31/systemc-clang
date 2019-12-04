@@ -8,7 +8,7 @@ import difflib
 # TODO: fix these paths... and command line options
 _systemc_clang_bin_path = os.environ['LLVM_INSTALL_DIR'] + "bin/systemc-clang"
 # TODO: we may not get the directory of the source folder, need to add that in the script
-_test_file = os.environ['SYSTEMC_CLANG_BUILD_DIR'] + "../systemc-clang/tests/llnl-examples/{}.cpp"
+_test_file = os.environ['SYSTEMC_CLANG_BUILD_DIR'] + "../systemc-clang/tests/data/llnl-examples/{}.cpp"
 _example_header_folder = os.environ['SYSTEMC_CLANG_BUILD_DIR'] + "../systemc-clang/examples/llnl-examples/"
 _systemc_clang_argument = ["-I", "{}/systemc/include/".format(os.environ['SYSTEMC']),
         "-std=c++14",
