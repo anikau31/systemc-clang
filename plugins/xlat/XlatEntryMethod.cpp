@@ -17,14 +17,21 @@ do {                                                                           \
 } while (0)
 
 XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & os):
-  _emd(emd) , os_(os){ 
-  os_ << "Entering XlatMethod constructor, has body is " << _emd->hasBody()<< "\n";
+  os_(os){ 
+  os_ << "Entering XlatMethod constructor, has body is " << emd->hasBody()<< "\n";
   
   h_root = NULL;
   h_ret = NULL;
-  bool ret1 = TraverseStmt(_emd->getBody());
+  bool ret1 = TraverseStmt(emd->getBody());
   h_top = h_ret;
-  os_ << "Exiting XlatMethod constructor\n";
+  os_ << "Exiting XlatMethod constructor for method body\n";
+}
+
+XlatMethod::XlatMethod(Expr * exp, hNodep &h_expr, hNodep & h_top, llvm::raw_ostream & os):
+  os_(os){
+  // bool ret1 = TraverseExpr(exp);
+  // h_top = h_ret;
+  // os_ << "Exiting XlatMethod constructor for expr\n";
 }
 
 XlatMethod::~XlatMethod() {
@@ -428,7 +435,7 @@ bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
   return true;
 }
 
-CXXMethodDecl *XlatMethod::getEMD() {
-  return _emd;
-}
+// CXXMethodDecl *XlatMethod::getEMD() {
+//   return _emd;
+// }
 
