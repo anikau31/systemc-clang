@@ -56,6 +56,11 @@ class ModuleDecl {
   ModuleDecl(const string &, CXXRecordDecl *);
   ModuleDecl(const std::tuple<const std::string &, CXXRecordDecl *> &);
 
+  // Copy constructor.
+  ModuleDecl(const ModuleDecl &from);
+
+  // Assignment operator.
+  ModuleDecl &operator=(const ModuleDecl &from);
   ~ModuleDecl();
 
   void addSignals(const FindSignals::signalMapType &);

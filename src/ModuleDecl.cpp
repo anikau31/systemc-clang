@@ -17,6 +17,60 @@ ModuleDecl::ModuleDecl(
     const std::tuple<const std::string &, CXXRecordDecl *> &element)
     : module_name_{get<0>(element)}, class_decl_{get<1>(element)} {}
 
+ModuleDecl::ModuleDecl(const ModuleDecl &from) {
+  module_name_ = from.module_name_;
+  class_decl_ = from.class_decl_;
+  constructor_stmt_ = from.constructor_stmt_;
+
+  process_map_ = from.process_map_;
+  in_ports_ = from.in_ports_;
+  out_ports_ = from.out_ports_;
+  inout_ports_ = from.inout_ports_;
+  other_fields_ = from.other_fields_;
+
+  _istreamports = from._istreamports;
+  _ostreamports = from._ostreamports;
+
+  _iinterfaces = from._iinterfaces;
+  _ointerfaces = from._ointerfaces;
+  _iointerfaces = from._iointerfaces;
+  _signals = from._signals;
+
+  _instanceList = from._instanceList;
+  _portSignalMap = from._portSignalMap;
+  _vef = from._vef;
+
+  // Class template parameters.
+  template_parameters_ = from.template_parameters_;
+}
+
+ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
+  module_name_ = from.module_name_;
+  class_decl_ = from.class_decl_;
+  constructor_stmt_ = from.constructor_stmt_;
+
+  process_map_ = from.process_map_;
+  in_ports_ = from.in_ports_;
+  out_ports_ = from.out_ports_;
+  inout_ports_ = from.inout_ports_;
+  other_fields_ = from.other_fields_;
+
+  _istreamports = from._istreamports;
+  _ostreamports = from._ostreamports;
+
+  _iinterfaces = from._iinterfaces;
+  _ointerfaces = from._ointerfaces;
+  _iointerfaces = from._iointerfaces;
+  _signals = from._signals;
+
+  _instanceList = from._instanceList;
+  _portSignalMap = from._portSignalMap;
+  _vef = from._vef;
+
+  // Class template parameters.
+  template_parameters_ = from.template_parameters_;
+}
+
 ModuleDecl::~ModuleDecl() {
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
@@ -438,7 +492,6 @@ void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dump(raw_ostream &os) {
-  os << "\n";
   os << "Module declaration name: " << module_name_;
   os << "\n# Instances:\n";
   dumpInstances(os, 4);
