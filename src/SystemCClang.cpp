@@ -1,7 +1,15 @@
 #include "SystemCClang.h"
+
+#include "Matchers.h"
+#include "clang/AST/ASTImporter.h"
+#include "clang/ASTMatchers/ASTMatchFinder.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
+
 using namespace scpar;
 using namespace clang;
 using namespace std;
+
+using namespace sc_ast_matchers;
 
 bool SystemCConsumer::preFire() { return true; }
 
@@ -25,8 +33,47 @@ bool SystemCConsumer::fire() {
   // This is important so that the top-level module can be found.
   //
 
+  // A first pass should be made to collect all sc_module declarations.
+  // This is important so that the top-level module can be found.
+  //
+  os_ << "================ TESTMATCHER =============== \n";
+  ModuleDeclarationMatcher module_declaration_handler{};
+  MatchFinder matchRegistry{};
+  module_declaration_handler.registerMatchers(matchRegistry);
+  // Run all the matchers
+  matchRegistry.matchAST(getContext());
+  module_declaration_handler.dump();
+  os_ << "================ END =============== \n";
+
+  // Check if the top-level module one of the sc_module declarations?
+  //
+  auto found_module_declarations{
+      module_declaration_handler.getFoundModuleDeclarations()};
+  auto found_top_module{std::find_if(
+      found_module_declarations.begin(), found_module_declarations.end(),
+      [this](std::tuple<std::string, CXXRecordDecl *> &element) {
+        return std::get<0>(element) == getTopModule();
+      })};
+
+  if (found_top_module != found_module_declarations.end()) {
+    os_ << "Found the top module: " << get<0>(*found_top_module) << ", "
+        << get<1>(*found_top_module) << "\n";
+  }
+
+  // ===========================================================
+  // 1. Add every module declaration to the model.
+  // ===========================================================
+  // Every module declaration that is found should be added to the model.
+  for (auto const &element : found_module_declarations) {
+    auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
+    os_ << "@@@@@ name: " << get<0>(element) << "\n";
+    systemcModel_->addModuleDecl(module_declaration);
+  }
+
   // Find the sc_modules
   //
+  //
+  /*
   FindSCModules scmod{tu, os_};
 
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
@@ -37,11 +84,8 @@ bool SystemCConsumer::fire() {
     ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
     systemcModel_->addModuleDecl(md);
 
-    //
-    // TODO: find any instances in the module declarations
-    os_ << "=> Processing module: " << mit->first << "\n";
-    FindModuleInstance module_instance{md->getModuleClassDecl(), os_};
   }
+  */
 
   ////////////////////////////////////////////////////////////////
   // Find the sc_main
@@ -158,26 +202,26 @@ bool SystemCConsumer::fire() {
   }
 
   /*
-FindSCMain scmain(tu, os_);
+     FindSCMain scmain(tu, os_);
 
-if (scmain.isSCMainFound())
-{
-          FunctionDecl *fnDecl = scmain.getSCMainFunctionDecl();
+     if (scmain.isSCMainFound())
+     {
+     FunctionDecl *fnDecl = scmain.getSCMainFunctionDecl();
 
-          FindSimTime scstart(fnDecl, os_);
-          systemcModel_->addSimulationTime(scstart.returnSimTime());
+     FindSimTime scstart(fnDecl, os_);
+     systemcModel_->addSimulationTime(scstart.returnSimTime());
 
-}
-else {
-          os_ <<"\n Could not find SCMain";
-}
+     }
+     else {
+     os_ <<"\n Could not find SCMain";
+     }
 
-FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
-findNetlist.dump();
-systemcModel_->addNetlist(findNetlist);
-*/
+     FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
+     findNetlist.dump();
+     systemcModel_->addNetlist(findNetlist);
+     */
 
-// Only do this if SAUTO flag is set.
+  // Only do this if SAUTO flag is set.
 #ifdef USE_SAUTO
   // Generate SAUTO
   // Placing it here so that unique SAUTO for each instance
