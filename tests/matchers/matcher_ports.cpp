@@ -1,5 +1,12 @@
 #include "systemc.h"
 
+SC_MODULE( dummy ) {
+  void entry() {}
+  SC_CTOR( dummy ) {
+    SC_METHOD( entry );
+  }
+};
+
 SC_MODULE( test ){
 
   sc_in_clk clk;
@@ -10,13 +17,15 @@ SC_MODULE( test ){
   sc_out<int> out2;
   sc_signal<int> internal_signal;
 
+  dummy dumdum;
+
   int x;
 
   void entry_function_1() {
     while(true) {
     }
   }
-  SC_CTOR( test ) {
+  SC_CTOR( test ) :dumdum{"dum"} {
     SC_METHOD(entry_function_1);
     sensitive << clk.pos();
   }
