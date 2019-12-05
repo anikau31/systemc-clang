@@ -35,14 +35,11 @@ bool SystemCConsumer::fire() {
                                               mitend = scmodules.end();
        mit != mitend; ++mit) {
     ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
-    // md->setTemplateParameters( scmod.getTemplateParameters() );
-    //       os_ << "SIZE: " << scmod.getTemplateParameters().size() << "\n";
     systemcModel_->addModuleDecl(md);
 
     //
     // TODO: find any instances in the module declarations
     os_ << "=> Processing module: " << mit->first << "\n";
-    // md->getModuleClassDecl()->dump();
     FindModuleInstance module_instance{md->getModuleClassDecl(), os_};
   }
 
@@ -87,7 +84,7 @@ bool SystemCConsumer::fire() {
     os_ << "For module: " << mit->first << " num instance : " << numInstances;
 
     for (unsigned int num{0}; num < numInstances; ++num) {
-      ModuleDecl *md = new ModuleDecl{};
+      ModuleDecl *md = new ModuleDecl{*mainmd};
 
       // Find the template arguments for the class.
       FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
@@ -246,7 +243,6 @@ SystemCConsumer::SystemCConsumer(ASTUnit *from_ast, std::string top)
       context_{from_ast->getASTContext()},
       top_{top},
       systemcModel_{nullptr} {}
-
 
 SystemCConsumer::SystemCConsumer(CompilerInstance &ci, std::string top)
     : os_{llvm::errs()},
