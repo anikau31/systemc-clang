@@ -13,6 +13,7 @@ set( UNIT_TEST_LIST
   t1 
   t2 
   t3 
+  subtree-matcher-test
   )
 
 include(CTest)
