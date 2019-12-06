@@ -48,5 +48,10 @@ set output diag
 # 2. Find method with the name
 # m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), hasDescendant(cxxConstructorDecl().bind("constructor")))
 
-set output dump
-m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")) )
+#set output dump
+#m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")) )
+
+# Detect field declarations that are of sc_module type 
+#m fieldDecl(hasType(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))))
+# Detect variable declarations that are of sc_module type 
+m varDecl(hasType(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))))

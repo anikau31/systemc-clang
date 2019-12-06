@@ -18,6 +18,6 @@ static std::vector<std::string> catch_test_args{
     "-D__STDC_LIMIT_MACROS",
     "-I${LLVM_INSTALL_DIR}/include",
     "-I${LLVM_INSTALL_DIR}/lib/clang/${CLANG_VERSION}/include",
-    "-I${SYSTEMC_DIR}/systemc/include/",
+    "-I${SYSTEMC_DIR}/include/",
     "-std=c++14"};
 };  // namespace systemc_clang

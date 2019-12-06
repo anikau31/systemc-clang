@@ -18,6 +18,7 @@ set( UNIT_TEST_LIST
   t2 
   t3 
   sreg-test
+  subtree-matcher-test
   )
 
 include(CTest)
