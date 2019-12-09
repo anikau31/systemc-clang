@@ -1,6 +1,6 @@
+#include <iostream>
 #include "Matchers.h"
 #include "clang/AST/DeclCXX.h"
-#include <iostream>
 
 using namespace std;
 using namespace sc_ast_matchers;
@@ -9,33 +9,41 @@ using namespace sc_ast_matchers;
 // Helper functions that can be made private to this class.
 //
 
-void printTemplateArguments( ModuleDeclarationMatcher::PortType &found_ports ) {
-// Input ports
-  for ( const auto &i: found_ports ) {
-    llvm::outs() << "name: " << get<0>(i) << ", FieldDecl*: " << get<1>(i)->getFieldDecl();
+void printTemplateArguments(ModuleDeclarationMatcher::PortType &found_ports) {
+  // Input ports
+  for (const auto &i : found_ports) {
+    llvm::outs() << "name: " << get<0>(i)
+                 << ", FieldDecl*: " << get<1>(i)->getFieldDecl();
     get<1>(i)->getTemplateType()->printTemplateArguments(llvm::outs());
     llvm::outs() << "\n";
   }
 }
 
-auto parseTemplateType( const FieldDecl *fd ) { 
+auto parseTemplateType(const FieldDecl *fd) {
   //}, const ModuleDeclarationMatcher::PortType &found_ports ) {
-  QualType qual_type { fd->getType() };
-  const Type *type_ptr { qual_type.getTypePtr() };
-  auto template_ptr { new FindTemplateTypes() }; 
-  template_ptr->Enumerate( type_ptr );
+  QualType qual_type{fd->getType()};
+  const Type *type_ptr{qual_type.getTypePtr()};
+  auto template_ptr{new FindTemplateTypes()};
+  template_ptr->Enumerate(type_ptr);
   return template_ptr;
 }
 
-
 template <typename NodeType>
-auto checkMatch(const std::string &name, const MatchFinder::MatchResult &result ){
+auto checkMatch(const std::string &name,
+                const MatchFinder::MatchResult &result) {
   return result.Nodes.getNodeAs<NodeType>(name);
 }
 
-auto makeFieldMatcher(const std::string &name ) { 
+// AST matcher to detect instances of sc_modules.
+auto makeInstanceInModuleMatcher(const std::string &name) {
+  auto match_module_instance = fieldDecl(
+      hasType(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))));
+  return match_module_instance;
+}
 
-// clang-format off
+// AST matcher to detect field declarations
+auto makeFieldMatcher(const std::string &name) {
+  // clang-format off
   return  cxxRecordDecl(
       isExpansionInMainFile(),
       isDerivedFrom(
@@ -45,14 +53,14 @@ auto makeFieldMatcher(const std::string &name ) {
         fieldDecl(hasType(cxxRecordDecl(hasName(name)))).bind(name)
         )
       );
-// clang-format on
+  // clang-format on
 }
 
 // End of helper functions
 
-// Register the matchers 
-void ModuleDeclarationMatcher::registerMatchers(MatchFinder &finder ) {
-// clang-format off
+// Register the matchers
+void ModuleDeclarationMatcher::registerMatchers(MatchFinder &finder) {
+  // clang-format off
 //
 auto match_module_decls = 
   cxxRecordDecl(
@@ -62,63 +70,48 @@ auto match_module_decls =
         ),
       unless(isDerivedFrom(matchesName("sc_event_queue")))
       );      
-  //clang-format on
 
-  // clang-format off
-auto match_in_ports = 
-  cxxRecordDecl(
-      match_module_decls,
-      forEach(
-          fieldDecl( hasType(cxxRecordDecl(hasName("sc_in"))) ).bind("sc_in")
+auto match_sc_in_clk = cxxRecordDecl( isDerivedFrom(hasName("sc_module")),
+    forEach( 
+      fieldDecl(
+        hasType(
+          namedDecl(
+            hasName("sc_in_clk")
+            )
           )
-      );
- 
+        ).bind("sc_in_clk")
+      )
+    );
+
 auto match_non_sc_types = cxxRecordDecl(
     match_module_decls,
     forEach(
       fieldDecl(
-        unless(hasType(
-            cxxRecordDecl(matchesName("sc*"))
-            )
+        allOf(
+        unless(hasType(cxxRecordDecl(matchesName("sc*")))),
+          unless(hasType(namedDecl(hasName("sc_in_clk"))))
           )
         ).bind("other_fields")
       )
     );
 
-auto match_all_ports = 
-  cxxRecordDecl(
-      match_module_decls,
-      anyOf(
-        forEach(
-          fieldDecl( hasType(cxxRecordDecl(hasName("sc_in"))) ).bind("sc_in")
-          ), 
-        forEach( 
-          fieldDecl( hasType(cxxRecordDecl(hasName("sc_out"))) ).bind("sc_out")
-          )
-        )
-      )
+  //clang-format on
 
-
-  ;
- 
-
-// clang-format off
-
-auto match_clock_ports = makeFieldMatcher("sc_in_clk");
+//auto match_clock_ports = makeFieldMatcher("sc_in_clk");
+auto match_in_ports = makeFieldMatcher("sc_in");
 auto match_out_ports = makeFieldMatcher("sc_out");
 auto match_in_out_ports = makeFieldMatcher("sc_inout");
 auto match_internal_signal = makeFieldMatcher("sc_signal");
 
 // add all the matchers.
 finder.addMatcher( match_module_decls.bind( "sc_module"), this );
-//finder.addMatcher( match_all_ports.bind( "sc_module"), this );
-/*finder.addMatcher( match_clock_ports, this );
+//finder.addMatcher( match_clock_ports, this );
+finder.addMatcher( match_sc_in_clk, this );
 finder.addMatcher( match_in_ports, this );
 finder.addMatcher( match_out_ports, this );
 finder.addMatcher( match_in_out_ports, this );
 finder.addMatcher( match_internal_signal, this );
 finder.addMatcher( match_non_sc_types, this );
-*/
 }
 
 void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
@@ -158,19 +151,19 @@ void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
     inout_ports_.push_back( std::make_tuple(port_name, new PortDecl( port_name, fd, parseTemplateType(fd)) ));
   }
   
-  /*
   if ( auto fd = checkMatch<FieldDecl>("sc_signal", result) ) {
     auto signal_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found sc_signal: " << signal_name << endl;
-    signal_fields_.push_back( std::make_tuple(signal_name, fd, parseTemplateType(fd) ));
+    signal_fields_.push_back( std::make_tuple(signal_name,  new PortDecl( signal_name, fd, parseTemplateType(fd)) ));
   }
 
   if ( auto fd = checkMatch<FieldDecl>("other_fields", result) ) {
     auto field_name { fd->getIdentifier()->getNameStart() };
     cout <<" Found others fields: " << field_name << endl;
-    other_fields_.push_back( std::make_tuple(field_name, fd, parseTemplateType(fd) ));
+    other_fields_.push_back( std::make_tuple(field_name, new PortDecl(field_name, fd, parseTemplateType(fd) )));
   }
 
+  /*
   if (auto spec_decl = result.Nodes.getNodeAs<ClassTemplateSpecializationDecl*>("sp_dcl_bd_name_")) {
     cout <<" Found template : \n";
 
@@ -212,5 +205,3 @@ void ModuleDeclarationMatcher::dump() {
   printTemplateArguments( signal_fields_ );
   printTemplateArguments( other_fields_ );
 }
-
-

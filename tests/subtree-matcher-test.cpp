@@ -78,13 +78,11 @@ class ModuleMatcher : public MatchFinder::MatchCallback {
               const_cast<CXXRecordDecl*>(module_decl), 
               const_cast<MatchFinder::MatchResult*>(&result) ) );
 
+        llvm::outs() << "run: " << module_decl << ", " << &result << "\n";
 
-        /*
-        // Find input ports. 
         MatchFinder field_registry{};
         field_matcher.registerMatchers( field_registry );
         field_registry.match( *module_decl, *result.Context );
-        */
 
       }
     }
@@ -216,16 +214,21 @@ SECTION( "Found sc_modules.") {
   // Two sc_modules should be found.
   REQUIRE( module_declaration_handler.module_names.size() == 2 );
 
+  /*
   SECTION( "Check if sub-tree field parsing works." ) {
 
     FieldMatcher field_matcher;
-        // Find input ports. 
-        MatchFinder field_registry{};
-        field_matcher.registerMatchers( field_registry );
-//        field_registry.match( *module_declaration_handler.found_module_decls_.front(), *result.Context );
-
+    // Find input ports. 
+    MatchFinder field_registry{};
+    field_matcher.registerMatchers( field_registry );
+ 
+    auto first_module{ module_declaration_handler.found_module_decls_.front() };
+    llvm::outs() << "Start sub-matching: " << get<0>(first_module) << ": " << get<1>(first_module) << "\n";
+    field_registry.match( *get<0>(first_module), *(*get<1>(first_module)).Context );
+    //module_declaration_handler.found_module_decls_.front(), *result.Context );
 
   }
+  */
 }
 
 }
