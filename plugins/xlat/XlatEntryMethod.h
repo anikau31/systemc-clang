@@ -41,6 +41,7 @@ namespace hnode {
   etype(hInt), \
   etype(hSigdecl), \
   etype(hVardecl), \
+  etype(hVarref), \
   etype(hSigAssignL), \
   etype(hSigAssignR), \
   etype(hVarAssign), \
