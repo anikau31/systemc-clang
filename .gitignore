@@ -1,4 +1,3 @@
-release-it.json 
 ./tests/llnl/
 ./paths.sh
 *.lo
