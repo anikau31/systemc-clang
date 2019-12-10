@@ -43,7 +43,7 @@ auto makeInstanceInModuleMatcher(const std::string &name) {
 
 // AST matcher to detect field declarations
 auto makeFieldMatcher(const std::string &name) {
-  // clang-format off
+  /* clang-format off */
   return  cxxRecordDecl(
       isExpansionInMainFile(),
       isDerivedFrom(
@@ -53,14 +53,14 @@ auto makeFieldMatcher(const std::string &name) {
         fieldDecl(hasType(cxxRecordDecl(hasName(name)))).bind(name)
         )
       );
-  // clang-format on
+  /* clang-format on */
 }
 
 // End of helper functions
 
 // Register the matchers
 void ModuleDeclarationMatcher::registerMatchers(MatchFinder &finder) {
-  // clang-format off
+  /* clang-format off */
 //
 auto match_module_decls = 
   cxxRecordDecl(
@@ -95,7 +95,7 @@ auto match_non_sc_types = cxxRecordDecl(
       )
     );
 
-  //clang-format on
+  /* clang-format on */
 
 //auto match_clock_ports = makeFieldMatcher("sc_in_clk");
 auto match_in_ports = makeFieldMatcher("sc_in");
@@ -171,7 +171,7 @@ void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
   */
 }
 
-const ModuleDeclarationMatcher::ModuleDeclarationTuple& ModuleDeclarationMatcher::getFoundModuleDeclarations() const { return found_declarations_; }
+const ModuleDeclarationMatcher::ModuleDeclarationType& ModuleDeclarationMatcher::getFoundModuleDeclarations() const { return found_declarations_; }
 
 const ModuleDeclarationMatcher::PortType& ModuleDeclarationMatcher::getFields(const std::string & port_type ) {
   if (port_type == "sc_in") { return in_ports_; }

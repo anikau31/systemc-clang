@@ -19,6 +19,7 @@ set( UNIT_TEST_LIST
   t3 
   sreg-test
   t4-matchers 
+  t5-template-matching
   subtree-matcher-test
   )
 
