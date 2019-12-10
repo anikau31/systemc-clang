@@ -100,19 +100,19 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   //
  public:
   typedef std::vector<std::tuple<std::string, CXXRecordDecl *> >
-      ModuleDeclarationTuple;
+      ModuleDeclarationType;
   typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
 
  public:
   void registerMatchers(MatchFinder &finder);
   virtual void run(const MatchFinder::MatchResult &result);
-  const ModuleDeclarationTuple &getFoundModuleDeclarations() const;
+  const ModuleDeclarationType &getFoundModuleDeclarations() const;
   const PortType &getFields(const std::string &port_type);
 
   void dump();
 
  private:
-  ModuleDeclarationTuple found_declarations_;
+  ModuleDeclarationType found_declarations_;
   PortType clock_ports_;
   PortType in_ports_;
   PortType out_ports_;
