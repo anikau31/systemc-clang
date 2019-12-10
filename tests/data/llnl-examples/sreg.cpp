@@ -1,6 +1,7 @@
 /* Placeholder for further modules */
 // TODO: include example directory
 #include "sreg.h"
+#include "sc_stream.h"
 
 #include <systemc.h>
 
@@ -13,7 +14,7 @@ public:
   }
 
   SC_CTOR(test) {
-    SC_METHOD(mc);
+    SC_METHOD(mc_test);
   }
 };
 
