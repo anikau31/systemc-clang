@@ -64,16 +64,19 @@ bool SystemCConsumer::fire() {
   // 1. Add every module declaration to the model.
   // ===========================================================
   // Every module declaration that is found should be added to the model.
+  //
+
+  /*
   for (auto const &element : found_module_declarations) {
     auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
     os_ << "@@@@@ name: " << get<0>(element) << "\n";
     systemcModel_->addModuleDecl(module_declaration);
   }
+  */
 
   // Find the sc_modules
   //
   //
-  /*
   FindSCModules scmod{tu, os_};
 
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
@@ -85,7 +88,6 @@ bool SystemCConsumer::fire() {
     systemcModel_->addModuleDecl(md);
 
   }
-  */
 
   ////////////////////////////////////////////////////////////////
   // Find the sc_main

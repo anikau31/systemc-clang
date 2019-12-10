@@ -73,6 +73,7 @@ class ModuleDecl {
   void addOtherVars(const FindPorts::PortType &);
   void addPorts(const PortType &found_ports, const std::string &port_type);
 
+  void addConstructor(Stmt *);
   void addInputInterfaces(FindTLMInterfaces::interfaceType);
   void addOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
@@ -82,9 +83,15 @@ class ModuleDecl {
   void setModuleName(const string &);
   void setTemplateParameters(const vector<string> &);
   vector<string> getTemplateParameters() const;
-  void addConstructor(Stmt *);
-  string getName();
+
+  string getName() const;
+  string getInstanceName() const;
+
   CXXRecordDecl *getModuleClassDecl();
+  FieldDecl *getInstanceFieldDecl();
+  VarDecl *getInstanceVarDecl();
+  bool isInstanceFieldDecl() const;
+
   bool isModuleClassDeclNull();
   portMapType getOPorts();
   portMapType getIPorts();
@@ -115,8 +122,15 @@ class ModuleDecl {
 
  private:
   string module_name_;
+  string instance_name_;
+
+  // Declaration
   CXXRecordDecl *class_decl_;
+  // Constructor statement
   Stmt *constructor_stmt_;
+  // Instance fieldDecl or varDecl
+  FieldDecl *instance_field_decl_;
+  VarDecl *instance_var_decl_;
 
   processMapType process_map_;
   portMapType in_ports_;
@@ -133,8 +147,8 @@ class ModuleDecl {
   signalMapType signals_;
 
   vector<string> instance_list_;
-  portSignalMapType _portSignalMap;
-  vector<EntryFunctionContainer *> _vef;
+  portSignalMapType port_signal_map_;
+  vector<EntryFunctionContainer *> vef_;
 
   // Class template parameters.
   vector<string> template_parameters_;

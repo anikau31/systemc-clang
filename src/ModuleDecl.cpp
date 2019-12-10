@@ -8,10 +8,19 @@ using namespace scpar;
 using namespace std;
 
 ModuleDecl::ModuleDecl()
-    : module_name_{"NONE"}, class_decl_{nullptr}, constructor_stmt_{nullptr} {}
+    : module_name_{"NONE"},
+      instance_name_{"NONE"},
+      class_decl_{nullptr},
+      constructor_stmt_{nullptr},
+      instance_field_decl_{nullptr},
+      instance_var_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
-    : module_name_{name}, class_decl_{decl} {}
+    : module_name_{name},
+      instance_name_{"NONE"},
+      class_decl_{decl},
+      instance_field_decl_{nullptr},
+      instance_var_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(
     const std::tuple<const std::string &, CXXRecordDecl *> &element)
@@ -19,8 +28,12 @@ ModuleDecl::ModuleDecl(
 
 ModuleDecl::ModuleDecl(const ModuleDecl &from) {
   module_name_ = from.module_name_;
+  instance_name_ = from.instance_name_;
+
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
+  instance_field_decl_ = from.instance_field_decl_;
+  instance_var_decl_ = from.instance_var_decl_;
 
   process_map_ = from.process_map_;
   in_ports_ = from.in_ports_;
@@ -37,8 +50,8 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
   signals_ = from.signals_;
 
   instance_list_ = from.instance_list_;
-  _portSignalMap = from._portSignalMap;
-  _vef = from._vef;
+  port_signal_map_ = from.port_signal_map_;
+  vef_ = from.vef_;
 
   // Class template parameters.
   template_parameters_ = from.template_parameters_;
@@ -46,8 +59,12 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
 
 ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   module_name_ = from.module_name_;
+  instance_name_ = from.instance_name_;
+
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
+  instance_field_decl_ = from.instance_field_decl_;
+  instance_var_decl_ = from.instance_var_decl_;
 
   process_map_ = from.process_map_;
   in_ports_ = from.in_ports_;
@@ -64,8 +81,8 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   signals_ = from.signals_;
 
   instance_list_ = from.instance_list_;
-  _portSignalMap = from._portSignalMap;
-  _vef = from._vef;
+  port_signal_map_ = from.port_signal_map_;
+  vef_ = from.vef_;
 
   // Class template parameters.
   template_parameters_ = from.template_parameters_;
@@ -75,6 +92,9 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 ModuleDecl::~ModuleDecl() {
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
+  instance_field_decl_ = nullptr;
+  instance_var_decl_ = nullptr;
+
   // Delete all pointers in ports.
   for (auto input_port : in_ports_) {
     // It is a tuple
@@ -119,7 +139,7 @@ void ModuleDecl::addInstances(const vector<string> &instanceList) {
 }
 
 void ModuleDecl::addSignalBinding(map<string, string> portSignalMap) {
-  _portSignalMap.insert(portSignalMap.begin(), portSignalMap.end());
+  port_signal_map_.insert(portSignalMap.begin(), portSignalMap.end());
 }
 
 void ModuleDecl::addSignals(const FindSignals::signalMapType &signal_map) {
@@ -240,7 +260,7 @@ void ModuleDecl::addConstructor(Stmt *constructor) {
 }
 
 void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
-  _vef = *efv;
+  vef_ = *efv;
   for (unsigned int i = 0; i < efv->size(); ++i) {
     EntryFunctionContainer *ef = (*efv)[i];
 
@@ -276,7 +296,7 @@ void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
 vector<string> ModuleDecl::getInstanceList() { return instance_list_; }
 
 vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
-  return _vef;
+  return vef_;
 }
 
 int ModuleDecl::getNumInstances() { return instance_list_.size(); }
@@ -313,13 +333,29 @@ ModuleDecl::interfaceMapType ModuleDecl::getIOInterfaces() {
   return iointerfaces_;
 }
 
-string ModuleDecl::getName() { return module_name_; }
+string ModuleDecl::getName() const { return module_name_; }
+
+string ModuleDecl::getInstanceName() const { return instance_name_; }
 
 bool ModuleDecl::isModuleClassDeclNull() { return (class_decl_ == nullptr); }
 
 CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
   assert(!(class_decl_ == nullptr));
   return class_decl_;
+}
+
+FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_; }
+VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
+
+bool ModuleDecl::isInstanceFieldDecl() const {
+  if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
+    return true;
+  }
+  if ((instance_field_decl_ == nullptr) && (instance_var_decl_ != nullptr)) {
+    return false;
+  }
+
+  return false;
 }
 
 void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
@@ -333,12 +369,12 @@ void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {
-  if (_portSignalMap.empty()) {
+  if (port_signal_map_.empty()) {
     os << " none\n";
     return;
   }
 
-  for (auto it : _portSignalMap) {
+  for (auto it : port_signal_map_) {
     os << "\nPort : " << it.first << " bound to signal : " << it.second;
   }
 }
