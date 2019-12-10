@@ -41,7 +41,7 @@ set output diag
 # Notice that we are using the namedDecl here because sc_in_clk is actually 
 # a typedef to sc_in<bool>.
 #
-#m cxxRecordDecl(isDerivedFrom(hasName("sc_module")), forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk")))).bind("sc_in_clk")))
+m cxxRecordDecl(isDerivedFrom(hasName("sc_module")), forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk")))).bind("sc_in_clk")))
 
 # Match entry function
 # 1. Find constructor
