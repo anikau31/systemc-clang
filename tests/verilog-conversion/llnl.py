@@ -55,10 +55,13 @@ def do_diff(golden, generated):
     print(''.join(diff))
     return len(diff) == 0
 
-def run_sexp_matched_test(module_name):
+def run_sexp_matched_test(module_name, args=None):
     parser = get_parser()
-    args = parser.parse_args()
-    keep_sexp = args.keep_sexp
+    if args is None:
+        keep_sexp = parser.get_default('keep_sexp')
+    else:
+        args_ = parser.parse_args()
+        keep_sexp = args_.keep_sexp
     golden_standard_file = _golden_sexp_file.format(module_name)
     with open(golden_standard_file, 'r') as f:
         golden = f.read()
@@ -76,11 +79,15 @@ def run_sexp_matched_test(module_name):
         if not keep_sexp:
             subprocess.run('rm -rf ./{}_hdl.txt'.format(module_name), shell=True)
 
-def run_verilog_matched_test(module_name):
+def run_verilog_matched_test(module_name, args=None):
     parser = get_parser()
-    args = parser.parse_args()
-    keep_sexp = args.keep_sexp
-    keep_v = args.keep_v
+    if args is None:
+        keep_sexp = parser.get_default('keep_sexp')
+        keep_v = parser.get_default('keep_v')
+    else:
+        args_ = parser.parse_args()
+        keep_sexp = args_.keep_sexp
+        keep_v = args_.keep_v
     golden_standard_file = _golden_verilog_file.format(module_name)
     with open(golden_standard_file, 'r') as f:
         golden = f.read()
