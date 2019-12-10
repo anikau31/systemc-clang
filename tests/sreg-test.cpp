@@ -50,14 +50,8 @@ TEST_CASE("sreg example",
 
   SECTION("Checking sreg_bypass ports", "[ports]") {
     auto module_instances{model->getModuleInstanceMap()};
-    // llvm::outs() << "INSTANCES #: " << module_instances.size() << "\n";
-    // for (const auto & n: module_instances) {
-    //   llvm::outs() << "SREG: " << n.first->getName() << "\n";
-    // }
     auto p_module{module_decl["sreg"]};
     auto sreg_bypass{module_instances[p_module][0]};
-
-    // sreg_bypass->dump(llvm::outs());
 
     REQUIRE(sreg_bypass->getIPorts().size() == 2);
     REQUIRE(sreg_bypass->getOPorts().size() == 0);
@@ -68,7 +62,6 @@ TEST_CASE("sreg example",
     REQUIRE(sreg_bypass->getOutputStreamPorts().size() == 1);
   }
 
-  /*
   SECTION("Checking sreg_fwd ports", "[ports]") {
     auto module_instances{model->getModuleInstanceMap()};
     auto p_module{module_decl["sreg"]};
@@ -96,7 +89,6 @@ TEST_CASE("sreg example",
     REQUIRE(sreg_fwd_rev->getInputStreamPorts().size() == 1);
     REQUIRE(sreg_fwd_rev->getOutputStreamPorts().size() == 1);
   }
-  */
 
   // SECTION("No ports bound", "[ports]") {
   //   // The module instances have all the information.
