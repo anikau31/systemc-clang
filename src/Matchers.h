@@ -13,7 +13,79 @@ using namespace clang::ast_matchers;
 using namespace scpar;
 
 namespace sc_ast_matchers {
-// Static to make sure multiple definitions are not resulted. 
+
+  // InstanceMatcher
+  class InstanceMatcher : public MatchFinder::MatchCallback {
+    public:
+      void registerMatchers(MatchFinder &finder) {
+        //clang-format off 
+        auto match_instances = 
+          fieldDecl( 
+              hasType( 
+                cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
+                )
+              ).bind("instances_in_fielddecl");
+
+        auto match_instances_vars = 
+          varDecl( 
+              hasType( 
+                cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
+                )
+              ).bind("instances_in_vardecl");
+        //clang-format on
+
+        finder.addMatcher(match_instances, this);
+        finder.addMatcher(match_instances_vars, this);
+      }
+
+      virtual void run(const MatchFinder::MatchResult &result) {
+        /*
+           if (auto field_decl = const_cast<FieldDecl *>(
+           result.Nodes.getNodeAs<FieldDecl>("sc_in"))) {
+           std::string name{field_decl->getIdentifier()->getNameStart()};
+           input_port_names.push_back(name);
+           }
+           */
+        cout << " Found an instance: "<< endl;
+      }
+
+ public:
+  std::vector<std::string> input_port_names;
+};
+
+
+// FieldMatcher class
+class FieldMatcher : public MatchFinder::MatchCallback {
+ public:
+  void registerMatchers(MatchFinder &finder) {
+    auto match_module_decls = cxxRecordDecl(
+        // isExpansionInMainFile(),
+        isDerivedFrom(hasName("::sc_core::sc_module")),
+        unless(isDerivedFrom(matchesName("sc_event_queue"))));
+
+    auto match_in_ports = cxxRecordDecl(forEach(
+        fieldDecl(hasType(cxxRecordDecl(hasName("sc_in")))).bind("sc_in")));
+
+    //clang-format on
+
+    finder.addMatcher(match_in_ports, this);
+  }
+
+  virtual void run(const MatchFinder::MatchResult &result) {
+    cout << " Trying to find sc_in. " << endl;
+    if (auto field_decl = const_cast<FieldDecl *>(
+            result.Nodes.getNodeAs<FieldDecl>("sc_in"))) {
+      std::string name{field_decl->getIdentifier()->getNameStart()};
+      cout << " Found an sc_in : " << name << endl;
+      input_port_names.push_back(name);
+    }
+  }
+
+ public:
+  std::vector<std::string> input_port_names;
+};
+
+
 
 class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 //
@@ -40,5 +112,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 };
 
 }; // namespace sc_ast_matchers
+
 #endif
 

@@ -241,7 +241,7 @@ bool XlatMethod::TraverseDeclRefExpr(DeclRefExpr* expr)
   os_ << "In TraverseDeclRefExpr\n";
   string name = (expr->getNameInfo()).getName().getAsString();
   os_ << "name is " << name << "\n";
-  h_ret = new hNode(name, hNode::hdlopsEnum::hVardecl);
+  h_ret = new hNode(name, hNode::hdlopsEnum::hVarref);
   return true; 
 }
 
