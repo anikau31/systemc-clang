@@ -18,7 +18,7 @@ TemplateType::~TemplateType() { type_ptr_ = nullptr; }
 
 string TemplateType::getTypeName() const { return type_name_; }
 
-const Type *TemplateType::getTypePtr() { return type_ptr_; }
+const Type *TemplateType::getTypePtr() const { return type_ptr_; }
 
 //////////////////////////////////////////////////////////////////////
 // FindTemplateTypes

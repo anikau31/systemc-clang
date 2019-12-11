@@ -24,7 +24,7 @@ namespace scpar {
     TemplateType( const TemplateType& );
 
     string getTypeName() const;
-    const Type* getTypePtr();
+    const Type* getTypePtr() const;
 
   private:
     string type_name_;
