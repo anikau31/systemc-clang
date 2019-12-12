@@ -107,13 +107,15 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
 }
 
 void Xlat::xlattype(FindTemplateTypes *tt, hNodep &h_typeinfo) {
-  // tt->printTemplateArguments(os, 1);
+  //tt->printTemplateArguments(os_);
 
   scpar::FindTemplateTypes::type_vector_t ttargs =
       tt->getTemplateArgumentsType();
   for (auto const &targ : ttargs) {
     h_typeinfo->child_list.push_back(
         new hNode(targ.getTypeName(), hNode::hdlopsEnum::hType));
+    const Type * tmpptr = targ.getTypePtr();
+    (targ.getTypePtr())->dump(os_);
   }
 }
 
