@@ -117,6 +117,7 @@ finder.addMatcher( match_non_sc_types, this );
 void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
 
   if ( auto decl = const_cast<CXXRecordDecl*>(result.Nodes.getNodeAs<CXXRecordDecl>("sc_module")) ) {
+
     cout << " Found sc_module: " << decl->getIdentifier()->getNameStart() << endl;
     std::string name{ decl->getIdentifier()->getNameStart() };
     found_declarations_.push_back( std::make_tuple(name, decl) );
