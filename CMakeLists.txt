@@ -70,6 +70,15 @@ else()
 
 endif()
 
+# Keep python tests off by default
+if("${ENABLE_PYTHON_TESTS}" STREQUAL "")
+  set( PY_TESTS_ON OFF )
+else()
+  set( PY_TESTS_ON ${ENABLE_PYTHON_TESTS} )
+  if(PY_TESTS_ON)
+    find_package(PythonInterp 3 REQUIRED)
+  endif()
+endif()
 
 # Test package
 
@@ -331,6 +340,7 @@ message(STATUS "Plugin Xlat           : ${PLUGIN_XLAT}")
 message(STATUS "")
 message(STATUS "[ Tests         ]")
 message(STATUS "Build tests           : ${TESTS_ON}")
+message(STATUS "Build python tests    : ${PY_TESTS_ON}")
 message(STATUS "")
 message(STATUS "[ Environment ]")
 message(STATUS "CMAKE_GENERATOR       : ${CMAKE_GENERATOR}")
@@ -347,6 +357,9 @@ message(STATUS "")
 message(STATUS "Install path          : ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "CMAKE_SOURCE_DIR      : ${CMAKE_SOURCE_DIR}")
 message(STATUS "CMAKE_BINARY_DIR      : ${CMAKE_BINARY_DIR}")
+message(STATUS "")
+message(STATUS "Python found          : ${PYTHONINTERP_FOUND}")
+message(STATUS "Python interpreter    : ${PYTHON_EXECUTABLE}")
 message(STATUS "")
 message(STATUS "[ Git info.     ]")
 message(STATUS "Git repo url          : ${GIT_REPO_URL}")
