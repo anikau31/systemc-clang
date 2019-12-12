@@ -114,7 +114,6 @@ void Xlat::xlattype(FindTemplateTypes *tt, hNodep &h_typeinfo) {
   for (auto const &targ : ttargs) {
     h_typeinfo->child_list.push_back(
         new hNode(targ.getTypeName(), hNode::hdlopsEnum::hType));
-    const Type * tmpptr = targ.getTypePtr();
     (targ.getTypePtr())->dump(os_);
   }
 }
