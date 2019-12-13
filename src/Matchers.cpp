@@ -64,7 +64,8 @@ void ModuleDeclarationMatcher::registerMatchers(MatchFinder &finder) {
 //
 auto match_module_decls = 
   cxxRecordDecl(
-      //isExpansionInMainFile(),
+      hasDefinition(), // There must be a definition.
+      unless( isImplicit() ), // Templates generate implicit structs - so ignore.
       isDerivedFrom(
         hasName("::sc_core::sc_module") 
         ),
@@ -97,112 +98,161 @@ auto match_non_sc_types = cxxRecordDecl(
 
   /* clang-format on */
 
-//auto match_clock_ports = makeFieldMatcher("sc_in_clk");
-auto match_in_ports = makeFieldMatcher("sc_in");
-auto match_out_ports = makeFieldMatcher("sc_out");
-auto match_in_out_ports = makeFieldMatcher("sc_inout");
-auto match_internal_signal = makeFieldMatcher("sc_signal");
+  // auto match_clock_ports = makeFieldMatcher("sc_in_clk");
+  auto match_in_ports = makeFieldMatcher("sc_in");
+  auto match_out_ports = makeFieldMatcher("sc_out");
+  auto match_in_out_ports = makeFieldMatcher("sc_inout");
+  auto match_internal_signal = makeFieldMatcher("sc_signal");
 
-// add all the matchers.
-finder.addMatcher( match_module_decls.bind( "sc_module"), this );
-//finder.addMatcher( match_clock_ports, this );
-finder.addMatcher( match_sc_in_clk, this );
-finder.addMatcher( match_in_ports, this );
-finder.addMatcher( match_out_ports, this );
-finder.addMatcher( match_in_out_ports, this );
-finder.addMatcher( match_internal_signal, this );
-finder.addMatcher( match_non_sc_types, this );
+  // add all the matchers.
+  finder.addMatcher(match_module_decls.bind("sc_module"), this);
+
+  // add instance matcher
+  // Not nested.
+  instance_matcher.registerMatchers( finder );
+
+  // finder.addMatcher( match_clock_ports, this );
+  finder.addMatcher(match_sc_in_clk, this);
+  finder.addMatcher(match_in_ports, this);
+  finder.addMatcher(match_out_ports, this);
+  finder.addMatcher(match_in_out_ports, this);
+  finder.addMatcher(match_internal_signal, this);
+  finder.addMatcher(match_non_sc_types, this);
+
 }
 
-void ModuleDeclarationMatcher::run( const MatchFinder::MatchResult &result ) {
-
-  if ( auto decl = const_cast<CXXRecordDecl*>(result.Nodes.getNodeAs<CXXRecordDecl>("sc_module")) ) {
-
-    cout << " Found sc_module: " << decl->getIdentifier()->getNameStart() << endl;
-    std::string name{ decl->getIdentifier()->getNameStart() };
-    found_declarations_.push_back( std::make_tuple(name, decl) );
-  }
-
-  if ( auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in_clk") ) {
-    std::string port_name { fd->getIdentifier()->getNameStart() };
-    cout <<" Found sc_in_clk: " << port_name << endl;
-    clock_ports_.push_back( std::make_tuple(port_name, 
-          new PortDecl(port_name, fd, parseTemplateType(fd)) 
-          )
-        );
-  }
-
-  if ( auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in") ) {
-    auto port_name { fd->getIdentifier()->getNameStart() };
-    cout <<" Found sc_in: " << port_name << endl;
-    //cout << fd->getParent()->getIdentifier()->getNameStart() << endl;
-
-    in_ports_.push_back( std::make_tuple(port_name, new PortDecl( port_name, fd, parseTemplateType(fd)) ));
-  }
-
-  if ( auto fd = checkMatch<FieldDecl>("sc_out", result) ) {
-    auto port_name { fd->getIdentifier()->getNameStart() };
-    cout <<" Found sc_out: " << port_name << endl;
-    out_ports_.push_back( std::make_tuple(port_name, new PortDecl( port_name, fd, parseTemplateType(fd) ) ));
-  }
-
-  if ( auto fd = checkMatch<FieldDecl>("sc_inout", result) ) {
-    auto port_name { fd->getIdentifier()->getNameStart() };
-    cout <<" Found sc_inout: " << port_name << endl;
-    inout_ports_.push_back( std::make_tuple(port_name, new PortDecl( port_name, fd, parseTemplateType(fd)) ));
-  }
-  
-  if ( auto fd = checkMatch<FieldDecl>("sc_signal", result) ) {
-    auto signal_name { fd->getIdentifier()->getNameStart() };
-    cout <<" Found sc_signal: " << signal_name << endl;
-    signal_fields_.push_back( std::make_tuple(signal_name,  new PortDecl( signal_name, fd, parseTemplateType(fd)) ));
-  }
-
-  if ( auto fd = checkMatch<FieldDecl>("other_fields", result) ) {
-    auto field_name { fd->getIdentifier()->getNameStart() };
-    cout <<" Found others fields: " << field_name << endl;
-    other_fields_.push_back( std::make_tuple(field_name, new PortDecl(field_name, fd, parseTemplateType(fd) )));
-  }
-
+void ModuleDeclarationMatcher::run(const MatchFinder::MatchResult &result) {
   /*
-  if (auto spec_decl = result.Nodes.getNodeAs<ClassTemplateSpecializationDecl*>("sp_dcl_bd_name_")) {
-    cout <<" Found template : \n";
-
+  if (auto decl = const_cast<ClassTemplateSpecializationDecl *>(
+          result.Nodes.getNodeAs<ClassTemplateSpecializationDecl>(
+              "sc_module"))) {
+    cout << " It's a CLASS TEMPLATE\n";
   }
   */
+
+  if (auto decl = const_cast<CXXRecordDecl *>(
+          result.Nodes.getNodeAs<CXXRecordDecl>("sc_module"))) {
+    cout << " Found sc_module: " << decl->getIdentifier()->getNameStart()
+         << endl;
+    std::string name{decl->getIdentifier()->getNameStart()};
+    // decl->dump();
+    //
+    if (isa<ClassTemplateSpecializationDecl>(decl)) {
+      cout << "TEMPLATE SPECIAL\n";
+      found_template_declarations_.push_back(std::make_tuple(name, decl));
+    } else {
+      found_declarations_.push_back(std::make_tuple(name, decl));
+    }
+
+    /* This is going to match only in subtree.
+    MatchFinder instance_registry{};
+    instance_matcher.registerMatchers(instance_registry);
+    instance_registry.match(*decl, *result.Context);
+    */
+  }
+
+  if (auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in_clk")) {
+    std::string port_name{fd->getIdentifier()->getNameStart()};
+    cout << " Found sc_in_clk: " << port_name << endl;
+    clock_ports_.push_back(std::make_tuple(
+        port_name, new PortDecl(port_name, fd, parseTemplateType(fd))));
+  }
+
+  if (auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in")) {
+    auto port_name{fd->getIdentifier()->getNameStart()};
+    cout << " Found sc_in: " << port_name << endl;
+    // cout << fd->getParent()->getIdentifier()->getNameStart() << endl;
+
+    in_ports_.push_back(std::make_tuple(
+        port_name, new PortDecl(port_name, fd, parseTemplateType(fd))));
+  }
+
+  if (auto fd = checkMatch<FieldDecl>("sc_out", result)) {
+    auto port_name{fd->getIdentifier()->getNameStart()};
+    cout << " Found sc_out: " << port_name << endl;
+    out_ports_.push_back(std::make_tuple(
+        port_name, new PortDecl(port_name, fd, parseTemplateType(fd))));
+  }
+
+  if (auto fd = checkMatch<FieldDecl>("sc_inout", result)) {
+    auto port_name{fd->getIdentifier()->getNameStart()};
+    cout << " Found sc_inout: " << port_name << endl;
+    inout_ports_.push_back(std::make_tuple(
+        port_name, new PortDecl(port_name, fd, parseTemplateType(fd))));
+  }
+
+  if (auto fd = checkMatch<FieldDecl>("sc_signal", result)) {
+    auto signal_name{fd->getIdentifier()->getNameStart()};
+    cout << " Found sc_signal: " << signal_name << endl;
+    signal_fields_.push_back(std::make_tuple(
+        signal_name, new PortDecl(signal_name, fd, parseTemplateType(fd))));
+  }
+
+  if (auto fd = checkMatch<FieldDecl>("other_fields", result)) {
+    auto field_name{fd->getIdentifier()->getNameStart()};
+    cout << " Found others fields: " << field_name << endl;
+    other_fields_.push_back(std::make_tuple(
+        field_name, new PortDecl(field_name, fd, parseTemplateType(fd))));
+  }
 }
 
-const ModuleDeclarationMatcher::ModuleDeclarationType& ModuleDeclarationMatcher::getFoundModuleDeclarations() const { return found_declarations_; }
+const ModuleDeclarationMatcher::ModuleDeclarationType &
+ModuleDeclarationMatcher::getFoundModuleDeclarations() const {
+  return found_declarations_;
+}
 
-const ModuleDeclarationMatcher::PortType& ModuleDeclarationMatcher::getFields(const std::string & port_type ) {
-  if (port_type == "sc_in") { return in_ports_; }
-  if (port_type == "sc_inout") { return inout_ports_; }
-  if (port_type == "sc_out") { return out_ports_; }
-  if (port_type == "sc_signal") { return signal_fields_; }
-  if (port_type == "sc_in_clk") { return clock_ports_; }
-  if (port_type == "others") { return other_fields_; }
+const ModuleDeclarationMatcher::PortType &ModuleDeclarationMatcher::getFields(
+    const std::string &port_type) {
+  if (port_type == "sc_in") {
+    return in_ports_;
+  }
+  if (port_type == "sc_inout") {
+    return inout_ports_;
+  }
+  if (port_type == "sc_out") {
+    return out_ports_;
+  }
+  if (port_type == "sc_signal") {
+    return signal_fields_;
+  }
+  if (port_type == "sc_in_clk") {
+    return clock_ports_;
+  }
+  if (port_type == "others") {
+    return other_fields_;
+  }
   // You should never get here.
   assert(true);
 }
 
 void ModuleDeclarationMatcher::dump() {
-  for ( const auto &i: found_declarations_ ) {
-    cout << "module name: " << get<0>(i) << ", " << get<1>(i) << std::endl;
+  for (const auto &i : found_declarations_) {
+    cout << "module name         : " << get<0>(i) << ", " << get<1>(i)
+         << std::endl;
   }
+
+  for (const auto &i : found_template_declarations_) {
+    cout << "template module name: " << get<0>(i) << ", " << get<1>(i)
+         << std::endl;
+  }
+
+  // Print the instances.
+  instance_matcher.dump();
 
   // Map structure
   // Input ports
   // for ( const auto &i: in_ports_ ) {
-    // llvm::outs() << "name: " << i.first << " ";
-    // (i.second)->printTemplateArguments(llvm::outs());
-    // llvm::outs() << "\n";
+  // llvm::outs() << "name: " << i.first << " ";
+  // (i.second)->printTemplateArguments(llvm::outs());
+  // llvm::outs() << "\n";
   // }
-//
+  //
 
-  printTemplateArguments( clock_ports_ );
-  printTemplateArguments( in_ports_ );
-  printTemplateArguments( out_ports_ );
-  printTemplateArguments( inout_ports_ );
-  printTemplateArguments( signal_fields_ );
-  printTemplateArguments( other_fields_ );
+  cout << "Printing ports" << endl;
+  printTemplateArguments(clock_ports_);
+  printTemplateArguments(in_ports_);
+  printTemplateArguments(out_ports_);
+  printTemplateArguments(inout_ports_);
+  printTemplateArguments(signal_fields_);
+  printTemplateArguments(other_fields_);
 }

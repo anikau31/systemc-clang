@@ -47,15 +47,40 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (auto instance = const_cast<FieldDecl *>(
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      cout << " Found a member field instance: " << name << endl;
+      cout << "Found a member field instance: " << name << endl;
       list_instance_fields_.push_back(std::make_tuple(name, instance));
     }
 
     if (auto instance = const_cast<VarDecl *>(
             result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      cout << " Found a member variable instance: " << name << endl;
+      cout << "Found a member variable instance: " << name << endl;
       list_instance_vars_.push_back(std::make_tuple(name, instance));
+
+      // const Type * returned
+      // 
+      /*
+      auto qtype{instance->getType().getTypePtr()};
+        if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
+          auto tn{dp->getTemplateName()};
+          auto tunder{tn.getUnderlying()};
+          auto name{tunder.getAsTemplateDecl()->getNameAsString()};
+          cout << "NAME: " << name << endl;
+        }
+
+      qtype->dump();
+      */
+    }
+  }
+
+  void dump() {
+    for (const auto &i : list_instance_fields_) {
+      cout << "fields module name: " << get<0>(i) << ", " << get<1>(i)
+           << std::endl;
+    }
+    for (const auto &i : list_instance_vars_) {
+      cout << "vars module name: " << get<0>(i) << ", " << get<1>(i)
+           << std::endl;
     }
   }
 
@@ -113,6 +138,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
  private:
   ModuleDeclarationType found_declarations_;
+  ModuleDeclarationType found_template_declarations_;
+  
+  // Match nested instances
+  InstanceMatcher  instance_matcher; 
+
+  // Ports
   PortType clock_ports_;
   PortType in_ports_;
   PortType out_ports_;
