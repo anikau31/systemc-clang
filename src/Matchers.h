@@ -49,6 +49,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       std::string name{instance->getIdentifier()->getNameStart()};
       cout << "Found a member field instance: " << name << endl;
       list_instance_fields_.push_back(std::make_tuple(name, instance));
+
+      // Get the pointer to the type declaration.
+      auto qtype{instance->getType().getTypePtr()};
+      qtype->dump();
     }
 
     if (auto instance = const_cast<VarDecl *>(
@@ -58,18 +62,24 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       list_instance_vars_.push_back(std::make_tuple(name, instance));
 
       // const Type * returned
-      // 
-      /*
+      //
+      cout << "Figure out type of vardecl\n";
       auto qtype{instance->getType().getTypePtr()};
-        if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
-          auto tn{dp->getTemplateName()};
-          auto tunder{tn.getUnderlying()};
-          auto name{tunder.getAsTemplateDecl()->getNameAsString()};
-          cout << "NAME: " << name << endl;
+      if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
+        auto tn{dp->getTemplateName()};
+        auto tunder{tn.getUnderlying()};
+        auto name{tunder.getAsTemplateDecl()->getNameAsString()};
+        cout << "template name: \n";
+        tn.dump();
+        cout << ", NAME: " << name << endl;
+
+        if (dp->isRecordType() ) {
+          auto rt{ dp->getAsCXXRecordDecl() };
+          cout << "RECORD type: " << rt << "\n";
         }
+      }
 
       qtype->dump();
-      */
     }
   }
 
@@ -127,6 +137,11 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   typedef std::vector<std::tuple<std::string, CXXRecordDecl *> >
       ModuleDeclarationType;
   typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
+
+ private:
+  // Template functions.
+  template <typename T>
+     void insert_port( PortType & port, T *decl );
 
  public:
   void registerMatchers(MatchFinder &finder);

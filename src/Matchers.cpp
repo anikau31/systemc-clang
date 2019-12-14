@@ -109,7 +109,7 @@ auto match_non_sc_types = cxxRecordDecl(
 
   // add instance matcher
   // Not nested.
-  instance_matcher.registerMatchers( finder );
+  instance_matcher.registerMatchers(finder);
 
   // finder.addMatcher( match_clock_ports, this );
   finder.addMatcher(match_sc_in_clk, this);
@@ -118,7 +118,13 @@ auto match_non_sc_types = cxxRecordDecl(
   finder.addMatcher(match_in_out_ports, this);
   finder.addMatcher(match_internal_signal, this);
   finder.addMatcher(match_non_sc_types, this);
+}
 
+template <typename T>
+void ModuleDeclarationMatcher::insert_port(PortType &port, T *decl) {
+  auto name{decl->getIdentifier()->getNameStart()};
+  port.push_back(
+      std::make_tuple(name, new PortDecl(name, decl, parseTemplateType(decl))));
 }
 
 void ModuleDeclarationMatcher::run(const MatchFinder::MatchResult &result) {
@@ -133,7 +139,7 @@ void ModuleDeclarationMatcher::run(const MatchFinder::MatchResult &result) {
   if (auto decl = const_cast<CXXRecordDecl *>(
           result.Nodes.getNodeAs<CXXRecordDecl>("sc_module"))) {
     cout << " Found sc_module: " << decl->getIdentifier()->getNameStart()
-         << endl;
+         << " CXXRecordDecl*: " << decl << endl;
     std::string name{decl->getIdentifier()->getNameStart()};
     // decl->dump();
     //
@@ -151,48 +157,41 @@ void ModuleDeclarationMatcher::run(const MatchFinder::MatchResult &result) {
     */
   }
 
-  if (auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in_clk")) {
+  if (auto fd = checkMatch<FieldDecl>("sc_in_clk", result)) {
     std::string port_name{fd->getIdentifier()->getNameStart()};
     cout << " Found sc_in_clk: " << port_name << endl;
-    clock_ports_.push_back(std::make_tuple(
-        port_name, new PortDecl(port_name, fd, parseTemplateType(fd))));
+
+    insert_port(clock_ports_, fd);
   }
 
-  if (auto fd = result.Nodes.getNodeAs<FieldDecl>("sc_in")) {
+  if (auto fd = checkMatch<FieldDecl>("sc_in", result)) {
     auto port_name{fd->getIdentifier()->getNameStart()};
     cout << " Found sc_in: " << port_name << endl;
-    // cout << fd->getParent()->getIdentifier()->getNameStart() << endl;
-
-    in_ports_.push_back(std::make_tuple(
-        port_name, new PortDecl(port_name, fd, parseTemplateType(fd))));
+    insert_port(in_ports_, fd);
   }
 
   if (auto fd = checkMatch<FieldDecl>("sc_out", result)) {
     auto port_name{fd->getIdentifier()->getNameStart()};
     cout << " Found sc_out: " << port_name << endl;
-    out_ports_.push_back(std::make_tuple(
-        port_name, new PortDecl(port_name, fd, parseTemplateType(fd))));
+    insert_port(out_ports_, fd);
   }
 
   if (auto fd = checkMatch<FieldDecl>("sc_inout", result)) {
     auto port_name{fd->getIdentifier()->getNameStart()};
     cout << " Found sc_inout: " << port_name << endl;
-    inout_ports_.push_back(std::make_tuple(
-        port_name, new PortDecl(port_name, fd, parseTemplateType(fd))));
+    insert_port(inout_ports_, fd);
   }
 
   if (auto fd = checkMatch<FieldDecl>("sc_signal", result)) {
     auto signal_name{fd->getIdentifier()->getNameStart()};
     cout << " Found sc_signal: " << signal_name << endl;
-    signal_fields_.push_back(std::make_tuple(
-        signal_name, new PortDecl(signal_name, fd, parseTemplateType(fd))));
+    insert_port(signal_fields_, fd);
   }
 
   if (auto fd = checkMatch<FieldDecl>("other_fields", result)) {
     auto field_name{fd->getIdentifier()->getNameStart()};
     cout << " Found others fields: " << field_name << endl;
-    other_fields_.push_back(std::make_tuple(
-        field_name, new PortDecl(field_name, fd, parseTemplateType(fd))));
+    insert_port(other_fields_, fd);
   }
 }
 
