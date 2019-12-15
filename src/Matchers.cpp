@@ -98,7 +98,6 @@ auto match_non_sc_types = cxxRecordDecl(
 
   /* clang-format on */
 
-  // auto match_clock_ports = makeFieldMatcher("sc_in_clk");
   auto match_in_ports = makeFieldMatcher("sc_in");
   auto match_out_ports = makeFieldMatcher("sc_out");
   auto match_in_out_ports = makeFieldMatcher("sc_inout");
@@ -108,10 +107,8 @@ auto match_non_sc_types = cxxRecordDecl(
   finder.addMatcher(match_module_decls.bind("sc_module"), this);
 
   // add instance matcher
-  // Not nested.
   instance_matcher.registerMatchers(finder);
 
-  // finder.addMatcher( match_clock_ports, this );
   finder.addMatcher(match_sc_in_clk, this);
   finder.addMatcher(match_in_ports, this);
   finder.addMatcher(match_out_ports, this);
@@ -128,14 +125,6 @@ void ModuleDeclarationMatcher::insert_port(PortType &port, T *decl) {
 }
 
 void ModuleDeclarationMatcher::run(const MatchFinder::MatchResult &result) {
-  /*
-  if (auto decl = const_cast<ClassTemplateSpecializationDecl *>(
-          result.Nodes.getNodeAs<ClassTemplateSpecializationDecl>(
-              "sc_module"))) {
-    cout << " It's a CLASS TEMPLATE\n";
-  }
-  */
-
   if (auto decl = const_cast<CXXRecordDecl *>(
           result.Nodes.getNodeAs<CXXRecordDecl>("sc_module"))) {
     cout << " Found sc_module: " << decl->getIdentifier()->getNameStart()

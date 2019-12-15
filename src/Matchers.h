@@ -18,10 +18,54 @@ namespace sc_ast_matchers {
 // InstanceMatcher
 class InstanceMatcher : public MatchFinder::MatchCallback {
  public:
+  typedef std::tuple<std::string, FieldDecl *> InstanceFieldType;
+  typedef std::tuple<std::string, VarDecl *> InstanceVarType;
   typedef std::vector<std::tuple<std::string, FieldDecl *> > instance_fields;
   typedef std::vector<std::tuple<std::string, VarDecl *> > instance_vars;
 
  public:
+  // Finds the instance with the same type as the argument.
+  void findInstance(CXXRecordDecl *decl) {
+    // First check in the instance_fields.
+    // Check to see if the pointer to the type is the same as the sc_module
+    // type.
+    auto it = std::find_if(
+        list_instance_fields_.begin(), list_instance_fields_.end(),
+        [&decl](const InstanceFieldType &element) {
+          // Get the CXXRecordDecl for the instance.
+          // The instance is the second element in the tuple.
+          auto qtype{get<1>(element)->getType().getTypePtr()};
+          if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
+            if (dp->isRecordType()) {
+              auto rt{dp->getAsCXXRecordDecl()};
+              return (rt == decl);
+            }
+          }
+        });
+
+    if (it != list_instance_fields_.end()) {
+      std::cout << "FOUND a FIELD instance: " << std::endl;
+    }
+
+    auto vit = std::find_if(
+        list_instance_vars_.begin(), list_instance_vars_.end(),
+        [&decl](const InstanceVarType &element) {
+          // Get the CXXRecordDecl for the instance.
+          // The instance is the second element in the tuple.
+          auto qtype{get<1>(element)->getType().getTypePtr()};
+          if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
+            if (dp->isRecordType()) {
+              auto rt{dp->getAsCXXRecordDecl()};
+              return (rt == decl);
+            }
+          }
+        });
+
+    if ( vit != list_instance_vars_.end()) {
+      std::cout << "FOUND a VAR instance: " << std::endl;
+    }
+  }
+
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
         auto match_instances = 
@@ -73,8 +117,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         tn.dump();
         cout << ", NAME: " << name << endl;
 
-        if (dp->isRecordType() ) {
-          auto rt{ dp->getAsCXXRecordDecl() };
+        if (dp->isRecordType()) {
+          auto rt{dp->getAsCXXRecordDecl()};
           cout << "RECORD type: " << rt << "\n";
         }
       }
