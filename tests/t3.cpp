@@ -31,13 +31,17 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
 
   SECTION("No ports bound for test declaration", "[ports]") {
     // The module instances have all the information.
-    auto test_module{module_decl.find("test")};
+    //auto test_module{module_decl.find("test")};
+    auto test_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "test"; })};
     // There is only one module instance
 
     // Check if the proper number of ports are found.
     INFO(
         "FAIL_TEST: A module must have a port bound for it to be "
         "recognized.");
-    REQUIRE(test_module != module_decl.end() );
+    REQUIRE(test_module != module_decl.end());
   }
 }

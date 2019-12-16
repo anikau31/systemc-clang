@@ -25,7 +25,7 @@ Model::~Model() {
 Model::Model(const Model &from) { modules_ = from.modules_; }
 
 void Model::addModuleDecl(ModuleDecl *md) {
-  modules_.insert(Model::modulePairType(md->getName(), md));
+  modules_.push_back(Model::modulePairType(md->getName(), md));
 }
 
 void Model::addModuleDeclInstances(ModuleDecl *md, vector<ModuleDecl *> mdVec) {

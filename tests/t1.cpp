@@ -104,8 +104,17 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(module_decl.size() == 2);
 
     // Check their names, and that their pointers are not nullptr.
-    REQUIRE(module_decl.find("test") != module_decl.end() );
-    REQUIRE(module_decl.find("simple_module") != module_decl.end() );
+
+    auto test_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "test"; })};
+    REQUIRE(test_module != module_decl.end() );
+    auto simple_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "simple_module"; })};
+    REQUIRE(simple_module != module_decl.end() );
 
     SECTION("Checking member ports for test instance", "[ports]") {
       // These checks should be performed on the declarations.
@@ -114,7 +123,12 @@ int sc_main(int argc, char *argv[]) {
       // This is necessary until the parsing code is restructured.
       // There is only one module instance
       auto module_instances{model->getModuleInstanceMap()};
-      auto p_module{module_decl.find("test")};
+      //auto p_module{module_decl.find("test")};
+
+    auto p_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "test"; })};
       auto test_module{module_instances[p_module->second].front()};
 
       // Check if the proper number of ports are found.
@@ -129,7 +143,11 @@ int sc_main(int argc, char *argv[]) {
 
     SECTION("Checking member ports for simple module instance", "[ports]") {
       auto module_instances{model->getModuleInstanceMap()};
-      auto p_module{module_decl.find("simple_module")};
+    //  auto p_module{module_decl.find("simple_module")};
+    auto p_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "simple_module"; })};
       auto test_module{module_instances[p_module->second].front()};
 
       // Check if the proper number of ports are found.

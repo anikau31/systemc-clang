@@ -40,19 +40,37 @@ TEST_CASE("sreg example",
   SECTION("Found sc_modules", "[modules]") {
     INFO( "ERROR: number of sc_module declarations found: " << module_decl.size() );
     CHECK(module_decl.size() == 5);
-    REQUIRE(module_decl.find("test") != module_decl.end() );
-    REQUIRE(module_decl.find("sreg") != module_decl.end() );
+    auto test_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "test"; })};
+
+    auto sreg_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "sreg"; })};
+    REQUIRE(test_module != module_decl.end() );
+    REQUIRE(sreg_module != module_decl.end() );
   }
 
   SECTION("Found sreg instances", "[instances]") {
     auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl.find("sreg")};
+    //auto p_module{module_decl.find("sreg")};
+    auto p_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "sreg"; })};
     REQUIRE(module_instances[p_module->second].size() == 3);
   }
 
   SECTION("Checking sreg_bypass ports", "[ports]") {
     auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl.find("sreg")};
+    //auto p_module{module_decl.find("sreg")};
+    auto p_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "sreg"; })};
+
     auto sreg_bypass{module_instances[p_module->second][0]};
 
     REQUIRE(sreg_bypass->getIPorts().size() == 2);
@@ -66,7 +84,11 @@ TEST_CASE("sreg example",
 
   SECTION("Checking sreg_fwd ports", "[ports]") {
     auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl.find("sreg")};
+    //auto p_module{module_decl.find("sreg")};
+    auto p_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "sreg"; })};
     auto sreg_fwd{module_instances[p_module->second][1]};
 
     REQUIRE(sreg_fwd->getIPorts().size() == 2);
@@ -80,7 +102,11 @@ TEST_CASE("sreg example",
 
   SECTION("Checking sreg_fwd_rev ports", "[ports]") {
     auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl.find("sreg")};
+    //auto p_module{module_decl.find("sreg")};
+    auto p_module{
+        std::find_if(
+            module_decl.begin(), module_decl.end(),
+            [](const auto &element) { return element.first == "sreg"; })};
     auto sreg_fwd_rev{module_instances[p_module->second][2]};
 
     REQUIRE(sreg_fwd_rev->getIPorts().size() == 2);

@@ -21,7 +21,7 @@ using namespace std;
 class Model {
 public:
   typedef pair<string, ModuleDecl *> modulePairType;
-  typedef multimap<string, ModuleDecl *> moduleMapType;
+  typedef std::vector< modulePairType > moduleMapType;
 
   typedef pair<string, EventContainer *> eventPairType;
   typedef map<string, EventContainer *> eventMapType;
