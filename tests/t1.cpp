@@ -100,11 +100,12 @@ int sc_main(int argc, char *argv[]) {
 
   SECTION("Found sc_modules", "[modules]") {
     // There should be 2 modules identified.
+    INFO( "ERROR: number of sc_module declarations found: " << module_decl.size() );
     REQUIRE(module_decl.size() == 2);
 
     // Check their names, and that their pointers are not nullptr.
-    REQUIRE(module_decl["test"] != nullptr);
-    REQUIRE(module_decl["simple_module"] != nullptr);
+    REQUIRE(module_decl.find("test") != module_decl.end() );
+    REQUIRE(module_decl.find("simple_module") != module_decl.end() );
 
     SECTION("Checking member ports for test instance", "[ports]") {
       // These checks should be performed on the declarations.
@@ -113,8 +114,8 @@ int sc_main(int argc, char *argv[]) {
       // This is necessary until the parsing code is restructured.
       // There is only one module instance
       auto module_instances{model->getModuleInstanceMap()};
-      auto p_module{module_decl["test"]};
-      auto test_module{module_instances[p_module].front()};
+      auto p_module{module_decl.find("test")};
+      auto test_module{module_instances[p_module->second].front()};
 
       // Check if the proper number of ports are found.
       REQUIRE(test_module->getIPorts().size() == 3);
@@ -128,8 +129,8 @@ int sc_main(int argc, char *argv[]) {
 
     SECTION("Checking member ports for simple module instance", "[ports]") {
       auto module_instances{model->getModuleInstanceMap()};
-      auto p_module{module_decl["simple_module"]};
-      auto test_module{module_instances[p_module].front()};
+      auto p_module{module_decl.find("simple_module")};
+      auto test_module{module_instances[p_module->second].front()};
 
       // Check if the proper number of ports are found.
       REQUIRE(test_module->getIPorts().size() == 3);

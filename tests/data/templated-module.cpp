@@ -1,7 +1,11 @@
 #include "systemc.h"
 
 SC_MODULE( non_template ) {
+  int x;
+
+  void ef() {}
   SC_CTOR(non_template) {
+    SC_METHOD(ef) {}
   };
 };
 
@@ -14,6 +18,10 @@ SC_MODULE( test ){
 
     sc_in<T> inT;
     sc_in<T> outT;
+
+    // FieldDecl of an sc_module
+    //non_template simple_module;
+
     void entry_function_1() {
         while(true) {
             // do nothing
@@ -33,6 +41,8 @@ int sc_main(int argc, char *argv[]) {
     test_instance.clk(clk);
     test_instance.inS(sig1);
     test_instance.outS(sig1);
+
+    non_template nt("non-templated-module-instance");
 
     return 0;
 }

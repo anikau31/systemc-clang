@@ -186,7 +186,7 @@ void ModuleDeclarationMatcher::run(const MatchFinder::MatchResult &result) {
 
 const ModuleDeclarationMatcher::ModuleDeclarationType &
 ModuleDeclarationMatcher::getFoundModuleDeclarations() const {
-  return found_declarations_;
+  return pruned_declarations_;
 }
 
 const ModuleDeclarationMatcher::PortType &ModuleDeclarationMatcher::getFields(
@@ -213,6 +213,30 @@ const ModuleDeclarationMatcher::PortType &ModuleDeclarationMatcher::getFields(
   assert(true);
 }
 
+void ModuleDeclarationMatcher::pruneMatches() {
+  // Must have found instances.
+  // 1. For every module found, check if there is an instance.
+  // 2. If there is an instance, then add it into the list.
+
+  for (auto const &element : found_declarations_) {
+    auto decl{get<1>(element)};
+    //std::cout << "## fd  name: " << get<0>(element) << "\n "; 
+    if (instance_matcher.findInstance(decl)) {
+      std::cout << "## GOOD MODULE: " << get<0>(element) << std::endl;
+      pruned_declarations_.push_back(element);
+    }
+  }
+
+  for (auto const &element : found_template_declarations_) {
+    auto decl{get<1>(element)};
+    //std::cout << "## ftd name: " << get<0>(element) << "\n "; 
+    if (instance_matcher.findInstance(decl)) {
+      std::cout << "## GOOD TEMPLATE MODULE: " << get<0>(element) << std::endl;
+      pruned_declarations_.push_back(element);
+    }
+  }
+}
+
 void ModuleDeclarationMatcher::dump() {
   for (const auto &i : found_declarations_) {
     cout << "module name         : " << get<0>(i) << ", " << get<1>(i)
@@ -221,6 +245,11 @@ void ModuleDeclarationMatcher::dump() {
 
   for (const auto &i : found_template_declarations_) {
     cout << "template module name: " << get<0>(i) << ", " << get<1>(i)
+         << std::endl;
+  }
+
+  for (const auto &i : pruned_declarations_) {
+    cout << "pruned module name: " << get<0>(i) << ", " << get<1>(i)
          << std::endl;
   }
 

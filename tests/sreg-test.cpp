@@ -36,22 +36,24 @@ TEST_CASE("sreg example",
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
 
+  cout << "MODULE SIZE: " << module_decl.size();
   SECTION("Found sc_modules", "[modules]") {
-    REQUIRE(module_decl.size() == 2);
-    REQUIRE(module_decl["test"] != nullptr);
-    REQUIRE(module_decl["sreg"] != nullptr);
+    INFO( "ERROR: number of sc_module declarations found: " << module_decl.size() );
+    CHECK(module_decl.size() == 5);
+    REQUIRE(module_decl.find("test") != module_decl.end() );
+    REQUIRE(module_decl.find("sreg") != module_decl.end() );
   }
 
   SECTION("Found sreg instances", "[instances]") {
     auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl["sreg"]};
-    REQUIRE(module_instances[p_module].size() == 3);
+    auto p_module{module_decl.find("sreg")};
+    REQUIRE(module_instances[p_module->second].size() == 3);
   }
 
   SECTION("Checking sreg_bypass ports", "[ports]") {
     auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl["sreg"]};
-    auto sreg_bypass{module_instances[p_module][0]};
+    auto p_module{module_decl.find("sreg")};
+    auto sreg_bypass{module_instances[p_module->second][0]};
 
     REQUIRE(sreg_bypass->getIPorts().size() == 2);
     REQUIRE(sreg_bypass->getOPorts().size() == 0);
@@ -64,8 +66,8 @@ TEST_CASE("sreg example",
 
   SECTION("Checking sreg_fwd ports", "[ports]") {
     auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl["sreg"]};
-    auto sreg_fwd{module_instances[p_module][1]};
+    auto p_module{module_decl.find("sreg")};
+    auto sreg_fwd{module_instances[p_module->second][1]};
 
     REQUIRE(sreg_fwd->getIPorts().size() == 2);
     REQUIRE(sreg_fwd->getOPorts().size() == 0);
@@ -78,8 +80,8 @@ TEST_CASE("sreg example",
 
   SECTION("Checking sreg_fwd_rev ports", "[ports]") {
     auto module_instances{model->getModuleInstanceMap()};
-    auto p_module{module_decl["sreg"]};
-    auto sreg_fwd_rev{module_instances[p_module][2]};
+    auto p_module{module_decl.find("sreg")};
+    auto sreg_fwd_rev{module_instances[p_module->second][2]};
 
     REQUIRE(sreg_fwd_rev->getIPorts().size() == 2);
     REQUIRE(sreg_fwd_rev->getOPorts().size() == 0);

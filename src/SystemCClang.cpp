@@ -37,11 +37,20 @@ bool SystemCConsumer::fire() {
   // This is important so that the top-level module can be found.
   //
   os_ << "================ TESTMATCHER =============== \n";
+
+  //InstanceMatcher match_instances{};
   ModuleDeclarationMatcher module_declaration_handler{};
   MatchFinder matchRegistry{};
-  module_declaration_handler.registerMatchers(matchRegistry);
+
   // Run all the matchers
+  
+  module_declaration_handler.registerMatchers(matchRegistry);
+  //match_instances.registerMatchers( matchRegistry );
+
   matchRegistry.matchAST(getContext());
+  //match_instances.dump();
+  module_declaration_handler.pruneMatches();
+  os_ << "== Print module declarations pruned\n";
   module_declaration_handler.dump();
   os_ << "================ END =============== \n";
 
@@ -49,6 +58,8 @@ bool SystemCConsumer::fire() {
   //
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
+
+  os_ << "@@@@@@@@@@@@ FOUND MODUE: " << found_module_declarations.size() <<"\n";
   auto found_top_module{std::find_if(
       found_module_declarations.begin(), found_module_declarations.end(),
       [this](std::tuple<std::string, CXXRecordDecl *> &element) {
@@ -66,17 +77,18 @@ bool SystemCConsumer::fire() {
   // Every module declaration that is found should be added to the model.
   //
 
-  /*
   for (auto const &element : found_module_declarations) {
     auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
     os_ << "@@@@@ name: " << get<0>(element) << "\n";
     systemcModel_->addModuleDecl(module_declaration);
   }
-  */
+  auto mdv{ systemcModel_->getModuleDecl() };
+  os_ << "@@@@@@@ SIZE MDV: " << mdv.size() << "\n";
 
+  /*
   // Find the sc_modules
   //
-  //
+  
   FindSCModules scmod{tu, os_};
 
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
@@ -88,6 +100,7 @@ bool SystemCConsumer::fire() {
     systemcModel_->addModuleDecl(md);
 
   }
+  */
 
   ////////////////////////////////////////////////////////////////
   // Find the sc_main

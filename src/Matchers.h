@@ -25,7 +25,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
  public:
   // Finds the instance with the same type as the argument.
-  void findInstance(CXXRecordDecl *decl) {
+  bool findInstance(CXXRecordDecl *decl) {
     // First check in the instance_fields.
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
@@ -35,8 +35,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           // Get the CXXRecordDecl for the instance.
           // The instance is the second element in the tuple.
           auto qtype{get<1>(element)->getType().getTypePtr()};
+            if (qtype->isRecordType()) {
           if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
-            if (dp->isRecordType()) {
               auto rt{dp->getAsCXXRecordDecl()};
               return (rt == decl);
             }
@@ -45,6 +45,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     if (it != list_instance_fields_.end()) {
       std::cout << "FOUND a FIELD instance: " << std::endl;
+      return  true;
     }
 
     auto vit = std::find_if(
@@ -52,18 +53,31 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         [&decl](const InstanceVarType &element) {
           // Get the CXXRecordDecl for the instance.
           // The instance is the second element in the tuple.
+          // Returns a Type*
           auto qtype{get<1>(element)->getType().getTypePtr()};
+          /*
           if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
             if (dp->isRecordType()) {
               auto rt{dp->getAsCXXRecordDecl()};
               return (rt == decl);
             }
+          } else 
+          */
+
+          if ( qtype->isRecordType() ) {
+          std::cout << " ==> class type\n";
+          auto rt { qtype->getAsCXXRecordDecl() };
+          std::cout << " r: " << rt << " :::: " << qtype->getAsRecordDecl() << endl;
+          return ( rt == decl );
           }
         });
 
     if ( vit != list_instance_vars_.end()) {
       std::cout << "FOUND a VAR instance: " << std::endl;
+      return  true;
     }
+
+    return false;
   }
 
   void registerMatchers(MatchFinder &finder) {
@@ -94,9 +108,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       cout << "Found a member field instance: " << name << endl;
       list_instance_fields_.push_back(std::make_tuple(name, instance));
 
-      // Get the pointer to the type declaration.
-      auto qtype{instance->getType().getTypePtr()};
-      qtype->dump();
     }
 
     if (auto instance = const_cast<VarDecl *>(
@@ -105,6 +116,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       cout << "Found a member variable instance: " << name << endl;
       list_instance_vars_.push_back(std::make_tuple(name, instance));
 
+      /*
       // const Type * returned
       //
       cout << "Figure out type of vardecl\n";
@@ -122,8 +134,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           cout << "RECORD type: " << rt << "\n";
         }
       }
+      */
 
-      qtype->dump();
     }
   }
 
@@ -193,11 +205,13 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   const ModuleDeclarationType &getFoundModuleDeclarations() const;
   const PortType &getFields(const std::string &port_type);
 
+  void pruneMatches();
   void dump();
 
  private:
   ModuleDeclarationType found_declarations_;
   ModuleDeclarationType found_template_declarations_;
+  ModuleDeclarationType pruned_declarations_;
   
   // Match nested instances
   InstanceMatcher  instance_matcher; 

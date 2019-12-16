@@ -28,12 +28,29 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
           .release();
 
   llvm::outs() << "================ TESTMATCHER =============== \n";
+
+//  InstanceMatcher match_instances{};
+
+  ModuleDeclarationMatcher module_declaration_handler{};
+  MatchFinder matchRegistry{};
+  module_declaration_handler.registerMatchers(matchRegistry);
+  // Run all the matchers
+  matchRegistry.matchAST(from_ast->getASTContext());
+  module_declaration_handler.pruneMatches();
+  module_declaration_handler.dump();
+  
+  //match_instances.registerMatchers( matchRegistry );
+  //match_instances.dump();
+ 
+
+  /*
   ModuleDeclarationMatcher module_declaration_handler{};
   MatchFinder matchRegistry{};
   module_declaration_handler.registerMatchers(matchRegistry);
   // Run all the matchers
   matchRegistry.matchAST(from_ast->getASTContext());
   module_declaration_handler.dump();
+  */
   llvm::outs() << "================ END =============== \n";
 
 
