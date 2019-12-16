@@ -79,11 +79,8 @@ bool SystemCConsumer::fire() {
 
   for (auto const &element : found_module_declarations) {
     auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
-    os_ << "@@@@@ name: " << get<0>(element) << "\n";
     systemcModel_->addModuleDecl(module_declaration);
   }
-  auto mdv{ systemcModel_->getModuleDecl() };
-  os_ << "@@@@@@@ SIZE MDV: " << mdv.size() << "\n";
 
   /*
   // Find the sc_modules
@@ -139,11 +136,10 @@ bool SystemCConsumer::fire() {
     int numInstances{mainmd->getNumInstances()};
     vector<ModuleDecl *> moduleDeclVec;
 
-    os_ << "\n";
-    os_ << "For module: " << mit->first << " num instance : " << numInstances;
+    os_ << "\nFor module: " << mit->first << " num instance : " << numInstances << "\n";
 
     for (unsigned int num{0}; num < numInstances; ++num) {
-      ModuleDecl *md = new ModuleDecl{*mainmd};
+      auto md{ new ModuleDecl{*mainmd} };
 
       // Find the template arguments for the class.
       FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};

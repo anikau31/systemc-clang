@@ -36,10 +36,16 @@ TEST_CASE("sreg example",
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
 
+  cout << "\n";
+  for (const auto &decl : module_decl ) {
+    cout << "[ " << decl.first  << "    ]" << decl.second << "   " << decl.second->getInstanceName() << "\n"; 
+  }
+
   cout << "MODULE SIZE: " << module_decl.size();
   SECTION("Found sc_modules", "[modules]") {
     INFO( "ERROR: number of sc_module declarations found: " << module_decl.size() );
     CHECK(module_decl.size() == 5);
+
     auto test_module{
         std::find_if(
             module_decl.begin(), module_decl.end(),
