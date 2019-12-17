@@ -120,6 +120,7 @@ bool SystemCConsumer::fire() {
   ////////////////////////////////////////////////////////////////
   // Find the netlist.
   ////////////////////////////////////////////////////////////////
+  // This actually also finds instances, but now we have AST matchers to do it.
   FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
   findNetlist.dump();
   systemcModel_->addNetlist(findNetlist);
@@ -129,11 +130,12 @@ bool SystemCConsumer::fire() {
   ////////////////////////////////////////////////////////////////
   Model::moduleMapType moduleMap{systemcModel_->getModuleDecl()};
 
+  // <string, ModuleDecl*>
   for (Model::moduleMapType::iterator mit = moduleMap.begin(),
                                       mitend = moduleMap.end();
        mit != mitend; mit++) {
-    ModuleDecl *mainmd{mit->second};
-    int numInstances{mainmd->getNumInstances()};
+    ModuleDecl *mainmd{ mit->second };
+    int numInstances{ mainmd->getNumInstances() };
     vector<ModuleDecl *> moduleDeclVec;
 
     os_ << "\nFor module: " << mit->first << " num instance : " << numInstances << "\n";

@@ -265,7 +265,7 @@ void ModuleDeclarationMatcher::dump() {
   // }
   //
 
-  cout << "Printing ports" << endl;
+  cout << "## Printing ports" << endl;
   printTemplateArguments(clock_ports_);
   printTemplateArguments(in_ports_);
   printTemplateArguments(out_ports_);

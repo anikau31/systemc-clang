@@ -15,9 +15,15 @@ using namespace scpar;
 
 namespace sc_ast_matchers {
 
+//
 // InstanceMatcher
+//
+//
 class InstanceMatcher : public MatchFinder::MatchCallback {
  public:
+  typedef std::tuple<std::string, Decl *> InstanceDeclType;
+  typedef std::vector<InstanceDeclType> InstanceDeclarationsType;
+
   typedef std::tuple<std::string, FieldDecl *> InstanceFieldType;
   typedef std::tuple<std::string, VarDecl *> InstanceVarType;
   typedef std::vector<std::tuple<std::string, FieldDecl *> > instance_fields;
@@ -29,54 +35,37 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // First check in the instance_fields.
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
-    auto it = std::find_if(
-        list_instance_fields_.begin(), list_instance_fields_.end(),
-        [&decl](const InstanceFieldType &element) {
+
+    auto found_it = std::find_if(
+        instances_.begin(), instances_.end(),
+        [&decl](const InstanceDeclType &element) {
           // Get the CXXRecordDecl for the instance.
           // The instance is the second element in the tuple.
-          auto qtype{get<1>(element)->getType().getTypePtr()};
+          auto p_field_var_decl{get<1>(element)};
+
+          if (auto *p_field{dyn_cast<FieldDecl>(p_field_var_decl)}) {
+            auto qtype{p_field->getType().getTypePtr()};
             if (qtype->isRecordType()) {
-          if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
-              auto rt{dp->getAsCXXRecordDecl()};
+              if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
+                auto rt{dp->getAsCXXRecordDecl()};
+                return (rt == decl);
+              }
+            }
+          } else {
+            // VarDecl
+            auto p_var{dyn_cast<VarDecl>(p_field_var_decl)};
+            auto qtype{p_var->getType().getTypePtr()};
+            if (qtype->isRecordType()) {
+              auto rt{qtype->getAsCXXRecordDecl()};
               return (rt == decl);
             }
           }
         });
 
-    if (it != list_instance_fields_.end()) {
-      std::cout << "FOUND a FIELD instance: " << std::endl;
-      return  true;
+    if (found_it != instances_.end()) {
+      std::cout << "FOUND AN FIELD instance: " << std::endl;
+      return true;
     }
-
-    auto vit = std::find_if(
-        list_instance_vars_.begin(), list_instance_vars_.end(),
-        [&decl](const InstanceVarType &element) {
-          // Get the CXXRecordDecl for the instance.
-          // The instance is the second element in the tuple.
-          // Returns a Type*
-          auto qtype{get<1>(element)->getType().getTypePtr()};
-          /*
-          if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
-            if (dp->isRecordType()) {
-              auto rt{dp->getAsCXXRecordDecl()};
-              return (rt == decl);
-            }
-          } else 
-          */
-
-          if ( qtype->isRecordType() ) {
-          std::cout << " ==> class type\n";
-          auto rt { qtype->getAsCXXRecordDecl() };
-          std::cout << " r: " << rt << " :::: " << qtype->getAsRecordDecl() << endl;
-          return ( rt == decl );
-          }
-        });
-
-    if ( vit != list_instance_vars_.end()) {
-      std::cout << "FOUND a VAR instance: " << std::endl;
-      return  true;
-    }
-
     return false;
   }
 
@@ -106,53 +95,35 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
       cout << "Found a member field instance: " << name << endl;
-      list_instance_fields_.push_back(std::make_tuple(name, instance));
 
+      instances_.push_back(std::make_tuple(name, instance));
     }
 
     if (auto instance = const_cast<VarDecl *>(
             result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
       cout << "Found a member variable instance: " << name << endl;
-      list_instance_vars_.push_back(std::make_tuple(name, instance));
-
-      /*
-      // const Type * returned
-      //
-      cout << "Figure out type of vardecl\n";
-      auto qtype{instance->getType().getTypePtr()};
-      if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
-        auto tn{dp->getTemplateName()};
-        auto tunder{tn.getUnderlying()};
-        auto name{tunder.getAsTemplateDecl()->getNameAsString()};
-        cout << "template name: \n";
-        tn.dump();
-        cout << ", NAME: " << name << endl;
-
-        if (dp->isRecordType()) {
-          auto rt{dp->getAsCXXRecordDecl()};
-          cout << "RECORD type: " << rt << "\n";
-        }
-      }
-      */
-
+      instances_.push_back(std::make_tuple(name, instance));
     }
   }
 
   void dump() {
-    for (const auto &i : list_instance_fields_) {
-      cout << "fields module name: " << get<0>(i) << ", " << get<1>(i)
+    // Instances holds both FieldDecl and VarDecl as its base class Decl.
+    for (const auto &i : instances_) {
+      cout << "module declarations name: " << get<0>(i) << ", " << get<1>(i)
            << std::endl;
-    }
-    for (const auto &i : list_instance_vars_) {
-      cout << "vars module name: " << get<0>(i) << ", " << get<1>(i)
-           << std::endl;
+
+      auto p_field_var_decl{get<1>(i)};
+      if (isa<FieldDecl>(p_field_var_decl)) {
+        cout << " ==> FieldDecl\n";
+      } else {
+        cout << " ==> VarDecl\n";
+      }
     }
   }
 
  private:
-  instance_fields list_instance_fields_;
-  instance_vars list_instance_vars_;
+  InstanceDeclarationsType instances_;
 };
 
 // FieldMatcher class
@@ -187,6 +158,10 @@ class FieldMatcher : public MatchFinder::MatchCallback {
   std::vector<std::string> input_port_names;
 };
 
+//
+// Class ModuleDeclarationMatcher
+//
+//
 class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   //
  public:
