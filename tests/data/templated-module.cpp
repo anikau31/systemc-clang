@@ -1,5 +1,7 @@
 #include "systemc.h"
 
+typedef float MY_FLOAT;
+
 SC_MODULE( non_template ) {
   int x;
 
@@ -44,5 +46,6 @@ int sc_main(int argc, char *argv[]) {
 
     non_template nt("non-templated-module-instance");
 
+    test<MY_FLOAT, double> test_double2("testing_double_double");
     return 0;
 }

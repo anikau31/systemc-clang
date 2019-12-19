@@ -39,9 +39,6 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   module_declaration_handler.pruneMatches();
   module_declaration_handler.dump();
   
-  //match_instances.registerMatchers( matchRegistry );
-  //match_instances.dump();
- 
 
   /*
   ModuleDeclarationMatcher module_declaration_handler{};
@@ -54,12 +51,10 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   llvm::outs() << "================ END =============== \n";
 
 
-
-
   SystemCConsumer sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
-  auto model{sc.getSystemCModel()};
-  auto module_decl{model->getModuleDecl()};
+  //auto model{sc.getSystemCModel()};
+  //auto module_decl{model->getModuleDecl()};
 
   SECTION("Test systemc-clang AST matchers ", "[matchers]") {
     // The module instances have all the information.

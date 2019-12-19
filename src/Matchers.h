@@ -62,8 +62,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         });
 
     if (found_it != instances_.end()) {
-      cout << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", "
-           << get<1>(*found_it) << endl;
+      // cout << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", "
+      // << get<1>(*found_it) << endl;
       // This is an odd way to set tuples.  Perhaps replace with a nicer
       // interface.
       get<0>(instance) = get<0>(*found_it);
@@ -100,7 +100,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (auto instance = const_cast<FieldDecl *>(
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      cout << "Found a member field instance: " << name << endl;
+      cout << "@@ Found a member field instance: " << name << endl;
 
       instances_.push_back(std::make_tuple(name, instance));
     }
@@ -108,7 +108,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (auto instance = const_cast<VarDecl *>(
             result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      cout << "Found a member variable instance: " << name << endl;
+      cout << "@@ Found a member variable instance: " << name << endl;
 
       if (auto instance_name = const_cast<CXXConstructExpr *>(
               result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
@@ -124,9 +124,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         std::string s;
         llvm::raw_string_ostream sstream(s);
         first_arg->printPretty(sstream, 0, Policy);
-        cout << "instance name: " << sstream.str() << "\n";
+        std::string strip_quote_name{sstream.str()};
+        strip_quote_name.erase(
+            std::remove(strip_quote_name.begin(), strip_quote_name.end(), '\"'),
+            strip_quote_name.end());
 
-        instances_.push_back(std::make_tuple(sstream.str(), instance));
+        instances_.push_back(std::make_tuple(strip_quote_name, instance));
       }
     }
   }
@@ -235,8 +238,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   const ModuleDeclarationMapType &getFoundModuleDeclarations() const {
     return pruned_declarations_map_;
   }
-
-  const PortType &getFields(const std::string &port_type);
 
   void pruneMatches();
   void dump();

@@ -184,30 +184,6 @@ void ModuleDeclarationMatcher::run(const MatchFinder::MatchResult &result) {
   }
 }
 
-const ModuleDeclarationMatcher::PortType &ModuleDeclarationMatcher::getFields(
-    const std::string &port_type) {
-  if (port_type == "sc_in") {
-    return in_ports_;
-  }
-  if (port_type == "sc_inout") {
-    return inout_ports_;
-  }
-  if (port_type == "sc_out") {
-    return out_ports_;
-  }
-  if (port_type == "sc_signal") {
-    return signal_fields_;
-  }
-  if (port_type == "sc_in_clk") {
-    return clock_ports_;
-  }
-  if (port_type == "others") {
-    return other_fields_;
-  }
-  // You should never get here.
-  assert(true);
-}
-
 void ModuleDeclarationMatcher::pruneMatches() {
   // Must have found instances.
   // 1. For every module found, check if there is an instance.
@@ -215,70 +191,75 @@ void ModuleDeclarationMatcher::pruneMatches() {
 
   for (auto const &element : found_declarations_) {
     auto decl{get<1>(element)};
-    //std::cout << "## fd  name: " << get<0>(element) << "\n "; 
-    InstanceListType  instance_list;
-    InstanceMatcher::InstanceDeclType instance; 
+    // std::cout << "## fd  name: " << get<0>(element) << "\n ";
+    InstanceListType instance_list;
+    InstanceMatcher::InstanceDeclType instance;
     if (instance_matcher.findInstance(decl, instance)) {
-      std::cout << "## GOOD MODULE: " << get<0>(element) << std::endl;
-      pruned_declarations_.push_back(element);
-      pruned_declarations_map_.insert( ModuleDeclarationPairType( decl, get<0>(element) ));
+      // pruned_declarations_.push_back(element);
+      pruned_declarations_map_.insert(
+          ModuleDeclarationPairType(decl, get<0>(element)));
       instance_list.push_back(instance);
+    declaration_instance_map_.insert( DeclarationInstancePairType(decl, instance_list));
     }
 
-    declaration_instance_map_.insert(DeclarationInstancePairType(decl, instance_list));
   }
 
   for (auto const &element : found_template_declarations_) {
     auto decl{get<1>(element)};
-    //std::cout << "## ftd name: " << get<0>(element) << "\n "; 
+    // std::cout << "## ftd name: " << get<0>(element) << "\n ";
     InstanceListType instance_list;
-    InstanceMatcher::InstanceDeclType instance; 
+    InstanceMatcher::InstanceDeclType instance;
     if (instance_matcher.findInstance(decl, instance)) {
-      std::cout << "## GOOD TEMPLATE MODULE: " << get<0>(element) << std::endl;
-      pruned_declarations_.push_back(element);
-      pruned_declarations_map_.insert( ModuleDeclarationPairType( decl, get<0>(element) ));
+      // pruned_declarations_.push_back(element);
+      pruned_declarations_map_.insert(
+          ModuleDeclarationPairType(decl, get<0>(element)));
       instance_list.push_back(instance);
+    declaration_instance_map_.insert(
+        DeclarationInstancePairType(decl, instance_list));
     }
-    declaration_instance_map_.insert(DeclarationInstancePairType(decl, instance_list));
   }
 }
 
 void ModuleDeclarationMatcher::dump() {
+
+  cout << "## Non-template module declarations: " << found_declarations_.size() << "\n";
   for (const auto &i : found_declarations_) {
     cout << "module name         : " << get<0>(i) << ", " << get<1>(i)
          << std::endl;
   }
 
+  cout << "## Template module declarations: " << found_template_declarations_.size() << "\n";
   for (const auto &i : found_template_declarations_) {
     cout << "template module name: " << get<0>(i) << ", " << get<1>(i)
          << std::endl;
   }
 
-  for (const auto &i : pruned_declarations_) {
-    cout << "pruned module name: " << get<0>(i) << ", " << get<1>(i)
-         << std::endl;
-  }
-
-  cout << "## Pruned declaration Map\n";
+  // for (const auto &i : pruned_declarations_) {
+  // cout << "pruned module name: " << get<0>(i) << ", " << get<1>(i)
+  // << std::endl;
+  // }
+  
+  cout << "## Pruned declaration Map: " << pruned_declarations_map_.size() << "\n";
   for (const auto &i : pruned_declarations_map_) {
-    auto decl{ i.first };
-    auto decl_name{ i.second }; 
-    cout << "CXXRecordDecl* " << i.first << ", module name: " << decl_name << "\n";
+    auto decl{i.first};
+    auto decl_name{i.second};
+    cout << "CXXRecordDecl* " << i.first << ", module name: " << decl_name
+         << "\n";
   }
-
 
   // Print the instances.
   instance_matcher.dump();
 
-  cout << "\n## Dump map of decl->instances\n";
+  cout << "\n## Dump map of decl->instances: " << declaration_instance_map_.size() << "\n";
 
-  for (const auto &i : declaration_instance_map_ ) {
-    auto decl{ i.first };
-    auto instance_list{ i.second };
+  for (const auto &i : declaration_instance_map_) {
+    auto decl{i.first};
+    auto instance_list{i.second};
 
     cout << "decl: " << decl->getIdentifier()->getNameStart();
-    for (const auto &instance : instance_list ) {
-      cout << ", instance type: " <<  get<0>(instance)  << ",   " << get<1>(instance) << "\n";
+    for (const auto &instance : instance_list) {
+      cout << ", instance type: " << get<0>(instance) << ",   "
+           << get<1>(instance) << "\n";
     }
   }
 

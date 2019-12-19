@@ -17,10 +17,30 @@ FindTemplateParameters::FindTemplateParameters(CXXRecordDecl *declaration,
 bool FindTemplateParameters::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
   if (IdentifierInfo *info = declaration_->getIdentifier()) {
     auto module_name = info->getNameStart();
-
     // Check if the class is a templated module class.
+
+    // This will only be called on instances of template specialized classes (so
+    // it seems). This should provide to the actual template arguments. For
+    // example, int.
+
+    if (const auto tdecl =
+            dyn_cast<ClassTemplateSpecializationDecl>(declaration)) {
+      os_ << "@@ template specialization args: " << module_name << "\n";
+      template_args_ = &tdecl->getTemplateArgs();
+      for ( size_t i{0} ; i < template_args_->size(); ++i) {
+        auto q{ template_args_->get(i).getAsType() };
+        auto name { q.getAsString() };
+      os_ << "@@ size: " << template_args_->size() << ", arg0: " << name << "\n";
+
+      }
+    }
+
+    // TODO: I'm not sure if this is required since the above should capture
+    // sc_in declarations too.  But, I'll have to add a test for it.
+    // This will provide access to the actual template parameters
     auto template_args{declaration->getDescribedClassTemplate()};
     if (template_args != nullptr) {
+      os_ << "@@ template described class args: " << module_name << "\n";
       template_parameters_ = template_args->getTemplateParameters();
     }
   }
@@ -37,7 +57,7 @@ vector<string> FindTemplateParameters::getTemplateParameters() const {
 
   for (auto parm : template_parameters_->asArray()) {
     parm_list.push_back(parm->getName());
-    //        os_ << "Parm: " << parm->getName() << "\n";
+    os_ << "Parm: " << parm->getName() << "\n";
   }
   return parm_list;
 }

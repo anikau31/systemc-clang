@@ -24,6 +24,7 @@ private:
   CXXRecordDecl *declaration_;
   llvm::raw_ostream &os_;
   TemplateParameterList *template_parameters_;
+  const TemplateArgumentList *template_args_;
 };
 } // namespace scpar
 #endif

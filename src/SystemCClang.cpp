@@ -59,9 +59,6 @@ bool SystemCConsumer::fire() {
   // Map CXXRecordDecl => std::string
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
-
-  os_ << "@@@@@@@@@@@@ FOUND MODUE: " << found_module_declarations.size()
-      << "\n";
   auto found_top_module{std::find_if(
       found_module_declarations.begin(), found_module_declarations.end(),
       [this](
@@ -151,17 +148,28 @@ bool SystemCConsumer::fire() {
     os_ << "CXXRecordDecl* " << cxx_decl
         << ", module type: " << found_module_declarations[cxx_decl];
     for (const auto &instance : instance_list) {
-      auto add_module_decl{ new ModuleDecl{ found_module_declarations[cxx_decl], cxx_decl } };
-    add_module_decl->setInstanceName( get<0>(instance) );
-    systemcModel_->addModuleDecl( add_module_decl );
+      auto add_module_decl{
+          new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
 
-      os_ << ", instance name: " << get<0>(instance) << ", Decl* "
-          << get<1>(instance) << "\n";
-    add_module_decl->dump_json();
+
+      // Insert what you know about the parsed sc_module
+      // 1. Insert the instance name from Matchers
+      add_module_decl->setInstanceName(get<0>(instance));
+
+      // 2. Find the template arguments for the class.
+      FindTemplateParameters tparms{cxx_decl, os_};
+      add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
+      add_module_decl->dump_json();
+      //cxx_decl->dump();
+
+
+      systemcModel_->addModuleDecl(add_module_decl);
+
+      //os_ << ", instance name: " << get<0>(instance) << ", Decl* " << get<1>(instance) << "\n";
     }
     os_ << "\n";
-
   }
+
   ////////////////////////////////////////////////////////////////
   // Figure out the module map.
   ////////////////////////////////////////////////////////////////
