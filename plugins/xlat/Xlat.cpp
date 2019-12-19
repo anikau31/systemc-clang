@@ -111,6 +111,7 @@ void Xlat::xlattype(FindTemplateTypes *tt, hNodep &h_typeinfo) {
 
   scpar::FindTemplateTypes::type_vector_t ttargs =
       tt->getTemplateArgumentsType();
+  os_ << "number of type args is " << ttargs.size() << "\n";
   for (auto const &targ : ttargs) {
     h_typeinfo->child_list.push_back(
         new hNode(targ.getTypeName(), hNode::hdlopsEnum::hType));
