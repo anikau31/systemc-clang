@@ -24,10 +24,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   typedef std::tuple<std::string, Decl *> InstanceDeclType;
   typedef std::vector<InstanceDeclType> InstanceDeclarationsType;
 
-  typedef std::tuple<std::string, FieldDecl *> InstanceFieldType;
-  typedef std::tuple<std::string, VarDecl *> InstanceVarType;
-  typedef std::vector<std::tuple<std::string, FieldDecl *> > instance_fields;
-  typedef std::vector<std::tuple<std::string, VarDecl *> > instance_vars;
+ private:
+  InstanceDeclarationsType instances_;
 
  public:
   // Finds the instance with the same type as the argument.
@@ -52,7 +50,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
               }
             }
           } else {
-            // VarDecl
+            // This is a VarDecl instance.
             auto p_var{dyn_cast<VarDecl>(p_field_var_decl)};
             auto qtype{p_var->getType().getTypePtr()};
             if (qtype->isRecordType()) {
@@ -82,7 +80,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           varDecl( 
               hasType( 
                 cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
-                )
+                ), 
+              hasDescendant(cxxConstructExpr(hasArgument(0, stringLiteral().bind("constructor_arg"))).bind("constructor_expr"))
               ).bind("instances_in_vardecl");
     /* clang-format on */
 
@@ -103,7 +102,34 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
       cout << "Found a member variable instance: " << name << endl;
+      instance->dump();
       instances_.push_back(std::make_tuple(name, instance));
+    }
+
+    if (auto instance_name = const_cast<CXXConstructExpr *>(
+            result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
+      cout << "Found constructor expression argument: "
+           << instance_name->getNumArgs() << "\n";
+      auto first_arg{instance_name->getArg(0)};
+
+      cout << " L VALUE \n";
+      first_arg->dump();
+
+      clang::LangOptions LangOpts;
+      LangOpts.CPlusPlus = true;
+      clang::PrintingPolicy Policy(LangOpts);
+
+      std::string s;
+      llvm::raw_string_ostream sstream(s);
+      first_arg->printPretty(sstream, 0, Policy);
+      cout << "instance name: " << sstream.str() << "\n";
+
+      if (auto instance_name = const_cast<Stmt *>(
+              result.Nodes.getNodeAs<Stmt>("constructor_arg"))) {
+        cout << "Found instance name: " << instance_name->getStmtClassName()
+             << ": \n";
+        instance_name->dump();
+      }
     }
   }
 
@@ -122,9 +148,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     }
   }
 
- private:
-  InstanceDeclarationsType instances_;
-};
+};  // namespace sc_ast_matchers
 
 // FieldMatcher class
 class FieldMatcher : public MatchFinder::MatchCallback {
@@ -158,7 +182,8 @@ class FieldMatcher : public MatchFinder::MatchCallback {
   std::vector<std::string> input_port_names;
 };
 
-//
+
+///////////////////////////////////////////////////////////////////////////////
 // Class ModuleDeclarationMatcher
 //
 //
@@ -169,24 +194,21 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       ModuleDeclarationType;
   typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
 
+  typedef std::vector<InstanceMatcher::InstanceDeclType> InstanceListType;
+  typedef std::pair<CXXRecordDecl*, InstanceListType > DeclarationInstancePairType;
+  typedef std::map< CXXRecordDecl*, InstanceListType > DeclarationsToInstancesMapType;
+
  private:
   // Template functions.
   template <typename T>
      void insert_port( PortType & port, T *decl );
 
- public:
-  void registerMatchers(MatchFinder &finder);
-  virtual void run(const MatchFinder::MatchResult &result);
-  const ModuleDeclarationType &getFoundModuleDeclarations() const;
-  const PortType &getFields(const std::string &port_type);
-
-  void pruneMatches();
-  void dump();
-
  private:
   ModuleDeclarationType found_declarations_;
   ModuleDeclarationType found_template_declarations_;
   ModuleDeclarationType pruned_declarations_;
+  DeclarationsToInstancesMapType declaration_instance_map_;
+
   
   // Match nested instances
   InstanceMatcher  instance_matcher; 
@@ -198,6 +220,17 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   PortType inout_ports_;
   PortType other_fields_;
   PortType signal_fields_;
+
+
+ public:
+  const DeclarationsToInstancesMapType & getInstances() { return declaration_instance_map_; }; 
+  void registerMatchers(MatchFinder &finder);
+  virtual void run(const MatchFinder::MatchResult &result);
+  const ModuleDeclarationType &getFoundModuleDeclarations() const;
+  const PortType &getFields(const std::string &port_type);
+
+  void pruneMatches();
+  void dump();
 };
 
 };  // namespace sc_ast_matchers

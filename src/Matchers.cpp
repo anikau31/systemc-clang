@@ -221,19 +221,26 @@ void ModuleDeclarationMatcher::pruneMatches() {
   for (auto const &element : found_declarations_) {
     auto decl{get<1>(element)};
     //std::cout << "## fd  name: " << get<0>(element) << "\n "; 
+    InstanceListType  instance_list;
     if (instance_matcher.findInstance(decl)) {
       std::cout << "## GOOD MODULE: " << get<0>(element) << std::endl;
       pruned_declarations_.push_back(element);
+      instance_list.push_back(element);
     }
+
+    declaration_instance_map_.insert(DeclarationInstancePairType(decl, instance_list));
   }
 
   for (auto const &element : found_template_declarations_) {
     auto decl{get<1>(element)};
     //std::cout << "## ftd name: " << get<0>(element) << "\n "; 
+    InstanceListType instance_list;
     if (instance_matcher.findInstance(decl)) {
       std::cout << "## GOOD TEMPLATE MODULE: " << get<0>(element) << std::endl;
       pruned_declarations_.push_back(element);
+      instance_list.push_back(element);
     }
+    declaration_instance_map_.insert(DeclarationInstancePairType(decl, instance_list));
   }
 }
 
@@ -256,14 +263,17 @@ void ModuleDeclarationMatcher::dump() {
   // Print the instances.
   instance_matcher.dump();
 
-  // Map structure
-  // Input ports
-  // for ( const auto &i: in_ports_ ) {
-  // llvm::outs() << "name: " << i.first << " ";
-  // (i.second)->printTemplateArguments(llvm::outs());
-  // llvm::outs() << "\n";
-  // }
-  //
+  cout << "\n## Dump map of decl->instances\n";
+
+  for (const auto &i : declaration_instance_map_ ) {
+    auto decl{ i.first };
+    auto instance_list{ i.second };
+
+    cout << "decl: " << decl->getIdentifier()->getNameStart();
+    for (const auto &instance : instance_list ) {
+      cout << ", instance type: " <<  get<0>(instance)  << ",   " << get<1>(instance) << "\n";
+    }
+  }
 
   cout << "## Printing ports" << endl;
   printTemplateArguments(clock_ports_);

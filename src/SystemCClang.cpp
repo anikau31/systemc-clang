@@ -121,9 +121,19 @@ bool SystemCConsumer::fire() {
   // Find the netlist.
   ////////////////////////////////////////////////////////////////
   // This actually also finds instances, but now we have AST matchers to do it.
+  
+  /*
   FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
   findNetlist.dump();
   systemcModel_->addNetlist(findNetlist);
+  */
+
+  // 
+  // Create a ModuleDecl for each instance with the appropriately parsed ModuleDecl.
+  //
+
+  auto found_instances{ module_declaration_handler };
+  // Go through each instance and find its appropriate module declaration.
 
   ////////////////////////////////////////////////////////////////
   // Figure out the module map.
