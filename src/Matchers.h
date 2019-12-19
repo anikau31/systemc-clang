@@ -29,7 +29,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
  public:
   // Finds the instance with the same type as the argument.
-  bool findInstance(CXXRecordDecl *decl, InstanceDeclType &instance ) {
+  // Pass by reference to the instance.
+  bool findInstance(CXXRecordDecl *decl, InstanceDeclType &instance) {
     // First check in the instance_fields.
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
@@ -46,7 +47,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             if (qtype->isRecordType()) {
               if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
                 auto rt{dp->getAsCXXRecordDecl()};
-                return ( rt == decl ) ;
+                return (rt == decl);
               }
             }
           } else {
@@ -60,8 +61,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           }
         });
 
-    if ( found_it != instances_.end() ) {
-      cout << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", " << get<1>(*found_it) << endl;
+    if (found_it != instances_.end()) {
+      cout << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", "
+           << get<1>(*found_it) << endl;
+      // This is an odd way to set tuples.  Perhaps replace with a nicer
+      // interface.
       get<0>(instance) = get<0>(*found_it);
       get<1>(instance) = get<1>(*found_it);
 
@@ -186,6 +190,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
  public:
   typedef std::vector<std::tuple<std::string, CXXRecordDecl *> >
       ModuleDeclarationType;
+  // Map to hold CXXREcordDecl to module declaration type name.
+  typedef std::pair< CXXRecordDecl*, std::string > ModuleDeclarationPairType;
+  typedef std::map< CXXRecordDecl*, std::string > ModuleDeclarationMapType;
+
   typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
 
   //typedef std::tuple<std::string, Decl *> InstanceDeclType;
@@ -201,7 +209,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
  private:
   ModuleDeclarationType found_declarations_;
   ModuleDeclarationType found_template_declarations_;
+  // One of those needs to be removed.
   ModuleDeclarationType pruned_declarations_;
+  ModuleDeclarationMapType pruned_declarations_map_;
+
   DeclarationsToInstancesMapType declaration_instance_map_;
 
   
@@ -221,7 +232,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   const DeclarationsToInstancesMapType & getInstances() { return declaration_instance_map_; }; 
   void registerMatchers(MatchFinder &finder);
   virtual void run(const MatchFinder::MatchResult &result);
-  const ModuleDeclarationType &getFoundModuleDeclarations() const;
+  const ModuleDeclarationMapType &getFoundModuleDeclarations() const {
+    return pruned_declarations_map_;
+  }
+
   const PortType &getFields(const std::string &port_type);
 
   void pruneMatches();

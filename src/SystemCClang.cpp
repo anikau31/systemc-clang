@@ -38,17 +38,17 @@ bool SystemCConsumer::fire() {
   //
   os_ << "================ TESTMATCHER =============== \n";
 
-  //InstanceMatcher match_instances{};
+  // InstanceMatcher match_instances{};
   ModuleDeclarationMatcher module_declaration_handler{};
   MatchFinder matchRegistry{};
 
   // Run all the matchers
-  
+
   module_declaration_handler.registerMatchers(matchRegistry);
-  //match_instances.registerMatchers( matchRegistry );
+  // match_instances.registerMatchers( matchRegistry );
 
   matchRegistry.matchAST(getContext());
-  //match_instances.dump();
+  // match_instances.dump();
   module_declaration_handler.pruneMatches();
   os_ << "== Print module declarations pruned\n";
   module_declaration_handler.dump();
@@ -56,19 +56,21 @@ bool SystemCConsumer::fire() {
 
   // Check if the top-level module one of the sc_module declarations?
   //
+  // Map CXXRecordDecl => std::string
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
 
-  os_ << "@@@@@@@@@@@@ FOUND MODUE: " << found_module_declarations.size() <<"\n";
+  os_ << "@@@@@@@@@@@@ FOUND MODUE: " << found_module_declarations.size()
+      << "\n";
   auto found_top_module{std::find_if(
       found_module_declarations.begin(), found_module_declarations.end(),
-      [this](std::tuple<std::string, CXXRecordDecl *> &element) {
-        return std::get<0>(element) == getTopModule();
+      [this](const ModuleDeclarationMatcher::ModuleDeclarationPairType  &element) {
+        return ( element.second == getTopModule() );
       })};
 
   if (found_top_module != found_module_declarations.end()) {
-    os_ << "Found the top module: " << get<0>(*found_top_module) << ", "
-        << get<1>(*found_top_module) << "\n";
+    os_ << "Found the top module: " << found_top_module->second << ", "
+        << found_top_module->second << "\n";
   }
 
   // ===========================================================
@@ -77,15 +79,10 @@ bool SystemCConsumer::fire() {
   // Every module declaration that is found should be added to the model.
   //
 
-  for (auto const &element : found_module_declarations) {
-    auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
-    systemcModel_->addModuleDecl(module_declaration);
-  }
-
   /*
   // Find the sc_modules
   //
-  
+
   FindSCModules scmod{tu, os_};
 
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
@@ -121,35 +118,42 @@ bool SystemCConsumer::fire() {
   // Find the netlist.
   ////////////////////////////////////////////////////////////////
   // This actually also finds instances, but now we have AST matchers to do it.
-  
+
   /*
   FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
   findNetlist.dump();
   systemcModel_->addNetlist(findNetlist);
   */
 
-  // 
-  // Create a ModuleDecl for each instance with the appropriately parsed ModuleDecl.
+  //
+  // Create a ModuleDecl for each instance with the appropriately parsed
+  // ModuleDecl.
   //
 
-  auto found_instances_map{ module_declaration_handler.getInstances() };
+  auto found_instances_map{module_declaration_handler.getInstances()};
   // Go through each instance and find its appropriate module declaration.
 
   os_ << "## Print INSTANCE MAP\n";
 
-  for ( const auto & inst : found_instances_map ) {
-    auto cxx_decl{ inst.first };
+  /*
+  for (auto const &element : found_module_declarations) {
+    auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
+    systemcModel_->addModuleDecl(module_declaration);
+  }
+  */
 
+  for (const auto &inst : found_instances_map) {
+    auto cxx_decl{inst.first};
     // Vector
-    auto instance_list{ inst.second };
+    auto instance_list{inst.second};
 
-    os_ << "CXXRecordDecl " << cxx_decl;
-    for ( const auto & val : instance_list ) {
-    os_ <<  ", instance name: " << get<0>(val) << ", Decl " << get<1>(val) << "\n";
-    //get<1>(val)->dump();
+    os_ << "CXXRecordDecl* " << cxx_decl << ", module type: " << found_module_declarations[cxx_decl];
+    for (const auto &instance : instance_list) {
+      os_ << ", instance name: " << get<0>(instance) << ", Decl* "
+          << get<1>(instance) << "\n";
+      // get<1>(val)->dump();
     }
     os_ << "\n";
-
   }
   ////////////////////////////////////////////////////////////////
   // Figure out the module map.
@@ -160,14 +164,15 @@ bool SystemCConsumer::fire() {
   for (Model::moduleMapType::iterator mit = moduleMap.begin(),
                                       mitend = moduleMap.end();
        mit != mitend; mit++) {
-    ModuleDecl *mainmd{ mit->second };
-    int numInstances{ mainmd->getNumInstances() };
+    ModuleDecl *mainmd{mit->second};
+    int numInstances{mainmd->getNumInstances()};
     vector<ModuleDecl *> moduleDeclVec;
 
-    os_ << "\nFor module: " << mit->first << " num instance : " << numInstances << "\n";
+    os_ << "\nFor module: " << mit->first << " num instance : " << numInstances
+        << "\n";
 
     for (unsigned int num{0}; num < numInstances; ++num) {
-      auto md{ new ModuleDecl{*mainmd} };
+      auto md{new ModuleDecl{*mainmd}};
 
       // Find the template arguments for the class.
       FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};

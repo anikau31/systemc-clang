@@ -184,11 +184,6 @@ void ModuleDeclarationMatcher::run(const MatchFinder::MatchResult &result) {
   }
 }
 
-const ModuleDeclarationMatcher::ModuleDeclarationType &
-ModuleDeclarationMatcher::getFoundModuleDeclarations() const {
-  return pruned_declarations_;
-}
-
 const ModuleDeclarationMatcher::PortType &ModuleDeclarationMatcher::getFields(
     const std::string &port_type) {
   if (port_type == "sc_in") {
@@ -226,6 +221,7 @@ void ModuleDeclarationMatcher::pruneMatches() {
     if (instance_matcher.findInstance(decl, instance)) {
       std::cout << "## GOOD MODULE: " << get<0>(element) << std::endl;
       pruned_declarations_.push_back(element);
+      pruned_declarations_map_.insert( ModuleDeclarationPairType( decl, get<0>(element) ));
       instance_list.push_back(instance);
     }
 
@@ -240,6 +236,7 @@ void ModuleDeclarationMatcher::pruneMatches() {
     if (instance_matcher.findInstance(decl, instance)) {
       std::cout << "## GOOD TEMPLATE MODULE: " << get<0>(element) << std::endl;
       pruned_declarations_.push_back(element);
+      pruned_declarations_map_.insert( ModuleDeclarationPairType( decl, get<0>(element) ));
       instance_list.push_back(instance);
     }
     declaration_instance_map_.insert(DeclarationInstancePairType(decl, instance_list));
@@ -262,6 +259,14 @@ void ModuleDeclarationMatcher::dump() {
          << std::endl;
   }
 
+  cout << "## Pruned declaration Map\n";
+  for (const auto &i : pruned_declarations_map_) {
+    auto decl{ i.first };
+    auto decl_name{ i.second }; 
+    cout << "CXXRecordDecl* " << i.first << ", module name: " << decl_name << "\n";
+  }
+
+
   // Print the instances.
   instance_matcher.dump();
 
@@ -277,6 +282,7 @@ void ModuleDeclarationMatcher::dump() {
     }
   }
 
+  cout << "\n";
   cout << "## Printing ports" << endl;
   printTemplateArguments(clock_ports_);
   printTemplateArguments(in_ports_);
