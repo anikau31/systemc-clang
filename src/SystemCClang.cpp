@@ -64,8 +64,9 @@ bool SystemCConsumer::fire() {
       << "\n";
   auto found_top_module{std::find_if(
       found_module_declarations.begin(), found_module_declarations.end(),
-      [this](const ModuleDeclarationMatcher::ModuleDeclarationPairType  &element) {
-        return ( element.second == getTopModule() );
+      [this](
+          const ModuleDeclarationMatcher::ModuleDeclarationPairType &element) {
+        return (element.second == getTopModule());
       })};
 
   if (found_top_module != found_module_declarations.end()) {
@@ -78,6 +79,13 @@ bool SystemCConsumer::fire() {
   // ===========================================================
   // Every module declaration that is found should be added to the model.
   //
+
+  /*
+  for (auto const &element : found_module_declarations) {
+    auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
+    systemcModel_->addModuleDecl(module_declaration);
+  }
+  */
 
   /*
   // Find the sc_modules
@@ -133,27 +141,26 @@ bool SystemCConsumer::fire() {
   auto found_instances_map{module_declaration_handler.getInstances()};
   // Go through each instance and find its appropriate module declaration.
 
-  os_ << "## Print INSTANCE MAP\n";
-
-  /*
-  for (auto const &element : found_module_declarations) {
-    auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
-    systemcModel_->addModuleDecl(module_declaration);
-  }
-  */
+  os_ << "## Print INSTANCE MAP #: " << found_instances_map.size() << "\n";
 
   for (const auto &inst : found_instances_map) {
     auto cxx_decl{inst.first};
     // Vector
     auto instance_list{inst.second};
 
-    os_ << "CXXRecordDecl* " << cxx_decl << ", module type: " << found_module_declarations[cxx_decl];
+    os_ << "CXXRecordDecl* " << cxx_decl
+        << ", module type: " << found_module_declarations[cxx_decl];
     for (const auto &instance : instance_list) {
+      auto add_module_decl{ new ModuleDecl{ found_module_declarations[cxx_decl], cxx_decl } };
+    add_module_decl->setInstanceName( get<0>(instance) );
+    systemcModel_->addModuleDecl( add_module_decl );
+
       os_ << ", instance name: " << get<0>(instance) << ", Decl* "
           << get<1>(instance) << "\n";
-      // get<1>(val)->dump();
+    add_module_decl->dump_json();
     }
     os_ << "\n";
+
   }
   ////////////////////////////////////////////////////////////////
   // Figure out the module map.

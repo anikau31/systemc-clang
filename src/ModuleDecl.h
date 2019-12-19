@@ -80,6 +80,8 @@ class ModuleDecl {
   void addProcess(FindEntryFunctions::entryFunctionVectorType *);
   void addInstances(const vector<string> &);
   void addSignalBinding(map<string, string>);
+
+  void setInstanceName(const string &);
   void setModuleName(const string &);
   void setTemplateParameters(const vector<string> &);
   vector<string> getTemplateParameters() const;

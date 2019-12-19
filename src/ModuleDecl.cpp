@@ -124,6 +124,8 @@ ModuleDecl::~ModuleDecl() {
   other_fields_.clear();
 }
 
+void ModuleDecl::setInstanceName( const string & name ) { instance_name_ = name; }
+
 void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
   template_parameters_ = parm_list;
 }
@@ -549,6 +551,7 @@ json ModuleDecl::dump_json() {
   json module_j;
 
   module_j["module_name"] = module_name_;
+  module_j["instance_name"] = instance_name_;
   // Template parameters.
   for (const auto &parm : template_parameters_) {
     module_j["template_parameters"].push_back(parm);
