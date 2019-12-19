@@ -222,10 +222,11 @@ void ModuleDeclarationMatcher::pruneMatches() {
     auto decl{get<1>(element)};
     //std::cout << "## fd  name: " << get<0>(element) << "\n "; 
     InstanceListType  instance_list;
-    if (instance_matcher.findInstance(decl)) {
+    InstanceMatcher::InstanceDeclType instance; 
+    if (instance_matcher.findInstance(decl, instance)) {
       std::cout << "## GOOD MODULE: " << get<0>(element) << std::endl;
       pruned_declarations_.push_back(element);
-      instance_list.push_back(element);
+      instance_list.push_back(instance);
     }
 
     declaration_instance_map_.insert(DeclarationInstancePairType(decl, instance_list));
@@ -235,10 +236,11 @@ void ModuleDeclarationMatcher::pruneMatches() {
     auto decl{get<1>(element)};
     //std::cout << "## ftd name: " << get<0>(element) << "\n "; 
     InstanceListType instance_list;
-    if (instance_matcher.findInstance(decl)) {
+    InstanceMatcher::InstanceDeclType instance; 
+    if (instance_matcher.findInstance(decl, instance)) {
       std::cout << "## GOOD TEMPLATE MODULE: " << get<0>(element) << std::endl;
       pruned_declarations_.push_back(element);
-      instance_list.push_back(element);
+      instance_list.push_back(instance);
     }
     declaration_instance_map_.insert(DeclarationInstancePairType(decl, instance_list));
   }

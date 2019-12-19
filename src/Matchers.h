@@ -29,12 +29,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
  public:
   // Finds the instance with the same type as the argument.
-  bool findInstance(CXXRecordDecl *decl) {
+  bool findInstance(CXXRecordDecl *decl, InstanceDeclType &instance ) {
     // First check in the instance_fields.
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
 
-    auto found_it = std::find_if(
+    InstanceDeclarationsType::iterator found_it = std::find_if(
         instances_.begin(), instances_.end(),
         [&decl](const InstanceDeclType &element) {
           // Get the CXXRecordDecl for the instance.
@@ -46,7 +46,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             if (qtype->isRecordType()) {
               if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
                 auto rt{dp->getAsCXXRecordDecl()};
-                return (rt == decl);
+                return ( rt == decl ) ;
               }
             }
           } else {
@@ -60,8 +60,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           }
         });
 
-    if (found_it != instances_.end()) {
-      std::cout << "FOUND AN FIELD instance: " << std::endl;
+    if ( found_it != instances_.end() ) {
+      cout << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", " << get<1>(*found_it) << endl;
+      get<0>(instance) = get<0>(*found_it);
+      get<1>(instance) = get<1>(*found_it);
+
       return true;
     }
     return false;
@@ -102,33 +105,24 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
       cout << "Found a member variable instance: " << name << endl;
-      instance->dump();
-      instances_.push_back(std::make_tuple(name, instance));
-    }
 
-    if (auto instance_name = const_cast<CXXConstructExpr *>(
-            result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
-      cout << "Found constructor expression argument: "
-           << instance_name->getNumArgs() << "\n";
-      auto first_arg{instance_name->getArg(0)};
+      if (auto instance_name = const_cast<CXXConstructExpr *>(
+              result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
+        cout << "Found constructor expression argument: "
+             << instance_name->getNumArgs() << "\n";
+        auto first_arg{instance_name->getArg(0)};
 
-      cout << " L VALUE \n";
-      first_arg->dump();
+        // Code to get the instance name
+        clang::LangOptions LangOpts;
+        LangOpts.CPlusPlus = true;
+        clang::PrintingPolicy Policy(LangOpts);
 
-      clang::LangOptions LangOpts;
-      LangOpts.CPlusPlus = true;
-      clang::PrintingPolicy Policy(LangOpts);
+        std::string s;
+        llvm::raw_string_ostream sstream(s);
+        first_arg->printPretty(sstream, 0, Policy);
+        cout << "instance name: " << sstream.str() << "\n";
 
-      std::string s;
-      llvm::raw_string_ostream sstream(s);
-      first_arg->printPretty(sstream, 0, Policy);
-      cout << "instance name: " << sstream.str() << "\n";
-
-      if (auto instance_name = const_cast<Stmt *>(
-              result.Nodes.getNodeAs<Stmt>("constructor_arg"))) {
-        cout << "Found instance name: " << instance_name->getStmtClassName()
-             << ": \n";
-        instance_name->dump();
+        instances_.push_back(std::make_tuple(sstream.str(), instance));
       }
     }
   }
@@ -194,6 +188,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       ModuleDeclarationType;
   typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
 
+  //typedef std::tuple<std::string, Decl *> InstanceDeclType;
   typedef std::vector<InstanceMatcher::InstanceDeclType> InstanceListType;
   typedef std::pair<CXXRecordDecl*, InstanceListType > DeclarationInstancePairType;
   typedef std::map< CXXRecordDecl*, InstanceListType > DeclarationsToInstancesMapType;

@@ -132,9 +132,25 @@ bool SystemCConsumer::fire() {
   // Create a ModuleDecl for each instance with the appropriately parsed ModuleDecl.
   //
 
-  auto found_instances{ module_declaration_handler };
+  auto found_instances_map{ module_declaration_handler.getInstances() };
   // Go through each instance and find its appropriate module declaration.
 
+  os_ << "## Print INSTANCE MAP\n";
+
+  for ( const auto & inst : found_instances_map ) {
+    auto cxx_decl{ inst.first };
+
+    // Vector
+    auto instance_list{ inst.second };
+
+    os_ << "CXXRecordDecl " << cxx_decl;
+    for ( const auto & val : instance_list ) {
+    os_ <<  ", instance name: " << get<0>(val) << ", Decl " << get<1>(val) << "\n";
+    //get<1>(val)->dump();
+    }
+    os_ << "\n";
+
+  }
   ////////////////////////////////////////////////////////////////
   // Figure out the module map.
   ////////////////////////////////////////////////////////////////
