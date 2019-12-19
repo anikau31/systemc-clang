@@ -21,6 +21,12 @@ It parses RTL constructs and some TLM 2.0 constructs.
 ## Tests
   To enable compilation of tests, run cmake with the `-DENABLE_TESTS=on` flag and also the `-DSYSTEMC_DIR=<path>` flag to pass the location for SystemC.  Without specifying the `SYSTEMC_DIR` path, it will not be possible to run the unit tests.
 
+### Python Tests for Verilog conversion
+
+  1. To enable the python tests, run cmake with the `-DENABLE_PYTHON_TESTS=on` flag. Note that `python 3` should be installed.
+  2. To install necessary packages listed in `requirements.txt`, run `pip -r requirements.txt` in the **repo** directory.
+  3. To run the python tests, swich to the `$SYSTEMC_CLANG_BUILD_DIR` build directory and run `ctest -R python --output` after the build completes.
+
 ## Contact
 
 If you encounter problems, please create issues with a minimally working example that illustrates the issue.  
