@@ -4,6 +4,7 @@ typedef float MY_FLOAT;
 
 SC_MODULE( non_template ) {
   int x;
+  sc_in<bool> blah;
 
   void ef() {}
   SC_CTOR(non_template) {

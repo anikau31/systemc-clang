@@ -130,6 +130,10 @@ void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
   template_parameters_ = parm_list;
 }
 
+void ModuleDecl::setTemplateArgs(const vector<string> &parm_list) {
+  template_args_ = parm_list;
+}
+
 vector<string> ModuleDecl::getTemplateParameters() const {
   return template_parameters_;
 }
@@ -557,6 +561,9 @@ json ModuleDecl::dump_json() {
     module_j["template_parameters"].push_back(parm);
   }
 
+  for (const auto &parm : template_args_ ) {
+    module_j["template_args"].push_back(parm);
+  }
   std::cout << module_j.dump(4);
   return module_j;
 }

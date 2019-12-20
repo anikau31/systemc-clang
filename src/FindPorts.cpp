@@ -3,7 +3,24 @@
 using namespace scpar;
 
 FindPorts::FindPorts(CXXRecordDecl *d, llvm::raw_ostream &os) : os_{os} {
-  TraverseDecl(d);
+  os_ << "@@ Finding Ports\n";
+  /*
+  switch (d->getKind()) {
+    case clang::Decl::ClassTemplateSpecialization: {
+                                                     // This just brings back the generic template
+      auto gp = static_cast<ClassTemplateSpecializationDecl*>(d)->getSpecializedTemplate()->getTemplatedDecl();
+      gp->dump();
+      TraverseDecl(gp);
+      // TraverseClassTemplateSpecializationDecl(
+      //    static_cast<clang::ClassTemplateSpecializationDecl *>(d));
+    } break;
+    default:
+      TraverseDecl(d);
+      break;
+  }
+  */
+      TraverseDecl(d);
+  os_ << "@@ Done Finding Ports\n";
 }
 
 FindPorts::PortType FindPorts::getInputPorts() const { return inPorts_; }
@@ -24,10 +41,13 @@ FindPorts::PortType FindPorts::getOutStreamPorts() const {
 
 FindPorts::PortType FindPorts::getOtherVars() const { return otherVars_; }
 
+bool FindPorts::shouldVisitTemplateInstantiations() { return true; }
+
 bool FindPorts::VisitFieldDecl(FieldDecl *fd) {
   QualType q{fd->getType()};
   string fname{};
 
+  os_ << "@@ FieldDecl\n";
   if (IdentifierInfo *info = fd->getIdentifier()) {
     fname = info->getNameStart();
     // os_ << "\n+ Name: " << info->getNameStart();

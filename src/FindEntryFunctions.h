@@ -29,6 +29,7 @@ public:
   virtual bool VisitStringLiteral(StringLiteral *l);
   virtual bool VisitCXXMethodDecl(CXXMethodDecl *d);
   virtual bool VisitMemberExpr(MemberExpr *e);
+  bool shouldVisitTemplateInstantiations();
 
   // Access Methods
   CXXRecordDecl *getEntryCXXRecordDecl();

@@ -154,18 +154,56 @@ bool SystemCConsumer::fire() {
 
       // Insert what you know about the parsed sc_module
       // 1. Insert the instance name from Matchers
+      os_ << "\n";
+      os_ << "1. Set instance name\n";
       add_module_decl->setInstanceName(get<0>(instance));
 
       // 2. Find the template arguments for the class.
+      os_ << "2. Set template arguments\n";
+      add_module_decl->setInstanceName(get<0>(instance));
       FindTemplateParameters tparms{cxx_decl, os_};
       add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
-      add_module_decl->dump_json();
+      add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
+
+
+      // 3. Find constructor
+      //
+      //
+      vector<EntryFunctionContainer *> _entryFunctionContainerVector;
+      FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
+      add_module_decl->addConstructor(constructor.returnConstructorStmt());
+
+
+      // 4. Find ports
+      //
+      //     
       //cxx_decl->dump();
+      FindPorts ports{static_cast<CXXRecordDecl*>(cxx_decl), os_};
+            ports.dump();
+      add_module_decl->addInputPorts(ports.getInputPorts());
+      add_module_decl->addOutputPorts(ports.getOutputPorts());
+      add_module_decl->addInputOutputPorts(ports.getInputOutputPorts());
+      add_module_decl->addOtherVars(ports.getOtherVars());
+      add_module_decl->addInputStreamPorts(ports.getInStreamPorts());
+      add_module_decl->addOutputStreamPorts(ports.getOutStreamPorts());
 
 
+
+      // 5. Find signals
+      FindSignals signals{add_module_decl->getModuleClassDecl(), os_};
+      add_module_decl->addSignals(signals.getSignals());
+
+      // 5. Find  entry functions
+      FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(), os_};
+      FindEntryFunctions::entryFunctionVectorType *entryFunctions{
+          findEntries.getEntryFunctions()};
+      add_module_decl->addProcess(entryFunctions);
+
+
+      add_module_decl->dump_json();
+      // Insert the module into the model.
       systemcModel_->addModuleDecl(add_module_decl);
 
-      //os_ << ", instance name: " << get<0>(instance) << ", Decl* " << get<1>(instance) << "\n";
     }
     os_ << "\n";
   }
@@ -190,10 +228,10 @@ bool SystemCConsumer::fire() {
       auto md{new ModuleDecl{*mainmd}};
 
       // Find the template arguments for the class.
-      FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
+      //FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
 
-      md->setTemplateParameters(tparms.getTemplateParameters());
-      md->dump_json();
+      //md->setTemplateParameters(tparms.getTemplateParameters());
+      //md->dump_json();
 
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{mainmd->getModuleClassDecl(), os_};

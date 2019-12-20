@@ -19,6 +19,7 @@ public:
 
   void dump();
   vector<string> getTemplateParameters() const;
+  vector<string> getTemplateArgs() const;
 
 private:
   CXXRecordDecl *declaration_;

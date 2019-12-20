@@ -8,7 +8,7 @@ using namespace scpar;
 
 FindTemplateParameters::FindTemplateParameters(CXXRecordDecl *declaration,
                                                llvm::raw_ostream &os)
-    : declaration_{declaration}, os_{os}, template_parameters_{nullptr} {
+    : declaration_{declaration}, os_{os}, template_parameters_{nullptr}, template_args_{nullptr} {
   if (declaration->hasDefinition() == true) {
     TraverseDecl(declaration);
   }
@@ -27,11 +27,11 @@ bool FindTemplateParameters::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
             dyn_cast<ClassTemplateSpecializationDecl>(declaration)) {
       os_ << "@@ template specialization args: " << module_name << "\n";
       template_args_ = &tdecl->getTemplateArgs();
-      for ( size_t i{0} ; i < template_args_->size(); ++i) {
-        auto q{ template_args_->get(i).getAsType() };
-        auto name { q.getAsString() };
-      os_ << "@@ size: " << template_args_->size() << ", arg0: " << name << "\n";
-
+      for (size_t i{0}; i < template_args_->size(); ++i) {
+        auto q{template_args_->get(i).getAsType()};
+        auto name{q.getAsString()};
+        os_ << "@@ size: " << template_args_->size() << ", arg0: " << name
+            << "\n";
       }
     }
 
@@ -60,6 +60,19 @@ vector<string> FindTemplateParameters::getTemplateParameters() const {
     os_ << "Parm: " << parm->getName() << "\n";
   }
   return parm_list;
+}
+
+vector<string> FindTemplateParameters::getTemplateArgs() const {
+  vector<string> arg_list;
+  if ((template_args_ == nullptr) || (template_args_->size() == 0)) {
+    return arg_list;
+  }
+
+  for (const auto &arg : template_args_->asArray()) {
+    arg_list.push_back(arg.getAsType().getAsString());
+    os_ << "Arg: " << arg.getAsType().getAsString() << "\n";
+  }
+  return arg_list;
 }
 
 FindTemplateParameters::~FindTemplateParameters() { declaration_ = nullptr; }

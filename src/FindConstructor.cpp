@@ -5,8 +5,12 @@ using namespace scpar;
 FindConstructor::FindConstructor(CXXRecordDecl *declaration,
                                  llvm::raw_ostream &os)
     : os_{os}, declaration_{declaration}, constructor_stmt_{nullptr}, pass_{1} {
+
+  os_ << "@@ FindConstructor::Traverse constructor\n";
   TraverseDecl(declaration_);
+  os_ << "@@ FindConstructor::End Traverse constructor\n";
   pass_ = 2;
+  os_ << "@@ Traverse constructor\n";
   TraverseStmt(constructor_stmt_);
 }
 
@@ -15,7 +19,10 @@ FindConstructor::~FindConstructor() {
   constructor_stmt_ = nullptr;
 }
 
+bool FindConstructor::shouldVisitTemplateInstantiations() { return true; }
+
 bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
+  os_ << "@@ CXXMethodDecl\n";
   switch (pass_) {
     case 1: {
       if (CXXConstructorDecl *cd =

@@ -84,7 +84,9 @@ class ModuleDecl {
   void setInstanceName(const string &);
   void setModuleName(const string &);
   void setTemplateParameters(const vector<string> &);
+  void setTemplateArgs(const vector<string> &);
   vector<string> getTemplateParameters() const;
+  vector<string> getTemplateArgs() const;
 
   string getName() const;
   string getInstanceName() const;
@@ -154,6 +156,7 @@ class ModuleDecl {
 
   // Class template parameters.
   vector<string> template_parameters_;
+  vector<string> template_args_;
 };
 }  // namespace scpar
 #endif
