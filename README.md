@@ -25,7 +25,7 @@ It parses RTL constructs and some TLM 2.0 constructs.
 
   1. To enable the python tests, run cmake with the `-DENABLE_PYTHON_TESTS=on` flag. Note that `python 3` should be installed.
   2. To install necessary packages listed in `requirements.txt`, run `pip -r requirements.txt` in the **repo** directory.
-  3. To run the python tests, swich to the `$SYSTEMC_CLANG_BUILD_DIR` build directory and run `ctest -R python --output` after the build completes.
+  3. To run the python tests, switch to the `$SYSTEMC_CLANG_BUILD_DIR` build directory and run `ctest -R python --output` after the build completes.
 
 ## Contact
 
