@@ -171,6 +171,7 @@ bool SystemCConsumer::fire() {
       //
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
+      constructor.dump();
       add_module_decl->addConstructor(constructor.returnConstructorStmt());
 
 

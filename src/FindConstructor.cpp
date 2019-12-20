@@ -19,7 +19,7 @@ FindConstructor::~FindConstructor() {
   constructor_stmt_ = nullptr;
 }
 
-bool FindConstructor::shouldVisitTemplateInstantiations() { return true; }
+bool FindConstructor::shouldVisitTemplateInstantiations() const { return true; }
 
 bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
   os_ << "@@ CXXMethodDecl\n";
