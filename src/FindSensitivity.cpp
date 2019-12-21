@@ -9,6 +9,8 @@ FindSensitivity::FindSensitivity(Stmt *s, llvm::raw_ostream &os)
   TraverseStmt(s);
 }
 
+bool FindSensitivity::shouldVisitTemplateInstantiations() const { return true; }
+
 bool FindSensitivity::VisitMemberExpr(MemberExpr *e) {
   QualType q{e->getType()};
 

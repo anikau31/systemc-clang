@@ -39,7 +39,7 @@ FindEntryFunctions::~FindEntryFunctions() {
   constructor_stmt_ = nullptr;
 }
 
-bool FindEntryFunctions::shouldVisitTemplateInstantiations() { return true; }
+bool FindEntryFunctions::shouldVisitTemplateInstantiations() const { return true; }
 
 bool FindEntryFunctions::VisitMemberExpr(MemberExpr *e) {
   // os_ << "\tVisitMemberExpr";

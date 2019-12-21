@@ -23,6 +23,7 @@ class FindSensitivity : public RecursiveASTVisitor<FindSensitivity> {
   virtual ~FindSensitivity();
 
   virtual bool VisitMemberExpr(MemberExpr *);
+  bool shouldVisitTemplateInstantiations() const;
 
   void dump();
   senseMapType getSenseMap();

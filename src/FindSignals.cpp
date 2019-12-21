@@ -15,6 +15,8 @@ FindSignals::FindSignals(CXXRecordDecl *d, llvm::raw_ostream &os) : os_(os) {
   TraverseDecl(d);
 }
 
+bool FindSignals::shouldVisitTemplateInstantiations() const { return true; }
+
 bool FindSignals::VisitFieldDecl(FieldDecl *fd) {
   QualType q{fd->getType()};
 

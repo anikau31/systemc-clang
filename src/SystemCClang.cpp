@@ -151,7 +151,6 @@ bool SystemCConsumer::fire() {
       auto add_module_decl{
           new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
 
-
       // Insert what you know about the parsed sc_module
       // 1. Insert the instance name from Matchers
       os_ << "\n";
@@ -165,7 +164,6 @@ bool SystemCConsumer::fire() {
       add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
       add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
 
-
       // 3. Find constructor
       //
       //
@@ -174,13 +172,12 @@ bool SystemCConsumer::fire() {
       constructor.dump();
       add_module_decl->addConstructor(constructor.returnConstructorStmt());
 
-
       // 4. Find ports
       //
-      //     
-      //cxx_decl->dump();
-      FindPorts ports{static_cast<CXXRecordDecl*>(cxx_decl), os_};
-            ports.dump();
+      //
+      // cxx_decl->dump();
+      FindPorts ports{static_cast<CXXRecordDecl *>(cxx_decl), os_};
+      ports.dump();
       add_module_decl->addInputPorts(ports.getInputPorts());
       add_module_decl->addOutputPorts(ports.getOutputPorts());
       add_module_decl->addInputOutputPorts(ports.getInputOutputPorts());
@@ -188,23 +185,42 @@ bool SystemCConsumer::fire() {
       add_module_decl->addInputStreamPorts(ports.getInStreamPorts());
       add_module_decl->addOutputStreamPorts(ports.getOutStreamPorts());
 
-
-
       // 5. Find signals
       FindSignals signals{add_module_decl->getModuleClassDecl(), os_};
       add_module_decl->addSignals(signals.getSignals());
 
       // 5. Find  entry functions
-      FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(), os_};
+      FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
+                                     os_};
       FindEntryFunctions::entryFunctionVectorType *entryFunctions{
           findEntries.getEntryFunctions()};
       add_module_decl->addProcess(entryFunctions);
 
+      for (size_t i = 0; i < entryFunctions->size(); i++) {
+        EntryFunctionContainer *ef{(*entryFunctions)[i]};
+        FindSensitivity findSensitivity{constructor.returnConstructorStmt(),
+                                        os_};
+        ef->addSensitivityInfo(findSensitivity);
 
-      add_module_decl->dump_json();
+        if (ef->getEntryMethod() == nullptr) {
+          os_ << "ERROR";
+          continue;
+        }
+
+        FindWait findWaits{ef->getEntryMethod(), os_};
+        ef->addWaits(findWaits);
+
+        FindNotify findNotify{ef->_entryMethodDecl, os_};
+        ef->addNotifys(findNotify);
+
+        _entryFunctionContainerVector.push_back(ef);
+      }
+
+      os_ << "============== DUMP the MODULEDECL ======================\n";
+      add_module_decl->dump(os_);
+      os_ << "============== END DUMP the MODULEDECL ==================\n";
       // Insert the module into the model.
       systemcModel_->addModuleDecl(add_module_decl);
-
     }
     os_ << "\n";
   }
@@ -229,10 +245,10 @@ bool SystemCConsumer::fire() {
       auto md{new ModuleDecl{*mainmd}};
 
       // Find the template arguments for the class.
-      //FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
+      // FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
 
-      //md->setTemplateParameters(tparms.getTemplateParameters());
-      //md->dump_json();
+      // md->setTemplateParameters(tparms.getTemplateParameters());
+      // md->dump_json();
 
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{mainmd->getModuleClassDecl(), os_};

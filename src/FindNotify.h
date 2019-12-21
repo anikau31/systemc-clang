@@ -17,6 +17,7 @@ public:
   FindNotify(CXXMethodDecl *, raw_ostream &);
   virtual ~FindNotify();
   virtual bool VisitCallExpr(CallExpr *expr);
+  bool shouldVisitTemplateInstantiations() const;
 
   NotifyCallListType getNotifyCallList() const;
   CXXMethodDecl *getEntryMethod() const;

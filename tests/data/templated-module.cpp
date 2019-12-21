@@ -1,6 +1,7 @@
 #include "systemc.h"
 
 typedef float MY_FLOAT;
+typedef MY_FLOAT MY_FLOAT2;
 
 SC_MODULE( non_template ) {
   int x;
@@ -40,6 +41,7 @@ SC_MODULE( test ){
 int sc_main(int argc, char *argv[]) {
     sc_clock clk;
     sc_signal<int> sig1;
+
     test<int,double> test_instance("testing");
     test_instance.clk(clk);
     test_instance.inS(sig1);
@@ -47,6 +49,6 @@ int sc_main(int argc, char *argv[]) {
 
     non_template nt("non-templated-module-instance");
 
-    test<MY_FLOAT, double> test_double2("testing_double_double");
+    test<MY_FLOAT2, double> test_double2("testing_double_double");
     return 0;
 }
