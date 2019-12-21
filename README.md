@@ -37,4 +37,4 @@ For other concerns and comments, please contact us directly.
 
 ## License
 
-systemc-clang follows the same licensing as clang.  Please look at [LICENSE](https://git.uwaterloo.ca/caesr-pub/systemc-clang/LICENSE.md).
+systemc-clang follows the same licensing as clang.  Please look at [LICENSE](https://github.com/anikau31/LICENSE).
