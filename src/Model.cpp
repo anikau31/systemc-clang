@@ -119,7 +119,7 @@ Model::entryFunctionGPUMacroMapType Model::getEntryFunctionGPUMacroMap() {
   return entry_function_gpu_macro_map_;
 }
 
-Model::moduleInstanceMapType Model::getModuleInstanceMap() {
+Model::moduleInstanceMapType & Model::getModuleInstanceMap() {
   return module_instance_map_;
 }
 
@@ -129,6 +129,13 @@ unsigned int Model::getNumEvents() { return (event_map_.size() - 3); }
 
 void Model::dump(llvm::raw_ostream &os) {
   os << "\n# Number of modules : " << modules_.size();
+  os << "\n";
+
+  for (const auto & mod : modules_ ) {
+    // <string, ModuleDecl*>
+    os << "Instance name " << mod.first ;
+    mod.second->dump(os);
+  }
 
   for (Model::moduleMapType::iterator mit = modules_.begin();
        mit != modules_.end(); mit++) {
@@ -143,6 +150,7 @@ void Model::dump(llvm::raw_ostream &os) {
     }
   }
   os << "\n\n";
+  
   os << "# Global events:\n";
   for (Model::eventMapType::iterator it = event_map_.begin(),
                                      ite = event_map_.end();

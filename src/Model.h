@@ -14,9 +14,12 @@
 #include <string>
 #include <vector>
 
+#include "Matchers.h"
+
 namespace scpar {
 using namespace clang;
 using namespace std;
+using namespace sc_ast_matchers; 
 
 class Model {
 public:
@@ -39,6 +42,7 @@ public:
 
   void addSCModules(FindSCModules *);
   void addModuleDecl(ModuleDecl *);
+
   void addModuleDeclInstances(ModuleDecl *, vector<ModuleDecl *>);
   void addSimulationTime(FindSimTime::simulationTimeMapType);
   void addGlobalEvents(FindGlobalEvents::globalEventMapType);
@@ -50,7 +54,7 @@ public:
   moduleMapType getModuleDecl();
   entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
   eventMapType getEventMapType();
-  moduleInstanceMapType getModuleInstanceMap();
+  moduleInstanceMapType & getModuleInstanceMap();
   unsigned int getNumEvents();
   vector<Transition *> getGSauto();
   void dump(raw_ostream &);

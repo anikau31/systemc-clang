@@ -471,22 +471,6 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
     ioport_j[name] = pd->dump_json(os);
   }
 
-  os << "\nother vars : " << other_fields_.size() << "\n";
-  othervars_j["number_of_other_vars"] = other_fields_.size();
-  for (auto mit : other_fields_) {
-    auto name = get<0>(mit);
-    auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
-
-    othervars_j[name] = pd->dump_json(os);
-  }
-
-  os << "Ports\n";
-  os << iport_j.dump(4) << "\n"
-     << oport_j.dump(4) << "\n"
-     << ioport_j.dump(4) << "\n"
-     << othervars_j.dump(4) << "\n";
   istreamport_j["number_of_instream_ports"] = istreamports_.size();
   for (auto mit : istreamports_) {
     auto name = get<0>(mit);

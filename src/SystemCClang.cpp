@@ -145,6 +145,14 @@ bool SystemCConsumer::fire() {
     // Vector
     auto instance_list{inst.second};
 
+    // TODO:
+    //
+    // FIXME: This has to be replaced once xlat is fixed.
+    vector<ModuleDecl *> module_decl_instances;
+    ModuleDecl *p_dummy_module_decl{
+        new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
+    // ==================
+
     os_ << "CXXRecordDecl* " << cxx_decl
         << ", module type: " << found_module_declarations[cxx_decl];
     for (const auto &instance : instance_list) {
@@ -169,7 +177,6 @@ bool SystemCConsumer::fire() {
       //
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
-      constructor.dump();
       add_module_decl->addConstructor(constructor.returnConstructorStmt());
 
       // 4. Find ports
@@ -177,7 +184,7 @@ bool SystemCConsumer::fire() {
       //
       // cxx_decl->dump();
       FindPorts ports{static_cast<CXXRecordDecl *>(cxx_decl), os_};
-      ports.dump();
+      // ports.dump();
       add_module_decl->addInputPorts(ports.getInputPorts());
       add_module_decl->addOutputPorts(ports.getOutputPorts());
       add_module_decl->addInputOutputPorts(ports.getInputOutputPorts());
@@ -220,9 +227,18 @@ bool SystemCConsumer::fire() {
       add_module_decl->dump(os_);
       os_ << "============== END DUMP the MODULEDECL ==================\n";
       // Insert the module into the model.
+      // All modules are also instances.
       systemcModel_->addModuleDecl(add_module_decl);
+      module_decl_instances.push_back(add_module_decl);
     }
     os_ << "\n";
+
+    // TODO:
+    //
+    // FIXME: Only there to make sure xlat still compiles.
+    // This should be removed.
+    systemcModel_->addModuleDeclInstances(p_dummy_module_decl,
+                                          module_decl_instances);
   }
 
   ////////////////////////////////////////////////////////////////
@@ -312,7 +328,7 @@ bool SystemCConsumer::fire() {
       }
       moduleDeclVec.push_back(md);
     }
-    systemcModel_->addModuleDeclInstances(mainmd, moduleDeclVec);
+    // systemcModel_->addModuleDeclInstances(mainmd, moduleDeclVec);
   }
 
   /*

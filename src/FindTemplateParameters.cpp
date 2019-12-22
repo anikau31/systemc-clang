@@ -25,7 +25,7 @@ bool FindTemplateParameters::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
 
     if (const auto tdecl =
             dyn_cast<ClassTemplateSpecializationDecl>(declaration)) {
-      os_ << "@@ template specialization args: " << module_name << "\n";
+      //os_ << "@@ template specialization args: " << module_name << "\n";
       template_args_ = &tdecl->getTemplateArgs();
       for (size_t i{0}; i < template_args_->size(); ++i) {
         auto q{template_args_->get(i).getAsType()};
