@@ -64,7 +64,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         });
 
     if (found_it != instances_.end()) {
-      // cout << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", "
+      // llvm::outs() << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", "
       // << get<1>(*found_it) << endl;
       // This is an odd way to set tuples.  Perhaps replace with a nicer
       // interface.
@@ -102,7 +102,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (auto instance = const_cast<FieldDecl *>(
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      cout << "@@ Found a member field instance: " << name << endl;
+      llvm::outs() << "@@ Found a member field instance: " << name << "\n";
 
       instances_.push_back(std::make_tuple(name, instance));
     }
@@ -110,11 +110,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (auto instance = const_cast<VarDecl *>(
             result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      cout << "@@ Found a member variable instance: " << name << endl;
+      llvm::outs() << "@@ Found a member variable instance: " << name << "\n";
 
       if (auto instance_name = const_cast<CXXConstructExpr *>(
               result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
-        cout << "Found constructor expression argument: "
+        llvm::outs() << "Found constructor expression argument: "
              << instance_name->getNumArgs() << "\n";
         auto first_arg{instance_name->getArg(0)};
 
@@ -139,14 +139,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.
     for (const auto &i : instances_) {
-      cout << "module declarations name: " << get<0>(i) << ", " << get<1>(i)
-           << std::endl;
+      llvm::outs() << "module declarations name: " << get<0>(i) << ", " << get<1>(i)
+           << "\n";
 
       auto p_field_var_decl{get<1>(i)};
       if (isa<FieldDecl>(p_field_var_decl)) {
-        cout << " ==> FieldDecl\n";
+        llvm::outs() << " ==> FieldDecl\n";
       } else {
-        cout << " ==> VarDecl\n";
+        llvm::outs() << " ==> VarDecl\n";
       }
     }
   }
@@ -271,38 +271,38 @@ class PortMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     if (auto fd = checkMatch<FieldDecl>("sc_in_clk", result)) {
       std::string port_name{fd->getIdentifier()->getNameStart()};
-      cout << " Found sc_in_clk: " << port_name << endl;
+      llvm::outs() << " Found sc_in_clk: " << port_name << "\n";
 
       insert_port(clock_ports_, fd);
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_in", result)) {
       auto port_name{fd->getIdentifier()->getNameStart()};
-      cout << " Found sc_in: " << port_name << endl;
+      llvm::outs() << " Found sc_in: " << port_name << "\n";
       insert_port(in_ports_, fd);
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_out", result)) {
       auto port_name{fd->getIdentifier()->getNameStart()};
-      cout << " Found sc_out: " << port_name << endl;
+      llvm::outs() << " Found sc_out: " << port_name << "\n";
       insert_port(out_ports_, fd);
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_inout", result)) {
       auto port_name{fd->getIdentifier()->getNameStart()};
-      cout << " Found sc_inout: " << port_name << endl;
+      llvm::outs() << " Found sc_inout: " << port_name << "\n";
       insert_port(inout_ports_, fd);
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_signal", result)) {
       auto signal_name{fd->getIdentifier()->getNameStart()};
-      cout << " Found sc_signal: " << signal_name << endl;
+      llvm::outs() << " Found sc_signal: " << signal_name << "\n";
       insert_port(signal_fields_, fd);
     }
 
     if (auto fd = checkMatch<FieldDecl>("other_fields", result)) {
       auto field_name{fd->getIdentifier()->getNameStart()};
-      cout << " Found others fields: " << field_name << endl;
+      llvm::outs() << " Found others fields: " << field_name << "\n";
       insert_port(other_fields_, fd);
     }
   }
@@ -385,13 +385,13 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     if (auto decl = const_cast<CXXRecordDecl *>(
             result.Nodes.getNodeAs<CXXRecordDecl>("sc_module"))) {
-      cout << " Found sc_module: " << decl->getIdentifier()->getNameStart()
-           << " CXXRecordDecl*: " << decl << endl;
+      llvm::outs() << " Found sc_module: " << decl->getIdentifier()->getNameStart()
+           << " CXXRecordDecl*: " << decl << "\n";
       std::string name{decl->getIdentifier()->getNameStart()};
       // decl->dump();
       //
       if (isa<ClassTemplateSpecializationDecl>(decl)) {
-        cout << "TEMPLATE SPECIAL\n";
+        llvm::outs() << "TEMPLATE SPECIAL\n";
         found_template_declarations_.push_back(std::make_tuple(name, decl));
       } else {
         found_declarations_.push_back(std::make_tuple(name, decl));
@@ -416,7 +416,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
     for (auto const &element : found_declarations_) {
       auto decl{get<1>(element)};
-      // std::cout << "## fd  name: " << get<0>(element) << "\n ";
+      // std::llvm::outs() << "## fd  name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
       InstanceMatcher::InstanceDeclType instance;
       if (instance_matcher.findInstance(decl, instance)) {
@@ -431,7 +431,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
     for (auto const &element : found_template_declarations_) {
       auto decl{get<1>(element)};
-      // std::cout << "## ftd name: " << get<0>(element) << "\n ";
+      // std::llvm::outs() << "## ftd name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
       InstanceMatcher::InstanceDeclType instance;
       if (instance_matcher.findInstance(decl, instance)) {
@@ -446,53 +446,53 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   }
 
   void dump() {
-    cout << "## Non-template module declarations: "
+    llvm::outs() << "## Non-template module declarations: "
          << found_declarations_.size() << "\n";
     for (const auto &i : found_declarations_) {
-      cout << "module name         : " << get<0>(i) << ", " << get<1>(i)
-           << std::endl;
+      llvm::outs() << "module name         : " << get<0>(i) << ", " << get<1>(i)
+           << "\n";
     }
 
-    cout << "## Template module declarations: "
+    llvm::outs() << "## Template module declarations: "
          << found_template_declarations_.size() << "\n";
     for (const auto &i : found_template_declarations_) {
-      cout << "template module name: " << get<0>(i) << ", " << get<1>(i)
-           << std::endl;
+      llvm::outs() << "template module name: " << get<0>(i) << ", " << get<1>(i)
+           << "\n";
     }
 
     // for (const auto &i : pruned_declarations_) {
-    // cout << "pruned module name: " << get<0>(i) << ", " << get<1>(i)
-    // << std::endl;
+    // llvm::outs() << "pruned module name: " << get<0>(i) << ", " << get<1>(i)
+    // << "\n";
     // }
 
-    cout << "## Pruned declaration Map: " << pruned_declarations_map_.size()
+    llvm::outs() << "## Pruned declaration Map: " << pruned_declarations_map_.size()
          << "\n";
     for (const auto &i : pruned_declarations_map_) {
       auto decl{i.first};
       auto decl_name{i.second};
-      cout << "CXXRecordDecl* " << i.first << ", module name: " << decl_name
+      llvm::outs() << "CXXRecordDecl* " << i.first << ", module name: " << decl_name
            << "\n";
     }
 
     // Print the instances.
     instance_matcher.dump();
 
-    cout << "\n## Dump map of decl->instances: "
+    llvm::outs() << "\n## Dump map of decl->instances: "
          << declaration_instance_map_.size() << "\n";
 
     for (const auto &i : declaration_instance_map_) {
       auto decl{i.first};
       auto instance_list{i.second};
 
-      cout << "decl: " << decl->getIdentifier()->getNameStart();
+      llvm::outs() << "decl: " << decl->getIdentifier()->getNameStart();
       for (const auto &instance : instance_list) {
-        cout << ", instance type: " << get<0>(instance) << ",   "
+        llvm::outs() << ", instance type: " << get<0>(instance) << ",   "
              << get<1>(instance) << "\n";
       }
     }
 
-    cout << "\n";
-    cout << "## Printing ports" << endl;
+    llvm::outs() << "\n";
+    llvm::outs() << "## Printing ports" << "\n";
     port_matcher.dump();
   }
 };

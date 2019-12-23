@@ -49,6 +49,6 @@ add_library (libsystemc-clang
   WaitCalls.cpp
   NotifyCalls.cpp
   EventContainer.cpp
-  Matchers.cpp
+  #Matchers.cpp
 
   )
