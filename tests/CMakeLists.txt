@@ -17,7 +17,7 @@ set( UNIT_TEST_LIST
   # t1
   # t2
   # t3
-  # sreg-test
+  sreg-test
   # t4-matchers
   t5-template-matching
   # subtree-matcher-test

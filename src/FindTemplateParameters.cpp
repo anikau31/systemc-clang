@@ -8,7 +8,10 @@ using namespace scpar;
 
 FindTemplateParameters::FindTemplateParameters(CXXRecordDecl *declaration,
                                                llvm::raw_ostream &os)
-    : declaration_{declaration}, os_{os}, template_parameters_{nullptr}, template_args_{nullptr} {
+    : declaration_{declaration},
+      os_{os},
+      template_parameters_{nullptr},
+      template_args_{nullptr} {
   if (declaration->hasDefinition() == true) {
     TraverseDecl(declaration);
   }
@@ -25,13 +28,26 @@ bool FindTemplateParameters::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
 
     if (const auto tdecl =
             dyn_cast<ClassTemplateSpecializationDecl>(declaration)) {
-      //os_ << "@@ template specialization args: " << module_name << "\n";
+      //tdecl->dump();
       template_args_ = &tdecl->getTemplateArgs();
+      os_ << "@@ template specialization args: " << module_name
+          << ", #args: " << template_args_->size() << "\n";
       for (size_t i{0}; i < template_args_->size(); ++i) {
-        auto q{template_args_->get(i).getAsType()};
-        auto name{q.getAsString()};
-        os_ << "@@ size: " << template_args_->size() << ", arg0: " << name
-            << "\n";
+        // Check the kind of the argument.
+        switch (template_args_->get(i).getKind()) {
+          case TemplateArgument::ArgKind::Integral: {
+            auto q{template_args_->get(i).getAsIntegral()};
+            // auto name{q.getAsString()};
+            os_ << "@@ Integral: " << q << "\n";
+          }; break;
+          case TemplateArgument::ArgKind::Type: {
+            auto q{template_args_->get(i).getAsType()};
+            auto name{q.getAsString()};
+            os_ << "@@ arg: " << name << "\n";
+          }; break;
+          default: {
+          }
+        };
       }
     }
 
@@ -69,8 +85,25 @@ vector<string> FindTemplateParameters::getTemplateArgs() const {
   }
 
   for (const auto &arg : template_args_->asArray()) {
-    arg_list.push_back(arg.getAsType().getAsString());
-    os_ << "Arg: " << arg.getAsType().getAsString() << "\n";
+    std::string name{};
+    switch (arg.getKind()) {
+      case TemplateArgument::ArgKind::Integral: {
+        // Return an LLVM APSInt type.
+        auto number{arg.getAsIntegral()};
+        SmallString<10> small_str;
+        number.toString(small_str);
+        arg_list.push_back(string(small_str.c_str()));
+        os_ << "Arg: " << small_str << "\n";
+      }; break;
+      case TemplateArgument::ArgKind::Type: {
+        auto q{arg.getAsType()};
+        name = q.getAsString();
+        arg_list.push_back(name);
+        os_ << "Arg: " << name << "\n";
+      }; break;
+      default: {
+      }
+    };
   }
   return arg_list;
 }
