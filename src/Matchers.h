@@ -169,6 +169,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   PortType inout_ports_;
   PortType other_fields_;
   PortType signal_fields_;
+  PortType sc_ports_;
 
  public:
   // AST matcher to detect field declarations
@@ -253,6 +254,18 @@ class PortMatcher : public MatchFinder::MatchCallback {
             ).bind("other_fields")
           )
         );
+
+     auto match_sc_ports = cxxRecordDecl(
+        match_module_decls,
+        forEach(
+          fieldDecl(
+            hasType(
+              cxxRecordDecl(isDerivedFrom(hasName("sc_port")))
+            )
+          ).bind("sc_port")
+        )
+      );
+
     /* clang-format on */
 
     auto match_in_ports = makeFieldMatcher("sc_in");
@@ -266,13 +279,13 @@ class PortMatcher : public MatchFinder::MatchCallback {
     finder.addMatcher(match_internal_signal, this);
     finder.addMatcher(match_sc_in_clk, this);
     finder.addMatcher(match_non_sc_types, this);
+    finder.addMatcher(match_sc_ports, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
     if (auto fd = checkMatch<FieldDecl>("sc_in_clk", result)) {
       std::string port_name{fd->getIdentifier()->getNameStart()};
       llvm::outs() << " Found sc_in_clk: " << port_name << "\n";
-
       insert_port(clock_ports_, fd);
     }
 
@@ -305,6 +318,13 @@ class PortMatcher : public MatchFinder::MatchCallback {
       llvm::outs() << " Found others fields: " << field_name << "\n";
       insert_port(other_fields_, fd);
     }
+
+    if (auto fd = checkMatch<FieldDecl>("sc_port", result)) {
+      auto field_name{fd->getIdentifier()->getNameStart()};
+      llvm::outs() << " Found sc_port : " << field_name << "\n";
+      insert_port(sc_ports_, fd);
+    }
+
   }
 
   void dump() {
@@ -314,6 +334,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     printTemplateArguments(inout_ports_);
     printTemplateArguments(signal_fields_);
     printTemplateArguments(other_fields_);
+    printTemplateArguments(sc_ports_);
   }
 };
 
