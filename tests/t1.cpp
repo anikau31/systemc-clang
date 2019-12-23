@@ -80,7 +80,7 @@ int sc_main(int argc, char *argv[]) {
   test_instance.in_out(double_sig);
   test_instance.out1(sig1);
 
-  simple_module simple("simple_module");
+  simple_module simple("simple_module_instance");
   simple.one(sig1);
 
   return 0;
@@ -98,66 +98,57 @@ int sc_main(int argc, char *argv[]) {
   // model->dump(llvm::outs());
   auto module_decl{model->getModuleDecl()};
 
-  SECTION("Found sc_modules", "[modules]") {
+  auto test_module{std::find_if(
+      module_decl.begin(), module_decl.end(), [](const auto &element) {
+        return element.second->getInstanceName() == "testing";
+      })};
+
+  auto simple_module{std::find_if(
+      module_decl.begin(), module_decl.end(), [](const auto &element) {
+        return element.second->getInstanceName() == "simple_module_instance";
+      })};
+
+  SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
-    INFO( "ERROR: number of sc_module declarations found: " << module_decl.size() );
+    INFO("ERROR: number of sc_module declarations found: "
+         << module_decl.size());
+
     REQUIRE(module_decl.size() == 2);
 
-    // Check their names, and that their pointers are not nullptr.
+    REQUIRE(test_module != module_decl.end());
+    REQUIRE(simple_module != module_decl.end());
 
-    auto test_module{
-        std::find_if(
-            module_decl.begin(), module_decl.end(),
-            [](const auto &element) { return element.first == "test"; })};
-    REQUIRE(test_module != module_decl.end() );
-    auto simple_module{
-        std::find_if(
-            module_decl.begin(), module_decl.end(),
-            [](const auto &element) { return element.first == "simple_module"; })};
-    REQUIRE(simple_module != module_decl.end() );
+    INFO("Checking member ports for test instance.");
+    // These checks should be performed on the declarations.
 
-    SECTION("Checking member ports for test instance", "[ports]") {
-      // These checks should be performed on the declarations.
+    // The module instances have all the information.
+    // This is necessary until the parsing code is restructured.
+    // There is only one module instance
+    // auto module_instances{model->getModuleInstanceMap()};
+    // auto p_module{module_decl.find("test")};
+    //
+    //
+    auto test_module_inst{test_module->second};
 
-      // The module instances have all the information.
-      // This is necessary until the parsing code is restructured.
-      // There is only one module instance
-      auto module_instances{model->getModuleInstanceMap()};
-      //auto p_module{module_decl.find("test")};
+    // Check if the proper number of ports are found.
+    REQUIRE(test_module_inst->getIPorts().size() == 3);
+    REQUIRE(test_module_inst->getOPorts().size() == 2);
+    REQUIRE(test_module_inst->getIOPorts().size() == 1);
+    REQUIRE(test_module_inst->getSignals().size() == 1);
+    REQUIRE(test_module_inst->getOtherVars().size() == 1);
+    REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
+    REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
 
-    auto p_module{
-        std::find_if(
-            module_decl.begin(), module_decl.end(),
-            [](const auto &element) { return element.first == "test"; })};
-      auto test_module{module_instances[p_module->second].front()};
+    INFO("Checking member ports for simple module instance.");
+    auto simple_module_inst{simple_module->second};
 
-      // Check if the proper number of ports are found.
-      REQUIRE(test_module->getIPorts().size() == 3);
-      REQUIRE(test_module->getOPorts().size() == 2);
-      REQUIRE(test_module->getIOPorts().size() == 1);
-      REQUIRE(test_module->getSignals().size() == 1);
-      REQUIRE(test_module->getOtherVars().size() == 1);
-      REQUIRE(test_module->getInputStreamPorts().size() == 0);
-      REQUIRE(test_module->getOutputStreamPorts().size() == 0);
-    }
-
-    SECTION("Checking member ports for simple module instance", "[ports]") {
-      auto module_instances{model->getModuleInstanceMap()};
-    //  auto p_module{module_decl.find("simple_module")};
-    auto p_module{
-        std::find_if(
-            module_decl.begin(), module_decl.end(),
-            [](const auto &element) { return element.first == "simple_module"; })};
-      auto test_module{module_instances[p_module->second].front()};
-
-      // Check if the proper number of ports are found.
-      REQUIRE(test_module->getIPorts().size() == 3);
-      REQUIRE(test_module->getOPorts().size() == 1);
-      REQUIRE(test_module->getIOPorts().size() == 0);
-      REQUIRE(test_module->getSignals().size() == 0);
-      REQUIRE(test_module->getOtherVars().size() == 1);
-      REQUIRE(test_module->getInputStreamPorts().size() == 0);
-      REQUIRE(test_module->getOutputStreamPorts().size() == 0);
-    }
+    // Check if the proper number of ports are found.
+    REQUIRE(simple_module_inst->getIPorts().size() == 3);
+    REQUIRE(simple_module_inst->getOPorts().size() == 1);
+    REQUIRE(simple_module_inst->getIOPorts().size() == 0);
+    REQUIRE(simple_module_inst->getSignals().size() == 0);
+    REQUIRE(simple_module_inst->getOtherVars().size() == 1);
+    REQUIRE(simple_module_inst->getInputStreamPorts().size() == 0);
+    REQUIRE(simple_module_inst->getOutputStreamPorts().size() == 0);
   }
 }

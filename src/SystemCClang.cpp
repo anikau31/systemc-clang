@@ -241,6 +241,7 @@ bool SystemCConsumer::fire() {
                                           module_decl_instances);
   }
 
+  /*
   ////////////////////////////////////////////////////////////////
   // Figure out the module map.
   ////////////////////////////////////////////////////////////////
@@ -330,6 +331,7 @@ bool SystemCConsumer::fire() {
     }
     // systemcModel_->addModuleDeclInstances(mainmd, moduleDeclVec);
   }
+  */
 
   /*
      FindSCMain scmain(tu, os_);
@@ -349,7 +351,6 @@ bool SystemCConsumer::fire() {
      FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
      findNetlist.dump();
      systemcModel_->addNetlist(findNetlist);
-     */
 
   // Only do this if SAUTO flag is set.
 #ifdef USE_SAUTO
@@ -384,8 +385,8 @@ bool SystemCConsumer::fire() {
   }
 #endif
 
-  os_ << "\n";
-  os_ << "\n## SystemC model\n";
+     */
+  os_ << "[Parsed SystemC model from systemc-clang] \n";
   systemcModel_->dump(os_);
   return true;
 }

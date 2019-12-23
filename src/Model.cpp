@@ -128,21 +128,23 @@ Model::eventMapType Model::getEventMapType() { return event_map_; }
 unsigned int Model::getNumEvents() { return (event_map_.size() - 3); }
 
 void Model::dump(llvm::raw_ostream &os) {
-  os << "\n# Number of modules : " << modules_.size();
+  os << "-- Number of sc_module instances: " << modules_.size();
   os << "\n";
 
   for (const auto & mod : modules_ ) {
     // <string, ModuleDecl*>
-    os << "Instance name " << mod.first ;
+    os << "-- Instance name: " << mod.first ;
     mod.second->dump(os);
   }
+  /*
 
   for (Model::moduleMapType::iterator mit = modules_.begin();
        mit != modules_.end(); mit++) {
     // Second is the ModuleDecl type.
 
+    os << "\n";
     vector<ModuleDecl *> instanceVec = module_instance_map_[mit->second];
-    os << "\n# Module " << mit->first << ": " << instanceVec.size()
+    os << " Module " << mit->first << ": " << instanceVec.size()
        << " instances.";
     for (size_t i = 0; i < instanceVec.size(); i++) {
       //			os <<", instance: " << i + 1 << " ";
@@ -150,6 +152,7 @@ void Model::dump(llvm::raw_ostream &os) {
     }
   }
   os << "\n\n";
+  */
   
   os << "# Global events:\n";
   for (Model::eventMapType::iterator it = event_map_.begin(),
