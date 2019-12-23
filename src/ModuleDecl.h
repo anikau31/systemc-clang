@@ -23,29 +23,29 @@ using json = nlohmann::json;
 
 class ModuleDecl {
  public:
-  typedef pair<string, Signal *> signalPairType;
-  typedef map<string, Signal *> signalMapType;
+  typedef std::pair<std::string, Signal *> signalPairType;
+  typedef std::map<std::string, Signal *> signalMapType;
 
   // Maps the name of the port with a pointer to a structure that holds
   // information about the port.
-  typedef pair<string, PortDecl *> portPairType;
+  typedef std::pair<std::string, PortDecl *> portPairType;
   // typedef map<string, PortDecl* > portMapType;
 
-  typedef pair<string, InterfaceDecl *> interfacePairType;
-  typedef map<string, InterfaceDecl *> interfaceMapType;
+  typedef std::pair<std::string, InterfaceDecl *> interfacePairType;
+  typedef std::map<std::string, InterfaceDecl *> interfaceMapType;
 
   // Maps the name of the process with a pointer to a structure that holds
   // information about the process.
-  typedef pair<string, ProcessDecl *> processPairType;
-  typedef map<string, ProcessDecl *> processMapType;
+  typedef std::pair<std::string, ProcessDecl *> processPairType;
+  typedef std::map<std::string, ProcessDecl *> processMapType;
 
-  typedef pair<string, string> moduleProcessPairType;
+  typedef std::pair<std::string, std::string> moduleProcessPairType;
 
-  typedef pair<string, string> portSignalPairType;
-  typedef map<string, string> portSignalMapType;
+  typedef std::pair<std::string, std::string> portSignalPairType;
+  typedef std::map<std::string, std::string> portSignalMapType;
 
   // Why is this a not a Type?
-  typedef vector<string> instanceName;
+  typedef std::vector<std::string> instanceName;
 
   // PortType
   typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
@@ -112,7 +112,7 @@ class ModuleDecl {
   vector<string> getInstanceList();
   vector<EntryFunctionContainer *> getEntryFunctionContainer();
   int getNumInstances();
-  signalMapType getSignals();
+  const signalMapType & getSignals() const;
 
   void dumpPorts(raw_ostream &, int);
   void dumpInterfaces(raw_ostream &, int);
