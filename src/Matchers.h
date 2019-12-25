@@ -227,7 +227,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
     port.push_back(std::make_tuple(
         name, new PortDecl(name, decl, parseTemplateType(decl))));
   }
-  void registerMatchers(MatchFinder &finder, const std::string & top_module_decl ) {
+  void registerMatchers(MatchFinder &finder,
+                        const std::string &top_module_decl) {
     /* clang-format off */
 
     auto match_sc_in_clk = cxxRecordDecl( 
@@ -390,150 +391,158 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     return declaration_instance_map_;
   };
 
-  void set_top_module_decl(const std::string &top) { top_module_decl_ = top; }
+  void set_top_module_decl(const std::string &top) {
+    // If there is no top specified, then match all, otherwise only top module.
+    if (top = "") {
+      top_module_decl_ = ".*";
+    } else {
+      top_module_decl_ = top;
+    }
 
-  // Register the matchers
-  void registerMatchers(MatchFinder &finder) {
-    /* clang-format off */
+    // Register the matchers
+    void registerMatchers(MatchFinder & finder) {
+      /* clang-format off */
+
   auto match_module_decls = 
     cxxRecordDecl(
-        hasName(top_module_decl_),  // Specifies the top-level module name.
+        matchesName(top_module_decl_),  // Specifies the top-level module name.
         hasDefinition(),            // There must be a definition.
         unless( isImplicit() ),     // Templates generate implicit structs - so ignore.
         isDerivedFrom(
           hasName("::sc_core::sc_module") 
           ),
         unless(isDerivedFrom(matchesName("sc_event_queue")))
-        );
-    /* clang-format on */
+        ).bind("sc_module");
+      /* clang-format on */
 
-    // add all the matchers.
-    finder.addMatcher(match_module_decls.bind("sc_module"), this);
+      // add all the matchers.
+      finder.addMatcher(match_module_decls, this);
 
-    // add instance matcher
-    instance_matcher.registerMatchers(finder);
+      // add instance matcher
+      instance_matcher.registerMatchers(finder);
 
-    // add port (field) matcher
-    port_matcher.registerMatchers(finder, top_module_decl_);
-  }
-
-  virtual void run(const MatchFinder::MatchResult &result) {
-    if (auto decl = const_cast<CXXRecordDecl *>(
-            result.Nodes.getNodeAs<CXXRecordDecl>("sc_module"))) {
-      llvm::outs() << " Found sc_module: "
-                   << decl->getIdentifier()->getNameStart()
-                   << " CXXRecordDecl*: " << decl << "\n";
-      std::string name{decl->getIdentifier()->getNameStart()};
-      // decl->dump();
-      //
-      if (isa<ClassTemplateSpecializationDecl>(decl)) {
-        llvm::outs() << "TEMPLATE SPECIAL\n";
-        found_template_declarations_.push_back(std::make_tuple(name, decl));
-      } else {
-        found_declarations_.push_back(std::make_tuple(name, decl));
-      }
-
-      /* This is going to match only in subtree.
-      MatchFinder instance_registry{};
-      instance_matcher.registerMatchers(instance_registry);
-      instance_registry.match(*decl, *result.Context);
-      */
+      // add port (field) matcher
+      port_matcher.registerMatchers(finder, top_module_decl_);
     }
-  }
 
-  const ModuleDeclarationMapType &getFoundModuleDeclarations() const {
-    return pruned_declarations_map_;
-  }
+    virtual void run(const MatchFinder::MatchResult &result) {
+      if (auto decl = const_cast<CXXRecordDecl *>(
+              result.Nodes.getNodeAs<CXXRecordDecl>("sc_module"))) {
+        llvm::outs() << " Found sc_module: "
+                     << decl->getIdentifier()->getNameStart()
+                     << " CXXRecordDecl*: " << decl << "\n";
+        std::string name{decl->getIdentifier()->getNameStart()};
+        // decl->dump();
+        //
+        if (isa<ClassTemplateSpecializationDecl>(decl)) {
+          llvm::outs() << "TEMPLATE SPECIAL\n";
+          found_template_declarations_.push_back(std::make_tuple(name, decl));
+        } else {
+          found_declarations_.push_back(std::make_tuple(name, decl));
+        }
 
-  void pruneMatches() {
-    // Must have found instances.
-    // 1. For every module found, check if there is an instance.
-    // 2. If there is an instance, then add it into the list.
-
-    for (auto const &element : found_declarations_) {
-      auto decl{get<1>(element)};
-      // std::llvm::outs() << "## fd  name: " << get<0>(element) << "\n ";
-      InstanceListType instance_list;
-      InstanceMatcher::InstanceDeclType instance;
-      if (instance_matcher.findInstance(decl, instance)) {
-        // pruned_declarations_.push_back(element);
-        pruned_declarations_map_.insert(
-            ModuleDeclarationPairType(decl, get<0>(element)));
-        instance_list.push_back(instance);
-        declaration_instance_map_.insert(
-            DeclarationInstancePairType(decl, instance_list));
+        /* This is going to match only in subtree.
+        MatchFinder instance_registry{};
+        instance_matcher.registerMatchers(instance_registry);
+        instance_registry.match(*decl, *result.Context);
+        */
       }
     }
 
-    for (auto const &element : found_template_declarations_) {
-      auto decl{get<1>(element)};
-      // std::llvm::outs() << "## ftd name: " << get<0>(element) << "\n ";
-      InstanceListType instance_list;
-      InstanceMatcher::InstanceDeclType instance;
-      if (instance_matcher.findInstance(decl, instance)) {
-        // pruned_declarations_.push_back(element);
-        pruned_declarations_map_.insert(
-            ModuleDeclarationPairType(decl, get<0>(element)));
-        instance_list.push_back(instance);
-        declaration_instance_map_.insert(
-            DeclarationInstancePairType(decl, instance_list));
+    const ModuleDeclarationMapType &getFoundModuleDeclarations() const {
+      return pruned_declarations_map_;
+    }
+
+    void pruneMatches() {
+      // Must have found instances.
+      // 1. For every module found, check if there is an instance.
+      // 2. If there is an instance, then add it into the list.
+
+      for (auto const &element : found_declarations_) {
+        auto decl{get<1>(element)};
+        // std::llvm::outs() << "## fd  name: " << get<0>(element) << "\n ";
+        InstanceListType instance_list;
+        InstanceMatcher::InstanceDeclType instance;
+        if (instance_matcher.findInstance(decl, instance)) {
+          // pruned_declarations_.push_back(element);
+          pruned_declarations_map_.insert(
+              ModuleDeclarationPairType(decl, get<0>(element)));
+          instance_list.push_back(instance);
+          declaration_instance_map_.insert(
+              DeclarationInstancePairType(decl, instance_list));
+        }
+      }
+
+      for (auto const &element : found_template_declarations_) {
+        auto decl{get<1>(element)};
+        // std::llvm::outs() << "## ftd name: " << get<0>(element) << "\n ";
+        InstanceListType instance_list;
+        InstanceMatcher::InstanceDeclType instance;
+        if (instance_matcher.findInstance(decl, instance)) {
+          // pruned_declarations_.push_back(element);
+          pruned_declarations_map_.insert(
+              ModuleDeclarationPairType(decl, get<0>(element)));
+          instance_list.push_back(instance);
+          declaration_instance_map_.insert(
+              DeclarationInstancePairType(decl, instance_list));
+        }
       }
     }
-  }
 
-  void dump() {
-    llvm::outs() << "## Top-level module: " << top_module_decl_ << "\n";
-    llvm::outs() << "## Non-template module declarations: "
-                 << found_declarations_.size() << "\n";
-    for (const auto &i : found_declarations_) {
-      llvm::outs() << "module name         : " << get<0>(i) << ", " << get<1>(i)
+    void dump() {
+      llvm::outs() << "## Top-level module: " << top_module_decl_ << "\n";
+      llvm::outs() << "## Non-template module declarations: "
+                   << found_declarations_.size() << "\n";
+      for (const auto &i : found_declarations_) {
+        llvm::outs() << "module name         : " << get<0>(i) << ", "
+                     << get<1>(i) << "\n";
+      }
+
+      llvm::outs() << "## Template module declarations: "
+                   << found_template_declarations_.size() << "\n";
+      for (const auto &i : found_template_declarations_) {
+        llvm::outs() << "template module name: " << get<0>(i) << ", "
+                     << get<1>(i) << "\n";
+      }
+
+      // for (const auto &i : pruned_declarations_) {
+      // llvm::outs() << "pruned module name: " << get<0>(i) << ", " <<
+      // get<1>(i)
+      // << "\n";
+      // }
+
+      llvm::outs() << "## Pruned declaration Map: "
+                   << pruned_declarations_map_.size() << "\n";
+      for (const auto &i : pruned_declarations_map_) {
+        auto decl{i.first};
+        auto decl_name{i.second};
+        llvm::outs() << "CXXRecordDecl* " << i.first
+                     << ", module name: " << decl_name << "\n";
+      }
+
+      // Print the instances.
+      instance_matcher.dump();
+
+      llvm::outs() << "\n## Dump map of decl->instances: "
+                   << declaration_instance_map_.size() << "\n";
+
+      for (const auto &i : declaration_instance_map_) {
+        auto decl{i.first};
+        auto instance_list{i.second};
+
+        llvm::outs() << "decl: " << decl->getIdentifier()->getNameStart();
+        for (const auto &instance : instance_list) {
+          llvm::outs() << ", instance type: " << get<0>(instance) << ",   "
+                       << get<1>(instance) << "\n";
+        }
+      }
+
+      llvm::outs() << "\n";
+      llvm::outs() << "## Printing ports"
                    << "\n";
+      port_matcher.dump();
     }
-
-    llvm::outs() << "## Template module declarations: "
-                 << found_template_declarations_.size() << "\n";
-    for (const auto &i : found_template_declarations_) {
-      llvm::outs() << "template module name: " << get<0>(i) << ", " << get<1>(i)
-                   << "\n";
-    }
-
-    // for (const auto &i : pruned_declarations_) {
-    // llvm::outs() << "pruned module name: " << get<0>(i) << ", " << get<1>(i)
-    // << "\n";
-    // }
-
-    llvm::outs() << "## Pruned declaration Map: "
-                 << pruned_declarations_map_.size() << "\n";
-    for (const auto &i : pruned_declarations_map_) {
-      auto decl{i.first};
-      auto decl_name{i.second};
-      llvm::outs() << "CXXRecordDecl* " << i.first
-                   << ", module name: " << decl_name << "\n";
-    }
-
-    // Print the instances.
-    instance_matcher.dump();
-
-    llvm::outs() << "\n## Dump map of decl->instances: "
-                 << declaration_instance_map_.size() << "\n";
-
-    for (const auto &i : declaration_instance_map_) {
-      auto decl{i.first};
-      auto instance_list{i.second};
-
-      llvm::outs() << "decl: " << decl->getIdentifier()->getNameStart();
-      for (const auto &instance : instance_list) {
-        llvm::outs() << ", instance type: " << get<0>(instance) << ",   "
-                     << get<1>(instance) << "\n";
-      }
-    }
-
-    llvm::outs() << "\n";
-    llvm::outs() << "## Printing ports"
-                 << "\n";
-    port_matcher.dump();
-  }
-};
+  };
 
 };  // namespace sc_ast_matchers
 
