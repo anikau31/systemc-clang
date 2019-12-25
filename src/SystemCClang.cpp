@@ -40,6 +40,7 @@ bool SystemCConsumer::fire() {
 
   // InstanceMatcher match_instances{};
   ModuleDeclarationMatcher module_declaration_handler{};
+  module_declaration_handler.set_top_module_decl(getTopModule());
   MatchFinder matchRegistry{};
 
   // Run all the matchers
