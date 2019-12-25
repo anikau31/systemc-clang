@@ -227,7 +227,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     port.push_back(std::make_tuple(
         name, new PortDecl(name, decl, parseTemplateType(decl))));
   }
-  void registerMatchers(MatchFinder &finder) {
+  void registerMatchers(MatchFinder &finder, const std::string & top_module_decl ) {
     /* clang-format off */
 
     auto match_sc_in_clk = cxxRecordDecl( 
@@ -242,10 +242,12 @@ class PortMatcher : public MatchFinder::MatchCallback {
               ).bind("sc_in_clk")
             )
         );
+
     auto match_module_decls = 
       cxxRecordDecl(
-          hasDefinition(), // There must be a definition.
-          unless( isImplicit() ), // Templates generate implicit structs - so ignore.
+          hasName(top_module_decl), // Specifies the top-level module name.
+          hasDefinition(),          // There must be a definition.
+          unless( isImplicit() ),   // Templates generate implicit structs - so ignore.
           isDerivedFrom(
             hasName("::sc_core::sc_module") 
             ),
@@ -395,8 +397,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     /* clang-format off */
   auto match_module_decls = 
     cxxRecordDecl(
-        hasDefinition(), // There must be a definition.
-        unless( isImplicit() ), // Templates generate implicit structs - so ignore.
+        hasName(top_module_decl_),  // Specifies the top-level module name.
+        hasDefinition(),            // There must be a definition.
+        unless( isImplicit() ),     // Templates generate implicit structs - so ignore.
         isDerivedFrom(
           hasName("::sc_core::sc_module") 
           ),
@@ -411,7 +414,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     instance_matcher.registerMatchers(finder);
 
     // add port (field) matcher
-    port_matcher.registerMatchers(finder);
+    port_matcher.registerMatchers(finder, top_module_decl_);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -479,6 +482,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   }
 
   void dump() {
+    llvm::outs() << "## Top-level module: " << top_module_decl_ << "\n";
     llvm::outs() << "## Non-template module declarations: "
                  << found_declarations_.size() << "\n";
     for (const auto &i : found_declarations_) {

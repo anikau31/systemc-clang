@@ -49,6 +49,6 @@ int sc_main(int argc, char *argv[]) {
 
     non_template nt("non-templated-module-instance");
 
-    test<MY_FLOAT2, double> test_double2("testing_double_double");
+    test<MY_FLOAT2, double> test_double2("testing_float_double");
     return 0;
 }

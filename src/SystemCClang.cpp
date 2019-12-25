@@ -387,8 +387,10 @@ bool SystemCConsumer::fire() {
 #endif
 
      */
-  os_ << "[Parsed SystemC model from systemc-clang] \n";
+  os_ << "Parsed SystemC model from systemc-clang\n";
+  os_ << "=========================================\n";
   systemcModel_->dump(os_);
+  os_ << "==============END========================\n";
   return true;
 }
 
@@ -434,9 +436,13 @@ SystemCConsumer::~SystemCConsumer() {
   }
 }
 
+void SystemCConsumer::setTopModule(const std::string &top_module_decl) {
+  top_ = top_module_decl;
+}
+
 Model *SystemCConsumer::getSystemCModel() { return systemcModel_; }
 
-std::string SystemCConsumer::getTopModule() const { return top_; }
+const std::string &SystemCConsumer::getTopModule() const { return top_; }
 
 ASTContext &SystemCConsumer::getContext() const { return context_; }
 

@@ -133,9 +133,11 @@ void Model::dump(llvm::raw_ostream &os) {
 
   for (const auto & mod : modules_ ) {
     // <string, ModuleDecl*>
-    os << "-- Instance name: " << mod.first ;
-    mod.second->dump(os);
+    auto decl{mod.second};
+    os << "-- Instance name: " << decl->getInstanceName() << "\n";
+    decl->dump(os);
   }
+    os << "Done dump in model\n";
   /*
 
   for (Model::moduleMapType::iterator mit = modules_.begin();
@@ -154,6 +156,7 @@ void Model::dump(llvm::raw_ostream &os) {
   os << "\n\n";
   */
   
+  /*
   os << "# Global events:\n";
   for (Model::eventMapType::iterator it = event_map_.begin(),
                                      ite = event_map_.end();
@@ -197,4 +200,5 @@ void Model::dump(llvm::raw_ostream &os) {
     }
     os << "\n ------------------------------------------------------\n";
   }
+  */
 }

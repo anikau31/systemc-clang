@@ -72,7 +72,8 @@ namespace scpar {
       virtual ~SystemCConsumer();
 
       Model *getSystemCModel();
-      std::string getTopModule() const;
+      const std::string & getTopModule() const;
+      void setTopModule( const std::string & top_module_decl );
       ASTContext& getContext() const; 
       SourceManager& getSourceManager() const;
 
