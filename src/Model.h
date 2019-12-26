@@ -7,7 +7,7 @@
 #include "FindNetlist.h"
 #include "FindSimTime.h"
 #include "ModuleDecl.h"
-#include "FindSCModules.h"
+//#include "FindSCModules.h"
 #include "SCuitable/FindGPUMacro.h"
 #include "clang/AST/DeclCXX.h"
 #include <map>
@@ -40,7 +40,7 @@ public:
   Model();
   ~Model();
 
-  void addSCModules(FindSCModules *);
+  //void addSCModules(FindSCModules *);
   void addModuleDecl(ModuleDecl *);
 
   void addModuleDeclInstances(ModuleDecl *, vector<ModuleDecl *>);

@@ -103,15 +103,15 @@ void Model::updateModuleDecl() {
   }
 }
 
-void Model::addSCModules(FindSCModules *m) {
-  FindSCModules::moduleMapType mods = m->getSystemCModulesMap();
-
-  for (FindSCModules::moduleMapType::iterator mit = mods.begin();
-       mit != mods.end(); mit++) {
-    addModuleDecl(new ModuleDecl(mit->first, mit->second));
-  }
-}
-
+// void Model::addSCModules(FindSCModules *m) {
+// FindSCModules::moduleMapType mods = m->getSystemCModulesMap();
+//
+// for (FindSCModules::moduleMapType::iterator mit = mods.begin();
+// mit != mods.end(); mit++) {
+// addModuleDecl(new ModuleDecl(mit->first, mit->second));
+// }
+// }
+//
 Model::moduleMapType Model::getModuleDecl() { return modules_; }
 
 Model::entryFunctionGPUMacroMapType Model::getEntryFunctionGPUMacroMap() {
@@ -119,7 +119,7 @@ Model::entryFunctionGPUMacroMapType Model::getEntryFunctionGPUMacroMap() {
   return entry_function_gpu_macro_map_;
 }
 
-Model::moduleInstanceMapType & Model::getModuleInstanceMap() {
+Model::moduleInstanceMapType &Model::getModuleInstanceMap() {
   return module_instance_map_;
 }
 
@@ -131,13 +131,13 @@ void Model::dump(llvm::raw_ostream &os) {
   os << "-- Number of sc_module instances: " << modules_.size();
   os << "\n";
 
-  for (const auto & mod : modules_ ) {
+  for (const auto &mod : modules_) {
     // <string, ModuleDecl*>
     auto decl{mod.second};
     os << "-- Instance name: " << decl->getInstanceName() << "\n";
     decl->dump(os);
   }
-    os << "Done dump in model\n";
+  os << "Done dump in model\n";
   /*
 
   for (Model::moduleMapType::iterator mit = modules_.begin();
@@ -155,7 +155,7 @@ void Model::dump(llvm::raw_ostream &os) {
   }
   os << "\n\n";
   */
-  
+
   /*
   os << "# Global events:\n";
   for (Model::eventMapType::iterator it = event_map_.begin(),
