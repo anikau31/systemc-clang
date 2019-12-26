@@ -67,8 +67,8 @@ namespace scpar {
       llvm::raw_ostream& os_;
 
     public: 
-      SystemCConsumer( CompilerInstance &, std::string top = "none" );
-      SystemCConsumer(ASTUnit *from_ast, std::string top = "none");
+      SystemCConsumer( CompilerInstance &, std::string top = "!none" );
+      SystemCConsumer(ASTUnit *from_ast, std::string top = "!none");
       virtual ~SystemCConsumer();
 
       Model *getSystemCModel();

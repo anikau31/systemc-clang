@@ -393,27 +393,34 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
   void set_top_module_decl(const std::string &top) {
     // If there is no top specified, then match all, otherwise only top module.
-    if (top = "") {
+    // The regular expression for matchesName() matcher for ".*" matches anything.
+    // That regular expression is enabled only when top module is not specified.
+    if ((top == "!none") || (top == "" )) {
       top_module_decl_ = ".*";
     } else {
       top_module_decl_ = top;
     }
+  }
 
     // Register the matchers
-    void registerMatchers(MatchFinder & finder) {
+  void registerMatchers(MatchFinder & finder) {
       /* clang-format off */
 
-  auto match_module_decls = 
-    cxxRecordDecl(
-        matchesName(top_module_decl_),  // Specifies the top-level module name.
-        hasDefinition(),            // There must be a definition.
-        unless( isImplicit() ),     // Templates generate implicit structs - so ignore.
-        isDerivedFrom(
-          hasName("::sc_core::sc_module") 
-          ),
-        unless(isDerivedFrom(matchesName("sc_event_queue")))
-        ).bind("sc_module");
-      /* clang-format on */
+    // This is in case the set method is not called explicitly.
+    // Simply pass in what is the default.
+    set_top_module_decl( top_module_decl_ );
+
+    auto match_module_decls = 
+      cxxRecordDecl(
+          matchesName(top_module_decl_),  // Specifies the top-level module name.
+          hasDefinition(),            // There must be a definition.
+          unless( isImplicit() ),     // Templates generate implicit structs - so ignore.
+          isDerivedFrom(
+            hasName("::sc_core::sc_module") 
+            ),
+          unless(isDerivedFrom(matchesName("sc_event_queue")))
+          ).bind("sc_module");
+    /* clang-format on */
 
       // add all the matchers.
       finder.addMatcher(match_module_decls, this);
