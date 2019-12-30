@@ -70,8 +70,9 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         });
 
     if (found_it != instances_.end()) {
-      llvm::outs() << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", " << get<1>(*found_it) << "\n";
-      //This is an odd way to set tuples.  Perhaps replace with a nicer
+      llvm::outs() << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", "
+                   << get<1>(*found_it) << "\n";
+      // This is an odd way to set tuples.  Perhaps replace with a nicer
       // interface.
       get<0>(instance) = get<0>(*found_it);
       get<1>(instance) = get<1>(*found_it);
@@ -108,14 +109,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     if (auto constructor =
             checkMatch<CXXConstructExpr>("constructor_expr", result)) {
-      //llvm::outs() << "@@ Found CONSTRUCTOR\n";
-      //constructor->dump();
+      // llvm::outs() << "@@ Found CONSTRUCTOR\n";
+      // constructor->dump();
     }
 
     if (auto instance = const_cast<FieldDecl *>(
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      //llvm::outs() << "@@ Found a member field instance: " << name << "\n";
+      // llvm::outs() << "@@ Found a member field instance: " << name << "\n";
 
       instances_.push_back(std::make_tuple(name, instance));
     }
@@ -144,7 +145,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             std::remove(strip_quote_name.begin(), strip_quote_name.end(), '\"'),
             strip_quote_name.end());
 
-        // This is the instance name. 
+        // This is the instance name.
         instances_.push_back(std::make_tuple(strip_quote_name, instance));
       }
     }
@@ -204,7 +205,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
   const PortType &getOutputStreamPorts() const { return outstream_ports_; }
   const PortType &getPorts() const { return sc_ports_; }
 
-  PortMatcher(const std::string &top_module = ".*" ) : top_module_decl_{top_module} {}
+  PortMatcher(const std::string &top_module = ".*")
+      : top_module_decl_{top_module} {}
 
   // AST matcher to detect field declarations
   auto makeFieldMatcher(const std::string &name) {
@@ -421,8 +423,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       DeclarationsToInstancesMapType;
 
   // This will store all the modules as ModuleDecl
-  typedef pair<string, ModuleDecl *> ModulePairType;
-  typedef std::vector<ModulePairType> ModuleMapType;
+  typedef std::pair<string, ModuleDecl *> ModulePairType;
+  typedef std::map<CXXRecordDecl *, ModulePairType> ModuleMapType;
 
  private:
   std::string top_module_decl_;
@@ -442,7 +444,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   InstanceMatcher instance_matcher;
 
   // Match ports
-  //PortMatcher port_matcher_;
+  // PortMatcher port_matcher_;
 
  public:
   // const PortMatcher &getPortMatcher() const { return port_matcher_; }
@@ -490,7 +492,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     instance_matcher.registerMatchers(finder);
 
     // add port (field) matcher
-    //port_matcher_.registerMatchers(finder);
+    // port_matcher_.registerMatchers(finder);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -502,8 +504,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       std::string name{decl->getIdentifier()->getNameStart()};
       // decl->dump();
       //
+      // TODO: Should we need this separation now?
+      // It seems that we can simply store them whether they are template
+      // specializations or not.
+      //
       if (isa<ClassTemplateSpecializationDecl>(decl)) {
-        llvm::outs() << "TEMPLATE SPECIAL\n";
+        // llvm::outs() << "TEMPLATE SPECIAL\n";
         found_template_declarations_.push_back(std::make_tuple(name, decl));
       } else {
         found_declarations_.push_back(std::make_tuple(name, decl));
@@ -518,11 +524,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // This is the new data structure that uses ModuleDecl internally.
       // Unpruned
       auto add_module{new ModuleDecl(name, decl)};
-      modules_.push_back(ModulePairType(add_module->getName(), add_module));
+      modules_.insert(std::pair<CXXRecordDecl *, ModulePairType>(
+          decl, ModulePairType(add_module->getName(), add_module)));
 
       // Instances should not be in subtree matching.
       //
-      
+
       // Subtree matcher
       MatchFinder port_registry{};
       PortMatcher port_matcher{top_module_decl_};
@@ -555,10 +562,21 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     // Remove declarations from modules_
     // This is the pruning.
 
+    auto remove_it{modules_.find(decl)};
+    if (remove_it != modules_.end()) {
+      modules_.erase(remove_it);
+    }
+
+    /*
     modules_.erase(
     std::remove_if(
         modules_.begin(), modules_.end(),
-        [&decl](auto const &module) { return (module.second->getModuleClassDecl() == decl); }), modules_.end() );
+        [&decl](auto const &module) {
+        // The first of this pair is the module class name.
+        auto module_pair{ module.second };
+        return (module_pair->second->getModuleClassDecl() == decl); }),
+    modules_.end() );
+        */
   }
 
   void pruneMatches() {
@@ -635,9 +653,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
     llvm::outs() << "## Module declarations: " << modules_.size() << "\n";
     for (const auto &i : modules_) {
-      auto decl_name{i.first};
-      auto decl{i.second};
-      llvm::outs() << "CXXRecordDecl* " << i.first
+      auto cxx_decl{i.first};
+      // TODO: really awkward
+      auto decl_name{i.second.first};
+      auto decl{i.second.second};
+
+      llvm::outs() << "CXXRecordDecl* " << cxx_decl
                    << ", module name: " << decl_name << "\n";
       decl->dump(llvm::outs());
     }
