@@ -110,14 +110,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     if (auto constructor =
             checkMatch<CXXConstructExpr>("constructor_expr", result)) {
-      llvm::outs() << "@@ Found CONSTRUCTOR\n";
-      constructor->dump();
+      //llvm::outs() << "@@ Found CONSTRUCTOR\n";
+      //constructor->dump();
     }
 
     if (auto instance = const_cast<FieldDecl *>(
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      llvm::outs() << "@@ Found a member field instance: " << name << "\n";
+      //llvm::outs() << "@@ Found a member field instance: " << name << "\n";
 
       instances_.push_back(std::make_tuple(name, instance));
     }
@@ -204,7 +204,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   const PortType &getOutputStreamPorts() const { return outstream_ports_; }
   const PortType &getPorts() const { return sc_ports_; }
 
-  PortMatcher(const std::string &top_module) : top_module_decl_{top_module} {}
+  PortMatcher(const std::string &top_module = ".*" ) : top_module_decl_{top_module} {}
 
   // AST matcher to detect field declarations
   auto makeFieldMatcher(const std::string &name) {
@@ -267,7 +267,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
     auto match_module_decls = 
       cxxRecordDecl(
-          hasName(top_module_decl_), // Specifies the top-level module name.
+          matchesName(top_module_decl_), // Specifies the top-level module name.
           hasDefinition(),          // There must be a definition.
           unless( isImplicit() ),   // Templates generate implicit structs - so ignore.
           isDerivedFrom(
@@ -288,6 +288,18 @@ class PortMatcher : public MatchFinder::MatchCallback {
           )
         );
 
+     auto match_sc_signal= cxxRecordDecl(
+        match_module_decls,
+        forEach(
+          fieldDecl(
+            hasType(
+              cxxRecordDecl((hasName("sc_signal")))
+            )
+          ).bind("sc_signal")
+        )
+      );
+
+
      auto match_sc_ports = cxxRecordDecl(
         match_module_decls,
         forEach(
@@ -304,14 +316,13 @@ class PortMatcher : public MatchFinder::MatchCallback {
     auto match_in_ports = makeFieldMatcher("sc_in");
     auto match_out_ports = makeFieldMatcher("sc_out");
     auto match_in_out_ports = makeFieldMatcher("sc_inout");
-    auto match_internal_signal = makeFieldMatcher("sc_signal");
     auto match_stream_in_ports = makeFieldMatcher("sc_stream_in");
     auto match_stream_out_ports = makeFieldMatcher("sc_stream_out");
 
     finder.addMatcher(match_in_ports, this);
     finder.addMatcher(match_out_ports, this);
     finder.addMatcher(match_in_out_ports, this);
-    finder.addMatcher(match_internal_signal, this);
+    finder.addMatcher(match_sc_signal, this);
     finder.addMatcher(match_sc_in_clk, this);
     finder.addMatcher(match_non_sc_types, this);
     finder.addMatcher(match_sc_ports, this);
@@ -431,7 +442,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   InstanceMatcher instance_matcher;
 
   // Match ports
-  // PortMatcher port_matcher_;
+  //PortMatcher port_matcher_;
 
  public:
   // const PortMatcher &getPortMatcher() const { return port_matcher_; }
@@ -479,7 +490,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     instance_matcher.registerMatchers(finder);
 
     // add port (field) matcher
-    // port_matcher_.registerMatchers(finder, top_module_decl_);
+    //port_matcher_.registerMatchers(finder);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -514,15 +525,16 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       PortMatcher port_matcher{top_module_decl_};
       port_matcher.registerMatchers(port_registry);
       port_registry.match(*decl, *result.Context);
+      port_matcher.dump();
 
       // All the ports for the CXXRecordDecl should be matched.
       // We can populate the ModuleDecl with that information.
+      // TODO: Have to add clock ports
       add_module->addPorts(port_matcher.getInputPorts(), "sc_in");
       add_module->addPorts(port_matcher.getOutputPorts(), "sc_out");
       add_module->addPorts(port_matcher.getInOutPorts(), "sc_inout");
       add_module->addPorts(port_matcher.getOtherVars(), "others");
-      // TODO: signals don't work yet
-      //add_module->addPorts(port_matcher.getSignals(), "sc_signal");
+      add_module->addPorts(port_matcher.getSignals(), "sc_signal");
       add_module->addPorts(port_matcher.getInputStreamPorts(), "sc_stream_in");
       add_module->addPorts(port_matcher.getOutputStreamPorts(),
                            "sc_stream_out");

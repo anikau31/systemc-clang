@@ -189,6 +189,23 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
               back_inserter(other_fields_));
   }
 
+  if (port_type == "sc_signal") {
+    // FIXME: There is a conversion from PortDecl to SignalContainer required :(
+    // They are equivalent, and quite unnecessary.
+    //
+    for (auto const &signal_port : found_ports) {
+      auto port_decl{ get<1>(signal_port)};
+      auto name{port_decl->getName()};
+      auto templates{port_decl->getTemplateType()};
+      auto field_decl{port_decl->getFieldDecl()};
+      // SignalContainer
+      auto signal_container{new SignalContainer{name, templates, field_decl}};
+      auto signal_entry{new Signal(name, signal_container)};
+      signals_.insert(ModuleDecl::signalPairType(name, signal_entry));
+    }
+    //std::copy(begin(found_ports), end(found_ports), back_inserter(signals_));
+  }
+
   if (port_type == "sc_stream_in") {
     std::copy(begin(found_ports), end(found_ports),
               back_inserter(istreamports_));
