@@ -190,11 +190,12 @@ class PortMatcher : public MatchFinder::MatchCallback {
   PortType inout_ports_;
   PortType other_fields_;
   PortType signal_fields_;
-  PortType sc_ports_;
   PortType instream_ports_;
   PortType outstream_ports_;
+  PortType sc_ports_;
 
  public:
+  const PortType &getClockPorts() const { return clock_ports_; }
   const PortType &getInputPorts() const { return in_ports_; }
   const PortType &getOutputPorts() const { return out_ports_; }
   const PortType &getInOutPorts() const { return inout_ports_; }
@@ -210,10 +211,10 @@ class PortMatcher : public MatchFinder::MatchCallback {
   auto makeFieldMatcher(const std::string &name) {
     /* clang-format off */
   return  cxxRecordDecl(
-      isExpansionInMainFile(),
-      isDerivedFrom(
-        hasName("::sc_core::sc_module")
-        ),
+      //isExpansionInMainFile(),
+      //isDerivedFrom(
+      //  hasName("::sc_core::sc_module")
+      //  ),
       forEach(
         fieldDecl(hasType(cxxRecordDecl(hasName(name)))).bind(name)
         )
@@ -333,7 +334,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     if (auto fd = checkMatch<FieldDecl>("sc_in_clk", result)) {
       std::string port_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found sc_in_clk: " << port_name << "\n";
+      llvm::outs() << "@@@@@@ Found sc_in_clk: " << port_name << "\n";
       insert_port(clock_ports_, fd);
     }
 
@@ -531,6 +532,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // We can populate the ModuleDecl with that information.
       // TODO: Have to add clock ports
       add_module->addPorts(port_matcher.getInputPorts(), "sc_in");
+      add_module->addPorts(port_matcher.getClockPorts(), "sc_in");
       add_module->addPorts(port_matcher.getOutputPorts(), "sc_out");
       add_module->addPorts(port_matcher.getInOutPorts(), "sc_inout");
       add_module->addPorts(port_matcher.getOtherVars(), "others");
