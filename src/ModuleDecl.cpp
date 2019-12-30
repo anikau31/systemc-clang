@@ -124,7 +124,7 @@ ModuleDecl::~ModuleDecl() {
   other_fields_.clear();
 }
 
-void ModuleDecl::setInstanceName( const string & name ) { instance_name_ = name; }
+void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
 
 void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
   template_parameters_ = parm_list;
@@ -174,15 +174,29 @@ void ModuleDecl::addOtherVars(const FindPorts::PortType &p) {
 
 void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
                           const std::string &port_type) {
-  /*
-  if ( port_type == "sc_in" ) { std::copy( begin(found_ports),
-  end(found_ports), back_inserter(in_ports_ )); } if ( port_type == "sc_out" )
-  { std::copy( begin(found_ports), end(found_ports), back_inserter(out_ports_
-  )); } if ( port_type == "sc_inout" ) {  std::copy( begin(found_ports),
-  end(found_ports), back_inserter(inout_ports_ )); } if ( port_type ==
-  "others" ) {  std::copy( begin(found_ports), end(found_ports),
-  back_inserter(other_fields_ )); }
-  */
+  if (port_type == "sc_in") {
+    std::copy(begin(found_ports), end(found_ports), back_inserter(in_ports_));
+  }
+  if (port_type == "sc_out") {
+    std::copy(begin(found_ports), end(found_ports), back_inserter(out_ports_));
+  }
+  if (port_type == "sc_inout") {
+    std::copy(begin(found_ports), end(found_ports),
+              back_inserter(inout_ports_));
+  }
+  if (port_type == "others") {
+    std::copy(begin(found_ports), end(found_ports),
+              back_inserter(other_fields_));
+  }
+
+  if (port_type == "sc_stream_in") {
+    std::copy(begin(found_ports), end(found_ports),
+              back_inserter(istreamports_));
+  }
+  if (port_type == "sc_stream_out") {
+    std::copy(begin(found_ports), end(found_ports),
+              back_inserter(ostreamports_));
+  }
 }
 
 void ModuleDecl::addInputPorts(const FindPorts::PortType &foundPorts) {
@@ -307,7 +321,9 @@ vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
 
 int ModuleDecl::getNumInstances() { return instance_list_.size(); }
 
-const ModuleDecl::signalMapType & ModuleDecl::getSignals() const { return signals_; }
+const ModuleDecl::signalMapType &ModuleDecl::getSignals() const {
+  return signals_;
+}
 
 ModuleDecl::processMapType ModuleDecl::getProcessMap() { return process_map_; }
 
@@ -545,7 +561,7 @@ json ModuleDecl::dump_json() {
     module_j["template_parameters"].push_back(parm);
   }
 
-  for (const auto &parm : template_args_ ) {
+  for (const auto &parm : template_args_) {
     module_j["template_args"].push_back(parm);
   }
   std::cout << module_j.dump(4);

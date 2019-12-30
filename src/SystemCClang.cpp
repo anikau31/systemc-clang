@@ -186,6 +186,9 @@ bool SystemCConsumer::fire() {
       // cxx_decl->dump();
       FindPorts ports{static_cast<CXXRecordDecl *>(cxx_decl), os_};
       // ports.dump();
+      //auto port_matcher{ module_declaration_handler.getPortMatcher() };
+      //add_module_decl->addPorts(port_matcher.getInputPorts(), "sc_in");
+      //add_module_decl->addPorts(port_matcher.getOutputPorts(), "sc_out");
       add_module_decl->addInputPorts(ports.getInputPorts());
       add_module_decl->addOutputPorts(ports.getOutputPorts());
       add_module_decl->addInputOutputPorts(ports.getInputOutputPorts());
