@@ -70,10 +70,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         });
 
     if (found_it != instances_.end()) {
-      // llvm::outs() << "FOUND AN FIELD instance: " << get<0>(*found_it) << ",
-      // "
-      // << get<1>(*found_it) << endl;
-      // This is an odd way to set tuples.  Perhaps replace with a nicer
+      llvm::outs() << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", " << get<1>(*found_it) << "\n";
+      //This is an odd way to set tuples.  Perhaps replace with a nicer
       // interface.
       get<0>(instance) = get<0>(*found_it);
       get<1>(instance) = get<1>(*found_it);
@@ -146,6 +144,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             std::remove(strip_quote_name.begin(), strip_quote_name.end(), '\"'),
             strip_quote_name.end());
 
+        // This is the instance name. 
         instances_.push_back(std::make_tuple(strip_quote_name, instance));
       }
     }
@@ -334,7 +333,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     if (auto fd = checkMatch<FieldDecl>("sc_in_clk", result)) {
       std::string port_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << "@@@@@@ Found sc_in_clk: " << port_name << "\n";
+      llvm::outs() << "Found sc_in_clk: " << port_name << "\n";
       insert_port(clock_ports_, fd);
     }
 
@@ -521,6 +520,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       auto add_module{new ModuleDecl(name, decl)};
       modules_.push_back(ModulePairType(add_module->getName(), add_module));
 
+      // Instances should not be in subtree matching.
+      //
+      
       // Subtree matcher
       MatchFinder port_registry{};
       PortMatcher port_matcher{top_module_decl_};
@@ -530,8 +532,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
       // All the ports for the CXXRecordDecl should be matched.
       // We can populate the ModuleDecl with that information.
-      // TODO: Have to add clock ports
       add_module->addPorts(port_matcher.getInputPorts(), "sc_in");
+      // Clock ports are also sc_in
       add_module->addPorts(port_matcher.getClockPorts(), "sc_in");
       add_module->addPorts(port_matcher.getOutputPorts(), "sc_out");
       add_module->addPorts(port_matcher.getInOutPorts(), "sc_inout");
