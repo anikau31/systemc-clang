@@ -423,8 +423,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       DeclarationsToInstancesMapType;
 
   // This will store all the modules as ModuleDecl
-  typedef std::pair<string, ModuleDecl *> ModulePairType;
-  typedef std::map<CXXRecordDecl *, ModulePairType> ModuleMapType;
+  //typedef ModuleDecl* ModulePairType;
+  typedef std::map<CXXRecordDecl *, ModuleDecl*> ModuleMapType;
 
  private:
   std::string top_module_decl_;
@@ -524,8 +524,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // This is the new data structure that uses ModuleDecl internally.
       // Unpruned
       auto add_module{new ModuleDecl(name, decl)};
-      modules_.insert(std::pair<CXXRecordDecl *, ModulePairType>(
-          decl, ModulePairType(add_module->getName(), add_module)));
+      modules_.insert(std::pair<CXXRecordDecl *, ModuleDecl*>(
+          decl, add_module));
 
       // Instances should not be in subtree matching.
       //
@@ -655,12 +655,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     for (const auto &i : modules_) {
       auto cxx_decl{i.first};
       // TODO: really awkward
-      auto decl_name{i.second.first};
-      auto decl{i.second.second};
+      auto module_decl{i.second};
+      auto decl_name{module_decl->getName()};
 
       llvm::outs() << "CXXRecordDecl* " << cxx_decl
                    << ", module name: " << decl_name << "\n";
-      decl->dump(llvm::outs());
+      module_decl->dump(llvm::outs());
     }
 
     // Print the instances.
