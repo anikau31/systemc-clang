@@ -14,10 +14,10 @@ file(COPY data DESTINATION ${CMAKE_BINARY_DIR}/tests/ )
 file(COPY ../examples/llnl-examples DESTINATION ${CMAKE_BINARY_DIR}/tests/data )
 
 set( UNIT_TEST_LIST 
-  t1
-  t2
-  t3
-  sreg-test
+  # t1
+  # t2
+  # t3
+  # sreg-test
   # t4-matchers
   t5-template-matching
   # subtree-matcher-test

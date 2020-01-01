@@ -3,9 +3,16 @@
 typedef float MY_FLOAT;
 typedef MY_FLOAT MY_FLOAT2;
 
+struct my_data {
+  public:
+    int ya_data;
+};
+
 SC_MODULE( non_template ) {
   int x;
   sc_in<bool> blah;
+  my_data mdt;
+  sc_signal<int> array_signal[10];
 
   void ef() {}
   SC_CTOR(non_template) {
@@ -16,12 +23,17 @@ SC_MODULE( non_template ) {
 template <typename S, typename T>
 SC_MODULE( test ){
     sc_in_clk clk;
-    sc_in<S> inS;
-    sc_out<S> outS;
-    sc_signal<S> test_signal;
 
+    sc_in<S> inS;
     sc_in<T> inT;
     sc_in<T> outT;
+
+    sc_out<S> outS;
+
+    sc_signal<S> test_signal;
+    sc_signal<S> data_array[10];
+    sc_signal<T> not_data_array[10];
+
 
     // FieldDecl of an sc_module
     //non_template simple_module;

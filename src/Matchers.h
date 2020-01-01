@@ -212,10 +212,10 @@ class PortMatcher : public MatchFinder::MatchCallback {
   auto makeFieldMatcher(const std::string &name) {
     /* clang-format off */
   return  cxxRecordDecl(
-      //isExpansionInMainFile(),
-      //isDerivedFrom(
-      //  hasName("::sc_core::sc_module")
-      //  ),
+      isExpansionInMainFile(),
+      isDerivedFrom(
+        hasName("::sc_core::sc_module")
+        ),
       forEach(
         fieldDecl(hasType(cxxRecordDecl(hasName(name)))).bind(name)
         )
@@ -278,19 +278,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
           unless(isDerivedFrom(matchesName("sc_event_queue")))
       );      
      
-    auto match_non_sc_types = cxxRecordDecl(
-        match_module_decls,
-        forEach(
-          fieldDecl(
-            allOf(
-            unless(hasType(cxxRecordDecl(matchesName("sc*")))),
-              unless(hasType(namedDecl(hasName("sc_in_clk"))))
-              )
-            ).bind("other_fields")
-          )
-        );
-
-     auto match_sc_signal= cxxRecordDecl(
+         auto match_sc_signal= cxxRecordDecl(
         match_module_decls,
         forEach(
           fieldDecl(
@@ -314,6 +302,55 @@ class PortMatcher : public MatchFinder::MatchCallback {
       );
 
     /* clang-format on */
+    auto match_all_ports = cxxRecordDecl(
+        match_module_decls,
+        eachOf(
+            forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk"))))
+                        .bind("sc_in_clk")),
+            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_in"))))
+                        .bind("sc_in")),
+            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_out"))))
+                        .bind("sc_out")),
+            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_inout"))))
+                        .bind("sc_inout")),
+            forEach(fieldDecl(
+                hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_signal_inout_if"))))
+                ).bind("sc_signal")),
+            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_in"))))
+                        .bind("sc_stream_in")),
+            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_out"))))
+                        .bind("sc_stream_out"))
+                )
+
+        /*
+          forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk")))).bind("sc_in_clk"),
+            fieldDecl(hasType(cxxRecordDecl(hasName("sc_in")))).bind("sc_in"),
+            fieldDecl(hasType(cxxRecordDecl(hasName("sc_out")))).bind("sc_out"),
+            fieldDecl(hasType(cxxRecordDecl(hasName("sc_inout")))).bind("sc_inout"),
+            fieldDecl(hasType(cxxRecordDecl(hasName("sc_signal")))).bind("sc_signal"),
+            fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_in")))).bind("sc_stream_in"),
+            fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_out")))).bind("sc_stream_out")
+            )
+            */
+    );
+
+    auto match_non_sc_types = cxxRecordDecl(
+       forEachDescendant(
+         fieldDecl(
+           anyOf(hasType(builtinType()),
+             hasType(cxxRecordDecl(
+                 allOf(
+                   unless(hasName("sc_in")),
+                   unless(hasName("sc_inout")), 
+                   unless(hasName("sc_out")), 
+                   unless(hasName("sc_signal")),
+                   unless(hasName("sc_stream_in")),
+                   unless(hasName("sc_stream_out"))
+                   ))))).bind("other_fields"))
+    );
+
+    // unless(
+    // forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_signal")))))),
 
     auto match_in_ports = makeFieldMatcher("sc_in");
     auto match_out_ports = makeFieldMatcher("sc_out");
@@ -321,6 +358,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     auto match_stream_in_ports = makeFieldMatcher("sc_stream_in");
     auto match_stream_out_ports = makeFieldMatcher("sc_stream_out");
 
+    /*
     finder.addMatcher(match_in_ports, this);
     finder.addMatcher(match_out_ports, this);
     finder.addMatcher(match_in_out_ports, this);
@@ -330,6 +368,9 @@ class PortMatcher : public MatchFinder::MatchCallback {
     finder.addMatcher(match_sc_ports, this);
     finder.addMatcher(match_stream_in_ports, this);
     finder.addMatcher(match_stream_out_ports, this);
+    */
+    finder.addMatcher(match_all_ports, this);
+    finder.addMatcher(match_non_sc_types, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -365,8 +406,10 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
     if (auto fd = checkMatch<FieldDecl>("other_fields", result)) {
       auto field_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found others fields: " << field_name << "\n";
+      llvm::outs() << " Found other_fields: " << field_name << "\n";
       insert_port(other_fields_, fd);
+      llvm::outs() << "WHOA dump\n";
+      fd->dump();
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_stream_in", result)) {
@@ -423,8 +466,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       DeclarationsToInstancesMapType;
 
   // This will store all the modules as ModuleDecl
-  //typedef ModuleDecl* ModulePairType;
-  typedef std::map<CXXRecordDecl *, ModuleDecl*> ModuleMapType;
+  // typedef ModuleDecl* ModulePairType;
+  typedef std::pair<CXXRecordDecl *, ModuleDecl *> ModulePairType;
+  typedef std::map<CXXRecordDecl *, ModuleDecl *> ModuleMapType;
 
  private:
   std::string top_module_decl_;
@@ -509,9 +553,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // specializations or not.
       //
       if (isa<ClassTemplateSpecializationDecl>(decl)) {
-        // llvm::outs() << "TEMPLATE SPECIAL\n";
+        //llvm::outs() << "TEMPLATE SPECIAL\n";
         found_template_declarations_.push_back(std::make_tuple(name, decl));
       } else {
+        //llvm::outs() << "NOT TEMPLATE SPECIAL\n";
         found_declarations_.push_back(std::make_tuple(name, decl));
       }
 
@@ -524,8 +569,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // This is the new data structure that uses ModuleDecl internally.
       // Unpruned
       auto add_module{new ModuleDecl(name, decl)};
-      modules_.insert(std::pair<CXXRecordDecl *, ModuleDecl*>(
-          decl, add_module));
+      modules_.insert(
+          std::pair<CXXRecordDecl *, ModuleDecl *>(decl, add_module));
 
       // Instances should not be in subtree matching.
       //
@@ -554,9 +599,13 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     }
   }
 
+  const ModuleMapType &getFoundModuleDeclarations() const { return modules_; }
+
+  /*
   const ModuleDeclarationMapType &getFoundModuleDeclarations() const {
     return pruned_declarations_map_;
   }
+  */
 
   void removeModule(CXXRecordDecl *decl) {
     // Remove declarations from modules_

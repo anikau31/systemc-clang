@@ -94,7 +94,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
     auto found_decl{found_module->second};
     REQUIRE(found_decl->getIPorts().size() == 1);
-    REQUIRE(found_decl->getOtherVars().size() == 1);
+    REQUIRE(found_decl->getOtherVars().size() == 2);
   }
 }
 
@@ -106,21 +106,21 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
           .release();
 
-  llvm::outs() << "================ TESTMATCHER =============== \n";
 
   // Name of top-level module declaration.
   std::string top{"test"};
 
-  ModuleDeclarationMatcher module_declaration_handler{};
-  MatchFinder matchRegistry{};
-  module_declaration_handler.registerMatchers(matchRegistry);
+  // llvm::outs() << "================ TESTMATCHER =============== \n";
+  // ModuleDeclarationMatcher module_declaration_handler{};
+  // MatchFinder matchRegistry{};
+  // module_declaration_handler.registerMatchers(matchRegistry);
   // Run all the matchers
-  matchRegistry.matchAST(from_ast->getASTContext());
-  module_declaration_handler.set_top_module_decl(top);
-  module_declaration_handler.pruneMatches();
-  module_declaration_handler.dump();
-
-  llvm::outs() << "================ END =============== \n";
+  // matchRegistry.matchAST(from_ast->getASTContext());
+  // module_declaration_handler.set_top_module_decl(top);
+  // module_declaration_handler.pruneMatches();
+  // module_declaration_handler.dump();
+//
+  // llvm::outs() << "================ END =============== \n";
 
   SystemCConsumer sc{from_ast};
   sc.setTopModule(top);

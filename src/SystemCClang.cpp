@@ -57,19 +57,18 @@ bool SystemCConsumer::fire() {
 
   // Check if the top-level module one of the sc_module declarations?
   //
-  // Map CXXRecordDecl => std::string
+  // Map CXXRecordDecl => ModuleDecl*
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
   auto found_top_module{std::find_if(
       found_module_declarations.begin(), found_module_declarations.end(),
-      [this](
-          const ModuleDeclarationMatcher::ModuleDeclarationPairType &element) {
-        return (element.second == getTopModule());
+      [this](const ModuleDeclarationMatcher::ModulePairType &element) {
+        return (element.second->getName() == getTopModule());
       })};
 
   if (found_top_module != found_module_declarations.end()) {
-    os_ << "Found the top module: " << found_top_module->second << ", "
-        << found_top_module->second << "\n";
+    os_ << "Found the top module: " << found_top_module->second->getName()
+        << ", " << found_top_module->second << "\n";
   }
 
   // ===========================================================
@@ -151,14 +150,17 @@ bool SystemCConsumer::fire() {
     // FIXME: This has to be replaced once xlat is fixed.
     vector<ModuleDecl *> module_decl_instances;
     ModuleDecl *p_dummy_module_decl{
-        new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
+        // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
+        // TODO: Remove deference pointer copy constructor
+        new ModuleDecl{*found_module_declarations[cxx_decl]}};
     // ==================
 
     os_ << "CXXRecordDecl* " << cxx_decl
-        << ", module type: " << found_module_declarations[cxx_decl];
+        << ", module type: " << found_module_declarations[cxx_decl]->getName();
     for (const auto &instance : instance_list) {
       auto add_module_decl{
-          new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
+          // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
+          new ModuleDecl{*found_module_declarations[cxx_decl]}};
 
       // Insert what you know about the parsed sc_module
       // 1. Insert the instance name from Matchers
@@ -184,11 +186,14 @@ bool SystemCConsumer::fire() {
       //
       //
       // cxx_decl->dump();
+
+
+      /*
       FindPorts ports{static_cast<CXXRecordDecl *>(cxx_decl), os_};
       // ports.dump();
-      //auto port_matcher{ module_declaration_handler.getPortMatcher() };
-      //add_module_decl->addPorts(port_matcher.getInputPorts(), "sc_in");
-      //add_module_decl->addPorts(port_matcher.getOutputPorts(), "sc_out");
+      // auto port_matcher{ module_declaration_handler.getPortMatcher() };
+      // add_module_decl->addPorts(port_matcher.getInputPorts(), "sc_in");
+      // add_module_decl->addPorts(port_matcher.getOutputPorts(), "sc_out");
       add_module_decl->addInputPorts(ports.getInputPorts());
       add_module_decl->addOutputPorts(ports.getOutputPorts());
       add_module_decl->addInputOutputPorts(ports.getInputOutputPorts());
@@ -199,6 +204,7 @@ bool SystemCConsumer::fire() {
       // 5. Find signals
       FindSignals signals{add_module_decl->getModuleClassDecl(), os_};
       add_module_decl->addSignals(signals.getSignals());
+      */
 
       // 5. Find  entry functions
       FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
