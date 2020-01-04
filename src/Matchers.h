@@ -8,6 +8,8 @@
 #include "PortDecl.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
+#include "clang/ASTMatchers/ASTMatchersMacros.h"
+#include "clang/ASTMatchers/ASTMatchersInternal.h"
 
 using namespace clang;
 using namespace clang::ast_matchers;
@@ -20,6 +22,23 @@ auto checkMatch(const std::string &name,
                 const MatchFinder::MatchResult &result) {
   return result.Nodes.getNodeAs<NodeType>(name);
 }
+
+
+/*
+ AST_MATCHER_P(CXXCtorInitializer, forField,
+               internal::Matcher<FieldDecl>, InnerMatcher) {
+   const FieldDecl *NodeAsDecl = Node.getAnyMember();
+   return (NodeAsDecl != nullptr &&
+       InnerMatcher.matches(*NodeAsDecl, Finder, Builder));
+ }
+*/
+ 
+AST_MATCHER(FieldDecl, matchesTypeName) {
+  auto type_ptr { Node.getType().getTypePtr()};
+  llvm::outs() << "[[OWN MATCHER]]\n";
+  type_ptr->dump();
+  return true; 
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -322,6 +341,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
                         .bind("sc_stream_out"))
                 )
 
+        // classTemplateSpecializationDecl(hasSpecializedTemplate(classTemplateDecl()))
         /*
           forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk")))).bind("sc_in_clk"),
             fieldDecl(hasType(cxxRecordDecl(hasName("sc_in")))).bind("sc_in"),
@@ -369,8 +389,14 @@ class PortMatcher : public MatchFinder::MatchCallback {
     finder.addMatcher(match_stream_in_ports, this);
     finder.addMatcher(match_stream_out_ports, this);
     */
-    finder.addMatcher(match_all_ports, this);
-    finder.addMatcher(match_non_sc_types, this);
+    //finder.addMatcher(match_all_ports, this);
+    //finder.addMatcher(match_non_sc_types, this);
+
+
+    // test own matcher
+    auto matcher_test = cxxRecordDecl(forEachDescendant(fieldDecl(matchesTypeName()).bind("other_fields")));
+    finder.addMatcher(matcher_test, this);
+
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {

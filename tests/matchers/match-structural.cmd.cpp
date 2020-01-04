@@ -60,6 +60,7 @@ set output dump
 
 #m fieldDecl(hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_signal_inout_if")))))
 
-m cxxRecordDecl(isExpansionInMainFile(), forEach(fieldDecl(hasType(arrayType(hasElementType(unless(builtinType()))))).bind("field")))
 
 #m cxxRecordDecl(forEachDescendant(fieldDecl(hasName("array_signal"))))
+
+m cxxRecordDecl(isExpansionInMainFile(), forEach(fieldDecl(hasType(arrayType()))))
