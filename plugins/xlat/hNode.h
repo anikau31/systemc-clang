@@ -71,8 +71,17 @@ namespace hnode {
       h_name = s;
       h_op = h;
     }
-  
-    ~hNode() { if (!is_leaf) child_list.clear(); }
+
+    ~hNode() {
+      if (!child_list.empty()) {
+	list<hNodep>::iterator it;
+	for (it = child_list.begin(); it != child_list.end(); ++it) {
+	  delete *it;
+	}
+      }
+      //cout << "visited hNode destructor\n";
+	    
+    }
   
 
     void setleaf(string s, hdlopsEnum h) {
