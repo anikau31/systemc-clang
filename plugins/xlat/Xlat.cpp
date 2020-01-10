@@ -45,7 +45,7 @@ bool Xlat::postFire() {
       //hNodep h_modname = new hNode(modname, hNode::hdlopsEnum::hModule);
 
       // Ports
-      hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsiglist);  // list of ports, signals
+      hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
       xlatport(instanceVec.at(i)->getIPorts(), hNode::hdlopsEnum::hPortin,
                h_ports);
       xlatport(instanceVec.at(i)->getOPorts(), hNode::hdlopsEnum::hPortout,
@@ -156,7 +156,7 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
       }
       h_process->child_list.push_back(h_senslist);
       CXXMethodDecl *emd = efc->getEntryMethod();
-      hNodep h_body = new hNode(hNode::hdlopsEnum::hCStmt);
+      hNodep h_body; // = new hNode(hNode::hdlopsEnum::hCStmt);
       XlatMethod xmethod(emd, h_body, os_);  //, xlatout);
       h_process->child_list.push_back(h_body);
       h_top->child_list.push_back(h_process);

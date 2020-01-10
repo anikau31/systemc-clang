@@ -17,7 +17,7 @@ namespace hnode {
   etype(hProcesses), \
   etype(hProcess), \
   etype(hCStmt), \
-    etype(hPortsiglist), \
+    etype(hPortsigvarlist), \
   etype(hPortin), \
   etype(hPortout), \
   etype(hPortio), \
@@ -94,6 +94,11 @@ namespace hnode {
 	    
     }
 
+    void set( hdlopsEnum h, string s = "") {
+      h_op = h;
+      h_name = s;
+    }
+    
     string printname(hdlopsEnum opc) {
       return hdlop_pn[static_cast<int>(opc)];
     }
@@ -116,7 +121,7 @@ namespace hnode {
       if (child_list.empty())
 	modelout << " NOLIST\n";
       else {
-	modelout << "[\n";
+	modelout << " [\n";
 	for (auto child : child_list)
 	  if (child)
 	    child->print(modelout, indnt+2);
