@@ -11,7 +11,7 @@ _systemc_clang_bin_path = os.environ['LLVM_INSTALL_DIR'] + "bin/systemc-clang"
 # TODO: we may not get the directory of the source folder
 # need to add that in the script
 _python_convert_template = 'python {} {{}}_hdl.txt'.format(os.environ['SYSTEMC_CLANG_BUILD_DIR'] + "../systemc-clang/plugins/xlat/convert.py")
-_test_folder = os.environ['SYSTEMC_CLANG_BUILD_DIR'] + "../systemc-clang/tests/data/llnl-examples/"
+_test_folder = os.environ['SYSTEMC_CLANG_BUILD_DIR'] + "/tests/data/verilog-conversion/llnl-examples/"
 _test_cpp_file = _test_folder + "{}.cpp"
 _golden_verilog_file = _test_folder + "handcrafted/{}.v"
 _golden_sexp_file = _test_folder + "handcrafted/{}_hdl.txt"
