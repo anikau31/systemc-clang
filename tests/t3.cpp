@@ -43,5 +43,17 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
         "FAIL_TEST: A module must have a port bound for it to be "
         "recognized.");
     REQUIRE(test_module != module_decl.end());
+    auto module_ptr{ test_module->second};
+
+    REQUIRE(module_ptr->getInstanceName() == "testing");
+
+    REQUIRE(module_ptr->getIPorts().size() == 2);
+    REQUIRE(module_ptr->getOPorts().size() == 1);
+    REQUIRE(module_ptr->getIOPorts().size() == 0);
+    REQUIRE(module_ptr->getSignals().size() == 1);
+    REQUIRE(module_ptr->getOtherVars().size() == 0);
+    REQUIRE(module_ptr->getInputStreamPorts().size() == 0);
+    REQUIRE(module_ptr->getOutputStreamPorts().size() == 0);
+
   }
 }

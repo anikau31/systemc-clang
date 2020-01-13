@@ -8,8 +8,8 @@
 #include "PortDecl.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
-#include "clang/ASTMatchers/ASTMatchersMacros.h"
 #include "clang/ASTMatchers/ASTMatchersInternal.h"
+#include "clang/ASTMatchers/ASTMatchersMacros.h"
 
 using namespace clang;
 using namespace clang::ast_matchers;
@@ -23,7 +23,6 @@ auto checkMatch(const std::string &name,
   return result.Nodes.getNodeAs<NodeType>(name);
 }
 
-
 /*
  AST_MATCHER_P(CXXCtorInitializer, forField,
                internal::Matcher<FieldDecl>, InnerMatcher) {
@@ -32,12 +31,38 @@ auto checkMatch(const std::string &name,
        InnerMatcher.matches(*NodeAsDecl, Finder, Builder));
  }
 */
- 
+
 AST_MATCHER(FieldDecl, matchesTypeName) {
-  auto type_ptr { Node.getType().getTypePtr()};
+  auto type_ptr{Node.getType().getTypePtr()};
   llvm::outs() << "[[OWN MATCHER]]\n";
-  type_ptr->dump();
-  return true; 
+  Node.dump();
+  
+  if ((type_ptr == nullptr) || (type_ptr->isBuiltinType())) {
+    type_ptr->dump();
+    return true;
+  } else {
+    FindTemplateTypes te;
+    te.Enumerate(type_ptr);
+    te.printTemplateArguments(llvm::outs());
+
+    auto args{te.getTemplateArgumentsType()};
+    FindTemplateTypes::argVectorType::iterator ait{args.begin()};
+
+    if (args.size() == 0) {
+      return true;
+    }
+
+    string field_type{ait->getTypeName()};
+    llvm::outs() << "\n@@@@@ Field type: " << field_type << "\n";
+
+    if ((field_type != "sc_in") && (field_type != "sc_out") &&
+        (field_type != "sc_signal") && (field_type != "sc_stream_in") &&
+        (field_type != "sc_stream_out")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,6 +111,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
               return (rt == decl);
             }
           }
+        return false;
         });
 
     if (found_it != instances_.end()) {
@@ -332,14 +358,14 @@ class PortMatcher : public MatchFinder::MatchCallback {
                         .bind("sc_out")),
             forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_inout"))))
                         .bind("sc_inout")),
-            forEach(fieldDecl(
-                hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_signal_inout_if"))))
-                ).bind("sc_signal")),
+            forEach(fieldDecl(anyOf(hasType(arrayType()),
+                                    hasType(cxxRecordDecl(isDerivedFrom(
+                                        hasName("sc_signal_inout_if"))))))
+                        .bind("sc_signal")),
             forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_in"))))
                         .bind("sc_stream_in")),
             forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_out"))))
-                        .bind("sc_stream_out"))
-                )
+                        .bind("sc_stream_out")))
 
         // classTemplateSpecializationDecl(hasSpecializedTemplate(classTemplateDecl()))
         /*
@@ -354,20 +380,15 @@ class PortMatcher : public MatchFinder::MatchCallback {
             */
     );
 
-    auto match_non_sc_types = cxxRecordDecl(
-       forEachDescendant(
-         fieldDecl(
-           anyOf(hasType(builtinType()),
-             hasType(cxxRecordDecl(
-                 allOf(
-                   unless(hasName("sc_in")),
-                   unless(hasName("sc_inout")), 
-                   unless(hasName("sc_out")), 
-                   unless(hasName("sc_signal")),
-                   unless(hasName("sc_stream_in")),
-                   unless(hasName("sc_stream_out"))
-                   ))))).bind("other_fields"))
-    );
+    auto match_non_sc_types = cxxRecordDecl(forEachDescendant(
+        fieldDecl(
+            anyOf(hasType(builtinType()),
+                  hasType(cxxRecordDecl(allOf(
+                      unless(hasName("sc_in")), unless(hasName("sc_inout")),
+                      unless(hasName("sc_out")), unless(hasName("sc_signal")),
+                      unless(hasName("sc_stream_in")),
+                      unless(hasName("sc_stream_out")))))))
+            .bind("other_fields")));
 
     // unless(
     // forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_signal")))))),
@@ -389,14 +410,14 @@ class PortMatcher : public MatchFinder::MatchCallback {
     finder.addMatcher(match_stream_in_ports, this);
     finder.addMatcher(match_stream_out_ports, this);
     */
-    //finder.addMatcher(match_all_ports, this);
-    //finder.addMatcher(match_non_sc_types, this);
-
-
+    finder.addMatcher(match_all_ports, this);
+    finder.addMatcher(match_non_sc_types, this);
+//
     // test own matcher
-    auto matcher_test = cxxRecordDecl(forEachDescendant(fieldDecl(matchesTypeName()).bind("other_fields")));
-    finder.addMatcher(matcher_test, this);
-
+    // auto matcher_test = cxxRecordDecl(
+        // forEachDescendant(fieldDecl(matchesTypeName()).bind("other_fields")));
+//
+    // finder.addMatcher(matcher_test, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -434,8 +455,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
       auto field_name{fd->getIdentifier()->getNameStart()};
       llvm::outs() << " Found other_fields: " << field_name << "\n";
       insert_port(other_fields_, fd);
-      llvm::outs() << "WHOA dump\n";
-      fd->dump();
+      //llvm::outs() << "WHOA dump\n";
+      //fd->dump();
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_stream_in", result)) {
@@ -579,10 +600,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // specializations or not.
       //
       if (isa<ClassTemplateSpecializationDecl>(decl)) {
-        //llvm::outs() << "TEMPLATE SPECIAL\n";
+        // llvm::outs() << "TEMPLATE SPECIAL\n";
         found_template_declarations_.push_back(std::make_tuple(name, decl));
       } else {
-        //llvm::outs() << "NOT TEMPLATE SPECIAL\n";
+        // llvm::outs() << "NOT TEMPLATE SPECIAL\n";
         found_declarations_.push_back(std::make_tuple(name, decl));
       }
 

@@ -35,6 +35,11 @@ SC_MODULE( test ){
     sc_signal<T> not_data_array[10];
 
 
+    // These are all others
+    static const int ORDER = 5;
+    static const double c[ORDER+1];
+    sc_buffer<double> i[ORDER];
+
     // FieldDecl of an sc_module
     //non_template simple_module;
 

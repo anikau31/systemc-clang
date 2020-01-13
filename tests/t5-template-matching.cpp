@@ -154,7 +154,8 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     auto found_decl{found_module_testing->second};
     REQUIRE(found_decl->getIPorts().size() == 4);
     REQUIRE(found_decl->getOPorts().size() == 1);
-    REQUIRE(found_decl->getSignals().size() == 1);
+    // This is 4 because sc_buffer is also inheriting from the signal interface.
+    REQUIRE(found_decl->getSignals().size() == 4);
     REQUIRE(found_decl->getOtherVars().size() == 0);
 
     // TODO: Check the template parameters.
@@ -163,7 +164,8 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     auto found_decl2{found_module_testing_float->second};
     REQUIRE(found_decl2->getIPorts().size() == 4);
     REQUIRE(found_decl2->getOPorts().size() == 1);
-    REQUIRE(found_decl2->getSignals().size() == 1);
+    // 1 regular signal, 2 array signals, 1 sc_buffer, which is a signal too.
+    REQUIRE(found_decl2->getSignals().size() == 4);
     REQUIRE(found_decl2->getOtherVars().size() == 0);
     
     // TODO: Check the template parameters.
