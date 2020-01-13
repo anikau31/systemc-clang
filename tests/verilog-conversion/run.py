@@ -1,44 +1,7 @@
 from driver import *
 from util.vparser import VerilogParser
+from util.conf import LLNLExampleTestingConfigurations
 import tempfile
-import contextlib
-
-class TestingConfigurations(object):
-    """parameters in this configuration might change"""
-
-    @property
-    def extra_header_folders(self):
-        # SystemC Clang build llnl-examples
-        return self.header_folders
-
-    @property
-    def positional_arguments(self):
-        headers = []
-        extra_header_folders = self.extra_header_folders
-        for h in extra_header_folders:
-            headers.extend(["-I", h])
-        return headers
-
-    def __init__(self, header_folders):
-        self.header_folders = header_folders
-
-class LLNLExampleTestingConfigurations(TestingConfigurations):
-
-    def __init__(self, header_folders=None):
-        if header_folders is None:
-            header_folders = []
-        this_folders = header_folders + [
-            '/home/allen/working/systemc-clang/examples/llnl-examples/'
-        ]
-        super(LLNLExampleTestingConfigurations, self).__init__(this_folders)
-
-@contextlib.contextmanager
-def make_temp_directory():
-    temp_dir = tempfile.mkdtemp()
-    try:
-        yield temp_dir
-    finally:
-        shutil.rmtree(temp_dir)
 
 def main():
     conf = LLNLExampleTestingConfigurations()

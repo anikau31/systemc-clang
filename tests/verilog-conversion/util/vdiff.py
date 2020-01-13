@@ -35,7 +35,6 @@ class VerilogASTDiff(object):
     @staticmethod
     def _diff_traverse(this_node, that_node):
         """traverses two asts using dfs, stops when different node encountered"""
-        print("at: {}".format(this_node))
         if type(this_node) != type(that_node):
             return False
 
@@ -48,7 +47,6 @@ class VerilogASTDiff(object):
             if a in that_names:
                 that_attr = getattr(that_node, a)
                 if this_attr != that_attr:
-                    print(this_attr, that_attr)
                     diff.append((a, this_attr, a, that_attr))
             else:
                 diff.append((a, this_attr, '', ''))
@@ -79,3 +77,4 @@ class VerilogASTDiff(object):
     def diff_info(this_verilog_ast, that_verilog_ast):
         """shows the diff information of two ast, including line number and node name"""
         return VerilogASTDiff._diff_traverse(this_verilog_ast, that_verilog_ast)
+

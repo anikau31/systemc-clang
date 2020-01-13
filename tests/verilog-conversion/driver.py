@@ -69,6 +69,8 @@ class SystemCClangDriver(object):
             SystemCClangDriver.PYTHON_CONVERT_TEMPLATE,
             path
         ])
+        if verbose:
+            print('cmdline', cmdline)
         try:
             if verbose:
                 subprocess.run(cmdline, shell=True)
@@ -112,6 +114,7 @@ class SystemCClangDriver(object):
         ok = True
         try:
             if verbose:
+                print('cmd: ', ' '.join(cmdline))
                 subprocess.run(' '.join(cmdline), shell=True)
             else:
                 with open(os.devnull, 'wb') as null:
@@ -137,6 +140,11 @@ class SystemCClangDriver(object):
     If any step fails, an exeption will be thrown
     """
     def generate_verilog(self, path, output_folder, verbose):
-        succ_sexp, sexp_filename = generate_sexp(path, output_folder, keep_sexp=True, verbose=verbose)
-        succ_v, v_filename = generate_verilog(sexp_filename, output_folder, keep_v=True, verbose=verbose)
+        succ_sexp, sexp_filename = self.generate_sexp(path, output_folder, keep_sexp=True, verbose=verbose)
+        if succ_sexp:
+            assert os.path.isfile(sexp_filename), 'Cannot find generated sexp_filename: {}'.format(sexp_filename)
+            succ_v, v_filename = self.generate_verilog_from_sexp(sexp_filename, output_folder, keep_v=True, verbose=verbose)
+            return succ_v, v_filename
+        else:
+            return False, None
 
