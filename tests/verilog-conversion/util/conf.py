@@ -53,12 +53,27 @@ class LLNLExampleTestingConfigurations(TestingConfigurations):
 class ExampleTestingConfigurations(TestingConfigurations):
     """parameters for ex_* examples"""
 
-    def __init__(self, root_folder, ex_id, header_folders=None):
+    def __init__(self, ex_id, header_folders=None):
+        self.ex_id = ex_id
         if header_folders is None:
             header_folders = []
         this_folders = header_folders + [
             '{}/ex_{}/'.format(TestingConfigurations.TEST_DATA_ROOT, ex_id)
         ]
-        root_folder = '{}/ex_{}/'.format(TestingConfigurations.TEST_DATA_ROOT, ex_id)
-        golden_folder = root_folder + 'handcrafted/'
-        super(ExampleTestingConfigurations, self).__init__(root_folder, golden_folder, this_folders)
+        # TODO: remove this special case for dependency crossing folder boundaries
+        if ex_id == 13:
+            this_folders.append('{}/ex_12/'.format(TestingConfigurations.TEST_DATA_ROOT))
+        root_folder = '{}/ex_{}/'.format(
+            TestingConfigurations.TEST_DATA_ROOT,
+            ex_id
+        )
+        golden_folder = '{}/tests/data/verilog-conversion/ex_{}/'\
+                        'handcrafted/'.format(
+            os.environ['SYSTEMC_CLANG_BUILD_DIR'], 
+            ex_id
+        )
+        super(ExampleTestingConfigurations, self).__init__(
+            root_folder, 
+            golden_folder, 
+            this_folders
+        )

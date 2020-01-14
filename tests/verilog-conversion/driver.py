@@ -3,13 +3,17 @@ import os
 import re
 import subprocess
 from pathlib import Path
+from shutil import move
 
 
 class SystemCClangDriver(object):
     """A clang driver class for running systemc-clang binaries
     """
     SYSTEMC_CLANG_BIN_PATH = os.environ['LLVM_INSTALL_DIR'] + "/bin/systemc-clang"
-    PYTHON_CONVERT_TEMPLATE = 'python {}'.format(os.environ['SYSTEMC_CLANG_BUILD_DIR'] + "../systemc-clang/plugins/xlat/convert.py")
+    PYTHON_CONVERT_TEMPLATE = 'python {}{}'.format(
+        os.environ['SYSTEMC_CLANG_BUILD_DIR'],
+        "../systemc-clang/plugins/xlat/convert.py"
+    )
     SYSTEMC_CLANG_ARGUMENTS = [
         "-I", "{}/include/".format(os.environ['SYSTEMC']),
         "-std=c++14",
@@ -19,11 +23,12 @@ class SystemCClangDriver(object):
         "-x c++ -w -c"
     ]
 
-    """
-    Extra args are positional and non positional arguments, for example,
-    extra header etc
-    """
+
     def systemc_clang_commandline(self, filename):
+        """
+        Extra args are positional and non positional arguments, for example,
+        extra header etc
+        """
         args = SystemCClangDriver.SYSTEMC_CLANG_ARGUMENTS + self.conf.positional_arguments
         return [
             SystemCClangDriver.SYSTEMC_CLANG_BIN_PATH,
@@ -35,13 +40,12 @@ class SystemCClangDriver(object):
         ]
 
     def __init__(self, conf, *args, **kwargs):
-        self.conf=conf
-        pass
+        self.conf = conf
 
-    """
-    Takes _hdl.txt as input, generate .v
-    """
     def generate_verilog_from_sexp(self, path, output_folder, keep_v=False, verbose=False):
+        """
+        Takes _hdl.txt as input, generate .v
+        """
         if not path.endswith('_hdl.txt'):
             raise RuntimeError('Filename should end with _hdl.txt')
         v_loc = path + '.v'
@@ -76,8 +80,13 @@ class SystemCClangDriver(object):
                 subprocess.run(cmdline, shell=True)
             else:
                 with open(os.devnull, 'wb') as null:
-                    subprocess.run(cmdline)
-            return True, output_filename
+                    subprocess.run(cmdline, 
+                            stdout=null,  stderr=null,
+                            shell=True)
+            if os.path.isfile(output_filename):
+                return True, output_filename
+            else:
+                return False, None
         except:
             raise
         finally:
@@ -102,7 +111,7 @@ class SystemCClangDriver(object):
             raise RuntimeError('File to generate: {} exists'.format(sexp_loc))
 
         sexp_filename = os.path.basename(sexp_loc)
-        output_filename = '{}/{}'.format(output_folder, sexp_filename)
+        output_filename = os.path.abspath('{}/{}'.format(output_folder, sexp_filename))
         if os.path.isfile(output_filename):
             raise RuntimeError('File to generate: {} exists'.format(output_filename))
 
@@ -121,8 +130,14 @@ class SystemCClangDriver(object):
                     subprocess.run(' '.join(cmdline), shell=True, 
                             stdout=null, 
                             stderr=null)
-            subprocess.run('mv {} {}'.format(sexp_loc, output_folder), shell=True)
-            return True, output_filename
+            move_required = os.path.normpath(sexp_loc) != os.path.normpath(output_filename)
+            if os.path.isfile(output_filename):
+                if move_required:
+                    move(sexp_loc, output_folder)
+                # subprocess.run('mv {} {}'.format(sexp_loc, output_folder), shell=True)
+                return True, output_filename
+            else:
+                return False, None
         except:
             raise
         finally:

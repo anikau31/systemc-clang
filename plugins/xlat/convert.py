@@ -20,6 +20,7 @@ l = Lark('''
         sigdecl: "(" "hSigdecl" ID ")"
         portdecltype: portdecl "[" htype htype "]"
                     | portdecl "[" htype htype htype "]"
+                    | portdecl "[" htype "]"
         ?portdecl: inportdecl | outportdecl
         inportdecl: "(" "hPortin" ID ")"
         outportdecl: "(" "hPortout" ID ")"
@@ -228,9 +229,11 @@ class VerilogTransformer(Transformer):
     def portdecltype(self, args):
         if len(args) == 3:
             return ('port', f'{args[1]} {args[2]} {args[0]}')
-        else:
-            width = int(args[3]) - 1
+        elif len(args) == 2:
             # Note: we remove the notation of signed vs unsigned for now
+            return ('port', f'{args[1]} {args[0]}')
+        else:
+            assert False, 'impossible path, args: {}'.format(args)
             return ('port', f'{args[1]} [{width}:0] {args[0]}')
 
     def outportdecl(self, args):
