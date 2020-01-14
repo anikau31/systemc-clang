@@ -12,6 +12,10 @@ class TestingConfigurations(object):
         # SystemC Clang build llnl-examples
         return self.header_folders
 
+    @extra_header_folders.setter
+    def set_extra_header_folders(self, value):
+        self._extra_header_folders = value
+
     @property
     def positional_arguments(self):
         """positional arguments for the systemc-clang command"""
