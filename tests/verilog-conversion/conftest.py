@@ -25,7 +25,7 @@ def exdriver(request):
 def pytest_addoption(parser):
     """add options for controlling the running of tests"""
     # whether output the clang output
-    parser.addoption("--tool-output", action="store_true")
+    parser.addoption("--tool-output", action="store_true", default=False)
 
 
 def pytest_generate_tests(metafunc):

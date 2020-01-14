@@ -2,14 +2,18 @@ import pytest
 from util.sexpdiff import sexpdiff
 from util.vparser import VerilogParser
 from shutil import copy
+import os
 
 
 def test_sreg_sexp(tmpdir, llnldriver, tool_output):
     conf = llnldriver.conf
     filename = conf.get_module_name('sreg.cpp')
     output_folder = tmpdir
+    copy(filename, output_folder)
+    cpp_path = str(output_folder) + '/' + 'sreg.cpp'
+    assert os.path.isfile(cpp_path)
     res, filename = llnldriver.generate_sexp(
-        path=filename,
+        path=cpp_path,
         output_folder=output_folder,
         verbose=tool_output,
         keep_sexp=True
@@ -40,6 +44,7 @@ def test_sreg_verilog(tmpdir, llnldriver, tool_output):
     )
     print(str(diff_info))
     assert diff_info is None, 'should be no diff in Verilog'
+
 
 def test_sreg_sexp_to_verilog(tmpdir, llnldriver, tool_output):
     conf = llnldriver.conf

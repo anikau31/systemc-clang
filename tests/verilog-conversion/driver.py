@@ -120,7 +120,6 @@ class SystemCClangDriver(object):
             print('sexp_loc: ', sexp_loc)
             print('sexp_filename: ', sexp_filename)
             print('output_filename: ', output_filename)
-        ok = True
         try:
             if verbose:
                 print('cmd: ', ' '.join(cmdline))
@@ -131,12 +130,13 @@ class SystemCClangDriver(object):
                             stdout=null, 
                             stderr=null)
             move_required = os.path.normpath(sexp_loc) != os.path.normpath(output_filename)
-            if os.path.isfile(output_filename):
+            if os.path.isfile(sexp_loc):
                 if move_required:
                     move(sexp_loc, output_folder)
                 # subprocess.run('mv {} {}'.format(sexp_loc, output_folder), shell=True)
                 return True, output_filename
             else:
+                print("Failed Path 1")
                 return False, None
         except:
             raise
@@ -148,7 +148,7 @@ class SystemCClangDriver(object):
             if keep_sexp and os.path.normpath(sexp_loc) != os.path.normpath(output_filename):
                 subprocess.run('rm -f {}'.format(sexp_loc), shell=True)
 
-        return ok, output_filename
+        return False, None
 
     """
     Takes .cpp as input, generate .v
