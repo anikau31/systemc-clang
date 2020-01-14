@@ -84,9 +84,9 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
                                    return element.second->getName() == top;
                                  })};
 
-  SECTION("Testing top-level module: non_templated", "[top-module]") {
+  SECTION("Testing top-level module: non_template", "[top-module]") {
     // There should be only one module.
-    INFO("Top-level module specified as non_templated.");
+    INFO("Top-level module specified as non_template.");
     REQUIRE(module_decl.size() == 1);
 
     // Actually found the module.
@@ -94,6 +94,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
     auto found_decl{found_module->second};
     REQUIRE(found_decl->getIPorts().size() == 1);
+    REQUIRE(found_decl->getOPorts().size() == 0);
     REQUIRE(found_decl->getOtherVars().size() == 2);
   }
 }

@@ -10,6 +10,7 @@ struct my_data {
 
 SC_MODULE( non_template ) {
   int x;
+  int y[10];
   sc_in<bool> blah;
   my_data mdt;
   sc_signal<int> array_signal[10];
@@ -28,7 +29,10 @@ SC_MODULE( test ){
     sc_in<T> inT;
     sc_in<T> outT;
 
+    sc_in<S> inArrayS[10];
+
     sc_out<S> outS;
+    sc_out<S> outArrayS[5];
 
     sc_signal<S> test_signal;
     sc_signal<S> data_array[10];

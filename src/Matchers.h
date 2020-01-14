@@ -36,6 +36,7 @@ AST_MATCHER(FieldDecl, matchesTypeName) {
   auto type_ptr{Node.getType().getTypePtr()};
   llvm::outs() << "[[OWN MATCHER]]\n";
   Node.dump();
+    type_ptr->dump();
   
   if ((type_ptr == nullptr) || (type_ptr->isBuiltinType())) {
     type_ptr->dump();
@@ -268,11 +269,41 @@ class PortMatcher : public MatchFinder::MatchCallback {
     /* clang-format on */
   }
 
+  auto makeSignalMatcher( const std::string &name ) {
+
+    return fieldDecl(
+        anyOf(
+          hasType(arrayType(hasElementType(hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name))))))),
+          hasType(cxxRecordDecl(isDerivedFrom(hasName(name))) )
+        )
+      );
+  }
+
+  auto makePortHasNameMatcher( const std::string &name ) {
+    return fieldDecl(
+        anyOf(
+          hasType(arrayType(hasElementType(asString(name)))),
+          hasType(cxxRecordDecl((hasName(name))) )
+        )
+      );
+  }
+
+  auto makePortHasNamedDeclNameMatcher( const std::string &name ) {
+    return fieldDecl(
+        anyOf(
+          hasType(arrayType(hasElementType(asString(name)))),
+          hasType(namedDecl(hasName(name)) )
+        )
+      );
+  }
+
+
+
   void printTemplateArguments(PortType &found_ports) {
     // Input ports
     for (const auto &i : found_ports) {
       llvm::outs() << "name: " << get<0>(i)
-                   << ", FieldDecl*: " << get<1>(i)->getFieldDecl();
+        << ", FieldDecl*: " << get<1>(i)->getFieldDecl();
       get<1>(i)->getTemplateType()->printTemplateArguments(llvm::outs());
       llvm::outs() << "\n";
     }
@@ -281,37 +312,27 @@ class PortMatcher : public MatchFinder::MatchCallback {
   auto parseTemplateType(const FieldDecl *fd) {
     //}, const ModuleDeclarationMatcher::PortType &found_ports ) {
     QualType qual_type{fd->getType()};
-    const Type *type_ptr{qual_type.getTypePtr()};
-    auto template_ptr{new FindTemplateTypes()};
-    template_ptr->Enumerate(type_ptr);
-    return template_ptr;
-  }
+  const Type *type_ptr{qual_type.getTypePtr()};
+  auto template_ptr{new FindTemplateTypes()};
+  template_ptr->Enumerate(type_ptr);
+  return template_ptr;
+}
 
-  template <typename T>
-  void insert_port(PortType &port, T *decl) {
-    // port is a map entry [CXXRecordDecl* => vector<PortDecl*>]
-    auto name{decl->getIdentifier()->getNameStart()};
+template <typename T>
+void insert_port(PortType &port, T *decl) {
+  // port is a map entry [CXXRecordDecl* => vector<PortDecl*>]
+  auto name{decl->getIdentifier()->getNameStart()};
 
-    port.push_back(std::make_tuple(
+  port.push_back(std::make_tuple(
         name, new PortDecl(name, decl, parseTemplateType(decl))));
-  }
+}
 
-  void registerMatchers(MatchFinder &finder) {
-    /* clang-format off */
+void registerMatchers(MatchFinder &finder) {
+  /* clang-format off */
 
-    auto match_sc_in_clk = cxxRecordDecl( 
-        isDerivedFrom(hasName("sc_module")),
-          forEach( 
-            fieldDecl(
-              hasType(
-                namedDecl(
-                  hasName("sc_in_clk")
-                  )
-                )
-              ).bind("sc_in_clk")
-            )
-        );
-
+  //
+  // Matchers for compositions.
+    //
     auto match_module_decls = 
       cxxRecordDecl(
           matchesName(top_module_decl_), // Specifies the top-level module name.
@@ -322,19 +343,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
             ),
           unless(isDerivedFrom(matchesName("sc_event_queue")))
       );      
-     
-         auto match_sc_signal= cxxRecordDecl(
-        match_module_decls,
-        forEach(
-          fieldDecl(
-            hasType(
-              cxxRecordDecl((hasName("sc_signal")))
-            )
-          ).bind("sc_signal")
-        )
-      );
-
-
+    
      auto match_sc_ports = cxxRecordDecl(
         match_module_decls,
         forEach(
@@ -346,39 +355,57 @@ class PortMatcher : public MatchFinder::MatchCallback {
         )
       );
 
-    /* clang-format on */
-    auto match_all_ports = cxxRecordDecl(
-        match_module_decls,
-        eachOf(
-            forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk"))))
-                        .bind("sc_in_clk")),
-            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_in"))))
-                        .bind("sc_in")),
-            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_out"))))
-                        .bind("sc_out")),
-            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_inout"))))
-                        .bind("sc_inout")),
-            forEach(fieldDecl(anyOf(hasType(arrayType()),
-                                    hasType(cxxRecordDecl(isDerivedFrom(
-                                        hasName("sc_signal_inout_if"))))))
-                        .bind("sc_signal")),
-            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_in"))))
-                        .bind("sc_stream_in")),
-            forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_out"))))
-                        .bind("sc_stream_out")))
-
-        // classTemplateSpecializationDecl(hasSpecializedTemplate(classTemplateDecl()))
-        /*
-          forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk")))).bind("sc_in_clk"),
-            fieldDecl(hasType(cxxRecordDecl(hasName("sc_in")))).bind("sc_in"),
-            fieldDecl(hasType(cxxRecordDecl(hasName("sc_out")))).bind("sc_out"),
-            fieldDecl(hasType(cxxRecordDecl(hasName("sc_inout")))).bind("sc_inout"),
-            fieldDecl(hasType(cxxRecordDecl(hasName("sc_signal")))).bind("sc_signal"),
-            fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_in")))).bind("sc_stream_in"),
-            fieldDecl(hasType(cxxRecordDecl(hasName("sc_stream_out")))).bind("sc_stream_out")
-            )
-            */
-    );
+     // Matches all the SystemC Ports.
+     // Notice that the ports can also be arrays.
+     auto match_all_ports = cxxRecordDecl(
+         match_module_decls,
+         eachOf(
+           forEach(
+             makePortHasNamedDeclNameMatcher("sc_in_clk")
+             /*
+             fieldDecl(
+               hasType(namedDecl(hasName("sc_in_clk"))))
+               */
+             .bind("sc_in_clk")),
+           forEach(
+               makePortHasNameMatcher("sc_in")
+               /*fieldDecl(
+               hasType(cxxRecordDecl(hasName("sc_in"))))
+               */
+             .bind("sc_in")),
+           forEach( 
+               makePortHasNameMatcher("sc_out")
+             /*fieldDecl(
+               hasType(cxxRecordDecl(hasName("sc_out"))))*/
+             .bind("sc_out")),
+           forEach(
+               makePortHasNameMatcher("sc_inout")
+             /*fieldDecl(
+               hasType(cxxRecordDecl(hasName("sc_inout"))))*/
+             .bind("sc_inout")),
+           // These can be also of array type. 
+           forEach(
+             makeSignalMatcher("sc_signal_inout_if")
+             /*
+             fieldDecl(anyOf(
+                 hasType(arrayType()), 
+                 hasType(cxxRecordDecl(isDerivedFrom(
+                       hasName("sc_signal_inout_if"))))))
+                       */
+             .bind("sc_signal")),
+           forEach(
+               makePortHasNameMatcher("sc_stream_in")
+               /*
+               fieldDecl(
+               hasType(cxxRecordDecl(hasName("sc_stream_in"))))*/
+             .bind("sc_stream_in")),
+           forEach(
+               makePortHasNameMatcher("sc_stream_out")
+               /*
+               fieldDecl(
+                 hasType(cxxRecordDecl(hasName("sc_stream_out"))))*/
+               .bind("sc_stream_out")))
+               );
 
     auto match_non_sc_types = cxxRecordDecl(forEachDescendant(
         fieldDecl(
@@ -390,34 +417,15 @@ class PortMatcher : public MatchFinder::MatchCallback {
                       unless(hasName("sc_stream_out")))))))
             .bind("other_fields")));
 
-    // unless(
-    // forEach(fieldDecl(hasType(cxxRecordDecl(hasName("sc_signal")))))),
+    /* clang-format on */
 
-    auto match_in_ports = makeFieldMatcher("sc_in");
-    auto match_out_ports = makeFieldMatcher("sc_out");
-    auto match_in_out_ports = makeFieldMatcher("sc_inout");
-    auto match_stream_in_ports = makeFieldMatcher("sc_stream_in");
-    auto match_stream_out_ports = makeFieldMatcher("sc_stream_out");
-
-    /*
-    finder.addMatcher(match_in_ports, this);
-    finder.addMatcher(match_out_ports, this);
-    finder.addMatcher(match_in_out_ports, this);
-    finder.addMatcher(match_sc_signal, this);
-    finder.addMatcher(match_sc_in_clk, this);
-    finder.addMatcher(match_non_sc_types, this);
-    finder.addMatcher(match_sc_ports, this);
-    finder.addMatcher(match_stream_in_ports, this);
-    finder.addMatcher(match_stream_out_ports, this);
-    */
+    // Add matchers to finder.
     finder.addMatcher(match_all_ports, this);
     finder.addMatcher(match_non_sc_types, this);
-//
-    // test own matcher
-    // auto matcher_test = cxxRecordDecl(
-        // forEachDescendant(fieldDecl(matchesTypeName()).bind("other_fields")));
-//
-    // finder.addMatcher(matcher_test, this);
+
+    auto test_matcher = cxxRecordDecl(forEachDescendant(
+          fieldDecl(matchesTypeName())));
+    finder.addMatcher(test_matcher, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
