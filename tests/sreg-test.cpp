@@ -43,6 +43,13 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   }
 
   // Testing instances.
+
+  auto test_module{model->getInstance("testing")};
+  auto sreg_bypass{model->getInstance("sreg_bypass")};
+  auto sreg_fwd{model->getInstance("sreg_fwd")};
+  auto sreg_fwd_rev{model->getInstance("sreg_fwd_rev")};
+
+  /*
   auto test_module{std::find_if(
       module_decl.begin(), module_decl.end(), [](const auto &element) {
         return element.second->getInstanceName() == "testing";
@@ -62,6 +69,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
       module_decl.begin(), module_decl.end(), [](const auto &element) {
         return element.second->getInstanceName() == "sreg_fwd_rev";
       })};
+      */
 
   //
   // Begin the tests.
@@ -72,16 +80,16 @@ TEST_CASE("sreg example", "[llnl-examples]") {
          << module_decl.size());
     CHECK(module_decl.size() == 4);
 
-    REQUIRE(test_module != module_decl.end());
-    REQUIRE(sreg_bypass != module_decl.end());
-    REQUIRE(sreg_fwd != module_decl.end());
-    REQUIRE(sreg_fwd_rev != module_decl.end());
+    REQUIRE(test_module != nullptr);
+    REQUIRE(sreg_bypass != nullptr);
+    REQUIRE(sreg_fwd !=  nullptr);
+    REQUIRE(sreg_fwd_rev !=  nullptr);
 
     //
     //
     //
     INFO("Checking sreg_bypass ports.");
-    auto sreg_bypass_decl{sreg_bypass->second};
+    auto sreg_bypass_decl{sreg_bypass};
 
     REQUIRE(sreg_bypass_decl->getIPorts().size() == 2);
     REQUIRE(sreg_bypass_decl->getOPorts().size() == 0);
@@ -95,7 +103,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     //
     //
     INFO("Checking sreg_fwd ports.");
-    auto sreg_fwd_decl{sreg_fwd->second};
+    auto sreg_fwd_decl{sreg_fwd};
 
     REQUIRE(sreg_fwd_decl->getIPorts().size() == 2);
     REQUIRE(sreg_fwd_decl->getOPorts().size() == 0);
@@ -110,7 +118,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     //
     INFO("Checking sreg_fwd_rev ports.");
 
-    auto sreg_fwd_rev_decl{sreg_fwd_rev->second};
+    auto sreg_fwd_rev_decl{sreg_fwd_rev};
 
     REQUIRE(sreg_fwd_rev_decl->getIPorts().size() == 2);
     REQUIRE(sreg_fwd_rev_decl->getOPorts().size() == 0);

@@ -95,28 +95,52 @@ int sc_main(int argc, char *argv[]) {
   sc.HandleTranslationUnit(from_ast->getASTContext());
 
   auto model{sc.getSystemCModel()};
-  // model->dump(llvm::outs());
+
+  // This provides the module declarations.
   auto module_decl{model->getModuleDecl()};
+  auto module_instance_map{model->getModuleInstanceMap()};
 
-  auto test_module{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "testing";
-      })};
+  // Want to find an instance named "testing".
 
-  auto simple_module{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "simple_module_instance";
-      })};
+  ModuleDecl *test_module{model->getInstance("testing")};;
+  ModuleDecl *simple_module{model->getInstance("simple_module_instance")};
+
+/*
+  for (auto const &element : module_instance_map) {
+    auto instance_list{element.second};
+
+    auto test_module_it = std::find_if(
+        instance_list.begin(), instance_list.end(), [](const auto &instance) {
+          return instance->getInstanceName() == "testing";
+        });
+    test_module = *test_module_it;
+    if (test_module_it != instance_list.end()) {
+      break;
+    }
+  }
+
+  for (auto const &element : module_instance_map) {
+    auto instance_list{element.second};
+    auto simple_module_it = std::find_if(
+        instance_list.begin(), instance_list.end(), [](const auto &instance) {
+          return instance->getInstanceName() == "simple_module_instance";
+        });
+    simple_module = *simple_module_it;
+    if (simple_module_it != instance_list.end()) {
+      break;
+    }
+  }
+  */
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
-    INFO("ERROR: number of sc_module declarations found: "
+    INFO("Checking number of sc_module declarations found: "
          << module_decl.size());
 
     REQUIRE(module_decl.size() == 2);
 
-    REQUIRE(test_module != module_decl.end());
-    REQUIRE(simple_module != module_decl.end());
+    REQUIRE(test_module != nullptr);
+    REQUIRE(simple_module != nullptr);
 
     INFO("Checking member ports for test instance.");
     // These checks should be performed on the declarations.
@@ -128,7 +152,7 @@ int sc_main(int argc, char *argv[]) {
     // auto p_module{module_decl.find("test")};
     //
     //
-    auto test_module_inst{test_module->second};
+    auto test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
     REQUIRE(test_module_inst->getIPorts().size() == 3);
@@ -140,7 +164,7 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
 
     INFO("Checking member ports for simple module instance.");
-    auto simple_module_inst{simple_module->second};
+    auto simple_module_inst{simple_module};
 
     // Check if the proper number of ports are found.
     REQUIRE(simple_module_inst->getIPorts().size() == 3);

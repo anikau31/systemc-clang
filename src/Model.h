@@ -51,7 +51,8 @@ public:
   void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
   void updateModuleDecl();
 
-  moduleMapType getModuleDecl();
+  const moduleMapType & getModuleDecl();
+  ModuleDecl *getInstance(const std::string &instance_name);
   entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
   eventMapType getEventMapType();
   moduleInstanceMapType & getModuleInstanceMap();

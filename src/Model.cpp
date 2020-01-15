@@ -25,11 +25,17 @@ Model::~Model() {
 Model::Model(const Model &from) { modules_ = from.modules_; }
 
 void Model::addModuleDecl(ModuleDecl *md) {
+  // class name, instance name.
   modules_.push_back(Model::modulePairType(md->getName(), md));
 }
 
 void Model::addModuleDeclInstances(ModuleDecl *md, vector<ModuleDecl *> mdVec) {
   module_instance_map_.insert(moduleInstancePairType(md, mdVec));
+
+  llvm::outs() << "[HDP] To add instances: " << md << "=" << mdVec.size()
+               << "\n";
+  llvm::outs() << "[HDP] Added module instances: "
+               << module_instance_map_.size() << "\n";
 }
 
 void Model::addSimulationTime(FindSimTime::simulationTimeMapType simTime) {
@@ -112,7 +118,24 @@ void Model::updateModuleDecl() {
 // }
 // }
 //
-Model::moduleMapType Model::getModuleDecl() { return modules_; }
+const Model::moduleMapType &Model::getModuleDecl() { return modules_; }
+
+ModuleDecl *Model::getInstance(const std::string &instance_name) {
+  for (auto const &element : module_instance_map_) {
+    auto instance_list{element.second};
+
+    auto test_module_it =
+        std::find_if(instance_list.begin(), instance_list.end(),
+                     [instance_name](const auto &instance) {
+                       return (instance->getInstanceName() == instance_name);
+                     });
+
+    if (test_module_it != instance_list.end()) {
+      return *test_module_it;
+    }
+  }
+  return nullptr;
+}
 
 Model::entryFunctionGPUMacroMapType Model::getEntryFunctionGPUMacroMap() {
   llvm::errs() << "\n return Size : " << entry_function_gpu_macro_map_.size();
@@ -128,8 +151,9 @@ Model::eventMapType Model::getEventMapType() { return event_map_; }
 unsigned int Model::getNumEvents() { return (event_map_.size() - 3); }
 
 void Model::dump(llvm::raw_ostream &os) {
-  os << "-- Number of sc_module instances: " << modules_.size();
-  os << "\n";
+  os << "-- Number of sc_module instances: " << modules_.size() << "\n";
+  os << "-- Number of sc_module instances in map: "
+     << module_instance_map_.size() << "\n";
 
   for (const auto &mod : modules_) {
     // <string, ModuleDecl*>

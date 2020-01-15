@@ -129,19 +129,26 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
 
+  auto found_module_testing{model->getInstance("testing")};
+
+  /*
   auto found_module_testing{std::find_if(
       module_decl.begin(), module_decl.end(), [&top](const auto &element) {
         // Get the declaration name.
         return ((element.second->getName() == top) &&
                 (element.second->getInstanceName() == "testing"));
       })};
+      */
 
+  auto found_module_testing_float{model->getInstance("testing_float_double")};
+  /*
   auto found_module_testing_float{std::find_if(
       module_decl.begin(), module_decl.end(), [&top](const auto &element) {
         // Get the declaration name.
         return ((element.second->getName() == top) &&
                 (element.second->getInstanceName() == "testing_float_double"));
       })};
+      */
 
   SECTION("Testing top-level module: test", "[top module]") {
     // There should be two modules because there are two instances.
@@ -149,10 +156,10 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     REQUIRE(module_decl.size() == 2);
 
     // Actually found the module.
-    REQUIRE(found_module_testing != module_decl.end());
-    REQUIRE(found_module_testing_float != module_decl.end());
+    REQUIRE(found_module_testing != nullptr);
+    REQUIRE(found_module_testing_float != nullptr);
 
-    auto found_decl{found_module_testing->second};
+    auto found_decl{found_module_testing};
     REQUIRE(found_decl->getIPorts().size() == 4);
     REQUIRE(found_decl->getOPorts().size() == 1);
     // This is 4 because sc_buffer is also inheriting from the signal interface.
@@ -162,7 +169,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     // TODO: Check the template parameters.
     //
 
-    auto found_decl2{found_module_testing_float->second};
+    auto found_decl2{found_module_testing_float};
     REQUIRE(found_decl2->getIPorts().size() == 4);
     REQUIRE(found_decl2->getOPorts().size() == 1);
     // 1 regular signal, 2 array signals, 1 sc_buffer, which is a signal too.

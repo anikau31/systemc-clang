@@ -149,10 +149,11 @@ bool SystemCConsumer::fire() {
     //
     // FIXME: This has to be replaced once xlat is fixed.
     vector<ModuleDecl *> module_decl_instances;
-    ModuleDecl *p_dummy_module_decl{
+    ModuleDecl *p_dummy_module_decl{found_module_declarations[cxx_decl]};
+    //
         // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
         // TODO: Remove deference pointer copy constructor
-        new ModuleDecl{*found_module_declarations[cxx_decl]}};
+     //   new ModuleDecl{*found_module_declarations[cxx_decl]}};
     // ==================
 
     os_ << "CXXRecordDecl* " << cxx_decl
@@ -185,27 +186,6 @@ bool SystemCConsumer::fire() {
       // 4. Find ports
       //
       //
-      // cxx_decl->dump();
-
-
-      /*
-      FindPorts ports{static_cast<CXXRecordDecl *>(cxx_decl), os_};
-      // ports.dump();
-      // auto port_matcher{ module_declaration_handler.getPortMatcher() };
-      // add_module_decl->addPorts(port_matcher.getInputPorts(), "sc_in");
-      // add_module_decl->addPorts(port_matcher.getOutputPorts(), "sc_out");
-      add_module_decl->addInputPorts(ports.getInputPorts());
-      add_module_decl->addOutputPorts(ports.getOutputPorts());
-      add_module_decl->addInputOutputPorts(ports.getInputOutputPorts());
-      add_module_decl->addOtherVars(ports.getOtherVars());
-      add_module_decl->addInputStreamPorts(ports.getInStreamPorts());
-      add_module_decl->addOutputStreamPorts(ports.getOutStreamPorts());
-
-      // 5. Find signals
-      FindSignals signals{add_module_decl->getModuleClassDecl(), os_};
-      add_module_decl->addSignals(signals.getSignals());
-      */
-
       // 5. Find  entry functions
       FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
                                      os_};
@@ -238,7 +218,11 @@ bool SystemCConsumer::fire() {
       os_ << "============== END DUMP the MODULEDECL ==================\n";
       // Insert the module into the model.
       // All modules are also instances.
-      systemcModel_->addModuleDecl(add_module_decl);
+
+      // Make the dummy equal to the updated add_module_decl
+      // This will make module declarations be one of the module instances.
+      *p_dummy_module_decl = *add_module_decl;
+      systemcModel_->addModuleDecl(p_dummy_module_decl);
       module_decl_instances.push_back(add_module_decl);
     }
     os_ << "\n";
@@ -247,6 +231,7 @@ bool SystemCConsumer::fire() {
     //
     // FIXME: Only there to make sure xlat still compiles.
     // This should be removed.
+    llvm::outs() << "[HDP] Add instances to model\n";
     systemcModel_->addModuleDeclInstances(p_dummy_module_decl,
                                           module_decl_instances);
   }
