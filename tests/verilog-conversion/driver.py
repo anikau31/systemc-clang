@@ -123,12 +123,14 @@ class SystemCClangDriver(object):
         try:
             if verbose:
                 print('cmd: ', ' '.join(cmdline))
-                subprocess.run(' '.join(cmdline), shell=True)
+                res = subprocess.run(' '.join(cmdline), shell=True)
             else:
                 with open(os.devnull, 'wb') as null:
-                    subprocess.run(' '.join(cmdline), shell=True, 
+                    res = subprocess.run(' '.join(cmdline), shell=True, 
                             stdout=null, 
                             stderr=null)
+            if res.returncode != 0:
+                raise RuntimeError('systemc-clang exits with code: {}'.format(res.returncode))
             move_required = os.path.normpath(sexp_loc) != os.path.normpath(output_filename)
             if os.path.isfile(sexp_loc):
                 if move_required:
