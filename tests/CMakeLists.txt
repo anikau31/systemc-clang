@@ -21,6 +21,8 @@ set( UNIT_TEST_LIST
   # t4-matchers
   t5-template-matching
   # subtree-matcher-test
+  # XLAT tests
+  xlat-sreg-test
   )
 
 include(CTest)
@@ -36,8 +38,8 @@ foreach(NAME IN LISTS UNIT_TEST_LIST)
   set(TARGET_NAME ${NAME})
   add_executable(${TARGET_NAME} main.cpp ${TEST_SOURCE_NAME} )
     
-  target_link_libraries(${TARGET_NAME} PUBLIC libsystemc-clang ${CLANG_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
-  target_include_directories(${TARGET_NAME} PUBLIC ../externals/catch2/ PUBLIC ../tests/ PUBLIC ${CMAKE_BINARY_DIR}/tests/ )
+  target_link_libraries(${TARGET_NAME} PUBLIC libsystemc-clang PUBLIC libxlat ${CLANG_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
+  target_include_directories(${TARGET_NAME} PUBLIC ../externals/catch2/ PUBLIC ../tests/ PUBLIC ../plugins/xlat/ PUBLIC ${CMAKE_BINARY_DIR}/tests/ )
   add_test( NAME ${TARGET_NAME} COMMAND ${TARGET_NAME} 
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests/data/ )
 endforeach()

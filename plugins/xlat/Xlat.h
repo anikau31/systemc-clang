@@ -3,6 +3,10 @@
 
 #include "SystemCClang.h"
 
+#include "clang/AST/AST.h"
+#include "clang/AST/ASTConsumer.h"
+#include "clang/AST/ASTImporter.h"
+#
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/FileSystem.h"
@@ -14,11 +18,14 @@ using namespace hnode;
 
 
 class Xlat : public SystemCConsumer {
-
   public:
   Xlat( CompilerInstance& ci, std::string topModule )
     : SystemCConsumer( ci, topModule ) {
     }
+
+   Xlat(ASTUnit *from_ast, std::string top = "!none") 
+   : SystemCConsumer(from_ast) {
+   }
 
   bool postFire();
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
