@@ -18,6 +18,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #  Make verbose on?
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
+# Maya
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+# end Maya
+
 # SystemC-Clang versions
 set(SCC_MAJOR_VERSION 1)
 set(SCC_MINOR_VERSION ${SCC_MAJOR_VERSION}.1)
