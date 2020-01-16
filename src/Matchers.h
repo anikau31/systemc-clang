@@ -36,8 +36,8 @@ AST_MATCHER(FieldDecl, matchesTypeName) {
   auto type_ptr{Node.getType().getTypePtr()};
   llvm::outs() << "[[OWN MATCHER]]\n";
   Node.dump();
-    type_ptr->dump();
-  
+  type_ptr->dump();
+
   if ((type_ptr == nullptr) || (type_ptr->isBuiltinType())) {
     type_ptr->dump();
     return true;
@@ -78,6 +78,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   typedef std::vector<InstanceDeclType> InstanceDeclarationsType;
 
  private:
+  // Instances can come in two forms:
+  // FieldDecl: this is when they are members of a class.
+  // VarDecl  : this is when they are simply variables such as in functions or
+  // in the main().
+  //
+  // The way to identify them both together is to look at its base class Decl.
+  // Then use dyn_cast<> to detect whether it is one of the two above mentioned
+  // types.
   InstanceDeclarationsType instances_;
 
  public:
@@ -112,14 +120,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
               return (rt == decl);
             }
           }
-        return false;
+          return false;
         });
 
     if (found_it != instances_.end()) {
-      llvm::outs() << "FOUND AN FIELD instance: " << get<0>(*found_it) << ", "
-                   << get<1>(*found_it) << "\n";
-      // This is an odd way to set tuples.  Perhaps replace with a nicer
-      // interface.
       get<0>(instance) = get<0>(*found_it);
       get<1>(instance) = get<1>(*found_it);
 
@@ -130,40 +134,48 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
-    auto match_instances = 
-      fieldDecl( 
-          hasType( 
-            cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
-            )
-          ).bind("instances_in_fielddecl");
 
-    auto match_instances_vars = 
-      varDecl( 
-          hasType( 
-            cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
-            ), 
-          hasDescendant(
-            cxxConstructExpr(hasArgument(0, stringLiteral().bind("constructor_arg"))).bind("constructor_expr")
+    // We will have two matchers.
+    //
+    // Match when the following conditions are satisifed:
+    // * It is a FieldDecl
+    // * It has a type that is a C++ class that is derived from sc_module
+    //
+    auto match_instances = fieldDecl(
+        hasType(
+          cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))))
+        ).bind("instances_in_fielddecl");
+
+    // Match when the following conditions are satisifed:
+    // * It is a VarDecl
+    // * It has a type that is a C++ class that is derived from sc_module
+    //   - It has a descendant that has a constructor that has as its first argument
+    //     a name provided for it.
+    //     (Every sc_module instantiated must have a string literal.
+    auto match_instances_vars =
+        varDecl(
+            hasType(
+                cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))),
+            hasDescendant(
+              cxxConstructExpr(hasArgument(0,
+              stringLiteral().bind("constructor_arg"))).bind("constructor_expr")
+              )
             )
-          ).bind("instances_in_vardecl");
+            .bind("instances_in_vardecl");
+
     /* clang-format on */
 
+    // Add the two matchers.
     finder.addMatcher(match_instances, this);
     finder.addMatcher(match_instances_vars, this);
   }
 
+  // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
-    if (auto constructor =
-            checkMatch<CXXConstructExpr>("constructor_expr", result)) {
-      // llvm::outs() << "@@ Found CONSTRUCTOR\n";
-      // constructor->dump();
-    }
 
     if (auto instance = const_cast<FieldDecl *>(
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      // llvm::outs() << "@@ Found a member field instance: " << name << "\n";
-
       instances_.push_back(std::make_tuple(name, instance));
     }
 
@@ -183,9 +195,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         LangOpts.CPlusPlus = true;
         clang::PrintingPolicy Policy(LangOpts);
 
-        std::string s;
-        llvm::raw_string_ostream sstream(s);
+        std::string name_string;
+        llvm::raw_string_ostream sstream(name_string);
         first_arg->printPretty(sstream, 0, Policy);
+        // The instance name comes with " and we should remove them.
         std::string strip_quote_name{sstream.str()};
         strip_quote_name.erase(
             std::remove(strip_quote_name.begin(), strip_quote_name.end(), '\"'),
@@ -197,17 +210,18 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     }
   }
 
+
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.
     for (const auto &i : instances_) {
-      llvm::outs() << "module declarations name: " << get<0>(i) << ", "
+      llvm::outs() << "[DBG] module declarations name: " << get<0>(i) << ", "
                    << get<1>(i) << "\n";
 
       auto p_field_var_decl{get<1>(i)};
       if (isa<FieldDecl>(p_field_var_decl)) {
-        llvm::outs() << " ==> FieldDecl\n";
+        llvm::outs() << "[DBG] FieldDecl\n";
       } else {
-        llvm::outs() << " ==> VarDecl\n";
+        llvm::outs() << "[DBG] VarDecl\n";
       }
     }
   }
@@ -257,53 +271,64 @@ class PortMatcher : public MatchFinder::MatchCallback {
   // AST matcher to detect field declarations
   auto makeFieldMatcher(const std::string &name) {
     /* clang-format off */
+
+    // The generic field matcher has the following conditions.
+    // * It is in the main provided file (not in the library files).
+    // * It is derived from sc_module
+    // * For each child that is a FieldDecl, 
+    //   - The type of it is a C++ class whose class name is "name"
   return  cxxRecordDecl(
       isExpansionInMainFile(),
-      isDerivedFrom(
-        hasName("::sc_core::sc_module")
+      isDerivedFrom(hasName("::sc_core::sc_module")
         ),
       forEach(
         fieldDecl(hasType(cxxRecordDecl(hasName(name)))).bind(name)
         )
       );
-    /* clang-format on */
   }
 
-  auto makeSignalMatcher( const std::string &name ) {
-
-    return fieldDecl(
-        anyOf(
-          hasType(arrayType(hasElementType(hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name))))))),
-          hasType(cxxRecordDecl(isDerivedFrom(hasName(name))) )
-        )
-      );
+  // This is a matcher to identify sc_signal.
+  // The reason for this matcher is for it to match arrays of sc_signals as well.
+  // The conditions are as follows:
+  // * It must be a FieldDecl
+  //   - It must have a type that is either an array whose type is a c++ class derived 
+  //     from a class name called "name"
+  //   - Or, it is has a type that is a c++ class that is derived from class name "name".
+  auto makeSignalMatcher(const std::string &name) {
+    return fieldDecl(anyOf(
+        hasType(arrayType(hasElementType(
+            hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name))))))),
+        hasType(cxxRecordDecl(isDerivedFrom(hasName(name))))));
   }
 
-  auto makePortHasNameMatcher( const std::string &name ) {
-    return fieldDecl(
-        anyOf(
-          hasType(arrayType(hasElementType(asString(name)))),
-          hasType(cxxRecordDecl((hasName(name))) )
-        )
-      );
+  // This is a matcher for sc_port.
+  // It has the following conditions:
+  // * It must be a FieldDecl
+  //   - It has a type that is an array whose type has a name "name"
+  //   - Or, it has a type that is a C++ class whose class name is "name".
+  //
+  auto makePortHasNameMatcher(const std::string &name) {
+    return fieldDecl(anyOf(hasType(arrayType(hasElementType(asString(name)))),
+                           hasType(cxxRecordDecl((hasName(name))))));
   }
 
-  auto makePortHasNamedDeclNameMatcher( const std::string &name ) {
-    return fieldDecl(
-        anyOf(
-          hasType(arrayType(hasElementType(asString(name)))),
-          hasType(namedDecl(hasName(name)) )
-        )
-      );
+  // This is a matcher for sc_in_clk since it uses a NamedDecl.
+  // It has the following conditions:
+  // * It must be a FieldDecl,
+  //  - It has a type that is an array whose type has a name "name".
+  //  - Or, it has a type that is a NamedDecl whose name is "name".
+  //
+  auto makePortHasNamedDeclNameMatcher(const std::string &name) {
+    return fieldDecl(anyOf(hasType(arrayType(hasElementType(asString(name)))),
+                           hasType(namedDecl(hasName(name)))));
   }
 
-
-
+  /* clang-format on */
   void printTemplateArguments(PortType &found_ports) {
     // Input ports
     for (const auto &i : found_ports) {
       llvm::outs() << "name: " << get<0>(i)
-        << ", FieldDecl*: " << get<1>(i)->getFieldDecl();
+                   << ", FieldDecl*: " << get<1>(i)->getFieldDecl();
       get<1>(i)->getTemplateType()->printTemplateArguments(llvm::outs());
       llvm::outs() << "\n";
     }
@@ -312,27 +337,27 @@ class PortMatcher : public MatchFinder::MatchCallback {
   auto parseTemplateType(const FieldDecl *fd) {
     //}, const ModuleDeclarationMatcher::PortType &found_ports ) {
     QualType qual_type{fd->getType()};
-  const Type *type_ptr{qual_type.getTypePtr()};
-  auto template_ptr{new FindTemplateTypes()};
-  template_ptr->Enumerate(type_ptr);
-  return template_ptr;
-}
+    const Type *type_ptr{qual_type.getTypePtr()};
+    auto template_ptr{new FindTemplateTypes()};
+    template_ptr->Enumerate(type_ptr);
+    return template_ptr;
+  }
 
-template <typename T>
-void insert_port(PortType &port, T *decl) {
-  // port is a map entry [CXXRecordDecl* => vector<PortDecl*>]
-  auto name{decl->getIdentifier()->getNameStart()};
+  template <typename T>
+  void insert_port(PortType &port, T *decl) {
+    // port is a map entry [CXXRecordDecl* => vector<PortDecl*>]
+    auto name{decl->getIdentifier()->getNameStart()};
 
-  port.push_back(std::make_tuple(
+    port.push_back(std::make_tuple(
         name, new PortDecl(name, decl, parseTemplateType(decl))));
-}
+  }
 
-void registerMatchers(MatchFinder &finder) {
-  /* clang-format off */
+  void registerMatchers(MatchFinder &finder) {
+    /* clang-format off */
 
-  //
-  // Matchers for compositions.
     //
+    // Matchers for compositions.
+    // These matchers are used to form other matchers. 
     auto match_module_decls = 
       cxxRecordDecl(
           matchesName(top_module_decl_), // Specifies the top-level module name.
@@ -423,8 +448,8 @@ void registerMatchers(MatchFinder &finder) {
     finder.addMatcher(match_all_ports, this);
     finder.addMatcher(match_non_sc_types, this);
 
-    auto test_matcher = cxxRecordDecl(forEachDescendant(
-          fieldDecl(matchesTypeName())));
+    auto test_matcher =
+        cxxRecordDecl(forEachDescendant(fieldDecl(matchesTypeName())));
     finder.addMatcher(test_matcher, this);
   }
 
@@ -463,8 +488,8 @@ void registerMatchers(MatchFinder &finder) {
       auto field_name{fd->getIdentifier()->getNameStart()};
       llvm::outs() << " Found other_fields: " << field_name << "\n";
       insert_port(other_fields_, fd);
-      //llvm::outs() << "WHOA dump\n";
-      //fd->dump();
+      // llvm::outs() << "WHOA dump\n";
+      // fd->dump();
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_stream_in", result)) {
