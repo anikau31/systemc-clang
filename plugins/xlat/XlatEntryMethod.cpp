@@ -342,6 +342,7 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
     }
   }
   os_ << "not yet implemented operator call expr, opc is " << clang::getOperatorSpelling(opcall->getOperator()) << " num arguments " << opcall->getNumArgs() << " skipping\n";
+  h_ret = new hNode(hNode::hdlopsEnum::hUnimpl);
   return true;
 }
 
@@ -355,7 +356,7 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
 }
 
 bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
-  hNodep h_ifstmt, h_ifc, h_ifthen, h_ifelse;
+  hNodep h_ifstmt, h_ifc = NULL, h_ifthen = NULL, h_ifelse = NULL;
   h_ifstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
   if (ifs->getConditionVariable()) {
       // Variable declarations are not allowed in if conditions
@@ -367,13 +368,14 @@ bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
     h_ifc = h_ret;
   }
   TRY_TO(TraverseStmt(ifs->getThen()));
-  h_ifthen = h_ret;
+  if (h_ret != h_ifc) // unchanged if couldn't translate the then clause
+    h_ifthen = h_ret;
 
   if (ifs->getElse()) {
     TRY_TO(TraverseStmt(ifs->getElse()));
-    h_ifelse = h_ret;
+    if ((h_ret != h_ifc) && (h_ret != h_ifthen))
+      h_ifelse = h_ret;
   }
-  else h_ifelse = NULL;
   h_ifstmt->child_list.push_back(h_ifc);
   h_ifstmt->child_list.push_back(h_ifthen);
   if(h_ifelse) h_ifstmt->child_list.push_back(h_ifelse);
