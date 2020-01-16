@@ -361,15 +361,17 @@ class PortMatcher : public MatchFinder::MatchCallback {
     auto match_module_decls = 
       cxxRecordDecl(
           matchesName(top_module_decl_), // Specifies the top-level module name.
-          hasDefinition(),          // There must be a definition.
-          unless( isImplicit() ),   // Templates generate implicit structs - so ignore.
+          hasDefinition(),               // There must be a definition.
+          unless( isImplicit() ),        // Templates generate implicit structs - so ignore.
           isDerivedFrom(
             hasName("::sc_core::sc_module") 
             ),
           unless(isDerivedFrom(matchesName("sc_event_queue")))
       );      
-    
-     auto match_sc_ports = cxxRecordDecl(
+
+
+     // Matches all the SystemC Ports.
+    auto match_sc_ports = cxxRecordDecl(
         match_module_decls,
         forEach(
           fieldDecl(
@@ -380,58 +382,29 @@ class PortMatcher : public MatchFinder::MatchCallback {
         )
       );
 
-     // Matches all the SystemC Ports.
      // Notice that the ports can also be arrays.
      auto match_all_ports = cxxRecordDecl(
          match_module_decls,
          eachOf(
            forEach(
-             makePortHasNamedDeclNameMatcher("sc_in_clk")
-             /*
-             fieldDecl(
-               hasType(namedDecl(hasName("sc_in_clk"))))
-               */
-             .bind("sc_in_clk")),
+             makePortHasNamedDeclNameMatcher("sc_in_clk").bind("sc_in_clk")),
            forEach(
-               makePortHasNameMatcher("sc_in")
-               /*fieldDecl(
-               hasType(cxxRecordDecl(hasName("sc_in"))))
-               */
-             .bind("sc_in")),
+               makePortHasNameMatcher("sc_in").bind("sc_in")),
            forEach( 
-               makePortHasNameMatcher("sc_out")
-             /*fieldDecl(
-               hasType(cxxRecordDecl(hasName("sc_out"))))*/
-             .bind("sc_out")),
+               makePortHasNameMatcher("sc_out").bind("sc_out")),
            forEach(
-               makePortHasNameMatcher("sc_inout")
-             /*fieldDecl(
-               hasType(cxxRecordDecl(hasName("sc_inout"))))*/
-             .bind("sc_inout")),
-           // These can be also of array type. 
+               makePortHasNameMatcher("sc_inout").bind("sc_inout")),
            forEach(
-             makeSignalMatcher("sc_signal_inout_if")
-             /*
-             fieldDecl(anyOf(
-                 hasType(arrayType()), 
-                 hasType(cxxRecordDecl(isDerivedFrom(
-                       hasName("sc_signal_inout_if"))))))
-                       */
-             .bind("sc_signal")),
+             makeSignalMatcher("sc_signal_inout_if").bind("sc_signal")),
            forEach(
-               makePortHasNameMatcher("sc_stream_in")
-               /*
-               fieldDecl(
-               hasType(cxxRecordDecl(hasName("sc_stream_in"))))*/
-             .bind("sc_stream_in")),
+               makePortHasNameMatcher("sc_stream_in").bind("sc_stream_in")),
            forEach(
-               makePortHasNameMatcher("sc_stream_out")
-               /*
-               fieldDecl(
-                 hasType(cxxRecordDecl(hasName("sc_stream_out"))))*/
-               .bind("sc_stream_out")))
+               makePortHasNameMatcher("sc_stream_out").bind("sc_stream_out")))
                );
 
+    // TODO: I'm not convinced that this would work. 
+    //
+    // I wonder if the way to fix this is to to unless(match_all_ports))
     auto match_non_sc_types = cxxRecordDecl(forEachDescendant(
         fieldDecl(
             anyOf(hasType(builtinType()),
@@ -447,7 +420,11 @@ class PortMatcher : public MatchFinder::MatchCallback {
     // Add matchers to finder.
     finder.addMatcher(match_all_ports, this);
     finder.addMatcher(match_non_sc_types, this);
+    finder.addMatcher(match_sc_ports, this);
 
+    // This is only for testing. 
+    //
+    // It is a way to show that we can write our own complex predicates for AST matchers :)
     auto test_matcher =
         cxxRecordDecl(forEachDescendant(fieldDecl(matchesTypeName())));
     finder.addMatcher(test_matcher, this);
@@ -488,8 +465,6 @@ class PortMatcher : public MatchFinder::MatchCallback {
       auto field_name{fd->getIdentifier()->getNameStart()};
       llvm::outs() << " Found other_fields: " << field_name << "\n";
       insert_port(other_fields_, fd);
-      // llvm::outs() << "WHOA dump\n";
-      // fd->dump();
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_stream_in", result)) {
@@ -602,9 +577,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
           matchesName(top_module_decl_),  // Specifies the top-level module name.
           hasDefinition(),            // There must be a definition.
           unless( isImplicit() ),     // Templates generate implicit structs - so ignore.
-          isDerivedFrom(
-            hasName("::sc_core::sc_module") 
-            ),
+          isDerivedFrom(hasName("::sc_core::sc_module")),
           unless(isDerivedFrom(matchesName("sc_event_queue")))
           ).bind("sc_module");
     /* clang-format on */
@@ -626,11 +599,11 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
                    << decl->getIdentifier()->getNameStart()
                    << " CXXRecordDecl*: " << decl << "\n";
       std::string name{decl->getIdentifier()->getNameStart()};
-      // decl->dump();
       //
       // TODO: Should we need this separation now?
       // It seems that we can simply store them whether they are template
       // specializations or not.
+      // This is necessary because of the way clang represents them in their AST.
       //
       if (isa<ClassTemplateSpecializationDecl>(decl)) {
         // llvm::outs() << "TEMPLATE SPECIAL\n";
@@ -639,12 +612,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         // llvm::outs() << "NOT TEMPLATE SPECIAL\n";
         found_declarations_.push_back(std::make_tuple(name, decl));
       }
-
-      /* This is going to match only in subtree.
-      MatchFinder instance_registry{};
-      instance_matcher.registerMatchers(instance_registry);
-      instance_registry.match(*decl, *result.Context);
-      */
 
       // This is the new data structure that uses ModuleDecl internally.
       // Unpruned
@@ -676,16 +643,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
                            "sc_stream_out");
 
       // TODO: Add all ports (getPorts) that are derived from sc_port.
+      // This was requested by Scott.  The matcher is already in place.
+      //
     }
   }
 
   const ModuleMapType &getFoundModuleDeclarations() const { return modules_; }
-
-  /*
-  const ModuleDeclarationMapType &getFoundModuleDeclarations() const {
-    return pruned_declarations_map_;
-  }
-  */
 
   void removeModule(CXXRecordDecl *decl) {
     // Remove declarations from modules_
@@ -695,18 +658,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     if (remove_it != modules_.end()) {
       modules_.erase(remove_it);
     }
-
-    /*
-    modules_.erase(
-    std::remove_if(
-        modules_.begin(), modules_.end(),
-        [&decl](auto const &module) {
-        // The first of this pair is the module class name.
-        auto module_pair{ module.second };
-        return (module_pair->second->getModuleClassDecl() == decl); }),
-    modules_.end() );
-        */
-  }
+ }
 
   void pruneMatches() {
     // Must have found instances.
@@ -750,28 +702,22 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   }
 
   void dump() {
-    llvm::outs() << "## Top-level module: " << top_module_decl_ << "\n";
-    llvm::outs() << "## Non-template module declarations: "
+    llvm::outs() << "[DBG] Top-level module: " << top_module_decl_ << "\n";
+    llvm::outs() << "[DBG] Non-template module declarations: "
                  << found_declarations_.size() << "\n";
     for (const auto &i : found_declarations_) {
       llvm::outs() << "module name         : " << get<0>(i) << ", " << get<1>(i)
                    << "\n";
     }
 
-    llvm::outs() << "## Template module declarations: "
+    llvm::outs() << "[DBG] Template module declarations: "
                  << found_template_declarations_.size() << "\n";
     for (const auto &i : found_template_declarations_) {
       llvm::outs() << "template module name: " << get<0>(i) << ", " << get<1>(i)
                    << "\n";
     }
 
-    // for (const auto &i : pruned_declarations_) {
-    // llvm::outs() << "pruned module name: " << get<0>(i) << ", " <<
-    // get<1>(i)
-    // << "\n";
-    // }
-
-    llvm::outs() << "## Pruned declaration Map: "
+    llvm::outs() << "[DBG] Pruned declaration Map: "
                  << pruned_declarations_map_.size() << "\n";
     for (const auto &i : pruned_declarations_map_) {
       auto decl{i.first};
@@ -780,7 +726,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
                    << ", module name: " << decl_name << "\n";
     }
 
-    llvm::outs() << "## Module declarations: " << modules_.size() << "\n";
+    llvm::outs() << "[DBG] Module declarations: " << modules_.size() << "\n";
     for (const auto &i : modules_) {
       auto cxx_decl{i.first};
       // TODO: really awkward
@@ -795,7 +741,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     // Print the instances.
     instance_matcher.dump();
 
-    llvm::outs() << "\n## Dump map of decl->instances: "
+    llvm::outs() << "\n[DBG] Dump map of decl->instances: "
                  << declaration_instance_map_.size() << "\n";
 
     for (const auto &i : declaration_instance_map_) {
@@ -808,11 +754,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
                      << get<1>(instance) << "\n";
       }
     }
-
-    // llvm::outs() << "\n";
-    // llvm::outs() << "## Printing ports"
-    // << "\n";
-    // port_matcher_.dump();
   }
 };
 
