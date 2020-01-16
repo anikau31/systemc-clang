@@ -16,10 +16,13 @@ using namespace hnode;
 class Xlat : public SystemCConsumer {
 
   public:
-  Xlat( CompilerInstance& ci, std::string topModule )
+  Xlat( CompilerInstance& ci, std::string topModule="!none" )
     : SystemCConsumer( ci, topModule ) {
     }
 
+    Xlat( ASTUnit *from_ast , std::string topModule="!none" )
+    : SystemCConsumer( from_ast, topModule ) {
+    }
   bool postFire();
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
