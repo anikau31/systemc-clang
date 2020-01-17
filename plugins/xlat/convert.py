@@ -1,6 +1,7 @@
 from lark import Lark, Transformer, Visitor
 import sys
 import logging
+import warnings
 logging.basicConfig(level=logging.DEBUG)
 
 l = Lark('''
@@ -20,15 +21,17 @@ l = Lark('''
         sigdecl: "(" "hSigdecl" ID ")"
         portdecltype: portdecl "[" htype htype "]"
                     | portdecl "[" htype htype htype "]"
+                    | portdecl "[" htype "]"
         ?portdecl: inportdecl | outportdecl
         inportdecl: "(" "hPortin" ID ")"
         outportdecl: "(" "hPortout" ID ")"
         vardecltype: hvardecl "[" htype "]" 
+                   | hvardecl "[" htype htype "]"
 
         // can be no process at all in the module
         processlist: ("[" hprocess "]") *
         // could be nothing
-        hprocess: "(" "hProcess" ID ")" "[" hsensvars "]"  "[" hcstmt "]"
+        hprocess: "(" "hProcess" ID ")" hsenslist  "[" hcstmt "]"
 
         // can be just an empty statement
         hcstmt: "(" "hCStmt" ")" hlitdecl stmts
@@ -38,19 +41,25 @@ l = Lark('''
         ?stmt : exprwrapper
              | ifstmtwrapper
              | hvardefwrapper
+             | forstmtwrapper
              | htemptrigger
 
         exprwrapper: "[" expression "]"
         ?ifstmtwrapper: "[" ifstmt "]"
         hvardefwrapper: "[" "[" hvardef "]" "]"
+        forstmtwrapper: "[" forstmt "]"
 
+        hsenslist: "[" (hsensvar hsensedge)* "]"
+                 | "[" "[" (hsensvar hsensedge)* "]" "]"
         hsensvar : "(" "hSensvar" ID ")"
         hsensvars : hsensvar*
+        hsensedge : "(" "hSensedge"  EDGE ")"
 
 
         // if and if-else, not handling if-elseif case
         ifstmt: ifcond "[" (hcstmt|exprinif|ifstmt) "]"
               | ifcond "[" (hcstmt|exprinif|ifstmt) "]" "[" (hcstmt|exprinif|ifstmt) "]"
+        forstmt: "(" "hForStmt" ")" "[" "[" hvardef "]" "]" "[" expression "]" "[" expression "]" stmts
         exprinif: expression
 
         ifcond: "(" "hIfStmt" ")" expression
@@ -63,18 +72,22 @@ l = Lark('''
                   | hunop
                   | hliteral
                   | hvardecl
+                  | hvarref
                   | hunimp
                   | syscread
                   | syscwrite
                   | "[" expression "]"
 
         syscread : hsigassignr hliteral
+                 | hsigassignr exprwrapper
         syscwrite : hsigassignl hliteral expression
+                 | hsigassignl exprwrapper (hliteral|"[" syscread "]")
         ?hsigassignr : "(" "hSigAssignR" "read" ")"
         ?hsigassignl : "(" "hSigAssignL" "write" ")"
         // function call
         fcall : "[" hliteral hvardecl "]"
 
+        hvarref: "(" "hVarref" ID ")"
         hunimp: "(" "hUnimpl" ID ")"
         hbinop: "(" "hBinop" BINOP ")" (expression|fcall) (expression|fcall)
         hunop: "(" "hUnop" UNOP ")" expression
@@ -92,8 +105,9 @@ l = Lark('''
         htype: "(" "hType" ID ")"
 
         ID: /[a-zA-Z_0-9]+/
-        BINOP: "==" | "&&" | "=" | "||" | "-" | ">" | "+" | "*" | "^"
-        UNOP: "!"
+        BINOP: "==" | "&&" | "=" | "||" | "-" | ">" | "+" | "*" | "^" | "[]" | "<=" | "<"
+        UNOP: "!" | "++"
+        EDGE: "pos" | "neg"
         %import common.WS
         %ignore WS
         ''', parser='lalr', debug=True)
@@ -140,6 +154,7 @@ class VerilogTransformer(Transformer):
             else:
                 stmt_list.append(stmt)
         # currently it's ok to append a comma
+        print(stmt_list)
         res = '\n'.join(x for x in stmt_list)
         return res
 
@@ -153,6 +168,8 @@ class VerilogTransformer(Transformer):
         op = str(args[0])
         if op == '=':
             return f'{args[1]} {args[0]} {args[2]}'
+        elif op == '[]':
+            return f'({args[1]})[(args[2])]'
         else:
             return f'({args[1]}) {args[0]} ({args[2]})'
 
@@ -161,6 +178,8 @@ class VerilogTransformer(Transformer):
             return f'{args[0]}'
         elif len(args) == 2:
             op = str(args[0])
+            if op == '++':
+                warnings.warn('++ may result in ambiguity in Verilog')
             return f'{args[0]}({args[1]})'
 
     def stmts(self, args):
@@ -228,9 +247,11 @@ class VerilogTransformer(Transformer):
     def portdecltype(self, args):
         if len(args) == 3:
             return ('port', f'{args[1]} {args[2]} {args[0]}')
-        else:
-            width = int(args[3]) - 1
+        elif len(args) == 2:
             # Note: we remove the notation of signed vs unsigned for now
+            return ('port', f'{args[1]} {args[0]}')
+        else:
+            assert False, 'impossible path, args: {}'.format(args)
             return ('port', f'{args[1]} [{width}:0] {args[0]}')
 
     def outportdecl(self, args):
@@ -282,14 +303,38 @@ class VerilogTransformer(Transformer):
     def hsensvar(self, args):
         return str(args[0])
 
+    def hsenslist(self, args):
+        if len(args) == 2:
+            if args[1] == 'pos':
+                return 'posedge {}'.format(args[0])
+            elif args[1] == 'neg':
+                return 'negedge {}'.format(args[0])
+            else:
+                assert False, 'Cannot convert'
+        assert False
+
+    def hsensedge(self, args):
+        return str(args[0])
+
     def hsigassignl(self, args):
-        return None
+        return 'hsigassignl'
     def hsigassignr(self, args):
-        return None
+        return 'hsigassignr'
     def syscwrite(self, args):
+        print('syscwrite: ', args)
         return f'{args[1]} <= {args[2]}'
     def syscread(self, args):
+        print('syscread: ', args)
         return f'{args[1]}'
+
+    def forstmtwrapper(self, args):
+        return args[0]
+    
+    def forstmt(self, args):
+        res = f'for({args[0]}; {args[1]}; {args[2]}) begin\n'
+        res += f'  {args[3]}\n'
+        res += f'end\n'
+        return res
 
     def vardecltype(self, args):
         return ('var', f'{args[1]} {args[0]}')
@@ -302,6 +347,9 @@ class VerilogTransformer(Transformer):
 
     def hsensvars(self, args):
         return ' or '.join(args)
+
+    def hvarref(self, args):
+        return str(args[0])
 
     def fcall(self, args):
         fname = str(args[0])
