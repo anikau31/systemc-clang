@@ -186,8 +186,12 @@ bool XlatMethod::TraverseBinaryOperator(BinaryOperator* expr)
   TRY_TO(TraverseStmt(expr->getLHS()));
   h_binop->child_list.push_back(h_ret);
 
+  hNodep save_h_ret = h_ret;
   TRY_TO(TraverseStmt(expr->getRHS()));
-  h_binop->child_list.push_back(h_ret);
+  if (h_ret == save_h_ret)
+    h_binop->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+  else
+      h_binop->child_list.push_back(h_ret);
 
   h_ret = h_binop;
 
@@ -301,8 +305,9 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     if (h_ret) h_callp -> child_list.push_back(h_ret);
 
     for (auto arg : callexpr->arguments()) {
+      hNodep save_h_ret = h_ret;
       TRY_TO(TraverseStmt(arg));
-      if (h_ret) h_callp->child_list.push_back(h_ret);
+      if (h_ret != save_h_ret) h_callp->child_list.push_back(h_ret);
     }
     h_ret = h_callp;	  
     return true;
@@ -333,8 +338,10 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
       hNodep h_assignop = new hNode ("=", hNode::hdlopsEnum::hBinop); // node to hold assignment expr
       TRY_TO(TraverseStmt(opcall->getArg(0)));
       h_assignop->child_list.push_back(h_ret);
+      hNodep save_h_ret = h_ret;
       TRY_TO(TraverseStmt(opcall->getArg(1)));
-      h_assignop->child_list.push_back(h_ret);
+      if (h_ret == save_h_ret) h_assignop->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+      else h_assignop->child_list.push_back(h_ret);
       h_ret = h_assignop;
       opcall->getArg(0)->dump(os_);
       opcall->getArg(1)->dump(os_);
@@ -395,6 +402,8 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   h_forcond = h_ret;
   TRY_TO(TraverseStmt(fors->getInc()));
   h_forinc = h_ret;
+  os_ << "For loop body\n";
+  fors->getBody()->dump(os_);
   TRY_TO(TraverseStmt(fors->getBody()));
   h_forbody = h_ret;
   h_forstmt->child_list.push_back(h_forinit);

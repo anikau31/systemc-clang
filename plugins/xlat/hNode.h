@@ -84,15 +84,16 @@ namespace hnode {
     }
 
     ~hNode() {
+      //return;
       if (!child_list.empty()) {
 	list<hNodep>::iterator it;
 	for (it = child_list.begin(); it != child_list.end(); it++) {
-	  //if (*it)
-	    //cout << "child list element " << *it << "\n";
+	  if (*it)
+	    cout << "child list element " << *it << "\n";
 	  if (*it) delete *it;
 	}
       }
-      //else cout << printname(h_op) << " '" << h_name << "' NOLIST\n";
+      else cout << printname(h_op) << " '" << h_name << "' NOLIST\n";
       //cout << "visited hNode destructor\n";
 	    
     }

@@ -71,7 +71,7 @@ bool Xlat::postFire() {
 
       h_module->child_list.push_back(h_top);
       h_module->print(xlatout);
-      delete h_module;
+      delete h_top; //h_module;
     }
   }
   return true;
