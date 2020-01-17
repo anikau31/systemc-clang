@@ -1,113 +1,110 @@
 from lark import Lark, Transformer, Visitor
 import sys
 import logging
-import warnings
 logging.basicConfig(level=logging.DEBUG)
 
 l = Lark('''
         start: modulelist
 
-        modulelist: ("[" hmodule "]")*
-        hmodule: "(" "hModule" ID ")" "[" portsiglist "]" "[" processlist "]"
+        modulelist: ( hmodule)*
+        hmodule:  "hModule" ID "[" modportsiglist processlist* "]"
 
-        ?portsiglist: modportsigdecl*
+        modportsiglist: portsiglist // used to separate between those in the processes
+
+        ?portsiglist: "hPortsigvarlist" "NONAME" "[" modportsigdecl* "]"
 
         ?modportsigdecl: portdecltype
                       | sigdecltype
                       | vardecltype
 
-        sigdecltype: sigdecl "[" htype htype "]"
-                   | sigdecl "[" htype htype htype "]"
-        sigdecl: "(" "hSigdecl" ID ")"
-        portdecltype: portdecl "[" htype htype "]"
-                    | portdecl "[" htype htype htype "]"
-                    | portdecl "[" htype "]"
+        sigdecltype: sigdecl  htypeinfo 
+        sigdecl:  "hSigdecl" ID "NOLIST"
+        portdecltype: portdecl  htypeinfo
         ?portdecl: inportdecl | outportdecl
-        inportdecl: "(" "hPortin" ID ")"
-        outportdecl: "(" "hPortout" ID ")"
-        vardecltype: hvardecl "[" htype "]" 
-                   | hvardecl "[" htype htype "]"
+        inportdecl:  "hPortin" ID "NOLIST"
+        outportdecl: "hPortout" ID "NOLIST"
+        vardecltype: vardeclonly // declaration only
+                   | hvardef
+        vardeclonly: hvardecl  htypeinfo
 
         // can be no process at all in the module
-        processlist: ("[" hprocess "]") *
+        processlist:  "hProcesses" "NONAME" "[" hprocess* "]"
         // could be nothing
-        hprocess: "(" "hProcess" ID ")" hsenslist  "[" hcstmt "]"
+        hprocess:  "hProcess" ID  "[" hsenslist*   hcstmt "]"
 
         // can be just an empty statement
-        hcstmt: "(" "hCStmt" ")" hlitdecl stmts
-              | "(" "hCStmt" ")" hlitdecl
+        hcstmt:  "hCStmt" "NONAME" "[" stmts "]" // useful for raising variable decls
+              |  "hCStmt" "NONAME" "NOLIST"
 
         ?stmts: stmt+
-        ?stmt : exprwrapper
-             | ifstmtwrapper
-             | hvardefwrapper
-             | forstmtwrapper
+        ?stmt : expression
+             | syscwrite
+             | ifstmt
+             | hvardef
              | htemptrigger
+             | portsiglist
+             | forstmt
 
-        exprwrapper: "[" expression "]"
-        ?ifstmtwrapper: "[" ifstmt "]"
-        hvardefwrapper: "[" "[" hvardef "]" "]"
-        forstmtwrapper: "[" forstmt "]"
+        // for(forinit; forcond; forpostcond) stmts
+        forstmt: "hForStmt" "NONAME" "[" forinit forcond forpostcond forbody "]"
+        forinit: "hPortsigvarlist" "NONAME" "[" vardecltype  "]"
+        forcond: expression
+        forpostcond: expression
+        forbody: stmts
 
-        hsenslist: "[" (hsensvar hsensedge)* "]"
-                 | "[" "[" (hsensvar hsensedge)* "]" "]"
-        hsensvar : "(" "hSensvar" ID ")"
+        hsenslist : "hSenslist" "NONAME" "[" hsensvars "]"
+                  | "hSenslist" "NONAME" "NOLIST"
+        hsensvar :  "hSensvar" ID "[" hsensedge "]"
         hsensvars : hsensvar*
-        hsensedge : "(" "hSensedge"  EDGE ")"
 
+        hsensedge : "hSensedge" npa "NOLIST"
+        !npa : "neg" | "pos" | "always"
 
         // if and if-else, not handling if-elseif case
-        ifstmt: ifcond "[" (hcstmt|exprinif|ifstmt) "]"
-              | ifcond "[" (hcstmt|exprinif|ifstmt) "]" "[" (hcstmt|exprinif|ifstmt) "]"
-        forstmt: "(" "hForStmt" ")" "[" "[" hvardef "]" "]" "[" expression "]" "[" expression "]" stmts
+        ifstmt: "hIfStmt" "[" expression  (hcstmt|exprinif|ifstmt) "]"
+              | "hIfStmt" "[" (hcstmt|exprinif|ifstmt) "]" "[" (hcstmt|exprinif|ifstmt) "]"
         exprinif: expression
-
-        ifcond: "(" "hIfStmt" ")" expression
-              | "(" "hIfStmt" ")" NC
-
-        NC: "<null child>"
-
-
+         
         ?expression: hbinop
                   | hunop
                   | hliteral
-                  | hvardecl
                   | hvarref
                   | hunimp
                   | syscread
-                  | syscwrite
-                  | "[" expression "]"
+                  | hnoop
+                  |  "[" expression "]"
 
-        syscread : hsigassignr hliteral
-                 | hsigassignr exprwrapper
-        syscwrite : hsigassignl hliteral expression
-                 | hsigassignl exprwrapper (hliteral|"[" syscread "]")
-        ?hsigassignr : "(" "hSigAssignR" "read" ")"
-        ?hsigassignl : "(" "hSigAssignL" "write" ")"
+        syscread : hsigassignr "[" expression "]"
+        syscwrite : hsigassignl "["  expression  expression "]"
+        ?hsigassignr :  "hSigAssignR" "read" 
+        ?hsigassignl :  "hSigAssignL" "write" 
         // function call
-        fcall : "[" hliteral hvardecl "]"
-
-        hvarref: "(" "hVarref" ID ")"
-        hunimp: "(" "hUnimpl" ID ")"
-        hbinop: "(" "hBinop" BINOP ")" (expression|fcall) (expression|fcall)
-        hunop: "(" "hUnop" UNOP ")" expression
+        fcall :  hliteral hvardecl 
+        hvarref : "hVarref" ID "NOLIST"
+        hunimp:  "hUnimpl" ID "NOLIST"
+        hbinop:  "hBinop" BINOP "[" (expression|fcall) (expression|fcall) "]"
+        hunop:  "hUnop" UNOP "[" expression "]"
              | htempandunop 
         // just a temporary workaround
         htempandunop: "(hLiteral operator const bool &)" expression
-        htemptrigger: "[" hliteral hliteral hvardecl "]"
-        hliteral: "(" "hLiteral" ID ")"
+        htemptrigger:  hliteral hliteral hvardecl 
+        hliteral:  "hLiteral" ID "NOLIST"
         hlitdecl: hliteral*
-        ?hvardecl: "(" "hVardecl" ID ")"
-        hvardef: hvardecl "[" "]" hvardefsuf // ok to shift instead of reduce
-               | hvardecl "[" htype "]" hvardefsuf
-               | hvardecl "[" htype htype "]" hvardefsuf
-        ?hvardefsuf: hunimp | hliteral | "[" syscread "]" | "[" syscwrite "]" | "[" hbinop "]"
-        htype: "(" "hType" ID ")"
+        ?hvardecl:  "hVardecl" ID "NOLIST"
+        hvardef: "hVardecl" ID "[" "]" hvardefsuf // ok to shift instead of reduce
+               | "hVardecl" ID "[" htypeinfo  hvardefsuf "]"
+        ?hvardefsuf: hunimp | hliteral |  syscread  |  syscwrite  |  hbinop 
+        htypeinfo: "hTypeinfo" "NONAME" "[" htype+ "]"
+        htype:  "hType" ID "NOLIST"
+
+        // This is like a function call
+        hnoop: "hNoop" ID "[" hvarref "]"
+             | "hNoop" ID "[" hliteral hvarref "]"
+             | "hNoop" "operator" "const" "bool" "&" "[" hliteral "]"
 
         ID: /[a-zA-Z_0-9]+/
-        BINOP: "==" | "&&" | "=" | "||" | "-" | ">" | "+" | "*" | "^" | "[]" | "<=" | "<"
+        BINOP: "==" | "&&" | "=" | "||" | "-" | ">" | "+" | "*" | "^" | "ARRAYSUBSCRIPT" | "<=" | "<"
         UNOP: "!" | "++"
-        EDGE: "pos" | "neg"
         %import common.WS
         %ignore WS
         ''', parser='lalr', debug=True)
@@ -117,45 +114,140 @@ class CType2VerilogType(object):
                  'sc_in': 'input wire',
                  'sc_out': 'output reg',
                  'sc_signal': 'reg',
-                 'sc_bv': 'reg',
                  'int': 'integer'}
+
     @staticmethod
-    def convert(t):
-        if t in CType2VerilogType.type_map:
-            return CType2VerilogType.type_map[t]
+    def varref_wrapper(t, v):
+        if t == 'double':
+            return '$bitstoreal(v)'
         else:
-            # not a built in type, could be user defined or other
-            return t
+            return v
+
+    @staticmethod
+    def convert_type_list(l):
+        """converts a list of htype info into proper type, also annotate for intended types for necessary conversion"""
+        res = []
+        in_port = 'sc_in' in l
+        out_port = 'sc_out' in l
+        # we almost always use reg, reg also for implicit values
+        wire_or_reg = 'reg'
+        if in_port:
+            wire_or_reg = 'wire'
+        bw = None
+        vtype = None
+        l_iter = iter(l)
+        for arg in l_iter:
+            if arg == 'sc_in':
+                in_port = True
+                wire_or_reg = 'wire'
+            elif arg == 'sc_out':
+                out_port = True
+            else: 
+                if arg in ['sc_bv', 'sc_int']:
+                    if bw is None:
+                        bw = int(next(l_iter))
+                    else:
+                        assert False, 'incorrect htype specification'
+                elif arg in ['double', 'int']:
+                    # bw = CType2VerilogType.get_width(arg)
+                    if arg == 'double':
+                        vtype = 'real'
+                    elif arg == 'int':
+                        vtype = 'integer'
+        inout = ''
+        if in_port:
+            inout = 'input'
+        elif out_port:
+            inout = 'output'
+        if bw is None:
+            width_or_type_str = ''
+            if vtype == 'real':
+                width_or_type_str = ' real'
+            elif vtype == 'integer':
+                width_or_type_str = ' integer'
+        else:
+            width_or_type_str = f' [{bw-1}:0]'
+        return [f'{inout} {wire_or_reg}{width_or_type_str}', vtype]
+
+    @staticmethod
+    def get_width(t):
+        if t == 'double':
+            return 64
+        elif t == 'int':
+            return 32
+        else:
+            assert False
+
+
+debug = True
+def p(decorated):
+    """a decorator that helps printing out the transformation results"""
+    if debug:
+        def wrapper(self, args):
+            print(f'{decorated.__name__}: \n{args} \n\n')
+            res = decorated(self, args)
+            return res
+        return wrapper
+    else:
+        return decorated
+
+
+def flatten(L):
+    """a simple flatten helper"""
+    for item in L:
+        try:
+            if isinstance(item, str) or isinstance(item, tuple):
+                yield item
+            else:
+                yield from flatten(item)
+        except TypeError:
+            yield item
+
+
 
 class VerilogTransformer(Transformer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.vardecl_map = dict()
+        self.global_type_map = dict()
 
     def start(self, args):
         return args[0]
 
+    @p
+    def htypeinfo(self, args):
+        """resolving type information"""
+
+        # drop sc_signal for types without width
+        # if args[0] == 'reg' and args[1] != 'sc_bv':
+        #     args = args[1:]
+
+        res = CType2VerilogType.convert_type_list(args)
+        return res
+
     def hliteral(self, args):
         return str(args[0])
 
+    @p
     def hlitdecl(self, args):
         return args
 
+    @p
     def hcstmt(self, args):
         stmt_list = []
         for idx, stmt in enumerate(args):
-            if idx == 0:
-                if len(stmt) > 0:
-                    annotated_stmt = map(lambda x: 'reg ' + x + ';', stmt)
-                    stmt_list.extend(list(annotated_stmt))
-            elif isinstance(stmt, list):
+            # if idx == 0:
+            #     if len(stmt) > 0:
+            #         print(stmt)
+            #         annotated_stmt = map(lambda x: 'reg ' + x + ';', stmt)
+            #         stmt_list.extend(list(annotated_stmt))
+            if isinstance(stmt, list):
                 stmt_list.extend(stmt)
             else:
                 stmt_list.append(stmt)
         # currently it's ok to append a comma
-        print(stmt_list)
-        res = '\n'.join(x for x in stmt_list)
+        res = ';\n'.join(x for x in stmt_list)
         return res
 
     def exprwrapper(self, args):
@@ -168,8 +260,8 @@ class VerilogTransformer(Transformer):
         op = str(args[0])
         if op == '=':
             return f'{args[1]} {args[0]} {args[2]}'
-        elif op == '[]':
-            return f'({args[1]})[(args[2])]'
+        elif op == 'ARRAYSUBSCRIPT':
+            return f'{args[1]} [ {args[2]} ]'
         else:
             return f'({args[1]}) {args[0]} ({args[2]})'
 
@@ -179,29 +271,37 @@ class VerilogTransformer(Transformer):
         elif len(args) == 2:
             op = str(args[0])
             if op == '++':
-                warnings.warn('++ may result in ambiguity in Verilog')
-            return f'{args[0]}({args[1]})'
+                # only used in the for loop
+                return f'{args[1]}={args[1]}+1'
+            elif op == '--':
+                # only used in the for loop
+                return f'{args[1]}={args[1]}-1'
+            else:
+                return f'{args[0]}({args[1]})'
 
     def stmts(self, args):
         return args
 
+    @p
+    def vardeclonly(self, args):
+        assert(isinstance(args[1], list))
+        assert(len(args[1]) == 2)
+        self.vardecl_map[str(args[0])] = args[1]
+        return None
+
+    @p
     def hvardef(self, args):
         # Init without a type
-        if len(args) == 2:
-            return f'{args[0]} = {args[1]}'
-        elif len(args) == 3:
+        if len(args) == 3:
             # by default, use reg
-            print(args)
             self.vardecl_map[str(args[0])] = args[1]
             return f'{args[0]} = {args[2]}'
-        elif len(args) == 4:
-            print(args)
-            width = int(args[2]) - 1
-            self.vardecl_map[str(args[0])] = f'{args[1]} [{width}:0]'
-            return f'{args[0]} = {args[3]}'
+        assert False
 
+    @p
     def htype(self, args):
-        return CType2VerilogType.convert(str(args[0]))
+        # return CType2VerilogType.convert(str(args[0]))
+        return str(args[0])
 
     def hunimp(self, args):
         return f'\"//# Unimplemented: {args[0]}\"'
@@ -225,8 +325,9 @@ class VerilogTransformer(Transformer):
             return f'\"NULL CHILD\"'
         return f'{args[0]}'
 
+    @p
     def hprocess(self, args):
-        vardecl_str = '\n'.join(map(lambda x: f'{x[1]} {x[0]};', self.vardecl_map.items()))
+        vardecl_str = '\n'.join(map(lambda x: f'{x[1][0]} {x[0]};', self.vardecl_map.items()))
         senslist = '*' if len(args[1]) == 0 else args[1]
         res = (f"always @({senslist}) begin: {args[0]}\n"
                f"{vardecl_str}\n"
@@ -235,6 +336,7 @@ class VerilogTransformer(Transformer):
         self.vardecl_map.clear()
         return res
 
+    @p
     def portsiglist(self, args):
         return args
 
@@ -244,43 +346,36 @@ class VerilogTransformer(Transformer):
     def inportdecl(self, args):
         return str(args[0])
 
+    @p
     def portdecltype(self, args):
-        if len(args) == 3:
-            return ('port', f'{args[1]} {args[2]} {args[0]}')
-        elif len(args) == 2:
-            # Note: we remove the notation of signed vs unsigned for now
-            return ('port', f'{args[1]} {args[0]}')
-        else:
-            assert False, 'impossible path, args: {}'.format(args)
-            return ('port', f'{args[1]} [{width}:0] {args[0]}')
+        self.global_type_map[args[0]] = args[1][1]
+        return ('port', f'{args[1][0]} {args[0]}')
 
     def outportdecl(self, args):
         return str(args[0])
 
+    @p
     def sigdecltype(self, args):
-        if len(args) == 3:
-            return ('sig', f'{args[1]} {args[2]} {args[0]}')
-        else:
-            width = int(args[3]) - 1
-            # Note: we remove the notation of signed vs unsigned for now
-            return ('sig', f'{args[1]} [{width}:0] {args[0]}')
+        self.global_type_map[args[0]] = args[1][1]
+        return ('sig', f'{args[1][0]} {args[0]}')
     
     def sigdecl(self, args):
         return str(args[0])
 
+    @p
     def hmodule(self, args):
         modname = str(args[0])
         portsiglist = args[1]
         proclist = args[2]
 
         # separate port from list of port, sig
-        portlist = list(map(lambda x: x[1], filter(lambda x: x[0] == 'port', portsiglist)))
+        portlist = list(map(lambda x: x[1], filter(lambda x: x is not None and  x[0] == 'port', portsiglist[0])))
         portstr = ',\n'.join(portlist)
 
-        siglist = list(map(lambda x: x[1], filter(lambda x: x[0] == 'sig', portsiglist)))
+        siglist = list(map(lambda x: x[1], filter(lambda x: x is not None and  x[0] == 'sig', portsiglist[0])))
         sigstr = ';\n'.join(siglist) + (';' if len(siglist) > 0 else '')  # the last semi-colon
 
-        varlist = list(map(lambda x: x[1], filter(lambda x: x[0] == 'var', portsiglist)))
+        varlist = portsiglist[1]# list(map(lambda x: x[1], filter(lambda x: x[0] == 'var', portsiglist[1])))
         varstr = ';\n'.join(varlist) + (';' if len(varlist) > 0 else '')
 
         # for the processes
@@ -300,44 +395,40 @@ class VerilogTransformer(Transformer):
     def exprinif(self, args):
         return str(args[0]) + ';'
 
+    @p
     def hsensvar(self, args):
-        return str(args[0])
+        if args[1] == 'pos':
+            return f'posedge {args[0]}'
+        elif args[1] == 'neg':
+            return f'negedge {args[0]}'
+        elif args[1] == 'always':
+            return args[0]
+        else:
+            raise RuntimError('edge sensitivity should be one of pos/neg/always')
 
+    @p
     def hsenslist(self, args):
-        if len(args) == 2:
-            if args[1] == 'pos':
-                return 'posedge {}'.format(args[0])
-            elif args[1] == 'neg':
-                return 'negedge {}'.format(args[0])
-            else:
-                assert False, 'Cannot convert'
-        assert False
-
-    def hsensedge(self, args):
-        return str(args[0])
+        assert len(args) <= 1
+        if len(args) == 0:
+            return '*'
+        else:
+            return args[0]
 
     def hsigassignl(self, args):
-        return 'hsigassignl'
+        return None
     def hsigassignr(self, args):
-        return 'hsigassignr'
+        return None
     def syscwrite(self, args):
-        print('syscwrite: ', args)
         return f'{args[1]} <= {args[2]}'
     def syscread(self, args):
-        print('syscread: ', args)
         return f'{args[1]}'
 
-    def forstmtwrapper(self, args):
-        return args[0]
-    
-    def forstmt(self, args):
-        res = f'for({args[0]}; {args[1]}; {args[2]}) begin\n'
-        res += f'  {args[3]}\n'
-        res += f'end\n'
-        return res
-
+    @p
     def vardecltype(self, args):
-        return ('var', f'{args[1]} {args[0]}')
+        assert(len(args) == 1)
+        # return ('var', f'{args[1]} {args[0]}')
+        # return ('var', f'{args[0]}')
+        return args[0]
 
     def htempandunop(self, args):
         return f'&{args[0]}'
@@ -345,11 +436,9 @@ class VerilogTransformer(Transformer):
     def htemptrigger(self, args):
         return '//#(' + ','.join(args) + ');'
 
+    @p
     def hsensvars(self, args):
         return ' or '.join(args)
-
-    def hvarref(self, args):
-        return str(args[0])
 
     def fcall(self, args):
         fname = str(args[0])
@@ -358,6 +447,75 @@ class VerilogTransformer(Transformer):
             return caller
         else:
             raise NotImplementedError
+        
+    @p
+    def npa(self, args):
+        return str(args[0])
+
+    @p
+    def hsensedge(self, args):
+        return args[0]
+
+    def hvarref(self, args):
+        if str(args[0]) in self.vardecl_map:
+            return CType2VerilogType.varref_wrapper(
+                self.vardecl_map[args[0]][1], 
+                str(args[0])
+            )
+        else:
+            return str(args[0]) + '/* definition not found */'
+
+    @p
+    def hnoop(self, args):
+        if len(args) == 2:
+            return str(args[1])
+        elif len(args) == 1:
+            return str(args[0])
+        elif len(args) == 3 and args[0] == 'next_trigger':
+            return '#' + str(args[1])
+        else:
+            assert False
+
+    @p
+    def modportsiglist(self, args):
+        args = list(flatten(args))
+        var_list = []
+        for k, v in self.vardecl_map.items():
+            var_list.append(f'{v[0]} {k}')
+            # move these signals to the global scope
+            self.global_type_map[k] = v[1]
+        self.vardecl_map.clear()
+        print(var_list)
+        return [args, var_list]
+
+    @p
+    def forinit(self, args):
+        # note: var decl is raised up to the top
+        return args[0]
+
+    @p
+    def forcond(self, args):
+        return args[0]
+
+    @p
+    def forpostcond(self, args):
+        # note: the args might be wrong
+        return args[0]
+
+    @p
+    def forbody(self, args):
+        return args
+
+    @p
+    def forstmt(self, args):
+        forinit, forcond, forpostcond, forbody = args
+        forbody = ';\n  '.join(forbody) + ';'
+        res = [
+                f'for({forinit};{forcond};{forpostcond}) begin',
+                f'  {forbody}',
+                f'end'
+            ]
+        return '\n'.join(res)
 
 def main():
     if len(sys.argv) != 2:
