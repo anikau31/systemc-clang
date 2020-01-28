@@ -46,7 +46,8 @@ set output diag
 # Match entry function
 # 1. Find constructor
 # 2. Find method with the name
-# m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), hasDescendant(cxxConstructorDecl().bind("constructor")))
+m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), hasDescendant(allOf(cxxConstructorDecl().bind("constructor"),cxxMethodDecl(equalsBoundNode("constructor")).bind("method"))) )
+
 
 set output dump
 #m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")) )
@@ -63,4 +64,5 @@ set output dump
 
 #m cxxRecordDecl(forEachDescendant(fieldDecl(hasName("array_signal"))))
 
-m cxxRecordDecl(isExpansionInMainFile(), forEachDescendant(fieldDecl(hasType(arrayType(hasElementType(hasDeclaration(cxxRecordDecl(hasName("sc_signal"))))).bind("array"))).bind("field")))
+#m cxxRecordDecl(isExpansionInMainFile(), forEachDescendant(fieldDecl(hasType(arrayType(hasElementType(hasDeclaration(cxxRecordDecl(hasName("sc_signal"))))).bind("array"))).bind("field")))
+
