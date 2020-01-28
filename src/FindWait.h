@@ -22,6 +22,7 @@ public:
     bool VisitUnresolvedMemberExpr(UnresolvedMemberExpr *e);
   FindWait(CXXMethodDecl *, llvm::raw_ostream &);
   virtual ~FindWait();
+  bool shouldVisitTemplateInstantiations() const;
 
   virtual bool VisitCallExpr(CallExpr *expr);
 

@@ -38,12 +38,13 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
 
 
 
-
   /*
+
   SystemCConsumer sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
+  model->dump(llvm::outs());
   */
 
   SECTION("Test systemc-clang AST matchers ", "[matchers]") {

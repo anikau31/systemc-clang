@@ -1,0 +1,3 @@
+[submodule "tests/data/verilog-conversion"]
+	path = tests/data/verilog-conversion
+	url = git@github.com:zhuanhao-wu/systemc-clang-verilog-conversion.git

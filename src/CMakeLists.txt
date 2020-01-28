@@ -10,7 +10,7 @@ endif (USE_SAUTO)
 add_library (libsystemc-clang
   ModuleDecl.cpp
   FindModule.cpp
-  FindSCModules.cpp
+  # Matchers -- FindSCModules.cpp
   FindSCMain.cpp
   FindPorts.cpp
   FindTLMInterfaces.cpp
@@ -49,6 +49,5 @@ add_library (libsystemc-clang
   WaitCalls.cpp
   NotifyCalls.cpp
   EventContainer.cpp
-  Matchers.cpp
 
   )

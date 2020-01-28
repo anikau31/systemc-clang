@@ -27,6 +27,8 @@ FindWait::~FindWait() {
   wait_calls_list_.clear();
 }
 
+bool FindWait::shouldVisitTemplateInstantiations() const { return true; }
+
 bool FindWait::VisitUnresolvedMemberExpr(UnresolvedMemberExpr *e) {
   // This is for the templated wait calls.
   // e should not be null if it gets here.

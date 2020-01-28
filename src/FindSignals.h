@@ -63,6 +63,7 @@ public:
   virtual ~FindSignals();
 
   virtual bool VisitFieldDecl(FieldDecl *);
+  bool shouldVisitTemplateInstantiations() const;
 
   signalMapType getSignals() const ;
   void dump();

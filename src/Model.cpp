@@ -25,11 +25,17 @@ Model::~Model() {
 Model::Model(const Model &from) { modules_ = from.modules_; }
 
 void Model::addModuleDecl(ModuleDecl *md) {
-  modules_.insert(Model::modulePairType(md->getName(), md));
+  // class name, instance name.
+  modules_.push_back(Model::modulePairType(md->getName(), md));
 }
 
 void Model::addModuleDeclInstances(ModuleDecl *md, vector<ModuleDecl *> mdVec) {
   module_instance_map_.insert(moduleInstancePairType(md, mdVec));
+
+  llvm::outs() << "[HDP] To add instances: " << md << "=" << mdVec.size()
+               << "\n";
+  llvm::outs() << "[HDP] Added module instances: "
+               << module_instance_map_.size() << "\n";
 }
 
 void Model::addSimulationTime(FindSimTime::simulationTimeMapType simTime) {
@@ -103,23 +109,40 @@ void Model::updateModuleDecl() {
   }
 }
 
-void Model::addSCModules(FindSCModules *m) {
-  FindSCModules::moduleMapType mods = m->getSystemCModulesMap();
+// void Model::addSCModules(FindSCModules *m) {
+// FindSCModules::moduleMapType mods = m->getSystemCModulesMap();
+//
+// for (FindSCModules::moduleMapType::iterator mit = mods.begin();
+// mit != mods.end(); mit++) {
+// addModuleDecl(new ModuleDecl(mit->first, mit->second));
+// }
+// }
+//
+const Model::moduleMapType &Model::getModuleDecl() { return modules_; }
 
-  for (FindSCModules::moduleMapType::iterator mit = mods.begin();
-       mit != mods.end(); mit++) {
-    addModuleDecl(new ModuleDecl(mit->first, mit->second));
+ModuleDecl *Model::getInstance(const std::string &instance_name) {
+  for (auto const &element : module_instance_map_) {
+    auto instance_list{element.second};
+
+    auto test_module_it =
+        std::find_if(instance_list.begin(), instance_list.end(),
+                     [instance_name](const auto &instance) {
+                       return (instance->getInstanceName() == instance_name);
+                     });
+
+    if (test_module_it != instance_list.end()) {
+      return *test_module_it;
+    }
   }
+  return nullptr;
 }
-
-Model::moduleMapType Model::getModuleDecl() { return modules_; }
 
 Model::entryFunctionGPUMacroMapType Model::getEntryFunctionGPUMacroMap() {
   llvm::errs() << "\n return Size : " << entry_function_gpu_macro_map_.size();
   return entry_function_gpu_macro_map_;
 }
 
-Model::moduleInstanceMapType Model::getModuleInstanceMap() {
+Model::moduleInstanceMapType &Model::getModuleInstanceMap() {
   return module_instance_map_;
 }
 
@@ -128,14 +151,26 @@ Model::eventMapType Model::getEventMapType() { return event_map_; }
 unsigned int Model::getNumEvents() { return (event_map_.size() - 3); }
 
 void Model::dump(llvm::raw_ostream &os) {
-  os << "\n# Number of modules : " << modules_.size();
+  os << "-- Number of sc_module instances: " << modules_.size() << "\n";
+  os << "-- Number of sc_module instances in map: "
+     << module_instance_map_.size() << "\n";
+
+  for (const auto &mod : modules_) {
+    // <string, ModuleDecl*>
+    auto decl{mod.second};
+    os << "-- Instance name: " << decl->getInstanceName() << "\n";
+    decl->dump(os);
+  }
+  os << "Done dump in model\n";
+  /*
 
   for (Model::moduleMapType::iterator mit = modules_.begin();
        mit != modules_.end(); mit++) {
     // Second is the ModuleDecl type.
 
+    os << "\n";
     vector<ModuleDecl *> instanceVec = module_instance_map_[mit->second];
-    os << "\n# Module " << mit->first << ": " << instanceVec.size()
+    os << " Module " << mit->first << ": " << instanceVec.size()
        << " instances.";
     for (size_t i = 0; i < instanceVec.size(); i++) {
       //			os <<", instance: " << i + 1 << " ";
@@ -143,6 +178,9 @@ void Model::dump(llvm::raw_ostream &os) {
     }
   }
   os << "\n\n";
+  */
+
+  /*
   os << "# Global events:\n";
   for (Model::eventMapType::iterator it = event_map_.begin(),
                                      ite = event_map_.end();
@@ -186,4 +224,5 @@ void Model::dump(llvm::raw_ostream &os) {
     }
     os << "\n ------------------------------------------------------\n";
   }
+  */
 }

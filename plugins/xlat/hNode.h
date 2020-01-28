@@ -14,13 +14,17 @@ namespace hnode {
 #define HNODEen \
   etype(hNoop), \
   etype(hModule), \
+  etype(hProcesses), \
   etype(hProcess), \
   etype(hCStmt), \
+    etype(hPortsigvarlist), \
   etype(hPortin), \
   etype(hPortout), \
   etype(hPortio), \
+  etype(hSenslist), \
   etype(hSensvar), \
   etype(hSensedge), \
+  etype(hTypeinfo), \
   etype(hType), \
   etype(hInt), \
   etype(hSigdecl), \
@@ -37,7 +41,7 @@ namespace hnode {
   etype(hForCond), \
   etype(hForInc), \
   etype(hForBody), \
-    etype(hWhileStmt),				\
+  etype(hWhileStmt),				\
   etype(hLiteral), \
   etype(hUnimpl), \
   etype(hLast)
@@ -49,7 +53,7 @@ namespace hnode {
  
     typedef enum { HNODEen } hdlopsEnum;
 
-    bool is_leaf;
+    //bool is_leaf;
     
     string h_name;
     hdlopsEnum h_op;
@@ -60,39 +64,47 @@ namespace hnode {
 
     const string hdlop_pn [hLast+1]  =  { HNODEen };
 
-    hNode() { is_leaf = true;}
+    //hNode() { is_leaf = true;}
     hNode(bool lf) {
-      is_leaf = lf;
+      //is_leaf = lf;
       h_op = hdlopsEnum::hNoop;
+      h_name = "";
     }
+
+    hNode(hdlopsEnum h) {
+      h_op = h;
+      h_name = "";
+    }
+       
   
     hNode(string s, hdlopsEnum h) {
-      is_leaf = true;
-      h_name = s;
+      //is_leaf = true;
       h_op = h;
+      h_name = s;
     }
 
     ~hNode() {
+      //return;
       if (!child_list.empty()) {
 	list<hNodep>::iterator it;
-	for (it = child_list.begin(); it != child_list.end(); ++it) {
-	  delete *it;
+	for (it = child_list.begin(); it != child_list.end(); it++) {
+	  if (*it)
+	    cout << "child list element " << *it << "\n";
+	  if (*it) delete *it;
 	}
       }
+      else cout << printname(h_op) << " '" << h_name << "' NOLIST\n";
       //cout << "visited hNode destructor\n";
 	    
     }
-  
 
-    void setleaf(string s, hdlopsEnum h) {
-      is_leaf = true;
-      h_name = s;
+    void set( hdlopsEnum h, string s = "") {
       h_op = h;
+      h_name = s;
     }
-
+    
     string printname(hdlopsEnum opc) {
-      if (is_leaf) return hdlop_pn[static_cast<int>(opc)];
-      else return "NON_LEAF";
+      return hdlop_pn[static_cast<int>(opc)];
     }
 
     // for completeness
@@ -105,14 +117,15 @@ namespace hnode {
       return hLast;
     }
     void print(llvm::raw_fd_ostream & modelout, unsigned int indnt=2) {
-      if (is_leaf) {
-	modelout.indent(indnt);
-	modelout << "(" << printname(h_op) << " " << h_name << ")" <<"\n";
-
-      }
+      modelout.indent(indnt);
+      modelout << printname(h_op) << " ";
+      if (h_name == "")
+	modelout << " NONAME";
+      else modelout << h_name;
+      if (child_list.empty())
+	modelout << " NOLIST\n";
       else {
-	modelout.indent(indnt);
-	modelout << "[\n";
+	modelout << " [\n";
 	for (auto child : child_list)
 	  if (child)
 	    child->print(modelout, indnt+2);

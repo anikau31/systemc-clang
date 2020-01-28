@@ -7,21 +7,24 @@
 #include "FindNetlist.h"
 #include "FindSimTime.h"
 #include "ModuleDecl.h"
-#include "FindSCModules.h"
+//#include "FindSCModules.h"
 #include "SCuitable/FindGPUMacro.h"
 #include "clang/AST/DeclCXX.h"
 #include <map>
 #include <string>
 #include <vector>
 
+#include "Matchers.h"
+
 namespace scpar {
 using namespace clang;
 using namespace std;
+using namespace sc_ast_matchers; 
 
 class Model {
 public:
   typedef pair<string, ModuleDecl *> modulePairType;
-  typedef map<string, ModuleDecl *> moduleMapType;
+  typedef std::vector< modulePairType > moduleMapType;
 
   typedef pair<string, EventContainer *> eventPairType;
   typedef map<string, EventContainer *> eventMapType;
@@ -37,8 +40,9 @@ public:
   Model();
   ~Model();
 
-  void addSCModules(FindSCModules *);
+  //void addSCModules(FindSCModules *);
   void addModuleDecl(ModuleDecl *);
+
   void addModuleDeclInstances(ModuleDecl *, vector<ModuleDecl *>);
   void addSimulationTime(FindSimTime::simulationTimeMapType);
   void addGlobalEvents(FindGlobalEvents::globalEventMapType);
@@ -47,10 +51,11 @@ public:
   void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
   void updateModuleDecl();
 
-  moduleMapType getModuleDecl();
+  const moduleMapType & getModuleDecl();
+  ModuleDecl *getInstance(const std::string &instance_name);
   entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
   eventMapType getEventMapType();
-  moduleInstanceMapType getModuleInstanceMap();
+  moduleInstanceMapType & getModuleInstanceMap();
   unsigned int getNumEvents();
   vector<Transition *> getGSauto();
   void dump(raw_ostream &);

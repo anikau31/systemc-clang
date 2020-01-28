@@ -39,13 +39,13 @@ bool Xlat::postFire() {
     vector<ModuleDecl *> instanceVec =
         model->getModuleInstanceMap()[mit->second];
     for (size_t i = 0; i < instanceVec.size(); i++) {
-      hNodep h_module = new hNode(false);
       os_ << "\nmodule " << mit->first << "\n";
       string modname = mit->first + "_" + to_string(i);
-      hNodep h_modname = new hNode(modname, hNode::hdlopsEnum::hModule);
+      hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
+      //hNodep h_modname = new hNode(modname, hNode::hdlopsEnum::hModule);
 
       // Ports
-      hNodep h_ports = new hNode(false);  // list of ports, signals
+      hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
       xlatport(instanceVec.at(i)->getIPorts(), hNode::hdlopsEnum::hPortin,
                h_ports);
       xlatport(instanceVec.at(i)->getOPorts(), hNode::hdlopsEnum::hPortout,
@@ -61,17 +61,17 @@ bool Xlat::postFire() {
       xlatsig(instanceVec.at(i)->getSignals(), hNode::hdlopsEnum::hSigdecl,
               h_ports);
 
-      h_module->child_list.push_back(h_modname);
+      //h_module->child_list.push_back(h_modname);
       h_module->child_list.push_back(h_ports);
 
-      h_top = new hNode(false);
+      h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
       // Processes
       xlatproc(instanceVec.at(i)->getEntryFunctionContainer(), h_top, os_);
 
       h_module->child_list.push_back(h_top);
       h_module->print(xlatout);
-      delete h_module;
+      delete h_top; //h_module;
     }
   }
   return true;
@@ -85,7 +85,7 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     h_info->child_list.push_back(new hNode(get<0>(*mit), h_op));
     os_ << "object name is " << get<0>(*mit) << "\n";
     PortDecl *pd = get<1>(*mit);
-    hNodep h_typeinfo = new hNode(false);
+    hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
     xlattype(pd->getTemplateType(), h_typeinfo);  // sctypes, xlatout);//, os_);
     h_info->child_list.push_back(h_typeinfo);
   }
@@ -103,7 +103,7 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
     // xlatout << mit->first;
     //Signal *pd = mit->second;
     Signal *pd = get<1>(*mit);
-    hNodep h_typeinfo = new hNode(false);
+    hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
     xlattype(pd->getTemplateTypes(), h_typeinfo);  // xlatout);//, os_);
     h_info->child_list.push_back(h_typeinfo);
   }
@@ -128,24 +128,21 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
                     llvm::raw_ostream &os) {
   for (auto efc : efv) {
     if (efc->getProcessType() == PROCESS_TYPE::METHOD) {
-      hNodep h_process = new hNode(false);
-      // [process name, process body]
-      h_process->child_list.push_back(
-          new hNode(efc->getName(), hNode::hdlopsEnum::hProcess));
+      hNodep h_process = new hNode(efc->getName(), hNode::hdlopsEnum::hProcess);
       os_ << "process " << efc->getName() << "\n";
       // Sensitivity list
-      hNodep h_senslist = new hNode(false);
+      hNodep h_senslist = new hNode(hNode::hdlopsEnum::hSenslist);
       for (auto sensmap : efc->getSenseMap()) {
 
-	hNodep h_senspair = new hNode(false); // [ (sensvar name) (edge expr) ]
-	hNodep h_sensitem = new hNode(sensmap.first, hNode::hdlopsEnum::hSensvar);
+	hNodep h_senspair = new hNode(sensmap.first, hNode::hdlopsEnum::hSensvar); // [ sensvar name (edge expr) ]
+	//hNodep h_sensitem = new hNode(sensmap.first, hNode::hdlopsEnum::hSensvar);
 	
   // HP: There is a change here. 
   // Sensitivity map returns as its second argument a tuple.  
   // The tuple has two parameters: the edge (pos/neg) and the second is the MemberExpr*.
   // 
   //
-	h_senspair->child_list.push_back(h_sensitem);
+	//h_senspair->child_list.push_back(h_sensitem);
 
 	string edgeval = get<0>(sensmap.second);
 
@@ -159,7 +156,7 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
       }
       h_process->child_list.push_back(h_senslist);
       CXXMethodDecl *emd = efc->getEntryMethod();
-      hNodep h_body = new hNode(false);
+      hNodep h_body; // = new hNode(hNode::hdlopsEnum::hCStmt);
       XlatMethod xmethod(emd, h_body, os_);  //, xlatout);
       h_process->child_list.push_back(h_body);
       h_top->child_list.push_back(h_process);

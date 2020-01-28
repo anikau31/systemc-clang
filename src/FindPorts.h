@@ -20,6 +20,8 @@ public:
   FindPorts(CXXRecordDecl *, llvm::raw_ostream &);
   virtual ~FindPorts();
   virtual bool VisitFieldDecl(FieldDecl *);
+  // This is necessary for it to traverse template implicit/explicit specializations
+  bool shouldVisitTemplateInstantiations();
 
   PortType getInputPorts() const;
   PortType getOutputPorts() const;

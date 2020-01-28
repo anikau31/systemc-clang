@@ -24,14 +24,16 @@ FindPorts::PortType FindPorts::getOutStreamPorts() const {
 
 FindPorts::PortType FindPorts::getOtherVars() const { return otherVars_; }
 
+bool FindPorts::shouldVisitTemplateInstantiations() { return true; }
+
 bool FindPorts::VisitFieldDecl(FieldDecl *fd) {
   QualType q{fd->getType()};
   string fname{};
 
   if (IdentifierInfo *info = fd->getIdentifier()) {
     fname = info->getNameStart();
-    // os_ << "\n+ Name: " << info->getNameStart();
-    //  os_ << "\n+ Type: " << q.getAsString();
+     os_ << "\n+ Name: " << info->getNameStart();
+      os_ << "\n+ Type: " << q.getAsString();
   }
 
   // These should be deleted in the appropriate container's constructor.
@@ -42,7 +44,7 @@ bool FindPorts::VisitFieldDecl(FieldDecl *fd) {
   // Continue to parse other types
   FindTemplateTypes *te{new FindTemplateTypes()};
   te->Enumerate(tp);
-  // te->printTemplateArguments(os_);
+  te->printTemplateArguments(os_);
 
   /// Check if we have sc_in/sc_out/sc_inout ports.
   /// The vector is organized such that the first element is the port type.
@@ -55,9 +57,9 @@ bool FindPorts::VisitFieldDecl(FieldDecl *fd) {
   }
 
   string port_type{ait->getTypeName()};
-  // os_ << "@@@@@ Port type: " << port_type << "\n";
+   os_ << "\n@@@@@ Port type: " << port_type << "\n";
   if (port_type == "sc_in") {
-    // os_ << "\n+ sc_in";
+     os_ << "\n+ sc_in";
     inPorts_.insert(kvType(fname, te));
   } else if (port_type == "sc_out") {
     //        os_ << "\n+ sc_out";
