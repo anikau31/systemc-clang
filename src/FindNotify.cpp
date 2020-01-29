@@ -14,6 +14,8 @@ FindNotify::FindNotify(CXXMethodDecl *d, llvm::raw_ostream &os)
 
 FindNotify::~FindNotify() { notify_call_list_.clear(); }
 
+bool FindNotify::shouldVisitTemplateInstantiations() const { return true; }
+
 bool FindNotify::VisitCallExpr(CallExpr *e) {
   //  e->dumpAll();
   LangOptions LangOpts;

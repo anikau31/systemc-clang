@@ -81,18 +81,17 @@ SC_MODULE( test ){
   }
 };
 
-/*
 int sc_main(int argc, char *argv[]) {
   sc_signal<int> sig1;
   sc_signal<double> double_sig;
   test test_instance("testing");
   test_instance.in1(sig1);
-  test_instance.in_out(double_sig);
+  test_instance.in_out1(double_sig);
   test_instance.out1(sig1);
 
-  simple_module simple("simple_module");
+  /*simple_module simple("simple_module");
   simple.one(sig1);
+  */
 
   return 0;
 }
-*/ 

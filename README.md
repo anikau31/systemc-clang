@@ -23,9 +23,14 @@ It parses RTL constructs and some TLM 2.0 constructs.
 
 ### Python Tests for Verilog conversion
 
-  1. To enable the python tests, run cmake with the `-DENABLE_PYTHON_TESTS=on` flag. Note that `python 3` should be installed.
-  2. To install necessary packages listed in `requirements.txt`, run `pip -r requirements.txt` in the **repo** directory.
-  3. To run the python tests, switch to the `$SYSTEMC_CLANG_BUILD_DIR` build directory and run `ctest -R python --output` after the build completes.
+  1. In the **repo_** directory, use `git submodule update` to pull the Verilog conversion data.
+  2. To enable the python tests, run cmake with the `-DENABLE_PYTHON_TESTS=on` flag. Note that `python 3` should be installed.
+  3. To install necessary packages listed in `requirements.txt`, run `pip install -r requirements.txt` in the **repo** directory.
+  4. To run the python tests, switch to the `$SYSTEMC_CLANG_BUILD_DIR` build directory and run `ctest -R python --output` after the build completes.
+
+#### Details
+  - To observe the failing tests, one can run the tests in `tests/verilog-conversion/` by running `pytest -s -v -q --tool-output`.
+  The `-s` option captures the standard output for the test, `-v` enables verbose mode, and `-q --tool-output` captures the output of the binary.
 
 ## Contact
 
@@ -37,4 +42,4 @@ For other concerns and comments, please contact us directly.
 
 ## License
 
-systemc-clang follows the same licensing as clang.  Please look at [LICENSE](https://git.uwaterloo.ca/caesr-pub/systemc-clang/LICENSE.md).
+systemc-clang follows the same licensing as clang.  Please look at [LICENSE](https://github.com/anikau31/systemc-clang/blob/master/LICENSE).

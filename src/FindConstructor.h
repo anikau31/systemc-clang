@@ -20,6 +20,7 @@ public:
   FindConstructor(CXXRecordDecl *, llvm::raw_ostream &);
   virtual ~FindConstructor();
   virtual bool VisitCXXMethodDecl(CXXMethodDecl *);
+  bool shouldVisitTemplateInstantiations() const;
 
   Stmt *returnConstructorStmt() const;
   void dump() const;

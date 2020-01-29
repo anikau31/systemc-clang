@@ -8,11 +8,11 @@
 
 #include "PluginAction.h"
 #include "SystemCClang.h"
+#include "Xlat.h"
 
 // This is automatically generated from cmake.
 #include "ClangArgs.h"
 #include "Testing.h"
-#include "../plugins/xlat/Xlat.h"
 
 using namespace clang;
 using namespace clang::tooling;
@@ -31,7 +31,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
 
-  //  SystemCConsumer sc{from_ast};
+  //SystemCConsumer sc{from_ast};
   Xlat sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};

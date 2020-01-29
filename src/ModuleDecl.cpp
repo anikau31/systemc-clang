@@ -124,8 +124,14 @@ ModuleDecl::~ModuleDecl() {
   other_fields_.clear();
 }
 
+void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
+
 void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
   template_parameters_ = parm_list;
+}
+
+void ModuleDecl::setTemplateArgs(const vector<string> &parm_list) {
+  template_args_ = parm_list;
 }
 
 vector<string> ModuleDecl::getTemplateParameters() const {
@@ -168,15 +174,46 @@ void ModuleDecl::addOtherVars(const FindPorts::PortType &p) {
 
 void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
                           const std::string &port_type) {
-  /*
-  if ( port_type == "sc_in" ) { std::copy( begin(found_ports),
-  end(found_ports), back_inserter(in_ports_ )); } if ( port_type == "sc_out" )
-  { std::copy( begin(found_ports), end(found_ports), back_inserter(out_ports_
-  )); } if ( port_type == "sc_inout" ) {  std::copy( begin(found_ports),
-  end(found_ports), back_inserter(inout_ports_ )); } if ( port_type ==
-  "others" ) {  std::copy( begin(found_ports), end(found_ports),
-  back_inserter(other_fields_ )); }
-  */
+  if (port_type == "sc_in") {
+    std::copy(begin(found_ports), end(found_ports), back_inserter(in_ports_));
+  }
+  if (port_type == "sc_out") {
+    std::copy(begin(found_ports), end(found_ports), back_inserter(out_ports_));
+  }
+  if (port_type == "sc_inout") {
+    std::copy(begin(found_ports), end(found_ports),
+              back_inserter(inout_ports_));
+  }
+  if (port_type == "others") {
+    std::copy(begin(found_ports), end(found_ports),
+              back_inserter(other_fields_));
+  }
+
+  if (port_type == "sc_signal") {
+    // FIXME: There is a conversion from PortDecl to SignalContainer required :(
+    // They are equivalent, and quite unnecessary.
+    //
+    for (auto const &signal_port : found_ports) {
+      auto port_decl{ get<1>(signal_port)};
+      auto name{port_decl->getName()};
+      auto templates{port_decl->getTemplateType()};
+      auto field_decl{port_decl->getFieldDecl()};
+      // SignalContainer
+      auto signal_container{new SignalContainer{name, templates, field_decl}};
+      auto signal_entry{new Signal(name, signal_container)};
+      signals_.insert(ModuleDecl::signalPairType(name, signal_entry));
+    }
+    //std::copy(begin(found_ports), end(found_ports), back_inserter(signals_));
+  }
+
+  if (port_type == "sc_stream_in") {
+    std::copy(begin(found_ports), end(found_ports),
+              back_inserter(istreamports_));
+  }
+  if (port_type == "sc_stream_out") {
+    std::copy(begin(found_ports), end(found_ports),
+              back_inserter(ostreamports_));
+  }
 }
 
 void ModuleDecl::addInputPorts(const FindPorts::PortType &foundPorts) {
@@ -301,7 +338,9 @@ vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
 
 int ModuleDecl::getNumInstances() { return instance_list_.size(); }
 
-ModuleDecl::signalMapType ModuleDecl::getSignals() { return signals_; }
+const ModuleDecl::signalMapType &ModuleDecl::getSignals() const {
+  return signals_;
+}
 
 ModuleDecl::processMapType ModuleDecl::getProcessMap() { return process_map_; }
 
@@ -465,22 +504,6 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
     ioport_j[name] = pd->dump_json(os);
   }
 
-  os << "\nother vars : " << other_fields_.size() << "\n";
-  othervars_j["number_of_other_vars"] = other_fields_.size();
-  for (auto mit : other_fields_) {
-    auto name = get<0>(mit);
-    auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
-
-    othervars_j[name] = pd->dump_json(os);
-  }
-
-  os << "Ports\n";
-  os << iport_j.dump(4) << "\n"
-     << oport_j.dump(4) << "\n"
-     << ioport_j.dump(4) << "\n"
-     << othervars_j.dump(4) << "\n";
   istreamport_j["number_of_instream_ports"] = istreamports_.size();
   for (auto mit : istreamports_) {
     auto name = get<0>(mit);
@@ -549,11 +572,15 @@ json ModuleDecl::dump_json() {
   json module_j;
 
   module_j["module_name"] = module_name_;
+  module_j["instance_name"] = instance_name_;
   // Template parameters.
   for (const auto &parm : template_parameters_) {
     module_j["template_parameters"].push_back(parm);
   }
 
+  for (const auto &parm : template_args_) {
+    module_j["template_args"].push_back(parm);
+  }
   std::cout << module_j.dump(4);
   return module_j;
 }

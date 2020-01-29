@@ -117,9 +117,8 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
 
 bool XlatMethod::TraverseCompoundStmt(CompoundStmt* cstmt) {
     // Traverse each statement and append it to the array
-  hNodep h_cstmt = new hNode(false);
-  h_cstmt->child_list.push_back(new hNode("", hNode::hdlopsEnum::hCStmt));
-
+  hNodep h_cstmt = new hNode(hNode::hdlopsEnum::hCStmt);
+  
   for (clang::Stmt* stmt : cstmt->body()) {
     TRY_TO(TraverseStmt(stmt));
     if (h_ret) {
@@ -134,14 +133,14 @@ bool XlatMethod::TraverseCompoundStmt(CompoundStmt* cstmt) {
 }
 
 bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
-  hNodep h_varlist = new hNode(false);
+  hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
   // from https://clang.llvm.org/doxygen/DeadStoresChecker_8cpp_source.html
   for (auto *DI : declstmt->decls())
     if (DI) {
 	auto *vardecl = dyn_cast<VarDecl>(DI);
 	if (!vardecl)
 	  continue;
-	hNodep h_vardecl = new hNode(false);
+	hNodep h_vardecl = new hNode(vardecl->getName(), hNode::hdlopsEnum::hVardecl);
 	ProcessVarDecl(vardecl, h_vardecl);
 	h_varlist->child_list.push_back(h_vardecl);
       }
@@ -150,9 +149,8 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
 }
 
 bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
-  h_vardecl->child_list.push_back(new hNode(vardecl->getName(), hNode::hdlopsEnum::hVardecl));
   os_ << "ProcessVarDecl var name is " << vardecl->getName() << "\n";
-  hNodep h_typeinfo = new hNode(false);
+  hNodep h_typeinfo = new hNode( hNode::hdlopsEnum::hTypeinfo);
   QualType q = vardecl->getType();
   const Type *tp = q.getTypePtr();
   os_ << "ProcessVarDecl type name is " << q.getAsString() << "\n";
@@ -182,16 +180,18 @@ bool XlatMethod::TraverseBinaryOperator(BinaryOperator* expr)
   //                          SourceLocation *Loc = nullptr,
   //                         bool isEvaluated = true) const;
 
-  hNodep  h_binop = new hNode(false); // node to hold binop expr
+  hNodep  h_binop = new hNode(expr->getOpcodeStr(), hNode::hdlopsEnum::hBinop); // node to hold binop expr
   os_ << "in TraverseBinaryOperator, opcode is " << expr->getOpcodeStr() << "\n";
 
-  h_binop->child_list.push_back(new hNode(expr->getOpcodeStr(), hNode::hdlopsEnum::hBinop));
-  
   TRY_TO(TraverseStmt(expr->getLHS()));
   h_binop->child_list.push_back(h_ret);
 
+  hNodep save_h_ret = h_ret;
   TRY_TO(TraverseStmt(expr->getRHS()));
-  h_binop->child_list.push_back(h_ret);
+  if (h_ret == save_h_ret)
+    h_binop->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+  else
+      h_binop->child_list.push_back(h_ret);
 
   h_ret = h_binop;
 
@@ -201,13 +201,13 @@ bool XlatMethod::TraverseBinaryOperator(BinaryOperator* expr)
 
 bool XlatMethod::TraverseUnaryOperator(UnaryOperator* expr) 
 { 
+  os_ << "in TraverseUnaryOperatory expr node is \n";
+  expr->dump(os_);
   
-  hNodep  h_unop = new hNode(false); // node to hold unop expr
-    os_ << "in TraverseUnaryOperatory expr node is \n";
-    expr->dump(os_);
-    auto opcstr = expr->getOpcode();
-    h_unop->child_list.push_back(new hNode(expr->getOpcodeStr(opcstr), hNode::hdlopsEnum::hUnop));
+  auto opcstr = expr->getOpcode();
   
+  hNodep  h_unop = new hNode(expr->getOpcodeStr(opcstr), hNode::hdlopsEnum::hUnop); // node to hold unop expr
+
   TRY_TO(TraverseStmt(expr->getSubExpr()));
   h_unop->child_list.push_back(h_ret);
 
@@ -248,8 +248,7 @@ bool XlatMethod::TraverseDeclRefExpr(DeclRefExpr* expr)
 bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
   os_ << "In TraverseArraySubscriptExpr, tree follows\n";
   expr->dump(os_);
-  hNodep h_arrexpr = new hNode(false);
-  h_arrexpr->child_list.push_back(new hNode("[]", hNode::hdlopsEnum::hBinop));
+  hNodep h_arrexpr = new hNode("ARRAYSUBSCRIPT", hNode::hdlopsEnum::hBinop);
   TRY_TO(TraverseStmt(expr->getLHS()));
   h_arrexpr->child_list.push_back(h_ret);
   TRY_TO(TraverseStmt(expr->getRHS()));
@@ -287,7 +286,6 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
 
     else methodname = "NOOP";
 
-    hNode * h_callp = new hNode(false); // list to hold call expr node
     hNode::hdlopsEnum opc; 
     
     os_ << "found " << methodname << "\n";
@@ -300,14 +298,16 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
       opc = hNode::hdlopsEnum::hNoop;
     }
 
-    h_callp -> child_list.push_back(new hNode(methodname, opc));
+    hNode * h_callp = new hNode(methodname, opc); // list to hold call expr node
+
     TRY_TO(TraverseStmt(arg)); // traverse the x in x.f(5)
 
     if (h_ret) h_callp -> child_list.push_back(h_ret);
 
     for (auto arg : callexpr->arguments()) {
+      hNodep save_h_ret = h_ret;
       TRY_TO(TraverseStmt(arg));
-      if (h_ret) h_callp->child_list.push_back(h_ret);
+      if (h_ret != save_h_ret) h_callp->child_list.push_back(h_ret);
     }
     h_ret = h_callp;	  
     return true;
@@ -335,12 +335,13 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
       (isLogicalOp(opcall->getOperator()))) {
     if (opcall->getNumArgs() == 2) {
       os_ << "assignment or logical operator, 2 args\n";
-      hNodep h_assignop = new hNode (false); // node to hold assignment expr
-      h_assignop->child_list.push_back(new hNode("=", hNode::hdlopsEnum::hBinop));
+      hNodep h_assignop = new hNode ("=", hNode::hdlopsEnum::hBinop); // node to hold assignment expr
       TRY_TO(TraverseStmt(opcall->getArg(0)));
       h_assignop->child_list.push_back(h_ret);
+      hNodep save_h_ret = h_ret;
       TRY_TO(TraverseStmt(opcall->getArg(1)));
-      h_assignop->child_list.push_back(h_ret);
+      if (h_ret == save_h_ret) h_assignop->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+      else h_assignop->child_list.push_back(h_ret);
       h_ret = h_assignop;
       opcall->getArg(0)->dump(os_);
       opcall->getArg(1)->dump(os_);
@@ -348,6 +349,7 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
     }
   }
   os_ << "not yet implemented operator call expr, opc is " << clang::getOperatorSpelling(opcall->getOperator()) << " num arguments " << opcall->getNumArgs() << " skipping\n";
+  h_ret = new hNode(hNode::hdlopsEnum::hUnimpl);
   return true;
 }
 
@@ -361,9 +363,8 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
 }
 
 bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
-  hNodep h_ifstmt, h_ifc, h_ifthen, h_ifelse;
-  h_ifstmt = new hNode(false);
-  h_ifstmt->child_list.push_back(new hNode("", hNode::hdlopsEnum::hIfStmt));
+  hNodep h_ifstmt, h_ifc = NULL, h_ifthen = NULL, h_ifelse = NULL;
+  h_ifstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
   if (ifs->getConditionVariable()) {
       // Variable declarations are not allowed in if conditions
     os_ << "Variable declarations are not allowed in if conditions, skipping\n";
@@ -374,13 +375,14 @@ bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
     h_ifc = h_ret;
   }
   TRY_TO(TraverseStmt(ifs->getThen()));
-  h_ifthen = h_ret;
+  if (h_ret != h_ifc) // unchanged if couldn't translate the then clause
+    h_ifthen = h_ret;
 
   if (ifs->getElse()) {
     TRY_TO(TraverseStmt(ifs->getElse()));
-    h_ifelse = h_ret;
+    if ((h_ret != h_ifc) && (h_ret != h_ifthen))
+      h_ifelse = h_ret;
   }
-  else h_ifelse = NULL;
   h_ifstmt->child_list.push_back(h_ifc);
   h_ifstmt->child_list.push_back(h_ifthen);
   if(h_ifelse) h_ifstmt->child_list.push_back(h_ifelse);
@@ -391,8 +393,7 @@ bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
 bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   hNodep h_forstmt, h_forinit, h_forcond, h_forinc, h_forbody;
   os_ << "For stmt\n";
-  h_forstmt = new hNode(false);
-  h_forstmt->child_list.push_back(new hNode("", hNode::hdlopsEnum::hForStmt));
+  h_forstmt = new hNode(hNode::hdlopsEnum::hForStmt);
   if (isa<CompoundStmt>(fors->getInit()))
     os_ << "Compound stmt not handled in for init, skipping\n";
   else TRY_TO(TraverseStmt(fors->getInit()));
@@ -401,6 +402,8 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   h_forcond = h_ret;
   TRY_TO(TraverseStmt(fors->getInc()));
   h_forinc = h_ret;
+  os_ << "For loop body\n";
+  fors->getBody()->dump(os_);
   TRY_TO(TraverseStmt(fors->getBody()));
   h_forbody = h_ret;
   h_forstmt->child_list.push_back(h_forinit);
@@ -417,8 +420,7 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
 bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
   hNodep h_whilestmt,  h_whilecond, h_whilebody;
   os_ << "While stmt\n";
-  h_whilestmt = new hNode(false);
-  h_whilestmt->child_list.push_back(new hNode("", hNode::hdlopsEnum::hWhileStmt));
+  h_whilestmt = new hNode(hNode::hdlopsEnum::hWhileStmt);
   if (whiles->getConditionVariable()) {
     os_ << "Variable declarations not handled in while condition, skipping\n";
   }

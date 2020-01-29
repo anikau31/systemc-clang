@@ -37,27 +37,38 @@ bool SystemCConsumer::fire() {
   // This is important so that the top-level module can be found.
   //
   os_ << "================ TESTMATCHER =============== \n";
+
+  // InstanceMatcher match_instances{};
   ModuleDeclarationMatcher module_declaration_handler{};
+  module_declaration_handler.set_top_module_decl(getTopModule());
   MatchFinder matchRegistry{};
-  module_declaration_handler.registerMatchers(matchRegistry);
+
   // Run all the matchers
+
+  module_declaration_handler.registerMatchers(matchRegistry);
+  // match_instances.registerMatchers( matchRegistry );
+
   matchRegistry.matchAST(getContext());
+  // match_instances.dump();
+  module_declaration_handler.pruneMatches();
+  os_ << "== Print module declarations pruned\n";
   module_declaration_handler.dump();
   os_ << "================ END =============== \n";
 
   // Check if the top-level module one of the sc_module declarations?
   //
+  // Map CXXRecordDecl => ModuleDecl*
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
   auto found_top_module{std::find_if(
       found_module_declarations.begin(), found_module_declarations.end(),
-      [this](std::tuple<std::string, CXXRecordDecl *> &element) {
-        return std::get<0>(element) == getTopModule();
+      [this](const ModuleDeclarationMatcher::ModulePairType &element) {
+        return (element.second->getName() == getTopModule());
       })};
 
   if (found_top_module != found_module_declarations.end()) {
-    os_ << "Found the top module: " << get<0>(*found_top_module) << ", "
-        << get<1>(*found_top_module) << "\n";
+    os_ << "Found the top module: " << found_top_module->second->getName()
+        << ", " << found_top_module->second << "\n";
   }
 
   // ===========================================================
@@ -69,14 +80,14 @@ bool SystemCConsumer::fire() {
   /*
   for (auto const &element : found_module_declarations) {
     auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
-    os_ << "@@@@@ name: " << get<0>(element) << "\n";
     systemcModel_->addModuleDecl(module_declaration);
   }
   */
 
+  /*
   // Find the sc_modules
   //
-  //
+
   FindSCModules scmod{tu, os_};
 
   FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
@@ -88,6 +99,7 @@ bool SystemCConsumer::fire() {
     systemcModel_->addModuleDecl(md);
 
   }
+  */
 
   ////////////////////////////////////////////////////////////////
   // Find the sc_main
@@ -110,15 +122,127 @@ bool SystemCConsumer::fire() {
   ////////////////////////////////////////////////////////////////
   // Find the netlist.
   ////////////////////////////////////////////////////////////////
+  // This actually also finds instances, but now we have AST matchers to do it.
+
+  /*
   FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
   findNetlist.dump();
   systemcModel_->addNetlist(findNetlist);
+  */
 
+  //
+  // Create a ModuleDecl for each instance with the appropriately parsed
+  // ModuleDecl.
+  //
+
+  auto found_instances_map{module_declaration_handler.getInstances()};
+  // Go through each instance and find its appropriate module declaration.
+
+  os_ << "## Print INSTANCE MAP #: " << found_instances_map.size() << "\n";
+
+  for (const auto &inst : found_instances_map) {
+    auto cxx_decl{inst.first};
+    // Vector
+    auto instance_list{inst.second};
+
+    // TODO:
+    //
+    // FIXME: This has to be replaced once xlat is fixed.
+    vector<ModuleDecl *> module_decl_instances;
+    ModuleDecl *p_dummy_module_decl{found_module_declarations[cxx_decl]};
+    //
+        // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
+        // TODO: Remove deference pointer copy constructor
+     //   new ModuleDecl{*found_module_declarations[cxx_decl]}};
+    // ==================
+
+    os_ << "CXXRecordDecl* " << cxx_decl
+        << ", module type: " << found_module_declarations[cxx_decl]->getName();
+    for (const auto &instance : instance_list) {
+      auto add_module_decl{
+          // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
+          new ModuleDecl{*found_module_declarations[cxx_decl]}};
+
+      // Insert what you know about the parsed sc_module
+      // 1. Insert the instance name from Matchers
+      os_ << "\n";
+      os_ << "1. Set instance name\n";
+      add_module_decl->setInstanceName(get<0>(instance));
+
+      // 2. Find the template arguments for the class.
+      os_ << "2. Set template arguments\n";
+      add_module_decl->setInstanceName(get<0>(instance));
+      FindTemplateParameters tparms{cxx_decl, os_};
+      add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
+      add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
+
+      // 3. Find constructor
+      //
+      //
+      vector<EntryFunctionContainer *> _entryFunctionContainerVector;
+      FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
+      add_module_decl->addConstructor(constructor.returnConstructorStmt());
+
+      // 4. Find ports
+      //
+      //
+      // 5. Find  entry functions
+      FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
+                                     os_};
+      FindEntryFunctions::entryFunctionVectorType *entryFunctions{
+          findEntries.getEntryFunctions()};
+      add_module_decl->addProcess(entryFunctions);
+
+      for (size_t i = 0; i < entryFunctions->size(); i++) {
+        EntryFunctionContainer *ef{(*entryFunctions)[i]};
+        FindSensitivity findSensitivity{constructor.returnConstructorStmt(),
+                                        os_};
+        ef->addSensitivityInfo(findSensitivity);
+
+        if (ef->getEntryMethod() == nullptr) {
+          os_ << "ERROR";
+          continue;
+        }
+
+        FindWait findWaits{ef->getEntryMethod(), os_};
+        ef->addWaits(findWaits);
+
+        FindNotify findNotify{ef->_entryMethodDecl, os_};
+        ef->addNotifys(findNotify);
+
+        _entryFunctionContainerVector.push_back(ef);
+      }
+
+      os_ << "============== DUMP the MODULEDECL ======================\n";
+      add_module_decl->dump(os_);
+      os_ << "============== END DUMP the MODULEDECL ==================\n";
+      // Insert the module into the model.
+      // All modules are also instances.
+
+      // Make the dummy equal to the updated add_module_decl
+      // This will make module declarations be one of the module instances.
+      *p_dummy_module_decl = *add_module_decl;
+      systemcModel_->addModuleDecl(p_dummy_module_decl);
+      module_decl_instances.push_back(add_module_decl);
+    }
+    os_ << "\n";
+
+    // TODO:
+    //
+    // FIXME: Only there to make sure xlat still compiles.
+    // This should be removed.
+    llvm::outs() << "[HDP] Add instances to model\n";
+    systemcModel_->addModuleDeclInstances(p_dummy_module_decl,
+                                          module_decl_instances);
+  }
+
+  /*
   ////////////////////////////////////////////////////////////////
   // Figure out the module map.
   ////////////////////////////////////////////////////////////////
   Model::moduleMapType moduleMap{systemcModel_->getModuleDecl()};
 
+  // <string, ModuleDecl*>
   for (Model::moduleMapType::iterator mit = moduleMap.begin(),
                                       mitend = moduleMap.end();
        mit != mitend; mit++) {
@@ -126,17 +250,17 @@ bool SystemCConsumer::fire() {
     int numInstances{mainmd->getNumInstances()};
     vector<ModuleDecl *> moduleDeclVec;
 
-    os_ << "\n";
-    os_ << "For module: " << mit->first << " num instance : " << numInstances;
+    os_ << "\nFor module: " << mit->first << " num instance : " << numInstances
+        << "\n";
 
     for (unsigned int num{0}; num < numInstances; ++num) {
-      ModuleDecl *md = new ModuleDecl{*mainmd};
+      auto md{new ModuleDecl{*mainmd}};
 
       // Find the template arguments for the class.
-      FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
+      // FindTemplateParameters tparms{mainmd->getModuleClassDecl(), os_};
 
-      md->setTemplateParameters(tparms.getTemplateParameters());
-      md->dump_json();
+      // md->setTemplateParameters(tparms.getTemplateParameters());
+      // md->dump_json();
 
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{mainmd->getModuleClassDecl(), os_};
@@ -200,8 +324,9 @@ bool SystemCConsumer::fire() {
       }
       moduleDeclVec.push_back(md);
     }
-    systemcModel_->addModuleDeclInstances(mainmd, moduleDeclVec);
+    // systemcModel_->addModuleDeclInstances(mainmd, moduleDeclVec);
   }
+  */
 
   /*
      FindSCMain scmain(tu, os_);
@@ -221,7 +346,6 @@ bool SystemCConsumer::fire() {
      FindNetlist findNetlist(scmain.getSCMainFunctionDecl());
      findNetlist.dump();
      systemcModel_->addNetlist(findNetlist);
-     */
 
   // Only do this if SAUTO flag is set.
 #ifdef USE_SAUTO
@@ -256,9 +380,11 @@ bool SystemCConsumer::fire() {
   }
 #endif
 
-  os_ << "\n";
-  os_ << "\n## SystemC model\n";
+     */
+  os_ << "Parsed SystemC model from systemc-clang\n";
+  os_ << "=========================================\n";
   systemcModel_->dump(os_);
+  os_ << "==============END========================\n";
   return true;
 }
 
@@ -304,9 +430,13 @@ SystemCConsumer::~SystemCConsumer() {
   }
 }
 
+void SystemCConsumer::setTopModule(const std::string &top_module_decl) {
+  top_ = top_module_decl;
+}
+
 Model *SystemCConsumer::getSystemCModel() { return systemcModel_; }
 
-std::string SystemCConsumer::getTopModule() const { return top_; }
+const std::string &SystemCConsumer::getTopModule() const { return top_; }
 
 ASTContext &SystemCConsumer::getContext() const { return context_; }
 

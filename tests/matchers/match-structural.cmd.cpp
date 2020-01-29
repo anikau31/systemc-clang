@@ -1,4 +1,4 @@
-#set bind-root false
+ set bind-root false
 # match sc_modules
 # m cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
 
@@ -41,17 +41,28 @@ set output diag
 # Notice that we are using the namedDecl here because sc_in_clk is actually 
 # a typedef to sc_in<bool>.
 #
-m cxxRecordDecl(isDerivedFrom(hasName("sc_module")), forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk")))).bind("sc_in_clk")))
+# m cxxRecordDecl(isDerivedFrom(hasName("sc_module")), forEach(fieldDecl(hasType(namedDecl(hasName("sc_in_clk")))).bind("sc_in_clk")))
 
 # Match entry function
 # 1. Find constructor
 # 2. Find method with the name
-# m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), hasDescendant(cxxConstructorDecl().bind("constructor")))
+m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")), hasDescendant(allOf(cxxConstructorDecl().bind("constructor"),cxxMethodDecl(equalsBoundNode("constructor")).bind("method"))) )
 
-#set output dump
+
+set output dump
 #m cxxRecordDecl(isExpansionInMainFile(), isDerivedFrom(hasName("::sc_core::sc_module")) )
 
 # Detect field declarations that are of sc_module type 
 #m fieldDecl(hasType(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))))
 # Detect variable declarations that are of sc_module type 
-m varDecl(hasType(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))))
+# m varDecl(hasType(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))))
+
+#m cxxRecordDecl(isExpansionInMainFile(), forEach(fieldDecl(allOf(unless(hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_port"))))),  hasType(cxxRecordDecl(hasDefinition())), unless(hasType(cxxRecordDecl(hasName("sc_signal")))))).bind("others")))
+
+#m fieldDecl(hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_signal_inout_if")))))
+
+
+#m cxxRecordDecl(forEachDescendant(fieldDecl(hasName("array_signal"))))
+
+#m cxxRecordDecl(isExpansionInMainFile(), forEachDescendant(fieldDecl(hasType(arrayType(hasElementType(hasDeclaration(cxxRecordDecl(hasName("sc_signal"))))).bind("array"))).bind("field")))
+
