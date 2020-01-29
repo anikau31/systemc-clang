@@ -21,6 +21,7 @@ set( UNIT_TEST_LIST
   t4-matchers 
   t5-template-matching
   subtree-matcher-test
+  clock-parsing
   )
 
 include(CTest)
