@@ -340,6 +340,17 @@ class PortMatcher : public MatchFinder::MatchCallback {
     const Type *type_ptr{qual_type.getTypePtr()};
     auto template_ptr{new FindTemplateTypes()};
     template_ptr->Enumerate(type_ptr);
+    template_ptr->printTemplateArguments(llvm::outs());
+
+    /*
+    auto tt{ type_ptr->getAs<TemplateSpecializationType>() };
+    tt->dump();
+    llvm::outs() << "@@ bha\n";
+    auto qtarg{ tt->getArgs() };
+    qtarg->dump();
+    */
+
+       
     return template_ptr;
   }
 

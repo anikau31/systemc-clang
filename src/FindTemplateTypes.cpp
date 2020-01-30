@@ -90,7 +90,14 @@ bool FindTemplateTypes::VisitType(Type *type) {
       template_types_.push_back(TemplateType(name, type));
       //cout << " ==> dependent type: " << name << "\n";
     }
-  } else {
+  } 
+  // Identify the _Bool in the sc_in_clk
+  // TODO: Hack.  We need to figure out a clean way to identify types.
+  else if (auto tt = type->getAs<TemplateSpecializationType>() ) {
+    auto arg{ tt->getArgs() };
+    template_types_.push_back(TemplateType(arg->getAsType().getAsString(), type));
+  }
+  else {
     CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
     if (p_cxx_record != nullptr) {
       IdentifierInfo *info{p_cxx_record->getIdentifier()};
