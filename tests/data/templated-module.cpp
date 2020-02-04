@@ -11,7 +11,10 @@ struct my_data {
 SC_MODULE( non_template ) {
   int x;
   int y[10];
+
   sc_in<bool> blah;
+	sc_in< sc_bv<8> > filter_input, filter_second_input;
+
   my_data mdt;
   sc_signal<int> array_signal[10];
 

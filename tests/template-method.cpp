@@ -4,8 +4,10 @@
 template<typename FP, int DIM>
 SC_MODULE( test ){
     sc_in<int> in;
+
     sc_out<int> out;
     sc_signal<int> test_signal;
+
     void entry_function_1() {
       std::cout << "value: " << DIM << std::endl;
     }
