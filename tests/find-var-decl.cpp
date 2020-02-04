@@ -35,21 +35,34 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
     //
     //
     auto match_vardecl = cxxMethodDecl(forEachDescendant(varDecl().bind("vardecl")));
+    auto match_declref = cxxMethodDecl(forEachDescendant(declRefExpr().bind("declref")));
 
     /* clang-format on */
 
     // Add the two matchers.
     finder.addMatcher(match_vardecl, this);
+    finder.addMatcher(match_declref, this);
   }
 
   // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
     llvm::outs() << "## Matched with SOMETHING\n";
-    if (auto var = const_cast<VarDecl *>(result.Nodes.getNodeAs<VarDecl>("vardecl"))) {
+
+    auto var = const_cast<VarDecl *>(result.Nodes.getNodeAs<VarDecl>("vardecl"));
+    auto declref = const_cast<DeclRefExpr*>(result.Nodes.getNodeAs<DeclRefExpr>("declref"));
+
+
+    if (var) {
       std::string name{var->getIdentifier()->getNameStart()};
       llvm::outs() << "Found a member variable with name: " << name << "\n";
       // This is where you can insert it into a vector.
       variables_.push_back(var);
+    }
+
+    if (declref) {
+      llvm::outs() << "Found a variable declref name: \n";
+      declref->dump();
+      declref->getDecl()->dump();
     }
   }
 
@@ -86,8 +99,18 @@ SC_MODULE( test ){
 
   void entry_function_1() {
     while(true) {
-      int i = 22;
+      int a = 22;
+      int k = 0;
       double j = 44;
+
+      if (j > 20) {
+        int i = 44;
+        k = k + i;
+        i = i + 4;
+      } else {
+        int i = 55;
+        a = i;
+        }
 
     }
   }
