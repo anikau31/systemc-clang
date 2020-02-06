@@ -95,6 +95,12 @@ bool FindTemplateTypes::VisitType(Type *type) {
   // TODO: Hack.  We need to figure out a clean way to identify types.
   else if (auto tt = type->getAs<TemplateSpecializationType>() ) {
     auto arg{ tt->getArgs() };
+    auto arg_kind{arg->getKind()};
+    // We have to make sure that it is fully evaluated before moving forward.
+    // If it is not then just keep parsing.
+    if (arg_kind == TemplateArgument::ArgKind::Expression) {
+      return true;
+    }
     template_types_.push_back(TemplateType(arg->getAsType().getAsString(), type));
   }
   else {
