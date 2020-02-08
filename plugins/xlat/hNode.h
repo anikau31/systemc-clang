@@ -35,6 +35,7 @@ namespace hnode {
   etype(hVarAssign), \
   etype(hBinop), \
   etype(hUnop), \
+  etype(hMethodCall), \
   etype(hIfStmt), \
   etype(hForStmt), \
   etype(hForInit), \

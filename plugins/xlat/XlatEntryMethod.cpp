@@ -295,7 +295,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     else {
       os_ << "unknown method. methoddecl follows\n";
       methdcl->dump();
-      opc = hNode::hdlopsEnum::hNoop;
+      opc = hNode::hdlopsEnum::hMethodCall;
     }
 
     hNode * h_callp = new hNode(methodname, opc); // list to hold call expr node
