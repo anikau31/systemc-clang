@@ -65,11 +65,10 @@ bool Xlat::postFire() {
       h_module->child_list.push_back(h_ports);
 
       h_top = new hNode(hNode::hdlopsEnum::hProcesses);
-
       // Processes
       xlatproc(instanceVec.at(i)->getEntryFunctionContainer(), h_top, os_);
-
-      h_module->child_list.push_back(h_top);
+      
+      if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
       h_module->print(xlatout);
       delete h_top; //h_module;
     }
