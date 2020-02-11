@@ -66,7 +66,7 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
     return template_types_;
   }
 
-  //type->dump();
+  // type->dump();
   TraverseType(QualType(type, 0));
   return template_types_;
 }
@@ -74,9 +74,9 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
 bool FindTemplateTypes::VisitType(Type *type) {
   type->dump();
   QualType q{type->getCanonicalTypeInternal()};
-  //cout << "\n###### Type: " << q.getAsString() << " \n";
+  // cout << "\n###### Type: " << q.getAsString() << " \n";
   if (type->isBuiltinType()) {
-    cout << " ==> builtin type: " << q.getAsString() << "\n";
+    // cout << " ==> builtin type: " << q.getAsString() << "\n";
     template_types_.push_back(TemplateType(q.getAsString(), type));
     return false;
   } else
@@ -89,13 +89,13 @@ bool FindTemplateTypes::VisitType(Type *type) {
       auto tunder{tn.getUnderlying()};
       auto name{tunder.getAsTemplateDecl()->getNameAsString()};
       template_types_.push_back(TemplateType(name, type));
-      //cout << " ==> dependent type: " << name << "\n";
+      // cout << " ==> dependent type: " << name << "\n";
     }
-  } 
+  }
   // Identify the _Bool in the sc_in_clk
   // TODO: Hack.  We need to figure out a clean way to identify types.
-  else if (auto tt = type->getAs<TemplateSpecializationType>() ) {
-    auto arg{ tt->getArgs() };
+  else if (auto tt = type->getAs<TemplateSpecializationType>()) {
+    auto arg{tt->getArgs()};
     auto arg_kind{arg->getKind()};
     //llvm::outs() << "==> template specialization type: " << arg_kind << "\n";
     // We have to make sure that it is fully evaluated before moving forward.
@@ -111,14 +111,14 @@ bool FindTemplateTypes::VisitType(Type *type) {
       return false;
     }
   }
-  else {
+ } else {
     CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
     if (p_cxx_record != nullptr) {
       IdentifierInfo *info{p_cxx_record->getIdentifier()};
        //cout << "##### info; " << info->getNameStart() << "\n";
       if (info != nullptr) {
         template_types_.push_back(TemplateType(info->getNameStart(), type));
-        //cout << " ==> CXXRecord type: " << info->getNameStart() << "\n";
+        // cout << " ==> CXXRecord type: " << info->getNameStart() << "\n";
       }
     }
   }
