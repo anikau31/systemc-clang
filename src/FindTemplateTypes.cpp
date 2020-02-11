@@ -111,7 +111,7 @@ bool FindTemplateTypes::VisitType(Type *type) {
       return false;
     }
   }
- } else {
+  else {
     CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
     if (p_cxx_record != nullptr) {
       IdentifierInfo *info{p_cxx_record->getIdentifier()};
