@@ -438,7 +438,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     // It is a way to show that we can write our own complex predicates for AST matchers :)
     auto test_matcher =
         cxxRecordDecl(forEachDescendant(fieldDecl(matchesTypeName())));
-    finder.addMatcher(test_matcher, this);
+    //finder.addMatcher(test_matcher, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
