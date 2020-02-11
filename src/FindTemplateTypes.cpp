@@ -72,13 +72,14 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
 }
 
 bool FindTemplateTypes::VisitType(Type *type) {
+  type->dump();
   QualType q{type->getCanonicalTypeInternal()};
   // cout << "\n###### Type: " << q.getAsString() << " \n";
   if (type->isBuiltinType()) {
     // cout << " ==> builtin type: " << q.getAsString() << "\n";
     template_types_.push_back(TemplateType(q.getAsString(), type));
     return false;
-  }
+  } else
 
   // Template for sc_stream_in and sc_stream_out
   // These are types that are dependent on the parameter for the template.
@@ -96,31 +97,25 @@ bool FindTemplateTypes::VisitType(Type *type) {
   else if (auto tt = type->getAs<TemplateSpecializationType>()) {
     auto arg{tt->getArgs()};
     auto arg_kind{arg->getKind()};
+    //llvm::outs() << "==> template specialization type: " << arg_kind << "\n";
     // We have to make sure that it is fully evaluated before moving forward.
     // If it is not then just keep parsing.
+    //if (arg_kind == TemplateArgument::ArgKind::Expression) {
+    //  return true;
+    //}
     //
-    // Problem: For some reason for the nested type, the sugared version
-    // crashes when even trying to do a dump.  This seems to be an issue with
-    // clang itself.
-    //
-    // TODO: This should be consolidated with newer versions.
-    if (arg_kind == TemplateArgument::ArgKind::Expression) {
-      // llvm::outs() << "#### HMM " << arg_kind << "\n";
-      // llvm::outs() << "\n#### HMM 2\n";
-      QualType q{tt->desugar()};
-      // const Type* ttt {tt->desugar().getTypePtr()};
-      //  ttt->dump();
-
-      template_types_.push_back(TemplateType(q.getAsString(), type));
-      return true;
+    // Break out if the template argument is integral or a type.
+    if ((arg_kind == TemplateArgument::ArgKind::Integral) || 
+    ( arg_kind == TemplateArgument::ArgKind::Type )){
+      template_types_.push_back(TemplateType(arg->getAsType().getAsString(), type));
+      return false;
     }
-    template_types_.push_back(
-        TemplateType(arg->getAsType().getAsString(), type));
-  } else {
+  }
+  else {
     CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
     if (p_cxx_record != nullptr) {
       IdentifierInfo *info{p_cxx_record->getIdentifier()};
-      // cout << "##### info; " << info->getNameStart() << "\n";
+       //cout << "##### info; " << info->getNameStart() << "\n";
       if (info != nullptr) {
         template_types_.push_back(TemplateType(info->getNameStart(), type));
         // cout << " ==> CXXRecord type: " << info->getNameStart() << "\n";
@@ -157,6 +152,7 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   for (auto const &targ : template_arguments) {
     os << targ << " ";
   }
+  os << "\n";
 }
 
 vector<string> FindTemplateTypes::getTemplateArguments() {
