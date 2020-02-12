@@ -27,7 +27,9 @@ using namespace scpar;
 class FindVariableDeclarations : public MatchFinder::MatchCallback {
  public:
  private:
-   std::vector<Decl*> variables_;
+  std::vector<Decl *> variables_;
+  std::map<Decl*, std::vector<DeclRefExpr*>> variable_use_map;
+
  public:
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
@@ -35,7 +37,9 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
     //
     //
     auto match_vardecl = cxxMethodDecl(forEachDescendant(varDecl().bind("vardecl")));
-    auto match_declref = cxxMethodDecl(forEachDescendant(declRefExpr().bind("declref")));
+    auto match_declref = cxxMethodDecl(
+        forEachDescendant(
+          declRefExpr().bind("declref")));
 
     /* clang-format on */
 
@@ -48,9 +52,10 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     llvm::outs() << "## Matched with SOMETHING\n";
 
-    auto var = const_cast<VarDecl *>(result.Nodes.getNodeAs<VarDecl>("vardecl"));
-    auto declref = const_cast<DeclRefExpr*>(result.Nodes.getNodeAs<DeclRefExpr>("declref"));
-
+    auto var =
+        const_cast<VarDecl *>(result.Nodes.getNodeAs<VarDecl>("vardecl"));
+    auto declref = const_cast<DeclRefExpr *>(
+        result.Nodes.getNodeAs<DeclRefExpr>("declref"));
 
     if (var) {
       std::string name{var->getIdentifier()->getNameStart()};
@@ -62,15 +67,45 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
     if (declref) {
       llvm::outs() << "Found a variable declref name: \n";
       declref->dump();
+      // Get the variable declaration
       declref->getDecl()->dump();
+      llvm::outs() << "==> varDecl: " << declref->getDecl() << ": " << declref << "\n";
+
+      // This is the information that can be added into a structure to map the 
+      // variable declaration -> reference to declaration.
+      // This is perhaps the simplest way to use it.
+
+      // Find the varDecl, if it exists.
+      auto variable_decl_it{ variable_use_map.find(declref->getDecl())};
+      if ( variable_decl_it != variable_use_map.end() ) {
+        variable_decl_it->second.push_back( declref );
+      } else {
+        std::vector<DeclRefExpr*> references;
+        references.push_back( declref );
+        variable_use_map.insert( std::pair<Decl*, std::vector<DeclRefExpr*> >(declref->getDecl(), references ));
+      }
     }
   }
 
   void dump() {
-    for (auto const & var : variables_ ) {
+    llvm::outs() << "DMP: All the variables\n";
+    for (auto const &var : variables_) {
       var->dump();
     }
+    llvm::outs() << "DMP: All the references to variables\n";
+    for (auto const &var : variable_use_map ) {
+      auto vardecl{ var.first };
+      auto varref{ var.second };
 
+      llvm::outs() << "== VarDecl \n";
+      vardecl->dump();
+      for (auto const &use : varref ) {
+        llvm::outs() << "  " << use << "\n";
+        use->dump();
+      }
+
+
+    }
   }
 };
 
@@ -99,17 +134,17 @@ SC_MODULE( test ){
 
   void entry_function_1() {
     while(true) {
-      int a = 22;
-      int k = 0;
-      double j = 44;
+      int j;
+      int k;
 
       if (j > 20) {
-        int i = 44;
+        int i = 33;
         k = k + i;
-        i = i + 4;
+        i = i + k + 5;
+        x = i;
       } else {
-        int i = 55;
-        a = i;
+        int i = 7;
+        x = i - 1;
         }
 
     }
