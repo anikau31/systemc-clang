@@ -52,12 +52,17 @@ json PortDecl::dump_json(raw_ostream &os) {
   // TODO:Print out the field_decl_
   // Template arguments
   auto template_args{template_type_->getTemplateArgumentsType()};
-  port_j["port_type"] = template_args[0].getTypeName();
-  template_args.erase(begin(template_args));
-
-  for (auto ait = begin(template_args); ait != end(template_args); ++ait) {
-    port_j["port_arguments"].push_back(ait->getTypeName());
+  int i{0};
+  for ( const auto & port_arg : template_args ) {
+    llvm::outs() << "@@@@: " << i++ << " : " << port_arg.getTypeName() << "\n";
+    port_j["port_arguments"].push_back(port_arg.getTypeName());
   }
+  //port_j["port_type"] = template_args[0].getTypeName();
+  //template_args.erase(begin(template_args));
+
+  //for (auto ait = begin(template_args); ait != end(template_args); ++ait) {
+    //port_j["port_arguments"].push_back(ait->getTypeName());
+  //}
 
   // os << port_j.dump(4);
   return port_j;

@@ -26,6 +26,7 @@ SC_MODULE( test ){
 
   // input ports
   sc_in_clk clk;
+  sc_in<bool> bool_clk;
 
   void entry_function_1() {
     while(true) {
@@ -60,9 +61,10 @@ int sc_main(int argc, char *argv[]) {
 
   // Want to find an instance named "testing".
 
-  ModuleDecl *test_module{model->getInstance("testing")};;
+  ModuleDecl *test_module{model->getInstance("testing")};
+  ;
 
-SECTION("Found sc_module instances", "[instances]") {
+  SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module declarations found: "
          << module_decl.size());
@@ -74,17 +76,40 @@ SECTION("Found sc_module instances", "[instances]") {
     INFO("Checking clock port parsing.");
     // These checks should be performed on the declarations.
 
-    auto test_module_inst{test_module};
+    ModuleDecl *test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
-    /*
-    REQUIRE(test_module_inst->getIPorts().size() == 3);
-    REQUIRE(test_module_inst->getOPorts().size() == 2);
-    REQUIRE(test_module_inst->getIOPorts().size() == 1);
-    REQUIRE(test_module_inst->getSignals().size() == 1);
-    REQUIRE(test_module_inst->getOtherVars().size() == 1);
+    //
+    // There is only one input port seen as sc_in<bool> clk;
+    auto input_ports{test_module_inst->getIPorts()};
+    REQUIRE(input_ports.size() == 2);
+
+    // Try to access each of the ports    
+    // // Iterate over all ports and their arguments.
+    for (const auto &port : input_ports) {
+      auto name = get<0>(port);
+      PortDecl *pd = get<1>(port);
+      llvm::outs() << "name: " << name << "\n";
+      auto template_type = pd->getTemplateType();
+      auto template_args{template_type->getTemplateArgumentsType()};
+
+      for (const auto &port_arg : template_args) {
+        llvm::outs() << "==> " << port_arg.getTypeName() << "\n";
+
+        if (name == "bool_clk") {
+          REQUIRE( (port_arg.getTypeName()) == "_Bool");
+        }
+        if (name == "clk") {
+          REQUIRE( port_arg.getTypeName() == "_Bool");
+        }
+      }
+    }
+    
+    REQUIRE(test_module_inst->getOPorts().size() == 0);
+    REQUIRE(test_module_inst->getIOPorts().size() == 0);
+    REQUIRE(test_module_inst->getSignals().size() == 0);
+    REQUIRE(test_module_inst->getOtherVars().size() == 0);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
-    */
   }
 }
