@@ -36,7 +36,9 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
 
     //
     //
-    auto match_vardecl = cxxMethodDecl(forEachDescendant(varDecl().bind("vardecl")));
+    auto match_vardecl = cxxMethodDecl(
+        forEachDescendant(varDecl().bind("vardecl")));
+
     auto match_declref = cxxMethodDecl(
         forEachDescendant(
           declRefExpr().bind("declref")));

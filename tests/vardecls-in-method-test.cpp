@@ -38,8 +38,8 @@ class FieldMatcher : public MatchFinder::MatchCallback {
       auto match_in_ports = 
         cxxRecordDecl(
             forEachDescendant(
-//              declStmt().bind("sc_in")
- declStmt(hasAncestor(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))), hasAncestor(cxxMethodDecl()), hasDescendant(varDecl(unless(hasType(cxxRecordDecl(hasName("sc_process_handle"))))))).bind("sc_in")
+              declStmt().bind("sc_in")
+ //declStmt(hasAncestor(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))), hasAncestor(cxxMethodDecl()), hasDescendant(varDecl(unless(hasType(cxxRecordDecl(hasName("sc_process_handle"))))))).bind("sc_in")
               //fieldDecl( hasType(cxxRecordDecl(hasName("sc_in"))) ).bind("sc_in")
               )
             );
@@ -53,7 +53,8 @@ class FieldMatcher : public MatchFinder::MatchCallback {
     virtual void run( const MatchFinder::MatchResult &result ) {
       cout << " Trying to find sc_in. " << endl;
       if ( auto field_decl = const_cast<Decl*>(result.Nodes.getNodeAs<Decl>("sc_in")) ) {
-        cout << " Found an Decl: ";
+        cout << " Found an Decl: \n";
+        field_decl->dump();
       }
 
 
