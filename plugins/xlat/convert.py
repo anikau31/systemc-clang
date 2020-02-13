@@ -61,8 +61,8 @@ l = Lark('''
         !npa : "neg" | "pos" | "always"
 
         // if and if-else, not handling if-elseif case
-        ifstmt: "hIfStmt" "[" expression  (hcstmt|exprinif|ifstmt) "]"
-              | "hIfStmt" "[" (hcstmt|exprinif|ifstmt) "]" "[" (hcstmt|exprinif|ifstmt) "]"
+        ifstmt: "hIfStmt" "NONAME" "[" expression  (hcstmt|exprinif|ifstmt) [(hcstmt|exprinif|ifstmt)] "]"
+              | "hIfStmt" "NONAME" "[" (hcstmt|exprinif|ifstmt) "]" "[" (hcstmt|exprinif|ifstmt) "]"
         exprinif: expression
          
         ?expression: hbinop
@@ -72,6 +72,7 @@ l = Lark('''
                   | hunimp
                   | syscread
                   | hnoop
+                  | hmethodcall
                   |  "[" expression "]"
 
         syscread : hsigassignr "[" expression "]"
@@ -84,18 +85,20 @@ l = Lark('''
         hunimp:  "hUnimpl" ID "NOLIST"
         hbinop:  "hBinop" BINOP "[" (expression|fcall) (expression|fcall) "]"
         hunop:  "hUnop" UNOP "[" expression "]"
-             | htempandunop 
+             | htempandunop
         // just a temporary workaround
         htempandunop: "(hLiteral operator const bool &)" expression
+        hmethodcall: "hMethodCall" hidorstr  "[" expression expression* "]"
         htemptrigger:  hliteral hliteral hvardecl 
+        hidorstr: ID | STRING
         hliteral:  "hLiteral" ID "NOLIST"
         hlitdecl: hliteral*
         ?hvardecl:  "hVardecl" ID "NOLIST"
         hvardef: "hVardecl" ID "[" "]" hvardefsuf // ok to shift instead of reduce
-               | "hVardecl" ID "[" htypeinfo  hvardefsuf "]"
-        ?hvardefsuf: hunimp | hliteral |  syscread  |  syscwrite  |  hbinop 
+               | "hVardecl" ID "[" htypeinfo  [hvardefsuf] "]"
+        ?hvardefsuf: hunimp | hliteral |  syscread  |  syscwrite  |  hbinop | hmethodcall
         htypeinfo: "hTypeinfo" "NONAME" "[" htype+ "]"
-        htype:  "hType" ID "NOLIST"
+        htype:  "hType" STRING "NOLIST" 
 
         // This is like a function call
         hnoop: "hNoop" ID "[" hvarref "]"
@@ -103,10 +106,11 @@ l = Lark('''
              | "hNoop" "operator" "const" "bool" "&" "[" hliteral "]"
 
         ID: /[a-zA-Z_0-9]+/
-        BINOP: "==" | "&&" | "=" | "||" | "-" | ">" | "+" | "*" | "^" | "ARRAYSUBSCRIPT" | "<=" | "<"
-        UNOP: "!" | "++"
+        BINOP: "==" | "&&" | "=" | "||" | "-" | ">" | "+" | "*" | "^" | "ARRAYSUBSCRIPT" | "<=" | "<" | "%"
+        UNOP: "!" | "++" | "-"
         %import common.WS
         %ignore WS
+        %import common.ESCAPED_STRING -> STRING
         ''', parser='lalr', debug=True)
 
 class CType2VerilogType(object):
