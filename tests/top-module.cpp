@@ -58,7 +58,16 @@ SC_MODULE(top) {
   }
 };
 
+SC_MODULE(consumer_only ) {
+
+  consumer c;
+  SC_CTOR(consumer_only): c("consumer_instance") {
+  }
+};
+
+
 int sc_main(int argc, char *argv[]) {
   top t("top_module");
+  consumer_only c("c");
   return 0;
 }
