@@ -24,6 +24,10 @@ const Type *TemplateType::getTypePtr() const { return type_ptr_; }
 // FindTemplateTypes
 //////////////////////////////////////////////////////////////////////
 
+bool FindTemplateTypes::shouldVisitTemplateInstantiations() const {
+  return true;
+}
+
 // Constructor
 FindTemplateTypes::FindTemplateTypes() {}
 
@@ -71,19 +75,74 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
   return template_types_;
 }
 
+bool FindTemplateTypes::VisitClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl *class_special_type) {
+
+  llvm::outs() << "=VisitClassTemplateSpecializationDecl=\n";
+  return true;
+}
+
+bool FindTemplateTypes::VisitTemplateSpecializationType(TemplateSpecializationType *special_type) {
+  llvm::outs() << "=VisitTemplateSpecializationType=\n";
+  //special_type->dump();
+  auto arg{special_type->getArgs()};
+  llvm::outs() << "== arg: " << arg->getAsType().getAsString() <<  "\n";
+  auto template_name {special_type->getTemplateName()};
+  // Code to get the instance name
+  clang::LangOptions LangOpts;
+  LangOpts.CPlusPlus = true;
+  clang::PrintingPolicy Policy(LangOpts);
+
+  std::string name_string;
+  llvm::raw_string_ostream sstream(name_string);
+  template_name.print(sstream, Policy, 0);
+  llvm::outs() << "== template_name: " << sstream.str() << "\n";
+  template_types_.push_back(TemplateType(sstream.str(), special_type));
+
+  return true;
+}
+
+bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
+  llvm::outs() << "=VisitCXXRecordDecl=\n";
+    if (cxx_record != nullptr) {
+      IdentifierInfo *info{cxx_record->getIdentifier()};
+      if (info != nullptr) {
+        llvm::outs() << " ==> CXXRecord type: " << info->getNameStart() << "\n";
+        template_types_.push_back(TemplateType(info->getNameStart(), cxx_record->getTypeForDecl()));
+      }
+    }
+
+    return true;
+}
+
+bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
+  llvm::outs() << "=VisitTypedefType=\n";
+  typedef_type->dump();
+  // child nodes of TemplateSpecializationType are not being invoked.
+  if (auto special_type = typedef_type->getAs<TemplateSpecializationType>()) {
+    TraverseType(QualType(special_type, 0));
+  }
+  return true;
+}
+
+
 bool FindTemplateTypes::VisitType(Type *type) {
-  type->dump();
+  llvm::outs() << "=VisitType=\n";
+  //type->dump();
   QualType q{type->getCanonicalTypeInternal()};
   // cout << "\n###### Type: " << q.getAsString() << " \n";
   if (type->isBuiltinType()) {
-    // cout << " ==> builtin type: " << q.getAsString() << "\n";
+    cout << " ==> builtin type: " << q.getAsString() << "\n";
     template_types_.push_back(TemplateType(q.getAsString(), type));
     return false;
-  } else
+  } 
 
-  // Template for sc_stream_in and sc_stream_out
-  // These are types that are dependent on the parameter for the template.
-  if (type->isDependentType()) {
+  /*
+
+  else
+
+      // Template for sc_stream_in and sc_stream_out
+      // These are types that are dependent on the parameter for the template.
+      if (type->isDependentType()) {
     if (auto dp = type->getAs<TemplateSpecializationType>()) {
       auto tn{dp->getTemplateName()};
       auto tunder{tn.getUnderlying()};
@@ -97,36 +156,38 @@ bool FindTemplateTypes::VisitType(Type *type) {
   else if (auto tt = type->getAs<TemplateSpecializationType>()) {
     auto arg{tt->getArgs()};
     auto arg_kind{arg->getKind()};
-    //llvm::outs() << "==> template specialization type: " << arg_kind << "\n";
+    // llvm::outs() << "==> template specialization type: " << arg_kind << "\n";
     // We have to make sure that it is fully evaluated before moving forward.
     // If it is not then just keep parsing.
-    //if (arg_kind == TemplateArgument::ArgKind::Expression) {
+    // if (arg_kind == TemplateArgument::ArgKind::Expression) {
     //  return true;
     //}
     //
     // Break out if the template argument is integral or a type.
-    if ((arg_kind == TemplateArgument::ArgKind::Integral) || 
-    ( arg_kind == TemplateArgument::ArgKind::Type )){
-      template_types_.push_back(TemplateType(arg->getAsType().getAsString(), type));
+    if ((arg_kind == TemplateArgument::ArgKind::Integral) ||
+        (arg_kind == TemplateArgument::ArgKind::Type)) {
+      template_types_.push_back(
+          TemplateType(arg->getAsType().getAsString(), type));
       return false;
     }
-  }
-  else {
+  } else {
     CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
     if (p_cxx_record != nullptr) {
       IdentifierInfo *info{p_cxx_record->getIdentifier()};
-       //cout << "##### info; " << info->getNameStart() << "\n";
+      // cout << "##### info; " << info->getNameStart() << "\n";
       if (info != nullptr) {
         template_types_.push_back(TemplateType(info->getNameStart(), type));
         // cout << " ==> CXXRecord type: " << info->getNameStart() << "\n";
       }
     }
   }
+  */
   return true;
 }
 
 bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
-  //_os << "\n####### IntegerLiteral: " << l->getValue().toString(10,true) <<
+  llvm::outs() << "\n=VisitIntegerLiteral: \n";
+  //<< l->getValue().toString(10,true) <<
   //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
   //"== type name: " << l->getType().getAsString() << "\n";
   template_types_.push_back(TemplateType(l->getValue().toString(10, true),

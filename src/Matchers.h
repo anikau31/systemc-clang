@@ -335,7 +335,6 @@ class PortMatcher : public MatchFinder::MatchCallback {
   }
 
   auto parseTemplateType(const FieldDecl *fd) {
-    //}, const ModuleDeclarationMatcher::PortType &found_ports ) {
     QualType qual_type{fd->getType()};
     const Type *type_ptr{qual_type.getTypePtr()};
     auto template_ptr{new FindTemplateTypes()};
