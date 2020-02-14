@@ -161,9 +161,13 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
   scpar::FindTemplateTypes::type_vector_t ttargs = te->getTemplateArgumentsType();
   for (auto const &targ : ttargs) {
 
-    h_typeinfo->child_list.push_back(new hNode(targ.getTypeName(), hNode::hdlopsEnum::hType));
+    h_typeinfo->child_list.push_back(new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
 
   }
+  
+  if (h_typeinfo->child_list.empty()) // front end didn't parse type info
+    h_typeinfo->child_list.push_back(new hNode("\"" + q.getAsString() + "\"", hNode::hdlopsEnum::hType));
+				     
   h_vardecl->child_list.push_back(h_typeinfo);
   if (Expr * declinit = vardecl->getInit()) {
 
@@ -296,6 +300,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
       os_ << "unknown method. methoddecl follows\n";
       methdcl->dump();
       opc = hNode::hdlopsEnum::hMethodCall;
+      if (methodname.find_first_of(" ") != std::string::npos) methodname = "\"" + methodname + "\"";
     }
 
     hNode * h_callp = new hNode(methodname, opc); // list to hold call expr node
