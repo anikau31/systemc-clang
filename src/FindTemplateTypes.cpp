@@ -83,11 +83,11 @@ bool FindTemplateTypes::VisitClassTemplateSpecializationDecl(ClassTemplateSpecia
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(TemplateSpecializationType *special_type) {
   llvm::outs() << "=VisitTemplateSpecializationType=\n";
-  //special_type->dump();
-  auto arg{special_type->getArgs()};
-  llvm::outs() << "== arg: " << arg->getAsType().getAsString() <<  "\n";
+  special_type->dump();
   auto template_name {special_type->getTemplateName()};
-  // Code to get the instance name
+  template_name.dump();
+  
+
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
   clang::PrintingPolicy Policy(LangOpts);
