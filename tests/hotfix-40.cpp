@@ -26,6 +26,42 @@ TEST_CASE("Basic parsing checks", "[parsing]") {
 #include "sreg.h"
 #include "sc_stream.h"
 
+// Taken from: https://www.doulos.com/knowhow/systemc/faq/#q1
+class MyType {
+  private:
+    unsigned info;
+    bool flag;
+  public:
+
+    // constructor
+    MyType (unsigned info_ = 0, bool flag_ = false) {
+      info = info_;
+      flag = flag_;
+    }
+
+    inline bool operator == (const MyType & rhs) const {
+      return (rhs.info == info && rhs.flag == flag );
+    }
+
+    inline MyType& operator = (const MyType& rhs) {
+      info = rhs.info;
+      flag = rhs.flag;
+      return *this;
+    }
+
+    inline friend void sc_trace(sc_trace_file *tf, const MyType & v,
+    const std::string & NAME ) {
+      sc_trace(tf,v.info, NAME + ".info");
+      sc_trace(tf,v.flag, NAME + ".flag");
+    }
+
+    inline friend ostream& operator << ( ostream& os,  MyType const & v ) {
+      os << v.info << std::boolalpha << v.flag ; 
+  return os;
+    }
+};
+
+
 SC_MODULE( test ){
 
 	typedef sc_uint<16> expo_t;
@@ -38,6 +74,9 @@ SC_MODULE( test ){
 
 	sc_stream_in<int> s_port;
 	sc_stream_out<double> m_port;
+
+  sc_in<MyType> in_mytype;
+  sc_out<MyType> out_mytype;
 
   void entry_function_1() {
     while(true) {

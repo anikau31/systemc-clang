@@ -127,7 +127,6 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
 
 bool FindTemplateTypes::VisitType(Type *type) {
   llvm::outs() << "=VisitType=\n";
-  //type->dump();
   QualType q{type->getCanonicalTypeInternal()};
   // cout << "\n###### Type: " << q.getAsString() << " \n";
   if (type->isBuiltinType()) {
@@ -135,7 +134,6 @@ bool FindTemplateTypes::VisitType(Type *type) {
     template_types_.push_back(TemplateType(q.getAsString(), type));
     return false;
   } 
-
   /*
 
   else
