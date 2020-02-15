@@ -1,4 +1,5 @@
 #include "FindTemplateTypes.h"
+#include "Utility.h"
 
 using namespace scpar;
 
@@ -75,18 +76,18 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
   return template_types_;
 }
 
-bool FindTemplateTypes::VisitClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl *class_special_type) {
-
+bool FindTemplateTypes::VisitClassTemplateSpecializationDecl(
+    ClassTemplateSpecializationDecl *class_special_type) {
   llvm::outs() << "=VisitClassTemplateSpecializationDecl=\n";
   return true;
 }
 
-bool FindTemplateTypes::VisitTemplateSpecializationType(TemplateSpecializationType *special_type) {
+bool FindTemplateTypes::VisitTemplateSpecializationType(
+    TemplateSpecializationType *special_type) {
   llvm::outs() << "=VisitTemplateSpecializationType=\n";
   special_type->dump();
-  auto template_name {special_type->getTemplateName()};
+  auto template_name{special_type->getTemplateName()};
   template_name.dump();
-  
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
@@ -103,15 +104,16 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(TemplateSpecializationTy
 
 bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
   llvm::outs() << "=VisitCXXRecordDecl=\n";
-    if (cxx_record != nullptr) {
-      IdentifierInfo *info{cxx_record->getIdentifier()};
-      if (info != nullptr) {
-        llvm::outs() << " ==> CXXRecord type: " << info->getNameStart() << "\n";
-        template_types_.push_back(TemplateType(info->getNameStart(), cxx_record->getTypeForDecl()));
-      }
+  if (cxx_record != nullptr) {
+    IdentifierInfo *info{cxx_record->getIdentifier()};
+    if (info != nullptr) {
+      llvm::outs() << " ==> CXXRecord type: " << info->getNameStart() << "\n";
+      template_types_.push_back(
+          TemplateType(info->getNameStart(), cxx_record->getTypeForDecl()));
     }
+  }
 
-    return true;
+  return true;
 }
 
 bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
@@ -124,62 +126,34 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
   return true;
 }
 
-
 bool FindTemplateTypes::VisitType(Type *type) {
   llvm::outs() << "=VisitType=\n";
   QualType q{type->getCanonicalTypeInternal()};
-  // cout << "\n###### Type: " << q.getAsString() << " \n";
+  llvm::outs() << "\n###### Type: " << q.getAsString() << " \n";
   if (type->isBuiltinType()) {
-    cout << " ==> builtin type: " << q.getAsString() << "\n";
+    llvm::outs() << " ==> builtin type: " << q.getAsString() << "\n";
     template_types_.push_back(TemplateType(q.getAsString(), type));
     return false;
-  } 
-  /*
-
-  else
-
-      // Template for sc_stream_in and sc_stream_out
-      // These are types that are dependent on the parameter for the template.
-      if (type->isDependentType()) {
-    if (auto dp = type->getAs<TemplateSpecializationType>()) {
-      auto tn{dp->getTemplateName()};
-      auto tunder{tn.getUnderlying()};
-      auto name{tunder.getAsTemplateDecl()->getNameAsString()};
-      template_types_.push_back(TemplateType(name, type));
-      // cout << " ==> dependent type: " << name << "\n";
-    }
   }
-  // Identify the _Bool in the sc_in_clk
-  // TODO: Hack.  We need to figure out a clean way to identify types.
-  else if (auto tt = type->getAs<TemplateSpecializationType>()) {
-    auto arg{tt->getArgs()};
-    auto arg_kind{arg->getKind()};
-    // llvm::outs() << "==> template specialization type: " << arg_kind << "\n";
-    // We have to make sure that it is fully evaluated before moving forward.
-    // If it is not then just keep parsing.
-    // if (arg_kind == TemplateArgument::ArgKind::Expression) {
-    //  return true;
-    //}
-    //
-    // Break out if the template argument is integral or a type.
-    if ((arg_kind == TemplateArgument::ArgKind::Integral) ||
-        (arg_kind == TemplateArgument::ArgKind::Type)) {
-      template_types_.push_back(
-          TemplateType(arg->getAsType().getAsString(), type));
-      return false;
-    }
-  } else {
-    CXXRecordDecl *p_cxx_record{type->getAsCXXRecordDecl()};
-    if (p_cxx_record != nullptr) {
-      IdentifierInfo *info{p_cxx_record->getIdentifier()};
-      // cout << "##### info; " << info->getNameStart() << "\n";
-      if (info != nullptr) {
-        template_types_.push_back(TemplateType(info->getNameStart(), type));
-        // cout << " ==> CXXRecord type: " << info->getNameStart() << "\n";
-      }
-    }
+
+  // This detects a user-defined type (class/struct).
+  // This is done by checking that this is not a TemplateSpecializationType, and
+  // if it is not a DependentType then there is no further parsing to be done.
+  //
+  // This is done because it is not clear how to detect user-defined types
+  // that are the inner-most template arguments.
+  //
+  if ((!type->getAs<TemplateSpecializationType>()) &&
+      (!type->isDependentType())) {
+    llvm::outs() << " ==> dependent type: " << q.getAsString() << "\n";
+    // type->dump();
+    Utility util;
+    std::string type_name{q.getAsString()};
+    type_name = util.strip(type_name, "class ");
+    type_name = util.strip(type_name, "struct ");
+
+    template_types_.push_back(TemplateType(type_name, type));
   }
-  */
   return true;
 }
 

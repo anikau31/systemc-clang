@@ -22,9 +22,9 @@ using namespace scpar;
 
 TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
-#include "systemc.h"
-#include "sreg.h"
 #include "sc_stream.h"
+#include "sreg.h"
+#include "systemc.h"
 
 // Taken from: https://www.doulos.com/knowhow/systemc/faq/#q1
 class MyType {
@@ -140,7 +140,7 @@ int sc_main(int argc, char *argv[]) {
     //
     // There is only one input port seen as sc_in<bool> clk;
     auto input_ports{test_module_inst->getIPorts()};
-    REQUIRE(input_ports.size() == 2);
+    REQUIRE(input_ports.size() == 3);
 
     // Try to access each of the ports
     // // Iterate over all ports and their arguments.
@@ -151,35 +151,43 @@ int sc_main(int argc, char *argv[]) {
       auto template_type = pd->getTemplateType();
       auto template_args{template_type->getTemplateArgumentsType()};
 
-      if (name == "uint" ) {
-        REQUIRE((template_args[0].getTypeName() == "sc_uin"));
+      if (name == "uint") {
+        REQUIRE((template_args[0].getTypeName() == "sc_uint"));
         REQUIRE((template_args[1].getTypeName() == "32"));
       }
 
-
-      if (name == "bool_clk" ) {
+      if (name == "bool_clk") {
         REQUIRE((template_args[0].getTypeName() == "sc_in"));
         REQUIRE((template_args[1].getTypeName() == "_Bool"));
       }
 
-      if (name == "clk" ) {
+      if (name == "clk") {
         REQUIRE((template_args[0].getTypeName() == "sc_in"));
         REQUIRE((template_args[1].getTypeName() == "_Bool"));
       }
 
-      if (name == "s_port" ) {
+      if (name == "s_port") {
         REQUIRE((template_args[0].getTypeName() == "sc_stream_in"));
         REQUIRE((template_args[1].getTypeName() == "int"));
       }
 
-      if (name == "m_port" ) {
+      if (name == "m_port") {
         REQUIRE((template_args[0].getTypeName() == "sc_stream_out"));
         REQUIRE((template_args[1].getTypeName() == "double"));
       }
 
+      if (name == "in_mytype") {
+        REQUIRE((template_args[0].getTypeName() == "sc_in"));
+        REQUIRE((template_args[1].getTypeName() == "MyType"));
+      }
+
+      if (name == "out_mytype") {
+        REQUIRE((template_args[0].getTypeName() == "sc_out"));
+        REQUIRE((template_args[1].getTypeName() == "MyType"));
+      }
     }
 
-    REQUIRE(test_module_inst->getOPorts().size() == 0);
+    REQUIRE(test_module_inst->getOPorts().size() == 1);
     REQUIRE(test_module_inst->getIOPorts().size() == 0);
     REQUIRE(test_module_inst->getSignals().size() == 1);
     REQUIRE(test_module_inst->getOtherVars().size() == 1);
