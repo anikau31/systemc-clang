@@ -93,16 +93,16 @@ int sc_main(int argc, char *argv[]) {
       auto template_type = pd->getTemplateType();
       auto template_args{template_type->getTemplateArgumentsType()};
 
-      for (const auto &port_arg : template_args) {
-        llvm::outs() << "==> " << port_arg.getTypeName() << "\n";
-
-        if (name == "bool_clk") {
-          REQUIRE( (port_arg.getTypeName()) == "_Bool");
-        }
-        if (name == "clk") {
-          REQUIRE( port_arg.getTypeName() == "_Bool");
-        }
+      if (name == "bool_clk" ) {
+        REQUIRE((template_args[0].getTypeName() == "sc_in"));
+        REQUIRE((template_args[1].getTypeName() == "_Bool"));
       }
+
+      if (name == "clk" ) {
+        REQUIRE((template_args[0].getTypeName() == "sc_in"));
+        REQUIRE((template_args[1].getTypeName() == "_Bool"));
+      }
+
     }
     
     REQUIRE(test_module_inst->getOPorts().size() == 0);
