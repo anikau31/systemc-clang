@@ -22,7 +22,7 @@ set( UNIT_TEST_LIST
   t5-template-matching
   subtree-matcher-test
   clock-parsing
-  hotfix-40
+  hotfix-40-findtemplatetypes
   )
 
 include(CTest)

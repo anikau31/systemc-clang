@@ -21,7 +21,7 @@ using namespace scpar;
 
 TEST_CASE("sreg example", "[llnl-examples]") {
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "/llnl-examples/sreg.cpp")};
+      systemc_clang::test_data_dir, "/llnl-examples/sreg-driver.cpp")};
   INFO(systemc_clang::test_data_dir);
 
   auto catch_test_args = systemc_clang::catch_test_args;
