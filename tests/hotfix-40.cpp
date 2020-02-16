@@ -22,9 +22,9 @@ using namespace scpar;
 
 TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
-#include "sc_stream.h"
-#include "sreg.h"
 #include "systemc.h"
+#include "sreg.h"
+#include "sc_stream.h"
 
 // Taken from: https://www.doulos.com/knowhow/systemc/faq/#q1
 class MyType {
