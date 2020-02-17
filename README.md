@@ -29,8 +29,44 @@ It parses RTL constructs and some TLM 2.0 constructs.
   4. To run the python tests, switch to the `$SYSTEMC_CLANG_BUILD_DIR` build directory and run `ctest -R python --output` after the build completes.
 
 #### Details
+
   - To observe the failing tests, one can run the tests in `tests/verilog-conversion/` by running `pytest -s -v -q --tool-output`.
   The `-s` option captures the standard output for the test, `-v` enables verbose mode, and `-q --tool-output` captures the output of the binary.
+
+
+### Running conversion comparison in shell
+  The script requires `pyverilog` to be installed, which can be achieved using the command: `pip install pyverilog`
+  Note that when using the script, the working directory needs to be `tests/verilog-conversion`
+  ```
+  $ python -m run-compare
+  usage: A tool for running and comparing against a golden standard
+       [-h] [--cpp CPP] [--hdl HDL] [--verilog VERILOG]
+       [--include-path [INCLUDE_PATH [INCLUDE_PATH ...]]]
+       [--output-dir OUTPUT_DIR] [--verbose]
+       {cpp-to-hdl,hdl-to-v,cpp-to-v}
+   ```
+   
+#### Examples
+##### Converting sreg-driver.cpp to sreg-driver_hdl.txt_
+   ```
+   python -B -m run-compare cpp-to-hdl --output-dir /tmp/  --cpp ../data/llnl-examples/sreg-driver.cpp --include-path ../../examples/llnl-examples/ --verbose
+   ```
+   The generated file will be placed into a timestamped directory in `/tmp/`, for example, `/tmp/2020-02-17_01-28-52/sreg-driver_hdl.txt`
+##### Converting sreg-driver.cpp to sreg-driver_hdl.txt and show the diff of an existing _`_hdl.txt` file
+   Compared to the last command, we need an addition `--hdl` option to specify the file to compare against:
+   ```
+   python -B -m run-compare cpp-to-hdl --output-dir /tmp/  --cpp ../data/llnl-examples/sreg-driver.cpp --include-path ../../examples/llnl-examples/ --hdl ../data/verilog-conversion/llnl-examples/sreg_hdl.txt
+   ```
+##### Converting sreg-driver_hdl.txt to sreg-driver.v
+   ```
+   python -B -m run-compare hdl-to-v --output-dir /tmp/ --hdl /tmp/2020-02-16_23-53-13/sreg-driver_hdl.txt --verbose
+   ```
+   The generated file will be placed into a timestamped directory in `/tmp/`, for example, `/tmp/2020-02-17_01-28-52/sreg-driver.v`
+##### Converting sreg-driver_hdl.txt to sreg-driver.v and show the diff of an existing Verilog file
+   ```
+   python -B -m run-compare hdl-to-v --output-dir /tmp/ --hdl /tmp/2020-02-16_23-53-13/sreg-driver_hdl.txt --verilog ../data/verilog-conversion/llnl-exmples/handcrafted/sreg.v
+   ```
+
 
 ## Contact
 
