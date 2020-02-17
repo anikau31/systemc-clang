@@ -85,9 +85,9 @@ bool FindTemplateTypes::VisitClassTemplateSpecializationDecl(
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
   llvm::outs() << "=VisitTemplateSpecializationType=\n";
-  special_type->dump();
+  //special_type->dump();
   auto template_name{special_type->getTemplateName()};
-  template_name.dump();
+  //template_name.dump();
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
@@ -118,7 +118,7 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
 
 bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
   llvm::outs() << "=VisitTypedefType=\n";
-  typedef_type->dump();
+  //typedef_type->dump();
   // child nodes of TemplateSpecializationType are not being invoked.
   if (auto special_type = typedef_type->getAs<TemplateSpecializationType>()) {
     TraverseType(QualType(special_type, 0));
@@ -130,6 +130,7 @@ bool FindTemplateTypes::VisitType(Type *type) {
   llvm::outs() << "=VisitType=\n";
   QualType q{type->getCanonicalTypeInternal()};
   llvm::outs() << "\n###### Type: " << q.getAsString() << " \n";
+
   if (type->isBuiltinType()) {
     llvm::outs() << " ==> builtin type: " << q.getAsString() << "\n";
     template_types_.push_back(TemplateType(q.getAsString(), type));
@@ -145,15 +146,37 @@ bool FindTemplateTypes::VisitType(Type *type) {
   //
   if ((!type->getAs<TemplateSpecializationType>()) &&
       (!type->isDependentType())) {
-    llvm::outs() << " ==> dependent type: " << q.getAsString() << "\n";
-    // type->dump();
+    llvm::outs() << " ==> user defined type: " << q.getAsString() << "\n";
+    type->dump();
+
+    // FIXME: This is where struct fp_t<11,52> fails. 
+    //
+    //
+
+
+    
     Utility util;
     std::string type_name{q.getAsString()};
     type_name = util.strip(type_name, "class ");
     type_name = util.strip(type_name, "struct ");
 
     template_types_.push_back(TemplateType(type_name, type));
+    /*
+    if (auto st = type->getAsStructureType()) {
+      llvm::outs() << " ==> structure type \n";
+      st->dump();
+      TraverseType(QualType(st->getAs<ClassTemplateSpecializationDecl>(), 0));
+
+    }
+    */
+    return false;
   }
+
+  return true;
+}
+
+bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
+  llvm::outs() << "=VisitRecordType=\n";
   return true;
 }
 
@@ -167,7 +190,7 @@ bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
   // template_types_.push_back(pair<string, const Type
   // *>(l->getValue().toString(10, true), l->getType().getTypePtr()));
 
-  return true;
+  return false;
 }
 
 FindTemplateTypes::type_vector_t FindTemplateTypes::getTemplateArgumentsType() {
