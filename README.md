@@ -26,7 +26,10 @@ It parses RTL constructs and some TLM 2.0 constructs.
   1. In the **repo_** directory, use `git submodule update` to pull the Verilog conversion data.
   2. To enable the python tests, run cmake with the `-DENABLE_PYTHON_TESTS=on` flag. Note that `python 3` should be installed.
   3. To install necessary packages listed in `requirements.txt`, run `pip install -r requirements.txt` in the **repo** directory.
-  4. To run the python tests, switch to the `$SYSTEMC_CLANG_BUILD_DIR` build directory and run `ctest -R python --output` after the build completes.
+  4. To run the python tests, switch to the `$SYSTEMC_CLANG_BUILD_DIR` build directory and after the build completes, run:
+  ```
+  ctest -R verilog-tests --output
+  ``` 
 
 #### Details
 
@@ -52,7 +55,7 @@ It parses RTL constructs and some TLM 2.0 constructs.
    python -B -m run-compare cpp-to-hdl --output-dir /tmp/  --cpp ../data/llnl-examples/sreg-driver.cpp --include-path ../../examples/llnl-examples/ --verbose
    ```
    The generated file will be placed into a timestamped directory in `/tmp/`, for example, `/tmp/2020-02-17_01-28-52/sreg-driver_hdl.txt`
-##### Converting sreg-driver.cpp to sreg-driver_hdl.txt and show the diff of an existing _`_hdl.txt` file
+##### Converting sreg-driver.cpp to sreg-driver_hdl.txt and show the diff of an existing `_hdl.txt` file
    Compared to the last command, we need an addition `--hdl` option to specify the file to compare against:
    ```
    python -B -m run-compare cpp-to-hdl --output-dir /tmp/  --cpp ../data/llnl-examples/sreg-driver.cpp --include-path ../../examples/llnl-examples/ --hdl ../data/verilog-conversion/llnl-examples/sreg_hdl.txt
