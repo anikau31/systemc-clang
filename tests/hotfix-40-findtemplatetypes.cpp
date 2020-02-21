@@ -26,6 +26,56 @@ TEST_CASE("Basic parsing checks", "[parsing]") {
 #include "sreg.h"
 #include "sc_stream.h"
 
+template< int E, int F>
+struct fp_t {
+	static constexpr int ebits = E;
+	static constexpr int fbits = F;
+	static constexpr int bits = 1+E+F;
+
+	// exponent bias
+	// When E (bits) =  8, ebias =  127
+	// When E (bits) = 11, ebias = 1023
+	static constexpr int ebias = (1 << (E-1))-1;
+
+
+	typedef sc_int <bits> si_t;
+	typedef sc_uint<bits> ui_t;
+
+
+	typedef sc_uint<F> frac_t;
+	typedef sc_uint<E> expo_t;
+	typedef sc_uint<1> sign_t;
+
+	frac_t frac;
+	expo_t expo; // biased by ebias
+	sign_t sign;
+
+	fp_t(ui_t ui = 0)
+	{
+		(sign,expo,frac) = ui;
+	}
+
+	fp_t& operator=(ui_t ui)
+	{
+		(sign,expo,frac) = ui;
+		return *this;
+	}
+
+	operator ui_t() const
+	{
+		return (sign,expo,frac);
+	}
+
+	bool operator==(const fp_t& fp)
+	{
+		return
+			this->frac == fp.frac &&
+			this->expo == fp.expo &&
+			this->sign == fp.sign;
+	}
+
+};
+
 // Taken from: https://www.doulos.com/knowhow/systemc/faq/#q1
 class MyType {
   private:
