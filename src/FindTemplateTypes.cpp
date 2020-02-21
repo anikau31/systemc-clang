@@ -214,30 +214,24 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
       llvm::outs() << " ====> template type : " << targ.getKind() << "\n";
 
       if (targ.getKind() == TemplateArgument::ArgKind::Type) {
-
-        /*
-        auto template_name{targ.getAsTemplate().getUnderlying()};
-        // template_name.dump();
-
-        clang::LangOptions LangOpts;
-        LangOpts.CPlusPlus = true;
-        clang::PrintingPolicy Policy(LangOpts);
-
-        std::string name_string;
-        llvm::raw_string_ostream sstream(name_string);
-        template_name.print(sstream, Policy, 0);
-        llvm::outs() << "== template_name: " << sstream.str() << "\n";
-        template_types_.push_back(TemplateType(sstream.str(), rt));
-        */
-
+        QualType template_name{targ.getAsType()};
+        llvm::outs() << " ====> template_type_name "
+                     << template_name.getAsString() << "\n";
         const Type *arg_type{targ.getAsType().getTypePtr()};
         //.getTypePtr()->dump();
         if (!arg_type->isBuiltinType()) {
           TraverseType(arg_list[i].getAsType());
+        } else {
+          template_types_.push_back(
+              TemplateType(template_name.getAsString(), rt));
         }
       }
 
       if (targ.getKind() == TemplateArgument::ArgKind::Integral) {
+        //QualType template_name{targ.getAsType()};
+        //llvm::outs() << " ====> template_type_name integral "
+        //             << template_name.getAsString() << "\n";
+
         llvm::outs() << " ====> Integral : ";
         auto integral{targ.getAsIntegral()};
         SmallString<16> integral_string{};
