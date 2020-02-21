@@ -75,14 +75,14 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
   type->dump();
   llvm::outs() << "####  Desugared #### \n";
   type->getUnqualifiedDesugaredType()->dump();
-  
-  //TraverseType(QualType(type, 0));
-  TraverseType(QualType(type, 0));
-  //TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
+
+  // TraverseType(QualType(type, 0));
+  // TraverseType(QualType(type, 0));
+  TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
   return template_types_;
 }
 
-bool FindTemplateTypes::VisitTemplateArgument( TemplateArgument *ta) {
+bool FindTemplateTypes::VisitTemplateArgument(TemplateArgument *ta) {
   llvm::outs() << "=VisitTemplateArgument=\n";
 
   return true;
@@ -97,9 +97,9 @@ bool FindTemplateTypes::VisitClassTemplateSpecializationDecl(
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
   llvm::outs() << "=VisitTemplateSpecializationType=\n";
-  //special_type->dump();
+  // special_type->dump();
   auto template_name{special_type->getTemplateName()};
-  //template_name.dump();
+  // template_name.dump();
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
@@ -114,13 +114,13 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   // Template argument
   //
 
-  unsigned int narg{ special_type->getNumArgs()};
+  unsigned int narg{special_type->getNumArgs()};
   for (unsigned int i{0}; i != narg; ++i) {
     llvm::outs() << " ==> template arg \n";
-    const TemplateArgument & arg{ special_type->getArg(i) };
+    const TemplateArgument &arg{special_type->getArg(i)};
     arg.dump();
     arg.getAsType().getTypePtr()->dump();
-    //traversetype(arg.getastype());
+    // traversetype(arg.getastype());
   }
 
   return true;
@@ -142,7 +142,7 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
 
 bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
   llvm::outs() << "=VisitTypedefType=\n";
-  //typedef_type->dump();
+  // typedef_type->dump();
   // child nodes of TemplateSpecializationType are not being invoked.
   if (auto special_type = typedef_type->getAs<TemplateSpecializationType>()) {
     TraverseType(QualType(special_type, 0));
@@ -174,12 +174,12 @@ bool FindTemplateTypes::VisitType(Type *type) {
     llvm::outs() << " ==> user defined type: " << q.getAsString() << "\n";
     type->dump();
 
-    // FIXME: This is where struct fp_t<11,52> fails. 
+    // FIXME: This is where struct fp_t<11,52> fails.
     //
     //
 
 
-    
+
     Utility util;
     std::string type_name{q.getAsString()};
     type_name = util.strip(type_name, "class ");
@@ -195,24 +195,57 @@ bool FindTemplateTypes::VisitType(Type *type) {
 
 bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   llvm::outs() << "=VisitRecordType=\n";
-  auto type_decl{ rt->getDecl() };
-  auto type_name{ type_decl->getName() };
+  auto type_decl{rt->getDecl()};
+  auto type_name{type_decl->getName()};
   llvm::outs() << " ==> name : " << type_name << "\n";
   template_types_.push_back(TemplateType(type_name, rt));
 
-  if (auto ctsd = dyn_cast<ClassTemplateSpecializationDecl>(type_decl) )  {
+  if (auto ctsd = dyn_cast<ClassTemplateSpecializationDecl>(type_decl)) {
     llvm::outs() << " ==> CTSD \n";
-    ctsd->dump();
+    // ctsd->dump();
 
-    const TemplateArgumentList & arg_list{ctsd->getTemplateArgs()};
+    const TemplateArgumentList &arg_list{ctsd->getTemplateArgs()};
     for (unsigned int i{0}; i < arg_list.size(); ++i) {
-       llvm::outs() << " ====> template argument: \n";
-       arg_list[i].dump();
+      const TemplateArgument &targ{arg_list[i]};
+      llvm::outs() << " ====> template argument: ";
+      targ.dump();
+      llvm::outs() << "\n";
+      // TODO Write this into the vector.
+      llvm::outs() << " ====> template type : " << targ.getKind() << "\n";
 
+      if (targ.getKind() == TemplateArgument::ArgKind::Type) {
+
+        /*
+        auto template_name{targ.getAsTemplate().getUnderlying()};
+        // template_name.dump();
+
+        clang::LangOptions LangOpts;
+        LangOpts.CPlusPlus = true;
+        clang::PrintingPolicy Policy(LangOpts);
+
+        std::string name_string;
+        llvm::raw_string_ostream sstream(name_string);
+        template_name.print(sstream, Policy, 0);
+        llvm::outs() << "== template_name: " << sstream.str() << "\n";
+        template_types_.push_back(TemplateType(sstream.str(), rt));
+        */
+
+        const Type *arg_type{targ.getAsType().getTypePtr()};
+        //.getTypePtr()->dump();
+        if (!arg_type->isBuiltinType()) {
+          TraverseType(arg_list[i].getAsType());
+        }
+      }
+
+      if (targ.getKind() == TemplateArgument::ArgKind::Integral) {
+        llvm::outs() << " ====> Integral : ";
+        auto integral{targ.getAsIntegral()};
+        SmallString<16> integral_string{};
+        integral.toString(integral_string);
+        llvm::outs() << integral_string << "\n";
+        template_types_.push_back(TemplateType(integral_string.c_str(), rt));
+      }
     }
-
-    
-
   }
   return true;
 }
