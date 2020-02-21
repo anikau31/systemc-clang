@@ -23,8 +23,8 @@ using namespace scpar;
 TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
 #include "systemc.h"
-#include "sreg.h"
-#include "sc_stream.h"
+//#include "sreg.h"
+//#include "sc_stream.h"
 
 template< int E, int F>
 struct fp_t {
@@ -75,6 +75,22 @@ struct fp_t {
 	}
 
 };
+  
+template<int E, int F>
+inline std::ostream& operator<<(std::ostream& os, const fp_t<E,F>& fp)
+{
+	return os << hex << fp.sign << ':'  << fp.expo << ':' << fp.frac;
+}
+
+template<int E, int F>
+void sc_trace(sc_trace_file* tf, const fp_t<E,F>& ob, const std::string& nm)
+{
+	sc_trace(tf, ob.frac, nm+".frac");
+	sc_trace(tf, ob.expo, nm+".expo");
+	sc_trace(tf, ob.sign, nm+".sign");
+}
+
+
 
 // Taken from: https://www.doulos.com/knowhow/systemc/faq/#q1
 class MyType {
@@ -112,18 +128,40 @@ class MyType {
 };
 
 
+template <typename T>
+SC_MODULE(ram) {
+
+  sc_signal<T> buggy_signal;
+
+  void ram_proc();
+
+  SC_HAS_PROCESS(ram);
+
+  ram(sc_module_name name_,  bool debug_ = false) :
+    sc_module(name_),  debug(debug_) {
+    SC_THREAD(ram_proc);
+
+  }
+
+  private:
+    const bool debug;
+};
+
+
 SC_MODULE( test ){
 
 	typedef sc_uint<16> expo_t;
 
+  ram<fp_t<11,3>> specialized_template;
+  
   // input ports
   sc_uint<32> uint;
   sc_in_clk clk;
   sc_in<bool> bool_clk;
 	sc_signal<expo_t> emax;
 
-	sc_stream_in<int> s_port;
-	sc_stream_out<double> m_port;
+	//sc_stream_in<int> s_port;
+	//sc_stream_out<double> m_port;
 
   sc_in<MyType> in_mytype;
   sc_out<MyType> out_mytype;
