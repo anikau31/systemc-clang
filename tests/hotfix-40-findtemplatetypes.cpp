@@ -127,24 +127,22 @@ class MyType {
     }
 };
 
+// https://www.doulos.com/knowhow/systemc/faq/
 
 template <typename T>
 SC_MODULE(ram) {
 
   sc_signal<T> buggy_signal;
 
-  void ram_proc();
+  void ram_proc(){};
 
   SC_HAS_PROCESS(ram);
 
-  ram(sc_module_name name_,  bool debug_ = false) :
-    sc_module(name_),  debug(debug_) {
+  ram(sc_module_name name_ = "AA"):
+    sc_module(name_) {
     SC_THREAD(ram_proc);
 
   }
-
-  private:
-    const bool debug;
 };
 
 

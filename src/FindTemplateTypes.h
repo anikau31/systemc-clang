@@ -58,6 +58,7 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitTypedefType(TypedefType *typedef_type);
   bool VisitCXXRecordDecl(CXXRecordDecl *cxx_type);
   bool VisitRecordType(RecordType *rt);
+bool VisitTemplateArgument( TemplateArgument *ta);
 
   ~FindTemplateTypes();
   string getTemplateType();

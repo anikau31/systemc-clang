@@ -71,9 +71,21 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
     return template_types_;
   }
 
-  // type->dump();
+  llvm::outs() << "####  Sugared #### \n";
+  type->dump();
+  llvm::outs() << "####  Desugared #### \n";
+  type->getUnqualifiedDesugaredType()->dump();
+  
+  //TraverseType(QualType(type, 0));
   TraverseType(QualType(type, 0));
+  //TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
   return template_types_;
+}
+
+bool FindTemplateTypes::VisitTemplateArgument( TemplateArgument *ta) {
+  llvm::outs() << "=VisitTemplateArgument=\n";
+
+  return true;
 }
 
 bool FindTemplateTypes::VisitClassTemplateSpecializationDecl(
@@ -98,6 +110,18 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   template_name.print(sstream, Policy, 0);
   llvm::outs() << "== template_name: " << sstream.str() << "\n";
   template_types_.push_back(TemplateType(sstream.str(), special_type));
+
+  // Template argument
+  //
+
+  unsigned int narg{ special_type->getNumArgs()};
+  for (unsigned int i{0}; i != narg; ++i) {
+    llvm::outs() << " ==> template arg \n";
+    const TemplateArgument & arg{ special_type->getArg(i) };
+    arg.dump();
+    arg.getAsType().getTypePtr()->dump();
+    //traversetype(arg.getastype());
+  }
 
   return true;
 }
@@ -128,6 +152,7 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
 
 bool FindTemplateTypes::VisitType(Type *type) {
   llvm::outs() << "=VisitType=\n";
+  /*
   QualType q{type->getCanonicalTypeInternal()};
   llvm::outs() << "\n###### Type: " << q.getAsString() << " \n";
 
@@ -161,22 +186,34 @@ bool FindTemplateTypes::VisitType(Type *type) {
     type_name = util.strip(type_name, "struct ");
 
     template_types_.push_back(TemplateType(type_name, type));
-    /*
-    if (auto st = type->getAsStructureType()) {
-      llvm::outs() << " ==> structure type \n";
-      st->dump();
-      TraverseType(QualType(st->getAs<ClassTemplateSpecializationDecl>(), 0));
-
-    }
-    */
     return false;
   }
 
+  */
   return true;
 }
 
 bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   llvm::outs() << "=VisitRecordType=\n";
+  auto type_decl{ rt->getDecl() };
+  auto type_name{ type_decl->getName() };
+  llvm::outs() << " ==> name : " << type_name << "\n";
+  template_types_.push_back(TemplateType(type_name, rt));
+
+  if (auto ctsd = dyn_cast<ClassTemplateSpecializationDecl>(type_decl) )  {
+    llvm::outs() << " ==> CTSD \n";
+    ctsd->dump();
+
+    const TemplateArgumentList & arg_list{ctsd->getTemplateArgs()};
+    for (unsigned int i{0}; i < arg_list.size(); ++i) {
+       llvm::outs() << " ====> template argument: \n";
+       arg_list[i].dump();
+
+    }
+
+    
+
+  }
   return true;
 }
 
