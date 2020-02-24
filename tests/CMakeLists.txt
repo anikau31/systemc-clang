@@ -20,7 +20,7 @@ set( UNIT_TEST_LIST
   sreg-test
   t4-matchers
   t5-template-matching
-  subtree-matcher-test
+  # subtree-matcher-test
   clock-parsing
   hotfix-40-findtemplatetypes
   )
