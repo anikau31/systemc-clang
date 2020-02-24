@@ -44,17 +44,20 @@ install:
   - export SYSTEMC=systemc-2.3.3; export TARGET_ARCH=linux64; export BUILD=RELEASE
   - export SYSTEMC_HOME=`pwd`/$SYSTEMC
   - echo $SYSTEMC_HOME
-  - echo $LLVM_LD_FLAGS
-  - | # Build SystemC
-      if [ ! -d $SYSTEMC_HOME ]; then
-          wget https://www.accellera.org/images/downloads/standards/systemc/$SYSTEMC.tar.gz
-          tar -xzf $SYSTEMC.tar.gz && cd $SYSTEMC
-          mkdir BUILD && cd BUILD
-          ../configure --enable-static CXXFLAGS="-std=c++14"
-          make -j 4 && make install
-          cd ../..
-          rm -rf $SYSTEMC.tar.gz $SYSTEMC/BUILD
-      fi
+  - cd $SYSTEMC_HOME; wget https://github.com/rseac/systemc-travisci-cache/raw/master/systemc-2.3.3.tar.gz
+  - tar zxvf systemc-2.3.3.tar.gz; mv systemc-2.3.3/systemc/* systemc-2.3.3/
+  - ls -l $SYSTEMC_HOME/
+    #- echo $LLVM_LD_FLAGS
+    #- | # Build SystemC
+      # if [ ! -d $SYSTEMC_HOME ]; then
+          # wget https://www.accellera.org/images/downloads/standards/systemc/$SYSTEMC.tar.gz
+          # tar -xzf $SYSTEMC.tar.gz && cd $SYSTEMC
+          # mkdir BUILD && cd BUILD
+          # ../configure --enable-static CXXFLAGS="-std=c++14"
+          # make -j 4 && make install
+          # cd ../..
+          # rm -rf $SYSTEMC.tar.gz $SYSTEMC/BUILD
+      # fi
   - cd ..
   - | # Build clang 
     cd DEPENDS
