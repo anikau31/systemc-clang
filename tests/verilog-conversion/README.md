@@ -1,7 +1,7 @@
 # Python Tests for Verilog Conversion and Utilites for Development
 
 ## Prelimilaries
-  Python tests are configured during the process of calling `cmake`, to enable the python tests, run cmake with `-DENABLE_PYTHON_TESTS=on` along with other build options when [building the binaries](doc/README.md#Installation).
+  Python tests are configured during the process of calling `cmake`, to enable the python tests, run cmake with `-DENABLE_PYTHON_TESTS=on` along with other build options when [building the binaries](/doc/README.md#Installation).
   If the python interpreter are found, `cmake` should report lines similar to:
   ```
   -- [ Tests         ]
