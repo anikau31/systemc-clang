@@ -36,17 +36,12 @@ def testfolderdriver():
     testfolder_driver = drv.SystemCClangDriver(conf)
     return testfolder_driver
 
+@pytest.fixture()
+def tool_output(pytestconfig):
+    return pytestconfig.getoption("tool_output")
 
 def pytest_addoption(parser):
     """add options for controlling the running of tests"""
     # whether output the clang output
     parser.addoption("--tool-output", action="store_true", default=False)
 
-
-def pytest_generate_tests(metafunc):
-    """augmenting parameters to tests"""
-    # This is called for every test. Only get/set command line arguments
-    # if the argument is specified in the list of test "fixturenames".
-    if 'tool_output' in metafunc.fixturenames:
-        verbose = bool(metafunc.config.getoption("tool_output"))
-        metafunc.parametrize("tool_output", [verbose])
