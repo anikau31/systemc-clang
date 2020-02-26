@@ -4,6 +4,7 @@ import pytest
 from util.conf import LLNLExampleTestingConfigurations
 from util.conf import ExampleTestingConfigurations
 from util.conf import TestingConfigurations
+from util.conf import SanityTestingConfigurations
 import driver as drv
 
 
@@ -22,6 +23,15 @@ def exdriver(request):
     conf = ExampleTestingConfigurations(request.param)
     ex_driver = drv.SystemCClangDriver(conf)
     return ex_driver
+
+
+@pytest.fixture
+def sanitydriver():
+    """fixture for sanity test driver"""
+    conf = SanityTestingConfigurations()
+    sanity_driver = drv.SystemCClangDriver(conf)
+    return sanity_driver
+
 
 @pytest.fixture
 def testfolderdriver():

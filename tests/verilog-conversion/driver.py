@@ -12,7 +12,7 @@ class SystemCClangDriver(object):
     SYSTEMC_CLANG_BIN_PATH = os.environ['LLVM_INSTALL_DIR'] + "/bin/systemc-clang"
     PYTHON_CONVERT_TEMPLATE = 'python {}{}'.format(
         os.environ['SYSTEMC_CLANG'],
-        "/systemc-clang/plugins/xlat/convert.py"
+        "/plugins/xlat/convert.py"
     )
     SYSTEMC_CLANG_ARGUMENTS = [
         "-I", "{}/include/".format(os.environ['SYSTEMC']),
@@ -49,9 +49,9 @@ class SystemCClangDriver(object):
         if not path.endswith('_hdl.txt'):
             raise RuntimeError('Filename should end with _hdl.txt')
         v_loc = path + '.v'
-        v_loc = os.path.abspath(v_loc)
-        if os.path.isfile(v_loc):
-            raise RuntimeError('File to generate: {} exists'.format(v_loc))
+        # v_loc = os.path.abspath(v_loc)
+        # if os.path.isfile(v_loc):
+        #    raise RuntimeError('File to generate: {} exists'.format(v_loc))
 
         v_filename = os.path.basename(v_loc)
         output_filename = '{}/{}'.format(output_folder, v_filename)
@@ -71,7 +71,8 @@ class SystemCClangDriver(object):
 
         cmdline = ' '.join([
             SystemCClangDriver.PYTHON_CONVERT_TEMPLATE,
-            path
+            path,
+            output_filename
         ])
         if verbose:
             print('cmdline', cmdline)
@@ -92,8 +93,8 @@ class SystemCClangDriver(object):
         finally:
             if not keep_v:
                 subprocess.run('rm {}'.format(output_filename), shell=True)
-            if keep_v and os.path.normpath(v_loc) != os.path.normpath(output_filename):
-                subprocess.run('rm -f {}'.format(output_filename), shell=True)
+            # if keep_v and os.path.normpath(v_loc) != os.path.normpath(output_filename):
+            #     subprocess.run('rm -f {}'.format(output_filename), shell=True)
 
     """
     Takes .cpp as input, generate _hdl.txt

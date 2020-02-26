@@ -164,7 +164,7 @@ class CType2VerilogType(object):
             if vtype == 'real':
                 width_or_type_str = ' real'
             elif vtype == 'integer':
-                width_or_type_str = ' integer'
+                width_or_type_str = ' [31:0]'
         else:
             width_or_type_str = f' [{bw-1}:0]'
         return [f'{inout} {wire_or_reg}{width_or_type_str}', vtype]
@@ -247,7 +247,7 @@ class VerilogTransformer(Transformer):
             else:
                 stmt_list.append(stmt)
         # currently it's ok to append a comma
-        res = ';\n'.join(x for x in stmt_list)
+        res = ';\n'.join(x for x in stmt_list) + ';'
         return res
 
     def exprwrapper(self, args):
@@ -387,7 +387,7 @@ class VerilogTransformer(Transformer):
                 f"{varstr}\n"
                 f"{sigstr}\n"
                 f"{proclist}\n"
-                f"endmodule // {modname}"
+                f"endmodule // {modname}\n"
                 )
     def modulelist(self, args):
         return "\n".join(args)
@@ -518,15 +518,18 @@ class VerilogTransformer(Transformer):
         return '\n'.join(res)
 
 def main():
-    if len(sys.argv) != 2:
-        print('Usage: convert.py filename')
+    if len(sys.argv) != 2 and len(sys.argv) != 3:
+        print('Usage: convert.py filename [outputfilename]')
     filename = sys.argv[1]
+    outputname = filename + ".v"
+    if len(sys.argv) == 3:
+        outputname = sys.argv[2]
     with open(filename, 'r') as f:
         file_content = f.read()
     t = l.parse(file_content)
     # print(t)
     res = VerilogTransformer().transform(t)
-    with open(filename + '.v', 'w+') as f:
+    with open(outputname, 'w+') as f:
         f.writelines(res)
     print(res)
 

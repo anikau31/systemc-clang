@@ -81,3 +81,12 @@ class ExampleTestingConfigurations(TestingConfigurations):
             golden_folder, 
             this_folders
         )
+
+class SanityTestingConfigurations(TestingConfigurations):
+    """parameters for sanity test"""
+    def __init__(self, header_folders=None):
+        if header_folders is None:
+            header_folders = []
+        root_folder =  os.environ['SYSTEMC_CLANG_BUILD_DIR'] + '/' + 'tests/data/verilog-conversion/sanity/'
+        golden_folder = root_folder + 'handcrafted/'
+        super(SanityTestingConfigurations, self).__init__(root_folder, golden_folder, header_folders)
