@@ -22,6 +22,8 @@ if(V_TESTS_ON)
   if(NOT EXISTS "${PROJECT_SOURCE_DIR}/tests/data/verilog-conversion/.git")
       message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
   endif()
+
+  file(COPY verilog-conversion/run-verilog-tests.py DESTINATION ${CMAKE_BINARY_DIR}/)
 endif()
 
 # Test files so far are t#.cpp

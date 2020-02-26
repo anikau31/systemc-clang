@@ -33,8 +33,8 @@
   - `lark-parser` for parsing and translating
   - `pyverilog` for parsing Verilog for verification.
 
-## Running tests
-  To run the python tests, switch to `$SYSTEMC_CLANG_BUILD_DIR`, build `systemc-clang` and copy the binary.
+## Running tests from ctest
+  To run the Verilog tests, switch to `$SYSTEMC_CLANG_BUILD_DIR`, build `systemc-clang` and copy the binary.
   Then run:
   ```
   ctest -R verilog-tests
@@ -44,23 +44,31 @@
   ctest -R verilog-tests --verbose
   ```
 
-
-## Individual tests
-  It is possible to run individual python tests to observe the output.
-  However, these tests need to be run through python.
-  For example, in `$SYSTEMC_CLANG_BUILD_DIR`,
+## Running tests manually
+  It is also possible to run the tests manually from python scripts for fine-grained control over what to test.
+  To run all the Verilog tests manually, in `$SYSTEMC_CLANG_BUILD_DIR`:
   ```
-  python -m pytest $SYSTEMC_CLANG/tests/verilog-conversion/ -s -v -k test_ex_sexp[1]
+  python -B run-verilog-tests.py
   ```
-
 
 ### List all tests
-  It is possible to list all tests that can be supplied for the `-k` argument for `pytest`.
+  It is possible to list all tests that can be supplied for the `-o` argument for `run-verilog-tests.py`.
   To list all available tests, in `$SYSTEMC_CLANG_BUILD_DIR`, run:
   ```
-  python -m pytest $SYSTEMC_CLANG/tests/verilog-conversion/ -s -v --collect-only -qq
+  python -B run-verilog-tests.py --collect-only
   ```
-  The returned list contains the filename in which the tests are defined and the test name.
+  For a more detailed list, use `-v` option:
+  ```
+  python -B run-verilog-tests.py --collect-only -v
+  ```
+  The returned list contains the filename in which the tests are defined, followed by `::` and the corresponding test names.
+
+### Individual tests
+  It is possible to run individual python tests to observe the output with `-o` option.
+  For example, in `$SYSTEMC_CLANG_BUILD_DIR`:
+  ```
+  python -B run-verilog-tests.py --only test_ex_sexp[1]
+  ```
 
 ---
 

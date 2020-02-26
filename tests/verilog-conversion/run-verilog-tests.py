@@ -21,14 +21,14 @@ def additional_options():
 
 
 def all_tests_args():
-    return '{} {} -s -v'.format(test_path(), additional_options()).split(' ')
+    return '{} {}'.format(test_path(), additional_options()).split(' ')
 
 
 def one_test_args(name):
-    return '{} {} -s -k {}'.format(test_path(), additional_options(), name).split(' ')
+    return '{} {} -k {}'.format(test_path(), additional_options(), name).split(' ')
 
 
-def  collect_only_args():
+def collect_only_args():
     return '{} {} -s --collect-only -qq'.format(
                 test_path(),
                 additional_options()
