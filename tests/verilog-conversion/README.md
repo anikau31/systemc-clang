@@ -1,20 +1,26 @@
 # Python Tests for Verilog Conversion and Utilites for Development
 
 ## Prelimilaries
-  Python tests are configured during the process of calling `cmake`, to enable the python tests, run cmake with `-DENABLE_PYTHON_TESTS=on` along with other build options when [building the binaries](/doc/README.md#Installation).
+  Python tests are configured during the process of calling `cmake`, to enable the python tests, run cmake with `-DENABLE_VERILOG_TESTS=on` flag along with other build options when [building the binaries](/doc/README.md#Installation).
+  
+  For example, to enable the python Verilog tests along with XLAT, the `cmake` command will be similar to:  `cmake ../systemc-clang -DXLAT=on -DENABLE_TESTS=on -DSYSTEMC_DIR=$SYSTEMC/systemc/ -G Ninja -DENABLE_VERILOG_TESTS=on`.
+
   If the python interpreter are found, `cmake` should report lines similar to:
   ```
   -- [ Tests         ]
   -- Build tests           : on
-  -- Build python tests    : on
+  -- Build Verilog tests    : on
   ...
   -- Python found          : TRUE
   -- Python interpreter    : /home/allen/anaconda3/bin/python3
   --
   ```
   Also, before running the tests, `$SYSTEMC_CLANG` should point to the git repository directory, for example, with `export SYSTEMC_CLANG=~/systemc-clang/` in shell.
-  Note that before calling the `cmake`, you should already source the `script/paths.sh` and after **building the binaries**, you should copy the `systemc-clang` correspondingly.
+
+  Note that before calling the `cmake`, you should already source the `script/paths.sh` and after **building the binaries**, you should copy the generated `systemc-clang` to `$LLVM_INSTALL_DIR/bin`.
+
   The following steps will be dependent on the environment variables defined in the `script/paths.sh` to search for the binaries and the python scripts.
+
   We use `$SYSTEMC_CLANG_BUILD_DIR` to refer to the build directory created for `cmake` and `$SYSTEMC_CLANG` to refer to the git repository directory.
 
 ## Setup
