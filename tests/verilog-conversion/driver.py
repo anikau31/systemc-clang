@@ -11,8 +11,8 @@ class SystemCClangDriver(object):
     """
     SYSTEMC_CLANG_BIN_PATH = os.environ['LLVM_INSTALL_DIR'] + "/bin/systemc-clang"
     PYTHON_CONVERT_TEMPLATE = 'python {}{}'.format(
-        os.environ['SYSTEMC_CLANG_BUILD_DIR'],
-        "../systemc-clang/plugins/xlat/convert.py"
+        os.environ['SYSTEMC_CLANG'],
+        "/systemc-clang/plugins/xlat/convert.py"
     )
     SYSTEMC_CLANG_ARGUMENTS = [
         "-I", "{}/include/".format(os.environ['SYSTEMC']),
