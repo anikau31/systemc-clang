@@ -24,13 +24,14 @@
   We use `$SYSTEMC_CLANG_BUILD_DIR` to refer to the build directory created for `cmake` and `$SYSTEMC_CLANG` to refer to the git repository directory.
 
 ## Setup
-  1. In `$SYSTEMC_CLANG`, if the the test data has never been pulled, use `git submodule update --init --recursive` to pull the Verilog conversion data.
-  Otherwise, use `git submodule update --recursive` to pull the data.
-  After the command, the `$SYSTEMC_CLANG/tests/data/verilog-conversion/` should be populated and not empty.
-  2. Python *3* is required to run these tests.
-  3. To install necessary packages listed in `requirements.txt`, run `pip install -r requirements.txt` in `$SYSTEMC_CLANG`. 
+  1. Python *3* is required to run these tests.
+  2. To install necessary packages listed in `requirements.txt`, run `pip install -r requirements.txt` in `$SYSTEMC_CLANG`. 
   Note that you might need to make sure whether `pip` command matches the python reported in the `cmake`.
-  The installed packages are: `pytest` for running tests, `lark-parser` for parsing and translating and `pyverilog` for parsing Verilog for verification.
+
+  The python packages to install are: 
+  - `pytest` for running tests
+  - `lark-parser` for parsing and translating
+  - `pyverilog` for parsing Verilog for verification.
 
 ## Running tests
   To run the python tests, switch to `$SYSTEMC_CLANG_BUILD_DIR`, build `systemc-clang` and copy the binary.
