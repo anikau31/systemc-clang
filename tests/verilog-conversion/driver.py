@@ -80,13 +80,16 @@ class SystemCClangDriver(object):
             if verbose:
                 subprocess.run(cmdline, shell=True)
             else:
-                with open(os.devnull, 'wb') as null:
-                    subprocess.run(cmdline, 
-                            stdout=null,  stderr=null,
-                            shell=True)
+                res = subprocess.run(cmdline, 
+                        stdout=subprocess.PIPE,  stderr=subprocess.PIPE,
+                        shell=True)
             if os.path.isfile(output_filename):
                 return True, output_filename
             else:
+                with open(output_folder + '/convert.py.stdout', 'wb') as f:
+                    f.write(res.stdout)
+                with open(output_folder + '/convert.py.stderr', 'wb') as f:
+                    f.write(res.stderr)
                 return False, None
         except:
             raise
@@ -124,14 +127,15 @@ class SystemCClangDriver(object):
         try:
             if verbose:
                 print('cmd: ', ' '.join(cmdline))
-                res = subprocess.run(' '.join(cmdline), shell=True)
-            else:
-                with open(os.devnull, 'wb') as null:
-                    res = subprocess.run(' '.join(cmdline), shell=True, 
-                            stdout=null, 
-                            stderr=null)
+            res = subprocess.run(' '.join(cmdline), shell=True, 
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE)
             if res.returncode != 0:
-                raise RuntimeError('systemc-clang exits with code: {}'.format(res.returncode))
+                with open(output_folder + '/systemc-clang.stdout', 'wb') as f:
+                    f.write(res.stdout)
+                with open(output_folder + '/systemc-clang.stderr', 'wb') as f:
+                    f.write(res.stderr)
+                raise RuntimeError('systemc-clang exits with code: {}, check {} for more information'.format(res.returncode, output_folder))
             move_required = os.path.normpath(sexp_loc) != os.path.normpath(output_filename)
             if os.path.isfile(sexp_loc):
                 if move_required:
