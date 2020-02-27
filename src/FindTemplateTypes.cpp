@@ -6,6 +6,7 @@ using namespace scpar;
 //////////////////////////////////////////////////////////////////////
 // TemplateType
 //////////////////////////////////////////////////////////////////////
+TemplateType::TemplateType() : type_name_{""}, type_ptr_{nullptr} {}
 
 TemplateType::TemplateType(string name, const Type *t)
     : type_name_{name}, type_ptr_{t} {}
@@ -36,11 +37,13 @@ FindTemplateTypes::FindTemplateTypes() {}
 FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes &rhs) {
   copy(rhs.template_types_.begin(), rhs.template_types_.end(),
        back_inserter(template_types_));
+  //template_args_ = rhs.template_args_;
 }
 
 FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
   copy(rhs->template_types_.begin(), rhs->template_types_.end(),
        back_inserter(template_types_));
+  //template_args_ = rhs->template_args_;
 }
 
 // Destructor
@@ -71,17 +74,18 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
     return template_types_;
   }
 
+  /*
   llvm::outs() << "####  Sugared #### \n";
   type->dump();
+  */
   llvm::outs() << "####  Desugared #### \n";
   type->getUnqualifiedDesugaredType()->dump();
 
-  // TraverseType(QualType(type, 0));
-  // TraverseType(QualType(type, 0));
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
   return template_types_;
 }
 
+/*
 bool FindTemplateTypes::VisitTemplateArgument(TemplateArgument *ta) {
   llvm::outs() << "=VisitTemplateArgument=\n";
 
@@ -93,6 +97,7 @@ bool FindTemplateTypes::VisitClassTemplateSpecializationDecl(
   llvm::outs() << "=VisitClassTemplateSpecializationDecl=\n";
   return true;
 }
+*/
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
@@ -198,6 +203,18 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   auto type_decl{rt->getDecl()};
   auto type_name{type_decl->getName()};
   llvm::outs() << " ==> name : " << type_name << "\n";
+
+  /*
+  if ( template_args_.begin() == template_args_.end()) {
+    template_args_.insert(template_args_.begin(), TemplateType(type_name, rt));
+    current_template_ = template_args_.begin();
+  } else {
+
+    current_template_ = template_args_.insert(template_args_.begin(), TemplateType(type_name, rt));
+
+  }
+  */
+
   template_types_.push_back(TemplateType(type_name, rt));
 
   if (auto ctsd = dyn_cast<ClassTemplateSpecializationDecl>(type_decl)) {
@@ -274,6 +291,23 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
     os << targ << " ";
   }
   os << "\n";
+
+  /*
+  template_arguments_type::post_order_iterator it = template_args_.begin();
+  template_arguments_type::post_order_iterator end = template_args_.end();
+  if (template_args_.is_valid(it)) {
+    int rootdepth {template_args_.depth(it)};
+    std::cout << "-----" << std::endl;
+    while (it != end) {
+      for (int i {0}; i < template_args_.depth(it) - rootdepth; ++i) {
+        std::cout << "  ";
+      }
+      std::cout << it->getTypeName() << std::endl << std::flush;
+      ++it;
+    }
+    std::cout << "-----" << std::endl;
+  }
+  */
 }
 
 vector<string> FindTemplateTypes::getTemplateArguments() {

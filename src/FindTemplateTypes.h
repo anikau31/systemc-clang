@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+//#include "tree.hh"
+
 namespace scpar {
 using namespace clang;
 using namespace std;
@@ -19,6 +21,10 @@ using namespace std;
 // type object.
 class TemplateType {
  public:
+  // Default constructor.
+  TemplateType();
+
+  // Overloaded constructor
   TemplateType(string, const Type *);
   ~TemplateType();
   TemplateType(const TemplateType &);
@@ -39,6 +45,7 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   typedef vector<TemplateTypePtr> type_vector_t;
   typedef vector<TemplateTypePtr> argVectorType;
 
+  //typedef tree< TemplateType > template_arguments_type;
   // Constructor
   FindTemplateTypes();
 
@@ -53,12 +60,12 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitIntegerLiteral(IntegerLiteral *l);
   bool VisitTemplateSpecializationType(
       TemplateSpecializationType *special_type);
-  bool VisitClassTemplateSpecializationDecl(
-      ClassTemplateSpecializationDecl *class_special_type);
+ // bool VisitClassTemplateSpecializationDecl(
+  //    ClassTemplateSpecializationDecl *class_special_type);
   bool VisitTypedefType(TypedefType *typedef_type);
   bool VisitCXXRecordDecl(CXXRecordDecl *cxx_type);
   bool VisitRecordType(RecordType *rt);
-bool VisitTemplateArgument( TemplateArgument *ta);
+//  bool VisitTemplateArgument(TemplateArgument *ta);
 
   ~FindTemplateTypes();
   string getTemplateType();
@@ -76,6 +83,12 @@ bool VisitTemplateArgument( TemplateArgument *ta);
   // outside type to the inside type.
 
   type_vector_t template_types_;
+
+  /*
+  template_arguments_type template_args_;
+  template_arguments_type::iterator current_template_;
+  */
+
 };
 }  // namespace scpar
 #endif
