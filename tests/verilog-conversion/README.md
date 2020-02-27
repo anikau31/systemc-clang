@@ -1,7 +1,7 @@
 # Python Tests for Verilog Conversion and Utilites for Development
 
 ## Prelimilaries
-  Python tests are configured during the process of calling `cmake`, to enable the python tests, run cmake with `-DENABLE_VERILOG_TESTS=on` flag along with other build options when [building the binaries](/doc/README.md#Installation).
+  Python tests are configured during the process of calling `cmake`, to enable the python tests, run `cmake` with `-DENABLE_VERILOG_TESTS=on` flag along with other build options when [building the binaries](/doc/README.md#Installation).
   
   For example, to enable the python Verilog tests along with XLAT, the `cmake` command will be similar to:  `cmake ../systemc-clang -DXLAT=on -DENABLE_TESTS=on -DSYSTEMC_DIR=$SYSTEMC/systemc/ -G Ninja -DENABLE_VERILOG_TESTS=on`.
 
@@ -9,7 +9,7 @@
   ```
   -- [ Tests         ]
   -- Build tests           : on
-  -- Build Verilog tests    : on
+  -- Build Verilog tests   : on
   ...
   -- Python found          : TRUE
   -- Python interpreter    : /home/allen/anaconda3/bin/python3
