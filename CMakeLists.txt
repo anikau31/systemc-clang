@@ -338,6 +338,10 @@ foreach (ld_flag ${LLVM_LD_FLAGS} ${LLVM_SYSTEM_LIBS})
   target_link_libraries( ${TARGET} ${ld_flag} )
 endforeach()
 
+# Copy target to LLVM_INSTALL_DIR
+set_target_properties(${TARGET} PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY ${LLVM_INSTALL_DIR}/bin
+)
 
 # Print the summary of the build. 
 message(STATUS "")
