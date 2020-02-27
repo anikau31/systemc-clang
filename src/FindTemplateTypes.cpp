@@ -222,7 +222,12 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
 
   current_type_node_ = template_args_.addNode( type_name );
   if (template_args_.size() == 1) {
+    llvm::outs() << "set root\n";
     template_args_.setRoot(current_type_node_);
+  }
+
+  if (stack_current_node_.size() > 0 ) {
+    template_args_.addEdge(stack_current_node_.top(), current_type_node_);
   }
 
   stack_current_node_.push( current_type_node_);
@@ -245,20 +250,20 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
 
       if (targ.getKind() == TemplateArgument::ArgKind::Type) {
         QualType template_name{targ.getAsType()};
-        llvm::outs() << " ====> template_type_name "
-                     << template_name.getAsString() << "\n";
+        llvm::outs() << " ====> template_type_name " << template_name.getAsString() << "\n";
         const Type *arg_type{targ.getAsType().getTypePtr()};
-        //.getTypePtr()->dump();
+
         if (!arg_type->isBuiltinType()) {
+          stack_current_node_.push( current_type_node_ );
           TraverseType(arg_list[i].getAsType());
+          current_type_node_ = stack_current_node_.top(); stack_current_node_.pop();
         } else {
           auto new_node {template_args_.addNode(template_name.getAsString())};
           template_args_.addEdge(current_type_node_, new_node );
 
           template_types_.push_back(TemplateType(template_name.getAsString(), rt));
         }
-      }
-
+      }else
       if (targ.getKind() == TemplateArgument::ArgKind::Integral) {
         QualType template_name{targ.getNonTypeTemplateArgumentType()};
         template_name.dump();
@@ -278,6 +283,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
       }
     }
   }
+  llvm::outs() << ">>> stack size: " << stack_current_node_.size() << "\n";
   current_type_node_ = stack_current_node_.top();
   stack_current_node_.pop();
 
@@ -315,10 +321,12 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   }
   os << "\n";
 
-  os << ">>>> Print current node \n";
   auto root_node{template_args_.getRoot()};
-  os << ">>>> Print arguments using DFT\n";
+  os << ">>>> DUMP rOOT node: " << root_node->getData() << "\n";
+  root_node->dump();
+  os << ">>>> DUMP: " << root_node->getData() << "\n";
   template_args_.dump();
+  os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
   template_args_.dft(root_node);
 }
 
