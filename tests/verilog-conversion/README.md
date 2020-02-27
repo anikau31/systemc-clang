@@ -108,6 +108,20 @@
 
   To observe detailed output, use the script `python -B run-verilog-tests.py -o test_custom -v`.
 
+## Debug information on failure
+  On a test failure, the output, together with the diff information is stored in the temporary folder.
+  For example, suppose we run individual tests with `-v` option and the tests fail, the failure may be reported in the form of:
+  ```
+  ...
+  ___________________________________________________________________ test_custom_sexp_to_verilog[add] ____________________________________________________________________
+
+  tmpdir = local('/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0'), customdriver = <driver.SystemCClangDriver object at 0x7f8750d6b910>
+  tool_output = False
+  ...
+  ```
+  In the output, `tmpdir = local('/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0')` logs the temporary folder where the intermediate output are stored.
+  And thus we can observe output in `/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0`
+
 ---
 
 ## Running conversion comparison in shell

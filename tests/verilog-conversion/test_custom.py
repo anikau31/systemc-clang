@@ -26,6 +26,10 @@ def test_custom_sexp(tmpdir, customdriver, tool_output):
     )
     if diff_res:
         print(diff_str)
+        diff_file = output_folder + "/diff"
+        with open(diff_file, 'w+') as f:
+            f.write(diff_str)
+        print('Diff information written to: {}'.format(diff_file))
     assert not diff_res, 'should match golden standard'
 
 
@@ -44,7 +48,12 @@ def test_custom_verilog(tmpdir, customdriver, tool_output):
         filename,
         conf.get_golden_verilog_name('{}_hdl.txt.v'.format(test_name))
     )
-    print(str(diff_info))
+    if not diff_info is None:
+        print(str(diff_info))
+        diff_file = output_folder + "/verilog.ast.diffinfo"
+        with open(diff_file, 'w+') as f:
+            f.write(str(diff_info))
+        print('Diff information written to: {}'.format(diff_file))
     assert diff_info is None, 'should be no diff in Verilog'
 
 
@@ -60,6 +69,7 @@ def test_custom_sexp_to_verilog(tmpdir, customdriver, tool_output):
         keep_v=True,
         verbose=tool_output
     )
+    print('Fail to convert to Verilog, convert.py output is written in folder {}'.format(output_folder))
     assert res, "should convert to Verilog from sexp"
     print('filename: ', filename)
     print('golden: ', conf.get_golden_verilog_name('{}_hdl.txt.v'.format(test_name)))

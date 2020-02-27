@@ -36,7 +36,7 @@ class VerilogASTDiff(object):
     def _diff_traverse(this_node, that_node):
         """traverses two asts using dfs, stops when different node encountered"""
         if type(this_node) != type(that_node):
-            return False
+            return DiffInfo(this_node.lineno, diff_nodes=[[this_node], [that_node]])
 
         # assuming each attr_name appear once in each node
         this_names = set(this_node.attr_names)

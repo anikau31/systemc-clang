@@ -42,7 +42,7 @@ class SystemCClangDriver(object):
     def __init__(self, conf, *args, **kwargs):
         self.conf = conf
 
-    def generate_verilog_from_sexp(self, path, output_folder, keep_v=False, verbose=False):
+    def generate_verilog_from_sexp(self, path, output_folder, keep_v=False, verbose=False, keep_log=True):
         """
         Takes _hdl.txt as input, generate .v
         """
@@ -77,19 +77,17 @@ class SystemCClangDriver(object):
         if verbose:
             print('cmdline', cmdline)
         try:
-            if verbose:
-                subprocess.run(cmdline, shell=True)
-            else:
-                res = subprocess.run(cmdline, 
-                        stdout=subprocess.PIPE,  stderr=subprocess.PIPE,
-                        shell=True)
-            if os.path.isfile(output_filename):
-                return True, output_filename
-            else:
+            res = subprocess.run(cmdline, 
+                    stdout=subprocess.PIPE,  stderr=subprocess.PIPE,
+                    shell=True)
+            if keep_log:
                 with open(output_folder + '/convert.py.stdout', 'wb') as f:
                     f.write(res.stdout)
                 with open(output_folder + '/convert.py.stderr', 'wb') as f:
                     f.write(res.stderr)
+            if os.path.isfile(output_filename):
+                return True, output_filename
+            else:
                 return False, None
         except:
             raise
@@ -102,7 +100,7 @@ class SystemCClangDriver(object):
     """
     Takes .cpp as input, generate _hdl.txt
     """
-    def generate_sexp(self, path, output_folder, keep_sexp=False, verbose=False):
+    def generate_sexp(self, path, output_folder, keep_sexp=False, verbose=False, keep_log=True):
         cmdline = self.systemc_clang_commandline(filename=path)
         if path.endswith('.cpp'):
             sexp_loc = re.sub(".cpp$", "_hdl.txt", path)
@@ -130,11 +128,12 @@ class SystemCClangDriver(object):
             res = subprocess.run(' '.join(cmdline), shell=True, 
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE)
-            if res.returncode != 0:
+            if keep_log:
                 with open(output_folder + '/systemc-clang.stdout', 'wb') as f:
                     f.write(res.stdout)
                 with open(output_folder + '/systemc-clang.stderr', 'wb') as f:
                     f.write(res.stderr)
+            if res.returncode != 0:
                 raise RuntimeError('systemc-clang exits with code: {}, check {} for more information'.format(res.returncode, output_folder))
             move_required = os.path.normpath(sexp_loc) != os.path.normpath(output_filename)
             if os.path.isfile(sexp_loc):
