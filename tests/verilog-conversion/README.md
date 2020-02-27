@@ -4,9 +4,9 @@
 ### CMake switch 
   Python tests are configured during the process of calling `cmake`, to enable the python tests, run `cmake` with `-DENABLE_VERILOG_TESTS=on` flag along with other build options when [building the binaries](/doc/README.md#Installation).
   
-  For example, to enable the python Verilog tests along with XLAT, the `cmake` command will be similar to:  
+  For example, to enable the python Verilog tests along with XLAT, the `cmake` command will be similar to (make sure the `-DSYSTEMC_DIR` is correctly specified): 
   ```
-  cmake ../systemc-clang -DXLAT=on -DENABLE_TESTS=on -DSYSTEMC_DIR=$SYSTEMC/systemc/ -G Ninja -DENABLE_VERILOG_TESTS=on
+  cmake ../systemc-clang -DXLAT=on -DENABLE_TESTS=on -DSYSTEMC_DIR=$SYSTEMC/ -G Ninja -DENABLE_VERILOG_TESTS=on
   ```
 
   If the python interpreter are found, `cmake` should report lines similar to:
