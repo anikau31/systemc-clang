@@ -83,14 +83,14 @@ def hdl_to_v(args, hdl=None, output_folder=None, rmdir=True):
             else:
                 print('Diff information of {} and {}:'.format(path, args.verilog))
                 print(str(diff_info))
+    except:
+        raise
     finally:
         if not res:
             print('Conversion failed, please check program output (with --verbose option)')
-            if rmdir:
-                pathlib.Path(output_folder).rmdir()
         else:
             print('The .v file is written to {}'.format(path))
-        return path, None
+            return path, None
 
 def cpp_to_v(args):
     assert args.cpp, 'should provide c++ (--cpp)'

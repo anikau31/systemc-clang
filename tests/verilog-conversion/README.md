@@ -1,9 +1,13 @@
 # Python Tests for Verilog Conversion and Utilites for Development
 
 ## Prelimilaries
+### CMake switch 
   Python tests are configured during the process of calling `cmake`, to enable the python tests, run `cmake` with `-DENABLE_VERILOG_TESTS=on` flag along with other build options when [building the binaries](/doc/README.md#Installation).
   
-  For example, to enable the python Verilog tests along with XLAT, the `cmake` command will be similar to:  `cmake ../systemc-clang -DXLAT=on -DENABLE_TESTS=on -DSYSTEMC_DIR=$SYSTEMC/systemc/ -G Ninja -DENABLE_VERILOG_TESTS=on`.
+  For example, to enable the python Verilog tests along with XLAT, the `cmake` command will be similar to:  
+  ```
+  cmake ../systemc-clang -DXLAT=on -DENABLE_TESTS=on -DSYSTEMC_DIR=$SYSTEMC/systemc/ -G Ninja -DENABLE_VERILOG_TESTS=on
+  ```
 
   If the python interpreter are found, `cmake` should report lines similar to:
   ```
@@ -15,17 +19,43 @@
   -- Python interpreter    : /home/allen/anaconda3/bin/python3
   --
   ```
-  Also, before running the tests, `$SYSTEMC_CLANG` should point to the git repository directory, for example, with `export SYSTEMC_CLANG=~/systemc-clang/` in shell.
 
-  Note that before calling the `cmake`, you should already source the `script/paths.sh` and after **building the binaries**, you should copy the generated `systemc-clang` to `$LLVM_INSTALL_DIR/bin`.
+### Additional environment variables
+
+  Also, before running the tests, `$SYSTEMC_CLANG` should point to the git repository directory, for example, with: 
+  ```
+  export SYSTEMC_CLANG=/home/$USER/systemc-clang/
+  ``` 
+  in shell.
+  
+  Make sure the following command list the root of the git repository:
+  ```
+  ls $SYSTEMC_CLANG
+  ```
+
+
+### Build systemc-clang
+
+  After `cmake`, build the project using `make` or `ninja`.
+
+### Done
+
+  Note that before calling the `cmake`, you should already source the `script/paths.sh` and after **building the binaries**, the `systemc-clang` is generated in `$LLVM_INSTALL_DIR/bin`.
 
   The following steps will be dependent on the environment variables defined in the `script/paths.sh` to search for the binaries and the python scripts.
 
   We use `$SYSTEMC_CLANG_BUILD_DIR` to refer to the build directory created for `cmake` and `$SYSTEMC_CLANG` to refer to the git repository directory.
 
+
 ## Setup
   1. Python *3* is required to run these tests.
-  2. To install necessary packages listed in `requirements.txt`, run `pip install -r requirements.txt` in `$SYSTEMC_CLANG`. 
+  2. Change the directory to the build directory: `cd $SYSTEMC_CLANG_BUILD_DIR`.
+  3. Install `iverilog`. On Ubuntu, use `sudo apt install iverilog`
+  4. To install necessary packages listed in `requirements.txt`, run
+  ```
+  pip install -r $SYSTEMC_CLANG/requirements.txt
+  ``` 
+
   Note that you might need to make sure whether `pip` command matches the python reported in the `cmake`.
 
   The python packages to install are: 
@@ -42,6 +72,11 @@
   If the tests do not pass, running the following command will provide more information:
   ```
   ctest -R verilog-tests --verbose
+  ```
+
+  The tests might not all pass at this moment, we provide a set of sanity tests that should pass at this point:
+  ```
+  ctest -R verilog-sanity-tests --verbose
   ```
 
 ## Running tests manually
@@ -67,7 +102,7 @@
   It is possible to run individual python tests to observe the output with `-o` option.
   For example, in `$SYSTEMC_CLANG_BUILD_DIR`:
   ```
-  python -B run-verilog-tests.py --only test_ex_sexp[1]
+  python -B run-verilog-tests.py --only test_sanity_add_sexp_to_verilog
   ```
 
 ## Adding tests
@@ -84,12 +119,15 @@
    
   ```
   In this example, all necessary files are grouped in an `add` folder in `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`.
+
   Within the `add` folder, there is a SystemC design file `add.cpp` and a `golden` folder that stores the reference file for `_hdl.txt` and Verilog.
+
   Note that all the file needs to have the same prefix.
   In this example, the prefix is `add`.
 
   To add another test for a different design, organize the `.cpp` SystemC design file, `_hdl.txt` file and Verilog file `_hdl.txt.v` as is shown in the previous example.
-  For example, if we want to add an `xor` module, the final directory structure will be similar to the following:
+
+  For example, if we want to add an `xor` module, the final directory structure will end up being the following:
   ```
   $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/
   ├── add
@@ -125,8 +163,7 @@
 ---
 
 ## Running conversion comparison in shell
-  The script requires `pyverilog` to be installed, which can be achieved using the command: `pip install pyverilog`
-  Note that when using the script, the working directory needs to be `tests/verilog-conversion`
+  The script requires `pyverilog` and `iverilog` to be installed, which can be achieved using the command: `pip install pyverilog` and `sudo apt install iverilog`:
   ```
   $ python $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py -h
   usage: A tool for running and comparing against a golden standard
@@ -154,7 +191,7 @@
      --output-dir /tmp/ \
      --cpp $SYSTEMC_CLANG_BUILD_DIR/tests/data/llnl-examples/sreg-driver.cpp \
      --include-path $SYSTEMC_CLANG/tests/examples/llnl-examples/ \
-     --hdl $SYSTEMC_CLANG_BUILD_DIR/tests/data/verilog-conversion/llnl-examples/golden/sreg_hdl.txt
+     --hdl $SYSTEMC_CLANG_BUILD_DIR/tests/data/verilog-conversion/llnl-examples/golden/sreg_hdl.txt \
      --verbose
    ```
 #### Converting sreg-driver_hdl.txt to sreg-driver.v
