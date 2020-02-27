@@ -72,7 +72,8 @@ endforeach()
 if(V_TESTS_ON)
   # integrate into ctest
   add_test(NAME verilog-tests
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR}
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} )
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR})
+  add_test(NAME verilog-sanity-tests
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k test_sanity)
 endif()
 
