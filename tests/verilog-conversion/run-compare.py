@@ -45,6 +45,10 @@ def cpp_to_hdl(args, output_folder=None, rmdir=True):
             if is_diff:
                 print('Differences between {} and {}:'.format(path, args.hdl))
                 print(diff_str)
+                diff_file = output_folder + '/diff'
+                print('diff stored in: {}'.format(diff_file))
+                with open(diff_file, 'w+') as f:
+                    f.write(diff_str)
             else:
                 print('{} and {} has the same content'.format(path, args.hdl))
     finally:
@@ -79,10 +83,14 @@ def hdl_to_v(args, hdl=None, output_folder=None, rmdir=True):
                     path,
                     args.verilog)
             if diff_info is None:
-                print('{} and {} has the Verilog AST'.format(path, args.verilog))
+                print('{} and {} has the same Verilog AST'.format(path, args.verilog))
             else:
                 print('Diff information of {} and {}:'.format(path, args.verilog))
                 print(str(diff_info))
+                diff_file = output_folder + '/verilog.ast.diffinfo'
+                print('diff stored in: {}'.format(diff_file))
+                with open(diff_file, 'w+') as f:
+                    f.write(str(diff_info))
     except:
         raise
     finally:
