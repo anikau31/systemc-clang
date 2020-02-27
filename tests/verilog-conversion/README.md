@@ -102,7 +102,7 @@
      --output-dir /tmp/ \
      --cpp $SYSTEMC_CLANG_BUILD_DIR/tests/data/llnl-examples/sreg-driver.cpp \
      --include-path $SYSTEMC_CLANG/tests/examples/llnl-examples/ \
-     --hdl $SYSTEMC_CLANG_BUILD_DIR/tests/data/verilog-conversion/llnl-examples/handcrafted/sreg_hdl.txt
+     --hdl $SYSTEMC_CLANG_BUILD_DIR/tests/data/verilog-conversion/llnl-examples/golden/sreg_hdl.txt
      --verbose
    ```
 #### Converting sreg-driver_hdl.txt to sreg-driver.v
@@ -121,6 +121,6 @@
      hdl-to-v \
      --output-dir /tmp/ \
      --hdl /tmp/2020-02-16_23-53-13/sreg-driver_hdl.txt \
-     --verilog $SYSTEMC_CLANG_BUILD_DIR/tests/data/verilog-conversion/llnl-exmples/handcrafted/sreg.v
+     --verilog $SYSTEMC_CLANG_BUILD_DIR/tests/data/verilog-conversion/llnl-exmples/golden/sreg.v
    ```
 

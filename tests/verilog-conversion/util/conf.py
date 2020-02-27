@@ -50,7 +50,7 @@ class LLNLExampleTestingConfigurations(TestingConfigurations):
             '{}/llnl-examples/'.format(TestingConfigurations.TEST_DATA_ROOT)
         ]
         root_folder =  os.environ['SYSTEMC_CLANG_BUILD_DIR'] + '/' + 'tests/data/verilog-conversion/llnl-examples/'
-        golden_folder = root_folder + 'handcrafted/'
+        golden_folder = root_folder + 'golden/'
         super(LLNLExampleTestingConfigurations, self).__init__(root_folder, golden_folder, this_folders)
 
 
@@ -72,7 +72,7 @@ class ExampleTestingConfigurations(TestingConfigurations):
             ex_id
         )
         golden_folder = '{}/tests/data/verilog-conversion/ex_{}/'\
-                        'handcrafted/'.format(
+                        'golden/'.format(
             os.environ['SYSTEMC_CLANG_BUILD_DIR'], 
             ex_id
         )
@@ -88,5 +88,5 @@ class SanityTestingConfigurations(TestingConfigurations):
         if header_folders is None:
             header_folders = []
         root_folder =  os.environ['SYSTEMC_CLANG_BUILD_DIR'] + '/' + 'tests/data/verilog-conversion/sanity/'
-        golden_folder = root_folder + 'handcrafted/'
+        golden_folder = root_folder + 'golden/'
         super(SanityTestingConfigurations, self).__init__(root_folder, golden_folder, header_folders)
