@@ -71,11 +71,11 @@
   ```
 
 ## Adding tests
-  New tests can be added to `$SYSTEMC_CLANG/test/data/verilog-conversion-custom/`, and they will be recognized automatically by the pytest without need to modify the script.
+  New tests can be added to `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`, and they will be recognized automatically by the pytest without need to modify the script.
 
   The following example shows the directory structure of one conversion test for an add module:
   ```
-  $SYSTEMC_CLANG/test/data/verilog-conversion-custom/
+  $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/
   └── add
       ├── add.cpp
       └── golden
@@ -83,7 +83,7 @@
           └── add_hdl.txt.v
    
   ```
-  In this example, all necessary files are grouped in an `add` folder in `$SYSTEMC_CLANG/test/data/verilog-conversion-custom/`.
+  In this example, all necessary files are grouped in an `add` folder in `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`.
   Within the `add` folder, there is a SystemC design file `add.cpp` and a `golden` folder that stores the reference file for `_hdl.txt` and Verilog.
   Note that all the file needs to have the same prefix.
   In this example, the prefix is `add`.
@@ -91,7 +91,7 @@
   To add another test for a different design, organize the `.cpp` SystemC design file, `_hdl.txt` file and Verilog file `_hdl.txt.v` as is shown in the previous example.
   For example, if we want to add an `xor` module, the final directory structure will be similar to the following:
   ```
-  $SYSTEMC_CLANG/test/data/verilog-conversion-custom/
+  $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/
   ├── add
   │   ├── add.cpp
   │   └── golden
