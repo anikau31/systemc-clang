@@ -228,9 +228,10 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
       }
 
       if (targ.getKind() == TemplateArgument::ArgKind::Integral) {
-        //QualType template_name{targ.getAsType()};
-        //llvm::outs() << " ====> template_type_name integral "
-        //             << template_name.getAsString() << "\n";
+        QualType template_name{targ.getNonTypeTemplateArgumentType()};
+        template_name.dump();
+        llvm::outs() << " ====> template_type_name integral "
+                     << template_name.getAsString() << "\n";
 
         llvm::outs() << " ====> Integral : ";
         auto integral{targ.getAsIntegral()};
