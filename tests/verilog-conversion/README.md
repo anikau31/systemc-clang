@@ -128,7 +128,7 @@
   ```
 
 ## Adding tests
-  New tests can be added to `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`, and they will be recognized automatically by the pytest, without the need to modify the script.
+  New tests can be added to `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`, and they will be recognized automatically by the pytest, without the need to modify the script or updating the submodules.
 
   The following example shows the directory structure of one conversion test for an add module:
   ```
@@ -163,6 +163,8 @@
       │   └── xor_hdl.txt.v
       └── xor.cpp
   ```
+  
+  **After making changes, re-run** `cmake` **to sync the changes from** `$SYSTEMC_CLANG` **to** `$SYSTEMC_CLANG_BUILD_DIR`.
 
   To run all these tests, use `ctest -R verilog-custom --verbose`.
 
