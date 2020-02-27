@@ -9,7 +9,7 @@
   cmake ../systemc-clang -DXLAT=on -DENABLE_TESTS=on -DSYSTEMC_DIR=$SYSTEMC/ -G Ninja -DENABLE_VERILOG_TESTS=on
   ```
 
-  If the python interpreter are found, `cmake` should report lines similar to:
+  If the python interpreter is found, `cmake` should report lines similar to:
   ```
   -- [ Tests         ]
   -- Build tests           : on
@@ -64,49 +64,70 @@
   - `pyverilog` for parsing Verilog for verification.
 
 ## Running tests from ctest
-  To run the Verilog tests, switch to `$SYSTEMC_CLANG_BUILD_DIR`, build `systemc-clang` and copy the binary.
+  To run the Verilog tests, switch to `$SYSTEMC_CLANG_BUILD_DIR`, and make sure `systemc-clang` is built.
   Then run:
   ```
   ctest -R verilog-tests
   ``` 
-  If the tests do not pass, running the following command will provide more information:
+  If the tests do not pass, running the following command will provide more information on what command is called:
   ```
   ctest -R verilog-tests --verbose
   ```
 
-  The tests might not all pass at this moment, we provide a set of sanity tests that should pass at this point:
+  The tests might not all pass at the moment, we provide a set of sanity tests that should pass at this point:
   ```
   ctest -R verilog-sanity-tests --verbose
   ```
 
-## Running tests manually
+## Running all tests manually
   It is also possible to run the tests manually from python scripts for fine-grained control over what to test.
+
   To run all the Verilog tests manually, in `$SYSTEMC_CLANG_BUILD_DIR`:
   ```
   python -B run-verilog-tests.py
   ```
 
+### Individual tests
+  It is possible to run individual python tests to observe the output with `-o` or `--only` option.
+  For example, in `$SYSTEMC_CLANG_BUILD_DIR`:
+  ```
+  python -B run-verilog-tests.py --only test_sanity_add_sexp_to_verilog
+  ```
 ### List all tests
   It is possible to list all tests that can be supplied for the `-o` argument for `run-verilog-tests.py`.
-  To list all available tests, in `$SYSTEMC_CLANG_BUILD_DIR`, run:
+  To list the number available tests in each file, in `$SYSTEMC_CLANG_BUILD_DIR`, run:
   ```
   python -B run-verilog-tests.py --collect-only
   ```
-  For a more detailed list, use `-v` option:
+  For a list of all available tests, use `-v` option:
   ```
   python -B run-verilog-tests.py --collect-only -v
   ```
   The returned list contains the filename in which the tests are defined, followed by `::` and the corresponding test names.
 
-### Individual tests
-  It is possible to run individual python tests to observe the output with `-o` option.
-  For example, in `$SYSTEMC_CLANG_BUILD_DIR`:
+  Note that when providing name to `-o`, only provide the name after `::`.
+
+  For example, in order to run one of the sanity tests:
   ```
-  python -B run-verilog-tests.py --only test_sanity_add_sexp_to_verilog
+  $ python -B run-verilog-tests.py --collect-only -v
+  ...
+  systemc-clang/tests/verilog-conversion/test_sanity.py::test_sanity_add_sexp
+  systemc-clang/tests/verilog-conversion/test_sanity.py::test_sanity_add_verilog
+  systemc-clang/tests/verilog-conversion/test_sanity.py::test_sanity_add_sexp_to_verilog
+  ...
+  $ python -B run-verilog-tests.py --only test_sanity_add_sexp_to_verilog
+  =================================== test session starts ===================================
+  platform linux -- Python 3.7.4, pytest-5.0.1, py-1.8.1, pluggy-0.13.1
+  rootdir: /home/ubuntu/working
+  collected 55 items / 54 deselected / 1 selected
+
+  ../systemc-clang/tests/verilog-conversion/test_sanity.py .                          [100%]
+
+  ========================= 1 passed, 54 deselected in 0.35 seconds =========================
   ```
 
 ## Adding tests
-  New tests can be added to `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`, and they will be recognized automatically by the pytest without need to modify the script.
+  New tests can be added to `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`, and they will be recognized automatically by the pytest, without the need to modify the script.
 
   The following example shows the directory structure of one conversion test for an add module:
   ```
@@ -151,14 +172,14 @@
   For example, suppose we run individual tests with `-v` option and the tests fail, the failure may be reported in the form of:
   ```
   ...
-  ___________________________________________________________________ test_custom_sexp_to_verilog[add] ____________________________________________________________________
+  ______test_custom_sexp_to_verilog[add] ______
 
   tmpdir = local('/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0'), customdriver = <driver.SystemCClangDriver object at 0x7f8750d6b910>
   tool_output = False
   ...
   ```
   In the output, `tmpdir = local('/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0')` logs the temporary folder where the intermediate output are stored.
-  And thus we can observe output in `/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0`
+  And thus we can observe the output in `/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0/`
 
 ---
 
