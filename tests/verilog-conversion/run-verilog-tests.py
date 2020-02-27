@@ -7,7 +7,11 @@ parser.add_argument('-o', '--only', dest='only', type=str, help='Run only one te
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False)
 parser.add_argument('-c', '--collect-only', dest='collect_only', action='store_true', default=False)
 
-SYSTEMC_CLANG_PATH = os.environ['SYSTEMC_CLANG']
+if 'SYSTEMC_CLANG' not in os.environ:
+    print('Environment variable SYSTEMC_CLANG not found')
+    exit(-1)
+else:
+    SYSTEMC_CLANG_PATH = os.environ['SYSTEMC_CLANG']
 
 args = parser.parse_args()
 
