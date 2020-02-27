@@ -50,6 +50,7 @@ class Tree {
   // This is a reasonable structure since types are
   // typically going to be of small depth.
   std::map<TreeNodePtr, std::vector<TreeNodePtr> > adj_list_;
+  TreeNodePtr root_;
 
  public:
   void dump() {
@@ -63,6 +64,11 @@ class Tree {
       cout << "\n";
     }
   }
+
+  std::size_t size() const { return adj_list_.size(); }
+
+  void setRoot(const TreeNodePtr from) { root_ = from; }
+  const TreeNodePtr getRoot() const { return root_; }
 
   TreeNodePtr addNode(std::string data) {
     TreeNodePtr new_node{new TreeNode(data)};
@@ -83,8 +89,6 @@ class Tree {
   }
 
   void dft(TreeNodePtr root) {
-    // TODO
-
     std::stack<TreeNodePtr> visit{};
     visit.push(root);
 
@@ -92,6 +96,7 @@ class Tree {
       // node is a TreeNodePtr
       auto &node{visit.top()};
       node->visit();
+      // Call back function.
       visit.pop();
 
 

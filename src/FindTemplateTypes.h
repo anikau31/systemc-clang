@@ -10,8 +10,9 @@
 #include "llvm/Support/raw_ostream.h"
 
 #include <iostream>
+#include <stack>
 
-//#include "tree.hh"
+#include "Tree.h"
 
 namespace scpar {
 using namespace clang;
@@ -84,10 +85,9 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
 
   type_vector_t template_types_;
 
-  /*
-  template_arguments_type template_args_;
-  template_arguments_type::iterator current_template_;
-  */
+  Tree template_args_;
+  Tree::TreeNodePtr current_type_node_;
+  std::stack<Tree::TreeNodePtr> stack_current_node_;
 
 };
 }  // namespace scpar
