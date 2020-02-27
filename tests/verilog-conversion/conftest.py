@@ -51,7 +51,7 @@ def testfolderdriver():
 
 def get_custom_tests():
     """helper function for collecting custom tests"""
-    root_folder = os.environ['SYSTEMC_CLANG_BUILD_DIR'] + '/' + 'tests/data/verilog-conversion/custom/'
+    root_folder = os.environ['SYSTEMC_CLANG_BUILD_DIR'] + '/' + 'tests/data/verilog-conversion-custom/'
     folder_list = glob.glob(root_folder + '*')
     print(folder_list)
     for f in folder_list:

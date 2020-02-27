@@ -96,7 +96,7 @@ class CustomTestingConfigurations(TestingConfigurations):
     def __init__(self, test_name, header_folders=None):
         if header_folders is None:
             header_folders = []
-        root_folder =  os.environ['SYSTEMC_CLANG_BUILD_DIR'] + '/' + 'tests/data/verilog-conversion/custom/' + test_name + '/'
+        root_folder =  os.environ['SYSTEMC_CLANG_BUILD_DIR'] + '/' + 'tests/data/verilog-conversion-custom/' + test_name + '/'
         golden_folder = root_folder + 'golden/'
         super(CustomTestingConfigurations, self).__init__(root_folder, golden_folder, header_folders)
 
