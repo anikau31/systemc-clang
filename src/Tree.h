@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "llvm/Support/raw_ostream.h"
+//#include "llvm/Support/raw_ostream.h"
 
 using namespace std;
 
@@ -40,9 +40,9 @@ class TreeNode {
   void setDiscovered() { discovered_ = true; }
   void resetDiscovered() { discovered_ = false; }
 
-  void dump() { llvm::outs() << "[" << data_ << "] "; }
+  void dump() { cout << "[" << data_ << "] "; }
 
-  virtual void visit() { llvm::outs() << " " << data_ << " "; }
+  virtual void visit() { cout << " " << data_ << " "; }
 };
 
 //////////////////////
@@ -62,6 +62,8 @@ class Tree {
   TreeNodePtr root_;
 
  public:
+  Tree() : root_{nullptr}, run_dft_{false}, run_bft_{false} {}
+
   void dump() {
     for (auto const &entry : adj_list_) {
       auto node{entry.first};
@@ -77,6 +79,7 @@ class Tree {
   std::size_t size() const { return adj_list_.size(); }
 
   void setRoot(const TreeNodePtr from) { root_ = from; }
+
   const TreeNodePtr getRoot() const { return root_; }
 
   TreeNodePtr addNode(std::string data) {
@@ -116,6 +119,7 @@ class Tree {
     while (!que.empty()) {
       auto node{que.front()};
       node->visit();
+      nodes_bft_.push_back(node);
       return_string += " ";
       return_string += node->getStringData();
       que.pop();
@@ -138,6 +142,7 @@ class Tree {
   }
 
   std::string dft(TreeNodePtr root) {
+    run_dft_ = true;
     resetDiscovered();
     std::string return_string;
 
@@ -149,6 +154,7 @@ class Tree {
       node->visit();
       return_string += " ";
       return_string += node->getStringData();
+      nodes_dft_.push_back(node);
 
       // Call back function.
       visit.pop();
@@ -167,9 +173,62 @@ class Tree {
         }
       }
     }
-      return return_string;
-
+    return return_string;
   }
+
+ public:
+  // Iterators
+  class dft_iterator {
+   public:
+    typedef std::vector<TreeNodePtr> *TreeDFTPtr;
+
+   private:
+    TreeDFTPtr nodes_dft_;
+    std::size_t pos_;
+
+   public:
+    dft_iterator(const TreeDFTPtr nodes_dft, std::size_t pos)
+        : nodes_dft_{nodes_dft}, pos_{pos} {}
+
+    std::string operator*() { 
+      return (nodes_dft_)->operator[](pos_)->getData(); 
+    }
+
+    dft_iterator &operator++() {
+      ++pos_;
+      return *this;
+    }
+
+    dft_iterator begin() {
+      pos_ = 0;
+      return *this;
+    }
+
+    dft_iterator end() {
+      pos_ = nodes_dft_->size();
+      return *this;
+    }
+
+    bool operator!=(const dft_iterator &it) { return pos_ != it.pos_; }
+  };
+
+  dft_iterator begin() {
+    if (!run_dft_ && root_) {
+      run_dft_ = true;
+      dft(root_);
+    }
+    return dft_iterator{&nodes_dft_, 0};
+  }
+
+  dft_iterator end() { 
+    return dft_iterator{&nodes_dft_, nodes_dft_.size()};
+  }
+
+  std::vector<TreeNodePtr> nodes_dft_;
+ private:
+  bool run_dft_;
+  bool run_bft_;
+  std::vector<TreeNodePtr> nodes_bft_;
 };
 
 #endif
