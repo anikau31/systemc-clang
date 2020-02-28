@@ -63,6 +63,12 @@ class Tree {
 
  public:
   Tree() : root_{nullptr}, run_dft_{false}, run_bft_{false} {}
+  virtual ~Tree() {
+    for (auto node : adj_list_) {
+      delete node.first;
+    }
+    adj_list_.clear();
+  }
 
   void dump() {
     for (auto const &entry : adj_list_) {
@@ -81,6 +87,26 @@ class Tree {
   void setRoot(const TreeNodePtr from) { root_ = from; }
 
   const TreeNodePtr getRoot() const { return root_; }
+
+  bool foundNode(TreeNodePtr node) const {
+    auto found_node{adj_list_.find(node)};
+    if (found_node == adj_list_.end()) {
+      return false;
+    }
+    return true;
+  }
+
+  bool hasChildren(TreeNodePtr node ) {
+    if (!foundNode(node)) {
+      return false;
+    }
+
+    return (adj_list_[node].size() > 0);
+  }
+
+  const VectorTreePtr &getChildren(TreeNodePtr node) {
+    return adj_list_[node];
+  }
 
   TreeNodePtr addNode(std::string data) {
     TreeNodePtr new_node{new TreeNode(data)};
@@ -190,8 +216,8 @@ class Tree {
     dft_iterator(const TreeDFTPtr nodes_dft, std::size_t pos)
         : nodes_dft_{nodes_dft}, pos_{pos} {}
 
-    std::string operator*() { 
-      return (nodes_dft_)->operator[](pos_)->getData(); 
+    std::string operator*() {
+      return (nodes_dft_)->operator[](pos_)->getData();
     }
 
     dft_iterator &operator++() {
@@ -220,15 +246,13 @@ class Tree {
     return dft_iterator{&nodes_dft_, 0};
   }
 
-  dft_iterator end() { 
-    return dft_iterator{&nodes_dft_, nodes_dft_.size()};
-  }
+  dft_iterator end() { return dft_iterator{&nodes_dft_, nodes_dft_.size()}; }
 
-  std::vector<TreeNodePtr> nodes_dft_;
  private:
   bool run_dft_;
   bool run_bft_;
   std::vector<TreeNodePtr> nodes_bft_;
+  std::vector<TreeNodePtr> nodes_dft_;
 };
 
 #endif
