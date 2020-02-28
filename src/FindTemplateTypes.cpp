@@ -74,30 +74,13 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
     return template_types_;
   }
 
-  /*
-  llvm::outs() << "####  Sugared #### \n";
-  type->dump();
-  */
-  llvm::outs() << "####  Desugared #### \n";
-  type->getUnqualifiedDesugaredType()->dump();
+  //llvm::outs() << "####  Desugared #### \n";
+  //type->getUnqualifiedDesugaredType()->dump();
 
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
   return template_types_;
 }
 
-/*
-bool FindTemplateTypes::VisitTemplateArgument(TemplateArgument *ta) {
-  llvm::outs() << "=VisitTemplateArgument=\n";
-
-  return true;
-}
-
-bool FindTemplateTypes::VisitClassTemplateSpecializationDecl(
-    ClassTemplateSpecializationDecl *class_special_type) {
-  llvm::outs() << "=VisitClassTemplateSpecializationDecl=\n";
-  return true;
-}
-*/
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
@@ -113,7 +96,7 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   std::string name_string;
   llvm::raw_string_ostream sstream(name_string);
   template_name.print(sstream, Policy, 0);
-  llvm::outs() << "== template_name: " << sstream.str() << "\n";
+  //llvm::outs() << "== template_name: " << sstream.str() << "\n";
 
   auto new_node{template_args_.addNode(sstream.str())};
   template_args_.addEdge(current_type_node_, new_node);
@@ -123,14 +106,15 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   // Template argument
   //
 
+  /*
   unsigned int narg{special_type->getNumArgs()};
   for (unsigned int i{0}; i != narg; ++i) {
-    llvm::outs() << " ==> template arg \n";
+    //llvm::outs() << " ==> template arg \n";
     const TemplateArgument &arg{special_type->getArg(i)};
     arg.dump();
     arg.getAsType().getTypePtr()->dump();
-    // traversetype(arg.getastype());
   }
+  */
 
   return true;
 }
@@ -206,23 +190,11 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   llvm::outs() << "=VisitRecordType=\n";
   auto type_decl{rt->getDecl()};
   auto type_name{type_decl->getName()};
-  llvm::outs() << " ==> name : " << type_name << "\n";
+  //llvm::outs() << " ==> name : " << type_name << "\n";
 
-  /*
-  if ( template_args_.begin() == template_args_.end()) {
-    template_args_.insert(template_args_.begin(), TemplateType(type_name, rt));
-    current_template_ = template_args_.begin();
-  } else {
-
-    current_template_ = template_args_.insert(template_args_.begin(),
-  TemplateType(type_name, rt));
-
-  }
-  */
 
   current_type_node_ = template_args_.addNode( type_name );
   if (template_args_.size() == 1) {
-    llvm::outs() << "set root\n";
     template_args_.setRoot(current_type_node_);
   }
 
@@ -231,26 +203,25 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   }
 
   stack_current_node_.push( current_type_node_);
-  template_args_.dump();
+  //template_args_.dump();
 
   template_types_.push_back(TemplateType(type_name, rt));
 
   if (auto ctsd = dyn_cast<ClassTemplateSpecializationDecl>(type_decl)) {
-    llvm::outs() << " ==> CTSD : " << ctsd->getTemplateArgs().size() << "\n";
-    // ctsd->dump();
+    //llvm::outs() << " ==> CTSD : " << ctsd->getTemplateArgs().size() << "\n";
 
     const TemplateArgumentList &arg_list{ctsd->getTemplateArgs()};
     for (unsigned int i{0}; i < arg_list.size(); ++i) {
       const TemplateArgument &targ{arg_list[i]};
-      llvm::outs() << " ====> template argument: ";
-      targ.dump();
-      llvm::outs() << "\n";
-      // TODO Write this into the vector.
-      llvm::outs() << " ====> template type : " << targ.getKind() << "\n";
-
+      // llvm::outs() << " ====> template argument: ";
+      // targ.dump();
+      // llvm::outs() << "\n";
+     // TODO Write this into the vector.
+      // llvm::outs() << " ====> template type : " << targ.getKind() << "\n";
+//
       if (targ.getKind() == TemplateArgument::ArgKind::Type) {
         QualType template_name{targ.getAsType()};
-        llvm::outs() << " ====> template_type_name " << template_name.getAsString() << "\n";
+      //  llvm::outs() << " ====> template_type_name " << template_name.getAsString() << "\n";
         const Type *arg_type{targ.getAsType().getTypePtr()};
 
         if (!arg_type->isBuiltinType()) {
@@ -266,15 +237,15 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
       }else
       if (targ.getKind() == TemplateArgument::ArgKind::Integral) {
         QualType template_name{targ.getNonTypeTemplateArgumentType()};
-        template_name.dump();
-        llvm::outs() << " ====> template_type_name integral "
-                     << template_name.getAsString() << "\n";
-
-        llvm::outs() << " ====> Integral : ";
+        //template_name.dump();
+        // llvm::outs() << " ====> template_type_name integral "
+                     // << template_name.getAsString() << "\n";
+//
+        // llvm::outs() << " ====> Integral : ";
         auto integral{targ.getAsIntegral()};
         SmallString<16> integral_string{};
         integral.toString(integral_string);
-        llvm::outs() << integral_string << "\n";
+        //llvm::outs() << integral_string << "\n";
 
         auto new_node {template_args_.addNode(integral_string.c_str())};
         template_args_.addEdge(current_type_node_, new_node );
@@ -283,7 +254,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
       }
     }
   }
-  llvm::outs() << ">>> stack size: " << stack_current_node_.size() << "\n";
+  //llvm::outs() << ">>> stack size: " << stack_current_node_.size() << "\n";
   current_type_node_ = stack_current_node_.top();
   stack_current_node_.pop();
 
@@ -321,13 +292,16 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   }
   os << "\n";
 
+  os << "\n";
+  os << "Print template type tree\n";
   auto root_node{template_args_.getRoot()};
-  os << ">>>> DUMP rOOT node: " << root_node->getData() << "\n";
-  root_node->dump();
-  os << ">>>> DUMP: " << root_node->getData() << "\n";
-  template_args_.dump();
-  os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
+  os << "\n DFT: ";
+  //os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
   template_args_.dft(root_node);
+  os << "\n BFT: ";
+  //os << "\n>>>> Print arguments using BFT: " << root_node->getData() << "\n";
+  template_args_.bft(root_node);
+  os << "\n";
 }
 
 vector<string> FindTemplateTypes::getTemplateArguments() {

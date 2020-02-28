@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <queue>
 #include <stack>
 #include <string>
 #include <vector>
@@ -40,7 +41,7 @@ class TreeNode {
 
   void dump() { llvm::outs() << "[" << data_ << "] "; }
 
-  virtual void visit() { llvm::outs() << "( " << data_ << ") "; }
+  virtual void visit() { llvm::outs() << " " << data_ << " "; }
 };
 
 //////////////////////
@@ -66,7 +67,7 @@ class Tree {
       auto edges{entry.second};
       cout << node->getData() << " => size: " << edges.size() << "\n";
       for (auto const &edge_node : edges) {
-        cout <<  "   " << edge_node->getData();
+        cout << "   " << edge_node->getData();
       }
       cout << "\n";
     }
@@ -80,7 +81,7 @@ class Tree {
   TreeNodePtr addNode(std::string data) {
     TreeNodePtr new_node{new TreeNode(data)};
     VectorTreePtr empty_edges{};
-    adj_list_.emplace(std::make_pair(new_node, empty_edges));
+    adj_list_.insert(adj_list_.begin(), std::make_pair(new_node, empty_edges));
     return new_node;
   }
 
@@ -93,9 +94,8 @@ class Tree {
 
     auto &edges{source->second};
     // Insert it into the beginning of the vector.
-    //edges.insert(edges.begin(), to);
+    // edges.insert(edges.begin(), to);
     edges.push_back(to);
-    //push_back(to);
   }
 
   void resetDiscovered() {
@@ -104,17 +104,45 @@ class Tree {
     }
   }
 
+  void bft(TreeNodePtr root) {
+    resetDiscovered();
+
+    std::queue<TreeNodePtr> que{};
+    root->setDiscovered();
+    que.push(root);
+
+    while (!que.empty()) {
+      auto node{que.front()};
+      node->visit();
+      que.pop();
+
+      auto source{adj_list_.find(node)};
+
+      if (source == adj_list_.end()) {
+        return;
+      }
+
+      auto const &edges{source->second};
+      for (auto const &edge_node : edges) {
+        if (!edge_node->isDiscovered()) {
+          edge_node->setDiscovered();
+          que.push(edge_node);
+        }
+      }
+    }
+  }
+
   void dft(TreeNodePtr root) {
     resetDiscovered();
 
     std::stack<TreeNodePtr> visit{};
     visit.push(root);
-    //cout << "dft: " << root->getData() << "\n";
+    // cout << "dft: " << root->getData() << "\n";
 
     while (!visit.empty()) {
       // node is a TreeNodePtr
       auto &node{visit.top()};
-      //cout << "dft: callback function " << node->getData() << "\n";
+      // cout << "dft: callback function " << node->getData() << "\n";
       node->visit();
       // Call back function.
       visit.pop();
@@ -124,16 +152,17 @@ class Tree {
 
         auto source{adj_list_.find(node)};
 
-       //   cout << "dft: finding " << node << "  " << node->getData() <<  " \n";
+        //   cout << "dft: finding " << node << "  " << node->getData() <<  "
+        //   \n";
         if (source == adj_list_.end()) {
-        //  cout << "dft: " << node << " not found\n";
+          //  cout << "dft: " << node << " not found\n";
           return;
         }
 
-        //cout << "dft: add all the edges\n";
-        auto edges{source->second};
+        // cout << "dft: add all the edges\n";
+        auto const &edges{source->second};
         for (auto &node : edges) {
-         // cout << "dft: => include an edge\n";
+          // cout << "dft: => include an edge\n";
           visit.push(node);
         }
       }
