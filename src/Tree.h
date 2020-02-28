@@ -16,16 +16,17 @@ using namespace std;
 // class TreeNode
 //
 //
+template <typename T>
 class TreeNode {
  private:
-  std::string data_;
+  T data_;
   // std::vector<TreeNode *> child_;
   bool discovered_;
 
  public:
   // friend class Tree;
 
-  TreeNode(string data) : data_{data}, discovered_{false} {};
+  TreeNode(T data) : data_{data}, discovered_{false} {};
 
   TreeNode(const TreeNode &from) {
     data_ = from.data_;
@@ -33,25 +34,29 @@ class TreeNode {
   }
   ~TreeNode() {}
 
-  std::string getData() const { return data_; }
-  std::string getStringData() const { return data_; }
+  T getData() const { return data_; }
+  T getStringData() const { return data_; }
 
   bool isDiscovered() const { return discovered_; }
   void setDiscovered() { discovered_ = true; }
   void resetDiscovered() { discovered_ = false; }
 
-  void dump() { cout << "[" << data_ << "] "; }
+  std::string toString() const {
+    return data_;
+  }
+  void dump() { cout << "[" << toString() << "] "; }
 
-  virtual void visit() { cout << " " << data_ << " "; }
+  virtual void visit() { cout << " " << toString() << " "; }
 };
 
 //////////////////////
 // class Tree
 //
 //
+template <typename T>
 class Tree {
  public:
-  typedef TreeNode *TreeNodePtr;
+  typedef TreeNode<T> *TreeNodePtr;
   typedef std::vector<TreeNodePtr> VectorTreePtr;
 
  private:
@@ -108,8 +113,8 @@ class Tree {
     return adj_list_[node];
   }
 
-  TreeNodePtr addNode(std::string data) {
-    TreeNodePtr new_node{new TreeNode(data)};
+  TreeNodePtr addNode(T data) {
+    TreeNodePtr new_node{new TreeNode<T>(data)};
     VectorTreePtr empty_edges{};
     adj_list_.insert(adj_list_.begin(), std::make_pair(new_node, empty_edges));
     return new_node;
