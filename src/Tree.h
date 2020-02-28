@@ -34,6 +34,7 @@ class TreeNode {
   ~TreeNode() {}
 
   std::string getData() const { return data_; }
+  std::string getStringData() const { return data_; }
 
   bool isDiscovered() const { return discovered_; }
   void setDiscovered() { discovered_ = true; }
@@ -104,8 +105,9 @@ class Tree {
     }
   }
 
-  void bft(TreeNodePtr root) {
+  std::string bft(TreeNodePtr root) {
     resetDiscovered();
+    std::string return_string{};
 
     std::queue<TreeNodePtr> que{};
     root->setDiscovered();
@@ -114,12 +116,14 @@ class Tree {
     while (!que.empty()) {
       auto node{que.front()};
       node->visit();
+      return_string += " ";
+      return_string += node->getStringData();
       que.pop();
 
       auto source{adj_list_.find(node)};
 
       if (source == adj_list_.end()) {
-        return;
+        return "";
       }
 
       auto const &edges{source->second};
@@ -130,20 +134,22 @@ class Tree {
         }
       }
     }
+    return return_string;
   }
 
-  void dft(TreeNodePtr root) {
+  std::string dft(TreeNodePtr root) {
     resetDiscovered();
+    std::string return_string;
 
     std::stack<TreeNodePtr> visit{};
     visit.push(root);
-    // cout << "dft: " << root->getData() << "\n";
 
     while (!visit.empty()) {
-      // node is a TreeNodePtr
       auto &node{visit.top()};
-      // cout << "dft: callback function " << node->getData() << "\n";
       node->visit();
+      return_string += " ";
+      return_string += node->getStringData();
+
       // Call back function.
       visit.pop();
 
@@ -151,22 +157,18 @@ class Tree {
         node->setDiscovered();
 
         auto source{adj_list_.find(node)};
-
-        //   cout << "dft: finding " << node << "  " << node->getData() <<  "
-        //   \n";
         if (source == adj_list_.end()) {
-          //  cout << "dft: " << node << " not found\n";
-          return;
+          return "";
         }
 
-        // cout << "dft: add all the edges\n";
         auto const &edges{source->second};
         for (auto &node : edges) {
-          // cout << "dft: => include an edge\n";
           visit.push(node);
         }
       }
     }
+      return return_string;
+
   }
 };
 

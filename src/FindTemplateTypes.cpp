@@ -74,13 +74,12 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
     return template_types_;
   }
 
-  //llvm::outs() << "####  Desugared #### \n";
-  //type->getUnqualifiedDesugaredType()->dump();
+  // llvm::outs() << "####  Desugared #### \n";
+  // type->getUnqualifiedDesugaredType()->dump();
 
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
   return template_types_;
 }
-
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
@@ -96,25 +95,12 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   std::string name_string;
   llvm::raw_string_ostream sstream(name_string);
   template_name.print(sstream, Policy, 0);
-  //llvm::outs() << "== template_name: " << sstream.str() << "\n";
+  // llvm::outs() << "== template_name: " << sstream.str() << "\n";
 
   auto new_node{template_args_.addNode(sstream.str())};
   template_args_.addEdge(current_type_node_, new_node);
 
   template_types_.push_back(TemplateType(sstream.str(), special_type));
-
-  // Template argument
-  //
-
-  /*
-  unsigned int narg{special_type->getNumArgs()};
-  for (unsigned int i{0}; i != narg; ++i) {
-    //llvm::outs() << " ==> template arg \n";
-    const TemplateArgument &arg{special_type->getArg(i)};
-    arg.dump();
-    arg.getAsType().getTypePtr()->dump();
-  }
-  */
 
   return true;
 }
@@ -190,25 +176,24 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   llvm::outs() << "=VisitRecordType=\n";
   auto type_decl{rt->getDecl()};
   auto type_name{type_decl->getName()};
-  //llvm::outs() << " ==> name : " << type_name << "\n";
+  // llvm::outs() << " ==> name : " << type_name << "\n";
 
-
-  current_type_node_ = template_args_.addNode( type_name );
+  current_type_node_ = template_args_.addNode(type_name);
   if (template_args_.size() == 1) {
     template_args_.setRoot(current_type_node_);
   }
 
-  if (stack_current_node_.size() > 0 ) {
+  if (stack_current_node_.size() > 0) {
     template_args_.addEdge(stack_current_node_.top(), current_type_node_);
   }
 
-  stack_current_node_.push( current_type_node_);
-  //template_args_.dump();
+  stack_current_node_.push(current_type_node_);
+  // template_args_.dump();
 
   template_types_.push_back(TemplateType(type_name, rt));
 
   if (auto ctsd = dyn_cast<ClassTemplateSpecializationDecl>(type_decl)) {
-    //llvm::outs() << " ==> CTSD : " << ctsd->getTemplateArgs().size() << "\n";
+    // llvm::outs() << " ==> CTSD : " << ctsd->getTemplateArgs().size() << "\n";
 
     const TemplateArgumentList &arg_list{ctsd->getTemplateArgs()};
     for (unsigned int i{0}; i < arg_list.size(); ++i) {
@@ -216,45 +201,56 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
       // llvm::outs() << " ====> template argument: ";
       // targ.dump();
       // llvm::outs() << "\n";
-     // TODO Write this into the vector.
+      // TODO Write this into the vector.
       // llvm::outs() << " ====> template type : " << targ.getKind() << "\n";
-//
+      //
       if (targ.getKind() == TemplateArgument::ArgKind::Type) {
         QualType template_name{targ.getAsType()};
-      //  llvm::outs() << " ====> template_type_name " << template_name.getAsString() << "\n";
+        //  llvm::outs() << " ====> template_type_name " <<
+        //  template_name.getAsString() << "\n";
         const Type *arg_type{targ.getAsType().getTypePtr()};
 
         if (!arg_type->isBuiltinType()) {
-          stack_current_node_.push( current_type_node_ );
+          stack_current_node_.push(current_type_node_);
           TraverseType(arg_list[i].getAsType());
-          current_type_node_ = stack_current_node_.top(); stack_current_node_.pop();
+          current_type_node_ = stack_current_node_.top();
+          stack_current_node_.pop();
         } else {
-          auto new_node {template_args_.addNode(template_name.getAsString())};
-          template_args_.addEdge(current_type_node_, new_node );
+          auto new_node{template_args_.addNode(template_name.getAsString())};
+          template_args_.addEdge(current_type_node_, new_node);
 
-          template_types_.push_back(TemplateType(template_name.getAsString(), rt));
+          template_types_.push_back(
+              TemplateType(template_name.getAsString(), rt));
         }
-      }else
-      if (targ.getKind() == TemplateArgument::ArgKind::Integral) {
+      } else if (targ.getKind() == TemplateArgument::ArgKind::Integral) {
         QualType template_name{targ.getNonTypeTemplateArgumentType()};
-        //template_name.dump();
+        // template_name.dump();
+
+        // Special case:
+        // Ignore when there are implicit arguments.
+        //
+        // sc_core::sc_writer_policy
+        //
         // llvm::outs() << " ====> template_type_name integral "
-                     // << template_name.getAsString() << "\n";
-//
+        //             << template_name.getAsString() << "\n";
         // llvm::outs() << " ====> Integral : ";
-        auto integral{targ.getAsIntegral()};
-        SmallString<16> integral_string{};
-        integral.toString(integral_string);
-        //llvm::outs() << integral_string << "\n";
+        //
 
-        auto new_node {template_args_.addNode(integral_string.c_str())};
-        template_args_.addEdge(current_type_node_, new_node );
+        if (template_name.getAsString() != "enum sc_core::sc_writer_policy") {
+          auto integral{targ.getAsIntegral()};
+          SmallString<16> integral_string{};
+          integral.toString(integral_string);
+          // llvm::outs() << integral_string << "\n";
 
-        template_types_.push_back(TemplateType(integral_string.c_str(), rt));
+          auto new_node{template_args_.addNode(integral_string.c_str())};
+          template_args_.addEdge(current_type_node_, new_node);
+
+          template_types_.push_back(TemplateType(integral_string.c_str(), rt));
+        }
       }
     }
   }
-  //llvm::outs() << ">>> stack size: " << stack_current_node_.size() << "\n";
+  // llvm::outs() << ">>> stack size: " << stack_current_node_.size() << "\n";
   current_type_node_ = stack_current_node_.top();
   stack_current_node_.pop();
 
@@ -292,14 +288,15 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   }
   os << "\n";
 
-  os << "\n";
-  os << "Print template type tree\n";
+  //os << "\n";
+  //os << "Print template type tree\n";
   auto root_node{template_args_.getRoot()};
   os << "\n DFT: ";
-  //os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
-  template_args_.dft(root_node);
+  // os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
+  auto s = template_args_.dft(root_node);
+  os << "s: " << s << "\n";
   os << "\n BFT: ";
-  //os << "\n>>>> Print arguments using BFT: " << root_node->getData() << "\n";
+  // os << "\n>>>> Print arguments using BFT: " << root_node->getData() << "\n";
   template_args_.bft(root_node);
   os << "\n";
 }
