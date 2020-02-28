@@ -23,8 +23,8 @@ using namespace scpar;
 TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
 #include "systemc.h"
-//#include "sreg.h"
-//#include "sc_stream.h"
+#include "sreg.h"
+#include "sc_stream.h"
 
 template< int E, int F>
 struct fp_t {
@@ -158,8 +158,8 @@ SC_MODULE( test ){
   sc_in<bool> bool_clk;
 	sc_signal<expo_t> emax;
 
-	//sc_stream_in<int> s_port;
-	//sc_stream_out<double> m_port;
+	sc_stream_in<int> s_port;
+	sc_stream_out<double> m_port;
 
   sc_in<MyType> in_mytype;
   sc_out<MyType> out_mytype;
