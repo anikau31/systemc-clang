@@ -98,7 +98,7 @@ class Tree {
     return true;
   }
 
-  bool hasChildren(TreeNodePtr node ) {
+  bool hasChildren(TreeNodePtr node) {
     if (!foundNode(node)) {
       return false;
     }
@@ -106,9 +106,7 @@ class Tree {
     return (adj_list_[node].size() > 0);
   }
 
-  const VectorTreePtr &getChildren(TreeNodePtr node) {
-    return adj_list_[node];
-  }
+  const VectorTreePtr &getChildren(TreeNodePtr node) { return adj_list_[node]; }
 
   TreeNodePtr addNode(T data) {
     TreeNodePtr new_node{new TreeNode<T>(data)};
@@ -177,6 +175,7 @@ class Tree {
     std::stack<TreeNodePtr> visit{};
     visit.push(root);
 
+    int sp{0};
     while (!visit.empty()) {
       auto &node{visit.top()};
       node->visit();
@@ -184,6 +183,11 @@ class Tree {
       return_string += node->getStringData();
       nodes_dft_.push_back(node);
 
+      for (int i{0}; i < sp; ++i) {
+        llvm::outs() << " ";
+      }
+      llvm::outs() << sp << ": " << node->getStringData() << "\n";
+      sp += 2;
       // Call back function.
       visit.pop();
 
@@ -196,6 +200,9 @@ class Tree {
         }
 
         auto const &edges{source->second};
+        if (edges.size() == 0 ) {
+          sp -=2;
+        }
         for (auto &node : edges) {
           visit.push(node);
         }

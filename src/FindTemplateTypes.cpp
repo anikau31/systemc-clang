@@ -292,7 +292,7 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   os << "Print template type tree\n";
   auto root_node{template_args_.getRoot()};
   template_args_.dump();
-  os << "\n DFT: ";
+  os << "\n DFT: \n";
   // os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
   auto s = template_args_.dft(root_node);
   os << "s: " << s << "\n";
