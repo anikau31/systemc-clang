@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-//#include "llvm/Support/raw_ostream.h"
+#include "llvm/Support/raw_ostream.h"
 
 using namespace std;
 
@@ -20,13 +20,11 @@ template <typename T>
 class TreeNode {
  private:
   T data_;
-  // std::vector<TreeNode *> child_;
   bool discovered_;
+  TreeNode *parent_;
 
  public:
-  // friend class Tree;
-
-  TreeNode(T data) : data_{data}, discovered_{false} {};
+  TreeNode(T data) : data_{data}, discovered_{false}, parent_{this} {};
 
   TreeNode(const TreeNode &from) {
     data_ = from.data_;
@@ -35,15 +33,22 @@ class TreeNode {
   ~TreeNode() {}
 
   T getData() const { return data_; }
-  std::string getStringData() const { return data_.getTypeName(); }
+  std::string toString() const { return data_.toString(); }
 
   bool isDiscovered() const { return discovered_; }
   void setDiscovered() { discovered_ = true; }
   void resetDiscovered() { discovered_ = false; }
 
-  void dump() { cout << "[" << getStringData() << "] "; }
+  void setParent(TreeNode *from) { parent_ = from; }
 
-  virtual void visit() { cout << " " << getStringData() << " "; }
+  TreeNode *getParent() const { return parent_; }
+
+  void dump() { llvm::outs() << "[" << toString() << "] "; }
+
+  virtual void visit() {
+    llvm::outs() << "(" << parent_->toString() << ")"
+                 << " " << toString() << " ";
+  }
 };
 
 //////////////////////
@@ -76,11 +81,11 @@ class Tree {
     for (auto const &entry : adj_list_) {
       auto node{entry.first};
       auto edges{entry.second};
-      cout << node->getStringData() << " => size: " << edges.size() << "\n";
+      llvm::outs() << node->toString() << " => size: " << edges.size() << "\n";
       for (auto const &edge_node : edges) {
-        cout << "   " << edge_node->getStringData();
+        llvm::outs() << "   " << edge_node->toString();
       }
-      cout << "\n";
+      llvm::outs() << "\n";
     }
   }
 
@@ -126,6 +131,7 @@ class Tree {
     // Insert it into the beginning of the vector.
     // edges.insert(edges.begin(), to);
     edges.push_back(to);
+    to->setParent(from);
   }
 
   void resetDiscovered() {
@@ -147,7 +153,7 @@ class Tree {
       node->visit();
       nodes_bft_.push_back(node);
       return_string += " ";
-      return_string += node->getStringData();
+      return_string += node->toString();
       que.pop();
 
       auto source{adj_list_.find(node)};
@@ -180,14 +186,9 @@ class Tree {
       auto &node{visit.top()};
       node->visit();
       return_string += " ";
-      return_string += node->getStringData();
+      return_string += node->toString();
       nodes_dft_.push_back(node);
 
-      for (int i{0}; i < sp; ++i) {
-        llvm::outs() << " ";
-      }
-      llvm::outs() << sp << ": " << node->getStringData() << "\n";
-      sp += 2;
       // Call back function.
       visit.pop();
 
@@ -200,9 +201,6 @@ class Tree {
         }
 
         auto const &edges{source->second};
-        if (edges.size() == 0 ) {
-          sp -=2;
-        }
         for (auto &node : edges) {
           visit.push(node);
         }
@@ -225,9 +223,7 @@ class Tree {
     dft_iterator(const TreeDFTPtr nodes_dft, std::size_t pos)
         : nodes_dft_{nodes_dft}, pos_{pos} {}
 
-    std::string operator*() {
-      return (nodes_dft_)->operator[](pos_)->getData();
-    }
+    T operator*() { return (nodes_dft_)->operator[](pos_)->getData(); }
 
     dft_iterator &operator++() {
       ++pos_;

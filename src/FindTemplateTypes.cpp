@@ -20,6 +20,8 @@ TemplateType::~TemplateType() { type_ptr_ = nullptr; }
 
 string TemplateType::getTypeName() const { return type_name_; }
 
+string TemplateType::toString() const { return getTypeName(); }
+
 const Type *TemplateType::getTypePtr() const { return type_ptr_; }
 
 //////////////////////////////////////////////////////////////////////

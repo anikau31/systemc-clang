@@ -31,6 +31,7 @@ class TemplateType {
   TemplateType(const TemplateType &);
 
   string getTypeName() const;
+  string toString() const;
   const Type *getTypePtr() const;
 
  private:
