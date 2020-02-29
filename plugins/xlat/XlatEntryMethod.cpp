@@ -133,7 +133,10 @@ bool XlatMethod::TraverseCompoundStmt(CompoundStmt* cstmt) {
 }
 
 bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
-  hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
+  hNodep h_varlist = NULL;
+  if (!declstmt->isSingleDecl()) {
+      h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
+    }
   // from https://clang.llvm.org/doxygen/DeadStoresChecker_8cpp_source.html
   for (auto *DI : declstmt->decls())
     if (DI) {
@@ -142,7 +145,8 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
 	  continue;
 	hNodep h_vardecl = new hNode(vardecl->getName(), hNode::hdlopsEnum::hVardecl);
 	ProcessVarDecl(vardecl, h_vardecl);
-	h_varlist->child_list.push_back(h_vardecl);
+	if (h_varlist) h_varlist->child_list.push_back(h_vardecl);
+	else h_varlist = h_vardecl; // single declaration
       }
   h_ret = h_varlist;
   return true;
@@ -172,7 +176,11 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
   if (Expr * declinit = vardecl->getInit()) {
 
     TraverseStmt(declinit);
-    if (h_ret) h_vardecl->child_list.push_back(h_ret);
+    if (h_ret) {
+      hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarInit);
+      varinitp->child_list.push_back(h_ret);
+      h_vardecl->child_list.push_back(varinitp);
+    }
   }
   return true;
 }

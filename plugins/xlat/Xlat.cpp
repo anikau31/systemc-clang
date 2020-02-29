@@ -85,12 +85,13 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 
   for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
        mit++) {
-    h_info->child_list.push_back(new hNode(get<0>(*mit), h_op));
+    hNodep hportp = new hNode(get<0>(*mit), h_op);
+    h_info->child_list.push_back(hportp);
     os_ << "object name is " << get<0>(*mit) << "\n";
     PortDecl *pd = get<1>(*mit);
     hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
     xlattype(pd->getTemplateType(), h_typeinfo);  
-    h_info->child_list.push_back(h_typeinfo);
+    hportp->child_list.push_back(h_typeinfo);
   }
 }
 
@@ -99,14 +100,14 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
 
   for (ModuleDecl::signalMapType::iterator mit = pmap.begin();
        mit != pmap.end(); mit++) {
-
-    h_info->child_list.push_back(new hNode(get<0>(*mit), h_op));
+    hNodep hsigp = new hNode(get<0>(*mit), h_op);
+    h_info->child_list.push_back(hsigp);
     os_ << "object name is " << get<0>(*mit) << "\n";
 
     Signal *pd = get<1>(*mit);
     hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
     xlattype(pd->getTemplateTypes(), h_typeinfo);  
-    h_info->child_list.push_back(h_typeinfo);
+    hsigp->child_list.push_back(h_typeinfo);
   }
 }
 
