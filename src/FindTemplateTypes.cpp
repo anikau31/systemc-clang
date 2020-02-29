@@ -97,7 +97,7 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   template_name.print(sstream, Policy, 0);
   // llvm::outs() << "== template_name: " << sstream.str() << "\n";
 
-  auto new_node{template_args_.addNode(sstream.str())};
+  auto new_node{template_args_.addNode(TemplateType{sstream.str(),special_type})};
   template_args_.addEdge(current_type_node_, new_node);
 
   template_types_.push_back(TemplateType(sstream.str(), special_type));
@@ -178,7 +178,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   auto type_name{type_decl->getName()};
   // llvm::outs() << " ==> name : " << type_name << "\n";
 
-  current_type_node_ = template_args_.addNode(type_name);
+  current_type_node_ = template_args_.addNode(TemplateType(type_name, rt));
   if (template_args_.size() == 1) {
     template_args_.setRoot(current_type_node_);
   }
@@ -216,7 +216,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
           current_type_node_ = stack_current_node_.top();
           stack_current_node_.pop();
         } else {
-          auto new_node{template_args_.addNode(template_name.getAsString())};
+          auto new_node{template_args_.addNode(TemplateType{template_name.getAsString(), arg_type})};
           template_args_.addEdge(current_type_node_, new_node);
 
           template_types_.push_back(
@@ -242,7 +242,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
           integral.toString(integral_string);
           // llvm::outs() << integral_string << "\n";
 
-          auto new_node{template_args_.addNode(integral_string.c_str())};
+          auto new_node{template_args_.addNode(TemplateType{integral_string.c_str(),template_name.getTypePtr()})};
           template_args_.addEdge(current_type_node_, new_node);
 
           template_types_.push_back(TemplateType(integral_string.c_str(), rt));
@@ -289,15 +289,16 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   os << "\n";
 
   //os << "\n";
-  //os << "Print template type tree\n";
+  os << "Print template type tree\n";
   auto root_node{template_args_.getRoot()};
+  template_args_.dump();
   os << "\n DFT: ";
   // os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
   auto s = template_args_.dft(root_node);
   os << "s: " << s << "\n";
-  os << "\n BFT: ";
+  //os << "\n BFT: ";
   // os << "\n>>>> Print arguments using BFT: " << root_node->getData() << "\n";
-  template_args_.bft(root_node);
+  //template_args_.bft(root_node);
   os << "\n";
 }
 

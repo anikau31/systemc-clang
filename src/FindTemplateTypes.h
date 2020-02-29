@@ -85,9 +85,9 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
 
   type_vector_t template_types_;
 
-  Tree template_args_;
-  Tree::TreeNodePtr current_type_node_;
-  std::stack<Tree::TreeNodePtr> stack_current_node_;
+  Tree<TemplateType> template_args_;
+  Tree<TemplateType>::TreeNodePtr current_type_node_;
+  std::stack<Tree<TemplateType>::TreeNodePtr> stack_current_node_;
 
 };
 }  // namespace scpar

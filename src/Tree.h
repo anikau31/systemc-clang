@@ -35,18 +35,15 @@ class TreeNode {
   ~TreeNode() {}
 
   T getData() const { return data_; }
-  T getStringData() const { return data_; }
+  std::string getStringData() const { return data_.getTypeName(); }
 
   bool isDiscovered() const { return discovered_; }
   void setDiscovered() { discovered_ = true; }
   void resetDiscovered() { discovered_ = false; }
 
-  std::string toString() const {
-    return data_;
-  }
-  void dump() { cout << "[" << toString() << "] "; }
+  void dump() { cout << "[" << getStringData() << "] "; }
 
-  virtual void visit() { cout << " " << toString() << " "; }
+  virtual void visit() { cout << " " << getStringData() << " "; }
 };
 
 //////////////////////
@@ -79,9 +76,9 @@ class Tree {
     for (auto const &entry : adj_list_) {
       auto node{entry.first};
       auto edges{entry.second};
-      cout << node->getData() << " => size: " << edges.size() << "\n";
+      cout << node->getStringData() << " => size: " << edges.size() << "\n";
       for (auto const &edge_node : edges) {
-        cout << "   " << edge_node->getData();
+        cout << "   " << edge_node->getStringData();
       }
       cout << "\n";
     }
