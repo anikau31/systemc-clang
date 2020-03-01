@@ -21,7 +21,7 @@ l = Lark('''
         inportdecl:  "hPortin" ID 
         outportdecl: "hPortout" ID
         vardeclinit: "hVardecl" ID "[" htypeinfo hvarinit? "]"
-        hvarinit: "hVarInit" "NONAME" expression
+        ?hvarinit: "hVarInit" "NONAME" expression
         // can be no process at all in the module
         ?processlist:  "hProcesses" "NONAME" "[" hprocess* "]"
         // could be nothing
@@ -78,7 +78,7 @@ l = Lark('''
         hbinop:  "hBinop" BINOP "[" expression expression "]"
         hunop:  "hUnop" UNOP "[" expression "]"
         hmethodcall: "hMethodCall" hidorstr  "[" expression expression* "]" 
-        hidorstr: ID | STRING
+        ?hidorstr: ID | STRING
         hliteral:  "hLiteral" ID "NOLIST"
         htypeinfo: "hTypeinfo" "NONAME" "[" htype+ "]"
         htype:  "hType" STRING "NOLIST" 
@@ -226,8 +226,10 @@ class VerilogTransformer(Transformer):
             if isinstance(stmt, list):
                 stmt_list.extend(stmt)
             else:
-                stmt_list.append(stmt)
+                if stmt:
+                    stmt_list.append(stmt)
         # currently it's ok to append a comma
+        print("stmtlist in hcstmt is ", args, stmt_list)
         res = ';\n'.join(x for x in stmt_list)
         return res
 
@@ -259,6 +261,10 @@ class VerilogTransformer(Transformer):
                 return f'{args[1]}={args[1]}-1'
             else:
                 return f'{args[0]}({args[1]})'
+    @p
+    def hmethodcall(self, args):
+        print("in hmethodcall, returning ", f'{args[0]}',"(", f'{",".join(args[1:])}', ")")
+        return (f'{args[0]}(' f'{",".join(args[1:])})')
 
     def stmts(self, args):
         return args
@@ -278,7 +284,14 @@ class VerilogTransformer(Transformer):
             self.vardecl_map[str(args[0])] = args[1]
             return f'{args[0]} = {args[2]}'
         assert False
-
+    @p
+    def vardeclinit(self, args):
+        print("vardeclinit: ", args)
+        self.vardecl_map[str(args[0])] = args[1]
+        if len(args)==3:
+            return f'{args[0]} = {args[2]}'
+        return None
+    
     @p
     def htype(self, args):
         # return CType2VerilogType.convert(str(args[0]))
