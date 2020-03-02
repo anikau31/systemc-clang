@@ -199,9 +199,17 @@ class Tree {
     resetDiscovered();
     std::string return_string;
 
+    // If the argument is not specified, then just use the root.
     if (root == nullptr) {
       root = root_;
     }
+
+    // If the root itself is not found then we can't run DFT.
+    if (root == nullptr) {
+      return return_string;
+    }
+
+
     std::stack<TreeNodePtr> visit{};
     visit.push(root);
 
