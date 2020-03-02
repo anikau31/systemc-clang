@@ -138,7 +138,7 @@ SC_MODULE(ram) {
 
   SC_HAS_PROCESS(ram);
 
-  ram(sc_module_name name_ = "AA"):
+  ram(sc_module_name name_ = "default_ram"):
     sc_module(name_) {
     SC_THREAD(ram_proc);
 
@@ -205,20 +205,42 @@ int sc_main(int argc, char *argv[]) {
 
   // Want to find an instance named "testing".
 
+  ModuleDecl *ram_module{model->getInstance("specialized_template")};
   ModuleDecl *test_module{model->getInstance("testing")};
-  ;
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module declarations found: "
          << module_decl.size());
 
-    REQUIRE(module_decl.size() == 1);
-
+    // There are two modules: ram, test.
+    REQUIRE(module_decl.size() == 2);
+    REQUIRE(ram_module != nullptr);
     REQUIRE(test_module != nullptr);
 
     INFO("Checking clock port parsing.");
     // These checks should be performed on the declarations.
+
+    ////////////////////////////////////////////////////////////////
+    // Test ram_module
+    //
+    ModuleDecl *ram_module_inst{ram_module};
+
+    REQUIRE(ram_module_inst->getIPorts().size() == 0);
+    REQUIRE(ram_module_inst->getOPorts().size() == 0);
+    REQUIRE(ram_module_inst->getIOPorts().size() == 0);
+    REQUIRE(ram_module_inst->getOtherVars().size() == 0);
+    REQUIRE(ram_module_inst->getInputStreamPorts().size() == 0);
+    REQUIRE(ram_module_inst->getOutputStreamPorts().size() == 0);
+
+    REQUIRE(ram_module_inst->getSignals().size() == 2);
+
+
+
+    ////////////////////////////////////////////////////////////////
+    // Test test_module
+    //
+
 
     ModuleDecl *test_module_inst{test_module};
 

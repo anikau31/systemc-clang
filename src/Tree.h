@@ -33,6 +33,7 @@ class TreeNode {
   ~TreeNode() {}
 
   T getData() const { return data_; }
+  const T* getDataPtr() { return &data_; }
   std::string toString() const { return data_.toString(); }
 
   bool isDiscovered() const { return discovered_; }
@@ -174,7 +175,6 @@ class Tree {
   }
 
   std::string dft(TreeNodePtr root) {
-    run_dft_ = true;
     resetDiscovered();
     std::string return_string;
 
@@ -187,7 +187,12 @@ class Tree {
       node->visit();
       return_string += " ";
       return_string += node->toString();
-      nodes_dft_.push_back(node);
+
+      // For repeated calls to dft...
+      // Check if node is already in there
+      if (!run_dft_) {
+        nodes_dft_.push_back(node);
+      }
 
       // Call back function.
       visit.pop();
@@ -206,6 +211,9 @@ class Tree {
         }
       }
     }
+    if (!run_dft_) {
+      run_dft_ = true;
+    }
     return return_string;
   }
 
@@ -223,7 +231,8 @@ class Tree {
     dft_iterator(const TreeDFTPtr nodes_dft, std::size_t pos)
         : nodes_dft_{nodes_dft}, pos_{pos} {}
 
-    T operator*() { return (nodes_dft_)->operator[](pos_)->getData(); }
+    TreeNodePtr operator*() { 
+      return (nodes_dft_)->operator[](pos_); }
 
     dft_iterator &operator++() {
       ++pos_;
@@ -245,7 +254,6 @@ class Tree {
 
   dft_iterator begin() {
     if (!run_dft_ && root_) {
-      run_dft_ = true;
       dft(root_);
     }
     return dft_iterator{&nodes_dft_, 0};

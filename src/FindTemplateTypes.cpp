@@ -273,6 +273,10 @@ bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
   return false;
 }
 
+Tree<TemplateType> &FindTemplateTypes::getTemplateArgTree() {
+  return template_args_;
+}
+
 FindTemplateTypes::type_vector_t FindTemplateTypes::getTemplateArgumentsType() {
   return template_types_;
 }
@@ -293,15 +297,15 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   //os << "\n";
   os << "Print template type tree\n";
   auto root_node{template_args_.getRoot()};
-  template_args_.dump();
+  //template_args_.dump();
   os << "\n DFT: \n";
   // os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
   auto s = template_args_.dft(root_node);
-  os << "s: " << s << "\n";
+ // os << "s: " << s << "\n";
   //os << "\n BFT: ";
   // os << "\n>>>> Print arguments using BFT: " << root_node->getData() << "\n";
   //template_args_.bft(root_node);
-  os << "\n";
+  //os << "\n";
 }
 
 vector<string> FindTemplateTypes::getTemplateArguments() {
