@@ -61,8 +61,7 @@ json PortDecl::dump_json(raw_ostream &os) {
 
   Tree<TemplateType> &args{template_type_->getTemplateArgTree()};
 
-  // llvm::outs() << " ### size of nodes: " << args.size() << "\n";
-  for (auto const &node : args) {
+  for (auto &node : args) {
     // Returns a TreeNodePtr
     auto type_data{node->getDataPtr()};
     auto parent_node{node->getParent()};

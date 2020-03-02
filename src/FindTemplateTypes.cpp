@@ -49,7 +49,10 @@ FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
 }
 
 // Destructor
-FindTemplateTypes::~FindTemplateTypes() { template_types_.clear(); }
+FindTemplateTypes::~FindTemplateTypes() { 
+  template_types_.clear(); 
+   
+}
 
 string FindTemplateTypes::getTemplateType() {
   string s{};

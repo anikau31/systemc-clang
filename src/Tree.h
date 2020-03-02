@@ -30,10 +30,13 @@ class TreeNode {
     data_ = from.data_;
     discovered_ = from.discovered_;
   }
-  ~TreeNode() {}
+
+  ~TreeNode() {
+    parent_ = nullptr;
+  }
 
   T getData() const { return data_; }
-  const T* getDataPtr() { return &data_; }
+  const T *getDataPtr() { return &data_; }
   std::string toString() const { return data_.toString(); }
 
   bool isDiscovered() const { return discovered_; }
@@ -71,11 +74,14 @@ class Tree {
 
  public:
   Tree() : root_{nullptr}, run_dft_{false}, run_bft_{false} {}
+
   virtual ~Tree() {
     for (auto node : adj_list_) {
       delete node.first;
     }
     adj_list_.clear();
+    nodes_dft_.clear();
+    root_ = nullptr;
   }
 
   void dump() {
@@ -174,19 +180,21 @@ class Tree {
     return return_string;
   }
 
-  std::string dft(TreeNodePtr root) {
+  std::string dft(TreeNodePtr root = nullptr) {
     resetDiscovered();
     std::string return_string;
 
+    if (root == nullptr) {
+      root = root_;
+    }
     std::stack<TreeNodePtr> visit{};
     visit.push(root);
 
-    int sp{0};
     while (!visit.empty()) {
       auto &node{visit.top()};
       node->visit();
-      return_string += " ";
       return_string += node->toString();
+      return_string += " ";
 
       // For repeated calls to dft...
       // Check if node is already in there
@@ -219,6 +227,43 @@ class Tree {
 
  public:
   // Iterators
+  //
+  //
+  /*
+   class const_dft_iterator {
+   public:
+    typedef std::vector<TreeNodePtr> *TreeDFTPtr;
+
+   private:
+    TreeDFTPtr nodes_dft_;
+    std::size_t pos_;
+
+   public:
+    const_dft_iterator(const TreeDFTPtr nodes_dft, std::size_t pos)
+        : nodes_dft_{nodes_dft}, pos_{pos} {}
+
+    const TreeNodePtr& operator*() { return (nodes_dft_)->operator[](pos_); }
+
+    const_dft_iterator &operator++() {
+      ++pos_;
+      return *this;
+    }
+
+    const_dft_iterator begin() {
+      pos_ = 0;
+      return *this;
+    }
+
+    const_dft_iterator end() {
+      pos_ = nodes_dft_->size();
+      return *this;
+    }
+
+    bool operator!=(const const_dft_iterator &it) { return pos_ != it.pos_; }
+  };
+  */
+
+
   class dft_iterator {
    public:
     typedef std::vector<TreeNodePtr> *TreeDFTPtr;
@@ -228,11 +273,10 @@ class Tree {
     std::size_t pos_;
 
    public:
-    dft_iterator(const TreeDFTPtr nodes_dft, std::size_t pos)
+    dft_iterator(TreeDFTPtr nodes_dft, std::size_t pos)
         : nodes_dft_{nodes_dft}, pos_{pos} {}
 
-    TreeNodePtr operator*() { 
-      return (nodes_dft_)->operator[](pos_); }
+    TreeNodePtr& operator*() { return (nodes_dft_)->operator[](pos_); }
 
     dft_iterator &operator++() {
       ++pos_;
@@ -260,6 +304,18 @@ class Tree {
   }
 
   dft_iterator end() { return dft_iterator{&nodes_dft_, nodes_dft_.size()}; }
+
+ 
+  /*
+  const_dft_iterator begin() const {
+    if (!run_dft_ && root_) {
+      dft();
+    }
+    return const_dft_iterator{&nodes_dft_, 0};
+  }
+
+  const_dft_iterator end() const { return const_dft_iterator{&nodes_dft_, nodes_dft_.size()}; }
+  */
 
  private:
   bool run_dft_;
