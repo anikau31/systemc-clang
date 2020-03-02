@@ -71,9 +71,24 @@ class Tree {
   // typically going to be of small depth.
   std::map<TreeNodePtr, std::vector<TreeNodePtr> > adj_list_;
   TreeNodePtr root_;
+  
+  bool run_dft_;
+  bool run_bft_;
+  std::vector<TreeNodePtr> nodes_bft_;
+  std::vector<TreeNodePtr> nodes_dft_;
 
  public:
   Tree() : root_{nullptr}, run_dft_{false}, run_bft_{false} {}
+
+  Tree( const Tree& from) {
+    adj_list_ = from.adj_list_;
+    root_ = from.root_;
+    run_dft_ = from.run_dft_;
+    run_bft_ = from.run_bft_;
+    nodes_bft_ = from.nodes_bft_;
+    nodes_dft_ = from.nodes_dft_;
+
+  }
 
   virtual ~Tree() {
     for (auto node : adj_list_) {
@@ -317,11 +332,6 @@ class Tree {
   const_dft_iterator end() const { return const_dft_iterator{&nodes_dft_, nodes_dft_.size()}; }
   */
 
- private:
-  bool run_dft_;
-  bool run_bft_;
-  std::vector<TreeNodePtr> nodes_bft_;
-  std::vector<TreeNodePtr> nodes_dft_;
 };
 
 #endif
