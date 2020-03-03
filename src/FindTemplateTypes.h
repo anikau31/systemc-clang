@@ -66,7 +66,6 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitRecordType(RecordType *rt);
 
   ~FindTemplateTypes();
-  std::string getTemplateType();
   type_vector_t Enumerate(const Type *type);
   type_vector_t getTemplateArgumentsType();
   void printTemplateArguments(llvm::raw_ostream &os);

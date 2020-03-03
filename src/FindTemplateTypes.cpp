@@ -51,25 +51,6 @@ FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
 // Destructor
 FindTemplateTypes::~FindTemplateTypes() { template_types_.clear(); }
 
-
-std::string FindTemplateTypes::getTemplateType() {
-  string s{};
-
-  // type_vector_t::iterator
-  for (auto mit = template_types_.begin(); mit != template_types_.end();
-       ++mit) {
-    // for ( auto const &mit: template_types_ ) {
-    if (mit != template_types_.begin()) {
-      s += "<";
-    }
-    s += mit->getTypeName();
-    if (mit != template_types_.begin()) {
-      s += ">";
-    }
-  }
-  return s;
-}
-
 FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
     const Type *type) {
   template_types_.clear();
