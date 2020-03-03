@@ -8,7 +8,7 @@ using namespace scpar;
 //////////////////////////////////////////////////////////////////////
 TemplateType::TemplateType() : type_name_{""}, type_ptr_{nullptr} {}
 
-TemplateType::TemplateType(string name, const Type *t)
+TemplateType::TemplateType(std::string name, const Type *t)
     : type_name_{name}, type_ptr_{t} {}
 
 TemplateType::TemplateType(const TemplateType &from) {
@@ -16,12 +16,11 @@ TemplateType::TemplateType(const TemplateType &from) {
   type_ptr_ = from.type_ptr_;
 }
 
-TemplateType::~TemplateType() { 
-  type_ptr_ = nullptr; }
+TemplateType::~TemplateType() { type_ptr_ = nullptr; }
 
-string TemplateType::getTypeName() const { return type_name_; }
+std::string TemplateType::getTypeName() const { return type_name_; }
 
-string TemplateType::toString() const { return getTypeName(); }
+std::string TemplateType::toString() const { return getTypeName(); }
 
 const Type *TemplateType::getTypePtr() const { return type_ptr_; }
 
@@ -50,11 +49,10 @@ FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
 }
 
 // Destructor
-FindTemplateTypes::~FindTemplateTypes() { 
-  template_types_.clear(); 
-}
+FindTemplateTypes::~FindTemplateTypes() { template_types_.clear(); }
 
-string FindTemplateTypes::getTemplateType() {
+
+std::string FindTemplateTypes::getTemplateType() {
   string s{};
 
   // type_vector_t::iterator
@@ -102,7 +100,8 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   template_name.print(sstream, Policy, 0);
   // llvm::outs() << "== template_name: " << sstream.str() << "\n";
 
-  auto new_node{template_args_.addNode(TemplateType{sstream.str(),special_type})};
+  auto new_node{
+      template_args_.addNode(TemplateType{sstream.str(), special_type})};
   template_args_.addEdge(current_type_node_, new_node);
 
   template_types_.push_back(TemplateType(sstream.str(), special_type));
@@ -131,49 +130,6 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
   if (auto special_type = typedef_type->getAs<TemplateSpecializationType>()) {
     TraverseType(QualType(special_type, 0));
   }
-  return true;
-}
-
-bool FindTemplateTypes::VisitType(Type *type) {
-  llvm::outs() << "=VisitType=\n";
-  /*
-  QualType q{type->getCanonicalTypeInternal()};
-  llvm::outs() << "\n###### Type: " << q.getAsString() << " \n";
-
-  if (type->isBuiltinType()) {
-    llvm::outs() << " ==> builtin type: " << q.getAsString() << "\n";
-    template_types_.push_back(TemplateType(q.getAsString(), type));
-    return false;
-  }
-
-  // This detects a user-defined type (class/struct).
-  // This is done by checking that this is not a TemplateSpecializationType, and
-  // if it is not a DependentType then there is no further parsing to be done.
-  //
-  // This is done because it is not clear how to detect user-defined types
-  // that are the inner-most template arguments.
-  //
-  if ((!type->getAs<TemplateSpecializationType>()) &&
-      (!type->isDependentType())) {
-    llvm::outs() << " ==> user defined type: " << q.getAsString() << "\n";
-    type->dump();
-
-    // FIXME: This is where struct fp_t<11,52> fails.
-    //
-    //
-
-
-
-    Utility util;
-    std::string type_name{q.getAsString()};
-    type_name = util.strip(type_name, "class ");
-    type_name = util.strip(type_name, "struct ");
-
-    template_types_.push_back(TemplateType(type_name, type));
-    return false;
-  }
-
-  */
   return true;
 }
 
@@ -221,7 +177,8 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
           current_type_node_ = stack_current_node_.top();
           stack_current_node_.pop();
         } else {
-          auto new_node{template_args_.addNode(TemplateType{template_name.getAsString(), arg_type})};
+          auto new_node{template_args_.addNode(
+              TemplateType{template_name.getAsString(), arg_type})};
           template_args_.addEdge(current_type_node_, new_node);
 
           template_types_.push_back(
@@ -247,7 +204,8 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
           integral.toString(integral_string);
           // llvm::outs() << integral_string << "\n";
 
-          auto new_node{template_args_.addNode(TemplateType{integral_string.c_str(),template_name.getTypePtr()})};
+          auto new_node{template_args_.addNode(TemplateType{
+              integral_string.c_str(), template_name.getTypePtr()})};
           template_args_.addEdge(current_type_node_, new_node);
 
           template_types_.push_back(TemplateType(integral_string.c_str(), rt));
@@ -285,7 +243,7 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::getTemplateArgumentsType() {
 }
 
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
-  vector<string> template_arguments;
+  vector<std::string> template_arguments;
   for (auto const &mit : template_types_) {
     template_arguments.push_back(mit.getTypeName());
   }
@@ -297,24 +255,17 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   }
   os << "\n";
 
-  //os << "\n";
-  os << "Print template type tree\n";
   auto root_node{template_args_.getRoot()};
-  //template_args_.dump();
+  // template_args_.dump();
   os << "\n DFT: \n";
   // os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
   auto s = template_args_.dft(root_node);
- // os << "s: " << s << "\n";
-  //os << "\n BFT: ";
-  // os << "\n>>>> Print arguments using BFT: " << root_node->getData() << "\n";
-  //template_args_.bft(root_node);
-  //os << "\n";
 }
 
-vector<string> FindTemplateTypes::getTemplateArguments() {
-  vector<string> template_arguments;
+vector<std::string> FindTemplateTypes::getTemplateArguments() {
+  vector<std::string> template_arguments;
   for (auto const &mit : template_types_) {
-    string name{mit.getTypeName()};
+    std::string name{mit.getTypeName()};
     if (name == "sc_in" || name == "sc_out" || name == "sc_inout") {
       break;
     }

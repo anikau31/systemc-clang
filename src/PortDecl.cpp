@@ -49,16 +49,6 @@ json PortDecl::dump_json(raw_ostream &os) {
   json port_j;
   port_j["port_name"] = getName();
 
-  // Template arguments
-  /*
-  auto template_args{template_type_->getTemplateArgumentsType()};
-  int i{0};
-  for ( const auto & port_arg : template_args ) {
-    //llvm::outs() << "@@@@: " << i++ << " : " << port_arg.getTypeName() <<
-  "\n"; port_j["port_arguments"].push_back(port_arg.getTypeName());
-  }
-  */
-
   auto &args{template_type_->getTemplateArgTree()};
   llvm::outs() << "### Memory leak: " << args.size() << "\n";
   args.dump();

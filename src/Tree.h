@@ -10,8 +10,7 @@
 
 #include "llvm/Support/raw_ostream.h"
 
-using namespace std;
-
+namespace scpar {
 //
 // class TreeNode
 //
@@ -339,5 +338,5 @@ class Tree {
 
   dft_iterator end() { return dft_iterator{this, nodes_dft_.size()}; }
 };
-
+}; // sc_par
 #endif
