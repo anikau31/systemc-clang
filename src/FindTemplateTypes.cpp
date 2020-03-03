@@ -215,8 +215,8 @@ bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
   return false;
 }
 
-Tree<TemplateType> &FindTemplateTypes::getTemplateArgTree() {
-  return template_args_;
+Tree<TemplateType> *FindTemplateTypes::getTemplateArgTreePtr() {
+  return &template_args_;
 }
 
 FindTemplateTypes::type_vector_t FindTemplateTypes::getTemplateArgumentsType() {

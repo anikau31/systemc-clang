@@ -49,11 +49,11 @@ json PortDecl::dump_json(raw_ostream &os) {
   json port_j;
   port_j["port_name"] = getName();
 
-  auto &args{template_type_->getTemplateArgTree()};
-  llvm::outs() << "### Memory leak: " << args.size() << "\n";
-  args.dump();
+  auto args{template_type_->getTemplateArgTreePtr()};
+  llvm::outs() << "### Memory leak: " << args->size() << "\n";
+  args->dump();
 
-  for (auto const &node : args) {
+  for (auto const &node : *args) {
     // Returns a TreeNodePtr
     auto type_data{node->getDataPtr()};
     auto parent_node{node->getParent()};

@@ -252,10 +252,10 @@ int sc_main(int argc, char *argv[]) {
       llvm::outs() << "signal name: " << name << "\n";
       // TODO: This member function should be consistent with PortDecl.
       auto template_type{sg->getTemplateTypes()};
-      auto &template_args{template_type->getTemplateArgTree()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
 
       // Get the tree as a string and check if it is correct.
-      std::string dft_str{template_args.dft()};
+      std::string dft_str{template_args->dft()};
       llvm::outs() << "\nCheck: " << dft_str << "\n";
       REQUIRE(name == "buggy_signal");
       REQUIRE(trim(dft_str) == "sc_signal fp_t 3 11");
@@ -281,8 +281,8 @@ int sc_main(int argc, char *argv[]) {
       llvm::outs() << "\n";
       llvm::outs() << "port name: " << name << "\n";
       auto template_type = pd->getTemplateType();
-      auto template_args{template_type->getTemplateArgTree()};
-      std::string dft_str{template_args.dft()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+      std::string dft_str{template_args->dft()};
 
       if (name == "uint") {
         REQUIRE( trim(dft_str) == "sc_uint 32" );
@@ -319,8 +319,8 @@ int sc_main(int argc, char *argv[]) {
       llvm::outs() << "Other name: " << name << "\n";
       auto template_type = pd->getTemplateType();
       // This must be a reference. 
-      auto &template_args{template_type->getTemplateArgTree()};
-      std::string dft_str{template_args.dft()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+      std::string dft_str{template_args->dft()};
 
       if (name == "uint_inst") {
         REQUIRE( trim(dft_str) == "sc_uint 32" );

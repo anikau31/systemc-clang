@@ -71,7 +71,7 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   void printTemplateArguments(llvm::raw_ostream &os);
   vector<std::string> getTemplateArguments();
   size_t size();
-  Tree<TemplateType> &getTemplateArgTree();
+  Tree<TemplateType> *getTemplateArgTreePtr();
 
  private:
   // (std::string, Type*)
