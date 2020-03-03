@@ -12,15 +12,15 @@ add_library (libsystemc-clang
   FindModule.cpp
   # Matchers -- FindSCModules.cpp
   FindSCMain.cpp
-  FindPorts.cpp
-  FindTLMInterfaces.cpp
+  # FindPorts.cpp
+  # FindTLMInterfaces.cpp
   FindEvents.cpp
   FindGlobalEvents.cpp
   FindEntryFunctions.cpp
   FindSensitivity.cpp
   FindWait.cpp
   FindNotify.cpp
-  FindSignals.cpp
+  #FindSignals.cpp
   FindSimTime.cpp
   FindTemplateTypes.cpp
   FindConstructor.cpp
