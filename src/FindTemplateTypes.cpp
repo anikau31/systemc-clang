@@ -16,7 +16,8 @@ TemplateType::TemplateType(const TemplateType &from) {
   type_ptr_ = from.type_ptr_;
 }
 
-TemplateType::~TemplateType() { type_ptr_ = nullptr; }
+TemplateType::~TemplateType() { 
+  type_ptr_ = nullptr; }
 
 string TemplateType::getTypeName() const { return type_name_; }
 
@@ -51,7 +52,6 @@ FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
 // Destructor
 FindTemplateTypes::~FindTemplateTypes() { 
   template_types_.clear(); 
-   
 }
 
 string FindTemplateTypes::getTemplateType() {

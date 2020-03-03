@@ -59,9 +59,11 @@ json PortDecl::dump_json(raw_ostream &os) {
   }
   */
 
-  Tree<TemplateType> &args{template_type_->getTemplateArgTree()};
+  auto &args{template_type_->getTemplateArgTree()};
+  llvm::outs() << "### Memory leak: " << args.size() << "\n";
+  args.dump();
 
-  for (auto &node : args) {
+  for (auto const &node : args) {
     // Returns a TreeNodePtr
     auto type_data{node->getDataPtr()};
     auto parent_node{node->getParent()};

@@ -252,7 +252,7 @@ int sc_main(int argc, char *argv[]) {
       llvm::outs() << "signal name: " << name << "\n";
       // TODO: This member function should be consistent with PortDecl.
       auto template_type{sg->getTemplateTypes()};
-      auto template_args{template_type->getTemplateArgTree()};
+      auto &template_args{template_type->getTemplateArgTree()};
 
       // Get the tree as a string and check if it is correct.
       std::string dft_str{template_args.dft()};
@@ -281,7 +281,7 @@ int sc_main(int argc, char *argv[]) {
       llvm::outs() << "\n";
       llvm::outs() << "port name: " << name << "\n";
       auto template_type = pd->getTemplateType();
-      auto &template_args{template_type->getTemplateArgTree()};
+      auto template_args{template_type->getTemplateArgTree()};
       std::string dft_str{template_args.dft()};
 
       if (name == "uint") {
