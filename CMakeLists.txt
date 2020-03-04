@@ -37,6 +37,8 @@ set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
 
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
+
+# Include ctest and catch2
 include(CTest)
 include(Catch)
 
@@ -53,6 +55,9 @@ set( CLANG_DIR ${Clang_DIR} )
 
 # Set the SystemC path
 set( SYSTEMC_DIR $ENV{SYSTEMC} )
+
+# Set extra include dir
+set( EXTRA_INCLUDE_DIR $ENV{EXTRA_INCLUDE_DIR} )
 
 # Default plugin status 
 if ("${XLAT}" STREQUAL "")
@@ -300,6 +305,10 @@ include_directories(
   plugins/xlat
   "${CATCH_INCLUDE_DIR}"
   )
+
+if(NOT "${EXTRA_INCLUDE_DIR}" STREQUAL "")
+  include_directories( "${EXTRA_INCLUDE_DIR}")
+endif()
 
 
 link_directories( ${LLVM_INSTALL_DIR}/lib )
