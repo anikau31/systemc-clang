@@ -4,7 +4,11 @@
 # Credits:
 # https://github.com/andreasfertig/cppinsights/blob/master/CMakeLists.txt
 
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.1)
+# Fix behavior of CMAKE_CXX_STANDARD when targeting macOS.
+if (POLICY CMP0025)
+  cmake_policy(SET CMP0025 NEW)
+endif ()
 
 # Project name
 project(systemc-clang)
@@ -150,6 +154,13 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(IS_CLANG On)
 else()
   set(IS_CLANG Off)
+endif()
+
+# Check whether the compiler is AppleClang, which requires special headers for the tests
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+  set(IS_APPLECLANG "1")
+else()
+  set(IS_APPLECLANG "0")
 endif()
 
 

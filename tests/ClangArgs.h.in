@@ -17,6 +17,10 @@ static std::vector<std::string> catch_test_args{
     "-D__STD_CONSTANT_MACROS",
     "-D__STDC_LIMIT_MACROS",
     "-I${LLVM_INSTALL_DIR}/include",
+    #if ${IS_APPLECLANG} == 1
+    // AppleClang exclusive include directory
+    "-I${LLVM_INSTALL_DIR}/include/c++/v1/",
+    #endif
     "-I${LLVM_INSTALL_DIR}/lib/clang/${CLANG_VERSION}/include",
     "-I${SYSTEMC_DIR}/include/",
     "-I${EXTRA_INCLUDE_DIR}",
