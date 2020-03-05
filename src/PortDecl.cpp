@@ -49,21 +49,29 @@ json PortDecl::dump_json(raw_ostream &os) {
   json port_j;
   port_j["port_name"] = getName();
 
-  // TODO:Print out the field_decl_
-  // Template arguments
-  auto template_args{template_type_->getTemplateArgumentsType()};
-  int i{0};
-  for ( const auto & port_arg : template_args ) {
-    //llvm::outs() << "@@@@: " << i++ << " : " << port_arg.getTypeName() << "\n";
-    port_j["port_arguments"].push_back(port_arg.getTypeName());
+  auto args{template_type_->getTemplateArgTreePtr()};
+  llvm::outs() << "### Memory leak: " << args->size() << "\n";
+  args->dump();
+
+  for (auto const &node : *args) {
+    // Returns a TreeNodePtr
+    auto type_data{node->getDataPtr()};
+    auto parent_node{node->getParent()};
+    auto parent_data{parent_node->getDataPtr()};
+    if (parent_node->getDataPtr() == node->getDataPtr()) {
+      llvm::outs() << "Insert parent node: " << type_data->getTypeName()
+                   << "\n";
+      port_j["port_arguments"][type_data->getTypeName()] = nullptr;
+    } else {
+      // FIXME: This does not print the tree properly.
+      // There does not seem to be a simple way to access the appropriate
+      // location for the insertion of the new values in this JSON.
+      // TODO: Perhaps the way to do this is to construct a string that JSON can
+      // use.
+      port_j["port_arguments"][parent_data->getTypeName()].push_back(
+          type_data->getTypeName());
+    }
   }
-  //port_j["port_type"] = template_args[0].getTypeName();
-  //template_args.erase(begin(template_args));
-
-  //for (auto ait = begin(template_args); ait != end(template_args); ++ait) {
-    //port_j["port_arguments"].push_back(ait->getTypeName());
-  //}
-
-  // os << port_j.dump(4);
+  os << port_j.dump(4);
   return port_j;
 }
