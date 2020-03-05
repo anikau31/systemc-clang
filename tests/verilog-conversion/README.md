@@ -310,6 +310,7 @@ We also provide ways in which you can make your development tests persisent in t
   ```
 ### List all tests
   It is possible to list all tests that can be supplied for the `-o` argument for `run-verilog-tests.py`.
+
   To list the number available tests in each file, in `$SYSTEMC_CLANG_BUILD_DIR`, run:
   ```
   python -B run-verilog-tests.py --collect-only
@@ -320,7 +321,7 @@ We also provide ways in which you can make your development tests persisent in t
   ```
   The returned list contains the filename in which the tests are defined, followed by `::` and the corresponding test names.
 
-  Note that when providing name to `-o`, only provide the name after `::`.
+  Note that when providing the name to `-o`, only provide the name **after** `::`.
 
   For example, in order to run one of the sanity tests:
   ```
@@ -342,7 +343,7 @@ We also provide ways in which you can make your development tests persisent in t
   ```
 
 ## Adding tests
-  New tests can be added to `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`, and they will be recognized automatically by the pytest, without the need to modify the script.
+  New tests can be added to `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`, and they will be recognized automatically by the pytest, without the need to modify the script or updating the submodules.
 
   The following example shows the directory structure of one conversion test for an add module:
   ```
@@ -377,6 +378,8 @@ We also provide ways in which you can make your development tests persisent in t
       │   └── xor_hdl.txt.v
       └── xor.cpp
   ```
+  
+  **After making changes, re-run** `cmake` **to sync the changes from** `$SYSTEMC_CLANG` **to** `$SYSTEMC_CLANG_BUILD_DIR`.
 
   To run all these tests, use `ctest -R verilog-custom --verbose`.
 
