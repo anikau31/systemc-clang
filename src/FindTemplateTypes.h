@@ -46,10 +46,21 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   FindTemplateTypes(const FindTemplateTypes &rhs);
   FindTemplateTypes(const FindTemplateTypes *rhs);
 
-  ~FindTemplateTypes();
-  string getTemplateType();
+  // This allows for template instantiations to be visited using RAV.
+  bool shouldVisitTemplateInstantiations() const;
+
   bool VisitType(Type *type);
   bool VisitIntegerLiteral(IntegerLiteral *l);
+  bool VisitTemplateSpecializationType(
+      TemplateSpecializationType *special_type);
+  bool VisitClassTemplateSpecializationDecl(
+      ClassTemplateSpecializationDecl *class_special_type);
+  bool VisitTypedefType(TypedefType *typedef_type);
+  bool VisitCXXRecordDecl(CXXRecordDecl *cxx_type);
+  bool VisitRecordType(RecordType *rt);
+
+  ~FindTemplateTypes();
+  string getTemplateType();
   type_vector_t Enumerate(const Type *type);
   type_vector_t getTemplateArgumentsType();
   void printTemplateArguments(llvm::raw_ostream &os);

@@ -20,9 +20,10 @@ set( UNIT_TEST_LIST
   sreg-test
   t4-matchers
   t5-template-matching
-  subtree-matcher-test
+  # subtree-matcher-test
   clock-parsing
   find-var-decl
+  hotfix-40-findtemplatetypes
   )
 
 include(CTest)
@@ -46,7 +47,7 @@ endforeach()
 
 # for pytest tests
 if(PY_TESTS_ON)
-  add_test(NAME python-tests
+  add_test(NAME verilog-tests
     COMMAND ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR}
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} )
 endif()

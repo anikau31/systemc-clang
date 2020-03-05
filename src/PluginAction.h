@@ -43,7 +43,7 @@ template <typename A> class PluginAction {
       static llvm::cl::OptionCategory category("systemc-clang options");
       static llvm::cl::opt<std::string> topModule(
           "top-module",
-          llvm::cl::desc("Specify top-level module for entry point"),
+          llvm::cl::desc("Specify top-level module declaration for entry point"),
           llvm::cl::cat(category));
 
       // Specify the top-level module. 

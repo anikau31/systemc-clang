@@ -19,6 +19,8 @@ public:
   virtual bool VisitIntegerLiteral(IntegerLiteral *il);
   virtual bool VisitCXXBoolLiteralExpr(CXXBoolLiteralExpr *bl);
 
+
+
   string getArgumentName();
 
 private:
