@@ -2,7 +2,7 @@
 
 ## Preliminaries
 
-**Before going through this documentation, make sure you have build the systemc-clang successfully, this implies that the `scripts/paths.sh` is sourced.**
+**Before going through this documentation, make sure you have built the systemc-clang successfully, this implies that the `scripts/paths.sh` is sourced.**
 
 ### Repository path
 Throughout the documentation, we use `$SYSTEMC_CLANG` to specify the systemc-clang git repository directory.
@@ -40,7 +40,6 @@ The tool has the following features:
 
 - Convert SystemC to `_hdl.txt`
 - Convert `_hdl.txt` to Verilog
-- Convert SystemC to Verilog
 - The convert result will be stored in time-stamped folders
 
 The tool is located at `/tests/verilog-conversion/run-compare.py` and its usage is 
@@ -56,13 +55,13 @@ usage: A tool for running and comparing against a golden standard
 ### Examples
 In this section, we provide examples on how to use the tool.
 
-Firstly, switch to an empty directory: 
+Firstly, create an empty directory outside `$SYSTEMC_CLANG_BUILD_DIR` and then switch to it:
 
 ```
 $ mkdir systemc-clang-test-tool && cd systemc-clang-test-tool/
 ```
 
-Next, in the directory, create a file called `add.cpp` with the following content, note that this is a SystemC adder:
+Next, in the directory, create a file called `add.cpp` with the following content, note that this is a SystemC adder module:
 
 ```c++
 #include "systemc.h"
@@ -177,11 +176,13 @@ $ python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
      --hdl ./golden/add_hdl.txt
 ```
 
-If there is a difference between the generated file and the golden standard, the diff will be output to the screen, and also it will be stored in the time-stamped folder together with the \_hdl.txt file called diff.
+If the generated file and the golden standard file are different, the diff will be output to the screen and will be stored in the time-stamped folder, together with the generated \_hdl.txt file.
 ```
 $ ls results/2020-03-05_12-16-33/
 add_hdl.txt  diff  systemc-clang.stderr  systemc-clang.stdout
 ```
+
+If the generated file and the golden standard file are the same, the diff will not be present.
 
 The `hdl-to-v` works similarly and it converts \_hdl.txt file to Verilog file, we provide the following command example to show their usage.
 
@@ -235,24 +236,6 @@ We also provide ways in which you can make your development tests persisent in t
   --
   ```
 
-### Additional environment variables
-
-  Also, before running the tests, `$SYSTEMC_CLANG` should point to the git repository directory, for example, with: 
-  ```
-  export SYSTEMC_CLANG=/home/$USER/systemc-clang/
-  ``` 
-  in shell.
-  
-  Make sure the following command list the root of the git repository:
-  ```
-  ls $SYSTEMC_CLANG
-  ```
-
-
-### Build systemc-clang
-
-  After `cmake`, build the project using `make` or `ninja`.
-
 ### Done
 
   Note that before calling the `cmake`, you should already source the `script/paths.sh` and after **building the binaries**, the `systemc-clang` is generated in `$LLVM_INSTALL_DIR/bin`.
@@ -261,22 +244,6 @@ We also provide ways in which you can make your development tests persisent in t
 
   We use `$SYSTEMC_CLANG_BUILD_DIR` to refer to the build directory created for `cmake` and `$SYSTEMC_CLANG` to refer to the git repository directory.
 
-
-## Setup
-  1. Python *3* is required to run these tests.
-  2. Change the directory to the build directory: `cd $SYSTEMC_CLANG_BUILD_DIR`.
-  3. Install `iverilog`. On Ubuntu, use `sudo apt install iverilog`
-  4. To install necessary packages listed in `requirements.txt`, run
-  ```
-  pip install -r $SYSTEMC_CLANG/requirements.txt
-  ``` 
-
-  Note that you might need to make sure whether `pip` command matches the python reported in the `cmake`.
-
-  The python packages to install are: 
-  - `pytest` for running tests
-  - `lark-parser` for parsing and translating
-  - `pyverilog` for parsing Verilog for verification.
 
 ## Running tests from ctest
   To run the Verilog tests, switch to `$SYSTEMC_CLANG_BUILD_DIR`, and make sure `systemc-clang` is built.
