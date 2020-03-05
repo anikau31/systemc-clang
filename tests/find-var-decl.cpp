@@ -10,8 +10,10 @@
 #include "SystemCClang.h"
 
 // This is automatically generated from cmake.
-#include <iostream>
 #include "ClangArgs.h"
+#include "Testing.h"
+
+#include <iostream>
 
 using namespace clang;
 using namespace clang::tooling;
@@ -116,6 +118,8 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
 TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
 #include "systemc.h"
+#include "sreg.h"
+#include "sc_stream.h"
 
 SC_MODULE( test ){
 
@@ -165,11 +169,16 @@ SC_MODULE( simple_module ){
   sc_out<int> out_one;
   int yx;
 
+  sc_stream_in<int> s_port;
+
   void entry_function_1() {
     int x_var;
     double y_var;
     sc_int<4> z_var;
     while(true) {
+    
+		s_port.ready_w(true);
+
     }
   }
 
@@ -195,9 +204,14 @@ int sc_main(int argc, char *argv[]) {
 }
      )";
 
+     cout << "TEST: " << systemc_clang::test_data_dir << "\n";
+  INFO(systemc_clang::test_data_dir);
+  auto catch_test_args = systemc_clang::catch_test_args;
+  catch_test_args.push_back("-I" + systemc_clang::test_data_dir +
+                            "/llnl-examples/");
+
   ASTUnit *from_ast =
-      tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
-          .release();
+      tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
 
   SystemCConsumer sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
