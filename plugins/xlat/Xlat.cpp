@@ -48,7 +48,11 @@ bool Xlat::postFire() {
       hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
       xlatport(instanceVec.at(i)->getIPorts(), hNode::hdlopsEnum::hPortin,
                h_ports);
+      xlatport(instanceVec.at(i)->getInputStreamPorts(), hNode::hdlopsEnum::hPortin,
+               h_ports);
       xlatport(instanceVec.at(i)->getOPorts(), hNode::hdlopsEnum::hPortout,
+               h_ports);
+      xlatport(instanceVec.at(i)->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
                h_ports);
       xlatport(instanceVec.at(i)->getIOPorts(), hNode::hdlopsEnum::hPortio,
                h_ports);
@@ -65,11 +69,10 @@ bool Xlat::postFire() {
       h_module->child_list.push_back(h_ports);
 
       h_top = new hNode(hNode::hdlopsEnum::hProcesses);
-
       // Processes
       xlatproc(instanceVec.at(i)->getEntryFunctionContainer(), h_top, os_);
-
-      h_module->child_list.push_back(h_top);
+      
+      if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
       h_module->print(xlatout);
       delete h_top; //h_module;
     }
@@ -79,51 +82,50 @@ bool Xlat::postFire() {
 
 void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
                     hNodep &h_info) {
-  static const std::set<std::string> sctypes = {"sc_in", "sc_out", "sc_inout"};
+
   for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
        mit++) {
-    h_info->child_list.push_back(new hNode(get<0>(*mit), h_op));
+    hNodep hportp = new hNode(get<0>(*mit), h_op);
+    h_info->child_list.push_back(hportp);
     os_ << "object name is " << get<0>(*mit) << "\n";
     PortDecl *pd = get<1>(*mit);
     hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-    xlattype(pd->getTemplateType(), h_typeinfo);  // sctypes, xlatout);//, os_);
-    h_info->child_list.push_back(h_typeinfo);
+    xlattype(pd->getTemplateType(), h_typeinfo);  
+    hportp->child_list.push_back(h_typeinfo);
   }
 }
 
 void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
                    hNodep &h_info) {
-  static const std::set<std::string> sctypes = {"sc_signal"};
+
   for (ModuleDecl::signalMapType::iterator mit = pmap.begin();
        mit != pmap.end(); mit++) {
-    //h_info->child_list.push_back(new hNode(mit->first, h_op));
-    h_info->child_list.push_back(new hNode(get<0>(*mit), h_op));
+    hNodep hsigp = new hNode(get<0>(*mit), h_op);
+    h_info->child_list.push_back(hsigp);
     os_ << "object name is " << get<0>(*mit) << "\n";
-    // xlatout << string( n, ' ') << typ;
-    // xlatout << mit->first;
-    //Signal *pd = mit->second;
+
     Signal *pd = get<1>(*mit);
     hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-    xlattype(pd->getTemplateTypes(), h_typeinfo);  // xlatout);//, os_);
-    h_info->child_list.push_back(h_typeinfo);
+    xlattype(pd->getTemplateTypes(), h_typeinfo);  
+    hsigp->child_list.push_back(h_typeinfo);
   }
 }
 
 void Xlat::xlattype(FindTemplateTypes *tt, hNodep &h_typeinfo) {
   //tt->printTemplateArguments(os_);
 
+  Tree<TemplateType> *template_args = tt->getTemplateArgTreePtr();
+  template_args->dump();
   scpar::FindTemplateTypes::type_vector_t ttargs =
       tt->getTemplateArgumentsType();
   os_ << "number of type args is " << ttargs.size() << "\n";
   for (auto const &targ : ttargs) {
     h_typeinfo->child_list.push_back(
-        new hNode(targ.getTypeName(), hNode::hdlopsEnum::hType));
+        new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
     (targ.getTypePtr())->dump(os_);
   }
 }
 
-// void Xlat::xlatproc(scpar::processMapType pmap, hNodep &h_top,
-// llvm::raw_ostream &os)
 void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
                     llvm::raw_ostream &os) {
   for (auto efc : efv) {

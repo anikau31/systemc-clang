@@ -30,11 +30,13 @@ namespace hnode {
   etype(hSigdecl), \
   etype(hVardecl), \
   etype(hVarref), \
+  etype(hVarInit), \
   etype(hSigAssignL), \
   etype(hSigAssignR), \
   etype(hVarAssign), \
   etype(hBinop), \
   etype(hUnop), \
+  etype(hMethodCall), \
   etype(hIfStmt), \
   etype(hForStmt), \
   etype(hForInit), \
@@ -88,12 +90,12 @@ namespace hnode {
       if (!child_list.empty()) {
 	list<hNodep>::iterator it;
 	for (it = child_list.begin(); it != child_list.end(); it++) {
-	  if (*it)
-	    cout << "child list element " << *it << "\n";
+	  /* if (*it) */
+	  /*   cout << "child list element " << *it << "\n"; */
 	  if (*it) delete *it;
 	}
       }
-      else cout << printname(h_op) << " '" << h_name << "' NOLIST\n";
+      //else cout << printname(h_op) << " '" << h_name << "' NOLIST\n";
       //cout << "visited hNode destructor\n";
 	    
     }
