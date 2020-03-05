@@ -1,6 +1,7 @@
+#define RVD
 
-#include "../shared/pulse.h"
-#include "../shared/zfp.h"
+#include "pulse.h"
+#include "zfp.h"
 
 #define E 11
 #define F 52

@@ -114,6 +114,8 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
 void Xlat::xlattype(FindTemplateTypes *tt, hNodep &h_typeinfo) {
   //tt->printTemplateArguments(os_);
 
+  Tree<TemplateType> *template_args = tt->getTemplateArgTreePtr();
+  template_args->dump();
   scpar::FindTemplateTypes::type_vector_t ttargs =
       tt->getTemplateArgumentsType();
   os_ << "number of type args is " << ttargs.size() << "\n";
