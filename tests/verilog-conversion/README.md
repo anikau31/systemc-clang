@@ -1,6 +1,221 @@
 # Python Tests for Verilog Conversion and Utilites for Development
 
+## Preliminaries
+
+**Before going through this documentation, make sure you have build the systemc-clang successfully, this implies that the `scripts/paths.sh` is sourced.**
+
+### Repository path
+Throughout the documentation, we use `$SYSTEMC_CLANG` to specify the systemc-clang git repository directory.
+```
+$ ls $SYSTEMC_CLANG
+cmake/  CMakeLists.txt  doc/  driver-tooling.cpp  driver-xlat.cpp  examples/  externals/  LICENSE  Makefile.systemc  plugins/  README.md  README.rst  requirements.txt  scripts/  src/  tests/  tests-old/
+```
+
+### Python dependencies
+
+#### Python version
+We use Python 3 in this documentation.
+```
+$ python --version
+Python 3.7.5
+```
+
+#### Dependencies
+- Install `iverilog`. On Ubuntu, use `sudo apt install iverilog`
+- To install necessary packages listed in `requirements.txt`, run
+```
+pip install -r $SYSTEMC_CLANG/requirements.txt
+``` 
+
+The python packages to install in the `requirements.txt` are: 
+- `pytest` for running tests
+- `lark-parser` for parsing and translating
+- `pyverilog` for parsing Verilog for verification.
+
+
+## The Tool
+
+We provide a command-line tool that helps the development process.
+The tool has the following features:
+
+- Convert SystemC to `_hdl.txt`
+- Convert `_hdl.txt` to Verilog
+- Convert SystemC to Verilog
+- The convert result will be stored in time-stamped folders
+
+The tool is located at `/tests/verilog-conversion/run-compare.py` and its usage is 
+```
+$ python $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py -h
+usage: A tool for running and comparing against a golden standard
+     [-h] [--cpp CPP] [--hdl HDL] [--verilog VERILOG]
+     [--include-path [INCLUDE_PATH [INCLUDE_PATH ...]]]
+     [--output-dir OUTPUT_DIR] [--verbose]
+     {cpp-to-hdl,hdl-to-v,cpp-to-v}
+ ```
+
+### Examples
+In this section, we provide examples on how to use the tool.
+
+Firstly, switch to an empty directory: 
+
+```
+$ mkdir systemc-clang-test-tool && cd systemc-clang-test-tool/
+```
+
+Next, in the directory, create a file called `add.cpp` with the following content, note that this is a SystemC adder:
+
+```c++
+#include "systemc.h"
+SC_MODULE(topadd2) {
+  sc_in_clk clk;
+  sc_in<int> in_port_1;
+  sc_in<int> in_port_2;
+  sc_out<int> out_port;
+
+  SC_CTOR(topadd2) {
+    SC_METHOD(topEntry);
+    sensitive<<clk.pos();
+  }
+
+  void topEntry() {
+    out_port.write(in_port_1.read() + in_port_2.read());
+	}
+
+};
+
+int sc_main(int argc, char *argv[]){
+
+  sc_clock CLOCK("clock", 5);
+  sc_signal<int> input_1;
+  sc_signal<int> input_2;
+  sc_signal<int> output;
+  topadd2 t1 ("t1");
+
+  t1.clk(CLOCK);
+  t1.in_port_1(input_1);
+  t1.in_port_2(input_2);
+  t1.out_port(output);
+
+  sc_start(10, SC_NS);
+
+  return 0;
+}
+```
+
+Alternatively, you can also copy this file from `$SYSTEMC_CLANG`:
+```
+cp $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/add.cpp .
+```
+
+This is the design file that we will be using in this documentation.
+
+#### Converting add.cpp to add\_hdl.txt
+As a part of the translation process, we can first translate the `add.cpp` into an intermediate representation, called `add_hdl.txt`.
+
+Make a folder called `results` and the folder structure will be:
+```
+$ mkdir results && ls
+add.cpp  results
+```
+
+Next, we convert add.cpp to add\_hdl.txt using our script:
+```
+$ python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
+     cpp-to-hdl \
+     --output-dir ./results/  \
+     --cpp add.cpp \
+     --verbose
+```
+
+And the output should be similar to:
+```
+path:  add.cpp
+sexp_loc:  add_hdl.txt
+sexp_filename:  add_hdl.txt
+output_filename:  /home/allen/working/systemc-clang-test-tool/results/2020-03-05_11-49-11/add_hdl.txt
+cmd:  /home/allen/working/clang+llvm-9.0.0//bin/systemc-clang add.cpp -- -I /home/allen/working/systemc//include/ -std=c++14 -I /usr/include/ -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -x c++ -w -c -I .
+The _hdl.txt file is written to: /home/allen/working/systemc-clang-test-tool/results/2020-03-05_11-49-11/add_hdl.txt
+Using systemc-clang binary: /home/allen/working/clang+llvm-9.0.0//bin/systemc-clang
+Using convert.py command: python /home/allen/working/systemc-clang//plugins/xlat/convert.py
+```
+
+Note that the `cmd: ...` shows the real command that is running under the hood.
+Also, your time-stamp is likely different from what we have in the output above.
+
+If we check the output folder, we would observe something similar to:
+```
+$ ls results/2020-03-05_11-49-11/
+add_hdl.txt  systemc-clang.stderr  systemc-clang.stdout
+```
+
+Apart from the output file add\_hdl.txt, the standard output/standard error of the systemc-clang tool is also captured, which might come handy when debugging.
+
+Now, copy the add\_hdl.txt file for later use, and the directory structure should be as follows:
+```
+$ cp results/2020-03-05_11-49-11/add_hdl.txt . && ls
+add.cpp  add_hdl.txt  results
+```
+
+Apart from conversion, you can also specify a golden standard file with `--hdl` option and the tool will do a diff at the end of the conversion against the specified golden standard.
+
+To try out this feature, make a directory called `golden`, copy our provided golden standard file for `add_hdl.txt` to the `golden` and confirm the directory structure:
+```
+$ mkdir golden && cp $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt golden/
+$ ls .
+add.cpp  golden  results
+$ ls golden/
+add_hdl.txt
+```
+
+Next, we run the tool again, with `--hdl` option enabled:
+```
+$ python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
+     cpp-to-hdl \
+     --output-dir ./results/  \
+     --cpp add.cpp \
+     --verbose \
+     --hdl ./golden/add_hdl.txt
+```
+
+If there is a difference between the generated file and the golden standard, the diff will be output to the screen, and also it will be stored in the time-stamped folder together with the \_hdl.txt file called diff.
+```
+$ ls results/2020-03-05_12-16-33/
+add_hdl.txt  diff  systemc-clang.stderr  systemc-clang.stdout
+```
+
+The `hdl-to-v` works similarly and it converts \_hdl.txt file to Verilog file, we provide the following command example to show their usage.
+
+#### Converting add_hdl.txt to add_hdl.txt.v
+   ```
+   python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
+     hdl-to-v \
+     --output-dir results/ \
+     --hdl results/2020-03-05_11-49-11/add_hdl.txt \
+     --verbose
+   ```
+   Note that here the `--hdl` is specified with a previously generated `_hdl.txt` file.
+   The generated file will be placed into a timestamped directory in `/tmp/`, for example, `/tmp/2020-02-17_01-28-52/sreg-driver.v`
+
+#### Converting add_hdl.txt to add.v and show the diff of an existing Verilog file
+   ```
+   python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
+     hdl-to-v \
+     --output-dir results/ \
+     --hdl results/2020-03-05_11-49-11/add_hdl.txt \
+     --verbose \
+     --verilog $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt.v
+   ```
+
+Now, you should be able to use the `run-compare.py` script when doing development.
+
+If you encounter problems when using the tool, please report back or file an issue, thank you!
+
+---
+
+We also provide ways in which you can make your development tests persisent in the repository, such as the `add.cpp` and `add_hdl.txt` files in the previous example.
+
 ## Prelimilaries
+
 ### CMake switch 
   Python tests are configured during the process of calling `cmake`, to enable the python tests, run `cmake` with `-DENABLE_VERILOG_TESTS=on` flag along with other build options when [building the binaries](/doc/README.md#Installation).
   
@@ -182,55 +397,3 @@
   And thus we can observe the output in `/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0/`
 
 ---
-
-## Running conversion comparison in shell
-  The script requires `pyverilog` and `iverilog` to be installed, which can be achieved using the command: `pip install pyverilog` and `sudo apt install iverilog`:
-  ```
-  $ python $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py -h
-  usage: A tool for running and comparing against a golden standard
-       [-h] [--cpp CPP] [--hdl HDL] [--verilog VERILOG]
-       [--include-path [INCLUDE_PATH [INCLUDE_PATH ...]]]
-       [--output-dir OUTPUT_DIR] [--verbose]
-       {cpp-to-hdl,hdl-to-v,cpp-to-v}
-   ```
-   
-### Examples
-#### Converting sreg-driver.cpp to sreg-driver_hdl.txt
-   ```
-   python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
-     cpp-to-hdl \
-     --output-dir /tmp/  \
-     --cpp $SYSTEMC_CLANG_BUILD_DIR/tests/data/llnl-examples/sreg-driver.cpp \
-     --include-path $SYSTEMC_CLANG/examples/llnl-examples/ --verbose
-   ```
-   The generated file will be placed into a timestamped directory in `/tmp/`, for example, `/tmp/2020-02-17_01-28-52/sreg-driver_hdl.txt`
-#### Converting sreg-driver.cpp to sreg-driver_hdl.txt and show the diff of an existing `_hdl.txt` file
-   Compared to the last command, we need an addition `--hdl` option to specify the file to compare against:
-   ```
-   python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
-     cpp-to-hdl \
-     --output-dir /tmp/ \
-     --cpp $SYSTEMC_CLANG_BUILD_DIR/tests/data/llnl-examples/sreg-driver.cpp \
-     --include-path $SYSTEMC_CLANG/tests/examples/llnl-examples/ \
-     --hdl $SYSTEMC_CLANG_BUILD_DIR/tests/data/verilog-conversion/llnl-examples/golden/sreg_hdl.txt \
-     --verbose
-   ```
-#### Converting sreg-driver_hdl.txt to sreg-driver.v
-   ```
-   python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
-     hdl-to-v \
-     --output-dir /tmp/ \
-     --hdl /tmp/2020-02-16_23-53-13/sreg-driver_hdl.txt \
-     --verbose
-   ```
-   Note that here the `--hdl` is specified with a previously generated `_hdl.txt` file.
-   The generated file will be placed into a timestamped directory in `/tmp/`, for example, `/tmp/2020-02-17_01-28-52/sreg-driver.v`
-#### Converting sreg-driver_hdl.txt to sreg-driver.v and show the diff of an existing Verilog file
-   ```
-   python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
-     hdl-to-v \
-     --output-dir /tmp/ \
-     --hdl /tmp/2020-02-16_23-53-13/sreg-driver_hdl.txt \
-     --verilog $SYSTEMC_CLANG_BUILD_DIR/tests/data/verilog-conversion/llnl-exmples/golden/sreg.v
-   ```
-
