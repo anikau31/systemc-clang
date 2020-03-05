@@ -51,9 +51,11 @@ def cpp_to_hdl(args, output_folder=None, rmdir=True):
                     f.write(diff_str)
             else:
                 print('{} and {} has the same content'.format(path, args.hdl))
+    except RuntimeError as e:
+        print(e)
     finally:
         if not res:
-            print('Conversion failed, please check program output (with --verbose option)')
+            print('Conversion failed, please check program output')
             if rmdir:
                 pathlib.Path(output_folder).rmdir()
         else:
