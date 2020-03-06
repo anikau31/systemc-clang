@@ -30,7 +30,7 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
  public:
  private:
   std::vector<Decl *> variables_;
-  std::map<Decl*, std::vector<DeclRefExpr*>> variable_use_map;
+  std::map<Decl *, std::vector<DeclRefExpr *>> variable_use_map;
 
  public:
   void registerMatchers(MatchFinder &finder) {
@@ -45,16 +45,29 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
         forEachDescendant(
           declRefExpr().bind("declref")));
 
+    auto match_memberexpr = cxxMethodDecl(
+        forEachDescendant(memberExpr().bind("memberexpr"))) ;
     /* clang-format on */
 
     // Add the two matchers.
     finder.addMatcher(match_vardecl, this);
     finder.addMatcher(match_declref, this);
+    //finder.addMatcher(match_memberexpr, this);
   }
 
   // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
     llvm::outs() << "## Matched with SOMETHING\n";
+
+    auto mexpr = const_cast<MemberExpr *>(
+        result.Nodes.getNodeAs<MemberExpr>("memberexpr"));
+
+    if (mexpr) {
+      llvm::outs() << "## Member Expr\n";
+      mexpr->dump();
+      llvm::outs() << "## ValueDecl Expr\n";
+      mexpr->getBase()->dump();
+    }
 
     auto var =
         const_cast<VarDecl *>(result.Nodes.getNodeAs<VarDecl>("vardecl"));
@@ -73,20 +86,22 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
       declref->dump();
       // Get the variable declaration
       declref->getDecl()->dump();
-      llvm::outs() << "==> varDecl: " << declref->getDecl() << ": " << declref << "\n";
+      llvm::outs() << "==> varDecl: " << declref->getDecl() << ": " << declref
+                   << "\n";
 
-      // This is the information that can be added into a structure to map the 
+      // This is the information that can be added into a structure to map the
       // variable declaration -> reference to declaration.
       // This is perhaps the simplest way to use it.
 
       // Find the varDecl, if it exists.
-      auto variable_decl_it{ variable_use_map.find(declref->getDecl())};
-      if ( variable_decl_it != variable_use_map.end() ) {
-        variable_decl_it->second.push_back( declref );
+      auto variable_decl_it{variable_use_map.find(declref->getDecl())};
+      if (variable_decl_it != variable_use_map.end()) {
+        variable_decl_it->second.push_back(declref);
       } else {
-        std::vector<DeclRefExpr*> references;
-        references.push_back( declref );
-        variable_use_map.insert( std::pair<Decl*, std::vector<DeclRefExpr*> >(declref->getDecl(), references ));
+        std::vector<DeclRefExpr *> references;
+        references.push_back(declref);
+        variable_use_map.insert(std::pair<Decl *, std::vector<DeclRefExpr *>>(
+            declref->getDecl(), references));
       }
     }
   }
@@ -97,18 +112,16 @@ class FindVariableDeclarations : public MatchFinder::MatchCallback {
       var->dump();
     }
     llvm::outs() << "DMP: All the references to variables\n";
-    for (auto const &var : variable_use_map ) {
-      auto vardecl{ var.first };
-      auto varref{ var.second };
+    for (auto const &var : variable_use_map) {
+      auto vardecl{var.first};
+      auto varref{var.second};
 
       llvm::outs() << "== VarDecl \n";
       vardecl->dump();
-      for (auto const &use : varref ) {
+      for (auto const &use : varref) {
         llvm::outs() << "  " << use << "\n";
         use->dump();
       }
-
-
     }
   }
 };
@@ -138,6 +151,8 @@ SC_MODULE( test ){
   // others
   int x;
 
+  sc_stream_in<int> s_port;
+
   void entry_function_1() {
     while(true) {
       int j;
@@ -154,6 +169,8 @@ SC_MODULE( test ){
         }
 
     }
+
+		s_port.ready_w(true);
   }
   SC_CTOR( test ) {
     SC_METHOD(entry_function_1);
@@ -169,7 +186,6 @@ SC_MODULE( simple_module ){
   sc_out<int> out_one;
   int yx;
 
-  sc_stream_in<int> s_port;
 
   void entry_function_1() {
     int x_var;
@@ -177,7 +193,6 @@ SC_MODULE( simple_module ){
     sc_int<4> z_var;
     while(true) {
     
-		s_port.ready_w(true);
 
     }
   }
@@ -204,7 +219,7 @@ int sc_main(int argc, char *argv[]) {
 }
      )";
 
-     cout << "TEST: " << systemc_clang::test_data_dir << "\n";
+  cout << "TEST: " << systemc_clang::test_data_dir << "\n";
   INFO(systemc_clang::test_data_dir);
   auto catch_test_args = systemc_clang::catch_test_args;
   catch_test_args.push_back("-I" + systemc_clang::test_data_dir +
@@ -225,7 +240,6 @@ int sc_main(int argc, char *argv[]) {
   // Want to find an instance named "testing".
 
   ModuleDecl *test_module{model->getInstance("testing")};
-  ;
   ModuleDecl *simple_module{model->getInstance("simple_module_instance")};
 
   SECTION("Found sc_module instances", "[instances]") {
@@ -256,7 +270,7 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getIOPorts().size() == 1);
     REQUIRE(test_module_inst->getSignals().size() == 1);
     REQUIRE(test_module_inst->getOtherVars().size() == 1);
-    REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
+    REQUIRE(test_module_inst->getInputStreamPorts().size() == 1);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
 
     auto entry_functions{test_module_inst->getEntryFunctionContainer()};
@@ -280,7 +294,7 @@ int sc_main(int argc, char *argv[]) {
     FindVariableDeclarations find_vars{};
     find_vars.registerMatchers(registry);
 
-    llvm::outs() << "Run the matcher\n";
+    llvm::outs() << "@@@@@@@@@@@@  Run the matcher\n";
     registry.match(*method, from_ast->getASTContext());
 
     find_vars.dump();
