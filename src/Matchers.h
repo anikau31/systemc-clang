@@ -405,8 +405,19 @@ class PortMatcher : public MatchFinder::MatchCallback {
     // TODO: I'm not convinced that this would work. 
     //
     // I wonder if the way to fix this is to to unless(match_all_ports))
-    auto match_non_sc_types = cxxRecordDecl(forEachDescendant(
-        fieldDecl(
+    auto match_non_sc_types = cxxRecordDecl(
+        match_module_decls,
+        forEach(fieldDecl(
+            anyOf(hasType(builtinType()),
+                  hasType(cxxRecordDecl(allOf(
+                      unless(hasName("sc_in")), unless(hasName("sc_inout")),
+                      unless(hasName("sc_out")), unless(hasName("sc_signal")),
+                      unless(hasName("sc_stream_in")),
+                      unless(hasName("sc_stream_out")))))))
+            .bind("other_fields")));
+
+    auto match_non_sc_types_vdecl = cxxRecordDecl(forEach(
+        varDecl(
             anyOf(hasType(builtinType()),
                   hasType(cxxRecordDecl(allOf(
                       unless(hasName("sc_in")), unless(hasName("sc_inout")),
@@ -420,6 +431,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     // Add matchers to finder.
     finder.addMatcher(match_all_ports, this);
     finder.addMatcher(match_non_sc_types, this);
+    finder.addMatcher(match_non_sc_types_vdecl, this);
     finder.addMatcher(match_sc_ports, this);
 
     // This is only for testing. 
@@ -465,6 +477,23 @@ class PortMatcher : public MatchFinder::MatchCallback {
       auto field_name{fd->getIdentifier()->getNameStart()};
       llvm::outs() << " Found other_fields: " << field_name << "\n";
       insert_port(other_fields_, fd);
+    }
+
+    if (auto fd = checkMatch<Decl>("other_fields", result)) {
+      // These will be either FieldDecl or VarDecl.
+      
+      if (auto *p_field{dyn_cast<FieldDecl>(fd)}) {
+        auto field_name{p_field->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found field other_fields: " << field_name << "\n";
+
+      } else {
+        auto *p_var{dyn_cast<VarDecl>(fd)}; 
+        auto field_name{p_var->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found var other_fields: " << field_name << "\n";
+
+      }
+      //llvm::outs() << " Found field/vardecl other_fields: " << field_name << "\n";
+      //insert_port(other_fields_, fd);
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_stream_in", result)) {
@@ -599,6 +628,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
                    << decl->getIdentifier()->getNameStart()
                    << " CXXRecordDecl*: " << decl << "\n";
       std::string name{decl->getIdentifier()->getNameStart()};
+      //decl->dump();
       //
       // TODO: Should we need this separation now?
       // It seems that we can simply store them whether they are template
