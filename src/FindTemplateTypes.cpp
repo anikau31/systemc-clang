@@ -67,7 +67,7 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
-  //llvm::outs() << "=VisitTemplateSpecializationType=\n";
+  // llvm::outs() << "=VisitTemplateSpecializationType=\n";
   // special_type->dump();
   auto template_name{special_type->getTemplateName()};
   // template_name.dump();
@@ -91,11 +91,12 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
 }
 
 bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
-  //llvm::outs() << "=VisitCXXRecordDecl=\n";
+  // llvm::outs() << "=VisitCXXRecordDecl=\n";
   if (cxx_record != nullptr) {
     IdentifierInfo *info{cxx_record->getIdentifier()};
     if (info != nullptr) {
-      //llvm::outs() << " ==> CXXRecord type: " << info->getNameStart() << "\n";
+      // llvm::outs() << " ==> CXXRecord type: " << info->getNameStart() <<
+      // "\n";
       template_types_.push_back(
           TemplateType(info->getNameStart(), cxx_record->getTypeForDecl()));
     }
@@ -112,8 +113,12 @@ bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
   LangOpts.CPlusPlus = true;
   clang::PrintingPolicy Policy(LangOpts);
 
-  auto type_name{ bi_type->getNameAsCString(Policy)};
+  auto type_name{bi_type->getNameAsCString(Policy)};
+  llvm::outs() << "type is : " << type_name << "\n";
+
   current_type_node_ = template_args_.addNode(TemplateType(type_name, bi_type));
+  template_types_.push_back(TemplateType(type_name, bi_type));
+
   if (template_args_.size() == 1) {
     template_args_.setRoot(current_type_node_);
   }
@@ -122,7 +127,7 @@ bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
 }
 
 bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
-  //llvm::outs() << "=VisitTypedefType=\n";
+  // llvm::outs() << "=VisitTypedefType=\n";
   // typedef_type->dump();
   // child nodes of TemplateSpecializationType are not being invoked.
   if (auto special_type = typedef_type->getAs<TemplateSpecializationType>()) {
@@ -132,12 +137,13 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
 }
 
 bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
-  //llvm::outs() << "=VisitRecordType=\n";
+  // llvm::outs() << "=VisitRecordType=\n";
   auto type_decl{rt->getDecl()};
   auto type_name{type_decl->getName()};
   // llvm::outs() << " ==> name : " << type_name << "\n";
 
   current_type_node_ = template_args_.addNode(TemplateType(type_name, rt));
+
   if (template_args_.size() == 1) {
     template_args_.setRoot(current_type_node_);
   }
@@ -215,12 +221,12 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   current_type_node_ = stack_current_node_.top();
   stack_current_node_.pop();
 
-  //llvm::outs() << "=END VisitRecordType=\n";
+  // llvm::outs() << "=END VisitRecordType=\n";
   return true;
 }
 
 bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
-  //llvm::outs() << "\n=VisitIntegerLiteral: \n";
+  // llvm::outs() << "\n=VisitIntegerLiteral: \n";
   //<< l->getValue().toString(10,true) <<
   //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
   //"== type name: " << l->getType().getAsString() << "\n";
@@ -253,11 +259,11 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   }
   os << "\n";
 
-  //auto root_node{template_args_.getRoot()};
+  // auto root_node{template_args_.getRoot()};
   // template_args_.dump();
-  //os << "\n DFT: \n";
+  // os << "\n DFT: \n";
   // os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
-  //auto s = template_args_.dft(root_node);
+  // auto s = template_args_.dft(root_node);
 }
 
 vector<std::string> FindTemplateTypes::getTemplateArguments() {

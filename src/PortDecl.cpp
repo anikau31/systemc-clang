@@ -55,7 +55,6 @@ json PortDecl::dump_json(raw_ostream &os) {
   port_j["port_name"] = getName();
 
   auto args{template_type_->getTemplateArgTreePtr()};
-  llvm::outs() << "### Memory leak: " << args->size() << "\n";
   args->dump();
 
   for (auto const &node : *args) {
@@ -64,7 +63,7 @@ json PortDecl::dump_json(raw_ostream &os) {
     auto parent_node{node->getParent()};
     auto parent_data{parent_node->getDataPtr()};
     if (parent_node->getDataPtr() == node->getDataPtr()) {
-      llvm::outs() << "Insert parent node: " << type_data->getTypeName()
+      llvm::outs() << "\nInsert parent node: " << type_data->getTypeName()
                    << "\n";
       port_j["port_arguments"][type_data->getTypeName()] = nullptr;
     } else {
