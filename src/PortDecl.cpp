@@ -18,11 +18,11 @@ PortDecl::PortDecl()
 PortDecl::PortDecl(const string &name, FindTemplateTypes *tt)
     : port_name_{name}, template_type_{tt} {}
 
-PortDecl::PortDecl(const string &name, const FieldDecl *fd,
+PortDecl::PortDecl(const string &name, const Decl *fd,
                    FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
-      field_decl_{const_cast<FieldDecl *>(fd)} {}
+      field_decl_{const_cast<Decl*>(fd)} {}
 
 PortDecl::PortDecl(const PortDecl &from) {
   port_name_ = from.port_name_;
@@ -34,8 +34,13 @@ void PortDecl::setModuleName(const string &name) { port_name_ = name; }
 
 string PortDecl::getName() const { return port_name_; }
 
-FieldDecl *PortDecl::getFieldDecl() const { return field_decl_; }
+FieldDecl *PortDecl::getFieldDecl() const { 
+  return dyn_cast<FieldDecl>(field_decl_);
+}
 
+VarDecl *PortDecl::getAsVarDecl() const { 
+  return dyn_cast<VarDecl>(field_decl_);
+}
 FindTemplateTypes *PortDecl::getTemplateType() { return template_type_; }
 
 void PortDecl::dump(llvm::raw_ostream &os, int tabn) {
