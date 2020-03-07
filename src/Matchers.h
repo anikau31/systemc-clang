@@ -334,7 +334,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
     }
   }
 
-  auto parseTemplateType(const FieldDecl *fd) {
+  template <typename T>
+  auto parseTemplateType(const T *fd) {
     QualType qual_type{fd->getType()};
     const Type *type_ptr{qual_type.getTypePtr()};
     auto template_ptr{new FindTemplateTypes()};
@@ -344,12 +345,21 @@ class PortMatcher : public MatchFinder::MatchCallback {
   }
 
   template <typename T>
-  void insert_port(PortType &port, T *decl) {
+  void insert_port(PortType &port, T *decl, bool isFieldDecl = true) {
     // port is a map entry [CXXRecordDecl* => vector<PortDecl*>]
-    auto name{decl->getIdentifier()->getNameStart()};
-
+    
+    std::string name{};
+    if (auto *fd = dyn_cast<FieldDecl>(decl)) {
+      name = fd->getIdentifier()->getNameStart();
     port.push_back(std::make_tuple(
-        name, new PortDecl(name, decl, parseTemplateType(decl))));
+        name, new PortDecl(name, decl, parseTemplateType(fd))));
+    } else {
+      auto *vd = dyn_cast<VarDecl>(decl);
+      name = vd->getIdentifier()->getNameStart();
+    port.push_back(std::make_tuple(
+        name, new PortDecl(name, decl, parseTemplateType(vd))));
+    }
+
   }
 
   void registerMatchers(MatchFinder &finder) {
@@ -409,6 +419,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
         match_module_decls,
         forEach(fieldDecl(
             anyOf(hasType(builtinType()),
+                  hasType(arrayType()),
                   hasType(cxxRecordDecl(allOf(
                       unless(hasName("sc_in")), unless(hasName("sc_inout")),
                       unless(hasName("sc_out")), unless(hasName("sc_signal")),
@@ -419,6 +430,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     auto match_non_sc_types_vdecl = cxxRecordDecl(forEach(
         varDecl(
             anyOf(hasType(builtinType()),
+                  hasType(arrayType()),
                   hasType(cxxRecordDecl(allOf(
                       unless(hasName("sc_in")), unless(hasName("sc_inout")),
                       unless(hasName("sc_out")), unless(hasName("sc_signal")),
@@ -476,7 +488,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     if (auto fd = checkMatch<FieldDecl>("other_fields", result)) {
       auto field_name{fd->getIdentifier()->getNameStart()};
       llvm::outs() << " Found other_fields: " << field_name << "\n";
-      insert_port(other_fields_, fd);
+//      insert_port(other_fields_, fd);
     }
 
     if (auto fd = checkMatch<Decl>("other_fields", result)) {
@@ -485,11 +497,13 @@ class PortMatcher : public MatchFinder::MatchCallback {
       if (auto *p_field{dyn_cast<FieldDecl>(fd)}) {
         auto field_name{p_field->getIdentifier()->getNameStart()};
         llvm::outs() << " Found field other_fields: " << field_name << "\n";
+        insert_port(other_fields_, p_field);
 
       } else {
         auto *p_var{dyn_cast<VarDecl>(fd)}; 
         auto field_name{p_var->getIdentifier()->getNameStart()};
         llvm::outs() << " Found var other_fields: " << field_name << "\n";
+      insert_port(other_fields_, p_var);
 
       }
       //llvm::outs() << " Found field/vardecl other_fields: " << field_name << "\n";
