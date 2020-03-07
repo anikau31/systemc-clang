@@ -21,7 +21,9 @@ XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & 
   os_ << "Entering XlatMethod constructor, has body is " << emd->hasBody()<< "\n";
   
   h_ret = NULL;
+  cnt = 0;
   bool ret1 = TraverseStmt(emd->getBody());
+  VnameDump();
   h_top = h_ret;
   os_ << "Exiting XlatMethod constructor for method body\n";
 }
@@ -154,6 +156,9 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
 
 bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
   os_ << "ProcessVarDecl var name is " << vardecl->getName() << "\n";
+  names_t names = {vardecl->getName(), newname()};
+  h_vardecl->set(names.newn); // replace original name with new name
+  vname_map[vardecl] = names;
   hNodep h_typeinfo = new hNode( hNode::hdlopsEnum::hTypeinfo);
   QualType q = vardecl->getType();
   const Type *tp = q.getTypePtr();
@@ -253,7 +258,13 @@ bool XlatMethod::TraverseDeclRefExpr(DeclRefExpr* expr)
   os_ << "In TraverseDeclRefExpr\n";
   string name = (expr->getNameInfo()).getName().getAsString();
   os_ << "name is " << name << "\n";
-  h_ret = new hNode(name, hNode::hdlopsEnum::hVarref);
+  string newname = "";
+  auto vname_it{vname_map.find(expr->getDecl())};
+      if (vname_it != vname_map.end()) {
+	newname = vname_map[expr->getDecl()].newn;
+      }
+  os_ << "new name is "<< newname << "\n";
+  h_ret = new hNode(newname.empty() ? name : newname, hNode::hdlopsEnum::hVarref);
   return true; 
 }
 
@@ -451,6 +462,14 @@ bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
   h_ret = h_whilestmt;
   
   return true;
+}
+
+void XlatMethod::VnameDump() {
+  os_ << "Vname Dump\n";
+  for (auto const &var : vname_map) {
+    os_ << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n";
+						  
+  }
 }
 
 // CXXMethodDecl *XlatMethod::getEMD() {

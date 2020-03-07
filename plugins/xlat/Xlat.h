@@ -12,9 +12,8 @@ using namespace clang;
 using namespace scpar;
 using namespace hnode;
 
-
 class Xlat : public SystemCConsumer {
-
+  
   public:
   Xlat( CompilerInstance& ci, std::string topModule = "!none" )
     : SystemCConsumer( ci, topModule ) {
@@ -31,7 +30,7 @@ class Xlat : public SystemCConsumer {
   void xlatproc(vector<EntryFunctionContainer *>efv, hNodep & h_top, llvm::raw_ostream &os );
   
   private:
-    typedef vector < pair < string, const Type *> > tavector_t;
+
     hNodep h_top;
 };
 

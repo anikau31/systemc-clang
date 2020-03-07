@@ -104,6 +104,10 @@ namespace hnode {
       h_op = h;
       h_name = s;
     }
+
+    void set(string s = "") {
+      h_name = s;
+    }
     
     string printname(hdlopsEnum opc) {
       return hdlop_pn[static_cast<int>(opc)];
