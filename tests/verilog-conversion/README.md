@@ -330,6 +330,7 @@ Within the test framework, we provide a simple way for a user to add tests for t
 
 Next, we introduce how a user adds a test to the framework.
 We will make another module to test: a `sub` module that takes two input and outputs their difference by doing subtraction.
+We assume that all commands done in this section is `$SYSTEMC_CLANG_BUILD_DIR`.
 
 To add a test, create another folder in `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`:
 ```
@@ -468,7 +469,7 @@ SC_MODULE(topsub2) {
   sc_in<int> in_port_2;
   sc_out<int> out_port;
 
-  SC_CTOR(topadd2) {
+  SC_CTOR(topsub2) {
   ┊ SC_METHOD(topEntry);
   ┊ sensitive<<clk.pos();
   }
@@ -526,10 +527,116 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '/home/allen/wor
 ../systemc-clang/tests/verilog-conversion/util/sexpdiff.py:8: FileNotFoundError
 ```
 
-This time, the file that is not found is the golden standard \_hdl.txt file, as the information states: `E       FileNotFoundError: [Errno 2] No such file or directory: '/home/allen/working/systemc-clang-build//tests/data/verilog-conversion-custom/sub/golden//sub_hdl.txt'`.
+This time, the golden standard \_hdl.txt file is missing, as the information states: `E       FileNotFoundError: [Errno 2] No such file or directory: '/home/allen/working/systemc-clang-build//tests/data/verilog-conversion-custom/sub/golden//sub_hdl.txt'`.
+
+Here, we use the golden standard of the `add` module, which is incorrect for `sub`, to show how to interpret the error information.
+
+To add a golden standard file, create a folder named `golden` under `sub` and put the golden standard file inside:
+```
+$ mkdir $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub/golden
+$ cp $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt \
+     $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub/golden/sub_hdl.txt
+```
+
+Now, the `verilog-conversion-custom` folder looks similar to:
+```
+$ tree $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/
+/home/allen/working/systemc-clang//tests/data/verilog-conversion-custom/
+├── add
+│   ├── add.cpp
+│   └── golden
+│       ├── add_hdl.txt
+│       └── add_hdl.txt.v
+├── sub
+│   ├── golden
+│   │   └── sub_hdl.txt
+│   └── sub.cpp
+└── xor
+    ├── golden
+    │   ├── xor_hdl.txt
+    │   └── xor_hdl.txt.v
+    └── xor.cpp
+```
+
+**Run `cmake`** and run the the test again:
+```
+$ cmake ../systemc-clang -DENABLE_TESTS=on -DXLAT=on -DENABLE_VERILOG_TESTS=on
+$ python -B run-verilog-tests.py -o test_custom_sexp[sub] -v
+...
+______________ test_custom_sexp[sub] ____________
+tmpdir = local('/tmp/pytest-of-allen/pytest-14/test_custom_sexp_sub_0')
+customdriver = <driver.SystemCClangDriver object at 0x7fc2f46b7b10>, tool_output = False
+...
+>       assert not diff_res, 'should match golden standard'
+E       AssertionError: should match golden standard
+E       assert not True
+
+../systemc-clang/tests/verilog-conversion/test_custom.py:33: AssertionError
+-------------- Captured stdout call -------------
+...
+-   hModule topadd2_0 [
+?              ^^^
++   hModule topsub2_0 [
+?              ^^^
+      hPortsigvarlist  NONAME [
+        hPortin in_port_1 NOLIST
+...
+        hTypeinfo  NONAME [
+          hType sc_in NOLIST
+-             hBinop + [
+?                    ^
++             hBinop - [
+?                    ^
+```
+
+Now, the test fails because the module name and the operation symbol does not match.
+
+Here, we can fix the golden standard file by replacing `topadd2_0` with `topsub2_0` and replacing `hBinop +` with `hBinop -`.
+These changes are made in `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub/golden/sub_hdl.txt`
+
+Also, pay attention to the line where it says `tmpdir`, it logs the temporary directory where the program output are stored:
+```
+$ ls /tmp/pytest-of-allen/pytest-14/test_custom_sexp_sub_0
+diff  sub.cpp  sub_hdl.txt  systemc-clang.stderr  systemc-clang.stdout
+```
+These files are useful for debugging purpose.
 
 
+After making changes to the golden standard file, **Run `cmake`** and run the the test again and it should pass:
+```
+$ cmake ../systemc-clang -DENABLE_TESTS=on -DXLAT=on -DENABLE_VERILOG_TESTS=on
+$ python -B run-verilog-tests.py -o test_custom_sexp[sub] -v
+```
 
+Similarly, we can copy the golden standard Verilog of `add`:
+```
+$ cp $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt.v $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub/golden/sub_hdl.txt.v
+```
+Then we make changes to the file so that it ends up being the following form:
+```
+module topsub2_0(
+input wire [31:0] in_port_1,
+input wire [31:0] in_port_2,
+input wire clk,
+output reg [31:0] out_port
+);
+
+
+always @(posedge clk) begin: topEntry
+
+out_port <= (in_port_1) - (in_port_2);
+end // topEntry
+endmodule // topsub2_0
+```
+
+
+After making changes to the golden standard Verilog, **Run `cmake`** and run the the test again and it should pass:
+```
+$ cmake ../systemc-clang -DENABLE_TESTS=on -DXLAT=on -DENABLE_VERILOG_TESTS=on
+$ python -B run-verilog-tests.py -o test_custom -v
+```
+
+Now, we have covered the basics of adding a test to the test framework.
 
 
 # Appendix
@@ -537,161 +644,21 @@ This time, the file that is not found is the golden standard \_hdl.txt file, as 
 ## Other tests
 
 There are other tests as well when running the python scripts.
+You can view all the tests using the following script:
+```
+$ python -B run-verilog-tests.py --collect-only -v
+systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp[xor]
+systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp[sub]
+systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp[add]
+systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_verilog[xor]
+systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_verilog[sub]
+systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_verilog[add]
+systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp_to_verilog[xor]
+systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp_to_verilog[sub]
+systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp_to_verilog[add]
+...
+```
 
 Some of the tests are for sanity check, to make sure that the tools are set-up correctly.
 Some of the tests are for the example folder because they don't follow certain naming convention and the need different driver for detecting modules.
 
-
-
-## Prelimilaries
-
-### CMake switch 
-  Python tests are configured during the process of calling `cmake`, to enable the python tests, run `cmake` with `-DENABLE_VERILOG_TESTS=on` flag along with other build options when [building the binaries](/doc/README.md#Installation).
-  
-  For example, to enable the python Verilog tests along with XLAT, the `cmake` command will be similar to (make sure the `-DSYSTEMC_DIR` is correctly specified): 
-  ```
-  cmake ../systemc-clang -DXLAT=on -DENABLE_TESTS=on -DSYSTEMC_DIR=$SYSTEMC/ -G Ninja -DENABLE_VERILOG_TESTS=on
-  ```
-
-  If the python interpreter is found, `cmake` should report lines similar to:
-  ```
-  -- [ Tests         ]
-  -- Build tests           : on
-  -- Build Verilog tests   : on
-  ...
-  -- Python found          : TRUE
-  -- Python interpreter    : /home/allen/anaconda3/bin/python3
-  --
-  ```
-
-### Done
-
-  Note that before calling the `cmake`, you should already source the `script/paths.sh` and after **building the binaries**, the `systemc-clang` is generated in `$LLVM_INSTALL_DIR/bin`.
-
-  The following steps will be dependent on the environment variables defined in the `script/paths.sh` to search for the binaries and the python scripts.
-
-  We use `$SYSTEMC_CLANG_BUILD_DIR` to refer to the build directory created for `cmake` and `$SYSTEMC_CLANG` to refer to the git repository directory.
-
-
-## Running tests from ctest
-  To run the Verilog tests, switch to `$SYSTEMC_CLANG_BUILD_DIR`, and make sure `systemc-clang` is built.
-  Then run:
-  ```
-  ctest -R verilog-tests
-  ``` 
-  If the tests do not pass, running the following command will provide more information on what command is called:
-  ```
-  ctest -R verilog-tests --verbose
-  ```
-
-  The tests might not all pass at the moment, we provide a set of sanity tests that should pass at this point:
-  ```
-  ctest -R verilog-sanity-tests --verbose
-  ```
-
-## Running all tests manually
-  It is also possible to run the tests manually from python scripts for fine-grained control over what to test.
-
-  To run all the Verilog tests manually, in `$SYSTEMC_CLANG_BUILD_DIR`:
-  ```
-  python -B run-verilog-tests.py
-  ```
-
-### Individual tests
-  It is possible to run individual python tests to observe the output with `-o` or `--only` option.
-  For example, in `$SYSTEMC_CLANG_BUILD_DIR`:
-  ```
-  python -B run-verilog-tests.py --only test_sanity_add_sexp_to_verilog
-  ```
-### List all tests
-  It is possible to list all tests that can be supplied for the `-o` argument for `run-verilog-tests.py`.
-
-  To list the number available tests in each file, in `$SYSTEMC_CLANG_BUILD_DIR`, run:
-  ```
-  python -B run-verilog-tests.py --collect-only
-  ```
-  For a list of all available tests, use `-v` option:
-  ```
-  python -B run-verilog-tests.py --collect-only -v
-  ```
-  The returned list contains the filename in which the tests are defined, followed by `::` and the corresponding test names.
-
-  Note that when providing the name to `-o`, only provide the name **after** `::`.
-
-  For example, in order to run one of the sanity tests:
-  ```
-  $ python -B run-verilog-tests.py --collect-only -v
-  ...
-  systemc-clang/tests/verilog-conversion/test_sanity.py::test_sanity_add_sexp
-  systemc-clang/tests/verilog-conversion/test_sanity.py::test_sanity_add_verilog
-  systemc-clang/tests/verilog-conversion/test_sanity.py::test_sanity_add_sexp_to_verilog
-  ...
-  $ python -B run-verilog-tests.py --only test_sanity_add_sexp_to_verilog
-  =================================== test session starts ===================================
-  platform linux -- Python 3.7.4, pytest-5.0.1, py-1.8.1, pluggy-0.13.1
-  rootdir: /home/ubuntu/working
-  collected 55 items / 54 deselected / 1 selected
-
-  ../systemc-clang/tests/verilog-conversion/test_sanity.py .                          [100%]
-
-  ========================= 1 passed, 54 deselected in 0.35 seconds =========================
-  ```
-
-## Adding tests
-  New tests can be added to `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`, and they will be recognized automatically by the pytest, without the need to modify the script or updating the submodules.
-
-  The following example shows the directory structure of one conversion test for an add module:
-  ```
-  $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/
-  └── add
-      ├── add.cpp
-      └── golden
-          ├── add_hdl.txt
-          └── add_hdl.txt.v
-   
-  ```
-  In this example, all necessary files are grouped in an `add` folder in `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`.
-
-  Within the `add` folder, there is a SystemC design file `add.cpp` and a `golden` folder that stores the reference file for `_hdl.txt` and Verilog.
-
-  Note that all the file needs to have the same prefix.
-  In this example, the prefix is `add`.
-
-  To add another test for a different design, organize the `.cpp` SystemC design file, `_hdl.txt` file and Verilog file `_hdl.txt.v` as is shown in the previous example.
-
-  For example, if we want to add an `xor` module, the final directory structure will end up being the following:
-  ```
-  $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/
-  ├── add
-  │   ├── add.cpp
-  │   └── golden
-  │       ├── add_hdl.txt
-  │       └── add_hdl.txt.v
-  └── xor
-      ├── golden
-      │   ├── xor_hdl.txt
-      │   └── xor_hdl.txt.v
-      └── xor.cpp
-  ```
-  
-  **After making changes, re-run** `cmake` **to sync the changes from** `$SYSTEMC_CLANG` **to** `$SYSTEMC_CLANG_BUILD_DIR`.
-
-  To run all these tests, use `ctest -R verilog-custom --verbose`.
-
-  To observe detailed output, use the script `python -B run-verilog-tests.py -o test_custom -v`.
-
-## Debug information on failure
-  On a test failure, the output, together with the diff information is stored in the temporary folder.
-  For example, suppose we run individual tests with `-v` option and the tests fail, the failure may be reported in the form of:
-  ```
-  ...
-  ______test_custom_sexp_to_verilog[add] ______
-
-  tmpdir = local('/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0'), customdriver = <driver.SystemCClangDriver object at 0x7f8750d6b910>
-  tool_output = False
-  ...
-  ```
-  In the output, `tmpdir = local('/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0')` logs the temporary folder where the intermediate output are stored.
-  And thus we can observe the output in `/tmp/pytest-of-allen/pytest-161/test_custom_sexp_to_verilog_ad0/`
-
----
