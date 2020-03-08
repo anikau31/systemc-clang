@@ -18,11 +18,11 @@ PortDecl::PortDecl()
 PortDecl::PortDecl(const string &name, FindTemplateTypes *tt)
     : port_name_{name}, template_type_{tt} {}
 
-PortDecl::PortDecl(const string &name, const FieldDecl *fd,
+PortDecl::PortDecl(const string &name, const Decl *fd,
                    FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
-      field_decl_{const_cast<FieldDecl *>(fd)} {}
+      field_decl_{const_cast<Decl*>(fd)} {}
 
 PortDecl::PortDecl(const PortDecl &from) {
   port_name_ = from.port_name_;
@@ -34,8 +34,13 @@ void PortDecl::setModuleName(const string &name) { port_name_ = name; }
 
 string PortDecl::getName() const { return port_name_; }
 
-FieldDecl *PortDecl::getFieldDecl() const { return field_decl_; }
+FieldDecl *PortDecl::getFieldDecl() const { 
+  return dyn_cast<FieldDecl>(field_decl_);
+}
 
+VarDecl *PortDecl::getAsVarDecl() const { 
+  return dyn_cast<VarDecl>(field_decl_);
+}
 FindTemplateTypes *PortDecl::getTemplateType() { return template_type_; }
 
 void PortDecl::dump(llvm::raw_ostream &os, int tabn) {
@@ -50,7 +55,6 @@ json PortDecl::dump_json(raw_ostream &os) {
   port_j["port_name"] = getName();
 
   auto args{template_type_->getTemplateArgTreePtr()};
-  llvm::outs() << "### Memory leak: " << args->size() << "\n";
   args->dump();
 
   for (auto const &node : *args) {
@@ -59,7 +63,7 @@ json PortDecl::dump_json(raw_ostream &os) {
     auto parent_node{node->getParent()};
     auto parent_data{parent_node->getDataPtr()};
     if (parent_node->getDataPtr() == node->getDataPtr()) {
-      llvm::outs() << "Insert parent node: " << type_data->getTypeName()
+      llvm::outs() << "\nInsert parent node: " << type_data->getTypeName()
                    << "\n";
       port_j["port_arguments"][type_data->getTypeName()] = nullptr;
     } else {
