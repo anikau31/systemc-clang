@@ -380,7 +380,17 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
 bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
   os_ << "In TraverseMemberExpr\n";
   string nameinfo = (memberexpr->getMemberNameInfo()).getName().getAsString();
-  os_ << "name is " << nameinfo << "\n";
+  os_ << "name is " << nameinfo << ", base and memberexpr trees follow\n";
+  os_ << "base is \n";
+  memberexpr->getBase()->dump(os_);
+  auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
+  if (baseexpr) {
+    // FIXME Only handling one level right now
+    nameinfo.insert((size_t) 0,  baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
+  }
+  os_ << "memberdecl is \n";
+  memberexpr->getMemberDecl()->dump(os_);
+    
   h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hLiteral);
 
   return true;
