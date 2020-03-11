@@ -1,4 +1,4 @@
-module topadd2_0(
+module topxor2_0(
 input wire [31:0] in_port_1,
 input wire [31:0] in_port_2,
 input wire clk,
@@ -10,4 +10,5 @@ always @(posedge clk) begin: topEntry
 
 out_port <= (in_port_1) ^ (in_port_2);
 end // topEntry
-endmodule // topadd2_0
+endmodule // topxor2_0
+

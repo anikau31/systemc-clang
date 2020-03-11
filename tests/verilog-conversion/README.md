@@ -44,10 +44,13 @@ The tool is located at `$SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py`.
 ```bash
 $ python $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py -h
 usage: A tool for running and comparing against a golden standard
-     [-h] [--cpp CPP] [--hdl HDL] [--verilog VERILOG]
-     [--include-path [INCLUDE_PATH [INCLUDE_PATH ...]]]
-     [--output-dir OUTPUT_DIR] [--verbose]
-     {cpp-to-hdl,hdl-to-v,cpp-to-v}
+       [-h] [--cpp CPP] [--hdl HDL]
+       [--golden-intermediate GOLDEN_INTERMEDIATE]
+       [--golden-verilog GOLDEN_VERILOG]
+       [--include-path [INCLUDE_PATH [INCLUDE_PATH ...]]]
+       [--output-dir OUTPUT_DIR] [--verbose]
+       {cpp-to-hdl,hdl-to-v,cpp-to-v}
+       ...
  ```
 
 ### Examples
@@ -164,7 +167,6 @@ add.cpp  golden  results
 $ ls golden/
 add_hdl.txt
 ```
-TODO: should --hdl be --golden-intermediate, and similarly we could have --golden-verilog.  This is because we could compare both the intermediate and the final resulting verilog ...?
 
 Next, run the tool again, with `--hdl` option enabled:
 ```
@@ -173,7 +175,7 @@ $ python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
      --output-dir ./results/  \
      --cpp add.cpp \
      --verbose \
-     --hdl ./golden/add_hdl.txt
+     --golden-intermediate ./golden/add_hdl.txt
 ```
 
 If the generated file and the golden standard file are different, the diff will be presented to the console, and will be stored in the time-stamped folder, together with the generated `add_hdl.txt` file.
@@ -204,7 +206,7 @@ The `hdl-to-v` works similarly and it converts `_hdl.txt` file to Verilog file.
      --output-dir results/ \
      --hdl results/2020-03-05_11-49-11/add_hdl.txt \
      --verbose \
-     --verilog $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt.v
+     --golden-verilog $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt.v
    ```
 
 Now, you should be able to use the `run-compare.py` script when doing development.
@@ -657,5 +659,6 @@ systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp_to_veril
 ```
 
 Some of the tests are for sanity check, to make sure that the tools are set-up correctly.
-Some of the tests are for the example folder because they don't follow certain naming convention and the need different driver for detecting modules.
+
+Some of the tests are for the example folder because they don't follow certain naming convention and they need different driver for detecting modules.
 

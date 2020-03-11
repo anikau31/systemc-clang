@@ -11,3 +11,4 @@ always @(posedge clk) begin: topEntry
 out_port <= (in_port_1) + (in_port_2);
 end // topEntry
 endmodule // topadd2_0
+

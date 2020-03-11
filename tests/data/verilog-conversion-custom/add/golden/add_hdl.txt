@@ -1,24 +1,28 @@
   hModule topadd2_0 [
     hPortsigvarlist  NONAME [
-      hPortin in_port_1 NOLIST
-      hTypeinfo  NONAME [
-        hType sc_in NOLIST
-        hType int NOLIST
+      hPortin in_port_1 [
+        hTypeinfo  NONAME [
+          hType "sc_in" NOLIST
+          hType "int" NOLIST
+        ]
       ]
-      hPortin in_port_2 NOLIST
-      hTypeinfo  NONAME [
-        hType sc_in NOLIST
-        hType int NOLIST
+      hPortin in_port_2 [
+        hTypeinfo  NONAME [
+          hType "sc_in" NOLIST
+          hType "int" NOLIST
+        ]
       ]
-      hPortin clk NOLIST
-      hTypeinfo  NONAME [
-        hType sc_in NOLIST
-        hType _Bool NOLIST
+      hPortin clk [
+        hTypeinfo  NONAME [
+          hType "sc_in" NOLIST
+          hType "_Bool" NOLIST
+        ]
       ]
-      hPortout out_port NOLIST
-      hTypeinfo  NONAME [
-        hType sc_out NOLIST
-        hType int NOLIST
+      hPortout out_port [
+        hTypeinfo  NONAME [
+          hType "sc_out" NOLIST
+          hType "int" NOLIST
+        ]
       ]
     ]
     hProcesses  NONAME [

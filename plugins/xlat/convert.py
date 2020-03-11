@@ -1,56 +1,50 @@
 from lark import Lark, Transformer, Visitor
 import sys
 import logging
+import warnings
 logging.basicConfig(level=logging.DEBUG)
 
 l = Lark('''
         start: modulelist
 
         modulelist: ( hmodule)*
-        hmodule:  "hModule" ID "[" modportsiglist processlist* "]"
+        hmodule:  "hModule" ID "[" modportsiglist? processlist* "]"
 
-        modportsiglist: portsiglist // used to separate between those in the processes
+        ?modportsiglist: "hPortsigvarlist" "NONAME" "[" modportsigdecl+ "]" 
 
-        ?portsiglist: "hPortsigvarlist" "NONAME" "[" modportsigdecl* "]"
-
-        ?modportsigdecl: portdecltype
-                      | sigdecltype
-                      | vardecltype
-
-        sigdecltype: sigdecl  htypeinfo 
-        sigdecl:  "hSigdecl" ID "NOLIST"
-        portdecltype: portdecl  htypeinfo
+        ?modportsigdecl: portdecltype 
+                      | sigdecltype 
+                      | vardeclinit 
+        portdecltype: portdecl "[" htypeinfo "]"
+        sigdecltype: sigdecl "[" htypeinfo "]"
+        sigdecl:  "hSigdecl" ID  
         ?portdecl: inportdecl | outportdecl
-        inportdecl:  "hPortin" ID "NOLIST"
-        outportdecl: "hPortout" ID "NOLIST"
-        vardecltype: vardeclonly // declaration only
-                   | hvardef
-        vardeclonly: hvardecl  htypeinfo
-
+        inportdecl:  "hPortin" ID 
+        outportdecl: "hPortout" ID
+        vardeclinit: "hVardecl" ID "[" htypeinfo hvarinit? "]"
+        ?hvarinit: "hVarInit" "NONAME" expression
         // can be no process at all in the module
-        processlist:  "hProcesses" "NONAME" "[" hprocess* "]"
+        ?processlist:  "hProcesses" "NONAME" "[" hprocess* "]"
         // could be nothing
-        hprocess:  "hProcess" ID  "[" hsenslist*   hcstmt "]"
+        hprocess:  "hProcess" ID  "[" hsenslist*   stmt "]"
 
         // can be just an empty statement
-        hcstmt:  "hCStmt" "NONAME" "[" stmts "]" // useful for raising variable decls
+        hcstmt:  "hCStmt" "NONAME" "[" modportsiglist* stmt+ "]" // useful for raising variable decls
               |  "hCStmt" "NONAME" "NOLIST"
 
-        ?stmts: stmt+
-        ?stmt : expression
+        stmt : expression
              | syscwrite
              | ifstmt
-             | hvardef
-             | htemptrigger
-             | portsiglist
              | forstmt
+             | hcstmt
 
         // for(forinit; forcond; forpostcond) stmts
         forstmt: "hForStmt" "NONAME" "[" forinit forcond forpostcond forbody "]"
-        forinit: "hPortsigvarlist" "NONAME" "[" vardecltype  "]"
+        forinit: "hPortsigvarlist" "NONAME" "[" vardeclinit  "]"
+                 | vardeclinit
         forcond: expression
         forpostcond: expression
-        forbody: stmts
+        forbody: stmt
 
         hsenslist : "hSenslist" "NONAME" "[" hsensvars "]"
                   | "hSenslist" "NONAME" "NOLIST"
@@ -61,17 +55,17 @@ l = Lark('''
         !npa : "neg" | "pos" | "always"
 
         // if and if-else, not handling if-elseif case
-        ifstmt: "hIfStmt" "NONAME" "[" expression  (hcstmt|exprinif|ifstmt) [(hcstmt|exprinif|ifstmt)] "]"
-              | "hIfStmt" "NONAME" "[" (hcstmt|exprinif|ifstmt) "]" "[" (hcstmt|exprinif|ifstmt) "]"
+        ifstmt: "hIfStmt" "NONAME" "[" expression  stmt stmt?"]"
+
         exprinif: expression
          
         ?expression: hbinop
                   | hunop
                   | hliteral
+                  | vardeclinit
                   | hvarref
                   | hunimp
                   | syscread
-                  | hnoop
                   | hmethodcall
                   |  "[" expression "]"
 
@@ -80,31 +74,15 @@ l = Lark('''
         ?hsigassignr :  "hSigAssignR" "read" 
         ?hsigassignl :  "hSigAssignL" "write" 
         // function call
-        fcall :  hliteral hvardecl 
         hvarref : "hVarref" ID "NOLIST"
         hunimp:  "hUnimpl" ID "NOLIST"
-        hbinop:  "hBinop" BINOP "[" (expression|fcall) (expression|fcall) "]"
+        hbinop:  "hBinop" BINOP "[" expression expression "]"
         hunop:  "hUnop" UNOP "[" expression "]"
-             | htempandunop
-        // just a temporary workaround
-        htempandunop: "(hLiteral operator const bool &)" expression
-        hmethodcall: "hMethodCall" hidorstr  "[" expression expression* "]"
-        htemptrigger:  hliteral hliteral hvardecl 
-        hidorstr: ID | STRING
+        hmethodcall: "hMethodCall" hidorstr  "[" expression expression* "]" 
+        ?hidorstr: ID | STRING
         hliteral:  "hLiteral" ID "NOLIST"
-        hlitdecl: hliteral*
-        ?hvardecl:  "hVardecl" ID "NOLIST"
-        hvardef: "hVardecl" ID "[" "]" hvardefsuf // ok to shift instead of reduce
-               | "hVardecl" ID "[" htypeinfo  [hvardefsuf] "]"
-        ?hvardefsuf: hunimp | hliteral |  syscread  |  syscwrite  |  hbinop | hmethodcall
         htypeinfo: "hTypeinfo" "NONAME" "[" htype+ "]"
         htype:  "hType" STRING "NOLIST" 
-
-        // This is like a function call
-        hnoop: "hNoop" ID "[" hvarref "]"
-             | "hNoop" ID "[" hliteral hvarref "]"
-             | "hNoop" "operator" "const" "bool" "&" "[" hliteral "]"
-
         ID: /[a-zA-Z_0-9]+/
         BINOP: "==" | "&&" | "=" | "||" | "-" | ">" | "+" | "*" | "^" | "ARRAYSUBSCRIPT" | "<=" | "<" | "%"
         UNOP: "!" | "++" | "-"
@@ -249,8 +227,10 @@ class VerilogTransformer(Transformer):
             if isinstance(stmt, list):
                 stmt_list.extend(stmt)
             else:
-                stmt_list.append(stmt)
+                if stmt:
+                    stmt_list.append(stmt)
         # currently it's ok to append a comma
+        print("stmtlist in hcstmt is ", args, stmt_list)
         res = ';\n'.join(x for x in stmt_list) + ';'
         return res
 
@@ -282,6 +262,10 @@ class VerilogTransformer(Transformer):
                 return f'{args[1]}={args[1]}-1'
             else:
                 return f'{args[0]}({args[1]})'
+    @p
+    def hmethodcall(self, args):
+        print("in hmethodcall, returning ", f'{args[0]}',"(", f'{",".join(args[1:])}', ")")
+        return (f'{args[0]}(' f'{",".join(args[1:])})')
 
     def stmts(self, args):
         return args
@@ -301,11 +285,20 @@ class VerilogTransformer(Transformer):
             self.vardecl_map[str(args[0])] = args[1]
             return f'{args[0]} = {args[2]}'
         assert False
-
+    @p
+    def vardeclinit(self, args):
+        print("vardeclinit: ", args)
+        self.vardecl_map[str(args[0])] = args[1]
+        if len(args)==3:
+            return f'{args[0]} = {args[2]}'
+        return None
+    
     @p
     def htype(self, args):
+        # NOTE: the name of htype will always be a STRING
+        # NOTE: args[0][1:-1] removes the quotes
         # return CType2VerilogType.convert(str(args[0]))
-        return str(args[0])
+        return str(args[0][1:-1])
 
     def hunimp(self, args):
         return f'\"//# Unimplemented: {args[0]}\"'
@@ -368,19 +361,32 @@ class VerilogTransformer(Transformer):
 
     @p
     def hmodule(self, args):
+        print("args: ", args)
         modname = str(args[0])
-        portsiglist = args[1]
-        proclist = args[2]
+        print(modname)
+        if modname.startswith('sc_stream_0'):
+            warnings.warn('TODO: temporary fix, manually skipping sc_stream_0')
+            return ''
+        if len(args)>1:
+            portsiglist = args[1]
+            print("portsiglist ", portsiglist)
+            if (len(args)>2):
+                proclist = args[2]
+            else:
+                proclist = None
+        else:
+            portsiglist = None
 
         # separate port from list of port, sig
-        portlist = list(map(lambda x: x[1], filter(lambda x: x is not None and  x[0] == 'port', portsiglist[0])))
-        portstr = ',\n'.join(portlist)
-
-        siglist = list(map(lambda x: x[1], filter(lambda x: x is not None and  x[0] == 'sig', portsiglist[0])))
-        sigstr = ';\n'.join(siglist) + (';' if len(siglist) > 0 else '')  # the last semi-colon
-
-        varlist = portsiglist[1]# list(map(lambda x: x[1], filter(lambda x: x[0] == 'var', portsiglist[1])))
-        varstr = ';\n'.join(varlist) + (';' if len(varlist) > 0 else '')
+        if portsiglist:
+            portlist = list(map(lambda x: x[1], filter(lambda x: x is not None and  x[0] == 'port', portsiglist[0])))
+            portstr = ',\n'.join(portlist)
+            
+            siglist = list(map(lambda x: x[1], filter(lambda x: x is not None and  x[0] == 'sig', portsiglist[0])))
+            sigstr = ';\n'.join(siglist) + (';' if len(siglist) > 0 else '')  # the last semi-colon
+            
+            varlist = portsiglist[1]# list(map(lambda x: x[1], filter(lambda x: x[0] == 'var', portsiglist[1])))
+            varstr = ';\n'.join(varlist) + (';' if len(varlist) > 0 else '')
 
         # for the processes
         procstr = proclist
@@ -391,7 +397,7 @@ class VerilogTransformer(Transformer):
                 f"{varstr}\n"
                 f"{sigstr}\n"
                 f"{proclist}\n"
-                f"endmodule // {modname}\n"
+                f"endmodule // {modname}"
                 )
     def modulelist(self, args):
         return "\n".join(args)
@@ -521,6 +527,11 @@ class VerilogTransformer(Transformer):
             ]
         return '\n'.join(res)
 
+    @p
+    def stmt(self, args):
+        assert(len(args) == 1)
+        return args[0]
+
 def main():
     if len(sys.argv) != 2 and len(sys.argv) != 3:
         print('Usage: convert.py filename [outputfilename]')
@@ -535,7 +546,10 @@ def main():
     res = VerilogTransformer().transform(t)
     with open(outputname, 'w+') as f:
         f.writelines(res)
+        f.write("\n\n")
     print(res)
+
+
 
 
 if __name__ == '__main__':

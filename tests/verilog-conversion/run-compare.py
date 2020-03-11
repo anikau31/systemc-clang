@@ -8,8 +8,10 @@ from util.sexpdiff import sexpdiff
 parser = argparse.ArgumentParser("A tool for running and comparing against a golden standard")
 parser.add_argument('action', choices=[ 'cpp-to-hdl', 'hdl-to-v', 'cpp-to-v'], help='Action to perfrom')
 parser.add_argument('--cpp', help='The SystemC C++ file to convert')
-parser.add_argument('--hdl', help='The _hdl.txt file to compare against')
-parser.add_argument('--verilog', help='The Verilog file to compare against')
+parser.add_argument('--hdl', help='The _hdl.txt file to convert')
+parser.add_argument('--golden-intermediate', help='The _hdl.txt file to compare against')
+# parser.add_argument('--verilog', help='The Verilog file to compare against')
+parser.add_argument('--golden-verilog', help='The Verilog file to compare against')
 parser.add_argument('--include-path', nargs='*', help='Include path (-I) option for the systemc-clang command')
 parser.add_argument('--output-dir', help='The output folder to store the results. '
                                          'Within the folder, a timestamped subfolder will be created')
@@ -40,18 +42,21 @@ def cpp_to_hdl(args, output_folder=None, rmdir=True):
                 output_folder=output_folder,
                 keep_sexp=True,
                 verbose=args.verbose)
-        if res and args.hdl:
-            is_diff, diff_str = sexpdiff(path, args.hdl)
+        if res and args.golden_intermediate:
+            if not os.path.isfile(args.golden_intermediate):
+                raise RuntimeError("Golden file {} does not exists".format(args.golden_intermediate))
+            is_diff, diff_str = sexpdiff(path, args.golden_intermediate)
             if is_diff:
-                print('Differences between {} and {}:'.format(path, args.hdl))
+                print('Differences between {} and {}:'.format(path, args.golden_intermediate))
                 print(diff_str)
                 diff_file = output_folder + '/diff'
                 print('diff stored in: {}'.format(diff_file))
                 with open(diff_file, 'w+') as f:
                     f.write(diff_str)
             else:
-                print('{} and {} has the same content'.format(path, args.hdl))
+                print('{} and {} has the same content'.format(path, args.golden_intermediate))
     except RuntimeError as e:
+        print('****** Error *****')
         print(e)
     finally:
         if not res:
@@ -80,14 +85,14 @@ def hdl_to_v(args, hdl=None, output_folder=None, rmdir=True):
                 verbose=args.verbose,
                 keep_v=True)
 
-        if res and args.verilog:
+        if res and args.golden_verilog:
             diff_info = VerilogParser.diff(
                     path,
-                    args.verilog)
+                    args.golden_verilog)
             if diff_info is None:
-                print('{} and {} has the same Verilog AST'.format(path, args.verilog))
+                print('{} and {} has the same Verilog AST'.format(path, args.golden_verilog))
             else:
-                print('Diff information of {} and {}:'.format(path, args.verilog))
+                print('Diff information of {} and {}:'.format(path, args.golden_verilog))
                 print(str(diff_info))
                 diff_file = output_folder + '/verilog.ast.diffinfo'
                 print('diff stored in: {}'.format(diff_file))

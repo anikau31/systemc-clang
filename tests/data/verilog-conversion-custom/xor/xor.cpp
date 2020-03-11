@@ -1,11 +1,11 @@
 #include "systemc.h"
-SC_MODULE(topadd2) {
+SC_MODULE(topxor2) {
   sc_in_clk clk;
   sc_in<int> in_port_1;
   sc_in<int> in_port_2;
   sc_out<int> out_port;
 
-  SC_CTOR(topadd2) {
+  SC_CTOR(topxor2) {
     SC_METHOD(topEntry);
     sensitive<<clk.pos();
   }
@@ -22,7 +22,7 @@ int sc_main(int argc, char *argv[]){
   sc_signal<int> input_1;
   sc_signal<int> input_2;
   sc_signal<int> output;
-  topadd2 t1 ("t1");
+  topxor2 t1 ("t1");
 
   t1.clk(CLOCK);
   t1.in_port_1(input_1);
