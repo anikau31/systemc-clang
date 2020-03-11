@@ -107,8 +107,8 @@ public:
 			sensitive << c_valid;
 		SC_METHOD(ms_proc);
 			sensitive << clk.pos();
-			reset_signal_is(reset, RLEV);
-			dont_initialize();
+			//reset_signal_is(reset, RLEV);
+			//dont_initialize();
 	}
 };
 
@@ -193,8 +193,8 @@ public:
 			for (unsigned i = 0; i < depth; i++) sensitive << data[i];
 		SC_METHOD(ms_proc);
 			sensitive << clk.pos();
-			reset_signal_is(reset, RLEV);
-			dont_initialize();
+			//reset_signal_is(reset, RLEV);
+			//dont_initialize();
 	}
 
 };
