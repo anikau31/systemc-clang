@@ -123,7 +123,7 @@ $ python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
      --cpp add.cpp \
      --verbose
 ```
-TODO: Note that the `-B` flag does ...
+Note that the `-B` flag prevents `.pyc` file generation, which keeps the directory clean.
 
 The output should be similar to:
 ```
