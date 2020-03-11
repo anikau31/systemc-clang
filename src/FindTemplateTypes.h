@@ -64,6 +64,7 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitTypedefType(TypedefType *typedef_type);
   bool VisitCXXRecordDecl(CXXRecordDecl *cxx_type);
   bool VisitRecordType(RecordType *rt);
+  bool VisitBuiltinType(BuiltinType *bi_type);
 
   ~FindTemplateTypes();
   type_vector_t Enumerate(const Type *type);
