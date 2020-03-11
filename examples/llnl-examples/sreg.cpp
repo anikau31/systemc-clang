@@ -1,3 +1,4 @@
+#define RVD
 #include "sreg.h"
 
 int sc_main(int argc , char *argv[])

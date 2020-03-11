@@ -10,6 +10,9 @@
 #include "llvm/Support/raw_ostream.h"
 
 #include <iostream>
+#include <stack>
+
+#include "Tree.h"
 
 namespace scpar {
 using namespace clang;
@@ -19,15 +22,20 @@ using namespace std;
 // type object.
 class TemplateType {
  public:
-  TemplateType(string, const Type *);
+  // Default constructor.
+  TemplateType();
+
+  // Overloaded constructor
+  TemplateType(std::string, const Type *);
   ~TemplateType();
   TemplateType(const TemplateType &);
 
-  string getTypeName() const;
+  std::string getTypeName() const;
+  std::string toString() const;
   const Type *getTypePtr() const;
 
  private:
-  string type_name_;
+  std::string type_name_;
   const Type *type_ptr_;
 };
 
@@ -39,6 +47,7 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   typedef vector<TemplateTypePtr> type_vector_t;
   typedef vector<TemplateTypePtr> argVectorType;
 
+  // typedef tree< TemplateType > template_arguments_type;
   // Constructor
   FindTemplateTypes();
 
@@ -49,32 +58,34 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   // This allows for template instantiations to be visited using RAV.
   bool shouldVisitTemplateInstantiations() const;
 
-  bool VisitType(Type *type);
   bool VisitIntegerLiteral(IntegerLiteral *l);
   bool VisitTemplateSpecializationType(
       TemplateSpecializationType *special_type);
-  bool VisitClassTemplateSpecializationDecl(
-      ClassTemplateSpecializationDecl *class_special_type);
   bool VisitTypedefType(TypedefType *typedef_type);
   bool VisitCXXRecordDecl(CXXRecordDecl *cxx_type);
   bool VisitRecordType(RecordType *rt);
+  bool VisitBuiltinType(BuiltinType *bi_type);
 
   ~FindTemplateTypes();
-  string getTemplateType();
   type_vector_t Enumerate(const Type *type);
   type_vector_t getTemplateArgumentsType();
   void printTemplateArguments(llvm::raw_ostream &os);
-  vector<string> getTemplateArguments();
+  vector<std::string> getTemplateArguments();
   size_t size();
+  Tree<TemplateType> *getTemplateArgTreePtr();
 
  private:
-  // (string, Type*)
+  // (std::string, Type*)
   // Classes such as sc_port and sc_in can have nested types within it.
   // For example: sc_in< sc_int<16> >
   // The general way to handle this would be to have a vector starting from the
   // outside type to the inside type.
 
   type_vector_t template_types_;
+
+  Tree<TemplateType> template_args_;
+  Tree<TemplateType>::TreeNodePtr current_type_node_;
+  std::stack<Tree<TemplateType>::TreeNodePtr> stack_current_node_;
 };
 }  // namespace scpar
 #endif

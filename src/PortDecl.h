@@ -19,7 +19,7 @@ class PortDecl {
 public:
   PortDecl();
   PortDecl(const string &, FindTemplateTypes *);
-  PortDecl(const string &, const FieldDecl*, FindTemplateTypes *);
+  PortDecl(const string &, const Decl*, FindTemplateTypes *);
 
   PortDecl(const PortDecl &);
 
@@ -30,6 +30,7 @@ public:
   /// Get parameters
   string getName() const;
   FieldDecl* getFieldDecl() const;
+  VarDecl *getAsVarDecl() const;
   FindTemplateTypes *getTemplateType();
 
   // Print
@@ -42,7 +43,7 @@ private:
   string port_name_;
   // This holds the types for the port
   FindTemplateTypes *template_type_;
-  FieldDecl *field_decl_;
+  Decl*field_decl_;
 };
 } // namespace scpar
 #endif

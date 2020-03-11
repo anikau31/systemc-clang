@@ -111,7 +111,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     REQUIRE(sreg_fwd_decl->getOPorts().size() == 0);
     REQUIRE(sreg_fwd_decl->getIOPorts().size() == 0);
     REQUIRE(sreg_fwd_decl->getSignals().size() == 1);
-    REQUIRE(sreg_fwd_decl->getOtherVars().size() == 0);
+    REQUIRE(sreg_fwd_decl->getOtherVars().size() == 1);
     REQUIRE(sreg_fwd_decl->getInputStreamPorts().size() == 1);
     REQUIRE(sreg_fwd_decl->getOutputStreamPorts().size() == 1);
 
@@ -126,7 +126,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     REQUIRE(sreg_fwd_rev_decl->getOPorts().size() == 0);
     REQUIRE(sreg_fwd_rev_decl->getIOPorts().size() == 0);
     REQUIRE(sreg_fwd_rev_decl->getSignals().size() == 7);
-    REQUIRE(sreg_fwd_rev_decl->getOtherVars().size() == 0);
+    REQUIRE(sreg_fwd_rev_decl->getOtherVars().size() == 3);
     REQUIRE(sreg_fwd_rev_decl->getInputStreamPorts().size() == 1);
     REQUIRE(sreg_fwd_rev_decl->getOutputStreamPorts().size() == 1);
   }

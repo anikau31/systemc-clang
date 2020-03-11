@@ -525,9 +525,10 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   othervars_j["number_of_other_vars"] = other_fields_.size();
   for (auto mit : other_fields_) {
     auto name = get<0>(mit);
+    llvm::outs() << "\n######## OTHER FIRLDS " << name << "\n";;
     auto pd = get<1>(mit);
     auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
+    auto template_args{template_type->getTemplateArgTreePtr()};
     othervars_j[name] = pd->dump_json(os);
   }
 

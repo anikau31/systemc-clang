@@ -172,7 +172,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
-
     if (auto instance = const_cast<FieldDecl *>(
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
@@ -209,7 +208,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       }
     }
   }
-
 
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.
@@ -294,10 +292,13 @@ class PortMatcher : public MatchFinder::MatchCallback {
   //   - It must have a type that is either an array whose type is a c++ class derived 
   //     from a class name called "name"
   //   - Or, it is has a type that is a c++ class that is derived from class name "name".
+  auto makeArrayType(const std::string &name) {
+    return hasType(arrayType(hasElementType(hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name)))))));
+  }
+
   auto makeSignalMatcher(const std::string &name) {
     return fieldDecl(anyOf(
-        hasType(arrayType(hasElementType(
-            hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name))))))),
+          makeArrayType(name),
         hasType(cxxRecordDecl(isDerivedFrom(hasName(name))))));
   }
 
@@ -334,32 +335,31 @@ class PortMatcher : public MatchFinder::MatchCallback {
     }
   }
 
-  auto parseTemplateType(const FieldDecl *fd) {
+  template <typename T>
+  auto parseTemplateType(const T *fd) {
     QualType qual_type{fd->getType()};
     const Type *type_ptr{qual_type.getTypePtr()};
     auto template_ptr{new FindTemplateTypes()};
     template_ptr->Enumerate(type_ptr);
     template_ptr->printTemplateArguments(llvm::outs());
-
-    /*
-    auto tt{ type_ptr->getAs<TemplateSpecializationType>() };
-    tt->dump();
-    llvm::outs() << "@@ bha\n";
-    auto qtarg{ tt->getArgs() };
-    qtarg->dump();
-    */
-
-       
     return template_ptr;
   }
 
   template <typename T>
-  void insert_port(PortType &port, T *decl) {
+  void insert_port(PortType &port, T *decl, bool isFieldDecl = true) {
     // port is a map entry [CXXRecordDecl* => vector<PortDecl*>]
-    auto name{decl->getIdentifier()->getNameStart()};
 
-    port.push_back(std::make_tuple(
-        name, new PortDecl(name, decl, parseTemplateType(decl))));
+    std::string name{};
+    if (auto *fd = dyn_cast<FieldDecl>(decl)) {
+      name = fd->getIdentifier()->getNameStart();
+      port.push_back(std::make_tuple(
+          name, new PortDecl(name, decl, parseTemplateType(fd))));
+    } else {
+      auto *vd = dyn_cast<VarDecl>(decl);
+      name = vd->getIdentifier()->getNameStart();
+      port.push_back(std::make_tuple(
+          name, new PortDecl(name, decl, parseTemplateType(vd))));
+    }
   }
 
   void registerMatchers(MatchFinder &finder) {
@@ -415,12 +415,51 @@ class PortMatcher : public MatchFinder::MatchCallback {
     // TODO: I'm not convinced that this would work. 
     //
     // I wonder if the way to fix this is to to unless(match_all_ports))
-    auto match_non_sc_types = cxxRecordDecl(forEachDescendant(
-        fieldDecl(
+    auto match_non_sc_types = cxxRecordDecl(
+        match_module_decls,
+        forEach(
+          fieldDecl(
+            anyOf(hasType(builtinType()),
+                  // hasType(arrayType(hasElementType(hasDeclaration(
+                          // unless(cxxRecordDecl(isDerivedFrom(hasName("sc_signal_inout_if")))))
+                        // )
+                      // )
+                    // ),
+                   hasType(cxxRecordDecl(allOf(
+                      unless(hasName("sc_in")), 
+                      unless(hasName("sc_inout")),
+                      unless(hasName("sc_out")), 
+                      unless(hasName("sc_signal_inout_if")),
+                      unless(hasName("sc_signal")),
+                      unless(hasName("sc_stream_in")),
+                      unless(hasName("sc_stream_out")))))))
+            .bind("other_fields")));
+
+
+    // auto match_non_sc_types = cxxRecordDecl(
+        // match_module_decls,
+        // forEach(fieldDecl(
+            // anyOf(hasType(builtinType()),
+                  // hasType(arrayType()),
+                  // hasType(cxxRecordDecl(allOf(
+                        // unless(match_all_ports),
+                      // unless(hasName("sc_in")),
+                      // unless(hasName("sc_inout")),
+                      // unless(hasName("sc_out")),
+                      // unless(hasName("sc_signal")),
+                      // unless(hasName("sc_stream_in")),
+                      // unless(hasName("sc_stream_out")))))))
+            // .bind("other_fields")));
+//
+    auto match_non_sc_types_vdecl = cxxRecordDecl(forEach(
+        varDecl(
             anyOf(hasType(builtinType()),
                   hasType(cxxRecordDecl(allOf(
-                      unless(hasName("sc_in")), unless(hasName("sc_inout")),
-                      unless(hasName("sc_out")), unless(hasName("sc_signal")),
+                      unless(hasName("sc_in")), 
+                      unless(hasName("sc_inout")),
+                      unless(hasName("sc_out")), 
+                      unless(hasName("sc_signal")),
+                      unless(hasName("sc_signal_inout_if")),
                       unless(hasName("sc_stream_in")),
                       unless(hasName("sc_stream_out")))))))
             .bind("other_fields")));
@@ -430,14 +469,16 @@ class PortMatcher : public MatchFinder::MatchCallback {
     // Add matchers to finder.
     finder.addMatcher(match_all_ports, this);
     finder.addMatcher(match_non_sc_types, this);
+    finder.addMatcher(match_non_sc_types_vdecl, this);
     finder.addMatcher(match_sc_ports, this);
 
-    // This is only for testing. 
+    // This is only for testing.
     //
-    // It is a way to show that we can write our own complex predicates for AST matchers :)
+    // It is a way to show that we can write our own complex predicates for AST
+    // matchers :)
     auto test_matcher =
         cxxRecordDecl(forEachDescendant(fieldDecl(matchesTypeName())));
-    //finder.addMatcher(test_matcher, this);
+    // finder.addMatcher(test_matcher, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -471,10 +512,28 @@ class PortMatcher : public MatchFinder::MatchCallback {
       insert_port(signal_fields_, fd);
     }
 
-    if (auto fd = checkMatch<FieldDecl>("other_fields", result)) {
-      auto field_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found other_fields: " << field_name << "\n";
-      insert_port(other_fields_, fd);
+    // if (auto fd = checkMatch<FieldDecl>("other_fields", result)) {
+    // auto field_name{fd->getIdentifier()->getNameStart()};
+    // llvm::outs() << " Found other_fields: " << field_name << "\n";
+    //     insert_port(other_fields_, fd);
+    // }
+    //
+    if (auto fd = checkMatch<Decl>("other_fields", result)) {
+      // These will be either FieldDecl or VarDecl.
+
+      if (auto *p_field{dyn_cast<FieldDecl>(fd)}) {
+        auto field_name{p_field->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found field other_fields: " << field_name << "\n";
+        insert_port(other_fields_, p_field);
+
+      } else {
+        auto *p_var{dyn_cast<VarDecl>(fd)};
+        auto field_name{p_var->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found var other_fields: " << field_name << "\n";
+        insert_port(other_fields_, p_var);
+      }
+      // llvm::outs() << " Found field/vardecl other_fields: " << field_name <<
+      // "\n"; insert_port(other_fields_, fd);
     }
 
     if (auto fd = checkMatch<FieldDecl>("sc_stream_in", result)) {
@@ -609,11 +668,13 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
                    << decl->getIdentifier()->getNameStart()
                    << " CXXRecordDecl*: " << decl << "\n";
       std::string name{decl->getIdentifier()->getNameStart()};
+      // decl->dump();
       //
       // TODO: Should we need this separation now?
       // It seems that we can simply store them whether they are template
       // specializations or not.
-      // This is necessary because of the way clang represents them in their AST.
+      // This is necessary because of the way clang represents them in their
+      // AST.
       //
       if (isa<ClassTemplateSpecializationDecl>(decl)) {
         // llvm::outs() << "TEMPLATE SPECIAL\n";
@@ -668,7 +729,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     if (remove_it != modules_.end()) {
       modules_.erase(remove_it);
     }
- }
+  }
 
   void pruneMatches() {
     // Must have found instances.

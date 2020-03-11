@@ -4,7 +4,11 @@
 # Credits:
 # https://github.com/andreasfertig/cppinsights/blob/master/CMakeLists.txt
 
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.1)
+# Fix behavior of CMAKE_CXX_STANDARD when targeting macOS.
+if (POLICY CMP0025)
+  cmake_policy(SET CMP0025 NEW)
+endif ()
 
 # Project name
 project(systemc-clang)
@@ -37,6 +41,8 @@ set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
 
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
+
+# Include ctest and catch2
 include(CTest)
 include(Catch)
 
@@ -53,6 +59,9 @@ set( CLANG_DIR ${Clang_DIR} )
 
 # Set the SystemC path
 set( SYSTEMC_DIR $ENV{SYSTEMC} )
+
+# Set extra include dir
+set( EXTRA_INCLUDE_DIR $ENV{EXTRA_INCLUDE_DIR} )
 
 # Default plugin status 
 if ("${XLAT}" STREQUAL "")
@@ -151,6 +160,13 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(IS_CLANG On)
 else()
   set(IS_CLANG Off)
+endif()
+
+# Check whether the compiler is AppleClang, which requires special headers for the tests
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+  set(IS_APPLECLANG "1")
+else()
+  set(IS_APPLECLANG "0")
 endif()
 
 
@@ -306,6 +322,10 @@ include_directories(
   plugins/xlat
   "${CATCH_INCLUDE_DIR}"
   )
+
+if(NOT "${EXTRA_INCLUDE_DIR}" STREQUAL "")
+  include_directories( "${EXTRA_INCLUDE_DIR}")
+endif()
 
 
 link_directories( ${LLVM_INSTALL_DIR}/lib )

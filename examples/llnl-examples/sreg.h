@@ -3,7 +3,15 @@
 #define SREG_H
 
 #include "systemc.h"
+
+#if defined(RVD)
+#include "sc_rvd.h"
+template <typename T> using sc_stream_in = sc_rvd_in<T>;
+template <typename T> using sc_stream_out = sc_rvd_out<T>;
+
+#else
 #include "sc_stream_ports.h"
+#endif
 
 // Port & Channel Prefix
 // m: port master
