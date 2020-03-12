@@ -298,7 +298,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
 	methodname = methdcl->getNameAsString();
 
 	os_ << "here is method printname info " << methodname << "\n";
-	if (methodname == "operator unsigned long long") {
+	if (methodname.compare(0, 8, "operator")==0) { // 0 means compare =, 8 is len("operator")
 	  // the conversion we know about, can be skipped
 	  os_ << "Found operator conversion node\n";
 	  TRY_TO(TraverseStmt(arg)); 
