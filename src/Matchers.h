@@ -309,8 +309,19 @@ class PortMatcher : public MatchFinder::MatchCallback {
   //   - Or, it has a type that is a C++ class whose class name is "name".
   //
   auto makePortHasNameMatcher(const std::string &name) {
-    return fieldDecl(anyOf(hasType(arrayType(hasElementType(asString(name)))),
-                           hasType(cxxRecordDecl((hasName(name))))));
+      return fieldDecl(
+          anyOf(
+            hasType(arrayType(hasElementType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(cxxRecordDecl(hasName(name)))))))),
+            hasType(hasUnqualifiedDesugaredType(
+                recordType(
+                  hasDeclaration(cxxRecordDecl(hasName(name)))
+                  )
+                )
+              )
+            )
+          );
+    //return fieldDecl(anyOf(hasType(arrayType(hasElementType(asString(name)))),
+    //                       hasType(cxxRecordDecl((hasName(name))))));
   }
 
   // This is a matcher for sc_in_clk since it uses a NamedDecl.
@@ -409,6 +420,10 @@ class PortMatcher : public MatchFinder::MatchCallback {
            forEach(
                makePortHasNameMatcher("sc_stream_in").bind("sc_stream_in")),
            forEach(
+               makePortHasNameMatcher("sc_rvd_in").bind("sc_stream_in")),
+           forEach(
+               makePortHasNameMatcher("sc_rvd_out").bind("sc_stream_out")),
+           forEach(
                makePortHasNameMatcher("sc_stream_out").bind("sc_stream_out")))
                );
 
@@ -482,11 +497,11 @@ class PortMatcher : public MatchFinder::MatchCallback {
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
-    if (auto fd = checkMatch<FieldDecl>("sc_in_clk", result)) {
-      std::string port_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << "Found sc_in_clk: " << port_name << "\n";
-      insert_port(clock_ports_, fd);
-    }
+    // if (auto fd = checkMatch<FieldDecl>("sc_in_clk", result)) {
+      // std::string port_name{fd->getIdentifier()->getNameStart()};
+      // llvm::outs() << "Found sc_in_clk: " << port_name << "\n";
+      // insert_port(clock_ports_, fd);
+    // }
 
     if (auto fd = checkMatch<FieldDecl>("sc_in", result)) {
       auto port_name{fd->getIdentifier()->getNameStart()};
