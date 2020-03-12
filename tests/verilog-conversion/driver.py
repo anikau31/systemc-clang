@@ -11,8 +11,8 @@ class SystemCClangDriver(object):
     """
     SYSTEMC_CLANG_BIN_PATH = os.environ['LLVM_INSTALL_DIR'] + "/bin/systemc-clang"
     PYTHON_CONVERT_TEMPLATE = 'python {}{}'.format(
-        os.environ['SYSTEMC_CLANG_BUILD_DIR'],
-        "../systemc-clang/plugins/xlat/convert.py"
+        os.environ['SYSTEMC_CLANG'],
+        "/plugins/xlat/convert.py"
     )
     SYSTEMC_CLANG_ARGUMENTS = [
         "-I", "{}/include/".format(os.environ['SYSTEMC']),
@@ -42,16 +42,16 @@ class SystemCClangDriver(object):
     def __init__(self, conf, *args, **kwargs):
         self.conf = conf
 
-    def generate_verilog_from_sexp(self, path, output_folder, keep_v=False, verbose=False):
+    def generate_verilog_from_sexp(self, path, output_folder, keep_v=False, verbose=False, keep_log=True):
         """
         Takes _hdl.txt as input, generate .v
         """
         if not path.endswith('_hdl.txt'):
             raise RuntimeError('Filename should end with _hdl.txt')
         v_loc = path + '.v'
-        v_loc = os.path.abspath(v_loc)
-        if os.path.isfile(v_loc):
-            raise RuntimeError('File to generate: {} exists'.format(v_loc))
+        # v_loc = os.path.abspath(v_loc)
+        # if os.path.isfile(v_loc):
+        #    raise RuntimeError('File to generate: {} exists'.format(v_loc))
 
         v_filename = os.path.basename(v_loc)
         output_filename = '{}/{}'.format(output_folder, v_filename)
@@ -71,18 +71,20 @@ class SystemCClangDriver(object):
 
         cmdline = ' '.join([
             SystemCClangDriver.PYTHON_CONVERT_TEMPLATE,
-            path
+            path,
+            output_filename
         ])
         if verbose:
             print('cmdline', cmdline)
         try:
-            if verbose:
-                subprocess.run(cmdline, shell=True)
-            else:
-                with open(os.devnull, 'wb') as null:
-                    subprocess.run(cmdline, 
-                            stdout=null,  stderr=null,
-                            shell=True)
+            res = subprocess.run(cmdline, 
+                    stdout=subprocess.PIPE,  stderr=subprocess.PIPE,
+                    shell=True)
+            if keep_log:
+                with open(output_folder + '/convert.py.stdout', 'wb') as f:
+                    f.write(res.stdout)
+                with open(output_folder + '/convert.py.stderr', 'wb') as f:
+                    f.write(res.stderr)
             if os.path.isfile(output_filename):
                 return True, output_filename
             else:
@@ -92,13 +94,13 @@ class SystemCClangDriver(object):
         finally:
             if not keep_v:
                 subprocess.run('rm {}'.format(output_filename), shell=True)
-            if keep_v and os.path.normpath(v_loc) != os.path.normpath(output_filename):
-                subprocess.run('rm -f {}'.format(output_filename), shell=True)
+            # if keep_v and os.path.normpath(v_loc) != os.path.normpath(output_filename):
+            #     subprocess.run('rm -f {}'.format(output_filename), shell=True)
 
     """
     Takes .cpp as input, generate _hdl.txt
     """
-    def generate_sexp(self, path, output_folder, keep_sexp=False, verbose=False):
+    def generate_sexp(self, path, output_folder, keep_sexp=False, verbose=False, keep_log=True):
         cmdline = self.systemc_clang_commandline(filename=path)
         if path.endswith('.cpp'):
             sexp_loc = re.sub(".cpp$", "_hdl.txt", path)
@@ -123,14 +125,16 @@ class SystemCClangDriver(object):
         try:
             if verbose:
                 print('cmd: ', ' '.join(cmdline))
-                res = subprocess.run(' '.join(cmdline), shell=True)
-            else:
-                with open(os.devnull, 'wb') as null:
-                    res = subprocess.run(' '.join(cmdline), shell=True, 
-                            stdout=null, 
-                            stderr=null)
+            res = subprocess.run(' '.join(cmdline), shell=True, 
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE)
+            if keep_log:
+                with open(output_folder + '/systemc-clang.stdout', 'wb') as f:
+                    f.write(res.stdout)
+                with open(output_folder + '/systemc-clang.stderr', 'wb') as f:
+                    f.write(res.stderr)
             if res.returncode != 0:
-                raise RuntimeError('systemc-clang exits with code: {}'.format(res.returncode))
+                raise RuntimeError('systemc-clang exits with code: {}, check {} for more information'.format(res.returncode, output_folder))
             move_required = os.path.normpath(sexp_loc) != os.path.normpath(output_filename)
             if os.path.isfile(sexp_loc):
                 if move_required:
