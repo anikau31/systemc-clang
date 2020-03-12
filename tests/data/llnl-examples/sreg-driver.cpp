@@ -1,9 +1,9 @@
 /* Placeholder for further modules */
 // TODO: include example directory
 #include "sreg.h"
-#include "sc_stream.h"
+//#include "sc_stream.h"
 
-#include <systemc.h>
+//#include <systemc.h>
 
 SC_MODULE(test) {
 public:
@@ -21,7 +21,7 @@ public:
 int sc_main(int argc, char *argv[]) {
   sc_signal<bool> clk;
   sc_signal<bool> reset;
-  sc_stream<int> in_s;
+  sc_rvd<int> in_s;
   test test_instance("testing");
   test_instance.clk(clk);
   test_instance.m_port(in_s);
