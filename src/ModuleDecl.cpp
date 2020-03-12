@@ -488,9 +488,9 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   for (auto mit : out_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
-
+    // auto template_type = pd->getTemplateType();
+    // auto template_args{template_type->getTemplateArgumentsType()};
+//
     oport_j[name] = pd->dump_json(os);
   }
 
@@ -499,9 +499,9 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   for (auto mit : inout_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
-
+    // auto template_type = pd->getTemplateType();
+    // auto template_args{template_type->getTemplateArgumentsType()};
+//
     ioport_j[name] = pd->dump_json(os);
   }
 
@@ -509,8 +509,8 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   for (auto mit : istreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
+    // auto template_type = pd->getTemplateType();
+    // auto template_args{template_type->getTemplateArgumentsType()};
     istreamport_j[name] = pd->dump_json(os);
   }
 
@@ -518,18 +518,18 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   for (auto mit : ostreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
+    // auto template_type = pd->getTemplateType();
+    // auto template_args{template_type->getTemplateArgumentsType()};
     ostreamport_j[name] = pd->dump_json(os);
   }
 
   othervars_j["number_of_other_vars"] = other_fields_.size();
   for (auto mit : other_fields_) {
     auto name = get<0>(mit);
-    llvm::outs() << "\n######## OTHER FIRLDS " << name << "\n";;
+//    llvm::outs() << "\n######## OTHER FIRLDS " << name << "\n";;
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgTreePtr()};
+    // auto template_type = pd->getTemplateType();
+    // auto template_args{template_type->getTemplateArgTreePtr()};
     othervars_j[name] = pd->dump_json(os);
   }
 
