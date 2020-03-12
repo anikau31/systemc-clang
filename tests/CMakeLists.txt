@@ -22,7 +22,7 @@ set( UNIT_TEST_LIST
   t5-template-matching
   # subtree-matcher-test
   clock-parsing
-  find-var-decl
+  # find-var-decl
   hotfix-40-findtemplatetypes
   )
 
