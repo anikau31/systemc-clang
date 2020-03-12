@@ -1,4 +1,3 @@
-
 #ifndef SFIFO_CC_H
 #define SFIFO_CC_H
 
@@ -101,8 +100,8 @@ public:
 			for (int i = 0; i < size_; i++) sensitive << data[i];
 		SC_METHOD(ms_proc);
 			sensitive << clk.pos();
-			reset_signal_is(reset, RLEV);
-			dont_initialize();
+			//reset_signal_is(reset, RLEV);
+			//dont_initialize();
 	}
 
 };

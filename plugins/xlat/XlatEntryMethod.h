@@ -44,6 +44,7 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   bool TraverseIfStmt(IfStmt *ifs);
   bool TraverseForStmt(ForStmt *fors);
   bool TraverseWhileStmt(WhileStmt *whiles);
+  void VnameDump();
   //CXXMethodDecl *getEMD();
   
  private:
@@ -53,6 +54,17 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   //  size_t n;
   
   hNodep h_ret;   // value returned by each subexpression
+  typedef struct {
+    string oldn;
+    string newn;
+  } names_t;
+  std::map<Decl *, std::vector<DeclRefExpr *>> vuse_map;
+  std::map<Decl *, names_t> vname_map;
+  const string prefix = "_XLAT_";
+  int cnt;
+  inline string newname() {
+    return (prefix+to_string(cnt++));
+  }
 };
 
 

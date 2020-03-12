@@ -165,7 +165,7 @@ SC_MODULE(find_emax)
 		}
 	}
 
-#if 1
+#if 0
 	void start_of_simulation()
 	{
 		extern sc_trace_file *tf;
@@ -200,8 +200,8 @@ SC_MODULE(find_emax)
 			sensitive << emax << emax_v << c_sync;
 		SC_METHOD(ms_proc);
 			sensitive << clk.pos();
-			reset_signal_is(reset, false);
-			dont_initialize();
+			//reset_signal_is(reset, false);
+			//dont_initialize();
 	}
 
 };
@@ -287,7 +287,7 @@ SC_MODULE(fwd_cast)
 			// reset_signal_is(reset, false);
 	// }
 
-#if 1
+#if 0
 	void start_of_simulation()
 	{
 		extern sc_trace_file *tf;
@@ -314,8 +314,8 @@ SC_MODULE(fwd_cast)
 			sensitive << count << c_sync;
 		SC_METHOD(ms_proc);
 			sensitive << clk.pos();
-			reset_signal_is(reset, false);
-			dont_initialize();
+			//reset_signal_is(reset, false);
+			//dont_initialize();
 	}
 
 };
