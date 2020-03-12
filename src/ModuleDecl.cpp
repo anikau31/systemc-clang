@@ -473,11 +473,12 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   iport_j["number_of_in_ports"] = in_ports_.size();
 
   os << "Start printing ports\n";
+  os << "\n@@@@@ Input ports: " << in_ports_.size() << "\n";
   for (auto mit : in_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
+    //auto template_type = pd->getTemplateType();
+    //auto template_args{template_type->getTemplateArgumentsType()};
 
     iport_j[name] = pd->dump_json(os);
   }

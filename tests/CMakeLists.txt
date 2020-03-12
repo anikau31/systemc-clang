@@ -2,6 +2,30 @@
 
 configure_file( ClangArgs.h.in ClangArgs.h)
 
+# updating submodules
+if(V_TESTS_ON)
+  # pull and update submodule
+  find_package(Git QUIET)
+  if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+    option(GIT_SUBMODULE "Check submodules during build" ON)
+    if(GIT_SUBMODULE)
+        message(STATUS "Submodule update")
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+        endif()
+    endif()
+  endif()
+
+  if(NOT EXISTS "${PROJECT_SOURCE_DIR}/tests/data/verilog-conversion/.git")
+      message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
+  endif()
+
+  file(COPY verilog-conversion/run-verilog-tests.py DESTINATION ${CMAKE_BINARY_DIR}/)
+endif()
+
 # Test files so far are t#.cpp
 # Don't use globbing as it doesn't recognize recompiles.
 # file(GLOB TEST_FILES "t[0-9].cpp")
@@ -20,9 +44,7 @@ set( UNIT_TEST_LIST
   sreg-test
   t4-matchers
   t5-template-matching
-  # subtree-matcher-test
   clock-parsing
-  # find-var-decl
   hotfix-40-findtemplatetypes
   )
 
@@ -46,9 +68,13 @@ foreach(NAME IN LISTS UNIT_TEST_LIST)
 endforeach()
 
 # for pytest tests
-if(PY_TESTS_ON)
+if(V_TESTS_ON)
+  # integrate into ctest
   add_test(NAME verilog-tests
-    COMMAND ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR}
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} )
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR})
+  add_test(NAME verilog-sanity-tests
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k test_sanity)
+  add_test(NAME verilog-custom-tests
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k test_custom)
 endif()
 

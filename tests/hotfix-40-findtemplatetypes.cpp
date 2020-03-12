@@ -35,7 +35,7 @@ TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
 #include "systemc.h"
 #include "sreg.h"
-#include "sc_stream.h"
+//#include "sc_stream.h"
 
 template< int E, int F>
 struct fp_t {

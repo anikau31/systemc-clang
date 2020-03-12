@@ -29,9 +29,6 @@ class VerilogParser(object):
         this_ast = VerilogParser.parse(this_verilog_filename, include_list, define_list)
         that_ast = VerilogParser.parse(that_verilog_filename, include_list, define_list)
 
-        # this_ast.show()
-        # that_ast.show()
-
         # show the diff
         diff_info = VerilogASTDiff.diff_info(this_ast, that_ast)
         return diff_info
