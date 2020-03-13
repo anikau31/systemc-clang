@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <ctype.h>
 #include "clang/AST/DeclCXX.h"
 #include "clang/AST/Stmt.h"
 #include "clang/AST/Expr.h"
@@ -65,6 +66,13 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   inline string newname() {
     return (prefix+to_string(cnt++));
   }
+  
+  inline bool is_ident(char ch) {
+    return (isalnum(ch) || ch=='_');
+  }
+  
+  void make_ident(string &nm);
+
 };
 
 

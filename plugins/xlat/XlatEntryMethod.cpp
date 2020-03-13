@@ -390,7 +390,8 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
     QualType q = unqualtyp->getCanonicalTypeInternal();
     //QualType q = (baseexpr->getType())->getDesugaredType();
      //string basestr = tp->getAsString();
-     nameinfo.insert((size_t) 0,  "\""+ q.getAsString() +"\"_"); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
+     nameinfo.insert((size_t) 0, q.getAsString()); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
+     make_ident(nameinfo);
   }
   os_ << "memberdecl is \n";
   memberexpr->getMemberDecl()->dump(os_);
@@ -483,6 +484,14 @@ void XlatMethod::VnameDump() {
   for (auto const &var : vname_map) {
     os_ << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n";
 						  
+  }
+}
+
+void XlatMethod::make_ident(string &nm) {
+  for (auto &ch : nm) {
+    if (!is_ident(ch)) {
+      ch = '_';
+    }
   }
 }
 
