@@ -383,10 +383,14 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
   os_ << "name is " << nameinfo << ", base and memberexpr trees follow\n";
   os_ << "base is \n";
   memberexpr->getBase()->dump(os_);
-  auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
+   auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
   if (baseexpr) {
     // FIXME Only handling one level right now
-    nameinfo.insert((size_t) 0,  baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
+    const Type *unqualtyp = baseexpr->getType()->getUnqualifiedDesugaredType();
+    QualType q = unqualtyp->getCanonicalTypeInternal();
+    //QualType q = (baseexpr->getType())->getDesugaredType();
+     //string basestr = tp->getAsString();
+     nameinfo.insert((size_t) 0,  "\""+ q.getAsString() +"\"_"); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
   }
   os_ << "memberdecl is \n";
   memberexpr->getMemberDecl()->dump(os_);
