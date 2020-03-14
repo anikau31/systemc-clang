@@ -1,6 +1,7 @@
 from lark import Lark, Transformer, Visitor
 import sys
 import logging
+import warnings
 logging.basicConfig(level=logging.DEBUG)
 
 l = Lark('''
@@ -31,7 +32,7 @@ l = Lark('''
         hcstmt:  "hCStmt" "NONAME" "[" modportsiglist* stmt+ "]" // useful for raising variable decls
               |  "hCStmt" "NONAME" "NOLIST"
 
-        ?stmt : expression
+        stmt : expression
              | syscwrite
              | ifstmt
              | forstmt
@@ -145,7 +146,7 @@ class CType2VerilogType(object):
             if vtype == 'real':
                 width_or_type_str = ' real'
             elif vtype == 'integer':
-                width_or_type_str = ' integer'
+                width_or_type_str = ' [31:0]'
         else:
             width_or_type_str = f' [{bw-1}:0]'
         return [f'{inout} {wire_or_reg}{width_or_type_str}', vtype]
@@ -230,7 +231,7 @@ class VerilogTransformer(Transformer):
                     stmt_list.append(stmt)
         # currently it's ok to append a comma
         print("stmtlist in hcstmt is ", args, stmt_list)
-        res = ';\n'.join(x for x in stmt_list)
+        res = ';\n'.join(x for x in stmt_list) + ';'
         return res
 
     def exprwrapper(self, args):
@@ -294,8 +295,10 @@ class VerilogTransformer(Transformer):
     
     @p
     def htype(self, args):
+        # NOTE: the name of htype will always be a STRING
+        # NOTE: args[0][1:-1] removes the quotes
         # return CType2VerilogType.convert(str(args[0]))
-        return str(args[0])
+        return str(args[0][1:-1])
 
     def hunimp(self, args):
         return f'\"//# Unimplemented: {args[0]}\"'
@@ -361,6 +364,9 @@ class VerilogTransformer(Transformer):
         print("args: ", args)
         modname = str(args[0])
         print(modname)
+        if modname.startswith('sc_stream_0'):
+            warnings.warn('TODO: temporary fix, manually skipping sc_stream_0')
+            return ''
         if len(args)>1:
             portsiglist = args[1]
             print("portsiglist ", portsiglist)
@@ -521,18 +527,29 @@ class VerilogTransformer(Transformer):
             ]
         return '\n'.join(res)
 
+    @p
+    def stmt(self, args):
+        assert(len(args) == 1)
+        return args[0]
+
 def main():
-    if len(sys.argv) != 2:
-        print('Usage: convert.py filename')
+    if len(sys.argv) != 2 and len(sys.argv) != 3:
+        print('Usage: convert.py filename [outputfilename]')
     filename = sys.argv[1]
+    outputname = filename + ".v"
+    if len(sys.argv) == 3:
+        outputname = sys.argv[2]
     with open(filename, 'r') as f:
         file_content = f.read()
     t = l.parse(file_content)
     # print(t)
     res = VerilogTransformer().transform(t)
-    with open(filename + '.v', 'w+') as f:
+    with open(outputname, 'w+') as f:
         f.writelines(res)
+        f.write("\n\n")
     print(res)
+
+
 
 
 if __name__ == '__main__':
