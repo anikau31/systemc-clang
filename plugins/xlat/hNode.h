@@ -145,4 +145,13 @@ namespace hnode {
     }
 
   };
+  
+  
+  inline void make_ident(string &nm) {
+    for (auto &ch : nm) {
+      if (!(isalnum(ch) || ch=='_')) {
+	ch = '_';
+      }
+    }
+  }
 }

@@ -120,8 +120,11 @@ void Xlat::xlattype(FindTemplateTypes *tt, hNodep &h_typeinfo) {
       tt->getTemplateArgumentsType();
   os_ << "number of type args is " << ttargs.size() << "\n";
   for (auto const &targ : ttargs) {
+    string tmps =  targ.getTypeName();
+    make_ident(tmps);
     h_typeinfo->child_list.push_back(
-        new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
+				     // new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
+       new hNode(tmps, hNode::hdlopsEnum::hType));
     (targ.getTypePtr())->dump(os_);
   }
 }

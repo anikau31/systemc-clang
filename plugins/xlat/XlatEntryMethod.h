@@ -66,12 +66,6 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   inline string newname() {
     return (prefix+to_string(cnt++));
   }
-  
-  inline bool is_ident(char ch) {
-    return (isalnum(ch) || ch=='_');
-  }
-  
-  void make_ident(string &nm);
 
 };
 

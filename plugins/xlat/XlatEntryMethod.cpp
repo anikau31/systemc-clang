@@ -170,12 +170,19 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
   scpar::FindTemplateTypes::type_vector_t ttargs = te->getTemplateArgumentsType();
   for (auto const &targ : ttargs) {
 
-    h_typeinfo->child_list.push_back(new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
+    //h_typeinfo->child_list.push_back(new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
+    string tmps = targ.getTypeName();
+    make_ident(tmps);
+    h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
 
   }
   
-  if (h_typeinfo->child_list.empty()) // front end didn't parse type info
-    h_typeinfo->child_list.push_back(new hNode("\"" + q.getAsString() + "\"", hNode::hdlopsEnum::hType));
+  if (h_typeinfo->child_list.empty()) { // front end didn't parse type info
+    //h_typeinfo->child_list.push_back(new hNode("\"" + q.getAsString() + "\"", hNode::hdlopsEnum::hType));
+    string tmps = q.getAsString();
+    make_ident(tmps);
+    h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
+  }
 				     
   h_vardecl->child_list.push_back(h_typeinfo);
   if (Expr * declinit = vardecl->getInit()) {
@@ -487,13 +494,6 @@ void XlatMethod::VnameDump() {
   }
 }
 
-void XlatMethod::make_ident(string &nm) {
-  for (auto &ch : nm) {
-    if (!is_ident(ch)) {
-      ch = '_';
-    }
-  }
-}
 
 // CXXMethodDecl *XlatMethod::getEMD() {
 //   return _emd;
