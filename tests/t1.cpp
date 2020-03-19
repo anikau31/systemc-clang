@@ -41,6 +41,8 @@ SC_MODULE( test ){
 
   void entry_function_1() {
     while(true) {
+     x = x+1;
+     out1.write(x);
     }
   }
   SC_CTOR( test ) {
@@ -105,34 +107,7 @@ int sc_main(int argc, char *argv[]) {
   ModuleDecl *test_module{model->getInstance("testing")};;
   ModuleDecl *simple_module{model->getInstance("simple_module_instance")};
 
-/*
-  for (auto const &element : module_instance_map) {
-    auto instance_list{element.second};
-
-    auto test_module_it = std::find_if(
-        instance_list.begin(), instance_list.end(), [](const auto &instance) {
-          return instance->getInstanceName() == "testing";
-        });
-    test_module = *test_module_it;
-    if (test_module_it != instance_list.end()) {
-      break;
-    }
-  }
-
-  for (auto const &element : module_instance_map) {
-    auto instance_list{element.second};
-    auto simple_module_it = std::find_if(
-        instance_list.begin(), instance_list.end(), [](const auto &instance) {
-          return instance->getInstanceName() == "simple_module_instance";
-        });
-    simple_module = *simple_module_it;
-    if (simple_module_it != instance_list.end()) {
-      break;
-    }
-  }
-  */
-
-  SECTION("Found sc_module instances", "[instances]") {
+SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module declarations found: "
          << module_decl.size());
@@ -159,9 +134,9 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getOPorts().size() == 2);
     REQUIRE(test_module_inst->getIOPorts().size() == 1);
     REQUIRE(test_module_inst->getSignals().size() == 1);
-    REQUIRE(test_module_inst->getOtherVars().size() == 1);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
+    REQUIRE(test_module_inst->getOtherVars().size() == 1);
 
     INFO("Checking member ports for simple module instance.");
     auto simple_module_inst{simple_module};

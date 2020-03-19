@@ -55,7 +55,7 @@ json PortDecl::dump_json(raw_ostream &os) {
   port_j["port_name"] = getName();
 
   auto args{template_type_->getTemplateArgTreePtr()};
-  args->dump();
+  //args->dump();
 
   for (auto const &node : *args) {
     // Returns a TreeNodePtr
@@ -63,8 +63,8 @@ json PortDecl::dump_json(raw_ostream &os) {
     auto parent_node{node->getParent()};
     auto parent_data{parent_node->getDataPtr()};
     if (parent_node->getDataPtr() == node->getDataPtr()) {
-      llvm::outs() << "\nInsert parent node: " << type_data->getTypeName()
-                   << "\n";
+      //llvm::outs() << "\nInsert parent node: " << type_data->getTypeName()
+      //             << "\n";
       port_j["port_arguments"][type_data->getTypeName()] = nullptr;
     } else {
       // FIXME: This does not print the tree properly.
@@ -76,6 +76,6 @@ json PortDecl::dump_json(raw_ostream &os) {
           type_data->getTypeName());
     }
   }
-  os << port_j.dump(4);
+  //os << port_j.dump(4);
   return port_j;
 }

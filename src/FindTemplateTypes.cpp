@@ -58,9 +58,9 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
     return template_types_;
   }
 
-  llvm::outs() << "####  Desugared #### \n";
-  type->getUnqualifiedDesugaredType()->dump();
-
+  // llvm::outs() << "####  Desugared #### \n";
+  // type->getUnqualifiedDesugaredType()->dump();
+//
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
   return template_types_;
 }
@@ -107,7 +107,7 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
 
 bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
   llvm::outs() << "=VisitBuiltinType=\n";
-  bi_type->dump();
+  //bi_type->dump();
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
