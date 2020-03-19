@@ -170,12 +170,19 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
   scpar::FindTemplateTypes::type_vector_t ttargs = te->getTemplateArgumentsType();
   for (auto const &targ : ttargs) {
 
-    h_typeinfo->child_list.push_back(new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
+    //h_typeinfo->child_list.push_back(new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
+    string tmps = targ.getTypeName();
+    make_ident(tmps);
+    h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
 
   }
   
-  if (h_typeinfo->child_list.empty()) // front end didn't parse type info
-    h_typeinfo->child_list.push_back(new hNode("\"" + q.getAsString() + "\"", hNode::hdlopsEnum::hType));
+  if (h_typeinfo->child_list.empty()) { // front end didn't parse type info
+    //h_typeinfo->child_list.push_back(new hNode("\"" + q.getAsString() + "\"", hNode::hdlopsEnum::hType));
+    string tmps = q.getAsString();
+    make_ident(tmps);
+    h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
+  }
 				     
   h_vardecl->child_list.push_back(h_typeinfo);
   if (Expr * declinit = vardecl->getInit()) {
@@ -298,7 +305,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
 	methodname = methdcl->getNameAsString();
 
 	os_ << "here is method printname info " << methodname << "\n";
-	if (methodname == "operator unsigned long long") {
+	if (methodname.compare(0, 8, "operator")==0) { // 0 means compare =, 8 is len("operator")
 	  // the conversion we know about, can be skipped
 	  os_ << "Found operator conversion node\n";
 	  TRY_TO(TraverseStmt(arg)); 
@@ -383,10 +390,15 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
   os_ << "name is " << nameinfo << ", base and memberexpr trees follow\n";
   os_ << "base is \n";
   memberexpr->getBase()->dump(os_);
-  auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
+   auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
   if (baseexpr) {
     // FIXME Only handling one level right now
-    nameinfo.insert((size_t) 0,  baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
+    const Type *unqualtyp = baseexpr->getType()->getUnqualifiedDesugaredType();
+    QualType q = unqualtyp->getCanonicalTypeInternal();
+    //QualType q = (baseexpr->getType())->getDesugaredType();
+     //string basestr = tp->getAsString();
+     nameinfo.insert((size_t) 0, q.getAsString()); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
+     make_ident(nameinfo);
   }
   os_ << "memberdecl is \n";
   memberexpr->getMemberDecl()->dump(os_);
@@ -481,6 +493,7 @@ void XlatMethod::VnameDump() {
 						  
   }
 }
+
 
 // CXXMethodDecl *XlatMethod::getEMD() {
 //   return _emd;
