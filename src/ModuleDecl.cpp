@@ -194,7 +194,7 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
     // They are equivalent, and quite unnecessary.
     //
     for (auto const &signal_port : found_ports) {
-      auto port_decl{ get<1>(signal_port)};
+      auto port_decl{get<1>(signal_port)};
       auto name{port_decl->getName()};
       auto templates{port_decl->getTemplateType()};
       auto field_decl{port_decl->getFieldDecl()};
@@ -203,7 +203,7 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
       auto signal_entry{new Signal(name, signal_container)};
       signals_.insert(ModuleDecl::signalPairType(name, signal_entry));
     }
-    //std::copy(begin(found_ports), end(found_ports), back_inserter(signals_));
+    // std::copy(begin(found_ports), end(found_ports), back_inserter(signals_));
   }
 
   if (port_type == "sc_stream_in") {
@@ -467,41 +467,27 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
-  os << "\nInput ports: " << in_ports_.size() << "\n";
-
   json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j;
-  iport_j["number_of_in_ports"] = in_ports_.size();
 
-  os << "Start printing ports\n";
-  os << "\n@@@@@ Input ports: " << in_ports_.size() << "\n";
+
+  iport_j["number_of_input_ports"] = in_ports_.size();
   for (auto mit : in_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    //auto template_type = pd->getTemplateType();
-    //auto template_args{template_type->getTemplateArgumentsType()};
-
     iport_j[name] = pd->dump_json(os);
   }
 
-  os << "\nOutput ports: " << out_ports_.size() << "\n";
   oport_j["number_of_output_ports"] = out_ports_.size();
   for (auto mit : out_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
-
     oport_j[name] = pd->dump_json(os);
   }
 
-  os << "\nInout ports: " << inout_ports_.size() << "\n";
   ioport_j["number_of_inout_ports"] = inout_ports_.size();
   for (auto mit : inout_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
-
     ioport_j[name] = pd->dump_json(os);
   }
 
@@ -509,8 +495,6 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   for (auto mit : istreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
     istreamport_j[name] = pd->dump_json(os);
   }
 
@@ -518,20 +502,23 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   for (auto mit : ostreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgumentsType()};
     ostreamport_j[name] = pd->dump_json(os);
   }
 
   othervars_j["number_of_other_vars"] = other_fields_.size();
   for (auto mit : other_fields_) {
     auto name = get<0>(mit);
-    llvm::outs() << "\n######## OTHER FIRLDS " << name << "\n";;
     auto pd = get<1>(mit);
-    auto template_type = pd->getTemplateType();
-    auto template_args{template_type->getTemplateArgTreePtr()};
     othervars_j[name] = pd->dump_json(os);
   }
+
+  os << "Start printing ports\n";
+  os << "\nInput ports: " << in_ports_.size() << "\n";
+  os << "\nOutput ports: " << out_ports_.size() << "\n";
+  os << "\nInout ports: " << inout_ports_.size() << "\n";
+  os << "\nIstream ports: " << istreamports_.size() << "\n";
+  os << "\nOstream ports: " << ostreamports_.size() << "\n";
+  os << "\nOther fields: " << other_fields_.size() << "\n";
 
   os << "Ports\n";
   os << iport_j.dump(4) << "\n"

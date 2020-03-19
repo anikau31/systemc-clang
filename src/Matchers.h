@@ -293,13 +293,29 @@ class PortMatcher : public MatchFinder::MatchCallback {
   //     from a class name called "name"
   //   - Or, it is has a type that is a c++ class that is derived from class name "name".
   auto makeArrayType(const std::string &name) {
-    return hasType(arrayType(hasElementType(hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name)))))));
+    return hasType(
+         arrayType(
+           hasElementType(hasDeclaration(
+               cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
+               )
+             )
+           )
+         );
+  }
+
+  auto signalMatcher(const std::string &name) {
+  return  anyOf(
+          makeArrayType(name),
+          hasType(
+            cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
+            )
+          );
   }
 
   auto makeSignalMatcher(const std::string &name) {
-    return fieldDecl(anyOf(
-          makeArrayType(name),
-        hasType(cxxRecordDecl(isDerivedFrom(hasName(name))))));
+    return fieldDecl(
+        signalMatcher(name)
+          ).bind("other_fields");
   }
 
   // This is a matcher for sc_port.
@@ -308,20 +324,38 @@ class PortMatcher : public MatchFinder::MatchCallback {
   //   - It has a type that is an array whose type has a name "name"
   //   - Or, it has a type that is a C++ class whose class name is "name".
   //
-  auto makePortHasNameMatcher(const std::string &name) {
-      return fieldDecl(
+  auto portNameMatcher(const std::string &name) {
+      return 
           anyOf(
-            hasType(arrayType(hasElementType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(cxxRecordDecl(hasName(name)))))))),
+            hasType(
+              arrayType(
+                hasElementType(hasUnqualifiedDesugaredType(
+                    recordType(
+                      hasDeclaration(
+                        cxxRecordDecl(hasName(name)).bind("desugar_"+name)
+                        )
+                      )
+                    )
+                  )
+                )
+              ),
             hasType(hasUnqualifiedDesugaredType(
                 recordType(
-                  hasDeclaration(cxxRecordDecl(hasName(name)))
+                  hasDeclaration(
+                    cxxRecordDecl(hasName(name)).bind("desugar_"+name)
+                    )
                   )
                 )
               )
-            )
-          );
-    //return fieldDecl(anyOf(hasType(arrayType(hasElementType(asString(name)))),
-    //                       hasType(cxxRecordDecl((hasName(name))))));
+            );
+          
+   
+  }
+
+  auto makePortHasNameMatcher(const std::string &name) {
+    return fieldDecl(
+        portNameMatcher(name)
+        ).bind("other_fields");
   }
 
   // This is a matcher for sc_in_clk since it uses a NamedDecl.
@@ -403,89 +437,73 @@ class PortMatcher : public MatchFinder::MatchCallback {
         )
       );
 
-     // Notice that the ports can also be arrays.
      auto match_all_ports = cxxRecordDecl(
          match_module_decls,
          eachOf(
            forEach(
-             makePortHasNamedDeclNameMatcher("sc_in_clk").bind("sc_in_clk")),
+             makePortHasNamedDeclNameMatcher("sc_in_clk")),
            forEach(
-               makePortHasNameMatcher("sc_in").bind("sc_in")),
+               makePortHasNameMatcher("sc_in")),
            forEach( 
-               makePortHasNameMatcher("sc_out").bind("sc_out")),
+               makePortHasNameMatcher("sc_out")),
            forEach(
-               makePortHasNameMatcher("sc_inout").bind("sc_inout")),
+               makePortHasNameMatcher("sc_inout")),
            forEach(
-             makeSignalMatcher("sc_signal_inout_if").bind("sc_signal")),
+             makeSignalMatcher("sc_signal_inout_if")),
            forEach(
-               makePortHasNameMatcher("sc_stream_in").bind("sc_stream_in")),
+               makePortHasNameMatcher("sc_stream_in")),
            forEach(
-               makePortHasNameMatcher("sc_rvd_in").bind("sc_stream_in")),
+               makePortHasNameMatcher("sc_rvd_in")),
            forEach(
-               makePortHasNameMatcher("sc_rvd_out").bind("sc_stream_out")),
+               makePortHasNameMatcher("sc_rvd_out")),
            forEach(
-               makePortHasNameMatcher("sc_stream_out").bind("sc_stream_out")))
+               makePortHasNameMatcher("sc_stream_out"))
+           )
                );
+     // Notice that the ports can also be arrays.
+     
+     auto match_non_sc_types_fdecl = 
+      cxxRecordDecl(
+      match_module_decls,
+      //unless(match_all_ports),
+          forEach(fieldDecl(
+              unless(portNameMatcher("sc_in_clk")),
+              unless(portNameMatcher("sc_in")),
+              unless(portNameMatcher("sc_out")),
+              unless(portNameMatcher("sc_inout")),
+              unless(portNameMatcher("sc_stream_in")),
+              unless(portNameMatcher("sc_stream_out")),
+              unless(portNameMatcher("sc_rvd_in")),
+              unless(portNameMatcher("sc_rvd_out")),
+              unless(signalMatcher("sc_signal_inout_if")),
+              unless(portNameMatcher("sc_rvd_in")),
+              unless(portNameMatcher("sc_rvd_out"))
+              ).bind("other_fvdecl")));
 
-    // TODO: I'm not convinced that this would work. 
-    //
-    // I wonder if the way to fix this is to to unless(match_all_ports))
-    auto match_non_sc_types = cxxRecordDecl(
-        match_module_decls,
+    auto match_non_sc_types_vdecl = cxxRecordDecl(
         forEach(
-          fieldDecl(
-            anyOf(hasType(builtinType()),
-                  // hasType(arrayType(hasElementType(hasDeclaration(
-                          // unless(cxxRecordDecl(isDerivedFrom(hasName("sc_signal_inout_if")))))
-                        // )
-                      // )
-                    // ),
-                   hasType(cxxRecordDecl(allOf(
-                      unless(hasName("sc_in")), 
-                      unless(hasName("sc_inout")),
-                      unless(hasName("sc_out")), 
-                      unless(hasName("sc_signal_inout_if")),
-                      unless(hasName("sc_signal")),
-                      unless(hasName("sc_stream_in")),
-                      unless(hasName("sc_stream_out")))))))
-            .bind("other_fields")));
-
-
-    // auto match_non_sc_types = cxxRecordDecl(
-        // match_module_decls,
-        // forEach(fieldDecl(
-            // anyOf(hasType(builtinType()),
-                  // hasType(arrayType()),
-                  // hasType(cxxRecordDecl(allOf(
-                        // unless(match_all_ports),
-                      // unless(hasName("sc_in")),
-                      // unless(hasName("sc_inout")),
-                      // unless(hasName("sc_out")),
-                      // unless(hasName("sc_signal")),
-                      // unless(hasName("sc_stream_in")),
-                      // unless(hasName("sc_stream_out")))))))
-            // .bind("other_fields")));
-//
-    auto match_non_sc_types_vdecl = cxxRecordDecl(forEach(
-        varDecl(
-            anyOf(hasType(builtinType()),
-                  hasType(cxxRecordDecl(allOf(
-                      unless(hasName("sc_in")), 
-                      unless(hasName("sc_inout")),
-                      unless(hasName("sc_out")), 
-                      unless(hasName("sc_signal")),
-                      unless(hasName("sc_signal_inout_if")),
-                      unless(hasName("sc_stream_in")),
-                      unless(hasName("sc_stream_out")))))))
-            .bind("other_fields")));
+          varDecl(
+          unless(portNameMatcher("sc_in_clk")),
+              unless(portNameMatcher("sc_in")),
+              unless(portNameMatcher("sc_out")),
+              unless(portNameMatcher("sc_inout")),
+              unless(portNameMatcher("sc_stream_in")),
+              unless(portNameMatcher("sc_stream_out")),
+              unless(portNameMatcher("sc_rvd_in")),
+              unless(portNameMatcher("sc_rvd_out")),
+              unless(signalMatcher("sc_signal_inout_if")),
+              unless(portNameMatcher("sc_rvd_in")),
+              unless(portNameMatcher("sc_rvd_out"))
+     
+            ).bind("other_fvdecl")));
 
     /* clang-format on */
 
     // Add matchers to finder.
     finder.addMatcher(match_all_ports, this);
-    finder.addMatcher(match_non_sc_types, this);
+    finder.addMatcher(match_non_sc_types_fdecl, this);
     finder.addMatcher(match_non_sc_types_vdecl, this);
-    finder.addMatcher(match_sc_ports, this);
+    // finder.addMatcher(match_sc_ports, this);
 
     // This is only for testing.
     //
@@ -497,76 +515,131 @@ class PortMatcher : public MatchFinder::MatchCallback {
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
-    // if (auto fd = checkMatch<FieldDecl>("sc_in_clk", result)) {
-      // std::string port_name{fd->getIdentifier()->getNameStart()};
-      // llvm::outs() << "Found sc_in_clk: " << port_name << "\n";
-      // insert_port(clock_ports_, fd);
-    // }
+    auto sc_in_field{checkMatch<CXXRecordDecl>("desugar_sc_in", result)};
+    auto sc_out_field{checkMatch<CXXRecordDecl>("desugar_sc_out", result)};
+    auto sc_inout_field{checkMatch<CXXRecordDecl>("desugar_sc_inout", result)};
+    auto sc_signal_field{
+        checkMatch<CXXRecordDecl>("desugar_sc_signal_inout_if", result)};
+    auto sc_stream_in_field{
+        checkMatch<CXXRecordDecl>("desugar_sc_stream_in", result)};
+    auto sc_stream_out_field{
+        checkMatch<CXXRecordDecl>("desugar_sc_stream_out", result)};
+    auto sc_rvd_in_field{
+        checkMatch<CXXRecordDecl>("desugar_sc_rvd_in", result)};
+    auto sc_rvd_out_field{
+        checkMatch<CXXRecordDecl>("desugar_sc_rvd_out", result)};
+    auto sc_port_field{checkMatch<CXXRecordDecl>("desugar_sc_port", result)};
+    auto other_fields{checkMatch<Decl>("other_fields", result)};
+    auto other_fvdecl{checkMatch<Decl>("other_fvdecl", result)};
 
-    if (auto fd = checkMatch<FieldDecl>("sc_in", result)) {
-      auto port_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found sc_in: " << port_name << "\n";
-      insert_port(in_ports_, fd);
-    }
+    llvm::outs() << "\n";
+    llvm::outs() << "in: " << sc_in_field << ", out: " << sc_out_field
+                 << ", inout: " << sc_inout_field << ", other: " << other_fields
+                 << "\n";
 
-    if (auto fd = checkMatch<FieldDecl>("sc_out", result)) {
-      auto port_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found sc_out: " << port_name << "\n";
-      insert_port(out_ports_, fd);
-    }
-
-    if (auto fd = checkMatch<FieldDecl>("sc_inout", result)) {
-      auto port_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found sc_inout: " << port_name << "\n";
-      insert_port(inout_ports_, fd);
-    }
-
-    if (auto fd = checkMatch<FieldDecl>("sc_signal", result)) {
-      auto signal_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found sc_signal: " << signal_name << "\n";
-      insert_port(signal_fields_, fd);
-    }
-
-    // if (auto fd = checkMatch<FieldDecl>("other_fields", result)) {
-    // auto field_name{fd->getIdentifier()->getNameStart()};
-    // llvm::outs() << " Found other_fields: " << field_name << "\n";
-    //     insert_port(other_fields_, fd);
-    // }
-    //
-    if (auto fd = checkMatch<Decl>("other_fields", result)) {
-      // These will be either FieldDecl or VarDecl.
-
-      if (auto *p_field{dyn_cast<FieldDecl>(fd)}) {
-        auto field_name{p_field->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found field other_fields: " << field_name << "\n";
-        insert_port(other_fields_, p_field);
-
-      } else {
-        auto *p_var{dyn_cast<VarDecl>(fd)};
-        auto field_name{p_var->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found var other_fields: " << field_name << "\n";
-        insert_port(other_fields_, p_var);
+    if (sc_in_field && other_fields) {
+      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+        auto fd = p_field;
+        auto port_name{fd->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found sc_in: " << port_name << "\n";
+        insert_port(in_ports_, fd);
       }
-      // llvm::outs() << " Found field/vardecl other_fields: " << field_name <<
-      // "\n"; insert_port(other_fields_, fd);
     }
 
-    if (auto fd = checkMatch<FieldDecl>("sc_stream_in", result)) {
-      auto field_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found sc_stream_in: " << field_name << "\n";
-      insert_port(instream_ports_, fd);
+    if (sc_out_field && other_fields) {
+      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+        auto fd = p_field;
+        auto port_name{fd->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found sc_out: " << port_name << "\n";
+        insert_port(out_ports_, fd);
+      }
     }
 
-    if (auto fd = checkMatch<FieldDecl>("sc_stream_out", result)) {
-      auto field_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found sc_stream_out: " << field_name << "\n";
-      insert_port(outstream_ports_, fd);
+    if (sc_inout_field && other_fields) {
+      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+        auto fd = p_field;
+        auto port_name{fd->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found sc_inout: " << port_name << "\n";
+        insert_port(inout_ports_, fd);
+      }
     }
 
-    if (auto fd = checkMatch<FieldDecl>("sc_port", result)) {
-      auto field_name{fd->getIdentifier()->getNameStart()};
-      llvm::outs() << " Found sc_port : " << field_name << "\n";
-      insert_port(sc_ports_, fd);
+    if (sc_signal_field && other_fields) {
+      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+        auto fd = p_field;
+        auto signal_name{fd->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found sc_signal: " << signal_name << "\n";
+        insert_port(signal_fields_, fd);
+      }
+    }
+
+    if (sc_stream_in_field && other_fields) {
+      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+        auto fd = p_field;
+        auto field_name{fd->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found sc_stream_in: " << field_name << "\n";
+        insert_port(instream_ports_, fd);
+      }
+    }
+
+    if (sc_stream_out_field && other_fields) {
+      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+        auto fd = p_field;
+        auto field_name{fd->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found sc_stream_out: " << field_name << "\n";
+        insert_port(outstream_ports_, fd);
+      }
+    }
+
+    if (sc_rvd_in_field && other_fields) {
+      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+        auto fd = p_field;
+        auto field_name{fd->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found sc_rvd_in: " << field_name << "\n";
+        insert_port(instream_ports_, fd);
+      }
+    }
+
+    if (sc_rvd_out_field && other_fields) {
+      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+        auto fd = p_field;
+        auto field_name{fd->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found sc_rvd_out: " << field_name << "\n";
+        insert_port(outstream_ports_, fd);
+      }
+    }
+
+    if (sc_port_field && other_fields) {
+      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+        auto fd = p_field;
+        auto field_name{fd->getIdentifier()->getNameStart()};
+        llvm::outs() << " Found sc_port : " << field_name << "\n";
+        insert_port(sc_ports_, fd);
+      }
+    }
+
+    auto is_ports{(sc_in_field) || sc_out_field || sc_inout_field ||
+                  sc_signal_field || sc_stream_in_field || sc_stream_out_field};
+    llvm::outs() << "is_ports: " << is_ports << "\n";
+
+    if ((!is_ports)) {
+      // These will be either FieldDecl or VarDecl.
+      auto fd{other_fvdecl};
+      if (fd) {
+        llvm::outs() << "Print out the other fd\n";
+
+        if (auto *p_field{dyn_cast<FieldDecl>(fd)}) {
+          auto field_name{p_field->getIdentifier()->getNameStart()};
+          llvm::outs() << " Found field other_fields: " << field_name << "\n";
+          insert_port(other_fields_, p_field);
+
+        } else {
+          auto *p_var{dyn_cast<VarDecl>(fd)};
+          auto field_name{p_var->getIdentifier()->getNameStart()};
+          llvm::outs() << " Found var other_fields: " << field_name << "\n";
+          insert_port(other_fields_, p_var);
+        }
+      }
     }
   }
 
@@ -713,6 +786,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       PortMatcher port_matcher{top_module_decl_};
       port_matcher.registerMatchers(port_registry);
       port_registry.match(*decl, *result.Context);
+      // decl->dump();
       port_matcher.dump();
 
       // All the ports for the CXXRecordDecl should be matched.

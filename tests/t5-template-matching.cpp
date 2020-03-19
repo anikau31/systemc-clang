@@ -95,7 +95,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
     auto found_decl{found_module->second};
     REQUIRE(found_decl->getIPorts().size() == 3);
     REQUIRE(found_decl->getOPorts().size() == 0);
-    REQUIRE(found_decl->getOtherVars().size() == 2);
+    REQUIRE(found_decl->getOtherVars().size() == 3);
   }
 }
 
@@ -165,8 +165,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     // This is 4 because sc_buffer is also inheriting from the signal interface.
     REQUIRE(found_decl->getSignals().size() == 4);
     // 1 non-array, and 2 array others
-    // TODO: Currently, only the 1 non-array is being recognized.
-    REQUIRE(found_decl->getOtherVars().size() == 1);
+    REQUIRE(found_decl->getOtherVars().size() == 2);
 
     // TODO: Check the template parameters.
     //
@@ -174,13 +173,11 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     auto found_decl2{found_module_testing_float};
     REQUIRE(found_decl2->getIPorts().size() == 5);
     // Array is the second port being recognized.
-    // TODO: Not recognized as multiple ports of an array though.
     REQUIRE(found_decl2->getOPorts().size() == 2);
     // 1 regular signal, 2 array signals, 1 sc_buffer, which is a signal too.
     REQUIRE(found_decl2->getSignals().size() == 4);
     // 1 non-array, and 2 array others
-    // TODO: Currently, only the 1 non-array is being recognized.
-    REQUIRE(found_decl2->getOtherVars().size() == 1);
+    REQUIRE(found_decl2->getOtherVars().size() == 2);
     
     // TODO: Check the template parameters.
     //
