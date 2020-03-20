@@ -46,6 +46,7 @@ set( UNIT_TEST_LIST
   t5-template-matching
   clock-parsing
   hotfix-40-findtemplatetypes
+  portarray-example
   )
 
 include(CTest)
