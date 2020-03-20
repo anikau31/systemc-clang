@@ -277,10 +277,10 @@ class PortMatcher : public MatchFinder::MatchCallback {
     //   - The type of it is a C++ class whose class name is "name"
   return  cxxRecordDecl(
       isExpansionInMainFile(),
-      isDerivedFrom(hasName("::sc_core::sc_module")
-        ),
+      isDerivedFrom(hasName("::sc_core::sc_module")),
       forEach(
-        fieldDecl(hasType(cxxRecordDecl(hasName(name)))).bind(name)
+        fieldDecl(hasType(
+            cxxRecordDecl(hasName(name)))).bind(name)
         )
       );
   }
@@ -333,23 +333,21 @@ class PortMatcher : public MatchFinder::MatchCallback {
                     recordType(
                       hasDeclaration(
                         cxxRecordDecl(hasName(name)).bind("desugar_"+name)
-                        )
                       )
                     )
                   )
                 )
-              ),
+              )
+            ),
             hasType(hasUnqualifiedDesugaredType(
                 recordType(
                   hasDeclaration(
                     cxxRecordDecl(hasName(name)).bind("desugar_"+name)
-                    )
                   )
                 )
               )
-            );
-          
-   
+            )
+          );
   }
 
   auto makePortHasNameMatcher(const std::string &name) {
@@ -365,8 +363,13 @@ class PortMatcher : public MatchFinder::MatchCallback {
   //  - Or, it has a type that is a NamedDecl whose name is "name".
   //
   auto makePortHasNamedDeclNameMatcher(const std::string &name) {
-    return fieldDecl(anyOf(hasType(arrayType(hasElementType(asString(name)))),
-                           hasType(namedDecl(hasName(name)))));
+    return 
+      fieldDecl(
+          anyOf(
+            hasType(arrayType(hasElementType(asString(name)))),
+            hasType(namedDecl(hasName(name)))
+          )
+      );
   }
 
   /* clang-format on */
