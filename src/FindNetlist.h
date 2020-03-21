@@ -33,15 +33,16 @@ public:
   typedef pair<string, vector<string>> instanceListModulePairType;
   typedef map<string, vector<string>> instanceListModuleMapType;
 
+public: 
   virtual bool VisitCXXOperatorCallExpr(CXXOperatorCallExpr *ce);
 
-  void updateInstanceListModuleMap(string, string);
+  void updateInstanceListModuleMap(const std::string &, const std::string &);
 
-  instanceModuleMapType getInstanceModuleMap();
-  instancePortSignalMapType getInstancePortSignalMap();
-  instanceListModuleMapType getInstanceListModuleMap();
-  portSignalMapType getPortSignalMap();
-  int getNumInstances(string);
+  const instanceModuleMapType &getInstanceModuleMap();
+  const instancePortSignalMapType &getInstancePortSignalMap();
+  const instanceListModuleMapType &getInstanceListModuleMap();
+  const portSignalMapType &getPortSignalMap();
+  int getNumInstances(std::string);
   void dump();
 
 private:

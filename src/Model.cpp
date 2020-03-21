@@ -197,6 +197,7 @@ void Model::dump(llvm::raw_ostream &os) {
     os << it->first << " " << it->second;
   }
 
+  */
   os << "\n\n";
   os << "# Netlist: ";
   for (FindNetlist::instanceModuleMapType::iterator
@@ -224,5 +225,4 @@ void Model::dump(llvm::raw_ostream &os) {
     }
     os << "\n ------------------------------------------------------\n";
   }
-  */
 }

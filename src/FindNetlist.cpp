@@ -12,16 +12,15 @@ FindNetlist::~FindNetlist() {
   _instancePortSignalMap.clear();
 }
 
-FindNetlist::FindNetlist(const FindNetlist &f) {
-  _pass = f._pass;
-  _instanceModuleMap = f._instanceModuleMap;
-  _portSignalMap = f._portSignalMap;
-  _instancePortSignalMap = f._instancePortSignalMap;
-  _instanceListModuleMap = f._instanceListModuleMap;
+FindNetlist::FindNetlist(const FindNetlist &from) {
+  _pass = from._pass;
+  _instanceModuleMap = from._instanceModuleMap;
+  _portSignalMap = from._portSignalMap;
+  _instancePortSignalMap = from._instancePortSignalMap;
+  _instanceListModuleMap = from._instanceListModuleMap;
 }
 
-void FindNetlist::updateInstanceListModuleMap(string instanceName,
-                                              string moduleName) {
+void FindNetlist::updateInstanceListModuleMap(const std::string &instanceName, const std::string &moduleName) {
   if (_instanceListModuleMap.find(moduleName) == _instanceListModuleMap.end()) {
     vector<string> instanceList;
     instanceList.push_back(instanceName);
@@ -41,10 +40,10 @@ void FindNetlist::updateInstanceListModuleMap(string instanceName,
 bool FindNetlist::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *ce) {
   bool foundME = false;
 
-  string moduleName;
-  string instanceName;
-  string portName;
-  string signalName;
+  std::string moduleName;
+  std::string instanceName;
+  std::string portName;
+  std::string signalName;
 
   for (Stmt::child_iterator it = ce->IgnoreImpCasts()->child_begin(),
                             eit = ce->IgnoreImpCasts()->child_end();
@@ -103,19 +102,19 @@ int FindNetlist::getNumInstances(string moduleName) {
   return counter;
 }
 
-FindNetlist::portSignalMapType FindNetlist::getPortSignalMap() {
+const FindNetlist::portSignalMapType &FindNetlist::getPortSignalMap() {
   return _portSignalMap;
 }
 
-FindNetlist::instanceListModuleMapType FindNetlist::getInstanceListModuleMap() {
+const FindNetlist::instanceListModuleMapType &FindNetlist::getInstanceListModuleMap() {
   return _instanceListModuleMap;
 }
 
-FindNetlist::instanceModuleMapType FindNetlist::getInstanceModuleMap() {
+const FindNetlist::instanceModuleMapType &FindNetlist::getInstanceModuleMap() {
   return _instanceModuleMap;
 }
-
-FindNetlist::instancePortSignalMapType FindNetlist::getInstancePortSignalMap() {
+ 
+const FindNetlist::instancePortSignalMapType &FindNetlist::getInstancePortSignalMap() {
   return _instancePortSignalMap;
 }
 

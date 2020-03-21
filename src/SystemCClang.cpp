@@ -111,7 +111,7 @@ bool SystemCConsumer::fire() {
 
     // TODO: find any instances in sc_main.
 
-    // fnDecl->dump();
+    fnDecl->dump();
 
     FindSimTime scstart{fnDecl, os_};
     systemcModel_->addSimulationTime(scstart.returnSimTime());
@@ -124,11 +124,9 @@ bool SystemCConsumer::fire() {
   ////////////////////////////////////////////////////////////////
   // This actually also finds instances, but now we have AST matchers to do it.
 
-  /*
   FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
   findNetlist.dump();
   systemcModel_->addNetlist(findNetlist);
-  */
 
   //
   // Create a ModuleDecl for each instance with the appropriately parsed
