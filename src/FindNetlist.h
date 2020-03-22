@@ -47,10 +47,10 @@ public:
 
 private:
   int _pass;
-  instanceModuleMapType _instanceModuleMap;
-  portSignalMapType _portSignalMap;
-  instancePortSignalMapType _instancePortSignalMap;
-  instanceListModuleMapType _instanceListModuleMap;
+  instanceModuleMapType inst_module_map_;
+  portSignalMapType port_signal_map_;
+  instancePortSignalMapType inst_port_signal_map_;
+  instanceListModuleMapType inst_list_module_map_;
 };
 } // namespace scpar
 #endif

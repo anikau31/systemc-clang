@@ -1,38 +1,39 @@
 #include "FindNetlist.h"
 using namespace scpar;
 
-FindNetlist::FindNetlist(FunctionDecl *fnDecl) : _pass{1} {
-  TraverseDecl(fnDecl);
+FindNetlist::FindNetlist(FunctionDecl *fdecl) : _pass{1} {
+  TraverseDecl(fdecl);
   _pass = 2;
 }
 
 FindNetlist::~FindNetlist() {
-  _instanceModuleMap.clear();
-  _portSignalMap.clear();
-  _instancePortSignalMap.clear();
+  inst_module_map_.clear();
+  port_signal_map_.clear();
+  inst_port_signal_map_.clear();
 }
 
 FindNetlist::FindNetlist(const FindNetlist &from) {
   _pass = from._pass;
-  _instanceModuleMap = from._instanceModuleMap;
-  _portSignalMap = from._portSignalMap;
-  _instancePortSignalMap = from._instancePortSignalMap;
-  _instanceListModuleMap = from._instanceListModuleMap;
+  inst_module_map_ = from.inst_module_map_;
+  port_signal_map_ = from.port_signal_map_;
+  inst_port_signal_map_ = from.inst_port_signal_map_;
+  inst_list_module_map_ = from.inst_list_module_map_;
 }
 
-void FindNetlist::updateInstanceListModuleMap(const std::string &instanceName, const std::string &moduleName) {
-  if (_instanceListModuleMap.find(moduleName) == _instanceListModuleMap.end()) {
+void FindNetlist::updateInstanceListModuleMap(const std::string &instanceName,
+                                              const std::string &moduleName) {
+  if (inst_list_module_map_.find(moduleName) == inst_list_module_map_.end()) {
     vector<string> instanceList;
     instanceList.push_back(instanceName);
-    _instanceListModuleMap.insert(
+    inst_list_module_map_.insert(
         instanceListModulePairType(moduleName, instanceList));
   } else {
     instanceListModuleMapType::iterator instanceListModuleMapFound =
-        _instanceListModuleMap.find(moduleName);
-    vector<string> instanceList = instanceListModuleMapFound->second;
+        inst_list_module_map_.find(moduleName);
+    std::vector<std::string> instanceList{instanceListModuleMapFound->second};
     instanceList.push_back(instanceName);
-    _instanceListModuleMap.erase(moduleName);
-    _instanceListModuleMap.insert(
+    inst_list_module_map_.erase(moduleName);
+    inst_list_module_map_.insert(
         instanceListModulePairType(moduleName, instanceList));
   }
 }
@@ -68,22 +69,22 @@ bool FindNetlist::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *ce) {
     }
   }
 
-  if (_instanceModuleMap.find(instanceName) == _instanceModuleMap.end()) {
-    _instanceModuleMap.insert(instanceModulePairType(instanceName, moduleName));
-    _portSignalMap.clear();
+  if (inst_module_map_.find(instanceName) == inst_module_map_.end()) {
+    inst_module_map_.insert(instanceModulePairType(instanceName, moduleName));
+    port_signal_map_.clear();
     updateInstanceListModuleMap(instanceName, moduleName);
   }
 
-  _portSignalMap.insert(portSignalPairType(portName, signalName));
+  port_signal_map_.insert(portSignalPairType(portName, signalName));
 
-  if (_instancePortSignalMap.find(instanceName) ==
-      _instancePortSignalMap.end()) {
-    _instancePortSignalMap.insert(
-        instancePortSignalPairType(instanceName, _portSignalMap));
+  if (inst_port_signal_map_.find(instanceName) ==
+      inst_port_signal_map_.end()) {
+    inst_port_signal_map_.insert(
+        instancePortSignalPairType(instanceName, port_signal_map_));
   } else {
-    _instancePortSignalMap.erase(instanceName);
-    _instancePortSignalMap.insert(
-        instancePortSignalPairType(instanceName, _portSignalMap));
+    inst_port_signal_map_.erase(instanceName);
+    inst_port_signal_map_.insert(
+        instancePortSignalPairType(instanceName, port_signal_map_));
   }
 
   return true;
@@ -91,8 +92,8 @@ bool FindNetlist::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *ce) {
 
 int FindNetlist::getNumInstances(string moduleName) {
   int counter = 0;
-  for (instanceModuleMapType::iterator it = _instanceModuleMap.begin(),
-                                       eit = _instanceModuleMap.end();
+  for (instanceModuleMapType::iterator it = inst_module_map_.begin(),
+                                       eit = inst_module_map_.end();
        it != eit; it++) {
     string modName = it->second;
     if (modName == moduleName) {
@@ -103,35 +104,37 @@ int FindNetlist::getNumInstances(string moduleName) {
 }
 
 const FindNetlist::portSignalMapType &FindNetlist::getPortSignalMap() {
-  return _portSignalMap;
+  return port_signal_map_;
 }
 
-const FindNetlist::instanceListModuleMapType &FindNetlist::getInstanceListModuleMap() {
-  return _instanceListModuleMap;
+const FindNetlist::instanceListModuleMapType &
+FindNetlist::getInstanceListModuleMap() {
+  return inst_list_module_map_;
 }
 
 const FindNetlist::instanceModuleMapType &FindNetlist::getInstanceModuleMap() {
-  return _instanceModuleMap;
+  return inst_module_map_;
 }
- 
-const FindNetlist::instancePortSignalMapType &FindNetlist::getInstancePortSignalMap() {
-  return _instancePortSignalMap;
+
+const FindNetlist::instancePortSignalMapType &
+FindNetlist::getInstancePortSignalMap() {
+  return inst_port_signal_map_;
 }
 
 void FindNetlist::dump() {
   llvm::errs() << "\n ----------------- Netlist dump ----------------- \n";
 
-  for (instanceModuleMapType::iterator it = _instanceModuleMap.begin(),
-                                       eit = _instanceModuleMap.end();
+  for (instanceModuleMapType::iterator it = inst_module_map_.begin(),
+                                       eit = inst_module_map_.end();
        it != eit; it++) {
     llvm::errs() << "\n Instance Name : " << it->first
                  << " Module Name : " << it->second;
     string instanceName = it->first;
 
-    if (_instancePortSignalMap.find(instanceName) !=
-        _instancePortSignalMap.end()) {
+    if (inst_port_signal_map_.find(instanceName) !=
+        inst_port_signal_map_.end()) {
       instancePortSignalMapType::iterator instancePortSignalMapFound =
-          _instancePortSignalMap.find(instanceName);
+          inst_port_signal_map_.find(instanceName);
       portSignalMapType portSignalMap = instancePortSignalMapFound->second;
       for (portSignalMapType::iterator pit = portSignalMap.begin(),
                                        pite = portSignalMap.end();
