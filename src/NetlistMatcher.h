@@ -136,11 +136,15 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                    << "\n";
       llvm::outs() << "#### Found DeclRefExpr Decl *:" << dre_me->getDecl()
                    << "\n";
+      dre_me->getDecl()->dump();
+
+      //TODo: Find the name of the variable from the VarDecl
+      llvm::outs() << "##### VarDecl Name: " << dre_me->getDecl()->getName() << "\n";
+     
 
       // This is the CXXRecordDecl of the instance type
       cxxdecl = dre_me->getDecl()->getType().getTypePtr()->getAsCXXRecordDecl();
       llvm::outs() << "#### Found DeclRefExpr CXXDecl *:" << cxxdecl << "\n";
-      //cxxdecl->dump();
 
       instance_var_name = dre_me->getFoundDecl()->getName();
       llvm::outs() << "#### Found DeclRefExpr module instance name:"

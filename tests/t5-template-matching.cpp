@@ -129,26 +129,8 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
 
-  auto found_module_testing{model->getInstance("testing")};
-
-  /*
-  auto found_module_testing{std::find_if(
-      module_decl.begin(), module_decl.end(), [&top](const auto &element) {
-        // Get the declaration name.
-        return ((element.second->getName() == top) &&
-                (element.second->getInstanceName() == "testing"));
-      })};
-      */
-
-  auto found_module_testing_float{model->getInstance("testing_float_double")};
-  /*
-  auto found_module_testing_float{std::find_if(
-      module_decl.begin(), module_decl.end(), [&top](const auto &element) {
-        // Get the declaration name.
-        return ((element.second->getName() == top) &&
-                (element.second->getInstanceName() == "testing_float_double"));
-      })};
-      */
+  auto found_module_testing{model->getInstance("test_instance")};
+  auto found_module_testing_float{model->getInstance("test_float_double")};
 
   SECTION("Testing top-level module: test", "[top module]") {
     // There should be two modules because there are two instances.

@@ -183,6 +183,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       std::string name{instance->getIdentifier()->getNameStart()};
       llvm::outs() << "@@ Found a member variable instance: " << name << "\n";
 
+        std::string strip_quote_name{name};
+        // This is the instance name.
+        instances_.push_back(std::make_tuple(strip_quote_name, instance));
+      // TODO: Is this how we want the instance name? 
+      /*
+
       if (auto instance_name = const_cast<CXXConstructExpr *>(
               result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
         llvm::outs() << "Found constructor expression argument: "
@@ -206,6 +212,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // This is the instance name.
         instances_.push_back(std::make_tuple(strip_quote_name, instance));
       }
+            */
     }
   }
 

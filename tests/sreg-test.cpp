@@ -10,9 +10,9 @@
 #include "SystemCClang.h"
 
 // This is automatically generated from cmake.
+#include "../plugins/xlat/Xlat.h"
 #include "ClangArgs.h"
 #include "Testing.h"
-#include "../plugins/xlat/Xlat.h"
 
 using namespace clang;
 using namespace clang::tooling;
@@ -41,38 +41,15 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   llvm::outs() << "\n";
   for (const auto &decl : module_decl) {
     llvm::outs() << "[ " << decl.first << "    ]" << decl.second << "   "
-         << decl.second->getInstanceName() << "\n";
+                 << decl.second->getInstanceName() << "\n";
   }
 
   // Testing instances.
 
-  auto test_module{model->getInstance("testing")};
+  auto test_module{model->getInstance("test_instance")};
   auto sreg_bypass{model->getInstance("sreg_bypass")};
   auto sreg_fwd{model->getInstance("sreg_fwd")};
   auto sreg_fwd_rev{model->getInstance("sreg_fwd_rev")};
-
-  /*
-  auto test_module{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "testing";
-      })};
-
-  auto sreg_bypass{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "sreg_bypass";
-      })};
-
-  auto sreg_fwd{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "sreg_fwd";
-      })};
-
-  auto sreg_fwd_rev{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "sreg_fwd_rev";
-      })};
-      */
-
   //
   // Begin the tests.
   //
@@ -84,8 +61,8 @@ TEST_CASE("sreg example", "[llnl-examples]") {
 
     REQUIRE(test_module != nullptr);
     REQUIRE(sreg_bypass != nullptr);
-    REQUIRE(sreg_fwd !=  nullptr);
-    REQUIRE(sreg_fwd_rev !=  nullptr);
+    REQUIRE(sreg_fwd != nullptr);
+    REQUIRE(sreg_fwd_rev != nullptr);
 
     //
     //
