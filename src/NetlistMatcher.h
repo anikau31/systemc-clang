@@ -33,7 +33,19 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
    auto match_callexpr = functionDecl(
        forEachDescendant(
          cxxOperatorCallExpr(
-           forEach(memberExpr().bind("memberexpr")) // Access to in1
+           eachOf(
+             forEachDescendant(
+             declRefExpr(
+               hasDeclaration(varDecl()), // Match the sig1
+               hasParent(implicitCastExpr()) // There must be (.) 
+               ).bind("declrefexpr")
+             )
+               ,
+           forEach(
+             memberExpr(
+               forEach(declRefExpr().bind("declrefexpr_in_memberexpr"))
+               ).bind("memberexpr")) // Access to in1
+             )
            ).bind("callexpr"))
        ).bind("functiondecl");
 
@@ -43,30 +55,38 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     // Add the two matchers.
     finder.addMatcher(match_callexpr, this);
-
   }
 
   // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
     llvm::outs() << "#### Something matcher ####\n";
-    if (auto callexpr = const_cast<CXXOperatorCallExpr *>(
-            result.Nodes.getNodeAs<CXXOperatorCallExpr>("callexpr"))) {
-      //     std::string name{callexpr->getIdentifier()->getNameStart()};
-      llvm::outs() << "#### Found CALLEXPR: \n";  // << name << "\n";
-    }
-
-    if (auto fd = const_cast<FunctionDecl *>(
-            result.Nodes.getNodeAs<FunctionDecl>("functiondecl"))) {
-      llvm::outs() << "#### Found FunctionDecl: \n";  // << name << "\n";
-    }
-
-    if (auto me= const_cast<MemberExpr*>(
+    if (auto me = const_cast<MemberExpr *>(
             result.Nodes.getNodeAs<MemberExpr>("memberexpr"))) {
-      llvm::outs() << "#### Found MemberExpr: \n";  // << name << "\n";
-      me->dump();
-
+      std::string portName { me->getMemberDecl()->getNameAsString() };
+      llvm::outs() << "#### Found MemberExpr portname: " << portName << "\n";
     }
 
+    if (auto ie = const_cast<ImplicitCastExpr*>(
+            result.Nodes.getNodeAs<ImplicitCastExpr>("impcastexpr"))) {
+      llvm::outs() << "#### Found ImplicitCastExpr: \n";// << portName << "\n";
+      ie->dump();
+    }
+
+    if (auto dre = const_cast<DeclRefExpr *>(
+            result.Nodes.getNodeAs<DeclRefExpr>("declrefexpr_in_memberexpr"))) {
+      std::string name{
+          dre->getDecl()->getType().getBaseTypeIdentifier()->getName()};
+      llvm::outs() << "#### Found DeclRefExpr module type:" << name << "\n";
+    }
+
+
+    if (auto dre = const_cast<DeclRefExpr *>(
+            result.Nodes.getNodeAs<DeclRefExpr>("declrefexpr"))) {
+      std::string name{
+          dre->getFoundDecl()->getName()};
+      llvm::outs() << "#### Found DeclRefExpr parameter name: " << name << "\n";
+      dre->getFoundDecl()->dump();
+    }
   }
 
   void dump() {
