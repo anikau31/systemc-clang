@@ -12,10 +12,6 @@ using namespace scpar;
 
 namespace sc_ast_matchers {
 
-AST_MATCHER(CXXOperatorCallExpr, matchTest) {
-  llvm::outs() << "[[OWN MATCHER]]\n";
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Class NetlistMatcher
@@ -35,7 +31,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
          cxxOperatorCallExpr(
                hasDescendant(
                  declRefExpr(
-               hasDeclaration(varDecl()), // Match the sig1
+               hasDeclaration(varDecl().bind("bound_variable")), // Match the sig1
                hasParent(implicitCastExpr()) // There must be (.) 
                ).bind("declrefexpr")
                  )
@@ -73,9 +69,12 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     if (auto dre = const_cast<DeclRefExpr *>(
             result.Nodes.getNodeAs<DeclRefExpr>("declrefexpr_in_memberexpr"))) {
-      std::string name{
+      std::string module_type{
           dre->getDecl()->getType().getBaseTypeIdentifier()->getName()};
-      llvm::outs() << "#### Found DeclRefExpr module type:" << name << "\n";
+      llvm::outs() << "#### Found DeclRefExpr module type:" << module_type<< "\n";
+
+      std::string name{dre->getFoundDecl()->getName()};
+      llvm::outs() << "#### Found DeclRefExpr module instance name:" << name << "\n";
     }
 
 
