@@ -12,6 +12,47 @@ using namespace scpar;
 
 namespace sc_ast_matchers {
 
+class PortBinding {
+ private:
+  std::string port_name_;
+  MemberExpr *port_member_expr_;
+  // Instance information
+  std::string instance_type_;
+  CXXRecordDecl *instance_type_decl_;
+  std::string instance_var_name_;
+  Decl *instance_decl_;
+  DeclRefExpr *port_dref_;
+
+  std::string port_parameter_name_;
+  DeclRefExpr *port_parameter_dref_;
+
+ public:
+  PortBinding()
+      : port_name_{},
+        port_member_expr_{nullptr},
+        instance_type_{},
+        instance_type_decl_{},
+        instance_var_name_{},
+        instance_decl_{nullptr},
+        port_dref_{nullptr},
+        port_parameter_name_{},
+        port_parameter_dref_{} {};
+
+  PortBinding(const std::string &port_name, MemberExpr *port_member_expr,
+              const std::string &instance_type, CXXRecordDecl *instance_type_decl,
+              const std::string &instance_name, Decl *instance_decl,
+              DeclRefExpr *port_dref, const std::string &port_parameter_name,
+              DeclRefExpr *port_parameter_dref)
+      : port_name_{port_name},
+        port_member_expr_{port_member_expr},
+        instance_type_{instance_type},
+        instance_type_decl_{instance_type_decl},
+        instance_var_name_{instance_name},
+        instance_decl_{instance_decl},
+        port_dref_{port_dref},
+        port_parameter_name_{port_parameter_name},
+        port_parameter_dref_{port_parameter_dref} {};
+};
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Class NetlistMatcher
@@ -53,38 +94,68 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   }
 
   // This is the callback function whenever there is a match.
+  //
+  // To save:
+  // 1. port_name
+  // 2. port_parameter
+  // 3. Instance variable name
+  // 4. Instance variable type
+  //
   virtual void run(const MatchFinder::MatchResult &result) {
     llvm::outs() << "#### Something matcher ####\n";
-    if (auto me = const_cast<MemberExpr *>(
-            result.Nodes.getNodeAs<MemberExpr>("memberexpr"))) {
-      std::string portName { me->getMemberDecl()->getNameAsString() };
-      llvm::outs() << "#### Found MemberExpr portname: " << portName << "\n";
+    auto me{const_cast<MemberExpr *>(
+        result.Nodes.getNodeAs<MemberExpr>("memberexpr"))};
+    auto ie{const_cast<ImplicitCastExpr *>(
+        result.Nodes.getNodeAs<ImplicitCastExpr>("impcastexpr"))};
+    auto dre_me{const_cast<DeclRefExpr *>(
+        result.Nodes.getNodeAs<DeclRefExpr>("declrefexpr_in_memberexpr"))};
+    auto dre{const_cast<DeclRefExpr *>(
+        result.Nodes.getNodeAs<DeclRefExpr>("declrefexpr"))};
+
+    std::string port_name{};
+    if (me) {
+      port_name = me->getMemberDecl()->getNameAsString();
+      llvm::outs() << "#### Found MemberExpr portname: " << port_name << "\n";
     }
 
-    if (auto ie = const_cast<ImplicitCastExpr*>(
-            result.Nodes.getNodeAs<ImplicitCastExpr>("impcastexpr"))) {
-      llvm::outs() << "#### Found ImplicitCastExpr: \n";// << portName << "\n";
+    if (ie) {
+      llvm::outs()
+          << "#### Found ImplicitCastExpr: \n";  // << portName << "\n";
       ie->dump();
     }
 
-    if (auto dre = const_cast<DeclRefExpr *>(
-            result.Nodes.getNodeAs<DeclRefExpr>("declrefexpr_in_memberexpr"))) {
-      std::string module_type{
-          dre->getDecl()->getType().getBaseTypeIdentifier()->getName()};
-      llvm::outs() << "#### Found DeclRefExpr module type:" << module_type<< "\n";
+    std::string instance_type{};
+    std::string instance_var_name{};
+    std::string port_param_name{};
+    CXXRecordDecl *cxxdecl{nullptr};
 
-      std::string name{dre->getFoundDecl()->getName()};
-      llvm::outs() << "#### Found DeclRefExpr module instance name:" << name << "\n";
+    if (dre_me) {
+      instance_type =
+          dre_me->getDecl()->getType().getBaseTypeIdentifier()->getName();
+      llvm::outs() << "#### Found DeclRefExpr module type:" << instance_type
+                   << "\n";
+      llvm::outs() << "#### Found DeclRefExpr Decl *:" << dre_me->getDecl()
+                   << "\n";
+
+      // This is the CXXRecordDecl of the instance type
+      cxxdecl = dre_me->getDecl()->getType().getTypePtr()->getAsCXXRecordDecl();
+      llvm::outs() << "#### Found DeclRefExpr CXXDecl *:" << cxxdecl << "\n";
+      //cxxdecl->dump();
+
+      instance_var_name = dre_me->getFoundDecl()->getName();
+      llvm::outs() << "#### Found DeclRefExpr module instance name:"
+                   << instance_var_name << "\n";
     }
 
-
-    if (auto dre = const_cast<DeclRefExpr *>(
-            result.Nodes.getNodeAs<DeclRefExpr>("declrefexpr"))) {
-      std::string name{
-          dre->getFoundDecl()->getName()};
-      llvm::outs() << "#### Found DeclRefExpr parameter name: " << name << "\n";
-      dre->getFoundDecl()->dump();
+    if (dre) {
+      port_param_name = dre->getFoundDecl()->getName();
+      llvm::outs() << "#### Found DeclRefExpr parameter name: "
+                   << port_param_name << "\n";
+      //dre->getFoundDecl()->dump();
     }
+
+    // new PortBinding(port_name, me, instance_type, instance_var_name,
+    // cxxdecl, dre_me->getDecl(), dre_me, port_param_name, dre);
   }
 
   void dump() {

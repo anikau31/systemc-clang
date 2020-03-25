@@ -173,12 +173,11 @@ bool SystemCConsumer::fire() {
       // Insert what you know about the parsed sc_module
       // 1. Insert the instance name from Matchers
       os_ << "\n";
-      os_ << "1. Set instance name\n";
+      os_ << "1. Set instance name: " << get<0>(instance) << "\n";
       add_module_decl->setInstanceName(get<0>(instance));
 
       // 2. Find the template arguments for the class.
       os_ << "2. Set template arguments\n";
-      add_module_decl->setInstanceName(get<0>(instance));
       FindTemplateParameters tparms{cxx_decl, os_};
       add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
       add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
