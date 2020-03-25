@@ -33,20 +33,19 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
    auto match_callexpr = functionDecl(
        forEachDescendant(
          cxxOperatorCallExpr(
-           eachOf(
-             forEachDescendant(
-             declRefExpr(
+               hasDescendant(
+                 declRefExpr(
                hasDeclaration(varDecl()), // Match the sig1
                hasParent(implicitCastExpr()) // There must be (.) 
                ).bind("declrefexpr")
-             )
+                 )
                ,
-           forEach(
-             memberExpr(
+             hasDescendant(memberExpr(
                forEach(declRefExpr().bind("declrefexpr_in_memberexpr"))
-               ).bind("memberexpr")) // Access to in1
-             )
-           ).bind("callexpr"))
+               ).bind("memberexpr")
+               )
+           ).bind("callexpr")
+         )
        ).bind("functiondecl");
 
      //cxxOperatorCallExpr().bind("callexpr");
