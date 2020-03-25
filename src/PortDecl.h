@@ -26,12 +26,15 @@ class PortDecl {
   ~PortDecl();
   // Set parameters
   void setModuleName(const std::string &);
+  void setBinding(VarDecl *vd);
 
   /// Get parameters
   std::string getName() const;
   FieldDecl *getFieldDecl() const;
   VarDecl *getAsVarDecl() const;
   FindTemplateTypes *getTemplateType();
+  std::string getBoundVarName() const;
+  VarDecl *getBoundVarDecl() const;
 
   // Print
   void dump(raw_ostream &, int tabn = 0);
@@ -49,7 +52,6 @@ class PortDecl {
   // The variable it is bound to.
   VarDecl *bound_vardecl_;
   std::string bound_var_name_;
-
 };
 }  // namespace scpar
 #endif

@@ -30,8 +30,9 @@ PortDecl::PortDecl(const std::string &name, const Decl *fd,
                    FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
-      field_decl_{const_cast<Decl *>(fd)}, bound_vardecl_{nullptr},
-                  bound_var_name_{} {}
+      field_decl_{const_cast<Decl *>(fd)},
+      bound_vardecl_{nullptr},
+      bound_var_name_{} {}
 
 PortDecl::PortDecl(const PortDecl &from) {
   port_name_ = from.port_name_;
@@ -42,9 +43,18 @@ PortDecl::PortDecl(const PortDecl &from) {
   bound_var_name_ = from.bound_var_name_;
 }
 
-void PortDecl::setModuleName(const string &name) { port_name_ = name; }
+void PortDecl::setModuleName(const std::string &name) { port_name_ = name; }
 
-string PortDecl::getName() const { return port_name_; }
+void PortDecl::setBinding(VarDecl *vd) {
+  bound_vardecl_ = vd;
+  bound_var_name_ = vd->getName();
+}
+
+std::string PortDecl::getBoundVarName() const { return bound_var_name_; }
+
+VarDecl *PortDecl::getBoundVarDecl() const { return bound_vardecl_; }
+
+std::string PortDecl::getName() const { return port_name_; }
 
 FieldDecl *PortDecl::getFieldDecl() const {
   return dyn_cast<FieldDecl>(field_decl_);
@@ -88,7 +98,7 @@ json PortDecl::dump_json(raw_ostream &os) {
           type_data->getTypeName());
     }
     port_j["port_binding"]["variable_name"] = bound_var_name_;
-    port_j["port_binding"]["VarDecl*"] = to_string(bound_vardecl_); 
+    port_j["port_binding"]["VarDecl*"] = to_string(bound_vardecl_);
   }
   // os << port_j.dump(4);
   return port_j;
