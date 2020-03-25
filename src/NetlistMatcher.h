@@ -28,8 +28,13 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
  public:
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
+
+    // instance.in1(sig1);
    auto match_callexpr = functionDecl(
-       forEachDescendant(cxxOperatorCallExpr().bind("callexpr"))
+       forEachDescendant(
+         cxxOperatorCallExpr(
+           forEach(memberExpr().bind("memberexpr")) // Access to in1
+           ).bind("callexpr"))
        ).bind("functiondecl");
 
      //cxxOperatorCallExpr().bind("callexpr");
@@ -54,6 +59,14 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
             result.Nodes.getNodeAs<FunctionDecl>("functiondecl"))) {
       llvm::outs() << "#### Found FunctionDecl: \n";  // << name << "\n";
     }
+
+    if (auto me= const_cast<MemberExpr*>(
+            result.Nodes.getNodeAs<MemberExpr>("memberexpr"))) {
+      llvm::outs() << "#### Found MemberExpr: \n";  // << name << "\n";
+      me->dump();
+
+    }
+
   }
 
   void dump() {
