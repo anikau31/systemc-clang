@@ -1,5 +1,5 @@
-#ifndef _MATCHERS_HPP_
-#define _MATCHERS_HPP_
+#ifndef _MATCHERS_H_
+#define _MATCHERS_H_
 #include <map>
 #include <tuple>
 #include <vector>
@@ -623,7 +623,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
     auto is_ports{(sc_in_field) || sc_out_field || sc_inout_field ||
                   sc_signal_field || sc_stream_in_field || sc_stream_out_field};
-    llvm::outs() << "is_ports: " << is_ports << "\n";
+    //llvm::outs() << "is_ports: " << is_ports << "\n";
 
     if ((!is_ports)) {
       // These will be either FieldDecl or VarDecl.

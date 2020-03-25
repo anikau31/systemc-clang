@@ -1,6 +1,7 @@
 #include "SystemCClang.h"
 
 #include "Matchers.h"
+#include "NetlistMatcher.h"
 #include "clang/AST/ASTImporter.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
@@ -123,6 +124,14 @@ bool SystemCConsumer::fire() {
   // Find the netlist.
   ////////////////////////////////////////////////////////////////
   // This actually also finds instances, but now we have AST matchers to do it.
+  //  
+  //  TEST NetlistMatcher
+  llvm::outs() << "##### TEST NetlistMatcher ##### \n";
+  NetlistMatcher netlist_matcher{};
+  MatchFinder netlist_registry{};
+  netlist_matcher.registerMatchers(netlist_registry);
+  netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
+  llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
 
   FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
   findNetlist.dump();
