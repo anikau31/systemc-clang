@@ -12,15 +12,13 @@ ModuleDecl::ModuleDecl()
       instance_name_{"NONE"},
       class_decl_{nullptr},
       constructor_stmt_{nullptr},
-      instance_field_decl_{nullptr},
-      instance_var_decl_{nullptr} {}
+      instance_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
     : module_name_{name},
       instance_name_{"NONE"},
       class_decl_{decl},
-      instance_field_decl_{nullptr},
-      instance_var_decl_{nullptr} {}
+      instance_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(
     const std::tuple<const std::string &, CXXRecordDecl *> &element)
@@ -32,8 +30,7 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
-  instance_field_decl_ = from.instance_field_decl_;
-  instance_var_decl_ = from.instance_var_decl_;
+  instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
   in_ports_ = from.in_ports_;
@@ -43,6 +40,7 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
 
   istreamports_ = from.istreamports_;
   ostreamports_ = from.ostreamports_;
+  port_bindings_ = from.port_bindings_;
 
   iinterfaces_ = from.iinterfaces_;
   ointerfaces_ = from.ointerfaces_;
@@ -63,8 +61,7 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
-  instance_field_decl_ = from.instance_field_decl_;
-  instance_var_decl_ = from.instance_var_decl_;
+  instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
   in_ports_ = from.in_ports_;
@@ -74,6 +71,8 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 
   istreamports_ = from.istreamports_;
   ostreamports_ = from.ostreamports_;
+
+  port_bindings_ = from.port_bindings_;
 
   iinterfaces_ = from.iinterfaces_;
   ointerfaces_ = from.ointerfaces_;
@@ -92,8 +91,7 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 ModuleDecl::~ModuleDecl() {
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
-  instance_field_decl_ = nullptr;
-  instance_var_decl_ = nullptr;
+  instance_decl_ = nullptr;
 
   // Delete all pointers in ports.
   for (auto input_port : in_ports_) {
@@ -126,6 +124,8 @@ ModuleDecl::~ModuleDecl() {
 
 void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
 
+void ModuleDecl::setInstanceDecl(Decl *decl ) { instance_decl_ = decl; }
+
 void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
   template_parameters_ = parm_list;
 }
@@ -142,6 +142,10 @@ void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
 
 void ModuleDecl::addInstances(const vector<string> &instanceList) {
   instance_list_ = instanceList;
+}
+
+void ModuleDecl::addPortBinding(const std::string &port_name, PortBinding *pb) {
+  port_bindings_.insert(portBindingPairType(port_name, pb));
 }
 
 void ModuleDecl::addSignalBinding(map<string, string> portSignalMap) {
@@ -383,20 +387,24 @@ CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
   return class_decl_;
 }
 
-FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_; }
-VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
+//FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_; }
+//VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
 
-bool ModuleDecl::isInstanceFieldDecl() const {
-  if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
-    return true;
-  }
-  if ((instance_field_decl_ == nullptr) && (instance_var_decl_ != nullptr)) {
-    return false;
-  }
-
-  return false;
+Decl *ModuleDecl::getInstanceDecl() { 
+  return instance_decl_;
 }
 
+// bool ModuleDecl::isInstanceFieldDecl() const {
+  // if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
+    // return true;
+  // }
+  // if ((instance_field_decl_ == nullptr) && (instance_var_decl_ != nullptr)) {
+    // return false;
+  // }
+//
+  // return false;
+// }
+//
 void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
   if (instance_list_.empty()) {
     os << " none \n";
@@ -407,6 +415,15 @@ void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
   }
 }
 
+void ModuleDecl::dumpPortBinding() {
+  for (auto const &pb : port_bindings_ ) {
+    auto port_name{ get<0>(pb) };
+    auto binding{ get<1>(pb) };
+
+    binding->dump();
+  }
+
+}
 void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {
   if (port_signal_map_.empty()) {
     os << " none\n";
@@ -550,6 +567,8 @@ void ModuleDecl::dump(raw_ostream &os) {
   dumpSignals(os, 4);
   os << "\n# Processes:\n";
   dumpProcesses(os, 4);
+  os << "# Port binding:" << port_bindings_.size() << "\n";
+  dumpPortBinding(); //(os, 4);
   os << "# Signal binding:\n";
   dumpSignalBinding(os, 4);
 

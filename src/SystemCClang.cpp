@@ -1,6 +1,7 @@
 #include "SystemCClang.h"
 
 #include "Matchers.h"
+#include "NetlistMatcher.h"
 #include "clang/AST/ASTImporter.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
@@ -111,7 +112,7 @@ bool SystemCConsumer::fire() {
 
     // TODO: find any instances in sc_main.
 
-    // fnDecl->dump();
+    fnDecl->dump();
 
     FindSimTime scstart{fnDecl, os_};
     systemcModel_->addSimulationTime(scstart.returnSimTime());
@@ -123,19 +124,14 @@ bool SystemCConsumer::fire() {
   // Find the netlist.
   ////////////////////////////////////////////////////////////////
   // This actually also finds instances, but now we have AST matchers to do it.
-
-  /*
-  FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
-  findNetlist.dump();
-  systemcModel_->addNetlist(findNetlist);
-  */
-
+  //
+  //  TEST NetlistMatcher
+  auto found_instances_map{module_declaration_handler.getInstances()};
   //
   // Create a ModuleDecl for each instance with the appropriately parsed
   // ModuleDecl.
   //
 
-  auto found_instances_map{module_declaration_handler.getInstances()};
   // Go through each instance and find its appropriate module declaration.
 
   os_ << "## Print INSTANCE MAP #: " << found_instances_map.size() << "\n";
@@ -151,9 +147,9 @@ bool SystemCConsumer::fire() {
     vector<ModuleDecl *> module_decl_instances;
     ModuleDecl *p_dummy_module_decl{found_module_declarations[cxx_decl]};
     //
-        // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
-        // TODO: Remove deference pointer copy constructor
-     //   new ModuleDecl{*found_module_declarations[cxx_decl]}};
+    // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
+    // TODO: Remove deference pointer copy constructor
+    //   new ModuleDecl{*found_module_declarations[cxx_decl]}};
     // ==================
 
     os_ << "CXXRecordDecl* " << cxx_decl
@@ -166,12 +162,12 @@ bool SystemCConsumer::fire() {
       // Insert what you know about the parsed sc_module
       // 1. Insert the instance name from Matchers
       os_ << "\n";
-      os_ << "1. Set instance name\n";
+      os_ << "1. Set instance name: " << get<0>(instance) << "\n";
       add_module_decl->setInstanceName(get<0>(instance));
+      add_module_decl->setInstanceDecl(get<1>(instance));
 
       // 2. Find the template arguments for the class.
       os_ << "2. Set template arguments\n";
-      add_module_decl->setInstanceName(get<0>(instance));
       FindTemplateParameters tparms{cxx_decl, os_};
       add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
       add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
@@ -184,6 +180,7 @@ bool SystemCConsumer::fire() {
       add_module_decl->addConstructor(constructor.returnConstructorStmt());
 
       // 4. Find ports
+      // This is done for the declaration.
       //
       //
       // 5. Find  entry functions
@@ -213,9 +210,9 @@ bool SystemCConsumer::fire() {
         _entryFunctionContainerVector.push_back(ef);
       }
 
-      os_ << "============== DUMP the MODULEDECL ======================\n";
-      add_module_decl->dump(os_);
-      os_ << "============== END DUMP the MODULEDECL ==================\n";
+      //os_ << "============== DUMP the MODULEDECL ======================\n";
+      //add_module_decl->dump(os_);
+      //os_ << "============== END DUMP the MODULEDECL ==================\n";
       // Insert the module into the model.
       // All modules are also instances.
 
@@ -235,6 +232,25 @@ bool SystemCConsumer::fire() {
     systemcModel_->addModuleDeclInstances(p_dummy_module_decl,
                                           module_decl_instances);
   }
+
+  // All instances are within the SystemC model.
+  //  This must come after instances of ModuleDecl have been generated.
+  //  This is because the netlist matcher inserts the port bindings into the
+  //  instance.
+  llvm::outs() << "##### TEST NetlistMatcher ##### \n";
+  NetlistMatcher netlist_matcher{};
+  MatchFinder netlist_registry{};
+  netlist_matcher.registerMatchers(netlist_registry, systemcModel_);
+  netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
+  llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
+
+  /*
+  FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
+  findNetlist.dump();
+  systemcModel_->addNetlist(findNetlist);
+  */
+
+  
 
   /*
   ////////////////////////////////////////////////////////////////
@@ -382,7 +398,7 @@ bool SystemCConsumer::fire() {
 
      */
   os_ << "Parsed SystemC model from systemc-clang\n";
-  os_ << "=========================================\n";
+  os_ << "============= MODEL ============================\n";
   systemcModel_->dump(os_);
   os_ << "==============END========================\n";
   return true;

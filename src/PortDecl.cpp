@@ -1,5 +1,5 @@
-#include "FindTemplateTypes.h"
 #include "PortDecl.h"
+#include "FindTemplateTypes.h"
 
 using namespace scpar;
 using namespace std;
@@ -13,32 +13,54 @@ PortDecl::~PortDecl() {
 }
 
 PortDecl::PortDecl()
-    : port_name_{"NONE"}, template_type_{nullptr}, field_decl_{nullptr} {}
+    : port_name_{"NONE"},
+      template_type_{nullptr},
+      field_decl_{nullptr},
+      bound_vardecl_{nullptr},
+      bound_var_name_{} {}
 
-PortDecl::PortDecl(const string &name, FindTemplateTypes *tt)
-    : port_name_{name}, template_type_{tt} {}
+PortDecl::PortDecl(const std::string &name, FindTemplateTypes *tt)
+    : port_name_{name},
+      template_type_{tt},
+      field_decl_{nullptr},
+      bound_vardecl_{nullptr},
+      bound_var_name_{} {}
 
-PortDecl::PortDecl(const string &name, const Decl *fd,
+PortDecl::PortDecl(const std::string &name, const Decl *fd,
                    FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
-      field_decl_{const_cast<Decl*>(fd)} {}
+      field_decl_{const_cast<Decl *>(fd)},
+      bound_vardecl_{nullptr},
+      bound_var_name_{} {}
 
 PortDecl::PortDecl(const PortDecl &from) {
   port_name_ = from.port_name_;
   // This is necessary to allow FindPorts to go out of scope.
   template_type_ = new FindTemplateTypes{*from.template_type_};
+  field_decl_ = from.field_decl_;
+  bound_vardecl_ = from.bound_vardecl_;
+  bound_var_name_ = from.bound_var_name_;
 }
 
-void PortDecl::setModuleName(const string &name) { port_name_ = name; }
+void PortDecl::setModuleName(const std::string &name) { port_name_ = name; }
 
-string PortDecl::getName() const { return port_name_; }
+void PortDecl::setBinding(VarDecl *vd) {
+  bound_vardecl_ = vd;
+  bound_var_name_ = vd->getName();
+}
 
-FieldDecl *PortDecl::getFieldDecl() const { 
+std::string PortDecl::getBoundVarName() const { return bound_var_name_; }
+
+VarDecl *PortDecl::getBoundVarDecl() const { return bound_vardecl_; }
+
+std::string PortDecl::getName() const { return port_name_; }
+
+FieldDecl *PortDecl::getFieldDecl() const {
   return dyn_cast<FieldDecl>(field_decl_);
 }
 
-VarDecl *PortDecl::getAsVarDecl() const { 
+VarDecl *PortDecl::getAsVarDecl() const {
   return dyn_cast<VarDecl>(field_decl_);
 }
 FindTemplateTypes *PortDecl::getTemplateType() { return template_type_; }
@@ -55,7 +77,7 @@ json PortDecl::dump_json(raw_ostream &os) {
   port_j["port_name"] = getName();
 
   auto args{template_type_->getTemplateArgTreePtr()};
-  //args->dump();
+  // args->dump();
 
   for (auto const &node : *args) {
     // Returns a TreeNodePtr
@@ -63,7 +85,7 @@ json PortDecl::dump_json(raw_ostream &os) {
     auto parent_node{node->getParent()};
     auto parent_data{parent_node->getDataPtr()};
     if (parent_node->getDataPtr() == node->getDataPtr()) {
-      //llvm::outs() << "\nInsert parent node: " << type_data->getTypeName()
+      // llvm::outs() << "\nInsert parent node: " << type_data->getTypeName()
       //             << "\n";
       port_j["port_arguments"][type_data->getTypeName()] = nullptr;
     } else {
@@ -75,7 +97,9 @@ json PortDecl::dump_json(raw_ostream &os) {
       port_j["port_arguments"][parent_data->getTypeName()].push_back(
           type_data->getTypeName());
     }
+    port_j["port_binding"]["variable_name"] = bound_var_name_;
+    port_j["port_binding"]["VarDecl*"] = to_string(bound_vardecl_);
   }
-  //os << port_j.dump(4);
+  // os << port_j.dump(4);
   return port_j;
 }
