@@ -46,7 +46,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
 
   // Testing instances.
 
-  auto test_module{model->getInstance("test_instance")};
+  auto test_module{model->getInstance("testing")};
   auto sreg_bypass{model->getInstance("sreg_bypass")};
   auto sreg_fwd{model->getInstance("sreg_fwd")};
   auto sreg_fwd_rev{model->getInstance("sreg_fwd_rev")};

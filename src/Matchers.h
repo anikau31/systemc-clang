@@ -183,16 +183,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       std::string name{instance->getIdentifier()->getNameStart()};
       llvm::outs() << "@@ Found a member variable instance: " << name << "\n";
 
-      std::string strip_quote_name{name};
-      // This is the instance name.
-      instances_.push_back(std::make_tuple(strip_quote_name, instance));
       // TODO: Is this how we want the instance name?
       // This is actually a good way to identify instances.
       // This is because these names will truly be unique. Variable names could
       // be arrays, which may not be the best way to identify unique sc_module
       // instances.
-      /*
-       *
 
       if (auto instance_name = const_cast<CXXConstructExpr *>(
               result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
@@ -217,7 +212,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // This is the instance name.
         instances_.push_back(std::make_tuple(strip_quote_name, instance));
       }
-            */
     }
   }
 

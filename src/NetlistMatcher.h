@@ -150,6 +150,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     std::string instance_type{};
     std::string instance_var_name{};
+    std::string instance_constructor_name{};
     std::string port_param_name{};
     CXXRecordDecl *cxxdecl{nullptr};
     Decl *instance_decl{nullptr};
@@ -169,7 +170,8 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       instance_decl = dre_me->getDecl();
 
       llvm::outs() << "#### Found DeclRefExpr CXXDecl *:" << cxxdecl << "\n";
-      llvm::outs() << "#### Found DeclRefExpr Decl *:" << dre_me->getDecl() << "\n";
+      llvm::outs() << "#### Found DeclRefExpr Decl *:" << dre_me->getDecl()
+                   << "\n";
       dre_me->getDecl()->dump();
 
       instance_var_name = dre_me->getFoundDecl()->getName();
@@ -184,25 +186,27 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       // dre->getFoundDecl()->dump();
     }
 
-  // Print out all the instances that were inserted in the model. 
-  auto instance_map{model_->getModuleInstanceMap()};
- 
-  for (auto const &element : instance_map) {
-    auto name{element.first};
-    auto instances{element.second};
+    // Print out all the instances that were inserted in the model.
+    // auto instance_map{model_->getModuleInstanceMap()};
+    //
+    // for (auto const &element : instance_map) {
+    // auto name{element.first};
+    // auto instances{element.second};
+    //
+    // llvm::outs() << "@@@@@@@ addr: " << name << "\n";
+    // for (auto const &inst : instances) {
+    // llvm::outs() << "@@@@@ instance name: " << inst->getInstanceName() << ",
+    // decl*: " << inst->getInstanceDecl() << "\n";
+    //
+    // }
+    // }
+    //
 
-    llvm::outs() << "@@@@@@@ addr: " << name << "\n";
-    for (auto const &inst : instances) {
-      llvm::outs() << "@@@@@ instance name: " << inst->getInstanceName() << ", decl*: " << inst->getInstanceDecl() << "\n";
-
-    }
-  }
-
-
-    auto module_decl{ findModuleDeclInstance(instance_decl)};
-    if (module_decl) {
-      llvm::outs() << "@@@@@@ instance name: " << module_decl->getInstanceName() << "\n"; 
-
+    auto instance_module_decl{findModuleDeclInstance(instance_decl)};
+    if (instance_module_decl) {
+      instance_constructor_name = instance_module_decl->getInstanceName();
+      llvm::outs() << "@@@@@@ instance constructor name: " << instance_constructor_name
+                   << "\n";
     }
 
     // new PortBinding(port_name, me, instance_type, instance_var_name,

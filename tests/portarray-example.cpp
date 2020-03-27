@@ -33,7 +33,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   auto model{sc.getSystemCModel()};
 
   // Want to find an instance named "testing".
-  ModuleDecl *pa{model->getInstance("prt_ar")};;
+  ModuleDecl *pa{model->getInstance("PORT_ARRAY")};;
 
   SECTION("Testing PORT_ARRAY", "[port arrays]") {
     // Actually found the module.

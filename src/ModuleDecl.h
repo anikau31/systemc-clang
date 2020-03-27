@@ -135,8 +135,6 @@ class ModuleDecl {
   // Constructor statement
   Stmt *constructor_stmt_;
   // Instance fieldDecl or varDecl
-  FieldDecl *instance_field_decl_;
-  VarDecl *instance_var_decl_;
   Decl *instance_decl_;
 
   processMapType process_map_;

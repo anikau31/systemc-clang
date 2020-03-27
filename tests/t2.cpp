@@ -69,7 +69,7 @@ int sc_main(int argc, char *argv[]) {
     // The module instances have all the information.
     // auto test_module{module_decl.find("test")};
 
-    auto test_module{ model->getInstance("test_instance") };
+    auto test_module{ model->getInstance("testing") };
     /*
     auto test_module{std::find_if(
         module_decl.begin(), module_decl.end(),

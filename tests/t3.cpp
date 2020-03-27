@@ -33,7 +33,7 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
     // The module instances have all the information.
     // auto test_module{module_decl.find("test")};
 
-    auto test_module{model->getInstance("test_instance")};
+    auto test_module{model->getInstance("testing")};
 
     // There is only one module instance
 
@@ -44,7 +44,7 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
     REQUIRE(test_module != nullptr);
     auto module_ptr{test_module};
 
-    REQUIRE(module_ptr->getInstanceName() == "test_instance");
+    REQUIRE(module_ptr->getInstanceName() == "testing");
 
     REQUIRE(module_ptr->getIPorts().size() == 2);
     REQUIRE(module_ptr->getOPorts().size() == 1);

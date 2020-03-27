@@ -12,17 +12,13 @@ ModuleDecl::ModuleDecl()
       instance_name_{"NONE"},
       class_decl_{nullptr},
       constructor_stmt_{nullptr},
-      instance_field_decl_{nullptr},
-      instance_decl_{nullptr},
-      instance_var_decl_{nullptr} {}
+      instance_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
     : module_name_{name},
       instance_name_{"NONE"},
       class_decl_{decl},
-      instance_field_decl_{nullptr},
-      instance_decl_{nullptr},
-      instance_var_decl_{nullptr} {}
+      instance_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(
     const std::tuple<const std::string &, CXXRecordDecl *> &element)
@@ -34,8 +30,6 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
-  instance_field_decl_ = from.instance_field_decl_;
-  instance_var_decl_ = from.instance_var_decl_;
   instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
@@ -66,8 +60,6 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
-  instance_field_decl_ = from.instance_field_decl_;
-  instance_var_decl_ = from.instance_var_decl_;
   instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
@@ -96,8 +88,7 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 ModuleDecl::~ModuleDecl() {
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
-  instance_field_decl_ = nullptr;
-  instance_var_decl_ = nullptr;
+  instance_decl_ = nullptr;
 
   // Delete all pointers in ports.
   for (auto input_port : in_ports_) {
@@ -389,24 +380,24 @@ CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
   return class_decl_;
 }
 
-FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_; }
-VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
+//FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_; }
+//VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
 
 Decl *ModuleDecl::getInstanceDecl() { 
   return instance_decl_;
 }
 
-bool ModuleDecl::isInstanceFieldDecl() const {
-  if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
-    return true;
-  }
-  if ((instance_field_decl_ == nullptr) && (instance_var_decl_ != nullptr)) {
-    return false;
-  }
-
-  return false;
-}
-
+// bool ModuleDecl::isInstanceFieldDecl() const {
+  // if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
+    // return true;
+  // }
+  // if ((instance_field_decl_ == nullptr) && (instance_var_decl_ != nullptr)) {
+    // return false;
+  // }
+//
+  // return false;
+// }
+//
 void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
   if (instance_list_.empty()) {
     os << " none \n";

@@ -129,8 +129,8 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
 
-  auto found_module_testing{model->getInstance("test_instance")};
-  auto found_module_testing_float{model->getInstance("test_float_double")};
+  auto found_module_testing{model->getInstance("testing")};
+  auto found_module_testing_float{model->getInstance("testing_float_double")};
 
   SECTION("Testing top-level module: test", "[top module]") {
     // There should be two modules because there are two instances.

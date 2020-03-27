@@ -61,7 +61,7 @@ int sc_main(int argc, char *argv[]) {
 
   // Want to find an instance named "testing".
 
-  ModuleDecl *test_module{model->getInstance("test_instance")};
+  ModuleDecl *test_module{model->getInstance("testing")};
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
