@@ -124,7 +124,7 @@ ModuleDecl::~ModuleDecl() {
 
 void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
 
-void ModuleDecl::setInstanceDecl(Decl *decl ) { instance_decl_ = decl; }
+void ModuleDecl::setInstanceDecl(Decl *decl) { instance_decl_ = decl; }
 
 void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
   template_parameters_ = parm_list;
@@ -387,22 +387,20 @@ CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
   return class_decl_;
 }
 
-//FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_; }
-//VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
+// FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_;
+// } VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
 
-Decl *ModuleDecl::getInstanceDecl() { 
-  return instance_decl_;
-}
+Decl *ModuleDecl::getInstanceDecl() { return instance_decl_; }
 
 // bool ModuleDecl::isInstanceFieldDecl() const {
-  // if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
-    // return true;
-  // }
-  // if ((instance_field_decl_ == nullptr) && (instance_var_decl_ != nullptr)) {
-    // return false;
-  // }
+// if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
+// return true;
+// }
+// if ((instance_field_decl_ == nullptr) && (instance_var_decl_ != nullptr)) {
+// return false;
+// }
 //
-  // return false;
+// return false;
 // }
 //
 void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
@@ -416,14 +414,20 @@ void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpPortBinding() {
-  for (auto const &pb : port_bindings_ ) {
-    auto port_name{ get<0>(pb) };
-    auto binding{ get<1>(pb) };
+  json binding_j;
+
+  binding_j["number_of_ports_bound"] = port_bindings_.size();
+  for (auto const &pb : port_bindings_) {
+    auto port_name{get<0>(pb)};
+    auto binding{get<1>(pb)};
+
+    binding_j[port_name] =  binding->getBoundToName();
 
     binding->dump();
   }
-
+    llvm::outs() << binding_j.dump(4) << "\n";
 }
+
 void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {
   if (port_signal_map_.empty()) {
     os << " none\n";
@@ -485,7 +489,6 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
 
 void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j;
-
 
   iport_j["number_of_input_ports"] = in_ports_.size();
   for (auto mit : in_ports_) {
@@ -568,7 +571,7 @@ void ModuleDecl::dump(raw_ostream &os) {
   os << "\n# Processes:\n";
   dumpProcesses(os, 4);
   os << "# Port binding:" << port_bindings_.size() << "\n";
-  dumpPortBinding(); //(os, 4);
+  dumpPortBinding();  //(os, 4);
   os << "# Signal binding:\n";
   dumpSignalBinding(os, 4);
 

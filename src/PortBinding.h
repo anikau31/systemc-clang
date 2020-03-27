@@ -23,6 +23,8 @@ class PortBinding {
   DeclRefExpr *port_parameter_dref_;
 
  public:
+  const std::string &getBoundToName() const { return port_parameter_name_; }
+
   void dump() {
     llvm::outs() << "> type: " << instance_type_ << " var_name: " << instance_var_name_ << " constructor_name: " << instance_constructor_name_ << " bound to " << port_parameter_name_ << "\n";
   }

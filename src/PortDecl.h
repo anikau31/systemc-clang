@@ -33,8 +33,8 @@ class PortDecl {
   FieldDecl *getFieldDecl() const;
   VarDecl *getAsVarDecl() const;
   FindTemplateTypes *getTemplateType();
-  std::string getBoundVarName() const;
-  VarDecl *getBoundVarDecl() const;
+  //std::string getBoundVarName() const;
+  //VarDecl *getBoundVarDecl() const;
 
   // Print
   void dump(raw_ostream &, int tabn = 0);
@@ -50,8 +50,8 @@ class PortDecl {
 
   // This is the information for binding this port.
   // The variable it is bound to.
-  VarDecl *bound_vardecl_;
-  std::string bound_var_name_;
+  // VarDecl *bound_vardecl_;
+  // std::string bound_var_name_;
 };
 }  // namespace scpar
 #endif
