@@ -7,12 +7,14 @@
 #include "clang/ASTMatchers/ASTMatchersMacros.h"
 
 #include "Matchers.h"
+#include "PortBinding.h"
 
 using namespace clang;
 using namespace clang::ast_matchers;
 using namespace scpar;
 
 namespace sc_ast_matchers {
+  /*
 
 class PortBinding {
  private:
@@ -64,6 +66,9 @@ class PortBinding {
         port_parameter_name_{port_parameter_name},
         port_parameter_dref_{port_parameter_dref} {};
 };
+*/
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Class NetlistMatcher
@@ -215,15 +220,6 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       instance_constructor_name = instance_module_decl->getInstanceName();
       llvm::outs() << "@@@@@@ instance constructor name: " << instance_constructor_name
                    << "\n";
-    }
-
-    // PortBinding(const std::string &port_name, MemberExpr *port_member_expr,
-              // const std::string &instance_type,
-              // CXXRecordDecl *instance_type_decl,
-              // const std::string &instance_name, Decl *instance_decl,
-              // DeclRefExpr *port_dref, const std::string &port_parameter_name,
-              // DeclRefExpr *port_parameter_dref)
-   
 
 
      auto pb = new PortBinding(port_name, me,
@@ -231,7 +227,9 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
          instance_constructor_name, instance_module_decl->getInstanceDecl(), 
          dre_me, port_param_name, 
          dre);
-     pb->dump();
+     instance_module_decl->addPortBinding(port_name, pb);
+     instance_module_decl->dumpPortBinding();
+    }
   }
 
   void dump() {

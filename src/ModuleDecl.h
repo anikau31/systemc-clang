@@ -9,12 +9,14 @@
 #include "FindTLMInterfaces.h"
 #include "InterfaceDecl.h"
 #include "PortDecl.h"
+#include "PortBinding.h"
 #include "ProcessDecl.h"
 #include "Signal.h"
 #include "Utility.h"
 #include "clang/AST/DeclCXX.h"
 #include "json.hpp"
 #include "systemc-clang.h"
+
 
 namespace scpar {
 using namespace clang;
@@ -46,6 +48,10 @@ class ModuleDecl {
 
   // Why is this a not a Type?
   typedef std::vector<std::string> instanceName;
+
+  // string: name of bound port, PortBinding*: structure with more info.
+  typedef std::pair<std::string, PortBinding *> portBindingPairType;
+  typedef std::map<std::string, PortBinding *> portBindingMapType;
 
   // PortType
   typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
@@ -79,6 +85,8 @@ class ModuleDecl {
   void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addProcess(FindEntryFunctions::entryFunctionVectorType *);
   void addInstances(const vector<string> &);
+
+  void addPortBinding(const std::string &port_name, PortBinding *pb);
   void addSignalBinding(map<string, string>);
 
   void setInstanceName(const string &);
@@ -117,6 +125,7 @@ class ModuleDecl {
   const signalMapType & getSignals() const;
 
   void dumpPorts(raw_ostream &, int);
+  void dumpPortBinding();
   void dumpInterfaces(raw_ostream &, int);
   void dumpProcesses(raw_ostream &, int);
   void dumpSignals(raw_ostream &, int);
@@ -145,6 +154,8 @@ class ModuleDecl {
 
   portMapType istreamports_;
   portMapType ostreamports_;
+
+  portBindingMapType port_bindings_;
 
   interfaceMapType iinterfaces_;
   interfaceMapType ointerfaces_;

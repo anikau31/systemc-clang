@@ -40,6 +40,7 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
 
   istreamports_ = from.istreamports_;
   ostreamports_ = from.ostreamports_;
+  port_bindings_ = from.port_bindings_;
 
   iinterfaces_ = from.iinterfaces_;
   ointerfaces_ = from.ointerfaces_;
@@ -70,6 +71,8 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 
   istreamports_ = from.istreamports_;
   ostreamports_ = from.ostreamports_;
+
+  port_bindings_ = from.port_bindings_;
 
   iinterfaces_ = from.iinterfaces_;
   ointerfaces_ = from.ointerfaces_;
@@ -139,6 +142,10 @@ void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
 
 void ModuleDecl::addInstances(const vector<string> &instanceList) {
   instance_list_ = instanceList;
+}
+
+void ModuleDecl::addPortBinding(const std::string &port_name, PortBinding *pb) {
+  port_bindings_.insert(portBindingPairType(port_name, pb));
 }
 
 void ModuleDecl::addSignalBinding(map<string, string> portSignalMap) {
@@ -408,6 +415,15 @@ void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
   }
 }
 
+void ModuleDecl::dumpPortBinding() {
+  for (auto const &pb : port_bindings_ ) {
+    auto port_name{ get<0>(pb) };
+    auto binding{ get<1>(pb) };
+
+    binding->dump();
+  }
+
+}
 void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {
   if (port_signal_map_.empty()) {
     os << " none\n";
@@ -551,6 +567,8 @@ void ModuleDecl::dump(raw_ostream &os) {
   dumpSignals(os, 4);
   os << "\n# Processes:\n";
   dumpProcesses(os, 4);
+  os << "# Port binding:" << port_bindings_.size() << "\n";
+  dumpPortBinding(); //(os, 4);
   os << "# Signal binding:\n";
   dumpSignalBinding(os, 4);
 

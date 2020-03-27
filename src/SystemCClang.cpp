@@ -210,9 +210,9 @@ bool SystemCConsumer::fire() {
         _entryFunctionContainerVector.push_back(ef);
       }
 
-      os_ << "============== DUMP the MODULEDECL ======================\n";
-      add_module_decl->dump(os_);
-      os_ << "============== END DUMP the MODULEDECL ==================\n";
+      //os_ << "============== DUMP the MODULEDECL ======================\n";
+      //add_module_decl->dump(os_);
+      //os_ << "============== END DUMP the MODULEDECL ==================\n";
       // Insert the module into the model.
       // All modules are also instances.
 
@@ -244,23 +244,13 @@ bool SystemCConsumer::fire() {
   netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
 
+  /*
   FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
   findNetlist.dump();
   systemcModel_->addNetlist(findNetlist);
+  */
 
-  // Print out all the instances that were inserted in the model.
-  auto instance_map{systemcModel_->getModuleInstanceMap()};
-
-  for (auto const &element : instance_map) {
-    auto name{element.first};
-    auto instances{element.second};
-
-    llvm::outs() << "@@@@@@@ addr: " << name << "\n";
-    for (auto const &inst : instances) {
-      llvm::outs() << "@@@@@ instance name: " << inst->getInstanceName()
-                   << "\n";
-    }
-  }
+  
 
   /*
   ////////////////////////////////////////////////////////////////
@@ -408,7 +398,7 @@ bool SystemCConsumer::fire() {
 
      */
   os_ << "Parsed SystemC model from systemc-clang\n";
-  os_ << "=========================================\n";
+  os_ << "============= MODEL ============================\n";
   systemcModel_->dump(os_);
   os_ << "==============END========================\n";
   return true;
