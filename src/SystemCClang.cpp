@@ -234,6 +234,9 @@ bool SystemCConsumer::fire() {
   }
 
   // All instances are within the SystemC model.
+  //  This must come after instances of ModuleDecl have been generated.
+  //  This is because the netlist matcher inserts the port bindings into the
+  //  instance.
   llvm::outs() << "##### TEST NetlistMatcher ##### \n";
   NetlistMatcher netlist_matcher{};
   MatchFinder netlist_registry{};
@@ -245,24 +248,19 @@ bool SystemCConsumer::fire() {
   findNetlist.dump();
   systemcModel_->addNetlist(findNetlist);
 
-  // Print out all the instances that were inserted in the model. 
+  // Print out all the instances that were inserted in the model.
   auto instance_map{systemcModel_->getModuleInstanceMap()};
- 
+
   for (auto const &element : instance_map) {
     auto name{element.first};
     auto instances{element.second};
 
     llvm::outs() << "@@@@@@@ addr: " << name << "\n";
     for (auto const &inst : instances) {
-      llvm::outs() << "@@@@@ instance name: " << inst->getInstanceName() << "\n";
-
+      llvm::outs() << "@@@@@ instance name: " << inst->getInstanceName()
+                   << "\n";
     }
   }
-
-  
-
-
-
 
   /*
   ////////////////////////////////////////////////////////////////

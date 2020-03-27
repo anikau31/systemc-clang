@@ -20,8 +20,9 @@ class PortBinding {
   MemberExpr *port_member_expr_;
   // Instance information
   std::string instance_type_;
-  CXXRecordDecl *instance_type_decl_;
   std::string instance_var_name_;
+  std::string instance_constructor_name_;
+  CXXRecordDecl *instance_type_decl_;
   Decl *instance_decl_;
   DeclRefExpr *port_dref_;
 
@@ -29,12 +30,17 @@ class PortBinding {
   DeclRefExpr *port_parameter_dref_;
 
  public:
+  void dump() {
+    llvm::outs() << "> type: " << instance_type_ << " var_name: " << instance_var_name_ << " constructor_name: " << instance_constructor_name_ << " bound to " << port_parameter_name_ << "\n";
+  }
+
   PortBinding()
       : port_name_{},
         port_member_expr_{nullptr},
         instance_type_{},
         instance_type_decl_{},
         instance_var_name_{},
+        instance_constructor_name_{},
         instance_decl_{nullptr},
         port_dref_{nullptr},
         port_parameter_name_{},
@@ -42,6 +48,7 @@ class PortBinding {
 
   PortBinding(const std::string &port_name, MemberExpr *port_member_expr,
               const std::string &instance_type,
+              const std::string &instance_var_name,
               CXXRecordDecl *instance_type_decl,
               const std::string &instance_name, Decl *instance_decl,
               DeclRefExpr *port_dref, const std::string &port_parameter_name,
@@ -50,8 +57,9 @@ class PortBinding {
         port_member_expr_{port_member_expr},
         instance_type_{instance_type},
         instance_type_decl_{instance_type_decl},
-        instance_var_name_{instance_name},
+        instance_var_name_{instance_var_name},
         instance_decl_{instance_decl},
+        instance_constructor_name_{instance_name},
         port_dref_{port_dref},
         port_parameter_name_{port_parameter_name},
         port_parameter_dref_{port_parameter_dref} {};
@@ -202,15 +210,28 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     // }
     //
 
-    auto instance_module_decl{findModuleDeclInstance(instance_decl)};
+    ModuleDecl *instance_module_decl{findModuleDeclInstance(instance_decl)};
     if (instance_module_decl) {
       instance_constructor_name = instance_module_decl->getInstanceName();
       llvm::outs() << "@@@@@@ instance constructor name: " << instance_constructor_name
                    << "\n";
     }
 
-    // new PortBinding(port_name, me, instance_type, instance_var_name,
-    // cxxdecl, dre_me->getDecl(), dre_me, port_param_name, dre);
+    // PortBinding(const std::string &port_name, MemberExpr *port_member_expr,
+              // const std::string &instance_type,
+              // CXXRecordDecl *instance_type_decl,
+              // const std::string &instance_name, Decl *instance_decl,
+              // DeclRefExpr *port_dref, const std::string &port_parameter_name,
+              // DeclRefExpr *port_parameter_dref)
+   
+
+
+     auto pb = new PortBinding(port_name, me,
+         instance_type, instance_var_name, cxxdecl, 
+         instance_constructor_name, instance_module_decl->getInstanceDecl(), 
+         dre_me, port_param_name, 
+         dre);
+     pb->dump();
   }
 
   void dump() {
