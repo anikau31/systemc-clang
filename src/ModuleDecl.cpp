@@ -13,6 +13,7 @@ ModuleDecl::ModuleDecl()
       class_decl_{nullptr},
       constructor_stmt_{nullptr},
       instance_field_decl_{nullptr},
+      instance_decl_{nullptr},
       instance_var_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
@@ -20,6 +21,7 @@ ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
       instance_name_{"NONE"},
       class_decl_{decl},
       instance_field_decl_{nullptr},
+      instance_decl_{nullptr},
       instance_var_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(
@@ -34,6 +36,7 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
   constructor_stmt_ = from.constructor_stmt_;
   instance_field_decl_ = from.instance_field_decl_;
   instance_var_decl_ = from.instance_var_decl_;
+  instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
   in_ports_ = from.in_ports_;
@@ -65,6 +68,7 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   constructor_stmt_ = from.constructor_stmt_;
   instance_field_decl_ = from.instance_field_decl_;
   instance_var_decl_ = from.instance_var_decl_;
+  instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
   in_ports_ = from.in_ports_;
@@ -125,6 +129,8 @@ ModuleDecl::~ModuleDecl() {
 }
 
 void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
+
+void ModuleDecl::setInstanceDecl(Decl *decl ) { instance_decl_ = decl; }
 
 void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
   template_parameters_ = parm_list;
@@ -385,6 +391,10 @@ CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
 
 FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_; }
 VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
+
+Decl *ModuleDecl::getInstanceDecl() { 
+  return instance_decl_;
+}
 
 bool ModuleDecl::isInstanceFieldDecl() const {
   if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
