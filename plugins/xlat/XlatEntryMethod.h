@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_set>
 #include <ctype.h>
 #include "clang/AST/DeclCXX.h"
 #include "clang/AST/Stmt.h"
@@ -26,7 +27,7 @@ using namespace hnode;
 class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
  public:
   XlatMethod(CXXMethodDecl * emd, hNodep &h_top, llvm::raw_ostream & os);
-  XlatMethod(Stmt * stmt, hNodep & h_top, llvm::raw_ostream & os);
+  XlatMethod(Stmt * stmt, hNodep &h_top, llvm::raw_ostream & os);
   virtual ~XlatMethod();
 
   bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
@@ -47,7 +48,9 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   bool TraverseWhileStmt(WhileStmt *whiles);
   void VnameDump();
   //CXXMethodDecl *getEMD();
-  
+
+  std::unordered_map<string, CXXMethodDecl *> methodecls;  //  methods called in this SC_METHOD
+
  private:
   
   //CXXMethodDecl * _emd;
@@ -61,6 +64,7 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   } names_t;
   std::map<Decl *, std::vector<DeclRefExpr *>> vuse_map;
   std::map<Decl *, names_t> vname_map;
+
   const string prefix = "_XLAT_";
   int cnt;
   inline string newname() {

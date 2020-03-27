@@ -71,11 +71,17 @@ bool Xlat::postFire() {
       h_top = new hNode(hNode::hdlopsEnum::hProcesses);
       // Processes
       xlatproc(instanceVec.at(i)->getEntryFunctionContainer(), h_top, os_);
-      
+
       if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
       h_module->print(xlatout);
       delete h_top; //h_module;
     }
+  }
+  os_ << "Global Method Map\n";
+  for (auto m : allmethodecls) {
+    os_ << "Method --------\n" << m.first << ":" << m.second << "\n";
+    m.second->dump(os_);
+    os_ << "---------\n";
   }
   return true;
 }
@@ -163,6 +169,13 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
       CXXMethodDecl *emd = efc->getEntryMethod();
       hNodep h_body; // = new hNode(hNode::hdlopsEnum::hCStmt);
       XlatMethod xmethod(emd, h_body, os_);  //, xlatout);
+      os_ << "Method Map:\n";
+      for (auto m : xmethod.methodecls) {
+	os_ << m.first << ":" << m.second <<"\n";
+	//m.second->dump(os_);
+      }
+      allmethodecls.insert(xmethod.methodecls.begin(), xmethod.methodecls.end());
+
       h_process->child_list.push_back(h_body);
       h_top->child_list.push_back(h_process);
     } else

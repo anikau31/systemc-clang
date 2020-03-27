@@ -295,41 +295,42 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
  
     arg->dump(os_);
     
-    string methodname;
+    string methodname, qualmethodname;
     CXXMethodDecl * methdcl = callexpr->getMethodDecl();
 
+    
     // os_ << "methoddecl follows\n";
     // methdcl->dump();
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {
-
-	methodname = methdcl->getNameAsString();
-
-	os_ << "here is method printname info " << methodname << "\n";
-	if (methodname.compare(0, 8, "operator")==0) { // 0 means compare =, 8 is len("operator")
-	  // the conversion we know about, can be skipped
-	  os_ << "Found operator conversion node\n";
-	  TRY_TO(TraverseStmt(arg)); 
-	  return true;
-	}
-
+    
+      methodname = methdcl->getNameAsString();
+      qualmethodname = methdcl->getQualifiedNameAsString();
+      make_ident(qualmethodname);
+      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
+      
+      os_ << "here is method printname " << methodname << " and qual name " << qualmethodname << " \n";
+      if (methodname.compare(0, 8, "operator")==0) { // 0 means compare =, 8 is len("operator")
+	// the conversion we know about, can be skipped
+	os_ << "Found operator conversion node\n";
+	TRY_TO(TraverseStmt(arg)); 
+	return true;
       }
 
-    else methodname = "NOOP";
+    }
+
+    else {
+      methodname = "NOOP";
+      qualmethodname = methodname;
+    }
 
     hNode::hdlopsEnum opc; 
     
     os_ << "found " << methodname << "\n";
-    // eg [write tap1]
-    if (methodname == "read") opc = hNode::hdlopsEnum::hSigAssignR;
-    else if (methodname == "write") opc = hNode::hdlopsEnum::hSigAssignL;
-    else {
-      os_ << "unknown method. methoddecl follows\n";
-      methdcl->dump();
-      opc = hNode::hdlopsEnum::hMethodCall;
-      if (methodname.find_first_of(" ") != std::string::npos) methodname = "\"" + methodname + "\"";
-    }
 
-    hNode * h_callp = new hNode(methodname, opc); // list to hold call expr node
+    opc = hNode::hdlopsEnum::hMethodCall;
+    
+
+    hNode * h_callp = new hNode(qualmethodname, opc); // list to hold call expr node
 
     TRY_TO(TraverseStmt(arg)); // traverse the x in x.f(5)
 
