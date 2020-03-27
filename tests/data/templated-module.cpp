@@ -71,8 +71,8 @@ int sc_main(int argc, char *argv[]) {
     test_instance.inS(sig1);
     test_instance.outS(sig1);
 
-    non_template nt("non-templated-module-instance");
+    non_template non_template("non-templated-module-instance");
 
-    test<MY_FLOAT2, double> test_double2("testing_float_double");
+    test<MY_FLOAT2, double> test_float_double("testing_float_double");
     return 0;
 }

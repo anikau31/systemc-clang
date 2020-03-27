@@ -1,5 +1,5 @@
-#ifndef _MATCHERS_HPP_
-#define _MATCHERS_HPP_
+#ifndef _MATCHERS_H_
+#define _MATCHERS_H_
 #include <map>
 #include <tuple>
 #include <vector>
@@ -182,6 +182,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
       llvm::outs() << "@@ Found a member variable instance: " << name << "\n";
+
+      // TODO: Is this how we want the instance name?
+      // This is actually a good way to identify instances.
+      // This is because these names will truly be unique. Variable names could
+      // be arrays, which may not be the best way to identify unique sc_module
+      // instances.
 
       if (auto instance_name = const_cast<CXXConstructExpr *>(
               result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
@@ -623,7 +629,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
     auto is_ports{(sc_in_field) || sc_out_field || sc_inout_field ||
                   sc_signal_field || sc_stream_in_field || sc_stream_out_field};
-    llvm::outs() << "is_ports: " << is_ports << "\n";
+    // llvm::outs() << "is_ports: " << is_ports << "\n";
 
     if ((!is_ports)) {
       // These will be either FieldDecl or VarDecl.

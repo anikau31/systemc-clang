@@ -155,11 +155,23 @@ void Model::dump(llvm::raw_ostream &os) {
   os << "-- Number of sc_module instances in map: "
      << module_instance_map_.size() << "\n";
 
+  /*
   for (const auto &mod : modules_) {
     // <string, ModuleDecl*>
     auto decl{mod.second};
     os << "-- Instance name: " << decl->getInstanceName() << "\n";
     decl->dump(os);
+  }
+  */
+
+  for (const auto &instmap : module_instance_map_) {
+    auto module_decl{instmap.first};
+    auto instances{instmap.second};
+
+    for (const auto &instance : instances) {
+      os << "-- Instance name: " << instance->getInstanceName() << "\n";
+      instance->dump(os);
+    }
   }
   os << "Done dump in model\n";
   /*
@@ -197,6 +209,7 @@ void Model::dump(llvm::raw_ostream &os) {
     os << it->first << " " << it->second;
   }
 
+  */
   os << "\n\n";
   os << "# Netlist: ";
   for (FindNetlist::instanceModuleMapType::iterator
@@ -224,5 +237,4 @@ void Model::dump(llvm::raw_ostream &os) {
     }
     os << "\n ------------------------------------------------------\n";
   }
-  */
 }

@@ -1,8 +1,8 @@
 #ifndef _PORT_DECL_H_
 #define _PORT_DECL_H_
 
-#include "systemc-clang.h"
 #include "json.hpp"
+#include "systemc-clang.h"
 
 #include <map>
 #include <string>
@@ -13,37 +13,45 @@
 namespace scpar {
 using namespace clang;
 using namespace std;
- using json = nlohmann::json;
+using json = nlohmann::json;
 
 class PortDecl {
-public:
+ public:
   PortDecl();
-  PortDecl(const string &, FindTemplateTypes *);
-  PortDecl(const string &, const Decl*, FindTemplateTypes *);
+  PortDecl(const std::string &, FindTemplateTypes *);
+  PortDecl(const std::string &, const Decl *, FindTemplateTypes *);
 
   PortDecl(const PortDecl &);
 
   ~PortDecl();
   // Set parameters
-  void setModuleName(const string &);
+  void setModuleName(const std::string &);
+  void setBinding(VarDecl *vd);
 
   /// Get parameters
-  string getName() const;
-  FieldDecl* getFieldDecl() const;
+  std::string getName() const;
+  FieldDecl *getFieldDecl() const;
   VarDecl *getAsVarDecl() const;
   FindTemplateTypes *getTemplateType();
+  std::string getBoundVarName() const;
+  VarDecl *getBoundVarDecl() const;
 
   // Print
   void dump(raw_ostream &, int tabn = 0);
 
   json dump_json(raw_ostream &);
 
-private:
+ private:
   // Name of the port
   string port_name_;
-  // This holds the types for the port
+  // This holds the types for the port declaration
   FindTemplateTypes *template_type_;
-  Decl*field_decl_;
+  Decl *field_decl_;
+
+  // This is the information for binding this port.
+  // The variable it is bound to.
+  VarDecl *bound_vardecl_;
+  std::string bound_var_name_;
 };
-} // namespace scpar
+}  // namespace scpar
 #endif
