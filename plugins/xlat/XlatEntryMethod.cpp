@@ -288,7 +288,7 @@ bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
 }
 
 inline bool XlatMethod::isSCType(string tstring) {
-  return (tstring.substr(0, 3) == "sc_");
+  return (tstring.substr(0, 10) == "sc_coresc_");
 }
 
 bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
@@ -336,9 +336,9 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     // if type of x in x.f(5) is primitive sc type (sc_in, sc_out, sc_inout, sc_signal
     // and method name is either read or write,
     // generate a SigAssignL|R -- NEED to do this
-    
-    if (methodname == "read") opc = hNode::hdlopsEnum::hSigAssignR;
-    else if (methodname == "write") opc = hNode::hdlopsEnum::hSigAssignL;
+
+    if ((methodname == "read") && (isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignR;
+    else if ((methodname == "write") && (isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignL;
     else {
       opc = hNode::hdlopsEnum::hMethodCall;
       if (methodname.find_first_of(" ") != std::string::npos) methodname = "\"" + methodname + "\"";
