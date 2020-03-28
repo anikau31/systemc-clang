@@ -287,6 +287,10 @@ bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
   return true;
 }
 
+inline bool XlatMethod::isSCType(string tstring) {
+  return (tstring.substr(0, 3) == "sc_");
+}
+
 bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
   os_ << "In TraverseCXXMemberCallExpr, printing implicit object arg\n";
       // Retrieves the implicit object argument for the member call.
@@ -294,6 +298,8 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
  
     arg->dump(os_);
+    QualType argtyp = arg->getType();
+    os_ << "type of x in x.f(5) is " << argtyp.getAsString() << "\n";
     
     string methodname, qualmethodname;
     CXXMethodDecl * methdcl = callexpr->getMethodDecl();
@@ -327,10 +333,19 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     
     os_ << "found " << methodname << "\n";
 
-    opc = hNode::hdlopsEnum::hMethodCall;
+    // if type of x in x.f(5) is primitive sc type (sc_in, sc_out, sc_inout, sc_signal
+    // and method name is either read or write,
+    // generate a SigAssignL|R -- NEED to do this
     
+    if (methodname == "read") opc = hNode::hdlopsEnum::hSigAssignR;
+    else if (methodname == "write") opc = hNode::hdlopsEnum::hSigAssignL;
+    else {
+      opc = hNode::hdlopsEnum::hMethodCall;
+      if (methodname.find_first_of(" ") != std::string::npos) methodname = "\"" + methodname + "\"";
+    }
 
-    hNode * h_callp = new hNode(qualmethodname, opc); // list to hold call expr node
+
+    hNode * h_callp = new hNode(methodname, opc); // list to hold call expr node
 
     TRY_TO(TraverseStmt(arg)); // traverse the x in x.f(5)
 
@@ -345,7 +360,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     return true;
 }
 
-bool isLogicalOp(clang::OverloadedOperatorKind opc) {
+bool XlatMethod::isLogicalOp(clang::OverloadedOperatorKind opc) {
   switch (opc) {
   case OO_Less:
   case OO_LessEqual:
@@ -391,18 +406,34 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
   os_ << "name is " << nameinfo << ", base and memberexpr trees follow\n";
   os_ << "base is \n";
   memberexpr->getBase()->dump(os_);
-   auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
-  if (baseexpr) {
-    // FIXME Only handling one level right now
-    const Type *unqualtyp = baseexpr->getType()->getUnqualifiedDesugaredType();
-    QualType q = unqualtyp->getCanonicalTypeInternal();
-    //QualType q = (baseexpr->getType())->getDesugaredType();
-     //string basestr = tp->getAsString();
-     nameinfo.insert((size_t) 0, q.getAsString()); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
-     make_ident(nameinfo);
-  }
   os_ << "memberdecl is \n";
   memberexpr->getMemberDecl()->dump(os_);
+
+  // traverse the memberexpr in case it is a nested structure
+  auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
+  if (baseexpr) {
+
+    hNodep old_h_ret = h_ret;
+    TRY_TO(TraverseStmt(baseexpr));
+    if (h_ret != old_h_ret) {
+      if (h_ret->h_op == hNode::hdlopsEnum::hLiteral) {
+	//concatenate base name in front of field name
+	hNodep memexprnode = new hNode(h_ret->h_name+"_"+nameinfo, hNode::hdlopsEnum::hLiteral);
+	delete h_ret;
+	h_ret = memexprnode;  // replace returned h_ret with single node, field names concatenated
+	return h_ret;
+      }
+    }
+    
+    // FIXME Only handling one level right now
+    //const Type *unqualtyp = baseexpr->getType()->getUnqualifiedDesugaredType();
+    //QualType q = unqualtyp->getCanonicalTypeInternal();
+    //QualType q = (baseexpr->getType())->getDesugaredType();
+     //string basestr = tp->getAsString();
+     //nameinfo.insert((size_t) 0, q.getAsString()); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
+     //make_ident(nameinfo);
+  }
+
     
   h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hLiteral);
 
