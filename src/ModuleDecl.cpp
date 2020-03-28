@@ -376,6 +376,10 @@ ModuleDecl::interfaceMapType ModuleDecl::getIOInterfaces() {
   return iointerfaces_;
 }
 
+ModuleDecl::portBindingMapType ModuleDecl::getPortBindings() {
+  return port_bindings_;
+}
+
 string ModuleDecl::getName() const { return module_name_; }
 
 string ModuleDecl::getInstanceName() const { return instance_name_; }
@@ -421,11 +425,11 @@ void ModuleDecl::dumpPortBinding() {
     auto port_name{get<0>(pb)};
     auto binding{get<1>(pb)};
 
-    binding_j[port_name] =  binding->getBoundToName();
+    binding_j[port_name] = binding->getBoundToName();
 
     binding->dump();
   }
-    llvm::outs() << binding_j.dump(4) << "\n";
+  llvm::outs() << binding_j.dump(4) << "\n";
 }
 
 void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {

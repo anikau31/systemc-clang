@@ -114,6 +114,8 @@ class ModuleDecl {
   portMapType getInputStreamPorts();
   portMapType getOutputStreamPorts();
 
+  portBindingMapType getPortBindings();
+
   processMapType getProcessMap();
   Stmt *getConstructorStmt();
   interfaceMapType getIInterfaces();

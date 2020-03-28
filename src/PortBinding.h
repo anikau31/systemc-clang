@@ -4,7 +4,6 @@
 using namespace clang;
 using namespace scpar;
 
-
 namespace scpar {
 
 class PortBinding {
@@ -15,7 +14,10 @@ class PortBinding {
   std::string instance_type_;
   std::string instance_var_name_;
   std::string instance_constructor_name_;
+  // Declaration for the instance's type.
   CXXRecordDecl *instance_type_decl_;
+
+  // Declaration for the instance (FieldDecl/VarDecl)
   Decl *instance_decl_;
   DeclRefExpr *port_dref_;
 
@@ -23,10 +25,29 @@ class PortBinding {
   DeclRefExpr *port_parameter_dref_;
 
  public:
+  const std::string &getPortName() const { return port_name_; }
+  MemberExpr *getPortMemberExpr() const { return port_member_expr_; }
+  const std::string &getInstanceType() const { return instance_type_; }
+  const std::string &getInstanceVarName() const { return instance_var_name_; }
+  const std::string &getInstanceConstructorName() const {
+    return instance_constructor_name_;
+  }
+  CXXRecordDecl *getInstanceTypeDecl() const { return instance_type_decl_;}
+  Decl* getInstanceDecl() const { return instance_type_decl_;}
+  DeclRefExpr *getPortDeclRefExpr() const { return port_dref_; }
+
   const std::string &getBoundToName() const { return port_parameter_name_; }
+  DeclRefExpr *getBoundPortDeclRefExpr() const { return port_parameter_dref_;}
+  const std::string toString() const {
+    return getInstanceType() + " " + getInstanceVarName() + " " +
+           getInstanceConstructorName() + " " + getBoundToName();
+  }
 
   void dump() {
-    llvm::outs() << "> type: " << instance_type_ << " var_name: " << instance_var_name_ << " constructor_name: " << instance_constructor_name_ << " bound to " << port_parameter_name_ << "\n";
+    llvm::outs() << "> port_name: " << port_name_ << " type: " << instance_type_
+                 << " var_name: " << instance_var_name_
+                 << " constructor_name: " << instance_constructor_name_
+                 << " bound to " << port_parameter_name_ << "\n";
   }
 
   PortBinding()
@@ -59,5 +80,5 @@ class PortBinding {
         port_parameter_name_{port_parameter_name},
         port_parameter_dref_{port_parameter_dref} {};
 };
-}; // namespace sc_par
-#endif //ifdef
+};      // namespace scpar
+#endif  // ifdef
