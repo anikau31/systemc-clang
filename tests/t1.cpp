@@ -214,5 +214,51 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(simple_module_inst->getOtherVars().size() == 1);
     REQUIRE(simple_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(simple_module_inst->getOutputStreamPorts().size() == 0);
+
+    for (auto const &port : simple_module_inst->getIPorts()) {
+      auto name{get<0>(port)};
+      PortDecl *pd{get<1>(port)};
+      auto template_type{pd->getTemplateType()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      std::string dft_str{template_args->dft()};
+
+      if (name == "clk") {
+        REQUIRE(trim(dft_str) == "sc_in _Bool");
+      }
+      if ((name == "one") || (name == "two")) {
+        REQUIRE(trim(dft_str) == "sc_in int");
+      }
+    }
+
+    for (auto const &port : simple_module_inst->getOPorts()) {
+      auto name{get<0>(port)};
+      PortDecl *pd{get<1>(port)};
+      auto template_type{pd->getTemplateType()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      std::string dft_str{template_args->dft()};
+
+      if ((name == "out_one") ) {
+        REQUIRE(trim(dft_str) == "sc_out int");
+      }
+    }
+
+    for (auto const &ovar : simple_module_inst->getOtherVars()) {
+      auto name{get<0>(ovar)};
+      PortDecl *pd{get<1>(ovar)};
+      auto template_type{pd->getTemplateType()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      std::string dft_str{template_args->dft()};
+
+      if ((name == "xy") ) {
+        REQUIRE(trim(dft_str) == "int");
+      }
+    }
+
+
+
+
   }
 }
