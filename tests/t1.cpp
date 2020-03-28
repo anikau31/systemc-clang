@@ -150,6 +150,10 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOtherVars().size() == 1);
 
+    //
+    // Check port types
+    //
+    //
     for (auto const &port : test_module_inst->getIPorts()) {
       auto name{get<0>(port)};
       PortDecl *pd{get<1>(port)};
@@ -215,6 +219,10 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(simple_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(simple_module_inst->getOutputStreamPorts().size() == 0);
 
+    //
+    // Check port types
+    //
+    //
     for (auto const &port : simple_module_inst->getIPorts()) {
       auto name{get<0>(port)};
       PortDecl *pd{get<1>(port)};
@@ -239,7 +247,7 @@ int sc_main(int argc, char *argv[]) {
 
       std::string dft_str{template_args->dft()};
 
-      if ((name == "out_one") ) {
+      if ((name == "out_one")) {
         REQUIRE(trim(dft_str) == "sc_out int");
       }
     }
@@ -252,13 +260,32 @@ int sc_main(int argc, char *argv[]) {
 
       std::string dft_str{template_args->dft()};
 
-      if ((name == "xy") ) {
+      if ((name == "xy")) {
         REQUIRE(trim(dft_str) == "int");
       }
     }
 
+    //
+    // Check netlist
+    //
+    //
 
+    // test_module_inst
+    for (auto const &pb : test_module_inst->getPortBindings()) {
+      std::string port_name{pb.first};
+      PortBinding *binding{pb.second};
 
+      std::string as_string{binding->toString()};
 
+      if (port_name == "in1") {
+        REQUIRE(as_string == "test test_instance testing sig1");
+      }
+      if (port_name == "in_out") {
+        REQUIRE(as_string == "test test_instance testing double_sig");
+      }
+      if (port_name == "out1") {
+        REQUIRE(as_string == "test test_instance testing sig1");
+      }
+    }
   }
 }
