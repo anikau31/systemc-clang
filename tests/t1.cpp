@@ -18,6 +18,18 @@ using namespace clang::tooling;
 using namespace clang::ast_matchers;
 using namespace scpar;
 
+// Source:
+// https://www.toptip.ca/2010/03/trim-leading-or-trailing-white-spaces.html
+std::string &trim(std::string &s) {
+  size_t p = s.find_first_not_of(" \t");
+  s.erase(0, p);
+
+  p = s.find_last_not_of(" \t");
+  if (string::npos != p) s.erase(p + 1);
+
+  return s;
+}
+
 TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
 #include "systemc.h"
@@ -138,6 +150,63 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOtherVars().size() == 1);
 
+    //
+    // Check port types
+    //
+    //
+    for (auto const &port : test_module_inst->getIPorts()) {
+      auto name{get<0>(port)};
+      PortDecl *pd{get<1>(port)};
+      auto template_type{pd->getTemplateType()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      std::string dft_str{template_args->dft()};
+
+      if (name == "clk") {
+        REQUIRE(trim(dft_str) == "sc_in _Bool");
+      }
+      if ((name == "in1") || (name == "in2")) {
+        REQUIRE(trim(dft_str) == "sc_in int");
+      }
+    }
+
+    for (auto const &port : test_module_inst->getOPorts()) {
+      auto name{get<0>(port)};
+      PortDecl *pd{get<1>(port)};
+      auto template_type{pd->getTemplateType()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      std::string dft_str{template_args->dft()};
+
+      if ((name == "out1") || (name == "out2")) {
+        REQUIRE(trim(dft_str) == "sc_out int");
+      }
+    }
+
+    for (auto const &port : test_module_inst->getIOPorts()) {
+      auto name{get<0>(port)};
+      PortDecl *pd{get<1>(port)};
+      auto template_type{pd->getTemplateType()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      std::string dft_str{template_args->dft()};
+
+      if ((name == "in_out")) REQUIRE(trim(dft_str) == "sc_inout double");
+    }
+
+    for (auto const &sig : test_module_inst->getSignals()) {
+      auto name{get<0>(sig)};
+      Signal *sg{get<1>(sig)};
+      auto template_type{sg->getTemplateTypes()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      // Get the tree as a string and check if it is correct.
+      std::string dft_str{template_args->dft()};
+      if (name == "internal_signal") {
+        REQUIRE(trim(dft_str) == "sc_signal int");
+      }
+    }
+
     INFO("Checking member ports for simple module instance.");
     auto simple_module_inst{simple_module};
 
@@ -149,5 +218,74 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(simple_module_inst->getOtherVars().size() == 1);
     REQUIRE(simple_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(simple_module_inst->getOutputStreamPorts().size() == 0);
+
+    //
+    // Check port types
+    //
+    //
+    for (auto const &port : simple_module_inst->getIPorts()) {
+      auto name{get<0>(port)};
+      PortDecl *pd{get<1>(port)};
+      auto template_type{pd->getTemplateType()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      std::string dft_str{template_args->dft()};
+
+      if (name == "clk") {
+        REQUIRE(trim(dft_str) == "sc_in _Bool");
+      }
+      if ((name == "one") || (name == "two")) {
+        REQUIRE(trim(dft_str) == "sc_in int");
+      }
+    }
+
+    for (auto const &port : simple_module_inst->getOPorts()) {
+      auto name{get<0>(port)};
+      PortDecl *pd{get<1>(port)};
+      auto template_type{pd->getTemplateType()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      std::string dft_str{template_args->dft()};
+
+      if ((name == "out_one")) {
+        REQUIRE(trim(dft_str) == "sc_out int");
+      }
+    }
+
+    for (auto const &ovar : simple_module_inst->getOtherVars()) {
+      auto name{get<0>(ovar)};
+      PortDecl *pd{get<1>(ovar)};
+      auto template_type{pd->getTemplateType()};
+      auto template_args{template_type->getTemplateArgTreePtr()};
+
+      std::string dft_str{template_args->dft()};
+
+      if ((name == "xy")) {
+        REQUIRE(trim(dft_str) == "int");
+      }
+    }
+
+    //
+    // Check netlist
+    //
+    //
+
+    // test_module_inst
+    for (auto const &pb : test_module_inst->getPortBindings()) {
+      std::string port_name{pb.first};
+      PortBinding *binding{pb.second};
+
+      std::string as_string{binding->toString()};
+
+      if (port_name == "in1") {
+        REQUIRE(as_string == "test test_instance testing sig1");
+      }
+      if (port_name == "in_out") {
+        REQUIRE(as_string == "test test_instance testing double_sig");
+      }
+      if (port_name == "out1") {
+        REQUIRE(as_string == "test test_instance testing sig1");
+      }
+    }
   }
 }

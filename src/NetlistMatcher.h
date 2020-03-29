@@ -80,6 +80,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   // const ModuleDeclarationMatcher::DeclarationsToInstancesMapType
   // *decl_instance_map_;
   Model *model_;
+  std::string top_;
 
   ModuleDecl *findModuleDeclInstance(Decl *decl) {
     for (auto element : model_->getModuleInstanceMap()) {
