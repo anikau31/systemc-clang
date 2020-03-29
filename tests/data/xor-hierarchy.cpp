@@ -1,3 +1,5 @@
+// Taken directly from : https://www.doulos.com/knowhow/systemc/tutorial/modules_and_processes/
+
 #include "systemc.h"
 
 SC_MODULE(nand2)  // declare nand2 sc_module
@@ -83,11 +85,13 @@ int sc_main(int argc, char* argv[]) {
   DUT.B(BSig);
   DUT.F(FSig);
 
+  /*
   mon Monitor1("Monitor");
   Monitor1.A(ASig);
   Monitor1.B(BSig);
   Monitor1.F(FSig);
   Monitor1.Clk(TestClk);
+  */
 
   sc_start();  // run forever
 
