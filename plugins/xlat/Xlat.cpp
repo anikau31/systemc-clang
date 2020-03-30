@@ -111,6 +111,8 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
     os_ << "object name is " << get<0>(*mit) << "\n";
 
     Signal *pd = get<1>(*mit);
+    os_ << "Sigtype is\n";
+    pd->getASTNode()->dump(os_);
     hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
     xlattype(pd->getTemplateTypes(), h_typeinfo);  
     hsigp->child_list.push_back(h_typeinfo);
@@ -122,16 +124,14 @@ void Xlat::xlattype(FindTemplateTypes *tt, hNodep &h_typeinfo) {
 
   Tree<TemplateType> *template_args = tt->getTemplateArgTreePtr();
   template_args->dump();
-  scpar::FindTemplateTypes::type_vector_t ttargs =
-      tt->getTemplateArgumentsType();
-  os_ << "number of type args is " << ttargs.size() << "\n";
-  for (auto const &targ : ttargs) {
-    string tmps =  targ.getTypeName();
+  
+  for (auto const &node : *template_args) {
+    auto type_data{node->getDataPtr()};
+    string tmps =  type_data->getTypeName();
     make_ident(tmps);
     h_typeinfo->child_list.push_back(
 				     // new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
        new hNode(tmps, hNode::hdlopsEnum::hType));
-    (targ.getTypePtr())->dump(os_);
   }
 }
 

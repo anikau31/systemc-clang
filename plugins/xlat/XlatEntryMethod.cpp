@@ -288,7 +288,8 @@ bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
 }
 
 inline bool XlatMethod::isSCType(string tstring) {
-  return (tstring.substr(0, 10) == "sc_coresc_");
+  return ((tstring.substr(0, 12) == "sc_core::sc_") ||
+	  (tstring.substr(0,5) == "sc_core::sc_dt"));
 }
 
 bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
@@ -301,7 +302,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     QualType argtyp = arg->getType();
     os_ << "type of x in x.f(5) is " << argtyp.getAsString() << "\n";
     
-    string methodname, qualmethodname;
+    string methodname = "NoMethod", qualmethodname = "NoQualMethod";
     CXXMethodDecl * methdcl = callexpr->getMethodDecl();
 
     
@@ -311,8 +312,9 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     
       methodname = methdcl->getNameAsString();
       qualmethodname = methdcl->getQualifiedNameAsString();
-      make_ident(qualmethodname);
-      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
+      os_ << "here is qualmethod printname " <<qualmethodname << "\n";
+      //make_ident(qualmethodname);
+      //      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
       
       os_ << "here is method printname " << methodname << " and qual name " << qualmethodname << " \n";
       if (methodname.compare(0, 8, "operator")==0) { // 0 means compare =, 8 is len("operator")
@@ -324,24 +326,21 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
 
     }
 
-    else {
-      methodname = "NOOP";
-      qualmethodname = methodname;
-    }
-
     hNode::hdlopsEnum opc; 
     
     os_ << "found " << methodname << "\n";
 
     // if type of x in x.f(5) is primitive sc type (sc_in, sc_out, sc_inout, sc_signal
     // and method name is either read or write,
-    // generate a SigAssignL|R -- NEED to do this
+    // generate a SigAssignL|R -- FIXME need to make sure it is templated to a primitive type
 
     if ((methodname == "read") && (isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignR;
     else if ((methodname == "write") && (isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignL;
     else {
       opc = hNode::hdlopsEnum::hMethodCall;
-      if (methodname.find_first_of(" ") != std::string::npos) methodname = "\"" + methodname + "\"";
+      make_ident(qualmethodname);
+      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
+      methodname = qualmethodname;
     }
 
 
