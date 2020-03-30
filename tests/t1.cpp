@@ -160,6 +160,16 @@ int sc_main(int argc, char *argv[]) {
       auto template_type{pd->getTemplateType()};
       auto template_args{template_type->getTemplateArgTreePtr()};
 
+      // Print out each argument individually using the iterators.
+      //
+
+      // Note: template_args must be dereferenced.
+      for (auto const &node : *template_args) {
+        auto type_data{node->getDataPtr()};
+        llvm::outs() << "\n@> name: " << name << ", type name: " << type_data->getTypeName() << " ";
+      }
+      llvm::outs() << "\n";
+
       std::string dft_str{template_args->dft()};
 
       if (name == "clk") {
