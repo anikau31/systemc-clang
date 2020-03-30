@@ -210,9 +210,6 @@ bool SystemCConsumer::fire() {
         _entryFunctionContainerVector.push_back(ef);
       }
 
-      //os_ << "============== DUMP the MODULEDECL ======================\n";
-      //add_module_decl->dump(os_);
-      //os_ << "============== END DUMP the MODULEDECL ==================\n";
       // Insert the module into the model.
       // All modules are also instances.
 
@@ -241,7 +238,15 @@ bool SystemCConsumer::fire() {
   NetlistMatcher netlist_matcher{};
   MatchFinder netlist_registry{};
   netlist_matcher.registerMatchers(netlist_registry, systemcModel_);
-  netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
+
+  if (getTopModule() == "!none") {
+    netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
+  } else {
+    // Use the top module's declaration's constructor
+    //
+    // Find the instance with the top module
+
+  }
   llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
 
   /*
@@ -249,8 +254,6 @@ bool SystemCConsumer::fire() {
   findNetlist.dump();
   systemcModel_->addNetlist(findNetlist);
   */
-
-  
 
   /*
   ////////////////////////////////////////////////////////////////

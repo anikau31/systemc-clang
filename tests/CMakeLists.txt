@@ -47,6 +47,7 @@ set( UNIT_TEST_LIST
   clock-parsing
   hotfix-40-findtemplatetypes
   portarray-example
+  test-xor-hierarchy
   )
 
 include(CTest)
