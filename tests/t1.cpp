@@ -187,8 +187,6 @@ int sc_main(int argc, char *argv[]) {
         for (auto const &kid: children) {
           llvm::outs() << "@> child type name: " << kid->getDataPtr()->getTypeName() << "\n";
         }
-
-
       }
       llvm::outs() << "\n";
 
