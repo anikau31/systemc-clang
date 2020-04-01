@@ -155,10 +155,10 @@ int sc_main(int argc, char *argv[]) {
     //
     //
     for (auto const &port : test_module_inst->getIPorts()) {
-      auto name{get<0>(port)};
+      std::string name{get<0>(port)};
       PortDecl *pd{get<1>(port)};
-      auto template_type{pd->getTemplateType()};
-      auto template_args{template_type->getTemplateArgTreePtr()};
+      FindTemplateTypes *template_type{pd->getTemplateType()};
+      Tree<TemplateType> *template_args{template_type->getTemplateArgTreePtr()};
 
       // Print out each argument individually using the iterators.
       //
@@ -166,7 +166,29 @@ int sc_main(int argc, char *argv[]) {
       // Note: template_args must be dereferenced.
       for (auto const &node : *template_args) {
         auto type_data{node->getDataPtr()};
-        llvm::outs() << "\n@> name: " << name << ", type name: " << type_data->getTypeName() << " ";
+        llvm::outs() << "\n@> name: " << name
+                     << ", type name: " << type_data->getTypeName() << " ";
+
+        // Access the parent of the current node.
+        // If the node is a pointer to itself, then the node itself is the
+        // parent. Otherwise, it points to the parent node.
+        auto parent_node{node->getParent()};
+        if (parent_node == node) {
+          llvm::outs() << "\n@> parent (itself) type name: " << parent_node->getDataPtr()->getTypeName() << "\n";
+        } else {
+          // It is a different parent.
+          llvm::outs() << "\n@> parent (different) type name: " << parent_node->getDataPtr()->getTypeName() << "\n";
+        }
+
+        // Access the children for each parent.
+        // We use the template_args to access it.
+
+        auto children{ template_args->getChildren(parent_node)};
+        for (auto const &kid: children) {
+          llvm::outs() << "@> child type name: " << kid->getDataPtr()->getTypeName() << "\n";
+        }
+
+
       }
       llvm::outs() << "\n";
 
