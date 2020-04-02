@@ -18,6 +18,18 @@ using namespace clang::tooling;
 using namespace clang::ast_matchers;
 using namespace scpar;
 
+// Source:
+// https://www.toptip.ca/2010/03/trim-leading-or-trailing-white-spaces.html
+std::string &trim(std::string &s) {
+  size_t p = s.find_first_not_of(" \t");
+  s.erase(0, p);
+
+  p = s.find_last_not_of(" \t");
+  if (string::npos != p) s.erase(p + 1);
+
+  return s;
+}
+
 TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
 #include "systemc.h"
@@ -87,11 +99,16 @@ int sc_main(int argc, char *argv[]) {
     // // Iterate over all ports and their arguments.
     for (const auto &port : input_ports) {
       auto name = get<0>(port);
-      PortDecl *pd = get<1>(port);
       llvm::outs() << "name: " << name << "\n";
-      auto template_type = pd->getTemplateType();
-      auto template_args{template_type->getTemplateArgumentsType()};
+      PortDecl *pd{get<1>(port)};
+      FindTemplateTypes *template_type{pd->getTemplateType()};
+      Tree<TemplateType> *template_args{template_type->getTemplateArgTreePtr()};
 
+      std::string dft_str{template_args->dft()};
+
+      if ((name == "bool_clk") || (name == "clk")) REQUIRE(trim(dft_str) == "sc_in _Bool");
+
+      /*
       if (name == "bool_clk" ) {
         REQUIRE((template_args[0].getTypeName() == "sc_in"));
         REQUIRE((template_args[1].getTypeName() == "_Bool"));
@@ -101,6 +118,7 @@ int sc_main(int argc, char *argv[]) {
         REQUIRE((template_args[0].getTypeName() == "sc_in"));
         REQUIRE((template_args[1].getTypeName() == "_Bool"));
       }
+      */
 
     }
     
