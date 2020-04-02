@@ -65,7 +65,6 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   std::map<Decl *, std::vector<DeclRefExpr *>> vuse_map;
   std::map<Decl *, names_t> vname_map;
 
-  inline bool isSCType(string tstring);
   bool isLogicalOp(clang::OverloadedOperatorKind opc);
   
   const string prefix = "_XLAT_";
@@ -73,7 +72,7 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   inline string newname() {
     return (prefix+to_string(cnt++));
   }
-
+   util lutil;
 };
 
 

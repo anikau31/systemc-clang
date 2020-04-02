@@ -8,6 +8,7 @@
 // used https://github.com/super-ast/cpptranslate as example
 
 using namespace std;
+using namespace hnode;
 
 // MACRO FOR TRAVERSING
 #define TRY_TO(CALL_EXPR)                                                      \
@@ -172,7 +173,7 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
 
     //h_typeinfo->child_list.push_back(new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
     string tmps = targ.getTypeName();
-    make_ident(tmps);
+    lutil.make_ident(tmps);
     h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
 
   }
@@ -180,7 +181,7 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
   if (h_typeinfo->child_list.empty()) { // front end didn't parse type info
     //h_typeinfo->child_list.push_back(new hNode("\"" + q.getAsString() + "\"", hNode::hdlopsEnum::hType));
     string tmps = q.getAsString();
-    make_ident(tmps);
+    lutil.make_ident(tmps);
     h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
   }
 				     
@@ -287,11 +288,6 @@ bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
   return true;
 }
 
-inline bool XlatMethod::isSCType(string tstring) {
-  return ((tstring.substr(0, 12) == "sc_core::sc_") ||
-	  (tstring.substr(0,5) == "sc_core::sc_dt"));
-}
-
 bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
   os_ << "In TraverseCXXMemberCallExpr, printing implicit object arg\n";
       // Retrieves the implicit object argument for the member call.
@@ -334,11 +330,11 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     // and method name is either read or write,
     // generate a SigAssignL|R -- FIXME need to make sure it is templated to a primitive type
 
-    if ((methodname == "read") && (isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignR;
-    else if ((methodname == "write") && (isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignL;
+    if ((methodname == "read") && (lutil.isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignR;
+    else if ((methodname == "write") && (lutil.isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignL;
     else {
       opc = hNode::hdlopsEnum::hMethodCall;
-      make_ident(qualmethodname);
+      lutil.make_ident(qualmethodname);
       methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
       methodname = qualmethodname;
     }

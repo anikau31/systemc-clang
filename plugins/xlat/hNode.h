@@ -147,14 +147,22 @@ namespace hnode {
 
   };
   
+  class util { 
+  public:
+    util() {}
+    static inline void make_ident(string &nm) {
+      // https://stackoverflow.com/questions/14475462/remove-set-of-characters-from-the-string
+      //str.erase(
+      // std::remove_if(str.begin(), str.end(), [](char chr){ return chr == '&' || chr == ' ';}),
+      //str.end());
+      std::replace(nm.begin(), nm.end(), ' ', '_');
+      nm.erase(std::remove_if(nm.begin(), nm.end(),
+			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
+    }
+    static inline bool isSCType(string tstring) {
+      return ((tstring.substr(0, 12) == "sc_core::sc_") ||
+	      (tstring.substr(0,5) == "sc_core::sc_dt"));
+    }
+  };
   
-  inline void make_ident(string &nm) {
-    // https://stackoverflow.com/questions/14475462/remove-set-of-characters-from-the-string
-    //str.erase(
-    // std::remove_if(str.begin(), str.end(), [](char chr){ return chr == '&' || chr == ' ';}),
-    //str.end());
-    std::replace(nm.begin(), nm.end(), ' ', '_');
-    nm.erase(std::remove_if(nm.begin(), nm.end(),
-			    [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
-  }
-}
+} // end namespace hnode

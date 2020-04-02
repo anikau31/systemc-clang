@@ -5,6 +5,8 @@
 #include "clang/Basic/FileManager.h"
 
 using namespace std;
+using namespace hnode;
+using namespace scpar;
 
 bool Xlat::postFire() {
   Model *model = getSystemCModel();
@@ -91,12 +93,15 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 
   for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
        mit++) {
-    hNodep hportp = new hNode(get<0>(*mit), h_op);
+
+    string objname = get<0>(*mit);
+    hNodep hportp = new hNode(objname, h_op);
     h_info->child_list.push_back(hportp);
-    os_ << "object name is " << get<0>(*mit) << "\n";
+    os_ << "object name is " << objname << "\n";
     PortDecl *pd = get<1>(*mit);
     hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-    xlattype(pd->getTemplateType(), h_typeinfo);  
+    xlattype(objname, pd->getTemplateType(), h_typeinfo);
+    //xlattype(objname, pd->getFieldDecl(), h_typeinfo);
     hportp->child_list.push_back(h_typeinfo);
   }
 }
@@ -106,33 +111,130 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
 
   for (ModuleDecl::signalMapType::iterator mit = pmap.begin();
        mit != pmap.end(); mit++) {
-    hNodep hsigp = new hNode(get<0>(*mit), h_op);
+    string objname = get<0>(*mit);
+    hNodep hsigp = new hNode(objname, h_op);
     h_info->child_list.push_back(hsigp);
-    os_ << "object name is " << get<0>(*mit) << "\n";
+    os_ << "object name is " << objname << "\n";
 
     Signal *pd = get<1>(*mit);
-    os_ << "Sigtype is\n";
-    pd->getASTNode()->dump(os_);
     hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-    xlattype(pd->getTemplateTypes(), h_typeinfo);  
+    xlattype(objname, pd->getTemplateTypes(), h_typeinfo);
+    //xlattype(objname, pd->getASTNode(), h_typeinfo);
     hsigp->child_list.push_back(h_typeinfo);
   }
 }
 
-void Xlat::xlattype(FindTemplateTypes *tt, hNodep &h_typeinfo) {
+/*
+for (auto const &port : test_module_inst->getIPorts()) {
+      std::string name{get<0>(port)};
+      PortDecl *pd{get<1>(port)};
+      FindTemplateTypes *template_type{pd->getTemplateType()};
+      Tree<TemplateType> *template_args{template_type->getTemplateArgTreePtr()};
+
+      // Print out each argument individually using the iterators.
+      //
+
+      // Note: template_args must be dereferenced.
+      for (auto const &node : *template_args) {
+        auto type_data{node->getDataPtr()};
+        llvm::outs() << "\n@> name: " << name
+                     << ", type name: " << type_data->getTypeName() << " ";
+
+        // Access the parent of the current node.
+        // If the node is a pointer to itself, then the node itself is the
+        // parent. Otherwise, it points to the parent node.
+        auto parent_node{node->getParent()};
+        if (parent_node == node) {
+          llvm::outs() << "\n@> parent (itself) type name: " << parent_node->getDataPtr()->getTypeName() << "\n";
+        } else {
+          // It is a different parent.
+          llvm::outs() << "\n@> parent (different) type name: " << parent_node->getDataPtr()->getTypeName() << "\n";
+        }
+
+        // Access the children for each parent.
+        // We use the template_args to access it.
+
+        auto children{ template_args->getChildren(parent_node)};
+        for (auto const &kid: children) {
+          llvm::outs() << "@> child type name: " << kid->getDataPtr()->getTypeName() << "\n";
+        }
+      }
+      llvm::outs() << "\n"; 
+*/
+void Xlat:: xlatprocesstype(string prefix, Tree<TemplateType> * treep, TreeNode<TemplateType> * nodep, hNodep &h_typeinfo) {
+  TreeNode<TemplateType> * parentp = nodep->getParent();
+  os_ << "xlatprocesstype pointers are " << treep << " " << nodep << "\n";
+  // check if sc_in, sc_out, sc_inout, sc_signal
+  // if so check template parameter to see if primitive -- bool or int, uint of a certain width
+  if (parentp == nodep) {
+    os_ << "parent (itself) type name: " << parentp->getDataPtr()->getTypeName() << "\n";
+  }									    
+    else {
+          // It is a different parent.
+         os_ << "parent (different) type name: " << parentp->getDataPtr()->getTypeName() << "\n";
+	 os_ << "this node type name: " << nodep->getDataPtr()->getTypeName() << "\n";
+    }
+    
+	
+	
+    auto children{ treep->getChildren(nodep)};
+    for (auto const &child: children) {
+      xlatprocesstype(prefix, treep, child, h_typeinfo);
+
+    }
+}
+
+void Xlat::xlattype(string prefix, FindTemplateTypes *tt, hNodep &h_typeinfo) {
   //tt->printTemplateArguments(os_);
 
-  Tree<TemplateType> *template_args = tt->getTemplateArgTreePtr();
-  template_args->dump();
-  
-  for (auto const &node : *template_args) {
-    auto type_data{node->getDataPtr()};
-    string tmps =  type_data->getTypeName();
-    make_ident(tmps);
+  Tree<TemplateType> *template_argtp = tt->getTemplateArgTreePtr();
+
+  //llvm::outs()  << "xlattype dump of templateargs follows\n";
+  //template_args->dump();
+  if (template_argtp->size() == 1) {
+    string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();  
+    os_ << "primitive type " << tmps << "\n";
+    lutil.make_ident(tmps);
     h_typeinfo->child_list.push_back(
-				     // new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
+       new hNode(tmps, hNode::hdlopsEnum::hType));
+    return;
+  }
+
+  // now process composite types
+  if (template_argtp->getRoot()) {
+    string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
+    os_ << " nonprimitive type " << tmps << "\n";
+    if (!isprim
+    auto children{ template_argtp->getChildren(template_argtp->getRoot())};
+    for (auto const &child: children) {
+      xlatprocesstype(prefix, template_argtp, child, h_typeinfo);
+    }
+  }
+  
+  for (auto const &node : *template_argtp) {
+    const TemplateType * type_data{node->getDataPtr()}; 
+    string tmps =  type_data->getTypeName();
+    if (tmps.empty()) os_ << "xlattype typename is empty\n";
+    else os_ << "xlattype typename is " << tmps << "\n";
+    auto parent_node{node->getParent()};
+    if (parent_node != node) { //has children
+    }
+    lutil.make_ident(tmps);
+    h_typeinfo->child_list.push_back(
        new hNode(tmps, hNode::hdlopsEnum::hType));
   }
+}
+
+void Xlat::xlattype(string prefix, FieldDecl *fieldd, hNodep &h_typeinfo) {
+  os_ << "PortVarSigtype " << prefix << " is\n";
+  if (fieldd) {
+    fieldd->dump(os_);
+    QualType q = fieldd->getType();
+    if (!lutil.isSCType(q.getAsString())) {
+      os_ <<"non primitive type " << q.getAsString() << "\n";
+    }
+  }
+  else os_ << "EMPTY FieldDecl pointer\n";
 }
 
 void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
