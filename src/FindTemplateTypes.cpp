@@ -246,6 +246,33 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::getTemplateArgumentsType() {
   return template_types_;
 }
 
+json FindTemplateTypes::dump_json() {
+  json tree_j;
+
+  auto args{getTemplateArgTreePtr()};
+
+  for (auto const &node : *args) {
+    // Returns a TreeNodePtr
+    auto type_data{node->getDataPtr()};
+    auto parent_node{node->getParent()};
+    auto parent_data{parent_node->getDataPtr()};
+    if (parent_node->getDataPtr() == node->getDataPtr()) {
+      // llvm::outs() << "\nInsert parent node: " << type_data->getTypeName()
+      //             << "\n";
+      tree_j[type_data->getTypeName()] = nullptr;
+    } else {
+      // FIXME: This does not print the tree properly.
+      // There does not seem to be a simple way to access the appropriate
+      // location for the insertion of the new values in this JSON.
+      // TODO: Perhaps the way to do this is to construct a string that JSON can
+      // use.
+      tree_j[parent_data->getTypeName()].push_back(type_data->getTypeName());
+    }
+  }
+  llvm::outs() << tree_j.dump(4);
+  return tree_j;
+}
+
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   vector<std::string> template_arguments;
   for (auto const &mit : template_types_) {
