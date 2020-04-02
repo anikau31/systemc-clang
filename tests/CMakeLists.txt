@@ -48,6 +48,8 @@ set( UNIT_TEST_LIST
   hotfix-40-findtemplatetypes
   portarray-example
   test-xor-hierarchy
+  # Unit tests for structures
+  tree-test
   )
 
 include(CTest)

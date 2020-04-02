@@ -1,5 +1,4 @@
 #include "FindTemplateTypes.h"
-#include "Utility.h"
 
 using namespace scpar;
 
@@ -157,8 +156,8 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
     const TemplateArgumentList &arg_list{ctsd->getTemplateArgs()};
     for (unsigned int i{0}; i < arg_list.size(); ++i) {
       const TemplateArgument &targ{arg_list[i]};
-      // llvm::outs() << " ====> template argument: ";
-      // targ.dump();
+      llvm::outs() << " ====> template argument: ";
+      targ.dump();
       // llvm::outs() << "\n";
       // TODO Write this into the vector.
       // llvm::outs() << " ====> template type : " << targ.getKind() << "\n";
@@ -224,11 +223,9 @@ bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
   //<< l->getValue().toString(10,true) <<
   //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
   //"== type name: " << l->getType().getAsString() << "\n";
-  template_types_.push_back(TemplateType(l->getValue().toString(10, true),
-                                         l->getType().getTypePtr()));
-  // template_types_.push_back(pair<string, const Type
-  // *>(l->getValue().toString(10, true), l->getType().getTypePtr()));
-
+  // template_types_.push_back(TemplateType(l->getValue().toString(10, true),
+                                         // l->getType().getTypePtr()));
+//
   return false;
 }
 
@@ -273,8 +270,8 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   os << "> Template args (DFT): " << s << "\n";
 }
 
-vector<std::string> FindTemplateTypes::getTemplateArguments() {
-  vector<std::string> template_arguments;
+std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
+  std::vector<std::string> template_arguments;
   for (auto const &mit : template_types_) {
     std::string name{mit.getTypeName()};
     if (name == "sc_in" || name == "sc_out" || name == "sc_inout") {

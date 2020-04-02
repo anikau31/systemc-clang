@@ -2,7 +2,6 @@
 #include "FindTemplateTypes.h"
 
 using namespace scpar;
-using namespace std;
 
 PortDecl::~PortDecl() {
   // Only delete the template_type_
