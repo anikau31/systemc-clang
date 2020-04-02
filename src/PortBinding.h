@@ -1,6 +1,8 @@
 #ifndef _PORT_BINDING_H_
 #define _PORT_BINDING_H_
 
+#include "llvm/Support/raw_ostream.h"
+
 using namespace clang;
 using namespace scpar;
 

@@ -48,7 +48,7 @@ TEST_CASE("Tree representation of template types", "[Tree]") {
   //      / \
   //    1    2
   //   /    / \ 
-  //  6 -- 3  5
+  //  6 -- 3   5
   //
   t.addEdge(zero, one);
   t.addEdge(zero, two);

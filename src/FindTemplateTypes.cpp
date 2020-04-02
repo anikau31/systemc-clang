@@ -1,5 +1,4 @@
 #include "FindTemplateTypes.h"
-#include "Utility.h"
 
 using namespace scpar;
 
@@ -272,7 +271,7 @@ json FindTemplateTypes::dump_json() {
 }
 
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
-  vector<std::string> template_arguments;
+  std::vector<std::string> template_arguments;
   for (auto const &mit : template_types_) {
     template_arguments.push_back(mit.getTypeName());
   }
@@ -291,8 +290,8 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   // auto s = template_args_.dft(root_node);
 }
 
-vector<std::string> FindTemplateTypes::getTemplateArguments() {
-  vector<std::string> template_arguments;
+std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
+  std::vector<std::string> template_arguments;
   for (auto const &mit : template_types_) {
     std::string name{mit.getTypeName()};
     if (name == "sc_in" || name == "sc_out" || name == "sc_inout") {

@@ -12,15 +12,13 @@
 #include "PortBinding.h"
 #include "ProcessDecl.h"
 #include "Signal.h"
-#include "Utility.h"
 #include "clang/AST/DeclCXX.h"
+
 #include "json.hpp"
-#include "systemc-clang.h"
 
 
 namespace scpar {
 using namespace clang;
-using namespace std;
 using json = nlohmann::json;
 
 class ModuleDecl {
@@ -59,7 +57,7 @@ class ModuleDecl {
 
  public:
   ModuleDecl();
-  ModuleDecl(const string &, CXXRecordDecl *);
+  ModuleDecl(const std::string &, CXXRecordDecl *);
   ModuleDecl(const std::tuple<const std::string &, CXXRecordDecl *> &);
 
   // Copy constructor.
@@ -87,18 +85,18 @@ class ModuleDecl {
   void addInstances(const vector<string> &);
 
   void addPortBinding(const std::string &port_name, PortBinding *pb);
-  void addSignalBinding(map<string, string>);
+  void addSignalBinding(map<std::string, std::string>);
 
-  void setInstanceName(const string &);
+  void setInstanceName(const std::string &);
   void setInstanceDecl(Decl *);
-  void setModuleName(const string &);
-  void setTemplateParameters(const vector<string> &);
-  void setTemplateArgs(const vector<string> &);
-  vector<string> getTemplateParameters() const;
-  vector<string> getTemplateArgs() const;
+  void setModuleName(const std::string &);
+  void setTemplateParameters(const vector<std::string> &);
+  void setTemplateArgs(const vector<std::string> &);
+  vector<std::string> getTemplateParameters() const;
+  vector<std::string> getTemplateArgs() const;
 
-  string getName() const;
-  string getInstanceName() const;
+  std::string getName() const;
+  std::string getInstanceName() const;
 
   CXXRecordDecl *getModuleClassDecl();
   FieldDecl *getInstanceFieldDecl();
@@ -121,7 +119,7 @@ class ModuleDecl {
   interfaceMapType getIInterfaces();
   interfaceMapType getOInterfaces();
   interfaceMapType getIOInterfaces();
-  vector<string> getInstanceList();
+  vector<std::string> getInstanceList();
   vector<EntryFunctionContainer *> getEntryFunctionContainer();
   int getNumInstances();
   const signalMapType & getSignals() const;
@@ -138,8 +136,8 @@ class ModuleDecl {
   json dump_json();
 
  private:
-  string module_name_;
-  string instance_name_;
+  std::string module_name_;
+  std::string instance_name_;
 
   // Declaration
   CXXRecordDecl *class_decl_;
@@ -164,13 +162,13 @@ class ModuleDecl {
   interfaceMapType iointerfaces_;
   signalMapType signals_;
 
-  vector<string> instance_list_;
+  vector<std::string> instance_list_;
   portSignalMapType port_signal_map_;
   vector<EntryFunctionContainer *> vef_;
 
   // Class template parameters.
-  vector<string> template_parameters_;
-  vector<string> template_args_;
+  vector<std::string> template_parameters_;
+  vector<std::string> template_args_;
 };
 }  // namespace scpar
 #endif
