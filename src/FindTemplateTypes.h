@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include <stack>
-
 #include "json.hpp"
 #include "Tree.h"
 
@@ -72,7 +71,6 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   void Enumerate(const Type *type);
   type_vector_t getTemplateArgumentsType();
   void printTemplateArguments(llvm::raw_ostream &os);
-
   json dump_json();
   vector<std::string> getTemplateArguments();
   size_t size();
