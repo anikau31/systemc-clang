@@ -12,11 +12,13 @@
 #include <iostream>
 #include <stack>
 
+#include "json.hpp"
 #include "Tree.h"
 
 namespace scpar {
 using namespace clang;
 using namespace std;
+using json = nlohmann::json;
 
 // This class holds the name of the type, and a pointer to the
 // type object.
@@ -67,9 +69,11 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitBuiltinType(BuiltinType *bi_type);
 
   ~FindTemplateTypes();
-  type_vector_t Enumerate(const Type *type);
+  void Enumerate(const Type *type);
   type_vector_t getTemplateArgumentsType();
   void printTemplateArguments(llvm::raw_ostream &os);
+
+  json dump_json();
   vector<std::string> getTemplateArguments();
   size_t size();
   Tree<TemplateType> *getTemplateArgTreePtr();

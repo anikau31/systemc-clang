@@ -26,11 +26,6 @@ class ModuleDecl {
   typedef std::pair<std::string, Signal *> signalPairType;
   typedef std::map<std::string, Signal *> signalMapType;
 
-  // Maps the name of the port with a pointer to a structure that holds
-  // information about the port.
-  typedef std::pair<std::string, PortDecl *> portPairType;
-  // typedef map<string, PortDecl* > portMapType;
-
   typedef std::pair<std::string, InterfaceDecl *> interfacePairType;
   typedef std::map<std::string, InterfaceDecl *> interfaceMapType;
 

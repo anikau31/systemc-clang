@@ -20,7 +20,6 @@ add_library (libsystemc-clang
   FindSensitivity.cpp
   FindWait.cpp
   FindNotify.cpp
-  #FindSignals.cpp
   FindSimTime.cpp
   FindTemplateTypes.cpp
   FindConstructor.cpp
