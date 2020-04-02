@@ -289,7 +289,7 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
       llvm::outs() << "\nCheck: " << dft_str << "\n";
       REQUIRE(name == "buggy_signal");
-      REQUIRE(trim(dft_str) == "sc_signal fp_t 3 11");
+      REQUIRE(trim(dft_str) == "sc_signal fp_t 11 3");
     }
 
     ////////////////////////////////////////////////////////////////
@@ -377,8 +377,8 @@ int sc_main(int argc, char *argv[]) {
     for (const auto &var: others) {
       auto name = get<0>(var);
       PortDecl *pd = get<1>(var);
-      llvm::outs() << "\n";
-      llvm::outs() << "Other name: " << name << "\n";
+      // llvm::outs() << "\n";
+      // llvm::outs() << "Other name: " << name << "\n";
       auto template_type = pd->getTemplateType();
       // This must be a reference. 
       auto template_args{template_type->getTemplateArgTreePtr()};
@@ -389,7 +389,7 @@ int sc_main(int argc, char *argv[]) {
       }
 
       if (name == "specialized_template") {
-        REQUIRE( trim(dft_str) == "ram fp_t 3 11" );
+        REQUIRE( trim(dft_str) == "ram fp_t 11 3" );
       }
       llvm::outs() << "End others\n";
     }

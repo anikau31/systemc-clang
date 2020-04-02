@@ -31,9 +31,9 @@ class TreeNode {
     parent_ = from.parent_;
   }
 
-  ~TreeNode() { 
-    //parent_ = nullptr; 
-   }
+  ~TreeNode() {
+    // parent_ = nullptr;
+  }
 
   T getData() const { return data_; }
   const T *getDataPtr() { return &data_; }
@@ -152,8 +152,12 @@ class Tree {
 
     auto &edges{source->second};
     // Insert it into the beginning of the vector.
-    // edges.insert(edges.begin(), to);
-    edges.push_back(to);
+    //
+    // Clang parses the template arguments in left-to-right manner.  Inserting
+    // these types at the beginning works to represent this correctly for the
+    // DFT.  This is because the DFT algorithm picks up from begin() to end()
+    // the edges, and inserts them into a queue by pushing them on.
+    edges.insert(edges.begin(), to);
     to->setParent(from);
   }
 
@@ -219,6 +223,7 @@ class Tree {
       return_string += node->toString();
       return_string += " ";
 
+      // llvm::outs() << "@@ " << node->toString() << "\n";
       // For repeated calls to dft...
       // Check if node is already in there
       if (!run_dft_) {
@@ -255,7 +260,7 @@ class Tree {
   //
   // class dft_iterator
   //
-   class const_dft_iterator {
+  class const_dft_iterator {
    public:
     typedef std::vector<TreeNodePtr> *TreeDFTPtr;
 
@@ -267,10 +272,10 @@ class Tree {
    public:
     const_dft_iterator(Tree<T> *tree, std::size_t pos)
         : tree_{tree}, nodes_dft_{&tree->nodes_dft_}, pos_{pos} {
-        tree->dft();
-        }
+      tree->dft();
+    }
 
-    const TreeNodePtr& operator*() { return (nodes_dft_)->operator[](pos_); }
+    const TreeNodePtr &operator*() { return (nodes_dft_)->operator[](pos_); }
 
     const_dft_iterator &operator++() {
       ++pos_;
@@ -290,11 +295,11 @@ class Tree {
     bool operator!=(const const_dft_iterator &it) { return pos_ != it.pos_; }
   };
 
-  const_dft_iterator begin() const {
-    return const_dft_iterator{this, 0};
-  }
+  const_dft_iterator begin() const { return const_dft_iterator{this, 0}; }
 
-  const_dft_iterator end() const { return const_dft_iterator{this, nodes_dft_.size()}; }
+  const_dft_iterator end() const {
+    return const_dft_iterator{this, nodes_dft_.size()};
+  }
 
   //
   // class dft_iterator
@@ -311,8 +316,8 @@ class Tree {
    public:
     dft_iterator(Tree<T> *tree, std::size_t pos)
         : tree_{tree}, nodes_dft_{&tree->nodes_dft_}, pos_{pos} {
-          tree_->dft();
-        }
+      tree_->dft();
+    }
 
     TreeNodePtr &operator*() { return (nodes_dft_)->operator[](pos_); }
 
@@ -338,5 +343,5 @@ class Tree {
 
   dft_iterator end() { return dft_iterator{this, nodes_dft_.size()}; }
 };
-}; // sc_par
+};  // namespace scpar
 #endif
