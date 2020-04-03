@@ -172,10 +172,19 @@ void Xlat:: xlatprocesstype(string prefix, Tree<TemplateType> * treep, TreeNode<
     else {
           // It is a different parent.
          os_ << "parent (different) type name: " << parentp->getDataPtr()->getTypeName() << "\n";
+	 os_ << "parent type follows\n";
+	 parentp->getDataPtr()->getTypePtr()->dump(os_);
+	 const RecordType * rectype = dyn_cast<RecordType>(parentp->getDataPtr()->getTypePtr());
+	 if (rectype) {
+	   for (auto const &fld: rectype->getDecl()->fields()) {
+	     os_ << "field of record type \n";
+	     fld ->dump(os_);
+	   }
+	 }
+	     
 	 os_ << "this node type name: " << nodep->getDataPtr()->getTypeName() << "\n";
+
     }
-    
-	
 	
     auto children{ treep->getChildren(nodep)};
     for (auto const &child: children) {
@@ -204,7 +213,7 @@ void Xlat::xlattype(string prefix, FindTemplateTypes *tt, hNodep &h_typeinfo) {
   if (template_argtp->getRoot()) {
     string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
     os_ << " nonprimitive type " << tmps << "\n";
-    if (!isprim
+    //if (!isprim
     auto children{ template_argtp->getChildren(template_argtp->getRoot())};
     for (auto const &child: children) {
       xlatprocesstype(prefix, template_argtp, child, h_typeinfo);
