@@ -152,30 +152,6 @@ void ModuleDecl::addSignalBinding(map<string, string> portSignalMap) {
   port_signal_map_.insert(portSignalMap.begin(), portSignalMap.end());
 }
 
-void ModuleDecl::addSignals(const FindSignals::signalMapType &signal_map) {
-  for (auto sit : signal_map) {
-    string name = sit.first;
-
-    // It is important to create new objects.
-    // This is because the objects created during Find*
-    // may go outside scope, and free up allocated memory.
-    SignalContainer *sc{new SignalContainer(*sit.second)};
-    Signal *sig{new Signal(name, sc)};
-
-    signals_.insert(ModuleDecl::signalPairType(name, sig));
-  }
-}
-
-void ModuleDecl::addOtherVars(const FindPorts::PortType &p) {
-  for (auto mit : p) {
-    string n = mit.first;
-    FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
-    PortDecl *pd = new PortDecl(n, tt);
-
-    other_fields_.push_back(portPairType(n, pd));
-  }
-}
-
 void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
                           const std::string &port_type) {
   if (port_type == "sc_in") {
@@ -220,34 +196,6 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
   }
 }
 
-void ModuleDecl::addInputPorts(const FindPorts::PortType &foundPorts) {
-  for (auto mit : foundPorts) {
-    auto name{mit.first};
-    FindTemplateTypes *template_type{new FindTemplateTypes(mit.second)};
-    PortDecl *portDecl{new PortDecl(name, template_type)};
-    in_ports_.push_back(portPairType(mit.first, portDecl));
-  }
-}
-
-void ModuleDecl::addOutputPorts(const FindPorts::PortType &p) {
-  for (auto mit : p) {
-    string n = mit.first;
-    FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
-    PortDecl *pd = new PortDecl(n, tt);
-
-    out_ports_.push_back(portPairType(n, pd));
-  }
-}
-
-void ModuleDecl::addInputOutputPorts(const FindPorts::PortType &p) {
-  for (auto mit : p) {
-    string n = mit.first;
-    FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
-    PortDecl *pd = new PortDecl(n, tt);
-    inout_ports_.push_back(portPairType(n, pd));
-  }
-}
-
 void ModuleDecl::addInputInterfaces(FindTLMInterfaces::interfaceType p) {
   for (auto mit : p) {
     string n = mit.first;
@@ -265,25 +213,6 @@ void ModuleDecl::addOutputInterfaces(FindTLMInterfaces::interfaceType p) {
     InterfaceDecl *pd = new InterfaceDecl(name, tt);
 
     ointerfaces_.insert(interfacePairType(name, pd));
-  }
-}
-
-void ModuleDecl::addInputStreamPorts(FindPorts::PortType p) {
-  for (auto mit : p) {
-    string name = mit.first;
-    FindTemplateTypes *template_type = new FindTemplateTypes(mit.second);
-    PortDecl *pd = new PortDecl(name, template_type);
-    istreamports_.push_back(portPairType(mit.first, pd));
-  }
-}
-
-void ModuleDecl::addOutputStreamPorts(FindPorts::PortType p) {
-  for (auto mit : p) {
-    string name = mit.first;
-    FindTemplateTypes *template_type = new FindTemplateTypes(mit.second);
-    PortDecl *pd = new PortDecl(name, template_type);
-
-    ostreamports_.push_back(portPairType(mit.first, pd));
   }
 }
 

@@ -1,5 +1,4 @@
 #include "FindTemplateTypes.h"
-#include "Utility.h"
 
 using namespace scpar;
 
@@ -51,18 +50,12 @@ FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
 // Destructor
 FindTemplateTypes::~FindTemplateTypes() { template_types_.clear(); }
 
-FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
-    const Type *type) {
-  template_types_.clear();
+void FindTemplateTypes::Enumerate(const Type *type) {
   if (!type) {
-    return template_types_;
+    return;
   }
 
-  // llvm::outs() << "####  Desugared #### \n";
-  // type->getUnqualifiedDesugaredType()->dump();
-//
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
-  return template_types_;
 }
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(
@@ -107,7 +100,7 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
 
 bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
   llvm::outs() << "=VisitBuiltinType=\n";
-  //bi_type->dump();
+  // bi_type->dump();
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
@@ -163,8 +156,8 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
     const TemplateArgumentList &arg_list{ctsd->getTemplateArgs()};
     for (unsigned int i{0}; i < arg_list.size(); ++i) {
       const TemplateArgument &targ{arg_list[i]};
-      // llvm::outs() << " ====> template argument: ";
-      // targ.dump();
+      llvm::outs() << " ====> template argument: ";
+      targ.dump();
       // llvm::outs() << "\n";
       // TODO Write this into the vector.
       // llvm::outs() << " ====> template type : " << targ.getKind() << "\n";
@@ -230,11 +223,9 @@ bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
   //<< l->getValue().toString(10,true) <<
   //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
   //"== type name: " << l->getType().getAsString() << "\n";
-  template_types_.push_back(TemplateType(l->getValue().toString(10, true),
-                                         l->getType().getTypePtr()));
-  // template_types_.push_back(pair<string, const Type
-  // *>(l->getValue().toString(10, true), l->getType().getTypePtr()));
-
+  // template_types_.push_back(TemplateType(l->getValue().toString(10, true),
+                                         // l->getType().getTypePtr()));
+//
   return false;
 }
 
@@ -246,28 +237,41 @@ FindTemplateTypes::type_vector_t FindTemplateTypes::getTemplateArgumentsType() {
   return template_types_;
 }
 
-void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
-  vector<std::string> template_arguments;
-  for (auto const &mit : template_types_) {
-    template_arguments.push_back(mit.getTypeName());
-  }
+json FindTemplateTypes::dump_json() {
+  json tree_j;
 
-  // Print the template arguments to the output stream
-  os << ", " << template_arguments.size() << " arguments, ";
-  for (auto const &targ : template_arguments) {
-    os << targ << " ";
-  }
-  os << "\n";
+  auto args{getTemplateArgTreePtr()};
 
-  // auto root_node{template_args_.getRoot()};
-  // template_args_.dump();
-  // os << "\n DFT: \n";
-  // os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
-  // auto s = template_args_.dft(root_node);
+  for (auto const &node : *args) {
+    // Returns a TreeNodePtr
+    auto type_data{node->getDataPtr()};
+    auto parent_node{node->getParent()};
+    auto parent_data{parent_node->getDataPtr()};
+    if (parent_node->getDataPtr() == node->getDataPtr()) {
+      // llvm::outs() << "\nInsert parent node: " << type_data->getTypeName()
+      //             << "\n";
+      tree_j[type_data->getTypeName()] = nullptr;
+    } else {
+      // FIXME: This does not print the tree properly.
+      // There does not seem to be a simple way to access the appropriate
+      // location for the insertion of the new values in this JSON.
+      // TODO: Perhaps the way to do this is to construct a string that JSON can
+      // use.
+      tree_j[parent_data->getTypeName()].push_back(type_data->getTypeName());
+    }
+  }
+  llvm::outs() << tree_j.dump(4);
+  return tree_j;
 }
 
-vector<std::string> FindTemplateTypes::getTemplateArguments() {
-  vector<std::string> template_arguments;
+void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
+  auto root_node{template_args_.getRoot()};
+  auto s{template_args_.dft(root_node)};
+  os << "> Template args (DFT): " << s << "\n";
+}
+
+std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
+  std::vector<std::string> template_arguments;
   for (auto const &mit : template_types_) {
     std::string name{mit.getTypeName()};
     if (name == "sc_in" || name == "sc_out" || name == "sc_inout") {

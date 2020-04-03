@@ -3,20 +3,21 @@
 
 #include <string>
 #include <vector>
-#include "clang/AST/DeclCXX.h"
-#include "clang/AST/DeclTemplate.h"
+#include <stack>
+#include "json.hpp"
+
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/Type.h"
 #include "llvm/Support/raw_ostream.h"
-
-#include <iostream>
-#include <stack>
 
 #include "Tree.h"
 
 namespace scpar {
 using namespace clang;
-using namespace std;
+using json = nlohmann::json;
+
+// Forward declarations
+//
 
 // This class holds the name of the type, and a pointer to the
 // type object.
@@ -44,8 +45,8 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
  public:
   /// Typedefs
   typedef TemplateType TemplateTypePtr;
-  typedef vector<TemplateTypePtr> type_vector_t;
-  typedef vector<TemplateTypePtr> argVectorType;
+  typedef std::vector<TemplateTypePtr> type_vector_t;
+  typedef std::vector<TemplateTypePtr> argVectorType;
 
   // typedef tree< TemplateType > template_arguments_type;
   // Constructor
@@ -67,10 +68,11 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitBuiltinType(BuiltinType *bi_type);
 
   ~FindTemplateTypes();
-  type_vector_t Enumerate(const Type *type);
+  void Enumerate(const Type *type);
   type_vector_t getTemplateArgumentsType();
   void printTemplateArguments(llvm::raw_ostream &os);
-  vector<std::string> getTemplateArguments();
+  json dump_json();
+  std::vector<std::string> getTemplateArguments();
   size_t size();
   Tree<TemplateType> *getTemplateArgTreePtr();
 

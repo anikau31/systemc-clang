@@ -2,7 +2,6 @@
 #include "FindTemplateTypes.h"
 
 using namespace scpar;
-using namespace std;
 
 PortDecl::~PortDecl() {
   // Only delete the template_type_
@@ -75,10 +74,11 @@ void PortDecl::dump(llvm::raw_ostream &os, int tabn) {
 json PortDecl::dump_json(raw_ostream &os) {
   json port_j;
   port_j["port_name"] = getName();
-
-  auto args{template_type_->getTemplateArgTreePtr()};
+  //auto args{template_type_->getTemplateArgTreePtr()};
   // args->dump();
+  port_j["port_arguments"] = template_type_->dump_json();
 
+  /*
   for (auto const &node : *args) {
     // Returns a TreeNodePtr
     auto type_data{node->getDataPtr()};
@@ -101,5 +101,6 @@ json PortDecl::dump_json(raw_ostream &os) {
     // port_j["port_binding"]["VarDecl*"] = to_string(bound_vardecl_);
   }
   // os << port_j.dump(4);
+  */
   return port_j;
 }

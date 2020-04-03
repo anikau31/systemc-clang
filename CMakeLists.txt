@@ -4,7 +4,7 @@
 # Credits:
 # https://github.com/andreasfertig/cppinsights/blob/master/CMakeLists.txt
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.3)
 # Fix behavior of CMAKE_CXX_STANDARD when targeting macOS.
 if (POLICY CMP0025)
   cmake_policy(SET CMP0025 NEW)
@@ -231,9 +231,18 @@ function(llvm_config VARNAME switch)
   # make result available outside
   set(${VARNAME} ${CONFIG_OUTPUT} PARENT_SCOPE)
 
+  # Find IWYU
+#
+  # find_program(iwyu_path NAMES include-what-you-use iwyu)
+# if(NOT iwyu_path)
+  # message(FATAL_ERROR "Could not find the program include-what-you-use")
+# endif()
+#
+
   # cleanup
   unset(CONFIG_COMMAND)
 endfunction(llvm_config)
+
 
 # Find llvm-config
 find_program(LLVM_CONFIG_EXE
@@ -324,7 +333,6 @@ set(CMAKE_MODULE_LINKER_FLAGS
 
 set( TARGET "systemc-clang" )
 
-
 # catch2 may have headers colliding with other local files, so we can use -iquote instead of -I to include files in src folder
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -iquote ${PROJECT_SOURCE_DIR}/src")
@@ -369,6 +377,8 @@ endforeach()
 foreach (ld_flag ${LLVM_LD_FLAGS} ${LLVM_SYSTEM_LIBS})
   target_link_libraries( ${TARGET} ${ld_flag} )
 endforeach()
+
+#set_property(TARGET "systemc-clang" PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
 
 # Print the summary of the build. 
 message(STATUS "")
