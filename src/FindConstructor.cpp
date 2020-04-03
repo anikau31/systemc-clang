@@ -5,7 +5,6 @@ using namespace scpar;
 FindConstructor::FindConstructor(CXXRecordDecl *declaration,
                                  llvm::raw_ostream &os)
     : os_{os}, declaration_{declaration}, constructor_stmt_{nullptr}, pass_{1} {
-
   TraverseDecl(declaration_);
   pass_ = 2;
   TraverseStmt(constructor_stmt_);
@@ -46,6 +45,4 @@ Stmt *FindConstructor::returnConstructorStmt() const {
   return constructor_stmt_;
 }
 
-void FindConstructor::dump() const {
-  constructor_stmt_->dump();
-}
+void FindConstructor::dump() const { constructor_stmt_->dump(); }

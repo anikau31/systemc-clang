@@ -2,17 +2,13 @@
 #define _FIND_SIGNALS_H_
 
 #include "FindTemplateTypes.h"
-#include "clang/AST/DeclCXX.h"
-#include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
-#include <map>
 
 namespace scpar {
 using namespace clang;
-using namespace std;
 
  struct SignalContainer  {
-  SignalContainer(string n, FindTemplateTypes *tt, FieldDecl *fd)
+  SignalContainer(std::string n, FindTemplateTypes *tt, FieldDecl *fd)
       : signal_name_{n}, template_types_{tt}, ast_node_{fd} {}
 
   ~SignalContainer() {
@@ -44,11 +40,11 @@ using namespace std;
     return ast_node_;
   }
 
-  string getName() { return signal_name_; }
+  std::string getName() { return signal_name_; }
 
   
  private: 
-  string signal_name_;
+  std::string signal_name_;
   FindTemplateTypes *template_types_;
   FieldDecl *ast_node_;
 };

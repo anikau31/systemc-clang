@@ -1,10 +1,5 @@
-#include "PluginAction.h"
-#include "SystemCClang.h"
 #include "catch.hpp"
-#include "clang/AST/ASTImporter.h"
-#include "clang/ASTMatchers/ASTMatchFinder.h"
-#include "clang/ASTMatchers/ASTMatchers.h"
-#include "clang/Parse/ParseAST.h"
+#include "SystemCClang.h"
 #include "clang/Tooling/Tooling.h"
 
 #include "Matchers.h"

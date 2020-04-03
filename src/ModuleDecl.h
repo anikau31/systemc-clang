@@ -13,11 +13,12 @@
 #include "Signal.h"
 #include "clang/AST/DeclCXX.h"
 
-#include "json.hpp"
 
 namespace scpar {
 using namespace clang;
-using json = nlohmann::json;
+
+// Forward declarations
+//
 
 class ModuleDecl {
  public:

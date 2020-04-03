@@ -1,19 +1,10 @@
-#include "PluginAction.h"
-#include "SystemCClang.h"
 #include "catch.hpp"
-#include "clang/AST/ASTImporter.h"
-#include "clang/ASTMatchers/ASTMatchFinder.h"
-#include "clang/ASTMatchers/ASTMatchers.h"
-#include "clang/Parse/ParseAST.h"
-#include "clang/Tooling/Tooling.h"
+#include "SystemCClang.h"
 
 // This is automatically generated from cmake.
 #include "ClangArgs.h"
 #include "Testing.h"
 
-using namespace clang;
-using namespace clang::tooling;
-using namespace clang::ast_matchers;
 using namespace scpar;
 
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
