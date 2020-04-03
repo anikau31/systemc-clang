@@ -5,31 +5,25 @@
 
 #include "FindConstructor.h"
 #include "FindEntryFunctions.h"
-#include "FindPorts.h"
 #include "FindTLMInterfaces.h"
 #include "InterfaceDecl.h"
-#include "PortDecl.h"
 #include "PortBinding.h"
+#include "PortDecl.h"
 #include "ProcessDecl.h"
 #include "Signal.h"
 #include "clang/AST/DeclCXX.h"
 
-#include "json.hpp"
-
 
 namespace scpar {
 using namespace clang;
-using json = nlohmann::json;
+
+// Forward declarations
+//
 
 class ModuleDecl {
  public:
   typedef std::pair<std::string, Signal *> signalPairType;
   typedef std::map<std::string, Signal *> signalMapType;
-
-  // Maps the name of the port with a pointer to a structure that holds
-  // information about the port.
-  typedef std::pair<std::string, PortDecl *> portPairType;
-  // typedef map<string, PortDecl* > portMapType;
 
   typedef std::pair<std::string, InterfaceDecl *> interfacePairType;
   typedef std::map<std::string, InterfaceDecl *> interfaceMapType;
@@ -67,14 +61,6 @@ class ModuleDecl {
   ModuleDecl &operator=(const ModuleDecl &from);
   ~ModuleDecl();
 
-  void addSignals(const FindSignals::signalMapType &);
-  void addInputPorts(const FindPorts::PortType &);
-  void addOutputPorts(const FindPorts::PortType &);
-  void addInputOutputPorts(const FindPorts::PortType &);
-
-  void addInputStreamPorts(FindPorts::PortType);
-  void addOutputStreamPorts(FindPorts::PortType);
-  void addOtherVars(const FindPorts::PortType &);
   void addPorts(const PortType &found_ports, const std::string &port_type);
 
   void addConstructor(Stmt *);
@@ -122,7 +108,7 @@ class ModuleDecl {
   vector<std::string> getInstanceList();
   vector<EntryFunctionContainer *> getEntryFunctionContainer();
   int getNumInstances();
-  const signalMapType & getSignals() const;
+  const signalMapType &getSignals() const;
 
   void dumpPorts(raw_ostream &, int);
   void dumpPortBinding();

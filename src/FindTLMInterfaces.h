@@ -2,20 +2,17 @@
 #define _FIND_TLM_INTERFACES_H_
 
 #include "FindTemplateTypes.h"
-#include "clang/AST/DeclCXX.h"
 #include "clang/AST/RecursiveASTVisitor.h"
-#include "llvm/Support/raw_ostream.h"
 #include <map>
 
 namespace scpar {
 using namespace clang;
-using namespace std;
 
 class FindTLMInterfaces : public RecursiveASTVisitor<FindTLMInterfaces> {
 public:
   // / typedefs
-  typedef map<string, FindTemplateTypes *> interfaceType;
-  typedef pair<string, FindTemplateTypes *> kvType;
+  typedef std::map<string, FindTemplateTypes *> interfaceType;
+  typedef std::pair<string, FindTemplateTypes *> kvType;
 
   FindTLMInterfaces(CXXRecordDecl *, llvm::raw_ostream &);
   virtual ~FindTLMInterfaces();

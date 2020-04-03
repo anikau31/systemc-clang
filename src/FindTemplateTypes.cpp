@@ -50,18 +50,12 @@ FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
 // Destructor
 FindTemplateTypes::~FindTemplateTypes() { template_types_.clear(); }
 
-FindTemplateTypes::type_vector_t FindTemplateTypes::Enumerate(
-    const Type *type) {
-  template_types_.clear();
+void FindTemplateTypes::Enumerate(const Type *type) {
   if (!type) {
-    return template_types_;
+    return;
   }
 
-  // llvm::outs() << "####  Desugared #### \n";
-  // type->getUnqualifiedDesugaredType()->dump();
-//
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
-  return template_types_;
 }
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(
@@ -106,7 +100,7 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
 
 bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
   llvm::outs() << "=VisitBuiltinType=\n";
-  //bi_type->dump();
+  // bi_type->dump();
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
@@ -271,23 +265,9 @@ json FindTemplateTypes::dump_json() {
 }
 
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
-  std::vector<std::string> template_arguments;
-  for (auto const &mit : template_types_) {
-    template_arguments.push_back(mit.getTypeName());
-  }
-
-  // Print the template arguments to the output stream
-  os << ", " << template_arguments.size() << " arguments, ";
-  for (auto const &targ : template_arguments) {
-    os << targ << " ";
-  }
-  os << "\n";
-
-  // auto root_node{template_args_.getRoot()};
-  // template_args_.dump();
-  // os << "\n DFT: \n";
-  // os << ">>>> Print arguments using DFT: " << root_node->getData() << "\n";
-  // auto s = template_args_.dft(root_node);
+  auto root_node{template_args_.getRoot()};
+  auto s{template_args_.dft(root_node)};
+  os << "> Template args (DFT): " << s << "\n";
 }
 
 std::vector<std::string> FindTemplateTypes::getTemplateArguments() {

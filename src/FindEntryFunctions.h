@@ -2,9 +2,7 @@
 #define _FIND_ENTRY_FUNCTIONS_H_
 
 #include "EntryFunctionContainer.h"
-#include "clang/AST/DeclCXX.h"
 #include "clang/AST/RecursiveASTVisitor.h"
-#include "llvm/Support/raw_ostream.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -12,15 +10,14 @@
 namespace scpar {
 
 using namespace clang;
-using namespace std;
 
 class FindEntryFunctions : public RecursiveASTVisitor<FindEntryFunctions> {
 public:
   /// Typedefs
-  typedef vector<EntryFunctionContainer *> entryFunctionVectorType;
+  typedef std::vector<EntryFunctionContainer *> entryFunctionVectorType;
 
-  typedef pair<string, vector<string>> entryFunctionLHSPairType;
-  typedef map<string, vector<string>> entryFunctionLHSMapType;
+  typedef std::pair<string, vector<string>> entryFunctionLHSPairType;
+  typedef std::map<string, vector<string>> entryFunctionLHSMapType;
 
   FindEntryFunctions(CXXRecordDecl *d, llvm::raw_ostream &os);
   virtual ~FindEntryFunctions();

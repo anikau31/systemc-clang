@@ -1,23 +1,11 @@
 #include "catch.hpp"
 
-#include "clang/AST/ASTImporter.h"
-#include "clang/ASTMatchers/ASTMatchFinder.h"
-#include "clang/ASTMatchers/ASTMatchers.h"
-#include "clang/Parse/ParseAST.h"
-#include "clang/Tooling/Tooling.h"
-
-#include "PluginAction.h"
 #include "SystemCClang.h"
 
 /// This is automatically generated from cmake.
 #include "ClangArgs.h"
 #include "Testing.h"
 
-#include <iostream>
-
-using namespace clang;
-using namespace clang::tooling;
-using namespace clang::ast_matchers;
 using namespace scpar;
 
 // Source: https://www.toptip.ca/2010/03/trim-leading-or-trailing-white-spaces.html
@@ -193,7 +181,7 @@ int sc_main(int argc, char *argv[]) {
 }
      )";
 
-  cout << "TEST: " << systemc_clang::test_data_dir << "\n";
+     llvm::outs()<< "TEST: " << systemc_clang::test_data_dir << "\n";
   INFO(systemc_clang::test_data_dir);
   auto catch_test_args = systemc_clang::catch_test_args;
   catch_test_args.push_back("-I" + systemc_clang::test_data_dir +

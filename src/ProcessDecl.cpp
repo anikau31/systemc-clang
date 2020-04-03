@@ -1,9 +1,11 @@
 #include "ProcessDecl.h"
+#include "EntryFunctionContainer.h"
 
 using namespace scpar;
 // using namespace nlohmann::json;
 
-ProcessDecl::ProcessDecl(string t, string n, CXXMethodDecl *entryMethodDecl,
+ProcessDecl::ProcessDecl(std::string t, std::string n,
+                         CXXMethodDecl *entryMethodDecl,
                          EntryFunctionContainer *e)
     : process_type_(t),
       entry_name_(n),
@@ -26,9 +28,9 @@ ProcessDecl::ProcessDecl(const ProcessDecl &from) {
   entry_function_ptr_ = from.entry_function_ptr_;
 }
 
-string ProcessDecl::getType() const { return process_type_; }
+std::string ProcessDecl::getType() const { return process_type_; }
 
-string ProcessDecl::getName() const { return entry_name_; }
+std::string ProcessDecl::getName() const { return entry_name_; }
 
 CXXMethodDecl *ProcessDecl::getEntryMethodDecl() const {
   return entry_method_decl_;

@@ -1,45 +1,44 @@
 #ifndef _SIGNAL_H_
 #define _SIGNAL_H_
 
-#include "clang/AST/DeclCXX.h"
-#include <map>
 #include <string>
 
-#include "systemc-clang.h"
 #include "json.hpp"
 
 #include "FindSignals.h"
-#include "FindTemplateTypes.h"
+//#include "FindTemplateTypes.h"
 
 namespace scpar {
 using namespace clang;
-using namespace std;
- using json = nlohmann::json;
+using json = nlohmann::json;
+
+class FindTemplateTypes;
+class SignalContainer;
 
 class Signal {
-public:
+ public:
   Signal();
-  Signal(const string &, SignalContainer *);
+  Signal(const std::string &, SignalContainer *);
 
   // Set parameters
-  void setModuleName(const string &);
+  void setModuleName(const std::string &);
 
   /// Get parameters
-  string getName();
+  std::string getName();
   FindTemplateTypes *getTemplateTypes();
   FieldDecl *getASTNode();
 
   // Print
-  void dump(raw_ostream &, int tabn);
+  void dump(llvm::raw_ostream &, int tabn);
 
-  json dump_json(raw_ostream &);
+  json dump_json(llvm::raw_ostream &);
 
-private:
+ private:
   void check();
 
-private:
-  string signal_name_;
-  SignalContainer * signal_container_;
+ private:
+  std::string signal_name_;
+  SignalContainer *signal_container_;
 };
-} // namespace scpar
+}  // namespace scpar
 #endif

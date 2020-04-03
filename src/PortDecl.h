@@ -3,7 +3,6 @@
 
 #include "json.hpp"
 
-#include <map>
 #include <string>
 
 #include "clang/AST/DeclCXX.h"

@@ -42,18 +42,12 @@ bool FindSensitivity::VisitMemberExpr(MemberExpr *e) {
 
   tt.Enumerate(memberType.getTypePtr());
 
-  FindTemplateTypes::argVectorType args{tt.getTemplateArgumentsType()};
-  FindTemplateTypes::argVectorType::iterator ait{args.begin()};
+  auto type_tree{tt.getTemplateArgTreePtr()};
+  auto type_str{type_tree->dft()};
 
-  // No port type to be checked.
-  if (args.size() == 0) {
-    return true;
-  }
-
-  /// Is it a port type
-  string port_type{ait->getTypeName()};
-  if (!(port_type == "sc_in" || port_type == "sc_out" ||
-        port_type == "sc_inout")) {
+  if ((type_str.find("sc_in") != std::string::npos) ||
+      (type_str.find("sc_inout") != std::string::npos) ||
+      (type_str.find("sc_out") != std::string::npos)) {
     return true;
   }
 

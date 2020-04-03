@@ -10,7 +10,6 @@
 #include "clang/AST/Type.h"
 #include "llvm/Support/raw_ostream.h"
 
-
 #include "Tree.h"
 
 namespace scpar {
@@ -69,7 +68,7 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitBuiltinType(BuiltinType *bi_type);
 
   ~FindTemplateTypes();
-  type_vector_t Enumerate(const Type *type);
+  void Enumerate(const Type *type);
   type_vector_t getTemplateArgumentsType();
   void printTemplateArguments(llvm::raw_ostream &os);
   json dump_json();
