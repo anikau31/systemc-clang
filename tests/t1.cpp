@@ -5,6 +5,7 @@
 // This is automatically generated from cmake.
 #include <iostream>
 #include "ClangArgs.h"
+#include "PortBinding.h"
 
 using namespace scpar;
 

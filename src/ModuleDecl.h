@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 
+/*
 #include "FindConstructor.h"
 #include "FindEntryFunctions.h"
 #include "FindTLMInterfaces.h"
@@ -12,10 +13,27 @@
 #include "ProcessDecl.h"
 #include "Signal.h"
 #include "clang/AST/DeclCXX.h"
+*/
+#include "FindEntryFunctions.h"            // for FindEntryFunctions, FindEn...
+#include "FindTLMInterfaces.h"             // for FindTLMInterfaces, FindTLM...
+#include "Signal.h"                        // for Signal (ptr only), json
+
+namespace clang { class CXXRecordDecl; }
+namespace clang { class Decl; }
+namespace clang { class FieldDecl; }
+namespace clang { class Stmt; }
+namespace clang { class VarDecl; }
+namespace llvm { class raw_ostream; }
+namespace scpar { class EntryFunctionContainer; }
+namespace scpar { class InterfaceDecl; }
+namespace scpar { class PortBinding; }
+namespace scpar { class PortDecl; }
+namespace scpar { class ProcessDecl; }
+
 
 
 namespace scpar {
-using namespace clang;
+//using namespace clang;
 
 // Forward declarations
 //

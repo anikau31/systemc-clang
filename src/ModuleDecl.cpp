@@ -1,11 +1,30 @@
-#include <algorithm>
+/*#include <algorithm>
 #include <string>
 #include <tuple>
 
+*/
 #include "ModuleDecl.h"
+#include <assert.h>                    // for assert
+#include <llvm/Support/raw_ostream.h>  // for raw_ostream, outs
+#include <stddef.h>                    // for size_t
+#include <iostream>                    // for cout, ostream, std
+#include <iterator>                    // for back_insert_iterator, back_ins...
+#include "EntryFunctionContainer.h"    // for EntryFunctionContainer
+#include "FindNotify.h"                // for scpar
+#include "FindSignals.h"               // for SignalContainer
+#include "FindTemplateTypes.h"         // for FindTemplateTypes
+#include "InterfaceDecl.h"             // for InterfaceDecl
+#include "PortBinding.h"               // for PortBinding
+#include "PortDecl.h"                  // for PortDecl
+#include "ProcessDecl.h"               // for ProcessDecl
+#include "enums.h"                     // for PROCESS_TYPE, PROCESS_TYPE::CT...
+#include "json.hpp"                    // for basic_json<>::object_t, basic_...
+namespace clang { class CXXRecordDecl; }
+namespace clang { class Decl; }
+namespace clang { class Stmt; }
 
 using namespace scpar;
-using namespace std;
+//using namespace std;
 
 ModuleDecl::ModuleDecl()
     : module_name_{"NONE"},
@@ -122,25 +141,25 @@ ModuleDecl::~ModuleDecl() {
   other_fields_.clear();
 }
 
-void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
+void ModuleDecl::setInstanceName(const std::string &name) { instance_name_ = name; }
 
 void ModuleDecl::setInstanceDecl(Decl *decl) { instance_decl_ = decl; }
 
-void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
+void ModuleDecl::setTemplateParameters(const std::vector<std::string> &parm_list) {
   template_parameters_ = parm_list;
 }
 
-void ModuleDecl::setTemplateArgs(const vector<string> &parm_list) {
+void ModuleDecl::setTemplateArgs(const std::vector<std::string> &parm_list) {
   template_args_ = parm_list;
 }
 
-vector<string> ModuleDecl::getTemplateParameters() const {
+std::vector<std::string> ModuleDecl::getTemplateParameters() const {
   return template_parameters_;
 }
 
-void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
+void ModuleDecl::setModuleName(const std::string &name) { module_name_ = name; }
 
-void ModuleDecl::addInstances(const vector<string> &instanceList) {
+void ModuleDecl::addInstances(const std::vector<std::string> &instanceList) {
   instance_list_ = instanceList;
 }
 
@@ -263,9 +282,9 @@ void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
   }
 }
 
-vector<string> ModuleDecl::getInstanceList() { return instance_list_; }
+std::vector<std::string> ModuleDecl::getInstanceList() { return instance_list_; }
 
-vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
+std::vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
   return vef_;
 }
 
