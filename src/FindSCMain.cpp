@@ -1,5 +1,11 @@
 #include "FindSCMain.h"
 
+#include <assert.h>                     // for assert
+#include <clang/AST/Decl.h>             // for FunctionDecl, TranslationUnit...
+#include <clang/AST/DeclarationName.h>  // for DeclarationNameInfo
+#include <string>                       // for operator!=, string
+namespace llvm { class raw_ostream; }
+
 using namespace scpar;
 
 FindSCMain::FindSCMain(TranslationUnitDecl *tuDecl, llvm::raw_ostream &os)

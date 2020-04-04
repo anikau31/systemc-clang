@@ -1,11 +1,15 @@
 #include "FindWait.h"
-#include "clang/AST/DeclTemplate.h"
-#include "clang/AST/PrettyPrinter.h"
-#include "clang/AST/Type.h"
-#include "clang/Basic/SourceManager.h"
+
+#include <clang/AST/Decl.h>             // for FunctionDecl
+#include <clang/AST/DeclCXX.h>          // for CXXMethodDecl
+#include <clang/AST/DeclarationName.h>  // for DeclarationNameInfo
+#include <clang/AST/Expr.h>             // for CallExpr
+#include <clang/AST/ExprCXX.h>          // for UnresolvedMemberExpr
+#include <clang/Basic/LangOptions.h>    // for LangOptions
+#include "WaitContainer.h"              // for WaitContainer, scpar
+namespace llvm { class raw_ostream; }
 
 using namespace scpar;
-using namespace std;
 
 FindWait::FindWait(CXXMethodDecl *d, llvm::raw_ostream &os)
     : entry_method_decl_{d}, os_{os}, wait_call_{nullptr}, found_wait_{false} {
@@ -32,7 +36,7 @@ bool FindWait::shouldVisitTemplateInstantiations() const { return true; }
 bool FindWait::VisitUnresolvedMemberExpr(UnresolvedMemberExpr *e) {
   // This is for the templated wait calls.
   // e should not be null if it gets here.
-  if (e->getMemberNameInfo().getAsString() == string("wait")) {
+  if (e->getMemberNameInfo().getAsString() == std::string("wait")) {
     wait_calls_list_.push_back(
         new WaitContainer(entry_method_decl_, wait_call_));
     found_wait_ = true;
@@ -51,7 +55,7 @@ bool FindWait::VisitCallExpr(CallExpr *e) {
   // Check if the non-templated wait has a "wait" in it.
   auto direct_callee{e->getDirectCallee()};
   if ((direct_callee != nullptr)) {
-    if ((direct_callee->getNameInfo().getAsString() == string("wait"))) {
+    if ((direct_callee->getNameInfo().getAsString() == std::string("wait"))) {
       // Insert the information to parse the wait arguments.
       wait_calls_list_.push_back(
           new WaitContainer(entry_method_decl_, wait_call_));
