@@ -146,7 +146,7 @@ namespace hnode {
     }
 
   };
-  
+  static const string scstrings [] = {"sc_core::sc_", "sc_core::sc_dt", "sc_in", "sc_out", "sc_inout"};
   class util { 
   public:
     util() {}
@@ -161,8 +161,12 @@ namespace hnode {
     }
     static inline bool isSCType(string tstring) {
       return ((tstring.substr(0, 12) == "sc_core::sc_") ||
-	      (tstring.substr(0,5) == "sc_core::sc_dt"));
+	      (tstring.substr(0, 5) == "sc_in") ||
+	      (tstring.substr(0, 7) == "sc_out") ||
+	      (tstring.substr(0, 9) == "sc_inout") ||
+	      (tstring.substr(0,14) == "sc_core::sc_dt"));
     }
+
   };
   
 } // end namespace hnode
