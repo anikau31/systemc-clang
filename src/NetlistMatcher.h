@@ -54,21 +54,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     module_matcher_ = module_matcher;
       
     // instance.in1(sig1);
-  auto mk_call_expr =       cxxOperatorCallExpr(
-               hasDescendant(
-                 declRefExpr(
-               hasDeclaration(varDecl().bind("bound_variable")), // Match the sig1
-               hasParent(implicitCastExpr()) // There must be (.) 
-               ).bind("declrefexpr")
-                 )
-               ,
-             hasDescendant(memberExpr(
-               forEach(declRefExpr().bind("declrefexpr_in_memberexpr"))
-               ).bind("memberexpr")
-               )
-           ).bind("callexpr");
-   
-   auto match_callexpr = namedDecl(
+   auto match_sc_main_callexpr = namedDecl(
        forEachDescendant(
          cxxOperatorCallExpr(
                hasDescendant(
@@ -86,28 +72,38 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
          )
        ).bind("functiondecl");
 
-     //cxxOperatorCallExpr().bind("callexpr");
     /* clang-format on */
 
     auto match_ctor_decl =
         namedDecl(
-            has(compoundStmt(forEachDescendant(
-                                 cxxOperatorCallExpr(
-                                     hasDescendant(
-                                         memberExpr(has(memberExpr().bind(
-                                                        "memberexpr_instance")))
-                                             .bind("memberexpr_port")),
-                                     hasDescendant(memberExpr(hasParent(implicitCastExpr()),
-                                         unless(hasDescendant(memberExpr()))
-                                         ).bind("memberexpr_arg"))
-                                     )
-                                     .bind("callexpr")))
+            has(compoundStmt(
+                    forEachDescendant(
+                        cxxOperatorCallExpr(
+                            // Port
+                            // 1. MemberExpr has a descendant that is a
+                            // MemberExpr The first MemberExpr gives the port
+                            // bound to information. The second MemberExpr gives
+                            // the instance information to whom the port
+                            // belongs.
+                            hasDescendant(
+                                memberExpr(has(memberExpr().bind(
+                                               "memberexpr_instance")))
+                                    .bind("memberexpr_port")),
+                            // Arguments
+                            // 1. Has MemberExpr as a descendant.
+                            //   1.a It must have an implicitCastExpr as a
+                            //   parent 1.b But not a MemberExpr (This is
+                            //   because it matches with the port others.
+                            hasDescendant(
+                                memberExpr(hasParent(implicitCastExpr()),
+                                           unless(hasDescendant(memberExpr())))
+                                    .bind("memberexpr_arg")))
+                            .bind("callexpr")))
                     .bind("compoundstmt")))
             .bind("functiondecl");
 
     // Add the two matchers.
-    // finder.addMatcher(match_callexpr, this);
-
+    finder.addMatcher(match_sc_main_callexpr, this);
     finder.addMatcher(match_ctor_decl, this);
   }
 
@@ -179,30 +175,10 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                    << ", port arg: " << port_arg << "\n";
     }
 
-    if (cstmt) {
-      llvm::outs() << "#### Found CompoundStmt: "
-                   << "\n";
-    }
-
-    if (cexpr) {
-      llvm::outs() << "#### Found CXXOperatorCallExpr: "
-                   << "\n";
-    }
     //////////////////////////////////////////////////////
     /// TESTING
     //
     std::string port_name{};
-    if (me) {
-      port_name = me->getMemberDecl()->getNameAsString();
-      llvm::outs() << "#### Found MemberExpr portname: " << port_name << "\n";
-    }
-
-    if (ie) {
-      llvm::outs()
-          << "#### Found ImplicitCastExpr: \n";  // << portName << "\n";
-      ie->dump();
-    }
-
     std::string instance_type{};
     std::string instance_var_name{};
     std::string instance_constructor_name{};

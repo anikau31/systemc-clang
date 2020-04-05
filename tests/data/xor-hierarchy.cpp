@@ -31,7 +31,6 @@ SC_MODULE(exor2) {
     n1.A(A);
     n1.B(B);
     n1.F(S1);
-    /*
 
     n2.A(A);
     n2.B(S1);
@@ -44,7 +43,6 @@ SC_MODULE(exor2) {
     n4.A(S2);
     n4.B(S3);
     n4.F(F);
-    */
   }
 };
 
