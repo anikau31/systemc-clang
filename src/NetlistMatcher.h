@@ -68,7 +68,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                )
            ).bind("callexpr");
    
-   auto match_callexpr = functionDecl(
+   auto match_callexpr = namedDecl(
        forEachDescendant(
          cxxOperatorCallExpr(
                hasDescendant(
@@ -90,27 +90,24 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     /* clang-format on */
 
     auto match_ctor_decl =
-        cxxConstructorDecl(
+        namedDecl(
             has(compoundStmt(
                     forEachDescendant(
                         cxxOperatorCallExpr(
-                            hasDescendant(
-                                declRefExpr(
-                                    hasDeclaration(varDecl().bind(
-                                        "bound_variable")),  // Match the sig1
-                                    hasParent(implicitCastExpr())  // There must
-                                                                   // be (.)
-                                    )
-                                    .bind("declrefexpr"))
-                                )
-                            .bind("callexpr")))
+                            hasDescendant(memberExpr(
+                                has(memberExpr().bind("memberexpr_instance"))
+                                ).bind("memberexpr_port"))
+                            ,
+                            hasDescendant(implicitCastExpr(
+                                has(memberExpr().bind("memberexpr_arg"))))
+                            ).bind("callexpr")))
                     .bind("compoundstmt")))
             .bind("functiondecl");
 
     // Add the two matchers.
-    finder.addMatcher(match_callexpr, this);
+    // finder.addMatcher(match_callexpr, this);
 
-    //finder.addMatcher(match_ctor_decl, this);
+    finder.addMatcher(match_ctor_decl, this);
   }
 
   // This is the callback function whenever there is a match.
@@ -132,11 +129,30 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     auto dre{const_cast<DeclRefExpr *>(
         result.Nodes.getNodeAs<DeclRefExpr>("declrefexpr"))};
 
+    //////////////////////////////////////////////////////
     /// TESTING
     auto cstmt{const_cast<CompoundStmt *>(
         result.Nodes.getNodeAs<CompoundStmt>("compoundstmt"))};
     auto cexpr{const_cast<CXXOperatorCallExpr *>(
         result.Nodes.getNodeAs<CXXOperatorCallExpr>("callexpr"))};
+    auto mexpr_port{const_cast<MemberExpr *>(
+        result.Nodes.getNodeAs<MemberExpr>("memberexpr_port"))};
+    auto mexpr_instance{const_cast<MemberExpr *>(
+        result.Nodes.getNodeAs<MemberExpr>("memberexpr_instance"))};
+    auto mexpr_arg{const_cast<MemberExpr *>(
+        result.Nodes.getNodeAs<MemberExpr>("memberexpr_arg"))};
+
+    if (mexpr_port && mexpr_instance && mexpr_arg) {
+      llvm::outs() << "#### Found MemberExpr: "
+                   << "\n";
+      auto port = mexpr_port->getMemberNameInfo().getAsString();
+      mexpr_port->dump();
+      auto instance_name = mexpr_instance->getMemberNameInfo().getAsString();
+      mexpr_instance->dump();
+      auto port_arg = mexpr_arg->getMemberNameInfo().getAsString();
+      mexpr_arg->dump();
+      llvm::outs() << "> inst name: " << instance_name << ", port: " << port << ", port arg: " << port_arg << "\n";
+    }
 
     if (cstmt) {
       llvm::outs() << "#### Found CompoundStmt: "
@@ -147,6 +163,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       llvm::outs() << "#### Found CXXOperatorCallExpr: "
                    << "\n";
     }
+    //////////////////////////////////////////////////////
     /// TESTING
     //
     std::string port_name{};
