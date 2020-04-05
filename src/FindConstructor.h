@@ -15,7 +15,7 @@ class FindConstructor : public RecursiveASTVisitor<FindConstructor> {
   virtual bool VisitCXXMethodDecl(CXXMethodDecl *);
   bool shouldVisitTemplateInstantiations() const;
 
-  Stmt *returnConstructorStmt() const;
+  Stmt *getConstructorStmt() const;
   void dump() const;
 
  private:

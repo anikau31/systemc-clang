@@ -26,6 +26,8 @@ bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
         cd->getBody(fd);
         if (cd->hasBody()) {
           constructor_stmt_ = cd->getBody();
+          llvm::outs() << "###### CONSTRUCTOR STMT\n";
+          constructor_stmt_->dump();
         }
       }
       break;
@@ -41,8 +43,6 @@ bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
   return true;
 }
 
-Stmt *FindConstructor::returnConstructorStmt() const {
-  return constructor_stmt_;
-}
+Stmt *FindConstructor::getConstructorStmt() const { return constructor_stmt_; }
 
 void FindConstructor::dump() const { constructor_stmt_->dump(); }

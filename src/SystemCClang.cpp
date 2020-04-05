@@ -177,7 +177,7 @@ bool SystemCConsumer::fire() {
       //
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
-      add_module_decl->addConstructor(constructor.returnConstructorStmt());
+      add_module_decl->addConstructor(constructor.getConstructorStmt());
 
       // 4. Find ports
       // This is done for the declaration.
@@ -192,8 +192,7 @@ bool SystemCConsumer::fire() {
 
       for (size_t i = 0; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
-        FindSensitivity findSensitivity{constructor.returnConstructorStmt(),
-                                        os_};
+        FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};
         ef->addSensitivityInfo(findSensitivity);
 
         if (ef->getEntryMethod() == nullptr) {
@@ -237,7 +236,8 @@ bool SystemCConsumer::fire() {
   llvm::outs() << "##### TEST NetlistMatcher ##### \n";
   NetlistMatcher netlist_matcher{};
   MatchFinder netlist_registry{};
-  netlist_matcher.registerMatchers(netlist_registry, systemcModel_);
+  netlist_matcher.registerMatchers(netlist_registry, systemcModel_,
+                                   &module_declaration_handler);
 
   if (getTopModule() == "!none") {
     netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
@@ -245,8 +245,8 @@ bool SystemCConsumer::fire() {
     // Use the top module's declaration's constructor
     //
     // Find the instance with the top module
-
   }
+  netlist_matcher.dump();
   llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
 
   /*

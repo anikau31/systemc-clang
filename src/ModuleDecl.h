@@ -101,7 +101,7 @@ class ModuleDecl {
   portBindingMapType getPortBindings();
 
   processMapType getProcessMap();
-  Stmt *getConstructorStmt();
+  Stmt *getConstructorStmt() const;
   interfaceMapType getIInterfaces();
   interfaceMapType getOInterfaces();
   interfaceMapType getIOInterfaces();

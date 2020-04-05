@@ -229,6 +229,8 @@ void ModuleDecl::addConstructor(Stmt *constructor) {
   constructor_stmt_ = constructor;
 }
 
+Stmt *ModuleDecl::getConstructorStmt() const { return constructor_stmt_; }
+
 void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
   vef_ = *efv;
   for (unsigned int i = 0; i < efv->size(); ++i) {
