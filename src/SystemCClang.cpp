@@ -260,8 +260,8 @@ bool SystemCConsumer::fire() {
       auto ctordecl{ mdecl->getConstructorDecl()};
       llvm::outs() << " HAHAHAH: " << ctordecl << "\n";
       if ( (ctordecl != nullptr) ) {
-        const FunctionDecl *fd{nullptr};
-        ctordecl->getBody(fd);
+        const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
+        //ctordecl->getBody(fd);
         fd->dump();
         netlist_registry.match(*fd, getContext());
       }

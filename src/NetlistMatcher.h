@@ -54,6 +54,20 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     module_matcher_ = module_matcher;
       
     // instance.in1(sig1);
+  auto mk_call_expr =       cxxOperatorCallExpr(
+               hasDescendant(
+                 declRefExpr(
+               hasDeclaration(varDecl().bind("bound_variable")), // Match the sig1
+               hasParent(implicitCastExpr()) // There must be (.) 
+               ).bind("declrefexpr")
+                 )
+               ,
+             hasDescendant(memberExpr(
+               forEach(declRefExpr().bind("declrefexpr_in_memberexpr"))
+               ).bind("memberexpr")
+               )
+           ).bind("callexpr");
+   
    auto match_callexpr = functionDecl(
        forEachDescendant(
          cxxOperatorCallExpr(
@@ -73,13 +87,30 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
        ).bind("functiondecl");
 
      //cxxOperatorCallExpr().bind("callexpr");
-
     /* clang-format on */
 
-   auto match_test = cxxConstructorDecl();
+    auto match_ctor_decl =
+        cxxConstructorDecl(
+            has(compoundStmt(
+                    forEachDescendant(
+                        cxxOperatorCallExpr(
+                            hasDescendant(
+                                declRefExpr(
+                                    hasDeclaration(varDecl().bind(
+                                        "bound_variable")),  // Match the sig1
+                                    hasParent(implicitCastExpr())  // There must
+                                                                   // be (.)
+                                    )
+                                    .bind("declrefexpr"))
+                                )
+                            .bind("callexpr")))
+                    .bind("compoundstmt")))
+            .bind("functiondecl");
+
     // Add the two matchers.
     finder.addMatcher(match_callexpr, this);
-    finder.addMatcher(match_test, this);
+
+    //finder.addMatcher(match_ctor_decl, this);
   }
 
   // This is the callback function whenever there is a match.
@@ -101,6 +132,23 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     auto dre{const_cast<DeclRefExpr *>(
         result.Nodes.getNodeAs<DeclRefExpr>("declrefexpr"))};
 
+    /// TESTING
+    auto cstmt{const_cast<CompoundStmt *>(
+        result.Nodes.getNodeAs<CompoundStmt>("compoundstmt"))};
+    auto cexpr{const_cast<CXXOperatorCallExpr *>(
+        result.Nodes.getNodeAs<CXXOperatorCallExpr>("callexpr"))};
+
+    if (cstmt) {
+      llvm::outs() << "#### Found CompoundStmt: "
+                   << "\n";
+    }
+
+    if (cexpr) {
+      llvm::outs() << "#### Found CXXOperatorCallExpr: "
+                   << "\n";
+    }
+    /// TESTING
+    //
     std::string port_name{};
     if (me) {
       port_name = me->getMemberDecl()->getNameAsString();
@@ -194,14 +242,12 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       llvm::outs() << "[[NetlistMatcher]]: CXXRecordDecl* " << cxx_decl
                    << " name: " << cxx_decl->getName() << "\n";
 
-      for (auto const &instance : instance_list ) {
-        ModuleDecl *mdecl{ model_->getInstance(get<0>(instance)) };
+      for (auto const &instance : instance_list) {
+        ModuleDecl *mdecl{model_->getInstance(get<0>(instance))};
         Stmt *constructor_stmt{mdecl->getConstructorStmt()};
         constructor_stmt->dump();
       }
-      // 
-      
-
+      //
     }
   }
 };  // class NetlistMatcher
