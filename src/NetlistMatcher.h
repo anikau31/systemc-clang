@@ -91,16 +91,17 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     auto match_ctor_decl =
         namedDecl(
-            has(compoundStmt(
-                    forEachDescendant(
-                        cxxOperatorCallExpr(
-                            hasDescendant(memberExpr(
-                                has(memberExpr().bind("memberexpr_instance"))
-                                ).bind("memberexpr_port"))
-                            ,
-                            hasDescendant(implicitCastExpr(
-                                has(memberExpr().bind("memberexpr_arg"))))
-                            ).bind("callexpr")))
+            has(compoundStmt(forEachDescendant(
+                                 cxxOperatorCallExpr(
+                                     hasDescendant(
+                                         memberExpr(has(memberExpr().bind(
+                                                        "memberexpr_instance")))
+                                             .bind("memberexpr_port")),
+                                     hasDescendant(memberExpr(hasParent(implicitCastExpr()),
+                                         unless(hasDescendant(memberExpr()))
+                                         ).bind("memberexpr_arg"))
+                                     )
+                                     .bind("callexpr")))
                     .bind("compoundstmt")))
             .bind("functiondecl");
 
@@ -146,12 +147,36 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       llvm::outs() << "#### Found MemberExpr: "
                    << "\n";
       auto port = mexpr_port->getMemberNameInfo().getAsString();
+      auto port_type{mexpr_port->getMemberDecl()->getType().getTypePtr()};
+      auto port_type_name = mexpr_port->getMemberDecl()
+                                ->getType()
+                                .getBaseTypeIdentifier()
+                                ->getName();
       mexpr_port->dump();
+
       auto instance_name = mexpr_instance->getMemberNameInfo().getAsString();
+      auto instance_type{
+          mexpr_instance->getMemberDecl()->getType().getTypePtr()};
+      auto instance_type_name = mexpr_instance->getMemberDecl()
+                                    ->getType()
+                                    .getBaseTypeIdentifier()
+                                    ->getName();
       mexpr_instance->dump();
+
       auto port_arg = mexpr_arg->getMemberNameInfo().getAsString();
-      mexpr_arg->dump();
-      llvm::outs() << "> inst name: " << instance_name << ", port: " << port << ", port arg: " << port_arg << "\n";
+      auto port_arg_type{mexpr_arg->getMemberDecl()->getType().getTypePtr()};
+      auto port_arg_type_name = mexpr_arg->getMemberDecl()
+                                    ->getType()
+                                    .getBaseTypeIdentifier()
+                                    ->getName();
+
+      llvm::outs() << " BASE \n";
+      mexpr_arg->getBase()->dump();
+      llvm::outs() << "> inst type: " << instance_type_name
+                   << ", inst name: " << instance_name
+                   << ", port_type: " << port_type_name << ", port: " << port
+                   << ", port arg type: " << port_arg_type_name
+                   << ", port arg: " << port_arg << "\n";
     }
 
     if (cstmt) {
