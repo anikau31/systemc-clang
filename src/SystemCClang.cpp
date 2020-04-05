@@ -177,7 +177,8 @@ bool SystemCConsumer::fire() {
       //
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
-      add_module_decl->addConstructor(constructor.getConstructorStmt());
+      add_module_decl->addConstructor(&constructor);
+      //add_module_decl->addConstructor(constructor.getConstructorStmt());
 
       // 4. Find ports
       // This is done for the declaration.
@@ -246,7 +247,28 @@ bool SystemCConsumer::fire() {
     //
     // Find the instance with the top module
   }
-  netlist_matcher.dump();
+
+  //auto instances_map{module_declaration_handler->getInstances()};
+  for (const auto &inst : found_instances_map) {
+    auto cxx_decl{inst.first};
+    // Vector
+    auto instance_list{inst.second};
+    llvm::outs() << "[[NetlistMatcher]]: CXXRecordDecl* " << cxx_decl
+                 << " name: " << cxx_decl->getName() << "\n";
+    for (auto const &instance : instance_list) {
+      ModuleDecl *mdecl{systemcModel_->getInstance(get<0>(instance))};
+      auto ctordecl{ mdecl->getConstructorDecl()};
+      llvm::outs() << " HAHAHAH: " << ctordecl << "\n";
+      if ( (ctordecl != nullptr) ) {
+        const FunctionDecl *fd{nullptr};
+        ctordecl->getBody(fd);
+        fd->dump();
+        netlist_registry.match(*fd, getContext());
+      }
+    }
+  }
+
+  //netlist_matcher.dump();
   llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
 
   /*

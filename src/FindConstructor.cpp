@@ -20,14 +20,14 @@ bool FindConstructor::shouldVisitTemplateInstantiations() const { return true; }
 bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
   switch (pass_) {
     case 1: {
-      if (CXXConstructorDecl *cd =
-              dyn_cast<CXXConstructorDecl>(method_declaration)) {
+      constructor_decl_ = dyn_cast<CXXConstructorDecl>(method_declaration);
+      if (constructor_decl_) {
         const FunctionDecl *fd{nullptr};
-        cd->getBody(fd);
-        if (cd->hasBody()) {
-          constructor_stmt_ = cd->getBody();
+        constructor_decl_->getBody(fd);
+        if (constructor_decl_->hasBody()) {
+          constructor_stmt_ = constructor_decl_->getBody();
           llvm::outs() << "###### CONSTRUCTOR STMT\n";
-          constructor_stmt_->dump();
+          // constructor_stmt_->dump();
         }
       }
       break;
@@ -43,6 +43,12 @@ bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
   return true;
 }
 
+CXXConstructorDecl *FindConstructor::getConstructorDecl() const {
+  return constructor_decl_;
+}
+CXXRecordDecl *FindConstructor::getAsCXXRecordDecl() const {
+  return declaration_;
+}
 Stmt *FindConstructor::getConstructorStmt() const { return constructor_stmt_; }
 
 void FindConstructor::dump() const { constructor_stmt_->dump(); }

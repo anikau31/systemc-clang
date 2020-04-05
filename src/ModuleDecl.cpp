@@ -12,6 +12,7 @@ ModuleDecl::ModuleDecl()
       instance_name_{"NONE"},
       class_decl_{nullptr},
       constructor_stmt_{nullptr},
+      constructor_decl_{nullptr},
       instance_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
@@ -30,6 +31,7 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
+  constructor_decl_ = from.constructor_decl_;
   instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
@@ -61,6 +63,7 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
+  constructor_decl_ = from.constructor_decl_;
   instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
@@ -225,11 +228,20 @@ void ModuleDecl::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   }
 }
 
+void ModuleDecl::addConstructor(FindConstructor *ctor) {
+  constructor_stmt_ = ctor->getConstructorStmt();
+  constructor_decl_ = ctor->getConstructorDecl();
+}
+
 void ModuleDecl::addConstructor(Stmt *constructor) {
   constructor_stmt_ = constructor;
 }
 
 Stmt *ModuleDecl::getConstructorStmt() const { return constructor_stmt_; }
+
+CXXConstructorDecl *ModuleDecl::getConstructorDecl() const {
+  return constructor_decl_;
+}
 
 void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
   vef_ = *efv;

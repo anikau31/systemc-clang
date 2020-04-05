@@ -15,12 +15,15 @@ class FindConstructor : public RecursiveASTVisitor<FindConstructor> {
   virtual bool VisitCXXMethodDecl(CXXMethodDecl *);
   bool shouldVisitTemplateInstantiations() const;
 
+  CXXRecordDecl *getAsCXXRecordDecl() const;
+  CXXConstructorDecl *getConstructorDecl() const;
   Stmt *getConstructorStmt() const;
   void dump() const;
 
  private:
   llvm::raw_ostream &os_;
   CXXRecordDecl *declaration_;
+  CXXConstructorDecl *constructor_decl_;
   Stmt *constructor_stmt_;
   unsigned int pass_;
 

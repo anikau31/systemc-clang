@@ -13,7 +13,6 @@
 #include "Signal.h"
 #include "clang/AST/DeclCXX.h"
 
-
 namespace scpar {
 using namespace clang;
 
@@ -63,6 +62,7 @@ class ModuleDecl {
 
   void addPorts(const PortType &found_ports, const std::string &port_type);
 
+  void addConstructor(FindConstructor *);
   void addConstructor(Stmt *);
   void addInputInterfaces(FindTLMInterfaces::interfaceType);
   void addOutputInterfaces(FindTLMInterfaces::interfaceType);
@@ -101,7 +101,10 @@ class ModuleDecl {
   portBindingMapType getPortBindings();
 
   processMapType getProcessMap();
+
   Stmt *getConstructorStmt() const;
+  CXXConstructorDecl *getConstructorDecl() const;
+
   interfaceMapType getIInterfaces();
   interfaceMapType getOInterfaces();
   interfaceMapType getIOInterfaces();
@@ -129,6 +132,7 @@ class ModuleDecl {
   CXXRecordDecl *class_decl_;
   // Constructor statement
   Stmt *constructor_stmt_;
+  CXXConstructorDecl *constructor_decl_;
   // Instance fieldDecl or varDecl
   Decl *instance_decl_;
 

@@ -76,8 +76,10 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     /* clang-format on */
 
+   auto match_test = cxxConstructorDecl();
     // Add the two matchers.
     finder.addMatcher(match_callexpr, this);
+    finder.addMatcher(match_test, this);
   }
 
   // This is the callback function whenever there is a match.
