@@ -164,18 +164,21 @@ int sc_main(int argc, char *argv[]) {
         // parent. Otherwise, it points to the parent node.
         auto parent_node{node->getParent()};
         if (parent_node == node) {
-          llvm::outs() << "\n@> parent (itself) type name: " << parent_node->getDataPtr()->getTypeName() << "\n";
+          llvm::outs() << "\n@> parent (itself) type name: "
+                       << parent_node->getDataPtr()->getTypeName() << "\n";
         } else {
           // It is a different parent.
-          llvm::outs() << "\n@> parent (different) type name: " << parent_node->getDataPtr()->getTypeName() << "\n";
+          llvm::outs() << "\n@> parent (different) type name: "
+                       << parent_node->getDataPtr()->getTypeName() << "\n";
         }
 
         // Access the children for each parent.
         // We use the template_args to access it.
 
-        auto children{ template_args->getChildren(parent_node)};
-        for (auto const &kid: children) {
-          llvm::outs() << "@> child type name: " << kid->getDataPtr()->getTypeName() << "\n";
+        auto children{template_args->getChildren(parent_node)};
+        for (auto const &kid : children) {
+          llvm::outs() << "@> child type name: "
+                       << kid->getDataPtr()->getTypeName() << "\n";
         }
       }
       llvm::outs() << "\n";
@@ -286,15 +289,22 @@ int sc_main(int argc, char *argv[]) {
     }
 
     //
+    //
     // Check netlist
     //
     //
 
     // test_module_inst
-    for (auto const &pb : test_module_inst->getPortBindings()) {
-      std::string port_name{pb.first};
-      PortBinding *binding{pb.second};
+    auto port_bindings{test_module_inst->getPortBindings()};
+    std::vector<std::string> test_ports{"in1", "in_out", "out1"};
 
+    for (auto const &pname : test_ports) {
+      auto found_it{port_bindings.find(pname)};
+      // Actually found the name
+      REQUIRE(found_it != port_bindings.end());
+      // Check now if the names
+      std::string port_name{found_it->first};
+      PortBinding *binding{found_it->second};
       std::string as_string{binding->toString()};
 
       if (port_name == "in1") {
