@@ -156,7 +156,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
     const TemplateArgumentList &arg_list{ctsd->getTemplateArgs()};
     for (unsigned int i{0}; i < arg_list.size(); ++i) {
       const TemplateArgument &targ{arg_list[i]};
-      llvm::outs() << " ====> template argument: ";
+      //llvm::outs() << " ====> template argument: ";
       targ.dump();
       // llvm::outs() << "\n";
       // TODO Write this into the vector.

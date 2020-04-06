@@ -23,11 +23,11 @@ using namespace sc_ast_matchers;
 
 class Model {
 public:
-  typedef pair<string, ModuleDecl *> modulePairType;
+  typedef std::pair<std::string, ModuleDecl *> modulePairType;
   typedef std::vector< modulePairType > moduleMapType;
 
-  typedef pair<string, EventContainer *> eventPairType;
-  typedef map<string, EventContainer *> eventMapType;
+  typedef std::pair<std::string, EventContainer *> eventPairType;
+  typedef std::map<std::string, EventContainer *> eventMapType;
 
   typedef pair<ModuleDecl *, vector<ModuleDecl *>> moduleInstancePairType;
   typedef map<ModuleDecl *, vector<ModuleDecl *>> moduleInstanceMapType;

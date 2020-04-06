@@ -92,12 +92,23 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 }
 
 ModuleDecl::~ModuleDecl() {
+  llvm::outs() << "\n~ModuleDecl\n";
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
   instance_decl_ = nullptr;
 
+  llvm::outs() << " => name: " << getName() <<  ", inst name: " << getInstanceName() << " pointer: " << this << "\n";
+
+  // IMPORTANT: Only the instance-specific details should be deleted.
+  // DO NOT delete the information collected through incomplete types.
+  //
+
+  for (auto &v : vef_) {
+    delete v;
+  }
   // Delete all pointers in ports.
-  for (auto input_port : in_ports_) {
+  /*
+  for (auto &input_port : in_ports_) {
     // It is a tuple
     // 0. string, 1. PortDecl*
     // Only one to delete is (3)
@@ -106,23 +117,33 @@ ModuleDecl::~ModuleDecl() {
     delete get<1>(input_port);
   }
   in_ports_.clear();
+  llvm::outs() << "FREE inputports\n";
 
-  for (auto output_port : out_ports_) {
+  for (auto &output_port : out_ports_) {
     delete get<1>(output_port);
   }
   out_ports_.clear();
+  llvm::outs() << "FREE output ports\n";
 
-  for (auto io_port : inout_ports_) {
+  for (auto &io_port : inout_ports_) {
     // Second is the PortDecl*.
     delete get<1>(io_port);
   }
   inout_ports_.clear();
 
-  for (auto other : other_fields_) {
+  for (auto &other : other_fields_) {
     // Second is the PortDecl*.
     delete get<1>(other);
   }
   other_fields_.clear();
+
+  // Delete EntryFunction container
+  for (auto &ef : vef_) {
+    delete ef;
+  }
+  vef_.clear();
+  llvm::outs() << "FREE other fields\n";
+  */
 }
 
 void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }

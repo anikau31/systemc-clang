@@ -91,23 +91,79 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
  public:
   // Finds the instance with the same type as the argument.
   // Pass by reference to the instance.
-  bool findInstance(CXXRecordDecl *decl, InstanceDeclType &instance) {
+  bool findInstance(CXXRecordDecl *decl, std::vector<InstanceDeclType> &found_instances) {
     // First check in the instance_fields.
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
 
+    llvm::outs() << "[findInstance] instance size: " << instances_.size()
+                 << "\n";
+
+    llvm::outs() << "[findInstance] must find decl name: " << decl->getName()
+                 << "\n";
+    //std::vector<InstanceDeclType> found_instances{};
+    // Walk through all the instances.
+    for (auto const &element : instances_) {
+      auto p_field_var_decl{get<1>(element)};
+
+      llvm::outs() << "=> inst name: " << get<0>(element) << "\n";
+      // Check if it is a FieldDecl
+
+      // TODO factor out this code to be handled for both.
+      if (auto *p_field{dyn_cast<FieldDecl>(p_field_var_decl)}) {
+        auto qtype{p_field->getType().getTypePtr()};
+        // qtype->dump();
+        if (qtype->isRecordType()) {
+          auto rt{qtype->getAsCXXRecordDecl()};
+          std::string dbg{"[InstanceMatcher] FieldDecl"};
+          llvm::outs() << dbg << " decl: " << decl->getName()
+                       << ", inst name: " << rt->getName() << "\n";
+          if (rt == decl) {
+            llvm::outs() << "==> Insert fieldDecl into found instance\n";
+            found_instances.push_back(
+                InstanceDeclType(get<0>(element), rt));
+          }
+        }
+      } else {
+        // This is a VarDecl instance.
+        auto p_var{dyn_cast<VarDecl>(p_field_var_decl)};
+        auto qtype{p_var->getType().getTypePtr()};
+
+        std::string dbg{"[InstanceMatcher] VarDecl"};
+        // p_var->dump();
+        if (qtype->isRecordType()) {
+          auto rt{qtype->getAsCXXRecordDecl()};
+          llvm::outs() << dbg << " decl: " << decl->getName()
+                       << ", inst name: " << rt->getName() << "\n";
+          if (rt == decl) {
+            llvm::outs() << "==> Insert vardecl into found instance\n";
+            found_instances.push_back(
+                InstanceDeclType(get<0>(element), rt));
+          }
+        }
+      }
+    }
+    llvm::outs() << "=> found_instances: " << found_instances.size() << "\n";
+
+    return (found_instances.size() != 0);
+
+    /*
+    // Original
     InstanceDeclarationsType::iterator found_it = std::find_if(
         instances_.begin(), instances_.end(),
         [&decl](const InstanceDeclType &element) {
           // Get the CXXRecordDecl for the instance.
           // The instance is the second element in the tuple.
           auto p_field_var_decl{get<1>(element)};
-
+          p_field_var_decl->dump();
+          std::string dbg{"[InstanceMatcher]"};
           if (auto *p_field{dyn_cast<FieldDecl>(p_field_var_decl)}) {
             auto qtype{p_field->getType().getTypePtr()};
             if (qtype->isRecordType()) {
               if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
                 auto rt{dp->getAsCXXRecordDecl()};
+                llvm::outs() << dbg << " decl: " << decl->getName()
+                             << ", inst name: " << rt->getName() << "\n";
                 return (rt == decl);
               }
             }
@@ -115,8 +171,13 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             // This is a VarDecl instance.
             auto p_var{dyn_cast<VarDecl>(p_field_var_decl)};
             auto qtype{p_var->getType().getTypePtr()};
+
+            std::string dbg{"[InstanceMatcher]"};
+            p_var->dump();
             if (qtype->isRecordType()) {
               auto rt{qtype->getAsCXXRecordDecl()};
+              llvm::outs() << dbg << " decl: " << decl->getName()
+                           << ", inst name: " << rt->getName() << "\n";
               return (rt == decl);
             }
           }
@@ -130,6 +191,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       return true;
     }
     return false;
+    */
   }
 
   void registerMatchers(MatchFinder &finder) {
@@ -218,12 +280,13 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.
     for (const auto &i : instances_) {
-      llvm::outs() << "[DBG] module declarations name: " << get<0>(i) << ", "
-                   << get<1>(i) << "\n";
+      llvm::outs() << "[InstanceMatcher] module instance declaration name: "
+                   << get<0>(i) << ", " << get<1>(i) << "\n";
 
       auto p_field_var_decl{get<1>(i)};
       if (isa<FieldDecl>(p_field_var_decl)) {
         llvm::outs() << "[DBG] FieldDecl\n";
+        p_field_var_decl->dump();
       } else {
         llvm::outs() << "[DBG] VarDecl\n";
       }
@@ -834,16 +897,17 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     // 1. For every module found, check if there is an instance.
     // 2. If there is an instance, then add it into the list.
 
+    std::string dbg{"[pruneMatches]"};
+    llvm::outs() << dbg << " start pruning\n";
     for (auto const &element : found_declarations_) {
       auto decl{get<1>(element)};
-      // std::llvm::outs() << "## fd  name: " << get<0>(element) << "\n ";
+      llvm::outs() << "## found decl name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
-      InstanceMatcher::InstanceDeclType instance;
-      if (instance_matcher.findInstance(decl, instance)) {
-        // pruned_declarations_.push_back(element);
+      //InstanceMatcher::InstanceDeclType instance;
+      if (instance_matcher.findInstance(decl, instance_list)) {
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
-        instance_list.push_back(instance);
+        //instance_list.push_back(instance);
         declaration_instance_map_.insert(
             DeclarationInstancePairType(decl, instance_list));
       } else {
@@ -856,12 +920,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       auto decl{get<1>(element)};
       // std::llvm::outs() << "## ftd name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
-      InstanceMatcher::InstanceDeclType instance;
-      if (instance_matcher.findInstance(decl, instance)) {
+      //InstanceMatcher::InstanceDeclType instance;
+      if (instance_matcher.findInstance(decl, instance_list)) {
         // pruned_declarations_.push_back(element);
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
-        instance_list.push_back(instance);
+        //instance_list.push_back(instance);
         declaration_instance_map_.insert(
             DeclarationInstancePairType(decl, instance_list));
       } else {
@@ -871,22 +935,24 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   }
 
   void dump() {
-    llvm::outs() << "[DBG] Top-level module: " << top_module_decl_ << "\n";
-    llvm::outs() << "[DBG] Non-template module declarations: "
-                 << found_declarations_.size() << "\n";
+    llvm::outs() << "[ModuleDeclarationMatcher] Top-level module: "
+                 << top_module_decl_ << "\n";
+    llvm::outs()
+        << "[ModuleDeclarationMatcher] Non-template module declarations: "
+        << found_declarations_.size() << "\n";
     for (const auto &i : found_declarations_) {
-      llvm::outs() << "module name         : " << get<0>(i) << ", " << get<1>(i)
-                   << "\n";
+      llvm::outs() << "[ModuleDeclarationMatcher] module name     : "
+                   << get<0>(i) << ", " << get<1>(i) << "\n";
     }
 
-    llvm::outs() << "[DBG] Template module declarations: "
+    llvm::outs() << "[ModuleDeclarationMatcher] Template module declarations: "
                  << found_template_declarations_.size() << "\n";
     for (const auto &i : found_template_declarations_) {
-      llvm::outs() << "template module name: " << get<0>(i) << ", " << get<1>(i)
-                   << "\n";
+      llvm::outs() << "[ModuleDeclarationMatcher] template module name: "
+                   << get<0>(i) << ", " << get<1>(i) << "\n";
     }
 
-    llvm::outs() << "[DBG] Pruned declaration Map: "
+    llvm::outs() << "[ModuleDeclarationMatcher] Pruned declaration Map: "
                  << pruned_declarations_map_.size() << "\n";
     for (const auto &i : pruned_declarations_map_) {
       auto decl{i.first};

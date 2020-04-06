@@ -254,9 +254,10 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     }
 
     if (is_ctor_binding) {
-    llvm::outs() << "@@@@@@@@@@@@@@@@@@@@@@@@@@ CTOR BINDING";
-    instance_decl->dump();
+      llvm::outs() << "@@@@@@@@@@@@@@@@@@@@@@@@@@ CTOR BINDING";
+      instance_decl->dump();
     }
+
     ModuleDecl *instance_module_decl{findModuleDeclInstance(instance_decl)};
     if (instance_module_decl) {
       auto instance_constructor_name = instance_module_decl->getInstanceName();

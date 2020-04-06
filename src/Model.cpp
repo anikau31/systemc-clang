@@ -8,18 +8,34 @@ using namespace std;
 Model::Model() {}
 
 Model::~Model() {
-  //  llvm::errs() << "\n[[ Destructor Model ]]\n";
+    llvm::errs() << "\n[ Destructor Model ]: \n";
+    for (auto &inst : module_instance_map_) {
+      auto incomplete_decl{ inst.first };
+      auto instance_list{ inst.second };
+      llvm::outs() << "Deleting " << incomplete_decl->getName() << ", pointer: " << incomplete_decl << ", instances: " << instance_list.size() << "\n";
+      for (ModuleDecl *inst_in_list: instance_list){
+        // This is a ModuleDecl*
+        llvm::outs() << "deleting instances: " << inst_in_list->getInstanceName() << "pointer: " << inst_in_list <<  "\n";
+        delete inst_in_list;
+      }
+
+      llvm::outs() << "delete incomplete decl\n";
+      delete incomplete_decl;
+    }
+
+    llvm::outs() << "Done with delete\n";
+      /*
   // Delete all ModuleDecl pointers.
   for (Model::moduleMapType::iterator mit = modules_.begin();
        mit != modules_.end(); mit++) {
-    //
-    // c++17 feature
-    // for (auto const & [it, module_decl] : modules_ ) {
+   
+    llvm::outs() << "=> Deleting module: " << mit->first << " pointer: " << mit->second << "\n";
     // Second is the ModuleDecl type.
     delete mit->second;
     // delete module_decl;
   }
   modules_.clear();
+  */
 }
 
 Model::Model(const Model &from) { modules_ = from.modules_; }

@@ -26,26 +26,47 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
+  //auto module_decl{model->getModuleInstanceMap()};
+
+  std::string module_instance_name{"exor2"};
+
+  /*
+  // Search for the module we want.
+  ModuleDecl *found_module_decl{nullptr};
+  for (auto const &entry : module_decl) {
+    // This is the sc_module class name.
+    auto instance_list{ entry.second };
+    for (auto const &inst : instance_list) {
+      if (inst->getInstanceName() == module_instance_name ) {
+        found_module_decl = inst;
+      }
+    }
+  }
+  */
 
   auto found_module{std::find_if(module_decl.begin(), module_decl.end(),
-                                 [&top](const auto &element) {
+                                 [&module_instance_name](const auto &element) {
                                    // Get the declaration name.
-                                   return element.second->getName() == top;
+                                   return element.second->getName() == module_instance_name;
                                  })};
 
   SECTION("Testing top-level module: exor2", "[exor2]") {
     // There should be only one module.
     INFO("Top-level module specified as exor2.");
-    REQUIRE(module_decl.size() == 1);
+    // exor2 has several sub-modules in it.
+    // Specifically, it has 4 nand2 modules (n1 to n4).
+    REQUIRE(module_decl.size() == 5);
 
     // Actually found the module.
-    REQUIRE(found_module != module_decl.end());
+    //REQUIRE(found_module_decl != nullptr); // != module_decl.end());
 
+    //auto found_decl{found_module_decl}; //->second};
     auto found_decl{found_module->second};
     REQUIRE(found_decl->getIPorts().size() == 2);
     REQUIRE(found_decl->getOPorts().size() == 1);
     REQUIRE(found_decl->getSignals().size() == 3);
     // Other sc_module instances are recognized as others.
     REQUIRE(found_decl->getOtherVars().size() == 4);
+    llvm::outs() << "All checks passed.\n";
   }
 }
