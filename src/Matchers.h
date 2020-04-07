@@ -540,12 +540,12 @@ class PortMatcher : public MatchFinder::MatchCallback {
     auto sc_port_field{checkMatch<CXXRecordDecl>("desugar_sc_port", result)};
     auto other_fields{checkMatch<Decl>("other_fields", result)};
     auto other_fvdecl{checkMatch<Decl>("other_fvdecl", result)};
-//
+    //
     // llvm::outs() << "\n";
     // llvm::outs() << "in: " << sc_in_field << ", out: " << sc_out_field
-                 // << ", inout: " << sc_inout_field << ", other: " << other_fields
-                 // << "\n";
-//
+    // << ", inout: " << sc_inout_field << ", other: " << other_fields
+    // << "\n";
+    //
     if (sc_in_field && other_fields) {
       if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
         auto fd = p_field;
@@ -712,7 +712,21 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   // PortMatcher port_matcher_;
 
  public:
-  // const PortMatcher &getPortMatcher() const { return port_matcher_; }
+  ~ModuleDeclarationMatcher() {
+    // The following classes are created dynamically in ModuleDeclarationMatcher
+    //
+    // 1. ModuleDecl
+    // - These instances create the incomplete ModuleDecl instances.  They only
+    // contain the most common parsing information such as the ports. Additional
+    // information that is instance specific is added later.
+    // - Delete: These should only be deleted in the Model class.  Do nothing
+    // here. These incomplete ModuleDecl will hold pointers that will be deleted
+    // when the complete ModuleDecl is deleted.  These complete ModuleDecl are
+    // essentially the instances.
+    //
+    // 2. PortDecl
+    // 3. FindTemplateTypes
+  }
 
   const DeclarationsToInstancesMapType &getInstances() {
     return declaration_instance_map_;

@@ -205,10 +205,6 @@ bool SystemCConsumer::fire() {
     }
     os_ << "\n";
 
-    // TODO:
-    //
-    // FIXME: Only there to make sure xlat still compiles.
-    // This should be removed.
     llvm::outs() << "[HDP] Add instances to model\n";
     systemcModel_->addModuleDeclInstances(incomplete_mdecl,
                                           module_decl_instances);

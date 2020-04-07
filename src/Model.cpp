@@ -9,7 +9,26 @@ Model::Model() {}
 
 Model::~Model() {
   llvm::errs() << "\n[~Model]\n";
-  // Delete all ModuleDecl pointers.
+  for (auto &inst : module_instance_map_) {
+    auto incomplete_decl{inst.first};
+    auto instance_list{inst.second};
+    llvm::outs() << "Delete instances for " << incomplete_decl->getName()
+                 << ": " << instance_list.size() << "\n";
+    for (ModuleDecl *inst_in_list : instance_list) {
+      llvm::outs() << "- delete instance: " << inst_in_list->getInstanceName()
+                   << ", pointer: " << inst_in_list << "\n";
+      delete inst_in_list;
+    }
+    // delete the incomplete ModuleDecl
+    // Must ensure that ModuleDecl does not erase something that is already
+    // erased.
+    // The reason why this will create a memory corruption error is that both the incomplete, and complete ModuleDecl will have pointers stored in their respective vectors of say input, output, etc. ports.  This means that even if one of them is deleted, the others won't be. 
+    //delete incomplete_decl;
+  }
+  llvm::outs() << "Done with delete\n";
+
+  /*
+  // Delete all M duleDecl pointers.
   for (Model::moduleMapType::iterator mit = modules_.begin();
        mit != modules_.end(); mit++) {
     // Second is the ModuleDecl type.
@@ -17,6 +36,7 @@ Model::~Model() {
     // delete module_decl;
   }
   modules_.clear();
+  */
 }
 
 Model::Model(const Model &from) { modules_ = from.modules_; }
@@ -26,7 +46,8 @@ void Model::addModuleDecl(ModuleDecl *md) {
   modules_.push_back(Model::modulePairType(md->getName(), md));
 }
 
-void Model::addModuleDeclInstances(ModuleDecl *md, std::vector<ModuleDecl *> mdVec) {
+void Model::addModuleDeclInstances(ModuleDecl *md,
+                                   std::vector<ModuleDecl *> mdVec) {
   module_instance_map_.insert(moduleInstancePairType(md, mdVec));
   // ModuleDeclarations only.
   modules_.push_back(Model::modulePairType(md->getName(), md));
