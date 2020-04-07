@@ -112,7 +112,7 @@ bool SystemCConsumer::fire() {
 
     // TODO: find any instances in sc_main.
 
-    fnDecl->dump();
+    // fnDecl->dump();
 
     FindSimTime scstart{fnDecl, os_};
     systemcModel_->addSimulationTime(scstart.returnSimTime());
@@ -135,39 +135,30 @@ bool SystemCConsumer::fire() {
   // Go through each instance and find its appropriate module declaration.
 
   os_ << "## Print INSTANCE MAP #: " << found_instances_map.size() << "\n";
-
   for (const auto &inst : found_instances_map) {
     auto cxx_decl{inst.first};
-    // Vector
-    auto instance_list{inst.second};
+    auto instance_list{inst.second};  // std::vector
 
-    // TODO:
-    //
-    // FIXME: This has to be replaced once xlat is fixed.
-    vector<ModuleDecl *> module_decl_instances;
-    ModuleDecl *p_dummy_module_decl{found_module_declarations[cxx_decl]};
-    //
-    // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
-    // TODO: Remove deference pointer copy constructor
-    //   new ModuleDecl{*found_module_declarations[cxx_decl]}};
-    // ==================
+    std::vector<ModuleDecl *> module_decl_instances;
+    ModuleDecl *incomplete_mdecl{found_module_declarations[cxx_decl]};
 
-    os_ << "CXXRecordDecl* " << cxx_decl
-        << ", module type: " << found_module_declarations[cxx_decl]->getName();
     for (const auto &instance : instance_list) {
-      auto add_module_decl{
-          // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
-          new ModuleDecl{*found_module_declarations[cxx_decl]}};
+      // This forces the copy constructor to be invoked.  Consequently,
+      // addresses are copied over.  This is somewhat problematic in that now
+      // there are two instances of ModuleDecl that hold the same addresses: (1)
+      // the incomplete type, and (2) the instance iwth instance-specific
+      // information populated.
+      //  
+      auto add_module_decl{new ModuleDecl{*incomplete_mdecl}};
 
       // Insert what you know about the parsed sc_module
       // 1. Insert the instance name from Matchers
-      os_ << "\n";
-      os_ << "1. Set instance name: " << get<0>(instance) << "\n";
+      llvm::outs() << "\n1. Set instance name: " << get<0>(instance) << "\n";
       add_module_decl->setInstanceName(get<0>(instance));
       add_module_decl->setInstanceDecl(get<1>(instance));
 
       // 2. Find the template arguments for the class.
-      os_ << "2. Set template arguments\n";
+      llvm::outs() << "2. Set template arguments\n";
       FindTemplateParameters tparms{cxx_decl, os_};
       add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
       add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
@@ -175,7 +166,7 @@ bool SystemCConsumer::fire() {
       // 3. Find constructor
       //
       //
-      vector<EntryFunctionContainer *> _entryFunctionContainerVector;
+      std::vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
       add_module_decl->addConstructor(constructor.returnConstructorStmt());
 
@@ -210,13 +201,6 @@ bool SystemCConsumer::fire() {
         _entryFunctionContainerVector.push_back(ef);
       }
 
-      // Insert the module into the model.
-      // All modules are also instances.
-
-      // Make the dummy equal to the updated add_module_decl
-      // This will make module declarations be one of the module instances.
-      *p_dummy_module_decl = *add_module_decl;
-      systemcModel_->addModuleDecl(p_dummy_module_decl);
       module_decl_instances.push_back(add_module_decl);
     }
     os_ << "\n";
@@ -226,7 +210,7 @@ bool SystemCConsumer::fire() {
     // FIXME: Only there to make sure xlat still compiles.
     // This should be removed.
     llvm::outs() << "[HDP] Add instances to model\n";
-    systemcModel_->addModuleDeclInstances(p_dummy_module_decl,
+    systemcModel_->addModuleDeclInstances(incomplete_mdecl,
                                           module_decl_instances);
   }
 
@@ -245,15 +229,8 @@ bool SystemCConsumer::fire() {
     // Use the top module's declaration's constructor
     //
     // Find the instance with the top module
-
   }
   llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
-
-  /*
-  FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
-  findNetlist.dump();
-  systemcModel_->addNetlist(findNetlist);
-  */
 
   /*
   ////////////////////////////////////////////////////////////////
@@ -400,10 +377,10 @@ bool SystemCConsumer::fire() {
 #endif
 
      */
-  os_ << "Parsed SystemC model from systemc-clang\n";
-  os_ << "============= MODEL ============================\n";
-  systemcModel_->dump(os_);
-  os_ << "==============END========================\n";
+  // os_ << "Parsed SystemC model from systemc-clang\n";
+  // os_ << "============= MODEL ============================\n";
+  // systemcModel_->dump(os_);
+  // os_ << "==============END========================\n";
   return true;
 }
 

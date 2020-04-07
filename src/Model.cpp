@@ -8,13 +8,10 @@ using namespace std;
 Model::Model() {}
 
 Model::~Model() {
-  //  llvm::errs() << "\n[[ Destructor Model ]]\n";
+  llvm::errs() << "\n[~Model]\n";
   // Delete all ModuleDecl pointers.
   for (Model::moduleMapType::iterator mit = modules_.begin();
        mit != modules_.end(); mit++) {
-    //
-    // c++17 feature
-    // for (auto const & [it, module_decl] : modules_ ) {
     // Second is the ModuleDecl type.
     delete mit->second;
     // delete module_decl;
@@ -29,8 +26,10 @@ void Model::addModuleDecl(ModuleDecl *md) {
   modules_.push_back(Model::modulePairType(md->getName(), md));
 }
 
-void Model::addModuleDeclInstances(ModuleDecl *md, vector<ModuleDecl *> mdVec) {
+void Model::addModuleDeclInstances(ModuleDecl *md, std::vector<ModuleDecl *> mdVec) {
   module_instance_map_.insert(moduleInstancePairType(md, mdVec));
+  // ModuleDeclarations only.
+  modules_.push_back(Model::modulePairType(md->getName(), md));
 
   llvm::outs() << "[HDP] To add instances: " << md << "=" << mdVec.size()
                << "\n";

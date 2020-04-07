@@ -540,12 +540,12 @@ class PortMatcher : public MatchFinder::MatchCallback {
     auto sc_port_field{checkMatch<CXXRecordDecl>("desugar_sc_port", result)};
     auto other_fields{checkMatch<Decl>("other_fields", result)};
     auto other_fvdecl{checkMatch<Decl>("other_fvdecl", result)};
-
-    llvm::outs() << "\n";
-    llvm::outs() << "in: " << sc_in_field << ", out: " << sc_out_field
-                 << ", inout: " << sc_inout_field << ", other: " << other_fields
-                 << "\n";
-
+//
+    // llvm::outs() << "\n";
+    // llvm::outs() << "in: " << sc_in_field << ", out: " << sc_out_field
+                 // << ", inout: " << sc_inout_field << ", other: " << other_fields
+                 // << "\n";
+//
     if (sc_in_field && other_fields) {
       if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
         auto fd = p_field;

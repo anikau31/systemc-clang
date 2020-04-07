@@ -79,6 +79,7 @@ SC_MODULE( simple_module ){
 int sc_main(int argc, char *argv[]) {
   sc_signal<int> sig1;
   sc_signal<double> double_sig;
+
   test test_instance("testing");
   test_instance.in1(sig1);
   test_instance.in_out(double_sig);
@@ -86,6 +87,9 @@ int sc_main(int argc, char *argv[]) {
 
   simple_module simple("simple_module_instance");
   simple.one(sig1);
+
+  simple_module another_simple("another_simple_module_instance");
+  another_simple.one(sig1);
 
   return 0;
 }
