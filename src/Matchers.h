@@ -775,7 +775,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   // PortMatcher port_matcher_;
 
  public:
-  // const PortMatcher &getPortMatcher() const { return port_matcher_; }
 
   const DeclarationsToInstancesMapType &getInstances() {
     return declaration_instance_map_;

@@ -127,7 +127,8 @@ bool SystemCConsumer::fire() {
   //
   //  TEST NetlistMatcher
   //  map: CXXRecordDecl =>  InstanceListType
-  auto found_instances_declaration_map{module_declaration_handler.getInstances()};
+  auto found_instances_declaration_map{
+      module_declaration_handler.getInstances()};
   //
   // Create a ModuleDecl for each instance with the appropriately parsed
   // ModuleDecl.
@@ -140,7 +141,7 @@ bool SystemCConsumer::fire() {
     // Vector
     auto instance_list{inst.second};
 
-    auto incomplete_module_decl{ found_module_declarations[cxx_decl]}; 
+    auto incomplete_module_decl{found_module_declarations[cxx_decl]};
     // TODO:
     //
     // FIXME: This has to be replaced once xlat is fixed.
@@ -156,7 +157,8 @@ bool SystemCConsumer::fire() {
       os_ << "\n";
       os_ << "1. Set instance name: " << get<0>(instance) << "\n";
       add_module_decl->setInstanceName(get<0>(instance));
-      os_ << "2. Set instance type decl: " << cxx_decl->getNameAsString() << "\n";
+      os_ << "2. Set instance type decl: " << cxx_decl->getNameAsString()
+          << "\n";
       add_module_decl->setInstanceDecl(get<1>(instance));
 
       // 2. Find the template arguments for the class.
@@ -184,7 +186,7 @@ bool SystemCConsumer::fire() {
           findEntries.getEntryFunctions()};
       add_module_decl->addProcess(entryFunctions);
 
-      for (size_t i = 0; i < entryFunctions->size(); i++) {
+      for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
         FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};
         ef->addSensitivityInfo(findSensitivity);
@@ -236,13 +238,13 @@ bool SystemCConsumer::fire() {
                                    &module_declaration_handler);
 
   if (getTopModule() == "!none") {
+    llvm::outs() << " No top module\n";
     netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
-  } else {
-    // Use the top module's declaration's constructor
-    //
-    // Find the instance with the top module
   }
 
+  /*
+  llvm::outs() << "Begin netlist parsing on instances: "
+               << found_instances_declaration_map.size() << "\n";
   for (const auto &inst : found_instances_declaration_map) {
     auto cxx_decl{inst.first};
     // Vector
@@ -252,16 +254,14 @@ bool SystemCConsumer::fire() {
     for (auto const &instance : instance_list) {
       ModuleDecl *mdecl{systemcModel_->getInstance(get<0>(instance))};
       auto ctordecl{mdecl->getConstructorDecl()};
-      // llvm::outs() << " HAHAHAH: " << ctordecl << "\n";
-      if ((ctordecl != nullptr)) {
+      if (ctordecl != nullptr) {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
-        // ctordecl->getBody(fd);
-        // fd->dump();
+        ctordecl->getBody(fd);
         netlist_registry.match(*fd, getContext());
       }
     }
   }
-
+  */
   netlist_matcher.dump();
   llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
 

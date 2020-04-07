@@ -12,15 +12,17 @@ Model::~Model() {
     for (auto &inst : module_instance_map_) {
       auto incomplete_decl{ inst.first };
       auto instance_list{ inst.second };
-      llvm::outs() << "Deleting " << incomplete_decl->getName() << ", pointer: " << incomplete_decl << ", instances: " << instance_list.size() << "\n";
+      llvm::outs() << "Delete instances for " << incomplete_decl->getName() << ": " << instance_list.size() << "\n";
       for (ModuleDecl *inst_in_list: instance_list){
         // This is a ModuleDecl*
-        llvm::outs() << "deleting instances: " << inst_in_list->getInstanceName() << "pointer: " << inst_in_list <<  "\n";
+        llvm::outs() << "- delete instance: " << inst_in_list->getInstanceName() << ", pointer: " << inst_in_list <<  "\n";
         delete inst_in_list;
       }
 
-      llvm::outs() << "delete incomplete decl\n";
-      delete incomplete_decl;
+      // Do not erase incmomplete_decl.  These are going to be cleaned up in Matchers.
+      //
+      //llvm::outs() << "Deleting " << incomplete_decl->getName() << ", pointer: " << incomplete_decl << "\n";
+      //delete incomplete_decl;
     }
 
     llvm::outs() << "Done with delete\n";

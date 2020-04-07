@@ -97,24 +97,28 @@ ModuleDecl::~ModuleDecl() {
   constructor_stmt_ = nullptr;
   instance_decl_ = nullptr;
 
-  llvm::outs() << " => name: " << getName() <<  ", inst name: " << getInstanceName() << " pointer: " << this << "\n";
+  llvm::outs() << "- name: " << getName() <<  ", inst name: " << getInstanceName() << " pointer: " << this << "\n";
 
   // IMPORTANT: Only the instance-specific details should be deleted.
   // DO NOT delete the information collected through incomplete types.
   //
 
+  llvm::outs() << "- deleting entry function pointers\n";
   for (auto &v : vef_) {
-    delete v;
+    if (v!= nullptr) { delete v;}
+    v = nullptr;
   }
+  llvm::outs() << "Exit deleting ModuleDecl\n";
   // Delete all pointers in ports.
   /*
   for (auto &input_port : in_ports_) {
     // It is a tuple
     // 0. string, 1. PortDecl*
-    // Only one to delete is (3)
+    // Only one to delete is (1)
     //
     //  delete input_port.second;
-    delete get<1>(input_port);
+    auto iport{get<1>(input_port)};
+    if (iport) { delete iport;}
   }
   in_ports_.clear();
   llvm::outs() << "FREE inputports\n";
