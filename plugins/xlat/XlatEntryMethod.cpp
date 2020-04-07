@@ -8,6 +8,7 @@
 // used https://github.com/super-ast/cpptranslate as example
 
 using namespace std;
+using namespace hnode;
 
 // MACRO FOR TRAVERSING
 #define TRY_TO(CALL_EXPR)                                                      \
@@ -172,7 +173,7 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
 
     //h_typeinfo->child_list.push_back(new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
     string tmps = targ.getTypeName();
-    make_ident(tmps);
+    lutil.make_ident(tmps);
     h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
 
   }
@@ -180,7 +181,7 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
   if (h_typeinfo->child_list.empty()) { // front end didn't parse type info
     //h_typeinfo->child_list.push_back(new hNode("\"" + q.getAsString() + "\"", hNode::hdlopsEnum::hType));
     string tmps = q.getAsString();
-    make_ident(tmps);
+    lutil.make_ident(tmps);
     h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
   }
 				     
@@ -294,40 +295,50 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
  
     arg->dump(os_);
+    QualType argtyp = arg->getType();
+    os_ << "type of x in x.f(5) is " << argtyp.getAsString() << "\n";
     
-    string methodname;
+    string methodname = "NoMethod", qualmethodname = "NoQualMethod";
     CXXMethodDecl * methdcl = callexpr->getMethodDecl();
 
+    
     // os_ << "methoddecl follows\n";
     // methdcl->dump();
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {
-
-	methodname = methdcl->getNameAsString();
-
-	os_ << "here is method printname info " << methodname << "\n";
-	if (methodname.compare(0, 8, "operator")==0) { // 0 means compare =, 8 is len("operator")
-	  // the conversion we know about, can be skipped
-	  os_ << "Found operator conversion node\n";
-	  TRY_TO(TraverseStmt(arg)); 
-	  return true;
-	}
-
+    
+      methodname = methdcl->getNameAsString();
+      qualmethodname = methdcl->getQualifiedNameAsString();
+      os_ << "here is qualmethod printname " <<qualmethodname << "\n";
+      //make_ident(qualmethodname);
+      //      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
+      
+      os_ << "here is method printname " << methodname << " and qual name " << qualmethodname << " \n";
+      if (methodname.compare(0, 8, "operator")==0) { // 0 means compare =, 8 is len("operator")
+	// the conversion we know about, can be skipped
+	os_ << "Found operator conversion node\n";
+	TRY_TO(TraverseStmt(arg)); 
+	return true;
       }
 
-    else methodname = "NOOP";
+    }
 
     hNode::hdlopsEnum opc; 
     
     os_ << "found " << methodname << "\n";
-    // eg [write tap1]
-    if (methodname == "read") opc = hNode::hdlopsEnum::hSigAssignR;
-    else if (methodname == "write") opc = hNode::hdlopsEnum::hSigAssignL;
+
+    // if type of x in x.f(5) is primitive sc type (sc_in, sc_out, sc_inout, sc_signal
+    // and method name is either read or write,
+    // generate a SigAssignL|R -- FIXME need to make sure it is templated to a primitive type
+
+    if ((methodname == "read") && (lutil.isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignR;
+    else if ((methodname == "write") && (lutil.isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignL;
     else {
-      os_ << "unknown method. methoddecl follows\n";
-      methdcl->dump();
       opc = hNode::hdlopsEnum::hMethodCall;
-      if (methodname.find_first_of(" ") != std::string::npos) methodname = "\"" + methodname + "\"";
+      lutil.make_ident(qualmethodname);
+      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
+      methodname = qualmethodname;
     }
+
 
     hNode * h_callp = new hNode(methodname, opc); // list to hold call expr node
 
@@ -344,7 +355,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     return true;
 }
 
-bool isLogicalOp(clang::OverloadedOperatorKind opc) {
+bool XlatMethod::isLogicalOp(clang::OverloadedOperatorKind opc) {
   switch (opc) {
   case OO_Less:
   case OO_LessEqual:
@@ -390,18 +401,34 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
   os_ << "name is " << nameinfo << ", base and memberexpr trees follow\n";
   os_ << "base is \n";
   memberexpr->getBase()->dump(os_);
-   auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
-  if (baseexpr) {
-    // FIXME Only handling one level right now
-    const Type *unqualtyp = baseexpr->getType()->getUnqualifiedDesugaredType();
-    QualType q = unqualtyp->getCanonicalTypeInternal();
-    //QualType q = (baseexpr->getType())->getDesugaredType();
-     //string basestr = tp->getAsString();
-     nameinfo.insert((size_t) 0, q.getAsString()); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
-     make_ident(nameinfo);
-  }
   os_ << "memberdecl is \n";
   memberexpr->getMemberDecl()->dump(os_);
+
+  // traverse the memberexpr in case it is a nested structure
+  auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
+  if (baseexpr) {
+
+    hNodep old_h_ret = h_ret;
+    TRY_TO(TraverseStmt(baseexpr));
+    if (h_ret != old_h_ret) {
+      if (h_ret->h_op == hNode::hdlopsEnum::hLiteral) {
+	//concatenate base name in front of field name
+	hNodep memexprnode = new hNode(h_ret->h_name+"_"+nameinfo, hNode::hdlopsEnum::hLiteral);
+	delete h_ret;
+	h_ret = memexprnode;  // replace returned h_ret with single node, field names concatenated
+	return h_ret;
+      }
+    }
+    
+    // FIXME Only handling one level right now
+    //const Type *unqualtyp = baseexpr->getType()->getUnqualifiedDesugaredType();
+    //QualType q = unqualtyp->getCanonicalTypeInternal();
+    //QualType q = (baseexpr->getType())->getDesugaredType();
+     //string basestr = tp->getAsString();
+     //nameinfo.insert((size_t) 0, q.getAsString()); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
+     //make_ident(nameinfo);
+  }
+
     
   h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hLiteral);
 

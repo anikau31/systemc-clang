@@ -25,13 +25,16 @@ class Xlat : public SystemCConsumer {
   bool postFire();
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
-  void xlattype(FindTemplateTypes * tt, hNodep & h_typeinfo);
+  void xlattype(string prefix, FindTemplateTypes * tt, hNodep & h_typeinfo);
+  void xlattype(string prefix, FieldDecl *fieldd, hNodep & h_typeinfo);
   //  void xlatproc(ModuleDecl::processMapType pmap, hNodep & h_top, llvm::raw_ostream &os );
   void xlatproc(vector<EntryFunctionContainer *>efv, hNodep & h_top, llvm::raw_ostream &os );
-  
+  void xlatprocesstype(string prefix, Tree<TemplateType> * treep, TreeNode<TemplateType> * nodep, hNodep &h_typeinfo);
   private:
 
     hNodep h_top;
+    std::unordered_map<string, CXXMethodDecl *> allmethodecls;  //  all methods called
+    util lutil;
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "llvm/Support/raw_ostream.h"
 
 #include <stack>
+#include <algorithm>
 
 using namespace scpar;
 
@@ -145,13 +146,27 @@ namespace hnode {
     }
 
   };
-  
-  
-  inline void make_ident(string &nm) {
-    for (auto &ch : nm) {
-      if (!(isalnum(ch) || ch=='_')) {
-	ch = '_';
-      }
+  static const string scstrings [] = {"sc_core::sc_", "sc_core::sc_dt", "sc_in", "sc_out", "sc_inout"};
+  class util { 
+  public:
+    util() {}
+    static inline void make_ident(string &nm) {
+      // https://stackoverflow.com/questions/14475462/remove-set-of-characters-from-the-string
+      //str.erase(
+      // std::remove_if(str.begin(), str.end(), [](char chr){ return chr == '&' || chr == ' ';}),
+      //str.end());
+      std::replace(nm.begin(), nm.end(), ' ', '_');
+      nm.erase(std::remove_if(nm.begin(), nm.end(),
+			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
     }
-  }
-}
+    static inline bool isSCType(string tstring) {
+      return ((tstring.substr(0, 12) == "sc_core::sc_") ||
+	      (tstring.substr(0, 5) == "sc_in") ||
+	      (tstring.substr(0, 7) == "sc_out") ||
+	      (tstring.substr(0, 9) == "sc_inout") ||
+	      (tstring.substr(0,14) == "sc_core::sc_dt"));
+    }
+
+  };
+  
+} // end namespace hnode
