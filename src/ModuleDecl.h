@@ -122,6 +122,8 @@ class ModuleDecl {
   void dumpInstances(raw_ostream &, int);
   void dumpSignalBinding(raw_ostream &, int);
 
+  void clearOnlyGlobal();
+
   json dump_json();
 
  private:

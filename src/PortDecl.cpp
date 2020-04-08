@@ -9,6 +9,7 @@ PortDecl::~PortDecl() {
     delete template_type_;
     template_type_ = nullptr;
   }
+  field_decl_ = nullptr;
 }
 
 PortDecl::PortDecl()

@@ -91,6 +91,25 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   return *this;
 }
 
+void ModuleDecl::clearOnlyGlobal() {
+  // This only clears the globally (not instance-specific) allocated structures.
+  // these are AST nodes 
+  class_decl_ = nullptr;
+  constructor_stmt_ = nullptr;
+  constructor_decl_ = nullptr;
+  instance_decl_;
+
+  // Ports are globally allocated.
+  in_ports_.clear();
+  out_ports_.clear();
+  inout_ports_.clear();
+  other_fields_.clear();
+  istreamports_.clear();
+  ostreamports_.clear();
+  signals_.clear();
+
+}
+
 ModuleDecl::~ModuleDecl() {
   llvm::outs() << "\n~ModuleDecl\n";
   class_decl_ = nullptr;
@@ -101,7 +120,7 @@ ModuleDecl::~ModuleDecl() {
 
   // IMPORTANT: Only the instance-specific details should be deleted.
   // DO NOT delete the information collected through incomplete types.
-  //
+  // 
 
   llvm::outs() << "- deleting entry function pointers\n";
   for (auto &v : vef_) {
@@ -110,7 +129,6 @@ ModuleDecl::~ModuleDecl() {
   }
   llvm::outs() << "Exit deleting ModuleDecl\n";
   // Delete all pointers in ports.
-  /*
   for (auto &input_port : in_ports_) {
     // It is a tuple
     // 0. string, 1. PortDecl*
@@ -147,7 +165,6 @@ ModuleDecl::~ModuleDecl() {
   }
   vef_.clear();
   llvm::outs() << "FREE other fields\n";
-  */
 }
 
 void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }

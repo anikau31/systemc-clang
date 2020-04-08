@@ -8,36 +8,60 @@ using namespace std;
 Model::Model() {}
 
 Model::~Model() {
-    llvm::errs() << "\n[ Destructor Model ]: \n";
-    for (auto &inst : module_instance_map_) {
-      auto incomplete_decl{ inst.first };
-      auto instance_list{ inst.second };
-      llvm::outs() << "Delete instances for " << incomplete_decl->getName() << ": " << instance_list.size() << "\n";
-      for (ModuleDecl *inst_in_list: instance_list){
-        // This is a ModuleDecl*
-        llvm::outs() << "- delete instance: " << inst_in_list->getInstanceName() << ", pointer: " << inst_in_list <<  "\n";
-        delete inst_in_list;
-      }
-
-      // Do not erase incmomplete_decl.  These are going to be cleaned up in Matchers.
+  llvm::errs() << "\n[ Destructor Model ]: \n";
+  for (auto &inst : module_instance_map_) {
+    auto incomplete_decl{inst.first};
+    auto instance_list{inst.second};
+    llvm::outs() << "Delete instances for " << incomplete_decl->getName()
+                 << ": " << instance_list.size() << "\n";
+    for (ModuleDecl *inst_in_list : instance_list) {
+      // This is a ModuleDecl*
+      llvm::outs() << "- delete instance: " << inst_in_list->getInstanceName()
+                   << ", pointer: " << inst_in_list << "\n";
       //
-      //llvm::outs() << "Deleting " << incomplete_decl->getName() << ", pointer: " << incomplete_decl << "\n";
-      //delete incomplete_decl;
+      // IMPORTANT
+      // The current design creates an incomplete ModuleDecl in Matchers. The
+      // ports are populated there.  Then, for each instance that is recognized,
+      // a new ModuleDecl is created, and information from the incomplete
+      // ModuleDecl is copied into the new instance-specific ModuleDecl. When
+      // deleting an instance of ModuleDecl, we have to be careful.  This is
+      // because we do not want to delete the instance-specific ModuleDecl,
+      // which has structures with pointers in it (PortDecl), and then delete
+      // the incomplete ModuleDecl because the latter will cause a double free
+      // memory error.  This is because the deletion of the instance-specific
+      // ModuleDecl will free the objects identified in the incomplete
+      // ModuleDecl.
+      //
+      // The current solution is to clear the information for the
+      // instance-specific ModuleDecl before deleting it.  Then, the deletion of
+      // the incomplete ModuleDecl will free the other objects such as PortDecl.
+      // clearOnlyGlobal does exactly this.
+      //
+      // TODO: ENHANCEMENT: This is one major refactoring that should be done at
+      // some point.
+      //
+      inst_in_list->clearOnlyGlobal();
+      delete inst_in_list;
     }
 
-    llvm::outs() << "Done with delete\n";
-      /*
-  // Delete all ModuleDecl pointers.
-  for (Model::moduleMapType::iterator mit = modules_.begin();
-       mit != modules_.end(); mit++) {
-   
-    llvm::outs() << "=> Deleting module: " << mit->first << " pointer: " << mit->second << "\n";
-    // Second is the ModuleDecl type.
-    delete mit->second;
-    // delete module_decl;
+    // This deletes the incomplete ModuleDecl.
+    delete incomplete_decl;
   }
-  modules_.clear();
-  */
+
+  llvm::outs() << "Done with delete\n";
+  /*
+// Delete all ModuleDecl pointers.
+for (Model::moduleMapType::iterator mit = modules_.begin();
+   mit != modules_.end(); mit++) {
+
+llvm::outs() << "=> Deleting module: " << mit->first << " pointer: " <<
+mit->second << "\n";
+// Second is the ModuleDecl type.
+delete mit->second;
+// delete module_decl;
+}
+modules_.clear();
+*/
 }
 
 Model::Model(const Model &from) { modules_ = from.modules_; }
@@ -45,7 +69,6 @@ Model::Model(const Model &from) { modules_ = from.modules_; }
 void Model::addModuleDecl(ModuleDecl *md) {
   // class name, instance name.
   modules_.push_back(Model::modulePairType(md->getName(), md));
-
 }
 
 void Model::addModuleDeclInstances(ModuleDecl *md, vector<ModuleDecl *> mdVec) {
@@ -138,8 +161,8 @@ void Model::updateModuleDecl() {
 // }
 // }
 //
-const Model::moduleMapType &Model::getModuleDecl() { 
-  //return modules_; 
+const Model::moduleMapType &Model::getModuleDecl() {
+  // return modules_;
 }
 
 ModuleDecl *Model::getInstance(const std::string &instance_name) {

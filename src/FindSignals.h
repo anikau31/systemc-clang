@@ -7,13 +7,13 @@
 namespace scpar {
 using namespace clang;
 
- struct SignalContainer  {
+struct SignalContainer {
   SignalContainer(std::string n, FindTemplateTypes *tt, FieldDecl *fd)
       : signal_name_{n}, template_types_{tt}, ast_node_{fd} {}
 
   ~SignalContainer() {
     // Only thing I create is FindTemplateType. Rest should be deleted by clang.
-    //      llvm::errs () << "[[ Destructor SignalContainer ]]\n";
+    llvm::errs() << "[ Destructor SignalContainer ]\n";
     delete template_types_;
   }
 
@@ -24,8 +24,8 @@ using namespace clang;
   }
 
   void dump(llvm::raw_ostream &os) {
-    os << "[SignalContainer " << signal_name_ << " FindTemplateType " << template_types_
-       << " FieldDecl " << ast_node_ << "\n";
+    os << "[SignalContainer " << signal_name_ << " FindTemplateType "
+       << template_types_ << " FieldDecl " << ast_node_ << "\n";
     template_types_->printTemplateArguments(os);
     os << "]\n";
   }
@@ -42,11 +42,10 @@ using namespace clang;
 
   std::string getName() { return signal_name_; }
 
-  
- private: 
+ private:
   std::string signal_name_;
   FindTemplateTypes *template_types_;
   FieldDecl *ast_node_;
 };
-} // namespace scpar
+}  // namespace scpar
 #endif
