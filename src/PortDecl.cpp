@@ -5,6 +5,7 @@ using namespace scpar;
 
 PortDecl::~PortDecl() {
   // Only delete the template_type_
+  llvm::outs() << "~PortDecl\n";
   if (template_type_ != nullptr) {
     delete template_type_;
     template_type_ = nullptr;

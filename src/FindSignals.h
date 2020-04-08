@@ -13,7 +13,7 @@ struct SignalContainer {
 
   ~SignalContainer() {
     // Only thing I create is FindTemplateType. Rest should be deleted by clang.
-    llvm::errs() << "[ Destructor SignalContainer ]\n";
+    llvm::errs() << "~SignalContainer\n";
     delete template_types_;
   }
 

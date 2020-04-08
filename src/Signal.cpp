@@ -8,6 +8,7 @@ using namespace std;
 void Signal::check() { assert(!(signal_container_ == nullptr)); }
 
 Signal::~Signal() {
+  llvm::outs() << "~Signal\n";
   if (signal_container_) {
     delete signal_container_;
     signal_container_ = nullptr;

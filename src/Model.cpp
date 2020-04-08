@@ -8,7 +8,7 @@ using namespace std;
 Model::Model() {}
 
 Model::~Model() {
-  llvm::errs() << "\n[ Destructor Model ]: \n";
+  llvm::errs() << "\n~Model\n";
   for (auto &inst : module_instance_map_) {
     auto incomplete_decl{inst.first};
     auto instance_list{inst.second};

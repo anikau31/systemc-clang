@@ -122,12 +122,12 @@ ModuleDecl::~ModuleDecl() {
   // DO NOT delete the information collected through incomplete types.
   // 
 
-  llvm::outs() << "- deleting entry function pointers\n";
+  //llvm::outs() << "- deleting entry function pointers\n";
   for (auto &v : vef_) {
     if (v!= nullptr) { delete v;}
     v = nullptr;
   }
-  llvm::outs() << "Exit deleting ModuleDecl\n";
+  //llvm::outs() << "Exit deleting ModuleDecl\n";
   // Delete all pointers in ports.
   for (auto &input_port : in_ports_) {
     // It is a tuple
@@ -139,13 +139,11 @@ ModuleDecl::~ModuleDecl() {
     if (iport) { delete iport;}
   }
   in_ports_.clear();
-  llvm::outs() << "FREE inputports\n";
 
   for (auto &output_port : out_ports_) {
     delete get<1>(output_port);
   }
   out_ports_.clear();
-  llvm::outs() << "FREE output ports\n";
 
   for (auto &io_port : inout_ports_) {
     // Second is the PortDecl*.
@@ -164,7 +162,10 @@ ModuleDecl::~ModuleDecl() {
     delete ef;
   }
   vef_.clear();
-  llvm::outs() << "FREE other fields\n";
+
+  for (auto &sig : signals_) {
+    delete sig.second;
+  }
 }
 
 void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
