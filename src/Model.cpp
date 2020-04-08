@@ -45,10 +45,12 @@ Model::Model(const Model &from) { modules_ = from.modules_; }
 void Model::addModuleDecl(ModuleDecl *md) {
   // class name, instance name.
   modules_.push_back(Model::modulePairType(md->getName(), md));
+
 }
 
 void Model::addModuleDeclInstances(ModuleDecl *md, vector<ModuleDecl *> mdVec) {
   module_instance_map_.insert(moduleInstancePairType(md, mdVec));
+  modules_.push_back(Model::modulePairType(md->getName(), md));
 
   llvm::outs() << "[HDP] To add instances: " << md << "=" << mdVec.size()
                << "\n";
@@ -136,7 +138,9 @@ void Model::updateModuleDecl() {
 // }
 // }
 //
-const Model::moduleMapType &Model::getModuleDecl() { return modules_; }
+const Model::moduleMapType &Model::getModuleDecl() { 
+  //return modules_; 
+}
 
 ModuleDecl *Model::getInstance(const std::string &instance_name) {
   for (auto const &element : module_instance_map_) {

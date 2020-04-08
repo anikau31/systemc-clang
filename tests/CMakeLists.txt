@@ -39,17 +39,17 @@ file(COPY ../examples/llnl-examples DESTINATION ${CMAKE_BINARY_DIR}/tests/data )
 
 set( UNIT_TEST_LIST 
   t1
-  t2
-  t3
-  sreg-test
-  t4-matchers
-  t5-template-matching
-  clock-parsing
-  hotfix-40-findtemplatetypes
+  # t2
+  # t3
+  # sreg-test
+  # t4-matchers
+  # t5-template-matching
+  # clock-parsing
+  # hotfix-40-findtemplatetypes
   portarray-example
   test-xor-hierarchy
   # Unit tests for structures
-  tree-test
+  # tree-test
   )
 
 include(CTest)

@@ -105,7 +105,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     // Add the two matchers.
     finder.addMatcher(match_sc_main_callexpr, this);
-    // finder.addMatcher(match_ctor_decl, this);
+    finder.addMatcher(match_ctor_decl, this);
   }
 
   // This is the callback function whenever there is a match.
@@ -207,11 +207,20 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       if (is_ctor_binding) {
         pb = new PortBinding(mexpr_port, mexpr_instance, mexpr_arg);
       } else {
+        llvm::outs() << "=> found instance in sc_main\n";
+        llvm::outs() << "=> me\n";
+        me->dump();
+        llvm::outs() << "=> dre_me\n";
+        dre_me->dump();
+        llvm::outs() << "=> dre\n";
+        dre->dump();
         pb = new PortBinding(me, dre_me, dre,
                              instance_module_decl->getInstanceDecl(),
                              instance_module_decl->getInstanceName());
       }
+      llvm::outs() << "Dump the port\n";
       pb->dump();
+      llvm::outs() << "End dump of sun\n";
       instance_module_decl->addPortBinding(port_name, pb);
       instance_module_decl->dumpPortBinding();
     }

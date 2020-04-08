@@ -115,6 +115,7 @@ class PortBinding {
         me_arg->getMemberDecl()->getType().getBaseTypeIdentifier()->getName();
   }
 
+  // This is used for sc_main
   PortBinding(MemberExpr *me, DeclRefExpr *port_dref,
               DeclRefExpr *port_arg_dref, Decl *instance_decl,
               const std::string &instance_constructor_name)

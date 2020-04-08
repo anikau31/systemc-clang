@@ -146,7 +146,7 @@ bool SystemCConsumer::fire() {
     //
     // FIXME: This has to be replaced once xlat is fixed.
     std::vector<ModuleDecl *> module_decl_instances;
-    ModuleDecl *p_dummy_module_decl{incomplete_module_decl};
+    //ModuleDecl *p_dummy_module_decl{incomplete_module_decl};
 
     for (const auto &instance : instance_list) {
       auto add_module_decl{new ModuleDecl{*incomplete_module_decl}};
@@ -210,8 +210,8 @@ bool SystemCConsumer::fire() {
 
       // Make the dummy equal to the updated add_module_decl
       // This will make module declarations be one of the module instances.
-      *p_dummy_module_decl = *add_module_decl;
-      systemcModel_->addModuleDecl(p_dummy_module_decl);
+      //*p_dummy_module_decl = *add_module_decl;
+      //systemcModel_->addModuleDecl(p_dummy_module_decl);
       module_decl_instances.push_back(add_module_decl);
     }
     os_ << "\n";
@@ -221,7 +221,7 @@ bool SystemCConsumer::fire() {
     // FIXME: Only there to make sure xlat still compiles.
     // This should be removed.
     llvm::outs() << "[HDP] Add instances to model\n";
-    systemcModel_->addModuleDeclInstances(p_dummy_module_decl,
+    systemcModel_->addModuleDeclInstances(incomplete_module_decl,
                                           module_decl_instances);
   }
 
@@ -242,7 +242,6 @@ bool SystemCConsumer::fire() {
     netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   }
 
-  /*
   llvm::outs() << "Begin netlist parsing on instances: "
                << found_instances_declaration_map.size() << "\n";
   for (const auto &inst : found_instances_declaration_map) {
@@ -261,7 +260,6 @@ bool SystemCConsumer::fire() {
       }
     }
   }
-  */
   netlist_matcher.dump();
   llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
 

@@ -30,20 +30,19 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
   std::string module_instance_name{"exor2"};
 
-  /*
   // Search for the module we want.
   ModuleDecl *found_module_decl{nullptr};
   for (auto const &entry : module_decl) {
     // This is the sc_module class name.
+    llvm::outs() << "decl name: " << entry.first << "\n";
     auto instance_list{ entry.second };
-    for (auto const &inst : instance_list) {
-      if (inst->getInstanceName() == module_instance_name ) {
-        found_module_decl = inst;
-      }
-    }
+    // for (auto const &inst : instance_list) {
+      // if (inst->getInstanceName() == module_instance_name ) {
+        // found_module_decl = inst;
+      // }
+    // }
   }
-  */
-
+  
   auto found_module{std::find_if(module_decl.begin(), module_decl.end(),
                                  [&module_instance_name](const auto &element) {
                                    // Get the declaration name.
@@ -54,8 +53,10 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
     // There should be only one module.
     INFO("Top-level module specified as exor2.");
     // exor2 has several sub-modules in it.
-    // Specifically, it has 4 nand2 modules (n1 to n4).
-    REQUIRE(module_decl.size() == 5);
+    // Note that module_decl will just hold the three unique module declarations.
+    // The instances will not be there.
+    // Therefore, the total number of module decls are 3: nand2, exor.
+    REQUIRE(module_decl.size() == 2);
 
     // Actually found the module.
     //REQUIRE(found_module_decl != nullptr); // != module_decl.end());
