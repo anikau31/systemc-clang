@@ -24,10 +24,10 @@ SC_MODULE( test ){
 };
 
 int sc_main(int argc, char *argv[]) {
-    sc_clock clk;
+    sc_clock clock;
     sc_signal<int> sig1;
-    test test_instance("testing");
-    test_instance.clk(clk);
+    test test_instance("testing_pb");
+    test_instance.clk(clock);
     test_instance.in(sig1);
     test_instance.out(sig1);
 
