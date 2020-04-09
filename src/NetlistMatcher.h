@@ -30,12 +30,19 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   std::string top_;
 
   ModuleDecl *findModuleDeclInstance(Decl *decl) {
+    llvm::outs() << "=> Looking for: " << decl << "\n";
     for (auto element : model_->getModuleInstanceMap()) {
+      auto incomplete{element.first};
+      llvm::outs() << "=> incomplete: " << incomplete->getName() << "\n";
       auto instance_list{element.second};
 
       auto found_inst_it =
           std::find_if(instance_list.begin(), instance_list.end(),
                        [decl](const auto &instance) {
+                       Decl *i{instance->getInstanceDecl()};
+                       llvm::outs() << "=> instance decl: " << i << "\n";
+
+                       //instance->getInstanceDecl()->dump();
                          return (instance->getInstanceDecl() == decl);
                        });
 
@@ -138,11 +145,12 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     auto mexpr_arg{const_cast<MemberExpr *>(
         result.Nodes.getNodeAs<MemberExpr>("memberexpr_arg"))};
 
+    std::string port_name{};
     if (mexpr_port && mexpr_instance && mexpr_arg) {
       is_ctor_binding = true;
       llvm::outs() << "#### Found MemberExpr: "
                    << "\n";
-      auto port = mexpr_port->getMemberNameInfo().getAsString();
+      port_name = mexpr_port->getMemberNameInfo().getAsString();
       auto port_type{mexpr_port->getMemberDecl()->getType().getTypePtr()};
       auto port_type_name = mexpr_port->getMemberDecl()
                                 ->getType()
@@ -172,7 +180,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     /// TESTING
     //
 
-    std::string port_name{};
+    //std::string port_name{};
     if (me && dre_me && dre) {
       is_ctor_binding = false;
       port_name = me->getMemberDecl()->getNameAsString();
@@ -190,7 +198,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         // instance_decl = dre_me->getDecl();
       }
     }
-    // instance_decl->dump();
+    instance_decl->dump();
 
     ModuleDecl *instance_module_decl{findModuleDeclInstance(instance_decl)};
     if (!instance_module_decl) {
@@ -205,6 +213,8 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       PortBinding *pb{nullptr};
 
       if (is_ctor_binding) {
+        llvm::outs() << "=> found member instance in constructor\n";
+        llvm::outs() << "=> port name: " << port_name <<"\n";
         pb = new PortBinding(mexpr_port, mexpr_instance, mexpr_arg);
       } else {
         llvm::outs() << "=> found instance in sc_main\n";

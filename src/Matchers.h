@@ -121,7 +121,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           if (rt == decl) {
             llvm::outs() << "==> Insert fieldDecl into found instance\n";
             found_instances.push_back(
-                InstanceDeclType(get<0>(element), rt));
+                InstanceDeclType(get<0>(element), get<1>(element)));
           }
         }
       } else {
@@ -238,6 +238,33 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
       instances_.push_back(std::make_tuple(name, instance));
+      //
+      /*
+  if (auto instance_name = const_cast<CXXConstructExpr *>(
+              result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
+        llvm::outs() << "Found constructor expression argument: "
+                     << instance_name->getNumArgs() << "\n";
+        auto first_arg{instance_name->getArg(0)};
+
+        // Code to get the instance name
+        clang::LangOptions LangOpts;
+        LangOpts.CPlusPlus = true;
+        clang::PrintingPolicy Policy(LangOpts);
+
+        std::string name_string;
+        llvm::raw_string_ostream sstream(name_string);
+        first_arg->printPretty(sstream, 0, Policy);
+        // The instance name comes with " and we should remove them.
+        std::string strip_quote_name{sstream.str()};
+        strip_quote_name.erase(
+            std::remove(strip_quote_name.begin(), strip_quote_name.end(), '\"'),
+            strip_quote_name.end());
+
+        // This is the instance name.
+        instances_.push_back(std::make_tuple(strip_quote_name, instance));
+      }
+      */
+
     }
 
     if (auto instance = const_cast<VarDecl *>(

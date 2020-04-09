@@ -158,7 +158,7 @@ bool SystemCConsumer::fire() {
       os_ << "1. Set instance name: " << get<0>(instance) << "\n";
       add_module_decl->setInstanceName(get<0>(instance));
       os_ << "2. Set instance type decl: " << cxx_decl->getNameAsString()
-          << "\n";
+          << " " << get<1>(instance) << "\n";
       add_module_decl->setInstanceDecl(get<1>(instance));
 
       // 2. Find the template arguments for the class.
@@ -244,14 +244,14 @@ bool SystemCConsumer::fire() {
 
   llvm::outs() << "Begin netlist parsing on instances: "
                << found_instances_declaration_map.size() << "\n";
-  for (const auto &inst : found_instances_declaration_map) {
-    auto cxx_decl{inst.first};
-    // Vector
+  auto module_instance_map{systemcModel_->getModuleInstanceMap()};
+  for (const auto &inst : module_instance_map) {
+    auto incomplete_mdecl{inst.first};
     auto instance_list{inst.second};
-    llvm::outs() << "[[NetlistMatcher]]: CXXRecordDecl* " << cxx_decl
-                 << " name: " << cxx_decl->getName() << "\n";
+
     for (auto const &instance : instance_list) {
-      ModuleDecl *mdecl{systemcModel_->getInstance(get<0>(instance))};
+      //ModuleDecl *mdecl{systemcModel_->getInstance(get<0>(instance))};
+      ModuleDecl *mdecl{instance};
       auto ctordecl{mdecl->getConstructorDecl()};
       if (ctordecl != nullptr) {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
