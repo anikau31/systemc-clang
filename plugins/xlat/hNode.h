@@ -1,3 +1,7 @@
+#ifndef _HNODE_H_
+#define _HNODE_H_
+
+
 #include "llvm/Support/raw_ostream.h"
 
 #include <stack>
@@ -146,10 +150,27 @@ namespace hnode {
     }
 
   };
-  static const string scstrings [] = {"sc_core::sc_", "sc_core::sc_dt", "sc_in", "sc_out", "sc_inout"};
+
+  
   class util { 
   public:
-    util() {}
+    const  int numstr = 6;
+     const string scbuiltintype [6] = {
+      "sc_uint",
+      "sc_int",
+      "sc_bigint",
+      "sc_biguint",
+      "sc_bv",
+      "sc_logic"
+    };
+    int scbtlen [ 6 ];
+    
+    util() {
+      for (int i=0; i < numstr; i++)
+	scbtlen[i] = scbuiltintype[i].length();
+    }
+    ~util() {}
+    
     static inline void make_ident(string &nm) {
       // https://stackoverflow.com/questions/14475462/remove-set-of-characters-from-the-string
       //str.erase(
@@ -159,14 +180,30 @@ namespace hnode {
       nm.erase(std::remove_if(nm.begin(), nm.end(),
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
     }
+     inline bool isSCBuiltinType(string tstring){
+      // linear search sorry, but at least the length
+      // isn't hard coded in ...
+      for (int i=0; i < numstr; i++) {
+	if (tstring.substr(0, scbtlen[i]) == scbuiltintype[i])
+	  return true;
+      }
+      return false;
+    }
+    
     static inline bool isSCType(string tstring) {
+      // linear search and the length is hard coded in ...
+      // used in the method name logic
+      if (tstring.substr(0, 6) == "class ") // this is so stupid
+	tstring = tstring.substr(6, tstring.length() - 6);
       return ((tstring.substr(0, 12) == "sc_core::sc_") ||
 	      (tstring.substr(0, 5) == "sc_in") ||
-	      (tstring.substr(0, 7) == "sc_out") ||
-	      (tstring.substr(0, 9) == "sc_inout") ||
-	      (tstring.substr(0,14) == "sc_core::sc_dt"));
+	      (tstring.substr(0, 6) == "sc_out") ||
+	      (tstring.substr(0, 8) == "sc_inout") ||
+	      (tstring.substr(0, 9) == "sc_signal") ||
+	      (tstring.substr(0,5) == "sc_dt"));
     }
 
   };
-  
 } // end namespace hnode
+
+#endif

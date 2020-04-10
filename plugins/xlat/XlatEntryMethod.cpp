@@ -96,6 +96,10 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     os_ << "Found if stmt\n";
     TRY_TO(TraverseForStmt((ForStmt *)stmt));
   }
+  else if (isa<SwitchStmt>(stmt)){
+    os_ << "Found switch stmt, not yet implemented\n";
+    return true;
+  }
   else {  
     os_ << "stmt type " << stmt->getStmtClassName() << " not recognized, calling default recursive ast visitor\n";
     hNodep oldh_ret = h_ret;

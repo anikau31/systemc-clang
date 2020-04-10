@@ -6,6 +6,8 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/FileSystem.h"
+//#include "XlatEntryMethod.h"
+#include "hNode.h"
 #include "XlatEntryMethod.h"
 
 using namespace clang;
@@ -25,11 +27,9 @@ class Xlat : public SystemCConsumer {
   bool postFire();
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
-  void xlattype(string prefix, FindTemplateTypes * tt, hNodep & h_typeinfo);
-  void xlattype(string prefix, FieldDecl *fieldd, hNodep & h_typeinfo);
-  //  void xlatproc(ModuleDecl::processMapType pmap, hNodep & h_top, llvm::raw_ostream &os );
+  void xlattype(string prefix, Tree<TemplateType> *template_argtp, const Type *typep,  hNode::hdlopsEnum h_op, hNodep &h_info);
+  void makehpsv(string prefix, string typnae,  hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo=true);
   void xlatproc(vector<EntryFunctionContainer *>efv, hNodep & h_top, llvm::raw_ostream &os );
-  void xlatprocesstype(string prefix, Tree<TemplateType> * treep, TreeNode<TemplateType> * nodep, hNodep &h_typeinfo);
   private:
 
     hNodep h_top;
