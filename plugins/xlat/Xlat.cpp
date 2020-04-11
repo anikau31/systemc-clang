@@ -100,8 +100,8 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
-    const Type * typep = (template_argtp->getRoot())->getDataPtr()->getTypePtr();
-    xlattype(objname, template_argtp, typep, h_op, h_info);  // passing the sigvarlist
+    xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+  
   }
 }
 
@@ -116,13 +116,10 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
     os_ << "object name is " << objname << "\n";
 
     Signal *pd = get<1>(*mit);
+
     Tree<TemplateType> *template_argtp = (pd->getTemplateTypes())->getTemplateArgTreePtr();
-    TreeNode<TemplateType> * rootp = template_argtp->getRoot();
-    if (rootp) {
-      const Type * typep = rootp->getDataPtr()->getTypePtr();
-      xlattype(objname, template_argtp, typep, h_op, h_info);  // passing the sigvarlist
-    }
-    else os_ << "object's template type root pointer is null, skipping\n";
+    xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+   
   }
 }
 
@@ -142,19 +139,44 @@ void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNode
     hmainp->child_list.push_back(htypep);
   }
 }
-  
-void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, const Type *typep,  hNode::hdlopsEnum h_op, hNodep &h_info) {
+
+void Xlat::xlatfieldtype(string prefix, Tree<TemplateType> *treep, const Type *typep, hNode::hdlopsEnum h_op, hNodep &h_info) {
+  os_ << "field " << prefix << " type follows\n";
+  typep->dump(os_);
+  if (const BuiltinType *bt = dyn_cast<BuiltinType>(typep)) {
+    string tmps = (bt->desugar()).getAsString();
+    os_ << "field: found built in type " << tmps << "\n";
+    makehpsv(prefix, tmps, h_op, h_info);
+    return;
+  }
+  if (const RecordType * rectype = dyn_cast<RecordType>(typep)) {
+    string tmps = rectype->desugar().getAsString();
+    os_ << "field: record type found, name is " << tmps << "\n";
+    makehpsv(prefix, tmps, h_op, h_info);  // would need to recurse here
+    return;
+  }
+  /*
+field m_port_datatype follows
+TemplateSpecializationType 0x1060a00c0 'sc_out<struct fp_t<11, 52> >' sugar sc_out
+|-TemplateArgument type 'struct fp_t<11, 52>':'struct fp_t<11, 52>'
+`-RecordType 0x1060a00a0 'class sc_core::sc_out<struct fp_t<11, 52> >'
+  `-ClassTemplateSpecialization 0x10609ffb0 'sc_out'
+  */
+  makehpsv(prefix, "UNKNOWNTYPE", h_op, h_info);
+}
+
+void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::hdlopsEnum h_op, hNodep &h_info) {
 
   //llvm::outs()  << "xlattype dump of templatetree args follows\n";
   //template_argtp->dump();
 
-  if (const BuiltinType *bt = dyn_cast<BuiltinType>(typep)) {
-    string typname = (bt->desugar()).getAsString();
-    os_ << "found built in type " << typname << "\n";
-    makehpsv(prefix, typname, h_op, h_info);
+  if (template_argtp->size() == 1) {
+    string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();  
+    os_ << "primitive type " << tmps << "\n";
+    lutil.make_ident(tmps);
+    makehpsv(prefix, tmps, h_op, h_info);
     return;
   }
-
   
   // QualType 	getCanonicalTypeInternal () const -- from Type
   // const Type * 	getUnqualifiedDesugaredType () const  -- from Type
@@ -164,23 +186,35 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, const Ty
   
   // now process composite types
 
-  if (const RecordType * rectype = dyn_cast<RecordType>(typep)) {
-    string tmps = rectype->desugar().getAsString();
-    os_ << "record type found, name is " << tmps << "\n";
-    if (lutil.isSCType(tmps) || lutil.isSCBuiltinType(tmps)) {  // primitive sc type
-      lutil.make_ident(tmps);
-      makehpsv(prefix,tmps, h_op, h_info);
-    }
-    else { // not primitive sc type, need to traverse
-      os_ << " nonprimitive type " << tmps << "\n";
-      for (auto const &fld: rectype->getDecl()->fields()) {
-	os_ << "field of record type \n";
-	fld ->dump(os_);
-	os_ << "found name " << fld->getName() << "\n";
-	xlattype(prefix+'_'+fld->getNameAsString(), template_argtp, fld->getType().getTypePtr(), h_op, h_info);
+  if (template_argtp->getRoot()) {
+    string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
+    os_ << " nonprimitive type " << tmps << "\n";
+    if (lutil.isSCBuiltinType(tmps)||lutil.isSCType(tmps)) {
+      hNodep hport = new hNode(prefix, h_op);
+      h_info->child_list.push_back(hport);
+      hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
+      hport->child_list.push_back(h_typeinfo);
+      for (auto const &node : *template_argtp) {
+	const TemplateType * type_data{node->getDataPtr()}; 
+	string tmps2 =  type_data->getTypeName();
+	if (tmps.empty()) os_ << "xlattype typename is empty\n";
+	else os_ << "xlattype typename is " << tmps2 << "\n";
+	lutil.make_ident(tmps2);
+	h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
       }
-    } // end non primitive sc type
-  } // end record type
+    }
+    else {
+      if (const RecordType * rectype = dyn_cast<RecordType>((template_argtp->getRoot()->getDataPtr())->getTypePtr())) {
+	os_ << "record type found, name is " << tmps << "\n";
+	for (auto const &fld: rectype->getDecl()->fields()) {
+	  os_ << "field of record type \n";
+	  fld ->dump(os_);
+	  os_ << "found name " << fld->getName() << "\n";
+	  xlatfieldtype(prefix+'_'+fld->getNameAsString(), template_argtp, fld->getType().getTypePtr(), h_op, h_info);
+        }
+      }
+    }
+  }
 }
 
 void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
