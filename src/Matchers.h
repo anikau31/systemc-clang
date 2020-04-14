@@ -91,7 +91,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
  public:
   // Finds the instance with the same type as the argument.
   // Pass by reference to the instance.
-  bool findInstance(CXXRecordDecl *decl, std::vector<InstanceDeclType> &found_instances) {
+  bool findInstance(CXXRecordDecl *decl,
+                    std::vector<InstanceDeclType> &found_instances) {
     // First check in the instance_fields.
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
@@ -101,7 +102,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     llvm::outs() << "[findInstance] must find decl name: " << decl->getName()
                  << "\n";
-    //std::vector<InstanceDeclType> found_instances{};
     // Walk through all the instances.
     for (auto const &element : instances_) {
       auto p_field_var_decl{get<1>(element)};
@@ -137,8 +137,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                        << ", inst name: " << rt->getName() << "\n";
           if (rt == decl) {
             llvm::outs() << "==> Insert vardecl into found instance\n";
-            found_instances.push_back(
-                InstanceDeclType(get<0>(element), rt));
+            found_instances.push_back(InstanceDeclType(get<0>(element), rt));
           }
         }
       }
@@ -146,52 +145,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     llvm::outs() << "=> found_instances: " << found_instances.size() << "\n";
 
     return (found_instances.size() != 0);
-
-    /*
-    // Original
-    InstanceDeclarationsType::iterator found_it = std::find_if(
-        instances_.begin(), instances_.end(),
-        [&decl](const InstanceDeclType &element) {
-          // Get the CXXRecordDecl for the instance.
-          // The instance is the second element in the tuple.
-          auto p_field_var_decl{get<1>(element)};
-          p_field_var_decl->dump();
-          std::string dbg{"[InstanceMatcher]"};
-          if (auto *p_field{dyn_cast<FieldDecl>(p_field_var_decl)}) {
-            auto qtype{p_field->getType().getTypePtr()};
-            if (qtype->isRecordType()) {
-              if (auto dp = qtype->getAs<TemplateSpecializationType>()) {
-                auto rt{dp->getAsCXXRecordDecl()};
-                llvm::outs() << dbg << " decl: " << decl->getName()
-                             << ", inst name: " << rt->getName() << "\n";
-                return (rt == decl);
-              }
-            }
-          } else {
-            // This is a VarDecl instance.
-            auto p_var{dyn_cast<VarDecl>(p_field_var_decl)};
-            auto qtype{p_var->getType().getTypePtr()};
-
-            std::string dbg{"[InstanceMatcher]"};
-            p_var->dump();
-            if (qtype->isRecordType()) {
-              auto rt{qtype->getAsCXXRecordDecl()};
-              llvm::outs() << dbg << " decl: " << decl->getName()
-                           << ", inst name: " << rt->getName() << "\n";
-              return (rt == decl);
-            }
-          }
-          return false;
-        });
-
-    if (found_it != instances_.end()) {
-      get<0>(instance) = get<0>(*found_it);
-      get<1>(instance) = get<1>(*found_it);
-
-      return true;
-    }
-    return false;
-    */
   }
 
   void registerMatchers(MatchFinder &finder) {
@@ -203,9 +156,17 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // * It is a FieldDecl
     // * It has a type that is a C++ class that is derived from sc_module
     //
-    auto match_instances = fieldDecl(
+    auto match_instances = 
+      fieldDecl(
         hasType(
           cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))))
+
+        /*
+            hasDescendant(
+              cxxConstructExpr(hasArgument(0,
+              stringLiteral().bind("constructor_arg"))).bind("constructor_expr")
+              )
+              */
         ).bind("instances_in_fielddecl");
 
     // Match when the following conditions are satisifed:
@@ -237,10 +198,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (auto instance = const_cast<FieldDecl *>(
             result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"))) {
       std::string name{instance->getIdentifier()->getNameStart()};
-      instances_.push_back(std::make_tuple(name, instance));
+      llvm::outs() << "InstanceMatcher\n";
+      instance->dump();
+      //      instances_.push_back(std::make_tuple(name, instance));
       //
-      /*
-  if (auto instance_name = const_cast<CXXConstructExpr *>(
+      if (auto instance_name = const_cast<CXXConstructExpr *>(
               result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"))) {
         llvm::outs() << "Found constructor expression argument: "
                      << instance_name->getNumArgs() << "\n";
@@ -263,8 +225,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // This is the instance name.
         instances_.push_back(std::make_tuple(strip_quote_name, instance));
       }
-      */
-
     }
 
     if (auto instance = const_cast<VarDecl *>(
@@ -631,11 +591,11 @@ class PortMatcher : public MatchFinder::MatchCallback {
     auto other_fields{checkMatch<Decl>("other_fields", result)};
     auto other_fvdecl{checkMatch<Decl>("other_fvdecl", result)};
 
-    llvm::outs() << "\n";
-    llvm::outs() << "in: " << sc_in_field << ", out: " << sc_out_field
-                 << ", inout: " << sc_inout_field << ", other: " << other_fields
-                 << "\n";
-
+    // llvm::outs() << "\n";
+    // llvm::outs() << "in: " << sc_in_field << ", out: " << sc_out_field
+    // << ", inout: " << sc_inout_field << ", other: " << other_fields
+    // << "\n";
+    //
     if (sc_in_field && other_fields) {
       if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
         auto fd = p_field;
@@ -802,7 +762,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   // PortMatcher port_matcher_;
 
  public:
-
   const DeclarationsToInstancesMapType &getInstances() {
     return declaration_instance_map_;
   };
@@ -929,11 +888,11 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       auto decl{get<1>(element)};
       llvm::outs() << "## found decl name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
-      //InstanceMatcher::InstanceDeclType instance;
+      // InstanceMatcher::InstanceDeclType instance;
       if (instance_matcher.findInstance(decl, instance_list)) {
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
-        //instance_list.push_back(instance);
+        // instance_list.push_back(instance);
         declaration_instance_map_.insert(
             DeclarationInstancePairType(decl, instance_list));
       } else {
@@ -946,12 +905,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       auto decl{get<1>(element)};
       // std::llvm::outs() << "## ftd name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
-      //InstanceMatcher::InstanceDeclType instance;
+      // InstanceMatcher::InstanceDeclType instance;
       if (instance_matcher.findInstance(decl, instance_list)) {
         // pruned_declarations_.push_back(element);
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
-        //instance_list.push_back(instance);
+        // instance_list.push_back(instance);
         declaration_instance_map_.insert(
             DeclarationInstancePairType(decl, instance_list));
       } else {

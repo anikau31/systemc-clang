@@ -198,7 +198,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         // instance_decl = dre_me->getDecl();
       }
     }
-    instance_decl->dump();
+    //instance_decl->dump();
 
     ModuleDecl *instance_module_decl{findModuleDeclInstance(instance_decl)};
     if (!instance_module_decl) {

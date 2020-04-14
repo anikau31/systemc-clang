@@ -2,6 +2,7 @@
 #define _FIND_SIGNALS_H_
 
 #include "FindTemplateTypes.h"
+
 #include "llvm/Support/raw_ostream.h"
 
 namespace scpar {

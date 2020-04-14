@@ -267,7 +267,7 @@ json FindTemplateTypes::dump_json() {
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   auto root_node{template_args_.getRoot()};
   auto s{template_args_.dft(root_node)};
-  os << "> Template args (DFT): " << s << "\n";
+  //os << "> Template args (DFT): " << s << "\n";
 }
 
 std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
