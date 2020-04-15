@@ -156,7 +156,7 @@ void Xlat::xlatfieldtype(string prefix, Tree<TemplateType> *treep, const Type *t
     return;
   }
   /*
-field m_port_datatype follows
+field m_port_data type follows
 TemplateSpecializationType 0x1060a00c0 'sc_out<struct fp_t<11, 52> >' sugar sc_out
 |-TemplateArgument type 'struct fp_t<11, 52>':'struct fp_t<11, 52>'
 `-RecordType 0x1060a00a0 'class sc_core::sc_out<struct fp_t<11, 52> >'
