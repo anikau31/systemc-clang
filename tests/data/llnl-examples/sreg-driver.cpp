@@ -1,5 +1,6 @@
 /* Placeholder for further modules */
 // TODO: include example directory
+#define RVD 1
 #include "sc_rvd.h"
 //#include "sc_stream.h"
 
