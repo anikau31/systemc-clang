@@ -81,9 +81,9 @@ class SystemCConsumer : public ASTConsumer,
 
  private:
   std::string top_;
-  Model *systemcModel_;
-  ASTContext &context_;
-  SourceManager &sm_;
+  Model* systemcModel_;
+  ASTContext& context_;
+  SourceManager& sm_;
 };  // End class SystemCConsumer
 
 //
@@ -97,21 +97,33 @@ class SystemCClang : public SystemCConsumer {
       : SystemCConsumer(ci, top) {}
 };
 
-template <typename A>
-class LightsCameraAction : public clang::ASTFrontendAction {
+class AXN : public ASTFrontendAction {
  public:
-  LightsCameraAction(std::string topModule) : top_{topModule} {};
-
- private:
+  AXN(std::string topModule) : top_{topModule} {};
   std::string top_;
 
- protected:
-  virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
-      CompilerInstance& ci, llvm::StringRef inFile) {
-    return std::unique_ptr<clang::ASTConsumer>(new A(ci, top_));
-  };
+ public:
+  virtual std::unique_ptr<ASTConsumer> CreateASTConsumer(
+      clang::CompilerInstance &Compiler, llvm::StringRef inFile) {
+    return std::unique_ptr<ASTConsumer>(new SystemCConsumer(Compiler, top_));
+  }
 };
 
+// template <typename A>
+// class LightsCameraAction : public clang::ASTFrontendAction {
+ // public:
+  // LightsCameraAction(std::string topModule) : top_{topModule} {};
+//
+ // private:
+  // std::string top_;
+//
+ // protected:
+  // std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
+      // CompilerInstance& ci, llvm::StringRef inFile) override {
+    // return std::unique_ptr<clang::ASTConsumer>(new A(ci, top_));
+  // };
+// };
+//
 }  // End namespace scpar
 
 #endif
