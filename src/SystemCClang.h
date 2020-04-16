@@ -109,21 +109,21 @@ class AXN : public ASTFrontendAction {
   }
 };
 
-template <typename A>
-class LightsCameraAction : public clang::ASTFrontendAction {
- public:
-  LightsCameraAction(std::string topModule) : top_{topModule} {};
-
- private:
-  std::string top_;
-
- protected:
-  std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
-      CompilerInstance& ci, llvm::StringRef inFile) override {
-    return std::unique_ptr<clang::ASTConsumer>(new A(ci, top_));
-  };
-};
-
+// template <typename A>
+// class LightsCameraAction : public clang::ASTFrontendAction {
+ // public:
+  // LightsCameraAction(std::string topModule) : top_{topModule} {};
+//
+ // private:
+  // std::string top_;
+//
+ // protected:
+  // std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
+      // CompilerInstance& ci, llvm::StringRef inFile) override {
+    // return std::unique_ptr<clang::ASTConsumer>(new A(ci, top_));
+  // };
+// };
+//
 }  // End namespace scpar
 
 #endif

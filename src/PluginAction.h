@@ -39,7 +39,7 @@ class SimpleFrontendActionFactory
 };
 
 */
-template <typename A>
+//template <typename A>
 class PluginAction {
  public:
   PluginAction(int argc, const char **argv) {
