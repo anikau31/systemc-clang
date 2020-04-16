@@ -16,7 +16,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
 
   auto catch_test_args = systemc_clang::catch_test_args;
   catch_test_args.push_back("-I" + systemc_clang::test_data_dir +
-                            "/llnl-examples/");
+                            "/llnl-examples/zfpsynth/shared");
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
