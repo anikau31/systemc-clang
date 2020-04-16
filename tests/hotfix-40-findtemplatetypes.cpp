@@ -23,7 +23,6 @@ TEST_CASE("Basic parsing checks", "[parsing]") {
   std::string code = R"(
 #include "systemc.h"
 #include "sreg.h"
-//#include "sc_stream.h"
 
 template< int E, int F>
 struct fp_t {
@@ -185,7 +184,7 @@ int sc_main(int argc, char *argv[]) {
   INFO(systemc_clang::test_data_dir);
   auto catch_test_args = systemc_clang::catch_test_args;
   catch_test_args.push_back("-I" + systemc_clang::test_data_dir +
-                            "/llnl-examples/");
+                            "/llnl-examples/zfpsynth/shared");
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
@@ -213,6 +212,7 @@ int sc_main(int argc, char *argv[]) {
          << module_decl.size());
 
     // There are two modules: ram, test.
+    //REQUIRE(module_instance_map.size() == 2 );
     REQUIRE(module_decl.size() == 2);
     REQUIRE(ram_module != nullptr);
     REQUIRE(test_module != nullptr);

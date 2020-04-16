@@ -41,7 +41,7 @@ set( UNIT_TEST_LIST
   t1
   t2
   t3
-  sreg-test
+  #sreg-test
   t4-matchers
   t5-template-matching
   clock-parsing
@@ -52,6 +52,13 @@ set( UNIT_TEST_LIST
   tree-test
   )
 
+if (PLUGIN_XLAT)
+set ( UNIT_XLAT_TEST_LIST 
+  sreg-test
+  )
+endif()
+
+set (UNIT_TEST_LIST ${UNIT_TEST_LIST} ${UNIT_XLAT_TEST_LIST})
 include(CTest)
 
 # catch2 may have headers colliding with other local files, 
@@ -65,7 +72,12 @@ foreach(NAME IN LISTS UNIT_TEST_LIST)
   set(TARGET_NAME ${NAME})
   add_executable(${TARGET_NAME} main.cpp ${TEST_SOURCE_NAME} )
     
-  target_link_libraries(${TARGET_NAME} PUBLIC libsystemc-clang PUBLIC libxlat ${CLANG_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
+  target_link_libraries(${TARGET_NAME} PUBLIC libsystemc-clang ${CLANG_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
+  
+  if (PLUGIN_XLAT) 
+    target_link_libraries(${TARGET_NAME} PUBLIC libxlat)
+  endif()
+
   target_include_directories(${TARGET_NAME} PUBLIC ../externals/catch2/ PUBLIC ../tests/ PUBLIC ${CMAKE_BINARY_DIR}/tests/ )
   add_test( NAME ${TARGET_NAME} COMMAND ${TARGET_NAME} 
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests/data/ )

@@ -15,19 +15,15 @@
 #ifndef _SYSTEMC_CLANG_H_
 #define _SYSTEMC_CLANG_H_
 
-//#include "clang/AST/AST.h"
 #include "clang/AST/ASTConsumer.h"
-//#include "clang/AST/ASTImporter.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/SourceManager.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/FrontendPluginRegistry.h"
-//#include "clang/Parse/Parser.h"
 #include "clang/Tooling/CommonOptionsParser.h"
 #include "clang/Tooling/Tooling.h"
 
-using namespace clang::driver;
-using namespace clang::tooling;
+//using namespace clang::driver;
 
 // / This is the include files we add to parse SystemC
 #include "FindArgument.h"
@@ -46,12 +42,11 @@ using namespace clang::tooling;
 #include "FindTemplateParameters.h"
 #include "FindWait.h"
 #include "Model.h"
-#include "SCuitable/FindGPUMacro.h"
-#include "SCuitable/GlobalSuspensionAutomata.h"
-#include "SuspensionAutomata.h"
-//#include "Utility.h"
+//#include "SCuitable/FindGPUMacro.h"
+//#include "SCuitable/GlobalSuspensionAutomata.h"
+//#include "SuspensionAutomata.h"
 
-using namespace clang;
+using namespace clang::tooling;
 
 namespace scpar {
 
@@ -62,13 +57,13 @@ class SystemCConsumer : public ASTConsumer,
   llvm::raw_ostream& os_;
 
  public:
-  SystemCConsumer(CompilerInstance&, std::string top = "!none");
-  SystemCConsumer(ASTUnit* from_ast, std::string top = "!none");
+  SystemCConsumer(CompilerInstance &, std::string top = "!none");
+  SystemCConsumer(ASTUnit *from_ast, std::string top = "!none");
   virtual ~SystemCConsumer();
 
   Model* getSystemCModel();
   const std::string& getTopModule() const;
-  void setTopModule(const std::string& top_module_decl);
+  void setTopModule(const std::string &top_module_decl);
   ASTContext& getContext() const;
   SourceManager& getSourceManager() const;
 
@@ -77,7 +72,7 @@ class SystemCConsumer : public ASTConsumer,
   virtual bool preFire();
   virtual bool postFire();
 
-  virtual void HandleTranslationUnit(ASTContext& context);
+  virtual void HandleTranslationUnit(ASTContext &context);
 
  private:
   std::string top_;
@@ -93,23 +88,20 @@ class SystemCConsumer : public ASTConsumer,
 
 class SystemCClang : public SystemCConsumer {
  public:
-  SystemCClang(CompilerInstance& ci, std::string top)
+  SystemCClang(CompilerInstance &ci, const std::string &top)
       : SystemCConsumer(ci, top) {}
 };
 
-template <typename A>
-class LightsCameraAction : public clang::ASTFrontendAction {
+class SystemCClangAXN : public ASTFrontendAction {
  public:
-  LightsCameraAction(std::string topModule) : top_{topModule} {};
-
- private:
+  SystemCClangAXN(const std::string &topModule) : top_{topModule} {};
   std::string top_;
 
- protected:
-  virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
-      CompilerInstance& ci, llvm::StringRef inFile) {
-    return std::unique_ptr<clang::ASTConsumer>(new A(ci, top_));
-  };
+ public:
+  virtual std::unique_ptr<ASTConsumer> CreateASTConsumer(
+      clang::CompilerInstance &Compiler, llvm::StringRef inFile) {
+    return std::unique_ptr<ASTConsumer>(new SystemCConsumer(Compiler, top_));
+  }
 };
 
 }  // End namespace scpar
