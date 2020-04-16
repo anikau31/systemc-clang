@@ -18,26 +18,8 @@
 #include <clang/Tooling/Tooling.h>
 #include "SystemCClang.h"
 
-using namespace scpar;
 
-// We need to find a way to pass the top-level module as an argument.
-//
-// Source:
-// https://github.com/facebook/facebook-clang-plugins/blob/master/libtooling/ast_exporter_bin.cpp
-//
-template <typename PluginConsumer>
-class SimpleFrontendActionFactory
-    : public clang::tooling::FrontendActionFactory {
- public:
-  explicit SimpleFrontendActionFactory(std::string topModule)
-      : top_{topModule} {};
-  clang::FrontendAction *create() override { return new PluginConsumer(top_); }
-
- private:
-  std::string top_;
-};
-
-template <typename A>
+namespace scpar {
 class PluginAction {
  public:
   PluginAction(int argc, const char **argv) {
@@ -52,10 +34,9 @@ class PluginAction {
     CommonOptionsParser OptionsParser(argc, argv, category);
     ClangTool Tool(OptionsParser.getCompilations(),
                    OptionsParser.getSourcePathList());
-    factory.reset(
-        new SimpleFrontendActionFactory<LightsCameraAction<A>>(topModule));
-    Tool.run(factory.get());
+    runToolOnCode(make_unique<SystemCClangAXN>(topModule), argv[1] );
   };
+};
 };
 
 #endif /* _PLUGIN_ACTION_H_ */

@@ -43,13 +43,15 @@ TEST_CASE("Tree representation of template types", "[Tree]") {
   auto five = t.addNode(Node{"5"});
   auto six = t.addNode(Node{"6"});
 
+  /*
   // Layout of the tree
   //       0
   //      / \
   //    1    2
-  //   /    / \ 
+  //   /    /  
   //  6 -- 3   5
   //
+  */
   t.addEdge(zero, one);
   t.addEdge(zero, two);
   t.addEdge(two, three);

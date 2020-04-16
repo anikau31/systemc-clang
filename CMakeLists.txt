@@ -74,10 +74,9 @@ set( SYSTEMC_DIR $ENV{SYSTEMC} )
 set( EXTRA_INCLUDE_DIR $ENV{EXTRA_INCLUDE_DIR} )
 
 # Default plugin status 
-if ("${XLAT}" STREQUAL "")
-  set( PLUGIN_XLAT OFF )
-else()
-  set( PLUGIN_XLAT ${XLAT})
+set( PLUGIN_XLAT OFF )
+if ("${XLAT}" STREQUAL "ON")
+  set( PLUGIN_XLAT ON)
 endif()
 
 
@@ -338,9 +337,10 @@ set( TARGET "systemc-clang" )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -iquote ${PROJECT_SOURCE_DIR}/src")
 include_directories(
   "${LLVM_INSTALL_DIR}/include"
-  plugins/xlat
   "${CATCH_INCLUDE_DIR}"
   )
+
+set( SRC_LIB libsystemc-clang )
 
 if(NOT "${EXTRA_INCLUDE_DIR}" STREQUAL "")
   include_directories( "${EXTRA_INCLUDE_DIR}")
@@ -350,14 +350,19 @@ endif()
 link_directories( ${LLVM_INSTALL_DIR}/lib )
 
 add_subdirectory(src)
-add_subdirectory(plugins)
+
+if(PLUGIN_XLAT) 
+  include_directories(plugins/xlat)
+  add_subdirectory(plugins)
+  set( SRC_LIB libsystemc-clang libxlat )
+endif()
+
 
 if( TESTS_ON )
   add_subdirectory(tests)
   enable_testing()
 endif()
 
-set( SRC_LIB libsystemc-clang libxlat )
 
 add_executable(
   ${TARGET}

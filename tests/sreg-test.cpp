@@ -16,13 +16,13 @@ TEST_CASE("sreg example", "[llnl-examples]") {
 
   auto catch_test_args = systemc_clang::catch_test_args;
   catch_test_args.push_back("-I" + systemc_clang::test_data_dir +
-                            "/llnl-examples/");
+                            "/llnl-examples/zfpsynth/shared");
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
 
-  //  SystemCConsumer sc{from_ast};
-  Xlat sc{from_ast};
+    SystemCConsumer sc{from_ast};
+  //Xlat sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   // These are instances.
@@ -78,7 +78,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     REQUIRE(sreg_fwd_decl->getOPorts().size() == 0);
     REQUIRE(sreg_fwd_decl->getIOPorts().size() == 0);
     REQUIRE(sreg_fwd_decl->getSignals().size() == 1);
-    REQUIRE(sreg_fwd_decl->getOtherVars().size() == 1);
+    REQUIRE(sreg_fwd_decl->getOtherVars().size() == 0);
     REQUIRE(sreg_fwd_decl->getInputStreamPorts().size() == 1);
     REQUIRE(sreg_fwd_decl->getOutputStreamPorts().size() == 1);
 
@@ -93,7 +93,8 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     REQUIRE(sreg_fwd_rev_decl->getOPorts().size() == 0);
     REQUIRE(sreg_fwd_rev_decl->getIOPorts().size() == 0);
     REQUIRE(sreg_fwd_rev_decl->getSignals().size() == 7);
-    REQUIRE(sreg_fwd_rev_decl->getOtherVars().size() == 3);
+    // captures the static constexpr
+    REQUIRE(sreg_fwd_rev_decl->getOtherVars().size() == 2);
     REQUIRE(sreg_fwd_rev_decl->getInputStreamPorts().size() == 1);
     REQUIRE(sreg_fwd_rev_decl->getOutputStreamPorts().size() == 1);
   }
