@@ -62,11 +62,8 @@ install:
   - | # Build clang 
     cd DEPENDS
     wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-    #wget https://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-    #tar xf clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz 
-    #mv clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04 clang-7.0.0
-    tar x clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-    mv clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz clang-10.0.0
+    tar xf clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    mv clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04 clang-10.0.0
 
     # Debug
     # Setup flags
