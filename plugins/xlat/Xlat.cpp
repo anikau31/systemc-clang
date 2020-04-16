@@ -96,6 +96,7 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 
     string objname = get<0>(*mit);
 
+
     os_ << "object name is " << objname << " and h_op is " << h_op << "\n";
 
     PortDecl *pd = get<1>(*mit);
@@ -154,6 +155,7 @@ void Xlat::xlatfieldtype(string prefix, Tree<TemplateType> *treep, const Type *t
     os_ << "field: record type found, name is " << tmps << "\n";
     makehpsv(prefix, tmps, h_op, h_info);  // would need to recurse here
     return;
+
   }
   /*
 field m_port_data type follows
@@ -169,6 +171,7 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
 
   //llvm::outs()  << "xlattype dump of templatetree args follows\n";
   //template_argtp->dump();
+
 
   if (template_argtp->size() == 1) {
     string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();  
@@ -215,6 +218,18 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
       }
     }
   }
+}
+
+void Xlat::xlattype(string prefix, FieldDecl *fieldd, hNodep &h_typeinfo) {
+  os_ << "PortVarSigtype " << prefix << " is\n";
+  if (fieldd) {
+    fieldd->dump(os_);
+    QualType q = fieldd->getType();
+    if (!lutil.isSCType(q.getAsString())) {
+      os_ <<"non primitive type " << q.getAsString() << "\n";
+    }
+  }
+  else os_ << "EMPTY FieldDecl pointer\n";
 }
 
 void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,

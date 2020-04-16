@@ -150,7 +150,6 @@ namespace hnode {
     }
 
   };
-
   
   class util { 
   public:
@@ -179,6 +178,7 @@ namespace hnode {
       std::replace(nm.begin(), nm.end(), ' ', '_');
       nm.erase(std::remove_if(nm.begin(), nm.end(),
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
+
     }
      inline bool isSCBuiltinType(string tstring){
       // linear search sorry, but at least the length
