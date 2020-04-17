@@ -23,7 +23,7 @@
 #include "clang/Tooling/CommonOptionsParser.h"
 #include "clang/Tooling/Tooling.h"
 
-//using namespace clang::driver;
+// using namespace clang::driver;
 
 // / This is the include files we add to parse SystemC
 #include "FindArgument.h"
@@ -54,18 +54,18 @@ class SystemCConsumer : public ASTConsumer,
                         public RecursiveASTVisitor<SystemCConsumer> {
   // TODO: This should be made private at some point.
  public:
-  llvm::raw_ostream& os_;
+  llvm::raw_ostream &os_;
 
  public:
   SystemCConsumer(CompilerInstance &, std::string top = "!none");
   SystemCConsumer(ASTUnit *from_ast, std::string top = "!none");
   virtual ~SystemCConsumer();
 
-  Model* getSystemCModel();
-  const std::string& getTopModule() const;
+  Model *getSystemCModel();
+  const std::string &getTopModule() const;
   void setTopModule(const std::string &top_module_decl);
-  ASTContext& getContext() const;
-  SourceManager& getSourceManager() const;
+  ASTContext &getContext() const;
+  SourceManager &getSourceManager() const;
 
   // Virtual methods that plugins may override.
   virtual bool fire();
@@ -92,18 +92,6 @@ class SystemCClang : public SystemCConsumer {
       : SystemCConsumer(ci, top) {}
 };
 
-class SystemCClangAXN : public ASTFrontendAction {
- public:
-  SystemCClangAXN(const std::string &topModule) : top_{topModule} {};
-  std::string top_;
-
- public:
-  virtual std::unique_ptr<ASTConsumer> CreateASTConsumer(
-      clang::CompilerInstance &Compiler, llvm::StringRef inFile) {
-    return std::unique_ptr<ASTConsumer>(new SystemCConsumer(Compiler, top_));
-  }
-};
 
 }  // End namespace scpar
-
 #endif

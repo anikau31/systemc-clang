@@ -18,25 +18,41 @@
 #include <clang/Tooling/Tooling.h>
 #include "SystemCClang.h"
 
-
 namespace scpar {
+
+static llvm::cl::OptionCategory category("systemc-clang options");
+static llvm::cl::opt<std::string> topModule(
+    "top-module",
+    llvm::cl::desc("Specify top-level module declaration for entry point"),
+    llvm::cl::cat(category));
+
+class SystemCClangAXN : public ASTFrontendAction {
+ public:
+  SystemCClangAXN() : top_{topModule} {};
+
+ private:
+  std::string top_;
+
+ public:
+  virtual std::unique_ptr<ASTConsumer> CreateASTConsumer(
+      clang::CompilerInstance &Compiler, llvm::StringRef inFile) {
+    return std::unique_ptr<ASTConsumer>(new SystemCConsumer(Compiler, top_));
+  }
+};
+
 class PluginAction {
  public:
   PluginAction(int argc, const char **argv) {
-    std::unique_ptr<clang::tooling::ToolAction> factory{nullptr};
-    static llvm::cl::OptionCategory category("systemc-clang options");
-    static llvm::cl::opt<std::string> topModule(
-        "top-module",
-        llvm::cl::desc("Specify top-level module declaration for entry point"),
-        llvm::cl::cat(category));
-
     // Specify the top-level module.
     CommonOptionsParser OptionsParser(argc, argv, category);
     ClangTool Tool(OptionsParser.getCompilations(),
                    OptionsParser.getSourcePathList());
-    runToolOnCode(make_unique<SystemCClangAXN>(topModule), argv[1] );
+
+    std::unique_ptr<FrontendActionFactory> FrontendFactory;
+    FrontendFactory = newFrontendActionFactory<SystemCClangAXN>();
+    Tool.run(FrontendFactory.get());
   };
 };
-};
+};  // namespace scpar
 
 #endif /* _PLUGIN_ACTION_H_ */
