@@ -22,5 +22,5 @@ fi
 
 # copy the binary systemc-clang to LLVM_INSTALL_DIR
 cp $SYSTEMC_CLANG_BUILD_DIR/systemc-clang $LLVM_INSTALL_DIR/bin/systemc-clang
-gdb --args $LLVM_INSTALL_DIR/bin/systemc-clang $1 -- -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -I$LLVM_INSTALL_DIR/lib/clang/9.0.0/include/ -I/usr/include -I$SYSTEMC/include -x c++ -w -c 
+gdb --args $LLVM_INSTALL_DIR/bin/systemc-clang $1 -- -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -I$LLVM_INSTALL_DIR/lib/clang/10.0.0/include/ -I/usr/include -I$SYSTEMC/include -x c++ -w -c 
 
