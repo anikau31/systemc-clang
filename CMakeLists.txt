@@ -75,7 +75,7 @@ set( EXTRA_INCLUDE_DIR $ENV{EXTRA_INCLUDE_DIR} )
 
 # Default plugin status 
 set( PLUGIN_XLAT OFF )
-if ("${XLAT}" STREQUAL "ON")
+if (("${XLAT}" STREQUAL "ON") OR ("${XLAT}" STREQUAL "on"))
   set( PLUGIN_XLAT ON)
 endif()
 
