@@ -220,18 +220,6 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
   }
 }
 
-void Xlat::xlattype(string prefix, FieldDecl *fieldd, hNodep &h_typeinfo) {
-  os_ << "PortVarSigtype " << prefix << " is\n";
-  if (fieldd) {
-    fieldd->dump(os_);
-    QualType q = fieldd->getType();
-    if (!lutil.isSCType(q.getAsString())) {
-      os_ <<"non primitive type " << q.getAsString() << "\n";
-    }
-  }
-  else os_ << "EMPTY FieldDecl pointer\n";
-}
-
 void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
                     llvm::raw_ostream &os) {
   for (auto efc : efv) {
