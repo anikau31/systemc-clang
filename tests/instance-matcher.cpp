@@ -14,7 +14,7 @@ using namespace sc_ast_matchers;
 
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "matcher-test.cpp")};
+      systemc_clang::test_data_dir, "xor-hierarchy.cpp")};
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)

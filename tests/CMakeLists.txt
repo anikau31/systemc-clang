@@ -50,6 +50,7 @@ set( UNIT_TEST_LIST
   test-xor-hierarchy
   # Unit tests for structures
   tree-test
+  instance-matcher
   )
 
 if (PLUGIN_XLAT)
