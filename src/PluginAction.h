@@ -17,7 +17,6 @@
 
 #include <clang/Tooling/Tooling.h>
 #include "SystemCClang.h"
-
 namespace scpar {
 
 static llvm::cl::OptionCategory category("systemc-clang options");
@@ -25,6 +24,8 @@ static llvm::cl::opt<std::string> topModule(
     "top-module",
     llvm::cl::desc("Specify top-level module declaration for entry point"),
     llvm::cl::cat(category));
+
+
 
 class SystemCClangAXN : public ASTFrontendAction {
  public:
