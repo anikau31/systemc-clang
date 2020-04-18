@@ -97,8 +97,8 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     TRY_TO(TraverseForStmt((ForStmt *)stmt));
   }
   else if (isa<SwitchStmt>(stmt)){
-    os_ << "Found switch stmt, not yet implemented\n";
-    return true;
+    os_ << "Found switch stmt\n";
+    TRY_TO(TraverseSwitchStmt((SwitchStmt *)stmt));
   }
   else {  
     os_ << "stmt type " << stmt->getStmtClassName() << " not recognized, calling default recursive ast visitor\n";
@@ -492,6 +492,38 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   return true;
 }
 
+bool XlatMethod::TraverseSwitchStmt(SwitchStmt *switchs) {
+  hNodep h_switchstmt;
+  os_ << "Switch stmt\n";
+  h_switchstmt = new hNode(hNode::hdlopsEnum::hSwitchStmt);
+  Stmt * swinit = dyn_cast<Stmt>(switchs->getInit());
+  if (swinit) {
+    os_ << "switch init not handled, skipping\n";
+  }
+  hNodep old_ret = h_ret;
+  TRY_TO(TraverseStmt(switchs->getCond()));
+  if (h_ret != old_ret) h_switchstmt->child_list.push_back(h_ret);
+  else h_switchstmt->child_list.push_back(new nNodep(hNode::hdlopsEnum::hUnimpl));
+  os_ << "Switch loop body\n";
+  switchs->getSwitchCaseList()->dump(os_);
+  for (const SwitchCase *sc = switchs->getSwitchCaseList(); sc != NULL;
+       sc = sc->getNextSwitchCase()) {
+    if (isa<DefaultStmt>(sc) {
+	
+      }
+      
+    } 
+  } 
+  //TRY_TO(TraverseStmt(switchs->getBody()));
+  //h_switchbody = h_ret;
+  //h_switchstmt->child_list.push_back(h_switchinit);
+  
+
+  //h_switchstmt->child_list.push_back(h_switchbody);
+  h_ret = h_switchstmt;
+  
+  return true;
+}
 // wouldn't appear in a SC_METHOD, but put it in anyway
 // won't put in do stmt for now
 bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {

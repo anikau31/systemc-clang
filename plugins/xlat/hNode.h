@@ -48,6 +48,7 @@ namespace hnode {
   etype(hForCond), \
   etype(hForInc), \
   etype(hForBody), \
+  etype(hSwitchStmt), \
   etype(hWhileStmt),				\
   etype(hLiteral), \
   etype(hUnimpl), \

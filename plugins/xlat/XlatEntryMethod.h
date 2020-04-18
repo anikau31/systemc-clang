@@ -45,6 +45,7 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   bool TraverseMemberExpr(MemberExpr *memberexpr);
   bool TraverseIfStmt(IfStmt *ifs);
   bool TraverseForStmt(ForStmt *fors);
+  bool TraverseSwitchStmt(SwitchStmt *switchs);
   bool TraverseWhileStmt(WhileStmt *whiles);
   void VnameDump();
   //CXXMethodDecl *getEMD();
