@@ -9,9 +9,44 @@
 #include "clang/ASTMatchers/ASTMatchersMacros.h"
 
 using namespace clang::ast_matchers;
-using namespace scpar;
 
 namespace sc_ast_matchers {
+
+struct ModuleInstanceType {
+  std::string var_name;
+  std::string var_type_name;
+  std::string instance_name;
+  bool is_field_decl;
+  clang::Decl *decl;
+
+  ModuleInstanceType()
+      : var_name{},
+        var_type_name{},
+        instance_name{},
+        is_field_decl{false},
+        decl{nullptr} {}
+
+  ModuleInstanceType(const ModuleInstanceType &rhs) {
+    var_name = rhs.var_name;
+    var_type_name = rhs.var_type_name;
+    instance_name = rhs.instance_name;
+    is_field_decl = rhs.is_field_decl;
+    decl = rhs.decl;
+  }
+
+  bool operator==(const ModuleInstanceType &rhs) {
+    return std::tie(var_name, var_type_name, instance_name, is_field_decl,
+                    decl) == std::tie(rhs.var_name, rhs.var_type_name,
+                                      rhs.instance_name, rhs.is_field_decl,
+                                      rhs.decl);
+  }
+
+  void dump() {
+    llvm::outs() << decl << " " << var_type_name << " " << var_name << " "
+                 << instance_name << " " << is_field_decl << "\n";
+  }
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Class InstanceMatcher
@@ -23,6 +58,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   typedef std::tuple<std::string, Decl *> InstanceDeclType;
   typedef std::vector<InstanceDeclType> InstanceDeclarationsType;
 
+  // Store all instances in a map.
+  // The map key should be the Decl*.  This will work for both FieldDecl
+  // (instances within sub-modules) and VarDecl separate modules in sc_main().
+  //
+
+  typedef std::pair<Decl *, ModuleInstanceType> ModuleInstanceTuple;
+  typedef std::map<Decl *, ModuleInstanceType> InstanceDeclarations;
+
  private:
   // Instances can come in two forms:
   // FieldDecl: this is when they are members of a class.
@@ -32,7 +75,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   // The way to identify them both together is to look at its base class Decl.
   // Then use dyn_cast<> to detect whether it is one of the two above mentioned
   // types.
+  //
+  // deprecated
   InstanceDeclarationsType instances_;
+
+  InstanceDeclarations instance_map_;
 
  public:
   // Finds the instance with the same type as the argument.
@@ -50,7 +97,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                  << "\n";
     // Walk through all the instances.
     for (auto const &element : instances_) {
-      auto p_field_var_decl{get<1>(element)};
+      auto p_field_var_decl{std::get<1>(element)};
 
       llvm::outs() << "=> inst name: " << std::get<0>(element) << "\n";
       // Check if it is a FieldDecl
@@ -185,12 +232,22 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       //
       // Get the variable name
       auto var_name{instance_fd->getNameAsString()};
-      // We do not get the instance name from within the field declaration. 
+      // We do not get the instance name from within the field declaration.
       // Get the type of the class of the field.
       auto var_type_name{instance_fd->getType().getAsString()};
 
-      llvm::outs() << "=> var_type_name " << var_type_name << " var_name " << var_name << "\n";
+      llvm::outs() << "=> var_type_name " << var_type_name << " var_name "
+                   << var_name << "\n";
       instances_.push_back(std::make_tuple(var_name, instance_fd));
+
+      ModuleInstanceType parsed_instance{};
+      parsed_instance.var_name = var_name;
+      parsed_instance.var_type_name = var_type_name;
+      parsed_instance.decl = instance_fd;
+      parsed_instance.is_field_decl = true;
+
+      instance_map_.insert(
+          std::pair<Decl *, ModuleInstanceType>(instance_fd, parsed_instance));
     }
 
     if (instance_vd && instance_name_vd) {
@@ -205,26 +262,46 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       // This is the main object's constructor name
       llvm::outs() << "Found constructor expression argument: "
                    << instance_name_vd->getNumArgs() << "\n";
-      auto inst_vd_name{cast<StringLiteral>(ctor_arg)->getString().str()};
+
+      auto var_name{instance_vd->getNameAsString()};
+      // We do not get the instance name from within the field declaration.
+      // Get the type of the class of the field.
+      auto var_type_name{instance_vd->getType().getAsString()};
+      auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
 
       // This is the instance name.
-      instances_.push_back(std::make_tuple(inst_vd_name, instance_vd));
+      instances_.push_back(std::make_tuple(instance_name, instance_vd));
+
+      ModuleInstanceType parsed_instance{};
+      parsed_instance.var_name = var_name;
+      parsed_instance.var_type_name = var_type_name;
+      parsed_instance.instance_name = instance_name;
+      parsed_instance.decl = instance_vd;
+      parsed_instance.is_field_decl = false;
+
+      // Don't add repeated matches
+      auto found_it{instance_map_.find(instance_vd)};
+      if (found_it == instance_map_.end()) {
+        instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
+            instance_vd, parsed_instance));
+      }
     }
   }
 
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.
-    for (const auto &i : instances_) {
-      llvm::outs() << "[InstanceMatcher] module instance declaration name: "
-                   << get<0>(i) << ", " << get<1>(i) << "\n";
+    for (const auto &i : instance_map_) {
+      llvm::outs() << "decl* " << i.first;
+      auto instance{i.second};
 
-      auto p_field_var_decl{get<1>(i)};
-      if (isa<FieldDecl>(p_field_var_decl)) {
-        llvm::outs() << "[DBG] FieldDecl\n";
-        p_field_var_decl->dump();
+      auto instance_field{instance.decl};
+      if (isa<FieldDecl>(instance_field)) {
+      //if (instance.is_field_decl){     
+        llvm::outs() << " FieldDecl ";
       } else {
-        llvm::outs() << "[DBG] VarDecl\n";
+        llvm::outs() << " VarDecl ";
       }
+      instance.dump();
     }
   }
 };
