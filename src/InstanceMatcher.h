@@ -12,7 +12,6 @@ using namespace clang::ast_matchers;
 using namespace scpar;
 
 namespace sc_ast_matchers {
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Class InstanceMatcher
@@ -53,7 +52,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     for (auto const &element : instances_) {
       auto p_field_var_decl{get<1>(element)};
 
-      llvm::outs() << "=> inst name: " << get<0>(element) << "\n";
+      llvm::outs() << "=> inst name: " << std::get<0>(element) << "\n";
       // Check if it is a FieldDecl
 
       // TODO factor out this code to be handled for both.
@@ -94,33 +93,33 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     return (found_instances.size() != 0);
   }
 
-  auto match_ctor_arg(const std::string &bind_arg_name, const std::string &bind_ctor_expr) {
-    return cxxConstructExpr(hasArgument(0, 
-          stringLiteral().bind(bind_arg_name)
-          )
-        ).bind(bind_ctor_expr);
+  auto match_ctor_arg(const std::string &bind_arg_name,
+                      const std::string &bind_ctor_expr) {
+    return cxxConstructExpr(hasArgument(0, stringLiteral().bind(bind_arg_name)))
+        .bind(bind_ctor_expr);
   }
 
   void registerMatchers(MatchFinder &finder) {
-    /* clang-format off */
-
     // We will have two matchers.
     //
     // Match when the following conditions are satisifed:
     // * It is a FieldDecl
     // * It has a type that is a C++ class that is derived from sc_module
     //
+    // These are field members within a class declaration.  Hence, we only need
+    // to collect their FieldDecl pointers and their variable names.  Their
+    // instance names would appear when the constructor of the class that has
+    // these field members within it.  This constructor would use the
+    // initialization list to provide an argument, which would be the instance
+    // name.
+    //
+    /* clang-format off */
     auto match_instances = 
       fieldDecl(
         hasType(
-          cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))))
-
-        /*
-            hasDescendant(
-              cxxConstructExpr(hasArgument(0,
-              stringLiteral().bind("constructor_arg"))).bind("constructor_expr")
-              )
-              */
+          cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))
+            ).bind("cxx_record_decl")
+          )
         ).bind("instances_in_fielddecl");
 
     // Match when the following conditions are satisifed:
@@ -133,14 +132,15 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     auto match_instances_vars =
         varDecl(
             hasType(
-                cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")),
-                  hasDescendant(cxxConstructorDecl(forEachDescendant(match_ctor_arg("ctor_arg", "ctor_expr"))
+                cxxRecordDecl(
+                  isDerivedFrom(hasName("::sc_core::sc_module")),
+                  hasDescendant(cxxConstructorDecl(
+                      forEachDescendant(match_ctor_arg("ctor_arg", "ctor_expr"))
                       ).bind("ctor_decl")
                     )
                   ).bind("cxx_record_decl")
               ),
-            hasDescendant(
-              match_ctor_arg("ctor_arg", "constructor_expr")
+            hasDescendant(match_ctor_arg("ctor_arg", "constructor_expr")
               )
             ).bind("instances_in_vardecl");
 
@@ -155,8 +155,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     auto instance_fd = const_cast<FieldDecl *>(
         result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"));
-    auto instance_name_fd = const_cast<CXXConstructExpr *>(
-        result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"));
+    // auto instance_name_fd = const_cast<CXXConstructExpr *>(
+    // result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"));
 
     // VD
     //
@@ -175,45 +175,27 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     // FD
     if (instance_fd) {
-      std::string name{instance_fd->getIdentifier()->getNameStart()};
       llvm::outs() << "InstanceMatcher\n";
       instance_fd->dump();
-      //      instances_.push_back(std::make_tuple(name, instance));
+
+      llvm::outs() << "## FieldDecl\n";
       //
-      if (instance_name_fd) {
-        llvm::outs() << "Found constructor expression argument: "
-                     << instance_name_fd->getNumArgs() << "\n";
-        auto first_arg{instance_name_fd->getArg(0)};
+      // NAND n1 such that n1("N1") somewhere
+      // variable name: n1, var_type_name: NAND, instance_name: N1
+      //
+      // Get the variable name
+      auto var_name{instance_fd->getNameAsString()};
+      // We do not get the instance name from within the field declaration. 
+      // Get the type of the class of the field.
+      auto var_type_name{instance_fd->getType().getAsString()};
 
-        // Code to get the instance name
-        clang::LangOptions LangOpts;
-        LangOpts.CPlusPlus = true;
-        clang::PrintingPolicy Policy(LangOpts);
-
-        std::string name_string;
-        llvm::raw_string_ostream sstream(name_string);
-        first_arg->printPretty(sstream, 0, Policy);
-        // The instance name comes with " and we should remove them.
-        std::string strip_quote_name{sstream.str()};
-        strip_quote_name.erase(
-            std::remove(strip_quote_name.begin(), strip_quote_name.end(), '\"'),
-            strip_quote_name.end());
-
-        // This is the instance name.
-        instances_.push_back(std::make_tuple(strip_quote_name, instance_fd));
-      }
+      llvm::outs() << "=> var_type_name " << var_type_name << " var_name " << var_name << "\n";
+      instances_.push_back(std::make_tuple(var_name, instance_fd));
     }
 
     if (instance_vd && instance_name_vd) {
       std::string name{instance_vd->getIdentifier()->getNameStart()};
       llvm::outs() << "@@ Found a member variable instance: " << name << "\n";
-
-      // TODO: Is this how we want the instance name?
-      // This is actually a good way to identify instances.
-      // This is because these names will truly be unique. Variable names could
-      // be arrays, which may not be the best way to identify unique sc_module
-      // instances.
-
       if (ctor_decl && ctor_expr && ctor_arg) {
         ctor_arg->dump();
         llvm::outs() << "=> instance name: "
@@ -223,26 +205,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       // This is the main object's constructor name
       llvm::outs() << "Found constructor expression argument: "
                    << instance_name_vd->getNumArgs() << "\n";
-      // instance_name_vd->dump();
-
-      auto first_arg{instance_name_vd->getArg(0)};
-
-      // Code to get the instance name
-      clang::LangOptions LangOpts;
-      LangOpts.CPlusPlus = true;
-      clang::PrintingPolicy Policy(LangOpts);
-
-      std::string name_string;
-      llvm::raw_string_ostream sstream(name_string);
-      first_arg->printPretty(sstream, 0, Policy);
-      // The instance name comes with " and we should remove them.
-      std::string strip_quote_name{sstream.str()};
-      strip_quote_name.erase(
-          std::remove(strip_quote_name.begin(), strip_quote_name.end(), '\"'),
-          strip_quote_name.end());
+      auto inst_vd_name{cast<StringLiteral>(ctor_arg)->getString().str()};
 
       // This is the instance name.
-      instances_.push_back(std::make_tuple(strip_quote_name, instance_vd));
+      instances_.push_back(std::make_tuple(inst_vd_name, instance_vd));
     }
   }
 
