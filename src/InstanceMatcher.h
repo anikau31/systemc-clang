@@ -94,6 +94,13 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     return (found_instances.size() != 0);
   }
 
+  auto match_ctor_arg(const std::string &bind_arg_name, const std::string &bind_ctor_expr) {
+    return cxxConstructExpr(hasArgument(0, 
+          stringLiteral().bind(bind_arg_name)
+          )
+        ).bind(bind_ctor_expr);
+  }
+
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
 
@@ -122,42 +129,18 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     //   - It has a descendant that has a constructor that has as its first argument
     //     a name provided for it.
     //     (Every sc_module instantiated must have a string literal.
-    
- // auto match_instances_vars =
-        // varDecl(
-            // hasType(
-                // cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")),
-                  // hasDescendant(cxxConstructorDecl(forEach(cxxCtorInitializer(
-                          // isMemberInitializer(), unless(isBaseInitializer()), withInitializer(anything())
-                          // ).bind("ctor_init"))
-                      // ).bind("ctor_decl"))
-//
-                  // )
-                // ),
-            // hasDescendant(
-              // cxxConstructExpr(hasArgument(0,
-              // stringLiteral().bind("constructor_arg"))).bind("constructor_expr")
-              // )
-            // )
-            // .bind("instances_in_vardecl");
-//
-
-
+   
     auto match_instances_vars =
         varDecl(
             hasType(
                 cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")),
-                  hasDescendant(cxxConstructorDecl(forEachDescendant(cxxConstructExpr(
-                          hasArgument(0,stringLiteral().bind("ctor_arg"))
-                          ).bind("ctor_expr")
-                          )
+                  hasDescendant(cxxConstructorDecl(forEachDescendant(match_ctor_arg("ctor_arg", "ctor_expr"))
                       ).bind("ctor_decl")
                     )
                   ).bind("cxx_record_decl")
               ),
             hasDescendant(
-              cxxConstructExpr(hasArgument(0,
-              stringLiteral().bind("constructor_arg"))).bind("constructor_expr")
+              match_ctor_arg("ctor_arg", "constructor_expr")
               )
             ).bind("instances_in_vardecl");
 
@@ -181,39 +164,43 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"));
     auto instance_name_vd = const_cast<CXXConstructExpr *>(
         result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"));
-    auto ctor_decl = const_cast<CXXConstructorDecl*>( result.Nodes.getNodeAs<CXXConstructorDecl>("ctor_decl"));
-    auto ctor_init = const_cast<CXXCtorInitializer*>( result.Nodes.getNodeAs<CXXCtorInitializer>("ctor_init"));
-    auto ctor_expr = const_cast<CXXConstructExpr*>( result.Nodes.getNodeAs<CXXConstructExpr>("ctor_expr"));
-    auto ctor_arg= const_cast<Stmt*>( result.Nodes.getNodeAs<Stmt>("ctor_arg"));
+    auto ctor_decl = const_cast<CXXConstructorDecl *>(
+        result.Nodes.getNodeAs<CXXConstructorDecl>("ctor_decl"));
+    auto ctor_init = const_cast<CXXCtorInitializer *>(
+        result.Nodes.getNodeAs<CXXCtorInitializer>("ctor_init"));
+    auto ctor_expr = const_cast<CXXConstructExpr *>(
+        result.Nodes.getNodeAs<CXXConstructExpr>("ctor_expr"));
+    auto ctor_arg =
+        const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_arg"));
 
     // FD
-    if (instance_fd ) {
+    if (instance_fd) {
       std::string name{instance_fd->getIdentifier()->getNameStart()};
       llvm::outs() << "InstanceMatcher\n";
       instance_fd->dump();
       //      instances_.push_back(std::make_tuple(name, instance));
       //
       if (instance_name_fd) {
-      llvm::outs() << "Found constructor expression argument: "
-                   << instance_name_fd->getNumArgs() << "\n";
-      auto first_arg{instance_name_fd->getArg(0)};
+        llvm::outs() << "Found constructor expression argument: "
+                     << instance_name_fd->getNumArgs() << "\n";
+        auto first_arg{instance_name_fd->getArg(0)};
 
-      // Code to get the instance name
-      clang::LangOptions LangOpts;
-      LangOpts.CPlusPlus = true;
-      clang::PrintingPolicy Policy(LangOpts);
+        // Code to get the instance name
+        clang::LangOptions LangOpts;
+        LangOpts.CPlusPlus = true;
+        clang::PrintingPolicy Policy(LangOpts);
 
-      std::string name_string;
-      llvm::raw_string_ostream sstream(name_string);
-      first_arg->printPretty(sstream, 0, Policy);
-      // The instance name comes with " and we should remove them.
-      std::string strip_quote_name{sstream.str()};
-      strip_quote_name.erase(
-          std::remove(strip_quote_name.begin(), strip_quote_name.end(), '\"'),
-          strip_quote_name.end());
+        std::string name_string;
+        llvm::raw_string_ostream sstream(name_string);
+        first_arg->printPretty(sstream, 0, Policy);
+        // The instance name comes with " and we should remove them.
+        std::string strip_quote_name{sstream.str()};
+        strip_quote_name.erase(
+            std::remove(strip_quote_name.begin(), strip_quote_name.end(), '\"'),
+            strip_quote_name.end());
 
-      // This is the instance name.
-      instances_.push_back(std::make_tuple(strip_quote_name, instance_fd));
+        // This is the instance name.
+        instances_.push_back(std::make_tuple(strip_quote_name, instance_fd));
       }
     }
 
@@ -227,24 +214,16 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       // be arrays, which may not be the best way to identify unique sc_module
       // instances.
 
-      if (ctor_decl)  {
-        //ctor_decl->dump();
-
-        if (ctor_expr) {
-          llvm::outs() << "## ctor expr\n"; 
-          ctor_expr->dump();
-          if (ctor_arg) {
-            llvm::outs() << "=> ctor_arg\n";
-            ctor_arg->dump();
-            llvm::outs() << "=> instance name: " << cast<StringLiteral>(ctor_arg)->getString() << "\n";
-          }
-        }
+      if (ctor_decl && ctor_expr && ctor_arg) {
+        ctor_arg->dump();
+        llvm::outs() << "=> instance name: "
+                     << cast<StringLiteral>(ctor_arg)->getString() << "\n";
       }
 
       // This is the main object's constructor name
       llvm::outs() << "Found constructor expression argument: "
                    << instance_name_vd->getNumArgs() << "\n";
-      //instance_name_vd->dump();
+      // instance_name_vd->dump();
 
       auto first_arg{instance_name_vd->getArg(0)};
 
