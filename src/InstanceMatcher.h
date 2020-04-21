@@ -227,8 +227,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                       forEachConstructorInitializer(
                         cxxCtorInitializer(
                           isMemberInitializer(),
-                          forField(decl().bind("ctor_field_decl"))
-                          ).bind("ctor_init")
+                          forField(
+                            allOf(
+                              hasType(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
+                                ),
+                              decl().bind("sub_ctor_field_decl")
+                              )
+                            )
+                          ).bind("sub_ctor_init")
                         )
                       ).bind("ctor_decl")
                     )
@@ -256,8 +262,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"));
     auto instance_name_vd = const_cast<CXXConstructExpr *>(
         result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"));
-    auto ctor_init = const_cast<CXXCtorInitializer *>(
-        result.Nodes.getNodeAs<CXXCtorInitializer>("ctor_init"));
+    auto sub_ctor_init = const_cast<CXXCtorInitializer *>(
+        result.Nodes.getNodeAs<CXXCtorInitializer>("sub_ctor_init"));
     auto ctor_arg =
         const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_arg"));
     auto cxx_record_decl = const_cast<CXXRecordDecl *>(
@@ -270,8 +276,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         result.Nodes.getNodeAs<CXXConstructExpr>("ctor_expr"));
     auto ctor_decl = const_cast<CXXConstructorDecl *>(
         result.Nodes.getNodeAs<CXXConstructorDecl>("ctor_decl"));
-    auto ctor_field_decl =
-        const_cast<Decl *>(result.Nodes.getNodeAs<Decl>("ctor_field_decl"));
+    auto sub_ctor_field_decl =
+        const_cast<Decl *>(result.Nodes.getNodeAs<Decl>("sub_ctor_field_decl"));
 
     // FD
     if (instance_fd) {
@@ -305,8 +311,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     if (instance_vd && instance_name_vd) {
       std::string name{instance_vd->getIdentifier()->getNameStart()};
-      // This is the main object's constructor name
 
+      // This is the main object's constructor name
       auto var_name{instance_vd->getNameAsString()};
       // We do not get the instance name from within the field declaration.
       // Get the type of the class of the field.
@@ -318,13 +324,13 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                    << "\n";
 
       // Found submodule
-      std::string submodule_instance_name{"none"};
-      if (ctor_field_decl && ctor_init) {
+      std::string submodule_instance_name{""};
+      if (sub_ctor_field_decl && sub_ctor_init) {
         llvm::outs() << "=> processing submodule\n";
-        Expr *expr = ctor_init->getInit()->IgnoreImplicit();
+        sub_ctor_field_decl->dump();
+        Expr *expr = sub_ctor_init->getInit()->IgnoreImplicit();
         CXXConstructExpr *cexpr = cast<CXXConstructExpr>(expr);
 
-        //        llvm::outs() << " ###### run InstanceMatcher \n";
         MatchFinder iarg_registry{};
         InstanceArgumentMatcher iarg_matcher{};
         iarg_matcher.registerMatchers(iarg_registry);
@@ -333,12 +339,19 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // This retrieves the submodule instance name.
         if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
           submodule_instance_name = inst_literal->getString().str();
+
+          // Find the instance if it has been already recorded.
+          auto found_it{instance_map_.find(sub_ctor_field_decl)};
+          if (found_it != instance_map_.end()) {
+            // has to be a reference
+            auto &inst{found_it->second};
+            inst.instance_name = submodule_instance_name;
+          }
         }
-        // llvm::outs() << " ###### END InstanceMatcher \n";
+        llvm::outs() << "=> submodule_instance_name " << submodule_instance_name
+                     << "\n";
       }
 
-      llvm::outs() << "=> submodule_instance_name " << submodule_instance_name
-                   << "\n";
       // This is the instance name.
       instances_.push_back(std::make_tuple(instance_name, instance_vd));
 
