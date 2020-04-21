@@ -47,6 +47,46 @@ struct ModuleInstanceType {
   }
 };
 
+class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
+ private:
+  clang::StringLiteral *instance_literal_;
+
+ public:
+  clang::StringLiteral *getInstanceLiteral() const { return instance_literal_; }
+
+  void registerMatchers(MatchFinder &finder) {
+    instance_literal_ = nullptr;
+    auto arg_matcher =
+        cxxConstructExpr(hasDescendant(cxxConstructExpr(
+                             hasArgument(0, stringLiteral().bind("inst_arg")))))
+            .bind("ctor_expr");
+
+    // cxxConstructExpr(hasArgument(0,
+    // stringLiteral().bind("inst_arg"))).bind("ctor_expr");
+
+    finder.addMatcher(arg_matcher, this);
+  }
+
+  virtual void run(const MatchFinder::MatchResult &result) {
+    auto ctor_expr = const_cast<CXXConstructExpr *>(
+        result.Nodes.getNodeAs<CXXConstructExpr>("ctor_expr"));
+    auto inst_arg = const_cast<StringLiteral *>(
+        result.Nodes.getNodeAs<StringLiteral>("inst_arg"));
+
+    llvm::outs() << "## InstanceArgumentMatcher\n";
+    if (ctor_expr && inst_arg) {
+      llvm::outs() << "@@ ctor expr\n";
+      instance_literal_ = inst_arg;
+    }
+  }
+
+  void dump() {
+    if (instance_literal_) {
+      instance_literal_->dump();
+    }
+  }
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Class InstanceMatcher
@@ -86,8 +126,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   // Finds the instance with the same type as the argument.
   // Pass by reference to the instance.
-  bool findInstanceByVariableType(CXXRecordDecl *decl,
-                    std::vector<InstanceDeclType> &found_instances) {
+  bool findInstanceByVariableType(
+      CXXRecordDecl *decl, std::vector<InstanceDeclType> &found_instances) {
     // First check in the instance_fields.
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
@@ -131,7 +171,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           instance.dump();
           if (rt == decl) {
             llvm::outs() << "==> Insert vardecl into found instance\n";
-            found_instances.push_back(InstanceDeclType(instance.instance_name, rt));
+            found_instances.push_back(
+                InstanceDeclType(instance.instance_name, rt));
           }
         }
       }
@@ -183,7 +224,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                 cxxRecordDecl(
                   isDerivedFrom(hasName("::sc_core::sc_module")),
                   hasDescendant(cxxConstructorDecl(
-                      forEachDescendant(match_ctor_arg("ctor_arg", "ctor_expr"))
+                      forEachConstructorInitializer(
+                        cxxCtorInitializer(
+                          isMemberInitializer(),
+                          forField(decl().bind("ctor_field_decl"))
+                          ).bind("ctor_init")
+                        )
                       ).bind("ctor_decl")
                     )
                   ).bind("cxx_record_decl")
@@ -203,8 +249,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     auto instance_fd = const_cast<FieldDecl *>(
         result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"));
-    // auto instance_name_fd = const_cast<CXXConstructExpr *>(
-    // result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"));
 
     // VD
     //
@@ -212,14 +256,22 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"));
     auto instance_name_vd = const_cast<CXXConstructExpr *>(
         result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"));
-    auto ctor_decl = const_cast<CXXConstructorDecl *>(
-        result.Nodes.getNodeAs<CXXConstructorDecl>("ctor_decl"));
     auto ctor_init = const_cast<CXXCtorInitializer *>(
         result.Nodes.getNodeAs<CXXCtorInitializer>("ctor_init"));
-    auto ctor_expr = const_cast<CXXConstructExpr *>(
-        result.Nodes.getNodeAs<CXXConstructExpr>("ctor_expr"));
     auto ctor_arg =
         const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_arg"));
+    auto cxx_record_decl = const_cast<CXXRecordDecl *>(
+        result.Nodes.getNodeAs<CXXRecordDecl>("cxx_record_decl"));
+
+    // Submodule
+    auto ctor_submodule_arg =
+        const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_submodule_arg"));
+    auto ctor_expr = const_cast<CXXConstructExpr *>(
+        result.Nodes.getNodeAs<CXXConstructExpr>("ctor_expr"));
+    auto ctor_decl = const_cast<CXXConstructorDecl *>(
+        result.Nodes.getNodeAs<CXXConstructorDecl>("ctor_decl"));
+    auto ctor_field_decl =
+        const_cast<Decl *>(result.Nodes.getNodeAs<Decl>("ctor_field_decl"));
 
     // FD
     if (instance_fd) {
@@ -253,16 +305,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     if (instance_vd && instance_name_vd) {
       std::string name{instance_vd->getIdentifier()->getNameStart()};
-      llvm::outs() << "@@ Found a member variable instance: " << name << "\n";
-      if (ctor_decl && ctor_expr && ctor_arg) {
-        ctor_arg->dump();
-        llvm::outs() << "=> instance name: "
-                     << cast<StringLiteral>(ctor_arg)->getString() << "\n";
-      }
-
       // This is the main object's constructor name
-      llvm::outs() << "Found constructor expression argument: "
-                   << instance_name_vd->getNumArgs() << "\n";
 
       auto var_name{instance_vd->getNameAsString()};
       // We do not get the instance name from within the field declaration.
@@ -270,6 +313,32 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       auto var_type_name{instance_vd->getType().getAsString()};
       auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
 
+      llvm::outs() << "=> var_name " << var_name << " var_type_name "
+                   << var_type_name << " instance_name " << instance_name
+                   << "\n";
+
+      // Found submodule
+      std::string submodule_instance_name{"none"};
+      if (ctor_field_decl && ctor_init) {
+        llvm::outs() << "=> processing submodule\n";
+        Expr *expr = ctor_init->getInit()->IgnoreImplicit();
+        CXXConstructExpr *cexpr = cast<CXXConstructExpr>(expr);
+
+        //        llvm::outs() << " ###### run InstanceMatcher \n";
+        MatchFinder iarg_registry{};
+        InstanceArgumentMatcher iarg_matcher{};
+        iarg_matcher.registerMatchers(iarg_registry);
+        iarg_registry.match(*cexpr, *result.Context);
+
+        // This retrieves the submodule instance name.
+        if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
+          submodule_instance_name = inst_literal->getString().str();
+        }
+        // llvm::outs() << " ###### END InstanceMatcher \n";
+      }
+
+      llvm::outs() << "=> submodule_instance_name " << submodule_instance_name
+                   << "\n";
       // This is the instance name.
       instances_.push_back(std::make_tuple(instance_name, instance_vd));
 
@@ -297,7 +366,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
       auto instance_field{instance.decl};
       if (isa<FieldDecl>(instance_field)) {
-      //if (instance.is_field_decl){     
+        // if (instance.is_field_decl){
         llvm::outs() << " FieldDecl ";
       } else {
         llvm::outs() << " VarDecl ";
