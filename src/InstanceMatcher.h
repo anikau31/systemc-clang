@@ -132,11 +132,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
 
-    llvm::outs() << "[findInstance] instance size: " << instances_.size()
+    llvm::outs() << "[findInstance] instance size: " << instance_map_.size()
                  << "\n";
 
     llvm::outs() << "[findInstance] must find decl name: " << decl->getName()
                  << "\n";
+
     // Walk through all the instances.
     for (auto const &element : instance_map_) {
       auto instance{element.second};
@@ -218,10 +219,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     //     a name provided for it.
     //     (Every sc_module instantiated must have a string literal.
    
-    auto match_instances_vars =
-        varDecl(
-            hasType(
-                cxxRecordDecl(
+    auto submodule_instance_matcher =  cxxRecordDecl(
                   isDerivedFrom(hasName("::sc_core::sc_module")),
                   hasDescendant(cxxConstructorDecl(
                       forEachConstructorInitializer(
@@ -238,11 +236,19 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                         )
                       ).bind("ctor_decl")
                     )
-                  ).bind("cxx_record_decl")
+                  ).bind("cxx_record_decl");
+
+    auto match_instances_vars =
+        varDecl(
+            anyOf(
+              allOf( // Match submodule instances with a variable declaration
+                hasType(submodule_instance_matcher),
+                hasDescendant(match_ctor_arg("ctor_arg", "constructor_expr"))
               ),
-            hasDescendant(match_ctor_arg("ctor_arg", "constructor_expr")
-              )
-            ).bind("instances_in_vardecl");
+            // Match only variable instances
+            hasDescendant(match_ctor_arg("ctor_arg", "constructor_expr"))
+            )
+          ).bind("instances_in_vardecl");
 
     /* clang-format on */
 
@@ -253,6 +259,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
+    llvm::outs() << " ===================== INSTANCE MATCHER ==================== \n";
     auto instance_fd = const_cast<FieldDecl *>(
         result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"));
 
