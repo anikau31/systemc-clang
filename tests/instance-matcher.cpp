@@ -49,8 +49,8 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
     REQUIRE(instances.size() == 5);
 
     std::vector<std::string> var_names{"DUT", "n1", "n2", "n3", "n4"};
-    std::vector<std::string> var_type_names{"exor2", "nand2", "nand2", "nand2",
-                                            "nand2"};
+    std::vector<std::string> var_type_names{"struct exor2", "struct nand2", "struct nand2", "struct nand2",
+                                            "struct nand2"};
     std::vector<std::string> instance_names{"exor2", "N1", "N2", "N3", "N4"};
 
     for (auto const &entry : instances) {
