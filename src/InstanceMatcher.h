@@ -82,9 +82,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   InstanceDeclarations instance_map_;
 
  public:
+  const InstanceDeclarations &getInstanceMap() { return instance_map_; }
+
   // Finds the instance with the same type as the argument.
   // Pass by reference to the instance.
-  bool findInstance(CXXRecordDecl *decl,
+  bool findInstanceByVariableType(CXXRecordDecl *decl,
                     std::vector<InstanceDeclType> &found_instances) {
     // First check in the instance_fields.
     // Check to see if the pointer to the type is the same as the sc_module
@@ -96,10 +98,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     llvm::outs() << "[findInstance] must find decl name: " << decl->getName()
                  << "\n";
     // Walk through all the instances.
-    for (auto const &element : instances_) {
-      auto p_field_var_decl{std::get<1>(element)};
+    for (auto const &element : instance_map_) {
+      auto instance{element.second};
+      auto p_field_var_decl{element.first};
 
-      llvm::outs() << "=> inst name: " << std::get<0>(element) << "\n";
+      llvm::outs() << "=> inst name: " << instance.instance_name << "\n";
       // Check if it is a FieldDecl
 
       // TODO factor out this code to be handled for both.
@@ -109,12 +112,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
           std::string dbg{"[InstanceMatcher] FieldDecl"};
-          llvm::outs() << dbg << " decl: " << decl->getName()
-                       << ", inst name: " << rt->getName() << "\n";
+          instance.dump();
           if (rt == decl) {
             llvm::outs() << "==> Insert fieldDecl into found instance\n";
             found_instances.push_back(
-                InstanceDeclType(get<0>(element), get<1>(element)));
+                InstanceDeclType(instance.instance_name, rt));
           }
         }
       } else {
@@ -126,11 +128,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // p_var->dump();
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
-          llvm::outs() << dbg << " decl: " << decl->getName()
-                       << ", inst name: " << rt->getName() << "\n";
+          instance.dump();
           if (rt == decl) {
             llvm::outs() << "==> Insert vardecl into found instance\n";
-            found_instances.push_back(InstanceDeclType(get<0>(element), rt));
+            found_instances.push_back(InstanceDeclType(instance.instance_name, rt));
           }
         }
       }

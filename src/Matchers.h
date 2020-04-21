@@ -201,7 +201,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       llvm::outs() << "## found decl name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
       // InstanceMatcher::InstanceDeclType instance;
-      if (instance_matcher.findInstance(decl, instance_list)) {
+      if (instance_matcher.findInstanceByVariableType(decl, instance_list)) {
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
         // instance_list.push_back(instance);
@@ -218,7 +218,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // std::llvm::outs() << "## ftd name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
       // InstanceMatcher::InstanceDeclType instance;
-      if (instance_matcher.findInstance(decl, instance_list)) {
+      if (instance_matcher.findInstanceByVariableType(decl, instance_list)) {
         // pruned_declarations_.push_back(element);
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));

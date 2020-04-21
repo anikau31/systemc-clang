@@ -1,5 +1,5 @@
-#include "catch.hpp"
 #include "SystemCClang.h"
+#include "catch.hpp"
 #include "clang/Tooling/Tooling.h"
 
 #include "Matchers.h"
@@ -29,9 +29,28 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   inst_matcher.dump();
   llvm::outs() << "================ END =============== \n";
 
-
   SECTION("Test instance matcher", "[instance-matcher]") {
+    // There should be five instances here.
+    // DUT2, n1, n2, n3, n4
+    auto instances{inst_matcher.getInstanceMap()};
+
+    REQUIRE(instances.size() == 5);
+
+    std::vector<std::string> var_names{"DUT", "n1", "n2", "n3", "n4"};
+
+    for (auto const &entry : instances) {
+      auto inst{entry.second};
+      llvm::outs() << "instance " << inst.var_name << "\n";
+
+      auto found_it =
+          std::find(var_names.begin(), var_names.end(), inst.var_name);
+      if (found_it != var_names.end()) {
+        var_names.erase(found_it);
+      }
+    }
+    // All the variable name should be found
+    REQUIRE(var_names.size() == 0);
+
     // The module instances have all the information.
-    REQUIRE( false );
   }
 }
