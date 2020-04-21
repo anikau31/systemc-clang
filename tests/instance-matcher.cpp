@@ -13,8 +13,7 @@ using namespace scpar;
 using namespace sc_ast_matchers;
 
 template <typename T>
-bool find_name(std::vector<T> &names,
-               const T &find_name) {
+bool find_name(std::vector<T> &names, const T &find_name) {
   auto found_it = std::find(names.begin(), names.end(), find_name);
   if (found_it != names.end()) {
     names.erase(found_it);
@@ -49,7 +48,8 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
     REQUIRE(instances.size() == 5);
 
     std::vector<std::string> var_names{"DUT", "n1", "n2", "n3", "n4"};
-    std::vector<std::string> var_type_names{"struct exor2", "struct nand2", "struct nand2", "struct nand2",
+    std::vector<std::string> var_type_names{"struct exor2", "struct nand2",
+                                            "struct nand2", "struct nand2",
                                             "struct nand2"};
     std::vector<std::string> instance_names{"exor2", "N1", "N2", "N3", "N4"};
 
@@ -61,17 +61,28 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
       find_name(var_type_names, inst.var_type_name);
       find_name(instance_names, inst.instance_name);
 
-      // auto found_it =
-          // std::find(var_names.begin(), var_names.end(), inst.var_name);
-      // if (found_it != var_names.end()) {
-        // var_names.erase(found_it);
-      // }
+      // Test findInstanceByVariableType()
+      if (inst.is_field_decl) {
+        auto fdecl{(cast<FieldDecl>(entry.first))};
+        auto cxx_decl{fdecl->getType().getTypePtr()->getAsCXXRecordDecl()};
+
+        std::vector<InstanceMatcher::InstanceDeclType> found_instances;
+        inst_matcher.findInstanceByVariableType(cxx_decl, found_instances);
+
+        if (inst.var_name == "DUT") {
+          // Find all the instances of exor2
+          llvm::errs() << "<<<< DUT\n";
+          REQUIRE(found_instances.size() == 1);
+        } else {
+          llvm::errs() << "<<<< NOT DUT\n";
+          // Find all the instances of nand2
+          REQUIRE(found_instances.size() == 4);
+        }
+      }
     }
     // All the variable name should be found
     REQUIRE(var_names.size() == 0);
     REQUIRE(var_type_names.size() == 0);
     REQUIRE(instance_names.size() == 0);
-
-    // The module instances have all the information.
   }
 }
