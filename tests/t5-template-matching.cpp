@@ -147,6 +147,12 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     auto port_bindings{found_decl->getPortBindings()};
     std::vector<std::string> test_ports{"clk", "inS", "outS"};
 
+    // Print all the port binding information
+    for (auto const &p: port_bindings) {
+      auto pb{ p.second };
+      pb->dump();
+    }
+    
     for (auto const &pname : test_ports) {
       auto found_it{port_bindings.find(pname)};
       // Actually found the name

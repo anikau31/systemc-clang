@@ -146,7 +146,7 @@ bool SystemCConsumer::fire() {
     //
     // FIXME: This has to be replaced once xlat is fixed.
     std::vector<ModuleDecl *> module_decl_instances;
-    //ModuleDecl *p_dummy_module_decl{incomplete_module_decl};
+    // ModuleDecl *p_dummy_module_decl{incomplete_module_decl};
 
     for (const auto &instance : instance_list) {
       auto add_module_decl{new ModuleDecl{*incomplete_module_decl}};
@@ -157,8 +157,8 @@ bool SystemCConsumer::fire() {
       os_ << "\n";
       os_ << "1. Set instance name: " << get<0>(instance) << "\n";
       add_module_decl->setInstanceName(get<0>(instance));
-      os_ << "2. Set instance type decl: " << cxx_decl->getNameAsString()
-          << " " << get<1>(instance) << "\n";
+      os_ << "2. Set instance type decl: " << cxx_decl->getNameAsString() << " "
+          << get<1>(instance) << "\n";
       add_module_decl->setInstanceDecl(get<1>(instance));
 
       // 2. Find the template arguments for the class.
@@ -211,7 +211,7 @@ bool SystemCConsumer::fire() {
       // Make the dummy equal to the updated add_module_decl
       // This will make module declarations be one of the module instances.
       //*p_dummy_module_decl = *add_module_decl;
-      //systemcModel_->addModuleDecl(p_dummy_module_decl);
+      // systemcModel_->addModuleDecl(p_dummy_module_decl);
       module_decl_instances.push_back(add_module_decl);
     }
     os_ << "\n";
@@ -231,15 +231,18 @@ bool SystemCConsumer::fire() {
   //  This must come after instances of ModuleDecl have been generated.
   //  This is because the netlist matcher inserts the port bindings into the
   //  instance.
-  llvm::outs() << "##### TEST NetlistMatcher ##### \n";
+  llvm::outs() << "=============== ##### TEST NetlistMatcher ##### \n";
   NetlistMatcher netlist_matcher{};
   MatchFinder netlist_registry{};
   netlist_matcher.registerMatchers(netlist_registry, systemcModel_,
                                    &module_declaration_handler);
 
+  // scmain.getSCMainFunctionDecl()->dump();
+
+  netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
+  // TODO: Fix the top-level
   if (getTopModule() == "!none") {
     llvm::outs() << " No top module\n";
-    netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   }
 
   llvm::outs() << "Begin netlist parsing on instances: "
@@ -250,13 +253,15 @@ bool SystemCConsumer::fire() {
     auto instance_list{inst.second};
 
     for (auto const &instance : instance_list) {
-      //ModuleDecl *mdecl{systemcModel_->getInstance(get<0>(instance))};
+      // ModuleDecl *mdecl{systemcModel_->getInstance(get<0>(instance))};
       ModuleDecl *mdecl{instance};
       auto ctordecl{mdecl->getConstructorDecl()};
       if (ctordecl != nullptr) {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
         ctordecl->getBody(fd);
+        llvm::outs() << "=> RUN netlist matcher\n";
         netlist_registry.match(*fd, getContext());
+        llvm::outs() << "=> DONE netlist matcher\n";
       }
     }
   }

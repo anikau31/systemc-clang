@@ -201,7 +201,9 @@ int sc_main(int argc, char *argv[]) {
 
   // Want to find an instance named "testing".
 
-  ModuleDecl *ram_module{model->getInstance("specialized_template")};
+  // Submodule needs to be indexed using variable name
+  ModuleDecl *ram_module{model->getInstance("ram_module")};
+  // VarDecl uses the name supplied to constructor
   ModuleDecl *test_module{model->getInstance("testing")};
 
   SECTION("Found sc_module instances", "[instances]") {
@@ -210,7 +212,7 @@ int sc_main(int argc, char *argv[]) {
          << module_decl.size());
 
     // There are two modules: ram, test.
-    //REQUIRE(module_instance_map.size() == 2 );
+    // REQUIRE(module_instance_map.size() == 2 );
     REQUIRE(module_decl.size() == 2);
     REQUIRE(ram_module != nullptr);
     REQUIRE(test_module != nullptr);

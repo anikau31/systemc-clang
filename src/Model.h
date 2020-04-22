@@ -29,8 +29,8 @@ public:
   typedef std::pair<std::string, EventContainer *> eventPairType;
   typedef std::map<std::string, EventContainer *> eventMapType;
 
-  typedef pair<ModuleDecl *, vector<ModuleDecl *>> moduleInstancePairType;
-  typedef map<ModuleDecl *, vector<ModuleDecl *>> moduleInstanceMapType;
+  typedef std::pair<ModuleDecl *, std::vector<ModuleDecl *>> moduleInstancePairType;
+  typedef std::map<ModuleDecl *, std::vector<ModuleDecl *>> moduleInstanceMapType;
 
   typedef pair<EntryFunctionContainer *, FindGPUMacro::forStmtGPUMacroMapType>
       entryFunctionGPUMacroPairType;

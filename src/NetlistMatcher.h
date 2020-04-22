@@ -30,23 +30,28 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   std::string top_;
 
   ModuleDecl *findModuleDeclInstance(Decl *decl) {
-    llvm::outs() << "=> Looking for: " << decl << "\n";
+    llvm::outs() << "=> findModuleDeclInstance: Looking for: " << decl << "\n";
     for (auto element : model_->getModuleInstanceMap()) {
       auto incomplete{element.first};
       llvm::outs() << "=> incomplete: " << incomplete->getName() << "\n";
       auto instance_list{element.second};
 
+      // for (auto const &inst : instance_list ) {
+      // Decl *inst_decl{ inst->getInstanceDecl()};
+      // llvm::outs() << "=> find: " << decl << " == " << inst_decl << "\n";
+      // }
+      //
       auto found_inst_it =
           std::find_if(instance_list.begin(), instance_list.end(),
                        [decl](const auto &instance) {
-                       Decl *i{instance->getInstanceDecl()};
-                       llvm::outs() << "=> instance decl: " << i << "\n";
+                         Decl *i{instance->getInstanceDecl()};
+                         llvm::outs() << "=> instance decl: " << i << "\n";
 
-                       //instance->getInstanceDecl()->dump();
                          return (instance->getInstanceDecl() == decl);
                        });
 
       if (found_inst_it != instance_list.end()) {
+        llvm::outs() << "=> found the iterator\n";
         return *found_inst_it;
       }
     }
@@ -54,14 +59,26 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   }
 
  public:
-    void registerMatchers(MatchFinder &finder, Model *model,
+  void registerMatchers(MatchFinder &finder, Model *model,
                         ModuleDeclarationMatcher *module_matcher) {
     /* clang-format off */
 
     model_ = model;
     module_matcher_ = module_matcher;
       
-    // instance.in1(sig1);
+   auto test = functionDecl(
+       forEachDescendant(
+       cxxOperatorCallExpr(
+         hasDescendant(
+           declRefExpr(
+             hasDeclaration(varDecl().bind("bound_variable")),
+             hasParent(implicitCastExpr())
+             ).bind("declrefexpr")
+           )
+         ).bind("call_expr")
+       )
+       ).bind("functiondecl");
+
    auto match_sc_main_callexpr = functionDecl(
        forEachDescendant(
          cxxOperatorCallExpr(
@@ -111,6 +128,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
             .bind("functiondecl");
 
     // Add the two matchers.
+    //finder.addMatcher(test, this);
     finder.addMatcher(match_sc_main_callexpr, this);
     finder.addMatcher(match_ctor_decl, this);
   }
@@ -124,7 +142,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   // 4. Instance variable type
   //
   virtual void run(const MatchFinder::MatchResult &result) {
-    llvm::outs() << "#### Something matcher ####\n";
+    llvm::outs() << "#### ============ NETLIST HAD A MATCH ============ ####\n";
     bool is_ctor_binding{true};
 
     auto me{const_cast<MemberExpr *>(
@@ -145,6 +163,29 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     auto mexpr_arg{const_cast<MemberExpr *>(
         result.Nodes.getNodeAs<MemberExpr>("memberexpr_arg"))};
 
+    // DEBUGGING
+    //
+    //
+    //
+    // auto fdecl{const_cast<FunctionDecl *>(
+        // result.Nodes.getNodeAs<FunctionDecl>("functiondecl"))};
+    // auto call_expr{const_cast<CXXOperatorCallExpr *>(
+        // result.Nodes.getNodeAs<CXXOperatorCallExpr>("call_expr"))};
+//
+    // if (fdecl) {
+      // llvm::outs() << " ### FunctionDecl\n";
+      // fdecl->dump();
+    // }
+    // if (call_expr) {
+      // llvm::outs() << " ### CXXOperatorCallExpr\n";
+      // call_expr->dump();
+//
+      // if (dre) {
+        // llvm::outs() << " ### DeclRefExpr\n";
+        // dre->dump();
+      // }
+    // }
+//
     std::string port_name{};
     if (mexpr_port && mexpr_instance && mexpr_arg) {
       is_ctor_binding = true;
@@ -180,7 +221,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     /// TESTING
     //
 
-    //std::string port_name{};
+    // std::string port_name{};
     if (me && dre_me && dre) {
       is_ctor_binding = false;
       port_name = me->getMemberDecl()->getNameAsString();
@@ -198,7 +239,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         // instance_decl = dre_me->getDecl();
       }
     }
-    //instance_decl->dump();
+    // instance_decl->dump();
 
     ModuleDecl *instance_module_decl{findModuleDeclInstance(instance_decl)};
     if (!instance_module_decl) {
@@ -214,7 +255,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
       if (is_ctor_binding) {
         llvm::outs() << "=> found member instance in constructor\n";
-        llvm::outs() << "=> port name: " << port_name <<"\n";
+        llvm::outs() << "=> port name: " << port_name << "\n";
         pb = new PortBinding(mexpr_port, mexpr_instance, mexpr_arg);
       } else {
         llvm::outs() << "=> found instance in sc_main\n";
@@ -250,9 +291,15 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
       for (auto const &instance : instance_list) {
         ModuleDecl *mdecl{model_->getInstance(get<0>(instance))};
-        Stmt *constructor_stmt{mdecl->getConstructorStmt()};
+        // Stmt *constructor_stmt{mdecl->getConstructorStmt()};
+        auto port_bindings{mdecl->getPortBindings()};
+
+        for (auto const &p : port_bindings) {
+          p.second->dump();
+
+        }
+
       }
-      //
     }
   }
 };  // namespace sc_ast_matchers
