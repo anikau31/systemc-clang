@@ -142,6 +142,38 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     // TODO: Check the template parameters.
     //
 
+    // test_module_inst
+    INFO("KNOWN FAILING: Need to fix the parsing of ports for templated modules");
+    auto port_bindings{found_decl->getPortBindings()};
+    std::vector<std::string> test_ports{"clk", "inS", "outS"};
+
+    // Print all the port binding information
+    for (auto const &p: port_bindings) {
+      auto pb{ p.second };
+      pb->dump();
+    }
+    
+    for (auto const &pname : test_ports) {
+      auto found_it{port_bindings.find(pname)};
+      // Actually found the name
+      REQUIRE(found_it != port_bindings.end());
+      // Check now if the names
+      std::string port_name{found_it->first};
+      PortBinding *binding{found_it->second};
+      std::string as_string{binding->toString()};
+
+      if (port_name == "clk") {
+        REQUIRE(as_string == "test test_instance testing clk");
+      }
+      if (port_name == "inS") {
+        REQUIRE(as_string == "test test_instance testing sig1");
+      }
+      if (port_name == "outS") {
+        REQUIRE(as_string == "test test_instance testing sig1");
+      }
+    }
+
+
     auto found_decl2{found_module_testing_float};
     REQUIRE(found_decl2->getIPorts().size() == 5);
     // Array is the second port being recognized.

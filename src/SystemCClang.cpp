@@ -25,7 +25,7 @@ bool SystemCConsumer::fire() {
   // ANI : Do we need FindGlobalEvents?
   FindGlobalEvents globals{tu, os_};
   FindGlobalEvents::globalEventMapType eventMap{globals.getEventMap()};
-  globals.dump_json();
+  //globals.dump_json();
   systemcModel_->addGlobalEvents(eventMap);
 
   //
@@ -51,6 +51,8 @@ bool SystemCConsumer::fire() {
 
   matchRegistry.matchAST(getContext());
   // match_instances.dump();
+  llvm::outs() << "=================== END MATCHER ====================";
+
   module_declaration_handler.pruneMatches();
   os_ << "== Print module declarations pruned\n";
   module_declaration_handler.dump();
@@ -85,23 +87,6 @@ bool SystemCConsumer::fire() {
   }
   */
 
-  /*
-  // Find the sc_modules
-  //
-
-  FindSCModules scmod{tu, os_};
-
-  FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
-
-  for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
-                                              mitend = scmodules.end();
-       mit != mitend; ++mit) {
-    ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
-    systemcModel_->addModuleDecl(md);
-
-  }
-  */
-
   ////////////////////////////////////////////////////////////////
   // Find the sc_main
   ////////////////////////////////////////////////////////////////
@@ -111,8 +96,6 @@ bool SystemCConsumer::fire() {
     FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
 
     // TODO: find any instances in sc_main.
-
-    fnDecl->dump();
 
     FindSimTime scstart{fnDecl, os_};
     systemcModel_->addSimulationTime(scstart.returnSimTime());
@@ -126,48 +109,46 @@ bool SystemCConsumer::fire() {
   // This actually also finds instances, but now we have AST matchers to do it.
   //
   //  TEST NetlistMatcher
-  auto found_instances_map{module_declaration_handler.getInstances()};
+  //  map: CXXRecordDecl =>  InstanceListType
+  auto found_instances_declaration_map{
+      module_declaration_handler.getInstances()};
   //
   // Create a ModuleDecl for each instance with the appropriately parsed
   // ModuleDecl.
   //
 
   // Go through each instance and find its appropriate module declaration.
-
-  os_ << "## Print INSTANCE MAP #: " << found_instances_map.size() << "\n";
-
-  for (const auto &inst : found_instances_map) {
+  for (const auto &inst : found_instances_declaration_map) {
+    // This is the CXXRecordDecl
     auto cxx_decl{inst.first};
     // Vector
     auto instance_list{inst.second};
 
+    auto incomplete_module_decl{found_module_declarations[cxx_decl]};
     // TODO:
     //
     // FIXME: This has to be replaced once xlat is fixed.
-    vector<ModuleDecl *> module_decl_instances;
-    ModuleDecl *p_dummy_module_decl{found_module_declarations[cxx_decl]};
-    //
-    // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
-    // TODO: Remove deference pointer copy constructor
-    //   new ModuleDecl{*found_module_declarations[cxx_decl]}};
-    // ==================
+    std::vector<ModuleDecl *> module_decl_instances;
+    // ModuleDecl *p_dummy_module_decl{incomplete_module_decl};
 
-    os_ << "CXXRecordDecl* " << cxx_decl
-        << ", module type: " << found_module_declarations[cxx_decl]->getName();
     for (const auto &instance : instance_list) {
-      auto add_module_decl{
-          // new ModuleDecl{found_module_declarations[cxx_decl], cxx_decl}};
-          new ModuleDecl{*found_module_declarations[cxx_decl]}};
+      auto add_module_decl{new ModuleDecl{*incomplete_module_decl}};
 
       // Insert what you know about the parsed sc_module
       // 1. Insert the instance name from Matchers
+      //
       os_ << "\n";
       os_ << "1. Set instance name: " << get<0>(instance) << "\n";
-      add_module_decl->setInstanceName(get<0>(instance));
-      add_module_decl->setInstanceDecl(get<1>(instance));
+      //add_module_decl->setInstanceName(get<0>(instance));
+      os_ << "2. Set instance type decl: " << cxx_decl->getNameAsString() << " "
+          << get<1>(instance) << "\n";
+      auto inst_info{ get<2>(instance) };
+      inst_info.dump();
+      add_module_decl->setInstanceInfo( get<2>(instance));
+      //add_module_decl->setInstanceDecl(get<1>(instance));
 
       // 2. Find the template arguments for the class.
-      os_ << "2. Set template arguments\n";
+      os_ << "3. Set template arguments\n";
       FindTemplateParameters tparms{cxx_decl, os_};
       add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
       add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
@@ -177,7 +158,8 @@ bool SystemCConsumer::fire() {
       //
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
-      add_module_decl->addConstructor(constructor.returnConstructorStmt());
+      add_module_decl->addConstructor(&constructor);
+      // add_module_decl->addConstructor(constructor.getConstructorStmt());
 
       // 4. Find ports
       // This is done for the declaration.
@@ -190,10 +172,9 @@ bool SystemCConsumer::fire() {
           findEntries.getEntryFunctions()};
       add_module_decl->addProcess(entryFunctions);
 
-      for (size_t i = 0; i < entryFunctions->size(); i++) {
+      for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
-        FindSensitivity findSensitivity{constructor.returnConstructorStmt(),
-                                        os_};
+        FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};
         ef->addSensitivityInfo(findSensitivity);
 
         if (ef->getEntryMethod() == nullptr) {
@@ -215,8 +196,8 @@ bool SystemCConsumer::fire() {
 
       // Make the dummy equal to the updated add_module_decl
       // This will make module declarations be one of the module instances.
-      *p_dummy_module_decl = *add_module_decl;
-      systemcModel_->addModuleDecl(p_dummy_module_decl);
+      //*p_dummy_module_decl = *add_module_decl;
+      // systemcModel_->addModuleDecl(p_dummy_module_decl);
       module_decl_instances.push_back(add_module_decl);
     }
     os_ << "\n";
@@ -226,27 +207,51 @@ bool SystemCConsumer::fire() {
     // FIXME: Only there to make sure xlat still compiles.
     // This should be removed.
     llvm::outs() << "[HDP] Add instances to model\n";
-    systemcModel_->addModuleDeclInstances(p_dummy_module_decl,
+    systemcModel_->addModuleDeclInstances(incomplete_module_decl,
                                           module_decl_instances);
   }
+
+  // Let us try to access all the moduledecl.
 
   // All instances are within the SystemC model.
   //  This must come after instances of ModuleDecl have been generated.
   //  This is because the netlist matcher inserts the port bindings into the
   //  instance.
-  llvm::outs() << "##### TEST NetlistMatcher ##### \n";
+  llvm::outs() << "=============== ##### TEST NetlistMatcher ##### \n";
   NetlistMatcher netlist_matcher{};
   MatchFinder netlist_registry{};
-  netlist_matcher.registerMatchers(netlist_registry, systemcModel_);
+  netlist_matcher.registerMatchers(netlist_registry, systemcModel_,
+                                   &module_declaration_handler);
 
-  if (getTopModule() == "!none") {
+  // scmain.getSCMainFunctionDecl()->dump();
+
     netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
-  } else {
-    // Use the top module's declaration's constructor
-    //
-    // Find the instance with the top module
-
+  // TODO: Fix the top-level
+  if (getTopModule() == "!none") {
+    llvm::outs() << " No top module\n";
   }
+
+  llvm::outs() << "Begin netlist parsing on instances: "
+               << found_instances_declaration_map.size() << "\n";
+  auto module_instance_map{systemcModel_->getModuleInstanceMap()};
+  for (const auto &inst : module_instance_map) {
+    auto incomplete_mdecl{inst.first};
+    auto instance_list{inst.second};
+
+    for (auto const &instance : instance_list) {
+      // ModuleDecl *mdecl{systemcModel_->getInstance(get<0>(instance))};
+      ModuleDecl *mdecl{instance};
+      auto ctordecl{mdecl->getConstructorDecl()};
+      if (ctordecl != nullptr) {
+        const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
+        ctordecl->getBody(fd);
+        llvm::outs() << "=> RUN netlist matcher\n";
+        netlist_registry.match(*fd, getContext());
+        llvm::outs() << "=> DONE netlist matcher\n";
+      }
+    }
+  }
+  netlist_matcher.dump();
   llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
 
   /*

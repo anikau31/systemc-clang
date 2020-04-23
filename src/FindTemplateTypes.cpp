@@ -156,7 +156,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
     const TemplateArgumentList &arg_list{ctsd->getTemplateArgs()};
     for (unsigned int i{0}; i < arg_list.size(); ++i) {
       const TemplateArgument &targ{arg_list[i]};
-      llvm::outs() << " ====> template argument: ";
+      //llvm::outs() << " ====> template argument: ";
       targ.dump();
       // llvm::outs() << "\n";
       // TODO Write this into the vector.
@@ -267,7 +267,7 @@ json FindTemplateTypes::dump_json() {
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   auto root_node{template_args_.getRoot()};
   auto s{template_args_.dft(root_node)};
-  os << "> Template args (DFT): " << s << "\n";
+  //os << "> Template args (DFT): " << s << "\n";
 }
 
 std::vector<std::string> FindTemplateTypes::getTemplateArguments() {

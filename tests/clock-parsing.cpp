@@ -117,5 +117,9 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getOtherVars().size() == 0);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
+
+
+    auto port_bindings{test_module_inst->getPortBindings()};
+    REQUIRE(port_bindings.size() == 0 );
   }
 }

@@ -7,6 +7,14 @@ using namespace std;
 
 void Signal::check() { assert(!(signal_container_ == nullptr)); }
 
+Signal::~Signal() {
+  llvm::outs() << "~Signal\n";
+  if (signal_container_) {
+    delete signal_container_;
+    signal_container_ = nullptr;
+  }
+}
+
 Signal::Signal() : signal_name_("NONE"), signal_container_(nullptr) {}
 
 Signal::Signal(const string &name, SignalContainer *s)
@@ -43,9 +51,8 @@ json Signal::dump_json(raw_ostream &os) {
   signal_j["signal_name"] = getName();
 
   // Container
-    auto template_args{
+  auto template_args{
       signal_container_->getTemplateTypes()->getTemplateArgumentsType()};
-
 
   signal_j["signal_type"] = template_args[0].getTypeName();
   template_args.erase(begin(template_args));

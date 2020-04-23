@@ -12,6 +12,7 @@ ModuleDecl::ModuleDecl()
       instance_name_{"NONE"},
       class_decl_{nullptr},
       constructor_stmt_{nullptr},
+      constructor_decl_{nullptr},
       instance_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
@@ -27,9 +28,11 @@ ModuleDecl::ModuleDecl(
 ModuleDecl::ModuleDecl(const ModuleDecl &from) {
   module_name_ = from.module_name_;
   instance_name_ = from.instance_name_;
+  instance_info_ = from.instance_info_;
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
+  constructor_decl_ = from.constructor_decl_;
   instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
@@ -58,9 +61,11 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
 ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   module_name_ = from.module_name_;
   instance_name_ = from.instance_name_;
+  instance_info_ = from.instance_info_;
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
+  constructor_decl_ = from.constructor_decl_;
   instance_decl_ = from.instance_decl_;
 
   process_map_ = from.process_map_;
@@ -88,44 +93,91 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   return *this;
 }
 
+void ModuleDecl::clearOnlyGlobal() {
+  // This only clears the globally (not instance-specific) allocated structures.
+  // these are AST nodes 
+  class_decl_ = nullptr;
+  constructor_stmt_ = nullptr;
+  constructor_decl_ = nullptr;
+  instance_decl_;
+
+  // Ports are globally allocated.
+  in_ports_.clear();
+  out_ports_.clear();
+  inout_ports_.clear();
+  other_fields_.clear();
+  istreamports_.clear();
+  ostreamports_.clear();
+  signals_.clear();
+
+}
+
 ModuleDecl::~ModuleDecl() {
+  llvm::outs() << "\n~ModuleDecl\n";
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
   instance_decl_ = nullptr;
 
+  llvm::outs() << "- name: " << getName() <<  ", inst name: " << getInstanceName() << " pointer: " << this << "\n";
+
+  // IMPORTANT: Only the instance-specific details should be deleted.
+  // DO NOT delete the information collected through incomplete types.
+  // 
+
+  //llvm::outs() << "- deleting entry function pointers\n";
+  for (auto &v : vef_) {
+    if (v!= nullptr) { delete v;}
+    v = nullptr;
+  }
+  //llvm::outs() << "Exit deleting ModuleDecl\n";
   // Delete all pointers in ports.
-  for (auto input_port : in_ports_) {
+  for (auto &input_port : in_ports_) {
     // It is a tuple
     // 0. string, 1. PortDecl*
-    // Only one to delete is (3)
+    // Only one to delete is (1)
     //
     //  delete input_port.second;
-    delete get<1>(input_port);
+    auto iport{get<1>(input_port)};
+    if (iport) { delete iport;}
   }
   in_ports_.clear();
 
-  for (auto output_port : out_ports_) {
+  for (auto &output_port : out_ports_) {
     delete get<1>(output_port);
   }
   out_ports_.clear();
 
-  for (auto io_port : inout_ports_) {
+  for (auto &io_port : inout_ports_) {
     // Second is the PortDecl*.
     delete get<1>(io_port);
   }
   inout_ports_.clear();
 
-  for (auto other : other_fields_) {
+  for (auto &other : other_fields_) {
     // Second is the PortDecl*.
     delete get<1>(other);
   }
   other_fields_.clear();
+
+  // Delete EntryFunction container
+  for (auto &ef : vef_) {
+    delete ef;
+  }
+  vef_.clear();
+
+  for (auto &sig : signals_) {
+    delete sig.second;
+  }
 }
 
-void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
+void ModuleDecl::setInstanceInfo(const sc_ast_matchers::ModuleInstanceType &info) {
+  instance_info_ = info;
+}
 
-void ModuleDecl::setInstanceDecl(Decl *decl) { instance_decl_ = decl; }
-
+// void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
+//
+// void ModuleDecl::setInstanceDecl(Decl *decl) { instance_decl_ = decl; }
+//
 void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
   template_parameters_ = parm_list;
 }
@@ -225,8 +277,19 @@ void ModuleDecl::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   }
 }
 
+void ModuleDecl::addConstructor(FindConstructor *ctor) {
+  constructor_stmt_ = ctor->getConstructorStmt();
+  constructor_decl_ = ctor->getConstructorDecl();
+}
+
 void ModuleDecl::addConstructor(Stmt *constructor) {
   constructor_stmt_ = constructor;
+}
+
+Stmt *ModuleDecl::getConstructorStmt() const { return constructor_stmt_; }
+
+CXXConstructorDecl *ModuleDecl::getConstructorDecl() const {
+  return constructor_decl_;
 }
 
 void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
@@ -311,7 +374,7 @@ ModuleDecl::portBindingMapType ModuleDecl::getPortBindings() {
 
 string ModuleDecl::getName() const { return module_name_; }
 
-string ModuleDecl::getInstanceName() const { return instance_name_; }
+string ModuleDecl::getInstanceName() const {  return instance_info_.instance_name; }
 
 bool ModuleDecl::isModuleClassDeclNull() { return (class_decl_ == nullptr); }
 
@@ -323,7 +386,7 @@ CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
 // FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_;
 // } VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
 
-Decl *ModuleDecl::getInstanceDecl() { return instance_decl_; }
+Decl *ModuleDecl::getInstanceDecl() { return instance_info_.decl; }
 
 // bool ModuleDecl::isInstanceFieldDecl() const {
 // if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
