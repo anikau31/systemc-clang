@@ -12,6 +12,22 @@ using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
 
+AST_MATCHER(FieldDecl, hasTemplateDeclParent) {
+  auto parent{ Node.getParent()};
+
+  if (isa<ClassTemplateDecl>(parent)) {
+    //llvm::outs() << " @@@@@@@@ CTD \n";
+  return false;
+  }
+
+  if (isa<ClassTemplateSpecializationDecl>(parent)) {
+    //llvm::outs() << " @@@@@@@@ CTSD \n";
+  }
+
+  return true;
+
+};
+
 struct ModuleInstanceType {
   std::string var_name;
   std::string var_type_name;
@@ -87,6 +103,8 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
   }
 };
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Class InstanceMatcher
@@ -135,16 +153,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     llvm::outs() << "[findInstance] instance size: " << instance_map_.size()
                  << "\n";
 
-    llvm::outs() << "[findInstance] must find decl name: " << decl->getName()
-                 << "\n";
+    llvm::outs() << "find decl name: " << decl->getName() << " " << decl  << "\n";
 
     // Walk through all the instances.
     for (auto const &element : instance_map_) {
       auto instance{element.second};
       auto p_field_var_decl{element.first};
-
-      llvm::outs() << "=> inst name: " << instance.instance_name << "\n";
-      // Check if it is a FieldDecl
 
       // TODO factor out this code to be handled for both.
       if (auto *p_field{dyn_cast<FieldDecl>(p_field_var_decl)}) {
@@ -152,10 +166,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // qtype->dump();
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
-          std::string dbg{"[InstanceMatcher] FieldDecl"};
+          llvm::outs() << "- fd " << rt << " " << p_field->getCanonicalDecl() << " " ;
           instance.dump();
+
           if (rt == decl) {
-            llvm::outs() << "==> Insert fieldDecl into found instance\n";
+            llvm::outs() << "- Insert fieldDecl into found instance\n";
             found_instances.push_back(
                 InstanceDeclType(instance.instance_name, rt));
           }
@@ -169,9 +184,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // p_var->dump();
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
+          llvm::outs() << "- vd " << rt << " " << " " ;
           instance.dump();
           if (rt == decl) {
-            llvm::outs() << "==> Insert vardecl into found instance\n";
+            llvm::outs() << "- Insert vardecl into found instance\n";
             found_instances.push_back(
                 InstanceDeclType(instance.instance_name, rt));
           }
@@ -206,9 +222,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     /* clang-format off */
     auto match_instances = 
       fieldDecl(
+          hasTemplateDeclParent(),
+          //hasType(hasUnqualifiedDesugaredType(recordType())),
         hasType(
-          cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))
-            ).bind("cxx_record_decl")
+          cxxRecordDecl(
+            hasDefinition(),
+            unless( isImplicit() ),     // Templates generate implicit structs - so ignore.
+            isDerivedFrom(hasName("::sc_core::sc_module"))
+            ).bind("inst_cxx_record_decl")
           )
         ).bind("instances_in_fielddecl");
 
@@ -220,23 +241,23 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     //     (Every sc_module instantiated must have a string literal.
    
     auto submodule_instance_matcher =  cxxRecordDecl(
-                  isDerivedFrom(hasName("::sc_core::sc_module")),
-                  hasDescendant(cxxConstructorDecl(
-                      forEachConstructorInitializer(
-                        cxxCtorInitializer(
-                          isMemberInitializer(),
-                          forField(
-                            allOf(
-                              hasType(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
-                                ),
-                              decl().bind("sub_ctor_field_decl")
-                              )
-                            )
-                          ).bind("sub_ctor_init")
-                        )
-                      ).bind("ctor_decl")
-                    )
-                  ).bind("cxx_record_decl");
+      isDerivedFrom(hasName("::sc_core::sc_module")),
+      hasDescendant(cxxConstructorDecl(
+          forEachConstructorInitializer(
+            cxxCtorInitializer(
+              isMemberInitializer(),
+              forField(
+                allOf(
+                  hasType(cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
+                    ),
+                  decl().bind("sub_ctor_field_decl")
+                  )
+                )
+              ).bind("sub_ctor_init")
+            )
+          ).bind("ctor_decl")
+        )
+      ).bind("cxx_record_decl");
 
     auto match_instances_vars =
         varDecl(
@@ -259,9 +280,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
-    llvm::outs() << " ===================== INSTANCE MATCHER ==================== \n";
+    llvm::outs()
+        << " ===================== INSTANCE MATCHER ==================== \n";
     auto instance_fd = const_cast<FieldDecl *>(
         result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"));
+    auto inst_cxx_record_decl = const_cast<CXXRecordDecl *>(
+        result.Nodes.getNodeAs<CXXRecordDecl>("inst_cxx_record_decl"));
 
     // VD
     //
@@ -286,10 +310,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     auto sub_ctor_field_decl =
         const_cast<Decl *>(result.Nodes.getNodeAs<Decl>("sub_ctor_field_decl"));
 
+    auto is_submodule_ctor{ (cxx_record_decl && ctor_decl && sub_ctor_field_decl && sub_ctor_init)};
     // FD
-    if (instance_fd) {
+    if (instance_fd) {// && inst_cxx_record_decl && !is_submodule_ctor) {
       llvm::outs() << "InstanceMatcher\n";
       instance_fd->dump();
+      // Dump out the parent
+      //llvm::outs() << "Parent\n";
+      //instance_fd->getParent()->dump();
 
       llvm::outs() << "## FieldDecl\n";
       //
@@ -304,16 +332,20 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
       llvm::outs() << "=> var_type_name " << var_type_name << " var_name "
                    << var_name << "\n";
-      instances_.push_back(std::make_tuple(var_name, instance_fd));
+      // instances_.push_back(std::make_tuple(var_name, instance_fd));
 
       ModuleInstanceType parsed_instance{};
       parsed_instance.var_name = var_name;
       parsed_instance.var_type_name = var_type_name;
       parsed_instance.decl = instance_fd;
       parsed_instance.is_field_decl = true;
-
-      instance_map_.insert(
-          std::pair<Decl *, ModuleInstanceType>(instance_fd, parsed_instance));
+      // Find the instance if it has been already recorded.
+      auto found_it{instance_map_.find(instance_fd)};
+      if (found_it == instance_map_.end()) {
+        llvm::outs() << "Inserting FD instance\n";
+        instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
+            instance_fd, parsed_instance));
+      }
     }
 
     if (instance_vd && instance_name_vd) {
@@ -334,7 +366,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       std::string submodule_instance_name{""};
       if (sub_ctor_field_decl && sub_ctor_init) {
         llvm::outs() << "=> processing submodule\n";
-        sub_ctor_field_decl->dump();
+        //sub_ctor_field_decl->dump();
         Expr *expr = sub_ctor_init->getInit()->IgnoreImplicit();
         CXXConstructExpr *cexpr = cast<CXXConstructExpr>(expr);
 
@@ -360,7 +392,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       }
 
       // This is the instance name.
-      instances_.push_back(std::make_tuple(instance_name, instance_vd));
+      // instances_.push_back(std::make_tuple(instance_name, instance_vd));
 
       ModuleInstanceType parsed_instance{};
       parsed_instance.var_name = var_name;
@@ -372,6 +404,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       // Don't add repeated matches
       auto found_it{instance_map_.find(instance_vd)};
       if (found_it == instance_map_.end()) {
+        llvm::outs() << "Inserting VD instance\n";
         instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
             instance_vd, parsed_instance));
       }

@@ -7,8 +7,8 @@
 #include "ModuleDecl.h"
 #include "PortDecl.h"
 
-#include "PortMatcher.h"
 #include "InstanceMatcher.h"
+#include "PortMatcher.h"
 
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
@@ -100,7 +100,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
     auto match_module_decls = 
       cxxRecordDecl(
-          matchesName(top_module_decl_),  // Specifies the top-level module name.
+          //matchesName(top_module_decl_),  // Specifies the top-level module name.
           hasDefinition(),            // There must be a definition.
           unless( isImplicit() ),     // Templates generate implicit structs - so ignore.
           isDerivedFrom(hasName("::sc_core::sc_module")),
@@ -195,12 +195,16 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     // 2. If there is an instance, then add it into the list.
 
     std::string dbg{"[pruneMatches]"};
-    llvm::outs() << dbg << " start pruning\n";
+    llvm::outs() << "\n"
+                 << dbg << " number_of_declarations "
+                 << found_declarations_.size() << " number_of_instances "
+                 << instance_matcher.getInstanceMap().size() << "\n";
+
     for (auto const &element : found_declarations_) {
       auto decl{get<1>(element)};
-      llvm::outs() << "## found decl name: " << get<0>(element) << "\n ";
+      llvm::outs() << "- decl name: " << get<0>(element) << " " << decl << "\n ";
       InstanceListType instance_list;
-      // InstanceMatcher::InstanceDeclType instance;
+
       if (instance_matcher.findInstanceByVariableType(decl, instance_list)) {
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
@@ -280,10 +284,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       auto decl{i.first};
       auto instance_list{i.second};
 
-      llvm::outs() << "decl: " << decl->getIdentifier()->getNameStart();
+      llvm::outs() << "- decl: " << decl->getIdentifier()->getNameStart();
       for (const auto &instance : instance_list) {
-        llvm::outs() << ", instance type: " << get<0>(instance) << ",   "
-                     << get<1>(instance) << "\n";
+        llvm::outs() << ", instance type: " << get<0>(instance) << ", " << get<1>(instance) << "\n";
       }
     }
   }

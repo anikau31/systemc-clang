@@ -36,16 +36,17 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       llvm::outs() << "=> incomplete: " << incomplete->getName() << "\n";
       auto instance_list{element.second};
 
-      // for (auto const &inst : instance_list ) {
-      // Decl *inst_decl{ inst->getInstanceDecl()};
-      // llvm::outs() << "=> find: " << decl << " == " << inst_decl << "\n";
-      // }
+       for (auto const &inst : instance_list ) {
+      Decl *inst_decl{ inst->getInstanceDecl()};
+       llvm::outs() << "=> find: " << decl << " == " << inst_decl << "\n";
+       }
       //
       auto found_inst_it =
           std::find_if(instance_list.begin(), instance_list.end(),
                        [decl](const auto &instance) {
                          Decl *i{instance->getInstanceDecl()};
-                         llvm::outs() << "=> instance decl: " << i << "\n";
+                         auto cxxdecl{ cast<CXXRecordDecl>(instance->getInstanceDecl())};
+                         llvm::outs() << "=> instance decl: " << i << " cxxRecordDecl " << cxxdecl << "\n";
 
                          return (instance->getInstanceDecl() == decl);
                        });

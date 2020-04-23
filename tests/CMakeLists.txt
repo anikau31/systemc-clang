@@ -50,7 +50,7 @@ set( UNIT_TEST_LIST
 
   # # Unit tests for structures
   # tree-test
-  # instance-matcher
+  instance-matcher
   netlist-matcher
 
   )

@@ -23,6 +23,36 @@ bool find_name(std::vector<T> &names, const T &find_name) {
   return false;
 }
 
+/*
+TEST_CASE("Test for templated instance matching", "[instance matching]") {
+  std::string code{systemc_clang::read_systemc_file(
+      systemc_clang::test_data_dir, "netlist-matcher-templated-model.cpp")};
+
+  ASTUnit *from_ast =
+      tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
+          .release();
+
+  llvm::outs() << "================ TESTMATCHER =============== \n";
+  InstanceMatcher inst_matcher{};
+  MatchFinder matchRegistry{};
+  inst_matcher.registerMatchers(matchRegistry);
+  // Run all the matchers
+  matchRegistry.matchAST(from_ast->getASTContext());
+  inst_matcher.dump();
+  llvm::outs() << "================ END =============== \n";
+
+  SECTION("Test instance matcher", "[instance-matcher]") {
+    auto instances{inst_matcher.getInstanceMap()};
+
+    INFO (" There is a bug with templates that it is identifying additional instances");
+    REQUIRE(instances.size() == 2);
+
+  }
+}
+*/
+
+
+// This test works
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "xor-hierarchy.cpp")};

@@ -51,6 +51,8 @@ bool SystemCConsumer::fire() {
 
   matchRegistry.matchAST(getContext());
   // match_instances.dump();
+  llvm::outs() << "=================== END MATCHER ====================";
+
   module_declaration_handler.pruneMatches();
   os_ << "== Print module declarations pruned\n";
   module_declaration_handler.dump();
