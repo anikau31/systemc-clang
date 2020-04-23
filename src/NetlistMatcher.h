@@ -48,9 +48,6 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
           std::find_if(instance_list.begin(), instance_list.end(),
                        [decl](const auto &instance) {
                          Decl *i{instance->getInstanceDecl()};
-                         //auto cxxdecl{ cast<CXXRecordDecl>(instance->getInstanceDecl())};
-                         //llvm::outs() << "=> instance decl: " << i << " cxxRecordDecl " << cxxdecl << "\n";
-
                          return (instance->getInstanceDecl() == decl);
                        });
 
@@ -263,6 +260,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         llvm::outs() << "=> found member instance in constructor\n";
         llvm::outs() << "=> port name: " << port_name << "\n";
         pb = new PortBinding(mexpr_port, mexpr_instance, mexpr_arg);
+        pb->setInstanceConstructorName(instance_module_decl->getInstanceName());
       } else {
         llvm::outs() << "=> found instance in sc_main\n";
         llvm::outs() << "=> me\n";

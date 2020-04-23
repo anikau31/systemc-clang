@@ -55,6 +55,9 @@ class PortBinding {
   DeclRefExpr *port_parameter_dref_;
 
  public:
+  void setInstanceVarName(const std::string &n) { instance_var_name_ = n;}
+  void setInstanceConstructorName(const std::string &n) { instance_constructor_name_= n;}
+
   const std::string &getPortName() const { return port_name_; }
   MemberExpr *getPortMemberExpr() const { return port_member_expr_; }
   const std::string &getInstanceType() const { return instance_type_; }

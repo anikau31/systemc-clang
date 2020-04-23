@@ -225,7 +225,7 @@ bool SystemCConsumer::fire() {
 
   // scmain.getSCMainFunctionDecl()->dump();
 
-  netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
+    netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   // TODO: Fix the top-level
   if (getTopModule() == "!none") {
     llvm::outs() << " No top module\n";

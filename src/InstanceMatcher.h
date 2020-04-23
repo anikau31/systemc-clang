@@ -272,8 +272,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                 hasDescendant(match_ctor_arg("ctor_arg", "constructor_expr"))
               ),
             // Match only variable instances
-            hasDescendant(match_ctor_arg("ctor_arg", "constructor_expr"))
-            )
+            //allOf(
+              //hasType(cxxRecordDecl().bind("vd_cxx_record_decl")),
+              hasDescendant(match_ctor_arg("ctor_arg", "constructor_expr"))
+              )
+            //)
           ).bind("instances_in_vardecl");
 
     /* clang-format on */
@@ -304,6 +307,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_arg"));
     auto cxx_record_decl = const_cast<CXXRecordDecl *>(
         result.Nodes.getNodeAs<CXXRecordDecl>("cxx_record_decl"));
+    auto vd_cxx_record_decl = const_cast<CXXRecordDecl *>(
+        result.Nodes.getNodeAs<CXXRecordDecl>("vd_cxx_record_decl"));
 
     // Submodule
     auto ctor_submodule_arg =
@@ -355,7 +360,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       }
     }
 
-    if (instance_vd && instance_name_vd) {
+    if (instance_vd && instance_name_vd ) {
       std::string name{instance_vd->getIdentifier()->getNameStart()};
 
       // This is the main object's constructor name
@@ -405,7 +410,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       parsed_instance.var_name = var_name;
       parsed_instance.var_type_name = var_type_name;
       parsed_instance.instance_name = instance_name;
-      parsed_instance.decl = instance_vd->getCanonicalDecl();
+      parsed_instance.decl = instance_vd->getType().getTypePtr()->getAsCXXRecordDecl();
       parsed_instance.instance_decl = instance_vd;
       parsed_instance.is_field_decl = false;
 
