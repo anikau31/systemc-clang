@@ -13,6 +13,7 @@
 #include "Signal.h"
 #include "clang/AST/DeclCXX.h"
 
+#include "InstanceMatcher.h"
 namespace scpar {
 using namespace clang;
 
@@ -73,6 +74,7 @@ class ModuleDecl {
   void addPortBinding(const std::string &port_name, PortBinding *pb);
   void addSignalBinding(map<std::string, std::string>);
 
+  void setInstanceInfo(const sc_ast_matchers::ModuleInstanceType &info);
   void setInstanceName(const std::string &);
   void setInstanceDecl(Decl *);
   void setModuleName(const std::string &);
@@ -129,6 +131,7 @@ class ModuleDecl {
  private:
   std::string module_name_;
   std::string instance_name_;
+  sc_ast_matchers::ModuleInstanceType instance_info_;
 
   // Declaration
   CXXRecordDecl *class_decl_;

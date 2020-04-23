@@ -48,8 +48,8 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
           std::find_if(instance_list.begin(), instance_list.end(),
                        [decl](const auto &instance) {
                          Decl *i{instance->getInstanceDecl()};
-                         auto cxxdecl{ cast<CXXRecordDecl>(instance->getInstanceDecl())};
-                         llvm::outs() << "=> instance decl: " << i << " cxxRecordDecl " << cxxdecl << "\n";
+                         //auto cxxdecl{ cast<CXXRecordDecl>(instance->getInstanceDecl())};
+                         //llvm::outs() << "=> instance decl: " << i << " cxxRecordDecl " << cxxdecl << "\n";
 
                          return (instance->getInstanceDecl() == decl);
                        });

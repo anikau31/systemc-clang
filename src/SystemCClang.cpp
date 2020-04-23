@@ -25,7 +25,7 @@ bool SystemCConsumer::fire() {
   // ANI : Do we need FindGlobalEvents?
   FindGlobalEvents globals{tu, os_};
   FindGlobalEvents::globalEventMapType eventMap{globals.getEventMap()};
-  globals.dump_json();
+  //globals.dump_json();
   systemcModel_->addGlobalEvents(eventMap);
 
   //
@@ -87,23 +87,6 @@ bool SystemCConsumer::fire() {
   }
   */
 
-  /*
-  // Find the sc_modules
-  //
-
-  FindSCModules scmod{tu, os_};
-
-  FindSCModules::moduleMapType scmodules{scmod.getSystemCModulesMap()};
-
-  for (FindSCModules::moduleMapType::iterator mit = scmodules.begin(),
-                                              mitend = scmodules.end();
-       mit != mitend; ++mit) {
-    ModuleDecl *md = new ModuleDecl{mit->first, mit->second};
-    systemcModel_->addModuleDecl(md);
-
-  }
-  */
-
   ////////////////////////////////////////////////////////////////
   // Find the sc_main
   ////////////////////////////////////////////////////////////////
@@ -113,8 +96,6 @@ bool SystemCConsumer::fire() {
     FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
 
     // TODO: find any instances in sc_main.
-
-    // fnDecl->dump();
 
     FindSimTime scstart{fnDecl, os_};
     systemcModel_->addSimulationTime(scstart.returnSimTime());
@@ -158,10 +139,13 @@ bool SystemCConsumer::fire() {
       //
       os_ << "\n";
       os_ << "1. Set instance name: " << get<0>(instance) << "\n";
-      add_module_decl->setInstanceName(get<0>(instance));
+      //add_module_decl->setInstanceName(get<0>(instance));
       os_ << "2. Set instance type decl: " << cxx_decl->getNameAsString() << " "
           << get<1>(instance) << "\n";
-      add_module_decl->setInstanceDecl(get<1>(instance));
+      auto inst_info{ get<2>(instance) };
+      inst_info.dump();
+      add_module_decl->setInstanceInfo( get<2>(instance));
+      //add_module_decl->setInstanceDecl(get<1>(instance));
 
       // 2. Find the template arguments for the class.
       os_ << "3. Set template arguments\n";

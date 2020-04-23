@@ -28,6 +28,7 @@ ModuleDecl::ModuleDecl(
 ModuleDecl::ModuleDecl(const ModuleDecl &from) {
   module_name_ = from.module_name_;
   instance_name_ = from.instance_name_;
+  instance_info_ = from.instance_info_;
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
@@ -60,6 +61,7 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
 ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   module_name_ = from.module_name_;
   instance_name_ = from.instance_name_;
+  instance_info_ = from.instance_info_;
 
   class_decl_ = from.class_decl_;
   constructor_stmt_ = from.constructor_stmt_;
@@ -168,10 +170,14 @@ ModuleDecl::~ModuleDecl() {
   }
 }
 
-void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
+void ModuleDecl::setInstanceInfo(const sc_ast_matchers::ModuleInstanceType &info) {
+  instance_info_ = info;
+}
 
-void ModuleDecl::setInstanceDecl(Decl *decl) { instance_decl_ = decl; }
-
+// void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name; }
+//
+// void ModuleDecl::setInstanceDecl(Decl *decl) { instance_decl_ = decl; }
+//
 void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
   template_parameters_ = parm_list;
 }
@@ -368,7 +374,7 @@ ModuleDecl::portBindingMapType ModuleDecl::getPortBindings() {
 
 string ModuleDecl::getName() const { return module_name_; }
 
-string ModuleDecl::getInstanceName() const { return instance_name_; }
+string ModuleDecl::getInstanceName() const {  return instance_info_.instance_name; }
 
 bool ModuleDecl::isModuleClassDeclNull() { return (class_decl_ == nullptr); }
 
@@ -380,7 +386,7 @@ CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
 // FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_;
 // } VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
 
-Decl *ModuleDecl::getInstanceDecl() { return instance_decl_; }
+Decl *ModuleDecl::getInstanceDecl() { return instance_info_.decl; }
 
 // bool ModuleDecl::isInstanceFieldDecl() const {
 // if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {

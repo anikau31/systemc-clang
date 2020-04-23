@@ -45,7 +45,7 @@ set( UNIT_TEST_LIST
   # clock-parsing
   # test-xor-hierarchy
   # hotfix-40-findtemplatetypes
-  t5-template-matching
+  # t5-template-matching
   # portarray-example
 
   # # Unit tests for structures
