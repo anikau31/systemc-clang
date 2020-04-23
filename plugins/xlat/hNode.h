@@ -43,12 +43,11 @@ namespace hnode {
   etype(hUnop), \
   etype(hMethodCall), \
   etype(hIfStmt), \
+  etype(hBreakStmt), \
   etype(hForStmt), \
-  etype(hForInit), \
-  etype(hForCond), \
-  etype(hForInc), \
-  etype(hForBody), \
   etype(hSwitchStmt), \
+  etype(hSwitchCase), \
+  etype(hSwitchDefault), \
   etype(hWhileStmt),				\
   etype(hLiteral), \
   etype(hUnimpl), \

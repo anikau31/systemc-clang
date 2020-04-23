@@ -100,6 +100,14 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     os_ << "Found switch stmt\n";
     TRY_TO(TraverseSwitchStmt((SwitchStmt *)stmt));
   }
+  else if (isa<CaseStmt>(stmt)){
+    os_ << "Found case stmt\n";
+    TRY_TO(TraverseCaseStmt((CaseStmt *)stmt));
+  }
+  else if (isa<BreakStmt>(stmt)){
+    os_ << "Found break stmt\n";
+    h_ret = new hNode(hNode::hdlopsEnum::hBreakStmt);
+  }
   else {  
     os_ << "stmt type " << stmt->getStmtClassName() << " not recognized, calling default recursive ast visitor\n";
     hNodep oldh_ret = h_ret;
@@ -491,8 +499,35 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   
   return true;
 }
+bool XlatMethod::ProcessSwitchCase(SwitchCase *sc) {
+  os_ << "In ProcessSwitchCase\n";
+  hNodep hcasep;
+  hNodep old_hret = h_ret;
+  if (isa<DefaultStmt>(sc)) {
+    os_ << "Found default stmt in switchcase\n";
+    hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
+    TRY_TO(TraverseStmt((DefaultStmt *)sc->getSubStmt()));
+    }
+  else {
+    os_ << "Found case stmt in switchcase\n";
+    hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
+    if (ConstantExpr * expr = dyn_cast<ConstantExpr>(((CaseStmt *)sc)->getLHS())) {
+      llvm::APSInt val = expr->getResultAsAPSInt();
+      hcasep->child_list.push_back(new hNode(val.toString(10), hNode::hdlopsEnum::hLiteral));
+    }
+    TRY_TO(TraverseStmt((CaseStmt *)sc->getSubStmt()));
+  }
+  if (h_ret != old_hret) {
+    hcasep->child_list.push_back(h_ret);
+  }
+  else {
+    hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+  }
+  h_ret = hcasep;
+  return true;
+}
 
-bool XlatMethod::TraverseSwitchStmt(SwitchStmt *switchs) {
+bool XlatMethod::TraverseSwitchStmt( SwitchStmt *switchs) {
   hNodep h_switchstmt;
   os_ << "Switch stmt\n";
   h_switchstmt = new hNode(hNode::hdlopsEnum::hSwitchStmt);
@@ -502,18 +537,23 @@ bool XlatMethod::TraverseSwitchStmt(SwitchStmt *switchs) {
   }
   hNodep old_ret = h_ret;
   TRY_TO(TraverseStmt(switchs->getCond()));
-  if (h_ret != old_ret) h_switchstmt->child_list.push_back(h_ret);
-  else h_switchstmt->child_list.push_back(new nNodep(hNode::hdlopsEnum::hUnimpl));
-  os_ << "Switch loop body\n";
-  switchs->getSwitchCaseList()->dump(os_);
-  for (const SwitchCase *sc = switchs->getSwitchCaseList(); sc != NULL;
+  if (h_ret != old_ret) {
+    h_switchstmt->child_list.push_back(h_ret);
+  }
+  else h_switchstmt->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+
+  for (SwitchCase *sc = switchs->getSwitchCaseList(); sc != NULL;
        sc = sc->getNextSwitchCase()) {
-    if (isa<DefaultStmt>(sc) {
-	
-      }
-      
-    } 
-  } 
+    os_ << "Switch case\n";
+    sc->dump(os_);
+    if (isa<DefaultStmt>(sc)) {
+      os_ << "Found default stmt in case\n";
+    }
+    else {
+      ProcessSwitchCase(sc);
+      h_switchstmt->child_list.push_back(h_ret);
+    }
+  }  
   //TRY_TO(TraverseStmt(switchs->getBody()));
   //h_switchbody = h_ret;
   //h_switchstmt->child_list.push_back(h_switchinit);
