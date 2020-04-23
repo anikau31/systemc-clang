@@ -26,10 +26,12 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   // const ModuleDeclarationMatcher::DeclarationsToInstancesMapType
   // *decl_instance_map_;
   Model *model_;
+  const InstanceMatcher *instance_matcher_;
   ModuleDeclarationMatcher *module_matcher_;
   std::string top_;
 
   ModuleDecl *findModuleDeclInstance(Decl *decl) {
+    // This is the instance type decl
     llvm::outs() << "=> findModuleDeclInstance: Looking for: " << decl << "\n";
     for (auto element : model_->getModuleInstanceMap()) {
       auto incomplete{element.first};
@@ -37,6 +39,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       auto instance_list{element.second};
 
        for (auto const &inst : instance_list ) {
+         // This is the instance type decl.
       Decl *inst_decl{ inst->getInstanceDecl()};
        llvm::outs() << "=> find: " << decl << " == " << inst_decl << "\n";
        }
@@ -62,10 +65,12 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
  public:
   void registerMatchers(MatchFinder &finder, Model *model,
                         ModuleDeclarationMatcher *module_matcher) {
+                        
     /* clang-format off */
 
     model_ = model;
     module_matcher_ = module_matcher;
+    instance_matcher_ = & (module_matcher_->getInstanceMatcher());
       
    auto test = functionDecl(
        forEachDescendant(

@@ -78,6 +78,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     return declaration_instance_map_;
   };
 
+  const InstanceMatcher &getInstanceMatcher() {
+    return instance_matcher;
+  }
+
   void set_top_module_decl(const std::string &top) {
     // If there is no top specified, then match all, otherwise only top module.
     // The regular expression for matchesName() matcher for ".*" matches
@@ -286,7 +290,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
       llvm::outs() << "- decl: " << decl->getIdentifier()->getNameStart();
       for (const auto &instance : instance_list) {
-        llvm::outs() << ", instance type: " << get<0>(instance) << ", " << get<1>(instance) << "\n";
+        llvm::outs() << ", instance name: " << get<0>(instance) << ", inst type decl: " << get<1>(instance) << "\n";
       }
     }
   }
