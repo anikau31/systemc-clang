@@ -8,18 +8,60 @@ using namespace std;
 Model::Model() {}
 
 Model::~Model() {
-  //  llvm::errs() << "\n[[ Destructor Model ]]\n";
-  // Delete all ModuleDecl pointers.
-  for (Model::moduleMapType::iterator mit = modules_.begin();
-       mit != modules_.end(); mit++) {
-    //
-    // c++17 feature
-    // for (auto const & [it, module_decl] : modules_ ) {
-    // Second is the ModuleDecl type.
-    delete mit->second;
-    // delete module_decl;
+  llvm::errs() << "\n~Model\n";
+  for (auto &inst : module_instance_map_) {
+    auto incomplete_decl{inst.first};
+    auto instance_list{inst.second};
+    llvm::outs() << "Delete instances for " << incomplete_decl->getName()
+                 << ": " << instance_list.size() << "\n";
+    for (ModuleDecl *inst_in_list : instance_list) {
+      // This is a ModuleDecl*
+      llvm::outs() << "- delete instance: " << inst_in_list->getInstanceName()
+                   << ", pointer: " << inst_in_list << "\n";
+      //
+      // IMPORTANT
+      // The current design creates an incomplete ModuleDecl in Matchers. The
+      // ports are populated there.  Then, for each instance that is recognized,
+      // a new ModuleDecl is created, and information from the incomplete
+      // ModuleDecl is copied into the new instance-specific ModuleDecl. When
+      // deleting an instance of ModuleDecl, we have to be careful.  This is
+      // because we do not want to delete the instance-specific ModuleDecl,
+      // which has structures with pointers in it (PortDecl), and then delete
+      // the incomplete ModuleDecl because the latter will cause a double free
+      // memory error.  This is because the deletion of the instance-specific
+      // ModuleDecl will free the objects identified in the incomplete
+      // ModuleDecl.
+      //
+      // The current solution is to clear the information for the
+      // instance-specific ModuleDecl before deleting it.  Then, the deletion of
+      // the incomplete ModuleDecl will free the other objects such as PortDecl.
+      // clearOnlyGlobal does exactly this.
+      //
+      // TODO: ENHANCEMENT: This is one major refactoring that should be done at
+      // some point.
+      //
+      inst_in_list->clearOnlyGlobal();
+      delete inst_in_list;
+    }
+
+    // This deletes the incomplete ModuleDecl.
+    delete incomplete_decl;
   }
-  modules_.clear();
+
+  llvm::outs() << "Done with delete\n";
+  /*
+// Delete all ModuleDecl pointers.
+for (Model::moduleMapType::iterator mit = modules_.begin();
+   mit != modules_.end(); mit++) {
+
+llvm::outs() << "=> Deleting module: " << mit->first << " pointer: " <<
+mit->second << "\n";
+// Second is the ModuleDecl type.
+delete mit->second;
+// delete module_decl;
+}
+modules_.clear();
+*/
 }
 
 Model::Model(const Model &from) { modules_ = from.modules_; }
@@ -31,6 +73,7 @@ void Model::addModuleDecl(ModuleDecl *md) {
 
 void Model::addModuleDeclInstances(ModuleDecl *md, vector<ModuleDecl *> mdVec) {
   module_instance_map_.insert(moduleInstancePairType(md, mdVec));
+  modules_.push_back(Model::modulePairType(md->getName(), md));
 
   llvm::outs() << "[HDP] To add instances: " << md << "=" << mdVec.size()
                << "\n";
@@ -118,15 +161,23 @@ void Model::updateModuleDecl() {
 // }
 // }
 //
-const Model::moduleMapType &Model::getModuleDecl() { return modules_; }
+const Model::moduleMapType &Model::getModuleDecl() {
+   return modules_;
+}
 
+// Must specify the instance name.
 ModuleDecl *Model::getInstance(const std::string &instance_name) {
+  bool dbg{true};
+
+  llvm::outs() << "getInstance\n";
+  llvm::outs() << "- Looking for " << instance_name << "\n";
   for (auto const &element : module_instance_map_) {
     auto instance_list{element.second};
 
     auto test_module_it =
         std::find_if(instance_list.begin(), instance_list.end(),
                      [instance_name](const auto &instance) {
+                     llvm::outs() << "- instance name: " << instance->getInstanceName() << "\n";
                        return (instance->getInstanceName() == instance_name);
                      });
 

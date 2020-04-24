@@ -46,6 +46,7 @@ SC_MODULE(exor2) {
   }
 };
 
+/*
 SC_MODULE(stim) {
   sc_out<bool> A, B;
   sc_in<bool> Clk;
@@ -70,15 +71,18 @@ SC_MODULE(stim) {
     sensitive << Clk.pos();
   }
 };
+*/
 
 int sc_main(int argc, char* argv[]) {
   sc_signal<bool> ASig, BSig, FSig;
   sc_clock TestClk("TestClock", 10, SC_NS, 0.5);
 
+  /*
   stim Stim1("Stimulus");
   Stim1.A(ASig);
   Stim1.B(BSig);
   Stim1.Clk(TestClk);
+  */
 
   exor2 DUT("exor2");
   DUT.A(ASig);

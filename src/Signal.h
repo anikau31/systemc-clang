@@ -18,6 +18,7 @@ class SignalContainer;
 class Signal {
  public:
   Signal();
+  ~Signal();
   Signal(const std::string &, SignalContainer *);
 
   // Set parameters

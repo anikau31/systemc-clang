@@ -41,15 +41,19 @@ set( UNIT_TEST_LIST
   t1
   t2
   t3
-  #sreg-test
   t4-matchers
-  t5-template-matching
   clock-parsing
-  hotfix-40-findtemplatetypes
-  portarray-example
   test-xor-hierarchy
-  # Unit tests for structures
+  hotfix-40-findtemplatetypes
+  t5-template-matching
+  portarray-example
+
+  # # Unit tests for structures
   tree-test
+  instance-matcher
+  netlist-matcher
+  netlist-templated-matcher
+
   )
 
 if (PLUGIN_XLAT)
