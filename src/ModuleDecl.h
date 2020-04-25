@@ -13,7 +13,8 @@
 #include "Signal.h"
 #include "clang/AST/DeclCXX.h"
 
-#include "InstanceMatcher.h"
+#include "ModuleInstanceType.h"
+//#include "InstanceMatcher.h"
 namespace scpar {
 using namespace clang;
 
