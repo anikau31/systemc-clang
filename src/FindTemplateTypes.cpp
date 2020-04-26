@@ -1,6 +1,7 @@
 #include "FindTemplateTypes.h"
-
+#include "FindMemberFieldMatcher.h"
 using namespace scpar;
+using namespace sc_ast_matchers;
 
 //////////////////////////////////////////////////////////////////////
 // TemplateType
@@ -23,6 +24,20 @@ std::string TemplateType::toString() const { return getTypeName(); }
 
 const Type *TemplateType::getTypePtr() const { return type_ptr_; }
 
+void TemplateType::dump() {
+  if (!type_ptr_) {
+    return;
+  }
+
+  if (type_ptr_->isClassType() || type_ptr_->isRecordType()) {
+    auto cxx_decl{type_ptr_->getAsCXXRecordDecl()};
+
+    FindMemberFieldMatcher field_matcher{};
+    MatchFinder registry{};
+    field_matcher.registerMatchers(registry);
+    //registry.match(*cxx_decl, getContext());
+  }
+}
 //////////////////////////////////////////////////////////////////////
 // FindTemplateTypes
 //////////////////////////////////////////////////////////////////////
@@ -156,7 +171,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
     const TemplateArgumentList &arg_list{ctsd->getTemplateArgs()};
     for (unsigned int i{0}; i < arg_list.size(); ++i) {
       const TemplateArgument &targ{arg_list[i]};
-      //llvm::outs() << " ====> template argument: ";
+      // llvm::outs() << " ====> template argument: ";
       targ.dump();
       // llvm::outs() << "\n";
       // TODO Write this into the vector.
@@ -224,8 +239,8 @@ bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
   //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
   //"== type name: " << l->getType().getAsString() << "\n";
   // template_types_.push_back(TemplateType(l->getValue().toString(10, true),
-                                         // l->getType().getTypePtr()));
-//
+  // l->getType().getTypePtr()));
+  //
   return false;
 }
 
@@ -267,7 +282,7 @@ json FindTemplateTypes::dump_json() {
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   auto root_node{template_args_.getRoot()};
   auto s{template_args_.dft(root_node)};
-  //os << "> Template args (DFT): " << s << "\n";
+  // os << "> Template args (DFT): " << s << "\n";
 }
 
 std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
@@ -283,3 +298,5 @@ std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
 }
 
 size_t FindTemplateTypes::size() { return template_types_.size(); }
+
+

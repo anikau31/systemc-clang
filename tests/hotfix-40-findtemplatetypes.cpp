@@ -1,5 +1,6 @@
 #include "catch.hpp"
 
+#include "FindMemberFieldMatcher.h"
 #include "SystemCClang.h"
 
 /// This is automatically generated from cmake.
@@ -248,6 +249,38 @@ int sc_main(int argc, char *argv[]) {
         llvm::outs() << "\n@> name: " << name
                      << ", type name: " << type_data->getTypeName() << " ";
 
+        // Get the Type pointer, and then try to get the field members for it.
+        const Type *arg_type_ptr{type_data->getTypePtr()};
+
+        // Check that the Type is of a class or record.
+        if (arg_type_ptr->isClassType() || arg_type_ptr->isRecordType()) {
+          // Get the CXXRecordDecl
+          auto cxx_decl{arg_type_ptr->getAsCXXRecordDecl()};
+
+          // Run the FieldMemberMatcher on it to get all the FieldDecls in it.
+          sc_ast_matchers::FindMemberFieldMatcher field_matcher{};
+          MatchFinder registry{};
+          field_matcher.registerMatchers(registry);
+
+          // Notice that the match() call must have the context.  We can get it
+          // from the SystemCConsumer object.
+          registry.match(*cxx_decl, sc.getContext());
+
+          // Check to see if we got the FieldDecl we expect.
+          std::vector<FieldDecl *> fields{field_matcher.getFieldDecls()};
+
+          llvm::outs() << "- number of FieldDecl in type "
+                       << type_data->getTypeName() << " " << fields.size()
+                       << "\n";
+
+          for (auto const &fld : fields) {
+            if (type_data->getTypeName() == "fp_t") {
+              REQUIRE((fld->getName() == "frac" || fld->getName() == "expo" ||
+                       fld->getName() == "sign"));
+            }
+          }
+        }
+
         // Access the parent of the current node.
         // If the node is a pointer to itself, then the node itself is the
         // parent. Otherwise, it points to the parent node.
@@ -306,6 +339,38 @@ int sc_main(int argc, char *argv[]) {
         auto type_data{node->getDataPtr()};
         llvm::outs() << "\n@> name: " << name
                      << ", type name: " << type_data->getTypeName() << " ";
+
+        // Get the Type pointer, and then try to get the field members for it.
+        const Type *arg_type_ptr{type_data->getTypePtr()};
+
+        // Check that the Type is of a class or record.
+        if (arg_type_ptr->isClassType() || arg_type_ptr->isRecordType()) {
+          // Get the CXXRecordDecl
+          auto cxx_decl{arg_type_ptr->getAsCXXRecordDecl()};
+
+          // Run the FieldMemberMatcher on it to get all the FieldDecls in it.
+          sc_ast_matchers::FindMemberFieldMatcher field_matcher{};
+          MatchFinder registry{};
+          field_matcher.registerMatchers(registry);
+
+          // Notice that the match() call must have the context.  We can get it
+          // from the SystemCConsumer object.
+          registry.match(*cxx_decl, sc.getContext());
+
+          // Check to see if we got the FieldDecl we expect.
+          std::vector<FieldDecl *> fields{field_matcher.getFieldDecls()};
+
+          llvm::outs() << "- number of FieldDecl in type "
+                       << type_data->getTypeName() << " " << fields.size()
+                       << "\n";
+
+          for (auto const &fld : fields) {
+            if (type_data->getTypeName() == "MyType") {
+              REQUIRE((fld->getName() == "info" || fld->getName() == "flag"));
+            }
+            fld->dump();
+          }
+        }
 
         // Access the parent of the current node.
         // If the node is a pointer to itself, then the node itself is the
