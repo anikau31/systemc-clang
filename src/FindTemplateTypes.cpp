@@ -24,20 +24,6 @@ std::string TemplateType::toString() const { return getTypeName(); }
 
 const Type *TemplateType::getTypePtr() const { return type_ptr_; }
 
-void TemplateType::dump() {
-  if (!type_ptr_) {
-    return;
-  }
-
-  if (type_ptr_->isClassType() || type_ptr_->isRecordType()) {
-    auto cxx_decl{type_ptr_->getAsCXXRecordDecl()};
-
-    FindMemberFieldMatcher field_matcher{};
-    MatchFinder registry{};
-    field_matcher.registerMatchers(registry);
-    //registry.match(*cxx_decl, getContext());
-  }
-}
 //////////////////////////////////////////////////////////////////////
 // FindTemplateTypes
 //////////////////////////////////////////////////////////////////////
