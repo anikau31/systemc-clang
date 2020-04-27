@@ -365,10 +365,20 @@ int sc_main(int argc, char *argv[]) {
                        << "\n";
 
           for (auto const &fld : fields) {
+            fld->dump();
             if (type_data->getTypeName() == "MyType") {
               REQUIRE((fld->getName() == "info" || fld->getName() == "flag"));
             }
-            fld->dump();
+            // Try to get the template type of these fields.
+            const Type *field_type{fld->getType().getTypePtr()};
+            FindTemplateTypes find_tt{};
+            find_tt.Enumerate(field_type);
+
+            // Ge the tree.
+            auto template_args{find_tt.getTemplateArgTreePtr()};
+            // Access the tree here in the way on wishes.
+            std::string dft_str{template_args->dft()};
+            llvm::outs() << "DFT: " << dft_str << "\n";
           }
         }
 

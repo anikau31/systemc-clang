@@ -100,17 +100,19 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
 }
 
 bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
-  llvm::outs() << "=VisitBuiltinType=\n";
+  llvm::outs() << "=VisitBuiltinType= \n";
   // bi_type->dump();
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
   clang::PrintingPolicy Policy(LangOpts);
 
-  auto type_name{bi_type->getNameAsCString(Policy)};
+  //auto type_name{bi_type->getNameAsCString(Policy)};
+  auto type_name{bi_type->getName(Policy)};
   llvm::outs() << "type is : " << type_name << "\n";
 
-  current_type_node_ = template_args_.addNode(TemplateType(type_name, bi_type));
+  TemplateType tt{type_name.str(), bi_type};
+  current_type_node_ = template_args_.addNode(tt);
   template_types_.push_back(TemplateType(type_name, bi_type));
 
   if (template_args_.size() == 1) {
