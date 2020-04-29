@@ -38,21 +38,21 @@ file(COPY data DESTINATION ${CMAKE_BINARY_DIR}/tests/ )
 file(COPY ../examples/llnl-examples DESTINATION ${CMAKE_BINARY_DIR}/tests/data )
 
 set( UNIT_TEST_LIST 
-  # t1
-  # t2
-  # t3
-  # t4-matchers
-  # clock-parsing
-  # test-xor-hierarchy
+  t1
+  t2
+  t3
+  t4-matchers
+  clock-parsing
+  test-xor-hierarchy
   hotfix-40-findtemplatetypes
-  # t5-template-matching
-  # portarray-example
-#
-  # Unit tests for structures
-  # tree-test
-  # instance-matcher
-  # netlist-matcher
-  # netlist-templated-matcher
+  t5-template-matching
+  portarray-example
+
+# Unit tests for structures
+  tree-test
+  instance-matcher
+  netlist-matcher
+  netlist-templated-matcher
 #
   )
 
@@ -62,7 +62,7 @@ set(UNIT_MATCHER_TEST_LIST
 
 if (PLUGIN_XLAT)
 set ( UNIT_XLAT_TEST_LIST 
-  # sreg-test
+   sreg-test
   )
 endif()
 
