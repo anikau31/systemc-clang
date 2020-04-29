@@ -1,8 +1,6 @@
 #include "FindTemplateParameters.h"
 #include "FindTemplateTypes.h"
-#include "clang/AST/DeclTemplate.h"
-#include "clang/AST/Type.h"
-#include "clang/Basic/SourceManager.h"
+//#include "clang/AST/Type.h"
 
 using namespace scpar;
 
@@ -64,8 +62,8 @@ bool FindTemplateParameters::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
   return false;
 }
 
-vector<string> FindTemplateParameters::getTemplateParameters() const {
-  vector<string> parm_list;
+const std::vector<std::string> FindTemplateParameters::getTemplateParameters() const {
+  std::vector<std::string> parm_list;
   if ((template_parameters_ == nullptr) ||
       (template_parameters_->size() <= 0)) {
     return parm_list;
@@ -78,8 +76,8 @@ vector<string> FindTemplateParameters::getTemplateParameters() const {
   return parm_list;
 }
 
-vector<string> FindTemplateParameters::getTemplateArgs() const {
-  vector<string> arg_list;
+const std::vector<std::string> FindTemplateParameters::getTemplateArgs() const {
+  std::vector<std::string> arg_list;
   if ((template_args_ == nullptr) || (template_args_->size() == 0)) {
     return arg_list;
   }
@@ -92,7 +90,7 @@ vector<string> FindTemplateParameters::getTemplateArgs() const {
         auto number{arg.getAsIntegral()};
         SmallString<10> small_str;
         number.toString(small_str);
-        arg_list.push_back(string(small_str.c_str()));
+        arg_list.push_back(std::string(small_str.c_str()));
         os_ << "Arg: " << small_str << "\n";
       }; break;
       case TemplateArgument::ArgKind::Type: {

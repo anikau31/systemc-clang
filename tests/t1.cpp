@@ -1,7 +1,6 @@
 #include "catch.hpp"
 
 #include "SystemCClang.h"
-
 // This is automatically generated from cmake.
 #include <iostream>
 #include "ClangArgs.h"
@@ -95,10 +94,10 @@ int sc_main(int argc, char *argv[]) {
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
           .release();
 
-  SystemCConsumer sc{from_ast};
-  sc.HandleTranslationUnit(from_ast->getASTContext());
+  SystemCConsumer systemc_clang_consumer{from_ast};
+  systemc_clang_consumer.HandleTranslationUnit(from_ast->getASTContext());
 
-  auto model{sc.getSystemCModel()};
+  auto model{systemc_clang_consumer.getSystemCModel()};
 
   // This provides the module declarations.
   auto module_decl{model->getModuleDecl()};
@@ -155,10 +154,11 @@ int sc_main(int argc, char *argv[]) {
 
       // Note: template_args must be dereferenced.
       for (auto const &node : *template_args) {
-        auto type_data{node->getDataPtr()};
-        llvm::outs() << "\n@> name: " << name
+        const TemplateType *type_data{node->getDataPtr()};
+        llvm::outs() << "\n- name: " << name
                      << ", type name: " << type_data->getTypeName() << " ";
 
+    
         // Access the parent of the current node.
         // If the node is a pointer to itself, then the node itself is the
         // parent. Otherwise, it points to the parent node.
