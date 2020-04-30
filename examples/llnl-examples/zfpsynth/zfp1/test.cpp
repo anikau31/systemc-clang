@@ -1,5 +1,5 @@
+#define __SYNTHESIS__
 
-// #define __SYNTHESIS__
 #if defined(__SYNTHESIS__)
 #define RVD
 #endif
