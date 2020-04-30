@@ -212,8 +212,19 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
 	for (auto const &fld: rectype->getDecl()->fields()) {
 	  os_ << "field of record type \n";
 	  fld ->dump(os_);
-	  os_ << "found name " << fld->getName() << "\n";
-	  xlatfieldtype(prefix+'_'+fld->getNameAsString(), template_argtp, fld->getType().getTypePtr(), h_op, h_info);
+	  os_ << "field: found name " << fld->getName() << "\n";
+	  // Try to get the template type of these fields.
+	  const Type *field_type{fld->getType().getTypePtr()};
+	  FindTemplateTypes find_tt{};
+	  find_tt.Enumerate(field_type);
+
+	  // Ge the tree.
+	  auto template_args{find_tt.getTemplateArgTreePtr()};
+	  // Access the tree here in the way on wishes.
+	  std::string dft_str{template_args->dft()};
+	  llvm::outs() << "DFT: " << dft_str << "\n";
+	  xlattype(prefix+'_'+fld->getNameAsString(), template_args,  h_op, h_info);
+	  //xlatfieldtype(prefix+'_'+fld->getNameAsString(), template_argtp, fld->getType().getTypePtr(), h_op, h_info);
         }
       }
     }
