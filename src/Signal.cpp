@@ -1,6 +1,8 @@
-#include "Signal.h"
 #include <string>
-#include "FindTemplateTypes.h"
+
+#include "clang/AST/DeclCXX.h"
+
+#include "Signal.h"
 
 using namespace scpar;
 using namespace std;
@@ -26,12 +28,12 @@ string Signal::getName() { return signal_name_; }
 
 FindTemplateTypes *Signal::getTemplateTypes() {
   check();
-  return signal_container_->getTemplateTypes();
+  return signal_container_->getTemplateType();
 }
 
-FieldDecl *Signal::getASTNode() {
+clang::FieldDecl *Signal::getASTNode() {
   check();
-  return signal_container_->getASTNode();
+  return signal_container_->getFieldDecl();
 }
 
 void Signal::dump(raw_ostream &os, int tabn = 0) {
@@ -52,7 +54,7 @@ json Signal::dump_json(raw_ostream &os) {
 
   // Container
   auto template_args{
-      signal_container_->getTemplateTypes()->getTemplateArgumentsType()};
+      signal_container_->getTemplateType()->getTemplateArgumentsType()};
 
   signal_j["signal_type"] = template_args[0].getTypeName();
   template_args.erase(begin(template_args));
