@@ -219,7 +219,7 @@ int sc_main(int argc, char *argv[]) {
 
     for (auto const &sig : test_module_inst->getSignals()) {
       auto name{get<0>(sig)};
-      Signal *sg{get<1>(sig)};
+      SignalDecl *sg{get<1>(sig)};
       auto template_type{sg->getTemplateTypes()};
       auto template_args{template_type->getTemplateArgTreePtr()};
 

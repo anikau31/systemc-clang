@@ -200,7 +200,7 @@ void ModuleDecl::addPortBinding(const std::string &port_name, PortBinding *pb) {
   port_bindings_.insert(portBindingPairType(port_name, pb));
 }
 
-void ModuleDecl::addSignalBinding(map<string, string> portSignalMap) {
+void ModuleDecl::addSignalBinding(std::map<std::string, std::string> portSignalMap) {
   port_signal_map_.insert(portSignalMap.begin(), portSignalMap.end());
 }
 
@@ -231,8 +231,8 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
       auto templates{port_decl->getTemplateType()};
       auto field_decl{port_decl->getFieldDecl()};
       // SignalContainer
-      auto signal_container{new SignalContainer{name, templates, field_decl}};
-      auto signal_entry{new Signal(name, signal_container)};
+      //auto signal_container{new SignalContainer{name, templates, field_decl}};
+      auto signal_entry{new SignalDecl{name, field_decl, templates}};
       signals_.insert(ModuleDecl::signalPairType(name, signal_entry));
     }
     // std::copy(begin(found_ports), end(found_ports), back_inserter(signals_));
@@ -548,7 +548,7 @@ void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
   json signal_j;
   signal_j["number_of_signals"] = signals_.size();
   for (auto sit : signals_) {
-    Signal *s = sit.second;
+    SignalDecl *s {sit.second};
     signal_j[sit.first] = s->dump_json(os);
   }
 

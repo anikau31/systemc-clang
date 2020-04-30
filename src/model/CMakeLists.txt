@@ -5,14 +5,14 @@ set( SCC_MODEL
   NotifyContainer.cpp
   EventDecl.cpp
   ProcessDecl.cpp
-  Signal.cpp
+  SignalDecl.cpp
   PortDecl.cpp
   InterfaceDecl.cpp
   Model.cpp
   WaitCalls.cpp
   NotifyCalls.cpp
   EventContainer.cpp
-  SignalContainer.cpp
+  #SignalContainer.cpp
   )
 
 include_directories(${SCC_INCLUDES})

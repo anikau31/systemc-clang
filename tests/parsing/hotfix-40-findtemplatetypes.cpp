@@ -237,7 +237,7 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(ram_signals.size() == 1);
     for (auto const &sig : ram_signals) {
       auto name{get<0>(sig)};
-      Signal *sg{get<1>(sig)};
+      SignalDecl *sg{get<1>(sig)};
       llvm::outs() << "signal name: " << name << "\n";
       // TODO: This member function should be consistent with PortDecl.
       auto template_type{sg->getTemplateTypes()};

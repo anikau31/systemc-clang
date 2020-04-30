@@ -10,7 +10,7 @@
 #include "PortBinding.h"
 #include "PortDecl.h"
 #include "ProcessDecl.h"
-#include "Signal.h"
+#include "SignalDecl.h"
 #include "clang/AST/DeclCXX.h"
 
 #include "ModuleInstanceType.h"
@@ -23,8 +23,8 @@ using namespace clang;
 
 class ModuleDecl {
  public:
-  typedef std::pair<std::string, Signal *> signalPairType;
-  typedef std::map<std::string, Signal *> signalMapType;
+  typedef std::pair<std::string, SignalDecl*> signalPairType;
+  typedef std::map<std::string, SignalDecl*> signalMapType;
 
   typedef std::pair<std::string, InterfaceDecl *> interfacePairType;
   typedef std::map<std::string, InterfaceDecl *> interfaceMapType;
