@@ -37,77 +37,20 @@ file(COPY data DESTINATION ${CMAKE_BINARY_DIR}/tests/ )
 # be careful about the filename as they may collide 
 file(COPY ../examples/llnl-examples DESTINATION ${CMAKE_BINARY_DIR}/tests/data )
 
-set( UNIT_TEST_LIST 
-  t1
-  t2
-  t3
-  t4-matchers
-  clock-parsing
-  test-xor-hierarchy
-  hotfix-40-findtemplatetypes
-  t5-template-matching
-  portarray-example
+set(TEST_DIR "tests")
 
-# Unit tests for structures
-  tree-test
-  instance-matcher
-  netlist-matcher
-  netlist-templated-matcher
-#
-  )
+add_subdirectory(unit)
+add_subdirectory(matchers)
+add_subdirectory(parsing)
 
-set(UNIT_MATCHER_TEST_LIST 
-  find-members
-  )
+# Plugins
+add_subdirectory(xlat)
 
-if (PLUGIN_XLAT)
-set ( UNIT_XLAT_TEST_LIST 
-   sreg-test
-  )
-endif()
 
-set (UNIT_TEST_LIST ${UNIT_TEST_LIST} ${UNIT_XLAT_TEST_LIST})
 include(CTest)
 
 # catch2 may have headers colliding with other local files, 
 # so we can use -iquote instead of -I to include files in src folder
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -iquote ${PROJECT_SOURCE_DIR}/src")
-
-# Just unit tests that do not need systemc-clang to run.
-foreach(NAME IN LISTS UNIT_MATCHER_TEST_LIST)
-  list(APPEND UNIT_TEST_SOURCE_LIST
-    ${NAME}.cpp)
-  set(TEST_SOURCE_NAME ${NAME})
-  set(TARGET_NAME ${NAME})
-  add_executable(${TARGET_NAME} main.cpp ${TEST_SOURCE_NAME} )
-    
-  target_link_libraries(${TARGET_NAME} PUBLIC findtemplatetypes ${CLANG_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
-  
-  target_include_directories(${TARGET_NAME} PUBLIC ../externals/catch2/ PUBLIC ../tests/ PUBLIC ${CMAKE_BINARY_DIR}/tests/ )
-  add_test( NAME ${TARGET_NAME} COMMAND ${TARGET_NAME} 
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests/data/ )
-endforeach()
-
-
-# This is to link with SystemC clang
-foreach(NAME IN LISTS UNIT_TEST_LIST)
-  list(APPEND UNIT_TEST_SOURCE_LIST
-    ${NAME}.cpp)
-  set(TEST_SOURCE_NAME ${NAME})
-  set(TARGET_NAME ${NAME})
-  add_executable(${TARGET_NAME} main.cpp ${TEST_SOURCE_NAME} )
-    
-  target_link_libraries(${TARGET_NAME} PUBLIC libsystemc-clang ${CLANG_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
-  
-  if (PLUGIN_XLAT) 
-    target_link_libraries(${TARGET_NAME} PUBLIC libxlat)
-  endif()
-
-  target_include_directories(${TARGET_NAME} PUBLIC ../externals/catch2/ PUBLIC ../tests/ PUBLIC ${CMAKE_BINARY_DIR}/tests/ )
-  add_test( NAME ${TARGET_NAME} COMMAND ${TARGET_NAME} 
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests/data/ )
-endforeach()
 
 # for pytest tests
 if(V_TESTS_ON)
