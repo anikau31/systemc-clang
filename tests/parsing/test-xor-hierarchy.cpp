@@ -22,7 +22,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   std::string top{"exor2"};
 
   SystemCConsumer sc{from_ast};
-  //sc.setTopModule(top);
+  // sc.setTopModule(top);
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   auto module_instances{model->getModuleInstanceMap()};
@@ -43,22 +43,22 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
       // }
     // }
   }
-  
+
                                   */
   auto found_module_decl{model->getInstance("exor2")};
   SECTION("Testing top-level module: exor2", "[exor2]") {
     // There should be only one module.
     INFO("Top-level module specified as exor2.");
     // exor2 has several sub-modules in it.
-    // Note that module_decl will just hold the three unique module declarations.
-    // The instances will not be there.
-    // Therefore, the total number of module decls are 3: nand2, exor.
-    //REQUIRE(module_instances.size() == 2);
+    // Note that module_decl will just hold the three unique module
+    // declarations. The instances will not be there. Therefore, the total
+    // number of module decls are 3: nand2, exor.
+    // REQUIRE(module_instances.size() == 2);
 
     // Actually found the module.
-    REQUIRE(found_module_decl != nullptr); // != module_decl.end());
+    REQUIRE(found_module_decl != nullptr);  // != module_decl.end());
 
-    //auto found_decl{found_module_decl}; //->second};
+    // auto found_decl{found_module_decl}; //->second};
     auto found_decl{found_module_decl};
     REQUIRE(found_decl->getIPorts().size() == 2);
     REQUIRE(found_decl->getOPorts().size() == 1);
@@ -70,7 +70,9 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
     //
     // test_module_inst
     auto port_bindings{found_decl->getPortBindings()};
-    llvm::outs() << "decl: " << found_decl->getName() << ", Number of port bindings: " << port_bindings.size() << "\n";
+    llvm::outs() << "decl: " << found_decl->getName()
+                 << ", Number of port bindings: " << port_bindings.size()
+                 << "\n";
     std::vector<std::string> test_ports{"A", "B", "F"};
 
     for (auto const &pname : test_ports) {
@@ -94,35 +96,118 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
       }
     }
 
-
-
-
-
-
-
     llvm::outs() << "All checks passed.\n";
   }
 
-std::vector<std::string> instance_names{"N1", "N2", "N3", "N4"};
+  // Submodule port bindings
+  // std::vector<std::string> instance_names{"N1", "N2", "N3", "N4"};
+  // std::vector<ModuleDecl *> found_modules{};
+//
+  // Populate a vector of ModuleDecl* that match the above instance names.
+  // for (auto const &name : instance_names) {
+    // found_modules.push_back(model->getInstance(name));
+  // }
+//
+  // REQUIRE(found_modules.size() == instance_names.size());
   auto found_module_n1{model->getInstance("N1")};
-/*
   auto found_module_n2{model->getInstance("N2")};
   auto found_module_n3{model->getInstance("N3")};
   auto found_module_n4{model->getInstance("N4")};
-  */
 
-  SECTION("Test port information and binding for sub-modules", "[nested submodules]") {
+  REQUIRE(found_module_n1 != nullptr);
+  REQUIRE(found_module_n2 != nullptr);
+  REQUIRE(found_module_n3 != nullptr);
+  REQUIRE(found_module_n4 != nullptr);
+
+  SECTION("Test port information and binding for sub-modules",
+          "[nested submodules]") {
     llvm::outs() << "Found a sub-module: " << found_module_n1 << "\n";
-    if (!found_module_n1) {
-      llvm::outs() << "FOUND N1\n";
-    } 
-    /*
-    for (auto const &name: instance_names) {
-      auto found_module{model->getInstance(name)};
 
-      REQUIRE( found_module != nullptr );
+    // N1
+    auto port_bindings{found_module_n1->getPortBindings()};
+    std::vector<std::string> test_ports{"A", "B", "F"};
+
+    for (auto const &pname : test_ports) {
+      auto found_it{port_bindings.find(pname)};
+      std::string port_name{found_it->first};
+      PortBinding *binding{found_it->second};
+      std::string as_string{binding->toString()};
+
+      if (port_name == "A") {
+        REQUIRE(as_string == "nand2 n1 N1 A");
+      }
+      if (port_name == "B") {
+        REQUIRE(as_string == "nand2 n1 N1 B");
+      }
+      if (port_name == "F") {
+        REQUIRE(as_string == "nand2 n1 N1 S1");
+      }
     }
-    */
+
+    // N2
+    port_bindings = found_module_n2->getPortBindings();
+
+    for (auto const &pname : test_ports) {
+      auto found_it{port_bindings.find(pname)};
+      std::string port_name{found_it->first};
+      PortBinding *binding{found_it->second};
+      std::string as_string{binding->toString()};
+
+      if (port_name == "A") {
+        REQUIRE(as_string == "nand2 n2 N2 A");
+      }
+      if (port_name == "B") {
+        REQUIRE(as_string == "nand2 n2 N2 S1");
+      }
+      if (port_name == "F") {
+        REQUIRE(as_string == "nand2 n2 N2 S2");
+      }
+    }
+
+
+    // N3
+    port_bindings = found_module_n3->getPortBindings();
+
+    for (auto const &pname : test_ports) {
+      auto found_it{port_bindings.find(pname)};
+      std::string port_name{found_it->first};
+      PortBinding *binding{found_it->second};
+      std::string as_string{binding->toString()};
+
+      if (port_name == "A") {
+        REQUIRE(as_string == "nand2 n3 N3 S1");
+      }
+      if (port_name == "B") {
+        REQUIRE(as_string == "nand2 n3 N3 B");
+      }
+      if (port_name == "F") {
+        REQUIRE(as_string == "nand2 n3 N3 S3");
+      }
+    }
+
+    // N4
+    port_bindings = found_module_n4->getPortBindings();
+
+    for (auto const &pname : test_ports) {
+      auto found_it{port_bindings.find(pname)};
+      std::string port_name{found_it->first};
+      PortBinding *binding{found_it->second};
+      std::string as_string{binding->toString()};
+
+      if (port_name == "A") {
+        REQUIRE(as_string == "nand2 n4 N4 S2");
+      }
+      if (port_name == "B") {
+        REQUIRE(as_string == "nand2 n4 N4 S3");
+      }
+      if (port_name == "F") {
+        REQUIRE(as_string == "nand2 n4 N4 F");
+      }
+    }
+
+
+
+
   }
 
 
