@@ -338,6 +338,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -iquote ${PROJECT_SOURCE_DIR}/src")
 include_directories(
   "${LLVM_INSTALL_DIR}/include"
   "${CATCH_INCLUDE_DIR}"
+  "src/"
+  "src/matchers"
+  "src/model"
   )
 
 set( SRC_LIB libsystemc-clang )
@@ -351,13 +354,17 @@ link_directories( ${LLVM_INSTALL_DIR}/lib )
 
 add_subdirectory(src)
 
+
 if(PLUGIN_XLAT) 
   include_directories(plugins/xlat)
   add_subdirectory(plugins)
   set( SRC_LIB libsystemc-clang libxlat )
 endif()
-
-
+#
+# SET(SCC_INCLUDES "src" "src/matchers" "src/model")
+#
+# include_directories(${SCC_INCLUDES})
+#
 if( TESTS_ON )
   add_subdirectory(tests)
   enable_testing()
