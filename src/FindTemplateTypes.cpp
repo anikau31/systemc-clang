@@ -1,6 +1,7 @@
 #include "FindTemplateTypes.h"
-
+#include "FindMemberFieldMatcher.h"
 using namespace scpar;
+using namespace sc_ast_matchers;
 
 //////////////////////////////////////////////////////////////////////
 // TemplateType
@@ -99,17 +100,19 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
 }
 
 bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
-  llvm::outs() << "=VisitBuiltinType=\n";
+  llvm::outs() << "=VisitBuiltinType= \n";
   // bi_type->dump();
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
   clang::PrintingPolicy Policy(LangOpts);
 
-  auto type_name{bi_type->getNameAsCString(Policy)};
+  //auto type_name{bi_type->getNameAsCString(Policy)};
+  auto type_name{bi_type->getName(Policy)};
   llvm::outs() << "type is : " << type_name << "\n";
 
-  current_type_node_ = template_args_.addNode(TemplateType(type_name, bi_type));
+  TemplateType tt{type_name.str(), bi_type};
+  current_type_node_ = template_args_.addNode(tt);
   template_types_.push_back(TemplateType(type_name, bi_type));
 
   if (template_args_.size() == 1) {
@@ -156,7 +159,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
     const TemplateArgumentList &arg_list{ctsd->getTemplateArgs()};
     for (unsigned int i{0}; i < arg_list.size(); ++i) {
       const TemplateArgument &targ{arg_list[i]};
-      //llvm::outs() << " ====> template argument: ";
+      // llvm::outs() << " ====> template argument: ";
       targ.dump();
       // llvm::outs() << "\n";
       // TODO Write this into the vector.
@@ -224,8 +227,8 @@ bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
   //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
   //"== type name: " << l->getType().getAsString() << "\n";
   // template_types_.push_back(TemplateType(l->getValue().toString(10, true),
-                                         // l->getType().getTypePtr()));
-//
+  // l->getType().getTypePtr()));
+  //
   return false;
 }
 
@@ -267,7 +270,7 @@ json FindTemplateTypes::dump_json() {
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   auto root_node{template_args_.getRoot()};
   auto s{template_args_.dft(root_node)};
-  //os << "> Template args (DFT): " << s << "\n";
+  // os << "> Template args (DFT): " << s << "\n";
 }
 
 std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
@@ -283,3 +286,5 @@ std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
 }
 
 size_t FindTemplateTypes::size() { return template_types_.size(); }
+
+

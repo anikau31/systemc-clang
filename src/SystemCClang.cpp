@@ -25,7 +25,7 @@ bool SystemCConsumer::fire() {
   // ANI : Do we need FindGlobalEvents?
   FindGlobalEvents globals{tu, os_};
   FindGlobalEvents::globalEventMapType eventMap{globals.getEventMap()};
-  //globals.dump_json();
+  // globals.dump_json();
   systemcModel_->addGlobalEvents(eventMap);
 
   //
@@ -139,15 +139,18 @@ bool SystemCConsumer::fire() {
       //
       os_ << "\n";
       os_ << "1. Set instance name: " << get<0>(instance) << "\n";
-      //add_module_decl->setInstanceName(get<0>(instance));
+      // add_module_decl->setInstanceName(get<0>(instance));
       os_ << "2. Set instance type decl: " << cxx_decl->getNameAsString() << " "
           << get<1>(instance) << "\n";
-      auto inst_info{ get<2>(instance) };
+      auto inst_info{get<2>(instance)};
       inst_info.dump();
-      add_module_decl->setInstanceInfo( get<2>(instance));
-      //add_module_decl->setInstanceDecl(get<1>(instance));
+      add_module_decl->setInstanceInfo(get<2>(instance));
+      // add_module_decl->setInstanceDecl(get<1>(instance));
 
       // 2. Find the template arguments for the class.
+      // In clang lingo: parameters are the templated values, and the arguments
+      // are the specialization values for the templates.
+      //
       os_ << "3. Set template arguments\n";
       FindTemplateParameters tparms{cxx_decl, os_};
       add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
@@ -225,7 +228,7 @@ bool SystemCConsumer::fire() {
 
   // scmain.getSCMainFunctionDecl()->dump();
 
-    netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
+  netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   // TODO: Fix the top-level
   if (getTopModule() == "!none") {
     llvm::outs() << " No top module\n";

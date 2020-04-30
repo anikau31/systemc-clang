@@ -7,10 +7,11 @@
 #include "json.hpp"
 
 #include "clang/AST/RecursiveASTVisitor.h"
-#include "clang/AST/Type.h"
 #include "llvm/Support/raw_ostream.h"
 
 #include "Tree.h"
+
+namespace clang { class Type; }
 
 namespace scpar {
 using namespace clang;
@@ -27,17 +28,18 @@ class TemplateType {
   TemplateType();
 
   // Overloaded constructor
-  TemplateType(std::string, const Type *);
+  TemplateType(std::string, const clang::Type *);
   ~TemplateType();
   TemplateType(const TemplateType &);
 
   std::string getTypeName() const;
   std::string toString() const;
-  const Type *getTypePtr() const;
+  const clang::Type *getTypePtr() const;
+  void dump();
 
  private:
   std::string type_name_;
-  const Type *type_ptr_;
+  const clang::Type *type_ptr_;
 };
 
 // This class is going to find the arguments from templates
@@ -68,13 +70,14 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitBuiltinType(BuiltinType *bi_type);
 
   ~FindTemplateTypes();
-  void Enumerate(const Type *type);
+  void Enumerate(const clang::Type *type);
   type_vector_t getTemplateArgumentsType();
+  std::vector<std::string> getTemplateArguments();
+  Tree<TemplateType> *getTemplateArgTreePtr();
+  size_t size();
+
   void printTemplateArguments(llvm::raw_ostream &os);
   json dump_json();
-  std::vector<std::string> getTemplateArguments();
-  size_t size();
-  Tree<TemplateType> *getTemplateArgTreePtr();
 
  private:
   // (std::string, Type*)

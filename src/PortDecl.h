@@ -35,7 +35,7 @@ class PortDecl {
   FindTemplateTypes *getTemplateType();
 
   // Print
-  void dump(llvm::raw_ostream &, int tabn = 0);
+  virtual void dump(llvm::raw_ostream &, int tabn = 0);
 
   json dump_json(llvm::raw_ostream &);
 

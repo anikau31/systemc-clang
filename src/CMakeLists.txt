@@ -7,6 +7,10 @@ if (USE_SAUTO)
     )
 endif (USE_SAUTO)
 
+add_library(findtemplatetypes 
+  FindTemplateTypes.cpp
+  )
+
 add_library (libsystemc-clang
   ModuleDecl.cpp
   FindModule.cpp
@@ -48,5 +52,6 @@ add_library (libsystemc-clang
   WaitCalls.cpp
   NotifyCalls.cpp
   EventContainer.cpp
+  SignalContainer.cpp
 
   )
