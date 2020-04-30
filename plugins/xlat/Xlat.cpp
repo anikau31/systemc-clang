@@ -116,7 +116,7 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
 
     os_ << "object name is " << objname << "\n";
 
-    Signal *pd = get<1>(*mit);
+    SignalDecl *pd = get<1>(*mit);
 
     Tree<TemplateType> *template_argtp = (pd->getTemplateTypes())->getTemplateArgTreePtr();
     xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
