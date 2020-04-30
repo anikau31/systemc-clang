@@ -141,32 +141,6 @@ void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNode
   }
 }
 
-void Xlat::xlatfieldtype(string prefix, Tree<TemplateType> *treep, const Type *typep, hNode::hdlopsEnum h_op, hNodep &h_info) {
-  os_ << "field " << prefix << " type follows\n";
-  typep->dump(os_);
-  if (const BuiltinType *bt = dyn_cast<BuiltinType>(typep)) {
-    string tmps = (bt->desugar()).getAsString();
-    os_ << "field: found built in type " << tmps << "\n";
-    makehpsv(prefix, tmps, h_op, h_info);
-    return;
-  }
-  if (const RecordType * rectype = dyn_cast<RecordType>(typep)) {
-    string tmps = rectype->desugar().getAsString();
-    os_ << "field: record type found, name is " << tmps << "\n";
-    makehpsv(prefix, tmps, h_op, h_info);  // would need to recurse here
-    return;
-
-  }
-  /*
-field m_port_data type follows
-TemplateSpecializationType 0x1060a00c0 'sc_out<struct fp_t<11, 52> >' sugar sc_out
-|-TemplateArgument type 'struct fp_t<11, 52>':'struct fp_t<11, 52>'
-`-RecordType 0x1060a00a0 'class sc_core::sc_out<struct fp_t<11, 52> >'
-  `-ClassTemplateSpecialization 0x10609ffb0 'sc_out'
-  */
-  makehpsv(prefix, "UNKNOWNTYPE", h_op, h_info);
-}
-
 void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::hdlopsEnum h_op, hNodep &h_info) {
 
   //llvm::outs()  << "xlattype dump of templatetree args follows\n";
@@ -180,15 +154,9 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
     makehpsv(prefix, tmps, h_op, h_info);
     return;
   }
-  
-  // QualType 	getCanonicalTypeInternal () const -- from Type
-  // const Type * 	getUnqualifiedDesugaredType () const  -- from Type
 
-  // sc_types: sc_int<>, sc_uint<>, sc_bigint<>, sc_biguint<>, sc_bv<>, sc_logic
-
-  
   // now process composite types
-
+  
   if (template_argtp->getRoot()) {
     string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
     os_ << " nonprimitive type " << tmps << "\n";
@@ -224,7 +192,6 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
 	  std::string dft_str{template_args->dft()};
 	  llvm::outs() << "DFT: " << dft_str << "\n";
 	  xlattype(prefix+'_'+fld->getNameAsString(), template_args,  h_op, h_info);
-	  //xlatfieldtype(prefix+'_'+fld->getNameAsString(), template_argtp, fld->getType().getTypePtr(), h_op, h_info);
         }
       }
     }
