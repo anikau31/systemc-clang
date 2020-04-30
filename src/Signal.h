@@ -5,7 +5,9 @@
 
 #include "json.hpp"
 
-#include "FindSignals.h"
+#include "SignalContainer.h"
+
+#include "llvm/Support/raw_ostream.h"
 
 namespace scpar {
 using namespace clang;
@@ -13,7 +15,6 @@ using json = nlohmann::json;
 
 // Forward declarations.
 class FindTemplateTypes;
-class SignalContainer;
 
 class Signal {
  public:

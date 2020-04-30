@@ -1,4 +1,6 @@
+/* clang-format off */
 #include "catch.hpp"
+
 #include "SystemCClang.h"
 #include "Matchers.h"
 
@@ -6,37 +8,10 @@
 #include "ClangArgs.h"
 #include "Testing.h"
 
+/* clang-format on */
+
 using namespace scpar;
 using namespace sc_ast_matchers;
-
-TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
-  std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "templated-module.cpp")};
-
-  ASTUnit *from_ast =
-      tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
-          .release();
-
-  llvm::outs() << "================ TESTMATCHER =============== \n";
-
-  ModuleDeclarationMatcher module_declaration_handler{};
-  MatchFinder matchRegistry{};
-  module_declaration_handler.registerMatchers(matchRegistry);
-  // Run all the matchers
-  matchRegistry.matchAST(from_ast->getASTContext());
-  module_declaration_handler.pruneMatches();
-  module_declaration_handler.dump();
-
-  llvm::outs() << "================ END =============== \n";
-
-  SystemCConsumer sc{from_ast};
-  sc.HandleTranslationUnit(from_ast->getASTContext());
-
-  SECTION("Test systemc-clang AST matchers ", "[matchers]") {
-    // The module instances have all the information.
-    REQUIRE(true);
-  }
-}
 
 TEST_CASE("Only parse a single top-level module", "[parsing]") {
   std::string code{systemc_clang::read_systemc_file(
@@ -45,44 +20,32 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
           .release();
-
-  llvm::outs() << "================ TESTMATCHER =============== \n";
-
-  // Name of top-level module declaration.
+  //
+  //  Name of top-level module declaration.
   std::string top{"non_template"};
-
-  ModuleDeclarationMatcher module_declaration_handler{};
-  MatchFinder matchRegistry{};
-  module_declaration_handler.registerMatchers(matchRegistry);
-  // Run all the matchers
-  matchRegistry.matchAST(from_ast->getASTContext());
-  module_declaration_handler.set_top_module_decl(top);
-  module_declaration_handler.pruneMatches();
-  module_declaration_handler.dump();
-
-  llvm::outs() << "================ END =============== \n";
-
   SystemCConsumer sc{from_ast};
   sc.setTopModule(top);
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
+  //
+  // auto found_module{std::find_if(module_decl.begin(), module_decl.end(),
+  // [&top](const auto &element) {
+  // return element.second->getName() == top;
+  // })};
+  //
 
-  auto found_module{std::find_if(module_decl.begin(), module_decl.end(),
-                                 [&top](const auto &element) {
-                                   // Get the declaration name.
-                                   return element.second->getName() == top;
-                                 })};
-
+  // The model has 3 module declarations.
+  REQUIRE(module_decl.size() == 3);
+  ModuleDecl *found_module{model->getInstance("non-templated-module-instance")};
   SECTION("Testing top-level module: non_template", "[top-module]") {
     // There should be only one module.
     INFO("Top-level module specified as non_template.");
-    REQUIRE(module_decl.size() == 1);
 
     // Actually found the module.
-    REQUIRE(found_module != module_decl.end());
+    REQUIRE(found_module != nullptr);
 
-    auto found_decl{found_module->second};
+    auto found_decl{found_module};
     REQUIRE(found_decl->getIPorts().size() == 3);
     REQUIRE(found_decl->getOPorts().size() == 0);
     REQUIRE(found_decl->getOtherVars().size() == 3);
@@ -101,18 +64,6 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   // Name of top-level module declaration.
   std::string top{"test"};
 
-  // llvm::outs() << "================ TESTMATCHER =============== \n";
-  // ModuleDeclarationMatcher module_declaration_handler{};
-  // MatchFinder matchRegistry{};
-  // module_declaration_handler.registerMatchers(matchRegistry);
-  // Run all the matchers
-  // matchRegistry.matchAST(from_ast->getASTContext());
-  // module_declaration_handler.set_top_module_decl(top);
-  // module_declaration_handler.pruneMatches();
-  // module_declaration_handler.dump();
-//
-  // llvm::outs() << "================ END =============== \n";
-
   SystemCConsumer sc{from_ast};
   sc.setTopModule(top);
   sc.HandleTranslationUnit(from_ast->getASTContext());
@@ -122,10 +73,10 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   auto found_module_testing{model->getInstance("testing")};
   auto found_module_testing_float{model->getInstance("testing_float_double")};
 
+  REQUIRE(module_decl.size() == 3);
   SECTION("Testing top-level module: test", "[top module]") {
     // There should be two modules because there are two instances.
     INFO("Top-level module specified as test.");
-    REQUIRE(module_decl.size() == 2);
 
     // Actually found the module.
     REQUIRE(found_module_testing != nullptr);
@@ -143,7 +94,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     //
 
     // test_module_inst
-    INFO("KNOWN FAILING: Need to fix the parsing of ports for templated modules");
+    INFO("KNOWN FAILING: Need to fix the parsing of ports for templated modules"); 
     auto port_bindings{found_decl->getPortBindings()};
     std::vector<std::string> test_ports{"clk", "inS", "outS"};
 
@@ -152,7 +103,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
       auto pb{ p.second };
       pb->dump();
     }
-    
+
     for (auto const &pname : test_ports) {
       auto found_it{port_bindings.find(pname)};
       // Actually found the name
@@ -182,7 +133,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     REQUIRE(found_decl2->getSignals().size() == 4);
     // 1 non-array, and 2 array others
     REQUIRE(found_decl2->getOtherVars().size() == 2);
-    
+
     // TODO: Check the template parameters.
     //
   }
