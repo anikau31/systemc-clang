@@ -109,7 +109,10 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
           REQUIRE(found_instances.size() == 4);
         }
 
-        // TODO Update test
+        // Check the parent of the FieldDecl to see whom it is instantiated in.
+        if ( (inst.var_name == "n1") || (inst.var_name == "n2") || (inst.var_name == "n3") || (inst.var_name == "n4") )   {
+          REQUIRE(inst.parent_name == "exor2");
+        }
       }
     }
     // All the variable name should be found

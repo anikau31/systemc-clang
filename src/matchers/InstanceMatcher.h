@@ -308,12 +308,19 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                    << var_name << "\n";
       // instances_.push_back(std::make_tuple(var_name, instance_fd));
 
+      RecordDecl *parent_rdecl {instance_fd->getParent()};
+      std::string parent_name {parent_rdecl->getName()};
+
+
       ModuleInstanceType parsed_instance{};
       parsed_instance.var_name = var_name;
       parsed_instance.var_type_name = var_type_name;
       parsed_instance.decl = instance_fd->getCanonicalDecl();
       parsed_instance.instance_decl = instance_fd;
       parsed_instance.is_field_decl = true;
+      parsed_instance.parent_name = parent_name;
+      parsed_instance.parent_decl = parent_rdecl;
+
       // Find the instance if it has been already recorded.
       auto found_it{instance_map_.find(instance_fd)};
       if (found_it == instance_map_.end()) {
