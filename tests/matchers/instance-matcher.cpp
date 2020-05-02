@@ -109,6 +109,7 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
           REQUIRE(found_instances.size() == 4);
         }
 
+        // TODO Update test
       }
     }
     // All the variable name should be found
