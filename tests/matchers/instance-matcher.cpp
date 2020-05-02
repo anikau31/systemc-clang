@@ -101,10 +101,8 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
 
         if (inst.var_name == "DUT") {
           // Find all the instances of exor2
-          llvm::errs() << "<<<< DUT\n";
           REQUIRE(found_instances.size() == 1);
         } else {
-          llvm::errs() << "<<<< NOT DUT\n";
           // Find all the instances of nand2
           REQUIRE(found_instances.size() == 4);
         }

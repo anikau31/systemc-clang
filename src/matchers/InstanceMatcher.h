@@ -346,6 +346,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // sub_ctor_field_decl->dump();
         Expr *expr = sub_ctor_init->getInit()->IgnoreImplicit();
         CXXConstructExpr *cexpr = cast<CXXConstructExpr>(expr);
+        RecordDecl *parent_rdecl { sub_ctor_init->getMember()->getParent()};
 
         MatchFinder iarg_registry{};
         InstanceArgumentMatcher iarg_matcher{};
@@ -364,7 +365,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             inst.instance_name = submodule_instance_name;
           }
         }
-        llvm::outs() << "=> submodule_instance_name " << submodule_instance_name
+        llvm::outs() << "=> submodule_instance_name " << submodule_instance_name << " parent name: " << parent_rdecl->getName() 
                      << "\n";
       }
 
