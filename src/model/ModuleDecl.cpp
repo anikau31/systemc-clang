@@ -326,6 +326,8 @@ void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
   }
 }
 
+void ModuleDecl::addNestedModule(ModuleDecl *nested_module) { nested_modules_.push_back(nested_module); }
+
 vector<string> ModuleDecl::getInstanceList() { return instance_list_; }
 
 vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
@@ -556,7 +558,7 @@ void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
   os << signal_j.dump(4) << "\n";
 }
 
-void ModuleDecl::dump(raw_ostream &os) {
+void ModuleDecl::dump(llvm::raw_ostream &os) {
   os << "Module declaration name: " << module_name_;
   os << "\n# Instances:\n";
   dumpInstances(os, 4);
