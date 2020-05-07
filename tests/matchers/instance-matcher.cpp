@@ -44,13 +44,12 @@ TEST_CASE("Test for templated instance matching", "[instance matching]") {
   SECTION("Test instance matcher", "[instance-matcher]") {
     auto instances{inst_matcher.getInstanceMap()};
 
-    INFO (" There is a bug with templates that it is identifying additional instances");
-    REQUIRE(instances.size() == 2);
+    INFO (" There is a bug with templates that it is identifying additional
+instances"); REQUIRE(instances.size() == 2);
 
   }
 }
 */
-
 
 // This test works
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
@@ -77,11 +76,14 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
 
     REQUIRE(instances.size() == 6);
 
-    std::vector<std::string> var_names{"DUT", "TestClk", "n1", "n2", "n3", "n4"};
-    std::vector<std::string> var_type_names{"struct exor2", "class sc_core::sc_clock",  "struct nand2",
-                                            "struct nand2", "struct nand2",
-                                            "struct nand2"};
-    std::vector<std::string> instance_names{"exor2", "TestClock", "N1", "N2", "N3", "N4"};
+    std::vector<std::string> var_names{"DUT", "TestClk", "n1",
+                                       "n2",  "n3",      "n4"};
+    std::vector<std::string> var_type_names{
+        "struct exor2", "class sc_core::sc_clock",
+        "struct nand2", "struct nand2",
+        "struct nand2", "struct nand2"};
+    std::vector<std::string> instance_names{"exor2", "TestClock", "N1",
+                                            "N2",    "N3",        "N4"};
 
     for (auto const &entry : instances) {
       auto inst{entry.second};
@@ -101,12 +103,15 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
 
         if (inst.var_name == "DUT") {
           // Find all the instances of exor2
-          llvm::errs() << "<<<< DUT\n";
           REQUIRE(found_instances.size() == 1);
         } else {
-          llvm::errs() << "<<<< NOT DUT\n";
           // Find all the instances of nand2
           REQUIRE(found_instances.size() == 4);
+        }
+
+        // Check the parent of the FieldDecl to see whom it is instantiated in.
+        if ( (inst.var_name == "n1") || (inst.var_name == "n2") || (inst.var_name == "n3") || (inst.var_name == "n4") )   {
+          REQUIRE(inst.parent_name == "exor2");
         }
       }
     }

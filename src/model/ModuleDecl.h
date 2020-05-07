@@ -1,7 +1,11 @@
 #ifndef _MODULE_DECL_H_
 #define _MODULE_DECL_H_
+
+/* clang-format off */
 #include <map>
 #include <string>
+
+/* clang-format on */
 
 #include "FindConstructor.h"
 #include "FindEntryFunctions.h"
@@ -14,7 +18,7 @@
 #include "clang/AST/DeclCXX.h"
 
 #include "ModuleInstanceType.h"
-//#include "InstanceMatcher.h"
+
 namespace scpar {
 using namespace clang;
 
@@ -23,8 +27,8 @@ using namespace clang;
 
 class ModuleDecl {
  public:
-  typedef std::pair<std::string, SignalDecl*> signalPairType;
-  typedef std::map<std::string, SignalDecl*> signalMapType;
+  typedef std::pair<std::string, SignalDecl *> signalPairType;
+  typedef std::map<std::string, SignalDecl *> signalMapType;
 
   typedef std::pair<std::string, InterfaceDecl *> interfacePairType;
   typedef std::map<std::string, InterfaceDecl *> interfaceMapType;
@@ -74,6 +78,8 @@ class ModuleDecl {
 
   void addPortBinding(const std::string &port_name, PortBinding *pb);
   void addSignalBinding(map<std::string, std::string>);
+
+  void addNestedModule(ModuleDecl *submodule);
 
   void setInstanceInfo(const sc_ast_matchers::ModuleInstanceType &info);
   void setInstanceName(const std::string &);
@@ -161,6 +167,9 @@ class ModuleDecl {
   vector<std::string> instance_list_;
   portSignalMapType port_signal_map_;
   vector<EntryFunctionContainer *> vef_;
+
+  // Nested modules
+  std::vector<ModuleDecl*> nested_modules_;
 
   // Class template parameters.
   vector<std::string> template_parameters_;

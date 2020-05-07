@@ -10,12 +10,10 @@
 
 #include "ModuleInstanceType.h"
 
-
 using namespace clang;
 using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
-
 
 AST_MATCHER(FieldDecl, hasTemplateDeclParent) {
   auto parent{Node.getParent()};
@@ -310,12 +308,19 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                    << var_name << "\n";
       // instances_.push_back(std::make_tuple(var_name, instance_fd));
 
+      RecordDecl *parent_rdecl {instance_fd->getParent()};
+      std::string parent_name {parent_rdecl->getName()};
+
+
       ModuleInstanceType parsed_instance{};
       parsed_instance.var_name = var_name;
       parsed_instance.var_type_name = var_type_name;
       parsed_instance.decl = instance_fd->getCanonicalDecl();
       parsed_instance.instance_decl = instance_fd;
       parsed_instance.is_field_decl = true;
+      parsed_instance.parent_name = parent_name;
+      parsed_instance.parent_decl = parent_rdecl;
+
       // Find the instance if it has been already recorded.
       auto found_it{instance_map_.find(instance_fd)};
       if (found_it == instance_map_.end()) {
@@ -325,7 +330,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       }
     }
 
-    if (instance_vd && instance_name_vd ) {
+    if (instance_vd && instance_name_vd) {
       std::string name{instance_vd->getIdentifier()->getNameStart()};
 
       // This is the main object's constructor name
@@ -341,11 +346,19 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
       // Found submodule
       std::string submodule_instance_name{""};
+      std::string parent_name{};
+      RecordDecl *parent_rdecl{};
+
       if (sub_ctor_field_decl && sub_ctor_init) {
         llvm::outs() << "=> processing submodule\n";
         // sub_ctor_field_decl->dump();
         Expr *expr = sub_ctor_init->getInit()->IgnoreImplicit();
         CXXConstructExpr *cexpr = cast<CXXConstructExpr>(expr);
+        parent_rdecl = sub_ctor_init->getMember()->getParent();
+
+        if (parent_rdecl) {
+          parent_name = parent_rdecl->getName();
+        }
 
         MatchFinder iarg_registry{};
         InstanceArgumentMatcher iarg_matcher{};
@@ -365,7 +378,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           }
         }
         llvm::outs() << "=> submodule_instance_name " << submodule_instance_name
-                     << "\n";
+                     << " parent name: " << parent_rdecl->getName() << "\n";
       }
 
       // This is the instance name.
@@ -375,9 +388,13 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       parsed_instance.var_name = var_name;
       parsed_instance.var_type_name = var_type_name;
       parsed_instance.instance_name = instance_name;
-      parsed_instance.decl = instance_vd->getType().getTypePtr()->getAsCXXRecordDecl();
+      parsed_instance.decl =
+          instance_vd->getType().getTypePtr()->getAsCXXRecordDecl();
       parsed_instance.instance_decl = instance_vd;
       parsed_instance.is_field_decl = false;
+      parsed_instance.parent_name = parent_name;
+      parsed_instance.parent_decl = parent_rdecl;
+
 
       // Don't add repeated matches
       auto found_it{instance_map_.find(instance_vd)};
