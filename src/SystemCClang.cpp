@@ -1,7 +1,9 @@
 #include "SystemCClang.h"
 
 #include "Matchers.h"
+#include "ModuleInstanceType.h"
 #include "NetlistMatcher.h"
+
 #include "clang/AST/ASTImporter.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
@@ -11,6 +13,33 @@ using namespace clang;
 using namespace std;
 
 using namespace sc_ast_matchers;
+
+// Private methods
+void SystemCConsumer::populateNestedModules(
+    const InstanceMatcher::InstanceDeclarations &instance_map) {
+  for (auto const &inst : instance_map) {
+    // get<0>(inst) is the Decl*, and get<1>(inst) is the ModuleInstanceType
+    ModuleInstanceType module_inst{get<1>(inst)};
+    module_inst.dump();
+    ModuleDecl *child{
+        systemcModel_->getInstance(module_inst.getInstanceDecl())};
+    ModuleDecl *parent{systemcModel_->getInstance(module_inst.getParentDecl())};
+
+    if (child) {
+      llvm::outs() << "- " << child->getName() << " : "
+                   << child->getInstanceName() << "\n";
+    }
+    if (parent) {
+      llvm::outs() << "- " << parent->getName() << " : "
+                   << parent->getInstanceName() << "\n";
+    }
+
+    // Insert the child into the parent.
+    if (child && parent) {
+      parent->addNestedModule(child);
+    }
+  }
+}
 
 bool SystemCConsumer::preFire() { return true; }
 
@@ -214,12 +243,26 @@ bool SystemCConsumer::fire() {
                                           module_decl_instances);
   }
 
-  // Let us try to access all the moduledecl.
+  // Module instance map.
+  auto module_instance_map{systemcModel_->getModuleInstanceMap()};
+
+  llvm::outs()
+      << " @@@@@@@@ =============== Populate sub-modules ============= \n";
+  // This must have the instance matcher already run.
+  // You need systemcModel_ and instance_matcher to build the hierarchy of
+  // sub-modules.
+  auto instance_matcher{module_declaration_handler.getInstanceMatcher()};
+  auto instance_map{instance_matcher.getInstanceMap()};
+  llvm::outs() << "- Print out all the instances in the instance map\n";
+  populateNestedModules(instance_map);
+
+  llvm::outs() << "===========END  Populate sub-modules ============= \n";
 
   // All instances are within the SystemC model.
   //  This must come after instances of ModuleDecl have been generated.
   //  This is because the netlist matcher inserts the port bindings into the
   //  instance.
+
   llvm::outs() << "=============== ##### TEST NetlistMatcher ##### \n";
   NetlistMatcher netlist_matcher{};
   MatchFinder netlist_registry{};
@@ -236,7 +279,6 @@ bool SystemCConsumer::fire() {
 
   llvm::outs() << "Begin netlist parsing on instances: "
                << found_instances_declaration_map.size() << "\n";
-  auto module_instance_map{systemcModel_->getModuleInstanceMap()};
   for (const auto &inst : module_instance_map) {
     auto incomplete_mdecl{inst.first};
     auto instance_list{inst.second};

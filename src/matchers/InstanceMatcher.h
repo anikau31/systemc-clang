@@ -102,6 +102,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   // deprecated
   InstanceDeclarationsType instances_;
 
+  // Map of Decl* => ModuleInstanceType
   InstanceDeclarations instance_map_;
 
  public:
