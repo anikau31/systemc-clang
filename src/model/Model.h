@@ -53,6 +53,8 @@ public:
 
   const moduleMapType & getModuleDecl();
   ModuleDecl *getInstance(const std::string &instance_name);
+  ModuleDecl *getInstance(Decl *instance_decl);
+
   entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
   eventMapType getEventMapType();
   moduleInstanceMapType & getModuleInstanceMap();

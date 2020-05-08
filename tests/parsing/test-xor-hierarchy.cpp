@@ -66,6 +66,10 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
     // Other sc_module instances are recognized as others.
     REQUIRE(found_decl->getOtherVars().size() == 4);
 
+    // Check how many nested modules it has.
+    // It should have 4: N1 - N4
+    REQUIRE(found_module_decl->getNestedModuleDecl().size() == 4);
+
     // Check port bindings
     //
     // test_module_inst
@@ -204,10 +208,6 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
         REQUIRE(as_string == "nand2 n4 N4 F");
       }
     }
-
-
-
-
   }
 
 

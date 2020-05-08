@@ -68,7 +68,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   ModuleMapType modules_;
 
   // Match nested instances
-  InstanceMatcher instance_matcher;
+  InstanceMatcher instance_matcher_;
 
   // Match ports
   // PortMatcher port_matcher_;
@@ -79,7 +79,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   };
 
   const InstanceMatcher &getInstanceMatcher() {
-    return instance_matcher;
+    return instance_matcher_;
   }
 
   void set_top_module_decl(const std::string &top) {
@@ -116,7 +116,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     finder.addMatcher(match_module_decls, this);
 
     // add instance matcher
-    instance_matcher.registerMatchers(finder);
+    instance_matcher_.registerMatchers(finder);
 
     // add port (field) matcher
     // port_matcher_.registerMatchers(finder);
@@ -202,14 +202,14 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     llvm::outs() << "\n"
                  << dbg << " number_of_declarations "
                  << found_declarations_.size() << " number_of_instances "
-                 << instance_matcher.getInstanceMap().size() << "\n";
+                 << instance_matcher_.getInstanceMap().size() << "\n";
 
     for (auto const &element : found_declarations_) {
       auto decl{get<1>(element)};
       llvm::outs() << "- decl name: " << get<0>(element) << " " << decl << "\n ";
       InstanceListType instance_list;
 
-      if (instance_matcher.findInstanceByVariableType(decl, instance_list)) {
+      if (instance_matcher_.findInstanceByVariableType(decl, instance_list)) {
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
         // instance_list.push_back(instance);
@@ -226,7 +226,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // std::llvm::outs() << "## ftd name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
       // InstanceMatcher::InstanceDeclType instance;
-      if (instance_matcher.findInstanceByVariableType(decl, instance_list)) {
+      if (instance_matcher_.findInstanceByVariableType(decl, instance_list)) {
         // pruned_declarations_.push_back(element);
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
@@ -279,7 +279,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     }
 
     // Print the instances.
-    instance_matcher.dump();
+    instance_matcher_.dump();
 
     llvm::outs() << "\n[DBG] Dump map of decl->instances: "
                  << declaration_instance_map_.size() << "\n";

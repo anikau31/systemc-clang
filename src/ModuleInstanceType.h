@@ -20,6 +20,9 @@ struct ModuleInstanceType {
   clang::Decl *instance_decl;
   clang::RecordDecl *parent_decl;
 
+  clang::Decl *getInstanceDecl() const { return instance_decl; }
+  clang::RecordDecl *getParentDecl() const { return parent_decl; }
+
   ModuleInstanceType()
       : var_name{},
         var_type_name{},

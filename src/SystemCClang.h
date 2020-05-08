@@ -42,6 +42,8 @@
 #include "matchers/FindTemplateParameters.h"
 #include "matchers/FindWait.h"
 #include "model/Model.h"
+#include "matchers/InstanceMatcher.h"
+
 //#include "SCuitable/FindGPUMacro.h"
 //#include "SCuitable/GlobalSuspensionAutomata.h"
 //#include "SuspensionAutomata.h"
@@ -73,6 +75,9 @@ class SystemCConsumer : public ASTConsumer,
   virtual bool postFire();
 
   virtual void HandleTranslationUnit(ASTContext &context);
+
+ private:
+void populateNestedModules(const InstanceMatcher::InstanceDeclarations &instance_map);
 
  private:
   std::string top_;

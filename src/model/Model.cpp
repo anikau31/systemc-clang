@@ -161,24 +161,40 @@ void Model::updateModuleDecl() {
 // }
 // }
 //
-const Model::moduleMapType &Model::getModuleDecl() {
-   return modules_;
-}
+const Model::moduleMapType &Model::getModuleDecl() { return modules_; }
 
 // Must specify the instance name.
 ModuleDecl *Model::getInstance(const std::string &instance_name) {
-  bool dbg{true};
-
   llvm::outs() << "getInstance\n";
   llvm::outs() << "- Looking for " << instance_name << "\n";
   for (auto const &element : module_instance_map_) {
     auto instance_list{element.second};
 
+    auto test_module_it = std::find_if(
+        instance_list.begin(), instance_list.end(),
+        [instance_name](const auto &instance) {
+          llvm::outs() << "- instance name: " << instance->getInstanceName()
+                       << "\n";
+          return (instance->getInstanceName() == instance_name);
+        });
+
+    if (test_module_it != instance_list.end()) {
+      return *test_module_it;
+    }
+  }
+  return nullptr;
+}
+
+// Must provide the Instance decl.
+ModuleDecl *Model::getInstance(Decl *instance_decl) {
+  llvm::outs() << "getInstance Decl : " << instance_decl <<"\n";
+  for (auto const &element : module_instance_map_) {
+    auto instance_list{element.second};
+
     auto test_module_it =
         std::find_if(instance_list.begin(), instance_list.end(),
-                     [instance_name](const auto &instance) {
-                     llvm::outs() << "- instance name: " << instance->getInstanceName() << "\n";
-                       return (instance->getInstanceName() == instance_name);
+                     [instance_decl](const auto &instance) {
+                       return (instance->getInstanceDecl() == instance_decl);
                      });
 
     if (test_module_it != instance_list.end()) {
