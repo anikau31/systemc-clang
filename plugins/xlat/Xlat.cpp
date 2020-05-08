@@ -33,7 +33,7 @@ bool Xlat::postFire() {
   os_ << "file " << outputfn << ".txt, create error code is " << ec.value()
       << "\n";
   os_ << "\n SC  Xlat plugin\n";
-
+  int module_cnt = 0;
   for (Model::moduleMapType::iterator mit = modules.begin();
        mit != modules.end(); mit++) {
     // Second is the ModuleDecl type.
@@ -42,7 +42,7 @@ bool Xlat::postFire() {
         model->getModuleInstanceMap()[mit->second];
     for (size_t i = 0; i < instanceVec.size(); i++) {
       os_ << "\nmodule " << mit->first << "\n";
-      string modname = mit->first + "_" + to_string(i);
+      string modname = mit->first + "_" + to_string(module_cnt++);
       hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
       //hNodep h_modname = new hNode(modname, hNode::hdlopsEnum::hModule);
 
