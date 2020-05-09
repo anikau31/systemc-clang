@@ -296,8 +296,17 @@ bool XlatMethod::TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr * b) {
 bool XlatMethod::TraverseDeclRefExpr(DeclRefExpr* expr) 
 { 
   // ... handle expr
-  // get a var name
   os_ << "In TraverseDeclRefExpr\n";
+  
+  ValueDecl *value = expr->getDecl();
+  if (isa<EnumConstantDecl>(value)) {
+    EnumConstantDecl * cd = (EnumConstantDecl *) value;
+    os_ << "got enum constant value " << cd->getInitVal() << "\n";
+    h_ret = new hNode(cd->getInitVal().toString(10), hNode::hdlopsEnum::hLiteral);
+    return true;
+  }
+  // get a var name
+
   string name = (expr->getNameInfo()).getName().getAsString();
   os_ << "name is " << name << "\n";
   string newname = "";

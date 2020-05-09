@@ -1,6 +1,7 @@
 #include <regex>
 #include <tuple>
 #include "SystemCClang.h"
+#include "PortBinding.h"
 #include "Xlat.h"
 #include "clang/Basic/FileManager.h"
 
@@ -33,7 +34,7 @@ bool Xlat::postFire() {
   os_ << "file " << outputfn << ".txt, create error code is " << ec.value()
       << "\n";
   os_ << "\n SC  Xlat plugin\n";
-
+  int module_cnt = 0;
   for (Model::moduleMapType::iterator mit = modules.begin();
        mit != modules.end(); mit++) {
     // Second is the ModuleDecl type.
@@ -42,9 +43,9 @@ bool Xlat::postFire() {
         model->getModuleInstanceMap()[mit->second];
     for (size_t i = 0; i < instanceVec.size(); i++) {
       os_ << "\nmodule " << mit->first << "\n";
-      string modname = mit->first + "_" + to_string(i);
+      string modname = mit->first + "_" + to_string(module_cnt++);
       hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
-      //hNodep h_modname = new hNode(modname, hNode::hdlopsEnum::hModule);
+
 
       // Ports
       hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
@@ -67,14 +68,22 @@ bool Xlat::postFire() {
       xlatsig(instanceVec.at(i)->getSignals(), hNode::hdlopsEnum::hSigdecl,
               h_ports);
 
-      //h_module->child_list.push_back(h_modname);
       h_module->child_list.push_back(h_ports);
 
-      h_top = new hNode(hNode::hdlopsEnum::hProcesses);
       // Processes
+      h_top = new hNode(hNode::hdlopsEnum::hProcesses);
+
       xlatproc(instanceVec.at(i)->getEntryFunctionContainer(), h_top, os_);
 
       if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
+
+      // Port bindings
+      hNodep h_submodule_pb = new hNode(hNode::hdlopsEnum::hPortbindings);
+      xlatportbindings(instanceVec.at(i)->getPortBindings(), h_submodule_pb);
+      
+      if (!h_submodule_pb->child_list.empty())
+	h_module->child_list.push_back(h_submodule_pb);
+      
       h_module->print(xlatout);
       delete h_top; //h_module;
     }
@@ -141,32 +150,6 @@ void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNode
   }
 }
 
-void Xlat::xlatfieldtype(string prefix, Tree<TemplateType> *treep, const Type *typep, hNode::hdlopsEnum h_op, hNodep &h_info) {
-  os_ << "field " << prefix << " type follows\n";
-  typep->dump(os_);
-  if (const BuiltinType *bt = dyn_cast<BuiltinType>(typep)) {
-    string tmps = (bt->desugar()).getAsString();
-    os_ << "field: found built in type " << tmps << "\n";
-    makehpsv(prefix, tmps, h_op, h_info);
-    return;
-  }
-  if (const RecordType * rectype = dyn_cast<RecordType>(typep)) {
-    string tmps = rectype->desugar().getAsString();
-    os_ << "field: record type found, name is " << tmps << "\n";
-    makehpsv(prefix, tmps, h_op, h_info);  // would need to recurse here
-    return;
-
-  }
-  /*
-field m_port_data type follows
-TemplateSpecializationType 0x1060a00c0 'sc_out<struct fp_t<11, 52> >' sugar sc_out
-|-TemplateArgument type 'struct fp_t<11, 52>':'struct fp_t<11, 52>'
-`-RecordType 0x1060a00a0 'class sc_core::sc_out<struct fp_t<11, 52> >'
-  `-ClassTemplateSpecialization 0x10609ffb0 'sc_out'
-  */
-  makehpsv(prefix, "UNKNOWNTYPE", h_op, h_info);
-}
-
 void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::hdlopsEnum h_op, hNodep &h_info) {
 
   //llvm::outs()  << "xlattype dump of templatetree args follows\n";
@@ -180,15 +163,9 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
     makehpsv(prefix, tmps, h_op, h_info);
     return;
   }
-  
-  // QualType 	getCanonicalTypeInternal () const -- from Type
-  // const Type * 	getUnqualifiedDesugaredType () const  -- from Type
 
-  // sc_types: sc_int<>, sc_uint<>, sc_bigint<>, sc_biguint<>, sc_bv<>, sc_logic
-
-  
   // now process composite types
-
+  
   if (template_argtp->getRoot()) {
     string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
     os_ << " nonprimitive type " << tmps << "\n";
@@ -224,7 +201,6 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
 	  std::string dft_str{template_args->dft()};
 	  llvm::outs() << "DFT: " << dft_str << "\n";
 	  xlattype(prefix+'_'+fld->getNameAsString(), template_args,  h_op, h_info);
-	  //xlatfieldtype(prefix+'_'+fld->getNameAsString(), template_argtp, fld->getType().getTypePtr(), h_op, h_info);
         }
       }
     }
@@ -278,4 +254,18 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
     } else
       os_ << "process " << efc->getName() << " not SC_METHOD, skipping\n";
   }
+}
+
+void Xlat::xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pbs){
+  for (auto const &pb : portbindingmap) {
+    string port_name{get<0>(pb)};
+    PortBinding *binding{get<1>(pb)};
+    os_ << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << "\n";
+    hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
+    hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
+    hpb->child_list.push_back(new hNode(binding->getBoundToName(), hNode::hdlopsEnum::hVarref));
+    h_pbs->child_list.push_back(hpb);
+  }
+  
+
 }
