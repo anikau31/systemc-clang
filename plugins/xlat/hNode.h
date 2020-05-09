@@ -19,6 +19,8 @@ namespace hnode {
 #define HNODEen \
   etype(hNoop), \
   etype(hModule), \
+  etype(hPortbindings), \
+  etype(hPortbinding), \
   etype(hProcesses), \
   etype(hProcess), \
   etype(hCStmt), \

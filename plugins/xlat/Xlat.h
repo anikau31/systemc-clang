@@ -33,7 +33,7 @@ class Xlat : public SystemCConsumer {
   void makehpsv(string prefix, string typnae,  hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo=true);
 
   void xlatproc(vector<EntryFunctionContainer *>efv, hNodep & h_top, llvm::raw_ostream &os );
-
+  void xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pb);
   private:
 
     hNodep h_top;

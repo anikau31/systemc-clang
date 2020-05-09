@@ -1,6 +1,7 @@
 #include <regex>
 #include <tuple>
 #include "SystemCClang.h"
+#include "PortBinding.h"
 #include "Xlat.h"
 #include "clang/Basic/FileManager.h"
 
@@ -44,7 +45,7 @@ bool Xlat::postFire() {
       os_ << "\nmodule " << mit->first << "\n";
       string modname = mit->first + "_" + to_string(module_cnt++);
       hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
-      //hNodep h_modname = new hNode(modname, hNode::hdlopsEnum::hModule);
+
 
       // Ports
       hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
@@ -67,14 +68,22 @@ bool Xlat::postFire() {
       xlatsig(instanceVec.at(i)->getSignals(), hNode::hdlopsEnum::hSigdecl,
               h_ports);
 
-      //h_module->child_list.push_back(h_modname);
       h_module->child_list.push_back(h_ports);
 
-      h_top = new hNode(hNode::hdlopsEnum::hProcesses);
       // Processes
+      h_top = new hNode(hNode::hdlopsEnum::hProcesses);
+
       xlatproc(instanceVec.at(i)->getEntryFunctionContainer(), h_top, os_);
 
       if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
+
+      // Port bindings
+      hNodep h_submodule_pb = new hNode(hNode::hdlopsEnum::hPortbindings);
+      xlatportbindings(instanceVec.at(i)->getPortBindings(), h_submodule_pb);
+      
+      if (!h_submodule_pb->child_list.empty())
+	h_module->child_list.push_back(h_submodule_pb);
+      
       h_module->print(xlatout);
       delete h_top; //h_module;
     }
@@ -245,4 +254,18 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
     } else
       os_ << "process " << efc->getName() << " not SC_METHOD, skipping\n";
   }
+}
+
+void Xlat::xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pbs){
+  for (auto const &pb : portbindingmap) {
+    string port_name{get<0>(pb)};
+    PortBinding *binding{get<1>(pb)};
+    os_ << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << "\n";
+    hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
+    hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
+    hpb->child_list.push_back(new hNode(binding->getBoundToName(), hNode::hdlopsEnum::hVarref));
+    h_pbs->child_list.push_back(hpb);
+  }
+  
+
 }
