@@ -23,6 +23,7 @@ namespace hnode {
   etype(hPortbinding), \
   etype(hProcesses), \
   etype(hProcess), \
+  etype(hMethod), \
   etype(hCStmt), \
     etype(hPortsigvarlist), \
   etype(hPortin), \

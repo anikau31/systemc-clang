@@ -48,7 +48,7 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   bool TraverseSwitchStmt(SwitchStmt *switchs);
   bool ProcessSwitchCase(SwitchCase *cases);
   bool TraverseWhileStmt(WhileStmt *whiles);
-  void VnameDump();
+  void AddVnames(hNodep &hvns);
   //CXXMethodDecl *getEMD();
 
   std::unordered_map<string, CXXMethodDecl *> methodecls;  //  methods called in this SC_METHOD

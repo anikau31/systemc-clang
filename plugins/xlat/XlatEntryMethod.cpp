@@ -24,8 +24,8 @@ XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & 
   h_ret = NULL;
   cnt = 0;
   bool ret1 = TraverseStmt(emd->getBody());
-  VnameDump();
-  h_top = h_ret;
+  AddVnames(h_top);
+  h_top->child_list.push_back(h_ret);
   os_ << "Exiting XlatMethod constructor for method body\n";
 }
 
@@ -628,11 +628,13 @@ bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
   return true;
 }
 
-void XlatMethod::VnameDump() {
+void XlatMethod::AddVnames(hNodep &hvns) {
   os_ << "Vname Dump\n";
   for (auto const &var : vname_map) {
     os_ << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n";
-						  
+    hNodep hv = new hNode(var.second.newn, hNode::hdlopsEnum::hVardecl);
+    //hv->child_list.push_back(var.first->type());
+    hvns->child_list.push_back(hv);
   }
 }
 
