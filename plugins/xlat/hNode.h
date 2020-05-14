@@ -46,7 +46,6 @@ namespace hnode {
   etype(hUnop), \
   etype(hMethodCall), \
   etype(hIfStmt), \
-  etype(hBreakStmt), \
   etype(hForStmt), \
   etype(hSwitchStmt), \
   etype(hSwitchCase), \

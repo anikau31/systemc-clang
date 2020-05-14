@@ -108,11 +108,13 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
       llvm::APSInt val = expr->getResultAsAPSInt();
       hcasep->child_list.push_back(new hNode(val.toString(10), hNode::hdlopsEnum::hLiteral));
     }
+    
     TRY_TO(TraverseStmt(((CaseStmt *)stmt)->getSubStmt()));
     if (h_ret != old_hret)
       hcasep->child_list.push_back(h_ret);
     else
       hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+    
     h_ret = hcasep;
   }
   else if (isa<DefaultStmt>(stmt)){
@@ -127,8 +129,8 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     h_ret = hcasep;
   }
   else if (isa<BreakStmt>(stmt)){
-    os_ << "Found break stmt\n";
-    h_ret = new hNode(hNode::hdlopsEnum::hBreakStmt);
+    os_ << "Found break stmt, substituting noop\n";
+    h_ret = new hNode(hNode::hdlopsEnum::hNoop);
   }
   else {  
     os_ << "stmt type " << stmt->getStmtClassName() << " not recognized, calling default recursive ast visitor\n";
