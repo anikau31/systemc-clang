@@ -170,10 +170,10 @@ bool XlatMethod::TraverseCompoundStmt(CompoundStmt* cstmt) {
 }
 
 bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
-  hNodep h_varlist = NULL;
-  if (!declstmt->isSingleDecl()) {
-      h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
-    }
+  //hNodep h_varlist = NULL;
+  // if (!declstmt->isSingleDecl()) {
+  //     h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
+  //   }
   // from https://clang.llvm.org/doxygen/DeadStoresChecker_8cpp_source.html
   for (auto *DI : declstmt->decls())
     if (DI) {
@@ -181,19 +181,17 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
 	if (!vardecl)
 	  continue;
 	hNodep h_vardecl = new hNode(vardecl->getName(), hNode::hdlopsEnum::hVardecl);
-	ProcessVarDecl(vardecl, h_vardecl);
-	if (h_varlist) h_varlist->child_list.push_back(h_vardecl);
-	else h_varlist = h_vardecl; // single declaration
+	ProcessVarDecl(vardecl, h_vardecl); // adds it to the list of renamed local variables
+	// if (h_varlist) h_varlist->child_list.push_back(h_vardecl);
+	// else h_varlist = h_vardecl; // single declaration
       }
-  h_ret = h_varlist;
+  h_ret = NULL; //h_varlist;
   return true;
 }
 
 bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
   os_ << "ProcessVarDecl var name is " << vardecl->getName() << "\n";
-  names_t names = {vardecl->getName(), newname()};
-  h_vardecl->set(names.newn); // replace original name with new name
-  vname_map[vardecl] = names;
+
   hNodep h_typeinfo = new hNode( hNode::hdlopsEnum::hTypeinfo);
   QualType q = vardecl->getType();
   const Type *tp = q.getTypePtr();
@@ -229,6 +227,11 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
       h_vardecl->child_list.push_back(varinitp);
     }
   }
+
+  string newn = newname();
+  h_vardecl->set(newn); // replace original name with new name
+  names_t names = {vardecl->getName(), newn, h_vardecl};
+  vname_map[vardecl] = names;
   return true;
 }
 
@@ -632,9 +635,7 @@ void XlatMethod::AddVnames(hNodep &hvns) {
   os_ << "Vname Dump\n";
   for (auto const &var : vname_map) {
     os_ << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n";
-    hNodep hv = new hNode(var.second.newn, hNode::hdlopsEnum::hVardecl);
-    //hv->child_list.push_back(var.first->type());
-    hvns->child_list.push_back(hv);
+    hvns->child_list.push_back(var.second.vardeclp);
   }
 }
 

@@ -63,6 +63,7 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   typedef struct {
     string oldn;
     string newn;
+    hNodep vardeclp;
   } names_t;
   std::map<Decl *, std::vector<DeclRefExpr *>> vuse_map;
   std::map<Decl *, names_t> vname_map;
