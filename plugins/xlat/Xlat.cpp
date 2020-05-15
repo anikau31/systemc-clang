@@ -240,7 +240,7 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
       }
       h_process->child_list.push_back(h_senslist);
       CXXMethodDecl *emd = efc->getEntryMethod();
-      hNodep h_body; // = new hNode(hNode::hdlopsEnum::hCStmt);
+      hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
       XlatMethod xmethod(emd, h_body, os_);  //, xlatout);
       os_ << "Method Map:\n";
       for (auto m : xmethod.methodecls) {
