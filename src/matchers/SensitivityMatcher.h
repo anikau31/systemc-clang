@@ -33,8 +33,6 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
           cxxOperatorCallExpr(
             // Match sc_event_finder argument
             //hasDescendant(cxxMemberCallExpr(hasType(cxxRecordDecl(hasName("sc_event_finder")))
-            // Match sc_port_base
-
             hasArgument(1, 
               anyOf(
                 hasType(cxxRecordDecl(hasName("sc_event")).bind("crd"))
@@ -42,6 +40,10 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
               , hasType(cxxRecordDecl(hasName("sc_event_finder")).bind("crd"))
               , hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_port_base"))).bind("crd"))
               )
+              )
+            // Match clk.pos() / clk.neg()
+            //, callExpr(hasDescendant()) 
+            //, forEachDescendant(memberExpr().bind("member_expr")
               )
             ).bind("cxx_operator_call_expr")
           )
@@ -58,8 +60,9 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     auto cxx_op_callexpr {const_cast<CXXOperatorCallExpr*>(result.Nodes.getNodeAs<CXXOperatorCallExpr>("cxx_operator_call_expr"))};
     auto decl_ref_expr{const_cast<DeclRefExpr*>(result.Nodes.getNodeAs<DeclRefExpr>("decl_ref_expr"))};
     auto crd{const_cast<CXXRecordDecl*>(result.Nodes.getNodeAs<CXXRecordDecl>("crd"))};
+    auto member_expr{const_cast<MemberExpr*>(result.Nodes.getNodeAs<MemberExpr>("member_expr"))};
 
-    if (construct_decl && cxx_op_callexpr) { //} && decl_ref_expr) {
+    if (construct_decl && cxx_op_callexpr && crd) { 
       auto name{construct_decl->getNameAsString()};
       llvm::outs() << "name: " << name << "\n";
 
@@ -73,9 +76,9 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
           llvm::outs() << "Trying to get type name\n";
           arg_expr->getType()->dump();
 
-          if (crd) {
-            llvm::outs() << "class type name: " << crd->getNameAsString() << "\n";
-
+          if (member_expr) {
+            llvm::outs() << " @@@@ => " << member_expr->getMemberDecl()->getNameAsString() << "\n";
+            member_expr->getBase()->dump();
           }
         }
 
