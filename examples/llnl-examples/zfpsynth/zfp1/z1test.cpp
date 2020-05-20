@@ -52,6 +52,6 @@ SC_MODULE(mymodule)
 int sc_main(int argc , char *argv[])
 {
 
-  mymodule("mymodule");
+  mymodule mymod("mymod");
 
 }
