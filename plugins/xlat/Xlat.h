@@ -28,7 +28,7 @@ class Xlat : public SystemCConsumer {
   bool postFire();
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
-
+  void xlatvars(ModuleDecl::portMapType pmap, Model *model,  hNodep &h_info);
   void xlattype(string prefix, Tree<TemplateType> *template_argtp,  hNode::hdlopsEnum h_op, hNodep &h_info);
   void makehpsv(string prefix, string typnae,  hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo=true);
 

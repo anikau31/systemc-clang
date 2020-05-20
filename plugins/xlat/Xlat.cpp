@@ -53,43 +53,43 @@ bool Xlat::postFire() {
 
       // Ports
       hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
-      xlatport(instanceVec.at(i)->getIPorts(), hNode::hdlopsEnum::hPortin,
+      xlatport(instanceVec[i]->getIPorts(), hNode::hdlopsEnum::hPortin,
                h_ports);
-      xlatport(instanceVec.at(i)->getInputStreamPorts(), hNode::hdlopsEnum::hPortin,
+      xlatport(instanceVec[i]->getInputStreamPorts(), hNode::hdlopsEnum::hPortin,
                h_ports);
-      xlatport(instanceVec.at(i)->getOPorts(), hNode::hdlopsEnum::hPortout,
+      xlatport(instanceVec[i]->getOPorts(), hNode::hdlopsEnum::hPortout,
                h_ports);
-      xlatport(instanceVec.at(i)->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
+      xlatport(instanceVec[i]->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
                h_ports);
-      xlatport(instanceVec.at(i)->getIOPorts(), hNode::hdlopsEnum::hPortio,
-               h_ports);
-
-      // Other Variables
-      xlatport(instanceVec.at(i)->getOtherVars(), hNode::hdlopsEnum::hVardecl,
+      xlatport(instanceVec[i]->getIOPorts(), hNode::hdlopsEnum::hPortio,
                h_ports);
 
       // Signals
-      xlatsig(instanceVec.at(i)->getSignals(), hNode::hdlopsEnum::hSigdecl,
+      xlatsig(instanceVec[i]->getSignals(), hNode::hdlopsEnum::hSigdecl,
               h_ports);
 
       h_module->child_list.push_back(h_ports);
-
+      
+      // Other Variables
+      xlatvars(instanceVec[i]->getOtherVars(), model,
+               h_ports);
+      
       // submodules
-	 const std::vector<ModuleDecl*> &submodv = instanceVec.at(i)->getNestedModuleDecl();
-	 os_ << "submodule count is " << submodv.size() << "\n";
+      const std::vector<ModuleDecl*> &submodv = instanceVec[i]->getNestedModuleDecl();
+      os_ << "submodule count is " << submodv.size() << "\n";
       for (auto& smod:submodv) {
 	os_ << "submodule " << smod->getInstanceName() << "\n";
       }
       // Processes
       h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
-      xlatproc(instanceVec.at(i)->getEntryFunctionContainer(), h_top, os_);
+      xlatproc(instanceVec[i]->getEntryFunctionContainer(), h_top, os_);
 
       if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
       // Port bindings
       hNodep h_submodule_pb = new hNode(hNode::hdlopsEnum::hPortbindings);
-      xlatportbindings(instanceVec.at(i)->getPortBindings(), h_submodule_pb);
+      xlatportbindings(instanceVec[i]->getPortBindings(), h_submodule_pb);
       
       if (!h_submodule_pb->child_list.empty())
 	h_module->child_list.push_back(h_submodule_pb);
@@ -212,6 +212,49 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
 	  llvm::outs() << "DFT: " << dft_str << "\n";
 	  xlattype(prefix+'_'+fld->getNameAsString(), template_args,  h_op, h_info);
         }
+      }
+    }
+  }
+}
+
+void Xlat::xlatvars(ModuleDecl::portMapType pmap, Model * model,  hNodep &h_info) {
+  hNode::hdlopsEnum h_op = hNode::hdlopsEnum::hVardecl;
+  for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
+       mit++) {
+
+    string objname = get<0>(*mit);
+
+    os_ << "variable name is " << objname << " and h_op is " << h_op << "\n";
+
+    PortDecl *pd = get<1>(*mit);
+    Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
+      
+    auto vmoddecl = model->getInstance(objname);
+    if (vmoddecl == nullptr) {
+      os_ << "variable is not a module\n";
+      xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+    }
+    else {
+      os_ << "variable is a module\n";
+      string tmps;
+      if (template_argtp->getRoot()) {
+	tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
+      }
+      else {
+	tmps = "MODULENOTYPE";
+      }
+      // from xlattype, builtin type processing code
+      hNodep hport = new hNode(objname, h_op);
+      h_info->child_list.push_back(hport);
+      hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
+      hport->child_list.push_back(h_typeinfo);
+      for (auto const &node : *template_argtp) {
+	const TemplateType * type_data{node->getDataPtr()}; 
+	string tmps2 =  type_data->getTypeName();
+	if (tmps.empty()) os_ << "submodule processing typename is empty\n";
+	else os_ << "submodule processing typename is " << tmps2 << "\n";
+	lutil.make_ident(tmps2);
+	h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
       }
     }
   }
