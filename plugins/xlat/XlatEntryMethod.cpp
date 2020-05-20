@@ -24,8 +24,8 @@ XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & 
   h_ret = NULL;
   cnt = 0;
   bool ret1 = TraverseStmt(emd->getBody());
-  VnameDump();
-  h_top = h_ret;
+  AddVnames(h_top);
+  h_top->child_list.push_back(h_ret);
   os_ << "Exiting XlatMethod constructor for method body\n";
 }
 
@@ -108,11 +108,13 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
       llvm::APSInt val = expr->getResultAsAPSInt();
       hcasep->child_list.push_back(new hNode(val.toString(10), hNode::hdlopsEnum::hLiteral));
     }
+    
     TRY_TO(TraverseStmt(((CaseStmt *)stmt)->getSubStmt()));
     if (h_ret != old_hret)
       hcasep->child_list.push_back(h_ret);
     else
       hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+    
     h_ret = hcasep;
   }
   else if (isa<DefaultStmt>(stmt)){
@@ -127,8 +129,8 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     h_ret = hcasep;
   }
   else if (isa<BreakStmt>(stmt)){
-    os_ << "Found break stmt\n";
-    h_ret = new hNode(hNode::hdlopsEnum::hBreakStmt);
+    os_ << "Found break stmt, substituting noop\n";
+    h_ret = new hNode(hNode::hdlopsEnum::hNoop);
   }
   else {  
     os_ << "stmt type " << stmt->getStmtClassName() << " not recognized, calling default recursive ast visitor\n";
@@ -170,10 +172,10 @@ bool XlatMethod::TraverseCompoundStmt(CompoundStmt* cstmt) {
 }
 
 bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
-  hNodep h_varlist = NULL;
-  if (!declstmt->isSingleDecl()) {
-      h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
-    }
+  //hNodep h_varlist = NULL;
+  // if (!declstmt->isSingleDecl()) {
+  //     h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
+  //   }
   // from https://clang.llvm.org/doxygen/DeadStoresChecker_8cpp_source.html
   for (auto *DI : declstmt->decls())
     if (DI) {
@@ -181,19 +183,17 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
 	if (!vardecl)
 	  continue;
 	hNodep h_vardecl = new hNode(vardecl->getName(), hNode::hdlopsEnum::hVardecl);
-	ProcessVarDecl(vardecl, h_vardecl);
-	if (h_varlist) h_varlist->child_list.push_back(h_vardecl);
-	else h_varlist = h_vardecl; // single declaration
+	ProcessVarDecl(vardecl, h_vardecl); // adds it to the list of renamed local variables
+	// if (h_varlist) h_varlist->child_list.push_back(h_vardecl);
+	// else h_varlist = h_vardecl; // single declaration
       }
-  h_ret = h_varlist;
+  h_ret = NULL; //h_varlist;
   return true;
 }
 
 bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
   os_ << "ProcessVarDecl var name is " << vardecl->getName() << "\n";
-  names_t names = {vardecl->getName(), newname()};
-  h_vardecl->set(names.newn); // replace original name with new name
-  vname_map[vardecl] = names;
+
   hNodep h_typeinfo = new hNode( hNode::hdlopsEnum::hTypeinfo);
   QualType q = vardecl->getType();
   const Type *tp = q.getTypePtr();
@@ -229,6 +229,11 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
       h_vardecl->child_list.push_back(varinitp);
     }
   }
+
+  string newn = newname();
+  h_vardecl->set(newn); // replace original name with new name
+  names_t names = {vardecl->getName(), newn, h_vardecl};
+  vname_map[vardecl] = names;
   return true;
 }
 
@@ -296,8 +301,17 @@ bool XlatMethod::TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr * b) {
 bool XlatMethod::TraverseDeclRefExpr(DeclRefExpr* expr) 
 { 
   // ... handle expr
-  // get a var name
   os_ << "In TraverseDeclRefExpr\n";
+  
+  ValueDecl *value = expr->getDecl();
+  if (isa<EnumConstantDecl>(value)) {
+    EnumConstantDecl * cd = (EnumConstantDecl *) value;
+    os_ << "got enum constant value " << cd->getInitVal() << "\n";
+    h_ret = new hNode(cd->getInitVal().toString(10), hNode::hdlopsEnum::hLiteral);
+    return true;
+  }
+  // get a var name
+
   string name = (expr->getNameInfo()).getName().getAsString();
   os_ << "name is " << name << "\n";
   string newname = "";
@@ -619,11 +633,11 @@ bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
   return true;
 }
 
-void XlatMethod::VnameDump() {
+void XlatMethod::AddVnames(hNodep &hvns) {
   os_ << "Vname Dump\n";
   for (auto const &var : vname_map) {
     os_ << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n";
-						  
+    hvns->child_list.push_back(var.second.vardeclp);
   }
 }
 
