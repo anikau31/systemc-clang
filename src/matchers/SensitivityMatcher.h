@@ -44,7 +44,6 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
             // Match clk.pos() / clk.neg()
             //, callExpr(hasDescendant()) 
             //, forEachDescendant(memberExpr().bind("member_expr")
-              )
             ).bind("cxx_operator_call_expr")
           )
         ).bind("cxx_constructor_decl");
