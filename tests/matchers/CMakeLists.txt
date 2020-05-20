@@ -5,6 +5,7 @@ set (TEST_LIST
   netlist-matcher
   netlist-templated-matcher
   find-members
+  sensitivity-matcher
   )
 
 set(SCC_LIBS libsystemc-clang)
