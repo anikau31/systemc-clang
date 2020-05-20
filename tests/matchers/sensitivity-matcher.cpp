@@ -67,4 +67,6 @@ int sc_main(int argc, char *argv[]) {
   matchRegistry.matchAST(from_ast->getASTContext());
   sens_matcher.dump();
   llvm::outs() << "================ END =============== \n";
+
+  REQUIRE(true);
 }
