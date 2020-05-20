@@ -38,12 +38,16 @@ bool Xlat::postFire() {
   for (Model::moduleMapType::iterator mit = modules.begin();
        mit != modules.end(); mit++) {
     // Second is the ModuleDecl type.
-
+    os_ << "In module iterator loop\n";
     vector<ModuleDecl *> instanceVec =
         model->getModuleInstanceMap()[mit->second];
     for (size_t i = 0; i < instanceVec.size(); i++) {
-      os_ << "\nmodule " << mit->first << "\n";
-      string modname = mit->first + "_" + to_string(module_cnt++);
+      //os_ << "\nmodule " << mit->first << "\n";
+      //string modname = mit->first + "_" + to_string(module_cnt++);
+
+      string modname = instanceVec[i]->getName() + "_" + to_string(module_cnt++);
+      os_ << "\nmodule " << modname << "\n";
+			   
       hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
 
 
@@ -70,6 +74,12 @@ bool Xlat::postFire() {
 
       h_module->child_list.push_back(h_ports);
 
+      // submodules
+	 const std::vector<ModuleDecl*> &submodv = instanceVec.at(i)->getNestedModuleDecl();
+	 os_ << "submodule count is " << submodv.size() << "\n";
+      for (auto& smod:submodv) {
+	os_ << "submodule " << smod->getInstanceName() << "\n";
+      }
       // Processes
       h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
