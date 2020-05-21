@@ -21,8 +21,8 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
 
-  //  SystemCConsumer sc{from_ast};
-  Xlat sc{from_ast};
+  SystemCConsumer sc{from_ast};
+  // Xlat sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   // These are instances.
@@ -45,19 +45,27 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     REQUIRE(mymod != nullptr);
 
     // Get the nested modules.
-    auto nested_mdecls{ mymod->getNestedModuleDecl()};
-    llvm::outs() << "######################## NESTED SUBMODULE " << nested_mdecls.size() << "\n";
+    auto nested_mdecls{mymod->getNestedModuleDecl()};
+    llvm::outs() << "######################## NESTED SUBMODULE "
+                 << nested_mdecls.size() << "\n";
 
-       // Only u_dut should be nested in mymodule.
-    REQUIRE( nested_mdecls.size() == 1 ); 
+    // Only u_dut should be nested in mymodule.
+    REQUIRE(nested_mdecls.size() == 1);
 
-    for (auto const &mdecl : nested_mdecls ) {
-      // There is only one, but showing how to access all of them, if there were more than one.
+    for (auto const &mdecl : nested_mdecls) {
+      // There is only one, but showing how to access all of them, if there were
+      // more than one.
       //
-      REQUIRE (mdecl->getInstanceName() == "u_dut");
+      REQUIRE(mdecl->getInstanceName() == "u_dut");
+
+      // Check for port bindings
+      auto port_bindings{mdecl->getPortBindings()};
+
+      // Print all the port binding information
+      for (auto const &p : port_bindings) {
+        auto pb{p.second};
+        pb->dump();
+      }
     }
-
-
-    
   }
 }

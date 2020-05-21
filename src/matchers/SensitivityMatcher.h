@@ -41,9 +41,16 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
               , hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_port_base"))).bind("crd"))
               )
               )
-            // Match clk.pos() / clk.neg()
-            //, callExpr(hasDescendant()) 
-            //, forEachDescendant(memberExpr().bind("member_expr")
+
+            // Match any of the internal nodes to extract the respective fields.
+            , 
+            hasDescendant(cxxMemberCallExpr(
+                //on(declRefExpr().bind("on_decl_ref_expr"))
+                //,
+                //hasDescendant(memberExpr().bind("in_call_member_expr"))
+                ).bind("cxx_member_call_expr"))
+            // Identifies sc_port_base 
+            //hasDescendant(memberExpr(hasDeclaration(fieldDecl(hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_port_base"))))))).bind("port_member_expr"))
             ).bind("cxx_operator_call_expr")
           )
         ).bind("cxx_constructor_decl");
@@ -59,7 +66,11 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     auto cxx_op_callexpr {const_cast<CXXOperatorCallExpr*>(result.Nodes.getNodeAs<CXXOperatorCallExpr>("cxx_operator_call_expr"))};
     auto decl_ref_expr{const_cast<DeclRefExpr*>(result.Nodes.getNodeAs<DeclRefExpr>("decl_ref_expr"))};
     auto crd{const_cast<CXXRecordDecl*>(result.Nodes.getNodeAs<CXXRecordDecl>("crd"))};
-    auto member_expr{const_cast<MemberExpr*>(result.Nodes.getNodeAs<MemberExpr>("member_expr"))};
+    auto port_member_expr{const_cast<MemberExpr*>(result.Nodes.getNodeAs<MemberExpr>("port_member_expr"))};
+
+    // This is to get the clk.pos()
+    auto in_call_member_expr{const_cast<MemberExpr*>(result.Nodes.getNodeAs<MemberExpr>("in_call_member_expr"))};
+    auto call_member_expr{const_cast<CXXMemberCallExpr*>(result.Nodes.getNodeAs<CXXMemberCallExpr>("cxx_member_call_expr"))};
 
     if (construct_decl && cxx_op_callexpr && crd) { 
       auto name{construct_decl->getNameAsString()};
@@ -71,13 +82,22 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
         llvm::outs()<< "#### ARGS in callexpr\n";
         auto arg_expr{cxx_op_callexpr->getArg(1)};
         if (arg_expr) {
-          arg_expr->dump();
+          arg_expr->IgnoreImpCasts()->dump();
           llvm::outs() << "Trying to get type name\n";
           arg_expr->getType()->dump();
 
-          if (member_expr) {
-            llvm::outs() << " @@@@ => " << member_expr->getMemberDecl()->getNameAsString() << "\n";
-            member_expr->getBase()->dump();
+          if (call_member_expr) {
+            llvm::outs() << " @@@ => call member expr\n";
+            call_member_expr->dump();
+            llvm::outs() << "     => callee: " << call_member_expr->getMethodDecl()->getNameAsString() << "\n";
+            llvm::outs() << "     => caller: \n";
+
+    //        in_call_member_expr->dump();
+
+          }
+          if (port_member_expr) {
+            llvm::outs() << " @@@@ => " << port_member_expr->getMemberDecl()->getNameAsString() << "\n";
+            port_member_expr->getBase()->dump();
           }
         }
 
