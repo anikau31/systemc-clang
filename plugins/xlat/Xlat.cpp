@@ -80,6 +80,12 @@ bool Xlat::postFire() {
       for (auto& smod:submodv) {
 	os_ << "submodule " << smod->getInstanceName() << "\n";
       }
+
+      // look at constructor
+
+      os_ << "dumping module constructor stmt\n";
+      instanceVec[i]->getConstructorStmt()->dump(os_);	     
+      os_ << "dumping module constructor decl\n";							        instanceVec[i]->getConstructorDecl()->dump(os_);
       // Processes
       h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
