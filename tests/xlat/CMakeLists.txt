@@ -4,6 +4,7 @@ if (PLUGIN_XLAT)
   set (TEST_LIST 
    sreg-test
    find-emax
+   test-nested-stream-ports
   )
 endif()
 

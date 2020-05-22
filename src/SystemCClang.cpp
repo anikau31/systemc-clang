@@ -290,9 +290,10 @@ bool SystemCConsumer::fire() {
       if (ctordecl != nullptr) {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
         ctordecl->getBody(fd);
-        llvm::outs() << "=> RUN netlist matcher\n";
+        llvm::outs() << "==============> RUN netlist matcher\n";
+        fd->dump();
         netlist_registry.match(*fd, getContext());
-        llvm::outs() << "=> DONE netlist matcher\n";
+        llvm::outs() << "==============> DONE netlist matcher\n";
       }
     }
   }
