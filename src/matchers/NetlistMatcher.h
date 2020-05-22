@@ -87,8 +87,8 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
          cxxOperatorCallExpr(
                hasDescendant(
                  declRefExpr(
-                   hasDeclaration(varDecl().bind("bound_variable")), // Match the sig1
-                   hasParent(implicitCastExpr()) // There must be (.) 
+               hasDeclaration(varDecl().bind("bound_variable")), // Match the sig1
+               hasParent(implicitCastExpr()) // There must be (.) 
                ).bind("declrefexpr")
                  )
                ,
@@ -102,40 +102,54 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     /* clang-format on */
 
-   // Match within constructor of module.
     auto match_ctor_decl =
         namedDecl(
             has(compoundStmt(
                     forEachDescendant(
                         cxxOperatorCallExpr(
+                        //callExpr(
                             // Port
                             // 1. MemberExpr has a descendant that is a
                             // MemberExpr The first MemberExpr gives the port
                             // bound to information. The second MemberExpr gives
                             // the instance information to whom the port
                             // belongs.
+                            
                             hasDescendant(
                                 memberExpr(has(memberExpr().bind(
                                                "memberexpr_instance")))
-                                    .bind("memberexpr_port")),
+                                    .bind("memberexpr_port"))
+
                             // Arguments
                             // 1. Has MemberExpr as a descendant.
                             //   1.a It must have an implicitCastExpr as a
                             //   parent 1.b But not a MemberExpr (This is
                             //   because it matches with the port others.
-                            hasDescendant(
-                                memberExpr(unless(hasParent(memberExpr())),//hasParent(implicitCastExpr()),
-                                           unless(hasDescendant(memberExpr())))
-                                    .bind("memberexpr_arg"))
-                            ,
-                            callee(cxxMethodDecl().bind("callee_method_decl"))
-                            )
-                            .bind("callexpr")))
+                            // , hasDescendant(
+                                // memberExpr(hasParent(implicitCastExpr()),
+                                           // unless(hasDescendant(memberExpr())))
+                                    // .bind("memberexpr_arg"))
+                                    //
+                            
+                                    // Get the memberExpr for the argument.
+                             , hasArgument(1, memberExpr().bind("port_arg"))
+                            ).bind("callexpr")))
                     .bind("compoundstmt")))
             .bind("functiondecl");
 
+
+    auto test_match_ctor_decl =
+      cxxConstructorDecl(has(
+            compoundStmt(
+              forEachDescendant(
+                cxxOperatorCallExpr(
+                  hasArgument(1, memberExpr().bind("port_arg"))
+                  ).bind("test")
+                )
+              )
+            ));
+
     // Add the two matchers.
-    //finder.addMatcher(test, this);
     finder.addMatcher(match_sc_main_callexpr, this);
     finder.addMatcher(match_ctor_decl, this);
   }
@@ -174,15 +188,28 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     //
     //
     //
-    
+    auto test{const_cast<CallExpr*>( result.Nodes.getNodeAs<CallExpr>("test"))};
+    if (test) {
+    llvm::outs() << " ########################## TEST ####################\n";
+    test->dump();
+    }
 
-    auto callee{const_cast<CXXMethodDecl*>(
-        result.Nodes.getNodeAs<CXXMethodDecl>("callee"))};
+    auto callee{const_cast<Decl*>(
+        result.Nodes.getNodeAs<Decl>("callee_method_decl"))};
     if (callee) {
     llvm::outs() << " ########################## CALLEE ####################\n";
     callee->dump();
     }
-//
+
+    auto fd_port_arg{const_cast<MemberExpr*>( result.Nodes.getNodeAs<MemberExpr>("port_arg"))};
+    llvm::outs() << "@@@@@@@@@@@@@@@@@@@@@@@@ CHECK IF PORT ARG @@@@@@@@@@@@@@@2\n";
+    if (fd_port_arg) {
+    llvm::outs() << " ########################## PORT ARG ####################\n";
+      fd_port_arg->dump();
+
+      mexpr_arg=fd_port_arg;
+    }
+
     // auto fdecl{const_cast<FunctionDecl *>(
         // result.Nodes.getNodeAs<FunctionDecl>("functiondecl"))};
     // auto call_expr{const_cast<CXXOperatorCallExpr *>(
@@ -270,7 +297,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       PortBinding *pb{nullptr};
 
       if (is_ctor_binding) {
-        llvm::outs() << "=> found member instance in constructor\n";
+        llvm::outs() << "=> CTOR binding\n";
         llvm::outs() << "=> port name: " << port_name << "\n";
         pb = new PortBinding(mexpr_port, mexpr_instance, mexpr_arg);
         pb->setInstanceConstructorName(instance_module_decl->getInstanceName());

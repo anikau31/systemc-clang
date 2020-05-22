@@ -51,10 +51,11 @@ TEST_CASE("sreg example", "[llnl-examples]") {
        // Only u_dut should be nested in mymodule.
     REQUIRE( nested_mdecls.size() == 1 ); 
 
-    // for (auto const &mdecl : nested_mdecls ) {
+    for (auto const &mdecl : nested_mdecls ) {
 
-      // REQUIRE (mdecl->getInstanceName() == "u_dut");
-    // }
+       REQUIRE (mdecl->getInstanceName() == "SUBMODULE");
+       
+    }
 //
 
     
