@@ -87,8 +87,8 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
          cxxOperatorCallExpr(
                hasDescendant(
                  declRefExpr(
-               hasDeclaration(varDecl().bind("bound_variable")), // Match the sig1
-               hasParent(implicitCastExpr()) // There must be (.) 
+                   hasDeclaration(varDecl().bind("bound_variable")), // Match the sig1
+                   hasParent(implicitCastExpr()) // There must be (.) 
                ).bind("declrefexpr")
                  )
                ,
@@ -102,6 +102,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     /* clang-format on */
 
+   // Match within constructor of module.
     auto match_ctor_decl =
         namedDecl(
             has(compoundStmt(
@@ -123,9 +124,12 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                             //   parent 1.b But not a MemberExpr (This is
                             //   because it matches with the port others.
                             hasDescendant(
-                                memberExpr(hasParent(implicitCastExpr()),
+                                memberExpr(unless(hasParent(memberExpr())),//hasParent(implicitCastExpr()),
                                            unless(hasDescendant(memberExpr())))
-                                    .bind("memberexpr_arg")))
+                                    .bind("memberexpr_arg"))
+                            ,
+                            callee(cxxMethodDecl().bind("callee_method_decl"))
+                            )
                             .bind("callexpr")))
                     .bind("compoundstmt")))
             .bind("functiondecl");
@@ -170,6 +174,15 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     //
     //
     //
+    
+
+    auto callee{const_cast<CXXMethodDecl*>(
+        result.Nodes.getNodeAs<CXXMethodDecl>("callee"))};
+    if (callee) {
+    llvm::outs() << " ########################## CALLEE ####################\n";
+    callee->dump();
+    }
+//
     // auto fdecl{const_cast<FunctionDecl *>(
         // result.Nodes.getNodeAs<FunctionDecl>("functiondecl"))};
     // auto call_expr{const_cast<CXXOperatorCallExpr *>(

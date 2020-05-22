@@ -269,7 +269,7 @@ bool SystemCConsumer::fire() {
   netlist_matcher.registerMatchers(netlist_registry, systemcModel_,
                                    &module_declaration_handler);
 
-  // scmain.getSCMainFunctionDecl()->dump();
+  scmain.getSCMainFunctionDecl()->dump();
 
   netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   // TODO: Fix the top-level
@@ -290,9 +290,10 @@ bool SystemCConsumer::fire() {
       if (ctordecl != nullptr) {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
         ctordecl->getBody(fd);
-        llvm::outs() << "=> RUN netlist matcher\n";
+        llvm::outs() << "==============> RUN netlist matcher\n";
+        //fd->dump();
         netlist_registry.match(*fd, getContext());
-        llvm::outs() << "=> DONE netlist matcher\n";
+        llvm::outs() << "==============> DONE netlist matcher\n";
       }
     }
   }
