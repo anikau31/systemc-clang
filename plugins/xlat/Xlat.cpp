@@ -2,6 +2,7 @@
 #include <tuple>
 #include "SystemCClang.h"
 #include "PortBinding.h"
+#include "Tree.h"
 #include "Xlat.h"
 #include "clang/Basic/FileManager.h"
 
@@ -185,7 +186,7 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
   if (template_argtp->getRoot()) {
     string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
     os_ << " nonprimitive type " << tmps << "\n";
-    if (lutil.isSCBuiltinType(tmps)||lutil.isSCType(tmps)) {
+    if (lutil.isSCBuiltinType(tmps)){ // primitive uint etc.
       hNodep hport = new hNode(prefix, h_op);
       h_info->child_list.push_back(hport);
       hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
@@ -197,6 +198,13 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
 	else os_ << "xlattype typename is " << tmps2 << "\n";
 	lutil.make_ident(tmps2);
 	h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
+      }
+    }
+    else if (lutil.isSCType(tmps)) {
+      // sc_in, sc_out etc.
+      auto const vectreeptr{ template_argtp->getChildren(template_argtp->getRoot())};
+      for (auto const &node : vectreeptr) {
+	os_ << "xlattype sctype processing child " << (node->getDataPtr())->getTypeName() << "\n";
       }
     }
     else {
