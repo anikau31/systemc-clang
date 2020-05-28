@@ -127,6 +127,8 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
+    //  if type is structured, it will be flattened into multiple declarations
+    // each with a unique name and Typeinfo followed by Type.
     xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
   
   }
@@ -145,6 +147,8 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
     SignalDecl *pd = get<1>(*mit);
 
     Tree<TemplateType> *template_argtp = (pd->getTemplateTypes())->getTemplateArgTreePtr();
+    //  if type is structured, it will be flattened into multiple declarations
+    // each with a unique name and Typeinfo followed by Type.
     xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
    
   }
@@ -167,7 +171,8 @@ void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNode
   }
 }
 
-void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::hdlopsEnum h_op, hNodep &h_info) {
+void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
+		     hNode::hdlopsEnum h_op, hNodep &h_info) {
 
   //llvm::outs()  << "xlattype dump of templatetree args follows\n";
   //template_argtp->dump();
@@ -183,30 +188,45 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
 
   // now process composite types
   
+  
   if (template_argtp->getRoot()) {
     string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
     os_ << " nonprimitive type " << tmps << "\n";
-    if (lutil.isSCBuiltinType(tmps)){ // primitive uint etc.
+    if (lutil.isSCBuiltinType(tmps) || (lutil.isSCType(tmps)) ){ // primitive uint etc. or sc_in
+      bool is_scinout = lutil.isSCType(tmps);
       hNodep hport = new hNode(prefix, h_op);
       h_info->child_list.push_back(hport);
       hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
       hport->child_list.push_back(h_typeinfo);
-      for (auto const &node : *template_argtp) {
+      if (is_scinout) {
+	// sc_in, sc_out etc.
+	hNodep htypep = new hNode(tmps, hNode::hdlopsEnum::hType);
+	h_typeinfo->child_list.push_back(htypep); // added sc_in, etc. to type info
+	auto const vectreeptr{ template_argtp->getChildren(template_argtp->getRoot())};
+	for (auto const &node : vectreeptr) {
+	  const Type * childtyp{(node->getDataPtr())->getTypePtr()};
+	  string childns = (node->getDataPtr())->getTypeName();
+	  os_ << "xlattype sctype processing child " << childns << "\n";
+	  
+	  const TemplateType * type_data{node->getDataPtr()}; 
+	  string tmps2 =  type_data->getTypeName();
+	  if (tmps2.empty()) os_ << "xlattype scinout builtin typename is empty\n";
+	  else os_ << "xlattype typename is " << tmps2 << "\n";
+	  lutil.make_ident(tmps2);
+	  h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
+	}
+	  
+      } // not sc_in etc, code below is for builtin type
+      else for (auto const &node : *template_argtp) {
 	const TemplateType * type_data{node->getDataPtr()}; 
 	string tmps2 =  type_data->getTypeName();
-	if (tmps.empty()) os_ << "xlattype typename is empty\n";
-	else os_ << "xlattype typename is " << tmps2 << "\n";
+	if (tmps.empty()) os_ << "xlattype builti typename is empty\n";
+	else os_ << "xlattype builtintypename is " << tmps2 << "\n";
 	lutil.make_ident(tmps2);
 	h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
-      }
+	}
     }
-    else if (lutil.isSCType(tmps)) {
-      // sc_in, sc_out etc.
-      auto const vectreeptr{ template_argtp->getChildren(template_argtp->getRoot())};
-      for (auto const &node : vectreeptr) {
-	os_ << "xlattype sctype processing child " << (node->getDataPtr())->getTypeName() << "\n";
-      }
-    }
+
     else {
       if (const RecordType * rectype = dyn_cast<RecordType>((template_argtp->getRoot()->getDataPtr())->getTypePtr())) {
 	os_ << "record type found, name is " << tmps << "\n";
@@ -219,12 +239,12 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp, hNode::h
 	  FindTemplateTypes find_tt{};
 	  find_tt.Enumerate(field_type);
 
-	  // Ge the tree.
+	  // Get the tree.
 	  auto template_args{find_tt.getTemplateArgTreePtr()};
-	  // Access the tree here in the way on wishes.
+	  // Access the tree here in the way one wishes.
 	  std::string dft_str{template_args->dft()};
 	  llvm::outs() << "DFT: " << dft_str << "\n";
-	  xlattype(prefix+'_'+fld->getNameAsString(), template_args,  h_op, h_info);
+	  xlattype(prefix+'_'+fld->getNameAsString(), template_args, h_op, h_info);
         }
       }
     }
