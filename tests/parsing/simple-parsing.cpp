@@ -74,19 +74,29 @@ SC_MODULE( simple_module ){
   }
 };
 
+SC_MODULE(DUT) {
 
-int sc_main(int argc, char *argv[]) {
   sc_signal<int> sig1;
   sc_signal<double> double_sig;
-  test test_instance("testing");
+
+  test test_instance;
+
+  simple_module simple;
+
+  SC_CTOR(DUT) : test_instance("testing"), simple("simple_module_instance") {
   test_instance.in1(sig1);
   test_instance.in_out(double_sig);
   test_instance.out1(sig1);
 
-  simple_module simple("simple_module_instance");
   simple.one(sig1);
+  }
 
-  return 0;
+
+};
+
+int sc_main(int argc, char *argv[]) {
+  DUT d("d");
+   return 0;
 }
      )";
 
@@ -113,7 +123,7 @@ int sc_main(int argc, char *argv[]) {
     INFO("Checking number of sc_module declarations found: "
          << module_decl.size());
 
-    REQUIRE(module_decl.size() == 2);
+    REQUIRE(module_decl.size() == 3);
 
     REQUIRE(test_module != nullptr);
     REQUIRE(simple_module != nullptr);

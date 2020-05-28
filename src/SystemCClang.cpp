@@ -17,25 +17,31 @@ using namespace sc_ast_matchers;
 // Private methods
 void SystemCConsumer::populateNestedModules(
     const InstanceMatcher::InstanceDeclarations &instance_map) {
+
+  // Decl* => ModuleInstanceType
   for (auto const &inst : instance_map) {
     // get<0>(inst) is the Decl*, and get<1>(inst) is the ModuleInstanceType
     ModuleInstanceType module_inst{get<1>(inst)};
     module_inst.dump();
-    ModuleDecl *child{
-        systemcModel_->getInstance(module_inst.getInstanceDecl())};
+    // Match with the same InstanceTypeDecl
+    ModuleDecl *child{systemcModel_->getInstance(module_inst.getInstanceDecl())};
+    llvm::outs() << "# child instance decl " << module_inst.getInstanceDecl() << "\n";
+    module_inst.getInstanceDecl()->dump();
+
     ModuleDecl *parent{systemcModel_->getInstance(module_inst.getParentDecl())};
 
     if (child) {
-      llvm::outs() << "- " << child->getName() << " : "
+      llvm::outs() << "- child " << child->getName() << " : "
                    << child->getInstanceName() << "\n";
     }
     if (parent) {
-      llvm::outs() << "- " << parent->getName() << " : "
+      llvm::outs() << "- parent " << parent->getName() << " : "
                    << parent->getInstanceName() << "\n";
     }
 
     // Insert the child into the parent.
     if (child && parent) {
+      llvm::outs() << "ADD A CHILD PARENT RELATIONSHIP\n";
       parent->addNestedModule(child);
     }
   }
@@ -139,8 +145,9 @@ bool SystemCConsumer::fire() {
   //
   //  TEST NetlistMatcher
   //  map: CXXRecordDecl =>  InstanceListType
-  auto found_instances_declaration_map{
-      module_declaration_handler.getInstances()};
+  //  -> InstanceListType:                    vector<InstanceMatcher::InstanceDeclType>
+  //  -> InstanceMatcher::InstanceDeclType :  std::tuple<std::string, Decl *, ModuleInstanceType> 
+  auto found_instances_declaration_map{module_declaration_handler.getInstances()};
   //
   // Create a ModuleDecl for each instance with the appropriately parsed
   // ModuleDecl.
@@ -150,7 +157,7 @@ bool SystemCConsumer::fire() {
   for (const auto &inst : found_instances_declaration_map) {
     // This is the CXXRecordDecl
     auto cxx_decl{inst.first};
-    // Vector
+    // List of InstanceListType 
     auto instance_list{inst.second};
 
     auto incomplete_module_decl{found_module_declarations[cxx_decl]};
@@ -162,19 +169,22 @@ bool SystemCConsumer::fire() {
 
     for (const auto &instance : instance_list) {
       auto add_module_decl{new ModuleDecl{*incomplete_module_decl}};
+      // 0: string 
+      // 1: Decl* (InstaceTypeDecl)
+      // 2: ModuleInstanceType
 
       // Insert what you know about the parsed sc_module
       // 1. Insert the instance name from Matchers
       //
+      auto inst_info{get<2>(instance)};
+      inst_info.dump();
+
       os_ << "\n";
       os_ << "1. Set instance name: " << get<0>(instance) << "\n";
       // add_module_decl->setInstanceName(get<0>(instance));
-      os_ << "2. Set instance type decl: " << cxx_decl->getNameAsString() << " "
-          << get<1>(instance) << "\n";
-      auto inst_info{get<2>(instance)};
-      inst_info.dump();
+      os_ << "2. Set instance decl: " << cxx_decl->getNameAsString() << " "
+          << inst_info.getInstanceDecl() << "\n";
       add_module_decl->setInstanceInfo(get<2>(instance));
-      // add_module_decl->setInstanceDecl(get<1>(instance));
 
       // 2. Find the template arguments for the class.
       // In clang lingo: parameters are the templated values, and the arguments

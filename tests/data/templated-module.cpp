@@ -62,17 +62,26 @@ SC_MODULE( test ){
     }
 };
 
-int sc_main(int argc, char *argv[]) {
+SC_MODULE(DUT) {
     sc_clock clk;
     sc_signal<int> sig1;
 
-    test<int,double> test_instance("testing");
+    test<int,double> test_instance;
+
+    non_template non_template;
+
+    test<MY_FLOAT2, double> test_float_double;
+
+    SC_CTOR(DUT) : test_instance("testing"), non_template("non-templated-module-instance"), test_float_double("testing_float_double") {
     test_instance.clk(clk);
     test_instance.inS(sig1);
     test_instance.outS(sig1);
 
-    non_template non_template("non-templated-module-instance");
+    }
+ 
+};
 
-    test<MY_FLOAT2, double> test_float_double("testing_float_double");
-    return 0;
+int sc_main(int argc, char *argv[]) {
+  DUT d("d");
+   return 0;
 }

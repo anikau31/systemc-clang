@@ -1,10 +1,10 @@
 # Test CMakeFile
 
 set (TEST_LIST 
+  test-xor-hierarchy
   simple-parsing
   model-from-file
   clock-parsing
-  test-xor-hierarchy
   hotfix-40-findtemplatetypes
   t5-template-matching
   hotfix-105-sensitivity-list
