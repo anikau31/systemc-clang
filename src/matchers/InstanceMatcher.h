@@ -214,7 +214,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
  
     auto match_with_parent = 
-      valueDecl(hasType(match_cxx_ctor_init)).bind("parent_fd");
+      valueDecl(hasType(
+            hasUnqualifiedDesugaredType(
+              recordType(
+                hasDeclaration(match_cxx_ctor_init))))).bind("parent_fd");
 
 
     auto match_instances_decl = 
@@ -235,13 +238,20 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         ).bind("instance_vd");
 
     
+    auto test = fieldDecl(hasType(
+          hasUnqualifiedDesugaredType(
+            recordType(
+              hasDeclaration(
+          cxxRecordDecl(isDerivedFrom("::sc_core::sc_module"))))
+            ))).bind("test_fd");
     /* clang-format on */
 
     // Add the two matchers.
     //
     finder.addMatcher(match_instances_decl, this);
-    //finder.addMatcher(match_cxx_ctor_init, this);
     finder.addMatcher(match_with_parent, this);
+    //finder.addMatcher(match_cxx_ctor_init, this);
+    //finder.addMatcher( test, this );
   }
 
   void parseVarDecl(VarDecl *instance_decl, std::string &instance_name) {
@@ -340,10 +350,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     auto ctor_arg = const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_arg"));
 
-    // if (parent_fd) {
-      // llvm::outs() << "###### FOUND PARENT_FD\n";
-      // parent_fd->dump();
-    // }
+    auto test_fd = const_cast<FieldDecl*>(result.Nodes.getNodeAs<FieldDecl>("test_fd"));
+    if (test_fd) {
+       llvm::outs() << "###### FOUND TESTFD\n";
+        test_fd->dump();
+     }
 //
     if (ctor_fd && ctor_init && parent_fd ) {
       llvm::outs() << "#### CTOR_FD: parent_fd " << parent_fd->getNameAsString() << " ctor_fd " << ctor_fd->getNameAsString() << "\n";
