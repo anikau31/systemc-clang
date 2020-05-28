@@ -29,8 +29,8 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
 
-  // There are two module declarations found: test and sub_module
-  REQUIRE(module_decl.size() == 2);
+  // There are two module declarations found: test dut sub_module
+  REQUIRE(module_decl.size() == 3);
 
   auto found_module_testing{model->getInstance("testing")};
   REQUIRE(found_module_testing != nullptr);

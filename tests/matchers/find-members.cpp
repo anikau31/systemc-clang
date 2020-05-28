@@ -49,13 +49,13 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
 
     REQUIRE(instances.size() == 6);
 
-    std::vector<std::string> var_names{"DUT", "TestClk", "n1",
+    std::vector<std::string> var_names{"dut", "d", "n1",
                                        "n2",  "n3",      "n4"};
     std::vector<std::string> var_type_names{
-        "struct exor2", "class sc_core::sc_clock",
+        "struct exor2", "struct DUT",
         "struct nand2", "struct nand2",
         "struct nand2", "struct nand2"};
-    std::vector<std::string> instance_names{"exor2", "TestClock", "N1",
+    std::vector<std::string> instance_names{"exor2", "N1",
                                             "N2",    "N3",        "N4"};
 
     for (auto const &entry : instances) {
@@ -74,7 +74,7 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
         std::vector<InstanceMatcher::InstanceDeclType> found_instances;
         inst_matcher.findInstanceByVariableType(cxx_decl, found_instances);
 
-        if (inst.var_name == "DUT") {
+        if (inst.var_name == "dut") {
           // Find all the instances of exor2
           llvm::errs() << "<<<< DUT\n";
           REQUIRE(found_instances.size() == 1);

@@ -35,14 +35,20 @@ SC_MODULE(test) {
   }
 };
 
-int sc_main(int argc, char *argv[]) {
+SC_MODULE(DUT) {
   sc_clock clk;
   sc_signal<int> sig1;
 
-  test<int, double> test_instance("testing");
-  test_instance.clk(clk);
-  test_instance.inS(sig1);
-  test_instance.outS(sig1);
+  test<int,double> test_instance;
+  SC_CTOR(DUT) : test_instance("testing") {
+    test_instance.clk(clk);
+    test_instance.inS(sig1);
+    test_instance.outS(sig1);
+  }
+};
 
-  return 0;
+
+int sc_main(int argc, char *argv[]) {
+  DUT d("dut");
+    return 0;
 }

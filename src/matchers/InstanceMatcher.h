@@ -190,8 +190,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // name.
     //
     /* clang-format off */
-    
-    auto match_cxx_ctor_init =
+       auto match_cxx_ctor_init =
       cxxRecordDecl(
           hasDescendant(
             cxxConstructorDecl(
@@ -213,6 +212,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             )
           );
 
+ 
+    auto match_with_parent = 
+      valueDecl(hasType(match_cxx_ctor_init)).bind("parent_fd");
+
+
     auto match_instances_decl = 
       varDecl( 
         hasDescendant(match_ctor_arg("ctor_arg", "constructor_expr"))
@@ -228,7 +232,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
               ).bind("record_type")
             )
           )
-        ).bind("decl_instance");
+        ).bind("instance_vd");
 
     
     /* clang-format on */
@@ -236,8 +240,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // Add the two matchers.
     //
     finder.addMatcher(match_instances_decl, this);
-    finder.addMatcher(match_cxx_ctor_init, this);
-    //finder.addMatcher(test, this);
+    //finder.addMatcher(match_cxx_ctor_init, this);
+    finder.addMatcher(match_with_parent, this);
   }
 
   void parseVarDecl(VarDecl *instance_decl, std::string &instance_name) {
@@ -251,7 +255,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
 
     std::string parent_name{};
-    RecordDecl *parent_rdecl{nullptr};
+    ValueDecl *parent_rdecl{nullptr};
 
     llvm::outs() << "=> var_name " << var_name << " var_type_name "
                  << var_type_name << " parent_name " << parent_name
@@ -280,7 +284,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     }
   }
 
-  void parseFieldDecl(FieldDecl *instance_decl) {
+  void parseFieldDecl(FieldDecl* instance_decl, ValueDecl* parent_decl) {
     std::string name{instance_decl->getIdentifier()->getNameStart()};
 
     // This is the main object's constructor name
@@ -291,10 +295,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
 
     std::string parent_name{};
-    RecordDecl *parent_rdecl{nullptr};
-    parent_rdecl = instance_decl->getParent();
-    if (parent_rdecl) {
-      parent_name = parent_rdecl->getName();
+    //RecordDecl *parent_rdecl{parent_decl};
+    //parent_rdecl = instance_decl->getParent();
+    if (parent_decl) {
+      parent_name = parent_decl->getName();
     }
 
     llvm::outs() << "=> var_name " << var_name << " var_type_name "
@@ -310,7 +314,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.instance_decl = instance_decl;
     parsed_instance.is_field_decl = true;
     parsed_instance.parent_name = parent_name;
-    parsed_instance.parent_decl = parent_rdecl;
+    parsed_instance.parent_decl = parent_decl;
 
     parsed_instance.dump();
     // Don't add repeated matches
@@ -325,26 +329,26 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     llvm::outs() << " ================== INSTANCE MATCHER ================= \n";
     // General decl
-    auto decl_instance =
-        const_cast<VarDecl *>(result.Nodes.getNodeAs<VarDecl>("decl_instance"));
+    auto instance_vd =
+        const_cast<VarDecl *>(result.Nodes.getNodeAs<VarDecl>("instance_vd"));
     auto ctor_init = const_cast<CXXCtorInitializer *>(
         result.Nodes.getNodeAs<CXXCtorInitializer>("ctor_init"));
     auto ctor_fd =
         const_cast<FieldDecl *>(result.Nodes.getNodeAs<FieldDecl>("ctor_fd"));
+    auto parent_fd =
+        const_cast<ValueDecl *>(result.Nodes.getNodeAs<ValueDecl>("parent_fd"));
 
     auto ctor_arg = const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_arg"));
-//
-    // if (decl_instance) {
-      // llvm::outs() << "Found a VD decl\n";
-      // decl_instance->dump();
-//
-      // return;
-    // }
 
-    if (ctor_fd && ctor_init) {
-      llvm::outs() << "#### CTOR_FD \n";
+    // if (parent_fd) {
+      // llvm::outs() << "###### FOUND PARENT_FD\n";
+      // parent_fd->dump();
+    // }
+//
+    if (ctor_fd && ctor_init && parent_fd ) {
+      llvm::outs() << "#### CTOR_FD: parent_fd " << parent_fd->getNameAsString() << " ctor_fd " << ctor_fd->getNameAsString() << "\n";
       ctor_fd->dump();
-      parseFieldDecl(ctor_fd);
+      parseFieldDecl(ctor_fd, parent_fd);
 
       Expr *expr = ctor_init->getInit()->IgnoreImplicit();
       CXXConstructExpr *cexpr = cast<CXXConstructExpr>(expr);
@@ -374,172 +378,18 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     // Is it a FieldDecl or VarDecl
 
-    if (decl_instance) {
-      auto instance_vd = decl_instance;
-      if (auto vd_instance = dyn_cast<VarDecl>(decl_instance)) {
+    if (instance_vd) {
+      //if (auto vd_instance = dyn_cast<VarDecl>(decl_instance)) {
         auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
-        llvm::outs() << "## FD: " << vd_instance->getNameAsString() << " "
-                     << vd_instance << " instance_name " << instance_name << "\n";
+        llvm::outs() << "## FD: " << instance_vd->getNameAsString() << " "
+                     << instance_vd << " instance_name " << instance_name << "\n";
 
-        parseVarDecl(vd_instance, instance_name);
-      }
+        parseVarDecl(instance_vd, instance_name);
+      //}
     }
   }
 
   // This is the callback function whenever there is a match.
-  virtual void run2(const MatchFinder::MatchResult &result) {
-    llvm::outs()
-        << " ===================== INSTANCE MATCHER ==================== \n";
-    auto instance_fd = const_cast<FieldDecl *>(
-        result.Nodes.getNodeAs<FieldDecl>("instances_in_fielddecl"));
-    auto inst_cxx_record_decl = const_cast<CXXRecordDecl *>(
-        result.Nodes.getNodeAs<CXXRecordDecl>("inst_cxx_record_decl"));
-
-    // VD
-    //
-    auto instance_vd = const_cast<VarDecl *>(
-        result.Nodes.getNodeAs<VarDecl>("instances_in_vardecl"));
-    auto instance_name_vd = const_cast<CXXConstructExpr *>(
-        result.Nodes.getNodeAs<CXXConstructExpr>("constructor_expr"));
-    auto sub_ctor_init = const_cast<CXXCtorInitializer *>(
-        result.Nodes.getNodeAs<CXXCtorInitializer>("sub_ctor_init"));
-    auto ctor_arg =
-        const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_arg"));
-    auto cxx_record_decl = const_cast<CXXRecordDecl *>(
-        result.Nodes.getNodeAs<CXXRecordDecl>("cxx_record_decl"));
-    auto vd_cxx_record_decl = const_cast<CXXRecordDecl *>(
-        result.Nodes.getNodeAs<CXXRecordDecl>("vd_cxx_record_decl"));
-
-    // Submodule
-    auto ctor_submodule_arg =
-        const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_submodule_arg"));
-    auto ctor_expr = const_cast<CXXConstructExpr *>(
-        result.Nodes.getNodeAs<CXXConstructExpr>("ctor_expr"));
-    auto ctor_decl = const_cast<CXXConstructorDecl *>(
-        result.Nodes.getNodeAs<CXXConstructorDecl>("ctor_decl"));
-    auto sub_ctor_field_decl =
-        const_cast<Decl *>(result.Nodes.getNodeAs<Decl>("sub_ctor_field_decl"));
-
-    auto is_submodule_ctor{
-        (cxx_record_decl && ctor_decl && sub_ctor_field_decl && sub_ctor_init)};
-    // FD
-    if (instance_fd) {  // && inst_cxx_record_decl && !is_submodule_ctor) {
-      llvm::outs() << "InstanceMatcher\n";
-      instance_fd->dump();
-      // Dump out the parent
-      // llvm::outs() << "Parent\n";
-      // instance_fd->getParent()->dump();
-
-      llvm::outs() << "## FieldDecl\n";
-      //
-      // NAND n1 such that n1("N1") somewhere
-      // variable name: n1, var_type_name: NAND, instance_name: N1
-      //
-      // Get the variable name
-      auto var_name{instance_fd->getNameAsString()};
-      // We do not get the instance name from within the field declaration.
-      // Get the type of the class of the field.
-      auto var_type_name{instance_fd->getType().getAsString()};
-
-      llvm::outs() << "=> var_type_name " << var_type_name << " var_name "
-                   << var_name << "\n";
-      // instances_.push_back(std::make_tuple(var_name, instance_fd));
-
-      RecordDecl *parent_rdecl{instance_fd->getParent()};
-      std::string parent_name{parent_rdecl->getName()};
-
-      ModuleInstanceType parsed_instance{};
-      parsed_instance.var_name = var_name;
-      parsed_instance.var_type_name = var_type_name;
-      parsed_instance.decl = instance_fd->getCanonicalDecl();
-      parsed_instance.instance_decl = instance_fd;
-      parsed_instance.is_field_decl = true;
-      parsed_instance.parent_name = parent_name;
-      parsed_instance.parent_decl = parent_rdecl;
-
-      // Find the instance if it has been already recorded.
-      auto found_it{instance_map_.find(instance_fd)};
-      if (found_it == instance_map_.end()) {
-        llvm::outs() << "Inserting FD instance\n";
-        instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
-            instance_fd, parsed_instance));
-      }
-    }
-
-    if (instance_vd && instance_name_vd) {
-      std::string name{instance_vd->getIdentifier()->getNameStart()};
-
-      // This is the main object's constructor name
-      auto var_name{instance_vd->getNameAsString()};
-      // We do not get the instance name from within the field declaration.
-      // Get the type of the class of the field.
-      auto var_type_name{instance_vd->getType().getAsString()};
-      auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
-
-      llvm::outs() << "=> var_name " << var_name << " var_type_name "
-                   << var_type_name << " instance_name " << instance_name
-                   << "\n";
-
-      // Found submodule
-      std::string submodule_instance_name{""};
-      std::string parent_name{};
-      RecordDecl *parent_rdecl{};
-
-      if (sub_ctor_field_decl && sub_ctor_init) {
-        llvm::outs() << "=> processing submodule\n";
-        // sub_ctor_field_decl->dump();
-        Expr *expr = sub_ctor_init->getInit()->IgnoreImplicit();
-        CXXConstructExpr *cexpr = cast<CXXConstructExpr>(expr);
-        parent_rdecl = sub_ctor_init->getMember()->getParent();
-
-        if (parent_rdecl) {
-          parent_name = parent_rdecl->getName();
-        }
-
-        MatchFinder iarg_registry{};
-        InstanceArgumentMatcher iarg_matcher{};
-        iarg_matcher.registerMatchers(iarg_registry);
-        iarg_registry.match(*cexpr, *result.Context);
-
-        // This retrieves the submodule instance name.
-        if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
-          submodule_instance_name = inst_literal->getString().str();
-
-          // Find the instance if it has been already recorded.
-          auto found_it{instance_map_.find(sub_ctor_field_decl)};
-          if (found_it != instance_map_.end()) {
-            // has to be a reference
-            auto &inst{found_it->second};
-            inst.instance_name = submodule_instance_name;
-          }
-        }
-        llvm::outs() << "=> submodule_instance_name " << submodule_instance_name
-                     << " parent name: " << parent_rdecl->getName() << "\n";
-      }
-
-      // This is the instance name.
-      // instances_.push_back(std::make_tuple(instance_name, instance_vd));
-
-      ModuleInstanceType parsed_instance{};
-      parsed_instance.var_name = var_name;
-      parsed_instance.var_type_name = var_type_name;
-      parsed_instance.instance_name = instance_name;
-      parsed_instance.decl =
-          instance_vd->getType().getTypePtr()->getAsCXXRecordDecl();
-      parsed_instance.instance_decl = instance_vd;
-      parsed_instance.is_field_decl = false;
-      parsed_instance.parent_name = parent_name;
-      parsed_instance.parent_decl = parent_rdecl;
-
-      // Don't add repeated matches
-      auto found_it{instance_map_.find(instance_vd)};
-      if (found_it == instance_map_.end()) {
-        llvm::outs() << "Inserting VD instance\n";
-        instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
-            instance_vd, parsed_instance));
-      }
-    }
-  }
 
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.

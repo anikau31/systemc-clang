@@ -187,7 +187,8 @@ ModuleDecl *Model::getInstance(const std::string &instance_name) {
 
 // Must provide the Instance decl.
 ModuleDecl *Model::getInstance(Decl *instance_decl) {
-  llvm::outs() << "getInstance Decl : " << instance_decl <<"\n";
+  llvm::outs() << "getInstance Decl to find : " << instance_decl <<"\n";
+  // std::map<ModuleDecl *, std::vector<ModuleDecl *>> moduleInstanceMapType;
   for (auto const &element : module_instance_map_) {
     auto instance_list{element.second};
 
@@ -196,7 +197,10 @@ ModuleDecl *Model::getInstance(Decl *instance_decl) {
                      [instance_decl](const auto &instance) {
                        return (instance->getInstanceDecl() == instance_decl);
                      });
-
+    // for (auto const inst: instance_list) {
+      // llvm::outs() << " => inst decl " << inst->getInstanceDecl() << "\n";
+    // }
+//
     if (test_module_it != instance_list.end()) {
       llvm::outs() << "Found";
       return *test_module_it;

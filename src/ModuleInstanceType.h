@@ -18,11 +18,11 @@ struct ModuleInstanceType {
   bool is_field_decl;
   clang::Decl *decl;
   clang::Decl *instance_decl;
-  clang::RecordDecl *parent_decl;
+  clang::ValueDecl *parent_decl;
 
   clang::Decl *getInstanceTypeDecl() const { return decl; }
   clang::Decl *getInstanceDecl() const { return instance_decl; }
-  clang::RecordDecl *getParentDecl() const { return parent_decl; }
+  clang::ValueDecl *getParentDecl() const { return parent_decl; }
 
   ModuleInstanceType()
       : var_name{},
