@@ -74,15 +74,15 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
     // DUT2, n1, n2, n3, n4
     auto instances{inst_matcher.getInstanceMap()};
 
-    REQUIRE(instances.size() == 6);
+    REQUIRE(instances.size() == 5);
 
-    std::vector<std::string> var_names{"DUT", "TestClk", "n1",
+    std::vector<std::string> var_names{"DUT", "n1",
                                        "n2",  "n3",      "n4"};
     std::vector<std::string> var_type_names{
-        "struct exor2", "class sc_core::sc_clock",
+        "struct exor2", 
         "struct nand2", "struct nand2",
         "struct nand2", "struct nand2"};
-    std::vector<std::string> instance_names{"exor2", "TestClock", "N1",
+    std::vector<std::string> instance_names{"exor2",  "N1",
                                             "N2",    "N3",        "N4"};
 
     for (auto const &entry : instances) {

@@ -198,6 +198,7 @@ ModuleDecl *Model::getInstance(Decl *instance_decl) {
                      });
 
     if (test_module_it != instance_list.end()) {
+      llvm::outs() << "Found";
       return *test_module_it;
     }
   }

@@ -17,25 +17,31 @@ using namespace sc_ast_matchers;
 // Private methods
 void SystemCConsumer::populateNestedModules(
     const InstanceMatcher::InstanceDeclarations &instance_map) {
+
   for (auto const &inst : instance_map) {
     // get<0>(inst) is the Decl*, and get<1>(inst) is the ModuleInstanceType
     ModuleInstanceType module_inst{get<1>(inst)};
     module_inst.dump();
     ModuleDecl *child{
         systemcModel_->getInstance(module_inst.getInstanceDecl())};
+    llvm::outs() << "# child instance decl " << module_inst.getInstanceDecl() << "\n";
+    module_inst.getInstanceDecl()->dump();
+    llvm::outs() << "# child ModuleDecl    " << child << "\n";
+
     ModuleDecl *parent{systemcModel_->getInstance(module_inst.getParentDecl())};
 
     if (child) {
-      llvm::outs() << "- " << child->getName() << " : "
+      llvm::outs() << "- child " << child->getName() << " : "
                    << child->getInstanceName() << "\n";
     }
     if (parent) {
-      llvm::outs() << "- " << parent->getName() << " : "
+      llvm::outs() << "- parent " << parent->getName() << " : "
                    << parent->getInstanceName() << "\n";
     }
 
     // Insert the child into the parent.
     if (child && parent) {
+      llvm::outs() << "ADD A CHILD PARENT RELATIONSHIP\n";
       parent->addNestedModule(child);
     }
   }

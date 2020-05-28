@@ -20,6 +20,7 @@ struct ModuleInstanceType {
   clang::Decl *instance_decl;
   clang::RecordDecl *parent_decl;
 
+  clang::Decl *getInstanceTypeDecl() const { return decl; }
   clang::Decl *getInstanceDecl() const { return instance_decl; }
   clang::RecordDecl *getParentDecl() const { return parent_decl; }
 
