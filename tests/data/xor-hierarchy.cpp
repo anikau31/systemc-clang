@@ -46,6 +46,16 @@ SC_MODULE(exor2) {
   }
 };
 
+SC_MODULE(DUT) {
+  sc_signal<bool> ASig, BSig, FSig;
+  exor2 dut;
+   SC_CTOR(DUT) : dut("dut_exor2") {
+    dut.A(ASig);
+    dut.B(BSig);
+    dut.F(FSig);
+   }
+};
+
 /*
 SC_MODULE(stim) {
   sc_out<bool> A, B;
@@ -74,7 +84,6 @@ SC_MODULE(stim) {
 */
 
 int sc_main(int argc, char* argv[]) {
-  sc_signal<bool> ASig, BSig, FSig;
   sc_clock TestClk("TestClock", 10, SC_NS, 0.5);
 
   /*
@@ -84,11 +93,11 @@ int sc_main(int argc, char* argv[]) {
   Stim1.Clk(TestClk);
   */
 
-  exor2 DUT("exor2");
-  DUT.A(ASig);
-  DUT.B(BSig);
-  DUT.F(FSig);
-
+  DUT d("exor2");
+  // DUT.A(ASig);
+  // DUT.B(BSig);
+  // DUT.F(FSig);
+//
   /*
   mon Monitor1("Monitor");
   Monitor1.A(ASig);

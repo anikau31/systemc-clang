@@ -405,7 +405,7 @@ CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
 // FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_;
 // } VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
 
-Decl *ModuleDecl::getInstanceDecl() { return instance_info_.decl; }
+Decl *ModuleDecl::getInstanceDecl() { return instance_info_.getInstanceDecl(); }
 
 // bool ModuleDecl::isInstanceFieldDecl() const {
 // if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {

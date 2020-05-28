@@ -45,7 +45,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   }
 
                                   */
-  auto found_module_decl{model->getInstance("exor2")};
+  auto found_module_decl{model->getInstance("dut_exor2")};
   SECTION("Testing top-level module: exor2", "[exor2]") {
     // There should be only one module.
     INFO("Top-level module specified as exor2.");
@@ -90,13 +90,13 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
       std::string as_string{binding->toString()};
 
       if (port_name == "A") {
-        REQUIRE(as_string == "exor2 DUT exor2 ASig");
+        REQUIRE(as_string == "exor2 dut dut_exor2 ASig");
       }
       if (port_name == "B") {
-        REQUIRE(as_string == "exor2 DUT exor2 BSig");
+        REQUIRE(as_string == "exor2 dut dut_exor2 BSig");
       }
       if (port_name == "F") {
-        REQUIRE(as_string == "exor2 DUT exor2 FSig");
+        REQUIRE(as_string == "exor2 dut dut_exor2 FSig");
       }
     }
 

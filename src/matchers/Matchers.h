@@ -275,7 +275,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
       llvm::outs() << "CXXRecordDecl* " << cxx_decl
                    << ", module name: " << decl_name << "\n";
-      module_decl->dump(llvm::outs());
+      //module_decl->dump(llvm::outs());
     }
 
     // Print the instances.
