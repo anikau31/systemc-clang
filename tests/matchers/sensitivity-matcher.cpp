@@ -29,9 +29,23 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
 
 SC_MODULE( test ){
 
-  // input ports
+  // clock ports
   sc_in_clk clk;
+
+  // input ports
   sc_in<bool> bool_clk;
+  sc_in<int> another_port;
+
+  // output ports
+  sc_out<bool> out_bool;
+
+  // events
+  sc_event eve1;
+  sc_event eve2;
+
+  // signals
+  sc_signal<bool> one_sig;
+  sc_signal<int>  two_sig;
 
   void entry_function_1() {
     while(true) {
@@ -40,7 +54,10 @@ SC_MODULE( test ){
   SC_CTOR( test ) {
     SC_METHOD(entry_function_1);
     sensitive << clk.pos();
-    sensitive << bool_clk;
+    sensitive << bool_clk << another_port ;
+    sensitive << out_bool;
+    sensitive << eve1 << eve2;
+    sensitive << one_sig << two_sig;
   }
 };
 

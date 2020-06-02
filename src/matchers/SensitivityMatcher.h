@@ -89,27 +89,26 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
         result.Nodes.getNodeAs<CXXMethodDecl>("cxx_caller"))};
 
     if (cxx_op_callexpr) {
-      llvm::outs() << "CALL EXPR\n";
-      cxx_op_callexpr->IgnoreImpCasts()->dump();
+      llvm::outs() << "x.y call expression\n";
+      //cxx_op_callexpr->IgnoreImpCasts()->dump();
 
       if (cxx_mcall && cxx_caller) {
-        llvm::outs() << " @@@ => call member expr\n";
-        cxx_mcall->IgnoreImpCasts()->dump();
-        llvm::outs() << "     => callee: "
-                     << cxx_mcall->getMethodDecl()->getNameAsString() << "\n";
-        llvm::outs() << "     => caller: " << cxx_caller->getNameAsString()
+        //cxx_mcall->IgnoreImpCasts()->dump();
+        // llvm::outs() << "     => callee: "
+                     // << cxx_mcall->getMethodDecl()->getNameAsString() << "\n";
+        llvm::outs() << "y =  " << cxx_caller->getNameAsString()
                      << "\n";
       }
 
       if (me) {
-        llvm::outs() << "ME\n";
-        me->IgnoreImplicit()->dump();
-        llvm::outs() << "Name: " << me->getMemberDecl()->getNameAsString()
+        //llvm::outs() << "ME\n";
+        //me->IgnoreImplicit()->dump();
+        llvm::outs() << "x: " << me->getMemberDecl()->getNameAsString()
                      << "\n";
-        for (auto const child : me->children()) {
-          llvm::outs() << "child\n";
-          child->dump();
-        }
+        // for (auto const child : me->children()) {
+          // llvm::outs() << "child\n";
+          // child->dump();
+        // }
       }
     }
 
