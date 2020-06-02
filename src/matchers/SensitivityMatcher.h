@@ -27,12 +27,11 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     /* clang-format off */
     /* clang-format on */
 
-    auto match = cxxConstructorDecl(
+    auto match = cxxConstructorDecl(isExpansionInMainFile(),
         forEachDescendant(
           // Find the sc_event
           cxxOperatorCallExpr(
             // Match sc_event_finder argument
-            //hasDescendant(cxxMemberCallExpr(hasType(cxxRecordDecl(hasName("sc_event_finder")))
             hasArgument(1, 
               ignoringParenCasts(
               allOf(
@@ -62,10 +61,6 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
               ) // allOf
             )
             )
-            // Match any of the internal nodes to extract the respective fields.
-            //, 
-            //hasDescendant(cxxMemberCallExpr(
-            //    ).bind("cxx_member_call_expr"))
             ).bind("cxx_operator_call_expr")
           )
         ).bind("cxx_constructor_decl");
