@@ -36,6 +36,8 @@ CXXMethodDecl *ProcessDecl::getEntryMethodDecl() const {
   return entry_method_decl_;
 }
 
+EntryFunctionContainer* ProcessDecl::getEntryFunction() { return entry_function_ptr_; }
+
 void ProcessDecl::dump(raw_ostream &os) {
   os << "ProcessDecl " << this << " '" << entry_name_ << "' "
      << entry_method_decl_ << " " << process_type_;

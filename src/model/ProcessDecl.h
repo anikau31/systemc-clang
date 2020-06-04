@@ -2,8 +2,6 @@
 #define _PROCESS_DECL_H_
 
 #include <string>
-//#include "EntryFunctionContainer.h"
-//#include "FindEntryFunctions.h"
 #include "clang/AST/DeclCXX.h"
 #include "json.hpp"
 #include "systemc-clang.h"
@@ -29,6 +27,7 @@ class ProcessDecl {
   std::string getType() const;
   std::string getName() const;
   CXXMethodDecl *getEntryMethodDecl() const;
+  EntryFunctionContainer* getEntryFunction();
 
   // Dump.
   void dump(llvm::raw_ostream &);
