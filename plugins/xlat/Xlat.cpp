@@ -402,6 +402,8 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
       // Sensitivity list
       hNodep h_senslist = new hNode(hNode::hdlopsEnum::hSenslist);
       for (auto sensmap : efc->getSenseMap()) {
+	// typedef map<string, tuple<string, MemberExpr *> > senseMapType;
+	
 	if (sensmap.first == "dont_initialize") // nonsynthesizable
 	  continue;
 	hNodep h_senspair = new hNode(sensmap.first, hNode::hdlopsEnum::hSensvar); // [ sensvar name (edge expr) ]
@@ -414,14 +416,15 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
   //
 	//h_senspair->child_list.push_back(h_sensitem);
 
-	string edgeval = get<0>(sensmap.second);
+	// string edgeval = get<0>(sensmap.second);
 
-	if (edgeval == "") edgeval = "always";
-	hNodep h_edge = new hNode(edgeval, hNode::hdlopsEnum::hSensedge);
-	h_senspair->child_list.push_back(h_edge);
-	get<1>(sensmap.second)->dump(os_);
-	//h_senslist->child_list.push_back(h_sensitem);
+	// if (edgeval == "") edgeval = "always";
+	// hNodep h_edge = new hNode(edgeval, hNode::hdlopsEnum::hSensedge);
+	// h_senspair->child_list.push_back(h_edge);
+	// get<1>(sensmap.second)->dump(os_);
+	// //h_senslist->child_list.push_back(h_sensitem);
 	h_senslist->child_list.push_back(h_senspair);
+
 	os_ << "sensitivity item " << sensmap.first << "\n";
       }
       h_process->child_list.push_back(h_senslist);
