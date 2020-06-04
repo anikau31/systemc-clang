@@ -28,16 +28,19 @@ class Xlat : public SystemCConsumer {
   bool postFire();
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
-
-  void xlattype(string prefix, Tree<TemplateType> *template_argtp,  hNode::hdlopsEnum h_op, hNodep &h_info);
-  void makehpsv(string prefix, string typnae,  hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo=true);
-
+  void xlatvars(ModuleDecl::portMapType pmap, Model *model,  hNodep &h_info);
+  void xlattype(string prefix, Tree<TemplateType> *template_argtp, hNode::hdlopsEnum h_op, hNodep &h_info);
+  void makehpsv(string prefix, string typname,  hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo=true);
+  hNodep addtype(string typname, const Type *typ);
+  void generatetype( scpar::TreeNode<scpar::TemplateType > * const &node,
+		     scpar::Tree<scpar::TemplateType > * const &treehead, hNodep &h_info);
   void xlatproc(vector<EntryFunctionContainer *>efv, hNodep & h_top, llvm::raw_ostream &os );
   void xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pb);
   private:
 
     hNodep h_top;
     std::unordered_map<string, CXXMethodDecl *> allmethodecls;  //  all methods called
+    std::unordered_map<string, const Type *> usertypes;
     util lutil;
 };
 

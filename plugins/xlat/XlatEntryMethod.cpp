@@ -80,6 +80,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
   }
   else if (isa<MaterializeTemporaryExpr>(stmt)) {
     TRY_TO(TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getSubExpr()));
+    //TRY_TO(TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary()));
   }
 
   else if (isa<IntegerLiteral>(stmt)) {

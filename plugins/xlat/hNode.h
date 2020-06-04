@@ -34,6 +34,7 @@ namespace hnode {
   etype(hSensedge), \
   etype(hTypeinfo), \
   etype(hType), \
+  etype(hTypedef), \
   etype(hInt), \
   etype(hSigdecl), \
   etype(hVardecl), \
@@ -156,7 +157,7 @@ namespace hnode {
   class util { 
   public:
     const  int numstr = 6;
-     const string scbuiltintype [6] = {
+    const string scbuiltintype [6] = {
       "sc_uint",
       "sc_int",
       "sc_bigint",
@@ -199,10 +200,19 @@ namespace hnode {
 	tstring = tstring.substr(6, tstring.length() - 6);
       return ((tstring.substr(0, 12) == "sc_core::sc_") ||
 	      (tstring.substr(0, 5) == "sc_in") ||
+	      (tstring.substr(0, 9) == "sc_rvd_in") ||
 	      (tstring.substr(0, 6) == "sc_out") ||
+	      (tstring.substr(0, 10) == "sc_rvd_out") ||
 	      (tstring.substr(0, 8) == "sc_inout") ||
 	      (tstring.substr(0, 9) == "sc_signal") ||
+	      (tstring.substr(0, 6) == "sc_rvd") ||
 	      (tstring.substr(0,5) == "sc_dt"));
+    }
+
+    static inline bool isposint(const std::string &str) {
+      // https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
+      // towards the middle
+      return !str.empty() && str.find_first_not_of("0123456789") == string::npos;
     }
 
   };
