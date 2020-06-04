@@ -66,8 +66,8 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
 
   void dump() {
     for (auto const &call : calls_) {
-      llvm::outs() << get<0>(call) << "  " << get<1>(call) << "  "
-                   << get<2>(call) << "\n";
+      llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
+                   << std::get<2>(call) << "\n";
       // get<1>(call)->dump();
     }
   }
@@ -99,6 +99,8 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     }
 
  public:
+  SenseMapType getSensitivityMap() { return sensitivity_; }
+
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
 

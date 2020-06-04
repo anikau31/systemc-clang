@@ -1,5 +1,4 @@
 #include "EntryFunctionContainer.h"
-#include <iostream>
 #include "enums.h"
 
 using namespace scpar;
@@ -27,8 +26,8 @@ EntryFunctionContainer::EntryFunctionContainer(
 ///////////////////////////////////////////////////////////////////////////////////////////////
 string EntryFunctionContainer::getName() { return _entryName; }
 
-FindSensitivity::senseMapType EntryFunctionContainer::getSenseMap() {
-  return _senseMap;
+EntryFunctionContainer::SenseMapType EntryFunctionContainer::getSenseMap() {
+  return senseMap_;
 }
 
 CXXMethodDecl *EntryFunctionContainer::getEntryMethod() {
@@ -67,6 +66,10 @@ void EntryFunctionContainer::setEntryMethod(CXXMethodDecl *d) {
 
 void EntryFunctionContainer::addSensitivityInfo(FindSensitivity &s) {
   _senseMap = s.getSenseMap();
+}
+
+void EntryFunctionContainer::addSensitivityInfo(SenseMapType &sm) {
+  senseMap_ = sm;
 }
 
 void EntryFunctionContainer::addWaits(FindWait &f) {

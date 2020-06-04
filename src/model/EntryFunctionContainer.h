@@ -19,6 +19,7 @@
 #include <string>
 #include "FindNotify.h"
 #include "FindSensitivity.h"
+#include "SensitivityMatcher.h"
 #include "FindWait.h"
 #include "NotifyContainer.h"
 #include "SuspensionAutomata.h"
@@ -46,6 +47,14 @@ class EntryFunctionContainer {
       instanceSusCFGPairType;
   typedef map<int, SuspensionAutomata::susCFGVectorType> instanceSusCFGMapType;
 
+  // Sensitivity information
+  typedef std::tuple<std::string, ValueDecl *, MemberExpr *>
+      SensitivityTupleType;
+  typedef std::pair<std::string, std::vector<SensitivityTupleType>>
+      SensitivityPairType;
+
+  typedef std::map<std::string, std::vector<SensitivityTupleType>> SenseMapType;
+
   EntryFunctionContainer();
   EntryFunctionContainer(string, PROCESS_TYPE, CXXMethodDecl *, Stmt *);
   EntryFunctionContainer(const EntryFunctionContainer &);
@@ -59,7 +68,7 @@ class EntryFunctionContainer {
 
   waitContainerListType getWaitCalls();
   notifyContainerListType getNotifyCalls();
-  FindSensitivity::senseMapType getSenseMap();
+  SenseMapType getSenseMap();
   SuspensionAutomata::susCFGVectorType getSusCFG();
   SuspensionAutomata::transitionVectorType getSusAuto();
   instanceSautoMapType getInstanceSautoMap();
@@ -67,6 +76,7 @@ class EntryFunctionContainer {
 
   // Add waits.
   void addSensitivityInfo(FindSensitivity &);
+  void addSensitivityInfo(SenseMapType &);
   void addWaits(FindWait &);
   void addNotifys(FindNotify &);
   void addSusCFGAuto(SuspensionAutomata &);
@@ -86,7 +96,11 @@ class EntryFunctionContainer {
   // Hold all the waits.
   waitContainerListType _waitCalls;
   notifyContainerListType _notifyCalls;
+
+  // Sensitivity information
   FindSensitivity::senseMapType _senseMap;
+  SenseMapType senseMap_;
+
   vector<Transition *> _susAuto;
   vector<SusCFG *> _susCFG;
 };

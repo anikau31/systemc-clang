@@ -109,5 +109,21 @@ int sc_main(int argc, char *argv[]) {
   sens_matcher.dump();
   llvm::outs() << "================ END =============== \n";
 
+
+  SystemCConsumer sc{from_ast};
+  sc.HandleTranslationUnit(from_ast->getASTContext());
+
+  auto model{sc.getSystemCModel()};
+
+  // This provides the module declarations.
+  auto module_decl{model->getModuleDecl()};
+  auto module_instance_map{model->getModuleInstanceMap()};
+
+  // Want to find an instance named "testing".
+
+  ModuleDecl *test_module{model->getInstance("testing")};
+
+
+
   REQUIRE(true);
 }
