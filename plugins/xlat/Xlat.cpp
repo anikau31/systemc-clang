@@ -162,6 +162,7 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
   }
 }
 
+// Not currently used
 void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo) {
   // create hNode for a Port|Signal|Var declaration with resolved type name
   os_ << "in makehpsv prefix, type, op " << prefix << " " << typname << " " << h_op << "\n";
@@ -181,6 +182,7 @@ void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNode
 
 hNodep Xlat::addtype(string typname, const Type *typ) {
   hNodep h_typdef = new hNode(typname, hNode::hdlopsEnum::hTypedef);
+  os_ << "addtype entered with type name " << typname << "\n";
   if (const RecordType * rectype = dyn_cast<RecordType>(typ)) {
   	os_ << "addtype record type found, name is " << typname << "\n";
   	for (auto const &fld: rectype->getDecl()->fields()) {
@@ -251,6 +253,7 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
   }
   return;
 
+  // Code below is not currently used. left here for reference
 #if 0 
   for (auto const &node : *template_argtp) {
 	const TemplateType * type_data{node->getDataPtr()}; 
@@ -345,6 +348,7 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
 #endif
 }
 
+// Note -- not currently called
 void Xlat::xlatvars(ModuleDecl::portMapType pmap, Model * model,  hNodep &h_info) {
   hNode::hdlopsEnum h_op = hNode::hdlopsEnum::hVardecl;
   for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
