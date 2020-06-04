@@ -221,7 +221,7 @@ bool SystemCConsumer::fire() {
 
       for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
-        FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};
+        //FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};
         llvm::outs()
             << "\n================ SENSITIVITY MATCHER =============== \n";
         SensitivityMatcher sens_matcher{};
@@ -232,7 +232,7 @@ bool SystemCConsumer::fire() {
         sens_matcher.dump();
         llvm::outs() << "================ END =============== \n";
 
-        ef->addSensitivityInfo(findSensitivity);
+        //ef->addSensitivityInfo(findSensitivity);
         EntryFunctionContainer::SenseMapType sensitivity_info{sens_matcher.getSensitivityMap()};
         ef->addSensitivityInfo(sensitivity_info);
 

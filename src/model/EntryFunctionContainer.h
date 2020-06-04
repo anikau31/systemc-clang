@@ -18,7 +18,7 @@
 #include <map>
 #include <string>
 #include "FindNotify.h"
-#include "FindSensitivity.h"
+//#include "FindSensitivity.h"
 #include "SensitivityMatcher.h"
 #include "FindWait.h"
 #include "NotifyContainer.h"
@@ -75,7 +75,7 @@ class EntryFunctionContainer {
   instanceSusCFGMapType getInstanceSusCFGMap();
 
   // Add waits.
-  void addSensitivityInfo(FindSensitivity &);
+  //void addSensitivityInfo(FindSensitivity &);
   void addSensitivityInfo(SenseMapType &);
   void addWaits(FindWait &);
   void addNotifys(FindNotify &);
@@ -98,7 +98,7 @@ class EntryFunctionContainer {
   notifyContainerListType _notifyCalls;
 
   // Sensitivity information
-  FindSensitivity::senseMapType _senseMap;
+  //FindSensitivity::senseMapType _senseMap;
   SenseMapType senseMap_;
 
   vector<Transition *> _susAuto;
