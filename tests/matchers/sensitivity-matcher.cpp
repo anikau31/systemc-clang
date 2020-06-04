@@ -150,10 +150,7 @@ int sc_main(int argc, char *argv[]) {
     auto entry{arg.second};
 
     llvm::outs() << name << "\n";
-    auto found_it{std::find(arg_names.begin(), arg_names.end(), name)};
-    if (found_it != arg_names.end()) {
-      arg_names.erase(found_it);
-    }
+    find_name(arg_names, name);
 
     for (auto const &call : entry) {
       llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
