@@ -37,7 +37,6 @@ template <typename T, int IW,  bool RLEV> using sfifo_cc = rvfifo_cc<T, IW, RLEV
 
 SC_MODULE( test ){
 
-/*
   // clock ports
   sc_in_clk clk;
 
@@ -57,7 +56,6 @@ SC_MODULE( test ){
   sc_signal<int>  two_sig;
   sc_signal<sc_uint<32>> count;
 
-*/
   // sc_rvd?
 	sc_stream_in<int> s_fp;
 	sc_stream<int> c_fp;
@@ -68,16 +66,14 @@ SC_MODULE( test ){
   }
   SC_CTOR( test ) {
     SC_METHOD(entry_function_1);
-    /*
     sensitive << clk.pos();
     sensitive << bool_clk << another_port ;
     sensitive << out_bool;
     sensitive << eve1 << eve2;
     sensitive << one_sig << two_sig << count;
-    */
 
 	  sensitive << s_fp.valid_chg() << s_fp.data_chg();
-		sensitive << c_fp.ready_event() << c_fp.ready_event();
+		sensitive << c_fp.ready_event(); 
   }
 };
 
