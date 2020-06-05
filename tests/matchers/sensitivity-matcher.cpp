@@ -27,11 +27,38 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   std::string code = R"(
 #include "systemc.h"
 
+#include "rvfifo_cc.h"
+#include "sc_rvd.h"
+template <typename T> using sc_stream = sc_rvd<T>;
+template <typename T> using sc_stream_in = sc_rvd_in<T>;
+template <typename T> using sc_stream_out = sc_rvd_out<T>;
+template <typename T, int IW,  bool RLEV> using sfifo_cc = rvfifo_cc<T, IW, RLEV>;
+
+
 SC_MODULE( test ){
 
-  // input ports
+  // clock ports
   sc_in_clk clk;
+
+  // input ports
   sc_in<bool> bool_clk;
+  sc_in<int> another_port;
+
+  // output ports
+  sc_out<bool> out_bool;
+
+  // events
+  sc_event eve1;
+  sc_event eve2;
+
+  // signals
+  sc_signal<bool> one_sig;
+  sc_signal<int>  two_sig;
+  sc_signal<sc_uint<32>> count;
+
+  // sc_rvd?
+	sc_stream_in<int> s_fp;
+	sc_stream<int> c_fp;
 
   void entry_function_1() {
     while(true) {
@@ -40,7 +67,13 @@ SC_MODULE( test ){
   SC_CTOR( test ) {
     SC_METHOD(entry_function_1);
     sensitive << clk.pos();
-    sensitive << bool_clk;
+    sensitive << bool_clk << another_port ;
+    sensitive << out_bool;
+    sensitive << eve1 << eve2;
+    sensitive << one_sig << two_sig << count;
+
+	  sensitive << s_fp.valid_chg() << s_fp.data_chg();
+		sensitive << c_fp.ready_event(); 
   }
 };
 
@@ -55,18 +88,76 @@ int sc_main(int argc, char *argv[]) {
   // std::string code{systemc_clang::read_systemc_file(
   // systemc_clang::test_data_dir, "xor-hierarchy.cpp")};
   //
+  // ASTUnit *from_ast =
+  // tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
+  // .release();
+  //
+
+  auto catch_test_args = systemc_clang::catch_test_args;
+  catch_test_args.push_back("-I" + systemc_clang::test_data_dir +
+                            "/llnl-examples/zfpsynth/shared");
+
   ASTUnit *from_ast =
-      tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
-          .release();
+      tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
+  //
+  // llvm::outs() << "================ TESTMATCHER =============== \n";
+  // SensitivityMatcher sens_matcher{};
+  // MatchFinder matchRegistry{};
+  // sens_matcher.registerMatchers(matchRegistry);
+  // matchRegistry.matchAST(from_ast->getASTContext());
+  // sens_matcher.dump();
+  // llvm::outs() << "================ END =============== \n";
+  //
 
-  llvm::outs() << "================ TESTMATCHER =============== \n";
-  SensitivityMatcher sens_matcher{};
-  MatchFinder matchRegistry{};
-  sens_matcher.registerMatchers(matchRegistry);
-  // Run all the matchers
-  matchRegistry.matchAST(from_ast->getASTContext());
-  sens_matcher.dump();
-  llvm::outs() << "================ END =============== \n";
+  SystemCConsumer sc{from_ast};
+  sc.HandleTranslationUnit(from_ast->getASTContext());
 
-  REQUIRE(true);
+  auto model{sc.getSystemCModel()};
+
+  // This provides the module declarations.
+  auto module_decl{model->getModuleDecl()};
+  auto module_instance_map{model->getModuleInstanceMap()};
+
+  REQUIRE(module_instance_map.size() == 1);
+  // Want to find an instance named "testing".
+
+  ModuleDecl *test_module{model->getInstance("testing")};
+  auto processes{test_module->getProcessMap()};
+  auto first_proc{processes.begin()};
+  ProcessDecl *proc{first_proc->second};
+
+  REQUIRE(test_module != nullptr);
+  REQUIRE(processes.size() == 1);
+  REQUIRE(first_proc != processes.end());
+
+  llvm::outs() << "PROCESS: " << first_proc->first << "\n";
+
+  // Get access to the sensitivity list.
+  EntryFunctionContainer *ef{proc->getEntryFunction()};
+  EntryFunctionContainer::SenseMapType sensitivity_list{ef->getSenseMap()};
+
+  std::vector<std::string> arg_names{
+      "another_port", "bool_clk",  "c_fpreadyvalue_changed_event",
+      "clkpos",       "count",     "eve1",
+      "eve2",         "one_sig",   "out_bool",
+      "s_fpdata",     "s_fpvalid", "two_sig"};
+
+  for (auto const &arg : sensitivity_list) {
+    // This is a concatenated string of all the call arguments
+    // Assumption is that they are unique, but they don't have to be I guess.
+    auto name{arg.first};
+    // This is a vector of tuples
+    auto entry{arg.second};
+
+    llvm::outs() << name << "\n";
+    find_name(arg_names, name);
+
+    for (auto const &call : entry) {
+      llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
+                   << std::get<2>(call) << "\n";
+    }
+  }
+
+  // Make sure that all of the ports were found.
+  REQUIRE(arg_names.size() == 0);
 }

@@ -4,7 +4,7 @@ set (SCC_MATCHERS
   FindEvents.cpp
   FindGlobalEvents.cpp
   FindEntryFunctions.cpp
-  FindSensitivity.cpp
+  #FindSensitivity.cpp
   FindWait.cpp
   FindNotify.cpp
   FindSimTime.cpp

@@ -2,6 +2,7 @@
 #define _SENSITIVITY_MATCHER_H_
 
 #include <vector>
+#include <map>
 
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
@@ -12,6 +13,65 @@ using namespace clang;
 using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
+/////////////////////////////////////////////////////////
+//
+// Class SensitivityMatcher
+//
+//
+///////////////////////////////////////////////////////////////////////////////
+class CallerCalleeMatcher : public MatchFinder::MatchCallback {
+ private:
+  // 1. name
+  // 2. FieldDecl/VarDecl = ValueDecl. Pointer to field declaration.
+  // 3. The MemberExpr from where I got this information.
+  typedef std::vector<std::tuple<std::string, ValueDecl*, MemberExpr*> >
+      CallerCalleeType;
+  std::vector<std::tuple<std::string, ValueDecl *, MemberExpr *>> calls_;
+
+ public:
+  CallerCalleeType getCallerCallee() const { return calls_; }
+
+  void registerMatchers(MatchFinder &finder) {
+    /* clang-format off */
+
+    auto match_member_expr = findAll(memberExpr().bind("me"));
+
+    auto match_member_expr_in_mcall = cxxMemberCallExpr(
+        forEachDescendant(
+          memberExpr().bind("me")
+          ) 
+        ).bind("cx");
+
+    /* clang-format on */
+
+    // finder.addMatcher(match_member_expr_in_mcall, this);
+    finder.addMatcher(match_member_expr, this);
+  }
+
+  virtual void run(const MatchFinder::MatchResult &result) {
+    auto me{const_cast<MemberExpr *>(result.Nodes.getNodeAs<MemberExpr>("me"))};
+    auto cx{const_cast<CXXMemberCallExpr *>(
+        result.Nodes.getNodeAs<CXXMemberCallExpr>("cx"))};
+
+    // llvm::outs() << "==================== ME\n";
+    if (me) {
+      // me->dump();
+      std::string name{me->getMemberDecl()->getNameAsString()};
+      // llvm::outs() << "ME x: " << me->getMemberDecl()->getNameAsString()
+      //             << "\n";
+      calls_.insert(calls_.begin(),
+                    std::make_tuple(name, me->getMemberDecl(), me));
+    }
+  }
+
+  void dump() {
+    for (auto const &call : calls_) {
+      llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
+                   << std::get<2>(call) << "\n";
+      // get<1>(call)->dump();
+    }
+  }
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -20,92 +80,161 @@ namespace sc_ast_matchers {
 //
 ///////////////////////////////////////////////////////////////////////////////
 class SensitivityMatcher : public MatchFinder::MatchCallback {
+  public:
+    typedef std::tuple<std::string, ValueDecl*, MemberExpr*> SensitivityTupleType;
+    typedef std::pair<std::string, std::vector<SensitivityTupleType>> SensitivityPairType;
+    
+    typedef std::map<std::string, std::vector<SensitivityTupleType>> SenseMapType;
+
+  private:
+    SenseMapType sensitivity_; 
+
+    std::string generateSensitivityName(const std::vector<SensitivityTupleType> &sense_args ) {
+      std::string name{};
+      for (auto const entry: sense_args) {
+        name = name + std::get<0>(entry);
+      }
+
+      return name;
+    }
+
  public:
- private:
- public:
+  SenseMapType getSensitivityMap() { return sensitivity_; }
+
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
-    /* clang-format on */
 
-    auto match = cxxConstructorDecl(
+
+    auto match = cxxConstructorDecl(isExpansionInMainFile(),
         forEachDescendant(
           // Find the sc_event
           cxxOperatorCallExpr(
             // Match sc_event_finder argument
-            //hasDescendant(cxxMemberCallExpr(hasType(cxxRecordDecl(hasName("sc_event_finder")))
             hasArgument(1, 
+              allOf(
+                anyOf(
+              memberExpr(hasDeclaration(fieldDecl().bind("fd"))).bind("me") 
+              ,
+              cxxMemberCallExpr().bind("cxx_mcall")
+              ) // anyOf
+              , 
               anyOf(
-                hasType(cxxRecordDecl(hasName("sc_event")).bind("crd"))
-              , hasType(cxxRecordDecl(hasName("sc_interface")).bind("crd"))
-              , hasType(cxxRecordDecl(hasName("sc_event_finder")).bind("crd"))
-              , hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_port_base"))).bind("crd"))
-              )
-              )
+                 hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
+                    cxxRecordDecl(isSameOrDerivedFrom("sc_event")).bind("crd")))))
+                , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
+                    cxxRecordDecl(isSameOrDerivedFrom("sc_interface")).bind("crd")))))
+                , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
+                    cxxRecordDecl(isSameOrDerivedFrom("sc_event_finder")).bind("crd")))))
+                , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
+                    cxxRecordDecl(isSameOrDerivedFrom("sc_port_base")).bind("crd")))))
 
-            // Match any of the internal nodes to extract the respective fields.
-            , 
-            hasDescendant(cxxMemberCallExpr(
-                //on(declRefExpr().bind("on_decl_ref_expr"))
-                //,
-                //hasDescendant(memberExpr().bind("in_call_member_expr"))
-                ).bind("cxx_member_call_expr"))
-            // Identifies sc_port_base 
-            //hasDescendant(memberExpr(hasDeclaration(fieldDecl(hasType(cxxRecordDecl(isDerivedFrom(hasName("sc_port_base"))))))).bind("port_member_expr"))
-            ).bind("cxx_operator_call_expr")
-          )
-        ).bind("cxx_constructor_decl");
-    // Add the two matchers.
+                )//anyOf
+              ) // allOf
+              ) //hasArgument
+          ).bind("cxx_operator_call_expr")
+        )
+      ).bind("cxx_constructor_decl");
+
+
+    /*
+
+
+    auto match = cxxConstructorDecl(isExpansionInMainFile(),
+        forEachDescendant(
+          // Find the sc_event
+          cxxOperatorCallExpr(
+            // Match sc_event_finder argument
+            hasArgument(1, 
+              ignoringParenCasts(
+              //allOf(
+                anyOf(
+                    hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
+                            cxxRecordDecl(isSameOrDerivedFrom("sc_event")).bind("crd")))))
+                  , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
+                            cxxRecordDecl(isSameOrDerivedFrom("sc_interface")).bind("crd")))))
+                  , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
+                            cxxRecordDecl(isSameOrDerivedFrom("sc_event_finder")).bind("crd")))))
+                  , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
+                            cxxRecordDecl(isSameOrDerivedFrom("sc_port_base")).bind("crd")))))
+                ) // anyOf
+                //, 
+                  //anyOf(
+                    //cxxMemberCallExpr().bind("cxx_mcall")
+                    //, memberExpr().bind("me")
+                    //) //anyof
+                //) // allOf
+              ) //ignoringParenCasts
+            ) // hasArgument
+          ).bind("cxx_operator_call_expr")
+        )
+      ).bind("cxx_constructor_decl");
+      */
+
+    /* clang-format on */
     finder.addMatcher(match, this);
   }
 
   // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
-    llvm::outs()
-        << " ===================== SENSITIVITY MATCHER ==================== \n";
-    auto construct_decl = const_cast<CXXConstructorDecl *>(result.Nodes.getNodeAs<CXXConstructorDecl>("cxx_constructor_decl"));
-    auto cxx_op_callexpr {const_cast<CXXOperatorCallExpr*>(result.Nodes.getNodeAs<CXXOperatorCallExpr>("cxx_operator_call_expr"))};
-    auto decl_ref_expr{const_cast<DeclRefExpr*>(result.Nodes.getNodeAs<DeclRefExpr>("decl_ref_expr"))};
-    auto crd{const_cast<CXXRecordDecl*>(result.Nodes.getNodeAs<CXXRecordDecl>("crd"))};
-    auto port_member_expr{const_cast<MemberExpr*>(result.Nodes.getNodeAs<MemberExpr>("port_member_expr"))};
+    auto cxx_op_callexpr{const_cast<CXXOperatorCallExpr *>(
+        result.Nodes.getNodeAs<CXXOperatorCallExpr>("cxx_operator_call_expr"))};
+    auto cxx_mcall{const_cast<CXXMemberCallExpr *>(
+        result.Nodes.getNodeAs<CXXMemberCallExpr>("cxx_mcall"))};
+    auto me_wo_mcall{
+        const_cast<MemberExpr *>(result.Nodes.getNodeAs<MemberExpr>("me"))};
+    auto cxx_ctor_decl{const_cast<CXXConstructorDecl *>(
+        result.Nodes.getNodeAs<CXXConstructorDecl>("cxx_constructor_decl"))};
+    auto fd{result.Nodes.getNodeAs<FieldDecl>("fd")};
+    //
+    // if (cxx_ctor_decl) {
+    // cxx_ctor_decl->dump();
+    //
+    // }
+    //
 
-    // This is to get the clk.pos()
-    auto in_call_member_expr{const_cast<MemberExpr*>(result.Nodes.getNodeAs<MemberExpr>("in_call_member_expr"))};
-    auto call_member_expr{const_cast<CXXMemberCallExpr*>(result.Nodes.getNodeAs<CXXMemberCallExpr>("cxx_member_call_expr"))};
+    // If the argument to the operator<<() is a MemberExpr.
+    if (me_wo_mcall) {
+      MatchFinder call_registry{};
+      CallerCalleeMatcher call_matcher{};
+      call_matcher.registerMatchers(call_registry);
+      call_registry.match(*me_wo_mcall, *result.Context);
+      call_matcher.dump();
+      // std::vector<SensitivityTupleType>
+      auto entry{ call_matcher.getCallerCallee()};
+      //sensitivity_.insert(std::get<0>(entry), entry);
+      sensitivity_.insert(SensitivityPairType(generateSensitivityName(entry), entry));
+    }
 
-    if (construct_decl && cxx_op_callexpr && crd) { 
-      auto name{construct_decl->getNameAsString()};
-      llvm::outs() << "name: " << name << "\n";
+    // If the argument to the operator<<() is a CXXMemberCallExpr.
+    // This is needed when there is a clk.pos() in the sensitivity list.
+    if (cxx_mcall) {
+      MatchFinder call_registry{};
+      CallerCalleeMatcher call_matcher{};
+      call_matcher.registerMatchers(call_registry);
+      call_registry.match(*cxx_mcall, *result.Context);
+      call_matcher.dump();
+      //sensitivity_.insert(SensitivityPairType(call_matcher.getCallerCallee()));
+      auto entry{ call_matcher.getCallerCallee()};
+      //sensitivity_.insert(generateSensitivityName(entry), entry);
+      sensitivity_.insert(SensitivityPairType(generateSensitivityName(entry), entry));
+    }
+    llvm::outs() << "\n";
+  }
 
-      if (name == "test") {
-        llvm::outs() << "########### FOUND TEST #######\n";
-        cxx_op_callexpr->dump();
-        llvm::outs()<< "#### ARGS in callexpr\n";
-        auto arg_expr{cxx_op_callexpr->getArg(1)};
-        if (arg_expr) {
-          arg_expr->IgnoreImpCasts()->dump();
-          llvm::outs() << "Trying to get type name\n";
-          arg_expr->getType()->dump();
+  void dump() {
+    for (auto const entry: sensitivity_) {
+      auto generated_name{ entry.first };
+      auto callercallee{ entry.second };
+      llvm::outs() << generated_name << "  \n";
 
-          if (call_member_expr) {
-            llvm::outs() << " @@@ => call member expr\n";
-            call_member_expr->dump();
-            llvm::outs() << "     => callee: " << call_member_expr->getMethodDecl()->getNameAsString() << "\n";
-            llvm::outs() << "     => caller: \n";
-
-    //        in_call_member_expr->dump();
-
-          }
-          if (port_member_expr) {
-            llvm::outs() << " @@@@ => " << port_member_expr->getMemberDecl()->getNameAsString() << "\n";
-            port_member_expr->getBase()->dump();
-          }
-        }
-
+      for (auto const &call : callercallee) {
+        llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
+                   << std::get<2>(call) << "\n";
       }
+
     }
   }
 
-  void dump() {}
 };
 };  // namespace sc_ast_matchers
 #endif

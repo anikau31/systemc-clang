@@ -1,5 +1,4 @@
 #include "EntryFunctionContainer.h"
-#include <iostream>
 #include "enums.h"
 
 using namespace scpar;
@@ -27,8 +26,8 @@ EntryFunctionContainer::EntryFunctionContainer(
 ///////////////////////////////////////////////////////////////////////////////////////////////
 string EntryFunctionContainer::getName() { return _entryName; }
 
-FindSensitivity::senseMapType EntryFunctionContainer::getSenseMap() {
-  return _senseMap;
+EntryFunctionContainer::SenseMapType EntryFunctionContainer::getSenseMap() {
+  return senseMap_;
 }
 
 CXXMethodDecl *EntryFunctionContainer::getEntryMethod() {
@@ -64,9 +63,13 @@ void EntryFunctionContainer::setProcessType(PROCESS_TYPE p) { _procType = p; }
 void EntryFunctionContainer::setEntryMethod(CXXMethodDecl *d) {
   _entryMethodDecl = d;
 }
+//
+// void EntryFunctionContainer::addSensitivityInfo(FindSensitivity &s) {
+  // _senseMap = s.getSenseMap();
+// }
 
-void EntryFunctionContainer::addSensitivityInfo(FindSensitivity &s) {
-  _senseMap = s.getSenseMap();
+void EntryFunctionContainer::addSensitivityInfo(SenseMapType &sm) {
+  senseMap_ = sm;
 }
 
 void EntryFunctionContainer::addWaits(FindWait &f) {
@@ -178,12 +181,12 @@ void EntryFunctionContainer::dump(raw_ostream &os, int tabn) {
   }
 
   // Print the sensitivity map.
-  for (auto const &sense : _senseMap) {
-    os << "sensitivity_signal: " << sense.first << ", "
-       << "edge: " << get<0>(sense.second)
-       << ", MemeberExpr*: " << get<1>(sense.second) << "\n";
-  }
-
+  // for (auto const &sense : _senseMap) {
+    // os << "sensitivity_signal: " << sense.first << ", "
+       // << "edge: " << get<0>(sense.second)
+       // << ", MemeberExpr*: " << get<1>(sense.second) << "\n";
+  // }
+//
   os << " CXXMethodDecl '" << getEntryMethod() << "\n";
   int newTabn = ++tabn;
 
