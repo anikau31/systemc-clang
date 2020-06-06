@@ -113,11 +113,16 @@ bool Xlat::postFire() {
   }
 
   os_ << "User Types Map\n";
-  for (auto t : usertypes) {
-    os_ << "User Type --------\n" << t.first << ":" << t.second << "\n";
-    t.second->dump(os_);
-    os_ << "---------\n";
-    addtype(t.first, t.second)->print(xlatout);
+
+  while (!usertypes.empty()) {
+    std::unordered_map<string, QualType> usertypestmp = usertypes;
+    usertypes.clear();
+    for (auto t : usertypestmp) {
+      os_ << "User Type --------\n" << t.first << ":" << t.second.getTypePtr() << "\n";
+      t.second->dump(os_);
+      os_ << "---------\n";
+      addtype(t.first, t.second)->print(xlatout);
+    }
   }
   return true;
 }
@@ -180,30 +185,44 @@ void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNode
   }
 }
 
-hNodep Xlat::addtype(string typname, const Type *typ) {
+hNodep Xlat::addtype(string typname, QualType qtyp) {
   hNodep h_typdef = new hNode(typname, hNode::hdlopsEnum::hTypedef);
   os_ << "addtype entered with type name " << typname << "\n";
-  if (const RecordType * rectype = dyn_cast<RecordType>(typ)) {
-  	os_ << "addtype record type found, name is " << typname << "\n";
-  	for (auto const &fld: rectype->getDecl()->fields()) {
-  	  os_ << "field of record type \n";
-  	  fld ->dump(os_);
-  	  os_ << "field: found name " << fld->getName() << "\n";
-  	  // Try to get the template type of these fields.
-  	  const Type *field_type{fld->getType().getTypePtr()};
-  	  FindTemplateTypes find_tt{};
-  	  find_tt.Enumerate(field_type);
-
-  	  // Get the tree.
-  	  auto template_args{find_tt.getTemplateArgTreePtr()};
-  	  // Access the tree here in the way one wishes.
-  	  //std::string dft_str{template_args->dft()};
-  	  //llvm::outs() << "DFT: " << dft_str << "\n";
-	  hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hType);
-	  h_typdef->child_list.push_back(hfld);
-  	  //xlattype(prefix+'_'+fld->getNameAsString(), template_args, h_op, h_info);
-        }
+  const Type * typ = qtyp.getTypePtr();
+  if (typ->isBuiltinType())
+    {
+      hNodep hprim = new hNode(qtyp.getAsString(), hNode::hdlopsEnum::hType);
+      os_ << "addtype found prim type " << qtyp.getAsString() << "\n";
+      h_typdef->child_list.push_back(hprim);
+      return h_typdef;
     }
+
+  if (const RecordType * rectype = dyn_cast<RecordType>(typ)) {
+    	os_ << "addtype record type found, name is " << typname << "\n";
+	if (!rectype->getDecl()->field_empty()) {
+	  for (auto const &fld: rectype->getDecl()->fields()) {
+	    os_ << "field of record type \n";
+	    fld ->dump(os_);
+	    os_ << "field: found name " << fld->getName() << "\n";
+	    // Try to get the template type of these fields.
+	    const Type *field_type{fld->getType().getTypePtr()};
+
+	    hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hType);
+	    h_typdef->child_list.push_back(hfld);
+	    QualType qtp = fld->getType().getCanonicalType();
+	    //os_ << "addtype canonical type of field follows\n";
+	    qtp->dump(os_);
+	    usertypes[fld->getName()] = qtp;
+	   }
+	}
+	else { // record type but no fields
+	  // get the type name
+	  os_ << "Found record with no fields, name is " << (rectype->getDecl())->getName() << "\n"; 
+	  h_typdef->child_list.push_back(new hNode(rectype->getDecl()->getName(), hNode::hdlopsEnum::hType));
+	      
+	}
+  }
+
   return h_typdef; 
 }
 
@@ -219,7 +238,7 @@ void Xlat::generatetype(scpar::TreeNode<scpar::TemplateType > * const &node,
   if (!(lutil.isSCType(tmps) || lutil.isSCBuiltinType(tmps) || lutil.isposint(tmps)))
     {
       os_ << "adding user defined type " << tmps << "\n";
-      usertypes[tmps] = (node->getDataPtr())->getTypePtr();
+      usertypes[tmps] = ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
     }
   auto const vectreeptr{ treehead->getChildren(node)};
   for (auto const &chnode : vectreeptr) {
