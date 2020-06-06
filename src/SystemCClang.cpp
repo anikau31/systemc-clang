@@ -1,6 +1,8 @@
 #include "SystemCClang.h"
 
 #include "Matchers.h"
+#include "SensitivityMatcher.h"
+
 #include "ModuleInstanceType.h"
 #include "NetlistMatcher.h"
 
@@ -17,15 +19,16 @@ using namespace sc_ast_matchers;
 // Private methods
 void SystemCConsumer::populateNestedModules(
     const InstanceMatcher::InstanceDeclarations &instance_map) {
-
   // Decl* => ModuleInstanceType
   for (auto const &inst : instance_map) {
     // get<0>(inst) is the Decl*, and get<1>(inst) is the ModuleInstanceType
     ModuleInstanceType module_inst{get<1>(inst)};
     module_inst.dump();
     // Match with the same InstanceTypeDecl
-    ModuleDecl *child{systemcModel_->getInstance(module_inst.getInstanceDecl())};
-    llvm::outs() << "# child instance decl " << module_inst.getInstanceDecl() << "\n";
+    ModuleDecl *child{
+        systemcModel_->getInstance(module_inst.getInstanceDecl())};
+    llvm::outs() << "# child instance decl " << module_inst.getInstanceDecl()
+                 << "\n";
     module_inst.getInstanceDecl()->dump();
 
     ModuleDecl *parent{systemcModel_->getInstance(module_inst.getParentDecl())};
@@ -145,9 +148,11 @@ bool SystemCConsumer::fire() {
   //
   //  TEST NetlistMatcher
   //  map: CXXRecordDecl =>  InstanceListType
-  //  -> InstanceListType:                    vector<InstanceMatcher::InstanceDeclType>
-  //  -> InstanceMatcher::InstanceDeclType :  std::tuple<std::string, Decl *, ModuleInstanceType> 
-  auto found_instances_declaration_map{module_declaration_handler.getInstances()};
+  //  -> InstanceListType: vector<InstanceMatcher::InstanceDeclType>
+  //  -> InstanceMatcher::InstanceDeclType :  std::tuple<std::string, Decl *,
+  //  ModuleInstanceType>
+  auto found_instances_declaration_map{
+      module_declaration_handler.getInstances()};
   //
   // Create a ModuleDecl for each instance with the appropriately parsed
   // ModuleDecl.
@@ -157,7 +162,7 @@ bool SystemCConsumer::fire() {
   for (const auto &inst : found_instances_declaration_map) {
     // This is the CXXRecordDecl
     auto cxx_decl{inst.first};
-    // List of InstanceListType 
+    // List of InstanceListType
     auto instance_list{inst.second};
 
     auto incomplete_module_decl{found_module_declarations[cxx_decl]};
@@ -169,7 +174,7 @@ bool SystemCConsumer::fire() {
 
     for (const auto &instance : instance_list) {
       auto add_module_decl{new ModuleDecl{*incomplete_module_decl}};
-      // 0: string 
+      // 0: string
       // 1: Decl* (InstaceTypeDecl)
       // 2: ModuleInstanceType
 
@@ -216,8 +221,20 @@ bool SystemCConsumer::fire() {
 
       for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
-        FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};
-        ef->addSensitivityInfo(findSensitivity);
+        //FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};
+        llvm::outs()
+            << "\n================ SENSITIVITY MATCHER =============== \n";
+        SensitivityMatcher sens_matcher{};
+        MatchFinder matchRegistry{};
+        sens_matcher.registerMatchers(matchRegistry);
+        // Run all the matchers
+        matchRegistry.match(*constructor.getConstructorDecl(), getContext());
+        sens_matcher.dump();
+        llvm::outs() << "================ END =============== \n";
+
+        //ef->addSensitivityInfo(findSensitivity);
+        EntryFunctionContainer::SenseMapType sensitivity_info{sens_matcher.getSensitivityMap()};
+        ef->addSensitivityInfo(sensitivity_info);
 
         if (ef->getEntryMethod() == nullptr) {
           os_ << "ERROR";
