@@ -198,7 +198,19 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
     }
 
   if (const RecordType * rectype = dyn_cast<RecordType>(typ)) {
-    	os_ << "addtype record type found, name is " << typname << "\n";
+    os_ << "addtype record type found, name is " << typname << "\n";
+    if ( isa<ClassTemplateSpecializationDecl>(rectype->getDecl())) {
+      os_ << "addtype isa template specialzation decl found, name is " << typname << "\n";
+      ClassTemplateSpecializationDecl * ctsd = dyn_cast<ClassTemplateSpecializationDecl>(rectype->getDecl());
+      ClassTemplateDecl * ctd = ctsd->getSpecializedTemplate();
+      TemplateParameterList * tpl = ctd->getTemplateParameters();
+      os_ << "addtype her are template parameters\n";
+      for (auto param : *tpl) {
+	os_ << "addtype template param name is " << param->getName() << "\n";
+	//param->dump(os_);
+	h_typdef->child_list.push_back(new hNode(param->getName(), hNode::hdlopsEnum::hTypeTemplateParam));
+      }
+    }
 	if (!rectype->getDecl()->field_empty()) {
 	  for (auto const &fld: rectype->getDecl()->fields()) {
 	    os_ << "field of record type \n";
@@ -230,7 +242,8 @@ void Xlat::generatetype(scpar::TreeNode<scpar::TemplateType > * const &node,
 			scpar::Tree<scpar::TemplateType > * const &treehead, hNodep &h_info) {
 
   string tmps = (node->getDataPtr())->getTypeName();
-  os_ << "generatetype node name is " << tmps << "\n";
+  os_ << "generatetype node name is " << tmps << "type follows\n";
+  (node->getDataPtr())->getTypePtr()->dump(os_);				 
   hNodep nodetyp = new hNode (tmps, hNode::hdlopsEnum::hType);
   h_info->child_list.push_back(nodetyp);
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
@@ -238,6 +251,14 @@ void Xlat::generatetype(scpar::TreeNode<scpar::TemplateType > * const &node,
   if (!(lutil.isSCType(tmps) || lutil.isSCBuiltinType(tmps) || lutil.isposint(tmps)))
     {
       os_ << "adding user defined type " << tmps << "\n";
+      const RecordType * tstp = dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());
+      if (tstp) {
+	//os_ << "generatetype found record type, dump of definition follows\n";
+	os_ << "generatetype found record type\n";
+	//RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
+	//tstdp->dump(os_);
+	//usertypes[tmps] = (tstp->getTypeForDecl())->getCanonicalTypeInternal();
+      }
       usertypes[tmps] = ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
     }
   auto const vectreeptr{ treehead->getChildren(node)};

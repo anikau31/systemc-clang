@@ -35,6 +35,7 @@ namespace hnode {
   etype(hTypeinfo), \
   etype(hType), \
   etype(hTypedef), \
+  etype(hTypeTemplateParam), \
   etype(hInt), \
   etype(hSigdecl), \
   etype(hVardecl), \
