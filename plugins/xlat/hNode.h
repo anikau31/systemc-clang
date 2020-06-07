@@ -34,6 +34,7 @@ namespace hnode {
   etype(hSensedge), \
   etype(hTypeinfo), \
   etype(hType), \
+  etype(hTypeField), \
   etype(hTypedef), \
   etype(hTypeTemplateParam), \
   etype(hInt), \

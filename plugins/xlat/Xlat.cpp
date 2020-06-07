@@ -219,12 +219,18 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
 	    // Try to get the template type of these fields.
 	    const Type *field_type{fld->getType().getTypePtr()};
 
-	    hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hType);
+	    hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hTypeField);
 	    h_typdef->child_list.push_back(hfld);
 	    QualType qtp = fld->getType().getCanonicalType();
-	    //os_ << "addtype canonical type of field follows\n";
+	    string fieldtypename = qtp.getBaseTypeIdentifier()->getName();
+	    hfld->child_list.push_back(new hNode(fieldtypename, hNode::hdlopsEnum::hType));
+	    os_ << "addtype canonical type of field follows\n";
 	    qtp->dump(os_);
-	    usertypes[fld->getName()] = qtp;
+	    // this is wrong - need the type of the field, not its name
+	    // and it might not be a user defined type
+	    os_ << "type name is " << qtp.getBaseTypeIdentifier()->getName() << " \n";
+	    if (!(field_type->isBuiltinType() || lutil.isSCType(fieldtypename) || lutil.isSCBuiltinType(fieldtypename) || lutil.isposint(fieldtypename)))
+	      usertypes[fieldtypename] = qtp;
 	   }
 	}
 	else { // record type but no fields
