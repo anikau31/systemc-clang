@@ -203,6 +203,7 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
       os_ << "addtype isa template specialzation decl found, name is " << typname << "\n";
       ClassTemplateSpecializationDecl * ctsd = dyn_cast<ClassTemplateSpecializationDecl>(rectype->getDecl());
       ClassTemplateDecl * ctd = ctsd->getSpecializedTemplate();
+      ctd->dump(os_);
       TemplateParameterList * tpl = ctd->getTemplateParameters();
       os_ << "addtype her are template parameters\n";
       for (auto param : *tpl) {
@@ -226,8 +227,6 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
 	    hfld->child_list.push_back(new hNode(fieldtypename, hNode::hdlopsEnum::hType));
 	    os_ << "addtype canonical type of field follows\n";
 	    qtp->dump(os_);
-	    // this is wrong - need the type of the field, not its name
-	    // and it might not be a user defined type
 	    os_ << "type name is " << qtp.getBaseTypeIdentifier()->getName() << " \n";
 	    if (!(field_type->isBuiltinType() || lutil.isSCType(fieldtypename) || lutil.isSCBuiltinType(fieldtypename) || lutil.isposint(fieldtypename)))
 	      usertypes[fieldtypename] = qtp;
@@ -259,10 +258,10 @@ void Xlat::generatetype(scpar::TreeNode<scpar::TemplateType > * const &node,
       os_ << "adding user defined type " << tmps << "\n";
       const RecordType * tstp = dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());
       if (tstp) {
-	//os_ << "generatetype found record type, dump of definition follows\n";
-	os_ << "generatetype found record type\n";
-	//RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
-	//tstdp->dump(os_);
+	os_ << "generatetype found record type, dump of definition follows\n";
+	//os_ << "generatetype found record type\n";
+	RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
+	tstdp->dump(os_);
 	//usertypes[tmps] = (tstp->getTypeForDecl())->getCanonicalTypeInternal();
       }
       usertypes[tmps] = ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
