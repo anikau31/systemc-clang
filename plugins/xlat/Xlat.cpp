@@ -229,7 +229,11 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
 	    os_ << "field: found name " << fld->getName() << "\n";
 	    // Try to get the template type of these fields.
 	    const Type *field_type{fld->getType().getTypePtr()};
+	    FindTemplateTypes find_tt{};
+	    find_tt.Enumerate(field_type);
 
+	    // Get the tree.
+	    auto template_args{find_tt.getTemplateArgTreePtr()};
 	    hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hTypeField);
 	    h_typdef->child_list.push_back(hfld);
 	    QualType qtp = fld->getType().getCanonicalType();
@@ -268,11 +272,11 @@ void Xlat::generatetype(scpar::TreeNode<scpar::TemplateType > * const &node,
       os_ << "adding user defined type " << tmps << "\n";
       const RecordType * tstp = dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());
       if (tstp) {
-	os_ << "generatetype found record type, dump of definition follows\n";
-	//os_ << "generatetype found record type\n";
-	RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
-	tstdp->dump(os_);
-	//usertypes[tmps] = (tstp->getTypeForDecl())->getCanonicalTypeInternal();
+	//os_ << "generatetype found record type, dump of definition follows\n";
+	os_ << "generatetype found record type\n";
+	//RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
+	//tstdp->dump(os_);
+	usertypes[tmps] = ((tstp->getDecl())->getTypeForDecl())->getCanonicalTypeInternal();
       }
       usertypes[tmps] = ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
     }
