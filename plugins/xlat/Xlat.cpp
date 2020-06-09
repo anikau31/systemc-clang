@@ -4,6 +4,8 @@
 #include "PortBinding.h"
 #include "Tree.h"
 #include "Xlat.h"
+#include "TemplateParametersMatcher.h"
+
 #include "clang/Basic/FileManager.h"
 
 using namespace std;
@@ -204,6 +206,14 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
       ClassTemplateSpecializationDecl * ctsd = dyn_cast<ClassTemplateSpecializationDecl>(rectype->getDecl());
       ClassTemplateDecl * ctd = ctsd->getSpecializedTemplate();
       ctd->dump(os_);
+      llvm::outs() << "####### ============================== MATCHER ========================= ##### \n";
+  TemplateParametersMatcher template_matcher{};
+  MatchFinder matchRegistry{};
+  template_matcher.registerMatchers(matchRegistry);
+  matchRegistry.match(*ctd, getContext());
+      llvm::outs() << "####### ============================== END MATCHER ========================= ##### \n";
+
+
       TemplateParameterList * tpl = ctd->getTemplateParameters();
       os_ << "addtype her are template parameters\n";
       for (auto param : *tpl) {
