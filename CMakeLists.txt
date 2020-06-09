@@ -22,11 +22,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #  Make verbose on?
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
-# Maya
-# Pass the flagg -DCMAKE_BUILD_TYPE=RelWithDebInfo
-# set(CMAKE_BUILD_TYPE RelWithDebInfo)
-# end Maya
-
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()

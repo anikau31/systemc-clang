@@ -187,6 +187,25 @@ void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNode
   }
 }
 
+void Xlat::addfieldtype(const FieldDecl * fld, hNodep &h_typdef) {
+  os_ << "field of record type \n";
+  fld ->dump(os_);
+  os_ << "field: found name " << fld->getName() << "\n";
+  // Try to get the template type of these fields.
+  const Type *field_type{fld->getType().getTypePtr()};
+  FindTemplateTypes find_tt{};
+  find_tt.Enumerate(field_type);
+
+  // Get the tree.
+  auto template_args{find_tt.getTemplateArgTreePtr()};
+  hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hTypeField);
+  h_typdef->child_list.push_back(hfld);
+  os_ << "calling generatetype with template args of field\n";
+  if (template_args->getRoot()) 
+    generatetype(template_args->getRoot(), template_args, h_typdef);
+  else os_ << "FindTemplateTypes returned null root\n";
+
+}
 hNodep Xlat::addtype(string typname, QualType qtyp) {
   hNodep h_typdef = new hNode(typname, hNode::hdlopsEnum::hTypedef);
   os_ << "addtype entered with type name " << typname << "\n";
@@ -206,13 +225,13 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
       ClassTemplateSpecializationDecl * ctsd = dyn_cast<ClassTemplateSpecializationDecl>(rectype->getDecl());
       ClassTemplateDecl * ctd = ctsd->getSpecializedTemplate();
       ctd->dump(os_);
-      llvm::outs() << "####### ============================== MATCHER ========================= ##### \n";
-  TemplateParametersMatcher template_matcher{};
-  MatchFinder matchRegistry{};
-  template_matcher.registerMatchers(matchRegistry);
-  matchRegistry.match(*ctd, getContext());
-      llvm::outs() << "####### ============================== END MATCHER ========================= ##### \n";
-
+      os_ << "####### ============================== MATCHER ========================= ##### \n";
+      TemplateParametersMatcher template_matcher{};
+      MatchFinder matchRegistry{};
+      template_matcher.registerMatchers(matchRegistry);
+      matchRegistry.match(*ctd, getContext());
+      os_ << "####### ============================== END MATCHER ========================= ##### \n";
+      
 
       TemplateParameterList * tpl = ctd->getTemplateParameters();
       os_ << "addtype her are template parameters\n";
@@ -221,9 +240,19 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
 	//param->dump(os_);
 	h_typdef->child_list.push_back(new hNode(param->getName(), hNode::hdlopsEnum::hTypeTemplateParam));
       }
+      std::vector<const FieldDecl *> fields;
+      template_matcher.getFields(fields);
+      if (fields.size()>0) {
+	for (const FieldDecl *fld : fields) {
+	  addfieldtype(fld, h_typdef);
+	}
+      }
     }
-	if (!rectype->getDecl()->field_empty()) {
+    else if (!rectype->getDecl()->field_empty()) {
 	  for (auto const &fld: rectype->getDecl()->fields()) {
+	    addfieldtype(fld, h_typdef);
+#if 0
+
 	    os_ << "field of record type \n";
 	    fld ->dump(os_);
 	    os_ << "field: found name " << fld->getName() << "\n";
@@ -236,14 +265,9 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
 	    auto template_args{find_tt.getTemplateArgTreePtr()};
 	    hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hTypeField);
 	    h_typdef->child_list.push_back(hfld);
-	    QualType qtp = fld->getType().getCanonicalType();
-	    string fieldtypename = qtp.getBaseTypeIdentifier()->getName();
-	    hfld->child_list.push_back(new hNode(fieldtypename, hNode::hdlopsEnum::hType));
-	    os_ << "addtype canonical type of field follows\n";
-	    qtp->dump(os_);
-	    os_ << "type name is " << qtp.getBaseTypeIdentifier()->getName() << " \n";
-	    if (!(field_type->isBuiltinType() || lutil.isSCType(fieldtypename) || lutil.isSCBuiltinType(fieldtypename) || lutil.isposint(fieldtypename)))
-	      usertypes[fieldtypename] = qtp;
+	    os_ << "calling generatetype with template args of field\n";
+	    generatetype(template_args->getRoot(), template_args, h_typdef);
+#endif
 	   }
 	}
 	else { // record type but no fields

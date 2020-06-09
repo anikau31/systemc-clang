@@ -12,7 +12,7 @@ using namespace sc_ast_matchers;
 
 class TemplateParametersMatcher : public MatchFinder::MatchCallback {
  private:
-  // std::vector<std::tuple<FieldDecl*,
+  std::vector<const FieldDecl*> found_fields;
 
  public:
   void registerMatchers(MatchFinder &finder) {
@@ -67,15 +67,13 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
 
     auto record_type{result.Nodes.getNodeAs<RecordType>("record_type")};
     auto parm_type{result.Nodes.getNodeAs<TemplateTypeParmType>("parm_type")};
-    auto template_special{result.Nodes.getNodeAs<TemplateSpecializationType>(
-        "specialization_type")};
+    auto template_special{result.Nodes.getNodeAs<TemplateSpecializationType>("specialization_type")};
     llvm::errs() << "=============== TEST Template Parm Matcher ====== \n";
 
     if (fd) {
       llvm::errs() << "Found a FieldDecl\n";
       fd->dump(llvm::errs());
-      llvm::errs() << "Found FieldDecl\n";
-      fd->dump();
+      found_fields.push_back(fd);
     }
 
     if (template_special && fd) {
@@ -119,6 +117,9 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
   }
 
   void dump() { }
+  void getFields( std::vector<const FieldDecl *> &flds) {
+    flds = found_fields;
+  }
 };
 
 #endif

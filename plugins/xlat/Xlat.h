@@ -31,6 +31,7 @@ class Xlat : public SystemCConsumer {
   void xlatvars(ModuleDecl::portMapType pmap, Model *model,  hNodep &h_info);
   void xlattype(string prefix, Tree<TemplateType> *template_argtp, hNode::hdlopsEnum h_op, hNodep &h_info);
   void makehpsv(string prefix, string typname,  hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo=true);
+  void addfieldtype(const FieldDecl * fld, hNodep &h_typdef);
   hNodep addtype(string typname, QualType typ);
   void generatetype( scpar::TreeNode<scpar::TemplateType > * const &node,
 		     scpar::Tree<scpar::TemplateType > * const &treehead, hNodep &h_info);
