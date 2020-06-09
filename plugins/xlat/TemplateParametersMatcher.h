@@ -69,15 +69,17 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
     auto parm_type{result.Nodes.getNodeAs<TemplateTypeParmType>("parm_type")};
     auto template_special{result.Nodes.getNodeAs<TemplateSpecializationType>(
         "specialization_type")};
-    llvm::outs() << "=============== TEST Template Parm Matcher ====== \n";
+    llvm::errs() << "=============== TEST Template Parm Matcher ====== \n";
 
     if (fd) {
-      llvm::outs() << "Found a FieldDecl\n";
+      llvm::errs() << "Found a FieldDecl\n";
+      fd->dump(llvm::errs());
+      llvm::errs() << "Found FieldDecl\n";
       fd->dump();
     }
 
     if (template_special && fd) {
-      llvm::outs() << "#### TemplateSpecializationType\n";
+      llvm::errs() << "#### TemplateSpecializationType\n";
       template_special->dump();
 
       const TemplateArgument &targ{template_special->getArg(0)};
@@ -85,18 +87,18 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
       switch (targ.getKind()) {
         case TemplateArgument::ArgKind::Integral: {
           auto q{targ.getAsIntegral()};
-          llvm::outs() << "@@ Integral: " << q << "\n";
+          llvm::errs() << "@@ Integral: " << q << "\n";
         }; break;
         case TemplateArgument::ArgKind::Type: {
           auto q{targ.getAsType()};
           auto name{q.getAsString()};
-          llvm::outs() << "@@ arg: " << name << "\n";
+          llvm::errs() << "@@ arg: " << name << "\n";
         }; break;
         case TemplateArgument::ArgKind::Expression: {
           Expr *expr{targ.getAsExpr()};
           DeclRefExpr *dexpr{dyn_cast<DeclRefExpr>(expr)};
           if (dexpr) {
-            llvm::outs() << "Template parameter: "
+            llvm::errs() << "Template parameter: "
                          << dexpr->getNameInfo().getAsString() << "\n";
           }
         }
@@ -107,16 +109,16 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
 
     // Since this is a RecordType, we can reuse our template type parsing.
     if (record_type && fd) {
-      llvm::outs() << "#### RecordType\n";
+      llvm::errs() << "#### RecordType\n";
       record_type->dump();
       FindTemplateTypes ftt{};
       ftt.Enumerate(record_type);
-      ftt.printTemplateArguments(llvm::outs());
+      ftt.printTemplateArguments(llvm::errs());
     }
-    llvm::outs() << "\n";
+    llvm::errs() << "\n";
   }
 
-  void dump() {}
+  void dump() { }
 };
 
 #endif
