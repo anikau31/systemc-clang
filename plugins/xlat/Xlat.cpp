@@ -88,7 +88,8 @@ bool Xlat::postFire() {
 
       //os_ << "dumping module constructor stmt\n";
       //instanceVec[i]->getConstructorStmt()->dump(os_);	     
-      //os_ << "dumping module constructor decl\n";							        instanceVec[i]->getConstructorDecl()->dump(os_);
+      //os_ << "dumping module constructor decl\n";							       
+      //instanceVec[i]->getConstructorDecl()->dump(os_);
       // Processes
       h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
@@ -145,7 +146,14 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     //  if type is structured, it will be flattened into multiple declarations
     // each with a unique name and Typeinfo followed by Type.
     xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
-  
+    // check for initializer
+    VarDecl * vard = pd->getAsVarDecl();
+    if (vard && vard->hasInit()) {
+      APValue *apval = vard->getEvaluatedValue();
+      if (apval && apval->isInt()) {
+	(h_info->child_list.back())->child_list.push_back(new hNode((apval->getInt()).toString(10),  hNode::hdlopsEnum::hVarInit));
+      }
+    }
   }
 }
 
@@ -251,23 +259,6 @@ hNodep Xlat::addtype(string typname, QualType qtyp) {
     else if (!rectype->getDecl()->field_empty()) {
 	  for (auto const &fld: rectype->getDecl()->fields()) {
 	    addfieldtype(fld, h_typdef);
-#if 0
-
-	    os_ << "field of record type \n";
-	    fld ->dump(os_);
-	    os_ << "field: found name " << fld->getName() << "\n";
-	    // Try to get the template type of these fields.
-	    const Type *field_type{fld->getType().getTypePtr()};
-	    FindTemplateTypes find_tt{};
-	    find_tt.Enumerate(field_type);
-
-	    // Get the tree.
-	    auto template_args{find_tt.getTemplateArgTreePtr()};
-	    hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hTypeField);
-	    h_typdef->child_list.push_back(hfld);
-	    os_ << "calling generatetype with template args of field\n";
-	    generatetype(template_args->getRoot(), template_args, h_typdef);
-#endif
 	   }
 	}
 	else { // record type but no fields
@@ -329,7 +320,7 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
   hmainp->child_list.push_back(h_typeinfo);
   hNodep h_typ = new hNode(tmps, hNode::hdlopsEnum::hType);
   h_typeinfo->child_list.push_back(h_typ);
-
+  
   auto const vectreeptr{ template_argtp->getChildren(template_argtp->getRoot())};
   for (auto const &node : vectreeptr) {
     generatetype(node, template_argtp, h_typ);
@@ -341,13 +332,11 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
   for (auto const &node : *template_argtp) {
 	const TemplateType * type_data{node->getDataPtr()}; 
 	string tmps2 =  type_data->getTypeName();
-	if (tmps.empty()) os_ << "xlattype builti typename is empty\n";
-	else os_ << "xlattype builtintypename is " << tmps2 << "\n";
+	if (tmps.empty()) os_ << "xlattype builtin typename is empty\n";
+	else os_ << "xlattype builtin typename is " << tmps2 << "\n";
 	lutil.make_ident(tmps2);
 	h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
 	}
-  
- 
 
   if (template_argtp->size() == 1) {
     string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();  
