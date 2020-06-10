@@ -202,7 +202,7 @@ void Xlat::addfieldtype(const FieldDecl * fld, hNodep &h_typdef) {
   h_typdef->child_list.push_back(hfld);
   os_ << "calling generatetype with template args of field\n";
   if (template_args->getRoot()) 
-    generatetype(template_args->getRoot(), template_args, h_typdef);
+    generatetype(template_args->getRoot(), template_args, hfld);
   else os_ << "FindTemplateTypes returned null root\n";
 
 }
