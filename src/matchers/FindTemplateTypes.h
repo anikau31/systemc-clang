@@ -69,6 +69,8 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitRecordType(RecordType *rt);
   bool VisitBuiltinType(BuiltinType *bi_type);
 
+  bool VisitDeclRefExpr(DeclRefExpr *dre);
+
   ~FindTemplateTypes();
   void Enumerate(const clang::Type *type);
   type_vector_t getTemplateArgumentsType();

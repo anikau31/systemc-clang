@@ -59,12 +59,25 @@ void FindTemplateTypes::Enumerate(const Type *type) {
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
 }
 
+bool FindTemplateTypes::VisitDeclRefExpr(DeclRefExpr *dre) {
+  //llvm::outs() << "=VisitDeclRefExpr=\n";
+  //llvm::outs() << "# : " << dre->getNumTemplateArgs() << "\n";
+
+  std::string template_parm{dre->getNameInfo().getAsString()};
+
+  auto new_node{template_args_.addNode(
+      TemplateType{template_parm, dre->getType().getTypePtr()})};
+  template_args_.addEdge(current_type_node_, new_node);
+
+  return true;
+}
+
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
-  // llvm::outs() << "=VisitTemplateSpecializationType=\n";
-  // special_type->dump();
+  //llvm::outs() << "=VisitTemplateSpecializationType=\n";
+  //special_type->dump();
   auto template_name{special_type->getTemplateName()};
-  // template_name.dump();
+  //template_name.dump();
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
@@ -73,11 +86,27 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   std::string name_string;
   llvm::raw_string_ostream sstream(name_string);
   template_name.print(sstream, Policy, 0);
-  // llvm::outs() << "== template_name: " << sstream.str() << "\n";
+  //llvm::outs() << "== template_name: " << sstream.str() << "\n";
 
   auto new_node{
       template_args_.addNode(TemplateType{sstream.str(), special_type})};
-  template_args_.addEdge(current_type_node_, new_node);
+
+  /////
+  current_type_node_ = new_node;
+
+  if (template_args_.size() == 1) {
+    template_args_.setRoot(current_type_node_);
+  }
+
+  if (stack_current_node_.size() > 0) {
+    template_args_.addEdge(stack_current_node_.top(), current_type_node_);
+  }
+
+  stack_current_node_.push(current_type_node_);
+  /////
+
+  //template_args_.dump();
+  //printTemplateArguments(llvm::outs());
 
   template_types_.push_back(TemplateType(sstream.str(), special_type));
 
@@ -107,7 +136,7 @@ bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
   LangOpts.CPlusPlus = true;
   clang::PrintingPolicy Policy(LangOpts);
 
-  //auto type_name{bi_type->getNameAsCString(Policy)};
+  // auto type_name{bi_type->getNameAsCString(Policy)};
   auto type_name{bi_type->getName(Policy)};
   llvm::outs() << "type is : " << type_name << "\n";
 
@@ -270,7 +299,7 @@ json FindTemplateTypes::dump_json() {
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   auto root_node{template_args_.getRoot()};
   auto s{template_args_.dft(root_node)};
-  // os << "> Template args (DFT): " << s << "\n";
+  os << "> Template args (DFT): " << s << "\n";
 }
 
 std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
@@ -286,5 +315,3 @@ std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
 }
 
 size_t FindTemplateTypes::size() { return template_types_.size(); }
-
-

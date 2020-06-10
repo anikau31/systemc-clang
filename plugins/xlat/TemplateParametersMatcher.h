@@ -80,6 +80,12 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
       llvm::outs() << "#### TemplateSpecializationType\n";
       template_special->dump();
 
+      llvm::outs() << "##### Try to find the template types\n";
+      FindTemplateTypes ftt{};
+      ftt.Enumerate(template_special);
+      ftt.printTemplateArguments(llvm::outs());
+      llvm::outs() << "##### END\n";
+
       const TemplateArgument &targ{template_special->getArg(0)};
 
       switch (targ.getKind()) {
