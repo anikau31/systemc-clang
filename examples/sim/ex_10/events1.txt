@@ -1,0 +1,68 @@
+
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x32c3e70 top CXXRecordDecl 0x45d5a90
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x3c91590 'clk' FindTemplateTypes 0x450b370 - sc_in, type ptr: 0x45d5ce0
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3e8aea0 'clk' FieldDecl 0x45d5d10
+
+    ClassDataMembers 0x38262a0 'inclass' FieldDecl 0x45d5d70
+
+    ClassDataMembers 0x3b79050 'var' FieldDecl 0x45d6140
+
+    ClassDataMembers 0x3ff2280 'x' FieldDecl 0x45d61a0
+
+    ClassDataMembers 0x4044e30 'y' FieldDecl 0x45d6200
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x382f590 'topEntry' 0x45d6060 SC_THREAD Constructor 0x45d7828
+     EntryFunctionContainer 'topEntry' processType 'SC_THREAD'  CXXMethodDecl '0x45d6060
+      WaitContainer numargs: 0 
+      WaitContainer numargs: 0 
+      WaitContainer numargs: 0 
+
+
+  Events:>
+    EventDecl 0x348a780 'inclass' FieldDecl 0x45d5d70
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: globalVar  VarDecl: 0x3973770
+   Event: m_never_notified  VarDecl: 0x33e1b40
+   Event: non_event  VarDecl: 0x3c6bb10
+   Event: sc_non_event  VarDecl: 0x3ad8900
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+

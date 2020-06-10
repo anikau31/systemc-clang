@@ -1,0 +1,103 @@
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x43a8c00 top CXXRecordDecl 0x4262290
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x3806c40 'clk' FindTemplateTypes 0x3b59600 - sc_in, type ptr: 0x42624e0
+
+     PortDecl 0x391c270 'in_port' FindTemplateTypes 0x3be54e0 - sc_in, type ptr: 0x4262670
+ - int, type ptr: 0x2f35ab0
+
+ 
+    Output ports:
+     PortDecl 0x3cf48c0 'out_port' FindTemplateTypes 0x31027d0 - sc_out, type ptr: 0x4279ea0
+ - int, type ptr: 0x2f35ab0
+
+ 
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x3da6750 'aev' FieldDecl 0x42936b0
+
+    ClassDataMembers 0x2f536f0 'clk' FieldDecl 0x4262510
+
+    ClassDataMembers 0x2f79690 'in_port' FieldDecl 0x4279d40
+
+    ClassDataMembers 0x3343470 'out_port' FieldDecl 0x4293650
+
+    ClassDataMembers 0x387b0c0 'v' FieldDecl 0x4293c80
+
+    ClassDataMembers 0x3907880 'w' FieldDecl 0x4293da0
+
+    ClassDataMembers 0x387be40 'x' FieldDecl 0x4293ce0
+
+    ClassDataMembers 0x40c3720 'y' FieldDecl 0x4293d40
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x37af790 'topEntry' 0x4293ba0 SC_THREAD Constructor 0x42955a8
+     EntryFunctionContainer 'topEntry' processType 'SC_THREAD'  CXXMethodDecl '0x4293ba0
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+      WaitContainer numargs: 1  arglist: 'ev' 
+      WaitContainer numargs: 2  arglist: '4' 'SC_NS' 
+
+
+  Events:>
+    EventDecl 0x3d7eea0 'aev' FieldDecl 0x42936b0
+
+  Member Functions:>
+    ClassMemberFunctions 0x411adb0 'f' CXXMethodecl* 0x4293850
+
+
+=======================================================
+
+Global Events:
+   Event: ev  VarDecl: 0x3350dd0
+   Event: m_never_notified  VarDecl: 0x32e37d0
+   Event: non_event  VarDecl: 0x31bcd50
+   Event: oev  VarDecl: 0x3114d90
+   Event: sc_non_event  VarDecl: 0x3654f50
+
+Signals:
+ SignalInstanceContainer 'f' Type: 'sc_signal<int>'  CXXConstructExpr 0x429bc38
+ - sc_signal, type ptr: 0x429bb30
+ - int, type ptr: 0x2f35ab0
+ SignalInstanceContainer 'in' Type: 'sc_signal<int>'  CXXConstructExpr 0x429b978
+ - sc_signal, type ptr: 0x4297340
+ - int, type ptr: 0x2f35ab0
+ SignalInstanceContainer 'out' Type: 'sc_signal<int>'  CXXConstructExpr 0x429bad8
+ - sc_signal, type ptr: 0x429b9d0
+ - int, type ptr: 0x2f35ab0
+
+Port bindings:
+ PortBindContainer 'clk' module 't1' signal 'CLOCK'
+ PortBindContainer 'in_port' module 't1' signal 'in'
+ PortBindContainer 'out_port' module 't1' signal 'f'
+ PortBindContainer 'clk' module 't2' signal 'CLOCK'
+ PortBindContainer 'in_port' module 't2' signal 'f'
+ PortBindContainer 'out_port' module 't2' signal 'out'
+
+Netlist :
+ ======================= Begin netlist ====================
+ Module Name : t1( CLOCK in f )
+ Module Name : t2( CLOCK f out )
+
+ Module : t1	 Signal Name: CLOCK	 Signal Type : sc_in
+ Module : t1	 Signal Name: f	 Signal Type : sc_out
+ Module : t1	 Signal Name: in	 Signal Type : sc_in
+ Module : t2	 Signal Name: CLOCK	 Signal Type : sc_in
+ Module : t2	 Signal Name: f	 Signal Type : sc_in
+ Module : t2	 Signal Name: out	 Signal Type : sc_out
+ ======================= End netlist ====================
+Simulation Time : 10 SC_NS
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+

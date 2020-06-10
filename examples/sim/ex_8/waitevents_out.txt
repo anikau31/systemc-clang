@@ -1,0 +1,69 @@
+^^^^^^^^^^^^^^^^^^^^  BEGIN DUMP ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number of Models : 1
+Model 0
+=======================================================
+ ModuleDecl 0x3d7e1f0 waitevents CXXRecordDecl 0x3c255d0
+  Port Declaration:>
+    Input ports:
+     PortDecl 0x35faa10 'clk' FindTemplateTypes 0x3446380 - sc_in, type ptr: 0x3c25820
+
+ 
+    Output ports:
+    <<<NULL>>>
+    Inout ports:
+     <<<NULL>>>
+
+  Class Members:> 
+    ClassDataMembers 0x39d0a40 'clk' FieldDecl 0x3c25850
+
+    ClassDataMembers 0x376ae70 'inclass' FieldDecl 0x3c258b0
+
+    ClassDataMembers 0x36939d0 'var' FieldDecl 0x3c25c80
+
+    ClassDataMembers 0x34c6c80 'x' FieldDecl 0x3c25ce0
+
+    ClassDataMembers 0x2914bd0 'y' FieldDecl 0x3c25d40
+
+
+  Signal Declaration:>
+     <<<NULL>>>
+
+  Processes:>
+    ProcessDecl 0x345b600 'topEntry' 0x3c25ba0 SC_THREAD Constructor 0x3c27368
+     EntryFunctionContainer 'topEntry' processType 'SC_THREAD'  CXXMethodDecl '0x3c25ba0
+      WaitContainer numargs: 2  arglist: '1' 'SC_NS' 
+      WaitContainer numargs: 0 
+      WaitContainer numargs: 1  arglist: 'this->inclass' 
+      WaitContainer numargs: 1  arglist: 'globalVar' 
+
+
+  Events:>
+    EventDecl 0x366c8f0 'inclass' FieldDecl 0x3c258b0
+
+  Member Functions:>
+     <<<NULL>>>
+
+
+=======================================================
+
+Global Events:
+   Event: extglobalEvent  VarDecl: 0x2f4d9d0
+   Event: globalVar  VarDecl: 0x3045ae0
+   Event: m_never_notified  VarDecl: 0x35faee0
+   Event: non_event  VarDecl: 0x3238b50
+   Event: sc_non_event  VarDecl: 0x2eef3e0
+
+Signals:
+
+Port bindings:
+
+Netlist :
+ ======================= Begin netlist ====================
+
+ ======================= End netlist ====================
+Simulation Time : 
+^^^^^^^^^^^^^^^^^^^^  END DUMP   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
