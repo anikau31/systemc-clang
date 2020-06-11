@@ -203,6 +203,7 @@ bool SystemCConsumer::fire() {
       // 3. Find constructor
       //
       //
+      os_ << "4. Set the constructor.\n";
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
       add_module_decl->addConstructor(&constructor);
@@ -213,11 +214,15 @@ bool SystemCConsumer::fire() {
       //
       //
       // 5. Find  entry functions
+      os_ << "5. Set the entry functions\n";
       FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
                                      os_};
       FindEntryFunctions::entryFunctionVectorType *entryFunctions{
           findEntries.getEntryFunctions()};
+      os_ << "6. Set the process\n";
       add_module_decl->addProcess(entryFunctions);
+
+      //add_module_decl->dump(llvm::outs());
 
       for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};

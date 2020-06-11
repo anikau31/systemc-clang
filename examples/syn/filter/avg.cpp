@@ -15,11 +15,11 @@ SC_MODULE(avg)	{
 	SC_CTOR(avg) {
 		SC_METHOD(first_function);
 			sensitive << i_data;
-		SC_METHOD(second_function);
-			sensitive << clk.pos();
-		SC_METHOD(third_function);
-			sensitive << tap1 << tap2 << tap3;
-		
+		// SC_METHOD(second_function);
+			// sensitive << clk.pos();
+		// SC_METHOD(third_function);
+			// sensitive << tap1 << tap2 << tap3;
+//
 	}
 	
 	void first_function(void)	{
