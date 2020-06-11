@@ -1,8 +1,8 @@
 #ifndef _SENSITIVITY_MATCHER_H_
 #define _SENSITIVITY_MATCHER_H_
 
-#include <vector>
 #include <map>
+#include <vector>
 
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
@@ -24,7 +24,7 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
   // 1. name
   // 2. FieldDecl/VarDecl = ValueDecl. Pointer to field declaration.
   // 3. The MemberExpr from where I got this information.
-  typedef std::vector<std::tuple<std::string, ValueDecl*, MemberExpr*> >
+  typedef std::vector<std::tuple<std::string, ValueDecl *, MemberExpr *>>
       CallerCalleeType;
   std::vector<std::tuple<std::string, ValueDecl *, MemberExpr *>> calls_;
 
@@ -80,23 +80,26 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
 //
 ///////////////////////////////////////////////////////////////////////////////
 class SensitivityMatcher : public MatchFinder::MatchCallback {
-  public:
-    typedef std::tuple<std::string, ValueDecl*, MemberExpr*> SensitivityTupleType;
-    typedef std::pair<std::string, std::vector<SensitivityTupleType>> SensitivityPairType;
-    
-    typedef std::map<std::string, std::vector<SensitivityTupleType>> SenseMapType;
+ public:
+  typedef std::tuple<std::string, ValueDecl *, MemberExpr *>
+      SensitivityTupleType;
+  typedef std::pair<std::string, std::vector<SensitivityTupleType>>
+      SensitivityPairType;
 
-  private:
-    SenseMapType sensitivity_; 
+  typedef std::map<std::string, std::vector<SensitivityTupleType>> SenseMapType;
 
-    std::string generateSensitivityName(const std::vector<SensitivityTupleType> &sense_args ) {
-      std::string name{};
-      for (auto const entry: sense_args) {
-        name = name + std::get<0>(entry);
-      }
+ private:
+  SenseMapType sensitivity_;
 
-      return name;
+  std::string generateSensitivityName(
+      const std::vector<SensitivityTupleType> &sense_args) {
+    std::string name{};
+    for (auto const entry : sense_args) {
+      name = name + std::get<0>(entry);
     }
+
+    return name;
+  }
 
  public:
   SenseMapType getSensitivityMap() { return sensitivity_; }
@@ -176,16 +179,17 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
 
   // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
+    llvm::outs() << "====== SENSITIVITY MATCHER EXECUTED ======= \n";
+    auto cxx_ctor_decl{const_cast<CXXConstructorDecl *>(
+        result.Nodes.getNodeAs<CXXConstructorDecl>("cxx_constructor_decl"))};
+
     auto cxx_op_callexpr{const_cast<CXXOperatorCallExpr *>(
         result.Nodes.getNodeAs<CXXOperatorCallExpr>("cxx_operator_call_expr"))};
     auto cxx_mcall{const_cast<CXXMemberCallExpr *>(
         result.Nodes.getNodeAs<CXXMemberCallExpr>("cxx_mcall"))};
     auto me_wo_mcall{
         const_cast<MemberExpr *>(result.Nodes.getNodeAs<MemberExpr>("me"))};
-    auto cxx_ctor_decl{const_cast<CXXConstructorDecl *>(
-        result.Nodes.getNodeAs<CXXConstructorDecl>("cxx_constructor_decl"))};
     auto fd{result.Nodes.getNodeAs<FieldDecl>("fd")};
-    //
     // if (cxx_ctor_decl) {
     // cxx_ctor_decl->dump();
     //
@@ -200,9 +204,10 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
       call_registry.match(*me_wo_mcall, *result.Context);
       call_matcher.dump();
       // std::vector<SensitivityTupleType>
-      auto entry{ call_matcher.getCallerCallee()};
-      //sensitivity_.insert(std::get<0>(entry), entry);
-      sensitivity_.insert(SensitivityPairType(generateSensitivityName(entry), entry));
+      auto entry{call_matcher.getCallerCallee()};
+      // sensitivity_.insert(std::get<0>(entry), entry);
+      sensitivity_.insert(
+          SensitivityPairType(generateSensitivityName(entry), entry));
     }
 
     // If the argument to the operator<<() is a CXXMemberCallExpr.
@@ -213,28 +218,27 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
       call_matcher.registerMatchers(call_registry);
       call_registry.match(*cxx_mcall, *result.Context);
       call_matcher.dump();
-      //sensitivity_.insert(SensitivityPairType(call_matcher.getCallerCallee()));
-      auto entry{ call_matcher.getCallerCallee()};
-      //sensitivity_.insert(generateSensitivityName(entry), entry);
-      sensitivity_.insert(SensitivityPairType(generateSensitivityName(entry), entry));
+      // sensitivity_.insert(SensitivityPairType(call_matcher.getCallerCallee()));
+      auto entry{call_matcher.getCallerCallee()};
+      // sensitivity_.insert(generateSensitivityName(entry), entry);
+      sensitivity_.insert(
+          SensitivityPairType(generateSensitivityName(entry), entry));
     }
     llvm::outs() << "\n";
   }
 
   void dump() {
-    for (auto const entry: sensitivity_) {
-      auto generated_name{ entry.first };
-      auto callercallee{ entry.second };
+    for (auto const entry : sensitivity_) {
+      auto generated_name{entry.first};
+      auto callercallee{entry.second};
       llvm::outs() << generated_name << "  \n";
 
       for (auto const &call : callercallee) {
         llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
-                   << std::get<2>(call) << "\n";
+                     << std::get<2>(call) << "\n";
       }
-
     }
   }
-
 };
 };  // namespace sc_ast_matchers
 #endif

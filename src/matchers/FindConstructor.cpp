@@ -4,7 +4,11 @@ using namespace scpar;
 
 FindConstructor::FindConstructor(CXXRecordDecl *declaration,
                                  llvm::raw_ostream &os)
-    : os_{os}, declaration_{declaration}, constructor_stmt_{nullptr}, pass_{1} {
+    : os_{os},
+      declaration_{declaration},
+      constructor_stmt_{nullptr},
+      constructor_decl_{nullptr},
+      pass_{1} {
   TraverseDecl(declaration_);
   pass_ = 2;
   TraverseStmt(constructor_stmt_);
@@ -17,17 +21,25 @@ FindConstructor::~FindConstructor() {
 
 bool FindConstructor::shouldVisitTemplateInstantiations() const { return true; }
 
+bool FindConstructor::VisitCXXConstructorDecl(CXXConstructorDecl *ctor_decl) {
+  constructor_decl_ = ctor_decl;
+
+  return true;
+}
+
 bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
   switch (pass_) {
     case 1: {
-      constructor_decl_ = dyn_cast<CXXConstructorDecl>(method_declaration);
+      //constructor_decl_ = dyn_cast<CXXConstructorDecl>(method_declaration);
+      //llvm::outs() << "setting the constructor_decl_ to " << constructor_decl_
+       //            << "\n ";
       if (constructor_decl_) {
         const FunctionDecl *fd{nullptr};
         constructor_decl_->getBody(fd);
         if (constructor_decl_->hasBody()) {
           constructor_stmt_ = constructor_decl_->getBody();
-          //llvm::outs() << "###### CONSTRUCTOR STMT\n";
-          // constructor_stmt_->dump();
+          llvm::outs() << "###### CONSTRUCTOR STMT\n";
+          constructor_stmt_->dump();
         }
       }
       break;
