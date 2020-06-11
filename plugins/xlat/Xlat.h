@@ -31,7 +31,8 @@ class Xlat : public SystemCConsumer {
   void xlatvars(ModuleDecl::portMapType pmap, Model *model,  hNodep &h_info);
   void xlattype(string prefix, Tree<TemplateType> *template_argtp, hNode::hdlopsEnum h_op, hNodep &h_info);
   void makehpsv(string prefix, string typname,  hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo=true);
-  hNodep addtype(string typname, const Type *typ);
+  void addfieldtype(const FieldDecl * fld, hNodep &h_typdef);
+  hNodep addtype(string typname, QualType typ);
   void generatetype( scpar::TreeNode<scpar::TemplateType > * const &node,
 		     scpar::Tree<scpar::TemplateType > * const &treehead, hNodep &h_info);
   void xlatproc(vector<EntryFunctionContainer *>efv, hNodep & h_top, llvm::raw_ostream &os );
@@ -40,7 +41,7 @@ class Xlat : public SystemCConsumer {
 
     hNodep h_top;
     std::unordered_map<string, CXXMethodDecl *> allmethodecls;  //  all methods called
-    std::unordered_map<string, const Type *> usertypes;
+    std::unordered_map<string, QualType > usertypes;
     util lutil;
 };
 
