@@ -12,7 +12,7 @@
 
 using namespace scpar;
 using namespace clang;
-using namespace std;
+//using namespace std;
 
 using namespace sc_ast_matchers;
 

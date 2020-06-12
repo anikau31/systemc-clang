@@ -1,6 +1,6 @@
 #ifndef _SYSTEMC_CLANG_H_
 #define _SYSTEMC_CLANG_H_
-#include <iostream>
+//#include <iostream>
 #include <sstream>
 #include <string>
 #include "json.hpp"

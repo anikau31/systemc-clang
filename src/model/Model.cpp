@@ -3,7 +3,6 @@
 #include <string>
 
 using namespace scpar;
-using namespace std;
 
 Model::Model() {}
 
@@ -95,7 +94,7 @@ void Model::addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType e) {
 void Model::addGlobalEvents(FindGlobalEvents::globalEventMapType eventMap) {
   for (FindGlobalEvents::globalEventMapType::iterator it = eventMap.begin();
        it != eventMap.end(); it++) {
-    string eventName = it->first;
+    std::string eventName = it->first;
     EventContainer *event = new EventContainer(eventName, it->second);
 
     event_map_.insert(eventPairType(eventName, event));
@@ -116,9 +115,9 @@ void Model::addNetlist(FindNetlist &n) {
 void Model::updateModuleDecl() {
   for (moduleMapType::iterator it = modules_.begin(), eit = modules_.end();
        it != eit; it++) {
-    string moduleName = it->first;
+    std::string moduleName { it->first};
     ModuleDecl *md = it->second;
-    vector<string> instanceList;
+    std::vector<std::string> instanceList;
 
     llvm::errs() << "Finding instances for " << moduleName << " declaration: ";
     if (module_instance_list_.find(moduleName) != module_instance_list_.end()) {
@@ -290,7 +289,7 @@ void Model::dump(llvm::raw_ostream &os) {
        it != eit; it++) {
     os << "\n";
     os << "Instance Name: " << it->first << ", module name : " << it->second;
-    string instanceName = it->first;
+    std::string instanceName = it->first;
     if (port_signal_instance_map_.find(instanceName) !=
         port_signal_instance_map_.end()) {
       FindNetlist::instancePortSignalMapType::iterator

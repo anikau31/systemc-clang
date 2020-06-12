@@ -6,13 +6,14 @@
 #include <tuple>
 #include "clang/AST/DeclCXX.h"
 #include "clang/AST/RecursiveASTVisitor.h"
-#include "llvm/Support/raw_ostream.h"
+//#include "llvm/Support/raw_ostream.h"
 // ANI : A module may have multiple threads and their corresponding
 // sensitivity lists. So, this function should of finding sensitivity list
 // should take into account that aspect.
 namespace scpar {
 using namespace clang;
-using namespace std;
+
+class clang::raw_ostream;
 
 class FindSensitivity : public RecursiveASTVisitor<FindSensitivity> {
  public:

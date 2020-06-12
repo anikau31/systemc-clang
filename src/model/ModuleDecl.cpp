@@ -620,6 +620,6 @@ json ModuleDecl::dump_json() {
     module_j["nested_modules"].push_back(submod->getInstanceName());
   }
 
-  std::cout << module_j.dump(4);
+  llvm::outs() << module_j.dump(4);
   return module_j;
 }
