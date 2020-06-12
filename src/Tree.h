@@ -1,7 +1,7 @@
 #ifndef VECTOR_TREE_H_
 #define VECTOR_TREE_H_
 
-#include <iostream>
+//#include <iostream>
 #include <map>
 #include <queue>
 #include <stack>

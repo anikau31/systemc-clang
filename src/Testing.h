@@ -3,7 +3,7 @@
 
 // Includes
 #include <fstream>
-#include <iostream>
+//#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -24,7 +24,7 @@ std::string read_systemc_file(std::string const data_dir,
 
   // If the file did not open, indicate an error occurred.
   if (!file.is_open()) {
-    std::cerr << "[ERROR]: " << name << " not found" << std::endl;
+    llvm::errs() << "[ERROR]: " << name << " not found" << "\n";
     return "";
   }
 

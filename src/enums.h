@@ -21,15 +21,15 @@ enum class ASTSTATE {
   MEMBEREXPR,
   CXXOPERATORCALLEXPR,
   CXXCONSTRUCTEXPR
-}; // End enum ASTSTATE
+};  // End enum ASTSTATE
 
-enum class ReadWrite { RWINIT, READ, WRITE }; // End enum ReadWrite
+enum class ReadWrite { RWINIT, READ, WRITE };  // End enum ReadWrite
 
 enum class PROCESS_TYPE {
   NONE,
   THREAD,
   CTHREAD,
   METHOD
-}; // End enum PROCESS_TYPE
-} // End namespace scpar
+};  // End enum PROCESS_TYPE
+}  // End namespace scpar
 #endif

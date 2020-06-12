@@ -2,24 +2,29 @@
 #define _ENTRY_FUNCTION_TYPE_H_
 
 #include "enums.h"
-#include "clang/AST/DeclCXX.h"
-#include <iostream>
+//#include "clang/AST/DeclCXX.h"
+//#include <iostream>
 
 namespace scpar {
-using namespace clang;
-using namespace std;
+// using namespace clang;
+// using namespace std;
+
+// Forward declarations.
+class clang::CXXMethodDecl;
+class clang::Stmt;
+class clang::CXXMethodDecl;
 
 class EntryFunctionType {
-public:
+ public:
   EntryFunctionType();
   EntryFunctionType(const EntryFunctionType &);
 
   Stmt *getConstructorStmt() { return _constructorStmt; }
   CXXMethodDecl *getEntryMethod() { return _entryMethodDecl; }
   PROCESS_TYPE _procType;
-  string _entryName;
+  std::string _entryName;
   CXXMethodDecl *_entryMethodDecl;
   Stmt *_constructorStmt;
 };
-} // namespace scpar
+}  // namespace scpar
 #endif
