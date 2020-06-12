@@ -571,10 +571,10 @@ bool XlatMethod::TraverseSwitchStmt( SwitchStmt *switchs) {
   os_ << "End Switch stmt body -----\n";
   
   h_switchstmt = new hNode(hNode::hdlopsEnum::hSwitchStmt);
-  Stmt * swinit = dyn_cast<Stmt>(switchs->getInit());
-  if (swinit) {
-    os_ << "switch init not handled, skipping\n";
-  }
+  //Stmt * swinit = dyn_cast<Stmt>(switchs->getInit());
+  //if (swinit) {
+  //  os_ << "switch init not handled, skipping\n";
+  //}
   hNodep old_ret = h_ret;
   TRY_TO(TraverseStmt(switchs->getCond()));
   if (h_ret != old_ret) {
