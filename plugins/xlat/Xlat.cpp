@@ -5,7 +5,7 @@
 #include "Tree.h"
 #include "Xlat.h"
 #include "TemplateParametersMatcher.h"
-
+#include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 
 using namespace std;
@@ -472,34 +472,28 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
       hNodep h_process = new hNode(efc->getName(), hNode::hdlopsEnum::hProcess);
       os_ << "process " << efc->getName() << "\n";
       // Sensitivity list
-      hNodep h_senslist = new hNode(hNode::hdlopsEnum::hSenslist);
-      for (auto sensmap : efc->getSenseMap()) {
-	// typedef map<string, tuple<string, MemberExpr *> > senseMapType;
-	
-	if (sensmap.first == "dont_initialize") // nonsynthesizable
-	  continue;
-	hNodep h_senspair = new hNode(sensmap.first, hNode::hdlopsEnum::hSensvar); // [ sensvar name (edge expr) ]
-	//hNodep h_sensitem = new hNode(sensmap.first, hNode::hdlopsEnum::hSensvar);
-	
-  // HP: There is a change here. 
-  // Sensitivity map returns as its second argument a tuple.  
-  // The tuple has two parameters: the edge (pos/neg) and the second is the MemberExpr*.
-  // 
-  //
-	//h_senspair->child_list.push_back(h_sensitem);
+      EntryFunctionContainer::SenseMapType sensmap = efc->getSenseMap();
+      if (!sensmap.empty()) {
+	hNodep h_senslist = new hNode(hNode::hdlopsEnum::hSenslist);
+	for (auto sensmapitem : sensmap) {
+	  //typedef std::map<std::string, std::vector<SensitivityTupleType>> SenseMapType;
+	  //typedef std::tuple<std::string, ValueDecl *, MemberExpr *>SensitivityTupleType;
 
-	// string edgeval = get<0>(sensmap.second);
-
-	// if (edgeval == "") edgeval = "always";
-	// hNodep h_edge = new hNode(edgeval, hNode::hdlopsEnum::hSensedge);
-	// h_senspair->child_list.push_back(h_edge);
-	// get<1>(sensmap.second)->dump(os_);
-	// //h_senslist->child_list.push_back(h_sensitem);
-	h_senslist->child_list.push_back(h_senspair);
-
-	os_ << "sensitivity item " << sensmap.first << "\n";
+	  if (sensmapitem.first == "dont_initialize") // nonsynthesizable
+	    continue;
+	  
+	  os_ << "sensmap item " << sensmapitem.first << "\n";
+	  std::vector<EntryFunctionContainer::SensitivityTupleType> sttv = sensmapitem.second;
+	  EntryFunctionContainer::SensitivityTupleType sensitem0 = sttv[0];
+	  hNodep h_firstfield = new hNode(get<1>(sensitem0)->getNameAsString(), hNode::hdlopsEnum::hSensvar);
+	  for (int i = 1; i < sttv.size(); i++) {
+	    h_firstfield->child_list.push_back(new hNode(get<1>(sttv[i])->getNameAsString(),
+							 hNode::hdlopsEnum::hSensvar));
+	  }
+	  h_senslist->child_list.push_back(h_firstfield);
+	}
+	h_process->child_list.push_back(h_senslist);
       }
-      h_process->child_list.push_back(h_senslist);
       CXXMethodDecl *emd = efc->getEntryMethod();
       hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
       XlatMethod xmethod(emd, h_body, os_);  //, xlatout);
