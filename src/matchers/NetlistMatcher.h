@@ -1,10 +1,7 @@
 #ifndef _NETLIST_MATCHER_H_
 #define _NETLIST_MATCHER_H_
 
-#include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
-#include "clang/ASTMatchers/ASTMatchersInternal.h"
-#include "clang/ASTMatchers/ASTMatchersMacros.h"
 
 #include "Matchers.h"
 #include "PortBinding.h"

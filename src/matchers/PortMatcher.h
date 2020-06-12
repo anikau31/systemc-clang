@@ -5,15 +5,10 @@
 #include "ModuleDecl.h"
 #include "PortDecl.h"
 
-#include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
-#include "clang/ASTMatchers/ASTMatchersInternal.h"
-#include "clang/ASTMatchers/ASTMatchersMacros.h"
 
 using namespace clang::ast_matchers;
 using namespace scpar;
-
-
 
 namespace sc_ast_matchers {
 
