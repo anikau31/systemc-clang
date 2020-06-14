@@ -8,9 +8,12 @@ Welcome to systemc-clang's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents: 
 
+   install/install-linux.rst
 
+Installation
+============
 
 Indices and tables
 ==================
