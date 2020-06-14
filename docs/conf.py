@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'systemc-clang'
-copyright = '2020, Anirudh Kaushik, Zhuanhao Wu and Hiren Patel'
-author = 'Anirudh Kaushik, Zhuanhao Wu and Hiren Patel'
+copyright = '2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel'
+author = 'Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel'
 
 # The full version, including alpha/beta/rc tags
 release = '2.0.0'
