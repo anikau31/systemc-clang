@@ -12,6 +12,10 @@ Welcome to systemc-clang's documentation!
 
    install/install-linux.rst
 
+   parsing/parsing.rst
+
+   plugins/xlat.rst
+
 Installation
 ============
 
