@@ -103,6 +103,7 @@ SystemC Ports and Member Variables
 
 SystemC ports and member fields can be a part of the module. In the counter example, there is a ``clk`` port of type ``sc_clk_in`` and there is a member variable called ``keep_count`` of type ``sc_uint<32>``. Note that the latter is a templated type. We extend this example further.
 
+Note that a member variable can also be an ``sc_signal<>``, which we show in the next subsection.
 
 .. code-block:: c++
   :linenos:
@@ -137,13 +138,14 @@ It is common to use a hierarchy of modules to describe a design. systemc-clang i
 For the example below, the nested module of type ``counter`` will be identified as being nested within the SystemC module of type ``DUT``. 
 Within the constructor of the ``DUT`` module, we are instantiating the ``count`` member variable with a given name, and then binding the ports to the appropriate signals. 
 
+This example also shows the use of a ``sc_signal<>``. 
+
 .. code-block:: c++
   :linenos:
 
   #include <systemc.h>
   // Code from before
   SC_MODULE(counter) {
-  // Some other code here.
   };
 
   // Top level module.
@@ -159,6 +161,15 @@ Within the constructor of the ``DUT`` module, we are instantiating the ``count``
     }; 
   };
 
+  int sc_main() {
+    DUT dut{"design_under_test"};
+  };
+
+Templated Modules
+----------------
+
+User-defined Types
+------------------
 
 TODO
 -----
