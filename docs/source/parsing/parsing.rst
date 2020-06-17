@@ -69,8 +69,8 @@ The only synthesizable process type is ``SC_METHOD()``.
     sc_uint<32> keep_count;
 
     SC_CTOR(counter): keep_count{0} {
-    SC_METHOD(count_up);
-    sensitive << clk.pos();
+      SC_METHOD(count_up);
+      sensitive << clk.pos();
     }
 
     void count_up() {
@@ -166,16 +166,36 @@ This example also shows the use of a ``sc_signal<>``.
   };
 
 Templated Modules
-----------------
+-----------------
 
-User-defined Types
-------------------
+The SystemC module declaration can be templated as well. We can extend our ``counter`` module to have it access a template argument.
 
-TODO
------
-User-defined Types for Ports and Signals
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. code-block:: c++
+  :linenos:
 
-Used-defined Templated Types for Ports and Signals
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  #include <systemc.h>
+  template <typename T>
+  SC_MODULE(counter) {
+    // clock
+    sc_clk_in clk;
+
+    // output port
+    sc_out<T> count_out;
+
+    // member variable
+    T keep_count;
+
+    SC_CTOR(counter) {
+      SC_METHOD(count_up);
+      sensitive << clk.pos();
+    }
+
+    void count_up() {
+      // Ensure that type T supports +
+      keep_count = keep_count + 1;
+      count_out.write( keep_count );
+    }
+
+  };
+
 
