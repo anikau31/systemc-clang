@@ -99,6 +99,8 @@ int sc_main() {
     auto input_ports{test_module_inst->getIPorts()};
     REQUIRE(input_ports.size() == 1);
 
+    auto output_ports{test_module_inst->getOPorts()};
+    REQUIRE(output_ports.size() == 1);
     /*
     // Try to access each of the ports
     // // Iterate over all ports and their arguments.

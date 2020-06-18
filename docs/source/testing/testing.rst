@@ -153,9 +153,11 @@ The following assertion ensures that we are able to find an instance of a System
 
     REQUIRE(test_module != nullptr);
 
-We can also check for the number of input ports found by systemc-clang.
+We can also check for the number of input ports found by systemc-clang, and likewise, the number of output ports.
 
 .. code-block:: c++
   :linenos:
     auto input_ports{test_module->getIPorts()};
     REQUIRE(input_ports.size() == 1);
+
+Similarly, using other member functions of the systemc-clang's ``Model`` class, one can access other components of a module instance.
