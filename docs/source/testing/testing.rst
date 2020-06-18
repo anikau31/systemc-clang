@@ -157,7 +157,15 @@ We can also check for the number of input ports found by systemc-clang, and like
 
 .. code-block:: c++
   :linenos:
+
     auto input_ports{test_module->getIPorts()};
     REQUIRE(input_ports.size() == 1);
 
 Similarly, using other member functions of the systemc-clang's ``Model`` class, one can access other components of a module instance.
+
+.. code-block:: c++
+  :linenos:
+
+    auto output_ports{test_module->getOPorts()};
+    REQUIRE(output_ports.size() == 1);
+
