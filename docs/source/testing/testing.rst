@@ -13,6 +13,9 @@ In order to run systemc-clang from within a C++ program, and integrate it succes
 Boilerplate
 ^^^^^^^^^^^
 
+Include files
+"""""""""""""
+
 We describe the ``#include`` files that are necessary.
 We must include the main header file from where we can invoke the ``SystemCConsumer`` called ``SystemCClang.h``. 
 We also include the ``catch.hpp``, which is necessary to use the features of Catch2.
@@ -27,10 +30,14 @@ Finally, there is an include file that is automatically generated called ``Clang
   // This is automatically generated from cmake.
   #include "ClangArgs.h"
 
+Namespace to use
+""""""""""""""""
 
 systemc-clang is wrapped in a namespace called ``scpar``. Hence, we add the namespace. 
 
 .. code-block:: c++
+  :linenos:
+
   using namespace scpar;
 
 The next step is in providing the SystemC source that we wish to parse. 
@@ -38,7 +45,9 @@ This can come from a file or embedded within the test program as a string.
 Note that this uses the ``R"`` approach to defining a ``std::string``.
 
 .. code-block:: c++
-  std::string code = R"(
+  :linenos:
+
+    std::string code = R"(
     #include <systemc.h>
     SC_MODULE(counter) {
       // clock
@@ -89,6 +98,8 @@ For example, the location of the SystemC header files.
 These are captured in ``systemc_clang::catch_test_args`` as a part of the ``ClangArgs.h``.
 
 .. code-block:: c++
+  :linenos:
+
   TEST_CASE("Basic parsing checks", "[parsing]") {
     ASTUnit *from_ast = 
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
