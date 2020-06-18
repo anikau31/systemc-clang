@@ -1,16 +1,13 @@
 .. highlight:: console
 
-Installing systemc-clang on Linux
+Installing systemc-clang on OSX
 ---------------------------------
-
-We provide instructions for installation using Linux. 
+We provide instructions for installation using OSX.
 You can install LLVM and Clang via source or via binaries. 
 
-Building LLVM/Clang from source 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Follow the instructions to `install clang <http://clang.llvm.org/get_started.html>`_. 
-Notice that you should also install LLVM as it is needed for compilation of the stand-along program. A suggestion is to install LLVM/clang in a location that is accessible by the user.
-Note that the clang-llvm version systemc-clang supports is version 7.0.0 and higher.  
+* systemc-clang requires llvm-config and by default does not come with the llvm package preinstalled on MacOS. 
+* Download the clang pre built binaries from [here](http://llvm.org/releases/download.html) for LLVM 7 or higher.
+* Untar the package into a suitable location, and modify the ``path.sh`` bash script in the systemc-clang folder to point to llvm-config, which will be found in the bin directory of the uncompressed binary. 
 
 Building systemc-clang 
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -53,12 +50,13 @@ If using ``ninja``:
 ::
   $ ninja
 
-Testing on a small example
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Copy the compiled binary in the bin folder of ``LLVM_INSTALL_DIR``.
+Testing on a small example
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Copy the compiled binary in the bin folder of ``LLVM_BUILD_DIR``
 ::
-  $ cp systemc-clang $LLVM_INSTALL_DIR/bin
+  $ cp systemc-clang $LLVM_BUILD_DIR/bin
 
 Set the ``SYSTEMC`` variable.
 ::
@@ -66,8 +64,6 @@ Set the ``SYSTEMC`` variable.
 
 Execute it on a simple example.  You should see some (debug) information print out on the screen.  Hope to make this more meaningful in the future.
 ::
-  $ $LLVM_INSTALL_DIR/bin/systemc-clang ../systemc-clang/tests/module1.hpp -- \
+  $ $LLVM_BUILD_DIR/bin/systemc-clang ../systemc-clang/tests/module1.hpp -- \
   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS  -I/usr/include  \
   -I$SYSTEMC/include  -x c++ -w -c
-
-

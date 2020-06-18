@@ -10,13 +10,12 @@ Welcome to systemc-clang's documentation!
    :maxdepth: 2
    :caption: Contents: 
 
-   install/install-linux.rst
+   install/install.rst
 
    parsing/parsing.rst
 
    plugins/xlat.rst
 
-   api/library_root
 
 Installation
 ============

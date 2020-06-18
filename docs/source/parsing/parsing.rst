@@ -59,6 +59,8 @@ SystemC Processes and Sensitivity Lists
 
 There are two process types that systemc-clang recognizes: (1) ``SC_METHOD()`` and  (2) ``SC_THREAD()``.
 The only synthesizable process type is ``SC_METHOD()``. 
+systemc-clang gives access to the function provided as the argument to the process macro.
+Plugins can then use tihs to perform other operations on the implementation of the process' function such as generating Verilog or an intermediate representation.
 
 .. code-block:: c++
   :linenos:
@@ -165,6 +167,7 @@ This example also shows the use of a ``sc_signal<>``.
     DUT dut{"design_under_test"};
   };
 
+
 Templated Modules
 -----------------
 
@@ -198,4 +201,15 @@ The SystemC module declaration can be templated as well. We can extend our ``cou
 
   };
 
+User-defined Templated Datatypes
+--------------------------------
 
+.. note:: Todo
+
+User-defined Channels
+---------------------
+
+.. note:: Todo
+
+Typedefs and ``using``
+----------------------
