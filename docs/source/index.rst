@@ -13,6 +13,7 @@ Welcome to systemc-clang's documentation!
    install/install.rst
 
    parsing/parsing.rst
+   testing/testing.rst
 
    plugins/xlat.rst
 
