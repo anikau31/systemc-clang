@@ -1,0 +1,13 @@
+.. _exhale_variable_namespacenlohmann_1_1detail_1_1dtoa__impl_1ac1ea1316de0b4a219f707c76b1db1966:
+
+Variable nlohmann::detail::dtoa_impl::kAlpha
+============================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: nlohmann::detail::dtoa_impl::kAlpha

@@ -1,0 +1,13 @@
+.. _exhale_enum_namespacenlohmann_1_1detail_1a5a76b60b26dc8c47256a996d18d967df:
+
+Enum error_handler_t
+====================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: nlohmann::detail::error_handler_t

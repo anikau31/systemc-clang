@@ -1,0 +1,33 @@
+.. _exhale_class_classsc__core_1_1sc__stream__nonblocking__in__if:
+
+Template Class sc_stream_nonblocking_in_if
+==========================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_stream_ifs.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Types
+**********
+
+- ``public sc_interface``
+- ``public sc_interface``
+
+
+Derived Types
+*************
+
+- ``public sc_core::sc_stream_in_if< T >`` (:ref:`exhale_class_classsc__core_1_1sc__stream__in__if`)
+- ``public sc_core::sc_stream_in_if< T >`` (:ref:`exhale_class_classsc__core_1_1sc__stream__in__if`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: sc_core::sc_stream_nonblocking_in_if
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,16 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1is__compatible__integer__type__impl_3_01RealIntegerType_00_01Compati3a04243716e8bda67d1ff2aead18da88:
+
+Template Struct is_compatible_integer_type_impl< RealIntegerType, CompatibleNumberIntegerType, enable_if_t< std::is_integral< RealIntegerType >::value and std::is_integral< CompatibleNumberIntegerType >::value and not std::is_same< bool, CompatibleNumberIntegerType >::value > >
+======================================================================================================================================================================================================================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::is_compatible_integer_type_impl< RealIntegerType, CompatibleNumberIntegerType, enable_if_t< std::is_integral< RealIntegerType >::value and std::is_integral< CompatibleNumberIntegerType >::value and not std::is_same< bool, CompatibleNumberIntegerType >::value > >
+   :members:
+   :protected-members:
+   :undoc-members:

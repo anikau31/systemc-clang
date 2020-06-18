@@ -1,0 +1,25 @@
+.. _exhale_class_classscpar_1_1FindSensitivity:
+
+Class FindSensitivity
+=====================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSensitivity.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public clang::RecursiveASTVisitor< FindSensitivity >``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::FindSensitivity
+   :members:
+   :protected-members:
+   :undoc-members:

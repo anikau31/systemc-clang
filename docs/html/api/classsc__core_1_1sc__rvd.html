@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class sc_rvd &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class sc_rvd_export_in" href="classsc__core_1_1sc__rvd__export__in.html" />
+    <link rel="prev" title="Template Class rvfifo_cc" href="classrvfifo__cc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">Library API</a> &raquo;</li>
+        
+      <li>Template Class sc_rvd</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classsc__core_1_1sc__rvd.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-sc-rvd">
+<span id="exhale-class-classsc-core-1-1sc-rvd"></span><h1>Template Class sc_rvd<a class="headerlink" href="#template-class-sc-rvd" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_rvd.h.html#file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsim-sc-rvd-h"><span class="std std-ref">File sc_rvd.h</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0EN7sc_core6sc_rvdE">
+<span id="_CPPv3I0EN7sc_core6sc_rvdE"></span><span id="_CPPv2I0EN7sc_core6sc_rvdE"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classsc__core_1_1sc__rvd"></span><em class="property">class </em><code class="sig-prename descclassname">sc_core<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">sc_rvd</code><a class="headerlink" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvd6sc_rvdEPKc">
+<span id="_CPPv3N7sc_core6sc_rvd6sc_rvdEPKc"></span><span id="_CPPv2N7sc_core6sc_rvd6sc_rvdEPKc"></span><span id="sc_core::sc_rvd::sc_rvd__cCP"></span><span class="target" id="classsc__core_1_1sc__rvd_1a0bf3ced89c4ecaa644381bdeca461f4c"></span><code class="sig-name descname">sc_rvd</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name</em> = sc_gen_unique_name(&quot;sc_rvd&quot;)<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core6sc_rvd6sc_rvdEPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvd4readEv">
+<span id="_CPPv3N7sc_core6sc_rvd4readEv"></span><span id="_CPPv2N7sc_core6sc_rvd4readEv"></span><span id="sc_core::sc_rvd::read"></span><span class="target" id="classsc__core_1_1sc__rvd_1a14b86d20574df7f3172ec6c1297dcac2"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd::T">T</a> &amp;<code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core6sc_rvd4readEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvd4readER1T">
+<span id="_CPPv3N7sc_core6sc_rvd4readER1T"></span><span id="_CPPv2N7sc_core6sc_rvd4readER1T"></span><span id="sc_core::sc_rvd::read__TR"></span><span class="target" id="classsc__core_1_1sc__rvd_1a29a15bf336a01406e1033de696b33380"></span>void <code class="sig-name descname">read</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd::T">T</a> &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core6sc_rvd4readER1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvd5writeERK1T">
+<span id="_CPPv3N7sc_core6sc_rvd5writeERK1T"></span><span id="_CPPv2N7sc_core6sc_rvd5writeERK1T"></span><span id="sc_core::sc_rvd::write__TCR"></span><span class="target" id="classsc__core_1_1sc__rvd_1ad5a62b8f8d6bc77e6a1cb7f510818401"></span>void <code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd::T">T</a> &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core6sc_rvd5writeERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvdcvRK1TEv">
+<span id="_CPPv3N7sc_core6sc_rvdcvRK1TEv"></span><span id="_CPPv2N7sc_core6sc_rvdcvRK1TEv"></span><span id="sc_core::sc_rvd::castto-TCR-operator"></span><span class="target" id="classsc__core_1_1sc__rvd_1a2e002c5139c70f8fa54ef747add5f72b"></span><code class="sig-name descname">operator const T&amp;</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core6sc_rvdcvRK1TEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvdaSERK1T">
+<span id="_CPPv3N7sc_core6sc_rvdaSERK1T"></span><span id="_CPPv2N7sc_core6sc_rvdaSERK1T"></span><span id="sc_core::sc_rvd::assign-operator__TCR"></span><span class="target" id="classsc__core_1_1sc__rvd_1a68aec2b9b45a9e5a0b1f5e599c16608a"></span><a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd">sc_rvd</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd::T">T</a> &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core6sc_rvdaSERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core6sc_rvd5printERNSt7ostreamE">
+<span id="_CPPv3NK7sc_core6sc_rvd5printERNSt7ostreamE"></span><span id="_CPPv2NK7sc_core6sc_rvd5printERNSt7ostreamE"></span><span id="sc_core::sc_rvd::print__osRC"></span><span class="target" id="classsc__core_1_1sc__rvd_1aa8885cd1c375ef13efe03ee5b899eb71"></span>void <code class="sig-name descname">print</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em> = std::cout<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7sc_core6sc_rvd5printERNSt7ostreamE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core6sc_rvd4dumpERNSt7ostreamE">
+<span id="_CPPv3NK7sc_core6sc_rvd4dumpERNSt7ostreamE"></span><span id="_CPPv2NK7sc_core6sc_rvd4dumpERNSt7ostreamE"></span><span id="sc_core::sc_rvd::dump__osRC"></span><span class="target" id="classsc__core_1_1sc__rvd_1af4da6847a53f5b5f724d1f2529798044"></span>void <code class="sig-name descname">dump</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em> = std::cout<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7sc_core6sc_rvd4dumpERNSt7ostreamE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core6sc_rvd4kindEv">
+<span id="_CPPv3NK7sc_core6sc_rvd4kindEv"></span><span id="_CPPv2NK7sc_core6sc_rvd4kindEv"></span><span id="sc_core::sc_rvd::kindC"></span><span class="target" id="classsc__core_1_1sc__rvd_1a7641b4cdbea61b4a79f90a1a938455d5"></span><em class="property">const</em> char *<code class="sig-name descname">kind</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7sc_core6sc_rvd4kindEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvd6sc_rvdEPKc">
+<span id="_CPPv3N7sc_core6sc_rvd6sc_rvdEPKc"></span><span id="_CPPv2N7sc_core6sc_rvd6sc_rvdEPKc"></span><span class="target" id="classsc__core_1_1sc__rvd_1a0bf3ced89c4ecaa644381bdeca461f4c"></span><code class="sig-name descname">sc_rvd</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name</em> = sc_gen_unique_name(&quot;sc_rvd&quot;)<span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvd4readEv">
+<span id="_CPPv3N7sc_core6sc_rvd4readEv"></span><span id="_CPPv2N7sc_core6sc_rvd4readEv"></span><span class="target" id="classsc__core_1_1sc__rvd_1a14b86d20574df7f3172ec6c1297dcac2"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd::T">T</a> &amp;<code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvd4readER1T">
+<span id="_CPPv3N7sc_core6sc_rvd4readER1T"></span><span id="_CPPv2N7sc_core6sc_rvd4readER1T"></span><span class="target" id="classsc__core_1_1sc__rvd_1a29a15bf336a01406e1033de696b33380"></span>void <code class="sig-name descname">read</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd::T">T</a> &amp;<em>d</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvd5writeERK1T">
+<span id="_CPPv3N7sc_core6sc_rvd5writeERK1T"></span><span id="_CPPv2N7sc_core6sc_rvd5writeERK1T"></span><span class="target" id="classsc__core_1_1sc__rvd_1ad5a62b8f8d6bc77e6a1cb7f510818401"></span>void <code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd::T">T</a> &amp;<em>d</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvdcvRK1TEv">
+<span id="_CPPv3N7sc_core6sc_rvdcvRK1TEv"></span><span id="_CPPv2N7sc_core6sc_rvdcvRK1TEv"></span><span class="target" id="classsc__core_1_1sc__rvd_1a2e002c5139c70f8fa54ef747add5f72b"></span><code class="sig-name descname">operator const T&amp;</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core6sc_rvdaSERK1T">
+<span id="_CPPv3N7sc_core6sc_rvdaSERK1T"></span><span id="_CPPv2N7sc_core6sc_rvdaSERK1T"></span><span class="target" id="classsc__core_1_1sc__rvd_1a68aec2b9b45a9e5a0b1f5e599c16608a"></span><a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd">sc_rvd</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd::T">T</a> &amp;<em>d</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core6sc_rvd5printERNSt7ostreamE">
+<span id="_CPPv3NK7sc_core6sc_rvd5printERNSt7ostreamE"></span><span id="_CPPv2NK7sc_core6sc_rvd5printERNSt7ostreamE"></span><span class="target" id="classsc__core_1_1sc__rvd_1aa8885cd1c375ef13efe03ee5b899eb71"></span>void <code class="sig-name descname">print</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em> = std::cout<span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core6sc_rvd4dumpERNSt7ostreamE">
+<span id="_CPPv3NK7sc_core6sc_rvd4dumpERNSt7ostreamE"></span><span id="_CPPv2NK7sc_core6sc_rvd4dumpERNSt7ostreamE"></span><span class="target" id="classsc__core_1_1sc__rvd_1af4da6847a53f5b5f724d1f2529798044"></span>void <code class="sig-name descname">dump</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em> = std::cout<span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core6sc_rvd4kindEv">
+<span id="_CPPv3NK7sc_core6sc_rvd4kindEv"></span><span id="_CPPv2NK7sc_core6sc_rvd4kindEv"></span><span class="target" id="classsc__core_1_1sc__rvd_1a7641b4cdbea61b4a79f90a1a938455d5"></span><em class="property">const</em> char *<code class="sig-name descname">kind</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="cpp var">
+<dt id="_CPPv4N7sc_core6sc_rvd4dataE">
+<span id="_CPPv3N7sc_core6sc_rvd4dataE"></span><span id="_CPPv2N7sc_core6sc_rvd4dataE"></span><span id="sc_core::sc_rvd::data__sc_signal:T:"></span><span class="target" id="classsc__core_1_1sc__rvd_1aed000d61f757c0fad7a9a3bcb5a2eaa8"></span>sc_signal&lt;<a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd::T">T</a>&gt; <code class="sig-name descname">data</code><a class="headerlink" href="#_CPPv4N7sc_core6sc_rvd4dataE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7sc_core6sc_rvd5validE">
+<span id="_CPPv3N7sc_core6sc_rvd5validE"></span><span id="_CPPv2N7sc_core6sc_rvd5validE"></span><span id="sc_core::sc_rvd::valid__sc_signal:b:"></span><span class="target" id="classsc__core_1_1sc__rvd_1a96adebbfd2210f3b8dea77fc94101b3b"></span>sc_signal&lt;bool&gt; <code class="sig-name descname">valid</code><a class="headerlink" href="#_CPPv4N7sc_core6sc_rvd5validE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7sc_core6sc_rvd5readyE">
+<span id="_CPPv3N7sc_core6sc_rvd5readyE"></span><span id="_CPPv2N7sc_core6sc_rvd5readyE"></span><span id="sc_core::sc_rvd::ready__sc_signal:b:"></span><span class="target" id="classsc__core_1_1sc__rvd_1a096952202891b6995a234f58b7e65a6e"></span>sc_signal&lt;bool&gt; <code class="sig-name descname">ready</code><a class="headerlink" href="#_CPPv4N7sc_core6sc_rvd5readyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Friends</p>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7sc_core6sc_rvd8sc_traceEvP13sc_trace_fileRK6sc_rvdI1UERKNSt6stringE">
+<span id="_CPPv3I0EN7sc_core6sc_rvd8sc_traceEP13sc_trace_fileRK6sc_rvdI1UERKNSt6stringE"></span><span id="_CPPv2I0EN7sc_core6sc_rvd8sc_traceEP13sc_trace_fileRK6sc_rvdI1UERKNSt6stringE"></span>template&lt;typename <code class="sig-name descname">U</code>&gt;<br /><span class="target" id="classsc__core_1_1sc__rvd_1a76473bdd597b92695ee8a2640a528414"></span><em class="property">friend</em> void <code class="sig-name descname">sc_trace</code><span class="sig-paren">(</span>sc_trace_file *<em>tf</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd">sc_rvd</a>&lt;<a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvd8sc_traceEvP13sc_trace_fileRK6sc_rvdI1UERKNSt6stringE" title="sc_core::sc_rvd::sc_trace::U">U</a>&gt; &amp;<em>ob</em>, <em class="property">const</em> std::string &amp;<em>nm</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN7sc_core6sc_rvd8sc_traceEvP13sc_trace_fileRK6sc_rvdI1UERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7sc_core6sc_rvd8sc_traceEvP13sc_trace_fileRK6sc_rvdI1UERKNSt6stringE">
+<span id="_CPPv3I0EN7sc_core6sc_rvd8sc_traceEP13sc_trace_fileRK6sc_rvdI1UERKNSt6stringE"></span>template&lt;typename <code class="sig-name descname">U</code>&gt;<br /><span class="target" id="classsc__core_1_1sc__rvd_1a76473bdd597b92695ee8a2640a528414"></span><em class="property">friend</em> void <code class="sig-name descname">sc_trace</code><span class="sig-paren">(</span>sc_trace_file *<em>tf</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvdE" title="sc_core::sc_rvd">sc_rvd</a>&lt;<a class="reference internal" href="#_CPPv4I0EN7sc_core6sc_rvd8sc_traceEvP13sc_trace_fileRK6sc_rvdI1UERKNSt6stringE" title="sc_core::sc_rvd::sc_trace::U">U</a>&gt; &amp;<em>ob</em>, <em class="property">const</em> std::string &amp;<em>nm</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classsc__core_1_1sc__rvd__export__in.html" class="btn btn-neutral float-right" title="Template Class sc_rvd_export_in" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classrvfifo__cc.html" class="btn btn-neutral float-left" title="Template Class rvfifo_cc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

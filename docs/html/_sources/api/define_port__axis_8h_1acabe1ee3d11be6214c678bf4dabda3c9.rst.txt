@@ -1,0 +1,13 @@
+.. _exhale_define_port__axis_8h_1acabe1ee3d11be6214c678bf4dabda3c9:
+
+Define DI
+=========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_port_axis.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: DI

@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsim_2fifo__cc_8h_1a4c135c3daa6659347eb5d6bffea2c427:
+
+Template Function SC_MODULE(fifo_cc)
+====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_fifo_cc.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(fifo_cc)

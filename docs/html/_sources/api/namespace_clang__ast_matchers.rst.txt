@@ -1,0 +1,13 @@
+
+.. _namespace_clang__ast_matchers:
+
+Namespace clang::ast_matchers
+=============================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+

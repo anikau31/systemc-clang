@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File SensitivityMatcher.h &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File SensitivityMatcher.h</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_matchers_SensitivityMatcher.h.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-sensitivitymatcher-h">
+<span id="program-listing-file-home-twiga-code-github-rseac-systemc-clang-src-matchers-sensitivitymatcher-h"></span><h1>Program Listing for File SensitivityMatcher.h<a class="headerlink" href="#program-listing-for-file-sensitivitymatcher-h" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_src_matchers_SensitivityMatcher.h.html#file-home-twiga-code-github-rseac-systemc-clang-src-matchers-sensitivitymatcher-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/src/matchers/SensitivityMatcher.h</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef _SENSITIVITY_MATCHER_H_</span>
+<span class="cp">#define _SENSITIVITY_MATCHER_H_</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;clang/ASTMatchers/ASTMatchFinder.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;clang/ASTMatchers/ASTMatchers.h&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">clang</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">clang</span><span class="o">::</span><span class="n">ast_matchers</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="n">sc_ast_matchers</span> <span class="p">{</span>
+<span class="c1">//</span>
+<span class="c1">// Class SensitivityMatcher</span>
+<span class="c1">//</span>
+<span class="c1">//</span>
+<span class="k">class</span> <span class="nc">CallerCalleeMatcher</span> <span class="o">:</span> <span class="k">public</span> <span class="n">MatchFinder</span><span class="o">::</span><span class="n">MatchCallback</span> <span class="p">{</span>
+ <span class="k">private</span><span class="o">:</span>
+  <span class="c1">// 1. name</span>
+  <span class="c1">// 2. FieldDecl/VarDecl = ValueDecl. Pointer to field declaration.</span>
+  <span class="c1">// 3. The MemberExpr from where I got this information.</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">ValueDecl</span> <span class="o">*</span><span class="p">,</span> <span class="n">MemberExpr</span> <span class="o">*&gt;&gt;</span>
+      <span class="n">CallerCalleeType</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">ValueDecl</span> <span class="o">*</span><span class="p">,</span> <span class="n">MemberExpr</span> <span class="o">*&gt;&gt;</span> <span class="n">calls_</span><span class="p">;</span>
+
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">CallerCalleeType</span> <span class="n">getCallerCallee</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">calls_</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">registerMatchers</span><span class="p">(</span><span class="n">MatchFinder</span> <span class="o">&amp;</span><span class="n">finder</span><span class="p">)</span> <span class="p">{</span>
+    <span class="cm">/* clang-format off */</span>
+
+    <span class="k">auto</span> <span class="n">match_member_expr</span> <span class="o">=</span> <span class="n">findAll</span><span class="p">(</span><span class="n">memberExpr</span><span class="p">().</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;me&quot;</span><span class="p">));</span>
+
+    <span class="k">auto</span> <span class="n">match_member_expr_in_mcall</span> <span class="o">=</span> <span class="n">cxxMemberCallExpr</span><span class="p">(</span>
+        <span class="n">forEachDescendant</span><span class="p">(</span>
+          <span class="n">memberExpr</span><span class="p">().</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;me&quot;</span><span class="p">)</span>
+          <span class="p">)</span>
+        <span class="p">).</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;cx&quot;</span><span class="p">);</span>
+
+    <span class="cm">/* clang-format on */</span>
+
+    <span class="c1">// finder.addMatcher(match_member_expr_in_mcall, this);</span>
+    <span class="n">finder</span><span class="p">.</span><span class="n">addMatcher</span><span class="p">(</span><span class="n">match_member_expr</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">run</span><span class="p">(</span><span class="k">const</span> <span class="n">MatchFinder</span><span class="o">::</span><span class="n">MatchResult</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">me</span><span class="p">{</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">MemberExpr</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">Nodes</span><span class="p">.</span><span class="n">getNodeAs</span><span class="o">&lt;</span><span class="n">MemberExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;me&quot;</span><span class="p">))};</span>
+    <span class="k">auto</span> <span class="n">cx</span><span class="p">{</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span> <span class="o">*&gt;</span><span class="p">(</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">Nodes</span><span class="p">.</span><span class="n">getNodeAs</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;cx&quot;</span><span class="p">))};</span>
+
+    <span class="c1">// llvm::outs() &lt;&lt; &quot;==================== ME\n&quot;;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">me</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// me-&gt;dump();</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">{</span><span class="n">me</span><span class="o">-&gt;</span><span class="n">getMemberDecl</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getNameAsString</span><span class="p">()};</span>
+      <span class="c1">// llvm::outs() &lt;&lt; &quot;ME x: &quot; &lt;&lt; me-&gt;getMemberDecl()-&gt;getNameAsString()</span>
+      <span class="c1">//             &lt;&lt; &quot;\n&quot;;</span>
+      <span class="n">calls_</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">calls_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+                    <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">me</span><span class="o">-&gt;</span><span class="n">getMemberDecl</span><span class="p">(),</span> <span class="n">me</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">dump</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="k">const</span> <span class="o">&amp;</span><span class="nl">call</span> <span class="p">:</span> <span class="n">calls_</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">call</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">call</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">(</span><span class="n">call</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="c1">// get&lt;1&gt;(call)-&gt;dump();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">//</span>
+<span class="c1">// Class SensitivityMatcher</span>
+<span class="c1">//</span>
+<span class="c1">//</span>
+<span class="k">class</span> <span class="nc">SensitivityMatcher</span> <span class="o">:</span> <span class="k">public</span> <span class="n">MatchFinder</span><span class="o">::</span><span class="n">MatchCallback</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">ValueDecl</span> <span class="o">*</span><span class="p">,</span> <span class="n">MemberExpr</span> <span class="o">*&gt;</span>
+      <span class="n">SensitivityTupleType</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SensitivityTupleType</span><span class="o">&gt;&gt;</span>
+      <span class="n">SensitivityPairType</span><span class="p">;</span>
+
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SensitivityTupleType</span><span class="o">&gt;&gt;</span> <span class="n">SenseMapType</span><span class="p">;</span>
+
+ <span class="k">private</span><span class="o">:</span>
+  <span class="n">SenseMapType</span> <span class="n">sensitivity_</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">generateSensitivityName</span><span class="p">(</span>
+      <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SensitivityTupleType</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">sense_args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">{};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="k">const</span> <span class="nl">entry</span> <span class="p">:</span> <span class="n">sense_args</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">entry</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">name</span><span class="p">;</span>
+  <span class="p">}</span>
+
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">SenseMapType</span> <span class="n">getSensitivityMap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sensitivity_</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">registerMatchers</span><span class="p">(</span><span class="n">MatchFinder</span> <span class="o">&amp;</span><span class="n">finder</span><span class="p">)</span> <span class="p">{</span>
+    <span class="cm">/* clang-format off */</span>
+
+
+    <span class="k">auto</span> <span class="n">match</span> <span class="o">=</span> <span class="n">cxxConstructorDecl</span><span class="p">(</span><span class="n">isExpansionInMainFile</span><span class="p">(),</span>
+        <span class="n">forEachDescendant</span><span class="p">(</span>
+          <span class="c1">// Find the sc_event</span>
+          <span class="n">cxxOperatorCallExpr</span><span class="p">(</span>
+            <span class="c1">// Match sc_event_finder argument</span>
+            <span class="n">hasArgument</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">allOf</span><span class="p">(</span>
+                <span class="n">anyOf</span><span class="p">(</span>
+              <span class="n">memberExpr</span><span class="p">(</span><span class="n">hasDeclaration</span><span class="p">(</span><span class="n">fieldDecl</span><span class="p">().</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;fd&quot;</span><span class="p">))).</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;me&quot;</span><span class="p">)</span>
+              <span class="p">,</span>
+              <span class="n">cxxMemberCallExpr</span><span class="p">().</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;cxx_mcall&quot;</span><span class="p">)</span>
+              <span class="p">)</span> <span class="c1">// anyOf</span>
+              <span class="p">,</span>
+              <span class="n">anyOf</span><span class="p">(</span>
+                 <span class="n">hasType</span><span class="p">(</span><span class="n">hasUnqualifiedDesugaredType</span><span class="p">(</span><span class="n">recordType</span><span class="p">(</span><span class="n">hasDeclaration</span><span class="p">(</span>
+                    <span class="n">cxxRecordDecl</span><span class="p">(</span><span class="n">isSameOrDerivedFrom</span><span class="p">(</span><span class="s">&quot;sc_event&quot;</span><span class="p">)).</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;crd&quot;</span><span class="p">)))))</span>
+                <span class="p">,</span> <span class="n">hasType</span><span class="p">(</span><span class="n">hasUnqualifiedDesugaredType</span><span class="p">(</span><span class="n">recordType</span><span class="p">(</span><span class="n">hasDeclaration</span><span class="p">(</span>
+                    <span class="n">cxxRecordDecl</span><span class="p">(</span><span class="n">isSameOrDerivedFrom</span><span class="p">(</span><span class="s">&quot;sc_interface&quot;</span><span class="p">)).</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;crd&quot;</span><span class="p">)))))</span>
+                <span class="p">,</span> <span class="n">hasType</span><span class="p">(</span><span class="n">hasUnqualifiedDesugaredType</span><span class="p">(</span><span class="n">recordType</span><span class="p">(</span><span class="n">hasDeclaration</span><span class="p">(</span>
+                    <span class="n">cxxRecordDecl</span><span class="p">(</span><span class="n">isSameOrDerivedFrom</span><span class="p">(</span><span class="s">&quot;sc_event_finder&quot;</span><span class="p">)).</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;crd&quot;</span><span class="p">)))))</span>
+                <span class="p">,</span> <span class="n">hasType</span><span class="p">(</span><span class="n">hasUnqualifiedDesugaredType</span><span class="p">(</span><span class="n">recordType</span><span class="p">(</span><span class="n">hasDeclaration</span><span class="p">(</span>
+                    <span class="n">cxxRecordDecl</span><span class="p">(</span><span class="n">isSameOrDerivedFrom</span><span class="p">(</span><span class="s">&quot;sc_port_base&quot;</span><span class="p">)).</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;crd&quot;</span><span class="p">)))))</span>
+
+                <span class="p">)</span><span class="c1">//anyOf</span>
+              <span class="p">)</span> <span class="c1">// allOf</span>
+              <span class="p">)</span> <span class="c1">//hasArgument</span>
+          <span class="p">).</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;cxx_operator_call_expr&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+      <span class="p">).</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;cxx_constructor_decl&quot;</span><span class="p">);</span>
+
+
+    <span class="cm">/*</span>
+
+
+<span class="cm">    auto match = cxxConstructorDecl(isExpansionInMainFile(),</span>
+<span class="cm">        forEachDescendant(</span>
+<span class="cm">          // Find the sc_event</span>
+<span class="cm">          cxxOperatorCallExpr(</span>
+<span class="cm">            // Match sc_event_finder argument</span>
+<span class="cm">            hasArgument(1,</span>
+<span class="cm">              ignoringParenCasts(</span>
+<span class="cm">              //allOf(</span>
+<span class="cm">                anyOf(</span>
+<span class="cm">                    hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(</span>
+<span class="cm">                            cxxRecordDecl(isSameOrDerivedFrom(&quot;sc_event&quot;)).bind(&quot;crd&quot;)))))</span>
+<span class="cm">                  , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(</span>
+<span class="cm">                            cxxRecordDecl(isSameOrDerivedFrom(&quot;sc_interface&quot;)).bind(&quot;crd&quot;)))))</span>
+<span class="cm">                  , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(</span>
+<span class="cm">                            cxxRecordDecl(isSameOrDerivedFrom(&quot;sc_event_finder&quot;)).bind(&quot;crd&quot;)))))</span>
+<span class="cm">                  , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(</span>
+<span class="cm">                            cxxRecordDecl(isSameOrDerivedFrom(&quot;sc_port_base&quot;)).bind(&quot;crd&quot;)))))</span>
+<span class="cm">                ) // anyOf</span>
+<span class="cm">                //,</span>
+<span class="cm">                  //anyOf(</span>
+<span class="cm">                    //cxxMemberCallExpr().bind(&quot;cxx_mcall&quot;)</span>
+<span class="cm">                    //, memberExpr().bind(&quot;me&quot;)</span>
+<span class="cm">                    //) //anyof</span>
+<span class="cm">                //) // allOf</span>
+<span class="cm">              ) //ignoringParenCasts</span>
+<span class="cm">            ) // hasArgument</span>
+<span class="cm">          ).bind(&quot;cxx_operator_call_expr&quot;)</span>
+<span class="cm">        )</span>
+<span class="cm">      ).bind(&quot;cxx_constructor_decl&quot;);</span>
+<span class="cm">      */</span>
+
+    <span class="cm">/* clang-format on */</span>
+    <span class="n">finder</span><span class="p">.</span><span class="n">addMatcher</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// This is the callback function whenever there is a match.</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">run</span><span class="p">(</span><span class="k">const</span> <span class="n">MatchFinder</span><span class="o">::</span><span class="n">MatchResult</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;====== SENSITIVITY MATCHER EXECUTED ======= </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">cxx_ctor_decl</span><span class="p">{</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CXXConstructorDecl</span> <span class="o">*&gt;</span><span class="p">(</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">Nodes</span><span class="p">.</span><span class="n">getNodeAs</span><span class="o">&lt;</span><span class="n">CXXConstructorDecl</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;cxx_constructor_decl&quot;</span><span class="p">))};</span>
+
+    <span class="k">auto</span> <span class="n">cxx_op_callexpr</span><span class="p">{</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CXXOperatorCallExpr</span> <span class="o">*&gt;</span><span class="p">(</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">Nodes</span><span class="p">.</span><span class="n">getNodeAs</span><span class="o">&lt;</span><span class="n">CXXOperatorCallExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;cxx_operator_call_expr&quot;</span><span class="p">))};</span>
+    <span class="k">auto</span> <span class="n">cxx_mcall</span><span class="p">{</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span> <span class="o">*&gt;</span><span class="p">(</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">Nodes</span><span class="p">.</span><span class="n">getNodeAs</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;cxx_mcall&quot;</span><span class="p">))};</span>
+    <span class="k">auto</span> <span class="n">me_wo_mcall</span><span class="p">{</span>
+        <span class="k">const_cast</span><span class="o">&lt;</span><span class="n">MemberExpr</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">Nodes</span><span class="p">.</span><span class="n">getNodeAs</span><span class="o">&lt;</span><span class="n">MemberExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;me&quot;</span><span class="p">))};</span>
+    <span class="k">auto</span> <span class="n">fd</span><span class="p">{</span><span class="n">result</span><span class="p">.</span><span class="n">Nodes</span><span class="p">.</span><span class="n">getNodeAs</span><span class="o">&lt;</span><span class="n">FieldDecl</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;fd&quot;</span><span class="p">)};</span>
+    <span class="c1">// if (cxx_ctor_decl) {</span>
+    <span class="c1">// cxx_ctor_decl-&gt;dump();</span>
+    <span class="c1">//</span>
+    <span class="c1">// }</span>
+    <span class="c1">//</span>
+
+    <span class="c1">// If the argument to the operator&lt;&lt;() is a MemberExpr.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">me_wo_mcall</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">MatchFinder</span> <span class="n">call_registry</span><span class="p">{};</span>
+      <span class="n">CallerCalleeMatcher</span> <span class="n">call_matcher</span><span class="p">{};</span>
+      <span class="n">call_matcher</span><span class="p">.</span><span class="n">registerMatchers</span><span class="p">(</span><span class="n">call_registry</span><span class="p">);</span>
+      <span class="n">call_registry</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="o">*</span><span class="n">me_wo_mcall</span><span class="p">,</span> <span class="o">*</span><span class="n">result</span><span class="p">.</span><span class="n">Context</span><span class="p">);</span>
+      <span class="n">call_matcher</span><span class="p">.</span><span class="n">dump</span><span class="p">();</span>
+      <span class="c1">// std::vector&lt;SensitivityTupleType&gt;</span>
+      <span class="k">auto</span> <span class="n">entry</span><span class="p">{</span><span class="n">call_matcher</span><span class="p">.</span><span class="n">getCallerCallee</span><span class="p">()};</span>
+      <span class="c1">// sensitivity_.insert(std::get&lt;0&gt;(entry), entry);</span>
+      <span class="n">sensitivity_</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+          <span class="n">SensitivityPairType</span><span class="p">(</span><span class="n">generateSensitivityName</span><span class="p">(</span><span class="n">entry</span><span class="p">),</span> <span class="n">entry</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="c1">// If the argument to the operator&lt;&lt;() is a CXXMemberCallExpr.</span>
+    <span class="c1">// This is needed when there is a clk.pos() in the sensitivity list.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cxx_mcall</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">MatchFinder</span> <span class="n">call_registry</span><span class="p">{};</span>
+      <span class="n">CallerCalleeMatcher</span> <span class="n">call_matcher</span><span class="p">{};</span>
+      <span class="n">call_matcher</span><span class="p">.</span><span class="n">registerMatchers</span><span class="p">(</span><span class="n">call_registry</span><span class="p">);</span>
+      <span class="n">call_registry</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="o">*</span><span class="n">cxx_mcall</span><span class="p">,</span> <span class="o">*</span><span class="n">result</span><span class="p">.</span><span class="n">Context</span><span class="p">);</span>
+      <span class="n">call_matcher</span><span class="p">.</span><span class="n">dump</span><span class="p">();</span>
+      <span class="c1">// sensitivity_.insert(SensitivityPairType(call_matcher.getCallerCallee()));</span>
+      <span class="k">auto</span> <span class="n">entry</span><span class="p">{</span><span class="n">call_matcher</span><span class="p">.</span><span class="n">getCallerCallee</span><span class="p">()};</span>
+      <span class="c1">// sensitivity_.insert(generateSensitivityName(entry), entry);</span>
+      <span class="n">sensitivity_</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+          <span class="n">SensitivityPairType</span><span class="p">(</span><span class="n">generateSensitivityName</span><span class="p">(</span><span class="n">entry</span><span class="p">),</span> <span class="n">entry</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">dump</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="k">const</span> <span class="nl">entry</span> <span class="p">:</span> <span class="n">sensitivity_</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">auto</span> <span class="n">generated_name</span><span class="p">{</span><span class="n">entry</span><span class="p">.</span><span class="n">first</span><span class="p">};</span>
+      <span class="k">auto</span> <span class="n">callercallee</span><span class="p">{</span><span class="n">entry</span><span class="p">.</span><span class="n">second</span><span class="p">};</span>
+      <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">generated_name</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="k">const</span> <span class="o">&amp;</span><span class="nl">call</span> <span class="p">:</span> <span class="n">callercallee</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">call</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">call</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  &quot;</span>
+                     <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">(</span><span class="n">call</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="p">};</span>  <span class="c1">// namespace sc_ast_matchers</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

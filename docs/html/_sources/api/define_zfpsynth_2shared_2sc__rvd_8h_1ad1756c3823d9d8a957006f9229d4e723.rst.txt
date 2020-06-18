@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsynth_2shared_2sc__rvd_8h_1ad1756c3823d9d8a957006f9229d4e723:
+
+Define valid_r
+==============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_shared_sc_rvd.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: valid_r

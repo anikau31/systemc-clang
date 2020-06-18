@@ -1,0 +1,13 @@
+.. _exhale_variable_module3_8hpp_1a06d82019392c63b429dcfaecb8dc768e:
+
+Variable zen
+============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_3_module3.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: zen

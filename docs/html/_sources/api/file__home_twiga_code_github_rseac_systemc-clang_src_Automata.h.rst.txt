@@ -1,0 +1,85 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_Automata.h:
+
+File Automata.h
+===============
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src>` (``/home/twiga/code/github/rseac/systemc-clang/src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/Automata.h``)
+---------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_Automata.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``clang/AST/DeclCXX.h``
+
+- ``clang/AST/Expr.h``
+
+- ``clang/AST/ParentMap.h``
+
+- ``clang/AST/PrettyPrinter.h``
+
+- ``clang/Analysis/CFG.h``
+
+- ``clang/Analysis/CFGStmtMap.h``
+
+- ``deque``
+
+- ``llvm/Support/raw_ostream.h``
+
+- ``map``
+
+- ``stdio.h``
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_Automata.cpp`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SuspensionAutomata.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_scpar`
+
+- :ref:`namespace_std`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classscpar_1_1Edge`
+
+- :ref:`exhale_class_classscpar_1_1Graph`
+
+- :ref:`exhale_class_classscpar_1_1Node`
+

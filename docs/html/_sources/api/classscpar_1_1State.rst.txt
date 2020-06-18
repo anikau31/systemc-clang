@@ -1,0 +1,16 @@
+.. _exhale_class_classscpar_1_1State:
+
+Class State
+===========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SuspensionAutomata.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::State
+   :members:
+   :protected-members:
+   :undoc-members:

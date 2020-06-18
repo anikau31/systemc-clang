@@ -1,0 +1,25 @@
+.. _exhale_class_classscpar_1_1SystemCClang:
+
+Class SystemCClang
+==================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SystemCClang.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public scpar::SystemCConsumer`` (:ref:`exhale_class_classscpar_1_1SystemCConsumer`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::SystemCClang
+   :members:
+   :protected-members:
+   :undoc-members:

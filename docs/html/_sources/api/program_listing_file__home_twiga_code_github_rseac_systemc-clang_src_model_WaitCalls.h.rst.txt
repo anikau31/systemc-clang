@@ -1,0 +1,59 @@
+
+.. _program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_model_WaitCalls.h:
+
+Program Listing for File WaitCalls.h
+====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file__home_twiga_code_github_rseac_systemc-clang_src_model_WaitCalls.h>` (``/home/twiga/code/github/rseac/systemc-clang/src/model/WaitCalls.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   //===-- src/WaitCalls.h - systec-clang class definition -------*- C++ -*-===//
+   //
+   //                     systemc-clang: SystemC Parser
+   //
+   // This file is distributed under the University of Illinois License.
+   // See LICENSE.mkd for details.
+   //
+   //===----------------------------------------------------------------------===//
+   //===----------------------------------------------------------------------===//
+   #ifndef _WAIT_CALLS_H_
+   #define _WAIT_CALLS_H_
+   
+   #include "FindWait.h"
+   #include "Utility.h"
+   #include "clang/AST/DeclCXX.h"
+   #include <map>
+   #include <string>
+   
+   namespace scpar {
+   using namespace clang;
+   using namespace std;
+   
+   class WaitCalls {
+   public:
+     // Constructors.
+     WaitCalls();
+     WaitCalls(const string &, FindWait::waitListType);
+   
+     // Copy constructor.
+     WaitCalls(const WaitCalls &);
+   
+     // Destructor.
+     ~WaitCalls();
+   
+     string getName();
+     FindWait::waitListType getWaitList();
+   
+     unsigned int getTotalWaits();
+     // Print
+     void dump(raw_ostream &, int);
+   
+   private:
+     string _name;
+     FindWait::waitListType _waitList;
+   };
+   } // namespace scpar
+   #endif

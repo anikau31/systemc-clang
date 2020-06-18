@@ -1,0 +1,13 @@
+.. _exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a22b6e37654ac93c6d0d9c06ec1bf5ded:
+
+Template Function nlohmann::detail::dtoa_impl::compute_boundaries
+=================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: nlohmann::detail::dtoa_impl::compute_boundaries(FloatType)

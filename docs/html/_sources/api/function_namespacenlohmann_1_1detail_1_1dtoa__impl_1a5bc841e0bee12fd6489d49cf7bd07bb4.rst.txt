@@ -1,0 +1,13 @@
+.. _exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a5bc841e0bee12fd6489d49cf7bd07bb4:
+
+Function nlohmann::detail::dtoa_impl::grisu2_round
+==================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: nlohmann::detail::dtoa_impl::grisu2_round(char *, int, std::uint64_t, std::uint64_t, std::uint64_t, std::uint64_t)

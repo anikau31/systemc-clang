@@ -1,0 +1,13 @@
+.. _exhale_typedef_port__axis_8h_1ad99b60cd51f35acfa1e16e5877416dc5:
+
+Typedef axi_td
+==============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_port_axis.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: axi_td

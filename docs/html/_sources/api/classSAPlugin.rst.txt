@@ -1,0 +1,25 @@
+.. _exhale_class_classSAPlugin:
+
+Class SAPlugin
+==============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SAPlugin.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public scpar::SystemCConsumer`` (:ref:`exhale_class_classscpar_1_1SystemCConsumer`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: SAPlugin
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_typedef_z1test_8cpp_1a77b7c603be1f2ebd37a6caabfe9dca8c:
+
+Typedef expo_t
+==============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp1_z1test.cpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: expo_t

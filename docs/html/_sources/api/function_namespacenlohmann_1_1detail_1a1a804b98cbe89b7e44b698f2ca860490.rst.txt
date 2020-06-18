@@ -1,0 +1,13 @@
+.. _exhale_function_namespacenlohmann_1_1detail_1a1a804b98cbe89b7e44b698f2ca860490:
+
+Template Function nlohmann::detail::to_json(BasicJsonType&, T)
+==============================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: nlohmann::detail::to_json(BasicJsonType&, T)

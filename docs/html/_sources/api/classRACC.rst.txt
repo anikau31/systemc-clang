@@ -1,0 +1,16 @@
+.. _exhale_class_classRACC:
+
+Class RACC
+==========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_port_axis.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: RACC
+   :members:
+   :protected-members:
+   :undoc-members:

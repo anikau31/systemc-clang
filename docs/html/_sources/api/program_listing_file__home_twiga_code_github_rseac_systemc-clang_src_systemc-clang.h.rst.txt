@@ -1,0 +1,31 @@
+
+.. _program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_systemc-clang.h:
+
+Program Listing for File systemc-clang.h
+========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file__home_twiga_code_github_rseac_systemc-clang_src_systemc-clang.h>` (``/home/twiga/code/github/rseac/systemc-clang/src/systemc-clang.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifndef _SYSTEMC_CLANG_H_
+   #define _SYSTEMC_CLANG_H_
+   //#include <iostream>
+   #include <sstream>
+   #include <string>
+   #include "json.hpp"
+   
+   namespace scpar {
+   
+   using json = nlohmann::json;
+   
+   template <typename T>
+   std::string to_string(T* pointer) {
+     std::ostringstream address;
+     address << pointer;
+     return address.str();
+   }
+   }  // namespace scpar
+   #endif

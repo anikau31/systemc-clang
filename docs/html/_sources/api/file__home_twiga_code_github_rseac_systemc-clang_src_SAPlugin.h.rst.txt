@@ -1,0 +1,48 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_SAPlugin.h:
+
+File SAPlugin.h
+===============
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src>` (``/home/twiga/code/github/rseac/systemc-clang/src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+Plugin consumer for generating suspension automata. 
+ 
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/SAPlugin.h``)
+---------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_SAPlugin.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``SystemCClang.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SystemCClang.h`)
+
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classSAPlugin`
+

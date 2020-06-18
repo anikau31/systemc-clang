@@ -1,0 +1,30 @@
+.. _exhale_class_classsc__core_1_1sc__stream:
+
+Template Class sc_stream
+========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_stream.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Types
+**********
+
+- ``public sc_core::sc_stream_in_if< T >`` (:ref:`exhale_class_classsc__core_1_1sc__stream__in__if`)
+- ``public sc_core::sc_stream_out_if< T >`` (:ref:`exhale_class_classsc__core_1_1sc__stream__out__if`)
+- ``public sc_channel``
+- ``public sc_core::sc_stream_in_if< T >`` (:ref:`exhale_class_classsc__core_1_1sc__stream__in__if`)
+- ``public sc_core::sc_stream_out_if< T >`` (:ref:`exhale_class_classsc__core_1_1sc__stream__out__if`)
+- ``public sc_channel``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: sc_core::sc_stream
+   :members:
+   :protected-members:
+   :undoc-members:

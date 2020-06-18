@@ -1,0 +1,13 @@
+.. _exhale_function_first-counter-syn_8cpp_1a6c5ff2bfcfb6dac0bde01167362ed6dd:
+
+Function SC_MODULE(DUT)
+=======================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_syn_first-counter_first-counter-syn.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(DUT)

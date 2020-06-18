@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a7c94253db90041af11dd946a49f0f8a4:
+
+Define NLOHMANN_JSON_VERSION_MAJOR
+==================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: NLOHMANN_JSON_VERSION_MAJOR

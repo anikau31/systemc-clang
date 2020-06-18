@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File sc_rvd.h &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File sc_rvd.h</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_rvd.h.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-sc-rvd-h">
+<span id="program-listing-file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsim-sc-rvd-h"></span><h1>Program Listing for File sc_rvd.h<a class="headerlink" href="#program-listing-for-file-sc-rvd-h" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_rvd.h.html#file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsim-sc-rvd-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/examples/llnl-examples/zfpsim/sc_rvd.h</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef SC_RVD_H</span>
+<span class="cp">#define SC_RVD_H</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;systemc.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#define data_r() data.read()</span>
+<span class="cp">#define data_w(d) data.write(d)</span>
+<span class="cp">#define data_event() data.value_changed_event()</span>
+<span class="cp">#define data_chg() data </span><span class="c1">//.value_changed()</span>
+
+<span class="cp">#define valid_r() valid.read()</span>
+<span class="cp">#define valid_w(d) valid.write(d)</span>
+<span class="cp">#define valid_event() valid.value_changed_event()</span>
+<span class="cp">#define valid_chg() valid </span><span class="c1">//.value_changed()</span>
+
+<span class="cp">#define ready_r() ready.read()</span>
+<span class="cp">#define ready_w(d) ready.write(d)</span>
+<span class="cp">#define ready_event() ready.value_changed_event()</span>
+<span class="cp">#define ready_chg() ready </span><span class="c1">//.value_changed()</span>
+
+<span class="k">namespace</span> <span class="n">sc_core</span> <span class="p">{</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">sc_rvd_export_in</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="cm">/* * * * * constructors * * * * */</span>
+
+    <span class="n">sc_rvd_export_in</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="o">=</span><span class="n">sc_gen_unique_name</span><span class="p">(</span><span class="s">&quot;sc_rvd_export_in&quot;</span><span class="p">))</span> <span class="o">:</span>
+        <span class="n">data</span> <span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_data&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()</span> <span class="p">),</span>
+        <span class="n">valid</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_valid&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()),</span>
+        <span class="n">ready</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_ready&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">())</span>
+    <span class="p">{}</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">sc_export</span><span class="o">&lt;</span><span class="n">sc_signal_in_if</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&gt;</span>     <span class="n">data</span><span class="p">;</span>
+    <span class="n">sc_export</span><span class="o">&lt;</span><span class="n">sc_signal_in_if</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">valid</span><span class="p">;</span>
+    <span class="n">sc_export</span><span class="o">&lt;</span><span class="n">sc_signal_out_if</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">ready</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">sc_rvd_export_out</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="cm">/* * * * * constructors * * * * */</span>
+
+    <span class="n">sc_rvd_export_out</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="o">=</span><span class="n">sc_gen_unique_name</span><span class="p">(</span><span class="s">&quot;sc_rvd_export_out&quot;</span><span class="p">))</span> <span class="o">:</span>
+        <span class="n">data</span> <span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_data&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()</span> <span class="p">),</span>
+        <span class="n">valid</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_valid&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()),</span>
+        <span class="n">ready</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_ready&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">())</span>
+    <span class="p">{}</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">sc_export</span><span class="o">&lt;</span><span class="n">sc_signal_out_if</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&gt;</span>    <span class="n">data</span><span class="p">;</span>
+    <span class="n">sc_export</span><span class="o">&lt;</span><span class="n">sc_signal_out_if</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">valid</span><span class="p">;</span>
+    <span class="n">sc_export</span><span class="o">&lt;</span><span class="n">sc_signal_in_if</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">ready</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// ----------------------------------------------------------------------------</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">sc_rvd_in</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="cm">/* * * * * constructors * * * * */</span>
+
+    <span class="n">sc_rvd_in</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="o">=</span><span class="n">sc_gen_unique_name</span><span class="p">(</span><span class="s">&quot;sc_rvd_in&quot;</span><span class="p">))</span> <span class="o">:</span>
+        <span class="n">data</span> <span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_data&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()</span> <span class="p">),</span>
+        <span class="n">valid</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_valid&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()),</span>
+        <span class="n">ready</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_ready&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">())</span>
+    <span class="p">{}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">C</span><span class="o">&gt;</span>
+    <span class="kt">void</span> <span class="n">bind</span><span class="p">(</span><span class="n">C</span><span class="o">&amp;</span> <span class="n">chan</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">data</span><span class="p">(</span><span class="n">chan</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>
+        <span class="n">valid</span><span class="p">(</span><span class="n">chan</span><span class="p">.</span><span class="n">valid</span><span class="p">);</span>
+        <span class="n">ready</span><span class="p">(</span><span class="n">chan</span><span class="p">.</span><span class="n">ready</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">C</span><span class="o">&gt;</span>
+    <span class="kt">void</span> <span class="k">operator</span> <span class="p">()</span> <span class="p">(</span><span class="n">C</span><span class="o">&amp;</span> <span class="n">chan</span><span class="p">)</span>
+    <span class="p">{</span> <span class="n">bind</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span> <span class="p">}</span>
+
+    <span class="cm">/* * * * * interface access methods * * * * */</span>
+
+    <span class="c1">// read data, blocking</span>
+    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">read</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">ready</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span> <span class="n">wait</span><span class="p">();</span> <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">valid</span><span class="p">);</span>
+        <span class="n">ready</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">read</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">d</span><span class="p">)</span>
+    <span class="p">{</span> <span class="n">d</span> <span class="o">=</span> <span class="n">read</span><span class="p">();</span> <span class="p">}</span>
+
+    <span class="cm">/* * * * * other methods * * * * */</span>
+
+    <span class="kt">void</span> <span class="n">reset</span><span class="p">()</span>
+    <span class="p">{</span> <span class="n">ready</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kr">inline</span> <span class="k">operator</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="p">()</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="n">read</span><span class="p">();</span> <span class="p">}</span>
+
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">kind</span><span class="p">()</span> <span class="k">const</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;sc_rvd_in&quot;</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">sc_in</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>    <span class="n">data</span><span class="p">;</span>
+    <span class="n">sc_in</span> <span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">valid</span><span class="p">;</span>
+    <span class="n">sc_out</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">ready</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="c1">// disabled</span>
+    <span class="n">sc_rvd_in</span><span class="p">(</span><span class="k">const</span> <span class="n">sc_rvd_in</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="n">sc_rvd_in</span><span class="o">&amp;</span> <span class="k">operator</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="n">sc_rvd_in</span><span class="o">&amp;</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">sc_rvd_out</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="cm">/* * * * * constructors * * * * */</span>
+
+    <span class="n">sc_rvd_out</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="o">=</span><span class="n">sc_gen_unique_name</span><span class="p">(</span><span class="s">&quot;sc_rvd_out&quot;</span><span class="p">))</span> <span class="o">:</span>
+        <span class="n">data</span> <span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_data&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()</span> <span class="p">),</span>
+        <span class="n">valid</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_valid&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()),</span>
+        <span class="n">ready</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_ready&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">())</span>
+    <span class="p">{}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">C</span><span class="o">&gt;</span>
+    <span class="kt">void</span> <span class="n">bind</span><span class="p">(</span><span class="n">C</span><span class="o">&amp;</span> <span class="n">chan</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">data</span><span class="p">(</span><span class="n">chan</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>
+        <span class="n">valid</span><span class="p">(</span><span class="n">chan</span><span class="p">.</span><span class="n">valid</span><span class="p">);</span>
+        <span class="n">ready</span><span class="p">(</span><span class="n">chan</span><span class="p">.</span><span class="n">ready</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">C</span><span class="o">&gt;</span>
+    <span class="kt">void</span> <span class="k">operator</span> <span class="p">()</span> <span class="p">(</span><span class="n">C</span><span class="o">&amp;</span> <span class="n">chan</span><span class="p">)</span>
+    <span class="p">{</span> <span class="n">bind</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span> <span class="p">}</span>
+
+    <span class="cm">/* * * * * interface access methods * * * * */</span>
+
+    <span class="c1">// write data, blocking</span>
+    <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">d</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span> <span class="n">wait</span><span class="p">();</span> <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">ready</span><span class="p">);</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* * * * * other methods * * * * */</span>
+
+    <span class="kt">void</span> <span class="n">reset</span><span class="p">()</span>
+    <span class="p">{</span> <span class="n">valid</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">sc_rvd_out</span><span class="o">&amp;</span> <span class="k">operator</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">d</span><span class="p">)</span>
+    <span class="p">{</span> <span class="n">write</span><span class="p">(</span><span class="n">d</span><span class="p">);</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">kind</span><span class="p">()</span> <span class="k">const</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;sc_rvd_out&quot;</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">sc_out</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>    <span class="n">data</span><span class="p">;</span>
+    <span class="n">sc_out</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">valid</span><span class="p">;</span>
+    <span class="n">sc_in</span> <span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">ready</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="c1">// disabled</span>
+    <span class="n">sc_rvd_out</span><span class="p">(</span><span class="k">const</span> <span class="n">sc_rvd_out</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="n">sc_rvd_out</span><span class="o">&amp;</span> <span class="k">operator</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="n">sc_rvd_out</span><span class="o">&amp;</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// ----------------------------------------------------------------------------</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">sc_rvd</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="cm">/* * * * * constructors * * * * */</span>
+
+    <span class="n">sc_rvd</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="o">=</span><span class="n">sc_gen_unique_name</span><span class="p">(</span><span class="s">&quot;sc_rvd&quot;</span><span class="p">))</span> <span class="o">:</span>
+        <span class="n">data</span> <span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_data&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()</span> <span class="p">),</span>
+        <span class="n">valid</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_valid&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">()),</span>
+        <span class="n">ready</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_ready&quot;</span><span class="p">).</span><span class="n">c_str</span><span class="p">())</span>
+    <span class="p">{}</span>
+
+    <span class="cm">/* * * * * interface access methods * * * * */</span>
+
+    <span class="c1">// read data, blocking</span>
+    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">read</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">ready</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span> <span class="n">wait</span><span class="p">();</span> <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">valid</span><span class="p">);</span>
+        <span class="n">ready</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">read</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">d</span><span class="p">)</span>
+    <span class="p">{</span> <span class="n">d</span> <span class="o">=</span> <span class="n">read</span><span class="p">();</span> <span class="p">}</span>
+
+    <span class="c1">// write data, blocking</span>
+    <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">d</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span> <span class="n">wait</span><span class="p">();</span> <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">ready</span><span class="p">);</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* * * * * other methods * * * * */</span>
+
+    <span class="kr">inline</span> <span class="k">operator</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="p">()</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="n">read</span><span class="p">();</span> <span class="p">}</span>
+
+    <span class="n">sc_rvd</span><span class="o">&amp;</span> <span class="k">operator</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">d</span><span class="p">)</span>
+    <span class="p">{</span> <span class="n">write</span><span class="p">(</span><span class="n">d</span><span class="p">);</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">)</span> <span class="k">const</span>
+    <span class="p">{</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+        <span class="n">valid</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+        <span class="n">ready</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">dump</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">)</span> <span class="k">const</span>
+    <span class="p">{</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">dump</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+        <span class="n">valid</span><span class="p">.</span><span class="n">dump</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+        <span class="n">ready</span><span class="p">.</span><span class="n">dump</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">kind</span><span class="p">()</span> <span class="k">const</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;sc_rvd&quot;</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">U</span><span class="o">&gt;</span>
+    <span class="k">friend</span> <span class="kt">void</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">sc_trace_file</span><span class="o">*</span> <span class="n">tf</span><span class="p">,</span> <span class="k">const</span> <span class="n">sc_rvd</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;&amp;</span> <span class="n">ob</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">nm</span><span class="p">);</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>    <span class="n">data</span><span class="p">;</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">valid</span><span class="p">;</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">ready</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// ----------------------------------------------------------------------------</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span>
+<span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">sc_rvd</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">ob</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ob</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">os</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="kt">void</span>
+<span class="n">sc_trace</span><span class="p">(</span><span class="n">sc_trace_file</span><span class="o">*</span> <span class="n">tf</span><span class="p">,</span> <span class="k">const</span> <span class="n">sc_rvd_in</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">ob</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">nm</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">data</span> <span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.data&quot;</span> <span class="p">);</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">valid</span><span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.valid&quot;</span><span class="p">);</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">ready</span><span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.ready&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="kt">void</span>
+<span class="n">sc_trace</span><span class="p">(</span><span class="n">sc_trace_file</span><span class="o">*</span> <span class="n">tf</span><span class="p">,</span> <span class="k">const</span> <span class="n">sc_rvd_out</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">ob</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">nm</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">data</span> <span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.data&quot;</span> <span class="p">);</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">valid</span><span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.valid&quot;</span><span class="p">);</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">ready</span><span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.ready&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="kt">void</span>
+<span class="n">sc_trace</span><span class="p">(</span><span class="n">sc_trace_file</span><span class="o">*</span> <span class="n">tf</span><span class="p">,</span> <span class="k">const</span> <span class="n">sc_rvd</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">ob</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">nm</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">data</span> <span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.data&quot;</span> <span class="p">);</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">valid</span><span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.valid&quot;</span><span class="p">);</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">ready</span><span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.ready&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="p">}</span> <span class="c1">// namespace sc_core</span>
+
+<span class="cp">#endif </span><span class="c1">// SC_RVD_H</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

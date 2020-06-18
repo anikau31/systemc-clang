@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a6954bec49ed2a2dfb938c1131c82740a:
+
+Define JSON_CATCH
+=================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_CATCH

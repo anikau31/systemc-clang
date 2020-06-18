@@ -1,0 +1,59 @@
+
+.. _program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_model_NotifyCalls.h:
+
+Program Listing for File NotifyCalls.h
+======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file__home_twiga_code_github_rseac_systemc-clang_src_model_NotifyCalls.h>` (``/home/twiga/code/github/rseac/systemc-clang/src/model/NotifyCalls.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   //===-- src/NotifyCalls.h - systec-clang class definition -------*- C++ -*-===//
+   //
+   //                     systemc-clang: SystemC Parser
+   //
+   // This file is distributed under the University of Illinois License.
+   // See LICENSE.mkd for details.
+   //
+   //===----------------------------------------------------------------------===//
+   //===----------------------------------------------------------------------===//
+   #ifndef _NOTIFY_CALLS_H_
+   #define _NOTIFY_CALLS_H_
+   
+   #include "FindNotify.h"
+   #include "Utility.h"
+   #include "clang/AST/DeclCXX.h"
+   #include <map>
+   #include <string>
+   
+   namespace scpar {
+   using namespace clang;
+   using namespace std;
+   
+   class NotifyCalls {
+   public:
+     // Constructors.
+     NotifyCalls();
+     NotifyCalls(const string &, FindNotify::NotifyCallListType);
+   
+     // Copy constructor.
+     NotifyCalls(const NotifyCalls &);
+   
+     // Destructor.
+     ~NotifyCalls();
+   
+     string getName() const;
+     FindNotify::NotifyCallListType getNotifyCallList();
+   
+     unsigned int getNumNotifyCalls();
+     // Print
+     void dump(llvm::raw_ostream &, int);
+   
+   private:
+     string name_;
+     FindNotify::NotifyCallListType notify_call_list_;
+   };
+   } // namespace scpar
+   #endif

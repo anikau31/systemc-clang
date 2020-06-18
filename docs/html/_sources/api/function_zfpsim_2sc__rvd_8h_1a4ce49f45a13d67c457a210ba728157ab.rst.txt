@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsim_2sc__rvd_8h_1a4ce49f45a13d67c457a210ba728157ab:
+
+Template Function sc_core::sc_trace(sc_trace_file \*, const sc_rvd_in<T>&, const std::string&)
+==============================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_rvd.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sc_core::sc_trace(sc_trace_file *, const sc_rvd_in<T>&, const std::string&)

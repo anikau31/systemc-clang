@@ -1,0 +1,44 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_2_module2.hpp:
+
+File module2.hpp
+================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_2>` (``/home/twiga/code/github/rseac/systemc-clang/examples/sim/ex_2``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/examples/sim/ex_2/module2.hpp``)
+------------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_2_module2.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``systemc.h``
+
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_module2_8hpp_1a883a58f440d6bf704bc22ca2daa9290e`
+

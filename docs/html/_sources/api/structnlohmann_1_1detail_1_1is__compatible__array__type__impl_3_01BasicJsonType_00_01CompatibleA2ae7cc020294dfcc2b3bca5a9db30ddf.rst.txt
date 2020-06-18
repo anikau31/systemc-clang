@@ -1,0 +1,16 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1is__compatible__array__type__impl_3_01BasicJsonType_00_01CompatibleA2ae7cc020294dfcc2b3bca5a9db30ddf:
+
+Template Struct is_compatible_array_type_impl< BasicJsonType, CompatibleArrayType, enable_if_t< is_detected< value_type_t, CompatibleArrayType >::value and is_detected< iterator_t, CompatibleArrayType >::value and not is_iterator_traits< iterator_traits< CompatibleArrayType > >::value > >
+=================================================================================================================================================================================================================================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::is_compatible_array_type_impl< BasicJsonType, CompatibleArrayType, enable_if_t< is_detected< value_type_t, CompatibleArrayType >::value and is_detected< iterator_t, CompatibleArrayType >::value and not is_iterator_traits< iterator_traits< CompatibleArrayType > >::value > >
+   :members:
+   :protected-members:
+   :undoc-members:

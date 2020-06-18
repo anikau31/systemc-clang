@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a50f81c80525d6fbce743d5d28b53ff73:
+
+Define JSON_HEDLEY_VERSION_DECODE_MAJOR
+=======================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_VERSION_DECODE_MAJOR

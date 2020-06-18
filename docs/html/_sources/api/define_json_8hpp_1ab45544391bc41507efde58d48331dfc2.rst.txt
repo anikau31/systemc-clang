@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1ab45544391bc41507efde58d48331dfc2:
+
+Define JSON_HEDLEY_GCC_HAS_WARNING
+==================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_GCC_HAS_WARNING

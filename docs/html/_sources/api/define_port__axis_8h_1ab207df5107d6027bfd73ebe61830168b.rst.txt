@@ -1,0 +1,13 @@
+.. _exhale_define_port__axis_8h_1ab207df5107d6027bfd73ebe61830168b:
+
+Define AXI_TD_CONCAT
+====================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_port_axis.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: AXI_TD_CONCAT

@@ -1,0 +1,59 @@
+.. _dir__home_twiga_code_github_rseac_systemc-clang_src_matchers:
+
+
+Directory matchers
+==================
+
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src>` (``/home/twiga/code/github/rseac/systemc-clang/src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+*Directory path:* ``/home/twiga/code/github/rseac/systemc-clang/src/matchers``
+
+
+Files
+-----
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindArgument.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindArgument.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindConstructor.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindConstructor.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindEntryFunctions.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindEntryFunctions.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindEvents.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindEvents.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindGlobalEvents.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindGlobalEvents.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindMemberFieldMatcher.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindModule.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindModule.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindModuleInstance.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindModuleInstance.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindNetlist.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindNetlist.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindNotify.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindNotify.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindPorts.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSCMain.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSCMain.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSCModules.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSensitivity.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSensitivity.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSimTime.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSimTime.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTemplateParameters.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTemplateParameters.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTemplateTypes.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTemplateTypes.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTLMInterfaces.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTLMInterfaces.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindWait.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindWait.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_InstanceMatcher.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_Matchers.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_NetlistMatcher.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_PortMatcher.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_SensitivityMatcher.h`
+
+

@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsim_2sc__stream_8h_1a5587c28173bbafa001484a10fd39befb:
+
+Template Function sc_core::sc_trace(sc_trace_file \*, const sc_stream<T>&, const std::string&)
+==============================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_stream.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sc_core::sc_trace(sc_trace_file *, const sc_stream<T>&, const std::string&)

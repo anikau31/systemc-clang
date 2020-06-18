@@ -1,0 +1,13 @@
+.. _exhale_function_SuspensionAutomata_8cpp_1ac484a884be6dbde73c1a5c0fc7b3fe80:
+
+Template Function generic_isFound
+=================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SuspensionAutomata.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: generic_isFound(Container<Node, Allocator>&, Node)

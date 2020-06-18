@@ -1,0 +1,13 @@
+.. _exhale_function_new__example_8hpp_1a80e2dc3f8dd57ba105f10a2d2cf8c656:
+
+Function SC_MODULE(fa)
+======================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_4_new_example.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(fa)

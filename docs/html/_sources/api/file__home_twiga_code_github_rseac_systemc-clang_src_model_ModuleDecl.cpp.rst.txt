@@ -1,0 +1,43 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_model_ModuleDecl.cpp:
+
+File ModuleDecl.cpp
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src_model>` (``/home/twiga/code/github/rseac/systemc-clang/src/model``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/model/ModuleDecl.cpp``)
+-------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_model_ModuleDecl.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``ModuleDecl.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_ModuleDecl.h`)
+
+- ``algorithm``
+
+- ``string``
+
+- ``tuple``
+
+
+
+
+

@@ -1,0 +1,61 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_enums.h:
+
+File enums.h
+============
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src>` (``/home/twiga/code/github/rseac/systemc-clang/src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+Defining enumerated types used throughout systemc-clang. 
+ 
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/enums.h``)
+------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_enums.h.rst
+
+
+
+
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_EntryFunctionContainer.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_EntryFunctionContainer.cpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_scpar`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_namespacescpar_1afc1126c1b41ec59a3fcb6d841b5ab046`
+
+- :ref:`exhale_enum_namespacescpar_1ab13ef6893ebd49625ff5661fd2f9d038`
+
+- :ref:`exhale_enum_namespacescpar_1ab3f01a1533a9ff1b38089f9674ad2177`
+

@@ -1,0 +1,16 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1wide__string__input__helper_3_01WideStringType_00_012_01_4:
+
+Template Struct wide_string_input_helper< WideStringType, 2 >
+=============================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::wide_string_input_helper< WideStringType, 2 >
+   :members:
+   :protected-members:
+   :undoc-members:

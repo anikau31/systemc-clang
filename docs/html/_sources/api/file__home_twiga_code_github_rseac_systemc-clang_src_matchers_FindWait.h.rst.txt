@@ -1,0 +1,71 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindWait.h:
+
+File FindWait.h
+===============
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src_matchers>` (``/home/twiga/code/github/rseac/systemc-clang/src/matchers``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/matchers/FindWait.h``)
+------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindWait.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``WaitContainer.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_WaitContainer.h`)
+
+- ``clang/AST/DeclCXX.h``
+
+- ``clang/AST/RecursiveASTVisitor.h``
+
+- ``llvm/Support/raw_ostream.h``
+
+- ``map``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindWait.cpp`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_EntryFunctionContainer.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_WaitCalls.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SystemCClang.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_scpar`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classscpar_1_1FindWait`
+

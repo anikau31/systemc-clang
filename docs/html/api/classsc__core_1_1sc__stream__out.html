@@ -1,0 +1,488 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class sc_stream_out &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class sc_stream_out_if" href="classsc__core_1_1sc__stream__out__if.html" />
+    <link rel="prev" title="Template Class sc_stream_nonblocking_out_if" href="classsc__core_1_1sc__stream__nonblocking__out__if.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">Library API</a> &raquo;</li>
+        
+      <li>Template Class sc_stream_out</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classsc__core_1_1sc__stream__out.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-sc-stream-out">
+<span id="exhale-class-classsc-core-1-1sc-stream-out"></span><h1>Template Class sc_stream_out<a class="headerlink" href="#template-class-sc-stream-out" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_stream_ports.h.html#file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsim-sc-stream-ports-h"><span class="std std-ref">File sc_stream_ports.h</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-types">
+<h3>Base Types<a class="headerlink" href="#base-types" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">sc_port&lt;</span> <span class="pre">sc_stream_out_if&lt;</span> <span class="pre">T</span> <span class="pre">&gt;,</span> <span class="pre">0,</span> <span class="pre">SC_ONE_OR_MORE_BOUND</span> <span class="pre">&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">sc_port&lt;</span> <span class="pre">sc_stream_out_if&lt;</span> <span class="pre">T</span> <span class="pre">&gt;,</span> <span class="pre">0,</span> <span class="pre">SC_ONE_OR_MORE_BOUND</span> <span class="pre">&gt;</span></code></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0EN7sc_core13sc_stream_outE">
+<span id="_CPPv3I0EN7sc_core13sc_stream_outE"></span><span id="_CPPv2I0EN7sc_core13sc_stream_outE"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classsc__core_1_1sc__stream__out"></span><em class="property">class </em><code class="sig-prename descclassname">sc_core<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">sc_stream_out</code> : <em class="property">public</em> sc_port&lt;<a class="reference internal" href="classsc__core_1_1sc__stream__out__if.html#_CPPv4I0EN7sc_core16sc_stream_out_ifE" title="sc_core::sc_stream_out_if">sc_stream_out_if</a>&lt;<a class="reference internal" href="#_CPPv4I0EN7sc_core13sc_stream_outE" title="sc_core::sc_stream_out::T">T</a>&gt;, 0, SC_ONE_OR_MORE_BOUND&gt;, <em class="property">public</em> sc_port&lt;<a class="reference internal" href="classsc__core_1_1sc__stream__out__if.html#_CPPv4I0EN7sc_core16sc_stream_out_ifE" title="sc_core::sc_stream_out_if">sc_stream_out_if</a>&lt;<a class="reference internal" href="#_CPPv4I0EN7sc_core13sc_stream_outE" title="sc_core::sc_stream_out::T">T</a>&gt;, 0, SC_ONE_OR_MORE_BOUND&gt;<a class="headerlink" href="#_CPPv4I0EN7sc_core13sc_stream_outE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out9data_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out9data_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out9data_typeE"></span><span id="sc_core::sc_stream_out::data_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a37734652ad75dcc51a95795e3ec58eec"></span><em class="property">typedef </em><a class="reference internal" href="#_CPPv4I0EN7sc_core13sc_stream_outE" title="sc_core::sc_stream_out::T">T</a> <code class="sig-name descname">data_type</code><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out7if_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out7if_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out7if_typeE"></span><span id="sc_core::sc_stream_out::if_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a13912f137ebd4ae3b68f83f32380a2d6"></span><em class="property">typedef </em><a class="reference internal" href="classsc__core_1_1sc__stream__out__if.html#_CPPv4I0EN7sc_core16sc_stream_out_ifE" title="sc_core::sc_stream_out_if">sc_stream_out_if</a>&lt;<a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a>&gt; <code class="sig-name descname">if_type</code><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out7if_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out9base_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out9base_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out9base_typeE"></span><span id="sc_core::sc_stream_out::base_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a0038c688742ace21302c751b78a5ea83"></span><em class="property">typedef </em>sc_port&lt;<a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out7if_typeE" title="sc_core::sc_stream_out::if_type">if_type</a>, 0, SC_ONE_OR_MORE_BOUND&gt; <code class="sig-name descname">base_type</code><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out9base_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out9this_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out9this_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out9this_typeE"></span><span id="sc_core::sc_stream_out::this_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a66208c3d5c9735cca20cd81c0a7320be"></span><em class="property">typedef </em><a class="reference internal" href="#_CPPv4I0EN7sc_core13sc_stream_outE" title="sc_core::sc_stream_out">sc_stream_out</a>&lt;<a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a>&gt; <code class="sig-name descname">this_type</code><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out9this_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out11out_if_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out11out_if_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out11out_if_typeE"></span><span id="sc_core::sc_stream_out::out_if_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a487b0a8f86b8ba208f2d7f2b31390fd2"></span><em class="property">typedef </em><a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out7if_typeE" title="sc_core::sc_stream_out::if_type">if_type</a> <code class="sig-name descname">out_if_type</code><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out11out_if_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out13out_port_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out13out_port_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out13out_port_typeE"></span><span id="sc_core::sc_stream_out::out_port_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a712aab04af298eb05ff5cf5ba2840548"></span><em class="property">typedef </em>sc_port_b&lt;<a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out11out_if_typeE" title="sc_core::sc_stream_out::out_if_type">out_if_type</a>&gt; <code class="sig-name descname">out_port_type</code><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out13out_port_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out9data_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out9data_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out9data_typeE"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a37734652ad75dcc51a95795e3ec58eec"></span><em class="property">typedef </em><a class="reference internal" href="#_CPPv4I0EN7sc_core13sc_stream_outE" title="sc_core::sc_stream_out::T">T</a> <code class="sig-name descname">data_type</code><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out7if_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out7if_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out7if_typeE"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a13912f137ebd4ae3b68f83f32380a2d6"></span><em class="property">typedef </em><a class="reference internal" href="classsc__core_1_1sc__stream__out__if.html#_CPPv4I0EN7sc_core16sc_stream_out_ifE" title="sc_core::sc_stream_out_if">sc_stream_out_if</a>&lt;<a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a>&gt; <code class="sig-name descname">if_type</code><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out9base_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out9base_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out9base_typeE"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a0038c688742ace21302c751b78a5ea83"></span><em class="property">typedef </em>sc_port&lt;<a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out7if_typeE" title="sc_core::sc_stream_out::if_type">if_type</a>, 0, SC_ONE_OR_MORE_BOUND&gt; <code class="sig-name descname">base_type</code><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out9this_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out9this_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out9this_typeE"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a66208c3d5c9735cca20cd81c0a7320be"></span><em class="property">typedef </em><a class="reference internal" href="#_CPPv4I0EN7sc_core13sc_stream_outE" title="sc_core::sc_stream_out">sc_stream_out</a>&lt;<a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a>&gt; <code class="sig-name descname">this_type</code><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out11out_if_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out11out_if_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out11out_if_typeE"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a487b0a8f86b8ba208f2d7f2b31390fd2"></span><em class="property">typedef </em><a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out7if_typeE" title="sc_core::sc_stream_out::if_type">if_type</a> <code class="sig-name descname">out_if_type</code><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N7sc_core13sc_stream_out13out_port_typeE">
+<span id="_CPPv3N7sc_core13sc_stream_out13out_port_typeE"></span><span id="_CPPv2N7sc_core13sc_stream_out13out_port_typeE"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a712aab04af298eb05ff5cf5ba2840548"></span><em class="property">typedef </em>sc_port_b&lt;<a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out11out_if_typeE" title="sc_core::sc_stream_out::out_if_type">out_if_type</a>&gt; <code class="sig-name descname">out_port_type</code><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEv">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEv"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEv"></span><span id="sc_core::sc_stream_out::sc_stream_out"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a9822bc2439e248fa865850776c76d7fe"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out13sc_stream_outEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKc">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEPKc"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEPKc"></span><span id="sc_core::sc_stream_out::sc_stream_out__cCP"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a3085adeac1b3131b1446943d2e4c640a"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outER11out_if_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outER11out_if_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outER11out_if_type"></span><span id="sc_core::sc_stream_out::sc_stream_out__out_if_typeR"></span><span class="target" id="classsc__core_1_1sc__stream__out_1ac584a2eba84bb01e68a33264f219c06b"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out11out_if_typeE" title="sc_core::sc_stream_out::out_if_type">out_if_type</a> &amp;<em>interface_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out13sc_stream_outER11out_if_type" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKcR11out_if_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEPKcR11out_if_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEPKcR11out_if_type"></span><span id="sc_core::sc_stream_out::sc_stream_out__cCP.out_if_typeR"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a26929de7e39148745fc5a15ea9661e7b"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name_</em>, <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out11out_if_typeE" title="sc_core::sc_stream_out::out_if_type">out_if_type</a> &amp;<em>interface_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKcR11out_if_type" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outER13out_port_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outER13out_port_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outER13out_port_type"></span><span id="sc_core::sc_stream_out::sc_stream_out__out_port_typeR"></span><span class="target" id="classsc__core_1_1sc__stream__out_1adce5166f6f1dbc720479ae65c60f5cbd"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out13out_port_typeE" title="sc_core::sc_stream_out::out_port_type">out_port_type</a> &amp;<em>parent_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out13sc_stream_outER13out_port_type" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKcR13out_port_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEPKcR13out_port_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEPKcR13out_port_type"></span><span id="sc_core::sc_stream_out::sc_stream_out__cCP.out_port_typeR"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a773a37fac4bcd5a957011b71e6c98c6c"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name_</em>, <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out13out_port_typeE" title="sc_core::sc_stream_out::out_port_type">out_port_type</a> &amp;<em>parent_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKcR13out_port_type" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outER9this_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outER9this_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outER9this_type"></span><span id="sc_core::sc_stream_out::sc_stream_out__this_typeR"></span><span class="target" id="classsc__core_1_1sc__stream__out_1aca0d22cfbefb6c3064fb9627f85a0b92"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9this_typeE" title="sc_core::sc_stream_out::this_type">this_type</a> &amp;<em>parent_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out13sc_stream_outER9this_type" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKcR9this_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEPKcR9this_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEPKcR9this_type"></span><span id="sc_core::sc_stream_out::sc_stream_out__cCP.this_typeR"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a7dde3c374aca3facf3acbc15749f6d9c"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name_</em>, <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9this_typeE" title="sc_core::sc_stream_out::this_type">this_type</a> &amp;<em>parent_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKcR9this_type" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_outD0Ev">
+<span id="_CPPv3N7sc_core13sc_stream_outD0Ev"></span><span id="_CPPv2N7sc_core13sc_stream_outD0Ev"></span><span id="sc_core::sc_stream_out::~sc_stream_out"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a2aa2f116cea1f539e5e6193a9226047e"></span><code class="sig-name descname">~sc_stream_out</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_outD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out5writeERK9data_type">
+<span id="_CPPv3N7sc_core13sc_stream_out5writeERK9data_type"></span><span id="_CPPv2N7sc_core13sc_stream_out5writeERK9data_type"></span><span id="sc_core::sc_stream_out::write__data_typeCR"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a9239378f203bd9cfe98d5b0951ddd5bd"></span>void <code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a> &amp;<em>value_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out5writeERK9data_type" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out6data_wERK9data_type">
+<span id="_CPPv3N7sc_core13sc_stream_out6data_wERK9data_type"></span><span id="_CPPv2N7sc_core13sc_stream_out6data_wERK9data_type"></span><span id="sc_core::sc_stream_out::data_w__data_typeCR"></span><span class="target" id="classsc__core_1_1sc__stream__out_1aed890c01f4f5d894a5a8923bad08c6f5"></span>void <code class="sig-name descname">data_w</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a> &amp;<em>value_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out6data_wERK9data_type" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out7valid_wERKb">
+<span id="_CPPv3N7sc_core13sc_stream_out7valid_wERKb"></span><span id="_CPPv2N7sc_core13sc_stream_out7valid_wERKb"></span><span id="sc_core::sc_stream_out::valid_w__bCR"></span><span class="target" id="classsc__core_1_1sc__stream__out_1ab0b03c50b907ed6bdffb3f8556367b10"></span>void <code class="sig-name descname">valid_w</code><span class="sig-paren">(</span><em class="property">const</em> bool &amp;<em>value_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out7valid_wERKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out7ready_rEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out7ready_rEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out7ready_rEv"></span><span id="sc_core::sc_stream_out::ready_rC"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a485d72dcee677de271540846cedfeb37"></span><em class="property">const</em> bool &amp;<code class="sig-name descname">ready_r</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7sc_core13sc_stream_out7ready_rEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out8data_refEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out8data_refEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out8data_refEv"></span><span id="sc_core::sc_stream_out::data_refC"></span><span class="target" id="classsc__core_1_1sc__stream__out_1af7fea336246d973633e1b29daba71aa1"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a> &amp;<code class="sig-name descname">data_ref</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7sc_core13sc_stream_out8data_refEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out9valid_refEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out9valid_refEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out9valid_refEv"></span><span id="sc_core::sc_stream_out::valid_refC"></span><span class="target" id="classsc__core_1_1sc__stream__out_1ab4b11e34ef96c6b06eabbe505e86005b"></span><em class="property">const</em> bool &amp;<code class="sig-name descname">valid_ref</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7sc_core13sc_stream_out9valid_refEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out11ready_eventEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out11ready_eventEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out11ready_eventEv"></span><span id="sc_core::sc_stream_out::ready_eventC"></span><span class="target" id="classsc__core_1_1sc__stream__out_1adef001d7432b08c1b6447a8312d2b9c1"></span><em class="property">const</em> sc_event &amp;<code class="sig-name descname">ready_event</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7sc_core13sc_stream_out11ready_eventEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out5resetEv">
+<span id="_CPPv3N7sc_core13sc_stream_out5resetEv"></span><span id="_CPPv2N7sc_core13sc_stream_out5resetEv"></span><span id="sc_core::sc_stream_out::reset"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a605e1d6e578bbcd29dd60a16c62f57bd"></span>void <code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7sc_core13sc_stream_out5resetEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out9ready_chgEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out9ready_chgEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out9ready_chgEv"></span><span id="sc_core::sc_stream_out::ready_chgC"></span><span class="target" id="classsc__core_1_1sc__stream__out_1ae3b674c5a6827d098c85d98cede30e44"></span>sc_event_finder &amp;<code class="sig-name descname">ready_chg</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7sc_core13sc_stream_out9ready_chgEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out4kindEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out4kindEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out4kindEv"></span><span id="sc_core::sc_stream_out::kindC"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a0add2991c6f67669c022918dba7de233"></span><em class="property">const</em> char *<code class="sig-name descname">kind</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7sc_core13sc_stream_out4kindEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEv">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEv"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEv"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a9822bc2439e248fa865850776c76d7fe"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKc">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEPKc"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEPKc"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a3085adeac1b3131b1446943d2e4c640a"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outER11out_if_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outER11out_if_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outER11out_if_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1ac584a2eba84bb01e68a33264f219c06b"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out11out_if_typeE" title="sc_core::sc_stream_out::out_if_type">out_if_type</a> &amp;<em>interface_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKcR11out_if_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEPKcR11out_if_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEPKcR11out_if_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a26929de7e39148745fc5a15ea9661e7b"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name_</em>, <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out11out_if_typeE" title="sc_core::sc_stream_out::out_if_type">out_if_type</a> &amp;<em>interface_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outER13out_port_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outER13out_port_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outER13out_port_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1adce5166f6f1dbc720479ae65c60f5cbd"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out13out_port_typeE" title="sc_core::sc_stream_out::out_port_type">out_port_type</a> &amp;<em>parent_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKcR13out_port_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEPKcR13out_port_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEPKcR13out_port_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a773a37fac4bcd5a957011b71e6c98c6c"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name_</em>, <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out13out_port_typeE" title="sc_core::sc_stream_out::out_port_type">out_port_type</a> &amp;<em>parent_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outER9this_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outER9this_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outER9this_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1aca0d22cfbefb6c3064fb9627f85a0b92"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9this_typeE" title="sc_core::sc_stream_out::this_type">this_type</a> &amp;<em>parent_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out13sc_stream_outEPKcR9this_type">
+<span id="_CPPv3N7sc_core13sc_stream_out13sc_stream_outEPKcR9this_type"></span><span id="_CPPv2N7sc_core13sc_stream_out13sc_stream_outEPKcR9this_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a7dde3c374aca3facf3acbc15749f6d9c"></span><code class="sig-name descname">sc_stream_out</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name_</em>, <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9this_typeE" title="sc_core::sc_stream_out::this_type">this_type</a> &amp;<em>parent_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_outD0Ev">
+<span id="_CPPv3N7sc_core13sc_stream_outD0Ev"></span><span id="_CPPv2N7sc_core13sc_stream_outD0Ev"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a2aa2f116cea1f539e5e6193a9226047e"></span><code class="sig-name descname">~sc_stream_out</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out5writeERK9data_type">
+<span id="_CPPv3N7sc_core13sc_stream_out5writeERK9data_type"></span><span id="_CPPv2N7sc_core13sc_stream_out5writeERK9data_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a9239378f203bd9cfe98d5b0951ddd5bd"></span>void <code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a> &amp;<em>value_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out6data_wERK9data_type">
+<span id="_CPPv3N7sc_core13sc_stream_out6data_wERK9data_type"></span><span id="_CPPv2N7sc_core13sc_stream_out6data_wERK9data_type"></span><span class="target" id="classsc__core_1_1sc__stream__out_1aed890c01f4f5d894a5a8923bad08c6f5"></span>void <code class="sig-name descname">data_w</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a> &amp;<em>value_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out7valid_wERKb">
+<span id="_CPPv3N7sc_core13sc_stream_out7valid_wERKb"></span><span id="_CPPv2N7sc_core13sc_stream_out7valid_wERKb"></span><span class="target" id="classsc__core_1_1sc__stream__out_1ab0b03c50b907ed6bdffb3f8556367b10"></span>void <code class="sig-name descname">valid_w</code><span class="sig-paren">(</span><em class="property">const</em> bool &amp;<em>value_</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out7ready_rEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out7ready_rEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out7ready_rEv"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a485d72dcee677de271540846cedfeb37"></span><em class="property">const</em> bool &amp;<code class="sig-name descname">ready_r</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out8data_refEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out8data_refEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out8data_refEv"></span><span class="target" id="classsc__core_1_1sc__stream__out_1af7fea336246d973633e1b29daba71aa1"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N7sc_core13sc_stream_out9data_typeE" title="sc_core::sc_stream_out::data_type">data_type</a> &amp;<code class="sig-name descname">data_ref</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out9valid_refEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out9valid_refEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out9valid_refEv"></span><span class="target" id="classsc__core_1_1sc__stream__out_1ab4b11e34ef96c6b06eabbe505e86005b"></span><em class="property">const</em> bool &amp;<code class="sig-name descname">valid_ref</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out11ready_eventEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out11ready_eventEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out11ready_eventEv"></span><span class="target" id="classsc__core_1_1sc__stream__out_1adef001d7432b08c1b6447a8312d2b9c1"></span><em class="property">const</em> sc_event &amp;<code class="sig-name descname">ready_event</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7sc_core13sc_stream_out5resetEv">
+<span id="_CPPv3N7sc_core13sc_stream_out5resetEv"></span><span id="_CPPv2N7sc_core13sc_stream_out5resetEv"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a605e1d6e578bbcd29dd60a16c62f57bd"></span>void <code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out9ready_chgEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out9ready_chgEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out9ready_chgEv"></span><span class="target" id="classsc__core_1_1sc__stream__out_1ae3b674c5a6827d098c85d98cede30e44"></span>sc_event_finder &amp;<code class="sig-name descname">ready_chg</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7sc_core13sc_stream_out4kindEv">
+<span id="_CPPv3NK7sc_core13sc_stream_out4kindEv"></span><span id="_CPPv2NK7sc_core13sc_stream_out4kindEv"></span><span class="target" id="classsc__core_1_1sc__stream__out_1a0add2991c6f67669c022918dba7de233"></span><em class="property">const</em> char *<code class="sig-name descname">kind</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classsc__core_1_1sc__stream__out__if.html" class="btn btn-neutral float-right" title="Template Class sc_stream_out_if" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classsc__core_1_1sc__stream__nonblocking__out__if.html" class="btn btn-neutral float-left" title="Template Class sc_stream_nonblocking_out_if" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

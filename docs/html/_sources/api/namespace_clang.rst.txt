@@ -1,0 +1,22 @@
+
+.. _namespace_clang:
+
+Namespace clang
+===============
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_clang__ast_matchers`
+
+- :ref:`namespace_clang__tooling`

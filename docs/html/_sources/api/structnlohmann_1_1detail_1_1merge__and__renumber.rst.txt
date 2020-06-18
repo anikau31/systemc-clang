@@ -1,0 +1,16 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1merge__and__renumber:
+
+Template Struct merge_and_renumber
+==================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::merge_and_renumber
+   :members:
+   :protected-members:
+   :undoc-members:

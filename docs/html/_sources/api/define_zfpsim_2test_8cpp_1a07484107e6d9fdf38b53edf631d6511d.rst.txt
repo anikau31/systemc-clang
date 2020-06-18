@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsim_2test_8cpp_1a07484107e6d9fdf38b53edf631d6511d:
+
+Define E
+========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_test.cpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: E

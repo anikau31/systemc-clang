@@ -1,0 +1,73 @@
+
+.. _namespace_nlohmann__detail__dtoa_impl:
+
+Namespace nlohmann::detail::dtoa_impl
+=====================================
+
+
+implements the Grisu2 algorithm for binary to decimal floating-point conversion. 
+ 
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+Detailed Description
+--------------------
+
+This implementation is a slightly modified version of the reference implementation which may be obtained from http://florian.loitsch.com/publications (bench.tar.gz).
+The code is distributed under the MIT license, Copyright (c) 2009 Florian Loitsch.
+For a detailed description of the algorithm see:
+[1] Loitsch, "Printing Floating-Point Numbers Quickly and Accurately with
+    Integers", Proceedings of the ACM SIGPLAN 2010 Conference on Programming Language Design and Implementation, PLDI 2010 [2] Burger, Dybvig, "Printing Floating-Point Numbers Quickly and Accurately", Proceedings of the ACM SIGPLAN 1996 Conference on Programming Language Design and Implementation, PLDI 1996 
+ 
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structnlohmann_1_1detail_1_1dtoa__impl_1_1boundaries`
+
+- :ref:`exhale_struct_structnlohmann_1_1detail_1_1dtoa__impl_1_1cached__power`
+
+- :ref:`exhale_struct_structnlohmann_1_1detail_1_1dtoa__impl_1_1diyfp`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a84733638b826eda624488f5fa4521e0b`
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a22b6e37654ac93c6d0d9c06ec1bf5ded`
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a36ded358763b5dbcea9867660fbe4e28`
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a12c1c5d8b46ba9702186445e73f86afe`
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1adbf329a18c5cf854a3477327afd2200b`
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a05b681dcb8569b9784c6dccfadb01633`
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1aab7a9670a4f4704a5d0347ad7588576b`
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a9b899c72b0e1e3dd46d75c2b4e6bcdfb`
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a5bc841e0bee12fd6489d49cf7bd07bb4`
+
+- :ref:`exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a1c5d30eb51e5e994a3f48bde104d2ce8`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_namespacenlohmann_1_1detail_1_1dtoa__impl_1ac1ea1316de0b4a219f707c76b1db1966`
+
+- :ref:`exhale_variable_namespacenlohmann_1_1detail_1_1dtoa__impl_1a4a750fcc38da1ce68b7e25ab3a230e20`

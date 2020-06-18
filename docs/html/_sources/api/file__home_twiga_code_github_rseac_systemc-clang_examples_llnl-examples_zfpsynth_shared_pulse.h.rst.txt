@@ -1,0 +1,61 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_shared_pulse.h:
+
+File pulse.h
+============
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_shared>` (``/home/twiga/code/github/rseac/systemc-clang/examples/llnl-examples/zfpsynth/shared``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/examples/llnl-examples/zfpsynth/shared/pulse.h``)
+-----------------------------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_shared_pulse.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``systemc.h``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp1_test.cpp`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp1_z1test.cpp`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp2_test.cpp`
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_zfpsynth_2shared_2pulse_8h_1a4d30cf035337d08ceec464c2c241808e`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_zfpsynth_2shared_2pulse_8h_1aa1873d112156b268187c890d064d77ea`
+

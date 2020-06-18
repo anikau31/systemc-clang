@@ -1,0 +1,13 @@
+.. _exhale_variable_new_8hpp_1a07305ee788531132752a6a4331fa354e:
+
+Variable ev
+===========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_5_new.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: ev

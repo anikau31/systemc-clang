@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsim_2zfp_8h_1a9e0626cb7c954b18b75117443910ce9d:
+
+Template Function sc_trace(sc_trace_file \*, const fp_t<E, F>&, const std::string&)
+===================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_zfp.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sc_trace(sc_trace_file *, const fp_t<E, F>&, const std::string&)

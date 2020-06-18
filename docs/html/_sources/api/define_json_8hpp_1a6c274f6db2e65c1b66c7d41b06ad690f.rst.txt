@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a6c274f6db2e65c1b66c7d41b06ad690f:
+
+Define JSON_THROW
+=================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_THROW

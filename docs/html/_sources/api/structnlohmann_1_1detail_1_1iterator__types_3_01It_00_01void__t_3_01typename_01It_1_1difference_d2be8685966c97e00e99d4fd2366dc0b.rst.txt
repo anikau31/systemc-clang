@@ -1,0 +1,16 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1iterator__types_3_01It_00_01void__t_3_01typename_01It_1_1difference_d2be8685966c97e00e99d4fd2366dc0b:
+
+Template Struct iterator_types< It, void_t< typename It::difference_type, typename It::value_type, typename It::pointer, typename It::reference, typename It::iterator_category > >
+===================================================================================================================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::iterator_types< It, void_t< typename It::difference_type, typename It::value_type, typename It::pointer, typename It::reference, typename It::iterator_category > >
+   :members:
+   :protected-members:
+   :undoc-members:

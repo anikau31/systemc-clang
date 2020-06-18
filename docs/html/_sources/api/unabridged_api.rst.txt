@@ -1,0 +1,452 @@
+
+Full API
+--------
+
+Namespaces
+**********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   namespace_clang.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   namespace_clang__ast_matchers.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   namespace_clang__tooling.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   namespace_llvm.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   namespace_sc_ast_matchers.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   namespace_scpar.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   namespace_std.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   namespace_systemc_clang.rst
+
+Classes and Structs
+*******************
+
+
+.. toctree::
+   :maxdepth: 5
+
+   structsc__ast__matchers_1_1ModuleInstanceType.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classSAPlugin.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classsc__ast__matchers_1_1CallerCalleeMatcher.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classsc__ast__matchers_1_1FindMemberFieldMatcher.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classsc__ast__matchers_1_1InstanceArgumentMatcher.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classsc__ast__matchers_1_1InstanceMatcher.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classsc__ast__matchers_1_1ModuleDeclarationMatcher.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classsc__ast__matchers_1_1NetlistMatcher.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classsc__ast__matchers_1_1PortMatcher.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classsc__ast__matchers_1_1SensitivityMatcher.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1Edge.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1EntryFunctionContainer.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1EventContainer.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1EventDecl.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindArgument.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindConstructor.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindEntryFunctions.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindEvents.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindGlobalEvents.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindGPUMacro.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindModule.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindModuleInstance.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindNetlist.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindNotify.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindPorts.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindSCMain.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindSCModules.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindSensitivity.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindSimTime.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindTemplateParameters.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindTemplateTypes.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindTLMInterfaces.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1FindWait.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1GlobalSuspensionAutomata.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1GPUMacro.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1Graph.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1InterfaceDecl.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1Model.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1ModuleDecl.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1Node.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1NotifyCalls.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1NotifyContainer.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1PluginAction.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1PortBinding.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1PortBindingCtor.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1PortDecl.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1ProcessDecl.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1SignalDecl.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1State.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1SusCFG.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1SuspensionAutomata.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1SystemCClang.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1SystemCClangAXN.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1SystemCConsumer.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1TemplateType.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1Transition.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1Tree.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1Tree_1_1const__dft__iterator.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1Tree_1_1dft__iterator.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1TreeNode.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1Utility.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1WaitCalls.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classscpar_1_1WaitContainer.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classTimeAnalysis.rst
+
+Enums
+*****
+
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_namespacescpar_1afc1126c1b41ec59a3fcb6d841b5ab046.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_namespacescpar_1ab13ef6893ebd49625ff5661fd2f9d038.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_namespacescpar_1ab3f01a1533a9ff1b38089f9674ad2177.rst
+
+Functions
+*********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   function_SuspensionAutomata_8cpp_1ac484a884be6dbde73c1a5c0fc7b3fe80.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_SuspensionAutomata_8cpp_1aa6afbc1aa166921abdbfc5026b82e6bd.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_namespacesc__ast__matchers_1a0824e9bd2af543bcce4e653af76b72d9.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_namespacesc__ast__matchers_1a39eb64b4d6ca007628f281ee14e03703.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_namespacescpar_1abd52aa0589cf2128344f26cc0d424ecd.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_namespacescpar_1a9ce98178c7343b89f49d8ed152082b76.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_namespacescpar_1aec507848d3bf6262acfa4b23cb355993.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_namespacesystemc__clang_1a7b8a4967050779d55cef83614413aafe.rst
+
+Variables
+*********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_namespacesystemc__clang_1a24221f7aa44f163d9275a2a0bf58ff06.rst
+
+Typedefs
+********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_namespacescpar_1a243eab593933a8518707f63acd4c4e58.rst

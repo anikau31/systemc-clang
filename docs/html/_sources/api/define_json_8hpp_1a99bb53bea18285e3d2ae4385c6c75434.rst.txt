@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a99bb53bea18285e3d2ae4385c6c75434:
+
+Define JSON_HEDLEY_NO_THROW
+===========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_NO_THROW

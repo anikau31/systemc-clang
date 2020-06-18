@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsynth_2zfp2_2test_8cpp_1a62c892c20dec136eba87d58d4b8ead23:
+
+Template Function SC_MODULE(tb_driver)
+======================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp2_test.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(tb_driver)

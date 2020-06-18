@@ -1,0 +1,579 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File zfp.h &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File zfp.h</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_zfp.h.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-zfp-h">
+<span id="program-listing-file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsim-zfp-h"></span><h1>Program Listing for File zfp.h<a class="headerlink" href="#program-listing-for-file-zfp-h" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_zfp.h.html#file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsim-zfp-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/examples/llnl-examples/zfpsim/zfp.h</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef _ZFP_H</span>
+<span class="cp">#define _ZFP_H</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;systemc.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#if defined(RVD)</span>
+<span class="cp">#include</span> <span class="cpf">&quot;sc_rvd.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;rvfifo_cc.h&quot;</span><span class="cp"></span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">sc_stream</span> <span class="o">=</span> <span class="n">sc_rvd</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">sc_stream_in</span> <span class="o">=</span> <span class="n">sc_rvd_in</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">sc_stream_out</span> <span class="o">=</span> <span class="n">sc_rvd_out</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">sfifo_cc</span> <span class="o">=</span> <span class="n">rvfifo_cc</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="cp">#else</span>
+<span class="cp">#include</span> <span class="cpf">&quot;sc_stream_ports.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;sc_stream.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;sfifo_cc.h&quot;</span><span class="cp"></span>
+<span class="cp">#endif</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;sreg.h&quot;</span><span class="cp"></span>
+
+<span class="c1">// Floating-point block size given dimension</span>
+<span class="k">constexpr</span> <span class="kt">int</span> <span class="nf">fpblk_sz</span><span class="p">(</span><span class="kt">int</span> <span class="n">dim</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">;}</span> <span class="c1">// 4^dim;</span>
+<span class="c1">// #define fpblk_sz(dim) (1 &lt;&lt; 2*dim)</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="kt">int</span> <span class="n">E</span><span class="p">,</span> <span class="kt">int</span> <span class="n">F</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">fp_t</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">ebits</span> <span class="o">=</span> <span class="n">E</span><span class="p">;</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">fbits</span> <span class="o">=</span> <span class="n">F</span><span class="p">;</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">bits</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="n">E</span><span class="o">+</span><span class="n">F</span><span class="p">;</span>
+
+    <span class="c1">// exponent bias</span>
+    <span class="c1">// When E (bits) =  8, ebias =  127</span>
+    <span class="c1">// When E (bits) = 11, ebias = 1023</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">ebias</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">typedef</span> <span class="n">sc_int</span> <span class="o">&lt;</span><span class="n">bits</span><span class="o">&gt;</span> <span class="n">si_t</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">sc_uint</span><span class="o">&lt;</span><span class="n">bits</span><span class="o">&gt;</span> <span class="n">ui_t</span><span class="p">;</span>
+
+    <span class="k">typedef</span> <span class="n">sc_uint</span><span class="o">&lt;</span><span class="n">F</span><span class="o">&gt;</span> <span class="n">frac_t</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">sc_uint</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="n">expo_t</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">sign_t</span><span class="p">;</span>
+
+    <span class="n">frac_t</span> <span class="n">frac</span><span class="p">;</span>
+    <span class="n">expo_t</span> <span class="n">expo</span><span class="p">;</span> <span class="c1">// biased by ebias</span>
+    <span class="n">sign_t</span> <span class="n">sign</span><span class="p">;</span>
+
+    <span class="n">fp_t</span><span class="p">(</span><span class="n">ui_t</span> <span class="n">ui</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">(</span><span class="n">sign</span><span class="p">,</span><span class="n">expo</span><span class="p">,</span><span class="n">frac</span><span class="p">)</span> <span class="o">=</span> <span class="n">ui</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">fp_t</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">ui_t</span> <span class="n">ui</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">(</span><span class="n">sign</span><span class="p">,</span><span class="n">expo</span><span class="p">,</span><span class="n">frac</span><span class="p">)</span> <span class="o">=</span> <span class="n">ui</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">operator</span> <span class="n">ui_t</span><span class="p">()</span> <span class="k">const</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sign</span><span class="p">,</span><span class="n">expo</span><span class="p">,</span><span class="n">frac</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">fp_t</span><span class="o">&amp;</span> <span class="n">fp</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span>
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">frac</span> <span class="o">==</span> <span class="n">fp</span><span class="p">.</span><span class="n">frac</span> <span class="o">&amp;&amp;</span>
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">expo</span> <span class="o">==</span> <span class="n">fp</span><span class="p">.</span><span class="n">expo</span> <span class="o">&amp;&amp;</span>
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">sign</span> <span class="o">==</span> <span class="n">fp</span><span class="p">.</span><span class="n">sign</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="kt">int</span> <span class="n">E</span><span class="p">,</span> <span class="kt">int</span> <span class="n">F</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">fp_t</span><span class="o">&lt;</span><span class="n">E</span><span class="p">,</span><span class="n">F</span><span class="o">&gt;&amp;</span> <span class="n">fp</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">fp</span><span class="p">.</span><span class="n">sign</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;:&#39;</span>  <span class="o">&lt;&lt;</span> <span class="n">fp</span><span class="p">.</span><span class="n">expo</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;:&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">fp</span><span class="p">.</span><span class="n">frac</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="kt">int</span> <span class="n">E</span><span class="p">,</span> <span class="kt">int</span> <span class="n">F</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">sc_trace</span><span class="p">(</span><span class="n">sc_trace_file</span><span class="o">*</span> <span class="n">tf</span><span class="p">,</span> <span class="k">const</span> <span class="n">fp_t</span><span class="o">&lt;</span><span class="n">E</span><span class="p">,</span><span class="n">F</span><span class="o">&gt;&amp;</span> <span class="n">ob</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">nm</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">frac</span><span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.frac&quot;</span><span class="p">);</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">expo</span><span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.expo&quot;</span><span class="p">);</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ob</span><span class="p">.</span><span class="n">sign</span><span class="p">,</span> <span class="n">nm</span><span class="o">+</span><span class="s">&quot;.sign&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cp">#define SREAD(data,in,out,outv) \</span>
+<span class="cp">    in.ready_w(true); \</span>
+<span class="cp">    wait(); \</span>
+<span class="cp">    while (!in.valid_r()) {if (out.ready_r()) out.valid_w(outv = false); wait();} \</span>
+<span class="cp">    data = in.data_r();</span>
+
+<span class="cp">#define SWRITE(data,in,out,outv) \</span>
+<span class="cp">    while (outv &amp;&amp; !out.ready_r()) {in.ready_w(false); wait();} \</span>
+<span class="cp">    out.valid_w(outv = true); \</span>
+<span class="cp">    out.data_w(data);</span>
+
+<span class="c1">// TODO:</span>
+<span class="c1">// * look into using clocked thread just for states and gating data.</span>
+
+<span class="c1">//-----------------------------------------------------------------------------</span>
+<span class="c1">// compute maximum floating-point exponent in block of n values</span>
+<span class="c1">//-----------------------------------------------------------------------------</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">FP</span><span class="p">,</span> <span class="kt">int</span> <span class="n">DIM</span><span class="o">&gt;</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">find_emax</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">FP</span><span class="o">::</span><span class="n">expo_t</span> <span class="n">expo_t</span><span class="p">;</span>
+
+    <span class="cm">/*-------- ports --------*/</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">clk</span><span class="p">;</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">reset</span><span class="p">;</span>
+
+    <span class="n">sc_stream_in</span> <span class="o">&lt;</span><span class="n">FP</span><span class="o">&gt;</span> <span class="n">s_fp</span><span class="p">;</span>
+    <span class="n">sc_stream_out</span><span class="o">&lt;</span><span class="n">FP</span><span class="o">&gt;</span> <span class="n">m_fp</span><span class="p">;</span>
+    <span class="n">sc_stream_out</span><span class="o">&lt;</span><span class="n">expo_t</span><span class="o">&gt;</span> <span class="n">m_ex</span><span class="p">;</span>
+
+    <span class="cm">/*-------- registers --------*/</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">*</span><span class="n">DIM</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">count</span><span class="p">;</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="n">expo_t</span><span class="o">&gt;</span> <span class="n">emax</span><span class="p">;</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">emax_v</span><span class="p">;</span>
+
+    <span class="cm">/*-------- channels --------*/</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">c_sync</span><span class="p">;</span>
+    <span class="n">sc_stream</span><span class="o">&lt;</span><span class="n">FP</span><span class="o">&gt;</span> <span class="n">c_fp</span><span class="p">;</span>
+    <span class="n">sc_stream</span><span class="o">&lt;</span><span class="n">expo_t</span><span class="o">&gt;</span> <span class="n">c_ex</span><span class="p">;</span>
+
+    <span class="cm">/*-------- modules --------*/</span>
+    <span class="n">sfifo_cc</span><span class="o">&lt;</span><span class="n">FP</span><span class="o">&gt;</span> <span class="n">u_que_fp</span><span class="p">;</span>
+    <span class="n">sreg</span><span class="o">&lt;</span><span class="n">expo_t</span><span class="p">,</span><span class="n">FWD_REV</span><span class="o">&gt;</span> <span class="n">u_reg_ex</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">mc_proc</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">s_fp</span><span class="p">.</span><span class="n">ready_w</span><span class="p">(</span><span class="n">c_sync</span><span class="p">);</span>
+
+        <span class="n">c_fp</span><span class="p">.</span><span class="n">data_w</span><span class="p">(</span><span class="n">s_fp</span><span class="p">.</span><span class="n">data_r</span><span class="p">());</span>
+        <span class="n">c_fp</span><span class="p">.</span><span class="n">valid_w</span><span class="p">(</span><span class="n">c_sync</span><span class="p">);</span>
+
+        <span class="n">c_ex</span><span class="p">.</span><span class="n">data_w</span><span class="p">(</span><span class="n">emax</span><span class="p">);</span>
+        <span class="n">c_ex</span><span class="p">.</span><span class="n">valid_w</span><span class="p">(</span><span class="n">emax_v</span><span class="p">);</span>
+
+        <span class="n">c_sync</span> <span class="o">=</span> <span class="n">s_fp</span><span class="p">.</span><span class="n">valid_r</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">c_fp</span><span class="p">.</span><span class="n">ready_r</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="n">emax_v</span> <span class="o">||</span> <span class="n">c_ex</span><span class="p">.</span><span class="n">ready_r</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">ms_proc</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">reset</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">fpblk_sz</span><span class="p">(</span><span class="n">DIM</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+            <span class="n">emax</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">emax_v</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="kt">bool</span> <span class="n">last</span> <span class="o">=</span> <span class="p">(</span><span class="n">count</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="n">FP</span> <span class="n">fp</span> <span class="o">=</span> <span class="n">s_fp</span><span class="p">.</span><span class="n">data_r</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">c_sync</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">last</span><span class="p">)</span> <span class="p">{</span><span class="n">count</span> <span class="o">=</span> <span class="n">fpblk_sz</span><span class="p">(</span><span class="n">DIM</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;}</span>
+                <span class="k">else</span> <span class="p">{</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;}</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">emax_v</span> <span class="o">&amp;&amp;</span> <span class="n">c_ex</span><span class="p">.</span><span class="n">ready_r</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">s_fp</span><span class="p">.</span><span class="n">valid_r</span><span class="p">())</span> <span class="n">emax</span> <span class="o">=</span> <span class="n">fp</span><span class="p">.</span><span class="n">expo</span><span class="p">;</span> <span class="k">else</span> <span class="n">emax</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">s_fp</span><span class="p">.</span><span class="n">valid_r</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">fp</span><span class="p">.</span><span class="n">expo</span> <span class="o">&gt;</span> <span class="n">emax</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">emax</span> <span class="o">=</span> <span class="n">fp</span><span class="p">.</span><span class="n">expo</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">emax_v</span> <span class="o">&amp;&amp;</span> <span class="n">c_ex</span><span class="p">.</span><span class="n">ready_r</span><span class="p">())</span> <span class="n">emax_v</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">c_sync</span> <span class="o">&amp;&amp;</span> <span class="n">last</span><span class="p">)</span> <span class="n">emax_v</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="cp">#if 0</span><span class="c"></span>
+<span class="c">    void start_of_simulation()</span>
+<span class="c">    {</span>
+<span class="c">        extern sc_trace_file *tf;</span>
+<span class="c">        sc_trace(tf, s_fp,   (std::string(name())+&quot;.s_fp&quot;).c_str());</span>
+<span class="c">        sc_trace(tf, m_fp,   (std::string(name())+&quot;.m_fp&quot;).c_str());</span>
+<span class="c">        sc_trace(tf, m_ex,   (std::string(name())+&quot;.m_ex&quot;).c_str());</span>
+<span class="c">        sc_trace(tf, count,  (std::string(name())+&quot;.count&quot;).c_str());</span>
+<span class="c">        sc_trace(tf, emax,   (std::string(name())+&quot;.emax&quot;).c_str());</span>
+<span class="c">        sc_trace(tf, emax_v, (std::string(name())+&quot;.emax_v&quot;).c_str());</span>
+<span class="c">    }</span>
+<span class="cp">#endif</span>
+
+    <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">find_emax</span><span class="p">)</span> <span class="o">:</span>
+        <span class="n">u_que_fp</span><span class="p">(</span><span class="s">&quot;u_que_fp&quot;</span><span class="p">,</span> <span class="n">fpblk_sz</span><span class="p">(</span><span class="n">DIM</span><span class="p">)),</span>
+        <span class="n">u_reg_ex</span><span class="p">(</span><span class="s">&quot;u_reg_ex&quot;</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// connect u_que_fp</span>
+        <span class="n">u_que_fp</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+        <span class="n">u_que_fp</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+        <span class="n">u_que_fp</span><span class="p">.</span><span class="n">s_port</span><span class="p">(</span><span class="n">c_fp</span><span class="p">);</span>
+        <span class="n">u_que_fp</span><span class="p">.</span><span class="n">m_port</span><span class="p">(</span><span class="n">m_fp</span><span class="p">);</span>
+
+        <span class="c1">// connect u_reg_ex</span>
+        <span class="n">u_reg_ex</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+        <span class="n">u_reg_ex</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+        <span class="n">u_reg_ex</span><span class="p">.</span><span class="n">s_port</span><span class="p">(</span><span class="n">c_ex</span><span class="p">);</span>
+        <span class="n">u_reg_ex</span><span class="p">.</span><span class="n">m_port</span><span class="p">(</span><span class="n">m_ex</span><span class="p">);</span>
+
+        <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">mc_proc</span><span class="p">);</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">s_fp</span><span class="p">.</span><span class="n">valid_chg</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">s_fp</span><span class="p">.</span><span class="n">data_chg</span><span class="p">();</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">c_fp</span><span class="p">.</span><span class="n">ready_event</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">c_ex</span><span class="p">.</span><span class="n">ready_event</span><span class="p">();</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">emax</span> <span class="o">&lt;&lt;</span> <span class="n">emax_v</span> <span class="o">&lt;&lt;</span> <span class="n">c_sync</span><span class="p">;</span>
+        <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">ms_proc</span><span class="p">);</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+            <span class="c1">//reset_signal_is(reset, false);</span>
+            <span class="c1">//dont_initialize();</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="c1">//-----------------------------------------------------------------------------</span>
+<span class="c1">// forward block-floating-point transform to signed integers</span>
+<span class="c1">//-----------------------------------------------------------------------------</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">FP</span><span class="p">,</span> <span class="kt">int</span> <span class="n">DIM</span><span class="o">&gt;</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">fwd_cast</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">FP</span><span class="o">::</span><span class="n">expo_t</span> <span class="n">expo_t</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">FP</span><span class="o">::</span><span class="n">si_t</span> <span class="n">si_t</span><span class="p">;</span>
+
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">clk</span><span class="p">;</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">reset</span><span class="p">;</span>
+
+    <span class="cm">/*-------- ports --------*/</span>
+    <span class="n">sc_stream_in</span><span class="o">&lt;</span><span class="n">expo_t</span><span class="o">&gt;</span> <span class="n">s_ex</span><span class="p">;</span>
+    <span class="n">sc_stream_in</span> <span class="o">&lt;</span><span class="n">FP</span><span class="o">&gt;</span> <span class="n">s_fp</span><span class="p">;</span>
+    <span class="n">sc_stream_out</span><span class="o">&lt;</span><span class="n">si_t</span><span class="o">&gt;</span> <span class="n">m_int</span><span class="p">;</span>
+
+    <span class="cm">/*-------- registers --------*/</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">*</span><span class="n">DIM</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">count</span><span class="p">;</span>
+
+    <span class="cm">/*-------- channels --------*/</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">c_sync</span><span class="p">;</span>
+    <span class="n">sc_stream</span><span class="o">&lt;</span><span class="n">si_t</span><span class="o">&gt;</span> <span class="n">c_int</span><span class="p">;</span>
+
+    <span class="cm">/*-------- modules --------*/</span>
+    <span class="n">sreg</span><span class="o">&lt;</span><span class="n">si_t</span><span class="p">,</span><span class="n">FWD_REV</span><span class="o">&gt;</span> <span class="n">u_reg_int</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">mc_proc</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">c_sync</span> <span class="o">=</span> <span class="n">s_ex</span><span class="p">.</span><span class="n">valid_r</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">s_fp</span><span class="p">.</span><span class="n">valid_r</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">c_int</span><span class="p">.</span><span class="n">ready_r</span><span class="p">();</span>
+
+        <span class="n">s_ex</span><span class="p">.</span><span class="n">ready_w</span><span class="p">(</span><span class="n">c_sync</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">count</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+        <span class="n">s_fp</span><span class="p">.</span><span class="n">ready_w</span><span class="p">(</span><span class="n">c_sync</span><span class="p">);</span>
+
+        <span class="n">expo_t</span> <span class="n">emax</span> <span class="o">=</span> <span class="n">s_ex</span><span class="p">.</span><span class="n">data_r</span><span class="p">();</span>
+        <span class="n">FP</span> <span class="n">fp</span> <span class="o">=</span> <span class="n">s_fp</span><span class="p">.</span><span class="n">data_r</span><span class="p">();</span>
+        <span class="n">si_t</span> <span class="n">si</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fp</span><span class="p">.</span><span class="n">sign</span><span class="p">)</span> <span class="n">si</span> <span class="o">=</span> <span class="o">-</span><span class="n">si_t</span><span class="p">((</span><span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">fp</span><span class="p">.</span><span class="n">frac</span><span class="p">,</span><span class="n">sc_uint</span><span class="o">&lt;</span><span class="n">FP</span><span class="o">::</span><span class="n">ebits</span><span class="o">-</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">emax</span><span class="o">-</span><span class="n">fp</span><span class="p">.</span><span class="n">expo</span><span class="p">));</span>
+        <span class="k">else</span> <span class="n">si</span> <span class="o">=</span> <span class="p">((</span><span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">fp</span><span class="p">.</span><span class="n">frac</span><span class="p">,</span><span class="n">sc_uint</span><span class="o">&lt;</span><span class="n">FP</span><span class="o">::</span><span class="n">ebits</span><span class="o">-</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">emax</span><span class="o">-</span><span class="n">fp</span><span class="p">.</span><span class="n">expo</span><span class="p">));</span>
+        <span class="n">c_int</span><span class="p">.</span><span class="n">data_w</span><span class="p">(</span><span class="n">si</span><span class="p">);</span>
+        <span class="n">c_int</span><span class="p">.</span><span class="n">valid_w</span><span class="p">(</span><span class="n">c_sync</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">ms_proc</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">reset</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">fpblk_sz</span><span class="p">(</span><span class="n">DIM</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">c_sync</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">count</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="n">count</span> <span class="o">=</span> <span class="n">fpblk_sz</span><span class="p">(</span><span class="n">DIM</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;}</span>
+                <span class="k">else</span> <span class="p">{</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// void ct_io()</span>
+    <span class="c1">// {</span>
+        <span class="c1">// FP fp;</span>
+        <span class="c1">// expo_t emax;</span>
+        <span class="c1">// si_t si;</span>
+        <span class="c1">// s_ex.reset();</span>
+        <span class="c1">// s_fp.reset();</span>
+        <span class="c1">// m_int.reset();</span>
+        <span class="c1">// wait();</span>
+        <span class="c1">// while (true) {</span>
+            <span class="c1">// emax = s_ex.read();</span>
+            <span class="c1">// for (int i = 0; i &lt; fpblk_sz(DIM); i++) {</span>
+                <span class="c1">// fp = s_fp.read();</span>
+                <span class="c1">// if (fp.sign) si = -si_t((sc_uint&lt;3&gt;(1),fp.frac,sc_uint&lt;FP::ebits-2&gt;(0)) &gt;&gt; (emax-fp.expo));</span>
+                <span class="c1">// else si = ((sc_uint&lt;3&gt;(1),fp.frac,sc_uint&lt;FP::ebits-2&gt;(0)) &gt;&gt; (emax-fp.expo));</span>
+                <span class="c1">// m_int.write(si);</span>
+            <span class="c1">// }</span>
+        <span class="c1">// }</span>
+    <span class="c1">// }</span>
+
+    <span class="c1">// SC_CTOR(fwd_cast)</span>
+    <span class="c1">// {</span>
+        <span class="c1">// SC_CTHREAD(ct_io, clk.pos());</span>
+            <span class="c1">// reset_signal_is(reset, false);</span>
+    <span class="c1">// }</span>
+
+<span class="cp">#if 0</span><span class="c"></span>
+<span class="c">    void start_of_simulation()</span>
+<span class="c">    {</span>
+<span class="c">        extern sc_trace_file *tf;</span>
+<span class="c">        sc_trace(tf, s_ex,   (std::string(name())+&quot;.s_ex&quot;).c_str());</span>
+<span class="c">        sc_trace(tf, s_fp,   (std::string(name())+&quot;.s_fp&quot;).c_str());</span>
+<span class="c">        sc_trace(tf, m_int,   (std::string(name())+&quot;.m_int&quot;).c_str());</span>
+<span class="c">        sc_trace(tf, count,  (std::string(name())+&quot;.count&quot;).c_str());</span>
+<span class="c">    }</span>
+<span class="cp">#endif</span>
+
+    <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">fwd_cast</span><span class="p">)</span> <span class="o">:</span>
+        <span class="n">u_reg_int</span><span class="p">(</span><span class="s">&quot;u_reg_int&quot;</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// connect u_reg_int</span>
+        <span class="n">u_reg_int</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+        <span class="n">u_reg_int</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+        <span class="n">u_reg_int</span><span class="p">.</span><span class="n">s_port</span><span class="p">(</span><span class="n">c_int</span><span class="p">);</span>
+        <span class="n">u_reg_int</span><span class="p">.</span><span class="n">m_port</span><span class="p">(</span><span class="n">m_int</span><span class="p">);</span>
+
+        <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">mc_proc</span><span class="p">);</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">s_ex</span><span class="p">.</span><span class="n">valid_chg</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">s_ex</span><span class="p">.</span><span class="n">data_chg</span><span class="p">();</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">s_fp</span><span class="p">.</span><span class="n">valid_chg</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">s_fp</span><span class="p">.</span><span class="n">data_chg</span><span class="p">();</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">c_int</span><span class="p">.</span><span class="n">ready_event</span><span class="p">();</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="n">c_sync</span><span class="p">;</span>
+        <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">ms_proc</span><span class="p">);</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+            <span class="c1">//reset_signal_is(reset, false);</span>
+            <span class="c1">//dont_initialize();</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="c1">//-----------------------------------------------------------------------------</span>
+<span class="c1">// Encode IEEE floating-point values</span>
+<span class="c1">//-----------------------------------------------------------------------------</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">FP</span><span class="p">,</span> <span class="kt">int</span> <span class="n">DIM</span><span class="o">&gt;</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">zfp_encode</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">FP</span><span class="o">::</span><span class="n">expo_t</span> <span class="n">expo_t</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">FP</span><span class="o">::</span><span class="n">si_t</span> <span class="n">si_t</span><span class="p">;</span>
+
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">clk</span><span class="p">;</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">reset</span><span class="p">;</span>
+
+    <span class="n">sc_stream_in</span> <span class="o">&lt;</span><span class="n">FP</span><span class="o">&gt;</span>   <span class="n">s_fp</span><span class="p">;</span>
+    <span class="n">sc_stream_out</span><span class="o">&lt;</span><span class="n">si_t</span><span class="o">&gt;</span> <span class="n">m_int</span><span class="p">;</span>
+
+    <span class="n">sc_stream</span><span class="o">&lt;</span><span class="n">FP</span><span class="o">&gt;</span>     <span class="n">c_fp</span><span class="p">;</span>
+    <span class="n">sc_stream</span><span class="o">&lt;</span><span class="n">expo_t</span><span class="o">&gt;</span> <span class="n">c_ex</span><span class="p">;</span>
+    <span class="n">sc_stream</span><span class="o">&lt;</span><span class="n">si_t</span><span class="o">&gt;</span>   <span class="n">c_int</span><span class="p">;</span>
+
+    <span class="n">find_emax</span><span class="o">&lt;</span><span class="n">FP</span><span class="p">,</span> <span class="n">DIM</span><span class="o">&gt;*</span> <span class="n">u_find_emax</span><span class="p">;</span>
+    <span class="n">fwd_cast</span><span class="o">&lt;</span><span class="n">FP</span><span class="p">,</span> <span class="n">DIM</span><span class="o">&gt;</span> <span class="n">u_fwd_cast</span><span class="p">;</span>
+
+    <span class="c1">// Temporary for debug</span>
+    <span class="kt">void</span> <span class="nf">mc_io</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">c_int</span><span class="p">.</span><span class="n">ready_w</span><span class="p">(</span><span class="n">m_int</span><span class="p">.</span><span class="n">ready_r</span><span class="p">());</span>
+        <span class="n">m_int</span><span class="p">.</span><span class="n">data_w</span><span class="p">(</span><span class="n">c_int</span><span class="p">.</span><span class="n">data_r</span><span class="p">());</span>
+        <span class="n">m_int</span><span class="p">.</span><span class="n">valid_w</span><span class="p">(</span><span class="n">c_int</span><span class="p">.</span><span class="n">valid_r</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">zfp_encode</span><span class="p">)</span> <span class="o">:</span>
+        <span class="c1">//u_find_emax(&quot;u_find_emax&quot;),</span>
+        <span class="n">u_fwd_cast</span><span class="p">(</span><span class="s">&quot;u_fwd_cast&quot;</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// connect u_find_emax</span>
+        <span class="p">(</span><span class="o">*</span><span class="n">u_find_emax</span><span class="p">).</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+        <span class="p">(</span><span class="o">*</span><span class="n">u_find_emax</span><span class="p">).</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+        <span class="p">(</span><span class="o">*</span><span class="n">u_find_emax</span><span class="p">).</span><span class="n">s_fp</span><span class="p">(</span><span class="n">s_fp</span><span class="p">);</span>
+        <span class="p">(</span><span class="o">*</span><span class="n">u_find_emax</span><span class="p">).</span><span class="n">m_fp</span><span class="p">(</span><span class="n">c_fp</span><span class="p">);</span>
+        <span class="p">(</span><span class="o">*</span><span class="n">u_find_emax</span><span class="p">).</span><span class="n">m_ex</span><span class="p">(</span><span class="n">c_ex</span><span class="p">);</span>
+
+        <span class="c1">// connect u_fwd_cast</span>
+        <span class="n">u_fwd_cast</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+        <span class="n">u_fwd_cast</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+        <span class="n">u_fwd_cast</span><span class="p">.</span><span class="n">s_fp</span><span class="p">(</span><span class="n">c_fp</span><span class="p">);</span>
+        <span class="n">u_fwd_cast</span><span class="p">.</span><span class="n">s_ex</span><span class="p">(</span><span class="n">c_ex</span><span class="p">);</span>
+        <span class="n">u_fwd_cast</span><span class="p">.</span><span class="n">m_int</span><span class="p">(</span><span class="n">c_int</span><span class="p">);</span>
+
+    <span class="c1">// Temporary for debug</span>
+        <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">mc_io</span><span class="p">);</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">c_int</span><span class="p">.</span><span class="n">valid_event</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">c_int</span><span class="p">.</span><span class="n">data_event</span><span class="p">();</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">m_int</span><span class="p">.</span><span class="n">ready_chg</span><span class="p">();</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="cp">#endif </span><span class="c1">// _ZFP_H</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

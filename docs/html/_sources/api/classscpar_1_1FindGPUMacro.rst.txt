@@ -1,0 +1,25 @@
+.. _exhale_class_classscpar_1_1FindGPUMacro:
+
+Class FindGPUMacro
+==================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SCuitable_FindGPUMacro.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public clang::RecursiveASTVisitor< FindGPUMacro >``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::FindGPUMacro
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsynth_2shared_2zfp_8h_1a6b73eb1aba62fac4e33634a1929a0ea6:
+
+Template Function SC_MODULE(find_emax)
+======================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_shared_zfp.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(find_emax)

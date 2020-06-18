@@ -1,0 +1,13 @@
+.. _exhale_function_sc__sfifo__cc_8h_1aa89fe00efbc2f73fa3570008dd914ee2:
+
+Template Function sc_core::sc_trace(sc_trace_file \*, const sc_sfifo_cc<T>&, const std::string&)
+================================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_sfifo_cc.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sc_core::sc_trace(sc_trace_file *, const sc_sfifo_cc<T>&, const std::string&)

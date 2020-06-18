@@ -1,0 +1,26 @@
+.. _exhale_class_classsc__core_1_1sc__stream__out:
+
+Template Class sc_stream_out
+============================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_stream_ports.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Types
+**********
+
+- ``public sc_port< sc_stream_out_if< T >, 0, SC_ONE_OR_MORE_BOUND >``
+- ``public sc_port< sc_stream_out_if< T >, 0, SC_ONE_OR_MORE_BOUND >``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: sc_core::sc_stream_out
+   :members:
+   :protected-members:
+   :undoc-members:

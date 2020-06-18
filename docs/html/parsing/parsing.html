@@ -1,0 +1,517 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Identifying SystemC constructs &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generating Verilog" href="../plugins/xlat.html" />
+    <link rel="prev" title="Installation" href="../install/install-linux.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Identifying SystemC constructs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#systemc-module-declarations">SystemC Module Declarations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#systemc-constructor">SystemC Constructor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#systemc-processes-and-sensitivity-lists">SystemC Processes and Sensitivity Lists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#systemc-ports-and-member-variables">SystemC Ports and Member Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nested-module-declarations-port-binding">Nested Module Declarations &amp; Port Binding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#templated-modules">Templated Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-defined-templated-datatypes">User-defined Templated Datatypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-defined-channels">User-defined Channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#typedefs-and-using">Typedefs and <code class="docutils literal notranslate"><span class="pre">using</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Identifying SystemC constructs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/parsing/parsing.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="identifying-systemc-constructs">
+<h1>Identifying SystemC constructs<a class="headerlink" href="#identifying-systemc-constructs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="systemc-module-declarations">
+<h2>SystemC Module Declarations<a class="headerlink" href="#systemc-module-declarations" title="Permalink to this headline">¶</a></h2>
+<p>There are two ways in which a SystemC module can be declared: (1) using the <code class="docutils literal notranslate"><span class="pre">SC_MODULE()</span></code> macro or (2) inheriting from the <code class="docutils literal notranslate"><span class="pre">sc_module</span></code> class.
+Both of these approaches are recognized by systemc-clang.</p>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;systemc.h&gt;</span><span class="cp"></span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1">// Some other code here.</span>
+
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;systemc.h&gt;</span><span class="cp"></span>
+<span class="k">class</span> <span class="nc">counter</span><span class="o">:</span> <span class="k">public</span> <span class="n">sc_module</span> <span class="p">{</span>
+<span class="c1">// Some other code here.</span>
+
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="systemc-constructor">
+<h2>SystemC Constructor<a class="headerlink" href="#systemc-constructor" title="Permalink to this headline">¶</a></h2>
+<p>There are two ways in which the constructor can be used: (1) using the <code class="docutils literal notranslate"><span class="pre">SC_CTOR()</span></code> macro or (2) using the class constructor.
+Both of approaches are recognized by systemc-clang.</p>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;systemc.h&gt;</span><span class="cp"></span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;</span> <span class="n">keep_count</span><span class="p">;</span>
+  <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span><span class="o">:</span> <span class="n">keep_count</span><span class="p">{</span><span class="mi">0</span><span class="p">}</span> <span class="p">{</span>
+  <span class="c1">// Some other code here.</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;systemc.h&gt;</span><span class="cp"></span>
+<span class="k">class</span> <span class="nc">counter</span><span class="o">:</span> <span class="k">public</span> <span class="n">sc_module</span> <span class="p">{</span>
+  <span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;</span> <span class="n">keep_count</span><span class="p">;</span>
+  <span class="n">counter</span><span class="p">()</span><span class="o">:</span> <span class="n">keep_count</span><span class="p">{</span><span class="mi">0</span><span class="p">}</span>  <span class="p">{</span>
+  <span class="c1">// Some other code here.</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="systemc-processes-and-sensitivity-lists">
+<h2>SystemC Processes and Sensitivity Lists<a class="headerlink" href="#systemc-processes-and-sensitivity-lists" title="Permalink to this headline">¶</a></h2>
+<p>There are two process types that systemc-clang recognizes: (1) <code class="docutils literal notranslate"><span class="pre">SC_METHOD()</span></code> and  (2) <code class="docutils literal notranslate"><span class="pre">SC_THREAD()</span></code>.
+The only synthesizable process type is <code class="docutils literal notranslate"><span class="pre">SC_METHOD()</span></code>.
+systemc-clang gives access to the function provided as the argument to the process macro.
+Plugins can then use tihs to perform other operations on the implementation of the process’ function such as generating Verilog or an intermediate representation.</p>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;systemc.h&gt;</span><span class="cp"></span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">sc_clk_in</span> <span class="n">clk</span><span class="p">;</span>
+  <span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;</span> <span class="n">keep_count</span><span class="p">;</span>
+
+  <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span><span class="o">:</span> <span class="n">keep_count</span><span class="p">{</span><span class="mi">0</span><span class="p">}</span> <span class="p">{</span>
+    <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">count_up</span><span class="p">);</span>
+    <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">count_up</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Some code here.</span>
+  <span class="p">}</span>
+
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;systemc.h&gt;</span><span class="cp"></span>
+<span class="k">class</span> <span class="nc">counter</span><span class="o">:</span> <span class="k">public</span> <span class="n">sc_module</span> <span class="p">{</span>
+  <span class="n">sc_clk_in</span> <span class="n">clk</span><span class="p">;</span>
+  <span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;</span> <span class="n">keep_count</span><span class="p">;</span>
+
+  <span class="n">SC_HAS_PROCESS</span><span class="p">(</span><span class="n">counter</span><span class="p">);</span>
+  <span class="n">counter</span><span class="p">()</span><span class="o">:</span> <span class="n">keep_count</span><span class="p">{</span><span class="mi">0</span><span class="p">}</span>  <span class="p">{</span>
+    <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">count_up</span><span class="p">);</span>
+    <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">count_up</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Some code here.</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="systemc-ports-and-member-variables">
+<h2>SystemC Ports and Member Variables<a class="headerlink" href="#systemc-ports-and-member-variables" title="Permalink to this headline">¶</a></h2>
+<p>SystemC ports and member fields can be a part of the module. In the counter example, there is a <code class="docutils literal notranslate"><span class="pre">clk</span></code> port of type <code class="docutils literal notranslate"><span class="pre">sc_clk_in</span></code> and there is a member variable called <code class="docutils literal notranslate"><span class="pre">keep_count</span></code> of type <code class="docutils literal notranslate"><span class="pre">sc_uint&lt;32&gt;</span></code>. Note that the latter is a templated type. We extend this example further.</p>
+<p>Note that a member variable can also be an <code class="docutils literal notranslate"><span class="pre">sc_signal&lt;&gt;</span></code>, which we show in the next subsection.</p>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;systemc.h&gt;</span><span class="cp"></span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// clock</span>
+  <span class="n">sc_clk_in</span> <span class="n">clk</span><span class="p">;</span>
+
+  <span class="c1">// output port</span>
+  <span class="n">sc_out</span><span class="o">&lt;</span><span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;&gt;</span> <span class="n">count_out</span><span class="p">;</span>
+
+  <span class="c1">// member variable</span>
+  <span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;</span> <span class="n">keep_count</span><span class="p">;</span>
+
+  <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">count_up</span><span class="p">);</span>
+    <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">count_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">keep_count</span> <span class="o">=</span> <span class="n">keep_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">count_out</span><span class="p">.</span><span class="n">write</span><span class="p">(</span> <span class="n">keep_count</span> <span class="p">);</span>
+  <span class="p">}</span>
+
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="nested-module-declarations-port-binding">
+<h2>Nested Module Declarations &amp; Port Binding<a class="headerlink" href="#nested-module-declarations-port-binding" title="Permalink to this headline">¶</a></h2>
+<p>It is common to use a hierarchy of modules to describe a design. systemc-clang identifies this hierarchy.
+For the example below, the nested module of type <code class="docutils literal notranslate"><span class="pre">counter</span></code> will be identified as being nested within the SystemC module of type <code class="docutils literal notranslate"><span class="pre">DUT</span></code>.
+Within the constructor of the <code class="docutils literal notranslate"><span class="pre">DUT</span></code> module, we are instantiating the <code class="docutils literal notranslate"><span class="pre">count</span></code> member variable with a given name, and then binding the ports to the appropriate signals.</p>
+<p>This example also shows the use of a <code class="docutils literal notranslate"><span class="pre">sc_signal&lt;&gt;</span></code>.</p>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;systemc.h&gt;</span><span class="cp"></span>
+<span class="c1">// Code from before</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">};</span>
+
+<span class="c1">// Top level module.</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">DUT</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">counter</span> <span class="n">count</span><span class="p">;</span>
+  <span class="n">sc_clk</span> <span class="n">clock</span><span class="p">;</span>
+  <span class="n">sc_signal</span><span class="o">&lt;</span> <span class="n">sc_uint</span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">counter_out</span><span class="p">;</span>
+
+  <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">DUT</span><span class="p">)</span><span class="o">:</span> <span class="n">count</span><span class="p">{</span><span class="s">&quot;counter_instance&quot;</span><span class="p">}</span> <span class="p">{</span>
+    <span class="c1">// port bindings</span>
+    <span class="n">count</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clock</span><span class="p">);</span>
+    <span class="n">count</span><span class="p">.</span><span class="n">count_out</span><span class="p">(</span><span class="n">counter_out</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">sc_main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">DUT</span> <span class="n">dut</span><span class="p">{</span><span class="s">&quot;design_under_test&quot;</span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="templated-modules">
+<h2>Templated Modules<a class="headerlink" href="#templated-modules" title="Permalink to this headline">¶</a></h2>
+<p>The SystemC module declaration can be templated as well. We can extend our <code class="docutils literal notranslate"><span class="pre">counter</span></code> module to have it access a template argument.</p>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;systemc.h&gt;</span><span class="cp"></span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// clock</span>
+  <span class="n">sc_clk_in</span> <span class="n">clk</span><span class="p">;</span>
+
+  <span class="c1">// output port</span>
+  <span class="n">sc_out</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">count_out</span><span class="p">;</span>
+
+  <span class="c1">// member variable</span>
+  <span class="n">T</span> <span class="n">keep_count</span><span class="p">;</span>
+
+  <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">count_up</span><span class="p">);</span>
+    <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">count_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Ensure that type T supports +</span>
+    <span class="n">keep_count</span> <span class="o">=</span> <span class="n">keep_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">count_out</span><span class="p">.</span><span class="n">write</span><span class="p">(</span> <span class="n">keep_count</span> <span class="p">);</span>
+  <span class="p">}</span>
+
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="user-defined-templated-datatypes">
+<h2>User-defined Templated Datatypes<a class="headerlink" href="#user-defined-templated-datatypes" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Todo</p>
+</div>
+</div>
+<div class="section" id="user-defined-channels">
+<h2>User-defined Channels<a class="headerlink" href="#user-defined-channels" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Todo</p>
+</div>
+</div>
+<div class="section" id="typedefs-and-using">
+<h2>Typedefs and <code class="docutils literal notranslate"><span class="pre">using</span></code><a class="headerlink" href="#typedefs-and-using" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../plugins/xlat.html" class="btn btn-neutral float-right" title="Generating Verilog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../install/install-linux.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

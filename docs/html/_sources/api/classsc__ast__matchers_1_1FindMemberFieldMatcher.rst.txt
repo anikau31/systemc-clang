@@ -1,0 +1,25 @@
+.. _exhale_class_classsc__ast__matchers_1_1FindMemberFieldMatcher:
+
+Class FindMemberFieldMatcher
+============================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindMemberFieldMatcher.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public MatchCallback``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: sc_ast_matchers::FindMemberFieldMatcher
+   :members:
+   :protected-members:
+   :undoc-members:

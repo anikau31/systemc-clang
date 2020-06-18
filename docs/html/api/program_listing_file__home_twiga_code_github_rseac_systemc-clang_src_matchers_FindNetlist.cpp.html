@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File FindNetlist.cpp &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File FindNetlist.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindNetlist.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-findnetlist-cpp">
+<span id="program-listing-file-home-twiga-code-github-rseac-systemc-clang-src-matchers-findnetlist-cpp"></span><h1>Program Listing for File FindNetlist.cpp<a class="headerlink" href="#program-listing-for-file-findnetlist-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindNetlist.cpp.html#file-home-twiga-code-github-rseac-systemc-clang-src-matchers-findnetlist-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/src/matchers/FindNetlist.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;FindNetlist.h&quot;</span><span class="cp"></span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">scpar</span><span class="p">;</span>
+
+<span class="n">FindNetlist</span><span class="o">::</span><span class="n">FindNetlist</span><span class="p">(</span><span class="n">FunctionDecl</span> <span class="o">*</span><span class="n">fdecl</span><span class="p">)</span> <span class="o">:</span> <span class="n">_pass</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span> <span class="p">{</span>
+  <span class="n">TraverseDecl</span><span class="p">(</span><span class="n">fdecl</span><span class="p">);</span>
+  <span class="n">_pass</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">FindNetlist</span><span class="o">::~</span><span class="n">FindNetlist</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">inst_module_map_</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+  <span class="n">port_signal_map_</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+  <span class="n">inst_port_signal_map_</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">FindNetlist</span><span class="o">::</span><span class="n">FindNetlist</span><span class="p">(</span><span class="k">const</span> <span class="n">FindNetlist</span> <span class="o">&amp;</span><span class="n">from</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">_pass</span> <span class="o">=</span> <span class="n">from</span><span class="p">.</span><span class="n">_pass</span><span class="p">;</span>
+  <span class="n">inst_module_map_</span> <span class="o">=</span> <span class="n">from</span><span class="p">.</span><span class="n">inst_module_map_</span><span class="p">;</span>
+  <span class="n">port_signal_map_</span> <span class="o">=</span> <span class="n">from</span><span class="p">.</span><span class="n">port_signal_map_</span><span class="p">;</span>
+  <span class="n">inst_port_signal_map_</span> <span class="o">=</span> <span class="n">from</span><span class="p">.</span><span class="n">inst_port_signal_map_</span><span class="p">;</span>
+  <span class="n">inst_list_module_map_</span> <span class="o">=</span> <span class="n">from</span><span class="p">.</span><span class="n">inst_list_module_map_</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FindNetlist</span><span class="o">::</span><span class="n">updateInstanceListModuleMap</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">instanceName</span><span class="p">,</span>
+                                              <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">moduleName</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">inst_list_module_map_</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">moduleName</span><span class="p">)</span> <span class="o">==</span> <span class="n">inst_list_module_map_</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">instanceList</span><span class="p">;</span>
+    <span class="n">instanceList</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">instanceName</span><span class="p">);</span>
+    <span class="n">inst_list_module_map_</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+        <span class="n">instanceListModulePairType</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">instanceList</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">instanceListModuleMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">instanceListModuleMapFound</span> <span class="o">=</span>
+        <span class="n">inst_list_module_map_</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">moduleName</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">instanceList</span><span class="p">{</span><span class="n">instanceListModuleMapFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">};</span>
+    <span class="n">instanceList</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">instanceName</span><span class="p">);</span>
+    <span class="n">inst_list_module_map_</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">moduleName</span><span class="p">);</span>
+    <span class="n">inst_list_module_map_</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+        <span class="n">instanceListModulePairType</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">instanceList</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">FindNetlist</span><span class="o">::</span><span class="n">VisitCXXOperatorCallExpr</span><span class="p">(</span><span class="n">CXXOperatorCallExpr</span> <span class="o">*</span><span class="n">ce</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">foundME</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">moduleName</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">instanceName</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">portName</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">signalName</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">Stmt</span><span class="o">::</span><span class="n">child_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">ce</span><span class="o">-&gt;</span><span class="n">IgnoreImpCasts</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">child_begin</span><span class="p">(),</span>
+                            <span class="n">eit</span> <span class="o">=</span> <span class="n">ce</span><span class="o">-&gt;</span><span class="n">IgnoreImpCasts</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">child_end</span><span class="p">();</span>
+       <span class="n">it</span> <span class="o">!=</span> <span class="n">eit</span><span class="p">;</span> <span class="n">it</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Expr</span> <span class="o">*</span><span class="n">e</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">Expr</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">MemberExpr</span> <span class="o">*</span><span class="n">me</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">MemberExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">IgnoreImpCasts</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">DeclRefExpr</span> <span class="o">*</span><span class="n">de</span> <span class="o">=</span>
+                <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">DeclRefExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">me</span><span class="o">-&gt;</span><span class="n">getBase</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">IgnoreImpCasts</span><span class="p">()))</span> <span class="p">{</span>
+          <span class="n">moduleName</span> <span class="o">=</span>
+              <span class="n">de</span><span class="o">-&gt;</span><span class="n">getDecl</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getType</span><span class="p">().</span><span class="n">getBaseTypeIdentifier</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">();</span>
+          <span class="n">instanceName</span> <span class="o">=</span> <span class="n">de</span><span class="o">-&gt;</span><span class="n">getFoundDecl</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getNameAsString</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="n">portName</span> <span class="o">=</span> <span class="n">me</span><span class="o">-&gt;</span><span class="n">getMemberDecl</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getNameAsString</span><span class="p">();</span>
+        <span class="n">foundME</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">DeclRefExpr</span> <span class="o">*</span><span class="n">de</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">DeclRefExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">IgnoreImpCasts</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">foundME</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">signalName</span> <span class="o">=</span> <span class="n">de</span><span class="o">-&gt;</span><span class="n">getNameInfo</span><span class="p">().</span><span class="n">getAsString</span><span class="p">();</span>
+          <span class="n">foundME</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">inst_module_map_</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">instanceName</span><span class="p">)</span> <span class="o">==</span> <span class="n">inst_module_map_</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">inst_module_map_</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">instanceModulePairType</span><span class="p">(</span><span class="n">instanceName</span><span class="p">,</span> <span class="n">moduleName</span><span class="p">));</span>
+    <span class="n">port_signal_map_</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="n">updateInstanceListModuleMap</span><span class="p">(</span><span class="n">instanceName</span><span class="p">,</span> <span class="n">moduleName</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">port_signal_map_</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">portSignalPairType</span><span class="p">(</span><span class="n">portName</span><span class="p">,</span> <span class="n">signalName</span><span class="p">));</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">inst_port_signal_map_</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">instanceName</span><span class="p">)</span> <span class="o">==</span>
+      <span class="n">inst_port_signal_map_</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">inst_port_signal_map_</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+        <span class="n">instancePortSignalPairType</span><span class="p">(</span><span class="n">instanceName</span><span class="p">,</span> <span class="n">port_signal_map_</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">inst_port_signal_map_</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">instanceName</span><span class="p">);</span>
+    <span class="n">inst_port_signal_map_</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+        <span class="n">instancePortSignalPairType</span><span class="p">(</span><span class="n">instanceName</span><span class="p">,</span> <span class="n">port_signal_map_</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">FindNetlist</span><span class="o">::</span><span class="n">getNumInstances</span><span class="p">(</span><span class="n">string</span> <span class="n">moduleName</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">instanceModuleMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">inst_module_map_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+                                       <span class="n">eit</span> <span class="o">=</span> <span class="n">inst_module_map_</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+       <span class="n">it</span> <span class="o">!=</span> <span class="n">eit</span><span class="p">;</span> <span class="n">it</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">string</span> <span class="n">modName</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">modName</span> <span class="o">==</span> <span class="n">moduleName</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">counter</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">counter</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">FindNetlist</span><span class="o">::</span><span class="n">portSignalMapType</span> <span class="o">&amp;</span><span class="n">FindNetlist</span><span class="o">::</span><span class="n">getPortSignalMap</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">port_signal_map_</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">FindNetlist</span><span class="o">::</span><span class="n">instanceListModuleMapType</span> <span class="o">&amp;</span>
+<span class="n">FindNetlist</span><span class="o">::</span><span class="n">getInstanceListModuleMap</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">inst_list_module_map_</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">FindNetlist</span><span class="o">::</span><span class="n">instanceModuleMapType</span> <span class="o">&amp;</span><span class="n">FindNetlist</span><span class="o">::</span><span class="n">getInstanceModuleMap</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">inst_module_map_</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">FindNetlist</span><span class="o">::</span><span class="n">instancePortSignalMapType</span> <span class="o">&amp;</span>
+<span class="n">FindNetlist</span><span class="o">::</span><span class="n">getInstancePortSignalMap</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">inst_port_signal_map_</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FindNetlist</span><span class="o">::</span><span class="n">dump</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">llvm</span><span class="o">::</span><span class="n">errs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> ----------------- Netlist dump ----------------- </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">instanceModuleMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">inst_module_map_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+                                       <span class="n">eit</span> <span class="o">=</span> <span class="n">inst_module_map_</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+       <span class="n">it</span> <span class="o">!=</span> <span class="n">eit</span><span class="p">;</span> <span class="n">it</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">llvm</span><span class="o">::</span><span class="n">errs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Instance Name : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span>
+                 <span class="o">&lt;&lt;</span> <span class="s">&quot; Module Name : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">instanceName</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">inst_port_signal_map_</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">instanceName</span><span class="p">)</span> <span class="o">!=</span>
+        <span class="n">inst_port_signal_map_</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">instancePortSignalMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">instancePortSignalMapFound</span> <span class="o">=</span>
+          <span class="n">inst_port_signal_map_</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">instanceName</span><span class="p">);</span>
+      <span class="n">portSignalMapType</span> <span class="n">portSignalMap</span> <span class="o">=</span> <span class="n">instancePortSignalMapFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">portSignalMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">pit</span> <span class="o">=</span> <span class="n">portSignalMap</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+                                       <span class="n">pite</span> <span class="o">=</span> <span class="n">portSignalMap</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+           <span class="n">pit</span> <span class="o">!=</span> <span class="n">pite</span><span class="p">;</span> <span class="n">pit</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">llvm</span><span class="o">::</span><span class="n">errs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Port : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">pit</span><span class="o">-&gt;</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; ------&gt; &quot;</span>
+                     <span class="o">&lt;&lt;</span> <span class="n">pit</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">llvm</span><span class="o">::</span><span class="n">errs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> No instance name found ////// weird.&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">llvm</span><span class="o">::</span><span class="n">errs</span><span class="p">()</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> ------------------------------------------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

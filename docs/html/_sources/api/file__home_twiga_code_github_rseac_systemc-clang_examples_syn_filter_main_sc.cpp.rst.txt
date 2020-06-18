@@ -1,0 +1,50 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_examples_syn_filter_main_sc.cpp:
+
+File main_sc.cpp
+================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_examples_syn_filter>` (``/home/twiga/code/github/rseac/systemc-clang/examples/syn/filter``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/examples/syn/filter/main_sc.cpp``)
+--------------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_syn_filter_main_sc.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``avg.cpp`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_syn_filter_avg.cpp`)
+
+- ``driver.cpp`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_syn_filter_driver.cpp`)
+
+- ``iostream``
+
+- ``monitor.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_syn_filter_monitor.h`)
+
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_main__sc_8cpp_1a82266acdd954cb0398aa91e591db9b99`
+

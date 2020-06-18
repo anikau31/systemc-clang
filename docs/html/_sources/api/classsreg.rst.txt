@@ -1,0 +1,16 @@
+.. _exhale_class_classsreg:
+
+Template Class sreg
+===================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sreg.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: sreg
+   :members:
+   :protected-members:
+   :undoc-members:

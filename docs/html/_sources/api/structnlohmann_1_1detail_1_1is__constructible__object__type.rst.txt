@@ -1,0 +1,25 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1is__constructible__object__type:
+
+Template Struct is_constructible_object_type
+============================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public nlohmann::detail::is_constructible_object_type_impl< BasicJsonType, ConstructibleObjectType >`` (:ref:`exhale_struct_structnlohmann_1_1detail_1_1is__constructible__object__type__impl`)
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::is_constructible_object_type
+   :members:
+   :protected-members:
+   :undoc-members:

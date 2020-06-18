@@ -1,0 +1,16 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1is__compatible__object__type__impl_3_01BasicJsonType_00_01Compatible0bd988932da161d60568f9b7198a50d2:
+
+Template Struct is_compatible_object_type_impl< BasicJsonType, CompatibleObjectType, enable_if_t< is_detected< mapped_type_t, CompatibleObjectType >::value and is_detected< key_type_t, CompatibleObjectType >::value > >
+==========================================================================================================================================================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::is_compatible_object_type_impl< BasicJsonType, CompatibleObjectType, enable_if_t< is_detected< mapped_type_t, CompatibleObjectType >::value and is_detected< key_type_t, CompatibleObjectType >::value > >
+   :members:
+   :protected-members:
+   :undoc-members:

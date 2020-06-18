@@ -1,0 +1,39 @@
+
+.. _program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_15_t2.hpp:
+
+Program Listing for File t2.hpp
+===============================
+
+|exhale_lsh| :ref:`Return to documentation for file <file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_15_t2.hpp>` (``/home/twiga/code/github/rseac/systemc-clang/examples/sim/ex_15/t2.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #include <systemc.h>
+   
+   SC_MODULE(top) {
+     sc_in_clk clk;
+       SC_CTOR(top) {
+         SC_THREAD(topEntry);
+       }
+   
+   
+   void topEntry() {
+   while(true) {
+       wait(1, SC_NS);
+       var++;
+       wait(2, SC_MS); 
+       --var;
+       y = y + 1;
+       wait(3, SC_NS); 
+       var = var * 2;
+   }
+   
+   }
+   
+   public:
+    int var;
+    int y;
+   };
+   

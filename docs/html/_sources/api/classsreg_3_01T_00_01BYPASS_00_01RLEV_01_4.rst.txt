@@ -1,0 +1,25 @@
+.. _exhale_class_classsreg_3_01T_00_01BYPASS_00_01RLEV_01_4:
+
+Template Class sreg< T, BYPASS, RLEV >
+======================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_shared_sreg.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public sc_module``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: sreg< T, BYPASS, RLEV >
+   :members:
+   :protected-members:
+   :undoc-members:

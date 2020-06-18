@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsynth_2zfp1_2test_8cpp_1a29105be75e2a7d01144a4bd4fcf6f4a8:
+
+Template Function SC_MODULE(tb_send)
+====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp1_test.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(tb_send)

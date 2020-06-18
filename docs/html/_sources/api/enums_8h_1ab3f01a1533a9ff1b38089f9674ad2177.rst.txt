@@ -1,0 +1,13 @@
+.. _exhale_enum_enums_8h_1ab3f01a1533a9ff1b38089f9674ad2177:
+
+Enum ReadWrite
+==============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_enums.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: scpar::ReadWrite

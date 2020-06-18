@@ -1,0 +1,13 @@
+.. _exhale_enum_zfpsim_2sreg_8h_1a846eb276d78512e5a087ab09d398fae6:
+
+Enum sreg_t
+===========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sreg.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: sreg_t

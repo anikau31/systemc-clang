@@ -1,0 +1,20 @@
+
+.. _namespace_nlohmann__@3:
+
+Namespace nlohmann::@3
+======================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+Detailed Description
+--------------------
+
+namespace to hold default ``from_json`` function to see why this is required: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html 
+ 
+

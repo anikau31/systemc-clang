@@ -1,0 +1,25 @@
+.. _exhale_class_classscpar_1_1FindSCMain:
+
+Class FindSCMain
+================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSCMain.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public clang::RecursiveASTVisitor< FindSCMain >``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::FindSCMain
+   :members:
+   :protected-members:
+   :undoc-members:
