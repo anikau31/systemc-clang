@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsim_2zfp_8h_1ae94fb7c1a20be7d3c99f8484822acce7:
+
+Template Function SC_MODULE(fwd_cast)
+=====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_zfp.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(fwd_cast)

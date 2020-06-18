@@ -1,0 +1,26 @@
+.. _exhale_class_classscpar_1_1FindSimTime:
+
+Class FindSimTime
+=================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSimTime.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Types
+**********
+
+- ``public clang::RecursiveASTVisitor< FindSimTime >``
+- ``public scpar::Utility`` (:ref:`exhale_class_classscpar_1_1Utility`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::FindSimTime
+   :members:
+   :protected-members:
+   :undoc-members:

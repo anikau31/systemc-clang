@@ -1,0 +1,25 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1has__non__default__from__json:
+
+Template Struct has_non_default_from_json
+=========================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public false_type``
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::has_non_default_from_json
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_define_port__axis_8h_1ad96b73e2000bcfa0dde06a178bd60e87:
+
+Define CA
+=========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_port_axis.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: CA

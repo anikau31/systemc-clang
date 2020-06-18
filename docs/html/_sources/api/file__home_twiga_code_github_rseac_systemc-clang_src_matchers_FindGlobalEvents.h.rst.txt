@@ -1,0 +1,82 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindGlobalEvents.h:
+
+File FindGlobalEvents.h
+=======================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src_matchers>` (``/home/twiga/code/github/rseac/systemc-clang/src/matchers``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/matchers/FindGlobalEvents.h``)
+--------------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindGlobalEvents.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``clang/AST/Decl.h``
+
+- ``clang/AST/RecursiveASTVisitor.h``
+
+- ``json.hpp``
+
+- ``llvm/Support/raw_ostream.h``
+
+- ``map``
+
+- ``string``
+
+- ``systemc-clang.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_systemc-clang.h`)
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindGlobalEvents.cpp`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_Model.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SystemCClang.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_scpar`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classscpar_1_1FindGlobalEvents`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_namespacescpar_1a243eab593933a8518707f63acd4c4e58`
+

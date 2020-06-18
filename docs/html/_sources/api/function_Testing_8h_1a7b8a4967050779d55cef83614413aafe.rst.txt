@@ -1,0 +1,13 @@
+.. _exhale_function_Testing_8h_1a7b8a4967050779d55cef83614413aafe:
+
+Function systemc_clang::read_systemc_file
+=========================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_Testing.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: systemc_clang::read_systemc_file(std::string const, std::string const)

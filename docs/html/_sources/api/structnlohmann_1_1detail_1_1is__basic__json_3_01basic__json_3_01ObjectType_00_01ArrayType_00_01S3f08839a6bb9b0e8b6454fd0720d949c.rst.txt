@@ -1,0 +1,25 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1is__basic__json_3_01basic__json_3_01ObjectType_00_01ArrayType_00_01S3f08839a6bb9b0e8b6454fd0720d949c:
+
+Template Struct is_basic_json< basic_json< ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer > >
+====================================================================================================================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public true_type``
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::is_basic_json< basic_json< ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer > >
+   :members:
+   :protected-members:
+   :undoc-members:

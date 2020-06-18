@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsim_2sc__rvd_8h_1add27deb54b50a78bc4d61b04618077b8:
+
+Define data_w
+=============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_rvd.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: data_w

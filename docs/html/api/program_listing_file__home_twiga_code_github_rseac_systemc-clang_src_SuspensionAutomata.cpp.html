@@ -1,0 +1,1054 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File SuspensionAutomata.cpp &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File SuspensionAutomata.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_SuspensionAutomata.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-suspensionautomata-cpp">
+<span id="program-listing-file-home-twiga-code-github-rseac-systemc-clang-src-suspensionautomata-cpp"></span><h1>Program Listing for File SuspensionAutomata.cpp<a class="headerlink" href="#program-listing-for-file-suspensionautomata-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_src_SuspensionAutomata.cpp.html#file-home-twiga-code-github-rseac-systemc-clang-src-suspensionautomata-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/src/SuspensionAutomata.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;SuspensionAutomata.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;FindArgument.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">scpar</span><span class="p">;</span>
+
+<span class="n">SusCFG</span><span class="o">::</span><span class="n">SusCFG</span><span class="p">(</span><span class="n">CFGBlock</span> <span class="o">*</span><span class="n">block</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">_block</span><span class="p">(</span><span class="n">block</span><span class="p">),</span>
+      <span class="n">_parentCFGBlock</span><span class="p">(</span><span class="nb">NULL</span><span class="p">),</span>
+      <span class="n">_parentSusCFGBlock</span><span class="p">(</span><span class="nb">NULL</span><span class="p">),</span>
+      <span class="n">_isWaitBlock</span><span class="p">(</span><span class="nb">false</span><span class="p">),</span>
+      <span class="n">_isParentBlock</span><span class="p">(</span><span class="nb">false</span><span class="p">),</span>
+      <span class="n">_isGPUFit</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span> <span class="p">{}</span>
+
+<span class="n">SusCFG</span><span class="o">::~</span><span class="n">SusCFG</span><span class="p">()</span> <span class="p">{}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">addParentBlock</span><span class="p">(</span><span class="n">CFGBlock</span> <span class="o">*</span><span class="n">parentBlock</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">_parentCFGBlock</span> <span class="o">=</span> <span class="n">parentBlock</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">addParentBlock</span><span class="p">(</span><span class="n">SusCFG</span> <span class="o">*</span><span class="n">parentBlock</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">_parentSusCFGBlock</span> <span class="o">=</span> <span class="n">parentBlock</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">addPredBlocks</span><span class="p">(</span><span class="n">SusCFG</span> <span class="o">*</span><span class="n">block</span><span class="p">)</span> <span class="p">{</span> <span class="n">_predBlocks</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">block</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">addSuccBlocks</span><span class="p">(</span><span class="n">SusCFG</span> <span class="o">*</span><span class="n">block</span><span class="p">)</span> <span class="p">{</span> <span class="n">_succBlocks</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">block</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">addGPUFit</span><span class="p">()</span> <span class="p">{</span> <span class="n">_isGPUFit</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">denyGPUFit</span><span class="p">()</span> <span class="p">{</span> <span class="n">_isGPUFit</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">addChildBlockList</span><span class="p">(</span><span class="n">SusCFG</span> <span class="o">*</span><span class="n">block</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">_childBlockList</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">block</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">addChildBlockList</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">blockList</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">blockList</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">_childBlockList</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">blockList</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">setWaitBlock</span><span class="p">()</span> <span class="p">{</span> <span class="n">_isWaitBlock</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">setParentBlock</span><span class="p">()</span> <span class="p">{</span> <span class="n">_isParentBlock</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">setWaitStmt</span><span class="p">(</span><span class="n">Stmt</span> <span class="o">*</span><span class="n">stmt</span><span class="p">)</span> <span class="p">{</span> <span class="n">_waitStmt</span> <span class="o">=</span> <span class="n">stmt</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">getChildBlockList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_childBlockList</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">getPredBlocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_predBlocks</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">getSuccBlocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_succBlocks</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">getBlockID</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_block</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">();</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">isWaitBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isWaitBlock</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">isParentBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isParentBlock</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">isGPUFit</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isGPUFit</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">SusCFG</span><span class="o">::</span><span class="n">getParentBlockID</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">_parentCFGBlock</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">_parentCFGBlock</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">CFGBlock</span> <span class="o">*</span><span class="n">SusCFG</span><span class="o">::</span><span class="n">getBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_block</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">CFGBlock</span> <span class="o">*</span><span class="n">SusCFG</span><span class="o">::</span><span class="n">getParentCFGBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parentCFGBlock</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">SusCFG</span> <span class="o">*</span><span class="n">SusCFG</span><span class="o">::</span><span class="n">getParentSusCFGBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parentSusCFGBlock</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">Stmt</span> <span class="o">*</span><span class="n">SusCFG</span><span class="o">::</span><span class="n">getWaitStmt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_waitStmt</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">State</span><span class="o">::</span><span class="n">State</span><span class="p">(</span><span class="n">SusCFG</span> <span class="o">*</span><span class="n">susCFG</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isTimed</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isDelta</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isInitial</span><span class="p">,</span>
+             <span class="kt">bool</span> <span class="n">isEvent</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">_susCFGBlock</span><span class="p">(</span><span class="n">susCFG</span><span class="p">),</span>
+      <span class="n">_isTimed</span><span class="p">(</span><span class="n">isTimed</span><span class="p">),</span>
+      <span class="n">_isDelta</span><span class="p">(</span><span class="n">isDelta</span><span class="p">),</span>
+      <span class="n">_isInitial</span><span class="p">(</span><span class="n">isInitial</span><span class="p">),</span>
+      <span class="n">_isEvent</span><span class="p">(</span><span class="n">isEvent</span><span class="p">)</span> <span class="p">{}</span>
+
+<span class="n">State</span><span class="o">::~</span><span class="n">State</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">_susCFGBlock</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">State</span><span class="o">::</span><span class="n">isTimed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isTimed</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">State</span><span class="o">::</span><span class="n">isDelta</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isDelta</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">State</span><span class="o">::</span><span class="n">isEvent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isEvent</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">State</span><span class="o">::</span><span class="n">isInitial</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isInitial</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">State</span><span class="o">::</span><span class="n">setInitial</span><span class="p">()</span> <span class="p">{</span> <span class="n">_isInitial</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">State</span><span class="o">::</span><span class="n">setTimed</span><span class="p">()</span> <span class="p">{</span> <span class="n">_isTimed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">State</span><span class="o">::</span><span class="n">setEvent</span><span class="p">()</span> <span class="p">{</span> <span class="n">_isEvent</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">State</span><span class="o">::</span><span class="n">setDelta</span><span class="p">()</span> <span class="p">{</span> <span class="n">_isDelta</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">State</span><span class="o">::</span><span class="n">addEventName</span><span class="p">(</span><span class="n">string</span> <span class="n">eventName</span><span class="p">)</span> <span class="p">{</span> <span class="n">_eventName</span> <span class="o">=</span> <span class="n">eventName</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">State</span><span class="o">::</span><span class="n">addSimTime</span><span class="p">(</span><span class="kt">float</span> <span class="n">simTime</span><span class="p">)</span> <span class="p">{</span> <span class="n">_timeInNS</span> <span class="o">=</span> <span class="n">simTime</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">string</span> <span class="n">State</span><span class="o">::</span><span class="n">getEventName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_eventName</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">State</span><span class="o">::</span><span class="n">getSimTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_timeInNS</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">SusCFG</span> <span class="o">*</span><span class="n">State</span><span class="o">::</span><span class="n">returnSusCFGBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_susCFGBlock</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">Transition</span><span class="o">::</span><span class="n">Transition</span><span class="p">()</span> <span class="o">:</span> <span class="n">_initialState</span><span class="p">(</span><span class="nb">NULL</span><span class="p">),</span> <span class="n">_finalState</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{}</span>
+
+<span class="n">Transition</span><span class="o">::~</span><span class="n">Transition</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">delete</span> <span class="n">_initialState</span><span class="p">;</span>
+  <span class="k">delete</span> <span class="n">_finalState</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Transition</span><span class="o">::</span><span class="n">addInstanceId</span><span class="p">(</span><span class="kt">int</span> <span class="n">instanceId</span><span class="p">)</span> <span class="p">{</span> <span class="n">_instanceId</span> <span class="o">=</span> <span class="n">instanceId</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Transition</span><span class="o">::</span><span class="n">addInitialState</span><span class="p">(</span><span class="n">State</span> <span class="o">*</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span> <span class="n">_initialState</span> <span class="o">=</span> <span class="n">state</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Transition</span><span class="o">::</span><span class="n">addFinalState</span><span class="p">(</span><span class="n">State</span> <span class="o">*</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span> <span class="n">_finalState</span> <span class="o">=</span> <span class="n">state</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Transition</span><span class="o">::</span><span class="n">addCodeBlocks</span><span class="p">(</span><span class="n">SusCFG</span> <span class="o">*</span><span class="n">susCFG</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">_codeBlockVector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">susCFG</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Transition</span><span class="o">::</span><span class="n">addCodeBlocks</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">susCFG</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">susCFG</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">_codeBlockVector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">susCFG</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">Transition</span><span class="o">::</span><span class="n">returnInstanceId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_instanceId</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">State</span> <span class="o">*</span><span class="n">Transition</span><span class="o">::</span><span class="n">returnInitialState</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_initialState</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">State</span> <span class="o">*</span><span class="n">Transition</span><span class="o">::</span><span class="n">returnFinalState</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_finalState</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">Transition</span><span class="o">::</span><span class="n">returnCodeBlocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_codeBlockVector</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Transition</span><span class="o">::</span><span class="n">dump</span><span class="p">(</span><span class="n">raw_ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> ####### Transition #######&quot;</span><span class="p">;</span>
+  <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Initial State : &quot;</span>
+     <span class="o">&lt;&lt;</span> <span class="n">_initialState</span><span class="o">-&gt;</span><span class="n">returnSusCFGBlock</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">();</span>
+  <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Final State : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">_finalState</span><span class="o">-&gt;</span><span class="n">returnSusCFGBlock</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">();</span>
+  <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Transition Blocks : &quot;</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_codeBlockVector</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">_codeBlockVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">SuspensionAutomata</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">WaitContainer</span> <span class="o">*&gt;</span> <span class="n">waitCalls</span><span class="p">,</span>
+                                       <span class="n">CXXMethodDecl</span> <span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">ASTContext</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span>
+                                       <span class="n">raw_ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">_d</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">_a</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">_os</span><span class="p">(</span><span class="n">os</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">waitCalls</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">WaitContainer</span> <span class="o">*</span><span class="n">wc</span><span class="p">{</span><span class="n">waitCalls</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)};</span>
+    <span class="n">_waitCalls</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">wc</span><span class="o">-&gt;</span><span class="n">getASTNode</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">SuspensionAutomata</span><span class="o">::~</span><span class="n">SuspensionAutomata</span><span class="p">()</span> <span class="p">{}</span>
+
+<span class="kt">bool</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">initialize</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="n">CFG</span><span class="o">::</span><span class="n">BuildOptions</span> <span class="o">&amp;</span><span class="n">b</span> <span class="o">=</span> <span class="n">CFG</span><span class="o">::</span><span class="n">BuildOptions</span><span class="p">();</span>
+
+  <span class="n">_cfg</span> <span class="o">=</span> <span class="n">CFG</span><span class="o">::</span><span class="n">buildCFG</span><span class="p">(</span><span class="n">cast</span><span class="o">&lt;</span><span class="n">Decl</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_d</span><span class="p">),</span> <span class="n">_d</span><span class="o">-&gt;</span><span class="n">getBody</span><span class="p">(),</span> <span class="n">_a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">_cfg</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">isWaitCall</span><span class="p">(</span><span class="k">const</span> <span class="n">CFGStmt</span> <span class="o">*</span><span class="n">cs</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">f</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+  <span class="n">Stmt</span> <span class="o">*</span><span class="n">s</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="n">Stmt</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">cs</span><span class="o">-&gt;</span><span class="n">getStmt</span><span class="p">());</span>
+
+  <span class="n">CXXMemberCallExpr</span> <span class="o">*</span><span class="n">m</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_waitCalls</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">CallExpr</span> <span class="o">*</span><span class="n">ce</span><span class="p">{</span><span class="n">_waitCalls</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m</span> <span class="o">==</span> <span class="n">ce</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">f</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="cm">/*</span>
+<span class="cm">    for (EntryFunctionContainer::waitContainerListType::iterator it =</span>
+<span class="cm">        _waitCalls.begin(), eit = _waitCalls.end(); it != eit; ++it)</span>
+<span class="cm">      WaitContainer *w = (*it);</span>
+<span class="cm">      if (m == w-&gt;getASTNode()) {</span>
+<span class="cm">        f = true;</span>
+<span class="cm">      }</span>
+<span class="cm">   */</span>
+  <span class="k">return</span> <span class="n">f</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*************************************************************************</span>
+<span class="cm">Description : Locates the suspension points in the CFG and</span>
+<span class="cm">creates new CFG blocks that isolates the suspension statements from the code.</span>
+<span class="cm">*************************************************************************/</span>
+<span class="kt">void</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">genSusCFG</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">LangOptions</span> <span class="n">LO</span><span class="p">;</span>
+
+  <span class="n">LO</span><span class="p">.</span><span class="n">CPlusPlus</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="n">PrintingPolicy</span> <span class="nf">Policy</span><span class="p">(</span><span class="n">LO</span><span class="p">);</span>
+
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">CFGStmt</span><span class="o">&gt;&gt;</span> <span class="n">pre</span><span class="p">;</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">waitBlockIDVector</span><span class="p">;</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">CFGBlock</span> <span class="o">*&gt;</span> <span class="n">CFGBlockVector</span><span class="p">;</span>
+  <span class="p">;</span>
+
+  <span class="k">typedef</span> <span class="n">map</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*</span><span class="p">,</span> <span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">susCFGBlockMapType</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*</span><span class="p">,</span> <span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">susCFGBlockPairType</span><span class="p">;</span>
+
+  <span class="n">susCFGBlockMapType</span> <span class="n">susCFGBlockMap</span><span class="p">;</span>
+
+  <span class="kt">bool</span> <span class="n">isFirstCFGBlockID</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">CFG</span><span class="o">::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">_cfg</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">eit</span> <span class="o">=</span> <span class="n">_cfg</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">eit</span><span class="p">;</span>
+       <span class="o">--</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">b</span> <span class="o">=</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="n">SusCFG</span> <span class="o">*</span><span class="n">currBlock</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="o">==</span>
+        <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">currBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SusCFG</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+      <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+          <span class="n">susCFGBlockPairType</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">currBlock</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">susCFGBlockMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">susCFGBlockFound</span> <span class="o">=</span>
+          <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+      <span class="n">currBlock</span> <span class="o">=</span> <span class="n">susCFGBlockFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">bool</span> <span class="n">foundWait</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span> <span class="n">splitBlocksVector</span><span class="p">;</span>
+    <span class="cm">/*</span>
+<span class="cm">    _os &lt;&lt; &quot;==========================================================\n&quot;;</span>
+<span class="cm">    _os &lt;&lt; &quot;Dump CFG Block\n&quot;;</span>
+<span class="cm">    b-&gt;dump(_cfg, LO, false);</span>
+<span class="cm">    */</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">prevCFGBlockID</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">CFGBlock</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">bit</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">(),</span> <span class="n">bite</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span>
+         <span class="n">bit</span> <span class="o">!=</span> <span class="n">bite</span><span class="p">;</span> <span class="n">bit</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">CFGStmt</span><span class="o">&gt;</span> <span class="n">cs</span> <span class="o">=</span> <span class="n">bit</span><span class="o">-&gt;</span><span class="n">getAs</span><span class="o">&lt;</span><span class="n">CFGStmt</span><span class="o">&gt;</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="n">CFGStmt</span> <span class="o">*</span><span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">CFGStmt</span> <span class="k">const</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cs</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">isWaitCall</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="p">{</span>
+          <span class="n">foundWait</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+          <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">newSplitBlock</span> <span class="o">=</span> <span class="n">_cfg</span><span class="o">-&gt;</span><span class="n">createBlock</span><span class="p">();</span>
+
+          <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">pre</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">newSplitBlock</span><span class="o">-&gt;</span><span class="n">appendStmt</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">Stmt</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">pre</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getStmt</span><span class="p">()),</span>
+                                      <span class="n">_cfg</span><span class="o">-&gt;</span><span class="n">getBumpVectorContext</span><span class="p">());</span>
+          <span class="p">}</span>
+
+          <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">waitBlock</span> <span class="o">=</span> <span class="n">_cfg</span><span class="o">-&gt;</span><span class="n">createBlock</span><span class="p">();</span>
+
+          <span class="n">waitBlock</span><span class="o">-&gt;</span><span class="n">appendStmt</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">Stmt</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">cs</span><span class="o">-&gt;</span><span class="n">getStmt</span><span class="p">()),</span>
+                                <span class="n">_cfg</span><span class="o">-&gt;</span><span class="n">getBumpVectorContext</span><span class="p">());</span>
+          <span class="n">waitBlock</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">Stmt</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">cs</span><span class="o">-&gt;</span><span class="n">getStmt</span><span class="p">()));</span>
+          <span class="n">splitBlocksVector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">newSplitBlock</span><span class="p">);</span>
+          <span class="n">splitBlocksVector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">waitBlock</span><span class="p">);</span>
+          <span class="n">pre</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="n">pre</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">cs</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// pre.clear();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">foundWait</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">currBlock</span><span class="o">-&gt;</span><span class="n">setParentBlock</span><span class="p">();</span>
+      <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">prev</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+      <span class="n">SusCFG</span> <span class="o">*</span><span class="n">prevBlock</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">splitBlocksVector</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">current</span> <span class="o">=</span> <span class="n">splitBlocksVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        <span class="n">SusCFG</span> <span class="o">*</span><span class="n">splitBlock</span> <span class="o">=</span>
+            <span class="k">new</span> <span class="n">SusCFG</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">splitBlocksVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)));</span>
+        <span class="n">currBlock</span><span class="o">-&gt;</span><span class="n">addChildBlockList</span><span class="p">(</span><span class="n">splitBlock</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">current</span><span class="o">-&gt;</span><span class="n">getLabel</span><span class="p">())</span> <span class="p">{</span>
+          <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">setWaitBlock</span><span class="p">();</span>
+          <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">setWaitStmt</span><span class="p">(</span><span class="n">current</span><span class="o">-&gt;</span><span class="n">getLabel</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pre</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// add trailing statements to post block wait stmt</span>
+          <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">newCFGBlock</span> <span class="o">=</span> <span class="n">_cfg</span><span class="o">-&gt;</span><span class="n">createBlock</span><span class="p">();</span>
+          <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">j</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">pre</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">newCFGBlock</span><span class="o">-&gt;</span><span class="n">appendStmt</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">Stmt</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">pre</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getStmt</span><span class="p">()),</span>
+                                    <span class="n">_cfg</span><span class="o">-&gt;</span><span class="n">getBumpVectorContext</span><span class="p">());</span>
+          <span class="p">}</span>
+          <span class="c1">// SusCFG * postSusCFGBlock = new SusCFG(newCFGBlock);</span>
+          <span class="c1">// susCFGBlockMap.insert(susCFGBlockPairType(newCFGBlock,</span>
+          <span class="c1">// postSusCFGBlock));</span>
+          <span class="n">splitBlocksVector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">newCFGBlock</span><span class="p">);</span>
+          <span class="n">pre</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">for</span> <span class="p">(</span><span class="n">CFGBlock</span><span class="o">::</span><span class="n">const_pred_iterator</span> <span class="n">pit</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">pred_begin</span><span class="p">(),</span>
+                                             <span class="n">pite</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">pred_end</span><span class="p">();</span>
+               <span class="n">pit</span> <span class="o">!=</span> <span class="n">pite</span><span class="p">;</span> <span class="n">pit</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">const</span> <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">pred</span> <span class="o">=</span> <span class="o">*</span><span class="n">pit</span><span class="p">;</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">pred</span><span class="p">))</span> <span class="o">==</span>
+                <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+              <span class="n">SusCFG</span> <span class="o">*</span><span class="n">tmpBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SusCFG</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">pred</span><span class="p">));</span>
+              <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+                  <span class="n">susCFGBlockPairType</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">pred</span><span class="p">),</span> <span class="n">tmpBlock</span><span class="p">));</span>
+              <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addPredBlocks</span><span class="p">(</span><span class="n">tmpBlock</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="n">susCFGBlockMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">susCFGBlockFound</span> <span class="o">=</span>
+                  <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">pred</span><span class="p">));</span>
+              <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addPredBlocks</span><span class="p">(</span><span class="n">susCFGBlockFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+
+          <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addParentBlock</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+          <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addParentBlock</span><span class="p">(</span><span class="n">currBlock</span><span class="p">);</span>
+          <span class="n">prevBlock</span> <span class="o">=</span> <span class="n">splitBlock</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">splitBlocksVector</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">prev</span> <span class="o">=</span> <span class="n">splitBlocksVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">prev</span><span class="p">)</span> <span class="o">==</span> <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">SusCFG</span> <span class="o">*</span><span class="n">tmpBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SusCFG</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">prev</span><span class="p">));</span>
+            <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+                <span class="n">susCFGBlockPairType</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">prev</span><span class="p">),</span> <span class="n">tmpBlock</span><span class="p">));</span>
+            <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addPredBlocks</span><span class="p">(</span><span class="n">tmpBlock</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">susCFGBlockMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">susCFGBlockFound</span> <span class="o">=</span>
+                <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">prev</span><span class="p">));</span>
+            <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addPredBlocks</span><span class="p">(</span><span class="n">susCFGBlockFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="n">prevBlock</span><span class="o">-&gt;</span><span class="n">addSuccBlocks</span><span class="p">(</span><span class="n">splitBlock</span><span class="p">);</span>
+
+          <span class="k">for</span> <span class="p">(</span><span class="n">CFGBlock</span><span class="o">::</span><span class="n">const_succ_iterator</span> <span class="n">sit</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">succ_begin</span><span class="p">(),</span>
+                                             <span class="n">site</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">succ_end</span><span class="p">();</span>
+               <span class="n">sit</span> <span class="o">!=</span> <span class="n">site</span><span class="p">;</span> <span class="n">sit</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">const</span> <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">succ</span> <span class="o">=</span> <span class="o">*</span><span class="n">sit</span><span class="p">;</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">succ</span><span class="p">))</span> <span class="o">==</span>
+                <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+              <span class="n">SusCFG</span> <span class="o">*</span><span class="n">tmpBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SusCFG</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">succ</span><span class="p">));</span>
+              <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+                  <span class="n">susCFGBlockPairType</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">succ</span><span class="p">),</span> <span class="n">tmpBlock</span><span class="p">));</span>
+              <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addSuccBlocks</span><span class="p">(</span><span class="n">tmpBlock</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="n">susCFGBlockMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">susCFGBlockFound</span> <span class="o">=</span>
+                  <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">succ</span><span class="p">));</span>
+              <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addSuccBlocks</span><span class="p">(</span><span class="n">susCFGBlockFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="n">prev</span> <span class="o">=</span> <span class="n">splitBlocksVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">prev</span><span class="p">))</span> <span class="o">==</span>
+              <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">SusCFG</span> <span class="o">*</span><span class="n">tmpBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SusCFG</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">prev</span><span class="p">));</span>
+            <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+                <span class="n">susCFGBlockPairType</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">prev</span><span class="p">),</span> <span class="n">tmpBlock</span><span class="p">));</span>
+            <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addPredBlocks</span><span class="p">(</span><span class="n">tmpBlock</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">susCFGBlockMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">susCFGBlockFound</span> <span class="o">=</span>
+                <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">prev</span><span class="p">));</span>
+            <span class="n">splitBlock</span><span class="o">-&gt;</span><span class="n">addPredBlocks</span><span class="p">(</span><span class="n">susCFGBlockFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="n">prevBlock</span><span class="o">-&gt;</span><span class="n">addSuccBlocks</span><span class="p">(</span><span class="n">splitBlock</span><span class="p">);</span>
+          <span class="n">prevBlock</span> <span class="o">=</span> <span class="n">splitBlock</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">_susCFGVector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">splitBlock</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">CFGBlock</span><span class="o">::</span><span class="n">const_pred_iterator</span> <span class="n">pit</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">pred_begin</span><span class="p">(),</span>
+                                         <span class="n">pite</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">pred_end</span><span class="p">();</span>
+           <span class="n">pit</span> <span class="o">!=</span> <span class="n">pite</span><span class="p">;</span> <span class="n">pit</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">predBlock</span> <span class="o">=</span> <span class="o">*</span><span class="n">pit</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">predBlock</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">predBlock</span><span class="p">))</span> <span class="o">==</span>
+              <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">SusCFG</span> <span class="o">*</span><span class="n">tmpBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SusCFG</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">predBlock</span><span class="p">));</span>
+            <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">susCFGBlockPairType</span><span class="p">(</span>
+                <span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">predBlock</span><span class="p">),</span> <span class="n">tmpBlock</span><span class="p">));</span>
+            <span class="n">currBlock</span><span class="o">-&gt;</span><span class="n">addPredBlocks</span><span class="p">(</span><span class="n">tmpBlock</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">susCFGBlockMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">predSusCFGBlockFound</span> <span class="o">=</span>
+                <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">predBlock</span><span class="p">));</span>
+            <span class="n">currBlock</span><span class="o">-&gt;</span><span class="n">addPredBlocks</span><span class="p">(</span><span class="n">predSusCFGBlockFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">CFGBlock</span><span class="o">::</span><span class="n">const_succ_iterator</span> <span class="n">sit</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">succ_begin</span><span class="p">(),</span>
+                                         <span class="n">site</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">succ_end</span><span class="p">();</span>
+           <span class="n">sit</span> <span class="o">!=</span> <span class="n">site</span><span class="p">;</span> <span class="n">sit</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="n">CFGBlock</span> <span class="o">*</span><span class="n">succBlock</span> <span class="o">=</span> <span class="o">*</span><span class="n">sit</span><span class="p">;</span>
+        <span class="n">SusCFG</span> <span class="o">*</span><span class="n">tmpBlock</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">succBlock</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">succBlock</span><span class="p">))</span> <span class="o">==</span>
+              <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">tmpBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SusCFG</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">succBlock</span><span class="p">));</span>
+            <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">susCFGBlockPairType</span><span class="p">(</span>
+                <span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">succBlock</span><span class="p">),</span> <span class="n">tmpBlock</span><span class="p">));</span>
+            <span class="n">currBlock</span><span class="o">-&gt;</span><span class="n">addSuccBlocks</span><span class="p">(</span><span class="n">tmpBlock</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">susCFGBlockMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">succSusCFGBlockFound</span> <span class="o">=</span>
+                <span class="n">susCFGBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">CFGBlock</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">succBlock</span><span class="p">));</span>
+            <span class="n">currBlock</span><span class="o">-&gt;</span><span class="n">addSuccBlocks</span><span class="p">(</span><span class="n">succSusCFGBlockFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="n">_susCFGVector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">currBlock</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">addRemainingBlocks</span><span class="p">(</span>
+    <span class="n">State</span> <span class="o">*</span><span class="n">initialState</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">transitionBlocks</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">duplicate</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">_stateCommonCodeBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">initialState</span><span class="p">)</span> <span class="o">!=</span>
+      <span class="n">_stateCommonCodeBlockMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">stateCommonCodeBlockMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">stateFound</span> <span class="o">=</span>
+        <span class="n">_stateCommonCodeBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">initialState</span><span class="p">);</span>
+    <span class="n">checkInsert</span><span class="p">(</span><span class="n">stateFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">,</span> <span class="n">transitionBlocks</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">modifDFS</span><span class="p">(</span><span class="n">SusCFG</span> <span class="o">*</span><span class="n">block</span><span class="p">,</span>
+                                              <span class="n">State</span> <span class="o">*</span><span class="n">initialState</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">deque</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">traversedBlocks</span><span class="p">;</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">visitedBlocks</span><span class="p">;</span>
+
+  <span class="n">traversedBlocks</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span><span class="n">block</span><span class="p">);</span>
+  <span class="kt">bool</span> <span class="n">isWaitEncounter</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">transitionBlocks</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">traversedBlocks</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">SusCFG</span> <span class="o">*</span><span class="n">currentBlock</span> <span class="o">=</span> <span class="n">traversedBlocks</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+
+    <span class="n">traversedBlocks</span><span class="p">.</span><span class="n">pop_front</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">isWaitBlock</span><span class="p">())</span> <span class="p">{</span>
+      <span class="kt">float</span> <span class="n">timeInNs</span><span class="p">;</span>
+      <span class="n">string</span> <span class="n">eventName</span><span class="p">;</span>
+      <span class="n">isWaitEncounter</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="n">susCFGStateMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">stateFound</span> <span class="o">=</span>
+          <span class="n">susCFGStateMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">currentBlock</span><span class="p">);</span>
+      <span class="n">State</span> <span class="o">*</span><span class="n">finalState</span> <span class="o">=</span> <span class="n">stateFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">isTimedWait</span><span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getWaitStmt</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">finalState</span><span class="o">-&gt;</span><span class="n">setTimed</span><span class="p">();</span>
+        <span class="n">timeInNs</span> <span class="o">=</span> <span class="n">getTime</span><span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getWaitStmt</span><span class="p">());</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">isEventWait</span><span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getWaitStmt</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">finalState</span><span class="o">-&gt;</span><span class="n">setEvent</span><span class="p">();</span>
+        <span class="n">eventName</span> <span class="o">=</span> <span class="n">getEvent</span><span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getWaitStmt</span><span class="p">());</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">isDeltaWait</span><span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getWaitStmt</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">finalState</span><span class="o">-&gt;</span><span class="n">setDelta</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">finalState</span><span class="o">-&gt;</span><span class="n">setInitial</span><span class="p">();</span>
+      <span class="p">}</span>
+
+      <span class="n">Transition</span> <span class="o">*</span><span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Transition</span><span class="p">();</span>
+      <span class="n">finalState</span><span class="o">-&gt;</span><span class="n">addEventName</span><span class="p">(</span><span class="n">eventName</span><span class="p">);</span>
+      <span class="n">finalState</span><span class="o">-&gt;</span><span class="n">addSimTime</span><span class="p">(</span><span class="n">timeInNs</span><span class="p">);</span>
+      <span class="n">t</span><span class="o">-&gt;</span><span class="n">addInitialState</span><span class="p">(</span><span class="n">initialState</span><span class="p">);</span>
+      <span class="n">t</span><span class="o">-&gt;</span><span class="n">addFinalState</span><span class="p">(</span><span class="n">finalState</span><span class="p">);</span>
+      <span class="n">addRemainingBlocks</span><span class="p">(</span><span class="n">initialState</span><span class="p">,</span> <span class="n">transitionBlocks</span><span class="p">);</span>
+      <span class="n">t</span><span class="o">-&gt;</span><span class="n">addCodeBlocks</span><span class="p">(</span><span class="n">transitionBlocks</span><span class="p">);</span>
+
+      <span class="n">_transitionVector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">transitionBlocks</span><span class="p">;</span>
+
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// When adding blocks to traversed blocks, check if the last node prior to</span>
+      <span class="c1">// the wait call has which branch discovered. Also need to check</span>
+      <span class="c1">// terminator block or block 0</span>
+      <span class="c1">//</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">currentBlock</span><span class="p">)</span> <span class="o">==</span> <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+        <span class="c1">// currentBlock is not our concern yet, so insert the 0th successive</span>
+        <span class="c1">// block</span>
+        <span class="c1">//_os &lt;&lt;&quot;\n Current Block : &quot; &lt;&lt;currentBlock-&gt;getBlockID()&lt;&lt;&quot; not of</span>
+        <span class="c1">// concern&quot;;</span>
+        <span class="c1">//</span>
+        <span class="c1">// TODO: BUG: There is an issue here.</span>
+        <span class="c1">// There exists a getSuccBlocks(), but it happens to be empty.</span>
+        <span class="c1">// This happens when there is a thread that uses a wait(), but no while</span>
+        <span class="c1">// loop.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">isParentBlock</span><span class="p">())</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isFound</span><span class="p">(</span>
+                  <span class="n">visitedBlocks</span><span class="p">,</span>
+                  <span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getChildBlockList</span><span class="p">().</span><span class="n">at</span><span class="p">(</span>
+                      <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+            <span class="n">traversedBlocks</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span>
+                <span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getChildBlockList</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+          <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isFound</span><span class="p">(</span><span class="n">visitedBlocks</span><span class="p">,</span> <span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">traversedBlocks</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// currentBlock has a previous entry in the map, so take the other</span>
+        <span class="c1">// succesive block if it exists</span>
+        <span class="c1">//_os &lt;&lt;&quot;\n Current block : &quot; &lt;&lt;currentBlock-&gt;getBlockID()&lt;&lt;&quot; is of</span>
+        <span class="c1">// concern&quot;;</span>
+        <span class="n">susCFGSuccIDMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">susCFGFound</span> <span class="o">=</span>
+            <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">currentBlock</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">susCFGFound</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">==</span> <span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// All the child branches of this node have been discovered. So, there</span>
+          <span class="c1">// is nothing to discover</span>
+          <span class="c1">//_os &lt;&lt;&quot;\n Current block : &quot; &lt;&lt;currentBlock-&gt;getBlockID()&lt;&lt;&quot; has all</span>
+          <span class="c1">// children accounted for&quot;;</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">()</span>
+                  <span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">susCFGFound</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                  <span class="o">-&gt;</span><span class="n">isParentBlock</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isFound</span><span class="p">(</span><span class="n">visitedBlocks</span><span class="p">,</span> <span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">()</span>
+                                            <span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">susCFGFound</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                                            <span class="o">-&gt;</span><span class="n">getChildBlockList</span><span class="p">()</span>
+                                            <span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+              <span class="n">traversedBlocks</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">()</span>
+                                             <span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">susCFGFound</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                                             <span class="o">-&gt;</span><span class="n">getChildBlockList</span><span class="p">()</span>
+                                             <span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+            <span class="p">}</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isFound</span><span class="p">(</span><span class="n">visitedBlocks</span><span class="p">,</span> <span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span>
+                                            <span class="n">susCFGFound</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">()</span>
+                      <span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">susCFGFound</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                      <span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">traversedBlocks</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span>
+                    <span class="n">currentBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="n">susCFGFound</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+              <span class="p">}</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="n">visitedBlocks</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">currentBlock</span><span class="p">);</span>
+      <span class="n">transitionBlocks</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">currentBlock</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">isWaitEncounter</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// we found a path that does not end in a wait block. So,</span>
+    <span class="c1">// it will be in all paths from this initial state to all final wait states</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_stateCommonCodeBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">initialState</span><span class="p">)</span> <span class="o">==</span>
+        <span class="n">_stateCommonCodeBlockMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">_stateCommonCodeBlockMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+          <span class="n">stateCommonCodeBlockPairType</span><span class="p">(</span><span class="n">initialState</span><span class="p">,</span> <span class="n">transitionBlocks</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">stateCommonCodeBlockMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">stateFound</span> <span class="o">=</span>
+          <span class="n">_stateCommonCodeBlockMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">initialState</span><span class="p">);</span>
+      <span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">remainingCodeBlocks</span> <span class="o">=</span> <span class="n">stateFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+      <span class="n">checkInsert</span><span class="p">(</span><span class="n">transitionBlocks</span><span class="p">,</span> <span class="n">remainingCodeBlocks</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">transitionBlocks</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">checkInsert</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">source</span><span class="p">,</span>
+                                     <span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">duplicate</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">source</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">duplicate</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="n">target</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">duplicate</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">duplicate</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">target</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">source</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">genSauto</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">susCFGVectorType</span> <span class="n">susCFGVector</span> <span class="o">=</span> <span class="n">_susCFGVector</span><span class="p">;</span>
+  <span class="n">susCFGVectorType</span> <span class="n">waitBlocks</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">susCFGVector</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">isWaitBlock</span><span class="p">()</span> <span class="o">||</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">waitBlocks</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+      <span class="n">State</span> <span class="o">*</span><span class="n">state</span> <span class="o">=</span> <span class="k">new</span> <span class="n">State</span><span class="p">(</span><span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">state</span><span class="o">-&gt;</span><span class="n">setInitial</span><span class="p">();</span>
+        <span class="c1">//_os &lt;&lt;&quot;\n State susblock set to initial : &quot;</span>
+        <span class="c1">//&lt;&lt;state-&gt;returnSusCFGBlock()-&gt;getBlockID(); _os &lt;&lt;&quot;\n State : &quot;</span>
+        <span class="c1">//&lt;&lt;state-&gt;isTimed()&lt;&lt;&quot; &quot; &lt;&lt;state-&gt;isInitial()&lt;&lt;&quot; &quot; &lt;&lt;state-&gt;isDelta();</span>
+      <span class="p">}</span>
+      <span class="n">susCFGStateMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">susCFGStatePairType</span><span class="p">(</span><span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">state</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">waitBlocks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">SusCFG</span> <span class="o">*</span><span class="n">waitBlock</span> <span class="o">=</span> <span class="n">waitBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+
+    <span class="c1">//_os &lt;&lt;&quot;\n Looking at Wait Block : &quot; &lt;&lt;waitBlock-&gt;getBlockID();</span>
+
+    <span class="n">susCFGStateMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">stateFound</span> <span class="o">=</span>
+        <span class="n">susCFGStateMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">waitBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="n">State</span> <span class="o">*</span><span class="n">initialState</span> <span class="o">=</span> <span class="n">stateFound</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">backTrackCodeBlocks</span><span class="p">;</span>
+    <span class="n">SusCFG</span> <span class="o">*</span><span class="n">lastBlock</span><span class="p">;</span>
+    <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>  <span class="c1">// For each new initial state, start fresh...</span>
+    <span class="c1">// Left child.. do the same for the right child</span>
+    <span class="k">do</span> <span class="p">{</span>
+      <span class="n">SusCFG</span> <span class="o">*</span><span class="n">initialInsertBlock</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">waitBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">isParentBlock</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">initialInsertBlock</span> <span class="o">=</span>
+            <span class="n">waitBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getChildBlockList</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">else</span> <span class="p">{</span>
+        <span class="n">initialInsertBlock</span> <span class="o">=</span> <span class="n">waitBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">transitionCodeBlocks</span> <span class="o">=</span>
+          <span class="n">modifDFS</span><span class="p">(</span><span class="n">initialInsertBlock</span><span class="p">,</span> <span class="n">initialState</span><span class="p">);</span>
+
+      <span class="c1">//_os &lt;&lt;&quot;\n Transition Blocks : &quot;;</span>
+      <span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">j</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">transitionCodeBlocks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">transitionCodeBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+        <span class="c1">//_os &lt;&lt;&quot; &quot;&lt;&lt;transitionCodeBlocks.at(j)-&gt;getBlockID();;</span>
+      <span class="p">}</span>
+      <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">j</span><span class="p">{};</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">//_os &lt;&lt;&quot;\n Block : &quot; &lt;&lt;backTrackCodeBlocks.at(j)-&gt;getBlockID()&lt;&lt;&quot; has</span>
+          <span class="c1">// more than one successor&quot;;</span>
+          <span class="n">SusCFG</span> <span class="o">*</span><span class="n">backBlock</span> <span class="o">=</span> <span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">backBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">isParentBlock</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">backBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getChildBlockList</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span>
+                <span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+              <span class="c1">//_os &lt;&lt;&quot;\n Block : &quot; &lt;&lt;backBlock-&gt;getBlockID()&lt;&lt;&quot; used the first</span>
+              <span class="c1">// successor&quot;;</span>
+              <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">susCFGSuccIDPairType</span><span class="p">(</span><span class="n">backBlock</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+              <span class="c1">//_os &lt;&lt;&quot;\n Map value : &quot; &lt;&lt;susCFGSuccIDMap[backBlock];</span>
+              <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">backBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">isParentBlock</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">backBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getChildBlockList</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span>
+                <span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+              <span class="c1">//_os &lt;&lt;&quot;\n Block : &quot; &lt;&lt;backBlock-&gt;getBlockID()&lt;&lt;&quot; used the second</span>
+              <span class="c1">// successor&quot;;</span>
+              <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">backBlock</span><span class="p">);</span>
+              <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">susCFGSuccIDPairType</span><span class="p">(</span><span class="n">backBlock</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+              <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+
+          <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">backBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span>
+                   <span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+            <span class="c1">//_os &lt;&lt;&quot;\n Block : &quot; &lt;&lt;backBlock-&gt;getBlockID()&lt;&lt;&quot; used the first</span>
+            <span class="c1">// successor&quot;;</span>
+
+            <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">susCFGSuccIDPairType</span><span class="p">(</span><span class="n">backBlock</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">backBlock</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span>
+                     <span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+            <span class="c1">//_os &lt;&lt;&quot;\n Block : &quot; &lt;&lt;backBlock-&gt;getBlockID()&lt;&lt;&quot; used the second</span>
+            <span class="c1">// successor&quot;;</span>
+
+            <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">backBlock</span><span class="p">);</span>
+            <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">susCFGSuccIDPairType</span><span class="p">(</span><span class="n">backBlock</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="c1">//_os &lt;&lt;&quot;\n J value : &quot; &lt;&lt;j;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">back</span><span class="p">())</span> <span class="o">==</span>
+            <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+          <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+              <span class="n">susCFGSuccIDPairType</span><span class="p">(</span><span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">back</span><span class="p">(),</span> <span class="mi">0</span><span class="p">));</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">susCFGSuccIDMap</span><span class="p">[</span><span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">back</span><span class="p">()]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">back</span><span class="p">());</span>
+            <span class="n">susCFGSuccIDMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+                <span class="n">susCFGSuccIDPairType</span><span class="p">(</span><span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">back</span><span class="p">(),</span> <span class="mi">1</span><span class="p">));</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="c1">// delete the blocks from the back to j</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+      <span class="p">}</span>
+
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">backTrackCodeBlocks</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">Node</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">is_found</span><span class="p">(</span><span class="n">Node</span> <span class="n">n1</span><span class="p">,</span> <span class="n">Node</span> <span class="n">n2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">n1</span> <span class="o">==</span> <span class="n">n2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="p">,</span> <span class="k">typename</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Container</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Node</span><span class="p">,</span>
+          <span class="k">typename</span> <span class="n">Allocator</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">generic_isFound</span><span class="p">(</span><span class="n">Container</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span> <span class="n">Allocator</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">container</span><span class="p">,</span> <span class="n">Node</span> <span class="n">node</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">foundBlock</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+  <span class="k">typename</span> <span class="n">Container</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span> <span class="n">Allocator</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">itr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span>
+      <span class="n">container</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">container</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">bind1st</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ptr_fun</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span> <span class="n">Node</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">is_found</span><span class="p">),</span> <span class="n">node</span><span class="p">));</span>
+
+  <span class="k">return</span> <span class="n">itr</span> <span class="o">!=</span> <span class="n">container</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// need a utility class and this should be a template function</span>
+<span class="kt">bool</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">isFound</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">visitedState</span><span class="p">,</span> <span class="n">SusCFG</span> <span class="o">*</span><span class="n">block</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">generic_isFound</span><span class="p">(</span><span class="n">visitedState</span><span class="p">,</span> <span class="n">block</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">isFound</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Transition</span> <span class="o">*&gt;</span> <span class="n">visitedState</span><span class="p">,</span>
+                                 <span class="n">Transition</span> <span class="o">*</span><span class="n">block</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">generic_isFound</span><span class="p">(</span><span class="n">visitedState</span><span class="p">,</span> <span class="n">block</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">getTime</span><span class="p">(</span><span class="n">Stmt</span> <span class="o">*</span><span class="n">stmt</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">float</span> <span class="n">factor</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">CXXMemberCallExpr</span> <span class="o">*</span><span class="n">ce</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">stmt</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">getArgumentName</span><span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getArg</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="s">&quot;SC_FS&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">factor</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">getArgumentName</span><span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getArg</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="s">&quot;SC_PS&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">factor</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">getArgumentName</span><span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getArg</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="s">&quot;SC_NS&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">factor</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">getArgumentName</span><span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getArg</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="s">&quot;SC_US&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">factor</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">getArgumentName</span><span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getArg</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="s">&quot;SC_MS&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">factor</span> <span class="o">=</span> <span class="mf">0.000001</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">getArgumentName</span><span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getArg</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="s">&quot;SC_SEC&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">factor</span> <span class="o">=</span> <span class="mf">0.0000000001</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">atof</span><span class="p">(</span><span class="n">getArgumentName</span><span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getArg</span><span class="p">(</span><span class="mi">0</span><span class="p">)).</span><span class="n">c_str</span><span class="p">())</span> <span class="o">*</span> <span class="n">factor</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">string</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">getEvent</span><span class="p">(</span><span class="n">Stmt</span> <span class="o">*</span><span class="n">stmt</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">CXXMemberCallExpr</span> <span class="o">*</span><span class="n">ce</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">stmt</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">getArgumentName</span><span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getArg</span><span class="p">(</span><span class="mi">0</span><span class="p">)));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">isTimedWait</span><span class="p">(</span><span class="n">Stmt</span> <span class="o">*</span><span class="n">stmt</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">CXXMemberCallExpr</span> <span class="o">*</span><span class="n">ce</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">stmt</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getNumArgs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">string</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">getArgumentName</span><span class="p">(</span><span class="n">Expr</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">arg</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="k">return</span> <span class="n">string</span><span class="p">(</span><span class="s">&quot;NULL&quot;</span><span class="p">);</span>
+
+  <span class="n">clang</span><span class="o">::</span><span class="n">LangOptions</span> <span class="n">LangOpts</span><span class="p">;</span>
+  <span class="n">LangOpts</span><span class="p">.</span><span class="n">CPlusPlus</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="n">clang</span><span class="o">::</span><span class="n">PrintingPolicy</span> <span class="n">Policy</span><span class="p">(</span><span class="n">LangOpts</span><span class="p">);</span>
+
+  <span class="n">string</span> <span class="n">TypeS</span><span class="p">;</span>
+
+  <span class="n">llvm</span><span class="o">::</span><span class="n">raw_string_ostream</span> <span class="n">s</span><span class="p">(</span><span class="n">TypeS</span><span class="p">);</span>
+
+  <span class="n">arg</span><span class="o">-&gt;</span><span class="n">printPretty</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Policy</span><span class="p">);</span>
+  <span class="c1">//  _os &lt;&lt; &quot;, argument: &quot; &lt;&lt; s.str() &lt;&lt; &quot;\n&quot;;</span>
+  <span class="k">return</span> <span class="n">s</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">isDeltaWait</span><span class="p">(</span><span class="n">Stmt</span> <span class="o">*</span><span class="n">stmt</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">CXXMemberCallExpr</span> <span class="o">*</span><span class="n">ce</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">stmt</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getNumArgs</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">string</span> <span class="n">eventName</span> <span class="o">=</span> <span class="n">getArgumentName</span><span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getArg</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">eventName</span> <span class="o">==</span> <span class="s">&quot;SC_ZERO_TIME&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">isEventWait</span><span class="p">(</span><span class="n">Stmt</span> <span class="o">*</span><span class="n">stmt</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">CXXMemberCallExpr</span> <span class="o">*</span><span class="n">ce</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">CXXMemberCallExpr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">stmt</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ce</span><span class="o">-&gt;</span><span class="n">getNumArgs</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">susCFGVectorType</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">getSusCFG</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">_susCFGVector</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">transitionVectorType</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">getSauto</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">_transitionVector</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">dumpSusCFG</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">susCFGVectorType</span> <span class="n">susCFGVector</span> <span class="o">=</span> <span class="n">_susCFGVector</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">susCFGVector</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Block ID : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">();</span>
+    <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Is Wait Block : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">isWaitBlock</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getParentBlockID</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Parent ID : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getParentBlockID</span><span class="p">();</span>
+      <span class="n">SusCFG</span> <span class="o">*</span><span class="n">parentBlock</span> <span class="o">=</span> <span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getParentSusCFGBlock</span><span class="p">();</span>
+
+      <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Parent Block ID : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">parentBlock</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">();</span>
+      <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Size of Children : &quot;</span>
+          <span class="o">&lt;&lt;</span> <span class="n">parentBlock</span><span class="o">-&gt;</span><span class="n">getChildBlockList</span><span class="p">().</span><span class="n">size</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">predBlocks</span> <span class="o">=</span> <span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getPredBlocks</span><span class="p">();</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">SusCFG</span> <span class="o">*&gt;</span> <span class="n">succBlocks</span> <span class="o">=</span> <span class="n">susCFGVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getSuccBlocks</span><span class="p">();</span>
+    <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Predecessor Blocks : &quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">predBlocks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">predBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="n">predBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Successor Blocks : &quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">succBlocks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">succBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="n">succBlocks</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBlockID</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SuspensionAutomata</span><span class="o">::</span><span class="n">dumpSauto</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Transition</span> <span class="o">*&gt;</span> <span class="n">transitionVector</span> <span class="o">=</span> <span class="n">_transitionVector</span><span class="p">;</span>
+  <span class="n">_os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Size of transitionVector : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">transitionVector</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">transitionVector</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Transition</span> <span class="o">*</span><span class="n">t</span> <span class="o">=</span> <span class="n">transitionVector</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">t</span><span class="o">-&gt;</span><span class="n">dump</span><span class="p">(</span><span class="n">_os</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+.. _exhale_function_InstanceMatcher_8h_1a0824e9bd2af543bcce4e653af76b72d9:
+
+Function sc_ast_matchers::AST_MATCHER
+=====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_InstanceMatcher.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sc_ast_matchers::AST_MATCHER(FieldDecl, hasTemplateDeclParent)

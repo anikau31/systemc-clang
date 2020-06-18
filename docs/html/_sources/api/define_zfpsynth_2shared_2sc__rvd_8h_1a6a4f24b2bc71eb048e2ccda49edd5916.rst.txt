@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsynth_2shared_2sc__rvd_8h_1a6a4f24b2bc71eb048e2ccda49edd5916:
+
+Define ready_r
+==============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_shared_sc_rvd.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: ready_r

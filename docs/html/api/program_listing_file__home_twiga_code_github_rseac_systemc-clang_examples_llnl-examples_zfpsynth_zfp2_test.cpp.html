@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File test.cpp &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File test.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp2_test.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-test-cpp">
+<span id="program-listing-file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsynth-zfp2-test-cpp"></span><h1>Program Listing for File test.cpp<a class="headerlink" href="#program-listing-for-file-test-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp2_test.cpp.html#file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsynth-zfp2-test-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/examples/llnl-examples/zfpsynth/zfp2/test.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// #define __SYNTHESIS__</span>
+<span class="cp">#if defined(__SYNTHESIS__)</span>
+<span class="cp">#define RVD</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#if !defined(RLEVEL)</span>
+<span class="cp">#define RLEVEL false</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;../shared/pulse.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;../shared/zfp.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#define EXPOW 11</span>
+<span class="cp">#define FRACW 52</span>
+<span class="c1">// #define EXPOW  8</span>
+<span class="c1">// #define FRACW 23</span>
+<span class="cp">#ifndef DIMS</span>
+<span class="cp">#define DIMS 1</span>
+<span class="cp">#endif</span>
+<span class="cp">#define BLOCK_CNT 2</span>
+<span class="cp">#define BLOCK_LEN fpblk_sz(DIMS) </span><span class="cm">/* values per block */</span><span class="cp"></span>
+
+<span class="k">typedef</span> <span class="n">fp_t</span><span class="o">&lt;</span><span class="n">EXPOW</span><span class="p">,</span><span class="n">FRACW</span><span class="o">&gt;</span> <span class="n">fpn_t</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">sc_bv</span><span class="o">&lt;</span><span class="n">fpn_t</span><span class="o">::</span><span class="n">bits</span><span class="o">*</span><span class="n">BLOCK_LEN</span><span class="o">&gt;</span> <span class="n">enc_t</span><span class="p">;</span>
+
+
+<span class="cp">#if DIMS &gt; 2</span>
+<span class="cp">#error &quot;block array only supports 1 or 2 dimensions&quot;</span>
+<span class="cp">#endif</span>
+<span class="cm">/* example 2D block of (reinterpreted) doubles */</span>
+<span class="k">static</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="n">block_emax</span> <span class="o">=</span> <span class="mh">0x3f7</span><span class="p">;</span>
+<span class="k">static</span> <span class="k">const</span> <span class="n">sc_dt</span><span class="o">::</span><span class="n">uint64</span> <span class="n">block</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mh">0xbf7c3a7bb8495ca9ULL</span><span class="p">,</span>
+    <span class="mh">0xbf79f9d9058ffdafULL</span><span class="p">,</span>
+    <span class="mh">0xbf77c7abd0b61999ULL</span><span class="p">,</span>
+    <span class="mh">0xbf75a42c806bd1daULL</span><span class="p">,</span>
+    <span class="mh">0xbf738f8f740b8ea8ULL</span><span class="p">,</span>
+    <span class="mh">0xbf718a050399fef8ULL</span><span class="p">,</span>
+    <span class="mh">0xbf6f2772ff8c30feULL</span><span class="p">,</span>
+    <span class="mh">0xbf6b59aa63d22f68ULL</span><span class="p">,</span>
+    <span class="mh">0xbf67aaf8b80cff9eULL</span><span class="p">,</span>
+    <span class="mh">0xbf641b9e71983592ULL</span><span class="p">,</span>
+    <span class="mh">0xbf60abd3f723f2b7ULL</span><span class="p">,</span>
+    <span class="mh">0xbf5ab7934169cc04ULL</span><span class="p">,</span>
+    <span class="mh">0xbf54574f6f4897d3ULL</span><span class="p">,</span>
+    <span class="mh">0xbf4c6e39da7fb99bULL</span><span class="p">,</span>
+    <span class="mh">0xbf40ae5826a893d1ULL</span><span class="p">,</span>
+    <span class="mh">0xbf25bce8e19d48e1ULL</span>
+<span class="p">};</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">I</span><span class="p">,</span> <span class="k">typename</span> <span class="n">O</span><span class="o">&gt;</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">tb_driver</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="cm">/*-------- ports --------*/</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">clk</span><span class="p">;</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">reset</span><span class="p">;</span>
+
+    <span class="n">sc_stream_in</span> <span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">s_port</span><span class="p">;</span>
+    <span class="n">sc_stream_out</span><span class="o">&lt;</span><span class="n">O</span><span class="o">&gt;</span> <span class="n">m_port</span><span class="p">;</span>
+
+    <span class="n">sc_out</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">error</span><span class="p">;</span>
+
+    <span class="cm">/*-------- registers --------*/</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">scount</span><span class="p">;</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">rcount</span><span class="p">;</span>
+
+    <span class="cm">/*-------- channels --------*/</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">c_sync_send</span><span class="p">;</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">c_sync_recv</span><span class="p">;</span>
+
+    <span class="cm">/*-------- send processes --------*/</span>
+    <span class="kt">void</span> <span class="nf">mc_send</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">bool</span> <span class="n">valid</span> <span class="o">=</span> <span class="n">scount</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">BLOCK_CNT</span><span class="o">*</span><span class="n">BLOCK_LEN</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">sync</span> <span class="o">=</span> <span class="n">m_port</span><span class="p">.</span><span class="n">ready_r</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">valid</span><span class="p">;</span>
+        <span class="n">O</span> <span class="n">flit</span><span class="p">(</span><span class="n">block</span><span class="p">[</span><span class="n">scount</span><span class="o">%</span><span class="n">BLOCK_LEN</span><span class="p">]);</span>
+
+        <span class="n">m_port</span><span class="p">.</span><span class="n">data_w</span><span class="p">(</span><span class="n">flit</span><span class="p">);</span>
+        <span class="n">m_port</span><span class="p">.</span><span class="n">valid_w</span><span class="p">(</span><span class="n">valid</span><span class="p">);</span>
+
+        <span class="n">c_sync_send</span> <span class="o">=</span> <span class="n">sync</span><span class="p">;</span>
+<span class="cp">#ifndef __SYNTHESIS__</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sync</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">name</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;::mc_send ts: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">sc_time_stamp</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, flit: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">flit</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="p">}</span>
+<span class="cp">#endif</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">ms_send</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">reset</span> <span class="o">==</span> <span class="n">RLEVEL</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">scount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">c_sync_send</span><span class="p">)</span> <span class="n">scount</span> <span class="o">=</span> <span class="n">scount</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/*-------- recv processes --------*/</span>
+    <span class="kt">void</span> <span class="nf">mc_recv</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">bool</span> <span class="n">sync</span> <span class="o">=</span> <span class="n">s_port</span><span class="p">.</span><span class="n">valid_r</span><span class="p">();</span> <span class="c1">// always ready</span>
+        <span class="n">I</span> <span class="n">flit</span> <span class="o">=</span> <span class="n">s_port</span><span class="p">.</span><span class="n">data_r</span><span class="p">();</span>
+
+        <span class="n">s_port</span><span class="p">.</span><span class="n">ready_w</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">rcount</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">!=</span> <span class="n">BLOCK_CNT</span><span class="p">;</span> <span class="c1">// * BLOCK_LEN;</span>
+
+        <span class="n">c_sync_recv</span> <span class="o">=</span> <span class="n">sync</span><span class="p">;</span>
+<span class="cp">#ifndef __SYNTHESIS__</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sync</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">name</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;::mc_recv ts: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">sc_time_stamp</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, flit: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">flit</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="p">}</span>
+<span class="cp">#endif</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="nf">ms_recv</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">reset</span> <span class="o">==</span> <span class="n">RLEVEL</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">rcount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">c_sync_recv</span><span class="p">)</span> <span class="n">rcount</span> <span class="o">=</span> <span class="n">rcount</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">tb_driver</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">mc_send</span><span class="p">);</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">m_port</span><span class="p">.</span><span class="n">ready_chg</span><span class="p">();</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">scount</span><span class="p">;</span>
+        <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">ms_send</span><span class="p">);</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+            <span class="n">dont_initialize</span><span class="p">();</span>
+
+        <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">mc_recv</span><span class="p">);</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">s_port</span><span class="p">.</span><span class="n">valid_chg</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">s_port</span><span class="p">.</span><span class="n">data_chg</span><span class="p">();</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">rcount</span><span class="p">;</span>
+        <span class="n">SC_METHOD</span><span class="p">(</span><span class="n">ms_recv</span><span class="p">);</span>
+            <span class="n">sensitive</span> <span class="o">&lt;&lt;</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+            <span class="n">dont_initialize</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="n">sc_trace_file</span> <span class="o">*</span><span class="n">tf</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">sc_main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span> <span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="n">sc_report_handler</span><span class="o">::</span><span class="n">set_actions</span><span class="p">(</span><span class="n">SC_ID_IEEE_1666_DEPRECATION_</span><span class="p">,</span> <span class="n">SC_DO_NOTHING</span><span class="p">);</span>
+    <span class="c1">// sc_report_handler::set_actions(SC_ID_LOGIC_X_TO_BOOL_, SC_LOG);</span>
+    <span class="c1">// sc_report_handler::set_actions(SC_ID_VECTOR_CONTAINS_LOGIC_VALUE_, SC_LOG);</span>
+    <span class="c1">// sc_report_handler::set_actions(SC_ID_OBJECT_EXISTS_, SC_LOG);</span>
+
+    <span class="n">sc_clock</span> <span class="n">clk</span><span class="p">(</span><span class="s">&quot;clk&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">SC_NS</span><span class="p">);</span> <span class="c1">// create a 10ns period clock signal</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">reset</span><span class="p">(</span><span class="s">&quot;reset&quot;</span><span class="p">);</span>
+
+    <span class="n">sc_stream</span><span class="o">&lt;</span><span class="n">fpn_t</span><span class="o">&gt;</span> <span class="n">c_driver_fp</span><span class="p">(</span><span class="s">&quot;c_driver_fp&quot;</span><span class="p">);</span>
+    <span class="n">sc_stream</span><span class="o">&lt;</span><span class="n">enc_t</span><span class="o">&gt;</span> <span class="n">c_dut_enc</span><span class="p">(</span><span class="s">&quot;c_dut_enc&quot;</span><span class="p">);</span>
+    <span class="n">sc_signal</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">c_error</span><span class="p">(</span><span class="s">&quot;c_error&quot;</span><span class="p">);</span>
+
+    <span class="n">pulse</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">RLEVEL</span><span class="o">&gt;</span> <span class="n">u_pulse</span><span class="p">(</span><span class="s">&quot;u_pulse&quot;</span><span class="p">);</span>
+    <span class="n">tb_driver</span><span class="o">&lt;</span><span class="n">enc_t</span><span class="p">,</span> <span class="n">fpn_t</span><span class="o">&gt;</span> <span class="n">u_tb_driver</span><span class="p">(</span><span class="s">&quot;u_tb_driver&quot;</span><span class="p">);</span>
+    <span class="n">zfp_encode</span><span class="o">&lt;</span><span class="n">fpn_t</span><span class="p">,</span> <span class="n">DIMS</span><span class="p">,</span> <span class="n">enc_t</span><span class="o">&gt;</span> <span class="n">u_dut</span><span class="p">(</span><span class="s">&quot;u_dut&quot;</span><span class="p">);</span>
+
+    <span class="c1">// connect reset</span>
+    <span class="n">u_pulse</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+    <span class="n">u_pulse</span><span class="p">.</span><span class="n">sig</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+
+    <span class="c1">// connect test bench driver</span>
+    <span class="n">u_tb_driver</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+    <span class="n">u_tb_driver</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+    <span class="n">u_tb_driver</span><span class="p">.</span><span class="n">m_port</span><span class="p">(</span><span class="n">c_driver_fp</span><span class="p">);</span>
+    <span class="n">u_tb_driver</span><span class="p">.</span><span class="n">s_port</span><span class="p">(</span><span class="n">c_dut_enc</span><span class="p">);</span>
+    <span class="n">u_tb_driver</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="n">c_error</span><span class="p">);</span>
+
+    <span class="c1">// connect DUT</span>
+    <span class="n">u_dut</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+    <span class="n">u_dut</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+    <span class="n">u_dut</span><span class="p">.</span><span class="n">s_fp</span><span class="p">(</span><span class="n">c_driver_fp</span><span class="p">);</span>
+    <span class="n">u_dut</span><span class="p">.</span><span class="n">m_enc</span><span class="p">(</span><span class="n">c_dut_enc</span><span class="p">);</span>
+
+<span class="cp">#if defined(VCD)</span>
+    <span class="n">tf</span> <span class="o">=</span> <span class="n">sc_create_vcd_trace_file</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">);</span>
+    <span class="n">tf</span><span class="o">-&gt;</span><span class="n">set_time_unit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">SC_NS</span><span class="p">);</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">clk</span><span class="p">,</span> <span class="n">clk</span><span class="p">.</span><span class="n">name</span><span class="p">());</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">reset</span><span class="p">,</span> <span class="n">reset</span><span class="p">.</span><span class="n">name</span><span class="p">());</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">c_driver_fp</span><span class="p">,</span> <span class="n">c_driver_fp</span><span class="p">.</span><span class="n">name</span><span class="p">());</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">c_dut_enc</span><span class="p">,</span> <span class="n">c_dut_enc</span><span class="p">.</span><span class="n">name</span><span class="p">());</span>
+    <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">c_error</span><span class="p">,</span> <span class="n">c_error</span><span class="p">.</span><span class="n">name</span><span class="p">());</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#if !defined(__SYNTHESIS__)</span>
+    <span class="c1">// start simulation</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;INFO: Simulating &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">sc_start</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span> <span class="n">SC_NS</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">c_error</span><span class="p">.</span><span class="n">read</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Test failed!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Test passed!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="cp">#endif</span>
+
+    <span class="k">return</span> <span class="n">c_error</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

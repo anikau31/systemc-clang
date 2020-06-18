@@ -1,0 +1,13 @@
+.. _exhale_function_namespacenlohmann_1_1detail_1ae5fd66b5517b3b5a6c6b9fd9f29ba8dc:
+
+Template Function nlohmann::detail::to_json(BasicJsonType&, CompatibleNumberUnsignedType)
+=========================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: nlohmann::detail::to_json(BasicJsonType&, CompatibleNumberUnsignedType)

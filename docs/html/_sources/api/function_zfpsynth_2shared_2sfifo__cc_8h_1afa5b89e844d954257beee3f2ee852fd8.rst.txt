@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsynth_2shared_2sfifo__cc_8h_1afa5b89e844d954257beee3f2ee852fd8:
+
+Template Function SC_MODULE(sfifo_cc)
+=====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_shared_sfifo_cc.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(sfifo_cc)

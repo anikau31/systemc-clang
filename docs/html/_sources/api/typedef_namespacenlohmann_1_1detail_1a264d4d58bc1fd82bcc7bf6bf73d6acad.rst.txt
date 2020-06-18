@@ -1,0 +1,13 @@
+.. _exhale_typedef_namespacenlohmann_1_1detail_1a264d4d58bc1fd82bcc7bf6bf73d6acad:
+
+Typedef nlohmann::detail::parse_error_function_t
+================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: nlohmann::detail::parse_error_function_t

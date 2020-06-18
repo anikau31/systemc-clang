@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File cswitch.h &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File cswitch.h</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_cswitch.h.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-cswitch-h">
+<span id="program-listing-file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsim-array-examples-cswitch-h"></span><h1>Program Listing for File cswitch.h<a class="headerlink" href="#program-listing-for-file-cswitch-h" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_cswitch.h.html#file-home-twiga-code-github-rseac-systemc-clang-examples-llnl-examples-zfpsim-array-examples-cswitch-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/examples/llnl-examples/zfpsim/array-examples/cswitch.h</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef _CSWITCH_H</span>
+<span class="cp">#define _CSWITCH_H</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;systemc.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;port_axis.h&quot;</span><span class="cp"></span>
+
+<span class="c1">// Xilinx specific:</span>
+<span class="c1">// When depth is (1 &gt;= D &gt;= 11) internal FIFOs</span>
+<span class="c1">// are implemented using shift registers.</span>
+
+<span class="cp">#define QDEPTH 11</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span> <span class="c1">// constraint: power of 2</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">csw_demux</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">clk</span><span class="p">;</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">reset</span><span class="p">;</span>
+
+    <span class="n">axi_tc_in</span>  <span class="n">s_port</span><span class="p">;</span>
+    <span class="n">axi_tc_out</span> <span class="n">m_port</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+
+    <span class="kt">void</span> <span class="nf">ct_demux</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">AXI_TC</span> <span class="n">flit</span><span class="p">;</span>
+        <span class="n">wait</span><span class="p">();</span>
+        <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">flit</span> <span class="o">=</span> <span class="n">s_port</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+<span class="c1">// printf(&quot;csw_demux&lt;%d&gt; in tdest:%02X tid:%02X tdata:%08X tlast:%1X\n&quot;, N, flit.tdest.to_uint(), flit.tid.to_uint(), flit.tdata.to_uint(), flit.tlast.to_uint());</span>
+            <span class="c1">// TODO: FIXME: use another template arg to specify a routing algorithm,</span>
+            <span class="c1">// or specify a routing table.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">N</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// printf(&quot;csw_demux&lt;%d&gt; out port:%d\n&quot;, N, flit.tdest.to_uint() &amp; (N-1));</span>
+                <span class="n">m_port</span><span class="p">[</span><span class="n">flit</span><span class="p">.</span><span class="n">tdest</span><span class="p">.</span><span class="n">to_uint</span><span class="p">()</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)].</span><span class="n">write</span><span class="p">(</span><span class="n">flit</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="c1">// printf(&quot;csw_demux&lt;%d&gt; out port:%d\n&quot;, N, (flit.tdest.to_uint() &gt;&gt; 1) &amp; (N-1));</span>
+                <span class="n">m_port</span><span class="p">[(</span><span class="n">flit</span><span class="p">.</span><span class="n">tdest</span><span class="p">.</span><span class="n">to_uint</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)].</span><span class="n">write</span><span class="p">(</span><span class="n">flit</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">csw_demux</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">SC_CTHREAD</span><span class="p">(</span><span class="n">ct_demux</span><span class="p">,</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">());</span>
+            <span class="n">reset_signal_is</span><span class="p">(</span><span class="n">reset</span><span class="p">,</span> <span class="n">RLEVEL</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="c1">// TODO: add arbitration, keep same input port until last flag</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">csw_mux</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">clk</span><span class="p">;</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">reset</span><span class="p">;</span>
+
+    <span class="n">axi_tc_in</span>  <span class="n">s_port</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+    <span class="n">axi_tc_out</span> <span class="n">m_port</span><span class="p">;</span>
+
+    <span class="n">axi_tc</span>      <span class="n">c_queue</span><span class="p">;</span>
+    <span class="n">axi_tc_fifo</span> <span class="n">u_queue</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">ct_mux</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">bool</span> <span class="n">active</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">wait</span><span class="p">();</span>
+        <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">active</span><span class="p">)</span>
+                <span class="n">wait</span><span class="p">();</span>
+            <span class="c1">// printf(&quot;csw_mux&lt;%d&gt; wake\n&quot;, N);</span>
+            <span class="n">active</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="c1">// priority encoder &amp; mux</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">s_port</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">valid_r</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="c1">// printf(&quot;csw_mux&lt;%d&gt; in port:%d\n&quot;, N, i);</span>
+                    <span class="n">c_queue</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">s_port</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">read</span><span class="p">());</span>
+                    <span class="n">active</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">csw_mux</span><span class="p">)</span> <span class="o">:</span>
+        <span class="n">c_queue</span><span class="p">(</span><span class="s">&quot;c_queue&quot;</span><span class="p">),</span>
+        <span class="n">u_queue</span><span class="p">(</span><span class="s">&quot;u_queue&quot;</span><span class="p">,</span> <span class="n">QDEPTH</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">u_queue</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+        <span class="n">u_queue</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+        <span class="n">u_queue</span><span class="p">.</span><span class="n">s_port</span><span class="p">(</span><span class="n">c_queue</span><span class="p">);</span>
+        <span class="n">u_queue</span><span class="p">.</span><span class="n">m_port</span><span class="p">(</span><span class="n">m_port</span><span class="p">);</span>
+
+        <span class="n">SC_CTHREAD</span><span class="p">(</span><span class="n">ct_mux</span><span class="p">,</span> <span class="n">clk</span><span class="p">.</span><span class="n">pos</span><span class="p">());</span>
+            <span class="n">reset_signal_is</span><span class="p">(</span><span class="n">reset</span><span class="p">,</span> <span class="n">RLEVEL</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">cswitch</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">clk</span><span class="p">;</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">reset</span><span class="p">;</span>
+
+    <span class="n">axi_tc_in</span>  <span class="n">s_port</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+    <span class="n">axi_tc_out</span> <span class="n">m_port</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+
+    <span class="n">axi_tc</span> <span class="n">xbar</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">];</span>
+
+    <span class="n">sc_vector</span><span class="o">&lt;</span><span class="n">csw_demux</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">u_csw_demux</span><span class="p">;</span>
+    <span class="n">sc_vector</span><span class="o">&lt;</span><span class="n">csw_mux</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">u_csw_mux</span><span class="p">;</span>
+
+<span class="cp">#if defined(VCD)</span>
+    <span class="kt">void</span> <span class="nf">start_of_simulation</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">extern</span> <span class="n">sc_trace_file</span> <span class="o">*</span><span class="n">tf</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+            <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">s_port</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">())</span><span class="o">+</span><span class="s">&quot;.s_port&quot;</span><span class="o">+</span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="n">c_str</span><span class="p">());</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+            <span class="n">sc_trace</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">m_port</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">())</span><span class="o">+</span><span class="s">&quot;.m_port&quot;</span><span class="o">+</span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="n">c_str</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="cp">#endif</span>
+
+    <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">cswitch</span><span class="p">)</span> <span class="o">:</span>
+        <span class="n">u_csw_demux</span><span class="p">(</span><span class="s">&quot;u_csw_demux&quot;</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span>
+        <span class="n">u_csw_mux</span><span class="p">(</span><span class="s">&quot;u_csw_mux&quot;</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">u_csw_demux</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+            <span class="n">u_csw_demux</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+            <span class="n">u_csw_demux</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">s_port</span><span class="p">(</span><span class="n">s_port</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">u_csw_demux</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">m_port</span><span class="p">[</span><span class="n">j</span><span class="p">](</span><span class="n">xbar</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+            <span class="p">}</span>
+
+            <span class="n">u_csw_mux</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+            <span class="n">u_csw_mux</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">u_csw_mux</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">s_port</span><span class="p">[</span><span class="n">j</span><span class="p">](</span><span class="n">xbar</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]);</span>
+            <span class="p">}</span>
+            <span class="n">u_csw_mux</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">m_port</span><span class="p">(</span><span class="n">m_port</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span>
+<span class="n">SC_MODULE</span><span class="p">(</span><span class="n">ctree</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">clk</span><span class="p">;</span>
+    <span class="n">sc_in</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">reset</span><span class="p">;</span>
+
+    <span class="n">axi_tc_in</span>  <span class="n">s_root</span><span class="p">;</span>
+    <span class="n">axi_tc_out</span> <span class="n">m_root</span><span class="p">;</span>
+
+    <span class="n">axi_tc_in</span>  <span class="n">s_port</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+    <span class="n">axi_tc_out</span> <span class="n">m_port</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+
+    <span class="n">csw_demux</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="n">u_csw_demux</span><span class="p">;</span>
+    <span class="n">csw_mux</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="n">u_csw_mux</span><span class="p">;</span>
+
+    <span class="n">SC_CTOR</span><span class="p">(</span><span class="n">ctree</span><span class="p">)</span> <span class="o">:</span>
+        <span class="n">u_csw_demux</span><span class="p">(</span><span class="s">&quot;u_csw_demux&quot;</span><span class="p">),</span>
+        <span class="n">u_csw_mux</span><span class="p">(</span><span class="s">&quot;u_csw_mux&quot;</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">u_csw_demux</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+        <span class="n">u_csw_demux</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+        <span class="n">u_csw_demux</span><span class="p">.</span><span class="n">s_port</span><span class="p">(</span><span class="n">s_root</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">u_csw_demux</span><span class="p">.</span><span class="n">m_port</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">m_port</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+
+        <span class="n">u_csw_mux</span><span class="p">.</span><span class="n">clk</span><span class="p">(</span><span class="n">clk</span><span class="p">);</span>
+        <span class="n">u_csw_mux</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">u_csw_mux</span><span class="p">.</span><span class="n">s_port</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">s_port</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="n">u_csw_mux</span><span class="p">.</span><span class="n">m_port</span><span class="p">(</span><span class="n">m_root</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="cp">#endif </span><span class="c1">// _CSWITCH_H</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

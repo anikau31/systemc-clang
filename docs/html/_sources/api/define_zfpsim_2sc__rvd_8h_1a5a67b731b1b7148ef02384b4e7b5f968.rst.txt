@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsim_2sc__rvd_8h_1a5a67b731b1b7148ef02384b4e7b5f968:
+
+Define valid_chg
+================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_rvd.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: valid_chg

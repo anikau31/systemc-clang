@@ -1,0 +1,13 @@
+.. _exhale_function_port__axis_8h_1ace93c03bf8111ee9b573a83b8a6cec09:
+
+Function operator<<(std::ostream&, const AXI_TD&)
+=================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_port_axis.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: operator<<(std::ostream&, const AXI_TD&)

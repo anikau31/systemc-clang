@@ -1,0 +1,13 @@
+.. _exhale_function_monitor_8h_1a36780c3c3a149e61bb87bed484237de3:
+
+Function SC_MODULE(monitor)
+===========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_syn_filter_monitor.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(monitor)

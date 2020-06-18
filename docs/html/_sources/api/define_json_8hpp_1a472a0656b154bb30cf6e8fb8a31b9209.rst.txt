@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a472a0656b154bb30cf6e8fb8a31b9209:
+
+Define JSON_HEDLEY_EMSCRIPTEN_VERSION_CHECK
+===========================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_EMSCRIPTEN_VERSION_CHECK

@@ -1,0 +1,13 @@
+.. _exhale_function_new__example_8hpp_1a6b41957e90c1cc278d8829eaf74263ce:
+
+Function sc_main(int, char \*)
+==============================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_4_new_example.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sc_main(int, char *)

@@ -1,0 +1,656 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>File json.hpp &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>File json.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="file-json-hpp">
+<span id="file-home-twiga-code-github-rseac-systemc-clang-src-json-hpp"></span><h1>File json.hpp<a class="headerlink" href="#file-json-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="dir__home_twiga_code_github_rseac_systemc-clang_src.html#dir-home-twiga-code-github-rseac-systemc-clang-src"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/src</span></code>)</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-home-twiga-code-github-rseac-systemc-clang-src-json-hpp" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/src/json.hpp</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id3">Included By</a></p></li>
+<li><p><a class="reference internal" href="#namespaces" id="id4">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id5">Classes</a></p></li>
+<li><p><a class="reference internal" href="#enums" id="id6">Enums</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id7">Functions</a></p></li>
+<li><p><a class="reference internal" href="#defines" id="id8">Defines</a></p></li>
+<li><p><a class="reference internal" href="#typedefs" id="id9">Typedefs</a></p></li>
+<li><p><a class="reference internal" href="#unions" id="id10">Unions</a></p></li>
+<li><p><a class="reference internal" href="#variables" id="id11">Variables</a></p></li>
+</ul>
+</div>
+<div class="section" id="definition-home-twiga-code-github-rseac-systemc-clang-src-json-hpp">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/src/json.hpp</span></code>)<a class="headerlink" href="#definition-home-twiga-code-github-rseac-systemc-clang-src-json-hpp" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp.html">Program Listing for File json.hpp</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">algorithm</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">array</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cassert</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cctype</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ciso646</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clocale</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cmath</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstddef</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstdint</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstdio</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstdlib</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstring</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exception</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">forward_list</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">functional</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initializer_list</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ios</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iosfwd</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">istream</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iterator</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">limits</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">map</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">memory</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numeric</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ostream</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stdexcept</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tuple</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type_traits</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unordered_map</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utility</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">valarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vector</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTemplateTypes.h.html#file-home-twiga-code-github-rseac-systemc-clang-src-matchers-findtemplatetypes-h"><span class="std std-ref">File FindTemplateTypes.h</span></a></p></li>
+<li><p><a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindGlobalEvents.h.html#file-home-twiga-code-github-rseac-systemc-clang-src-matchers-findglobalevents-h"><span class="std std-ref">File FindGlobalEvents.h</span></a></p></li>
+<li><p><a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_src_model_PortDecl.h.html#file-home-twiga-code-github-rseac-systemc-clang-src-model-portdecl-h"><span class="std std-ref">File PortDecl.h</span></a></p></li>
+<li><p><a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_src_model_ProcessDecl.h.html#file-home-twiga-code-github-rseac-systemc-clang-src-model-processdecl-h"><span class="std std-ref">File ProcessDecl.h</span></a></p></li>
+<li><p><a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_src_model_SignalDecl.h.html#file-home-twiga-code-github-rseac-systemc-clang-src-model-signaldecl-h"><span class="std std-ref">File SignalDecl.h</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_nlohmann.html#namespace-nlohmann"><span class="std std-ref">Namespace nlohmann</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_nlohmann__detail.html#namespace-nlohmann-detail"><span class="std std-ref">Namespace nlohmann::detail</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_nlohmann__detail__dtoa_impl.html#namespace-nlohmann-detail-dtoa-impl"><span class="std std-ref">Namespace nlohmann::detail::dtoa_impl</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_std.html#namespace-std"><span class="std std-ref">Namespace std</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="structnlohmann_1_1adl__serializer.html#exhale-struct-structnlohmann-1-1adl-serializer"><span class="std std-ref">Template Struct adl_serializer</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1conjunction.html#exhale-struct-structnlohmann-1-1detail-1-1conjunction"><span class="std std-ref">Template Struct conjunction</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1conjunction_3_01B1_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1conjunction-3-01b1-01-4"><span class="std std-ref">Template Struct conjunction&lt; B1 &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1conjunction_3_01B1_00_01Bn_8_8_8_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1conjunction-3-01b1-00-01bn-8-8-8-01-4"><span class="std std-ref">Template Struct conjunction&lt; B1, Bn… &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1detector.html#exhale-struct-structnlohmann-1-1detail-1-1detector"><span class="std std-ref">Template Struct detector</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1detector_3_01Default_00_01void__t_3_01Op_3_01Args_8_8_8_01_4_01_4_00_01Op_00_01Args_8_8_8_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1detector-3-01default-00-01void-t-3-01op-3-01args-8-8-8-01-4-01-4-00-01op-00-01args-8-8-8-01-4"><span class="std std-ref">Template Struct detector&lt; Default, void_t&lt; Op&lt; Args… &gt; &gt;, Op, Args… &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1dtoa__impl_1_1boundaries.html#exhale-struct-structnlohmann-1-1detail-1-1dtoa-impl-1-1boundaries"><span class="std std-ref">Struct boundaries</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1dtoa__impl_1_1cached__power.html#exhale-struct-structnlohmann-1-1detail-1-1dtoa-impl-1-1cached-power"><span class="std std-ref">Struct cached_power</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1dtoa__impl_1_1diyfp.html#exhale-struct-structnlohmann-1-1detail-1-1dtoa-impl-1-1diyfp"><span class="std std-ref">Struct diyfp</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1external__constructor.html#exhale-struct-structnlohmann-1-1detail-1-1external-constructor"><span class="std std-ref">Template Struct external_constructor</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1external__constructor_3_01value__t_1_1array_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1external-constructor-3-01value-t-1-1array-01-4"><span class="std std-ref">Template Struct external_constructor&lt; value_t::array &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1external__constructor_3_01value__t_1_1boolean_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1external-constructor-3-01value-t-1-1boolean-01-4"><span class="std std-ref">Template Struct external_constructor&lt; value_t::boolean &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1external__constructor_3_01value__t_1_1number__float_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1external-constructor-3-01value-t-1-1number-float-01-4"><span class="std std-ref">Template Struct external_constructor&lt; value_t::number_float &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1external__constructor_3_01value__t_1_1number__integer_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1external-constructor-3-01value-t-1-1number-integer-01-4"><span class="std std-ref">Template Struct external_constructor&lt; value_t::number_integer &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1external__constructor_3_01value__t_1_1number__unsigned_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1external-constructor-3-01value-t-1-1number-unsigned-01-4"><span class="std std-ref">Template Struct external_constructor&lt; value_t::number_unsigned &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1external__constructor_3_01value__t_1_1object_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1external-constructor-3-01value-t-1-1object-01-4"><span class="std std-ref">Template Struct external_constructor&lt; value_t::object &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1external__constructor_3_01value__t_1_1string_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1external-constructor-3-01value-t-1-1string-01-4"><span class="std std-ref">Template Struct external_constructor&lt; value_t::string &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1from__json__fn.html#exhale-struct-structnlohmann-1-1detail-1-1from-json-fn"><span class="std std-ref">Struct from_json_fn</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1has__from__json.html#exhale-struct-structnlohmann-1-1detail-1-1has-from-json"><span class="std std-ref">Template Struct has_from_json</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1has__from__json_3_01BasicJsonType_00_01T_00_01enable__if__t_3_01not_5e786a91cad76ed1c14f425887b41640.html#exhale-struct-structnlohmann-1-1detail-1-1has-from-json-3-01basicjsontype-00-01t-00-01enable-if-t-3-01not-5e786a91cad76ed1c14f425887b41640"><span class="std std-ref">Template Struct has_from_json&lt; BasicJsonType, T, enable_if_t&lt; not is_basic_json&lt; T &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1has__non__default__from__json.html#exhale-struct-structnlohmann-1-1detail-1-1has-non-default-from-json"><span class="std std-ref">Template Struct has_non_default_from_json</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1has__non__default__from__json_3_01BasicJsonType_00_01T_00_01enable__a9e4562f31f7ed523e6e0f675606b0f2.html#exhale-struct-structnlohmann-1-1detail-1-1has-non-default-from-json-3-01basicjsontype-00-01t-00-01enable-a9e4562f31f7ed523e6e0f675606b0f2"><span class="std std-ref">Template Struct has_non_default_from_json&lt; BasicJsonType, T, enable_if_t&lt; not is_basic_json&lt; T &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1has__to__json.html#exhale-struct-structnlohmann-1-1detail-1-1has-to-json"><span class="std std-ref">Template Struct has_to_json</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1has__to__json_3_01BasicJsonType_00_01T_00_01enable__if__t_3_01not_01737900a749c335e922e2f74e2face5e4.html#exhale-struct-structnlohmann-1-1detail-1-1has-to-json-3-01basicjsontype-00-01t-00-01enable-if-t-3-01not-01737900a749c335e922e2f74e2face5e4"><span class="std std-ref">Template Struct has_to_json&lt; BasicJsonType, T, enable_if_t&lt; not is_basic_json&lt; T &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1index__sequence.html#exhale-struct-structnlohmann-1-1detail-1-1index-sequence"><span class="std std-ref">Template Struct index_sequence</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1input__adapter__protocol.html#exhale-struct-structnlohmann-1-1detail-1-1input-adapter-protocol"><span class="std std-ref">Struct input_adapter_protocol</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1internal__iterator.html#exhale-struct-structnlohmann-1-1detail-1-1internal-iterator"><span class="std std-ref">Template Struct internal_iterator</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__basic__json.html#exhale-struct-structnlohmann-1-1detail-1-1is-basic-json"><span class="std std-ref">Template Struct is_basic_json</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__basic__json_3_01basic__json_3_01ObjectType_00_01ArrayType_00_01S3f08839a6bb9b0e8b6454fd0720d949c.html#exhale-struct-structnlohmann-1-1detail-1-1is-basic-json-3-01basic-json-3-01objecttype-00-01arraytype-00-01s3f08839a6bb9b0e8b6454fd0720d949c"><span class="std std-ref">Template Struct is_basic_json&lt; basic_json&lt; ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__array__type.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-array-type"><span class="std std-ref">Template Struct is_compatible_array_type</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__array__type__impl.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-array-type-impl"><span class="std std-ref">Template Struct is_compatible_array_type_impl</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__array__type__impl_3_01BasicJsonType_00_01CompatibleA2ae7cc020294dfcc2b3bca5a9db30ddf.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-array-type-impl-3-01basicjsontype-00-01compatiblea2ae7cc020294dfcc2b3bca5a9db30ddf"><span class="std std-ref">Template Struct is_compatible_array_type_impl&lt; BasicJsonType, CompatibleArrayType, enable_if_t&lt; is_detected&lt; value_type_t, CompatibleArrayType &gt;::value and is_detected&lt; iterator_t, CompatibleArrayType &gt;::value and not is_iterator_traits&lt; iterator_traits&lt; CompatibleArrayType &gt; &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__integer__type.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-integer-type"><span class="std std-ref">Template Struct is_compatible_integer_type</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__integer__type__impl.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-integer-type-impl"><span class="std std-ref">Template Struct is_compatible_integer_type_impl</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__integer__type__impl_3_01RealIntegerType_00_01Compati3a04243716e8bda67d1ff2aead18da88.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-integer-type-impl-3-01realintegertype-00-01compati3a04243716e8bda67d1ff2aead18da88"><span class="std std-ref">Template Struct is_compatible_integer_type_impl&lt; RealIntegerType, CompatibleNumberIntegerType, enable_if_t&lt; std::is_integral&lt; RealIntegerType &gt;::value and std::is_integral&lt; CompatibleNumberIntegerType &gt;::value and not std::is_same&lt; bool, CompatibleNumberIntegerType &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__object__type.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-object-type"><span class="std std-ref">Template Struct is_compatible_object_type</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__object__type__impl.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-object-type-impl"><span class="std std-ref">Template Struct is_compatible_object_type_impl</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__object__type__impl_3_01BasicJsonType_00_01Compatible0bd988932da161d60568f9b7198a50d2.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-object-type-impl-3-01basicjsontype-00-01compatible0bd988932da161d60568f9b7198a50d2"><span class="std std-ref">Template Struct is_compatible_object_type_impl&lt; BasicJsonType, CompatibleObjectType, enable_if_t&lt; is_detected&lt; mapped_type_t, CompatibleObjectType &gt;::value and is_detected&lt; key_type_t, CompatibleObjectType &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__string__type.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-string-type"><span class="std std-ref">Template Struct is_compatible_string_type</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__string__type__impl.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-string-type-impl"><span class="std std-ref">Template Struct is_compatible_string_type_impl</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__string__type__impl_3_01BasicJsonType_00_01Compatible494e9dc742c819c61e54b8282030b5b6.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-string-type-impl-3-01basicjsontype-00-01compatible494e9dc742c819c61e54b8282030b5b6"><span class="std std-ref">Template Struct is_compatible_string_type_impl&lt; BasicJsonType, CompatibleStringType, enable_if_t&lt; is_detected_exact&lt; typename BasicJsonType::string_t::value_type, value_type_t, CompatibleStringType &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__type.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-type"><span class="std std-ref">Template Struct is_compatible_type</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__type__impl.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-type-impl"><span class="std std-ref">Template Struct is_compatible_type_impl</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__compatible__type__impl_3_01BasicJsonType_00_01CompatibleType_00_fa54cb60e66f5c6ba93b1dd3f418b703.html#exhale-struct-structnlohmann-1-1detail-1-1is-compatible-type-impl-3-01basicjsontype-00-01compatibletype-00-fa54cb60e66f5c6ba93b1dd3f418b703"><span class="std std-ref">Template Struct is_compatible_type_impl&lt; BasicJsonType, CompatibleType, enable_if_t&lt; is_complete_type&lt; CompatibleType &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__complete__type.html#exhale-struct-structnlohmann-1-1detail-1-1is-complete-type"><span class="std std-ref">Template Struct is_complete_type</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__complete__type_3_01T_00_01decltype_07void_07sizeof_07T_08_08_08_4.html#exhale-struct-structnlohmann-1-1detail-1-1is-complete-type-3-01t-00-01decltype-07void-07sizeof-07t-08-08-08-4"><span class="std std-ref">Template Struct is_complete_type&lt; T, decltype(void(sizeof(T)))&gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__array__type.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-array-type"><span class="std std-ref">Template Struct is_constructible_array_type</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__array__type__impl.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-array-type-impl"><span class="std std-ref">Template Struct is_constructible_array_type_impl</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__array__type__impl_3_01BasicJsonType_00_01Construcb751ba39e14100ed41966800a3fcf4db.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-array-type-impl-3-01basicjsontype-00-01construcb751ba39e14100ed41966800a3fcf4db"><span class="std std-ref">Template Struct is_constructible_array_type_impl&lt; BasicJsonType, ConstructibleArrayType, enable_if_t&lt; not std::is_same&lt; ConstructibleArrayType, typename BasicJsonType::value_type &gt;::value and std::is_default_constructible&lt; ConstructibleArrayType &gt;::value and(std::is_move_assignable&lt; ConstructibleArrayType &gt;::value or std::is_copy_assignable&lt; ConstructibleArrayType &gt;::value) andis_detected&lt; value_type_t, ConstructibleArrayType &gt;::value andis_detected&lt; iterator_t, ConstructibleArrayType &gt;::value andis_complete_type&lt; detected_t&lt; value_type_t, ConstructibleArrayType &gt; &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__array__type__impl_3_01BasicJsonType_00_01Construce6fa33688da703b95649da4749cdeb98.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-array-type-impl-3-01basicjsontype-00-01construce6fa33688da703b95649da4749cdeb98"><span class="std std-ref">Template Struct is_constructible_array_type_impl&lt; BasicJsonType, ConstructibleArrayType, enable_if_t&lt; std::is_same&lt; ConstructibleArrayType, typename BasicJsonType::value_type &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__object__type.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-object-type"><span class="std std-ref">Template Struct is_constructible_object_type</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__object__type__impl.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-object-type-impl"><span class="std std-ref">Template Struct is_constructible_object_type_impl</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__object__type__impl_3_01BasicJsonType_00_01Construb7f96efbcfd2606ccb5c84a830a60036.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-object-type-impl-3-01basicjsontype-00-01construb7f96efbcfd2606ccb5c84a830a60036"><span class="std std-ref">Template Struct is_constructible_object_type_impl&lt; BasicJsonType, ConstructibleObjectType, enable_if_t&lt; is_detected&lt; mapped_type_t, ConstructibleObjectType &gt;::value and is_detected&lt; key_type_t, ConstructibleObjectType &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__string__type.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-string-type"><span class="std std-ref">Template Struct is_constructible_string_type</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__string__type__impl.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-string-type-impl"><span class="std std-ref">Template Struct is_constructible_string_type_impl</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__string__type__impl_3_01BasicJsonType_00_01Construe4743afb22172cdb3c5f428800835387.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-string-type-impl-3-01basicjsontype-00-01construe4743afb22172cdb3c5f428800835387"><span class="std std-ref">Template Struct is_constructible_string_type_impl&lt; BasicJsonType, ConstructibleStringType, enable_if_t&lt; is_detected_exact&lt; typename BasicJsonType::string_t::value_type, value_type_t, ConstructibleStringType &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__tuple.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-tuple"><span class="std std-ref">Template Struct is_constructible_tuple</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__constructible__tuple_3_01T1_00_01std_1_1tuple_3_01Args_8_8_8_01_4_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1is-constructible-tuple-3-01t1-00-01std-1-1tuple-3-01args-8-8-8-01-4-01-4"><span class="std std-ref">Template Struct is_constructible_tuple&lt; T1, std::tuple&lt; Args… &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__iterator__traits.html#exhale-struct-structnlohmann-1-1detail-1-1is-iterator-traits"><span class="std std-ref">Template Struct is_iterator_traits</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__iterator__traits_3_01iterator__traits_3_01T_01_4_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1is-iterator-traits-3-01iterator-traits-3-01t-01-4-01-4"><span class="std std-ref">Template Struct is_iterator_traits&lt; iterator_traits&lt; T &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__sax.html#exhale-struct-structnlohmann-1-1detail-1-1is-sax"><span class="std std-ref">Template Struct is_sax</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1is__sax__static__asserts.html#exhale-struct-structnlohmann-1-1detail-1-1is-sax-static-asserts"><span class="std std-ref">Template Struct is_sax_static_asserts</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1iterator__traits.html#exhale-struct-structnlohmann-1-1detail-1-1iterator-traits"><span class="std std-ref">Template Struct iterator_traits</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1iterator__traits_3_01T_01_5_00_01enable__if__t_3_01std_1_1is__object_3_01T_01_4_1_1value_01_4_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1iterator-traits-3-01t-01-5-00-01enable-if-t-3-01std-1-1is-object-3-01t-01-4-1-1value-01-4-01-4"><span class="std std-ref">Template Struct iterator_traits&lt; T *, enable_if_t&lt; std::is_object&lt; T &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1iterator__traits_3_01T_00_01enable__if__t_3_01_9std_1_1is__pointer_3_01T_01_4_1_1value_01_4_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1iterator-traits-3-01t-00-01enable-if-t-3-01-9std-1-1is-pointer-3-01t-01-4-1-1value-01-4-01-4"><span class="std std-ref">Template Struct iterator_traits&lt; T, enable_if_t&lt; !std::is_pointer&lt; T &gt;::value &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1iterator__types.html#exhale-struct-structnlohmann-1-1detail-1-1iterator-types"><span class="std std-ref">Template Struct iterator_types</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1iterator__types_3_01It_00_01void__t_3_01typename_01It_1_1difference_d2be8685966c97e00e99d4fd2366dc0b.html#exhale-struct-structnlohmann-1-1detail-1-1iterator-types-3-01it-00-01void-t-3-01typename-01it-1-1difference-d2be8685966c97e00e99d4fd2366dc0b"><span class="std std-ref">Template Struct iterator_types&lt; It, void_t&lt; typename It::difference_type, typename It::value_type, typename It::pointer, typename It::reference, typename It::iterator_category &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1make__index__sequence.html#exhale-struct-structnlohmann-1-1detail-1-1make-index-sequence"><span class="std std-ref">Template Struct make_index_sequence</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1make__index__sequence_3_010_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1make-index-sequence-3-010-01-4"><span class="std std-ref">Template Struct make_index_sequence&lt; 0 &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1make__index__sequence_3_011_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1make-index-sequence-3-011-01-4"><span class="std std-ref">Template Struct make_index_sequence&lt; 1 &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1make__void.html#exhale-struct-structnlohmann-1-1detail-1-1make-void"><span class="std std-ref">Template Struct make_void</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1merge__and__renumber.html#exhale-struct-structnlohmann-1-1detail-1-1merge-and-renumber"><span class="std std-ref">Template Struct merge_and_renumber</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1merge__and__renumber_3_01index__sequence_3_01I1_8_8_8_01_4_00_01inde4885d6f1d93a04f25932afbd429c4793.html#exhale-struct-structnlohmann-1-1detail-1-1merge-and-renumber-3-01index-sequence-3-01i1-8-8-8-01-4-00-01inde4885d6f1d93a04f25932afbd429c4793"><span class="std std-ref">Template Struct merge_and_renumber&lt; index_sequence&lt; I1… &gt;, index_sequence&lt; I2… &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1nonesuch.html#exhale-struct-structnlohmann-1-1detail-1-1nonesuch"><span class="std std-ref">Struct nonesuch</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1output__adapter__protocol.html#exhale-struct-structnlohmann-1-1detail-1-1output-adapter-protocol"><span class="std std-ref">Template Struct output_adapter_protocol</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1position__t.html#exhale-struct-structnlohmann-1-1detail-1-1position-t"><span class="std std-ref">Struct position_t</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1priority__tag.html#exhale-struct-structnlohmann-1-1detail-1-1priority-tag"><span class="std std-ref">Template Struct priority_tag</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1priority__tag_3_010_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1priority-tag-3-010-01-4"><span class="std std-ref">Template Struct priority_tag&lt; 0 &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1static__const.html#exhale-struct-structnlohmann-1-1detail-1-1static-const"><span class="std std-ref">Template Struct static_const</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1to__json__fn.html#exhale-struct-structnlohmann-1-1detail-1-1to-json-fn"><span class="std std-ref">Struct to_json_fn</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1wide__string__input__helper.html#exhale-struct-structnlohmann-1-1detail-1-1wide-string-input-helper"><span class="std std-ref">Template Struct wide_string_input_helper</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1wide__string__input__helper_3_01WideStringType_00_012_01_4.html#exhale-struct-structnlohmann-1-1detail-1-1wide-string-input-helper-3-01widestringtype-00-012-01-4"><span class="std std-ref">Template Struct wide_string_input_helper&lt; WideStringType, 2 &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1json__sax.html#exhale-struct-structnlohmann-1-1json-sax"><span class="std std-ref">Template Struct json_sax</span></a></p></li>
+<li><p><a class="reference internal" href="structstd_1_1hash_3_01nlohmann_1_1json_01_4.html#exhale-struct-structstd-1-1hash-3-01nlohmann-1-1json-01-4"><span class="std std-ref">Template Struct hash&lt; nlohmann::json &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structstd_1_1less_3_1_1nlohmann_1_1detail_1_1value__t_01_4.html#exhale-struct-structstd-1-1less-3-1-1nlohmann-1-1detail-1-1value-t-01-4"><span class="std std-ref">Template Struct less&lt;::nlohmann::detail::value_t &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1basic__json.html#exhale-class-classnlohmann-1-1basic-json"><span class="std std-ref">Template Class basic_json</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1binary__reader.html#exhale-class-classnlohmann-1-1detail-1-1binary-reader"><span class="std std-ref">Template Class binary_reader</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1binary__writer.html#exhale-class-classnlohmann-1-1detail-1-1binary-writer"><span class="std std-ref">Template Class binary_writer</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1exception.html#exhale-class-classnlohmann-1-1detail-1-1exception"><span class="std std-ref">Class exception</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1file__input__adapter.html#exhale-class-classnlohmann-1-1detail-1-1file-input-adapter"><span class="std std-ref">Class file_input_adapter</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1input__adapter.html#exhale-class-classnlohmann-1-1detail-1-1input-adapter"><span class="std std-ref">Class input_adapter</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1input__buffer__adapter.html#exhale-class-classnlohmann-1-1detail-1-1input-buffer-adapter"><span class="std std-ref">Class input_buffer_adapter</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1input__stream__adapter.html#exhale-class-classnlohmann-1-1detail-1-1input-stream-adapter"><span class="std std-ref">Class input_stream_adapter</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1invalid__iterator.html#exhale-class-classnlohmann-1-1detail-1-1invalid-iterator"><span class="std std-ref">Class invalid_iterator</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1iter__impl.html#exhale-class-classnlohmann-1-1detail-1-1iter-impl"><span class="std std-ref">Template Class iter_impl</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1iteration__proxy.html#exhale-class-classnlohmann-1-1detail-1-1iteration-proxy"><span class="std std-ref">Template Class iteration_proxy</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1iteration__proxy__value.html#exhale-class-classnlohmann-1-1detail-1-1iteration-proxy-value"><span class="std std-ref">Template Class iteration_proxy_value</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1json__ref.html#exhale-class-classnlohmann-1-1detail-1-1json-ref"><span class="std std-ref">Template Class json_ref</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1json__reverse__iterator.html#exhale-class-classnlohmann-1-1detail-1-1json-reverse-iterator"><span class="std std-ref">Template Class json_reverse_iterator</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1json__sax__acceptor.html#exhale-class-classnlohmann-1-1detail-1-1json-sax-acceptor"><span class="std std-ref">Template Class json_sax_acceptor</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1json__sax__dom__callback__parser.html#exhale-class-classnlohmann-1-1detail-1-1json-sax-dom-callback-parser"><span class="std std-ref">Template Class json_sax_dom_callback_parser</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1json__sax__dom__parser.html#exhale-class-classnlohmann-1-1detail-1-1json-sax-dom-parser"><span class="std std-ref">Template Class json_sax_dom_parser</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1lexer.html#exhale-class-classnlohmann-1-1detail-1-1lexer"><span class="std std-ref">Template Class lexer</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1other__error.html#exhale-class-classnlohmann-1-1detail-1-1other-error"><span class="std std-ref">Class other_error</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1out__of__range.html#exhale-class-classnlohmann-1-1detail-1-1out-of-range"><span class="std std-ref">Class out_of_range</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1output__adapter.html#exhale-class-classnlohmann-1-1detail-1-1output-adapter"><span class="std std-ref">Template Class output_adapter</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1output__stream__adapter.html#exhale-class-classnlohmann-1-1detail-1-1output-stream-adapter"><span class="std std-ref">Template Class output_stream_adapter</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1output__string__adapter.html#exhale-class-classnlohmann-1-1detail-1-1output-string-adapter"><span class="std std-ref">Template Class output_string_adapter</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1output__vector__adapter.html#exhale-class-classnlohmann-1-1detail-1-1output-vector-adapter"><span class="std std-ref">Template Class output_vector_adapter</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1parse__error.html#exhale-class-classnlohmann-1-1detail-1-1parse-error"><span class="std std-ref">Class parse_error</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1parser.html#exhale-class-classnlohmann-1-1detail-1-1parser"><span class="std std-ref">Template Class parser</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1primitive__iterator__t.html#exhale-class-classnlohmann-1-1detail-1-1primitive-iterator-t"><span class="std std-ref">Class primitive_iterator_t</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1serializer.html#exhale-class-classnlohmann-1-1detail-1-1serializer"><span class="std std-ref">Template Class serializer</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1type__error.html#exhale-class-classnlohmann-1-1detail-1-1type-error"><span class="std std-ref">Class type_error</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1detail_1_1wide__string__input__adapter.html#exhale-class-classnlohmann-1-1detail-1-1wide-string-input-adapter"><span class="std std-ref">Template Class wide_string_input_adapter</span></a></p></li>
+<li><p><a class="reference internal" href="classnlohmann_1_1json__pointer.html#exhale-class-classnlohmann-1-1json-pointer"><span class="std std-ref">Template Class json_pointer</span></a></p></li>
+<li><p><a class="reference internal" href="classstd_1_1tuple__element_3_01N_00_01_1_1nlohmann_1_1detail_1_1iteration__proxy__value_3_01IteratorType_01_4_01_4.html#exhale-class-classstd-1-1tuple-element-3-01n-00-01-1-1nlohmann-1-1detail-1-1iteration-proxy-value-3-01iteratortype-01-4-01-4"><span class="std std-ref">Template Class tuple_element&lt; N, ::nlohmann::detail::iteration_proxy_value&lt; IteratorType &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="classstd_1_1tuple__size_3_1_1nlohmann_1_1detail_1_1iteration__proxy__value_3_01IteratorType_01_4_01_4.html#exhale-class-classstd-1-1tuple-size-3-1-1nlohmann-1-1detail-1-1iteration-proxy-value-3-01iteratortype-01-4-01-4"><span class="std std-ref">Template Class tuple_size&lt;::nlohmann::detail::iteration_proxy_value&lt; IteratorType &gt; &gt;</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="enum_namespacenlohmann_1_1detail_1a5a76b60b26dc8c47256a996d18d967df.html#exhale-enum-namespacenlohmann-1-1detail-1a5a76b60b26dc8c47256a996d18d967df"><span class="std std-ref">Enum error_handler_t</span></a></p></li>
+<li><p><a class="reference internal" href="enum_namespacenlohmann_1_1detail_1aa554fc6a11519e4f347deb25a9f0db40.html#exhale-enum-namespacenlohmann-1-1detail-1aa554fc6a11519e4f347deb25a9f0db40"><span class="std std-ref">Enum input_format_t</span></a></p></li>
+<li><p><a class="reference internal" href="enum_namespacenlohmann_1_1detail_1a1ed8fc6239da25abcaf681d30ace4985.html#exhale-enum-namespacenlohmann-1-1detail-1a1ed8fc6239da25abcaf681d30ace4985"><span class="std std-ref">Enum value_t</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a84733638b826eda624488f5fa4521e0b.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a84733638b826eda624488f5fa4521e0b"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::append_exponent</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a22b6e37654ac93c6d0d9c06ec1bf5ded.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a22b6e37654ac93c6d0d9c06ec1bf5ded"><span class="std std-ref">Template Function nlohmann::detail::dtoa_impl::compute_boundaries</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a36ded358763b5dbcea9867660fbe4e28.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a36ded358763b5dbcea9867660fbe4e28"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::find_largest_pow10</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a12c1c5d8b46ba9702186445e73f86afe.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a12c1c5d8b46ba9702186445e73f86afe"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::format_buffer</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1adbf329a18c5cf854a3477327afd2200b.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1adbf329a18c5cf854a3477327afd2200b"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::get_cached_power_for_binary_exponent</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a05b681dcb8569b9784c6dccfadb01633.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a05b681dcb8569b9784c6dccfadb01633"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::grisu2(char *, int&amp;, int&amp;, diyfp, diyfp, diyfp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1aab7a9670a4f4704a5d0347ad7588576b.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1aab7a9670a4f4704a5d0347ad7588576b"><span class="std std-ref">Template Function nlohmann::detail::dtoa_impl::grisu2(char *, int&amp;, int&amp;, FloatType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a9b899c72b0e1e3dd46d75c2b4e6bcdfb.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a9b899c72b0e1e3dd46d75c2b4e6bcdfb"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::grisu2_digit_gen</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a5bc841e0bee12fd6489d49cf7bd07bb4.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a5bc841e0bee12fd6489d49cf7bd07bb4"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::grisu2_round</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a1c5d30eb51e5e994a3f48bde104d2ce8.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a1c5d30eb51e5e994a3f48bde104d2ce8"><span class="std std-ref">Template Function nlohmann::detail::dtoa_impl::reinterpret_bits</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a1f0395aad0fe853a4539288749d3a603.html#exhale-function-namespacenlohmann-1-1detail-1a1f0395aad0fe853a4539288749d3a603"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, typename std::nullptr_t&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a58117f225f43d03e3a0a4a6f3d77c9d9.html#exhale-function-namespacenlohmann-1-1detail-1a58117f225f43d03e3a0a4a6f3d77c9d9"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, typename BasicJsonType::boolean_t&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1ad74d89f77ada7a57eff38b43d4bf2335.html#exhale-function-namespacenlohmann-1-1detail-1ad74d89f77ada7a57eff38b43d4bf2335"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, typename BasicJsonType::string_t&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a2932f2bc2943dac6d51669312f4fc0f5.html#exhale-function-namespacenlohmann-1-1detail-1a2932f2bc2943dac6d51669312f4fc0f5"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, ConstructibleStringType&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a7cb5dd7d46a60e65f9a8e0873b3f7dd8.html#exhale-function-namespacenlohmann-1-1detail-1a7cb5dd7d46a60e65f9a8e0873b3f7dd8"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, typename BasicJsonType::number_float_t&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1ace4d5680ba413d9fd897ccb5d9c61a1c.html#exhale-function-namespacenlohmann-1-1detail-1ace4d5680ba413d9fd897ccb5d9c61a1c"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, typename BasicJsonType::number_unsigned_t&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a047d881e611fcac709dc318f730a1732.html#exhale-function-namespacenlohmann-1-1detail-1a047d881e611fcac709dc318f730a1732"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, typename BasicJsonType::number_integer_t&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a5440d650150d01e8015133521351b459.html#exhale-function-namespacenlohmann-1-1detail-1a5440d650150d01e8015133521351b459"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, EnumType&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a5cfb765aad92795abd7fda29d017272a.html#exhale-function-namespacenlohmann-1-1detail-1a5cfb765aad92795abd7fda29d017272a"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, std::forward_list&lt;T, Allocator&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a3df497b1d3977f071b488ecac1401517.html#exhale-function-namespacenlohmann-1-1detail-1a3df497b1d3977f071b488ecac1401517"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, std::valarray&lt;T&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a7deb2db8eed6f1762373dde7a6595760.html#exhale-function-namespacenlohmann-1-1detail-1a7deb2db8eed6f1762373dde7a6595760"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, T(&amp;))</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a14d8cdf544585f1c38eab6a0820e55f7.html#exhale-function-namespacenlohmann-1-1detail-1a14d8cdf544585f1c38eab6a0820e55f7"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, ConstructibleArrayType&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a5b24896e5f5db6af06d939dde4b63fe1.html#exhale-function-namespacenlohmann-1-1detail-1a5b24896e5f5db6af06d939dde4b63fe1"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, ConstructibleObjectType&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a839b0ab50d2c9bce669068f56bc41202.html#exhale-function-namespacenlohmann-1-1detail-1a839b0ab50d2c9bce669068f56bc41202"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, ArithmeticType&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1aae9f9c2601074e323d49428132cc293d.html#exhale-function-namespacenlohmann-1-1detail-1aae9f9c2601074e323d49428132cc293d"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, std::pair&lt;A1, A2&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a8b99ec9b29f3f20a18fc4281fb784e49.html#exhale-function-namespacenlohmann-1-1detail-1a8b99ec9b29f3f20a18fc4281fb784e49"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, std::tuple&lt;Args…&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1ae93147a54d2740228ef16a5e6210ca3e.html#exhale-function-namespacenlohmann-1-1detail-1ae93147a54d2740228ef16a5e6210ca3e"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, std::map&lt;Key, Value, Compare, Allocator&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1aef5c8ea108f4d2b03fb4a635617510de.html#exhale-function-namespacenlohmann-1-1detail-1aef5c8ea108f4d2b03fb4a635617510de"><span class="std std-ref">Template Function nlohmann::detail::from_json(const BasicJsonType&amp;, std::unordered_map&lt;Key, Value, Hash, KeyEqual, Allocator&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a40f7bb070a60e8ba14fffb9c117fcbd8.html#exhale-function-namespacenlohmann-1-1detail-1a40f7bb070a60e8ba14fffb9c117fcbd8"><span class="std std-ref">Template Function nlohmann::detail::from_json_array_impl(const BasicJsonType&amp;, typename BasicJsonType::array_t&amp;, priority_tag&lt;3&gt;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1aba0ce45ebb69fd2c7132a00f9a56b503.html#exhale-function-namespacenlohmann-1-1detail-1aba0ce45ebb69fd2c7132a00f9a56b503"><span class="std std-ref">Template Function nlohmann::detail::from_json_array_impl(const BasicJsonType&amp;, std::array&lt;T, N&gt;&amp;, priority_tag&lt;2&gt;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a464e1246f3df7edea79c3f81ab701edd.html#exhale-function-namespacenlohmann-1-1detail-1a464e1246f3df7edea79c3f81ab701edd"><span class="std std-ref">Template Function nlohmann::detail::from_json_array_impl(const BasicJsonType&amp;, ConstructibleArrayType&amp;, priority_tag&lt;1&gt;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a20cf21255e75cff1ffb0869c2c545e63.html#exhale-function-namespacenlohmann-1-1detail-1a20cf21255e75cff1ffb0869c2c545e63"><span class="std std-ref">Template Function nlohmann::detail::from_json_array_impl(const BasicJsonType&amp;, ConstructibleArrayType&amp;, priority_tag&lt;0&gt;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a28253915d9db4a0112d60eaee0422949.html#exhale-function-namespacenlohmann-1-1detail-1a28253915d9db4a0112d60eaee0422949"><span class="std std-ref">Template Function nlohmann::detail::from_json_tuple_impl</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1acc422c11342b31368f610b6f96fcedc6.html#exhale-function-namespacenlohmann-1-1detail-1acc422c11342b31368f610b6f96fcedc6"><span class="std std-ref">Template Function nlohmann::detail::get</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1ad9e016d7b6a3cd2847027950aa0aac3b.html#exhale-function-namespacenlohmann-1-1detail-1ad9e016d7b6a3cd2847027950aa0aac3b"><span class="std std-ref">Function nlohmann::detail::get&lt; typename ConstructibleArrayType::value_type &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a85955b9c6dd31846e4b8e891f78614b6.html#exhale-function-namespacenlohmann-1-1detail-1a85955b9c6dd31846e4b8e891f78614b6"><span class="std std-ref">Template Function nlohmann::detail::get_arithmetic_value</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a3c45286b0a2f15ea0a756cb87a76cf9b.html#exhale-function-namespacenlohmann-1-1detail-1a3c45286b0a2f15ea0a756cb87a76cf9b"><span class="std std-ref">Template Function nlohmann::detail::int_to_string</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a09169efff3bd1771fff29bd92cea19e0.html#exhale-function-namespacenlohmann-1-1detail-1a09169efff3bd1771fff29bd92cea19e0"><span class="std std-ref">Function nlohmann::detail::operator&lt;</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a18759c536d89c4dd3a118bd3ecb790da.html#exhale-function-namespacenlohmann-1-1detail-1a18759c536d89c4dd3a118bd3ecb790da"><span class="std std-ref">Template Function nlohmann::detail::to_chars</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a24c9c12f3839c94e09532f08de85e949.html#exhale-function-namespacenlohmann-1-1detail-1a24c9c12f3839c94e09532f08de85e949"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, const CompatibleObjectType&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1ac9f7a5542851c61d93740148eaec509f.html#exhale-function-namespacenlohmann-1-1detail-1ac9f7a5542851c61d93740148eaec509f"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, typename BasicJsonType::object_t&amp;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a20ea5175c8999fc8b673e46b892f71f6.html#exhale-function-namespacenlohmann-1-1detail-1a20ea5175c8999fc8b673e46b892f71f6"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, const T(&amp;))</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1ab64eeb55b44db44eb8e9070229eb97df.html#exhale-function-namespacenlohmann-1-1detail-1ab64eeb55b44db44eb8e9070229eb97df"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, const std::pair&lt;T1, T2&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1aaa77b0c9745130b77733a92a1a2e82ec.html#exhale-function-namespacenlohmann-1-1detail-1aaa77b0c9745130b77733a92a1a2e82ec"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, const T&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a1a804b98cbe89b7e44b698f2ca860490.html#exhale-function-namespacenlohmann-1-1detail-1a1a804b98cbe89b7e44b698f2ca860490"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, T)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a7356ed05cdbbb080cee80e1211e1c6c9.html#exhale-function-namespacenlohmann-1-1detail-1a7356ed05cdbbb080cee80e1211e1c6c9"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, const CompatibleString&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a4aa1ca6b7c61bf19d1f30ea5b669f68e.html#exhale-function-namespacenlohmann-1-1detail-1a4aa1ca6b7c61bf19d1f30ea5b669f68e"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, typename BasicJsonType::string_t&amp;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a22bffdc8bc7e43af380ba2050696b230.html#exhale-function-namespacenlohmann-1-1detail-1a22bffdc8bc7e43af380ba2050696b230"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, FloatType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1ae5fd66b5517b3b5a6c6b9fd9f29ba8dc.html#exhale-function-namespacenlohmann-1-1detail-1ae5fd66b5517b3b5a6c6b9fd9f29ba8dc"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, CompatibleNumberUnsignedType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a91fe576be579c8c2fdd14610605c6dd2.html#exhale-function-namespacenlohmann-1-1detail-1a91fe576be579c8c2fdd14610605c6dd2"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, CompatibleNumberIntegerType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a0c8b159dba71981d6c555d284cf6e2bf.html#exhale-function-namespacenlohmann-1-1detail-1a0c8b159dba71981d6c555d284cf6e2bf"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, EnumType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1aeca6fb5fede5ed1e12a4420d98a5692b.html#exhale-function-namespacenlohmann-1-1detail-1aeca6fb5fede5ed1e12a4420d98a5692b"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, const std::vector&lt;bool&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a3afebc132c5ff83f9cd160e52030fdfd.html#exhale-function-namespacenlohmann-1-1detail-1a3afebc132c5ff83f9cd160e52030fdfd"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, const CompatibleArrayType&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a7f7c7b9760161b774cdc0b4b838fae64.html#exhale-function-namespacenlohmann-1-1detail-1a7f7c7b9760161b774cdc0b4b838fae64"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, const std::valarray&lt;T&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1aa0fd1b5788e9ba37e31da43dda738cb5.html#exhale-function-namespacenlohmann-1-1detail-1aa0fd1b5788e9ba37e31da43dda738cb5"><span class="std std-ref">Template Function nlohmann::detail::to_json(BasicJsonType&amp;, typename BasicJsonType::array_t&amp;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a510dfa15b01e9a8afe31600a27b28199.html#exhale-function-namespacenlohmann-1-1detail-1a510dfa15b01e9a8afe31600a27b28199"><span class="std std-ref">Template Function nlohmann::detail::to_json_tuple_impl</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1a59fca69799f6b9e366710cb9043aa77d.html#exhale-function-namespacenlohmann-1-1detail-1a59fca69799f6b9e366710cb9043aa77d"><span class="std std-ref">Function nlohmann::detail::void</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1ad675d1c22f5240b2b3065c241b204477.html#exhale-function-namespacenlohmann-1ad675d1c22f5240b2b3065c241b204477"><span class="std std-ref">Template Function nlohmann::to_string</span></a></p></li>
+<li><p><a class="reference internal" href="function_json_8hpp_1a106b949d848bb8243a7cf94f11bcebf1.html#exhale-function-json-8hpp-1a106b949d848bb8243a7cf94f11bcebf1"><span class="std std-ref">Function operator”” _json</span></a></p></li>
+<li><p><a class="reference internal" href="function_json_8hpp_1aa2015c6dc3a0fb76fc526cfecef2286a.html#exhale-function-json-8hpp-1aa2015c6dc3a0fb76fc526cfecef2286a"><span class="std std-ref">Function operator”” _json_pointer</span></a></p></li>
+<li><p><a class="reference internal" href="function_json_8hpp_1ace192546038d61d9c28ddfe0c3d732de.html#exhale-function-json-8hpp-1ace192546038d61d9c28ddfe0c3d732de"><span class="std std-ref">Function std::swap&lt; nlohmann::json &gt;</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="defines">
+<h2>Defines<a class="headerlink" href="#defines" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="define_json_8hpp_1ae7fdc438c6d6cb1f17c4373bce5a802d.html#exhale-define-json-8hpp-1ae7fdc438c6d6cb1f17c4373bce5a802d"><span class="std std-ref">Define INCLUDE_NLOHMANN_JSON_FWD_HPP_</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a6954bec49ed2a2dfb938c1131c82740a.html#exhale-define-json-8hpp-1a6954bec49ed2a2dfb938c1131c82740a"><span class="std std-ref">Define JSON_CATCH</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aa8811aa2a21030baad33c103cb04d322.html#exhale-define-json-8hpp-1aa8811aa2a21030baad33c103cb04d322"><span class="std std-ref">Define JSON_HEDLEY_ALWAYS_INLINE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aec1d1b1e286d1610ff11dbb29bf3e8cf.html#exhale-define-json-8hpp-1aec1d1b1e286d1610ff11dbb29bf3e8cf"><span class="std std-ref">Define JSON_HEDLEY_ARM_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a81c7e3b5b6811abfd89146ad33a93d8f.html#exhale-define-json-8hpp-1a81c7e3b5b6811abfd89146ad33a93d8f"><span class="std std-ref">Define JSON_HEDLEY_ARRAY_PARAM</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a70d7244eea52c8bb5716545e54050bb5.html#exhale-define-json-8hpp-1a70d7244eea52c8bb5716545e54050bb5"><span class="std std-ref">Define JSON_HEDLEY_ASSUME</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ad43f9ae10083194afdfe88516ad876e7.html#exhale-define-json-8hpp-1ad43f9ae10083194afdfe88516ad876e7"><span class="std std-ref">Define JSON_HEDLEY_BEGIN_C_DECLS</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a378be9b66feb11153979c282c669b12e.html#exhale-define-json-8hpp-1a378be9b66feb11153979c282c669b12e"><span class="std std-ref">Define JSON_HEDLEY_C_DECL</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a940783ca9410ed9dbe4f7abf44a29394.html#exhale-define-json-8hpp-1a940783ca9410ed9dbe4f7abf44a29394"><span class="std std-ref">Define JSON_HEDLEY_CLANG_HAS_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a4500e349152e53a3a6f0ab95c6a4a840.html#exhale-define-json-8hpp-1a4500e349152e53a3a6f0ab95c6a4a840"><span class="std std-ref">Define JSON_HEDLEY_CLANG_HAS_BUILTIN</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a3ce7b30717e453922113c4f62e645e13.html#exhale-define-json-8hpp-1a3ce7b30717e453922113c4f62e645e13"><span class="std std-ref">Define JSON_HEDLEY_CLANG_HAS_CPP_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1afb4bf1280cd8738877e1f0f681a5d96d.html#exhale-define-json-8hpp-1afb4bf1280cd8738877e1f0f681a5d96d"><span class="std std-ref">Define JSON_HEDLEY_CLANG_HAS_DECLSPEC_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a8fcc2d27e828fbd8d5ef88ba341e56c0.html#exhale-define-json-8hpp-1a8fcc2d27e828fbd8d5ef88ba341e56c0"><span class="std std-ref">Define JSON_HEDLEY_CLANG_HAS_EXTENSION</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a096be2083232d3a3ea9f3aeb25885f60.html#exhale-define-json-8hpp-1a096be2083232d3a3ea9f3aeb25885f60"><span class="std std-ref">Define JSON_HEDLEY_CLANG_HAS_FEATURE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a6125ffd318b2d6698faad4175a6e7c56.html#exhale-define-json-8hpp-1a6125ffd318b2d6698faad4175a6e7c56"><span class="std std-ref">Define JSON_HEDLEY_CLANG_HAS_WARNING</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ad8f9aee7d709155d6745cb3f77c6ff0c.html#exhale-define-json-8hpp-1ad8f9aee7d709155d6745cb3f77c6ff0c"><span class="std std-ref">Define JSON_HEDLEY_COMPCERT_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a4ec16c2642fdc5876d8dbeab3445b313.html#exhale-define-json-8hpp-1a4ec16c2642fdc5876d8dbeab3445b313"><span class="std std-ref">Define JSON_HEDLEY_CONCAT</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aee52531ff30270c04958309efa66a5da.html#exhale-define-json-8hpp-1aee52531ff30270c04958309efa66a5da"><span class="std std-ref">Define JSON_HEDLEY_CONCAT_EX</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a0d17bf1a54fc45a04ced6d3aa86a96e3.html#exhale-define-json-8hpp-1a0d17bf1a54fc45a04ced6d3aa86a96e3"><span class="std std-ref">Define JSON_HEDLEY_CONST</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ab849ba88a6f410da5a46a86f8565b381.html#exhale-define-json-8hpp-1ab849ba88a6f410da5a46a86f8565b381"><span class="std std-ref">Define JSON_HEDLEY_CONST_CAST</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ac317a48664e4099c22d33d8132bef97e.html#exhale-define-json-8hpp-1ac317a48664e4099c22d33d8132bef97e"><span class="std std-ref">Define JSON_HEDLEY_CONSTEXPR</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a8c790866b16f58cbe0b3286a7a6238c3.html#exhale-define-json-8hpp-1a8c790866b16f58cbe0b3286a7a6238c3"><span class="std std-ref">Define JSON_HEDLEY_CPP_CAST</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a5d9ed879aa65e4db12a81ee95529c3e4.html#exhale-define-json-8hpp-1a5d9ed879aa65e4db12a81ee95529c3e4"><span class="std std-ref">Define JSON_HEDLEY_CRAY_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a0f2cbf281fa983a844b9279c697b7a0c.html#exhale-define-json-8hpp-1a0f2cbf281fa983a844b9279c697b7a0c"><span class="std std-ref">Define JSON_HEDLEY_DEPRECATED</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1af0469b867b0ec3a1c4b229ce9d087620.html#exhale-define-json-8hpp-1af0469b867b0ec3a1c4b229ce9d087620"><span class="std std-ref">Define JSON_HEDLEY_DEPRECATED_FOR</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a8d412aa5d441b533afa439a89aa4a754.html#exhale-define-json-8hpp-1a8d412aa5d441b533afa439a89aa4a754"><span class="std std-ref">Define JSON_HEDLEY_DIAGNOSTIC_DISABLE_CAST_QUAL</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a543a78d9931a92663e3b3fc552a390a4.html#exhale-define-json-8hpp-1a543a78d9931a92663e3b3fc552a390a4"><span class="std std-ref">Define JSON_HEDLEY_DIAGNOSTIC_DISABLE_CPP98_COMPAT_WRAP_</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1afe5855242129fa5d1adf55227669a337.html#exhale-define-json-8hpp-1afe5855242129fa5d1adf55227669a337"><span class="std std-ref">Define JSON_HEDLEY_DIAGNOSTIC_DISABLE_DEPRECATED</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ab6e5abd7e400c9a725278206ece33e16.html#exhale-define-json-8hpp-1ab6e5abd7e400c9a725278206ece33e16"><span class="std std-ref">Define JSON_HEDLEY_DIAGNOSTIC_DISABLE_UNKNOWN_CPP_ATTRIBUTES</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ab67745ae0065d536d8e67969db68d564.html#exhale-define-json-8hpp-1ab67745ae0065d536d8e67969db68d564"><span class="std std-ref">Define JSON_HEDLEY_DIAGNOSTIC_DISABLE_UNKNOWN_PRAGMAS</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aeedd50a52e1ea565ceab84bb596ec07f.html#exhale-define-json-8hpp-1aeedd50a52e1ea565ceab84bb596ec07f"><span class="std std-ref">Define JSON_HEDLEY_DIAGNOSTIC_POP</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a1850f57fcda72becebc7033a2e10e77b.html#exhale-define-json-8hpp-1a1850f57fcda72becebc7033a2e10e77b"><span class="std std-ref">Define JSON_HEDLEY_DIAGNOSTIC_PUSH</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1af21c5dbd9df3b2e245ae547e2d940adc.html#exhale-define-json-8hpp-1af21c5dbd9df3b2e245ae547e2d940adc"><span class="std std-ref">Define JSON_HEDLEY_DMC_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ae7a983344e78f37697c2688f1885f9e1.html#exhale-define-json-8hpp-1ae7a983344e78f37697c2688f1885f9e1"><span class="std std-ref">Define JSON_HEDLEY_EMPTY_BASES</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a472a0656b154bb30cf6e8fb8a31b9209.html#exhale-define-json-8hpp-1a472a0656b154bb30cf6e8fb8a31b9209"><span class="std std-ref">Define JSON_HEDLEY_EMSCRIPTEN_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aca2fc4b765ac5739d680153895b673fb.html#exhale-define-json-8hpp-1aca2fc4b765ac5739d680153895b673fb"><span class="std std-ref">Define JSON_HEDLEY_END_C_DECLS</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a7056c44a5787e78720407fc97aefbd0f.html#exhale-define-json-8hpp-1a7056c44a5787e78720407fc97aefbd0f"><span class="std std-ref">Define JSON_HEDLEY_FALL_THROUGH</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a701eddd8e14dbe617a9ca81b095e88fb.html#exhale-define-json-8hpp-1a701eddd8e14dbe617a9ca81b095e88fb"><span class="std std-ref">Define JSON_HEDLEY_FLAGS_CAST</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1af33c67f65300eb91494f25bf583f5bd7.html#exhale-define-json-8hpp-1af33c67f65300eb91494f25bf583f5bd7"><span class="std std-ref">Define JSON_HEDLEY_GCC_HAS_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aa210655ec7cc8387bef8ade74c3af647.html#exhale-define-json-8hpp-1aa210655ec7cc8387bef8ade74c3af647"><span class="std std-ref">Define JSON_HEDLEY_GCC_HAS_BUILTIN</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aaa3c748298e83bf6a67b583b83233c11.html#exhale-define-json-8hpp-1aaa3c748298e83bf6a67b583b83233c11"><span class="std std-ref">Define JSON_HEDLEY_GCC_HAS_CPP_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a164e098f308804c3bada63613ad75dab.html#exhale-define-json-8hpp-1a164e098f308804c3bada63613ad75dab"><span class="std std-ref">Define JSON_HEDLEY_GCC_HAS_DECLSPEC_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1af488159969a8b7154820cffe04bb4917.html#exhale-define-json-8hpp-1af488159969a8b7154820cffe04bb4917"><span class="std std-ref">Define JSON_HEDLEY_GCC_HAS_EXTENSION</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ae9f353e2ea047111e419855144b06ab7.html#exhale-define-json-8hpp-1ae9f353e2ea047111e419855144b06ab7"><span class="std std-ref">Define JSON_HEDLEY_GCC_HAS_FEATURE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ab45544391bc41507efde58d48331dfc2.html#exhale-define-json-8hpp-1ab45544391bc41507efde58d48331dfc2"><span class="std std-ref">Define JSON_HEDLEY_GCC_HAS_WARNING</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1af3737b675cbb70bcdfdaca78c2bc7d4a.html#exhale-define-json-8hpp-1af3737b675cbb70bcdfdaca78c2bc7d4a"><span class="std std-ref">Define JSON_HEDLEY_GCC_NOT_CLANG_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aaf82a065634719d57994ef5876e208ff.html#exhale-define-json-8hpp-1aaf82a065634719d57994ef5876e208ff"><span class="std std-ref">Define JSON_HEDLEY_GCC_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1afdf01f41465021815bb6fc4d8c1839fd.html#exhale-define-json-8hpp-1afdf01f41465021815bb6fc4d8c1839fd"><span class="std std-ref">Define JSON_HEDLEY_GNUC_HAS_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a92764b738f44272e1b18c3ef1403c894.html#exhale-define-json-8hpp-1a92764b738f44272e1b18c3ef1403c894"><span class="std std-ref">Define JSON_HEDLEY_GNUC_HAS_BUILTIN</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a938dadb6cadaaaccf72990d09be5dc0a.html#exhale-define-json-8hpp-1a938dadb6cadaaaccf72990d09be5dc0a"><span class="std std-ref">Define JSON_HEDLEY_GNUC_HAS_CPP_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a005d6f0dbab6f7152e43fb85fc4f4990.html#exhale-define-json-8hpp-1a005d6f0dbab6f7152e43fb85fc4f4990"><span class="std std-ref">Define JSON_HEDLEY_GNUC_HAS_DECLSPEC_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a2417cc05952936574c0a6ed96d73d8e2.html#exhale-define-json-8hpp-1a2417cc05952936574c0a6ed96d73d8e2"><span class="std std-ref">Define JSON_HEDLEY_GNUC_HAS_EXTENSION</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ad5dab327c783036962c7d921a4144676.html#exhale-define-json-8hpp-1ad5dab327c783036962c7d921a4144676"><span class="std std-ref">Define JSON_HEDLEY_GNUC_HAS_FEATURE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a8afa30449fac8b5069e62f26421d4148.html#exhale-define-json-8hpp-1a8afa30449fac8b5069e62f26421d4148"><span class="std std-ref">Define JSON_HEDLEY_GNUC_HAS_WARNING</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a074e795380699252f28c9526ca83e586.html#exhale-define-json-8hpp-1a074e795380699252f28c9526ca83e586"><span class="std std-ref">Define JSON_HEDLEY_GNUC_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1af41dc3300eaa6e5e6a976730d160a268.html#exhale-define-json-8hpp-1af41dc3300eaa6e5e6a976730d160a268"><span class="std std-ref">Define JSON_HEDLEY_HAS_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1acf8ab10ce06ffe6f54840b555b15121c.html#exhale-define-json-8hpp-1acf8ab10ce06ffe6f54840b555b15121c"><span class="std std-ref">Define JSON_HEDLEY_HAS_BUILTIN</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a2c4e6a04293aaf333a31698dea661b3b.html#exhale-define-json-8hpp-1a2c4e6a04293aaf333a31698dea661b3b"><span class="std std-ref">Define JSON_HEDLEY_HAS_CPP_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ad5b94be3095ea0549561c1bc951c5998.html#exhale-define-json-8hpp-1ad5b94be3095ea0549561c1bc951c5998"><span class="std std-ref">Define JSON_HEDLEY_HAS_CPP_ATTRIBUTE_NS</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ac256365345e803d24cbd9651d3cb0274.html#exhale-define-json-8hpp-1ac256365345e803d24cbd9651d3cb0274"><span class="std std-ref">Define JSON_HEDLEY_HAS_DECLSPEC_ATTRIBUTE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a320bfe79028a67cd5873f917bc5418dd.html#exhale-define-json-8hpp-1a320bfe79028a67cd5873f917bc5418dd"><span class="std std-ref">Define JSON_HEDLEY_HAS_EXTENSION</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a752eb648bbfc7bcd8a4624c43f520412.html#exhale-define-json-8hpp-1a752eb648bbfc7bcd8a4624c43f520412"><span class="std std-ref">Define JSON_HEDLEY_HAS_FEATURE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a472922971d1cd7308a4402042bdafe34.html#exhale-define-json-8hpp-1a472922971d1cd7308a4402042bdafe34"><span class="std std-ref">Define JSON_HEDLEY_HAS_WARNING</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a8788394855e9b5a1cc32327db5a613cb.html#exhale-define-json-8hpp-1a8788394855e9b5a1cc32327db5a613cb"><span class="std std-ref">Define JSON_HEDLEY_IAR_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a66ec7d7c320280d6e75cb3634048cd49.html#exhale-define-json-8hpp-1a66ec7d7c320280d6e75cb3634048cd49"><span class="std std-ref">Define JSON_HEDLEY_IBM_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a29c62e19dfa10fb48bf3aa877c4af21c.html#exhale-define-json-8hpp-1a29c62e19dfa10fb48bf3aa877c4af21c"><span class="std std-ref">Define JSON_HEDLEY_IMPORT</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1af943d68414c7fe0fdfab7e772fa628a8.html#exhale-define-json-8hpp-1af943d68414c7fe0fdfab7e772fa628a8"><span class="std std-ref">Define JSON_HEDLEY_INLINE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ae51b1abb6876168df25d3f36fa335c94.html#exhale-define-json-8hpp-1ae51b1abb6876168df25d3f36fa335c94"><span class="std std-ref">Define JSON_HEDLEY_INTEL_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a37617841d58aa4d88d0efee4db57ee18.html#exhale-define-json-8hpp-1a37617841d58aa4d88d0efee4db57ee18"><span class="std std-ref">Define JSON_HEDLEY_IS_CONSTANT</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a355f2770653ff7bdd5c74b204b5a3ad0.html#exhale-define-json-8hpp-1a355f2770653ff7bdd5c74b204b5a3ad0"><span class="std std-ref">Define JSON_HEDLEY_LIKELY</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a521367b4e81907450a7ea0bf28028b01.html#exhale-define-json-8hpp-1a521367b4e81907450a7ea0bf28028b01"><span class="std std-ref">Define JSON_HEDLEY_MALLOC</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a8419c2b65d28686932087c587eb19157.html#exhale-define-json-8hpp-1a8419c2b65d28686932087c587eb19157"><span class="std std-ref">Define JSON_HEDLEY_MESSAGE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ac3dc0b5b04f307fc875f9470c0cc841f.html#exhale-define-json-8hpp-1ac3dc0b5b04f307fc875f9470c0cc841f"><span class="std std-ref">Define JSON_HEDLEY_MSVC_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aa400dd54d50fd20d7e931e2f08ee6374.html#exhale-define-json-8hpp-1aa400dd54d50fd20d7e931e2f08ee6374"><span class="std std-ref">Define JSON_HEDLEY_NEVER_INLINE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a9a8fe3009f53d14ac4b48600a2606fc1.html#exhale-define-json-8hpp-1a9a8fe3009f53d14ac4b48600a2606fc1"><span class="std std-ref">Define JSON_HEDLEY_NO_ESCAPE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a82747e7a15c5cecf1223dbc4eb7a1c6b.html#exhale-define-json-8hpp-1a82747e7a15c5cecf1223dbc4eb7a1c6b"><span class="std std-ref">Define JSON_HEDLEY_NO_RETURN</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a99bb53bea18285e3d2ae4385c6c75434.html#exhale-define-json-8hpp-1a99bb53bea18285e3d2ae4385c6c75434"><span class="std std-ref">Define JSON_HEDLEY_NO_THROW</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a5338981b5ad9027c9e54b1c5597f4344.html#exhale-define-json-8hpp-1a5338981b5ad9027c9e54b1c5597f4344"><span class="std std-ref">Define JSON_HEDLEY_NON_NULL</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a06449cfb74f25f075a8ea334542f1c65.html#exhale-define-json-8hpp-1a06449cfb74f25f075a8ea334542f1c65"><span class="std std-ref">Define JSON_HEDLEY_NULL</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a21937c8e7c79a1bef6695691c733e29f.html#exhale-define-json-8hpp-1a21937c8e7c79a1bef6695691c733e29f"><span class="std std-ref">Define JSON_HEDLEY_PELLES_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a009a77cb8a9fd33aafff173bb945128d.html#exhale-define-json-8hpp-1a009a77cb8a9fd33aafff173bb945128d"><span class="std std-ref">Define JSON_HEDLEY_PGI_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aeb6e382f24fc5453621ae258b72e8775.html#exhale-define-json-8hpp-1aeb6e382f24fc5453621ae258b72e8775"><span class="std std-ref">Define JSON_HEDLEY_PRAGMA</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a34846d0797b38c1971baee08736dae69.html#exhale-define-json-8hpp-1a34846d0797b38c1971baee08736dae69"><span class="std std-ref">Define JSON_HEDLEY_PREDICT</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aec5597506417346f8f1c4d1f08c7719f.html#exhale-define-json-8hpp-1aec5597506417346f8f1c4d1f08c7719f"><span class="std std-ref">Define JSON_HEDLEY_PREDICT_FALSE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1adb569cea2c5a17c33734f27e8fef2473.html#exhale-define-json-8hpp-1adb569cea2c5a17c33734f27e8fef2473"><span class="std std-ref">Define JSON_HEDLEY_PREDICT_TRUE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a2e17831d69746d3ee8ad4796e96975a2.html#exhale-define-json-8hpp-1a2e17831d69746d3ee8ad4796e96975a2"><span class="std std-ref">Define JSON_HEDLEY_PRINTF_FORMAT</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a034c879888858092ec101e8d02be67c2.html#exhale-define-json-8hpp-1a034c879888858092ec101e8d02be67c2"><span class="std std-ref">Define JSON_HEDLEY_PRIVATE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aa1588f4ea4e7819b5b6e66f07865737f.html#exhale-define-json-8hpp-1aa1588f4ea4e7819b5b6e66f07865737f"><span class="std std-ref">Define JSON_HEDLEY_PUBLIC</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1af5c84b7d1a43361bdc14cc6941078000.html#exhale-define-json-8hpp-1af5c84b7d1a43361bdc14cc6941078000"><span class="std std-ref">Define JSON_HEDLEY_PURE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a86dd11af75e3f25f5be26cf3c779ba79.html#exhale-define-json-8hpp-1a86dd11af75e3f25f5be26cf3c779ba79"><span class="std std-ref">Define JSON_HEDLEY_REINTERPRET_CAST</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1acbc72fa9390d5e8b7592a81384dfabf3.html#exhale-define-json-8hpp-1acbc72fa9390d5e8b7592a81384dfabf3"><span class="std std-ref">Define JSON_HEDLEY_REQUIRE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a1136ab0d872379bb18d0839893bede67.html#exhale-define-json-8hpp-1a1136ab0d872379bb18d0839893bede67"><span class="std std-ref">Define JSON_HEDLEY_REQUIRE_CONSTEXPR</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a7106fb230747163b5b16121eb6a42b23.html#exhale-define-json-8hpp-1a7106fb230747163b5b16121eb6a42b23"><span class="std std-ref">Define JSON_HEDLEY_REQUIRE_MSG</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ad4979e5bc2f252ff6e367fc254ab4e85.html#exhale-define-json-8hpp-1ad4979e5bc2f252ff6e367fc254ab4e85"><span class="std std-ref">Define JSON_HEDLEY_RESTRICT</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a5f2aaec3b681d0a72f7d6e90b70cdcd1.html#exhale-define-json-8hpp-1a5f2aaec3b681d0a72f7d6e90b70cdcd1"><span class="std std-ref">Define JSON_HEDLEY_RETURNS_NON_NULL</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1afe58497d56cda5e4cbf2d33be1bdd91e.html#exhale-define-json-8hpp-1afe58497d56cda5e4cbf2d33be1bdd91e"><span class="std std-ref">Define JSON_HEDLEY_SENTINEL</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a04269935c66fe5a9b6c33fa36037d215.html#exhale-define-json-8hpp-1a04269935c66fe5a9b6c33fa36037d215"><span class="std std-ref">Define JSON_HEDLEY_STATIC_ASSERT</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a2edb8d037ad5cbac818c86aca317226a.html#exhale-define-json-8hpp-1a2edb8d037ad5cbac818c86aca317226a"><span class="std std-ref">Define JSON_HEDLEY_STATIC_CAST</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a9b2aefadecfe77306599a08b0d8147ca.html#exhale-define-json-8hpp-1a9b2aefadecfe77306599a08b0d8147ca"><span class="std std-ref">Define JSON_HEDLEY_STRINGIFY</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a8b50e69690eed3a7e11797b1122b4302.html#exhale-define-json-8hpp-1a8b50e69690eed3a7e11797b1122b4302"><span class="std std-ref">Define JSON_HEDLEY_STRINGIFY_EX</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a4b6d318de76d6d23850ec1a588bdeffa.html#exhale-define-json-8hpp-1a4b6d318de76d6d23850ec1a588bdeffa"><span class="std std-ref">Define JSON_HEDLEY_SUNPRO_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a3d620ef5f95be933b3d8e24d4fc5b6d5.html#exhale-define-json-8hpp-1a3d620ef5f95be933b3d8e24d4fc5b6d5"><span class="std std-ref">Define JSON_HEDLEY_TI_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a38192f48e8c6ee0018a988d54e97cacf.html#exhale-define-json-8hpp-1a38192f48e8c6ee0018a988d54e97cacf"><span class="std std-ref">Define JSON_HEDLEY_TINYC_VERSION_CHECK</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a681fd0533fbc24394f3322b6f4a60c4f.html#exhale-define-json-8hpp-1a681fd0533fbc24394f3322b6f4a60c4f"><span class="std std-ref">Define JSON_HEDLEY_UNAVAILABLE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a8df7de76ab3c9445f46f6994ec205bcd.html#exhale-define-json-8hpp-1a8df7de76ab3c9445f46f6994ec205bcd"><span class="std std-ref">Define JSON_HEDLEY_UNLIKELY</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a26967eb7395562701e450cec045dda15.html#exhale-define-json-8hpp-1a26967eb7395562701e450cec045dda15"><span class="std std-ref">Define JSON_HEDLEY_UNPREDICTABLE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a2d5705bd7bd14855c3ef5b98305c5fb4.html#exhale-define-json-8hpp-1a2d5705bd7bd14855c3ef5b98305c5fb4"><span class="std std-ref">Define JSON_HEDLEY_UNREACHABLE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a06401b258ef03263f2aec48029dc8b03.html#exhale-define-json-8hpp-1a06401b258ef03263f2aec48029dc8b03"><span class="std std-ref">Define JSON_HEDLEY_UNREACHABLE_RETURN</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ae4654024695783bdf7cbd900f0e0634a.html#exhale-define-json-8hpp-1ae4654024695783bdf7cbd900f0e0634a"><span class="std std-ref">Define JSON_HEDLEY_VERSION</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a50f81c80525d6fbce743d5d28b53ff73.html#exhale-define-json-8hpp-1a50f81c80525d6fbce743d5d28b53ff73"><span class="std std-ref">Define JSON_HEDLEY_VERSION_DECODE_MAJOR</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ae55f01749c4cc564b20b0f2650f10519.html#exhale-define-json-8hpp-1ae55f01749c4cc564b20b0f2650f10519"><span class="std std-ref">Define JSON_HEDLEY_VERSION_DECODE_MINOR</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a2d04cc47c899e9addd019e0e7d1ebdbb.html#exhale-define-json-8hpp-1a2d04cc47c899e9addd019e0e7d1ebdbb"><span class="std std-ref">Define JSON_HEDLEY_VERSION_DECODE_REVISION</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1aa1da535c59b21f70e5967b66473543f0.html#exhale-define-json-8hpp-1aa1da535c59b21f70e5967b66473543f0"><span class="std std-ref">Define JSON_HEDLEY_VERSION_ENCODE</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a28d7e3b2d26bd5b8a3806da3db7dea03.html#exhale-define-json-8hpp-1a28d7e3b2d26bd5b8a3806da3db7dea03"><span class="std std-ref">Define JSON_HEDLEY_WARN_UNUSED_RESULT</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a5563e5b0fbc2a9b525830081404d9208.html#exhale-define-json-8hpp-1a5563e5b0fbc2a9b525830081404d9208"><span class="std std-ref">Define JSON_HEDLEY_WARNING</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a5478b7564e65634cc69432ed3cb6490e.html#exhale-define-json-8hpp-1a5478b7564e65634cc69432ed3cb6490e"><span class="std std-ref">Define JSON_INTERNAL_CATCH</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a6c274f6db2e65c1b66c7d41b06ad690f.html#exhale-define-json-8hpp-1a6c274f6db2e65c1b66c7d41b06ad690f"><span class="std std-ref">Define JSON_THROW</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a985d3b82445302c57257f6432f261fe9.html#exhale-define-json-8hpp-1a985d3b82445302c57257f6432f261fe9"><span class="std std-ref">Define JSON_TRY</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a80b7254e63f199a1f656f07ae551f632.html#exhale-define-json-8hpp-1a80b7254e63f199a1f656f07ae551f632"><span class="std std-ref">Define NLOHMANN_BASIC_JSON_TPL</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a0643bd74c2dc6f0e4e420b8190ea8f0f.html#exhale-define-json-8hpp-1a0643bd74c2dc6f0e4e420b8190ea8f0f"><span class="std std-ref">Define NLOHMANN_BASIC_JSON_TPL_DECLARATION</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a4c5d399dfa9252e70f876756f3f49084.html#exhale-define-json-8hpp-1a4c5d399dfa9252e70f876756f3f49084"><span class="std std-ref">Define NLOHMANN_JSON_SERIALIZE_ENUM</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a7c94253db90041af11dd946a49f0f8a4.html#exhale-define-json-8hpp-1a7c94253db90041af11dd946a49f0f8a4"><span class="std std-ref">Define NLOHMANN_JSON_VERSION_MAJOR</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1ab5ca1e164894d78d3276d2e5fe58c5e3.html#exhale-define-json-8hpp-1ab5ca1e164894d78d3276d2e5fe58c5e3"><span class="std std-ref">Define NLOHMANN_JSON_VERSION_MINOR</span></a></p></li>
+<li><p><a class="reference internal" href="define_json_8hpp_1a307e0238ebc35e99ea45c68823eb83eb.html#exhale-define-json-8hpp-1a307e0238ebc35e99ea45c68823eb83eb"><span class="std std-ref">Define NLOHMANN_JSON_VERSION_PATCH</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="typedefs">
+<h2>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a45ec87326503b8884b664a9ef23a6c99.html#exhale-typedef-namespacenlohmann-1-1detail-1a45ec87326503b8884b664a9ef23a6c99"><span class="std std-ref">Typedef nlohmann::detail::boolean_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a240ce21919ab08e8a6cb3a5cfa412bce.html#exhale-typedef-namespacenlohmann-1-1detail-1a240ce21919ab08e8a6cb3a5cfa412bce"><span class="std std-ref">Typedef nlohmann::detail::detected_or</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a7ac5b8ef0363101275a2827b3b117dcf.html#exhale-typedef-namespacenlohmann-1-1detail-1a7ac5b8ef0363101275a2827b3b117dcf"><span class="std std-ref">Typedef nlohmann::detail::detected_or_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a37e97a32d0b94ce5f745427e4e40204d.html#exhale-typedef-namespacenlohmann-1-1detail-1a37e97a32d0b94ce5f745427e4e40204d"><span class="std std-ref">Typedef nlohmann::detail::detected_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a3603b59a17d1c5e15050743b847992f2.html#exhale-typedef-namespacenlohmann-1-1detail-1a3603b59a17d1c5e15050743b847992f2"><span class="std std-ref">Typedef nlohmann::detail::difference_type_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a02bcbc878bee413f25b985ada771aa9c.html#exhale-typedef-namespacenlohmann-1-1detail-1a02bcbc878bee413f25b985ada771aa9c"><span class="std std-ref">Typedef nlohmann::detail::enable_if_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1aec53c029383b34a72182210e58fadb79.html#exhale-typedef-namespacenlohmann-1-1detail-1aec53c029383b34a72182210e58fadb79"><span class="std std-ref">Typedef nlohmann::detail::end_array_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1af52d6d2521c386998ae940d118182ebc.html#exhale-typedef-namespacenlohmann-1-1detail-1af52d6d2521c386998ae940d118182ebc"><span class="std std-ref">Typedef nlohmann::detail::end_object_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a1711ee5cef66a0523055c8d9f024f322.html#exhale-typedef-namespacenlohmann-1-1detail-1a1711ee5cef66a0523055c8d9f024f322"><span class="std std-ref">Typedef nlohmann::detail::from_json_function</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1ab4d22cdb6521ee3508db496dea66711e.html#exhale-typedef-namespacenlohmann-1-1detail-1ab4d22cdb6521ee3508db496dea66711e"><span class="std std-ref">Typedef nlohmann::detail::get_template_function</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a24800493c6ec02ce033dcbb47b7fd28e.html#exhale-typedef-namespacenlohmann-1-1detail-1a24800493c6ec02ce033dcbb47b7fd28e"><span class="std std-ref">Typedef nlohmann::detail::index_sequence_for</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1ae132f8cd5bb24c5e9b40ad0eafedf1c2.html#exhale-typedef-namespacenlohmann-1-1detail-1ae132f8cd5bb24c5e9b40ad0eafedf1c2"><span class="std std-ref">Typedef nlohmann::detail::input_adapter_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a9135fcf616d6ac6e231a86e0a055ac44.html#exhale-typedef-namespacenlohmann-1-1detail-1a9135fcf616d6ac6e231a86e0a055ac44"><span class="std std-ref">Typedef nlohmann::detail::is_detected</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a5262e531c46e357b33007060f294673b.html#exhale-typedef-namespacenlohmann-1-1detail-1a5262e531c46e357b33007060f294673b"><span class="std std-ref">Typedef nlohmann::detail::is_detected_convertible</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a7542b4dbac07817fd4849ecfa4619def.html#exhale-typedef-namespacenlohmann-1-1detail-1a7542b4dbac07817fd4849ecfa4619def"><span class="std std-ref">Typedef nlohmann::detail::is_detected_exact</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1ad22d2aa3aab018050ae519f6754366e1.html#exhale-typedef-namespacenlohmann-1-1detail-1ad22d2aa3aab018050ae519f6754366e1"><span class="std std-ref">Typedef nlohmann::detail::iterator_category_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a9ff93db146174305bce1bc4c54703e11.html#exhale-typedef-namespacenlohmann-1-1detail-1a9ff93db146174305bce1bc4c54703e11"><span class="std std-ref">Typedef nlohmann::detail::iterator_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a44869ca9f422b260625d78e4e8121559.html#exhale-typedef-namespacenlohmann-1-1detail-1a44869ca9f422b260625d78e4e8121559"><span class="std std-ref">Typedef nlohmann::detail::key_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a66dfe39f03b05d6b7265a0ff748d64ef.html#exhale-typedef-namespacenlohmann-1-1detail-1a66dfe39f03b05d6b7265a0ff748d64ef"><span class="std std-ref">Typedef nlohmann::detail::key_type_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a9c1795c148875722f8482d39e0eb9364.html#exhale-typedef-namespacenlohmann-1-1detail-1a9c1795c148875722f8482d39e0eb9364"><span class="std std-ref">Typedef nlohmann::detail::mapped_type_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1ac1b4e524746bf8b790b2b776048b93c4.html#exhale-typedef-namespacenlohmann-1-1detail-1ac1b4e524746bf8b790b2b776048b93c4"><span class="std std-ref">Typedef nlohmann::detail::null_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1ad42df56e913abe26ed556e0e92f386f4.html#exhale-typedef-namespacenlohmann-1-1detail-1ad42df56e913abe26ed556e0e92f386f4"><span class="std std-ref">Typedef nlohmann::detail::number_float_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a4a3e14a011b9ea1ff849fc6d2411e6a0.html#exhale-typedef-namespacenlohmann-1-1detail-1a4a3e14a011b9ea1ff849fc6d2411e6a0"><span class="std std-ref">Typedef nlohmann::detail::number_integer_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a74da7b17bda76f65d276feb18209c913.html#exhale-typedef-namespacenlohmann-1-1detail-1a74da7b17bda76f65d276feb18209c913"><span class="std std-ref">Typedef nlohmann::detail::number_unsigned_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a9b680ddfb58f27eb53a67229447fc556.html#exhale-typedef-namespacenlohmann-1-1detail-1a9b680ddfb58f27eb53a67229447fc556"><span class="std std-ref">Typedef nlohmann::detail::output_adapter_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a264d4d58bc1fd82bcc7bf6bf73d6acad.html#exhale-typedef-namespacenlohmann-1-1detail-1a264d4d58bc1fd82bcc7bf6bf73d6acad"><span class="std std-ref">Typedef nlohmann::detail::parse_error_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a26dc71e2dd9336587e56062178f9abce.html#exhale-typedef-namespacenlohmann-1-1detail-1a26dc71e2dd9336587e56062178f9abce"><span class="std std-ref">Typedef nlohmann::detail::pointer_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a082bdafd3b4c61d9d1e92b35b8f75ee3.html#exhale-typedef-namespacenlohmann-1-1detail-1a082bdafd3b4c61d9d1e92b35b8f75ee3"><span class="std std-ref">Typedef nlohmann::detail::reference_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a80273cecc45765d7b2826ec931fbffdd.html#exhale-typedef-namespacenlohmann-1-1detail-1a80273cecc45765d7b2826ec931fbffdd"><span class="std std-ref">Typedef nlohmann::detail::start_array_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a5fff1e6dcaabd367d9b1109a5682f9d4.html#exhale-typedef-namespacenlohmann-1-1detail-1a5fff1e6dcaabd367d9b1109a5682f9d4"><span class="std std-ref">Typedef nlohmann::detail::start_object_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a27c3fc3bd42ac406f763184aa8ae4cb0.html#exhale-typedef-namespacenlohmann-1-1detail-1a27c3fc3bd42ac406f763184aa8ae4cb0"><span class="std std-ref">Typedef nlohmann::detail::string_function_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1af846b6cf2f926009ff3a7a61495ca383.html#exhale-typedef-namespacenlohmann-1-1detail-1af846b6cf2f926009ff3a7a61495ca383"><span class="std std-ref">Typedef nlohmann::detail::to_json_function</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a53a082eedad9f4729fcd8fed552a21f7.html#exhale-typedef-namespacenlohmann-1-1detail-1a53a082eedad9f4729fcd8fed552a21f7"><span class="std std-ref">Typedef nlohmann::detail::uncvref_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1af91beae90c2fb0f931079b3d50a343bc.html#exhale-typedef-namespacenlohmann-1-1detail-1af91beae90c2fb0f931079b3d50a343bc"><span class="std std-ref">Typedef nlohmann::detail::value_type_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1_1detail_1a92a167c49c6697b6ffe4f79492c705e5.html#exhale-typedef-namespacenlohmann-1-1detail-1a92a167c49c6697b6ffe4f79492c705e5"><span class="std std-ref">Typedef nlohmann::detail::void_t</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacenlohmann_1a2bfd99e845a2e5cd90aeaf1b1431f474.html#exhale-typedef-namespacenlohmann-1a2bfd99e845a2e5cd90aeaf1b1431f474"><span class="std std-ref">Typedef nlohmann::json</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="unions">
+<h2>Unions<a class="headerlink" href="#unions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="unionnlohmann_1_1basic__json_1_1json__value.html#exhale-union-unionnlohmann-1-1basic-json-1-1json-value"><span class="std std-ref">Union basic_json::json_value</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="variable_namespacenlohmann_1_1detail_1_1dtoa__impl_1ac1ea1316de0b4a219f707c76b1db1966.html#exhale-variable-namespacenlohmann-1-1detail-1-1dtoa-impl-1ac1ea1316de0b4a219f707c76b1db1966"><span class="std std-ref">Variable nlohmann::detail::dtoa_impl::kAlpha</span></a></p></li>
+<li><p><a class="reference internal" href="variable_namespacenlohmann_1_1detail_1_1dtoa__impl_1a4a750fcc38da1ce68b7e25ab3a230e20.html#exhale-variable-namespacenlohmann-1-1detail-1-1dtoa-impl-1a4a750fcc38da1ce68b7e25ab3a230e20"><span class="std std-ref">Variable nlohmann::detail::dtoa_impl::kGamma</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

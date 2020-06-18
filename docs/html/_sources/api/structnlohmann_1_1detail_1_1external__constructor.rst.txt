@@ -1,0 +1,16 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1external__constructor:
+
+Template Struct external_constructor
+====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::external_constructor
+   :members:
+   :protected-members:
+   :undoc-members:

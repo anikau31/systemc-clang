@@ -1,0 +1,16 @@
+.. _exhale_class_classnlohmann_1_1detail_1_1iteration__proxy__value:
+
+Template Class iteration_proxy_value
+====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: nlohmann::detail::iteration_proxy_value
+   :members:
+   :protected-members:
+   :undoc-members:

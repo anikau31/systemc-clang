@@ -1,0 +1,65 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTemplateParameters.h:
+
+File FindTemplateParameters.h
+=============================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src_matchers>` (``/home/twiga/code/github/rseac/systemc-clang/src/matchers``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/matchers/FindTemplateParameters.h``)
+--------------------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTemplateParameters.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``clang/AST/RecursiveASTVisitor.h``
+
+- ``llvm/Support/raw_ostream.h``
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTemplateParameters.cpp`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SystemCClang.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_clang`
+
+- :ref:`namespace_scpar`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classscpar_1_1FindTemplateParameters`
+

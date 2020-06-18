@@ -1,0 +1,20 @@
+.. _dir__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_7:
+
+
+Directory 7
+===========
+
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_examples_sim>` (``/home/twiga/code/github/rseac/systemc-clang/examples/sim``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+*Directory path:* ``/home/twiga/code/github/rseac/systemc-clang/examples/sim/ex_7``
+
+
+Files
+-----
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_7_signal1.hpp`
+
+

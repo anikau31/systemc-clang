@@ -1,0 +1,45 @@
+
+.. _program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSimTime.h:
+
+Program Listing for File FindSimTime.h
+======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindSimTime.h>` (``/home/twiga/code/github/rseac/systemc-clang/src/matchers/FindSimTime.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifndef _FIND_SIM_TIME_H_
+   #define _FIND_SIM_TIME_H_
+   
+   #include "Utility.h"
+   #include "clang/AST/DeclCXX.h"
+   #include "clang/AST/PrettyPrinter.h"
+   #include "clang/AST/RecursiveASTVisitor.h"
+   #include "llvm/Support/raw_ostream.h"
+   #include <map>
+   namespace scpar {
+   
+   using namespace clang;
+   using namespace std;
+   
+   class FindSimTime : public RecursiveASTVisitor<FindSimTime>, public Utility {
+   public:
+     typedef pair<string, string> simulationTimePairType;
+     typedef map<string, string> simulationTimeMapType;
+   
+     FindSimTime(FunctionDecl *, llvm::raw_ostream &);
+     virtual ~FindSimTime();
+     virtual bool VisitCallExpr(CallExpr *c);
+   
+     simulationTimeMapType returnSimTime();
+   
+   private:
+     llvm::raw_ostream &os_;
+     //    FunctionDecl *_sigInst;
+     simulationTimeMapType simulation_time_;
+     //    CallExpr *call_expr_;
+   };
+   } // namespace scpar
+   #endif

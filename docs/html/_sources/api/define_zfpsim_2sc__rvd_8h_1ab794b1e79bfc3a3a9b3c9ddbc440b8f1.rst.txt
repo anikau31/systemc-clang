@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsim_2sc__rvd_8h_1ab794b1e79bfc3a3a9b3c9ddbc440b8f1:
+
+Define data_r
+=============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_rvd.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: data_r

@@ -1,0 +1,13 @@
+.. _exhale_define_port__axis_8h_1a876ce77f3c672c7162658151e648389e:
+
+Define CR
+=========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_port_axis.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: CR

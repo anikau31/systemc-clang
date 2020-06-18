@@ -1,0 +1,13 @@
+.. _exhale_function_first__counter_8cpp_1a85ddd6d17ca384c926232ca51f7b08f1:
+
+Function SC_MODULE(first_counter)
+=================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_12_first_counter.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(first_counter)

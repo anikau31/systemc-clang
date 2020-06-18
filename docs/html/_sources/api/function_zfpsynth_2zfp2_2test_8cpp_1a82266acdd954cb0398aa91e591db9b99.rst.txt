@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsynth_2zfp2_2test_8cpp_1a82266acdd954cb0398aa91e591db9b99:
+
+Function sc_main(int, char \*)
+==============================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp2_test.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sc_main(int, char *)

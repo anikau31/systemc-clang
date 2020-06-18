@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File SystemCClang.cpp &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File SystemCClang.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_SystemCClang.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-systemcclang-cpp">
+<span id="program-listing-file-home-twiga-code-github-rseac-systemc-clang-src-systemcclang-cpp"></span><h1>Program Listing for File SystemCClang.cpp<a class="headerlink" href="#program-listing-for-file-systemcclang-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file__home_twiga_code_github_rseac_systemc-clang_src_SystemCClang.cpp.html#file-home-twiga-code-github-rseac-systemc-clang-src-systemcclang-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">/home/twiga/code/github/rseac/systemc-clang/src/SystemCClang.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;SystemCClang.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;Matchers.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;SensitivityMatcher.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;ModuleInstanceType.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;NetlistMatcher.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;clang/AST/ASTImporter.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;clang/ASTMatchers/ASTMatchFinder.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;clang/ASTMatchers/ASTMatchers.h&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">scpar</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">clang</span><span class="p">;</span>
+<span class="c1">//using namespace std;</span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">sc_ast_matchers</span><span class="p">;</span>
+
+<span class="c1">// Private methods</span>
+<span class="kt">void</span> <span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">populateNestedModules</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">InstanceMatcher</span><span class="o">::</span><span class="n">InstanceDeclarations</span> <span class="o">&amp;</span><span class="n">instance_map</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Decl* =&gt; ModuleInstanceType</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="k">const</span> <span class="o">&amp;</span><span class="nl">inst</span> <span class="p">:</span> <span class="n">instance_map</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// get&lt;0&gt;(inst) is the Decl*, and get&lt;1&gt;(inst) is the ModuleInstanceType</span>
+    <span class="n">ModuleInstanceType</span> <span class="n">module_inst</span><span class="p">{</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inst</span><span class="p">)};</span>
+    <span class="n">module_inst</span><span class="p">.</span><span class="n">dump</span><span class="p">();</span>
+    <span class="c1">// Match with the same InstanceTypeDecl</span>
+    <span class="n">ModuleDecl</span> <span class="o">*</span><span class="n">child</span><span class="p">{</span>
+        <span class="n">systemcModel_</span><span class="o">-&gt;</span><span class="n">getInstance</span><span class="p">(</span><span class="n">module_inst</span><span class="p">.</span><span class="n">getInstanceDecl</span><span class="p">())};</span>
+    <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;# child instance decl &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">module_inst</span><span class="p">.</span><span class="n">getInstanceDecl</span><span class="p">()</span>
+                 <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="n">module_inst</span><span class="p">.</span><span class="n">getInstanceDecl</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">dump</span><span class="p">();</span>
+
+    <span class="n">ModuleDecl</span> <span class="o">*</span><span class="n">parent</span><span class="p">{</span><span class="n">systemcModel_</span><span class="o">-&gt;</span><span class="n">getInstance</span><span class="p">(</span><span class="n">module_inst</span><span class="p">.</span><span class="n">getParentDecl</span><span class="p">())};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;- child &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">child</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; : &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="n">child</span><span class="o">-&gt;</span><span class="n">getInstanceName</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parent</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;- parent &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">parent</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; : &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="n">parent</span><span class="o">-&gt;</span><span class="n">getInstanceName</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Insert the child into the parent.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">child</span> <span class="o">&amp;&amp;</span> <span class="n">parent</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;ADD A CHILD PARENT RELATIONSHIP</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="n">parent</span><span class="o">-&gt;</span><span class="n">addNestedModule</span><span class="p">(</span><span class="n">child</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">preFire</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">postFire</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">fire</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Top module: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">getTopModule</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">TranslationUnitDecl</span> <span class="o">*</span><span class="n">tu</span><span class="p">{</span><span class="n">getContext</span><span class="p">().</span><span class="n">getTranslationUnitDecl</span><span class="p">()};</span>
+  <span class="c1">// Reflection database.</span>
+  <span class="n">systemcModel_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Model</span><span class="p">{};</span>
+
+  <span class="c1">// ANI : Do we need FindGlobalEvents?</span>
+  <span class="n">FindGlobalEvents</span> <span class="n">globals</span><span class="p">{</span><span class="n">tu</span><span class="p">,</span> <span class="n">os_</span><span class="p">};</span>
+  <span class="n">FindGlobalEvents</span><span class="o">::</span><span class="n">globalEventMapType</span> <span class="n">eventMap</span><span class="p">{</span><span class="n">globals</span><span class="p">.</span><span class="n">getEventMap</span><span class="p">()};</span>
+  <span class="c1">// globals.dump_json();</span>
+  <span class="n">systemcModel_</span><span class="o">-&gt;</span><span class="n">addGlobalEvents</span><span class="p">(</span><span class="n">eventMap</span><span class="p">);</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// TODO:</span>
+  <span class="c1">// A first pass should be made to collect all sc_module declarations.</span>
+  <span class="c1">// This is important so that the top-level module can be found.</span>
+  <span class="c1">//</span>
+
+  <span class="c1">// A first pass should be made to collect all sc_module declarations.</span>
+  <span class="c1">// This is important so that the top-level module can be found.</span>
+  <span class="c1">//</span>
+  <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;================ TESTMATCHER =============== </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+  <span class="c1">// InstanceMatcher match_instances{};</span>
+  <span class="n">ModuleDeclarationMatcher</span> <span class="n">module_declaration_handler</span><span class="p">{};</span>
+  <span class="n">module_declaration_handler</span><span class="p">.</span><span class="n">set_top_module_decl</span><span class="p">(</span><span class="n">getTopModule</span><span class="p">());</span>
+  <span class="n">MatchFinder</span> <span class="n">matchRegistry</span><span class="p">{};</span>
+
+  <span class="c1">// Run all the matchers</span>
+
+  <span class="n">module_declaration_handler</span><span class="p">.</span><span class="n">registerMatchers</span><span class="p">(</span><span class="n">matchRegistry</span><span class="p">);</span>
+  <span class="c1">// match_instances.registerMatchers( matchRegistry );</span>
+
+  <span class="n">matchRegistry</span><span class="p">.</span><span class="n">matchAST</span><span class="p">(</span><span class="n">getContext</span><span class="p">());</span>
+  <span class="c1">// match_instances.dump();</span>
+  <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;=================== END MATCHER ====================&quot;</span><span class="p">;</span>
+
+  <span class="n">module_declaration_handler</span><span class="p">.</span><span class="n">pruneMatches</span><span class="p">();</span>
+  <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;== Print module declarations pruned</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">module_declaration_handler</span><span class="p">.</span><span class="n">dump</span><span class="p">();</span>
+  <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;================ END =============== </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+  <span class="c1">// Check if the top-level module one of the sc_module declarations?</span>
+  <span class="c1">//</span>
+  <span class="c1">// Map CXXRecordDecl =&gt; ModuleDecl*</span>
+  <span class="k">auto</span> <span class="n">found_module_declarations</span><span class="p">{</span>
+      <span class="n">module_declaration_handler</span><span class="p">.</span><span class="n">getFoundModuleDeclarations</span><span class="p">()};</span>
+  <span class="k">auto</span> <span class="n">found_top_module</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span>
+      <span class="n">found_module_declarations</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">found_module_declarations</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+      <span class="p">[</span><span class="k">this</span><span class="p">](</span><span class="k">const</span> <span class="n">ModuleDeclarationMatcher</span><span class="o">::</span><span class="n">ModulePairType</span> <span class="o">&amp;</span><span class="n">element</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">element</span><span class="p">.</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span> <span class="o">==</span> <span class="n">getTopModule</span><span class="p">());</span>
+      <span class="p">})};</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">found_top_module</span> <span class="o">!=</span> <span class="n">found_module_declarations</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Found the top module: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">found_top_module</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">found_top_module</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// ===========================================================</span>
+  <span class="c1">// 1. Add every module declaration to the model.</span>
+  <span class="c1">// ===========================================================</span>
+  <span class="c1">// Every module declaration that is found should be added to the model.</span>
+  <span class="c1">//</span>
+
+  <span class="cm">/*</span>
+<span class="cm">  for (auto const &amp;element : found_module_declarations) {</span>
+<span class="cm">    auto module_declaration{new ModuleDecl{get&lt;0&gt;(element), get&lt;1&gt;(element)}};</span>
+<span class="cm">    systemcModel_-&gt;addModuleDecl(module_declaration);</span>
+<span class="cm">  }</span>
+<span class="cm">  */</span>
+
+  <span class="c1">// Find the sc_main</span>
+  <span class="n">FindSCMain</span> <span class="n">scmain</span><span class="p">{</span><span class="n">tu</span><span class="p">,</span> <span class="n">os_</span><span class="p">};</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">scmain</span><span class="p">.</span><span class="n">isSCMainFound</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">FunctionDecl</span> <span class="o">*</span><span class="n">fnDecl</span><span class="p">{</span><span class="n">scmain</span><span class="p">.</span><span class="n">getSCMainFunctionDecl</span><span class="p">()};</span>
+
+    <span class="c1">// TODO: find any instances in sc_main.</span>
+
+    <span class="n">FindSimTime</span> <span class="n">scstart</span><span class="p">{</span><span class="n">fnDecl</span><span class="p">,</span> <span class="n">os_</span><span class="p">};</span>
+    <span class="n">systemcModel_</span><span class="o">-&gt;</span><span class="n">addSimulationTime</span><span class="p">(</span><span class="n">scstart</span><span class="p">.</span><span class="n">returnSimTime</span><span class="p">());</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Could not find SCMain&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Find the netlist.</span>
+  <span class="c1">// This actually also finds instances, but now we have AST matchers to do it.</span>
+  <span class="c1">//</span>
+  <span class="c1">//  TEST NetlistMatcher</span>
+  <span class="c1">//  map: CXXRecordDecl =&gt;  InstanceListType</span>
+  <span class="c1">//  -&gt; InstanceListType: vector&lt;InstanceMatcher::InstanceDeclType&gt;</span>
+  <span class="c1">//  -&gt; InstanceMatcher::InstanceDeclType :  std::tuple&lt;std::string, Decl *,</span>
+  <span class="c1">//  ModuleInstanceType&gt;</span>
+  <span class="k">auto</span> <span class="n">found_instances_declaration_map</span><span class="p">{</span>
+      <span class="n">module_declaration_handler</span><span class="p">.</span><span class="n">getInstances</span><span class="p">()};</span>
+  <span class="c1">//</span>
+  <span class="c1">// Create a ModuleDecl for each instance with the appropriately parsed</span>
+  <span class="c1">// ModuleDecl.</span>
+  <span class="c1">//</span>
+
+  <span class="c1">// Go through each instance and find its appropriate module declaration.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">inst</span> <span class="p">:</span> <span class="n">found_instances_declaration_map</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This is the CXXRecordDecl</span>
+    <span class="k">auto</span> <span class="n">cxx_decl</span><span class="p">{</span><span class="n">inst</span><span class="p">.</span><span class="n">first</span><span class="p">};</span>
+    <span class="c1">// List of InstanceListType</span>
+    <span class="k">auto</span> <span class="n">instance_list</span><span class="p">{</span><span class="n">inst</span><span class="p">.</span><span class="n">second</span><span class="p">};</span>
+
+    <span class="k">auto</span> <span class="n">incomplete_module_decl</span><span class="p">{</span><span class="n">found_module_declarations</span><span class="p">[</span><span class="n">cxx_decl</span><span class="p">]};</span>
+    <span class="c1">// TODO:</span>
+    <span class="c1">//</span>
+    <span class="c1">// FIXME: This has to be replaced once xlat is fixed.</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ModuleDecl</span> <span class="o">*&gt;</span> <span class="n">module_decl_instances</span><span class="p">;</span>
+    <span class="c1">// ModuleDecl *p_dummy_module_decl{incomplete_module_decl};</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">instance</span> <span class="p">:</span> <span class="n">instance_list</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">auto</span> <span class="n">add_module_decl</span><span class="p">{</span><span class="k">new</span> <span class="n">ModuleDecl</span><span class="p">{</span><span class="o">*</span><span class="n">incomplete_module_decl</span><span class="p">}};</span>
+      <span class="c1">// 0: string</span>
+      <span class="c1">// 1: Decl* (InstaceTypeDecl)</span>
+      <span class="c1">// 2: ModuleInstanceType</span>
+
+      <span class="c1">// Insert what you know about the parsed sc_module</span>
+      <span class="c1">// 1. Insert the instance name from Matchers</span>
+      <span class="c1">//</span>
+      <span class="k">auto</span> <span class="n">inst_info</span><span class="p">{</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">(</span><span class="n">instance</span><span class="p">)};</span>
+      <span class="n">inst_info</span><span class="p">.</span><span class="n">dump</span><span class="p">();</span>
+
+      <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;1. Set instance name: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="c1">// add_module_decl-&gt;setInstanceName(get&lt;0&gt;(instance));</span>
+      <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;2. Set instance decl: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">cxx_decl</span><span class="o">-&gt;</span><span class="n">getNameAsString</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span>
+          <span class="o">&lt;&lt;</span> <span class="n">inst_info</span><span class="p">.</span><span class="n">getInstanceDecl</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="n">add_module_decl</span><span class="o">-&gt;</span><span class="n">setInstanceInfo</span><span class="p">(</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">(</span><span class="n">instance</span><span class="p">));</span>
+
+      <span class="c1">// 2. Find the template arguments for the class.</span>
+      <span class="c1">// In clang lingo: parameters are the templated values, and the arguments</span>
+      <span class="c1">// are the specialization values for the templates.</span>
+      <span class="c1">//</span>
+      <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;3. Set template arguments</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="n">FindTemplateParameters</span> <span class="n">tparms</span><span class="p">{</span><span class="n">cxx_decl</span><span class="p">,</span> <span class="n">os_</span><span class="p">};</span>
+      <span class="n">add_module_decl</span><span class="o">-&gt;</span><span class="n">setTemplateParameters</span><span class="p">(</span><span class="n">tparms</span><span class="p">.</span><span class="n">getTemplateParameters</span><span class="p">());</span>
+      <span class="n">add_module_decl</span><span class="o">-&gt;</span><span class="n">setTemplateArgs</span><span class="p">(</span><span class="n">tparms</span><span class="p">.</span><span class="n">getTemplateArgs</span><span class="p">());</span>
+
+      <span class="c1">// 3. Find constructor</span>
+      <span class="c1">//</span>
+      <span class="c1">//</span>
+      <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;4. Set the constructor.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="n">vector</span><span class="o">&lt;</span><span class="n">EntryFunctionContainer</span> <span class="o">*&gt;</span> <span class="n">_entryFunctionContainerVector</span><span class="p">;</span>
+      <span class="n">FindConstructor</span> <span class="n">constructor</span><span class="p">{</span><span class="n">add_module_decl</span><span class="o">-&gt;</span><span class="n">getModuleClassDecl</span><span class="p">(),</span> <span class="n">os_</span><span class="p">};</span>
+      <span class="n">add_module_decl</span><span class="o">-&gt;</span><span class="n">addConstructor</span><span class="p">(</span><span class="o">&amp;</span><span class="n">constructor</span><span class="p">);</span>
+      <span class="c1">// add_module_decl-&gt;addConstructor(constructor.getConstructorStmt());</span>
+
+      <span class="c1">// 4. Find ports</span>
+      <span class="c1">// This is done for the declaration.</span>
+      <span class="c1">//</span>
+      <span class="c1">//</span>
+      <span class="c1">// 5. Find  entry functions</span>
+      <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;5. Set the entry functions</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="n">FindEntryFunctions</span> <span class="n">findEntries</span><span class="p">{</span><span class="n">add_module_decl</span><span class="o">-&gt;</span><span class="n">getModuleClassDecl</span><span class="p">(),</span>
+                                     <span class="n">os_</span><span class="p">};</span>
+      <span class="n">FindEntryFunctions</span><span class="o">::</span><span class="n">entryFunctionVectorType</span> <span class="o">*</span><span class="n">entryFunctions</span><span class="p">{</span>
+          <span class="n">findEntries</span><span class="p">.</span><span class="n">getEntryFunctions</span><span class="p">()};</span>
+      <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;6. Set the process</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="n">add_module_decl</span><span class="o">-&gt;</span><span class="n">addProcess</span><span class="p">(</span><span class="n">entryFunctions</span><span class="p">);</span>
+
+      <span class="c1">//add_module_decl-&gt;dump(llvm::outs());</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">entryFunctions</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">EntryFunctionContainer</span> <span class="o">*</span><span class="n">ef</span><span class="p">{(</span><span class="o">*</span><span class="n">entryFunctions</span><span class="p">)[</span><span class="n">i</span><span class="p">]};</span>
+        <span class="c1">//FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};</span>
+        <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span>
+            <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">================ SENSITIVITY MATCHER =============== </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+        <span class="n">SensitivityMatcher</span> <span class="n">sens_matcher</span><span class="p">{};</span>
+        <span class="n">MatchFinder</span> <span class="n">matchRegistry</span><span class="p">{};</span>
+        <span class="n">sens_matcher</span><span class="p">.</span><span class="n">registerMatchers</span><span class="p">(</span><span class="n">matchRegistry</span><span class="p">);</span>
+        <span class="c1">// Run all the matchers</span>
+        <span class="n">matchRegistry</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="o">*</span><span class="n">constructor</span><span class="p">.</span><span class="n">getConstructorDecl</span><span class="p">(),</span> <span class="n">getContext</span><span class="p">());</span>
+        <span class="n">sens_matcher</span><span class="p">.</span><span class="n">dump</span><span class="p">();</span>
+        <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;================ END =============== </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+        <span class="c1">//ef-&gt;addSensitivityInfo(findSensitivity);</span>
+        <span class="n">EntryFunctionContainer</span><span class="o">::</span><span class="n">SenseMapType</span> <span class="n">sensitivity_info</span><span class="p">{</span><span class="n">sens_matcher</span><span class="p">.</span><span class="n">getSensitivityMap</span><span class="p">()};</span>
+        <span class="n">ef</span><span class="o">-&gt;</span><span class="n">addSensitivityInfo</span><span class="p">(</span><span class="n">sensitivity_info</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">ef</span><span class="o">-&gt;</span><span class="n">getEntryMethod</span><span class="p">()</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;ERROR&quot;</span><span class="p">;</span>
+          <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">FindWait</span> <span class="n">findWaits</span><span class="p">{</span><span class="n">ef</span><span class="o">-&gt;</span><span class="n">getEntryMethod</span><span class="p">(),</span> <span class="n">os_</span><span class="p">};</span>
+        <span class="n">ef</span><span class="o">-&gt;</span><span class="n">addWaits</span><span class="p">(</span><span class="n">findWaits</span><span class="p">);</span>
+
+        <span class="n">FindNotify</span> <span class="n">findNotify</span><span class="p">{</span><span class="n">ef</span><span class="o">-&gt;</span><span class="n">_entryMethodDecl</span><span class="p">,</span> <span class="n">os_</span><span class="p">};</span>
+        <span class="n">ef</span><span class="o">-&gt;</span><span class="n">addNotifys</span><span class="p">(</span><span class="n">findNotify</span><span class="p">);</span>
+
+        <span class="n">_entryFunctionContainerVector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ef</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Insert the module into the model.</span>
+      <span class="c1">// All modules are also instances.</span>
+
+      <span class="c1">// Make the dummy equal to the updated add_module_decl</span>
+      <span class="c1">// This will make module declarations be one of the module instances.</span>
+      <span class="c1">//*p_dummy_module_decl = *add_module_decl;</span>
+      <span class="c1">// systemcModel_-&gt;addModuleDecl(p_dummy_module_decl);</span>
+      <span class="n">module_decl_instances</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">add_module_decl</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+    <span class="c1">// TODO:</span>
+    <span class="c1">//</span>
+    <span class="c1">// FIXME: Only there to make sure xlat still compiles.</span>
+    <span class="c1">// This should be removed.</span>
+    <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[HDP] Add instances to model</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="n">systemcModel_</span><span class="o">-&gt;</span><span class="n">addModuleDeclInstances</span><span class="p">(</span><span class="n">incomplete_module_decl</span><span class="p">,</span>
+                                          <span class="n">module_decl_instances</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Module instance map.</span>
+  <span class="k">auto</span> <span class="n">module_instance_map</span><span class="p">{</span><span class="n">systemcModel_</span><span class="o">-&gt;</span><span class="n">getModuleInstanceMap</span><span class="p">()};</span>
+
+  <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span>
+      <span class="o">&lt;&lt;</span> <span class="s">&quot; @@@@@@@@ =============== Populate sub-modules ============= </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="c1">// This must have the instance matcher already run.</span>
+  <span class="c1">// You need systemcModel_ and instance_matcher to build the hierarchy of</span>
+  <span class="c1">// sub-modules.</span>
+  <span class="k">auto</span> <span class="n">instance_matcher</span><span class="p">{</span><span class="n">module_declaration_handler</span><span class="p">.</span><span class="n">getInstanceMatcher</span><span class="p">()};</span>
+  <span class="k">auto</span> <span class="n">instance_map</span><span class="p">{</span><span class="n">instance_matcher</span><span class="p">.</span><span class="n">getInstanceMap</span><span class="p">()};</span>
+  <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;- Print out all the instances in the instance map</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">populateNestedModules</span><span class="p">(</span><span class="n">instance_map</span><span class="p">);</span>
+
+  <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;===========END  Populate sub-modules ============= </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+  <span class="c1">// All instances are within the SystemC model.</span>
+  <span class="c1">//  This must come after instances of ModuleDecl have been generated.</span>
+  <span class="c1">//  This is because the netlist matcher inserts the port bindings into the</span>
+  <span class="c1">//  instance.</span>
+
+  <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;=============== ##### TEST NetlistMatcher ##### </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">NetlistMatcher</span> <span class="n">netlist_matcher</span><span class="p">{};</span>
+  <span class="n">MatchFinder</span> <span class="n">netlist_registry</span><span class="p">{};</span>
+  <span class="n">netlist_matcher</span><span class="p">.</span><span class="n">registerMatchers</span><span class="p">(</span><span class="n">netlist_registry</span><span class="p">,</span> <span class="n">systemcModel_</span><span class="p">,</span>
+                                   <span class="o">&amp;</span><span class="n">module_declaration_handler</span><span class="p">);</span>
+
+  <span class="c1">// scmain.getSCMainFunctionDecl()-&gt;dump();</span>
+
+  <span class="n">netlist_registry</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="o">*</span><span class="n">scmain</span><span class="p">.</span><span class="n">getSCMainFunctionDecl</span><span class="p">(),</span> <span class="n">getContext</span><span class="p">());</span>
+  <span class="c1">// TODO: Fix the top-level</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">getTopModule</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;!none&quot;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; No top module</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Begin netlist parsing on instances: &quot;</span>
+               <span class="o">&lt;&lt;</span> <span class="n">found_instances_declaration_map</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">inst</span> <span class="p">:</span> <span class="n">module_instance_map</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">incomplete_mdecl</span><span class="p">{</span><span class="n">inst</span><span class="p">.</span><span class="n">first</span><span class="p">};</span>
+    <span class="k">auto</span> <span class="n">instance_list</span><span class="p">{</span><span class="n">inst</span><span class="p">.</span><span class="n">second</span><span class="p">};</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="k">const</span> <span class="o">&amp;</span><span class="nl">instance</span> <span class="p">:</span> <span class="n">instance_list</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// ModuleDecl *mdecl{systemcModel_-&gt;getInstance(get&lt;0&gt;(instance))};</span>
+      <span class="n">ModuleDecl</span> <span class="o">*</span><span class="n">mdecl</span><span class="p">{</span><span class="n">instance</span><span class="p">};</span>
+      <span class="k">auto</span> <span class="n">ctordecl</span><span class="p">{</span><span class="n">mdecl</span><span class="o">-&gt;</span><span class="n">getConstructorDecl</span><span class="p">()};</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">ctordecl</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="n">FunctionDecl</span> <span class="o">*</span><span class="n">fd</span><span class="p">{</span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">FunctionDecl</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ctordecl</span><span class="p">)};</span>
+        <span class="n">ctordecl</span><span class="o">-&gt;</span><span class="n">getBody</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+        <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;==============&gt; RUN netlist matcher</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+        <span class="n">fd</span><span class="o">-&gt;</span><span class="n">dump</span><span class="p">();</span>
+        <span class="n">netlist_registry</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="o">*</span><span class="n">fd</span><span class="p">,</span> <span class="n">getContext</span><span class="p">());</span>
+        <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;==============&gt; DONE netlist matcher</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">netlist_matcher</span><span class="p">.</span><span class="n">dump</span><span class="p">();</span>
+  <span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;##### END TEST NetlistMatcher ##### </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+  <span class="cm">/*</span>
+<span class="cm">  FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};</span>
+<span class="cm">  findNetlist.dump();</span>
+<span class="cm">  systemcModel_-&gt;addNetlist(findNetlist);</span>
+<span class="cm">  */</span>
+
+  <span class="cm">/*</span>
+<span class="cm">  // Figure out the module map.</span>
+<span class="cm">  Model::moduleMapType moduleMap{systemcModel_-&gt;getModuleDecl()};</span>
+
+<span class="cm">  // &lt;string, ModuleDecl*&gt;</span>
+<span class="cm">  for (Model::moduleMapType::iterator mit = moduleMap.begin(),</span>
+<span class="cm">                                      mitend = moduleMap.end();</span>
+<span class="cm">       mit != mitend; mit++) {</span>
+<span class="cm">    ModuleDecl *mainmd{mit-&gt;second};</span>
+<span class="cm">    int numInstances{mainmd-&gt;getNumInstances()};</span>
+<span class="cm">    vector&lt;ModuleDecl *&gt; moduleDeclVec;</span>
+
+<span class="cm">    os_ &lt;&lt; &quot;\nFor module: &quot; &lt;&lt; mit-&gt;first &lt;&lt; &quot; num instance : &quot; &lt;&lt; numInstances</span>
+<span class="cm">        &lt;&lt; &quot;\n&quot;;</span>
+
+<span class="cm">    for (unsigned int num{0}; num &lt; numInstances; ++num) {</span>
+<span class="cm">      auto md{new ModuleDecl{*mainmd}};</span>
+
+<span class="cm">      // Find the template arguments for the class.</span>
+<span class="cm">      // FindTemplateParameters tparms{mainmd-&gt;getModuleClassDecl(), os_};</span>
+
+<span class="cm">      // md-&gt;setTemplateParameters(tparms.getTemplateParameters());</span>
+<span class="cm">      // md-&gt;dump_json();</span>
+
+<span class="cm">      vector&lt;EntryFunctionContainer *&gt; _entryFunctionContainerVector;</span>
+<span class="cm">      FindConstructor constructor{mainmd-&gt;getModuleClassDecl(), os_};</span>
+<span class="cm">      md-&gt;addConstructor(constructor.returnConstructorStmt());</span>
+
+<span class="cm">      FindPorts ports{mainmd-&gt;getModuleClassDecl(), os_};</span>
+<span class="cm">      //      ports.dump();</span>
+<span class="cm">      md-&gt;addInputPorts(ports.getInputPorts());</span>
+<span class="cm">      md-&gt;addOutputPorts(ports.getOutputPorts());</span>
+<span class="cm">      md-&gt;addInputOutputPorts(ports.getInputOutputPorts());</span>
+<span class="cm">      md-&gt;addOtherVars(ports.getOtherVars());</span>
+<span class="cm">      md-&gt;addInputStreamPorts(ports.getInStreamPorts());</span>
+<span class="cm">      md-&gt;addOutputStreamPorts(ports.getOutStreamPorts());</span>
+
+<span class="cm">      FindTLMInterfaces findTLMInterfaces{mainmd-&gt;getModuleClassDecl(), os_};</span>
+<span class="cm">      md-&gt;addInputInterfaces(findTLMInterfaces.getInputInterfaces());</span>
+<span class="cm">      md-&gt;addOutputInterfaces(findTLMInterfaces.getOutputInterfaces());</span>
+<span class="cm">      md-&gt;addInputOutputInterfaces(</span>
+<span class="cm">          findTLMInterfaces.getInputOutputInterfaces());</span>
+
+<span class="cm">      FindSignals signals{mainmd-&gt;getModuleClassDecl(), os_};</span>
+<span class="cm">      md-&gt;addSignals(signals.getSignals());</span>
+
+<span class="cm">      FindEntryFunctions findEntries{mainmd-&gt;getModuleClassDecl(), os_};</span>
+<span class="cm">      FindEntryFunctions::entryFunctionVectorType *entryFunctions{</span>
+<span class="cm">          findEntries.getEntryFunctions()};</span>
+<span class="cm">      md-&gt;addProcess(entryFunctions);</span>
+
+<span class="cm">      for (size_t i = 0; i &lt; entryFunctions-&gt;size(); i++) {</span>
+<span class="cm">        EntryFunctionContainer *ef{(*entryFunctions)[i]};</span>
+<span class="cm">        FindSensitivity findSensitivity{constructor.returnConstructorStmt(),</span>
+<span class="cm">                                        os_};</span>
+<span class="cm">        ef-&gt;addSensitivityInfo(findSensitivity);</span>
+
+<span class="cm">        if (ef-&gt;getEntryMethod() == nullptr) {</span>
+<span class="cm">          os_ &lt;&lt; &quot;ERROR&quot;;</span>
+<span class="cm">          continue;</span>
+<span class="cm">        }</span>
+
+<span class="cm">        FindWait findWaits{ef-&gt;getEntryMethod(), os_};</span>
+<span class="cm">        ef-&gt;addWaits(findWaits);</span>
+
+<span class="cm">        FindNotify findNotify{ef-&gt;_entryMethodDecl, os_};</span>
+<span class="cm">        ef-&gt;addNotifys(findNotify);</span>
+
+<span class="cm">#ifdef USE_SAUTO</span>
+<span class="cm">        SuspensionAutomata suspensionAutomata(findWaits.getWaitCalls(),</span>
+<span class="cm">                                              ef-&gt;getEntryMethod(),</span>
+<span class="cm">                                              &amp;getContext(), llvm::errs());</span>
+<span class="cm">        if (suspensionAutomata.initialize()) {</span>
+<span class="cm">          suspensionAutomata.genSusCFG();</span>
+<span class="cm">          suspensionAutomata.dumpSusCFG();</span>
+<span class="cm">          suspensionAutomata.genSauto();</span>
+<span class="cm">          suspensionAutomata.dumpSauto();</span>
+<span class="cm">          ef-&gt;addSusCFGAuto(suspensionAutomata);</span>
+<span class="cm">        }</span>
+<span class="cm">#endif</span>
+
+<span class="cm">        _entryFunctionContainerVector.push_back(ef);</span>
+<span class="cm">      }</span>
+<span class="cm">      moduleDeclVec.push_back(md);</span>
+<span class="cm">    }</span>
+<span class="cm">    // systemcModel_-&gt;addModuleDeclInstances(mainmd, moduleDeclVec);</span>
+<span class="cm">  }</span>
+<span class="cm">  */</span>
+
+  <span class="cm">/*</span>
+<span class="cm">     FindSCMain scmain(tu, os_);</span>
+
+<span class="cm">     if (scmain.isSCMainFound())</span>
+<span class="cm">     {</span>
+<span class="cm">     FunctionDecl *fnDecl = scmain.getSCMainFunctionDecl();</span>
+
+<span class="cm">     FindSimTime scstart(fnDecl, os_);</span>
+<span class="cm">     systemcModel_-&gt;addSimulationTime(scstart.returnSimTime());</span>
+
+<span class="cm">     }</span>
+<span class="cm">     else {</span>
+<span class="cm">     os_ &lt;&lt;&quot;\n Could not find SCMain&quot;;</span>
+<span class="cm">     }</span>
+
+<span class="cm">     FindNetlist findNetlist(scmain.getSCMainFunctionDecl());</span>
+<span class="cm">     findNetlist.dump();</span>
+<span class="cm">     systemcModel_-&gt;addNetlist(findNetlist);</span>
+
+<span class="cm">  // Only do this if SAUTO flag is set.</span>
+<span class="cm">#ifdef USE_SAUTO</span>
+<span class="cm">  // Generate SAUTO</span>
+<span class="cm">  // Placing it here so that unique SAUTO for each instance</span>
+<span class="cm">  // Model::moduleMapType moduleMap = systemcModel_-&gt;getModuleDecl();</span>
+<span class="cm">  Model::moduleInstanceMapType moduleInstanceMap =</span>
+<span class="cm">      systemcModel_-&gt;getModuleInstanceMap();</span>
+
+<span class="cm">  for (Model::moduleInstanceMapType::iterator it = moduleInstanceMap.begin(),</span>
+<span class="cm">                                              eit = moduleInstanceMap.end();</span>
+<span class="cm">       it != eit; it++) {</span>
+<span class="cm">    vector&lt;ModuleDecl *&gt; moduleDeclVec = it-&gt;second;</span>
+<span class="cm">    for (size_t i = 0; i &lt; moduleDeclVec.size(); i++) {</span>
+<span class="cm">      ModuleDecl *moduleDecl = moduleDeclVec.at(i);</span>
+<span class="cm">      vector&lt;EntryFunctionContainer *&gt; entryFunctionContainer =</span>
+<span class="cm">          moduleDecl-&gt;getEntryFunctionContainer();</span>
+<span class="cm">      for (size_t j = 0; j &lt; entryFunctionContainer.size(); j++) {</span>
+<span class="cm">        SuspensionAutomata suspensionAutomata(</span>
+<span class="cm">            entryFunctionContainer.at(j)-&gt;getWaitCalls(),</span>
+<span class="cm">            entryFunctionContainer.at(j)-&gt;getEntryMethod(), &amp;getContext(),</span>
+<span class="cm">            llvm::errs());</span>
+<span class="cm">        if (suspensionAutomata.initialize()) {</span>
+<span class="cm">          suspensionAutomata.genSusCFG();</span>
+<span class="cm">          // suspensionAutomata.dumpSusCFG();</span>
+<span class="cm">          suspensionAutomata.genSauto();</span>
+<span class="cm">          // suspensionAutomata.dumpSauto();</span>
+<span class="cm">          entryFunctionContainer.at(j)-&gt;addSusCFGAuto(suspensionAutomata);</span>
+<span class="cm">        }</span>
+<span class="cm">      }</span>
+<span class="cm">    }</span>
+<span class="cm">  }</span>
+<span class="cm">#endif</span>
+
+<span class="cm">     */</span>
+  <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Parsed SystemC model from systemc-clang</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;============= MODEL ============================</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">systemcModel_</span><span class="o">-&gt;</span><span class="n">dump</span><span class="p">(</span><span class="n">os_</span><span class="p">);</span>
+  <span class="n">os_</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;==============END========================</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">HandleTranslationUnit</span><span class="p">(</span><span class="n">ASTContext</span> <span class="o">&amp;</span><span class="n">context</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ///////////////////////////////////////////////////////////////</span>
+  <span class="c1">// / Pass 1: Find the necessary information.</span>
+  <span class="c1">// ///////////////////////////////////////////////////////////////</span>
+
+  <span class="kt">bool</span> <span class="n">pre</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="n">pre</span> <span class="o">=</span> <span class="n">preFire</span><span class="p">();</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">pre</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">bool</span> <span class="n">f</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="n">f</span> <span class="o">=</span> <span class="n">fire</span><span class="p">();</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">postFire</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">SystemCConsumer</span><span class="p">(</span><span class="n">ASTUnit</span> <span class="o">*</span><span class="n">from_ast</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">top</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">os_</span><span class="p">{</span><span class="n">llvm</span><span class="o">::</span><span class="n">errs</span><span class="p">()},</span>
+      <span class="n">sm_</span><span class="p">{</span><span class="n">from_ast</span><span class="o">-&gt;</span><span class="n">getSourceManager</span><span class="p">()},</span>
+      <span class="n">context_</span><span class="p">{</span><span class="n">from_ast</span><span class="o">-&gt;</span><span class="n">getASTContext</span><span class="p">()},</span>
+      <span class="n">top_</span><span class="p">{</span><span class="n">top</span><span class="p">},</span>
+      <span class="n">systemcModel_</span><span class="p">{</span><span class="k">nullptr</span><span class="p">}</span> <span class="p">{}</span>
+
+<span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">SystemCConsumer</span><span class="p">(</span><span class="n">CompilerInstance</span> <span class="o">&amp;</span><span class="n">ci</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">top</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">os_</span><span class="p">{</span><span class="n">llvm</span><span class="o">::</span><span class="n">errs</span><span class="p">()},</span>
+      <span class="n">sm_</span><span class="p">{</span><span class="n">ci</span><span class="p">.</span><span class="n">getSourceManager</span><span class="p">()},</span>
+      <span class="n">context_</span><span class="p">{</span><span class="n">ci</span><span class="p">.</span><span class="n">getASTContext</span><span class="p">()},</span>
+      <span class="n">top_</span><span class="p">{</span><span class="n">top</span><span class="p">},</span>
+      <span class="n">systemcModel_</span><span class="p">{</span><span class="k">nullptr</span><span class="p">}</span> <span class="p">{}</span>
+
+<span class="n">SystemCConsumer</span><span class="o">::~</span><span class="n">SystemCConsumer</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">systemcModel_</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">systemcModel_</span><span class="p">;</span>
+    <span class="n">systemcModel_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">setTopModule</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">top_module_decl</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">top_</span> <span class="o">=</span> <span class="n">top_module_decl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Model</span> <span class="o">*</span><span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">getSystemCModel</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">systemcModel_</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">getTopModule</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">top_</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">ASTContext</span> <span class="o">&amp;</span><span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">getContext</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">context_</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">SourceManager</span> <span class="o">&amp;</span><span class="n">SystemCConsumer</span><span class="o">::</span><span class="n">getSourceManager</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sm_</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

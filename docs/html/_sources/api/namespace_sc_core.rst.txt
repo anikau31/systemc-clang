@@ -1,0 +1,77 @@
+
+.. _namespace_sc_core:
+
+Namespace sc_core
+=================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classsc__core_1_1sc__rvd`
+
+- :ref:`exhale_class_classsc__core_1_1sc__rvd__export__in`
+
+- :ref:`exhale_class_classsc__core_1_1sc__rvd__export__out`
+
+- :ref:`exhale_class_classsc__core_1_1sc__rvd__in`
+
+- :ref:`exhale_class_classsc__core_1_1sc__rvd__out`
+
+- :ref:`exhale_class_classsc__core_1_1sc__sfifo__cc`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__blocking__in__if`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__blocking__out__if`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__in`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__in__if`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__nonblocking__in__if`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__nonblocking__out__if`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__out`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__out__if`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_zfpsim_2sc__rvd_8h_1a292664f8bf696dca4abd908746ffc0b0`
+
+- :ref:`exhale_function_sc__sfifo__cc_8h_1a6cdc9c8767425afac4684f408bfc828a`
+
+- :ref:`exhale_function_zfpsim_2sc__stream_8h_1a2f1ce7cd0889c26994eb20267725cb09`
+
+- :ref:`exhale_function_zfpsim_2sc__rvd_8h_1a4ce49f45a13d67c457a210ba728157ab`
+
+- :ref:`exhale_function_zfpsim_2sc__rvd_8h_1a1d06a2fe0a72a1cb32ab64cd6a8e191c`
+
+- :ref:`exhale_function_zfpsim_2sc__rvd_8h_1a725a678095e35c8838258bf014312818`
+
+- :ref:`exhale_function_sc__sfifo__cc_8h_1aa89fe00efbc2f73fa3570008dd914ee2`
+
+- :ref:`exhale_function_zfpsim_2sc__stream_8h_1a5587c28173bbafa001484a10fd39befb`
+
+- :ref:`exhale_function_zfpsim_2sc__stream__ports_8h_1a6601ded11ab4c8aa44657770ec8c9706`
+
+- :ref:`exhale_function_zfpsim_2sc__stream__ports_8h_1ab4e2bd9804f21ba83070719bb919149c`
+
+- :ref:`exhale_function_zfpsim_2sc__stream__ports_8h_1a5df5cf56e38ec3df712094fa36b5c25a`
+
+- :ref:`exhale_function_zfpsim_2sc__stream__ports_8h_1ab6dd2c83eb5ffb0ea4d86f9aa95d52de`

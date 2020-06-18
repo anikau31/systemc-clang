@@ -1,0 +1,13 @@
+.. _exhale_typedef_namespacenlohmann_1_1detail_1a9135fcf616d6ac6e231a86e0a055ac44:
+
+Typedef nlohmann::detail::is_detected
+=====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: nlohmann::detail::is_detected

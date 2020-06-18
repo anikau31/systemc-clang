@@ -1,0 +1,16 @@
+.. _exhale_class_classnlohmann_1_1detail_1_1primitive__iterator__t:
+
+Class primitive_iterator_t
+==========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: nlohmann::detail::primitive_iterator_t
+   :members:
+   :protected-members:
+   :undoc-members:

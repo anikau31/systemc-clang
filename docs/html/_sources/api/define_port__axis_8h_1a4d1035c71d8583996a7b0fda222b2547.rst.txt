@@ -1,0 +1,13 @@
+.. _exhale_define_port__axis_8h_1a4d1035c71d8583996a7b0fda222b2547:
+
+Define RACC_CONCAT
+==================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_port_axis.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: RACC_CONCAT

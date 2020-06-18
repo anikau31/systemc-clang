@@ -1,0 +1,27 @@
+
+.. _namespace_systemc_clang:
+
+Namespace systemc_clang
+=======================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_namespacesystemc__clang_1a7b8a4967050779d55cef83614413aafe`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_namespacesystemc__clang_1a24221f7aa44f163d9275a2a0bf58ff06`

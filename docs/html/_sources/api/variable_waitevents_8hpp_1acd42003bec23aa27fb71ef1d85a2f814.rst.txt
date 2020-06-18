@@ -1,0 +1,13 @@
+.. _exhale_variable_waitevents_8hpp_1acd42003bec23aa27fb71ef1d85a2f814:
+
+Variable globalBool
+===================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_8_waitevents.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: globalBool

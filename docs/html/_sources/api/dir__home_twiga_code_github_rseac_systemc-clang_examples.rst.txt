@@ -1,0 +1,18 @@
+.. _dir__home_twiga_code_github_rseac_systemc-clang_examples:
+
+
+Directory examples
+==================
+
+
+*Directory path:* ``/home/twiga/code/github/rseac/systemc-clang/examples``
+
+Subdirectories
+--------------
+
+- :ref:`dir__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples`
+- :ref:`dir__home_twiga_code_github_rseac_systemc-clang_examples_sim`
+- :ref:`dir__home_twiga_code_github_rseac_systemc-clang_examples_syn`
+
+
+

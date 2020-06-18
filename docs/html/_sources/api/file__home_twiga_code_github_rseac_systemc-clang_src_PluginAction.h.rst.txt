@@ -1,0 +1,68 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_PluginAction.h:
+
+File PluginAction.h
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src>` (``/home/twiga/code/github/rseac/systemc-clang/src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+This file contains the class for defining basic plugin actions. 
+ 
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/PluginAction.h``)
+-------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_PluginAction.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``SystemCClang.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SystemCClang.h`)
+
+- ``clang/Tooling/Tooling.h``
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_scpar`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classscpar_1_1PluginAction`
+
+- :ref:`exhale_class_classscpar_1_1SystemCClangAXN`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_namespacescpar_1abd52aa0589cf2128344f26cc0d424ecd`
+
+- :ref:`exhale_function_namespacescpar_1aec507848d3bf6262acfa4b23cb355993`
+

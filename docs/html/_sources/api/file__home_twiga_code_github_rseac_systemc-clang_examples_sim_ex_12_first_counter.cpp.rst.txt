@@ -1,0 +1,44 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_12_first_counter.cpp:
+
+File first_counter.cpp
+======================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_12>` (``/home/twiga/code/github/rseac/systemc-clang/examples/sim/ex_12``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/examples/sim/ex_12/first_counter.cpp``)
+-------------------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_12_first_counter.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``systemc.h``
+
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_first__counter_8cpp_1a85ddd6d17ca384c926232ca51f7b08f1`
+

@@ -1,0 +1,13 @@
+.. _exhale_variable_new_8hpp_1ad7b5770df56bf717f698fd87a0851292:
+
+Variable oev
+============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_5_new.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: oev

@@ -1,0 +1,13 @@
+.. _exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1adbf329a18c5cf854a3477327afd2200b:
+
+Function nlohmann::detail::dtoa_impl::get_cached_power_for_binary_exponent
+==========================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: nlohmann::detail::dtoa_impl::get_cached_power_for_binary_exponent(int)

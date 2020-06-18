@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsynth_2zfp2_2test_8cpp_1a4ddd3ba5bd21eaaed12b0f39f346d12b:
+
+Define DIMS
+===========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp2_test.cpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: DIMS

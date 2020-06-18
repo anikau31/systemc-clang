@@ -1,0 +1,65 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_model_ProcessDecl.h:
+
+File ProcessDecl.h
+==================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src_model>` (``/home/twiga/code/github/rseac/systemc-clang/src/model``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/model/ProcessDecl.h``)
+------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_model_ProcessDecl.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``clang/AST/DeclCXX.h``
+
+- ``json.hpp``
+
+- ``string``
+
+- ``systemc-clang.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_systemc-clang.h`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_ModuleDecl.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_ProcessDecl.cpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_scpar`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classscpar_1_1ProcessDecl`
+

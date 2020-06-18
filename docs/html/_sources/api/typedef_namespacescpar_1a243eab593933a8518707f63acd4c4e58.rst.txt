@@ -1,0 +1,13 @@
+.. _exhale_typedef_namespacescpar_1a243eab593933a8518707f63acd4c4e58:
+
+Typedef scpar::json
+===================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindGlobalEvents.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: scpar::json

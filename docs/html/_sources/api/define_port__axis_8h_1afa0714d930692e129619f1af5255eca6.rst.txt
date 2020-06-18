@@ -1,0 +1,13 @@
+.. _exhale_define_port__axis_8h_1afa0714d930692e129619f1af5255eca6:
+
+Define DD
+=========
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_array-examples_port_axis.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: DD

@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsim_2zfp_8h_1a322c9e71df67940317d42029f38e5aa7:
+
+Template Function SC_MODULE(zfp_encode)
+=======================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_zfp.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: SC_MODULE(zfp_encode)

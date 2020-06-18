@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsim_2zfp_8h_1a2bc388c88fd3df3fe3558c883d783e96:
+
+Function fpblk_sz(int)
+======================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_zfp.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: fpblk_sz(int)

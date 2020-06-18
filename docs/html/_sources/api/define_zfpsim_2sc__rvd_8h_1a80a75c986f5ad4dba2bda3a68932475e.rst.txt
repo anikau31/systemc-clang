@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsim_2sc__rvd_8h_1a80a75c986f5ad4dba2bda3a68932475e:
+
+Define valid_w
+==============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_rvd.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: valid_w

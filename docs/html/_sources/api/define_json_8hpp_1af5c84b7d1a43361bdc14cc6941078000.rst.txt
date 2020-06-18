@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1af5c84b7d1a43361bdc14cc6941078000:
+
+Define JSON_HEDLEY_PURE
+=======================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_PURE

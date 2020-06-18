@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsim_2sc__rvd_8h_1a292664f8bf696dca4abd908746ffc0b0:
+
+Template Function sc_core::operator<<(std::ostream&, const sc_rvd<T>&)
+======================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_rvd.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sc_core::operator<<(std::ostream&, const sc_rvd<T>&)

@@ -1,0 +1,26 @@
+.. _exhale_class_classrvfifo__cc:
+
+Template Class rvfifo_cc
+========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_rvfifo_cc.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Types
+**********
+
+- ``public sc_module``
+- ``public sc_module``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: rvfifo_cc
+   :members:
+   :protected-members:
+   :undoc-members:

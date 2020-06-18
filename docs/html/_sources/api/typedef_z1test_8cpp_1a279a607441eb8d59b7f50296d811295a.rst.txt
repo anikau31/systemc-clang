@@ -1,0 +1,13 @@
+.. _exhale_typedef_z1test_8cpp_1a279a607441eb8d59b7f50296d811295a:
+
+Typedef enc_t
+=============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp1_z1test.cpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: enc_t

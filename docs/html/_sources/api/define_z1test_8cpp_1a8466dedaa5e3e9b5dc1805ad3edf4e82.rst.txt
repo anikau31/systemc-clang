@@ -1,0 +1,13 @@
+.. _exhale_define_z1test_8cpp_1a8466dedaa5e3e9b5dc1805ad3edf4e82:
+
+Define __SYNTHESIS__
+====================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp1_z1test.cpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: __SYNTHESIS__

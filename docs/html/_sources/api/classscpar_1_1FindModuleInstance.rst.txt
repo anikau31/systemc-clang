@@ -1,0 +1,25 @@
+.. _exhale_class_classscpar_1_1FindModuleInstance:
+
+Class FindModuleInstance
+========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindModuleInstance.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public clang::RecursiveASTVisitor< FindModuleInstance >``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::FindModuleInstance
+   :members:
+   :protected-members:
+   :undoc-members:

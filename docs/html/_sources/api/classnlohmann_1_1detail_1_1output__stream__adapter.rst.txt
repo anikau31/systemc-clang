@@ -1,0 +1,25 @@
+.. _exhale_class_classnlohmann_1_1detail_1_1output__stream__adapter:
+
+Template Class output_stream_adapter
+====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public nlohmann::detail::output_adapter_protocol< CharType >`` (:ref:`exhale_struct_structnlohmann_1_1detail_1_1output__adapter__protocol`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: nlohmann::detail::output_stream_adapter
+   :members:
+   :protected-members:
+   :undoc-members:

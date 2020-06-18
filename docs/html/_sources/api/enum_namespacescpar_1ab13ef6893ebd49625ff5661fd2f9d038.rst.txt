@@ -1,0 +1,13 @@
+.. _exhale_enum_namespacescpar_1ab13ef6893ebd49625ff5661fd2f9d038:
+
+Enum PROCESS_TYPE
+=================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_enums.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: scpar::PROCESS_TYPE

@@ -1,0 +1,13 @@
+.. _exhale_function_zfpsim_2sc__stream_8h_1a2f1ce7cd0889c26994eb20267725cb09:
+
+Template Function sc_core::operator<<(std::ostream&, const sc_stream<T>&)
+=========================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_stream.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sc_core::operator<<(std::ostream&, const sc_stream<T>&)

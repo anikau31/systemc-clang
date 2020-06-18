@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1afe5855242129fa5d1adf55227669a337:
+
+Define JSON_HEDLEY_DIAGNOSTIC_DISABLE_DEPRECATED
+================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_DIAGNOSTIC_DISABLE_DEPRECATED

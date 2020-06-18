@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a009a77cb8a9fd33aafff173bb945128d:
+
+Define JSON_HEDLEY_PGI_VERSION_CHECK
+====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_PGI_VERSION_CHECK

@@ -1,0 +1,13 @@
+.. _exhale_variable_waitevents_8hpp_1a51ca640e7cb746ad1aa3c2716ad87b8e:
+
+Variable extglobalEvent
+=======================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_8_waitevents.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: extglobalEvent

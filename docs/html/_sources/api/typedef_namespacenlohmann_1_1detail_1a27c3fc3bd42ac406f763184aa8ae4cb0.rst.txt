@@ -1,0 +1,13 @@
+.. _exhale_typedef_namespacenlohmann_1_1detail_1a27c3fc3bd42ac406f763184aa8ae4cb0:
+
+Typedef nlohmann::detail::string_function_t
+===========================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: nlohmann::detail::string_function_t

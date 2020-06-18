@@ -1,0 +1,13 @@
+.. _exhale_typedef_zfpsim_2test_8cpp_1afd84cf6bdcea118f0bc81cf29186c550:
+
+Typedef si_t
+============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_test.cpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: si_t

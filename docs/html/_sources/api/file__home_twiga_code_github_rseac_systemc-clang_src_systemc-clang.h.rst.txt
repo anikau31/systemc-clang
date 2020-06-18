@@ -1,0 +1,63 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_systemc-clang.h:
+
+File systemc-clang.h
+====================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src>` (``/home/twiga/code/github/rseac/systemc-clang/src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/systemc-clang.h``)
+--------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_systemc-clang.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``json.hpp``
+
+- ``sstream``
+
+- ``string``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindGlobalEvents.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_ProcessDecl.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_scpar`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_namespacescpar_1a9ce98178c7343b89f49d8ed152082b76`
+

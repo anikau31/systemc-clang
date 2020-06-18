@@ -1,0 +1,13 @@
+.. _exhale_function_SuspensionAutomata_8cpp_1aa6afbc1aa166921abdbfc5026b82e6bd:
+
+Template Function is_found
+==========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SuspensionAutomata.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: is_found(Node, Node)

@@ -1,0 +1,244 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Namespace nlohmann::detail::dtoa_impl &mdash; systemc-clang 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> systemc-clang
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install-linux.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsing/parsing.html">Identifying SystemC constructs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/xlat.html">Generating Verilog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">systemc-clang</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Namespace nlohmann::detail::dtoa_impl</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/namespace_nlohmann__detail__dtoa_impl.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="namespace-nlohmann-detail-dtoa-impl">
+<span id="id1"></span><h1>Namespace nlohmann::detail::dtoa_impl<a class="headerlink" href="#namespace-nlohmann-detail-dtoa-impl" title="Permalink to this headline">¶</a></h1>
+<p>implements the Grisu2 algorithm for binary to decimal floating-point conversion.</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#detailed-description" id="id2">Detailed Description</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id3">Classes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id4">Functions</a></p></li>
+<li><p><a class="reference internal" href="#variables" id="id5">Variables</a></p></li>
+</ul>
+</div>
+<div class="section" id="detailed-description">
+<h2>Detailed Description<a class="headerlink" href="#detailed-description" title="Permalink to this headline">¶</a></h2>
+<p>This implementation is a slightly modified version of the reference implementation which may be obtained from <a class="reference external" href="http://florian.loitsch.com/publications">http://florian.loitsch.com/publications</a> (bench.tar.gz).
+The code is distributed under the MIT license, Copyright (c) 2009 Florian Loitsch.
+For a detailed description of the algorithm see:
+[1] Loitsch, “Printing Floating-Point Numbers Quickly and Accurately with</p>
+<blockquote>
+<div><p>Integers”, Proceedings of the ACM SIGPLAN 2010 Conference on Programming Language Design and Implementation, PLDI 2010 [2] Burger, Dybvig, “Printing Floating-Point Numbers Quickly and Accurately”, Proceedings of the ACM SIGPLAN 1996 Conference on Programming Language Design and Implementation, PLDI 1996</p>
+</div></blockquote>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1dtoa__impl_1_1boundaries.html#exhale-struct-structnlohmann-1-1detail-1-1dtoa-impl-1-1boundaries"><span class="std std-ref">Struct boundaries</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1dtoa__impl_1_1cached__power.html#exhale-struct-structnlohmann-1-1detail-1-1dtoa-impl-1-1cached-power"><span class="std std-ref">Struct cached_power</span></a></p></li>
+<li><p><a class="reference internal" href="structnlohmann_1_1detail_1_1dtoa__impl_1_1diyfp.html#exhale-struct-structnlohmann-1-1detail-1-1dtoa-impl-1-1diyfp"><span class="std std-ref">Struct diyfp</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a84733638b826eda624488f5fa4521e0b.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a84733638b826eda624488f5fa4521e0b"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::append_exponent</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a22b6e37654ac93c6d0d9c06ec1bf5ded.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a22b6e37654ac93c6d0d9c06ec1bf5ded"><span class="std std-ref">Template Function nlohmann::detail::dtoa_impl::compute_boundaries</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a36ded358763b5dbcea9867660fbe4e28.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a36ded358763b5dbcea9867660fbe4e28"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::find_largest_pow10</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a12c1c5d8b46ba9702186445e73f86afe.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a12c1c5d8b46ba9702186445e73f86afe"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::format_buffer</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1adbf329a18c5cf854a3477327afd2200b.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1adbf329a18c5cf854a3477327afd2200b"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::get_cached_power_for_binary_exponent</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a05b681dcb8569b9784c6dccfadb01633.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a05b681dcb8569b9784c6dccfadb01633"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::grisu2(char *, int&amp;, int&amp;, diyfp, diyfp, diyfp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1aab7a9670a4f4704a5d0347ad7588576b.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1aab7a9670a4f4704a5d0347ad7588576b"><span class="std std-ref">Template Function nlohmann::detail::dtoa_impl::grisu2(char *, int&amp;, int&amp;, FloatType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a9b899c72b0e1e3dd46d75c2b4e6bcdfb.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a9b899c72b0e1e3dd46d75c2b4e6bcdfb"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::grisu2_digit_gen</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a5bc841e0bee12fd6489d49cf7bd07bb4.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a5bc841e0bee12fd6489d49cf7bd07bb4"><span class="std std-ref">Function nlohmann::detail::dtoa_impl::grisu2_round</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a1c5d30eb51e5e994a3f48bde104d2ce8.html#exhale-function-namespacenlohmann-1-1detail-1-1dtoa-impl-1a1c5d30eb51e5e994a3f48bde104d2ce8"><span class="std std-ref">Template Function nlohmann::detail::dtoa_impl::reinterpret_bits</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="variable_namespacenlohmann_1_1detail_1_1dtoa__impl_1ac1ea1316de0b4a219f707c76b1db1966.html#exhale-variable-namespacenlohmann-1-1detail-1-1dtoa-impl-1ac1ea1316de0b4a219f707c76b1db1966"><span class="std std-ref">Variable nlohmann::detail::dtoa_impl::kAlpha</span></a></p></li>
+<li><p><a class="reference internal" href="variable_namespacenlohmann_1_1detail_1_1dtoa__impl_1a4a750fcc38da1ce68b7e25ab3a230e20.html#exhale-variable-namespacenlohmann-1-1detail-1-1dtoa-impl-1a4a750fcc38da1ce68b7e25ab3a230e20"><span class="std std-ref">Variable nlohmann::detail::dtoa_impl::kGamma</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

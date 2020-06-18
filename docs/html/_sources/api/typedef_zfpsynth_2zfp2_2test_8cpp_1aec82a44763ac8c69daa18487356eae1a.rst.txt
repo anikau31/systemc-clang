@@ -1,0 +1,13 @@
+.. _exhale_typedef_zfpsynth_2zfp2_2test_8cpp_1aec82a44763ac8c69daa18487356eae1a:
+
+Typedef fpn_t
+=============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsynth_zfp2_test.cpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: fpn_t

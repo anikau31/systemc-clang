@@ -1,0 +1,61 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_PortBinding.h:
+
+File PortBinding.h
+==================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src>` (``/home/twiga/code/github/rseac/systemc-clang/src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/PortBinding.h``)
+------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_PortBinding.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``llvm/Support/raw_ostream.h``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_NetlistMatcher.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_ModuleDecl.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_scpar`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classscpar_1_1PortBinding`
+
+- :ref:`exhale_class_classscpar_1_1PortBindingCtor`
+

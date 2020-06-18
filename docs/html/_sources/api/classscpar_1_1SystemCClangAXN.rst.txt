@@ -1,0 +1,25 @@
+.. _exhale_class_classscpar_1_1SystemCClangAXN:
+
+Class SystemCClangAXN
+=====================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_PluginAction.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public ASTFrontendAction``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::SystemCClangAXN
+   :members:
+   :protected-members:
+   :undoc-members:

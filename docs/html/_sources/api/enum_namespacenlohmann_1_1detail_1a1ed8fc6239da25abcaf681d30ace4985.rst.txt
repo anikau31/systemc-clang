@@ -1,0 +1,13 @@
+.. _exhale_enum_namespacenlohmann_1_1detail_1a1ed8fc6239da25abcaf681d30ace4985:
+
+Enum value_t
+============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: nlohmann::detail::value_t

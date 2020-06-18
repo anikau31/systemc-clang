@@ -1,0 +1,13 @@
+.. _exhale_typedef_namespacenlohmann_1_1detail_1a3603b59a17d1c5e15050743b847992f2:
+
+Typedef nlohmann::detail::difference_type_t
+===========================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: nlohmann::detail::difference_type_t

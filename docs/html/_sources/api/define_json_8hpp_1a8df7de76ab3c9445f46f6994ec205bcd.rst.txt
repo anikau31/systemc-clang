@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a8df7de76ab3c9445f46f6994ec205bcd:
+
+Define JSON_HEDLEY_UNLIKELY
+===========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_UNLIKELY

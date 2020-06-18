@@ -1,0 +1,13 @@
+.. _exhale_variable_waitevents_8hpp_1aa198fc3b99632c9206e691d02a0cfe81:
+
+Variable globalVar
+==================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_sim_ex_8_waitevents.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: globalVar

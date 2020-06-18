@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a6125ffd318b2d6698faad4175a6e7c56:
+
+Define JSON_HEDLEY_CLANG_HAS_WARNING
+====================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_CLANG_HAS_WARNING

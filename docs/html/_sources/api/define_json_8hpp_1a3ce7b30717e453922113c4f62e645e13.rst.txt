@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a3ce7b30717e453922113c4f62e645e13:
+
+Define JSON_HEDLEY_CLANG_HAS_CPP_ATTRIBUTE
+==========================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_CLANG_HAS_CPP_ATTRIBUTE

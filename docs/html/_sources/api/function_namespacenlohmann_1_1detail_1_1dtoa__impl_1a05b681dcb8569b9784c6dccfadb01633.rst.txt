@@ -1,0 +1,13 @@
+.. _exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a05b681dcb8569b9784c6dccfadb01633:
+
+Function nlohmann::detail::dtoa_impl::grisu2(char \*, int&, int&, diyfp, diyfp, diyfp)
+======================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: nlohmann::detail::dtoa_impl::grisu2(char *, int&, int&, diyfp, diyfp, diyfp)

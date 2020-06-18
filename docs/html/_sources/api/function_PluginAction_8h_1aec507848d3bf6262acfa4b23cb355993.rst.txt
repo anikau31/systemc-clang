@@ -1,0 +1,13 @@
+.. _exhale_function_PluginAction_8h_1aec507848d3bf6262acfa4b23cb355993:
+
+Function scpar::topModule
+=========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_PluginAction.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: scpar::topModule("top-module", llvm::cl::desc("Specify top-level module declaration for entry point"), llvm::cl::cat(category))

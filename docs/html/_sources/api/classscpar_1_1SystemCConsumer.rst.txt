@@ -1,0 +1,34 @@
+.. _exhale_class_classscpar_1_1SystemCConsumer:
+
+Class SystemCConsumer
+=====================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SystemCClang.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Types
+**********
+
+- ``public ASTConsumer``
+- ``public clang::RecursiveASTVisitor< SystemCConsumer >``
+
+
+Derived Types
+*************
+
+- ``public SAPlugin`` (:ref:`exhale_class_classSAPlugin`)
+- ``public scpar::SystemCClang`` (:ref:`exhale_class_classscpar_1_1SystemCClang`)
+- ``public TimeAnalysis`` (:ref:`exhale_class_classTimeAnalysis`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::SystemCConsumer
+   :members:
+   :protected-members:
+   :undoc-members:

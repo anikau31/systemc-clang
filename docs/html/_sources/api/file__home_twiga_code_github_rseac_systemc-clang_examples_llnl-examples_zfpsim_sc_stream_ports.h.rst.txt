@@ -1,0 +1,80 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_stream_ports.h:
+
+File sc_stream_ports.h
+======================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim>` (``/home/twiga/code/github/rseac/systemc-clang/examples/llnl-examples/zfpsim``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/examples/llnl-examples/zfpsim/sc_stream_ports.h``)
+------------------------------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_stream_ports.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``sc_stream_ifs.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sc_stream_ifs.h`)
+
+- ``sysc/communication/sc_port.h``
+
+- ``sysc/tracing/sc_trace.h``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sfifo_cc.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_sreg.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_zfp.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_sc_core`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__in`
+
+- :ref:`exhale_class_classsc__core_1_1sc__stream__out`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_zfpsim_2sc__stream__ports_8h_1a5df5cf56e38ec3df712094fa36b5c25a`
+
+- :ref:`exhale_function_zfpsim_2sc__stream__ports_8h_1a6601ded11ab4c8aa44657770ec8c9706`
+
+- :ref:`exhale_function_zfpsim_2sc__stream__ports_8h_1ab6dd2c83eb5ffb0ea4d86f9aa95d52de`
+
+- :ref:`exhale_function_zfpsim_2sc__stream__ports_8h_1ab4e2bd9804f21ba83070719bb919149c`
+

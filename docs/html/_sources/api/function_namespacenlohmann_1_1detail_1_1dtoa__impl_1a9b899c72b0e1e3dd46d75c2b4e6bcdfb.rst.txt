@@ -1,0 +1,13 @@
+.. _exhale_function_namespacenlohmann_1_1detail_1_1dtoa__impl_1a9b899c72b0e1e3dd46d75c2b4e6bcdfb:
+
+Function nlohmann::detail::dtoa_impl::grisu2_digit_gen
+======================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: nlohmann::detail::dtoa_impl::grisu2_digit_gen(char *, int&, int&, diyfp, diyfp, diyfp)

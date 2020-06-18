@@ -1,0 +1,85 @@
+
+.. _file__home_twiga_code_github_rseac_systemc-clang_src_model_ModuleDecl.h:
+
+File ModuleDecl.h
+=================
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src_model>` (``/home/twiga/code/github/rseac/systemc-clang/src/model``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/twiga/code/github/rseac/systemc-clang/src/model/ModuleDecl.h``)
+-----------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_model_ModuleDecl.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``FindConstructor.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindConstructor.h`)
+
+- ``FindEntryFunctions.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindEntryFunctions.h`)
+
+- ``FindTLMInterfaces.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_FindTLMInterfaces.h`)
+
+- ``InterfaceDecl.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_InterfaceDecl.h`)
+
+- ``ModuleInstanceType.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_ModuleInstanceType.h`)
+
+- ``PortBinding.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_PortBinding.h`)
+
+- ``PortDecl.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_PortDecl.h`)
+
+- ``ProcessDecl.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_ProcessDecl.h`)
+
+- ``SignalDecl.h`` (:ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_SignalDecl.h`)
+
+- ``clang/AST/DeclCXX.h``
+
+- ``map``
+
+- ``string``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_Matchers.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_matchers_PortMatcher.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_Model.h`
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_model_ModuleDecl.cpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_scpar`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classscpar_1_1ModuleDecl`
+

@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a752eb648bbfc7bcd8a4624c43f520412:
+
+Define JSON_HEDLEY_HAS_FEATURE
+==============================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_HAS_FEATURE

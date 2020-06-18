@@ -1,0 +1,16 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1is__constructible__string__type__impl_3_01BasicJsonType_00_01Construe4743afb22172cdb3c5f428800835387:
+
+Template Struct is_constructible_string_type_impl< BasicJsonType, ConstructibleStringType, enable_if_t< is_detected_exact< typename BasicJsonType::string_t::value_type, value_type_t, ConstructibleStringType >::value > >
+===========================================================================================================================================================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::is_constructible_string_type_impl< BasicJsonType, ConstructibleStringType, enable_if_t< is_detected_exact< typename BasicJsonType::string_t::value_type, value_type_t, ConstructibleStringType >::value > >
+   :members:
+   :protected-members:
+   :undoc-members:

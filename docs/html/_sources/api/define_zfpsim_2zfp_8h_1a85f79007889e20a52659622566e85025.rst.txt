@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsim_2zfp_8h_1a85f79007889e20a52659622566e85025:
+
+Define SWRITE
+=============
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_zfp.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: SWRITE

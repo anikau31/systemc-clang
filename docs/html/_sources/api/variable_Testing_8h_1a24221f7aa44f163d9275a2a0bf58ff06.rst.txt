@@ -1,0 +1,13 @@
+.. _exhale_variable_Testing_8h_1a24221f7aa44f163d9275a2a0bf58ff06:
+
+Variable systemc_clang::file
+============================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_Testing.h`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: systemc_clang::file

@@ -1,0 +1,13 @@
+.. _exhale_define_zfpsim_2test_8cpp_1ad51ded0bbd705f02f73fc60c0b721ced:
+
+Define BLOCK_SIZE
+=================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_examples_llnl-examples_zfpsim_test.cpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: BLOCK_SIZE

@@ -1,0 +1,54 @@
+
+.. _program_listing_file__home_twiga_code_github_rseac_systemc-clang_src_model_EventDecl.h:
+
+Program Listing for File EventDecl.h
+====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file__home_twiga_code_github_rseac_systemc-clang_src_model_EventDecl.h>` (``/home/twiga/code/github/rseac/systemc-clang/src/model/EventDecl.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifndef _EVENT_DECL_H_
+   #define _EVENT_DECL_H_
+   
+   #include "Utility.h"
+   #include "clang/AST/DeclCXX.h"
+   #include <map>
+   #include <string>
+   
+   namespace scpar {
+   using namespace clang;
+   using namespace std;
+   
+   class EventDecl {
+   public:
+     // Typedefs.
+     //    typedef pair < string, FieldDecl * >eventPairType;
+     //    typedef map < string, FieldDecl * >eventMapType;
+   
+     // Constructors.
+     EventDecl();
+     EventDecl(const string &, FieldDecl *);
+   
+     // Copy constructor.
+     EventDecl(const EventDecl &);
+   
+     // Destructor.
+     ~EventDecl();
+   
+     string getName();
+     FieldDecl *getASTNode();
+     // Print
+     void dump(raw_ostream &, int tabn = 0);
+   
+   private:
+     void ptrCheck();
+   
+   private:
+     string _name;
+     FieldDecl *_astNode;
+   };
+   } // namespace scpar
+   #endif

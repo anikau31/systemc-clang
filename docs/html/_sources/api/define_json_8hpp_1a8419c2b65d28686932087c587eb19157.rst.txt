@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a8419c2b65d28686932087c587eb19157:
+
+Define JSON_HEDLEY_MESSAGE
+==========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_MESSAGE

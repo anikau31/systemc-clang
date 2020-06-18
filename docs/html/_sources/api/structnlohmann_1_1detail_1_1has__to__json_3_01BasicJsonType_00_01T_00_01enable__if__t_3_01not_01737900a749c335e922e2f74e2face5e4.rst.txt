@@ -1,0 +1,16 @@
+.. _exhale_struct_structnlohmann_1_1detail_1_1has__to__json_3_01BasicJsonType_00_01T_00_01enable__if__t_3_01not_01737900a749c335e922e2f74e2face5e4:
+
+Template Struct has_to_json< BasicJsonType, T, enable_if_t< not is_basic_json< T >::value > >
+=============================================================================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: nlohmann::detail::has_to_json< BasicJsonType, T, enable_if_t< not is_basic_json< T >::value > >
+   :members:
+   :protected-members:
+   :undoc-members:

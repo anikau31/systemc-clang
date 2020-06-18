@@ -1,0 +1,19 @@
+.. _exhale_union_unionnlohmann_1_1basic__json_1_1json__value:
+
+Union basic_json::json_value
+============================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Nested Relationships
+--------------------
+
+This union is a nested type of :ref:`exhale_class_classnlohmann_1_1basic__json`.
+
+
+Union Documentation
+-------------------
+
+
+.. doxygenunion:: nlohmann::basic_json::json_value

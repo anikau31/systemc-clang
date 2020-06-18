@@ -1,0 +1,13 @@
+.. _exhale_define_json_8hpp_1a5f2aaec3b681d0a72f7d6e90b70cdcd1:
+
+Define JSON_HEDLEY_RETURNS_NON_NULL
+===================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: JSON_HEDLEY_RETURNS_NON_NULL

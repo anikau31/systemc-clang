@@ -1,0 +1,22 @@
+.. _exhale_class_classscpar_1_1Tree_1_1dft__iterator:
+
+Class Tree::dft_iterator
+========================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_Tree.h`
+
+
+Nested Relationships
+--------------------
+
+This class is a nested type of :ref:`exhale_class_classscpar_1_1Tree`.
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: scpar::Tree::dft_iterator
+   :members:
+   :protected-members:
+   :undoc-members:

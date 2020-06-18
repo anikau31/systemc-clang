@@ -1,0 +1,13 @@
+.. _exhale_typedef_namespacenlohmann_1_1detail_1ae132f8cd5bb24c5e9b40ad0eafedf1c2:
+
+Typedef nlohmann::detail::input_adapter_t
+=========================================
+
+- Defined in :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_json.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: nlohmann::detail::input_adapter_t

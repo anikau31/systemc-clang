@@ -1,0 +1,23 @@
+.. _dir__home_twiga_code_github_rseac_systemc-clang_src_SCuitable:
+
+
+Directory SCuitable
+===================
+
+
+|exhale_lsh| :ref:`Parent directory <dir__home_twiga_code_github_rseac_systemc-clang_src>` (``/home/twiga/code/github/rseac/systemc-clang/src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+*Directory path:* ``/home/twiga/code/github/rseac/systemc-clang/src/SCuitable``
+
+
+Files
+-----
+
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SCuitable_FindGPUMacro.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SCuitable_FindGPUMacro.h`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SCuitable_GlobalSuspensionAutomata.cpp`
+- :ref:`file__home_twiga_code_github_rseac_systemc-clang_src_SCuitable_GlobalSuspensionAutomata.h`
+
+
