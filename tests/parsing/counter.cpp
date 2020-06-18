@@ -23,7 +23,7 @@ TEST_CASE("Basic parsing checks", "[parsing]") {
 #include <systemc.h>
 SC_MODULE(counter) {
   // clock
-  sc_clk_in clk;
+  sc_in_clk clk;
 
   // output port
   sc_out<sc_uint<32>> count_out;
@@ -66,25 +66,25 @@ int sc_main() {
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
           .release();
 
-  SystemCConsumer sc{from_ast};
-  sc.HandleTranslationUnit(from_ast->getASTContext());
+  SystemCConsumer consumer{from_ast};
+  consumer.HandleTranslationUnit(from_ast->getASTContext());
 
-  auto model{sc.getSystemCModel()};
+  Model *model{consumer.getSystemCModel()};
 
   // This provides the module declarations.
   auto module_decl{model->getModuleDecl()};
   auto module_instance_map{model->getModuleInstanceMap()};
 
   // Want to find an instance named "testing".
-
-  ModuleDecl *test_module{model->getInstance("design_under_test")};
+  ModuleDecl *test_module{model->getInstance("counter_instance")};
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module declarations found: "
          << module_decl.size());
 
-    REQUIRE(module_decl.size() == 1);
+    // DUT and 
+    REQUIRE(module_decl.size() == 2);
 
     REQUIRE(test_module != nullptr);
 
