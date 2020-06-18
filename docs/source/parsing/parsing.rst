@@ -67,7 +67,7 @@ Plugins can then use tihs to perform other operations on the implementation of t
 
   #include <systemc.h>
   SC_MODULE(counter) {
-    sc_clk_in clk;
+    sc_in_clk clk;
     sc_uint<32> keep_count;
 
     SC_CTOR(counter): keep_count{0} {
@@ -86,7 +86,7 @@ Plugins can then use tihs to perform other operations on the implementation of t
 
   #include <systemc.h>
   class counter: public sc_module {
-    sc_clk_in clk;
+    sc_in_clk clk;
     sc_uint<32> keep_count;
 
     SC_HAS_PROCESS(counter);
@@ -103,7 +103,7 @@ Plugins can then use tihs to perform other operations on the implementation of t
 SystemC Ports and Member Variables 
 ----------------------------------
 
-SystemC ports and member fields can be a part of the module. In the counter example, there is a ``clk`` port of type ``sc_clk_in`` and there is a member variable called ``keep_count`` of type ``sc_uint<32>``. Note that the latter is a templated type. We extend this example further.
+SystemC ports and member fields can be a part of the module. In the counter example, there is a ``clk`` port of type ``sc_in_clk`` and there is a member variable called ``keep_count`` of type ``sc_uint<32>``. Note that the latter is a templated type. We extend this example further.
 
 Note that a member variable can also be an ``sc_signal<>``, which we show in the next subsection.
 
@@ -113,7 +113,7 @@ Note that a member variable can also be an ``sc_signal<>``, which we show in the
   #include <systemc.h>
   SC_MODULE(counter) {
     // clock
-    sc_clk_in clk;
+    sc_in_clk clk;
 
     // output port
     sc_out<sc_uint<32>> count_out;
@@ -180,7 +180,7 @@ The SystemC module declaration can be templated as well. We can extend our ``cou
   template <typename T>
   SC_MODULE(counter) {
     // clock
-    sc_clk_in clk;
+    sc_in_clk clk;
 
     // output port
     sc_out<T> count_out;
@@ -213,3 +213,7 @@ User-defined Channels
 
 Typedefs and ``using``
 ----------------------
+
+Typedefs and the use of type alias via ``using`` are parsed by systemc-clang. 
+The parsing drills down to the most basic type, and desugars any sugared type. 
+This means that any intermediate type (via indirection) is not captured, but only the final desugared type.
