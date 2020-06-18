@@ -30,8 +30,7 @@ release = '2.0.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['recommonmark'
-]
+extensions = ['recommonmark', 'breathe', 'exhale' ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -53,3 +52,36 @@ html_theme = 'sphinx_rtd_theme' #'alabaster'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# -- Breath and Exhale 
+
+
+# Setup the breathe extension
+breathe_default_project = "systemc-clang"
+
+breathe_projects = {
+    "systemc-clang": "./doxydoc/xml"
+}
+
+
+# Setup the exhale extension
+exhale_args = {
+    # These arguments are required
+    "containmentFolder":     "./api",
+    "rootFileName":          "library_root.rst",
+    "rootFileTitle":         "Library API",
+    "doxygenStripFromPath":  "..",
+    # Suggested optional arguments
+    "createTreeView":        True,
+    # TIP: if using the sphinx-bootstrap-theme, you need
+    # "treeViewIsBootstrap": True,
+    "exhaleExecutesDoxygen": False,
+    "exhaleDoxygenStdin":    "INPUT = ../../src",
+    "listingExclude": ["r.*nlohmann"]
+}
+
+# Tell sphinx what the primary language being documented is.
+primary_domain = 'cpp'
+
+# Tell sphinx what the pygments highlight language should be.
+highlight_language = 'cpp'

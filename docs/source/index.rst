@@ -16,6 +16,8 @@ Welcome to systemc-clang's documentation!
 
    plugins/xlat.rst
 
+   api/library_root
+
 Installation
 ============
 
