@@ -51,7 +51,12 @@
 using namespace clang::tooling;
 
 namespace scpar {
+/** @brief This is the main consumer class that beings the parsing of SystemC.
 
+    This class drives the AST consumer for parsing SystemC constructs.
+
+    
+    */
 class SystemCConsumer : public ASTConsumer,
                         public RecursiveASTVisitor<SystemCConsumer> {
   // TODO: This should be made private at some point.
@@ -91,6 +96,13 @@ void populateNestedModules(const InstanceMatcher::InstanceDeclarations &instance
 //
 //
 
+/** 
+ *
+ * @mainpage 
+ * systemc-clang is a parser for SystemC constructs built using clang. 
+ *
+ *
+ */
 class SystemCClang : public SystemCConsumer {
  public:
   SystemCClang(CompilerInstance &ci, const std::string &top)
