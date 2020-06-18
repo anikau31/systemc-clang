@@ -10,12 +10,15 @@ Welcome to systemc-clang's documentation!
    :maxdepth: 2
    :caption: Contents: 
 
+   about.rst
    install/install.rst
 
    parsing/parsing.rst
    testing/testing.rst
 
    plugins/xlat.rst
+
+   support.rst
 
 
 Installation

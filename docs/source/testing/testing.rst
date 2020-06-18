@@ -13,6 +13,8 @@ In order to run systemc-clang from within a C++ program, and integrate it succes
 Boilerplate
 ^^^^^^^^^^^
 
+The boilerplate allows one to integrate tests into the build environment for systemc-clang.
+
 Include files
 """""""""""""
 
@@ -39,6 +41,9 @@ systemc-clang is wrapped in a namespace called ``scpar``. Hence, we add the name
   :linenos:
 
   using namespace scpar;
+
+SystemC model to parse
+""""""""""""""""""""""
 
 The next step is in providing the SystemC source that we wish to parse. 
 This can come from a file or embedded within the test program as a string. 
@@ -90,6 +95,9 @@ Note that this uses the ``R"`` approach to defining a ``std::string``.
     };
    )";
 
+
+Build the AST
+""""""""""""""
 We can start creating our test using Catch2's ``TEST_CASE()``.
 Please refer to the Catch2 documentation the usage of the specific Catch2 macros.
 They key systemc-clang aspect we point out is that the tests create the AST from within the C++ program using ``ASTUnit`` as shown below.
@@ -107,6 +115,47 @@ These are captured in ``systemc_clang::catch_test_args`` as a part of the ``Clan
             // Some more code here
   }
 
+If the SystemC model has compile errors, then they will be shown on the standard output.
+Otherwise, ``from_ast`` will point to the AST of the SystemC model.
 
+Running systemc-clang
+"""""""""""""""""""""
 
+Now that we have access to the AST, we can run systemc-clang.
+Inline comments describe each of the lines.
 
+.. code-block:: c++
+  :linenos:
+
+  // Instantiate consumer.
+  SystemCConsumer consumer{from_ast};
+
+  // Run systemc-clang.
+  consumer.HandleTranslationUnit(from_ast->getASTContext());
+
+  // Get access to the internal model.
+  Model *model{consumer.getSystemCModel()};
+
+  // Get instance with name "counter_instance".
+  ModuleDecl *test_module{model->getInstance("counter_instance")};
+
+The key observation is that ``model`` provides access to the parsed information.
+This includes all the modules that were instantiated, the ports and signals within it, any nested sub-modules, etc. 
+
+Writing assertions for parsed information
+""""""""""""""""""""""""""""""""""""""""
+
+The test can use ``REQIRE()`` macro from Catch2 to assert for the information found about the model.
+The following assertion ensures that we are able to find an instance of a SystemC module that has the name ``counter_instance``.
+
+.. code-block:: c++
+  :linenos:
+
+    REQUIRE(test_module != nullptr);
+
+We can also check for the number of input ports found by systemc-clang.
+
+.. code-block:: c++
+  :linenos:
+    auto input_ports{test_module->getIPorts()};
+    REQUIRE(input_ports.size() == 1);
