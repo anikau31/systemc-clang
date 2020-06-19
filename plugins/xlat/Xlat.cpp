@@ -37,77 +37,74 @@ bool Xlat::postFire() {
   os_ << "file " << outputfn << ".txt, create error code is " << ec.value()
       << "\n";
   os_ << "\n SC  Xlat plugin\n";
-  int module_cnt = 0;
-  for (Model::moduleMapType::iterator mit = modules.begin();
-       mit != modules.end(); mit++) {
-    // Second is the ModuleDecl type.
+
+  for (scpar::Model::modulePairType modpair: modules) {
+    
     os_ << "In module iterator loop\n";
-    vector<ModuleDecl *> instanceVec =
-        model->getModuleInstanceMap()[mit->second];
-    for (size_t i = 0; i < instanceVec.size(); i++) {
-      //os_ << "\nmodule " << mit->first << "\n";
-      //string modname = mit->first + "_" + to_string(module_cnt++);
 
-      string modname = instanceVec[i]->getName() + "_" + to_string(module_cnt++);
-      os_ << "\nmodule " << modname << "\n";
-			   
-      hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
+    ModuleDecl * mod = modpair.second;
+    string modname = mod->getName();
+    os_ << "\nmodule " << modname << "\n";
 
+    hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
 
-      // Ports
-      hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
-      xlatport(instanceVec[i]->getIPorts(), hNode::hdlopsEnum::hPortin,
-               h_ports);
-      xlatport(instanceVec[i]->getInputStreamPorts(), hNode::hdlopsEnum::hPortin,
-               h_ports);
-      xlatport(instanceVec[i]->getOPorts(), hNode::hdlopsEnum::hPortout,
-               h_ports);
-      xlatport(instanceVec[i]->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
-               h_ports);
-      xlatport(instanceVec[i]->getIOPorts(), hNode::hdlopsEnum::hPortio,
-               h_ports);
+    
+    // Ports
+    hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
+    xlatport(mod->getIPorts(), hNode::hdlopsEnum::hPortin,
+	     h_ports);
+    xlatport(mod->getInputStreamPorts(), hNode::hdlopsEnum::hPortin,
+	     h_ports);
+    xlatport(mod->getOPorts(), hNode::hdlopsEnum::hPortout,
+	     h_ports);
+    xlatport(mod->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
+	     h_ports);
+    xlatport(mod->getIOPorts(), hNode::hdlopsEnum::hPortio,
+	     h_ports);
 
-      // Signals
-      xlatsig(instanceVec[i]->getSignals(), hNode::hdlopsEnum::hSigdecl,
-              h_ports);
+    // Signals
+    xlatsig(mod->getSignals(), hNode::hdlopsEnum::hSigdecl,
+	    h_ports);
 
-      h_module->child_list.push_back(h_ports);
+    h_module->child_list.push_back(h_ports);
       
-      // Other Variables
-      //xlatvars(instanceVec[i]->getOtherVars(), model,
-      // h_ports);
-      xlatport(instanceVec[i]->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
-      // submodules
-      const std::vector<ModuleDecl*> &submodv = instanceVec[i]->getNestedModuleDecl();
-      os_ << "submodule count is " << submodv.size() << "\n";
-      for (auto& smod:submodv) {
-	os_ << "submodule " << smod->getInstanceName() << "\n";
-      }
+    // Other Variables
+    //xlatvars(mod->getOtherVars(), model,
+    // h_ports);
+    xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
+    // submodules
+    const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
+    os_ << "submodule count is " << submodv.size() << "\n";
+    for (auto& smod:submodv) {
+      os_ << "submodule " << smod->getInstanceName() << "\n";
+    }
 
-      // look at constructor
+    // look at constructor
 
-      //os_ << "dumping module constructor stmt\n";
-      //instanceVec[i]->getConstructorStmt()->dump(os_);	     
-      //os_ << "dumping module constructor decl\n";							       
-      //instanceVec[i]->getConstructorDecl()->dump(os_);
-      // Processes
-      h_top = new hNode(hNode::hdlopsEnum::hProcesses);
+    //os_ << "dumping module constructor stmt\n";
+    //mod->getConstructorStmt()->dump(os_);	     
+    //os_ << "dumping module constructor decl\n";							       
+    //mod->getConstructorDecl()->dump(os_);
+    // Processes
+    h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
-      xlatproc(instanceVec[i]->getEntryFunctionContainer(), h_top, os_);
+    vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
+    if (instanceVec.size()>0) {
+      xlatproc(instanceVec[0]->getEntryFunctionContainer(), h_top, os_);
 
       if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
       // Port bindings
       hNodep h_submodule_pb = new hNode(hNode::hdlopsEnum::hPortbindings);
-      xlatportbindings(instanceVec[i]->getPortBindings(), h_submodule_pb);
-      
+      xlatportbindings(instanceVec[0]->getPortBindings(), h_submodule_pb);
+    
       if (!h_submodule_pb->child_list.empty())
 	h_module->child_list.push_back(h_submodule_pb);
-      
-      h_module->print(xlatout);
-      delete h_top; //h_module;
     }
+    h_module->print(xlatout);
+    delete h_top; //h_module;
   }
+  
   os_ << "Global Method Map\n";
   for (auto m : allmethodecls) {
     os_ << "Method --------\n" << m.first << ":" << m.second << "\n";
