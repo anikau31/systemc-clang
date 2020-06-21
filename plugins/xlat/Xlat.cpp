@@ -14,8 +14,7 @@ using namespace scpar;
 
 bool Xlat::postFire() {
   Model *model = getSystemCModel();
-  Model::moduleMapType modules = model->getModuleDecl();
-
+ 
   std::error_code ec;
   string outputfn;
 
@@ -38,74 +37,26 @@ bool Xlat::postFire() {
       << "\n";
   os_ << "\n SC  Xlat plugin\n";
 
-  for (scpar::Model::modulePairType modpair: modules) {
-    
-    os_ << "In module iterator loop\n";
+  // typedef std::vector< modulePairType > moduleMapType;
+  // typedef std::pair<std::string, ModuleDecl *> modulePairType;
+  
+  Model::moduleMapType modules = model->getModuleDecl();
+  if (modules.size() <= 0) return true;
+  Model::modulePairType modpair = modules[0]; // assume first one is top module
+  ModuleDecl * mod = modpair.second;
+  string modname = mod->getName();
+  os_ << "\nmodule " << modname << "\n";
 
-    ModuleDecl * mod = modpair.second;
-    string modname = mod->getName();
-    os_ << "\nmodule " << modname << "\n";
+  hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
 
-    hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
-
-    
-    // Ports
-    hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
-    xlatport(mod->getIPorts(), hNode::hdlopsEnum::hPortin,
-	     h_ports);
-    xlatport(mod->getInputStreamPorts(), hNode::hdlopsEnum::hPortin,
-	     h_ports);
-    xlatport(mod->getOPorts(), hNode::hdlopsEnum::hPortout,
-	     h_ports);
-    xlatport(mod->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
-	     h_ports);
-    xlatport(mod->getIOPorts(), hNode::hdlopsEnum::hPortio,
-	     h_ports);
-
-    // Signals
-    xlatsig(mod->getSignals(), hNode::hdlopsEnum::hSigdecl,
-	    h_ports);
-
-    h_module->child_list.push_back(h_ports);
-      
-    // Other Variables
-    //xlatvars(mod->getOtherVars(), model,
-    // h_ports);
-    xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
-    // submodules
-    const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
-    os_ << "submodule count is " << submodv.size() << "\n";
-    for (auto& smod:submodv) {
-      os_ << "submodule " << smod->getInstanceName() << "\n";
-    }
-
-    // look at constructor
-
-    //os_ << "dumping module constructor stmt\n";
-    //mod->getConstructorStmt()->dump(os_);	     
-    //os_ << "dumping module constructor decl\n";							       
-    //mod->getConstructorDecl()->dump(os_);
-    // Processes
-    h_top = new hNode(hNode::hdlopsEnum::hProcesses);
-
-    vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
-    if (instanceVec.size()>0) {
-      xlatproc(instanceVec[0]->getEntryFunctionContainer(), h_top, os_);
-
-      if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
-
-      // Port bindings
-      hNodep h_submodule_pb = new hNode(hNode::hdlopsEnum::hPortbindings);
-      xlatportbindings(instanceVec[0]->getPortBindings(), h_submodule_pb);
-    
-      if (!h_submodule_pb->child_list.empty())
-	h_module->child_list.push_back(h_submodule_pb);
-    }
-    h_module->print(xlatout);
-    delete h_top; //h_module;
+  vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
+  if (instanceVec.size()<=0) return true;
+  for (auto modinstance: instanceVec) { // generate module def for each instance
+    xlatmodule(modinstance, h_module, xlatout);
+    //h_module->print(xlatout);
   }
   
-  os_ << "Global Method Map\n";
+   os_ << "Global Method Map\n";
   for (auto m : allmethodecls) {
     os_ << "Method --------\n" << m.first << ":" << m.second << "\n";
     m.second->dump(os_);
@@ -121,10 +72,98 @@ bool Xlat::postFire() {
       os_ << "User Type --------\n" << t.first << ":" << t.second.getTypePtr() << "\n";
       t.second->dump(os_);
       os_ << "---------\n";
-      addtype(t.first, t.second)->print(xlatout);
+      //addtype(t.first, t.second)->print(xlatout);
     }
   }
   return true;
+}
+
+void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &xlatout ) {
+  const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
+  os_ << "submodule count is " << submodv.size() << "\n";
+  typedef std::pair<std::string, scpar::ModuleDecl::portBindingMapType> submodportbindings_t;
+  std::vector<submodportbindings_t> submodportbindings;
+  for (auto& smod:submodv) {
+    os_ << "get submodule portbindings" << smod->getInstanceName() << "\n";
+    if ((smod->getPortBindings()).size()>0) {
+      submodportbindings.push_back(submodportbindings_t(smod->getInstanceName(), smod->getPortBindings()));
+    }
+  }
+          // Ports
+  hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
+  xlatport(mod->getIPorts(), hNode::hdlopsEnum::hPortin,
+	   h_ports);
+  xlatport(mod->getInputStreamPorts(), hNode::hdlopsEnum::hPortin,
+	   h_ports);
+  xlatport(mod->getOPorts(), hNode::hdlopsEnum::hPortout,
+	   h_ports);
+  xlatport(mod->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
+	   h_ports);
+  xlatport(mod->getIOPorts(), hNode::hdlopsEnum::hPortio,
+	   h_ports);
+
+  // Signals
+  xlatsig(mod->getSignals(), hNode::hdlopsEnum::hSigdecl,
+	  h_ports);
+
+  h_module->child_list.push_back(h_ports);
+      
+  // Other Variables
+  //xlatvars(mod->getOtherVars(), model,
+  // h_ports);
+  
+  xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
+  
+  // submodules
+  // const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
+  // os_ << "submodule count is " << submodv.size() << "\n";
+  // for (auto& smod:submodv) {
+  //   os_ << "submodule " << smod->getInstanceName() << "\n";
+  // }
+
+      // look at constructor
+
+      //os_ << "dumping module constructor stmt\n";
+
+      //mod->getConstructorStmt()->dump(os_);	     
+      //os_ << "dumping module constructor decl\n";							       
+      //mod->getConstructorDecl()->dump(os_);
+      // Processes
+  h_top = new hNode(hNode::hdlopsEnum::hProcesses);
+
+  xlatproc(mod->getEntryFunctionContainer(), h_top, os_);
+
+  if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
+
+  //  typedef std::pair<std::string, PortBinding *> portBindingPairType;
+  //  typedef std::map<std::string, PortBinding *> portBindingMapType;
+  //   portBindingMapType getPortBindings();
+
+  for (std::pair<std::string, scpar::ModuleDecl::portBindingMapType> pbm: submodportbindings) {
+    hNodep h_submodule_pb = new hNode(pbm.first, hNode::hdlopsEnum::hPortbindings);
+    xlatportbindings(pbm.second, h_submodule_pb);
+    if (!h_submodule_pb->child_list.empty())
+      h_module->child_list.push_back(h_submodule_pb);
+  }
+  h_module->print(xlatout);
+  // now generate submodules
+  for (auto& smod:submodv) {
+    os_ << "generate submodule " << smod->getInstanceName() << "\n";
+    hNodep h_submod = new hNode(smod->getInstanceName(), hNode::hdlopsEnum::hModule);
+    xlatmodule(smod, h_submod, xlatout);
+  }
+}
+
+void Xlat::xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pbs){
+  for (auto const &pb : portbindingmap) {
+    string port_name{get<0>(pb)};
+    PortBinding *binding{get<1>(pb)};
+    os_ << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << "\n";
+    hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
+    hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
+    hpb->child_list.push_back(new hNode(binding->getBoundToName(), hNode::hdlopsEnum::hVarref));
+    h_pbs->child_list.push_back(hpb);
+  }
 }
 
 void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
@@ -508,16 +547,3 @@ void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
   }
 }
 
-void Xlat::xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pbs){
-  for (auto const &pb : portbindingmap) {
-    string port_name{get<0>(pb)};
-    PortBinding *binding{get<1>(pb)};
-    os_ << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << "\n";
-    hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
-    hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
-    hpb->child_list.push_back(new hNode(binding->getBoundToName(), hNode::hdlopsEnum::hVarref));
-    h_pbs->child_list.push_back(hpb);
-  }
-  
-
-}
