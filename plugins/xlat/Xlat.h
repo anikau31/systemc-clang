@@ -26,6 +26,7 @@ class Xlat : public SystemCConsumer {
   }
 
   bool postFire();
+  void xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &xlatout );
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatvars(ModuleDecl::portMapType pmap, Model *model,  hNodep &h_info);
