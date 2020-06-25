@@ -13,6 +13,7 @@ endif ()
 # Project name
 project(systemc-clang)
 
+
 # Use C++ standard version to c++14
 set(CMAKE_CXX_STANDARD 14)
 
@@ -102,6 +103,23 @@ else()
     endif()
   endif()
 endif()
+
+
+# Use ccache
+if (("${USE_CCACHE}" STREQUAL "ON") OR ("${USE_CCACHE}" STREQUAL "on"))
+  set(USE_CCACHE ON)
+else()
+  set(USE_CCACHE OFF)
+endif()
+
+if(USE_CCACHE) # set by build.sh
+  find_program(CCACHE_PROGRAM ccache)
+  if(CCACHE_PROGRAM)
+    set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+    set(CMAKE_C_COMPILER_LAUNCHER   ${CCACHE_PROGRAM})
+  endif()
+endif()
+
 
 # Test package
 
@@ -408,6 +426,7 @@ message(STATUS "")
 message(STATUS "clang version         : ${CLANG_VERSION}")
 message(STATUS "clang path            : ${LLVM_INSTALL_DIR}")
 message(STATUS "llvm-config           : ${LLVM_CONFIG_EXE}")
+message(STATUS "Use ccache            : ${USE_CCACHE}")
 message(STATUS "")
 message(STATUS "SystemC path          : ${SYSTEMC_DIR}")
 message(STATUS "")

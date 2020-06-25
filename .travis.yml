@@ -16,6 +16,7 @@ addons:
     packages:
     - g++
     - cmake
+    - ccache
     - libelf-dev 
     - ninja-build
 

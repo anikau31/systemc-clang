@@ -4,6 +4,8 @@
 #include <map>
 #include <vector>
 
+// Clang includes. 
+//
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchersInternal.h"
@@ -137,41 +139,6 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
           ).bind("cxx_operator_call_expr")
         )
       ).bind("cxx_constructor_decl");
-
-
-    /*
-
-
-    auto match = cxxConstructorDecl(isExpansionInMainFile(),
-        forEachDescendant(
-          // Find the sc_event
-          cxxOperatorCallExpr(
-            // Match sc_event_finder argument
-            hasArgument(1, 
-              ignoringParenCasts(
-              //allOf(
-                anyOf(
-                    hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
-                            cxxRecordDecl(isSameOrDerivedFrom("sc_event")).bind("crd")))))
-                  , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
-                            cxxRecordDecl(isSameOrDerivedFrom("sc_interface")).bind("crd")))))
-                  , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
-                            cxxRecordDecl(isSameOrDerivedFrom("sc_event_finder")).bind("crd")))))
-                  , hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
-                            cxxRecordDecl(isSameOrDerivedFrom("sc_port_base")).bind("crd")))))
-                ) // anyOf
-                //, 
-                  //anyOf(
-                    //cxxMemberCallExpr().bind("cxx_mcall")
-                    //, memberExpr().bind("me")
-                    //) //anyof
-                //) // allOf
-              ) //ignoringParenCasts
-            ) // hasArgument
-          ).bind("cxx_operator_call_expr")
-        )
-      ).bind("cxx_constructor_decl");
-      */
 
     /* clang-format on */
     finder.addMatcher(match, this);
