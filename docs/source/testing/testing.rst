@@ -143,7 +143,7 @@ The key observation is that ``model`` provides access to the parsed information.
 This includes all the modules that were instantiated, the ports and signals within it, any nested sub-modules, etc. 
 
 Writing assertions for parsed information
-""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""
 
 The test can use ``REQIRE()`` macro from Catch2 to assert for the information found about the model.
 The following assertion ensures that we are able to find an instance of a SystemC module that has the name ``counter_instance``.

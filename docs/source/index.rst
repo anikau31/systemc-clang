@@ -7,22 +7,25 @@ Welcome to systemc-clang's documentation!
 =========================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents: 
+  :maxdepth: 2
+  :hidden:
+  :caption: Contents
 
-   about.rst
-   install/install.rst
+  about.rst
 
-   parsing/parsing.rst
-   testing/testing.rst
+  install/install.rst
+  usage.rst
 
-   plugins/xlat.rst
+  examples.rst
 
-   support.rst
+  support.rst
+
+  parsing/parsing.rst
+  testing/testing.rst
+
+  plugins/xlat.rst
 
 
-Installation
-============
 
 Indices and tables
 ==================
