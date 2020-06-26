@@ -31,8 +31,11 @@ release = '2.0.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['recommonmark'
-        #  , 'breathe'
-        #  , 'exhale'
+        , 'sphinx.ext.autodoc'
+        , 'sphinx.ext.viewcode'
+        # , 'sphinx.ext.'
+        , 'breathe'
+        , 'exhale'
         ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -78,3 +81,7 @@ exhale_args = {
 #
 primary_domain = 'cpp'
 highlight_language = 'cpp'
+
+
+# Variables
+systemc_clang = 'systemc-clang'
