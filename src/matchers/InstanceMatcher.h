@@ -4,10 +4,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
-#include "clang/ASTMatchers/ASTMatchersInternal.h"
-#include "clang/ASTMatchers/ASTMatchersMacros.h"
 
 #include "ModuleInstanceType.h"
 

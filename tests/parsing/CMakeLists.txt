@@ -1,6 +1,7 @@
 # Test CMakeFile
 
 set (TEST_LIST 
+  counter
   test-xor-hierarchy
   simple-parsing
   model-from-file
