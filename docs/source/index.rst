@@ -35,7 +35,7 @@ Welcome to systemc-clang's documentation!
   :hidden:
   :caption: Code
 
-  api/library_root
+..  api/library_root
 
 
 
