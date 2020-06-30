@@ -88,7 +88,7 @@ exhale_args = {
     "doxygenStripFromPath":  "..",
     "createTreeView":        True,
     "exhaleExecutesDoxygen": False,
-    "exhaleDoxygenStdin":    "INPUT = ../../src",
+    #"exhaleDoxygenStdin":    "INPUT = ../../src",
     "listingExclude": ["r.*nlohmann"]
 }
 #
