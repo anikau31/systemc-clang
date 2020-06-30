@@ -33,7 +33,7 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
   bool TraverseStmt(Stmt *stmt);
   bool TraverseDeclStmt(DeclStmt * declstmt);
-  bool ProcessVarDecl(VarDecl * vardecl, hNodep &h_vardecl);
+  bool ProcessVarDecl(VarDecl * vardecl);
   bool TraverseBinaryOperator(BinaryOperator* expr);
   bool TraverseUnaryOperator(UnaryOperator* expr);
   bool TraverseIntegerLiteral(IntegerLiteral * lit);

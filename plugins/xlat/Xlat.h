@@ -10,6 +10,7 @@
 //#include "XlatEntryMethod.h"
 #include "hNode.h"
 #include "XlatEntryMethod.h"
+#include "XlatType.h"
 
 using namespace clang;
 using namespace scpar;
@@ -30,12 +31,14 @@ class Xlat : public SystemCConsumer {
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatvars(ModuleDecl::portMapType pmap, Model *model,  hNodep &h_info);
+#if 0
   void xlattype(string prefix, Tree<TemplateType> *template_argtp, hNode::hdlopsEnum h_op, hNodep &h_info);
   void makehpsv(string prefix, string typname,  hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo=true);
   void addfieldtype(const FieldDecl * fld, hNodep &h_typdef);
   hNodep addtype(string typname, QualType typ);
   void generatetype( scpar::TreeNode<scpar::TemplateType > * const &node,
 		     scpar::Tree<scpar::TemplateType > * const &treehead, hNodep &h_info);
+#endif
   void xlatproc(vector<EntryFunctionContainer *>efv, hNodep & h_top, llvm::raw_ostream &os );
   void xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pb);
   private:
@@ -43,6 +46,7 @@ class Xlat : public SystemCConsumer {
     hNodep h_top;
     std::unordered_map<string, CXXMethodDecl *> allmethodecls;  //  all methods called
     std::unordered_map<string, QualType > usertypes;
+    XlatType xlatt;
     util lutil;
 };
 

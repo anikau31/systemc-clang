@@ -4,7 +4,8 @@
 #include "PortBinding.h"
 #include "Tree.h"
 #include "Xlat.h"
-#include "TemplateParametersMatcher.h"
+//#include "TemplateParametersMatcher.h"
+#include "XlatType.h"
 #include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 
@@ -14,7 +15,7 @@ using namespace scpar;
 
 bool Xlat::postFire() {
   Model *model = getSystemCModel();
- 
+  
   std::error_code ec;
   string outputfn;
 
@@ -39,7 +40,7 @@ bool Xlat::postFire() {
 
   // typedef std::vector< modulePairType > moduleMapType;
   // typedef std::pair<std::string, ModuleDecl *> modulePairType;
-  
+
   Model::moduleMapType modules = model->getModuleDecl();
   if (modules.size() <= 0) return true;
   Model::modulePairType modpair = modules[0]; // assume first one is top module
@@ -65,14 +66,14 @@ bool Xlat::postFire() {
 
   os_ << "User Types Map\n";
 
-  while (!usertypes.empty()) {
-    std::unordered_map<string, QualType> usertypestmp = usertypes;
-    usertypes.clear();
+  while (!xlatt.usertypes.empty()) {
+    std::unordered_map<string, QualType> usertypestmp = xlatt.usertypes;
+    xlatt.usertypes.clear();
     for (auto t : usertypestmp) {
       os_ << "User Type --------\n" << t.first << ":" << t.second.getTypePtr() << "\n";
       t.second->dump(os_);
       os_ << "---------\n";
-      //addtype(t.first, t.second)->print(xlatout);
+      xlatt.addtype(t.first, t.second, getContext())->print(xlatout);
     }
   }
   return true;
@@ -181,7 +182,7 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
     //  if type is structured, it will be flattened into multiple declarations
     // each with a unique name and Typeinfo followed by Type.
-    xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+    xlatt.xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
     // check for initializer
     VarDecl * vard = pd->getAsVarDecl();
     if (vard && vard->hasInit()) {
@@ -208,11 +209,12 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
     Tree<TemplateType> *template_argtp = (pd->getTemplateTypes())->getTemplateArgTreePtr();
     //  if type is structured, it will be flattened into multiple declarations
     // each with a unique name and Typeinfo followed by Type.
-    xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+    xlatt.xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
    
   }
 }
 
+#if 0
 // Not currently used
 void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo) {
   // create hNode for a Port|Signal|Var declaration with resolved type name
@@ -364,7 +366,7 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
   return;
 
   // Code below is not currently used. left here for reference
-#if 0 
+  //#if 0 
   for (auto const &node : *template_argtp) {
 	const TemplateType * type_data{node->getDataPtr()}; 
 	string tmps2 =  type_data->getTypeName();
@@ -453,7 +455,7 @@ void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
       }
     }
   }
-#endif
+  //#endif
 }
 
 // Note -- not currently called
@@ -500,7 +502,7 @@ void Xlat::xlatvars(ModuleDecl::portMapType pmap, Model * model,  hNodep &h_info
     }
   }
 }
-
+#endif
 void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
                     llvm::raw_ostream &os) {
   for (auto efc : efv) {

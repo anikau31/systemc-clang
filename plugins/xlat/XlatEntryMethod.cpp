@@ -1,4 +1,5 @@
 #include "XlatEntryMethod.h"
+#include "XlatType.h"
 
 // We have to use the Traverse pattern rather than Visitor 
 // because we need control to come back to the point of call
@@ -183,44 +184,26 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
 	auto *vardecl = dyn_cast<VarDecl>(DI);
 	if (!vardecl)
 	  continue;
-	hNodep h_vardecl = new hNode(vardecl->getName(), hNode::hdlopsEnum::hVardecl);
-	ProcessVarDecl(vardecl, h_vardecl); // adds it to the list of renamed local variables
-	// if (h_varlist) h_varlist->child_list.push_back(h_vardecl);
-	// else h_varlist = h_vardecl; // single declaration
+	ProcessVarDecl(vardecl); // adds it to the list of renamed local variables
       }
-  h_ret = NULL; //h_varlist;
+  h_ret = NULL; 
   return true;
 }
 
-bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
+bool XlatMethod::ProcessVarDecl( VarDecl * vardecl) {
   os_ << "ProcessVarDecl var name is " << vardecl->getName() << "\n";
 
-  hNodep h_typeinfo = new hNode( hNode::hdlopsEnum::hTypeinfo);
+  hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
+
   QualType q = vardecl->getType();
   const Type *tp = q.getTypePtr();
   os_ << "ProcessVarDecl type name is " << q.getAsString() << "\n";
   FindTemplateTypes *te = new FindTemplateTypes();
 
   te->Enumerate(tp);
- 
-  scpar::FindTemplateTypes::type_vector_t ttargs = te->getTemplateArgumentsType();
-  for (auto const &targ : ttargs) {
-
-    //h_typeinfo->child_list.push_back(new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
-    string tmps = targ.getTypeName();
-    lutil.make_ident(tmps);
-    h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
-
-  }
-  
-  if (h_typeinfo->child_list.empty()) { // front end didn't parse type info
-    //h_typeinfo->child_list.push_back(new hNode("\"" + q.getAsString() + "\"", hNode::hdlopsEnum::hType));
-    string tmps = q.getAsString();
-    lutil.make_ident(tmps);
-    h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
-  }
-				     
-  h_vardecl->child_list.push_back(h_typeinfo);
+  XlatType xlatt;
+  xlatt.xlattype(vardecl->getName(), te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hVardecl, h_varlist);
+  hNodep h_vardecl = h_varlist->child_list.back();
   if (Expr * declinit = vardecl->getInit()) {
 
     TraverseStmt(declinit);
