@@ -14,9 +14,18 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-import subprocess
+ 
+ import subprocess, os
 
-subprocess.call('doxygen Doxyfile', shell=True)
+read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+
+if read_the_docs_build:
+
+    subprocess.call('doxygen Doxyfile', shell=True)
+
+
+#  import subprocess
+#  subprocess.call('doxygen Doxyfile', shell=True)
 
 # -- Project information -----------------------------------------------------
 
