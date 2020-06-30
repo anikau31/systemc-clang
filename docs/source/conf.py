@@ -83,5 +83,5 @@ primary_domain = 'cpp'
 highlight_language = 'cpp'
 
 
-# Variables
+## Variables
 systemc_clang = 'systemc-clang'
