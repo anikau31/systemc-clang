@@ -1,10 +1,11 @@
+.. highlight:: console
+
 ====================
 Using systemc-clang
 ====================
 
 After successfully compiling `systemc-clang`, it is possible to run the tool, but it requires several additional arguments.
 Assuming that the current path is in the directory that contains the ``systemc-clang`` binary, the tool can be run as follows.
-
 ::
   $ ./systemc-clang test.cpp -- __STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS  \
   -I<path-to-llvm-install>/lib/clang/10.0.0/include/ -I/usr/include -I$<path-to-systemc>/include \
@@ -33,11 +34,5 @@ These can be changed in the file itself.
 * ``SYSTEMC_CLANG_BUILD_DIR``: This points to where ``systemc-clang`` was built.
 
 Once the appropriate environment variables are set, the scripts used to run ``systemc-clang`` can be executed successfully.
-
 ::
   $ scripts/run.sh test.cpp
-
-::
-  $ scripts/run-gdb.sh test.cpp 
-
-The latter will enter the user into the gdb interface.

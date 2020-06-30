@@ -21,10 +21,21 @@ Welcome to systemc-clang's documentation!
 
   support.rst
 
-  parsing/parsing.rst
-  testing/testing.rst
+.. toctree::
+  :maxdepth: 2
+  :hidden:
+  :caption: Developer
+
+  developer/developer.rst
 
   plugins/xlat.rst
+
+.. toctree::
+  :maxdepth: 2
+  :hidden:
+  :caption: Code
+
+  api/library_root
 
 
 
