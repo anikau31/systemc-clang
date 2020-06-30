@@ -86,6 +86,3 @@ exhale_args = {
 primary_domain = 'cpp'
 highlight_language = 'cpp'
 
-
-## Variables
-systemc_clang = 'systemc-clang'
