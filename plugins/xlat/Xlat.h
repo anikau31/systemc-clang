@@ -30,33 +30,17 @@ class Xlat : public SystemCConsumer {
   void xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &xlatout );
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
-  void xlatvars(ModuleDecl::portMapType pmap, Model *model,  hNodep &h_info);
-#if 0
-  void xlattype(string prefix, Tree<TemplateType> *template_argtp, hNode::hdlopsEnum h_op, hNodep &h_info);
-  void makehpsv(string prefix, string typname,  hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo=true);
-  void addfieldtype(const FieldDecl * fld, hNodep &h_typdef);
-  hNodep addtype(string typname, QualType typ);
-  void generatetype( scpar::TreeNode<scpar::TemplateType > * const &node,
-		     scpar::Tree<scpar::TemplateType > * const &treehead, hNodep &h_info);
-#endif
   void xlatproc(vector<EntryFunctionContainer *>efv, hNodep & h_top, llvm::raw_ostream &os );
   void xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pb);
   private:
 
     hNodep h_top;
     std::unordered_map<string, CXXMethodDecl *> allmethodecls;  //  all methods called
-    std::unordered_map<string, QualType > usertypes;
     XlatType xlatt;
-    util lutil;
 };
 
  static llvm::cl::OptionCategory xlat_category("xlat-systemc-clang options");
-// static llvm::cl::opt<std::string> xlat_top(
-    // "top",
-    // llvm::cl::desc("Specify top-level module declaration for entry point"),
-    // llvm::cl::cat(xlat_category));
-//
-//
+
 class XlatAXN : public ASTFrontendAction {
  public:
   XlatAXN() : top_{} {};
