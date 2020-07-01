@@ -109,11 +109,8 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
 
   h_module->child_list.push_back(h_ports);
       
-  // Other Variables
-  //xlatvars(mod->getOtherVars(), model,
-  // h_ports);
   
-  xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
+  xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hModdecl, h_ports);
   
   // submodules
   // const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
@@ -180,8 +177,7 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
-    //  if type is structured, it will be flattened into multiple declarations
-    // each with a unique name and Typeinfo followed by Type.
+
     xlatt.xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
     // check for initializer
     VarDecl * vard = pd->getAsVarDecl();
