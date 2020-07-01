@@ -14,6 +14,18 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+ 
+import subprocess,os
+
+read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+
+if read_the_docs_build:
+
+    subprocess.call('doxygen Doxyfile', shell=True)
+
+
+#  import subprocess
+#  subprocess.call('doxygen Doxyfile', shell=True)
 
 # -- Project information -----------------------------------------------------
 
@@ -57,7 +69,8 @@ html_theme = 'sphinx_rtd_theme' #'alabaster'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
+#html_extra_path = ['doxydoc/html']
 
 # -- Breath and Exhale 
 
@@ -75,13 +88,10 @@ exhale_args = {
     "doxygenStripFromPath":  "..",
     "createTreeView":        True,
     "exhaleExecutesDoxygen": False,
-    "exhaleDoxygenStdin":    "INPUT = ../../src",
+    #"exhaleDoxygenStdin":    "INPUT = ../../src",
     "listingExclude": ["r.*nlohmann"]
 }
 #
 primary_domain = 'cpp'
 highlight_language = 'cpp'
 
-
-# Variables
-systemc_clang = 'systemc-clang'
