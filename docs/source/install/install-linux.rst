@@ -58,16 +58,16 @@ Testing on a small example
 
 Copy the compiled binary in the bin folder of ``LLVM_INSTALL_DIR``.
 ::
-$ cp systemc-clang $LLVM_INSTALL_DIR/bin
+   $ cp systemc-clang $LLVM_INSTALL_DIR/bin
 
 Set the ``SYSTEMC`` variable.
 ::
-$ export SYSTEMC=<path-to-systemc-install>
+   $ export SYSTEMC=<path-to-systemc-install>
 
 Execute it on a simple example.  You should see some (debug) information print out on the screen.  Hope to make this more meaningful in the future.
 ::
-$ $LLVM_INSTALL_DIR/bin/systemc-clang ../systemc-clang/tests/module1.hpp -- \
--D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS  -I/usr/include  \
--I$SYSTEMC/include  -x c++ -w -c
+   $ $LLVM_INSTALL_DIR/bin/systemc-clang ../systemc-clang/tests/module1.hpp -- \
+   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS  -I/usr/include  \
+   -I$SYSTEMC/include  -x c++ -w -c
 
 
