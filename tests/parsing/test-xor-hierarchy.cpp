@@ -68,7 +68,14 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
     // Check how many nested modules it has.
     // It should have 4: N1 - N4
-    REQUIRE(found_module_decl->getNestedModuleDecl().size() == 4);
+    auto nested_decls{ found_module_decl->getNestedModuleDecl()};
+    REQUIRE(nested_decls.size() == 4);
+
+    // Print out the nested declaration's. 
+    for (const auto &ndecl: nested_decls ) {
+      ndecl->dump(llvm::outs());
+    }
+
 
     // Check port bindings
     //
