@@ -53,7 +53,7 @@ bool Xlat::postFire() {
   vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
   if (instanceVec.size()<=0) return true;
   for (auto modinstance: instanceVec) { // generate module def for each instance
-    xlatmodule(modinstance, h_module, xlatout);
+    xlatmodule(modinstance, h_module, model, xlatout);
     //h_module->print(xlatout);
   }
   
@@ -79,7 +79,7 @@ bool Xlat::postFire() {
   return true;
 }
 
-void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &xlatout ) {
+void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, Model *model, llvm::raw_fd_ostream &xlatout ) {
   const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
   os_ << "submodule count is " << submodv.size() << "\n";
   typedef std::pair<std::string, scpar::ModuleDecl::portBindingMapType> submodportbindings_t;
@@ -129,7 +129,7 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
       // Processes
   h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
-  xlatproc(mod->getEntryFunctionContainer(), h_top, os_);
+  xlatproc(mod->getProcessMap(), h_top, os_);
 
   if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
@@ -145,10 +145,10 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
   }
   h_module->print(xlatout);
   // now generate submodules
-  for (auto& smod:submodv) {
+  for (const auto &smod:submodv) {
     os_ << "generate submodule " << smod->getInstanceName() << "\n";
     hNodep h_submod = new hNode(smod->getInstanceName(), hNode::hdlopsEnum::hModule);
-    xlatmodule(smod, h_submod, xlatout);
+    xlatmodule(smod, h_submod, model, xlatout);
   }
 }
 
@@ -210,9 +210,16 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
   }
 }
 
-void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
+void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
                     llvm::raw_ostream &os) {
-  for (auto efc : efv) {
+
+  // typedef std::map<std::string, ProcessDecl *> processMapType;
+  // processMapType getProcessMap();
+  // ProcessDecl::getEntryFunction() returns EntryFunctionContainer*
+
+  for (auto const &pm_entry : pm) {
+    ProcessDecl *pd{get<1>(pm_entry)};
+    EntryFunctionContainer *efc{pd->getEntryFunction()};
     if (efc->getProcessType() == PROCESS_TYPE::METHOD) {
       hNodep h_process = new hNode(efc->getName(), hNode::hdlopsEnum::hProcess);
       os_ << "process " << efc->getName() << "\n";
