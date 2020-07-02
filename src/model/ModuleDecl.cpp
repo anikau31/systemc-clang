@@ -348,7 +348,7 @@ void ModuleDecl::addNestedModule(ModuleDecl *nested_module) {
 
 vector<string> ModuleDecl::getInstanceList() { return instance_list_; }
 
-vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
+std::vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
   return vef_;
 }
 

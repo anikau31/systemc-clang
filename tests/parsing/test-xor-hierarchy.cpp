@@ -72,8 +72,44 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
     REQUIRE(nested_decls.size() == 4);
 
     // Print out the nested declaration's. 
+    llvm::outs() << "############# Nested Decl test bug ##############\n";
     for (const auto &ndecl: nested_decls ) {
       ndecl->dump(llvm::outs());
+
+      // 
+      // This is how we should be accessing the EntryFunctionContainer.
+      // 
+      llvm::outs() << "############ Process map way \n";
+      auto process_map{ndecl->getProcessMap()};
+      for (const auto &proc: process_map) {
+        // Get the EntryFunctionContainer.
+        ProcessDecl *pd{get<1>(proc)};
+        auto entry_function{pd->getEntryFunction()};
+        // Get the sensitivity map.
+        auto sense_map{entry_function->getSenseMap()};
+
+        for (auto const &sense : sense_map) {
+          llvm::outs() << "sensitivity name: " << sense.first << "\n";
+          // There is more to the sensitivity info ... 
+        }
+      }
+
+      // Test the bug
+      // This is how we should not be allowed to access the EntryFunctionContainer.
+      // This access should be removed.
+      llvm::outs() << "############ Bug way \n";
+      std::vector<EntryFunctionContainer*> entry_functions{ndecl->getEntryFunctionContainer()};
+      // Go through each of the entry function and print them out.
+      for (const auto &ef: entry_functions) {
+       // ef->dump(llvm::outs(),0);
+        auto sense_map{ef->getSenseMap()};
+
+        for (auto const &sense : sense_map) {
+          llvm::outs() << "sensitivity name: " << sense.first << "\n";
+          // There is more to the sensitivity info ...
+        }
+
+      }
     }
 
 
