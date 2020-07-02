@@ -47,6 +47,7 @@ Requirements
 ^^^^^^^^^^^^
 
 ``systemc-clang`` has the following requirements.
+
 * `clang <http://clang.llvm.org/download.html>`_ version 10.0.0.
 * `SystemC <http://systemc.org>`_ version 2.3.3. Please see `installation notes <https://github.com/anikau31/systemc-clang/blob/master/doc/systemc-install.mkd>`_
 * c++14 is required.  We are using some features that necessitate c++14.  Down-porting it is also possible, but not supported.
