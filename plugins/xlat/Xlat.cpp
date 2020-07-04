@@ -110,7 +110,7 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, Model *model, llvm::raw
   h_module->child_list.push_back(h_ports);
       
   
-  xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hModdecl, h_ports);
+  xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
   
   // submodules
   // const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();

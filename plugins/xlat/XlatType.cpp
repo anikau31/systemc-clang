@@ -45,9 +45,9 @@ void XlatType::generatetype(scpar::TreeNode<scpar::TemplateType > * const &node,
 			scpar::Tree<scpar::TemplateType > * const &treehead, hNodep &h_info) {
 
   string tmps = (node->getDataPtr())->getTypeName();
-  llvm::errs() << "generatetype node name is " << tmps << "type follows\n";
+  llvm::errs() << "generatetype node name is " << tmps << " type follows\n";
   (node->getDataPtr())->getTypePtr()->dump(llvm::errs());				 
-  hNodep nodetyp = new hNode (tmps, hNode::hdlopsEnum::hType);
+  hNodep nodetyp = new hNode (tmps, tutil.isposint(tmps) ? hNode::hdlopsEnum::hLiteral: hNode::hdlopsEnum::hType);
   h_info->child_list.push_back(nodetyp);
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
      return;
