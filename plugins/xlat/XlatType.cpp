@@ -26,6 +26,7 @@ void XlatType::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
   hNodep hmainp = new hNode(prefix, h_op); // opPort|Sig|Var prefix
   h_info->child_list.push_back(hmainp);
   string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
+  std::replace(tmps.begin(), tmps.end(), ' ', '_'); // replace spaces in type name with _
   hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
   hmainp->child_list.push_back(h_typeinfo);
   hNodep h_typ = new hNode(tmps, hNode::hdlopsEnum::hType);
