@@ -184,7 +184,10 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     if (vard && vard->hasInit()) {
       APValue *apval = vard->getEvaluatedValue();
       if (apval && apval->isInt()) {
-	(h_info->child_list.back())->child_list.push_back(new hNode((apval->getInt()).toString(10),  hNode::hdlopsEnum::hVarInit));
+	hNodep h_lit = new hNode((apval->getInt()).toString(10), hNode::hdlopsEnum::hLiteral);
+	hNodep h_varinit = new hNode(hNode::hdlopsEnum::hVarInit);
+	h_varinit->child_list.push_back(h_lit);
+	(h_info->child_list.back())->child_list.push_back(h_varinit);
       }
     }
   }

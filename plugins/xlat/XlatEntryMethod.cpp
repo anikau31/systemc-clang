@@ -83,7 +83,12 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     TRY_TO(TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getSubExpr()));
     //TRY_TO(TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary()));
   }
-
+  else if (isa<DeclRefExpr>(stmt)) {
+    TRY_TO(TraverseDeclRefExpr((DeclRefExpr *) stmt));
+  }
+  else if (isa<MemberExpr>(stmt)) {
+    TRY_TO(TraverseMemberExpr((MemberExpr *) stmt));
+  }
   else if (isa<IntegerLiteral>(stmt)) {
     TRY_TO(TraverseIntegerLiteral((IntegerLiteral *)stmt));
   }  
@@ -409,7 +414,7 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
       (isLogicalOp(opcall->getOperator()))) {
     if (opcall->getNumArgs() == 2) {
       os_ << "assignment or logical operator, 2 args\n";
-      hNodep h_assignop = new hNode ("=", hNode::hdlopsEnum::hBinop); // node to hold assignment expr
+      hNodep h_assignop = new hNode (isLogicalOp(opcall->getOperator())? "==" : "=", hNode::hdlopsEnum::hBinop); // node to hold logical or assignment expr
       TRY_TO(TraverseStmt(opcall->getArg(0)));
       h_assignop->child_list.push_back(h_ret);
       hNodep save_h_ret = h_ret;
