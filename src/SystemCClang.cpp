@@ -323,7 +323,7 @@ bool SystemCConsumer::fire() {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
         ctordecl->getBody(fd);
         llvm::outs() << "==============> RUN netlist matcher\n";
-        fd->dump();
+        //fd->dump();
         netlist_registry.match(*fd, getContext());
         llvm::outs() << "==============> DONE netlist matcher\n";
       }

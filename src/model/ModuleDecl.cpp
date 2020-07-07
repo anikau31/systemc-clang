@@ -56,6 +56,9 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
 
   // Class template parameters.
   template_parameters_ = from.template_parameters_;
+
+  // Nested submodules
+  nested_modules_ = from.nested_modules_;
 }
 
 ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
@@ -90,6 +93,10 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
 
   // Class template parameters.
   template_parameters_ = from.template_parameters_;
+
+  // Nested submodules
+  nested_modules_ = from.nested_modules_;
+
   return *this;
 }
 
@@ -341,7 +348,7 @@ void ModuleDecl::addNestedModule(ModuleDecl *nested_module) {
 
 vector<string> ModuleDecl::getInstanceList() { return instance_list_; }
 
-vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
+std::vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
   return vef_;
 }
 
