@@ -68,4 +68,28 @@ TEST_CASE("sreg example", "[llnl-examples]") {
       }
     }
   }
+
+  auto ureg{model->getInstance("u_reg_ex")};
+  SECTION("Print out the netlist for instance u_reg_ex", "[u_reg_ex sensitivity]") {
+    REQUIRE(ureg != nullptr);
+
+    llvm::outs() << "============= XXXXXXXXXXX ======================\n";
+    llvm::outs() << "Print out the sensitivity for u_reg_ex\n";
+
+    llvm::outs() << "############ Process map way \n";
+      auto process_map{ureg->getProcessMap()};
+      for (const auto &proc: process_map) {
+        // Get the EntryFunctionContainer.
+        ProcessDecl *pd{get<1>(proc)};
+        auto entry_function{pd->getEntryFunction()};
+        // Get the sensitivity map.
+        auto sense_map{entry_function->getSenseMap()};
+
+        for (auto const &sense : sense_map) {
+          llvm::outs() << "sensitivity name: " << sense.first << "\n";
+          // There is more to the sensitivity info ... 
+        }
+      }
+  } // Section 
+
 }

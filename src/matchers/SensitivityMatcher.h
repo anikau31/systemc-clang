@@ -1,3 +1,15 @@
+ //===- SensitivityMatcher.h - Matching sensitivity lists --*- C++ -*-=====//
+ //
+ // Part of the systemc-clang project.
+ // See License.rst
+ //
+ //===----------------------------------------------------------------------===//
+ //
+ /// \file
+ /// Parses a SystemC module's process' sensitivity list.
+ //
+ //===----------------------------------------------------------------------===//
+
 #ifndef _SENSITIVITY_MATCHER_H_
 #define _SENSITIVITY_MATCHER_H_
 
@@ -14,18 +26,22 @@ using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
 /////////////////////////////////////////////////////////
-//
-// Class SensitivityMatcher
-//
-//
+///
+/// Class CallerCaleeMatcher
+///
+/// This class identfies for a method call, who is the caller, and who is the
+/// callee.
+///
 ///////////////////////////////////////////////////////////////////////////////
 class CallerCalleeMatcher : public MatchFinder::MatchCallback {
  private:
-  // 1. name
-  // 2. FieldDecl/VarDecl = ValueDecl. Pointer to field declaration.
-  // 3. The MemberExpr from where I got this information.
+  /// 1. name
+  /// 2. FieldDecl/VarDecl = ValueDecl. Pointer to field declaration.
+  /// 3. The MemberExpr from where I got this information.
   typedef std::vector<std::tuple<std::string, ValueDecl *, MemberExpr *>>
       CallerCalleeType;
+
+  /// Store the information.
   std::vector<std::tuple<std::string, ValueDecl *, MemberExpr *>> calls_;
 
  public:
@@ -34,6 +50,7 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
 
+    /// This is the matcher that finds all the member expressions..  
     auto match_member_expr = findAll(memberExpr().bind("me"));
 
     auto match_member_expr_in_mcall = cxxMemberCallExpr(
@@ -107,8 +124,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
 
-
-    auto match = cxxConstructorDecl(isExpansionInMainFile(),
+    auto match = cxxConstructorDecl(
         forEachDescendant(
           // Find the sc_event
           cxxOperatorCallExpr(
@@ -144,7 +160,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
 
   // This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
-    llvm::outs() << "====== SENSITIVITY MATCHER EXECUTED ======= \n";
+    //llvm::outs() << "====== SENSITIVITY MATCHER EXECUTED ======= \n";
     auto cxx_ctor_decl{const_cast<CXXConstructorDecl *>(
         result.Nodes.getNodeAs<CXXConstructorDecl>("cxx_constructor_decl"))};
 
@@ -167,7 +183,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
       CallerCalleeMatcher call_matcher{};
       call_matcher.registerMatchers(call_registry);
       call_registry.match(*me_wo_mcall, *result.Context);
-      call_matcher.dump();
+      //call_matcher.dump();
       // std::vector<SensitivityTupleType>
       auto entry{call_matcher.getCallerCallee()};
       // sensitivity_.insert(std::get<0>(entry), entry);
@@ -182,14 +198,16 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
       CallerCalleeMatcher call_matcher{};
       call_matcher.registerMatchers(call_registry);
       call_registry.match(*cxx_mcall, *result.Context);
-      call_matcher.dump();
+      //call_matcher.dump();
       // sensitivity_.insert(SensitivityPairType(call_matcher.getCallerCallee()));
       auto entry{call_matcher.getCallerCallee()};
       // sensitivity_.insert(generateSensitivityName(entry), entry);
       sensitivity_.insert(
           SensitivityPairType(generateSensitivityName(entry), entry));
     }
-    llvm::outs() << "\n";
+    //llvm::outs() << "\n";
+
+    //dump();
   }
 
   void dump() {

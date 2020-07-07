@@ -9,6 +9,7 @@ set (TEST_LIST
   hotfix-40-findtemplatetypes
   t5-template-matching
   hotfix-105-sensitivity-list
+  sreg
   # TODO Failing test
   #portarray-example
   )
