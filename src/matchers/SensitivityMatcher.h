@@ -96,6 +96,8 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
   /// represent where this particular ValueDecl was found for further parsing.
   typedef std::tuple<std::string, ValueDecl *, MemberExpr *>
       SensitivityTupleType;
+
+  /// This is the pair for inserting key-value entries in the map.
   typedef std::pair<std::string, std::vector<SensitivityTupleType>>
       SensitivityPairType;
 
@@ -106,6 +108,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
   /// This is the map structure to store the identified sensitivity list.
   SenseMapType sensitivity_;
 
+  // This generates the name of the argument for the sensitivity.
   std::string generateSensitivityName(
       const std::vector<SensitivityTupleType> &sense_args) {
     std::string name{};
@@ -120,6 +123,8 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
   /// Return the sensitivity map that has been created.
   SenseMapType getSensitivityMap() { return sensitivity_; }
 
+  /// Defines the matcher, and setup the matcher.
+  ///
   void registerMatchers(MatchFinder &finder) {
     /// This is the main matcher for identifying sensitivity lists.
     ///
@@ -174,10 +179,11 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
       ).bind("cxx_constructor_decl");
 
     /* clang-format on */
+    /// Add the matcher.
     finder.addMatcher(match, this);
   }
 
-  // This is the callback function whenever there is a match.
+  /// This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
     // llvm::outs() << "====== SENSITIVITY MATCHER EXECUTED ======= \n";
     auto cxx_ctor_decl{const_cast<CXXConstructorDecl *>(
@@ -225,6 +231,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     }
   }
 
+  // Dump out the detected sensitivity list arguments.
   void dump() {
     for (auto const entry : sensitivity_) {
       auto generated_name{entry.first};
