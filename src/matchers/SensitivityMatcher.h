@@ -48,6 +48,7 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
   /// This returns a list of all the caller and callees that are identified.
   CallerCalleeType getCallerCallee() const { return calls_; }
 
+  /// Register the matchers to identify caller and callees.
   void registerMatchers(MatchFinder &finder) {
     /* clang-format off */
 
@@ -58,15 +59,12 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
     finder.addMatcher(match_member_expr, this);
   }
 
+  /// This is the callback function when there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
     auto me{const_cast<MemberExpr *>(result.Nodes.getNodeAs<MemberExpr>("me"))};
 
-    // llvm::outs() << "==================== ME\n";
     if (me) {
-      // me->dump();
       std::string name{me->getMemberDecl()->getNameAsString()};
-      // llvm::outs() << "ME x: " << me->getMemberDecl()->getNameAsString()
-      //             << "\n";
       calls_.insert(calls_.begin(),
                     std::make_tuple(name, me->getMemberDecl(), me));
     }
@@ -77,7 +75,6 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
     for (auto const &call : calls_) {
       llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
                    << std::get<2>(call) << "\n";
-      // get<1>(call)->dump();
     }
   }
 };
@@ -206,8 +203,6 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
       CallerCalleeMatcher call_matcher{};
       call_matcher.registerMatchers(call_registry);
       call_registry.match(*me_wo_mcall, *result.Context);
-      // call_matcher.dump();
-      // std::vector<SensitivityTupleType>
       auto entry{call_matcher.getCallerCallee()};
       // sensitivity_.insert(std::get<0>(entry), entry);
       sensitivity_.insert(
@@ -216,16 +211,13 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
 
     /// If the argument to the operator<<() is a CXXMemberCallExpr.
     /// This is needed when there is a clk.pos() in the sensitivity list.
-    /// This is when we have member call expressions on the FieldDecl. 
+    /// This is when we have member call expressions on the FieldDecl.
     if (cxx_mcall) {
       MatchFinder call_registry{};
       CallerCalleeMatcher call_matcher{};
       call_matcher.registerMatchers(call_registry);
       call_registry.match(*cxx_mcall, *result.Context);
-      // call_matcher.dump();
-      // sensitivity_.insert(SensitivityPairType(call_matcher.getCallerCallee()));
       auto entry{call_matcher.getCallerCallee()};
-      // sensitivity_.insert(generateSensitivityName(entry), entry);
       sensitivity_.insert(
           SensitivityPairType(generateSensitivityName(entry), entry));
     }
