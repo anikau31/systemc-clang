@@ -26,7 +26,8 @@ auto checkMatch(const std::string &name,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Class ModuleDeclarationMatcher
+//
+/// Class ModuleDeclarationMatcher
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,7 +36,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
  public:
   typedef std::vector<std::tuple<std::string, CXXRecordDecl *> >
       ModuleDeclarationType;
-  // Map to hold CXXREcordDecl to module declaration type name.
+  /// Map to hold CXXREcordDecl to module declaration type name.
   typedef std::pair<CXXRecordDecl *, std::string> ModuleDeclarationPairType;
   typedef std::map<CXXRecordDecl *, std::string> ModuleDeclarationMapType;
 
@@ -46,8 +47,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   typedef std::map<CXXRecordDecl *, InstanceListType>
       DeclarationsToInstancesMapType;
 
-  // This will store all the modules as ModuleDecl
-  // typedef ModuleDecl* ModulePairType;
+  /// This will store all the modules as ModuleDecl.
   typedef std::pair<CXXRecordDecl *, ModuleDecl *> ModulePairType;
   typedef std::map<CXXRecordDecl *, ModuleDecl *> ModuleMapType;
 
@@ -61,15 +61,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
   DeclarationsToInstancesMapType declaration_instance_map_;
 
-  // This will store the pruned modules as pair of string, ModuleDecl*
-  // The string will be the class name?
+  /// This will store the pruned modules as pair of string, ModuleDecl*
+  /// The string will be the class name?
   ModuleMapType modules_;
 
   // Match nested instances
   InstanceMatcher instance_matcher_;
-
-  // Match ports
-  // PortMatcher port_matcher_;
 
  public:
   const DeclarationsToInstancesMapType &getInstances() {
@@ -92,14 +89,14 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     }
   }
 
-  // Register the matchers
+  /// Register the matchers.
   void registerMatchers(MatchFinder &finder) {
-    /* clang-format off */
 
     // This is in case the set method is not called explicitly.
     // Simply pass in what is the default.
     set_top_module_decl( top_module_decl_ );
 
+    /* clang-format off */
     auto match_module_decls = 
       cxxRecordDecl(
           //matchesName(top_module_decl_),  // Specifies the top-level module name.
@@ -110,14 +107,11 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
           ).bind("sc_module");
     /* clang-format on */
 
-    // add all the matchers.
+    /// Add all the matchers.
     finder.addMatcher(match_module_decls, this);
 
-    // add instance matcher
+    // Add instance matcher
     instance_matcher_.registerMatchers(finder);
-
-    // add port (field) matcher
-    // port_matcher_.registerMatchers(finder);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {

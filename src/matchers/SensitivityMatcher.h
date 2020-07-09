@@ -20,6 +20,11 @@
 //
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
+#include "llvm/Support/Debug.h"
+
+/// Different matchers may use different DEBUG_TYPE
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "SensitivityMatcher"
 
 using namespace clang;
 using namespace clang::ast_matchers;
@@ -73,8 +78,8 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
   /// Dump out the caller and callee found in the sensitivity list.
   void dump() {
     for (auto const &call : calls_) {
-      llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
-                   << std::get<2>(call) << "\n";
+      LLVM_DEBUG(llvm::dbgs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
+                   << std::get<2>(call) << "\n");
     }
   }
 };
@@ -182,7 +187,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
 
   /// This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
-    // llvm::outs() << "====== SENSITIVITY MATCHER EXECUTED ======= \n";
+    LLVM_DEBUG(llvm::dbgs() << "====== SENSITIVITY MATCHER EXECUTED ======= \n";);
     auto cxx_ctor_decl{const_cast<CXXConstructorDecl *>(
         result.Nodes.getNodeAs<CXXConstructorDecl>("cxx_constructor_decl"))};
 
@@ -228,11 +233,11 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     for (auto const entry : sensitivity_) {
       auto generated_name{entry.first};
       auto callercallee{entry.second};
-      llvm::outs() << generated_name << "  \n";
+      LLVM_DEBUG(llvm::dbgs() << generated_name << "  \n");
 
       for (auto const &call : callercallee) {
-        llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
-                     << std::get<2>(call) << "\n";
+        LLVM_DEBUG(llvm::dbgs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
+                     << std::get<2>(call) << "\n");
       }
     }
   }

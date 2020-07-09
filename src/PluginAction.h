@@ -16,7 +16,10 @@
 #define _PLUGIN_ACTION_H_
 
 #include <clang/Tooling/Tooling.h>
+#include "llvm/Support/Debug.h"
+
 #include "SystemCClang.h"
+
 namespace scpar {
 
 static llvm::cl::OptionCategory category("systemc-clang options");
@@ -24,6 +27,17 @@ static llvm::cl::opt<std::string> topModule(
     "top-module",
     llvm::cl::desc("Specify top-level module declaration for entry point"),
     llvm::cl::cat(category));
+
+static llvm::cl::opt<bool> debug_mode(
+    "debug",
+    llvm::cl::desc("Enable debug output from systemc-clang"),
+    llvm::cl::cat(category));
+
+static llvm::cl::opt<std::string> debug_only(
+    "debug-only",
+    llvm::cl::desc("Enable debug only for the specified DEBUG_TYPE"),
+    llvm::cl::cat(category));
+
 
 
 
@@ -44,10 +58,21 @@ class SystemCClangAXN : public ASTFrontendAction {
 class PluginAction {
  public:
   PluginAction(int argc, const char **argv) {
-    // Specify the top-level module.
+    /// Specify the top-level module.
     CommonOptionsParser OptionsParser(argc, argv, category);
     ClangTool Tool(OptionsParser.getCompilations(),
                    OptionsParser.getSourcePathList());
+
+    /// Setup the debug mode.
+    //
+    if (debug_mode || (debug_only != "") ) {
+      LLVM_DEBUG(llvm::dbgs() << "Debug mode enabled\n";);
+      llvm::DebugFlag = true;
+    }
+
+    if (debug_only != "") {
+      llvm::setCurrentDebugType(debug_only.c_str());
+    }
 
     std::unique_ptr<FrontendActionFactory> FrontendFactory;
     FrontendFactory = newFrontendActionFactory<SystemCClangAXN>();

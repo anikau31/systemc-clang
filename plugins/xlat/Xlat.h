@@ -15,6 +15,9 @@ using namespace clang;
 using namespace scpar;
 using namespace hnode;
 
+//static llvm::cl::OptionCategory xlat_category("systemc-clang options");
+
+
 class Xlat : public SystemCConsumer {
 
   public:
@@ -46,7 +49,6 @@ class Xlat : public SystemCConsumer {
     util lutil;
 };
 
- static llvm::cl::OptionCategory xlat_category("xlat-systemc-clang options");
 // static llvm::cl::opt<std::string> xlat_top(
     // "top",
     // llvm::cl::desc("Specify top-level module declaration for entry point"),
@@ -71,9 +73,40 @@ class XlatPluginAction {
  public:
   XlatPluginAction(int argc, const char **argv) {
     // Specify the top-level module.
+    //
+    //
+    //
+llvm::cl::OptionCategory xlat_category("xlat options");
+llvm::cl::opt<std::string> topModule(
+    "top-module",
+    llvm::cl::desc("Specify top-level module declaration for entry point"),
+    llvm::cl::cat(xlat_category));
+
+llvm::cl::opt<bool> debug_mode(
+    "debug",
+    llvm::cl::desc("Enable debug output from systemc-clang"),
+    llvm::cl::cat(xlat_category));
+
+llvm::cl::opt<std::string> debug_only(
+    "debug-only",
+    llvm::cl::desc("Enable debug only for the specified DEBUG_TYPE"),
+    llvm::cl::cat(xlat_category));
+
     CommonOptionsParser OptionsParser(argc, argv, xlat_category);
     ClangTool Tool(OptionsParser.getCompilations(),
                    OptionsParser.getSourcePathList());
+
+    /// Setup the debug mode.
+    //
+    if (debug_mode || (debug_only != "") ) {
+      LLVM_DEBUG(llvm::dbgs() << "Debug mode enabled\n";);
+      llvm::DebugFlag = true;
+    }
+
+    if (debug_only != "") {
+      llvm::setCurrentDebugType(debug_only.c_str());
+    }
+
 
     std::unique_ptr<FrontendActionFactory> FrontendFactory;
     FrontendFactory = newFrontendActionFactory<XlatAXN>();
