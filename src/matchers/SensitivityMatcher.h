@@ -78,7 +78,7 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
   /// Dump out the caller and callee found in the sensitivity list.
   void dump() {
     for (auto const &call : calls_) {
-      LLVM_DEBUG(llvm::dbgs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
+      (llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
                    << std::get<2>(call) << "\n");
     }
   }

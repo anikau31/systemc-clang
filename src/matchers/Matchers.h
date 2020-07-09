@@ -17,6 +17,11 @@ using namespace clang;
 using namespace clang::ast_matchers;
 using namespace scpar;
 
+/// Different matchers may use different DEBUG_TYPE
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Matchers"
+
+
 namespace sc_ast_matchers {
 
 template <typename NodeType>
@@ -117,9 +122,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   virtual void run(const MatchFinder::MatchResult &result) {
     if (auto decl = const_cast<CXXRecordDecl *>(
             result.Nodes.getNodeAs<CXXRecordDecl>("sc_module"))) {
-      llvm::outs() << " Found sc_module: "
+      LLVM_DEBUG(llvm::dbgs() << " Found sc_module: "
                    << decl->getIdentifier()->getNameStart()
-                   << " CXXRecordDecl*: " << decl << "\n";
+                   << " CXXRecordDecl*: " << decl << "\n");
       std::string name{decl->getIdentifier()->getNameStart()};
       // decl->dump();
       //
@@ -191,14 +196,14 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     // 2. If there is an instance, then add it into the list.
 
     std::string dbg{"[pruneMatches]"};
-    llvm::outs() << "\n"
+    LLVM_DEBUG(llvm::dbgs() << "\n"
                  << dbg << " number_of_declarations "
                  << found_declarations_.size() << " number_of_instances "
-                 << instance_matcher_.getInstanceMap().size() << "\n";
+                 << instance_matcher_.getInstanceMap().size() << "\n");
 
     for (auto const &element : found_declarations_) {
       auto decl{get<1>(element)};
-      llvm::outs() << "- decl name: " << get<0>(element) << " " << decl << "\n ";
+      LLVM_DEBUG(llvm::dbgs() << "- decl name: " << get<0>(element) << " " << decl << "\n ");
       InstanceListType instance_list;
 
       if (instance_matcher_.findInstanceByVariableType(decl, instance_list)) {
