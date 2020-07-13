@@ -53,7 +53,7 @@ bool Xlat::postFire() {
   vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
   if (instanceVec.size()<=0) return true;
   for (auto modinstance: instanceVec) { // generate module def for each instance
-    xlatmodule(modinstance, h_module, model, xlatout);
+    xlatmodule(modinstance, h_module, xlatout);
     //h_module->print(xlatout);
   }
   
@@ -79,7 +79,7 @@ bool Xlat::postFire() {
   return true;
 }
 
-void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, Model *model, llvm::raw_fd_ostream &xlatout ) {
+void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &xlatout ) {
   const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
   os_ << "submodule count is " << submodv.size() << "\n";
   typedef std::pair<std::string, scpar::ModuleDecl::portBindingMapType> submodportbindings_t;
@@ -148,7 +148,7 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, Model *model, llvm::raw
   for (const auto &smod:submodv) {
     os_ << "generate submodule " << smod->getInstanceName() << "\n";
     hNodep h_submod = new hNode(smod->getInstanceName(), hNode::hdlopsEnum::hModule);
-    xlatmodule(smod, h_submod, model, xlatout);
+    xlatmodule(smod, h_submod, xlatout);
   }
 }
 
