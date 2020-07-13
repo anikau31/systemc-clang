@@ -53,6 +53,11 @@ instances"); REQUIRE(instances.size() == 2);
 
 // This test works
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
+  /// Enable debug
+  //
+  
+  llvm::DebugFlag = true;
+  ///
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "xor-hierarchy.cpp")};
 

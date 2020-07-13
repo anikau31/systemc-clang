@@ -104,6 +104,7 @@ class ModuleDecl {
   portMapType getIPorts();
   portMapType getIOPorts();
   portMapType getOtherVars();
+  portMapType getSubmodules();
   portMapType getInputStreamPorts();
   portMapType getOutputStreamPorts();
 
@@ -155,6 +156,7 @@ class ModuleDecl {
   portMapType out_ports_;
   portMapType inout_ports_;
   portMapType other_fields_;
+  portMapType submodules_;
 
   portMapType istreamports_;
   portMapType ostreamports_;

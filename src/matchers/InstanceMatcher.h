@@ -62,7 +62,7 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
 
     LLVM_DEBUG(llvm::dbgs() << "## InstanceArgumentMatcher\n");
     if (ctor_expr && inst_arg) {
-      llvm::outs() << "@@ ctor expr\n";
+      LLVM_DEBUG(llvm::dbgs() << "@@ ctor expr\n");
       instance_literal_ = inst_arg;
     }
   }
@@ -120,11 +120,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
 
-    llvm::outs() << "[findInstance] instance size: " << instance_map_.size()
-                 << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "[findInstance] instance size: " << instance_map_.size()
+                 << "\n");
 
-    llvm::outs() << "find decl name: " << decl->getName() << " " << decl
-                 << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "find decl name: " << decl->getName() << " " << decl
+                 << "\n");
 
     // Walk through all the instances.
     for (auto const &element : instance_map_) {
@@ -137,12 +137,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // qtype->dump();
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
-          llvm::outs() << "- fd " << rt << " " << p_field->getCanonicalDecl()
-                       << " ";
-          instance.dump();
+          LLVM_DEBUG(llvm::dbgs() << "- fd " << rt << " " << p_field->getCanonicalDecl()
+                       << " ") ;
+          LLVM_DEBUG(instance.dump());
 
           if (rt == decl) {
-            llvm::outs() << "- Insert fieldDecl into found instance\n";
+            LLVM_DEBUG(llvm::dbgs() << "- Insert fieldDecl into found instance\n");
             found_instances.push_back(
                 InstanceDeclType(instance.instance_name, rt, instance));
           }
@@ -156,18 +156,18 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // p_var->dump();
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
-          llvm::outs() << "- vd " << rt << " "
-                       << " ";
-          instance.dump();
+          LLVM_DEBUG(llvm::dbgs() << "- vd " << rt << " "
+                       << " ");
+          LLVM_DEBUG(instance.dump());
           if (rt == decl) {
-            llvm::outs() << "- Insert vardecl into found instance\n";
+            LLVM_DEBUG(llvm::dbgs() << "- Insert vardecl into found instance\n");
             found_instances.push_back(
                 InstanceDeclType(instance.instance_name, rt, instance));
           }
         }
       }
     }
-    llvm::outs() << "=> found_instances: " << found_instances.size() << "\n";
+    LLVM_DEBUG(llvm::outs() << "=> found_instances: " << found_instances.size() << "\n");
 
     return (found_instances.size() != 0);
   }
@@ -275,9 +275,9 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     std::string parent_name{};
     ValueDecl *parent_rdecl{nullptr};
 
-    llvm::outs() << "=> var_name " << var_name << " var_type_name "
+    LLVM_DEBUG(llvm::dbgs() << "=> var_name " << var_name << " var_type_name "
                  << var_type_name << " parent_name " << parent_name
-                 << "\n";  // instance_name "; // << instance_name << "\n";
+                 << "\n");  // instance_name "; // << instance_name << "\n";
 
     ModuleInstanceType parsed_instance{};
     parsed_instance.var_name = var_name;
@@ -296,7 +296,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // Don't add repeated matches
     auto found_it{instance_map_.find(instance_decl)};
     if (found_it == instance_map_.end()) {
-      llvm::outs() << "Inserting VD instance\n";
+      LLVM_DEBUG(llvm::dbgs() << "Inserting VD instance" << "\n");
       instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
           instance_decl, parsed_instance));
     }

@@ -4,7 +4,6 @@
 #include <sstream>
 #include <string>
 #include "json.hpp"
-
 namespace scpar {
 
 using json = nlohmann::json;

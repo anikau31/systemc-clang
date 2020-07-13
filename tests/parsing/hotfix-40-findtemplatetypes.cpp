@@ -435,7 +435,7 @@ int sc_main(int argc, char *argv[]) {
 
     // There are two: uint_inst and spepcialized_template
     auto others{test_module_inst->getOtherVars()};
-    REQUIRE(others.size() == 2);
+    REQUIRE(others.size() == 1);
     for (const auto &var : others) {
       auto name = get<0>(var);
       PortDecl *pd = get<1>(var);

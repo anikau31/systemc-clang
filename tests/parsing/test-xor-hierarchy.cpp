@@ -63,8 +63,9 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
     REQUIRE(found_decl->getIPorts().size() == 2);
     REQUIRE(found_decl->getOPorts().size() == 1);
     REQUIRE(found_decl->getSignals().size() == 3);
+    REQUIRE(found_decl->getOtherVars().size() == 0);
     // Other sc_module instances are recognized as others.
-    REQUIRE(found_decl->getOtherVars().size() == 4);
+    REQUIRE(found_decl->getSubmodules().size() == 4);
 
     // Check how many nested modules it has.
     // It should have 4: N1 - N4

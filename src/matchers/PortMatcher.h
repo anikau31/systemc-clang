@@ -39,6 +39,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
   PortType outstream_ports_;
   PortType sc_ports_;
 
+  PortType submodules_;
+
  public:
   const PortType &getClockPorts() const { return clock_ports_; }
   const PortType &getInputPorts() const { return in_ports_; }
@@ -46,6 +48,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   const PortType &getInOutPorts() const { return inout_ports_; }
   const PortType &getOtherVars() const { return other_fields_; }
   const PortType &getSignals() const { return signal_fields_; }
+  const PortType &getSubmodules() const { return submodules_; }
   const PortType &getInputStreamPorts() const { return instream_ports_; }
   const PortType &getOutputStreamPorts() const { return outstream_ports_; }
   const PortType &getPorts() const { return sc_ports_; }
@@ -159,6 +162,24 @@ class PortMatcher : public MatchFinder::MatchCallback {
       );
   }
 
+  auto makeMemberIsSubModule() {
+    return
+      fieldDecl(
+          hasType(hasUnqualifiedDesugaredType(
+              recordType(
+                hasDeclaration(
+                  cxxRecordDecl(
+                    isDerivedFrom(hasName("::sc_core::sc_module")),
+                    unless(isDerivedFrom(matchesName("sc_event_queue")))
+                    ).bind("submodule")
+                  ) //hasDeclaration
+                ) //recordType
+              ) //hasUnqualifiedDesugaredType
+            ) //hasType
+
+          ).bind("submodule_fd"); // fieldDecl;
+
+  }
   /* clang-format on */
 
   template <typename NodeType>
@@ -275,7 +296,8 @@ auto checkMatch(const std::string &name,
               unless(portNameMatcher("sc_rvd_out")),
               unless(signalMatcher("sc_signal_inout_if")),
               unless(portNameMatcher("sc_rvd_in")),
-              unless(portNameMatcher("sc_rvd_out"))
+              unless(portNameMatcher("sc_rvd_out")),
+              unless(makeMemberIsSubModule())
               ).bind("other_fvdecl")));
 
     auto match_non_sc_types_vdecl = cxxRecordDecl(
@@ -291,16 +313,23 @@ auto checkMatch(const std::string &name,
               unless(portNameMatcher("sc_rvd_out")),
               unless(signalMatcher("sc_signal_inout_if")),
               unless(portNameMatcher("sc_rvd_in")),
-              unless(portNameMatcher("sc_rvd_out"))
+              unless(portNameMatcher("sc_rvd_out")),
+              unless(makeMemberIsSubModule())
      
             ).bind("other_fvdecl")));
 
+    auto match_submodules = cxxRecordDecl(
+        forEach(
+          makeMemberIsSubModule()
+          )
+        );
     /* clang-format on */
 
     // Add matchers to finder.
     finder.addMatcher(match_all_ports, this);
     finder.addMatcher(match_non_sc_types_fdecl, this);
     finder.addMatcher(match_non_sc_types_vdecl, this);
+    finder.addMatcher(match_submodules, this);
     // finder.addMatcher(match_sc_ports, this);
 
     // This is only for testing.
@@ -329,12 +358,21 @@ auto checkMatch(const std::string &name,
     auto sc_port_field{checkMatch<CXXRecordDecl>("desugar_sc_port", result)};
     auto other_fields{checkMatch<Decl>("other_fields", result)};
     auto other_fvdecl{checkMatch<Decl>("other_fvdecl", result)};
+    /// Submodules
+    auto submodule_fd{checkMatch<FieldDecl>("submodule_fd", result)};
 
     // llvm::outs() << "\n";
     // llvm::outs() << "in: " << sc_in_field << ", out: " << sc_out_field
     // << ", inout: " << sc_inout_field << ", other: " << other_fields
     // << "\n";
     //
+    
+    if (submodule_fd) {
+      auto name{ submodule_fd->getNameAsString() };
+      llvm::outs() << "@@@@@@@@@@@@@ Found submodule: " << name << "\n"; 
+        insert_port(submodules_, submodule_fd);
+    }
+
     if (sc_in_field && other_fields) {
       if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
         auto fd = p_field;
@@ -420,6 +458,7 @@ auto checkMatch(const std::string &name,
                   sc_signal_field || sc_stream_in_field || sc_stream_out_field};
     // llvm::outs() << "is_ports: " << is_ports << "\n";
 
+    /// Not a submodule and not a port
     if ((!is_ports)) {
       // These will be either FieldDecl or VarDecl.
       auto fd{other_fvdecl};
@@ -451,6 +490,8 @@ auto checkMatch(const std::string &name,
     printTemplateArguments(signal_fields_);
     printTemplateArguments(other_fields_);
     printTemplateArguments(sc_ports_);
+    LLVM_DEBUG(llvm::dbgs() << "Identified submodules\n");
+    printTemplateArguments(submodules_);
   }
 };
 }; // namespace
