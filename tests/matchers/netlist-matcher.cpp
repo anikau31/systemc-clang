@@ -48,7 +48,8 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     // This is 4 because sc_buffer is also inheriting from the signal interface.
     REQUIRE(found_decl->getSignals().size() == 0);
     // 1 non-array, and 2 array others
-    REQUIRE(found_decl->getOtherVars().size() == 1);
+    REQUIRE(found_decl->getOtherVars().size() == 0);
+    REQUIRE(found_decl->getSubmodules().size() == 1);
 
     // TODO: Check the template parameters.
     //
