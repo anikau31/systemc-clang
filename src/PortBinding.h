@@ -35,6 +35,7 @@ class PortBinding {
   // Instance information
   std::string port_name_;
   std::string port_type_name_;
+
   std::string instance_type_;
   std::string instance_var_name_;
   std::string instance_constructor_name_;
@@ -52,11 +53,14 @@ class PortBinding {
   std::string port_parameter_name_;
   const Type *port_parameter_type_;
   std::string port_parameter_type_name_;
+  std::string port_parameter_bound_to_var_name_;
   DeclRefExpr *port_parameter_dref_;
 
  public:
-  void setInstanceVarName(const std::string &n) { instance_var_name_ = n;}
-  void setInstanceConstructorName(const std::string &n) { instance_constructor_name_= n;}
+  void setInstanceVarName(const std::string &n) { instance_var_name_ = n; }
+  void setInstanceConstructorName(const std::string &n) {
+    instance_constructor_name_ = n;
+  }
 
   const std::string &getPortName() const { return port_name_; }
   MemberExpr *getPortMemberExpr() const { return port_member_expr_; }
@@ -70,6 +74,9 @@ class PortBinding {
   DeclRefExpr *getPortDeclRefExpr() const { return port_dref_; }
 
   const std::string &getBoundToName() const { return port_parameter_name_; }
+  const std::string &getBoundToParameterVarName() const {
+    return port_parameter_bound_to_var_name_;
+  }
   DeclRefExpr *getBoundPortDeclRefExpr() const { return port_parameter_dref_; }
   const std::string toString() const {
     return getInstanceType() + " " + getInstanceVarName() + " " +
@@ -82,6 +89,8 @@ class PortBinding {
                  << ", port_type name: " << port_type_name_
                  << ", port name     : " << port_name_
                  << ", port arg type : " << port_parameter_type_name_
+                 << ", port_bound_to_var_name : "
+                 << port_parameter_bound_to_var_name_
                  << ", port arg      : " << port_parameter_name_ << "\n";
 
     // llvm::outs() << "> port_name: " << port_name_ << " type: " <<
@@ -116,6 +125,16 @@ class PortBinding {
     port_parameter_type_ = me_arg->getMemberDecl()->getType().getTypePtr();
     port_parameter_type_name_ =
         me_arg->getMemberDecl()->getType().getBaseTypeIdentifier()->getName();
+
+    auto children{me_arg->children()};
+
+    if (children.begin() != children.end()) {
+      Stmt *kid{*children.begin()};
+      if (MemberExpr * member_expr_kid{dyn_cast<MemberExpr>(kid)}) {
+        port_parameter_bound_to_var_name_ =
+            member_expr_kid->getMemberDecl()->getNameAsString();
+      }
+    }
   }
 
   // This is used for sc_main
@@ -137,7 +156,7 @@ class PortBinding {
     port_name_ = me->getMemberDecl()->getNameAsString();
     port_type_name_ =
         me->getMemberDecl()->getType().getBaseTypeIdentifier()->getName();
-    
+
     instance_type_ =
         port_dref_->getDecl()->getType().getBaseTypeIdentifier()->getName();
     instance_decl_ = port_dref_->getDecl();

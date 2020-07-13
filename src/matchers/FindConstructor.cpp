@@ -38,8 +38,6 @@ bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
         constructor_decl_->getBody(fd);
         if (constructor_decl_->hasBody()) {
           constructor_stmt_ = constructor_decl_->getBody();
-          llvm::outs() << "###### CONSTRUCTOR STMT\n";
-          constructor_stmt_->dump();
         }
       }
       break;
