@@ -83,6 +83,7 @@ SC_MODULE(DUT) {
 
   simple_module simple;
 
+  int others;
   SC_CTOR(DUT) : test_instance("testing"), simple("simple_module_instance") {
   test_instance.in1(sig1);
   test_instance.in_out(double_sig);
@@ -103,6 +104,11 @@ int sc_main(int argc, char *argv[]) {
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
           .release();
+
+
+  /// Turn debug on
+  //
+  llvm::DebugFlag = true;
 
   SystemCConsumer systemc_clang_consumer{from_ast};
   systemc_clang_consumer.HandleTranslationUnit(from_ast->getASTContext());

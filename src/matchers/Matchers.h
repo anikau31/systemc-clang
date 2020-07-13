@@ -109,7 +109,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
           unless( isImplicit() ),     // Templates generate implicit structs - so ignore.
           isDerivedFrom(hasName("::sc_core::sc_module")),
           unless(isDerivedFrom(matchesName("sc_event_queue")))
-          ).bind("sc_module");
+        ).bind("sc_module");
     /* clang-format on */
 
     /// Add all the matchers.
@@ -157,6 +157,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       port_matcher.registerMatchers(port_registry);
       port_registry.match(*decl, *result.Context);
       // decl->dump();
+      LLVM_DEBUG(llvm::dbgs() << "========== Port Matcher =============\n");
       port_matcher.dump();
 
       // All the ports for the CXXRecordDecl should be matched.
@@ -171,6 +172,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       add_module->addPorts(port_matcher.getInputStreamPorts(), "sc_stream_in");
       add_module->addPorts(port_matcher.getOutputStreamPorts(),
                            "sc_stream_out");
+      add_module->addPorts(port_matcher.getSubmodules(),
+                           "submodules");
 
       // TODO: Add all ports (getPorts) that are derived from sc_port.
       // This was requested by Scott.  The matcher is already in place.

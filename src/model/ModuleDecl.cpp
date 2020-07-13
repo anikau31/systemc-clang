@@ -40,6 +40,7 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
   out_ports_ = from.out_ports_;
   inout_ports_ = from.inout_ports_;
   other_fields_ = from.other_fields_;
+  submodules_ = from.submodules_;
 
   istreamports_ = from.istreamports_;
   ostreamports_ = from.ostreamports_;
@@ -76,6 +77,7 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   out_ports_ = from.out_ports_;
   inout_ports_ = from.inout_ports_;
   other_fields_ = from.other_fields_;
+  submodules_ = from.submodules_;
 
   istreamports_ = from.istreamports_;
   ostreamports_ = from.ostreamports_;
@@ -113,6 +115,7 @@ void ModuleDecl::clearOnlyGlobal() {
   out_ports_.clear();
   inout_ports_.clear();
   other_fields_.clear();
+  submodules_.clear();
   istreamports_.clear();
   ostreamports_.clear();
   signals_.clear();
@@ -170,6 +173,12 @@ ModuleDecl::~ModuleDecl() {
     delete get<1>(other);
   }
   other_fields_.clear();
+
+  for (auto &sm: submodules_) {
+    // Second is the PortDecl*.
+    delete get<1>(sm);
+  }
+  submodules_.clear();
 
   // Delete EntryFunction container
   for (auto &ef : vef_) {
@@ -235,6 +244,12 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
     std::copy(begin(found_ports), end(found_ports),
               back_inserter(other_fields_));
   }
+
+  if (port_type == "submodules") {
+    std::copy(begin(found_ports), end(found_ports),
+              back_inserter(submodules_));
+  }
+
 
   if (port_type == "sc_signal") {
     // FIXME: There is a conversion from PortDecl to SignalContainer required :(
@@ -371,6 +386,8 @@ ModuleDecl::portMapType ModuleDecl::getIPorts() { return in_ports_; }
 ModuleDecl::portMapType ModuleDecl::getIOPorts() { return inout_ports_; }
 
 ModuleDecl::portMapType ModuleDecl::getOtherVars() { return other_fields_; }
+
+ModuleDecl::portMapType ModuleDecl::getSubmodules() { return submodules_; }
 
 ModuleDecl::portMapType ModuleDecl::getInputStreamPorts() {
   return istreamports_;
@@ -518,7 +535,7 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
-  json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j;
+  json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j, submodules_j;
 
   iport_j["number_of_input_ports"] = in_ports_.size();
   for (auto mit : in_ports_) {
@@ -562,6 +579,14 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
     othervars_j[name] = pd->dump_json(os);
   }
 
+  submodules_j["number_of_submodules"] = submodules_.size();
+  for (auto mit : submodules_) {
+    auto name = get<0>(mit);
+    auto pd = get<1>(mit);
+    submodules_j[name] = pd->dump_json(os);
+  }
+
+
   os << "Start printing ports\n";
   os << "\nInput ports: " << in_ports_.size() << "\n";
   os << "\nOutput ports: " << out_ports_.size() << "\n";
@@ -569,13 +594,14 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   os << "\nIstream ports: " << istreamports_.size() << "\n";
   os << "\nOstream ports: " << ostreamports_.size() << "\n";
   os << "\nOther fields: " << other_fields_.size() << "\n";
+  os << "\nSubmodules: " << submodules_.size() << "\n";
 
   os << "Ports\n";
   os << iport_j.dump(4) << "\n"
      << oport_j.dump(4) << "\n"
      << ioport_j.dump(4) << "\n"
      << istreamport_j.dump(4) << "\n"
-     << ostreamport_j.dump(4) << othervars_j.dump(4) << "\n";
+     << ostreamport_j.dump(4) << othervars_j.dump(4) << submodules_j.dump(4) << "\n";
 }
 
 void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
