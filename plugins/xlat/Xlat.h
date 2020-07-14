@@ -16,7 +16,7 @@
 using namespace clang;
 using namespace scpar;
 using namespace hnode;
-
+using namespace llvm;
 //static llvm::cl::OptionCategory xlat_category("systemc-clang options");
 
 
@@ -100,8 +100,8 @@ llvm::cl::opt<std::string> debug_only(
     }
 
     if (debug_only != "") {
-      //llvm::setCurrentDebugType(debug_only.c_str());
-      setCurrentDebugType(debug_only.c_str());
+      llvm::setCurrentDebugType(debug_only.c_str())
+      //setCurrentDebugType(debug_only.c_str());
     }
 
 
