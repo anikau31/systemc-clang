@@ -506,7 +506,7 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   if (isa<CompoundStmt>(fors->getInit()))
     os_ << "Compound stmt not handled in for init, skipping\n";
   else TRY_TO(TraverseStmt(fors->getInit()));
-  h_forinit = h_ret;
+  h_forinit = (h_ret==NULL) ? new hNode(hNode::hdlopsEnum::hNoop): h_ret; // null if in place var decl
   TRY_TO(TraverseStmt(fors->getCond()));
   h_forcond = h_ret;
   TRY_TO(TraverseStmt(fors->getInc()));
