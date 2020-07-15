@@ -154,10 +154,14 @@ void Xlat::xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap
   for (auto const &pb : portbindingmap) {
     string port_name{get<0>(pb)};
     PortBinding *binding{get<1>(pb)};
-    os_ << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << "\n";
+    os_ << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << " " <<
+      binding->getBoundToParameterVarName() << "\n";
     hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
     hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
-    hpb->child_list.push_back(new hNode(binding->getBoundToName(), hNode::hdlopsEnum::hVarref));
+    string mapped_name = binding->getBoundToParameterVarName().empty()? binding->getBoundToName() :
+      binding->getBoundToParameterVarName()+"##"+binding->getBoundToName();
+    //hpb->child_list.push_back(new hNode(binding->getBoundToName(), hNode::hdlopsEnum::hVarref));
+    hpb->child_list.push_back(new hNode(mapped_name, hNode::hdlopsEnum::hVarref));
     h_pbs->child_list.push_back(hpb);
   }
 }
