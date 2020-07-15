@@ -45,14 +45,15 @@ bool Xlat::postFire() {
   if (modules.size() <= 0) return true;
   Model::modulePairType modpair = modules[0]; // assume first one is top module
   ModuleDecl * mod = modpair.second;
-  string modname = mod->getName();
-  os_ << "\nmodule " << modname << "\n";
-
-  hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
 
   vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
   if (instanceVec.size()<=0) return true;
+
   for (auto modinstance: instanceVec) { // generate module def for each instance
+    string modname = mod_newn.newname();
+    os_ << "\ntop level module " << modinstance->getName() << " renamed " << modname<< "\n";
+    hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
+    mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(), modname, h_module};
     xlatmodule(modinstance, h_module, xlatout);
     //h_module->print(xlatout);
   }
@@ -111,21 +112,17 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
       
   
   xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
-  
-  // submodules
-  // const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
-  // os_ << "submodule count is " << submodv.size() << "\n";
-  // for (auto& smod:submodv) {
-  //   os_ << "submodule " << smod->getInstanceName() << "\n";
-  // }
-
-      // look at constructor
-
-      //os_ << "dumping module constructor stmt\n";
-
-      //mod->getConstructorStmt()->dump(os_);	     
-      //os_ << "dumping module constructor decl\n";							       
-      //mod->getConstructorDecl()->dump(os_);
+  //xlatport(mod->getSubmodules(), hNode::hdlopsEnum::hModdecl, h_ports);
+  for (const auto &smod:submodv) {
+    hNodep h_smod = new hNode(smod->getInstanceName(), hNode::hdlopsEnum::hModdecl);
+    h_ports->child_list.push_back(h_smod);
+    hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
+    string newmodname = mod_newn.newname();
+    mod_name_map[smod->getInstanceDecl()] = {smod->getInstanceName(), newmodname, h_smod};
+    h_smodtypinfo->child_list.push_back(new hNode(newmodname, hNode::hdlopsEnum::hType));
+    h_smod->child_list.push_back(h_smodtypinfo);
+    }
+ 
       // Processes
   h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
@@ -146,8 +143,9 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
   h_module->print(xlatout);
   // now generate submodules
   for (const auto &smod:submodv) {
-    os_ << "generate submodule " << smod->getInstanceName() << "\n";
-    hNodep h_submod = new hNode(smod->getInstanceName(), hNode::hdlopsEnum::hModule);
+    string modname =  mod_name_map[smod->getInstanceDecl()].newn;
+    os_ << "generate submodule " << smod->getInstanceName() << " renamed " << modname<< "\n";
+    hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
     xlatmodule(smod, h_submod, xlatout);
   }
 }

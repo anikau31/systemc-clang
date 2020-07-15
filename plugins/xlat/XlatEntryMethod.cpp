@@ -23,7 +23,6 @@ XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & 
   os_ << "Entering XlatMethod constructor, has body is " << emd->hasBody()<< "\n";
   
   h_ret = NULL;
-  cnt = 0;
   bool ret1 = TraverseStmt(emd->getBody());
   AddVnames(h_top);
   h_top->child_list.push_back(h_ret);
@@ -219,7 +218,7 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl) {
     }
   }
 
-  string newn = newname();
+  string newn = lname.newname();
   h_vardecl->set(newn); // replace original name with new name
   names_t names = {vardecl->getName(), newn, h_vardecl};
   vname_map[vardecl] = names;
@@ -626,7 +625,7 @@ void XlatMethod::AddVnames(hNodep &hvns) {
   os_ << "Vname Dump\n";
   for (auto const &var : vname_map) {
     os_ << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n";
-    hvns->child_list.push_back(var.second.vardeclp);
+    hvns->child_list.push_back(var.second.h_vardeclp);
   }
 }
 

@@ -71,7 +71,11 @@ class PluginAction {
     }
 
     if (debug_only != "") {
+#ifdef  __clang__
+      setCurrentDebugType(debug_only.c_str());
+#else
       llvm::setCurrentDebugType(debug_only.c_str());
+#endif
     }
 
     std::unique_ptr<FrontendActionFactory> FrontendFactory;

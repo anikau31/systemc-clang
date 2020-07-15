@@ -40,7 +40,11 @@ class Xlat : public SystemCConsumer {
 
     hNodep h_top;
     std::unordered_map<string, CXXMethodDecl *> allmethodecls;  //  all methods called
+    
     XlatType xlatt;
+
+    hname_map_t mod_name_map;
+    name_serve mod_newn{"_sc_module_"};
 };
 
 
@@ -100,8 +104,11 @@ llvm::cl::opt<std::string> debug_only(
     }
 
     if (debug_only != "") {
-      llvm::setCurrentDebugType(debug_only.c_str())
-      //setCurrentDebugType(debug_only.c_str());
+#ifdef  __clang__
+      setCurrentDebugType(debug_only.c_str());
+#else
+      llvm::setCurrentDebugType(debug_only.c_str());
+#endif
     }
 
 
