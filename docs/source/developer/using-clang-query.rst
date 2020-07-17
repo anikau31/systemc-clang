@@ -16,8 +16,6 @@ Pre-requisites
 Ensure that the following environment variables have been set.
 * ``SYSTEMC``
 
-The ``systemc-clang`` distribution provides a script ``scripts/run-`clang-query`.sh`` that runs ``clang-query`` with the appropriate arguments to recognize SystemC models. 
-If there is a need to add additional paths, it can be done the same way. 
 
 An example: Matching SystemC module declarations
 -------------------------------------------------
