@@ -29,8 +29,8 @@ Without a doubt, anyone who wishes to write an AST matcher must review the list 
 
 To run this example, we can execute it in the following way (assuming we are in the root of the `systemc-clang` directory).
 
-.. code-block:: bash
-   $ `clang-query`.sh -extra-arg=-I$SYSTEMC/include docs/source/matcher/counter.cpp
+.. code-block:: c++
+   $ clang-query -extra-arg=-I$SYSTEMC/include docs/source/matcher/counter.cpp
 
 The ``-extra-arg`` option in ``clang-query`` specified the path for SystemC includes. 
 You will come to a ``clang-query`` prompt.
@@ -57,44 +57,7 @@ If we want to limit ourselves to only matching the file provided, then we can us
 
 This matcher will produce four matches of the two SystemC modules in the model.
 
-.. code-block:: bash
-   Match #1:
-
-   /home/twiga/code/github/systemc-clang/docs/source/developer/matchers/counter.cpp:3:1: note: "root" binds here
-   SC_MODULE(counter) {
-   ^~~~~~~~~~~~~~~~~~~~
-   /home/twiga/code/systemc-2.3.3/systemc/include/sysc/kernel/sc_module.h:397:5: note: expanded from macro 'SC_MODULE'
-       struct user_module_name : ::sc_core::sc_module
-       ^
-
-   Match #2:
-
-   /home/twiga/code/github/systemc-clang/docs/source/developer/matchers/counter.cpp:3:1: note: "root" binds here
-   SC_MODULE(counter) {
-   ^~~~~~~~~~~~~~~~~~
-   /home/twiga/code/systemc-2.3.3/systemc/include/sysc/kernel/sc_module.h:397:5: note: expanded from macro 'SC_MODULE'
-       struct user_module_name : ::sc_core::sc_module
-       ^~~~~~~~~~~~~~~~~~~~~~~
-
-   Match #3:
-
-   /home/twiga/code/github/systemc-clang/docs/source/developer/matchers/counter.cpp:26:1: note: "root" binds here
-   SC_MODULE(DUT) {
-   ^~~~~~~~~~~~~~~~
-   /home/twiga/code/systemc-2.3.3/systemc/include/sysc/kernel/sc_module.h:397:5: note: expanded from macro 'SC_MODULE'
-       struct user_module_name : ::sc_core::sc_module
-       ^
-
-   Match #4:
-
-   /home/twiga/code/github/systemc-clang/docs/source/developer/matchers/counter.cpp:26:1: note: "root" binds here
-   SC_MODULE(DUT) {
-   ^~~~~~~~~~~~~~
-   /home/twiga/code/systemc-2.3.3/systemc/include/sysc/kernel/sc_module.h:397:5: note: expanded from macro 'SC_MODULE'
-       struct user_module_name : ::sc_core::sc_module
-       ^~~~~~~~~~~~~~~~~~~~~~~
-   4 matches.
-
+.. literalinclude:: matchers/four-match.cpp
 
 You will quickly note that ``clang-query`` doesn't really provide a nice interface to go back to the previous command and edit it. 
 Consequently, it is better to use a file to provide as an input to it with the matcher we wish to write.
@@ -102,7 +65,7 @@ Consequently, it is better to use a file to provide as an input to it with the m
 Suppose that we create a separate file called ``control.dbg``, which contains our matcher. 
 We can then execute the script in the following way.
 
-.. code-block:: bash
+.. code-block:: c++ 
    $ `clang-query`.sh -extra-arg=-I$SYSTEMC/include docs/source/matcher/counter.cpp -f control.dbg
 
 You will notice that we have multiple matches (more then 2), and we should only be having two matches for the two SystemC modules. 
