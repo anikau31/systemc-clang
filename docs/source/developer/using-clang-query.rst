@@ -25,11 +25,14 @@ Suppose we have the following SystemC module declaration.
 
 .. literalinclude:: matchers/counter.cpp
 
+
 Without a doubt, anyone who wishes to write an AST matcher must review the list of matchers that are available here: `AST Matchers Reference <https://clang.llvm.org/docs/LibASTMatchersReference.html>`_. 
 
 To run this example, we can execute it in the following way (assuming we are in the root of the `systemc-clang` directory).
 
 .. code-block:: c++
+   :linenos:
+
    $ clang-query -extra-arg=-I$SYSTEMC/include docs/source/matcher/counter.cpp
 
 The ``-extra-arg`` option in ``clang-query`` specified the path for SystemC includes. 
@@ -43,6 +46,7 @@ As a starter, we could write the following matcher.
 
 .. code-block:: c++
    :linenos:
+
    match cxxRecordDecl()
 
 Note that the command ``match`` tells that the string following it is the matcher to execute.
@@ -53,6 +57,7 @@ If we want to limit ourselves to only matching the file provided, then we can us
 
 .. code-block:: c++
    :linenos:
+
    match cxxRecordDecl(isExpansionInMainFile())
 
 This matcher will produce four matches of the two SystemC modules in the model.
@@ -66,6 +71,8 @@ Suppose that we create a separate file called ``control.dbg``, which contains ou
 We can then execute the script in the following way.
 
 .. code-block:: c++ 
+   :linenos:
+
    $ `clang-query`.sh -extra-arg=-I$SYSTEMC/include docs/source/matcher/counter.cpp -f control.dbg
 
 You will notice that we have multiple matches (more then 2), and we should only be having two matches for the two SystemC modules. 
@@ -77,6 +84,7 @@ If we want to write a matcher that refers to the identified AST nodes, we have t
 
 .. code-block:: c++
    :linenos:
+
    match cxxRecordDecl(unless(isImplicit()), isExpansionInMainFile()).bind("modules")
 
 .. note:: 
@@ -89,6 +97,7 @@ If you wish to display the AST nodes for these matches, then you can add a comma
 
 .. code-block:: c++
    :linenos:
+   
    set bind-root false
    set output dump 
    match cxxRecordDecl(unless(isImplicit()), isExpansionInMainFile()).bind("modules")
@@ -101,9 +110,11 @@ We would update our matcher in the following way.
 
 .. code-block:: c++
    :linenos:
+
    set bind-root false
    set output dump 
    match cxxRecordDecl(isDerivedFrom("::sc_core::sc_module"), unless(isImplicit()), isExpansionInMainFile()).bind("modules")
 
 If you were to go and add non-SystemC classes to the original model, you will see that those will not be matched.
+
 
