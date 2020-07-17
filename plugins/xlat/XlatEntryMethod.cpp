@@ -338,8 +338,8 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     CXXMethodDecl * methdcl = callexpr->getMethodDecl();
 
     
-    // os_ << "methoddecl follows\n";
-    // methdcl->dump();
+    //os_ << "methoddecl follows\n";
+    //methdcl->dump();
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {
     
       methodname = methdcl->getNameAsString();
@@ -441,32 +441,34 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
   memberexpr->getMemberDecl()->dump(os_);
 
   // traverse the memberexpr in case it is a nested structure
-  auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
-  if (baseexpr) {
-
-    hNodep old_h_ret = h_ret;
-    TRY_TO(TraverseStmt(baseexpr));
-    if (h_ret != old_h_ret) {
-      if (h_ret->h_op == hNode::hdlopsEnum::hLiteral) {
-	//concatenate base name in front of field name
-	hNodep memexprnode = new hNode(h_ret->h_name+"_"+nameinfo, hNode::hdlopsEnum::hLiteral);
-	delete h_ret;
-	h_ret = memexprnode;  // replace returned h_ret with single node, field names concatenated
-	return h_ret;
-      }
+  hNodep old_h_ret = h_ret;
+  TRY_TO(TraverseStmt(memberexpr->getBase()));  // get hcode for the base
+  if (h_ret != old_h_ret) {
+    if (h_ret->h_op == hNode::hdlopsEnum::hVarref) {
+      //concatenate base name in front of field name
+      hNodep memexprnode = new hNode(h_ret->h_name+"##"+nameinfo, hNode::hdlopsEnum::hVarref);
+      delete h_ret;
+      h_ret = memexprnode;  // replace returned h_ret with single node, field names concatenated
+      return h_ret;
     }
-    
-    // FIXME Only handling one level right now
-    //const Type *unqualtyp = baseexpr->getType()->getUnqualifiedDesugaredType();
-    //QualType q = unqualtyp->getCanonicalTypeInternal();
-    //QualType q = (baseexpr->getType())->getDesugaredType();
-     //string basestr = tp->getAsString();
-     //nameinfo.insert((size_t) 0, q.getAsString()); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
-     //make_ident(nameinfo);
   }
-
+  // auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
+  // if (baseexpr) {
+  //   hNodep old_h_ret = h_ret;
+  //   TRY_TO(TraverseStmt(baseexpr));
+  //   if (h_ret != old_h_ret) {
+  //     if (h_ret->h_op == hNode::hdlopsEnum::hLiteral) {
+  // 	//concatenate base name in front of field name
+  // 	hNodep memexprnode = new hNode(h_ret->h_name+"##"+nameinfo, hNode::hdlopsEnum::hLiteral);
+  // 	delete h_ret;
+  // 	h_ret = memexprnode;  // replace returned h_ret with single node, field names concatenated
+  // 	return h_ret;
+  //     }
+  //   }
     
-  h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hLiteral);
+  //}  
+    
+  h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hVarref);
 
   return true;
 }
