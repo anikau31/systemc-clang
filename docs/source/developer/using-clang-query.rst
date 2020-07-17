@@ -1,5 +1,5 @@
-Writing matchers with `clang-query`
-==================================
+Writing matchers with ``clang-query``
+======================================
 
 ``clang-query`` is a clang tool that allows one to write AST matchers and test them. 
 Using ``clang-query`` to write matchers to identify SystemC constructs is quite beneficial.
