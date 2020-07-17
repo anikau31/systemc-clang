@@ -103,6 +103,7 @@ Consequently, it is better to use a file to provide as an input to it with the m
 
 Suppose that we create a separate file called ``control.dbg``, which contains our matcher. 
 We can then execute the script in the following way.
+
 .. code-block:: bash
    $ `clang-query`.sh -extra-arg=-I$SYSTEMC/include docs/source/matcher/counter.cpp -f control.dbg
 
@@ -112,6 +113,7 @@ To correct this, we have to make two changes:
 * Second, we have to remove implicit nodes that are created in the clang AST. 
 
 If we want to write a matcher that refers to the identified AST nodes, we have to `bind` the nodes to a string that we can then use to extract them. We can update our matcher to add a binding string.
+
 .. code-block:: c++
    :linenos:
    match cxxRecordDecl(unless(isImplicit()), isExpansionInMainFile()).bind("modules")
