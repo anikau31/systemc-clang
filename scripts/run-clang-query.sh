@@ -15,5 +15,5 @@ if [ -z "$SYSTEMC" ]; then
 fi
 
 # Execute clang query.
-clang-query $1 -extra-arg=-I$SYSTEMC/include
+clang-query $1 -extra-arg=-I$SYSTEMC/include $@
 
