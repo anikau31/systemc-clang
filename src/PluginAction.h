@@ -22,6 +22,8 @@
 
 namespace scpar {
 
+  using namespace llvm;
+
 static llvm::cl::OptionCategory category("systemc-clang options");
 static llvm::cl::opt<std::string> topModule(
     "top-module",
