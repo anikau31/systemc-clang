@@ -33,7 +33,7 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
   bool TraverseStmt(Stmt *stmt);
   bool TraverseDeclStmt(DeclStmt * declstmt);
-  bool ProcessVarDecl(VarDecl * vardecl, hNodep &h_vardecl);
+  bool ProcessVarDecl(VarDecl * vardecl);
   bool TraverseBinaryOperator(BinaryOperator* expr);
   bool TraverseUnaryOperator(UnaryOperator* expr);
   bool TraverseIntegerLiteral(IntegerLiteral * lit);
@@ -60,22 +60,12 @@ class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
   //  size_t n;
   
   hNodep h_ret;   // value returned by each subexpression
-  typedef struct {
-    string oldn;
-    string newn;
-    hNodep vardeclp;
-  } names_t;
-  std::map<Decl *, std::vector<DeclRefExpr *>> vuse_map;
-  std::map<Decl *, names_t> vname_map;
+  hname_map_t vname_map;
+  name_serve lname;
 
   bool isLogicalOp(clang::OverloadedOperatorKind opc);
-  
-  const string prefix = "_XLAT_";
-  int cnt;
-  inline string newname() {
-    return (prefix+to_string(cnt++));
-  }
-   util lutil;
+
+  util lutil;
 };
 
 

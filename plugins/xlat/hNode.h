@@ -40,6 +40,7 @@ namespace hnode {
   etype(hInt), \
   etype(hSigdecl), \
   etype(hVardecl), \
+  etype(hModdecl), \
   etype(hVarref), \
   etype(hVarInit), \
   etype(hSigAssignL), \
@@ -218,6 +219,26 @@ namespace hnode {
     }
 
   };
+
+  typedef struct {
+    string oldn;
+    string newn;
+    hNodep h_vardeclp;
+  } names_t;
+
+  typedef std::map<Decl *, names_t> hname_map_t;
+
+  class name_serve {
+  private:
+    int cnt;
+    string prefix;
+  public:
+  name_serve(string prefx="_local_") : prefix(prefx), cnt(0){ }
+    string newname() {
+      return (prefix+to_string(cnt++));
+    }
+  };
+    
 } // end namespace hnode
 
 #endif

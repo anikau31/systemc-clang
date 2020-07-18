@@ -4,7 +4,8 @@
 #include "PortBinding.h"
 #include "Tree.h"
 #include "Xlat.h"
-#include "TemplateParametersMatcher.h"
+//#include "TemplateParametersMatcher.h"
+#include "XlatType.h"
 #include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 
@@ -14,7 +15,7 @@ using namespace scpar;
 
 bool Xlat::postFire() {
   Model *model = getSystemCModel();
- 
+  
   std::error_code ec;
   string outputfn;
 
@@ -39,19 +40,20 @@ bool Xlat::postFire() {
 
   // typedef std::vector< modulePairType > moduleMapType;
   // typedef std::pair<std::string, ModuleDecl *> modulePairType;
-  
+
   Model::moduleMapType modules = model->getModuleDecl();
   if (modules.size() <= 0) return true;
   Model::modulePairType modpair = modules[0]; // assume first one is top module
   ModuleDecl * mod = modpair.second;
-  string modname = mod->getName();
-  os_ << "\nmodule " << modname << "\n";
-
-  hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
 
   vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
   if (instanceVec.size()<=0) return true;
+
   for (auto modinstance: instanceVec) { // generate module def for each instance
+    string modname = mod_newn.newname();
+    os_ << "\ntop level module " << modinstance->getName() << " renamed " << modname<< "\n";
+    hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
+    mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(), modname, h_module};
     xlatmodule(modinstance, h_module, xlatout);
     //h_module->print(xlatout);
   }
@@ -65,14 +67,14 @@ bool Xlat::postFire() {
 
   os_ << "User Types Map\n";
 
-  while (!usertypes.empty()) {
-    std::unordered_map<string, QualType> usertypestmp = usertypes;
-    usertypes.clear();
+  while (!xlatt.usertypes.empty()) {
+    std::unordered_map<string, QualType> usertypestmp = xlatt.usertypes;
+    xlatt.usertypes.clear();
     for (auto t : usertypestmp) {
       os_ << "User Type --------\n" << t.first << ":" << t.second.getTypePtr() << "\n";
       t.second->dump(os_);
       os_ << "---------\n";
-      //addtype(t.first, t.second)->print(xlatout);
+      xlatt.addtype(t.first, t.second, getContext())->print(xlatout);
     }
   }
   return true;
@@ -108,30 +110,23 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
 
   h_module->child_list.push_back(h_ports);
       
-  // Other Variables
-  //xlatvars(mod->getOtherVars(), model,
-  // h_ports);
   
   xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
-  
-  // submodules
-  // const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
-  // os_ << "submodule count is " << submodv.size() << "\n";
-  // for (auto& smod:submodv) {
-  //   os_ << "submodule " << smod->getInstanceName() << "\n";
-  // }
-
-      // look at constructor
-
-      //os_ << "dumping module constructor stmt\n";
-
-      //mod->getConstructorStmt()->dump(os_);	     
-      //os_ << "dumping module constructor decl\n";							       
-      //mod->getConstructorDecl()->dump(os_);
+  //xlatport(mod->getSubmodules(), hNode::hdlopsEnum::hModdecl, h_ports);
+  for (const auto &smod:submodv) {
+    hNodep h_smod = new hNode(smod->getInstanceName(), hNode::hdlopsEnum::hModdecl);
+    h_ports->child_list.push_back(h_smod);
+    hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
+    string newmodname = mod_newn.newname();
+    mod_name_map[smod->getInstanceDecl()] = {smod->getInstanceName(), newmodname, h_smod};
+    h_smodtypinfo->child_list.push_back(new hNode(newmodname, hNode::hdlopsEnum::hType));
+    h_smod->child_list.push_back(h_smodtypinfo);
+    }
+ 
       // Processes
   h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
-  xlatproc(mod->getEntryFunctionContainer(), h_top, os_);
+  xlatproc(mod->getProcessMap(), h_top, os_);
 
   if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
@@ -147,9 +142,10 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
   }
   h_module->print(xlatout);
   // now generate submodules
-  for (auto& smod:submodv) {
-    os_ << "generate submodule " << smod->getInstanceName() << "\n";
-    hNodep h_submod = new hNode(smod->getInstanceName(), hNode::hdlopsEnum::hModule);
+  for (const auto &smod:submodv) {
+    string modname =  mod_name_map[smod->getInstanceDecl()].newn;
+    os_ << "generate submodule " << smod->getInstanceName() << " renamed " << modname<< "\n";
+    hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
     xlatmodule(smod, h_submod, xlatout);
   }
 }
@@ -158,10 +154,14 @@ void Xlat::xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap
   for (auto const &pb : portbindingmap) {
     string port_name{get<0>(pb)};
     PortBinding *binding{get<1>(pb)};
-    os_ << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << "\n";
+    os_ << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << " " <<
+      binding->getBoundToParameterVarName() << "\n";
     hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
     hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
-    hpb->child_list.push_back(new hNode(binding->getBoundToName(), hNode::hdlopsEnum::hVarref));
+    string mapped_name = binding->getBoundToParameterVarName().empty()? binding->getBoundToName() :
+      binding->getBoundToParameterVarName()+"##"+binding->getBoundToName();
+    //hpb->child_list.push_back(new hNode(binding->getBoundToName(), hNode::hdlopsEnum::hVarref));
+    hpb->child_list.push_back(new hNode(mapped_name, hNode::hdlopsEnum::hVarref));
     h_pbs->child_list.push_back(hpb);
   }
 }
@@ -179,15 +179,17 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
-    //  if type is structured, it will be flattened into multiple declarations
-    // each with a unique name and Typeinfo followed by Type.
-    xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+
+    xlatt.xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
     // check for initializer
     VarDecl * vard = pd->getAsVarDecl();
     if (vard && vard->hasInit()) {
       APValue *apval = vard->getEvaluatedValue();
       if (apval && apval->isInt()) {
-	(h_info->child_list.back())->child_list.push_back(new hNode((apval->getInt()).toString(10),  hNode::hdlopsEnum::hVarInit));
+	hNodep h_lit = new hNode((apval->getInt()).toString(10), hNode::hdlopsEnum::hLiteral);
+	hNodep h_varinit = new hNode(hNode::hdlopsEnum::hVarInit);
+	h_varinit->child_list.push_back(h_lit);
+	(h_info->child_list.back())->child_list.push_back(h_varinit);
       }
     }
   }
@@ -208,302 +210,21 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
     Tree<TemplateType> *template_argtp = (pd->getTemplateTypes())->getTemplateArgTreePtr();
     //  if type is structured, it will be flattened into multiple declarations
     // each with a unique name and Typeinfo followed by Type.
-    xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+    xlatt.xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
    
   }
 }
 
-// Not currently used
-void Xlat::makehpsv(string prefix, string typname, hNode::hdlopsEnum h_op, hNodep &h_info, bool needtypeinfo) {
-  // create hNode for a Port|Signal|Var declaration with resolved type name
-  os_ << "in makehpsv prefix, type, op " << prefix << " " << typname << " " << h_op << "\n";
-  hNodep hmainp = new hNode(prefix, h_op);
-  h_info->child_list.push_back(hmainp); // returning [opPort|Sig|Var prefix [Typeinfo [Type typname]]]
-
-  hNodep htypep = new hNode(typname, hNode::hdlopsEnum::hType);
-  if (needtypeinfo) {
-    hNodep h_typeinfop = new hNode(hNode::hdlopsEnum::hTypeinfo);
-    h_typeinfop->child_list.push_back(htypep);
-    hmainp->child_list.push_back(h_typeinfop);
-  }
-  else {
-    hmainp->child_list.push_back(htypep);
-  }
-}
-
-void Xlat::addfieldtype(const FieldDecl * fld, hNodep &h_typdef) {
-  os_ << "field of record type \n";
-  fld ->dump(os_);
-  os_ << "field: found name " << fld->getName() << "\n";
-  // Try to get the template type of these fields.
-  const Type *field_type{fld->getType().getTypePtr()};
-  FindTemplateTypes find_tt{};
-  find_tt.Enumerate(field_type);
-
-  // Get the tree.
-  auto template_args{find_tt.getTemplateArgTreePtr()};
-  hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hTypeField);
-  h_typdef->child_list.push_back(hfld);
-  os_ << "calling generatetype with template args of field\n";
-  if (template_args->getRoot()) 
-    generatetype(template_args->getRoot(), template_args, hfld);
-  else os_ << "FindTemplateTypes returned null root\n";
-
-}
-hNodep Xlat::addtype(string typname, QualType qtyp) {
-  hNodep h_typdef = new hNode(typname, hNode::hdlopsEnum::hTypedef);
-  os_ << "addtype entered with type name " << typname << "\n";
-  const Type * typ = qtyp.getTypePtr();
-  if (typ->isBuiltinType())
-    {
-      hNodep hprim = new hNode(qtyp.getAsString(), hNode::hdlopsEnum::hType);
-      os_ << "addtype found prim type " << qtyp.getAsString() << "\n";
-      h_typdef->child_list.push_back(hprim);
-      return h_typdef;
-    }
-
-  if (const RecordType * rectype = dyn_cast<RecordType>(typ)) {
-    os_ << "addtype record type found, name is " << typname << "\n";
-    if ( isa<ClassTemplateSpecializationDecl>(rectype->getDecl())) {
-      os_ << "addtype isa template specialzation decl found, name is " << typname << "\n";
-      ClassTemplateSpecializationDecl * ctsd = dyn_cast<ClassTemplateSpecializationDecl>(rectype->getDecl());
-      ClassTemplateDecl * ctd = ctsd->getSpecializedTemplate();
-      ctd->dump(os_);
-      os_ << "####### ============================== MATCHER ========================= ##### \n";
-      TemplateParametersMatcher template_matcher{};
-      MatchFinder matchRegistry{};
-      template_matcher.registerMatchers(matchRegistry);
-      matchRegistry.match(*ctd, getContext());
-      os_ << "####### ============================== END MATCHER ========================= ##### \n";
-      
-
-      TemplateParameterList * tpl = ctd->getTemplateParameters();
-      os_ << "addtype her are template parameters\n";
-      for (auto param : *tpl) {
-	os_ << "addtype template param name is " << param->getName() << "\n";
-	//param->dump(os_);
-	h_typdef->child_list.push_back(new hNode(param->getName(), hNode::hdlopsEnum::hTypeTemplateParam));
-      }
-      std::vector<const FieldDecl *> fields;
-      template_matcher.getFields(fields);
-      if (fields.size()>0) {
-	for (const FieldDecl *fld : fields) {
-	  addfieldtype(fld, h_typdef);
-	}
-      }
-    }
-    else if (!rectype->getDecl()->field_empty()) {
-	  for (auto const &fld: rectype->getDecl()->fields()) {
-	    addfieldtype(fld, h_typdef);
-	   }
-	}
-	else { // record type but no fields
-	  // get the type name
-	  os_ << "Found record with no fields, name is " << (rectype->getDecl())->getName() << "\n"; 
-	  h_typdef->child_list.push_back(new hNode(rectype->getDecl()->getName(), hNode::hdlopsEnum::hType));
-	      
-	}
-  }
-
-  return h_typdef; 
-}
-
-void Xlat::generatetype(scpar::TreeNode<scpar::TemplateType > * const &node,
-			scpar::Tree<scpar::TemplateType > * const &treehead, hNodep &h_info) {
-
-  string tmps = (node->getDataPtr())->getTypeName();
-  os_ << "generatetype node name is " << tmps << "type follows\n";
-  (node->getDataPtr())->getTypePtr()->dump(os_);				 
-  hNodep nodetyp = new hNode (tmps, hNode::hdlopsEnum::hType);
-  h_info->child_list.push_back(nodetyp);
-  if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
-     return;
-  if (!(lutil.isSCType(tmps) || lutil.isSCBuiltinType(tmps) || lutil.isposint(tmps)))
-    {
-      os_ << "adding user defined type " << tmps << "\n";
-      const RecordType * tstp = dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());
-      if (tstp) {
-	//os_ << "generatetype found record type, dump of definition follows\n";
-	os_ << "generatetype found record type\n";
-	//RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
-	//tstdp->dump(os_);
-	usertypes[tmps] = ((tstp->getDecl())->getTypeForDecl())->getCanonicalTypeInternal();
-      }
-      usertypes[tmps] = ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
-    }
-  auto const vectreeptr{ treehead->getChildren(node)};
-  for (auto const &chnode : vectreeptr) {
-    generatetype(chnode, treehead, nodetyp);
-  }					       
-
-}
-
-void Xlat::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
-		     hNode::hdlopsEnum h_op, hNodep &h_info) {
-
-  //llvm::outs()  << "xlattype dump of templatetree args follows\n";
-  //template_argtp->dump();
-
-    if (!(template_argtp &&  (template_argtp->getRoot()))) {
-      os_ << "xlattype no root prefix is " << prefix << " " << template_argtp << "\n";;
-
-    return;
-    }										 
-  hNodep hmainp = new hNode(prefix, h_op); // opPort|Sig|Var prefix
-  h_info->child_list.push_back(hmainp);
-  string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
-  hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-  hmainp->child_list.push_back(h_typeinfo);
-  hNodep h_typ = new hNode(tmps, hNode::hdlopsEnum::hType);
-  h_typeinfo->child_list.push_back(h_typ);
-  
-  auto const vectreeptr{ template_argtp->getChildren(template_argtp->getRoot())};
-  for (auto const &node : vectreeptr) {
-    generatetype(node, template_argtp, h_typ);
-  }
-  return;
-
-  // Code below is not currently used. left here for reference
-#if 0 
-  for (auto const &node : *template_argtp) {
-	const TemplateType * type_data{node->getDataPtr()}; 
-	string tmps2 =  type_data->getTypeName();
-	if (tmps.empty()) os_ << "xlattype builtin typename is empty\n";
-	else os_ << "xlattype builtin typename is " << tmps2 << "\n";
-	lutil.make_ident(tmps2);
-	h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
-	}
-
-  if (template_argtp->size() == 1) {
-    string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();  
-    os_ << "primitive type " << tmps << "\n";
-    lutil.make_ident(tmps);
-    makehpsv(prefix, tmps, h_op, h_info);
-    return;
-  }
-
-  // now process composite types
-  
-  
-  if (template_argtp->getRoot()) {
-    string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
-    os_ << " nonprimitive type " << tmps << "\n";
-    if (lutil.isSCBuiltinType(tmps) || (lutil.isSCType(tmps)) ){ // primitive uint etc. or sc_in
-      bool is_scinout = lutil.isSCType(tmps);
-      hNodep hport = new hNode(prefix, h_op);
-      h_info->child_list.push_back(hport);
-      hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-      hport->child_list.push_back(h_typeinfo);
-      if (is_scinout) {
-	// sc_in, sc_out etc.
-	hNodep htypep = new hNode(tmps, hNode::hdlopsEnum::hType);
-	h_typeinfo->child_list.push_back(htypep); // added sc_in, etc. to type info
-	auto const vectreeptr{ template_argtp->getChildren(template_argtp->getRoot())};
-	for (auto const &node : vectreeptr) {
-	  const Type * childtyp{(node->getDataPtr())->getTypePtr()};
-	  string childns = (node->getDataPtr())->getTypeName();
-	  os_ << "xlattype sctype processing child " << childns << "\n";
-	  
-	  const TemplateType * type_data{node->getDataPtr()}; 
-	  string tmps2 =  type_data->getTypeName();
-	  if (tmps2.empty()) os_ << "xlattype scinout builtin typename is empty\n";
-	  else os_ << "xlattype typename is " << tmps2 << "\n";
-	  if (lutil.isSCBuiltinType(tmps2)) {  // sc_in<Bool>
-	    lutil.make_ident(tmps2); // but need to add parameters such as 8 in uint<8>
-	    if (template_argtp->hasChildren(node)) {
-	      // need to process the children of this node to generate the type parameters
-	    }
-	  }
-	  else { // sc_in<nonprimitivetype>
-	    generatetype(node, tmps2);
-	  }
-	  h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
-	}
-	  
-      } // not sc_in etc, code below is for builtin type
-      else for (auto const &node : *template_argtp) {
-	const TemplateType * type_data{node->getDataPtr()}; 
-	string tmps2 =  type_data->getTypeName();
-	if (tmps.empty()) os_ << "xlattype builti typename is empty\n";
-	else os_ << "xlattype builtintypename is " << tmps2 << "\n";
-	lutil.make_ident(tmps2);
-	h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
-	}
-    }
-
-    else {
-      if (const RecordType * rectype = dyn_cast<RecordType>((template_argtp->getRoot()->getDataPtr())->getTypePtr())) {
-	os_ << "record type found, name is " << tmps << "\n";
-	for (auto const &fld: rectype->getDecl()->fields()) {
-	  os_ << "field of record type \n";
-	  fld ->dump(os_);
-	  os_ << "field: found name " << fld->getName() << "\n";
-	  // Try to get the template type of these fields.
-	  const Type *field_type{fld->getType().getTypePtr()};
-	  FindTemplateTypes find_tt{};
-	  find_tt.Enumerate(field_type);
-
-	  // Get the tree.
-	  auto template_args{find_tt.getTemplateArgTreePtr()};
-	  // Access the tree here in the way one wishes.
-	  std::string dft_str{template_args->dft()};
-	  llvm::outs() << "DFT: " << dft_str << "\n";
-	  xlattype(prefix+'_'+fld->getNameAsString(), template_args, h_op, h_info);
-        }
-      }
-    }
-  }
-#endif
-}
-
-// Note -- not currently called
-void Xlat::xlatvars(ModuleDecl::portMapType pmap, Model * model,  hNodep &h_info) {
-  hNode::hdlopsEnum h_op = hNode::hdlopsEnum::hVardecl;
-  for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
-       mit++) {
-
-    string objname = get<0>(*mit);
-
-    os_ << "variable name is " << objname << " and h_op is " << h_op << "\n";
-
-    PortDecl *pd = get<1>(*mit);
-    Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
-    xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
-    return;
-    auto vmoddecl = model->getInstance(objname);
-    if (vmoddecl == nullptr) {
-      os_ << "variable is not a module\n";
-      xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
-    }
-    else {
-      os_ << "variable is a module\n";
-      string tmps;
-      if (template_argtp->getRoot()) {
-	tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
-      }
-      else {
-	tmps = "MODULENOTYPE";
-      }
-      // from xlattype, builtin type processing code
-      hNodep hport = new hNode(objname, h_op);
-      h_info->child_list.push_back(hport);
-      hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-      hport->child_list.push_back(h_typeinfo);
-      for (auto const &node : *template_argtp) {
-	const TemplateType * type_data{node->getDataPtr()}; 
-	string tmps2 =  type_data->getTypeName();
-	if (tmps.empty()) os_ << "submodule processing typename is empty\n";
-	else os_ << "submodule processing typename is " << tmps2 << "\n";
-	lutil.make_ident(tmps2);
-	h_typeinfo->child_list.push_back( new hNode(tmps2, hNode::hdlopsEnum::hType));
-      }
-    }
-  }
-}
-
-void Xlat::xlatproc(scpar::vector<EntryFunctionContainer *> efv, hNodep &h_top,
+void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
                     llvm::raw_ostream &os) {
-  for (auto efc : efv) {
+
+  // typedef std::map<std::string, ProcessDecl *> processMapType;
+  // processMapType getProcessMap();
+  // ProcessDecl::getEntryFunction() returns EntryFunctionContainer*
+
+  for (auto const &pm_entry : pm) {
+    ProcessDecl *pd{get<1>(pm_entry)};
+    EntryFunctionContainer *efc{pd->getEntryFunction()};
     if (efc->getProcessType() == PROCESS_TYPE::METHOD) {
       hNodep h_process = new hNode(efc->getName(), hNode::hdlopsEnum::hProcess);
       os_ << "process " << efc->getName() << "\n";

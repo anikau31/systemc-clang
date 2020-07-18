@@ -1,4 +1,5 @@
 #include "XlatEntryMethod.h"
+#include "XlatType.h"
 
 // We have to use the Traverse pattern rather than Visitor 
 // because we need control to come back to the point of call
@@ -22,7 +23,6 @@ XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & 
   os_ << "Entering XlatMethod constructor, has body is " << emd->hasBody()<< "\n";
   
   h_ret = NULL;
-  cnt = 0;
   bool ret1 = TraverseStmt(emd->getBody());
   AddVnames(h_top);
   h_top->child_list.push_back(h_ret);
@@ -82,7 +82,12 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     TRY_TO(TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getSubExpr()));
     //TRY_TO(TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary()));
   }
-
+  else if (isa<DeclRefExpr>(stmt)) {
+    TRY_TO(TraverseDeclRefExpr((DeclRefExpr *) stmt));
+  }
+  else if (isa<MemberExpr>(stmt)) {
+    TRY_TO(TraverseMemberExpr((MemberExpr *) stmt));
+  }
   else if (isa<IntegerLiteral>(stmt)) {
     TRY_TO(TraverseIntegerLiteral((IntegerLiteral *)stmt));
   }  
@@ -183,44 +188,26 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
 	auto *vardecl = dyn_cast<VarDecl>(DI);
 	if (!vardecl)
 	  continue;
-	hNodep h_vardecl = new hNode(vardecl->getName(), hNode::hdlopsEnum::hVardecl);
-	ProcessVarDecl(vardecl, h_vardecl); // adds it to the list of renamed local variables
-	// if (h_varlist) h_varlist->child_list.push_back(h_vardecl);
-	// else h_varlist = h_vardecl; // single declaration
+	ProcessVarDecl(vardecl); // adds it to the list of renamed local variables
       }
-  h_ret = NULL; //h_varlist;
+  h_ret = NULL; 
   return true;
 }
 
-bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
+bool XlatMethod::ProcessVarDecl( VarDecl * vardecl) {
   os_ << "ProcessVarDecl var name is " << vardecl->getName() << "\n";
 
-  hNodep h_typeinfo = new hNode( hNode::hdlopsEnum::hTypeinfo);
+  hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
+
   QualType q = vardecl->getType();
   const Type *tp = q.getTypePtr();
   os_ << "ProcessVarDecl type name is " << q.getAsString() << "\n";
   FindTemplateTypes *te = new FindTemplateTypes();
 
   te->Enumerate(tp);
- 
-  scpar::FindTemplateTypes::type_vector_t ttargs = te->getTemplateArgumentsType();
-  for (auto const &targ : ttargs) {
-
-    //h_typeinfo->child_list.push_back(new hNode("\"" + targ.getTypeName() + "\"", hNode::hdlopsEnum::hType));
-    string tmps = targ.getTypeName();
-    lutil.make_ident(tmps);
-    h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
-
-  }
-  
-  if (h_typeinfo->child_list.empty()) { // front end didn't parse type info
-    //h_typeinfo->child_list.push_back(new hNode("\"" + q.getAsString() + "\"", hNode::hdlopsEnum::hType));
-    string tmps = q.getAsString();
-    lutil.make_ident(tmps);
-    h_typeinfo->child_list.push_back(new hNode(tmps, hNode::hdlopsEnum::hType));
-  }
-				     
-  h_vardecl->child_list.push_back(h_typeinfo);
+  XlatType xlatt;
+  xlatt.xlattype(vardecl->getName(), te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hVardecl, h_varlist);
+  hNodep h_vardecl = h_varlist->child_list.back();
   if (Expr * declinit = vardecl->getInit()) {
 
     TraverseStmt(declinit);
@@ -231,7 +218,7 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl, hNodep &h_vardecl) {
     }
   }
 
-  string newn = newname();
+  string newn = lname.newname();
   h_vardecl->set(newn); // replace original name with new name
   names_t names = {vardecl->getName(), newn, h_vardecl};
   vname_map[vardecl] = names;
@@ -351,8 +338,8 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     CXXMethodDecl * methdcl = callexpr->getMethodDecl();
 
     
-    // os_ << "methoddecl follows\n";
-    // methdcl->dump();
+    //os_ << "methoddecl follows\n";
+    //methdcl->dump();
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {
     
       methodname = methdcl->getNameAsString();
@@ -426,7 +413,7 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
       (isLogicalOp(opcall->getOperator()))) {
     if (opcall->getNumArgs() == 2) {
       os_ << "assignment or logical operator, 2 args\n";
-      hNodep h_assignop = new hNode ("=", hNode::hdlopsEnum::hBinop); // node to hold assignment expr
+      hNodep h_assignop = new hNode (isLogicalOp(opcall->getOperator())? "==" : "=", hNode::hdlopsEnum::hBinop); // node to hold logical or assignment expr
       TRY_TO(TraverseStmt(opcall->getArg(0)));
       h_assignop->child_list.push_back(h_ret);
       hNodep save_h_ret = h_ret;
@@ -454,32 +441,34 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
   memberexpr->getMemberDecl()->dump(os_);
 
   // traverse the memberexpr in case it is a nested structure
-  auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
-  if (baseexpr) {
-
-    hNodep old_h_ret = h_ret;
-    TRY_TO(TraverseStmt(baseexpr));
-    if (h_ret != old_h_ret) {
-      if (h_ret->h_op == hNode::hdlopsEnum::hLiteral) {
-	//concatenate base name in front of field name
-	hNodep memexprnode = new hNode(h_ret->h_name+"_"+nameinfo, hNode::hdlopsEnum::hLiteral);
-	delete h_ret;
-	h_ret = memexprnode;  // replace returned h_ret with single node, field names concatenated
-	return h_ret;
-      }
+  hNodep old_h_ret = h_ret;
+  TRY_TO(TraverseStmt(memberexpr->getBase()));  // get hcode for the base
+  if (h_ret != old_h_ret) {
+    if (h_ret->h_op == hNode::hdlopsEnum::hVarref) {
+      //concatenate base name in front of field name
+      hNodep memexprnode = new hNode(h_ret->h_name+"##"+nameinfo, hNode::hdlopsEnum::hVarref);
+      delete h_ret;
+      h_ret = memexprnode;  // replace returned h_ret with single node, field names concatenated
+      return h_ret;
     }
-    
-    // FIXME Only handling one level right now
-    //const Type *unqualtyp = baseexpr->getType()->getUnqualifiedDesugaredType();
-    //QualType q = unqualtyp->getCanonicalTypeInternal();
-    //QualType q = (baseexpr->getType())->getDesugaredType();
-     //string basestr = tp->getAsString();
-     //nameinfo.insert((size_t) 0, q.getAsString()); //baseexpr->getMemberNameInfo().getName().getAsString() + "_") ;
-     //make_ident(nameinfo);
   }
-
+  // auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
+  // if (baseexpr) {
+  //   hNodep old_h_ret = h_ret;
+  //   TRY_TO(TraverseStmt(baseexpr));
+  //   if (h_ret != old_h_ret) {
+  //     if (h_ret->h_op == hNode::hdlopsEnum::hLiteral) {
+  // 	//concatenate base name in front of field name
+  // 	hNodep memexprnode = new hNode(h_ret->h_name+"##"+nameinfo, hNode::hdlopsEnum::hLiteral);
+  // 	delete h_ret;
+  // 	h_ret = memexprnode;  // replace returned h_ret with single node, field names concatenated
+  // 	return h_ret;
+  //     }
+  //   }
     
-  h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hLiteral);
+  //}  
+    
+  h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hVarref);
 
   return true;
 }
@@ -519,7 +508,7 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   if (isa<CompoundStmt>(fors->getInit()))
     os_ << "Compound stmt not handled in for init, skipping\n";
   else TRY_TO(TraverseStmt(fors->getInit()));
-  h_forinit = h_ret;
+  h_forinit = (h_ret==NULL) ? new hNode(hNode::hdlopsEnum::hNoop): h_ret; // null if in place var decl
   TRY_TO(TraverseStmt(fors->getCond()));
   h_forcond = h_ret;
   TRY_TO(TraverseStmt(fors->getInc()));
@@ -638,7 +627,7 @@ void XlatMethod::AddVnames(hNodep &hvns) {
   os_ << "Vname Dump\n";
   for (auto const &var : vname_map) {
     os_ << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n";
-    hvns->child_list.push_back(var.second.vardeclp);
+    hvns->child_list.push_back(var.second.h_vardeclp);
   }
 }
 

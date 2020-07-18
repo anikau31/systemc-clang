@@ -22,6 +22,8 @@
 
 namespace scpar {
 
+  using namespace llvm;
+
 static llvm::cl::OptionCategory category("systemc-clang options");
 static llvm::cl::opt<std::string> topModule(
     "top-module",
@@ -71,7 +73,11 @@ class PluginAction {
     }
 
     if (debug_only != "") {
+#ifdef  __clang__
+      setCurrentDebugType(debug_only.c_str());
+#else
       llvm::setCurrentDebugType(debug_only.c_str());
+#endif
     }
 
     std::unique_ptr<FrontendActionFactory> FrontendFactory;
