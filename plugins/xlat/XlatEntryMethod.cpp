@@ -138,6 +138,21 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     os_ << "Found break stmt, substituting noop\n";
     h_ret = new hNode(hNode::hdlopsEnum::hNoop);
   }
+  else if (isa<CXXDefaultArgExpr>(stmt)){
+    TRY_TO(TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr()));
+  }
+  else if (isa<CXXTemporaryObjectExpr>(stmt)) {
+    int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
+    if (nargs==0) { // end of the road
+      h_ret = new hNode("0", (hNode::hdlopsEnum::hLiteral));  // assume this is an initializer of 0
+    }
+    else {
+      Expr **objargs = ((CXXTemporaryObjectExpr *)stmt)->getArgs();
+      for (int i=0; i< nargs; i++) {
+	TRY_TO(TraverseStmt(objargs[i]));
+      }
+    }
+  }
   else {  
     os_ << "stmt type " << stmt->getStmtClassName() << " not recognized, calling default recursive ast visitor\n";
     hNodep oldh_ret = h_ret;
