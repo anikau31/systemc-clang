@@ -33,6 +33,7 @@ class ProcessDecl {
   void dump(llvm::raw_ostream &);
   json dump_json(llvm::raw_ostream &) const;
 
+
  protected:
   // Process information
   std::string process_type_;

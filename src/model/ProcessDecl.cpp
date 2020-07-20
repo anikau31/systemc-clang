@@ -59,8 +59,6 @@ json ProcessDecl::dump_json(raw_ostream &os) const {
 
     for (auto const &sense : sense_map) {
       process_j["sensitivity_list"][sense.first] = sense.second.size();
-      //process_j["sensitivity_list"]["MemberExpr*"] =
-      //    to_string(get<1>(sense.second));
     }
   }
 

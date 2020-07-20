@@ -23,28 +23,28 @@ void SystemCConsumer::populateNestedModules(
   for (auto const &inst : instance_map) {
     // get<0>(inst) is the Decl*, and get<1>(inst) is the ModuleInstanceType
     ModuleInstanceType module_inst{get<1>(inst)};
-    module_inst.dump();
+    LLVM_DEBUG(module_inst.dump());
     // Match with the same InstanceTypeDecl
     ModuleDecl *child{
         systemcModel_->getInstance(module_inst.getInstanceDecl())};
-    llvm::outs() << "# child instance decl " << module_inst.getInstanceDecl()
-                 << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "# child instance decl " << module_inst.getInstanceDecl()
+                 << "\n");
     module_inst.getInstanceDecl()->dump();
 
     ModuleDecl *parent{systemcModel_->getInstance(module_inst.getParentDecl())};
 
     if (child) {
-      llvm::outs() << "- child " << child->getName() << " : "
-                   << child->getInstanceName() << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "- child " << child->getName() << " : "
+                   << child->getInstanceName() << "\n");
     }
     if (parent) {
-      llvm::outs() << "- parent " << parent->getName() << " : "
-                   << parent->getInstanceName() << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "- parent " << parent->getName() << " : "
+                   << parent->getInstanceName() << "\n");
     }
 
     // Insert the child into the parent.
     if (child && parent) {
-      llvm::outs() << "ADD A CHILD PARENT RELATIONSHIP\n";
+      LLVM_DEBUG(llvm::dbgs() << "ADD A CHILD PARENT RELATIONSHIP\n");
       parent->addNestedModule(child);
     }
   }
@@ -213,7 +213,7 @@ bool SystemCConsumer::fire() {
       // This is done for the declaration.
       //
       //
-      // 5. Find  entry functions
+      // 5. Find  entry functions within one sc_module.
       os_ << "5. Set the entry functions\n";
       FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
                                      os_};
@@ -224,6 +224,9 @@ bool SystemCConsumer::fire() {
 
       //add_module_decl->dump(llvm::outs());
 
+      /// TODO: this is not how we should be processing it. 
+      /// We should only go through one of the CXXRecordDecls
+      /// 
       for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
         //FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};
