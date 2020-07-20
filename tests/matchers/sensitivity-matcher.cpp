@@ -22,6 +22,17 @@ bool find_name(std::vector<T> &names, const T &find_name) {
 
   return false;
 }
+
+std::string generateSensitivityName(
+    const std::vector<SensitivityMatcher::SensitivityTupleType> &sense_args) {
+  std::string name{};
+  for (auto const entry : sense_args) {
+    name = name + std::get<0>(entry);
+  }
+
+  return name;
+}
+
 // This test works
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   std::string code = R"(
@@ -64,16 +75,24 @@ SC_MODULE( test ){
     while(true) {
     }
   }
+
+  void second_ef() {
+  }
+
   SC_CTOR( test ) {
     SC_METHOD(entry_function_1);
     sensitive << clk.pos();
     sensitive << bool_clk << another_port ;
     sensitive << out_bool;
-    sensitive << eve1 << eve2;
+    sensitive << eve1 ;
+    sensitive << eve2 ;
     sensitive << one_sig << two_sig << count;
 
 	  sensitive << s_fp.valid_chg() << s_fp.data_chg();
 		sensitive << c_fp.ready_event(); 
+
+    SC_METHOD(second_ef);
+    sensitive << clk.pos();
   }
 };
 
@@ -96,6 +115,10 @@ int sc_main(int argc, char *argv[]) {
   auto catch_test_args = systemc_clang::catch_test_args;
   catch_test_args.push_back("-I" + systemc_clang::test_data_dir +
                             "/llnl-examples/zfpsynth/shared");
+
+  /// Turn on debug
+  //
+  llvm::DebugFlag = true;
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
@@ -127,7 +150,7 @@ int sc_main(int argc, char *argv[]) {
   ProcessDecl *proc{first_proc->second};
 
   REQUIRE(test_module != nullptr);
-  REQUIRE(processes.size() == 1);
+  REQUIRE(processes.size() == 2);
   REQUIRE(first_proc != processes.end());
 
   llvm::outs() << "PROCESS: " << first_proc->first << "\n";
@@ -150,11 +173,21 @@ int sc_main(int argc, char *argv[]) {
     auto entry{arg.second};
 
     llvm::outs() << name << "\n";
-    find_name(arg_names, name);
+    find_name(arg_names, generateSensitivityName(entry));
+
+    /// The tuple now has the last element std::get<3>(.) that provides a
+    /// DeclRfExpr to the process_handle. This means that the sensitivity has to
+    /// be extracted in relation to what the DeclRefExpr is.  Thus, there is no
+    /// separate structure to hold DeclRefExpr => sensitivity list. If needed,
+    /// we can add that.
 
     for (auto const &call : entry) {
-      llvm::outs() << std::get<0>(call) << "  " << std::get<1>(call) << "  "
-                   << std::get<2>(call) << "\n";
+      DeclRefExpr *to_get_process_handle{std::get<3>(call)};
+      auto process_handle_name{
+          to_get_process_handle->getNameInfo().getAsString()};
+      llvm::outs() << process_handle_name << "  " << std::get<0>(call) << "  "
+                   << std::get<1>(call) << "  " << std::get<2>(call) << "  "
+                   << std::get<3>(call) << "\n";
     }
   }
 
