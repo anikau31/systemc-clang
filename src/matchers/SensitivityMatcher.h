@@ -45,11 +45,11 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
   /// 2. FieldDecl/VarDecl = ValueDecl. Pointer to field declaration.
   /// 3. The MemberExpr from where I got this information.
   typedef std::vector<
-      std::tuple<std::string, ValueDecl *, MemberExpr *, DeclRefExpr*>>
+      std::tuple<std::string, ValueDecl *, MemberExpr *, DeclRefExpr *>>
       CallerCalleeType;
 
   /// Store the information.
-  std::vector<std::tuple<std::string, ValueDecl *, MemberExpr *, DeclRefExpr*>>
+  std::vector<std::tuple<std::string, ValueDecl *, MemberExpr *, DeclRefExpr *>>
       calls_;
 
   DeclRefExpr *vd_;
@@ -59,7 +59,7 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
   CallerCalleeType getCallerCallee() const { return calls_; }
 
   /// Register the matchers to identify caller and callees.
-  void registerMatchers(MatchFinder &finder, DeclRefExpr* vd) {
+  void registerMatchers(MatchFinder &finder, DeclRefExpr *vd) {
     vd_ = vd;
     /* clang-format off */
 
@@ -262,31 +262,29 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     MemberExpr *me_wo_mcall{};
 
     /// Debug code
-    auto process_handle{const_cast<DeclRefExpr*>(result.Nodes.getNodeAs<DeclRefExpr>("process_handle"))};
-    auto opcall{const_cast<CXXOperatorCallExpr*>(result.Nodes.getNodeAs<CXXOperatorCallExpr>("opcall"))};
+    auto process_handle{const_cast<DeclRefExpr *>(
+        result.Nodes.getNodeAs<DeclRefExpr>("process_handle"))};
+    auto opcall{const_cast<CXXOperatorCallExpr *>(
+        result.Nodes.getNodeAs<CXXOperatorCallExpr>("opcall"))};
 
     if (opcall) {
-      llvm::outs() << "############ DEBUG CODE \n";
 
       // Check if there is process handle
       if (process_handle) {
-        ValueDecl *vd{ process_handle->getDecl() };
-        llvm::outs() << "# DeclRefExpr " << process_handle->getNameInfo().getAsString()
-          << "   => " << vd->getNameAsString()
-                     << "\n";
+        ValueDecl *vd{process_handle->getDecl()};
+        llvm::outs() << "# DeclRefExpr "
+                     << process_handle->getNameInfo().getAsString() << "   => "
+                     << vd->getNameAsString() << "\n";
         process_handle_ = process_handle;
-        vd->dump();
       }
 
-        llvm::outs() << "# CXXOperatorCallExpr\n";
-        opcall->dump();
-        MatchFinder sense_registry{};
-        SensitiveOperatorCallMatcher sop_matcher{};
-        sop_matcher.registerMatchers(sense_registry);
-        sense_registry.match(*opcall, *result.Context);
+      MatchFinder sense_registry{};
+      SensitiveOperatorCallMatcher sop_matcher{};
+      sop_matcher.registerMatchers(sense_registry);
+      sense_registry.match(*opcall, *result.Context);
 
-        cxx_mcall = sop_matcher.getMemberExprCallExpr();
-        me_wo_mcall = sop_matcher.getMemberExprWithoutCall();
+      cxx_mcall = sop_matcher.getMemberExprCallExpr();
+      me_wo_mcall = sop_matcher.getMemberExprWithoutCall();
     }
     /// If the argument to the operator<<() is a MemberExpr.
     /// This is the situation when we only have a FieldDecl as a part of the
@@ -300,10 +298,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
         call_matcher.registerMatchers(call_registry, process_handle_);
         call_registry.match(*me_wo_mcall, *result.Context);
 
-        llvm::outs() << "### ME_WO_MCALL \n";
-        me_wo_mcall->dump();
-
-        call_matcher.dump();
+        LLVM_DEBUG(call_matcher.dump());
         auto entry{call_matcher.getCallerCallee()};
         sensitivity_.insert(
             SensitivityPairType(generateSensitivityName(entry), entry));
@@ -317,14 +312,15 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
         CallerCalleeMatcher call_matcher{};
         call_matcher.registerMatchers(call_registry, process_handle_);
         call_registry.match(*cxx_mcall, *result.Context);
-        call_matcher.dump();
+        LLVM_DEBUG(call_matcher.dump());
+
         auto entry{call_matcher.getCallerCallee()};
         sensitivity_.insert(
             SensitivityPairType(generateSensitivityName(entry), entry));
         llvm::outs() << "INSERT with call\n";
       }
     }
-    dump();
+    LLVM_DEBUG( dump() );
   }
 
   // Dump out the detected sensitivity list arguments.
@@ -335,8 +331,9 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(llvm::dbgs() << generated_name << "  \n");
 
       for (auto const &call : callercallee) {
-        //auto vd{std::get<3>(call)};
-        //if (vd) { LLVM_DEBUG(llvm::dbgs() << "Entry function name: " << vd->getNameInfo().getAsString() << "\n"); }
+        // auto vd{std::get<3>(call)};
+        // if (vd) { LLVM_DEBUG(llvm::dbgs() << "Entry function name: " <<
+        // vd->getNameInfo().getAsString() << "\n"); }
         LLVM_DEBUG(llvm::dbgs()
                    << std::get<0>(call) << "  " << std::get<1>(call) << "  "
                    << std::get<2>(call) << "\n");

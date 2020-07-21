@@ -12,7 +12,7 @@
 
 using namespace scpar;
 using namespace clang;
-//using namespace std;
+// using namespace std;
 
 using namespace sc_ast_matchers;
 
@@ -27,19 +27,19 @@ void SystemCConsumer::populateNestedModules(
     // Match with the same InstanceTypeDecl
     ModuleDecl *child{
         systemcModel_->getInstance(module_inst.getInstanceDecl())};
-    LLVM_DEBUG(llvm::dbgs() << "# child instance decl " << module_inst.getInstanceDecl()
-                 << "\n");
+    LLVM_DEBUG(llvm::dbgs() << "# child instance decl "
+                            << module_inst.getInstanceDecl() << "\n");
     module_inst.getInstanceDecl()->dump();
 
     ModuleDecl *parent{systemcModel_->getInstance(module_inst.getParentDecl())};
 
     if (child) {
       LLVM_DEBUG(llvm::dbgs() << "- child " << child->getName() << " : "
-                   << child->getInstanceName() << "\n");
+                              << child->getInstanceName() << "\n");
     }
     if (parent) {
       LLVM_DEBUG(llvm::dbgs() << "- parent " << parent->getName() << " : "
-                   << parent->getInstanceName() << "\n");
+                              << parent->getInstanceName() << "\n");
     }
 
     // Insert the child into the parent.
@@ -222,26 +222,24 @@ bool SystemCConsumer::fire() {
       os_ << "6. Set the process\n";
       add_module_decl->addProcess(entryFunctions);
 
-      //add_module_decl->dump(llvm::outs());
-
-      /// TODO: this is not how we should be processing it. 
       /// We should only go through one of the CXXRecordDecls
-      /// 
+
+      LLVM_DEBUG(
+          llvm::dbgs()
+          << "\n================ SENSITIVITY MATCHER =============== \n");
+      SensitivityMatcher sens_matcher{};
+      MatchFinder matchRegistry{};
+      sens_matcher.registerMatchers(matchRegistry);
+      matchRegistry.match(*constructor.getConstructorDecl(), getContext());
+      sens_matcher.dump();
+      llvm::outs() << "================ END =============== \n";
+
       for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
-        //FindSensitivity findSensitivity{constructor.getConstructorStmt(), os_};
-        llvm::outs()
-            << "\n================ SENSITIVITY MATCHER =============== \n";
-        SensitivityMatcher sens_matcher{};
-        MatchFinder matchRegistry{};
-        sens_matcher.registerMatchers(matchRegistry);
-        // Run all the matchers
-        matchRegistry.match(*constructor.getConstructorDecl(), getContext());
-        sens_matcher.dump();
-        llvm::outs() << "================ END =============== \n";
 
-        //ef->addSensitivityInfo(findSensitivity);
-        EntryFunctionContainer::SenseMapType sensitivity_info{sens_matcher.getSensitivityMap()};
+        /// Add the sensitivity information to each of the entry functions.
+        EntryFunctionContainer::SenseMapType sensitivity_info{
+            sens_matcher.getSensitivityMap()};
         ef->addSensitivityInfo(sensitivity_info);
 
         if (ef->getEntryMethod() == nullptr) {
@@ -326,7 +324,7 @@ bool SystemCConsumer::fire() {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
         ctordecl->getBody(fd);
         llvm::outs() << "==============> RUN netlist matcher\n";
-        //fd->dump();
+        // fd->dump();
         netlist_registry.match(*fd, getContext());
         llvm::outs() << "==============> DONE netlist matcher\n";
       }
