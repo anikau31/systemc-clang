@@ -234,14 +234,23 @@ void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
 	hNodep h_senslist = new hNode(hNode::hdlopsEnum::hSenslist);
 	for (auto sensmapitem : sensmap) {
 	  //typedef std::map<std::string, std::vector<SensitivityTupleType>> SenseMapType;
-	  //typedef std::tuple<std::string, ValueDecl *, MemberExpr *>SensitivityTupleType;
+	  //typedef std::tuple<std::string, ValueDecl *, MemberExpr *, DeclRefExpr*>SensitivityTupleType;
 
 	  if (sensmapitem.first == "dont_initialize") // nonsynthesizable
 	    continue;
 	  
-	  os_ << "sensmap item " << sensmapitem.first << "\n";
+	  os_ << "sensmap item " << sensmapitem.first <<"\n";
+	  size_t found = sensmapitem.first.find("_handle");
+	  os_ << "first part is " << sensmapitem.first.substr(0, found) << "\n";
+	  if ((found==std::string::npos) || (sensmapitem.first.substr(0, found).compare(efc->getName())!=0)) {
+	    os_ << "compare not equal " << sensmapitem.first.substr(0, found) << " " << efc->getName() << "\n";
+	    continue;  // sensitivity item is not for this process
+	  }
 	  std::vector<EntryFunctionContainer::SensitivityTupleType> sttv = sensmapitem.second;
 	  EntryFunctionContainer::SensitivityTupleType sensitem0 = sttv[0];
+	  os_ << "sens item " << get<1>(sensitem0)->getNameAsString() << " declref follows\n";
+	  get<3>(sensitem0)->dump(os_);
+
 	  hNodep h_firstfield = new hNode(get<1>(sensitem0)->getNameAsString(), hNode::hdlopsEnum::hSensvar);
 	  for (int i = 1; i < sttv.size(); i++) {
 	    h_firstfield->child_list.push_back(new hNode(get<1>(sttv[i])->getNameAsString(),
