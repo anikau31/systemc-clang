@@ -11,13 +11,6 @@
 using namespace std;
 using namespace hnode;
 
-// MACRO FOR TRAVERSING
-#define TRY_TO(CALL_EXPR)                                                      \
-do {                                                                           \
-  if (!getDerived().CALL_EXPR)                                                 \
-    return false;                                                              \
-} while (0)
-
 XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & os):
   os_(os){ 
   os_ << "Entering XlatMethod constructor, has body is " << emd->hasBody()<< "\n";
@@ -55,7 +48,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     TraverseCompoundStmt((CompoundStmt *)stmt);
   }
   else if (isa<DeclStmt>(stmt)) {
-    TRY_TO(TraverseDeclStmt((DeclStmt *) stmt));
+    TraverseDeclStmt((DeclStmt *) stmt);
   }
   else if (isa<CallExpr>(stmt)) {
     if (CXXOperatorCallExpr *opercall = dyn_cast<CXXOperatorCallExpr>(stmt)) {
@@ -73,38 +66,38 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     }
   }
   else if (isa<BinaryOperator>(stmt)) {
-    TRY_TO(TraverseBinaryOperator((BinaryOperator *) stmt));
+    TraverseBinaryOperator((BinaryOperator *) stmt);
   }
   else if (isa<UnaryOperator>(stmt)) {
-    TRY_TO(TraverseUnaryOperator((UnaryOperator *) stmt));
+    TraverseUnaryOperator((UnaryOperator *) stmt);
   }
   else if (isa<MaterializeTemporaryExpr>(stmt)) {
-    TRY_TO(TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getSubExpr()));
-    //TRY_TO(TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary()));
+    TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getSubExpr());
+    //TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary());
   }
   else if (isa<DeclRefExpr>(stmt)) {
-    TRY_TO(TraverseDeclRefExpr((DeclRefExpr *) stmt));
+    TraverseDeclRefExpr((DeclRefExpr *) stmt);
   }
   else if (isa<MemberExpr>(stmt)) {
-    TRY_TO(TraverseMemberExpr((MemberExpr *) stmt));
+    TraverseMemberExpr((MemberExpr *) stmt);
   }
   else if (isa<IntegerLiteral>(stmt)) {
-    TRY_TO(TraverseIntegerLiteral((IntegerLiteral *)stmt));
+    TraverseIntegerLiteral((IntegerLiteral *)stmt);
   }  
   else if (isa<CXXBoolLiteralExpr>(stmt)) {
-    TRY_TO(TraverseCXXBoolLiteralExpr((CXXBoolLiteralExpr *)stmt));
+    TraverseCXXBoolLiteralExpr((CXXBoolLiteralExpr *)stmt);
   }
   else if (isa<IfStmt>(stmt)){
     os_ << "Found if stmt\n";
-    TRY_TO(TraverseIfStmt((IfStmt *)stmt));
+    TraverseIfStmt((IfStmt *)stmt);
   }
   else if (isa<ForStmt>(stmt)) {
     os_ << "Found if stmt\n";
-    TRY_TO(TraverseForStmt((ForStmt *)stmt));
+    TraverseForStmt((ForStmt *)stmt);
   }
   else if (isa<SwitchStmt>(stmt)){
     os_ << "Found switch stmt\n";
-    TRY_TO(TraverseSwitchStmt((SwitchStmt *)stmt));
+    TraverseSwitchStmt((SwitchStmt *)stmt);
   }
   else if (isa<CaseStmt>(stmt)){
     os_ << "Found case stmt\n";
@@ -115,7 +108,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
       hcasep->child_list.push_back(new hNode(val.toString(10), hNode::hdlopsEnum::hLiteral));
     }
     
-    TRY_TO(TraverseStmt(((CaseStmt *)stmt)->getSubStmt()));
+    TraverseStmt(((CaseStmt *)stmt)->getSubStmt());
     if (h_ret != old_hret)
       hcasep->child_list.push_back(h_ret);
     else
@@ -127,7 +120,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     os_ << "Found default stmt\n";
     hNodep old_hret = h_ret;
     hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
-    TRY_TO(TraverseStmt(((DefaultStmt *)stmt)->getSubStmt()));
+    TraverseStmt(((DefaultStmt *)stmt)->getSubStmt());
     if (h_ret != old_hret)
       hcasep->child_list.push_back(h_ret);
     else
@@ -139,7 +132,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     h_ret = new hNode(hNode::hdlopsEnum::hNoop);
   }
   else if (isa<CXXDefaultArgExpr>(stmt)){
-    TRY_TO(TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr()));
+    TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
   }
   else if (isa<CXXTemporaryObjectExpr>(stmt)) {
     int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
@@ -149,7 +142,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     else {
       Expr **objargs = ((CXXTemporaryObjectExpr *)stmt)->getArgs();
       for (int i=0; i< nargs; i++) {
-	TRY_TO(TraverseStmt(objargs[i]));
+	TraverseStmt(objargs[i]);
       }
     }
   }
@@ -163,7 +156,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     }
     for( auto arg : stmt->children()) {
       os_ << "child stmt type " << ((Stmt *) arg)->getStmtClassName() << "\n";
-      TRY_TO(TraverseStmt(arg));
+      TraverseStmt(arg);
       if (h_ret == oldh_ret) {
 	os_ << "child stmt not handled\n";
 	// no output generated
@@ -180,7 +173,7 @@ bool XlatMethod::TraverseCompoundStmt(CompoundStmt* cstmt) {
   hNodep h_cstmt = new hNode(hNode::hdlopsEnum::hCStmt);
   
   for (clang::Stmt* stmt : cstmt->body()) {
-    TRY_TO(TraverseStmt(stmt));
+    TraverseStmt(stmt);
     if (h_ret) {
       h_cstmt->child_list.push_back(h_ret);
     }
@@ -250,11 +243,11 @@ bool XlatMethod::TraverseBinaryOperator(BinaryOperator* expr)
   hNodep  h_binop = new hNode(expr->getOpcodeStr(), hNode::hdlopsEnum::hBinop); // node to hold binop expr
   os_ << "in TraverseBinaryOperator, opcode is " << expr->getOpcodeStr() << "\n";
 
-  TRY_TO(TraverseStmt(expr->getLHS()));
+  TraverseStmt(expr->getLHS());
   h_binop->child_list.push_back(h_ret);
 
   hNodep save_h_ret = h_ret;
-  TRY_TO(TraverseStmt(expr->getRHS()));
+  TraverseStmt(expr->getRHS());
   if (h_ret == save_h_ret)
     h_binop->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
   else
@@ -275,7 +268,7 @@ bool XlatMethod::TraverseUnaryOperator(UnaryOperator* expr)
   
   hNodep  h_unop = new hNode(expr->getOpcodeStr(opcstr), hNode::hdlopsEnum::hUnop); // node to hold unop expr
 
-  TRY_TO(TraverseStmt(expr->getSubExpr()));
+  TraverseStmt(expr->getSubExpr());
   h_unop->child_list.push_back(h_ret);
 
   h_ret = h_unop;
@@ -331,9 +324,9 @@ bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
   os_ << "In TraverseArraySubscriptExpr, tree follows\n";
   expr->dump(os_);
   hNodep h_arrexpr = new hNode("ARRAYSUBSCRIPT", hNode::hdlopsEnum::hBinop);
-  TRY_TO(TraverseStmt(expr->getLHS()));
+  TraverseStmt(expr->getLHS());
   h_arrexpr->child_list.push_back(h_ret);
-  TRY_TO(TraverseStmt(expr->getRHS()));
+  TraverseStmt(expr->getRHS());
   h_arrexpr->child_list.push_back(h_ret);
   h_ret = h_arrexpr;
   return true;
@@ -367,7 +360,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
       if (methodname.compare(0, 8, "operator")==0) { // 0 means compare =, 8 is len("operator")
 	// the conversion we know about, can be skipped
 	os_ << "Found operator conversion node\n";
-	TRY_TO(TraverseStmt(arg)); 
+	TraverseStmt(arg); 
 	return true;
       }
 
@@ -393,13 +386,13 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
 
     hNode * h_callp = new hNode(methodname, opc); // list to hold call expr node
 
-    TRY_TO(TraverseStmt(arg)); // traverse the x in x.f(5)
+    TraverseStmt(arg); // traverse the x in x.f(5)
 
     if (h_ret) h_callp -> child_list.push_back(h_ret);
 
     for (auto arg : callexpr->arguments()) {
       hNodep save_h_ret = h_ret;
-      TRY_TO(TraverseStmt(arg));
+      TraverseStmt(arg);
       if (h_ret != save_h_ret) h_callp->child_list.push_back(h_ret);
     }
     h_ret = h_callp;	  
@@ -429,10 +422,10 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
     if (opcall->getNumArgs() == 2) {
       os_ << "assignment or logical operator, 2 args\n";
       hNodep h_assignop = new hNode (isLogicalOp(opcall->getOperator())? "==" : "=", hNode::hdlopsEnum::hBinop); // node to hold logical or assignment expr
-      TRY_TO(TraverseStmt(opcall->getArg(0)));
+      TraverseStmt(opcall->getArg(0));
       h_assignop->child_list.push_back(h_ret);
       hNodep save_h_ret = h_ret;
-      TRY_TO(TraverseStmt(opcall->getArg(1)));
+      TraverseStmt(opcall->getArg(1));
       if (h_ret == save_h_ret) h_assignop->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
       else h_assignop->child_list.push_back(h_ret);
       h_ret = h_assignop;
@@ -457,7 +450,7 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
 
   // traverse the memberexpr in case it is a nested structure
   hNodep old_h_ret = h_ret;
-  TRY_TO(TraverseStmt(memberexpr->getBase()));  // get hcode for the base
+  TraverseStmt(memberexpr->getBase());  // get hcode for the base
   if (h_ret != old_h_ret) {
     if (h_ret->h_op == hNode::hdlopsEnum::hVarref) {
       //concatenate base name in front of field name
@@ -470,7 +463,7 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
   // auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested field decl
   // if (baseexpr) {
   //   hNodep old_h_ret = h_ret;
-  //   TRY_TO(TraverseStmt(baseexpr));
+  //   TraverseStmt(baseexpr);
   //   if (h_ret != old_h_ret) {
   //     if (h_ret->h_op == hNode::hdlopsEnum::hLiteral) {
   // 	//concatenate base name in front of field name
@@ -497,15 +490,15 @@ bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
     return true;
   }
   else {
-    TRY_TO(TraverseStmt(ifs->getCond()));
+    TraverseStmt(ifs->getCond());
     h_ifc = h_ret;
   }
-  TRY_TO(TraverseStmt(ifs->getThen()));
+  TraverseStmt(ifs->getThen());
   if (h_ret != h_ifc) // unchanged if couldn't translate the then clause
     h_ifthen = h_ret;
 
   if (ifs->getElse()) {
-    TRY_TO(TraverseStmt(ifs->getElse()));
+    TraverseStmt(ifs->getElse());
     if ((h_ret != h_ifc) && (h_ret != h_ifthen))
       h_ifelse = h_ret;
   }
@@ -522,15 +515,15 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   h_forstmt = new hNode(hNode::hdlopsEnum::hForStmt);
   if (isa<CompoundStmt>(fors->getInit()))
     os_ << "Compound stmt not handled in for init, skipping\n";
-  else TRY_TO(TraverseStmt(fors->getInit()));
+  else TraverseStmt(fors->getInit());
   h_forinit = (h_ret==NULL) ? new hNode(hNode::hdlopsEnum::hNoop): h_ret; // null if in place var decl
-  TRY_TO(TraverseStmt(fors->getCond()));
+  TraverseStmt(fors->getCond());
   h_forcond = h_ret;
-  TRY_TO(TraverseStmt(fors->getInc()));
+  TraverseStmt(fors->getInc());
   h_forinc = h_ret;
   os_ << "For loop body\n";
   fors->getBody()->dump(os_);
-  TRY_TO(TraverseStmt(fors->getBody()));
+  TraverseStmt(fors->getBody());
   h_forbody = h_ret;
   h_forstmt->child_list.push_back(h_forinit);
   h_forstmt->child_list.push_back(h_forcond);
@@ -547,7 +540,7 @@ bool XlatMethod::ProcessSwitchCase(SwitchCase *sc) {
   if (isa<DefaultStmt>(sc)) {
     os_ << "Found default stmt in switchcase\n";
     hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
-    TRY_TO(TraverseStmt((DefaultStmt *)sc->getSubStmt()));
+    TraverseStmt((DefaultStmt *)sc->getSubStmt());
     }
   else {
     os_ << "Found case stmt in switchcase\n";
@@ -556,7 +549,7 @@ bool XlatMethod::ProcessSwitchCase(SwitchCase *sc) {
       llvm::APSInt val = expr->getResultAsAPSInt();
       hcasep->child_list.push_back(new hNode(val.toString(10), hNode::hdlopsEnum::hLiteral));
     }
-    TRY_TO(TraverseStmt((CaseStmt *)sc->getSubStmt()));
+    TraverseStmt((CaseStmt *)sc->getSubStmt());
   }
   if (h_ret != old_hret) {
     hcasep->child_list.push_back(h_ret);
@@ -580,14 +573,14 @@ bool XlatMethod::TraverseSwitchStmt( SwitchStmt *switchs) {
   //  os_ << "switch init not handled, skipping\n";
   //}
   hNodep old_ret = h_ret;
-  TRY_TO(TraverseStmt(switchs->getCond()));
+  TraverseStmt(switchs->getCond());
   if (h_ret != old_ret) {
     h_switchstmt->child_list.push_back(h_ret);
   }
   else h_switchstmt->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
 
   old_ret = h_ret;
-  TRY_TO(TraverseStmt(switchs->getBody()));
+  TraverseStmt(switchs->getBody());
   if (h_ret != old_ret)
     h_switchstmt->child_list.push_back(h_ret);
   
@@ -603,7 +596,7 @@ bool XlatMethod::TraverseSwitchStmt( SwitchStmt *switchs) {
   //     h_switchstmt->child_list.push_back(h_ret);
   //   }
   // }  
-  //TRY_TO(TraverseStmt(switchs->getBody()));
+  //TraverseStmt(switchs->getBody());
   //h_switchbody = h_ret;
   //h_switchstmt->child_list.push_back(h_switchinit);
   
@@ -624,12 +617,12 @@ bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
   }
   else {
     // Get condition
-    TRY_TO(TraverseStmt(whiles->getCond()));
+    TraverseStmt(whiles->getCond());
     h_whilecond = h_ret;
   }
 
   // Get the body
-  TRY_TO(TraverseStmt(whiles->getBody()));
+  TraverseStmt(whiles->getBody());
   h_whilebody = h_ret;
   h_whilestmt->child_list.push_back(h_whilecond);
   h_whilestmt->child_list.push_back(h_whilebody);

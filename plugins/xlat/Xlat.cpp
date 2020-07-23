@@ -241,9 +241,9 @@ void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
 	  
 	  os_ << "sensmap item " << sensmapitem.first <<"\n";
 	  size_t found = sensmapitem.first.find("_handle");
-	  os_ << "first part is " << sensmapitem.first.substr(0, found) << "\n";
+	  //os_ << "first part is " << sensmapitem.first.substr(0, found) << "\n";
 	  if ((found==std::string::npos) || (sensmapitem.first.substr(0, found).compare(efc->getName())!=0)) {
-	    os_ << "compare not equal " << sensmapitem.first.substr(0, found) << " " << efc->getName() << "\n";
+	    //os_ << "compare not equal " << sensmapitem.first.substr(0, found) << " " << efc->getName() << "\n";
 	    continue;  // sensitivity item is not for this process
 	  }
 	  std::vector<EntryFunctionContainer::SensitivityTupleType> sttv = sensmapitem.second;
