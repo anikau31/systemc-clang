@@ -73,7 +73,7 @@ We can then execute the script in the following way.
 .. code-block:: c++ 
    :linenos:
 
-   $ `clang-query`.sh -extra-arg=-I$SYSTEMC/include docs/source/matcher/counter.cpp -f control.dbg
+   $ clang-query -extra-arg=-I$SYSTEMC/include docs/source/matcher/counter.cpp -f control.dbg
 
 You will notice that we have multiple matches (more then 2), and we should only be having two matches for the two SystemC modules. 
 To correct this, we have to make two changes:
