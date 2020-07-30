@@ -1,3 +1,16 @@
+//===- PortMatcher.h - Matching Ports -------------------------*- C++ -*-=====//
+//
+// Part of the systemc-clang project.
+// See License.rst
+//
+//===----------------------------------------------------------------------===//
+//
+/// \file
+/// Parses ports of a SystemC module
+//
+/// \author Hiren Patel
+//===----------------------------------------------------------------------===//
+
 #ifndef _PORT_MATCHER_H_
 #define _PORT_MATCHER_H_
 
@@ -7,14 +20,21 @@
 
 #include "clang/ASTMatchers/ASTMatchers.h"
 
+/// Different matchers may use different DEBUG_TYPE
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "PortMatcher"
+
 using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
 
 ///////////////////////////////////////////////////////////////////////////////
-// Class PortMatcher
 //
+/// Class PortMatcher
 //
+/// This class identifies a SystemC module's port declaration, and nested
+/// submodules as well.
+///
 ///////////////////////////////////////////////////////////////////////////////
 
 class PortMatcher : public MatchFinder::MatchCallback {
@@ -38,6 +58,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   PortType outstream_ports_;
   PortType sc_ports_;
 
+  /// Store the declaration of submodules.
   PortType submodules_;
 
  public:
@@ -182,19 +203,19 @@ class PortMatcher : public MatchFinder::MatchCallback {
   /* clang-format on */
 
   template <typename NodeType>
-auto checkMatch(const std::string &name,
-                const MatchFinder::MatchResult &result) {
-  return result.Nodes.getNodeAs<NodeType>(name);
-}
-
+  auto checkMatch(const std::string &name,
+                  const MatchFinder::MatchResult &result) {
+    return result.Nodes.getNodeAs<NodeType>(name);
+  }
 
   void printTemplateArguments(PortType &found_ports) {
     // Input ports
     for (const auto &i : found_ports) {
-      llvm::outs() << "name: " << get<0>(i)
-                   << ", FieldDecl*: " << get<1>(i)->getFieldDecl();
-      get<1>(i)->getTemplateType()->printTemplateArguments(llvm::outs());
-      llvm::outs() << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "name: " << get<0>(i)
+                              << ", FieldDecl*: " << get<1>(i)->getFieldDecl());
+      LLVM_DEBUG(
+          get<1>(i)->getTemplateType()->printTemplateArguments(llvm::outs()));
+      LLVM_DEBUG(llvm::outs() << "\n");
     }
   }
 
@@ -204,7 +225,7 @@ auto checkMatch(const std::string &name,
     const clang::Type *type_ptr{qual_type.getTypePtr()};
     auto template_ptr{new FindTemplateTypes()};
     template_ptr->Enumerate(type_ptr);
-    template_ptr->printTemplateArguments(llvm::outs());
+    LLVM_DEBUG(template_ptr->printTemplateArguments(llvm::outs()));
     return template_ptr;
   }
 
@@ -330,20 +351,14 @@ auto checkMatch(const std::string &name,
     finder.addMatcher(match_non_sc_types_vdecl, this);
     finder.addMatcher(match_submodules, this);
     // finder.addMatcher(match_sc_ports, this);
-
-    // This is only for testing.
-    //
-    // It is a way to show that we can write our own complex predicates for AST
-    // matchers :)
-    //auto test_matcher =
-        //cxxRecordDecl(forEachDescendant(fieldDecl(matchesTypeName())));
-    // finder.addMatcher(test_matcher, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
     auto sc_in_field{checkMatch<clang::CXXRecordDecl>("desugar_sc_in", result)};
-    auto sc_out_field{checkMatch<clang::CXXRecordDecl>("desugar_sc_out", result)};
-    auto sc_inout_field{checkMatch<clang::CXXRecordDecl>("desugar_sc_inout", result)};
+    auto sc_out_field{
+        checkMatch<clang::CXXRecordDecl>("desugar_sc_out", result)};
+    auto sc_inout_field{
+        checkMatch<clang::CXXRecordDecl>("desugar_sc_inout", result)};
     auto sc_signal_field{
         checkMatch<clang::CXXRecordDecl>("desugar_sc_signal_inout_if", result)};
     auto sc_stream_in_field{
@@ -354,29 +369,24 @@ auto checkMatch(const std::string &name,
         checkMatch<clang::CXXRecordDecl>("desugar_sc_rvd_in", result)};
     auto sc_rvd_out_field{
         checkMatch<clang::CXXRecordDecl>("desugar_sc_rvd_out", result)};
-    auto sc_port_field{checkMatch<clang::CXXRecordDecl>("desugar_sc_port", result)};
+    auto sc_port_field{
+        checkMatch<clang::CXXRecordDecl>("desugar_sc_port", result)};
     auto other_fields{checkMatch<clang::Decl>("other_fields", result)};
     auto other_fvdecl{checkMatch<clang::Decl>("other_fvdecl", result)};
     /// Submodules
     auto submodule_fd{checkMatch<clang::FieldDecl>("submodule_fd", result)};
 
-    // llvm::outs() << "\n";
-    // llvm::outs() << "in: " << sc_in_field << ", out: " << sc_out_field
-    // << ", inout: " << sc_inout_field << ", other: " << other_fields
-    // << "\n";
-    //
-    
     if (submodule_fd) {
-      auto name{ submodule_fd->getNameAsString() };
-      llvm::outs() << "@@@@@@@@@@@@@ Found submodule: " << name << "\n"; 
-        insert_port(submodules_, submodule_fd);
+      auto name{submodule_fd->getNameAsString()};
+      LLVM_DEBUG(llvm::dbgs() << "Found submodule: " << name << "\n");
+      insert_port(submodules_, submodule_fd);
     }
 
     if (sc_in_field && other_fields) {
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto port_name{fd->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found sc_in: " << port_name << "\n";
+        LLVM_DEBUG(llvm::dbgs() << " Found sc_in: " << port_name << "\n");
         insert_port(in_ports_, fd);
       }
     }
@@ -385,7 +395,7 @@ auto checkMatch(const std::string &name,
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto port_name{fd->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found sc_out: " << port_name << "\n";
+        LLVM_DEBUG(llvm::dbgs() << " Found sc_out: " << port_name << "\n");
         insert_port(out_ports_, fd);
       }
     }
@@ -394,7 +404,7 @@ auto checkMatch(const std::string &name,
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto port_name{fd->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found sc_inout: " << port_name << "\n";
+        LLVM_DEBUG(llvm::dbgs() << " Found sc_inout: " << port_name << "\n");
         insert_port(inout_ports_, fd);
       }
     }
@@ -403,7 +413,7 @@ auto checkMatch(const std::string &name,
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto signal_name{fd->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found sc_signal: " << signal_name << "\n";
+        llvm::dbgs() << " Found sc_signal: " << signal_name << "\n";
         insert_port(signal_fields_, fd);
       }
     }
@@ -412,7 +422,8 @@ auto checkMatch(const std::string &name,
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found sc_stream_in: " << field_name << "\n";
+        LLVM_DEBUG(llvm::dbgs()
+                   << " Found sc_stream_in: " << field_name << "\n");
         insert_port(instream_ports_, fd);
       }
     }
@@ -421,7 +432,8 @@ auto checkMatch(const std::string &name,
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found sc_stream_out: " << field_name << "\n";
+        LLVM_DEBUG(llvm::dbgs()
+                   << " Found sc_stream_out: " << field_name << "\n");
         insert_port(outstream_ports_, fd);
       }
     }
@@ -430,7 +442,7 @@ auto checkMatch(const std::string &name,
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found sc_rvd_in: " << field_name << "\n";
+        LLVM_DEBUG(llvm::dbgs() << " Found sc_rvd_in: " << field_name << "\n");
         insert_port(instream_ports_, fd);
       }
     }
@@ -439,7 +451,7 @@ auto checkMatch(const std::string &name,
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found sc_rvd_out: " << field_name << "\n";
+        LLVM_DEBUG(llvm::dbgs() << " Found sc_rvd_out: " << field_name << "\n");
         insert_port(outstream_ports_, fd);
       }
     }
@@ -448,31 +460,32 @@ auto checkMatch(const std::string &name,
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
-        llvm::outs() << " Found sc_port : " << field_name << "\n";
+        LLVM_DEBUG(llvm::dbgs() << " Found sc_port : " << field_name << "\n");
         insert_port(sc_ports_, fd);
       }
     }
 
     auto is_ports{(sc_in_field) || sc_out_field || sc_inout_field ||
                   sc_signal_field || sc_stream_in_field || sc_stream_out_field};
-    // llvm::outs() << "is_ports: " << is_ports << "\n";
 
     /// Not a submodule and not a port
     if ((!is_ports)) {
       // These will be either FieldDecl or VarDecl.
       auto fd{other_fvdecl};
       if (fd) {
-        llvm::outs() << "Print out the other fd\n";
+        LLVM_DEBUG(llvm::dbgs() << "Print out the other fd\n");
 
         if (auto *p_field{dyn_cast<FieldDecl>(fd)}) {
           auto field_name{p_field->getIdentifier()->getNameStart()};
-          llvm::outs() << " Found field other_fields: " << field_name << "\n";
+          LLVM_DEBUG(llvm::dbgs()
+                     << " Found field other_fields: " << field_name << "\n");
           insert_port(other_fields_, p_field);
 
         } else {
           auto *p_var{dyn_cast<VarDecl>(fd)};
           auto field_name{p_var->getIdentifier()->getNameStart()};
-          llvm::outs() << " Found var other_fields: " << field_name << "\n";
+          LLVM_DEBUG(llvm::dbgs()
+                     << " Found var other_fields: " << field_name << "\n");
           insert_port(other_fields_, p_var);
         }
       }
@@ -493,7 +506,6 @@ auto checkMatch(const std::string &name,
     printTemplateArguments(submodules_);
   }
 };
-}; // namespace
+};  // namespace sc_ast_matchers
 
-#endif 
-
+#endif
