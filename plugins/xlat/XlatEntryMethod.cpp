@@ -198,7 +198,7 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
 	  continue;
 	ProcessVarDecl(vardecl); // adds it to the list of renamed local variables
       }
-  h_ret = NULL; 
+  //h_ret = NULL; 
   return true;
 }
 
@@ -216,20 +216,23 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl) {
   XlatType xlatt;
   xlatt.xlattype(vardecl->getName(), te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hVardecl, h_varlist);
   hNodep h_vardecl = h_varlist->child_list.back();
-  if (Expr * declinit = vardecl->getInit()) {
+  h_ret = NULL;
 
+  if (Expr * declinit = vardecl->getInit()) {
     TraverseStmt(declinit);
-    if (h_ret) {
-      hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarInit);
-      varinitp->child_list.push_back(h_ret);
-      h_vardecl->child_list.push_back(varinitp);
-    }
   }
 
   string newn = lname.newname();
   h_vardecl->set(newn); // replace original name with new name
   names_t names = {vardecl->getName(), newn, h_vardecl};
   vname_map[vardecl] = names;
+
+  if (h_ret) {
+    hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
+    varinitp->child_list.push_back(new hNode(newn, hNode::hdlopsEnum::hVarref));
+    varinitp->child_list.push_back(h_ret);
+    h_ret = varinitp;
+  }
   return true;
 }
 
@@ -515,7 +518,10 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   h_forstmt = new hNode(hNode::hdlopsEnum::hForStmt);
   if (isa<CompoundStmt>(fors->getInit()))
     os_ << "Compound stmt not handled in for init, skipping\n";
-  else TraverseStmt(fors->getInit());
+  else {
+    //if (isa<DeclStmt>(stmt)) {
+    TraverseStmt(fors->getInit());
+  }
   h_forinit = (h_ret==NULL) ? new hNode(hNode::hdlopsEnum::hNoop): h_ret; // null if in place var decl
   TraverseStmt(fors->getCond());
   h_forcond = h_ret;
