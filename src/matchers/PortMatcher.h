@@ -39,69 +39,76 @@ namespace sc_ast_matchers {
 
 class PortMatcher : public MatchFinder::MatchCallback {
  public:
-  typedef std::pair<std::string, ModuleDecl*> ModulePairType;
-  typedef std::vector<ModulePairType> ModuleMapType;
+  // typedef std::pair<std::string, ModuleDecl*> ModulePairType;
+  // typedef std::vector<ModulePairType> ModuleMapType;
 
-  typedef std::vector<std::tuple<std::string, PortDecl*> > PortType;
+  /// A vector of tuples that holds the name of the port, and a pointer to
+  /// PortDecl.
+  typedef std::vector<std::tuple<std::string, PortDecl *> > MemberDeclType;
 
  private:
   std::string top_module_decl_;
 
  public:
-  PortType clock_ports_;
-  PortType in_ports_;
-  PortType out_ports_;
-  PortType inout_ports_;
-  PortType other_fields_;
-  PortType signal_fields_;
-  PortType instream_ports_;
-  PortType outstream_ports_;
-  PortType sc_ports_;
+  /// Separate out the member declarations found within a SystemC module.
+  MemberDeclType clock_ports_;
+  MemberDeclType in_ports_;
+  MemberDeclType out_ports_;
+  MemberDeclType inout_ports_;
+  MemberDeclType other_fields_;
+  MemberDeclType signal_fields_;
+  MemberDeclType instream_ports_;
+  MemberDeclType outstream_ports_;
+  MemberDeclType sc_ports_;
 
   /// Store the declaration of submodules.
-  PortType submodules_;
+  MemberDeclType submodules_;
 
  public:
-  const PortType &getClockPorts() const { return clock_ports_; }
-  const PortType &getInputPorts() const { return in_ports_; }
-  const PortType &getOutputPorts() const { return out_ports_; }
-  const PortType &getInOutPorts() const { return inout_ports_; }
-  const PortType &getOtherVars() const { return other_fields_; }
-  const PortType &getSignals() const { return signal_fields_; }
-  const PortType &getSubmodules() const { return submodules_; }
-  const PortType &getInputStreamPorts() const { return instream_ports_; }
-  const PortType &getOutputStreamPorts() const { return outstream_ports_; }
-  const PortType &getPorts() const { return sc_ports_; }
+  const MemberDeclType &getClockPorts() const { return clock_ports_; }
+  const MemberDeclType &getInputPorts() const { return in_ports_; }
+  const MemberDeclType &getOutputPorts() const { return out_ports_; }
+  const MemberDeclType &getInOutPorts() const { return inout_ports_; }
+  const MemberDeclType &getOtherVars() const { return other_fields_; }
+  const MemberDeclType &getSignals() const { return signal_fields_; }
+  const MemberDeclType &getSubmodules() const { return submodules_; }
+  const MemberDeclType &getInputStreamPorts() const { return instream_ports_; }
+  const MemberDeclType &getOutputStreamPorts() const {
+    return outstream_ports_;
+  }
+  const MemberDeclType &getPorts() const { return sc_ports_; }
 
   PortMatcher(const std::string &top_module = ".*")
       : top_module_decl_{top_module} {}
 
-  // AST matcher to detect field declarations
+  /// AST matcher to detect field declarations.
   auto makeFieldMatcher(const std::string &name) {
     /* clang-format off */
 
-    // The generic field matcher has the following conditions.
-    // * It is in the main provided file (not in the library files).
-    // * It is derived from sc_module
-    // * For each child that is a FieldDecl, 
-    //   - The type of it is a C++ class whose class name is "name"
+    /// The generic field matcher has the following conditions.
+    /// * It is in the main provided file (not in the library files).
+    /// * It is derived from sc_module
+    /// * For each child that is a FieldDecl, 
+    ///   - The type of it is a C++ class whose class name is "name"
   return  cxxRecordDecl(
       isExpansionInMainFile(),
       isDerivedFrom(hasName("::sc_core::sc_module")),
       forEach(
         fieldDecl(hasType(
-            cxxRecordDecl(hasName(name)))).bind(name)
+            cxxRecordDecl(hasName(name))
+            ) // hasType
+          ).bind(name) // fieldDecl
         )
       );
   }
 
-  // This is a matcher to identify sc_signal.
-  // The reason for this matcher is for it to match arrays of sc_signals as well.
-  // The conditions are as follows:
-  // * It must be a FieldDecl
-  //   - It must have a type that is either an array whose type is a c++ class derived 
-  //     from a class name called "name"
-  //   - Or, it is has a type that is a c++ class that is derived from class name "name".
+  /// This is a matcher to identify sc_signal.
+  /// The reason for this matcher is for it to match arrays of sc_signals as well.
+  /// The conditions are as follows:
+  /// * It must be a FieldDecl
+  ///   - It must have a type that is either an array whose type is a c++ class derived 
+  ///     from a class name called "name"
+  ///   - Or, it is has a type that is a c++ class that is derived from class name "name".
   auto makeArrayType(const std::string &name) {
     return hasType(
          arrayType(
@@ -114,7 +121,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   }
 
   auto signalMatcher(const std::string &name) {
-  return  anyOf(
+  return anyOf(
           makeArrayType(name),
           hasType(
             cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
@@ -125,15 +132,15 @@ class PortMatcher : public MatchFinder::MatchCallback {
   auto makeSignalMatcher(const std::string &name) {
     return fieldDecl(
         signalMatcher(name)
-          ).bind("other_fields");
+      ).bind("other_fields");
   }
 
-  // This is a matcher for sc_port.
-  // It has the following conditions:
-  // * It must be a FieldDecl
-  //   - It has a type that is an array whose type has a name "name"
-  //   - Or, it has a type that is a C++ class whose class name is "name".
-  //
+  /// This is a matcher for sc_port.
+  /// It has the following conditions:
+  /// * It must be a FieldDecl
+  ///   - It has a type that is an array whose type has a name "name"
+  ///   - Or, it has a type that is a C++ class whose class name is "name".
+  ///
   auto portNameMatcher(const std::string &name) {
       return 
           anyOf(
@@ -166,12 +173,12 @@ class PortMatcher : public MatchFinder::MatchCallback {
         ).bind("other_fields");
   }
 
-  // This is a matcher for sc_in_clk since it uses a NamedDecl.
-  // It has the following conditions:
-  // * It must be a FieldDecl,
-  //  - It has a type that is an array whose type has a name "name".
-  //  - Or, it has a type that is a NamedDecl whose name is "name".
-  //
+  /// This is a matcher for sc_in_clk since it uses a NamedDecl.
+  /// It has the following conditions:
+  /// * It must be a FieldDecl,
+  ///  - It has a type that is an array whose type has a name "name".
+  ///  - Or, it has a type that is a NamedDecl whose name is "name".
+  ///
   auto makePortHasNamedDeclNameMatcher(const std::string &name) {
     return 
       fieldDecl(
@@ -196,7 +203,6 @@ class PortMatcher : public MatchFinder::MatchCallback {
                 ) //recordType
               ) //hasUnqualifiedDesugaredType
             ) //hasType
-
           ).bind("submodule_fd"); // fieldDecl;
 
   }
@@ -208,7 +214,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     return result.Nodes.getNodeAs<NodeType>(name);
   }
 
-  void printTemplateArguments(PortType &found_ports) {
+  void printTemplateArguments(MemberDeclType &found_ports) {
     // Input ports
     for (const auto &i : found_ports) {
       LLVM_DEBUG(llvm::dbgs() << "name: " << get<0>(i)
@@ -230,7 +236,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   }
 
   template <typename T>
-  void insert_port(PortType &port, T *decl, bool isFieldDecl = true) {
+  void insert_port(MemberDeclType &port, T *decl, bool isFieldDecl = true) {
     // port is a map entry [CXXRecordDecl* => vector<PortDecl*>]
 
     std::string name{};
@@ -250,8 +256,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
     /* clang-format off */
 
     //
-    // Matchers for compositions.
-    // These matchers are used to form other matchers. 
+    /// Matchers for compositions.
+    /// These matchers are used to form other matchers. 
     auto match_module_decls = 
       cxxRecordDecl(
           matchesName(top_module_decl_), // Specifies the top-level module name.
@@ -264,7 +270,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
       );      
 
 
-     // Matches all the SystemC Ports.
+     /// Matches all the SystemC Ports.
     auto match_sc_ports = cxxRecordDecl(
         match_module_decls,
         forEach(
