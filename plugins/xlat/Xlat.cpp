@@ -248,13 +248,28 @@ void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
 	  }
 	  std::vector<EntryFunctionContainer::SensitivityTupleType> sttv = sensmapitem.second;
 	  EntryFunctionContainer::SensitivityTupleType sensitem0 = sttv[0];
-	  os_ << "sens item " << get<1>(sensitem0)->getNameAsString() << " declref follows\n";
-	  get<3>(sensitem0)->dump(os_);
-
-	  hNodep h_firstfield = new hNode(get<1>(sensitem0)->getNameAsString(), hNode::hdlopsEnum::hSensvar);
+	  string sensitm = get<1>(sensitem0)->getNameAsString();
+	  os_ << "sens item " << sensitm << "\n";
+	  //os_ << " declref follows\n";
+	  //get<3>(sensitem0)->dump(os_);
+	  hNode::hdlopsEnum h_op;
+	  if (sensitm.compare("pos") || sensitm.compare("neg")) {
+	    h_op = hNode::hdlopsEnum::hSensedge;
+	  }
+	  else {
+	    h_op = hNode::hdlopsEnum::hSensvar;
+	  }
+	  hNodep h_firstfield = new hNode(sensitm, h_op);
 	  for (int i = 1; i < sttv.size(); i++) {
-	    h_firstfield->child_list.push_back(new hNode(get<1>(sttv[i])->getNameAsString(),
-							 hNode::hdlopsEnum::hSensvar));
+	    sensitm = get<1>(sttv[i])->getNameAsString();
+	    if (sensitm.compare("pos") || sensitm.compare("neg")) {
+	      h_op = hNode::hdlopsEnum::hSensedge;
+	    }
+	    else {
+	      h_op = hNode::hdlopsEnum::hSensvar;
+	    }
+	    h_firstfield->child_list.push_back(new hNode(sensitm,
+							 h_op));
 	  }
 	  h_senslist->child_list.push_back(h_firstfield);
 	}
