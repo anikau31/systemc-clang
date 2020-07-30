@@ -8,7 +8,6 @@
 #include "clang/ASTMatchers/ASTMatchers.h"
 
 using namespace clang::ast_matchers;
-using namespace scpar;
 
 namespace sc_ast_matchers {
 
@@ -20,10 +19,10 @@ namespace sc_ast_matchers {
 
 class PortMatcher : public MatchFinder::MatchCallback {
  public:
-  typedef std::pair<string, ModuleDecl *> ModulePairType;
+  typedef std::pair<std::string, ModuleDecl*> ModulePairType;
   typedef std::vector<ModulePairType> ModuleMapType;
 
-  typedef std::vector<std::tuple<std::string, PortDecl *> > PortType;
+  typedef std::vector<std::tuple<std::string, PortDecl*> > PortType;
 
  private:
   std::string top_module_decl_;
@@ -201,8 +200,8 @@ auto checkMatch(const std::string &name,
 
   template <typename T>
   auto parseTemplateType(const T *fd) {
-    QualType qual_type{fd->getType()};
-    const Type *type_ptr{qual_type.getTypePtr()};
+    clang::QualType qual_type{fd->getType()};
+    const clang::Type *type_ptr{qual_type.getTypePtr()};
     auto template_ptr{new FindTemplateTypes()};
     template_ptr->Enumerate(type_ptr);
     template_ptr->printTemplateArguments(llvm::outs());
@@ -214,12 +213,12 @@ auto checkMatch(const std::string &name,
     // port is a map entry [CXXRecordDecl* => vector<PortDecl*>]
 
     std::string name{};
-    if (auto *fd = dyn_cast<FieldDecl>(decl)) {
+    if (auto *fd = dyn_cast<clang::FieldDecl>(decl)) {
       name = fd->getIdentifier()->getNameStart();
       port.push_back(std::make_tuple(
           name, new PortDecl(name, decl, parseTemplateType(fd))));
     } else {
-      auto *vd = dyn_cast<VarDecl>(decl);
+      auto *vd = dyn_cast<clang::VarDecl>(decl);
       name = vd->getIdentifier()->getNameStart();
       port.push_back(std::make_tuple(
           name, new PortDecl(name, decl, parseTemplateType(vd))));
@@ -342,24 +341,24 @@ auto checkMatch(const std::string &name,
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
-    auto sc_in_field{checkMatch<CXXRecordDecl>("desugar_sc_in", result)};
-    auto sc_out_field{checkMatch<CXXRecordDecl>("desugar_sc_out", result)};
-    auto sc_inout_field{checkMatch<CXXRecordDecl>("desugar_sc_inout", result)};
+    auto sc_in_field{checkMatch<clang::CXXRecordDecl>("desugar_sc_in", result)};
+    auto sc_out_field{checkMatch<clang::CXXRecordDecl>("desugar_sc_out", result)};
+    auto sc_inout_field{checkMatch<clang::CXXRecordDecl>("desugar_sc_inout", result)};
     auto sc_signal_field{
-        checkMatch<CXXRecordDecl>("desugar_sc_signal_inout_if", result)};
+        checkMatch<clang::CXXRecordDecl>("desugar_sc_signal_inout_if", result)};
     auto sc_stream_in_field{
-        checkMatch<CXXRecordDecl>("desugar_sc_stream_in", result)};
+        checkMatch<clang::CXXRecordDecl>("desugar_sc_stream_in", result)};
     auto sc_stream_out_field{
-        checkMatch<CXXRecordDecl>("desugar_sc_stream_out", result)};
+        checkMatch<clang::CXXRecordDecl>("desugar_sc_stream_out", result)};
     auto sc_rvd_in_field{
-        checkMatch<CXXRecordDecl>("desugar_sc_rvd_in", result)};
+        checkMatch<clang::CXXRecordDecl>("desugar_sc_rvd_in", result)};
     auto sc_rvd_out_field{
-        checkMatch<CXXRecordDecl>("desugar_sc_rvd_out", result)};
-    auto sc_port_field{checkMatch<CXXRecordDecl>("desugar_sc_port", result)};
-    auto other_fields{checkMatch<Decl>("other_fields", result)};
-    auto other_fvdecl{checkMatch<Decl>("other_fvdecl", result)};
+        checkMatch<clang::CXXRecordDecl>("desugar_sc_rvd_out", result)};
+    auto sc_port_field{checkMatch<clang::CXXRecordDecl>("desugar_sc_port", result)};
+    auto other_fields{checkMatch<clang::Decl>("other_fields", result)};
+    auto other_fvdecl{checkMatch<clang::Decl>("other_fvdecl", result)};
     /// Submodules
-    auto submodule_fd{checkMatch<FieldDecl>("submodule_fd", result)};
+    auto submodule_fd{checkMatch<clang::FieldDecl>("submodule_fd", result)};
 
     // llvm::outs() << "\n";
     // llvm::outs() << "in: " << sc_in_field << ", out: " << sc_out_field
@@ -374,7 +373,7 @@ auto checkMatch(const std::string &name,
     }
 
     if (sc_in_field && other_fields) {
-      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto port_name{fd->getIdentifier()->getNameStart()};
         llvm::outs() << " Found sc_in: " << port_name << "\n";
@@ -383,7 +382,7 @@ auto checkMatch(const std::string &name,
     }
 
     if (sc_out_field && other_fields) {
-      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto port_name{fd->getIdentifier()->getNameStart()};
         llvm::outs() << " Found sc_out: " << port_name << "\n";
@@ -392,7 +391,7 @@ auto checkMatch(const std::string &name,
     }
 
     if (sc_inout_field && other_fields) {
-      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto port_name{fd->getIdentifier()->getNameStart()};
         llvm::outs() << " Found sc_inout: " << port_name << "\n";
@@ -401,7 +400,7 @@ auto checkMatch(const std::string &name,
     }
 
     if (sc_signal_field && other_fields) {
-      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto signal_name{fd->getIdentifier()->getNameStart()};
         llvm::outs() << " Found sc_signal: " << signal_name << "\n";
@@ -410,7 +409,7 @@ auto checkMatch(const std::string &name,
     }
 
     if (sc_stream_in_field && other_fields) {
-      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
         llvm::outs() << " Found sc_stream_in: " << field_name << "\n";
@@ -419,7 +418,7 @@ auto checkMatch(const std::string &name,
     }
 
     if (sc_stream_out_field && other_fields) {
-      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
         llvm::outs() << " Found sc_stream_out: " << field_name << "\n";
@@ -428,7 +427,7 @@ auto checkMatch(const std::string &name,
     }
 
     if (sc_rvd_in_field && other_fields) {
-      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
         llvm::outs() << " Found sc_rvd_in: " << field_name << "\n";
@@ -437,7 +436,7 @@ auto checkMatch(const std::string &name,
     }
 
     if (sc_rvd_out_field && other_fields) {
-      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
         llvm::outs() << " Found sc_rvd_out: " << field_name << "\n";
@@ -446,7 +445,7 @@ auto checkMatch(const std::string &name,
     }
 
     if (sc_port_field && other_fields) {
-      if (auto *p_field{dyn_cast<FieldDecl>(other_fields)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto field_name{fd->getIdentifier()->getNameStart()};
         llvm::outs() << " Found sc_port : " << field_name << "\n";
