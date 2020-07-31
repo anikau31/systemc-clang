@@ -1,6 +1,10 @@
 #include "XlatEntryMethod.h"
 #include "XlatType.h"
 
+/// Different matchers may use different DEBUG_TYPE
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Xlat"
+
 // We have to use the Traverse pattern rather than Visitor 
 // because we need control to come back to the point of call
 // so that the generated tree can be returned back up the 
@@ -13,13 +17,13 @@ using namespace hnode;
 
 XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & os):
   os_(os){ 
-  os_ << "Entering XlatMethod constructor, has body is " << emd->hasBody()<< "\n";
+  LLVM_DEBUG(llvm::dbgs() << "Entering XlatMethod constructor, has body is " << emd->hasBody()<< "\n");
   
   h_ret = NULL;
   bool ret1 = TraverseStmt(emd->getBody());
   AddVnames(h_top);
   h_top->child_list.push_back(h_ret);
-  os_ << "Exiting XlatMethod constructor for method body\n";
+  LLVM_DEBUG(llvm::dbgs() << "Exiting XlatMethod constructor for method body\n");
 }
 
 // leaving this in for the future in case 
@@ -30,21 +34,21 @@ XlatMethod::XlatMethod(Stmt * stmt, hNodep & h_top, llvm::raw_ostream & os):
   h_ret = NULL;
   bool ret1 = TraverseStmt(stmt);
   h_top = h_ret;
-  os_ << "Exiting XlatMethod constructor for stmt\n";
+  LLVM_DEBUG(llvm::dbgs() << "Exiting XlatMethod constructor for stmt\n");
 }
 
 XlatMethod::~XlatMethod() {
-  os_ << "[[ Destructor XlatMethod ]]\n";
+  LLVM_DEBUG(llvm::dbgs() << "[[ Destructor XlatMethod ]]\n");
 }
   
 // order of checking is important as some exprs
 // inherit from binaryoperator
 
 bool XlatMethod::TraverseStmt(Stmt *stmt) {
-  os_ << "In TraverseStmt\n";
+  LLVM_DEBUG(llvm::dbgs() << "In TraverseStmt\n");
 
   if (isa<CompoundStmt>(stmt)) {
-    os_ << "calling traverse compoundstmt from traversestmt\n";
+    LLVM_DEBUG(llvm::dbgs() << "calling traverse compoundstmt from traversestmt\n");
     TraverseCompoundStmt((CompoundStmt *)stmt);
   }
   else if (isa<DeclStmt>(stmt)) {
@@ -52,7 +56,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
   }
   else if (isa<CallExpr>(stmt)) {
     if (CXXOperatorCallExpr *opercall = dyn_cast<CXXOperatorCallExpr>(stmt)) {
-      os_ << "found cxxoperatorcallexpr\n";
+      LLVM_DEBUG(llvm::dbgs() << "found cxxoperatorcallexpr\n");
       TraverseCXXOperatorCallExpr(opercall);
     }
     else if (isa<CXXMemberCallExpr>(stmt)) {
@@ -60,8 +64,8 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     }
     else {
       h_ret = new hNode(stmt->getStmtClassName(), hNode::hdlopsEnum::hUnimpl);
-      os_ << "found a call expr" << " AST follows\n ";
-      stmt->dump();
+      LLVM_DEBUG(llvm::dbgs() << "found a call expr" << " AST follows\n ");
+      LLVM_DEBUG(stmt->dump(llvm::dbgs()));
       return RecursiveASTVisitor::TraverseStmt(stmt);
     }
   }
@@ -88,19 +92,19 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     TraverseCXXBoolLiteralExpr((CXXBoolLiteralExpr *)stmt);
   }
   else if (isa<IfStmt>(stmt)){
-    os_ << "Found if stmt\n";
+    LLVM_DEBUG(llvm::dbgs() << "Found if stmt\n");
     TraverseIfStmt((IfStmt *)stmt);
   }
   else if (isa<ForStmt>(stmt)) {
-    os_ << "Found if stmt\n";
+    LLVM_DEBUG(llvm::dbgs() << "Found if stmt\n");
     TraverseForStmt((ForStmt *)stmt);
   }
   else if (isa<SwitchStmt>(stmt)){
-    os_ << "Found switch stmt\n";
+    LLVM_DEBUG(llvm::dbgs() << "Found switch stmt\n");
     TraverseSwitchStmt((SwitchStmt *)stmt);
   }
   else if (isa<CaseStmt>(stmt)){
-    os_ << "Found case stmt\n";
+    LLVM_DEBUG(llvm::dbgs() << "Found case stmt\n");
     hNodep old_hret = h_ret;
     hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
     if (ConstantExpr * expr = dyn_cast<ConstantExpr>(((CaseStmt *)stmt)->getLHS())) {
@@ -117,7 +121,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     h_ret = hcasep;
   }
   else if (isa<DefaultStmt>(stmt)){
-    os_ << "Found default stmt\n";
+    LLVM_DEBUG(llvm::dbgs() << "Found default stmt\n");
     hNodep old_hret = h_ret;
     hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
     TraverseStmt(((DefaultStmt *)stmt)->getSubStmt());
@@ -128,7 +132,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     h_ret = hcasep;
   }
   else if (isa<BreakStmt>(stmt)){
-    os_ << "Found break stmt, substituting noop\n";
+    LLVM_DEBUG(llvm::dbgs() << "Found break stmt, substituting noop\n");
     h_ret = new hNode(hNode::hdlopsEnum::hNoop);
   }
   else if (isa<CXXDefaultArgExpr>(stmt)){
@@ -147,18 +151,18 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
     }
   }
   else {  
-    os_ << "stmt type " << stmt->getStmtClassName() << " not recognized, calling default recursive ast visitor\n";
+    LLVM_DEBUG(llvm::dbgs() << "stmt type " << stmt->getStmtClassName() << " not recognized, calling default recursive ast visitor\n");
     hNodep oldh_ret = h_ret;
     RecursiveASTVisitor::TraverseStmt(stmt);      
     if (h_ret != oldh_ret) {
-      os_ << "default recursive ast visitor called - returning translation\n";
+      LLVM_DEBUG(llvm::dbgs() << "default recursive ast visitor called - returning translation\n");
       return true;
     }
     for( auto arg : stmt->children()) {
-      os_ << "child stmt type " << ((Stmt *) arg)->getStmtClassName() << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "child stmt type " << ((Stmt *) arg)->getStmtClassName() << "\n");
       TraverseStmt(arg);
       if (h_ret == oldh_ret) {
-	os_ << "child stmt not handled\n";
+	LLVM_DEBUG(llvm::dbgs() << "child stmt not handled\n");
 	// no output generated
 	h_ret = new hNode(arg->getStmtClassName(), hNode::hdlopsEnum::hUnimpl);
       }
@@ -177,7 +181,7 @@ bool XlatMethod::TraverseCompoundStmt(CompoundStmt* cstmt) {
     if (h_ret) {
       h_cstmt->child_list.push_back(h_ret);
     }
-    else os_ << "stmt result was empty\n";
+    else LLVM_DEBUG(llvm::dbgs() << "stmt result was empty\n");
     h_ret = NULL;
   }
 
@@ -203,13 +207,13 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
 }
 
 bool XlatMethod::ProcessVarDecl( VarDecl * vardecl) {
-  os_ << "ProcessVarDecl var name is " << vardecl->getName() << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl var name is " << vardecl->getName() << "\n");
 
   hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
 
   QualType q = vardecl->getType();
   const Type *tp = q.getTypePtr();
-  os_ << "ProcessVarDecl type name is " << q.getAsString() << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl type name is " << q.getAsString() << "\n");
   FindTemplateTypes *te = new FindTemplateTypes();
 
   te->Enumerate(tp);
@@ -244,7 +248,7 @@ bool XlatMethod::TraverseBinaryOperator(BinaryOperator* expr)
   //                         bool isEvaluated = true) const;
 
   hNodep  h_binop = new hNode(expr->getOpcodeStr(), hNode::hdlopsEnum::hBinop); // node to hold binop expr
-  os_ << "in TraverseBinaryOperator, opcode is " << expr->getOpcodeStr() << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is " << expr->getOpcodeStr() << "\n");
 
   TraverseStmt(expr->getLHS());
   h_binop->child_list.push_back(h_ret);
@@ -264,8 +268,8 @@ bool XlatMethod::TraverseBinaryOperator(BinaryOperator* expr)
 
 bool XlatMethod::TraverseUnaryOperator(UnaryOperator* expr) 
 { 
-  os_ << "in TraverseUnaryOperatory expr node is \n";
-  expr->dump(os_);
+  LLVM_DEBUG(llvm::dbgs() << "in TraverseUnaryOperatory expr node is \n");
+  LLVM_DEBUG(expr->dump(llvm::dbgs()));
   
   auto opcstr = expr->getOpcode();
   
@@ -282,7 +286,7 @@ bool XlatMethod::TraverseUnaryOperator(UnaryOperator* expr)
 
 bool XlatMethod::TraverseIntegerLiteral(IntegerLiteral * lit)
 {
-  os_ << "In integerliteral\n";
+  LLVM_DEBUG(llvm::dbgs() << "In integerliteral\n");
   string s = lit->getValue().toString(10, true);
   h_ret = new hNode(s, hNode::hdlopsEnum::hLiteral);
   
@@ -290,7 +294,7 @@ bool XlatMethod::TraverseIntegerLiteral(IntegerLiteral * lit)
 }
 
 bool XlatMethod::TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr * b) {
-  os_ << "In boollitexpr\n";
+  LLVM_DEBUG(llvm::dbgs() << "In boollitexpr\n");
   bool v = b->getValue();
   h_ret = new hNode(v?"1":"0", hNode::hdlopsEnum::hLiteral);
 
@@ -300,32 +304,32 @@ bool XlatMethod::TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr * b) {
 bool XlatMethod::TraverseDeclRefExpr(DeclRefExpr* expr) 
 { 
   // ... handle expr
-  os_ << "In TraverseDeclRefExpr\n";
+  LLVM_DEBUG(llvm::dbgs() << "In TraverseDeclRefExpr\n");
   
   ValueDecl *value = expr->getDecl();
   if (isa<EnumConstantDecl>(value)) {
     EnumConstantDecl * cd = (EnumConstantDecl *) value;
-    os_ << "got enum constant value " << cd->getInitVal() << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "got enum constant value " << cd->getInitVal() << "\n");
     h_ret = new hNode(cd->getInitVal().toString(10), hNode::hdlopsEnum::hLiteral);
     return true;
   }
   // get a var name
 
   string name = (expr->getNameInfo()).getName().getAsString();
-  os_ << "name is " << name << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "name is " << name << "\n");
   string newname = "";
   auto vname_it{vname_map.find(expr->getDecl())};
       if (vname_it != vname_map.end()) {
 	newname = vname_map[expr->getDecl()].newn;
       }
-  os_ << "new name is "<< newname << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "new name is "<< newname << "\n");
   h_ret = new hNode(newname.empty() ? name : newname, hNode::hdlopsEnum::hVarref);
   return true; 
 }
 
 bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
-  os_ << "In TraverseArraySubscriptExpr, tree follows\n";
-  expr->dump(os_);
+  LLVM_DEBUG(llvm::dbgs() << "In TraverseArraySubscriptExpr, tree follows\n");
+  LLVM_DEBUG(expr->dump(llvm::dbgs()));
   hNodep h_arrexpr = new hNode("ARRAYSUBSCRIPT", hNode::hdlopsEnum::hBinop);
   TraverseStmt(expr->getLHS());
   h_arrexpr->child_list.push_back(h_ret);
@@ -336,33 +340,33 @@ bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
 }
 
 bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
-  os_ << "In TraverseCXXMemberCallExpr, printing implicit object arg\n";
+  LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXMemberCallExpr, printing implicit object arg\n");
       // Retrieves the implicit object argument for the member call.
     //For example, in "x.f(5)", this returns the sub-expression "x".
     Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
  
-    arg->dump(os_);
+    LLVM_DEBUG(arg->dump(llvm::dbgs()));
     QualType argtyp = arg->getType();
-    os_ << "type of x in x.f(5) is " << argtyp.getAsString() << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "type of x in x.f(5) is " << argtyp.getAsString() << "\n");
     
     string methodname = "NoMethod", qualmethodname = "NoQualMethod";
     CXXMethodDecl * methdcl = callexpr->getMethodDecl();
 
     
-    //os_ << "methoddecl follows\n";
-    //methdcl->dump();
+    //LLVM_DEBUG(llvm::dbgs() << "methoddecl follows\n");
+    //LLVM_DEBUG(methdcl->dump(llvm::dbgs());
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {
     
       methodname = methdcl->getNameAsString();
       qualmethodname = methdcl->getQualifiedNameAsString();
-      os_ << "here is qualmethod printname " <<qualmethodname << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "here is qualmethod printname " <<qualmethodname << "\n");
       //make_ident(qualmethodname);
       //      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
       
-      os_ << "here is method printname " << methodname << " and qual name " << qualmethodname << " \n";
+      LLVM_DEBUG(llvm::dbgs() << "here is method printname " << methodname << " and qual name " << qualmethodname << " \n");
       if (methodname.compare(0, 8, "operator")==0) { // 0 means compare =, 8 is len("operator")
 	// the conversion we know about, can be skipped
-	os_ << "Found operator conversion node\n";
+	LLVM_DEBUG(llvm::dbgs() << "Found operator conversion node\n");
 	TraverseStmt(arg); 
 	return true;
       }
@@ -371,7 +375,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
 
     hNode::hdlopsEnum opc; 
     
-    os_ << "found " << methodname << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "found " << methodname << "\n");
 
     // if type of x in x.f(5) is primitive sc type (sc_in, sc_out, sc_inout, sc_signal
     // and method name is either read or write,
@@ -419,11 +423,11 @@ bool XlatMethod::isLogicalOp(clang::OverloadedOperatorKind opc) {
 
 bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
 
-  os_ << "In TraverseCXXOperatorCallExpr\n";
+  LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr\n");
   if ((opcall->isAssignmentOp())|| 
       (isLogicalOp(opcall->getOperator()))) {
     if (opcall->getNumArgs() == 2) {
-      os_ << "assignment or logical operator, 2 args\n";
+      LLVM_DEBUG(llvm::dbgs() << "assignment or logical operator, 2 args\n");
       hNodep h_assignop = new hNode (isLogicalOp(opcall->getOperator())? "==" : "=", hNode::hdlopsEnum::hBinop); // node to hold logical or assignment expr
       TraverseStmt(opcall->getArg(0));
       h_assignop->child_list.push_back(h_ret);
@@ -432,24 +436,24 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
       if (h_ret == save_h_ret) h_assignop->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
       else h_assignop->child_list.push_back(h_ret);
       h_ret = h_assignop;
-      opcall->getArg(0)->dump(os_);
-      opcall->getArg(1)->dump(os_);
+      LLVM_DEBUG(opcall->getArg(0)->dump(llvm::dbgs()));
+      LLVM_DEBUG(opcall->getArg(1)->dump(llvm::dbgs()));
       return true;
     }
   }
-  os_ << "not yet implemented operator call expr, opc is " << clang::getOperatorSpelling(opcall->getOperator()) << " num arguments " << opcall->getNumArgs() << " skipping\n";
+  LLVM_DEBUG(llvm::dbgs() << "not yet implemented operator call expr, opc is " << clang::getOperatorSpelling(opcall->getOperator()) << " num arguments " << opcall->getNumArgs() << " skipping\n");
   h_ret = new hNode(hNode::hdlopsEnum::hUnimpl);
   return true;
 }
 
 bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
-  os_ << "In TraverseMemberExpr\n";
+  LLVM_DEBUG(llvm::dbgs() << "In TraverseMemberExpr\n");
   string nameinfo = (memberexpr->getMemberNameInfo()).getName().getAsString();
-  os_ << "name is " << nameinfo << ", base and memberexpr trees follow\n";
-  os_ << "base is \n";
-  memberexpr->getBase()->dump(os_);
-  os_ << "memberdecl is \n";
-  memberexpr->getMemberDecl()->dump(os_);
+  LLVM_DEBUG(llvm::dbgs() << "name is " << nameinfo << ", base and memberexpr trees follow\n");
+  LLVM_DEBUG(llvm::dbgs() << "base is \n");
+  LLVM_DEBUG(memberexpr->getBase()->dump(llvm::dbgs()));
+  LLVM_DEBUG(llvm::dbgs() << "memberdecl is \n");
+  LLVM_DEBUG(memberexpr->getMemberDecl()->dump(llvm::dbgs()));
 
   // traverse the memberexpr in case it is a nested structure
   hNodep old_h_ret = h_ret;
@@ -489,7 +493,7 @@ bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
   h_ifstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
   if (ifs->getConditionVariable()) {
       // Variable declarations are not allowed in if conditions
-    os_ << "Variable declarations are not allowed in if conditions, skipping\n";
+    LLVM_DEBUG(llvm::dbgs() << "Variable declarations are not allowed in if conditions, skipping\n");
     return true;
   }
   else {
@@ -514,10 +518,10 @@ bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
 
 bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   hNodep h_forstmt, h_forinit, h_forcond, h_forinc, h_forbody;
-  os_ << "For stmt\n";
+  LLVM_DEBUG(llvm::dbgs() << "For stmt\n");
   h_forstmt = new hNode(hNode::hdlopsEnum::hForStmt);
   if (isa<CompoundStmt>(fors->getInit()))
-    os_ << "Compound stmt not handled in for init, skipping\n";
+    LLVM_DEBUG(llvm::dbgs() << "Compound stmt not handled in for init, skipping\n");
   else {
     //if (isa<DeclStmt>(stmt)) {
     TraverseStmt(fors->getInit());
@@ -527,8 +531,8 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   h_forcond = h_ret;
   TraverseStmt(fors->getInc());
   h_forinc = h_ret;
-  os_ << "For loop body\n";
-  fors->getBody()->dump(os_);
+  LLVM_DEBUG(llvm::dbgs() << "For loop body\n");
+  LLVM_DEBUG(fors->getBody()->dump(llvm::dbgs()));
   TraverseStmt(fors->getBody());
   h_forbody = h_ret;
   h_forstmt->child_list.push_back(h_forinit);
@@ -540,16 +544,16 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   return true;
 }
 bool XlatMethod::ProcessSwitchCase(SwitchCase *sc) {
-  os_ << "In ProcessSwitchCase\n";
+  LLVM_DEBUG(llvm::dbgs() << "In ProcessSwitchCase\n");
   hNodep hcasep;
   hNodep old_hret = h_ret;
   if (isa<DefaultStmt>(sc)) {
-    os_ << "Found default stmt in switchcase\n";
+    LLVM_DEBUG(llvm::dbgs() << "Found default stmt in switchcase\n");
     hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
     TraverseStmt((DefaultStmt *)sc->getSubStmt());
     }
   else {
-    os_ << "Found case stmt in switchcase\n";
+    LLVM_DEBUG(llvm::dbgs() << "Found case stmt in switchcase\n");
     hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
     if (ConstantExpr * expr = dyn_cast<ConstantExpr>(((CaseStmt *)sc)->getLHS())) {
       llvm::APSInt val = expr->getResultAsAPSInt();
@@ -569,14 +573,14 @@ bool XlatMethod::ProcessSwitchCase(SwitchCase *sc) {
 
 bool XlatMethod::TraverseSwitchStmt( SwitchStmt *switchs) {
   hNodep h_switchstmt;
-  os_ << "Switch stmt body -----\n";
-  switchs->getBody()->dump(os_);
-  os_ << "End Switch stmt body -----\n";
+  LLVM_DEBUG(llvm::dbgs() << "Switch stmt body -----\n");
+  LLVM_DEBUG(switchs->getBody()->dump(llvm::dbgs()));
+  LLVM_DEBUG(llvm::dbgs() << "End Switch stmt body -----\n");
   
   h_switchstmt = new hNode(hNode::hdlopsEnum::hSwitchStmt);
   //Stmt * swinit = dyn_cast<Stmt>(switchs->getInit());
   //if (swinit) {
-  //  os_ << "switch init not handled, skipping\n";
+  //  LLVM_DEBUG(llvm::dbgs() << "switch init not handled, skipping\n");
   //}
   hNodep old_ret = h_ret;
   TraverseStmt(switchs->getCond());
@@ -592,10 +596,10 @@ bool XlatMethod::TraverseSwitchStmt( SwitchStmt *switchs) {
   
   // for (SwitchCase *sc = switchs->getSwitchCaseList(); sc != NULL;
   //      sc = sc->getNextSwitchCase()) {
-  //   os_ << "Switch case\n";
-  //   sc->dump(os_);
+  //   LLVM_DEBUG(llvm::dbgs() << "Switch case\n");
+  //   LLVM_DEBUG(sc->dump(llvm::dbgs()));
   //   if (isa<DefaultStmt>(sc)) {
-  //     os_ << "Found default stmt in case\n";
+  //     LLVM_DEBUG(llvm::dbgs() << "Found default stmt in case\n");
   //   }
   //   else {
   //     ProcessSwitchCase(sc);
@@ -616,10 +620,10 @@ bool XlatMethod::TraverseSwitchStmt( SwitchStmt *switchs) {
 // won't put in do stmt for now
 bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
   hNodep h_whilestmt,  h_whilecond, h_whilebody;
-  os_ << "While stmt\n";
+  LLVM_DEBUG(llvm::dbgs() << "While stmt\n");
   h_whilestmt = new hNode(hNode::hdlopsEnum::hWhileStmt);
   if (whiles->getConditionVariable()) {
-    os_ << "Variable declarations not handled in while condition, skipping\n";
+    LLVM_DEBUG(llvm::dbgs() << "Variable declarations not handled in while condition, skipping\n");
   }
   else {
     // Get condition
@@ -638,9 +642,9 @@ bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
 }
 
 void XlatMethod::AddVnames(hNodep &hvns) {
-  os_ << "Vname Dump\n";
+  LLVM_DEBUG(llvm::dbgs() << "Vname Dump\n");
   for (auto const &var : vname_map) {
-    os_ << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n";
+    LLVM_DEBUG(llvm::dbgs() << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n");
     hvns->child_list.push_back(var.second.h_vardeclp);
   }
 }
