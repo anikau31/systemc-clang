@@ -8,6 +8,11 @@
 #include "XlatType.h"
 #include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
+#include "llvm/Support/Debug.h"
+
+/// Different matchers may use different DEBUG_TYPE
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Xlat"
 
 using namespace std;
 using namespace hnode;
@@ -23,20 +28,20 @@ bool Xlat::postFire() {
   const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
   if (!fileentry) {
     outputfn = "xlatout";
-    os_ << "Null file entry for tranlation unit for this astcontext\n";
+    LLVM_DEBUG(llvm::dbgs() << "Null file entry for tranlation unit for this astcontext\n");
   } else {
     outputfn = fileentry->getName();
     regex r("\\.cpp");
     outputfn = regex_replace(outputfn, r, "_hdl");
 
-    os_ << "File name is " << outputfn << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "File name is " << outputfn << "\n");
   }
 
   llvm::raw_fd_ostream xlatout(outputfn + ".txt", ec,
                                llvm::sys::fs::CD_CreateAlways);
-  os_ << "file " << outputfn << ".txt, create error code is " << ec.value()
-      << "\n";
-  os_ << "\n SC  Xlat plugin\n";
+  LLVM_DEBUG(llvm::dbgs() << "file " << outputfn << ".txt, create error code is " << ec.value() << "\n");
+      
+  LLVM_DEBUG(llvm::dbgs() << "\n SC  Xlat plugin\n");
 
   // typedef std::vector< modulePairType > moduleMapType;
   // typedef std::pair<std::string, ModuleDecl *> modulePairType;
@@ -51,29 +56,29 @@ bool Xlat::postFire() {
 
   for (auto modinstance: instanceVec) { // generate module def for each instance
     string modname = mod_newn.newname();
-    os_ << "\ntop level module " << modinstance->getName() << " renamed " << modname<< "\n";
+    LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName() << " renamed " << modname<< "\n");
     hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
     mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(), modname, h_module};
     xlatmodule(modinstance, h_module, xlatout);
     //h_module->print(xlatout);
   }
   
-   os_ << "Global Method Map\n";
+   LLVM_DEBUG(llvm::dbgs() << "Global Method Map\n");
   for (auto m : allmethodecls) {
-    os_ << "Method --------\n" << m.first << ":" << m.second << "\n";
-    m.second->dump(os_);
-    os_ << "---------\n";
+    LLVM_DEBUG(llvm::dbgs() << "Method --------\n" << m.first << ":" << m.second << "\n");
+    LLVM_DEBUG(m.second->dump(llvm::dbgs()));
+    LLVM_DEBUG(llvm::dbgs() << "---------\n");
   }
 
-  os_ << "User Types Map\n";
+  LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
   while (!xlatt.usertypes.empty()) {
     std::unordered_map<string, QualType> usertypestmp = xlatt.usertypes;
     xlatt.usertypes.clear();
     for (auto t : usertypestmp) {
-      os_ << "User Type --------\n" << t.first << ":" << t.second.getTypePtr() << "\n";
-      t.second->dump(os_);
-      os_ << "---------\n";
+      LLVM_DEBUG(llvm::dbgs() << "User Type --------\n" << t.first << ":" << t.second.getTypePtr() << "\n");
+      LLVM_DEBUG(t.second->dump(llvm::dbgs()));
+      LLVM_DEBUG(llvm::dbgs() << "---------\n");
       xlatt.addtype(t.first, t.second, getContext())->print(xlatout);
     }
   }
@@ -82,11 +87,11 @@ bool Xlat::postFire() {
 
 void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &xlatout ) {
   const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
-  os_ << "submodule count is " << submodv.size() << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
   typedef std::pair<std::string, scpar::ModuleDecl::portBindingMapType> submodportbindings_t;
   std::vector<submodportbindings_t> submodportbindings;
   for (auto& smod:submodv) {
-    os_ << "get submodule portbindings" << smod->getInstanceName() << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "get submodule portbindings" << smod->getInstanceName() << "\n");
     if ((smod->getPortBindings()).size()>0) {
       submodportbindings.push_back(submodportbindings_t(smod->getInstanceName(), smod->getPortBindings()));
     }
@@ -126,7 +131,7 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
       // Processes
   h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
-  xlatproc(mod->getProcessMap(), h_top, os_);
+  xlatproc(mod->getProcessMap(), h_top, llvm::dbgs());
 
   if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
@@ -144,7 +149,7 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
   // now generate submodules
   for (const auto &smod:submodv) {
     string modname =  mod_name_map[smod->getInstanceDecl()].newn;
-    os_ << "generate submodule " << smod->getInstanceName() << " renamed " << modname<< "\n";
+    LLVM_DEBUG(llvm::dbgs() << "generate submodule " << smod->getInstanceName() << " renamed " << modname<< "\n");
     hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
     xlatmodule(smod, h_submod, xlatout);
   }
@@ -154,8 +159,7 @@ void Xlat::xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap
   for (auto const &pb : portbindingmap) {
     string port_name{get<0>(pb)};
     PortBinding *binding{get<1>(pb)};
-    os_ << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << " " <<
-      binding->getBoundToParameterVarName() << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << " " << binding->getBoundToParameterVarName() << "\n");
     hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
     hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
     string mapped_name = binding->getBoundToParameterVarName().empty()? binding->getBoundToName() :
@@ -175,7 +179,7 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     string objname = get<0>(*mit);
 
 
-    os_ << "object name is " << objname << " and h_op is " << h_op << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "object name is " << objname << " and h_op is " << h_op << "\n");
 
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
@@ -203,7 +207,7 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
 
     string objname = get<0>(*mit);
 
-    os_ << "object name is " << objname << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "object name is " << objname << "\n");
 
     SignalDecl *pd = get<1>(*mit);
 
@@ -227,7 +231,7 @@ void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
     EntryFunctionContainer *efc{pd->getEntryFunction()};
     if (efc->getProcessType() == PROCESS_TYPE::METHOD) {
       hNodep h_process = new hNode(efc->getName(), hNode::hdlopsEnum::hProcess);
-      os_ << "process " << efc->getName() << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName() << "\n");
       // Sensitivity list
       EntryFunctionContainer::SenseMapType sensmap = efc->getSenseMap();
       if (!sensmap.empty()) {
@@ -239,22 +243,37 @@ void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
 	  if (sensmapitem.first == "dont_initialize") // nonsynthesizable
 	    continue;
 	  
-	  os_ << "sensmap item " << sensmapitem.first <<"\n";
+	  LLVM_DEBUG(llvm::dbgs() << "sensmap item " << sensmapitem.first <<"\n");
 	  size_t found = sensmapitem.first.find("_handle");
-	  os_ << "first part is " << sensmapitem.first.substr(0, found) << "\n";
+	  //LLVM_DEBUG(llvm::dbgs() << "first part is " << sensmapitem.first.substr(0, found) << "\n");
 	  if ((found==std::string::npos) || (sensmapitem.first.substr(0, found).compare(efc->getName())!=0)) {
-	    os_ << "compare not equal " << sensmapitem.first.substr(0, found) << " " << efc->getName() << "\n";
+	    //LLVM_DEBUG(llvm::dbgs() << "compare not equal " << sensmapitem.first.substr(0, found) << " " << efc->getName() << "\n");
 	    continue;  // sensitivity item is not for this process
 	  }
 	  std::vector<EntryFunctionContainer::SensitivityTupleType> sttv = sensmapitem.second;
 	  EntryFunctionContainer::SensitivityTupleType sensitem0 = sttv[0];
-	  os_ << "sens item " << get<1>(sensitem0)->getNameAsString() << " declref follows\n";
-	  get<3>(sensitem0)->dump(os_);
-
-	  hNodep h_firstfield = new hNode(get<1>(sensitem0)->getNameAsString(), hNode::hdlopsEnum::hSensvar);
+	  string sensitm = get<1>(sensitem0)->getNameAsString();
+	  LLVM_DEBUG(llvm::dbgs() << "sens item " << sensitm << "\n");
+	  //LLVM_DEBUG(llvm::dbgs() << " declref follows\n");
+	  //LLVM_DEBUG(get<3>(sensitem0)->dump(llvm::dbgs()));
+	  hNode::hdlopsEnum h_op;
+	  if (sensitm.compare("pos") || sensitm.compare("neg")) {
+	    h_op = hNode::hdlopsEnum::hSensedge;
+	  }
+	  else {
+	    h_op = hNode::hdlopsEnum::hSensvar;
+	  }
+	  hNodep h_firstfield = new hNode(sensitm, h_op);
 	  for (int i = 1; i < sttv.size(); i++) {
-	    h_firstfield->child_list.push_back(new hNode(get<1>(sttv[i])->getNameAsString(),
-							 hNode::hdlopsEnum::hSensvar));
+	    sensitm = get<1>(sttv[i])->getNameAsString();
+	    if (sensitm.compare("pos") || sensitm.compare("neg")) {
+	      h_op = hNode::hdlopsEnum::hSensedge;
+	    }
+	    else {
+	      h_op = hNode::hdlopsEnum::hSensvar;
+	    }
+	    h_firstfield->child_list.push_back(new hNode(sensitm,
+							 h_op));
 	  }
 	  h_senslist->child_list.push_back(h_firstfield);
 	}
@@ -262,18 +281,18 @@ void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
       }
       CXXMethodDecl *emd = efc->getEntryMethod();
       hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-      XlatMethod xmethod(emd, h_body, os_);  //, xlatout);
-      os_ << "Method Map:\n";
+      XlatMethod xmethod(emd, h_body, llvm::dbgs());  //, xlatout);
+      LLVM_DEBUG(llvm::dbgs() << "Method Map:\n");
       for (auto m : xmethod.methodecls) {
-	os_ << m.first << ":" << m.second <<"\n";
-	//m.second->dump(os_);
+	LLVM_DEBUG(llvm::dbgs() << m.first << ":" << m.second <<"\n");
+	//LLVM_DEBUG(m.second->dump(llvm::dbgs()));
       }
       allmethodecls.insert(xmethod.methodecls.begin(), xmethod.methodecls.end());
 
       h_process->child_list.push_back(h_body);
       h_top->child_list.push_back(h_process);
     } else
-      os_ << "process " << efc->getName() << " not SC_METHOD, skipping\n";
+      LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName() << " not SC_METHOD, skipping\n");
   }
 }
 
