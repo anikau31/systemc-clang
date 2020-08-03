@@ -257,7 +257,7 @@ void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
 	  //LLVM_DEBUG(llvm::dbgs() << " declref follows\n");
 	  //LLVM_DEBUG(get<3>(sensitem0)->dump(llvm::dbgs()));
 	  hNode::hdlopsEnum h_op;
-	  if (sensitm.compare("pos") || sensitm.compare("neg")) {
+	  if ((sensitm.compare("pos")==0) || (sensitm.compare("neg")==0)) {
 	    h_op = hNode::hdlopsEnum::hSensedge;
 	  }
 	  else {
@@ -266,7 +266,7 @@ void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
 	  hNodep h_firstfield = new hNode(sensitm, h_op);
 	  for (int i = 1; i < sttv.size(); i++) {
 	    sensitm = get<1>(sttv[i])->getNameAsString();
-	    if (sensitm.compare("pos") || sensitm.compare("neg")) {
+	    if ((sensitm.compare("pos")==0) || (sensitm.compare("neg")==0)) {
 	      h_op = hNode::hdlopsEnum::hSensedge;
 	    }
 	    else {
