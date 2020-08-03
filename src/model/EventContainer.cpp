@@ -1,6 +1,6 @@
 #include "EventContainer.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace std;
 
 EventContainer::~EventContainer() {

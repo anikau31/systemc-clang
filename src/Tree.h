@@ -9,7 +9,7 @@
 
 #include "llvm/Support/raw_ostream.h"
 
-namespace scpar {
+namespace systemc_clang {
 //
 // class TreeNode
 //
@@ -342,5 +342,5 @@ class Tree {
 
   dft_iterator end() { return dft_iterator{this, nodes_dft_.size()}; }
 };
-};  // namespace scpar
+};  // namespace systemc_clang
 #endif

@@ -7,7 +7,7 @@
 #include <map>
 #include <string>
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -42,5 +42,5 @@ private:
 
   waitArgVectorType _args;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

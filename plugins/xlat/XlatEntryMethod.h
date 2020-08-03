@@ -19,7 +19,7 @@
 #include "hNode.h"
 
 using namespace clang;
-using namespace scpar;
+using namespace systemc_clang;
 
 
 using namespace hnode;

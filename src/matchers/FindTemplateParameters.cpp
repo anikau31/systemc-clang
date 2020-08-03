@@ -2,7 +2,7 @@
 #include "FindTemplateTypes.h"
 //#include "clang/AST/Type.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 FindTemplateParameters::FindTemplateParameters(CXXRecordDecl *declaration,
                                                llvm::raw_ostream &os)

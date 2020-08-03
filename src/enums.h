@@ -14,7 +14,7 @@
 #ifndef _ENUM_H_
 #define _ENUM_H_
 
-namespace scpar {
+namespace systemc_clang {
 enum class ASTSTATE {
   EMPTY,
   DECLSTMT,
@@ -31,5 +31,5 @@ enum class PROCESS_TYPE {
   CTHREAD,
   METHOD
 };  // End enum PROCESS_TYPE
-}  // End namespace scpar
+}  // End namespace systemc_clang
 #endif

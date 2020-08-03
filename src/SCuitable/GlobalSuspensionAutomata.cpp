@@ -1,5 +1,5 @@
 #include "GlobalSuspensionAutomata.h"
-using namespace scpar;
+using namespace systemc_clang;
 
 GlobalSuspensionAutomata::GlobalSuspensionAutomata(Model *systemCmodel,
                                                    raw_ostream &os,

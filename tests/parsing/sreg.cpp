@@ -17,7 +17,7 @@
 using namespace clang;
 using namespace clang::tooling;
 using namespace clang::ast_matchers;
-using namespace scpar;
+using namespace systemc_clang;
 
 TEST_CASE("sreg example", "[llnl-examples]") {
   std::string code{systemc_clang::read_systemc_file(

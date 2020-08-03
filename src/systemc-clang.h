@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 #include "json.hpp"
-namespace scpar {
+namespace systemc_clang {
 
 using json = nlohmann::json;
 
@@ -14,5 +14,5 @@ std::string to_string(T* pointer) {
   address << pointer;
   return address.str();
 }
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

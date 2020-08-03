@@ -50,7 +50,7 @@
 
 using namespace clang::tooling;
 
-namespace scpar {
+namespace systemc_clang {
 /** @brief This is the main consumer class that beings the parsing of SystemC.
 
     This class drives the AST consumer for parsing SystemC constructs.
@@ -110,5 +110,5 @@ class SystemCClang : public SystemCConsumer {
 };
 
 
-}  // End namespace scpar
+}  // End namespace systemc_clang
 #endif

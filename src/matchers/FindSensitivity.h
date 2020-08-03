@@ -10,7 +10,7 @@
 // ANI : A module may have multiple threads and their corresponding
 // sensitivity lists. So, this function should of finding sensitivity list
 // should take into account that aspect.
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 
 class clang::raw_ostream;
@@ -36,5 +36,5 @@ class FindSensitivity : public RecursiveASTVisitor<FindSensitivity> {
   senseMapType sensitive_ports_;
 };
 
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

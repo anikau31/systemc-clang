@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -39,5 +39,5 @@ private:
   string _name;
   FieldDecl *_astNode;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

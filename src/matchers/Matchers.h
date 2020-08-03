@@ -15,7 +15,7 @@
 
 using namespace clang;
 using namespace clang::ast_matchers;
-using namespace scpar;
+using namespace systemc_clang;
 
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE

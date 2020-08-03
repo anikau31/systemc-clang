@@ -42,8 +42,8 @@ void XlatType::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
   return;
 }
 
-void XlatType::generatetype(scpar::TreeNode<scpar::TemplateType > * const &node,
-			scpar::Tree<scpar::TemplateType > * const &treehead, hNodep &h_info) {
+void XlatType::generatetype(systemc_clang::TreeNode<systemc_clang::TemplateType > * const &node,
+			systemc_clang::Tree<systemc_clang::TemplateType > * const &treehead, hNodep &h_info) {
 
   string tmps = (node->getDataPtr())->getTypeName();
   llvm::errs() << "generatetype node name is " << tmps << " type follows\n";

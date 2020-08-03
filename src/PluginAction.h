@@ -20,7 +20,7 @@
 
 #include "SystemCClang.h"
 
-namespace scpar {
+namespace systemc_clang {
 
   using namespace llvm;
 
@@ -85,6 +85,6 @@ class PluginAction {
     Tool.run(FrontendFactory.get());
   };
 };
-};  // namespace scpar
+};  // namespace systemc_clang
 
 #endif /* _PLUGIN_ACTION_H_ */

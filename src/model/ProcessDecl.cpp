@@ -2,7 +2,7 @@
 #include "EntryFunctionContainer.h"
 #include "clang/AST/DeclCXX.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 ProcessDecl::ProcessDecl(std::string t, std::string n,
                          clang::CXXMethodDecl *entryMethodDecl,

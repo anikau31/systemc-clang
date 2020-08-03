@@ -1,6 +1,6 @@
 #include "FindTemplateTypes.h"
 #include "FindMemberFieldMatcher.h"
-using namespace scpar;
+using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
 //////////////////////////////////////////////////////////////////////

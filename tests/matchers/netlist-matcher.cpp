@@ -9,7 +9,7 @@
 #include "ClangArgs.h"
 #include "Testing.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
 TEST_CASE("Testing top-level module: test", "[top-module]") {

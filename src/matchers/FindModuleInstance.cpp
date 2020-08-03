@@ -4,7 +4,7 @@
 #include "clang/AST/Type.h"
 //#include "clang/Basic/SourceManager.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 string FindModuleInstance::getInstanceName() const { return instance_name_; }
 

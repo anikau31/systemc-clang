@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
 #include "Model.h"
-using namespace scpar;
+using namespace systemc_clang;
 
 TEST_CASE( "systemc-clang Model copying tests", "[model]") {
 

@@ -5,7 +5,7 @@
 #include <iostream>
 #include "ClangArgs.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 // Source:
 // https://www.toptip.ca/2010/03/trim-leading-or-trailing-white-spaces.html

@@ -16,7 +16,7 @@
 
 using namespace std;
 using namespace hnode;
-using namespace scpar;
+using namespace systemc_clang;
 
 bool Xlat::postFire() {
   Model *model = getSystemCModel();
@@ -88,7 +88,7 @@ bool Xlat::postFire() {
 void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &xlatout ) {
   const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
   LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
-  typedef std::pair<std::string, scpar::ModuleDecl::portBindingMapType> submodportbindings_t;
+  typedef std::pair<std::string, systemc_clang::ModuleDecl::portBindingMapType> submodportbindings_t;
   std::vector<submodportbindings_t> submodportbindings;
   for (auto& smod:submodv) {
     LLVM_DEBUG(llvm::dbgs() << "get submodule portbindings" << smod->getInstanceName() << "\n");
@@ -139,7 +139,7 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
   //  typedef std::map<std::string, PortBinding *> portBindingMapType;
   //   portBindingMapType getPortBindings();
 
-  for (std::pair<std::string, scpar::ModuleDecl::portBindingMapType> pbm: submodportbindings) {
+  for (std::pair<std::string, systemc_clang::ModuleDecl::portBindingMapType> pbm: submodportbindings) {
     hNodep h_submodule_pb = new hNode(pbm.first, hNode::hdlopsEnum::hPortbindings);
     xlatportbindings(pbm.second, h_submodule_pb);
     if (!h_submodule_pb->child_list.empty())
@@ -155,7 +155,7 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
   }
 }
 
-void Xlat::xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pbs){
+void Xlat::xlatportbindings(systemc_clang::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pbs){
   for (auto const &pb : portbindingmap) {
     string port_name{get<0>(pb)};
     PortBinding *binding{get<1>(pb)};

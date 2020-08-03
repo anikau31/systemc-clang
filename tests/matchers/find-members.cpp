@@ -10,7 +10,7 @@
 #include "Testing.h"
 
 using namespace clang::ast_matchers;
-using namespace scpar;
+using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
 template <typename T>

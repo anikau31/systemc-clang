@@ -10,7 +10,7 @@
 
 /* clang-format on */
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
 TEST_CASE("Only parse a single top-level module", "[parsing]") {

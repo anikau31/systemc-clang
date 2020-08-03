@@ -9,7 +9,7 @@
 #include <vector>
 //#include "ReflectionContainerClass.h"
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -38,5 +38,5 @@ private:
   //    reflectionDataStructure * _reflectionMap;
 };
 
-} // namespace scpar
+} // namespace systemc_clang
 #endif

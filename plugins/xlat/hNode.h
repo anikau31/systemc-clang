@@ -7,7 +7,7 @@
 #include <stack>
 #include <algorithm>
 
-using namespace scpar;
+using namespace systemc_clang;
 
 namespace hnode {
   class hNode;

@@ -3,7 +3,7 @@
 #include "FindTemplateTypes.h"
 #include "PortDecl.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 PortDecl::~PortDecl() {
   // Only delete the template_type_

@@ -12,7 +12,7 @@
 #include "clang/ASTMatchers/ASTMatchersMacros.h"
 
 using namespace clang::ast_matchers;
-using namespace scpar;
+using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
 class TemplateParametersMatcher : public MatchFinder::MatchCallback {

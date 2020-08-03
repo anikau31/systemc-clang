@@ -5,7 +5,7 @@
 #include "SignalDecl.h"
 #include "FindTemplateTypes.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 SignalDecl::~SignalDecl() { DEBUG_WITH_TYPE("DebugDestructors", llvm::dbgs() << "~SignalDecl\n";); }
 

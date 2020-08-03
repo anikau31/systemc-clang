@@ -19,7 +19,7 @@
 
 #include "ModuleInstanceType.h"
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 
 /// Forward declarations
@@ -179,5 +179,5 @@ class ModuleDecl {
   vector<std::string> template_parameters_;
   vector<std::string> template_args_;
 };
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

@@ -1,6 +1,6 @@
 #include "Utility.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 /*
 void Utility::tabit(raw_ostream &os, int tabn) {
   for (int i = 0; i < tabn; i++) {

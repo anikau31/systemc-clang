@@ -1,7 +1,7 @@
 #include "EntryFunctionContainer.h"
 #include "enums.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 EntryFunctionContainer::~EntryFunctionContainer() {
   // DO NOT free anything.

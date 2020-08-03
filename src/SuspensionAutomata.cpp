@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-using namespace scpar;
+using namespace systemc_clang;
 
 SusCFG::SusCFG(CFGBlock *block)
     : _block(block),

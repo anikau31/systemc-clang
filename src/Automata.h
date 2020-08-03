@@ -12,7 +12,7 @@
 #include <map>
 #include <stdio.h>
 #include <vector>
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -130,5 +130,5 @@ protected:
   nodeVector _nodeVector;
   edgeVector _edgeVector;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

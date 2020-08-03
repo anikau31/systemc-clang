@@ -1,6 +1,6 @@
 #include "FindGPUMacro.h"
 #include "clang/AST/ASTContext.h"
-using namespace scpar;
+using namespace systemc_clang;
 
 GPUMacro::GPUMacro(int blockIdx, int blockIdy, int blockIdz, int threadIdx,
                    int threadIdy, int threadIdz, int gpuTime, int cpuTime)

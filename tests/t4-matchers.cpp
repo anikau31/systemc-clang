@@ -11,7 +11,7 @@
 using namespace clang;
 using namespace clang::tooling;
 using namespace clang::ast_matchers;
-using namespace scpar;
+using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {

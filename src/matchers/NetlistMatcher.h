@@ -9,7 +9,7 @@
 
 using namespace clang;
 using namespace clang::ast_matchers;
-using namespace scpar;
+using namespace systemc_clang;
 
 namespace sc_ast_matchers {
 

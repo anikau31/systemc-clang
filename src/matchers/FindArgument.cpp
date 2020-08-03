@@ -1,6 +1,6 @@
 #include "FindArgument.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 FindArgument::FindArgument(Expr *e) : expression_(e) {
   TraverseStmt(expression_);

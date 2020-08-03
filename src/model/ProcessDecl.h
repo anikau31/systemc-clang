@@ -10,7 +10,7 @@ namespace clang {
   class CXXMethodDecl;
 };
 
-namespace scpar {
+namespace systemc_clang {
 
 using json = nlohmann::json;
 
@@ -47,5 +47,5 @@ class ProcessDecl {
   EntryFunctionContainer *entry_function_ptr_;
 };  // End class ProcessDecl
 
-}  // End namespace scpar
+}  // End namespace systemc_clang
 #endif

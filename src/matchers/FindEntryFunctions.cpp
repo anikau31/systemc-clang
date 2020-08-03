@@ -1,6 +1,6 @@
 #include "FindEntryFunctions.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 FindEntryFunctions::FindEntryFunctions(CXXRecordDecl *d, llvm::raw_ostream &os)
     : os_{os},

@@ -5,7 +5,7 @@
 #include "ClangArgs.h"
 #include "Testing.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   std::string code{systemc_clang::read_systemc_file(

@@ -10,7 +10,7 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace clang;
 // using namespace std;
 

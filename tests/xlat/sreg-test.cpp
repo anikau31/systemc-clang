@@ -7,7 +7,7 @@
 #include "ClangArgs.h"
 #include "Testing.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 TEST_CASE("sreg example", "[llnl-examples]") {
   std::string code{systemc_clang::read_systemc_file(

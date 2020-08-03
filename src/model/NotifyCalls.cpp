@@ -1,6 +1,6 @@
 #include "NotifyCalls.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace std;
 
 NotifyCalls::~NotifyCalls() {

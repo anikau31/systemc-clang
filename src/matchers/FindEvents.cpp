@@ -1,7 +1,7 @@
 #include "FindEvents.h"
 #include "FindTemplateTypes.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace std;
 
 FindEvents::FindEvents(CXXRecordDecl *d, llvm::raw_ostream &os) : os_(os) {

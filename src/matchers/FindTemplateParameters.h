@@ -11,7 +11,7 @@ namespace clang {
 class CXXRecordDecl;
 }
 
-namespace scpar {
+namespace systemc_clang {
 
 class FindTemplateParameters
     : public clang::RecursiveASTVisitor<FindTemplateParameters> {
@@ -32,5 +32,5 @@ class FindTemplateParameters
   clang::TemplateParameterList *template_parameters_;
   const clang::TemplateArgumentList *template_args_;
 };
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

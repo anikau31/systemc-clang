@@ -1,7 +1,7 @@
 #include "WaitContainer.h"
 #include "llvm/Support/raw_ostream.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace llvm;
 
 WaitContainer::~WaitContainer() {

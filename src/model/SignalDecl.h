@@ -7,7 +7,7 @@
 
 #include "PortDecl.h"
 
-namespace scpar {
+namespace systemc_clang {
 
 using json = nlohmann::json;
 
@@ -28,5 +28,5 @@ class SignalDecl : public PortDecl {
 
   json dump_json();
 };
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

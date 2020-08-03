@@ -5,7 +5,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
 
-namespace scpar {
+namespace systemc_clang {
 
 using namespace clang;
 class FindSCMain : public RecursiveASTVisitor<FindSCMain> {
@@ -21,5 +21,5 @@ private:
   llvm::raw_ostream &os_;
   FunctionDecl *sc_main_function_declaration_;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

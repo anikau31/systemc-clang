@@ -5,7 +5,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
 
-namespace scpar {
+namespace systemc_clang {
 
 using namespace clang;
 using namespace std;
@@ -26,5 +26,5 @@ private:
   llvm::raw_ostream &os_;
   string instance_name_;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

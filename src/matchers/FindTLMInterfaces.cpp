@@ -1,6 +1,6 @@
 #include "FindTLMInterfaces.h"
 #include "FindTemplateTypes.h"
-using namespace scpar;
+using namespace systemc_clang;
 
 FindTLMInterfaces::FindTLMInterfaces(CXXRecordDecl *d, llvm::raw_ostream &os)
     : _os(os) {

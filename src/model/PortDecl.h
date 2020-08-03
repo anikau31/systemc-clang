@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace scpar {
+namespace systemc_clang {
 //using namespace clang;
 using json = nlohmann::json;
 
@@ -47,5 +47,5 @@ class PortDecl {
   /// declaration.
   clang::Decl *field_decl_;
 };
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif
