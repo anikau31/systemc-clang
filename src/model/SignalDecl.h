@@ -6,31 +6,27 @@
 #include "json.hpp"
 
 #include "PortDecl.h"
-#include "FindTemplateTypes.h"
-
-#include "llvm/Support/raw_ostream.h"
 
 namespace scpar {
-using namespace clang;
+
 using json = nlohmann::json;
 
-// Forward declarations.
+/// Forward declarations
+class FindTemplateTypes;
 
 class SignalDecl : public PortDecl {
  public:
   SignalDecl();
   virtual ~SignalDecl();
-  SignalDecl(const std::string &name, clang::FieldDecl *fd, FindTemplateTypes *tt);
-
-  // Set parameters
-  // void setModuleName(const std::string &);
+  SignalDecl(const std::string &name, clang::FieldDecl *fd,
+             FindTemplateTypes *tt);
 
   /// Get parameters
   std::string getName();
   FindTemplateTypes *getTemplateTypes();
   clang::FieldDecl *getASTNode();
 
-  json dump_json(llvm::raw_ostream &);
+  json dump_json();
 };
 }  // namespace scpar
 #endif

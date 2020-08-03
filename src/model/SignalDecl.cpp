@@ -3,10 +3,11 @@
 #include "clang/AST/DeclCXX.h"
 
 #include "SignalDecl.h"
+#include "FindTemplateTypes.h"
 
 using namespace scpar;
 
-SignalDecl::~SignalDecl() { llvm::outs() << "~SignalDecl\n"; }
+SignalDecl::~SignalDecl() { DEBUG_WITH_TYPE("DebugDestructors", llvm::dbgs() << "~SignalDecl\n";); }
 
 SignalDecl::SignalDecl() : PortDecl{} {}
 
@@ -22,7 +23,7 @@ FindTemplateTypes *SignalDecl::getTemplateTypes() {
 
 clang::FieldDecl *SignalDecl::getASTNode() { return PortDecl::getFieldDecl(); }
 
-json SignalDecl::dump_json(raw_ostream &os) {
+json SignalDecl::dump_json() {
   json signal_j;
   signal_j["signal_name"] = getName();
 
@@ -35,8 +36,6 @@ json SignalDecl::dump_json(raw_ostream &os) {
   for (auto ait = begin(template_args); ait != end(template_args); ++ait) {
     signal_j["signal_arguments"].push_back(ait->getTypeName());
   }
-
-  // os << signal_j.dump(4);
 
   return signal_j;
 }

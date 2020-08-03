@@ -22,13 +22,13 @@
 namespace scpar {
 using namespace clang;
 
-// Forward declarations
+/// Forward declarations
 //
 
 class ModuleDecl {
  public:
-  typedef std::pair<std::string, SignalDecl *> signalPairType;
-  typedef std::map<std::string, SignalDecl *> signalMapType;
+  typedef std::pair<std::string, SignalDecl*> signalPairType;
+  typedef std::map<std::string, SignalDecl*> signalMapType;
 
   typedef std::pair<std::string, InterfaceDecl *> interfacePairType;
   typedef std::map<std::string, InterfaceDecl *> interfaceMapType;

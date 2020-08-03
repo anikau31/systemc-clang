@@ -5,47 +5,47 @@
 
 #include <string>
 
-#include "clang/AST/DeclCXX.h"
-
 namespace scpar {
-using namespace clang;
+//using namespace clang;
 using json = nlohmann::json;
 
-// Forward declarations
+/// Forward declarations
 //
 class FindTemplateTypes;
 
+/// This class holds the member declarations of a SystemC module class.
+/// These can be ports, signals or submodules (instances of other SystemC
+/// modules).
 class PortDecl {
  public:
   PortDecl();
   PortDecl(const std::string &, FindTemplateTypes *);
-  PortDecl(const std::string &, const Decl *, FindTemplateTypes *);
+  PortDecl(const std::string &, const clang::Decl *, FindTemplateTypes *);
 
   PortDecl(const PortDecl &);
-
   ~PortDecl();
-  // Set parameters
+
+  /// Set parameters
   void setModuleName(const std::string &);
-  void setBinding(VarDecl *vd);
+  void setBinding(clang::VarDecl *vd);
 
   /// Get parameters
   std::string getName() const;
-  FieldDecl *getFieldDecl() const;
-  VarDecl *getAsVarDecl() const;
+  clang::FieldDecl *getFieldDecl() const;
+  clang::VarDecl *getAsVarDecl() const;
   FindTemplateTypes *getTemplateType();
 
-  // Print
-  virtual void dump(llvm::raw_ostream &, int tabn = 0);
-
-  json dump_json(llvm::raw_ostream &);
+  /// Produce json dump.
+  json dump_json();
 
  private:
-  // Name of the port
+  /// Name of the port
   std::string port_name_;
-  // This holds the types for the port declaration
+  /// This holds the types for the port declaration
   FindTemplateTypes *template_type_;
-  Decl *field_decl_;
-
+  /// This is the clang::Decl pointer to the FieldDecl found for the
+  /// declaration.
+  clang::Decl *field_decl_;
 };
 }  // namespace scpar
 #endif

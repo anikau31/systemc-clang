@@ -491,7 +491,7 @@ void ModuleDecl::dumpProcesses(raw_ostream &os, int tabn) {
   process_j["number_of_processes"] = process_map_.size();
   for (auto pit : process_map_) {
     ProcessDecl *pd{pit.second};
-    process_j[pit.first] = pd->dump_json(os);
+    process_j[pit.first] = pd->dump_json();
   }
 
   os << "Processes\n";
@@ -541,49 +541,49 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   for (auto mit : in_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    iport_j[name] = pd->dump_json(os);
+    iport_j[name] = pd->dump_json();
   }
 
   oport_j["number_of_output_ports"] = out_ports_.size();
   for (auto mit : out_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    oport_j[name] = pd->dump_json(os);
+    oport_j[name] = pd->dump_json();
   }
 
   ioport_j["number_of_inout_ports"] = inout_ports_.size();
   for (auto mit : inout_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ioport_j[name] = pd->dump_json(os);
+    ioport_j[name] = pd->dump_json();
   }
 
   istreamport_j["number_of_instream_ports"] = istreamports_.size();
   for (auto mit : istreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    istreamport_j[name] = pd->dump_json(os);
+    istreamport_j[name] = pd->dump_json();
   }
 
   ostreamport_j["number_of_outstream_ports"] = ostreamports_.size();
   for (auto mit : ostreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ostreamport_j[name] = pd->dump_json(os);
+    ostreamport_j[name] = pd->dump_json();
   }
 
   othervars_j["number_of_other_vars"] = other_fields_.size();
   for (auto mit : other_fields_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    othervars_j[name] = pd->dump_json(os);
+    othervars_j[name] = pd->dump_json();
   }
 
   submodules_j["number_of_submodules"] = submodules_.size();
   for (auto mit : submodules_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    submodules_j[name] = pd->dump_json(os);
+    submodules_j[name] = pd->dump_json();
   }
 
 
@@ -609,7 +609,7 @@ void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
   signal_j["number_of_signals"] = signals_.size();
   for (auto sit : signals_) {
     SignalDecl *s{sit.second};
-    signal_j[sit.first] = s->dump_json(os);
+    signal_j[sit.first] = s->dump_json();
   }
 
   os << "Signals\n";

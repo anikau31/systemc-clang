@@ -2,37 +2,38 @@
 #define _PROCESS_DECL_H_
 
 #include <string>
-#include "clang/AST/DeclCXX.h"
 #include "json.hpp"
 #include "systemc-clang.h"
 
+/// clang forward declarations.
+namespace clang {
+  class CXXMethodDecl;
+};
+
 namespace scpar {
 
-using namespace clang;
 using json = nlohmann::json;
 
+/// Forward declarations.
 class EntryFunctionContainer;
 
 class ProcessDecl {
  public:
-  // typedef
-
-  ProcessDecl(std::string, std::string, CXXMethodDecl *,
+  ProcessDecl(std::string, std::string, clang::CXXMethodDecl *,
               EntryFunctionContainer *);
 
   ProcessDecl(const ProcessDecl &);
   ~ProcessDecl();
 
-  /// Accessor methods.
+  /// Get methods.
   std::string getType() const;
   std::string getName() const;
-  CXXMethodDecl *getEntryMethodDecl() const;
-  EntryFunctionContainer* getEntryFunction();
+  clang::CXXMethodDecl *getEntryMethodDecl() const;
+  EntryFunctionContainer *getEntryFunction();
 
-  // Dump.
-  void dump(llvm::raw_ostream &);
-  json dump_json(llvm::raw_ostream &) const;
-
+  /// Dump.
+  void dump();
+  json dump_json() const;
 
  protected:
   // Process information
@@ -40,7 +41,7 @@ class ProcessDecl {
   // Name of the entry function
   std::string entry_name_;
   // Each process can have 1 entry function.
-  CXXMethodDecl *entry_method_decl_;
+  clang::CXXMethodDecl *entry_method_decl_;
   // This is a container that holds information about the
   // entry function.
   EntryFunctionContainer *entry_function_ptr_;
