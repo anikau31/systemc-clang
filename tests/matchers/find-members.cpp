@@ -13,6 +13,9 @@ using namespace clang::ast_matchers;
 using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Tests"
+
 template <typename T>
 bool find_name(std::vector<T> &names, const T &find_name) {
   auto found_it = std::find(names.begin(), names.end(), find_name);
@@ -33,7 +36,7 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
           .release();
 
-  llvm::outs() << "================ TESTMATCHER =============== \n";
+  LLVM_DEBUG(llvm::dbgs() << "================ TESTMATCHER =============== \n";);
   InstanceMatcher inst_matcher{};
   MatchFinder matchRegistry{};
   inst_matcher.registerMatchers(matchRegistry);
@@ -76,10 +79,10 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
 
         if (inst.var_name == "dut") {
           // Find all the instances of exor2
-          llvm::errs() << "<<<< DUT\n";
+          LLVM_DEBUG(llvm::dbgs() << "<<<< DUT\n";);
           REQUIRE(found_instances.size() == 1);
         } else {
-          llvm::errs() << "<<<< NOT DUT\n";
+          LLVM_DEBUG(llvm::dbgs() << "<<<< NOT DUT\n";);
           // Find all the instances of nand2
           REQUIRE(found_instances.size() == 4);
         }
@@ -96,11 +99,11 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
         // Check to see if we got the FieldDecl we expect.
         std::vector<FieldDecl *> fields{field_matcher.getFieldDecls()};
 
-        llvm::outs() << "- number of FieldDecl in type " << fields.size()
-                     << "\n";
+        LLVM_DEBUG(llvm::dbgs() << "- number of FieldDecl in type " << fields.size()
+                     << "\n";);
 
         for (auto const &fld : fields) {
-          fld->dump();
+          LLVM_DEBUG(fld->dump(););
 
           const Type *field_type{fld->getType().getTypePtr()};
           FindTemplateTypes find_tt{};
@@ -109,7 +112,7 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
           // Ge the tree.
           auto template_args{find_tt.getTemplateArgTreePtr()};
           std::string dft_str{template_args->dft()};
-          llvm::outs() << dft_str << "\n";
+          LLVM_DEBUG(llvm::outs() << dft_str << "\n";);
         }
       }
     }

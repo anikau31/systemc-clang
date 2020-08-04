@@ -12,6 +12,9 @@ using namespace clang::ast_matchers;
 using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Tests"
+
 template <typename T>
 bool find_name(std::vector<T> &names, const T &find_name) {
   auto found_it = std::find(names.begin(), names.end(), find_name);
@@ -35,6 +38,10 @@ std::string generateSensitivityName(
 
 // This test works
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
+
+  /// Enable debug
+  llvm::DebugFlag = false;
+
   std::string code = R"(
 #include "systemc.h"
 
@@ -116,23 +123,9 @@ int sc_main(int argc, char *argv[]) {
   catch_test_args.push_back("-I" + systemc_clang::test_data_dir +
                             "/llnl-examples/zfpsynth/shared");
 
-  /// Turn on debug
-  //
-  llvm::DebugFlag = true;
-
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
-  //
-  // llvm::outs() << "================ TESTMATCHER =============== \n";
-  // SensitivityMatcher sens_matcher{};
-  // MatchFinder matchRegistry{};
-  // sens_matcher.registerMatchers(matchRegistry);
-  // matchRegistry.matchAST(from_ast->getASTContext());
-  // sens_matcher.dump();
-  // llvm::outs() << "================ END =============== \n";
-  //
-
-  SystemCConsumer sc{from_ast};
+    SystemCConsumer sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
 
   auto model{sc.getSystemCModel()};
@@ -153,7 +146,7 @@ int sc_main(int argc, char *argv[]) {
   REQUIRE(processes.size() == 2);
   REQUIRE(first_proc != processes.end());
 
-  llvm::outs() << "PROCESS: " << first_proc->first << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "PROCESS: " << first_proc->first << "\n";);
 
   // Get access to the sensitivity list.
   EntryFunctionContainer *ef{proc->getEntryFunction()};
@@ -172,7 +165,7 @@ int sc_main(int argc, char *argv[]) {
     // This is a vector of tuples
     auto entry{arg.second};
 
-    llvm::outs() << name << "\n";
+    LLVM_DEBUG(llvm::dbgs() << name << "\n";);
     find_name(arg_names, generateSensitivityName(entry));
 
     /// The tuple now has the last element std::get<3>(.) that provides a
@@ -185,9 +178,9 @@ int sc_main(int argc, char *argv[]) {
       DeclRefExpr *to_get_process_handle{std::get<3>(call)};
       auto process_handle_name{
           to_get_process_handle->getNameInfo().getAsString()};
-      llvm::outs() << process_handle_name << "  " << std::get<0>(call) << "  "
+      LLVM_DEBUG(llvm::dbgs() << process_handle_name << "  " << std::get<0>(call) << "  "
                    << std::get<1>(call) << "  " << std::get<2>(call) << "  "
-                   << std::get<3>(call) << "\n";
+                   << std::get<3>(call) << "\n";);
     }
   }
 

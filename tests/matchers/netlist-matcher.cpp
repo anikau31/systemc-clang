@@ -12,7 +12,13 @@
 using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Tests"
+
 TEST_CASE("Testing top-level module: test", "[top-module]") {
+  /// Enable debug
+  llvm::DebugFlag = false;
+
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "netlist-matcher-model.cpp")};
 
@@ -24,7 +30,6 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   // std::string top{"test"};
 
   SystemCConsumer sc{from_ast};
-  // sc.setTopModule(top);
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   auto module_decl{model->getModuleDecl()};
@@ -58,11 +63,11 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     auto port_bindings{found_decl->getPortBindings()};
     std::vector<std::string> test_ports{"clk", "inS", "outS"};
 
-    llvm::outs() << "Number of port bindings: " << port_bindings.size() << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "Number of port bindings: " << port_bindings.size() << "\n";);
     // Print all the port binding information
     for (auto const &p : port_bindings) {
       auto pb{p.second};
-      pb->dump();
+      LLVM_DEBUG(pb->dump(););
     }
 
     for (auto const &pname : test_ports) {
