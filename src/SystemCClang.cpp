@@ -12,7 +12,6 @@
 
 using namespace systemc_clang;
 using namespace clang;
-// using namespace std;
 
 using namespace sc_ast_matchers;
 
@@ -75,29 +74,23 @@ bool SystemCConsumer::fire() {
   // A first pass should be made to collect all sc_module declarations.
   // This is important so that the top-level module can be found.
   //
-  os_ << "================ TESTMATCHER =============== \n";
 
-  // InstanceMatcher match_instances{};
   ModuleDeclarationMatcher module_declaration_handler{};
   module_declaration_handler.set_top_module_decl(getTopModule());
   MatchFinder matchRegistry{};
 
-  // Run all the matchers
-
+  /// Run all the matchers
   module_declaration_handler.registerMatchers(matchRegistry);
-  // match_instances.registerMatchers( matchRegistry );
 
   matchRegistry.matchAST(getContext());
-  // match_instances.dump();
-  llvm::outs() << "=================== END MATCHER ====================";
 
   module_declaration_handler.pruneMatches();
-  os_ << "== Print module declarations pruned\n";
-  module_declaration_handler.dump();
-  os_ << "================ END =============== \n";
+  LLVM_DEBUG(llvm::dbgs() << "== Print module declarations pruned\n";
+             module_declaration_handler.dump();
+             llvm::dbgs() << "================ END =============== \n";);
 
-  // Check if the top-level module one of the sc_module declarations?
-  //
+  /// Check if the top-level module one of the sc_module declarations?
+  ///
   // Map CXXRecordDecl => ModuleDecl*
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
@@ -108,8 +101,9 @@ bool SystemCConsumer::fire() {
       })};
 
   if (found_top_module != found_module_declarations.end()) {
-    os_ << "Found the top module: " << found_top_module->second->getName()
-        << ", " << found_top_module->second << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "Found the top module: "
+                            << found_top_module->second->getName() << ", "
+                            << found_top_module->second << "\n";);
   }
 
   // ===========================================================
@@ -138,7 +132,7 @@ bool SystemCConsumer::fire() {
     FindSimTime scstart{fnDecl, os_};
     systemcModel_->addSimulationTime(scstart.returnSimTime());
   } else {
-    os_ << "\n Could not find SCMain";
+    LLVM_DEBUG(llvm::dbgs() << "\n Could not find SCMain";);
   }
 
   ////////////////////////////////////////////////////////////////

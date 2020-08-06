@@ -122,14 +122,14 @@ void ModuleDecl::clearOnlyGlobal() {
 }
 
 ModuleDecl::~ModuleDecl() {
-  llvm::outs() << "\n~ModuleDecl\n";
+  DEBUG_WITH_TYPE("DebugDestructors", llvm::dbgs() << "\n~ModuleDecl\n";);
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
   instance_decl_ = nullptr;
 
-  llvm::outs() << "- name: " << getName()
+  DEBUG_WITH_TYPE("DebugDestructors", llvm::dbgs() << "- name: " << getName()
                << ", inst name: " << getInstanceName() << " pointer: " << this
-               << "\n";
+               << "\n";);
 
   // IMPORTANT: Only the instance-specific details should be deleted.
   // DO NOT delete the information collected through incomplete types.
