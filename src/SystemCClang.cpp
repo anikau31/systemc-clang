@@ -178,42 +178,41 @@ bool SystemCConsumer::fire() {
       auto inst_info{get<2>(instance)};
       inst_info.dump();
 
-      os_ << "\n";
-      os_ << "1. Set instance name: " << get<0>(instance) << "\n";
-      // add_module_decl->setInstanceName(get<0>(instance));
-      os_ << "2. Set instance decl: " << cxx_decl->getNameAsString() << " "
-          << inst_info.getInstanceDecl() << "\n";
+      LLVM_DEBUG(llvm::dbgs()
+                     << "\n"
+                     << "1. Set instance name: " << get<0>(instance) << "\n"
+                     << "2. Set instance decl: " << cxx_decl->getNameAsString()
+                     << " " << inst_info.getInstanceDecl() << "\n";);
       add_module_decl->setInstanceInfo(get<2>(instance));
 
-      // 2. Find the template arguments for the class.
+      /// 2. Find the template arguments for the class.
       // In clang lingo: parameters are the templated values, and the arguments
       // are the specialization values for the templates.
       //
-      os_ << "3. Set template arguments\n";
+      LLVM_DEBUG(llvm::dbgs() << "3. Set template arguments\n";);
       FindTemplateParameters tparms{cxx_decl, os_};
       add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
       add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
 
-      // 3. Find constructor
+      /// 3. Find constructor
       //
       //
-      os_ << "4. Set the constructor.\n";
+      LLVM_DEBUG(llvm::dbgs() << "4. Set the constructor.\n";);
       vector<EntryFunctionContainer *> _entryFunctionContainerVector;
       FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
       add_module_decl->addConstructor(&constructor);
-      // add_module_decl->addConstructor(constructor.getConstructorStmt());
 
-      // 4. Find ports
-      // This is done for the declaration.
+      /// 4. Find ports
+      /// This is done for the declaration.
       //
       //
       // 5. Find  entry functions within one sc_module.
-      os_ << "5. Set the entry functions\n";
+      LLVM_DEBUG(llvm::dbgs() << "5. Set the entry functions\n";);
       FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
                                      os_};
       FindEntryFunctions::entryFunctionVectorType *entryFunctions{
           findEntries.getEntryFunctions()};
-      os_ << "6. Set the process\n";
+      LLVM_DEBUG(llvm::dbgs() << "6. Set the process\n";);
       add_module_decl->addProcess(entryFunctions);
 
       /// We should only go through one of the CXXRecordDecls
@@ -225,8 +224,9 @@ bool SystemCConsumer::fire() {
       MatchFinder matchRegistry{};
       sens_matcher.registerMatchers(matchRegistry);
       matchRegistry.match(*constructor.getConstructorDecl(), getContext());
-      sens_matcher.dump();
-      llvm::outs() << "================ END =============== \n";
+
+      LLVM_DEBUG(sens_matcher.dump();
+      llvm::dbgs() << "================ END =============== \n";);
 
       for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
@@ -237,7 +237,7 @@ bool SystemCConsumer::fire() {
         ef->addSensitivityInfo(sensitivity_info);
 
         if (ef->getEntryMethod() == nullptr) {
-          os_ << "ERROR";
+          LLVM_DEBUG(llvm::dbgs() << "ERROR";);
           continue;
         }
 
@@ -259,13 +259,13 @@ bool SystemCConsumer::fire() {
       // systemcModel_->addModuleDecl(p_dummy_module_decl);
       module_decl_instances.push_back(add_module_decl);
     }
-    os_ << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "\n";);
 
     // TODO:
     //
     // FIXME: Only there to make sure xlat still compiles.
     // This should be removed.
-    llvm::outs() << "[HDP] Add instances to model\n";
+    LLVM_DEBUG(llvm::dbgs() << "[HDP] Add instances to model\n";);
     systemcModel_->addModuleDeclInstances(incomplete_module_decl,
                                           module_decl_instances);
   }
@@ -273,30 +273,29 @@ bool SystemCConsumer::fire() {
   // Module instance map.
   auto module_instance_map{systemcModel_->getModuleInstanceMap()};
 
-  llvm::outs()
-      << " @@@@@@@@ =============== Populate sub-modules ============= \n";
+  LLVM_DEBUG(llvm::dbgs()
+      << " @@@@@@@@ =============== Populate sub-modules ============= \n";);
   // This must have the instance matcher already run.
   // You need systemcModel_ and instance_matcher to build the hierarchy of
   // sub-modules.
   auto instance_matcher{module_declaration_handler.getInstanceMatcher()};
   auto instance_map{instance_matcher.getInstanceMap()};
-  llvm::outs() << "- Print out all the instances in the instance map\n";
+  LLVM_DEBUG(llvm::dbgs() << "- Print out all the instances in the instance map\n";);
   populateNestedModules(instance_map);
 
-  llvm::outs() << "===========END  Populate sub-modules ============= \n";
+  LLVM_DEBUG(llvm::dbgs() << "===========END  Populate sub-modules ============= \n";);
 
   // All instances are within the SystemC model.
   //  This must come after instances of ModuleDecl have been generated.
   //  This is because the netlist matcher inserts the port bindings into the
   //  instance.
 
-  llvm::outs() << "=============== ##### TEST NetlistMatcher ##### \n";
+  LLVM_DEBUG(llvm::dbgs() << "=============== ##### TEST NetlistMatcher ##### \n";);
   NetlistMatcher netlist_matcher{};
   MatchFinder netlist_registry{};
   netlist_matcher.registerMatchers(netlist_registry, systemcModel_,
                                    &module_declaration_handler);
 
-  // scmain.getSCMainFunctionDecl()->dump();
 
   netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   // TODO: Fix the top-level
@@ -304,8 +303,8 @@ bool SystemCConsumer::fire() {
     llvm::outs() << " No top module\n";
   }
 
-  llvm::outs() << "Begin netlist parsing on instances: "
-               << found_instances_declaration_map.size() << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "Begin netlist parsing on instances: "
+               << found_instances_declaration_map.size() << "\n";);
   for (const auto &inst : module_instance_map) {
     auto incomplete_mdecl{inst.first};
     auto instance_list{inst.second};
@@ -317,21 +316,18 @@ bool SystemCConsumer::fire() {
       if (ctordecl != nullptr) {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
         ctordecl->getBody(fd);
-        llvm::outs() << "==============> RUN netlist matcher\n";
-        // fd->dump();
+
+        LLVM_DEBUG(llvm::dbgs() << "==============> RUN netlist matcher\n";);
+
         netlist_registry.match(*fd, getContext());
-        llvm::outs() << "==============> DONE netlist matcher\n";
+
+        LLVM_DEBUG(llvm::dbgs() << "==============> DONE netlist matcher\n";);
       }
     }
   }
-  netlist_matcher.dump();
-  llvm::outs() << "##### END TEST NetlistMatcher ##### \n";
+  LLVM_DEBUG(netlist_matcher.dump();
+  llvm::dbgs() << "##### END TEST NetlistMatcher ##### \n";);
 
-  /*
-  FindNetlist findNetlist{scmain.getSCMainFunctionDecl()};
-  findNetlist.dump();
-  systemcModel_->addNetlist(findNetlist);
-  */
 
   /*
   ////////////////////////////////////////////////////////////////
@@ -478,10 +474,10 @@ bool SystemCConsumer::fire() {
 #endif
 
      */
-  os_ << "Parsed SystemC model from systemc-clang\n";
-  os_ << "============= MODEL ============================\n";
-  systemcModel_->dump(os_);
-  os_ << "==============END========================\n";
+  LLVM_DEBUG(llvm::dbgs() << "Parsed SystemC model from systemc-clang\n";
+      llvm::dbgs() << "============= MODEL ============================\n";
+      systemcModel_->dump(llvm::dbgs());
+      llvm::dbgs() << "==============END========================\n";);
   return true;
 }
 
