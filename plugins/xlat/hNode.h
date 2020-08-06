@@ -199,17 +199,26 @@ namespace hnode {
     static inline bool isSCType(string tstring) {
       // linear search and the length is hard coded in ...
       // used in the method name logic
-      if (tstring.substr(0, 6) == "class ") // this is so stupid
-	tstring = tstring.substr(6, tstring.length() - 6);
-      return ((tstring.substr(0, 12) == "sc_core::sc_") ||
-	      (tstring.substr(0, 5) == "sc_in") ||
-	      (tstring.substr(0, 9) == "sc_rvd_in") ||
-	      (tstring.substr(0, 6) == "sc_out") ||
-	      (tstring.substr(0, 10) == "sc_rvd_out") ||
-	      (tstring.substr(0, 8) == "sc_inout") ||
-	      (tstring.substr(0, 9) == "sc_signal") ||
-	      (tstring.substr(0, 6) == "sc_rvd") ||
-	      (tstring.substr(0,5) == "sc_dt"));
+      string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_rvd", "sc_inout",
+			  "sc_signal", "sc_subref", "sc_dt"};
+      for (string onestring : strings) {
+	if (tstring.find(onestring)!=string::npos)
+	  return true;
+      }
+      return false;
+      /* if (tstring.substr(0, 6) == "class ") // this is so stupid */
+      /* 	tstring = tstring.substr(6, tstring.length() - 6); */
+      /* //return (tstring.find("sc_in")!=string::npos)  */
+      /* return ((tstring.substr(0, 12) == "sc_core::sc_") || */
+      /* 	      (tstring.substr(0, 5) == "sc_in") || */
+      /* 	      (tstring.substr(0, 9) == "sc_rvd_in") || */
+      /* 	      (tstring.substr(0, 6) == "sc_out") || */
+      /* 	      (tstring.substr(0, 10) == "sc_rvd_out") || */
+      /* 	      (tstring.substr(0, 8) == "sc_inout") || */
+      /* 	      (tstring.substr(0, 9) == "sc_signal") || */
+      /* 	      (tstring.substr(0, 6) == "sc_rvd") || */
+      /* 	      (tstring.substr(0, 9) == "sc_subref") || */
+      /* 	      (tstring.substr(0,5) == "sc_dt")); */
     }
 
     static inline bool isposint(const std::string &str) {

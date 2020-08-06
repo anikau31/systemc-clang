@@ -1,5 +1,6 @@
 #include "XlatEntryMethod.h"
 #include "XlatType.h"
+#include "clang/Basic/OperatorKinds.h"
 
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
@@ -359,7 +360,6 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     
       methodname = methdcl->getNameAsString();
       qualmethodname = methdcl->getQualifiedNameAsString();
-      LLVM_DEBUG(llvm::dbgs() << "here is qualmethod printname " <<qualmethodname << "\n");
       //make_ident(qualmethodname);
       //      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
       
@@ -423,24 +423,37 @@ bool XlatMethod::isLogicalOp(clang::OverloadedOperatorKind opc) {
 
 bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
 
-  LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr\n");
-  if ((opcall->isAssignmentOp())|| 
-      (isLogicalOp(opcall->getOperator()))) {
-    if (opcall->getNumArgs() == 2) {
-      LLVM_DEBUG(llvm::dbgs() << "assignment or logical operator, 2 args\n");
-      hNodep h_assignop = new hNode (isLogicalOp(opcall->getOperator())? "==" : "=", hNode::hdlopsEnum::hBinop); // node to hold logical or assignment expr
-      TraverseStmt(opcall->getArg(0));
-      h_assignop->child_list.push_back(h_ret);
-      hNodep save_h_ret = h_ret;
-      TraverseStmt(opcall->getArg(1));
-      if (h_ret == save_h_ret) h_assignop->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
-      else h_assignop->child_list.push_back(h_ret);
-      h_ret = h_assignop;
-      LLVM_DEBUG(opcall->getArg(0)->dump(llvm::dbgs()));
-      LLVM_DEBUG(opcall->getArg(1)->dump(llvm::dbgs()));
-      return true;
+  string operatorname = getOperatorSpelling(opcall->getOperator());
+  string operatortype = (opcall->getType()).getAsString();
+  hNodep h_operop;
+  
+  LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr, Operator name is " << operatorname << "\n");
+  LLVM_DEBUG(llvm::dbgs() << "Type with name " << operatortype << " follows\n");
+  LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs()));
+
+  if (lutil.isSCBuiltinType(operatortype)|| lutil.isSCType(operatortype) || (opcall->getType())->isBuiltinType()) {
+    LLVM_DEBUG(llvm::dbgs() << "Processing SC operator call type\n");
+    // operator for an SC type
+    if ((operatorname.compare("()")==0) &&
+	(operatortype.find("subref")!=string::npos) && (opcall->getNumArgs() == 3)) {
+      // bit slice
+      h_operop = new hNode("SLICE", hNode::hdlopsEnum::hBinop);
     }
+    else {
+     h_operop = new hNode (getOperatorSpelling(opcall->getOperator()), hNode::hdlopsEnum::hBinop);
+    }
+    for (int i = 0; i < opcall->getNumArgs(); i++) {
+      hNodep save_h_ret = h_ret;
+      TraverseStmt(opcall->getArg(i));
+      if (h_ret == save_h_ret) h_operop->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+      else h_operop->child_list.push_back(h_ret);
+      LLVM_DEBUG(llvm::dbgs() << "operator call argument " << i << " follows\n");
+      LLVM_DEBUG(opcall->getArg(i)->dump(llvm::dbgs()));
+    }
+    h_ret = h_operop;
+    return true;
   }
+	
   LLVM_DEBUG(llvm::dbgs() << "not yet implemented operator call expr, opc is " << clang::getOperatorSpelling(opcall->getOperator()) << " num arguments " << opcall->getNumArgs() << " skipping\n");
   h_ret = new hNode(hNode::hdlopsEnum::hUnimpl);
   return true;
