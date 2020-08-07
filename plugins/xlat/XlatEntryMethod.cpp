@@ -432,7 +432,7 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
   LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs()));
 
   if (lutil.isSCBuiltinType(operatortype)|| lutil.isSCType(operatortype) || (opcall->getType())->isBuiltinType()) {
-    LLVM_DEBUG(llvm::dbgs() << "Processing SC operator call type\n");
+    LLVM_DEBUG(llvm::dbgs() << "Processing operator call type\n");
     // operator for an SC type
     if ((operatorname.compare("()")==0) &&
 	(operatortype.find("subref")!=string::npos) && (opcall->getNumArgs() == 3)) {

@@ -1,0 +1,1353 @@
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=1 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o test.o test.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=1 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o zbatch.o zbatch.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=1 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include -L/home/lloyd23/src/systemc-2.3.2/objdir/src/.libs -L/home/lloyd23/src/zfp/lib  test.o zbatch.o  -lsystemc -lpthread -lzfp -lm -o test
+dims: 1
+tcase: 2
+rate: 8, blocks: 1
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 9
+dims: 1
+tcase: 2
+rate: 8, blocks: 2
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 26
+dims: 1
+tcase: 2
+rate: 8, blocks: 3
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32
+dims: 1
+tcase: 2
+rate: 8, blocks: 4
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 37
+dims: 1
+tcase: 2
+rate: 8, blocks: 5
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 42
+dims: 1
+tcase: 2
+rate: 8, blocks: 6
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 47
+dims: 1
+tcase: 2
+rate: 8, blocks: 7
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 52
+dims: 1
+tcase: 2
+rate: 8, blocks: 8
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 57
+dims: 1
+tcase: 2
+rate: 16, blocks: 1
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 9
+dims: 1
+tcase: 2
+rate: 16, blocks: 2
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 26
+dims: 1
+tcase: 2
+rate: 16, blocks: 3
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32
+dims: 1
+tcase: 2
+rate: 16, blocks: 4
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 37
+dims: 1
+tcase: 2
+rate: 16, blocks: 5
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 42
+dims: 1
+tcase: 2
+rate: 16, blocks: 6
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 47
+dims: 1
+tcase: 2
+rate: 16, blocks: 7
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 52
+dims: 1
+tcase: 2
+rate: 16, blocks: 8
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 57
+dims: 1
+tcase: 2
+rate: 24, blocks: 1
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 10
+dims: 1
+tcase: 2
+rate: 24, blocks: 2
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 27
+dims: 1
+tcase: 2
+rate: 24, blocks: 3
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 33
+dims: 1
+tcase: 2
+rate: 24, blocks: 4
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 38
+dims: 1
+tcase: 2
+rate: 24, blocks: 5
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 43
+dims: 1
+tcase: 2
+rate: 24, blocks: 6
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 48
+dims: 1
+tcase: 2
+rate: 24, blocks: 7
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 53
+dims: 1
+tcase: 2
+rate: 24, blocks: 8
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 58
+dims: 1
+tcase: 2
+rate: 32, blocks: 1
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 10
+dims: 1
+tcase: 2
+rate: 32, blocks: 2
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 27
+dims: 1
+tcase: 2
+rate: 32, blocks: 3
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 33
+dims: 1
+tcase: 2
+rate: 32, blocks: 4
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 38
+dims: 1
+tcase: 2
+rate: 32, blocks: 5
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 43
+dims: 1
+tcase: 2
+rate: 32, blocks: 6
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 48
+dims: 1
+tcase: 2
+rate: 32, blocks: 7
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 53
+dims: 1
+tcase: 2
+rate: 32, blocks: 8
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 58
+dims: 1
+tcase: 2
+rate: 40, blocks: 1
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 11
+dims: 1
+tcase: 2
+rate: 40, blocks: 2
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 28
+dims: 1
+tcase: 2
+rate: 40, blocks: 3
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 34
+dims: 1
+tcase: 2
+rate: 40, blocks: 4
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 39
+dims: 1
+tcase: 2
+rate: 40, blocks: 5
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 44
+dims: 1
+tcase: 2
+rate: 40, blocks: 6
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 49
+dims: 1
+tcase: 2
+rate: 40, blocks: 7
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 54
+dims: 1
+tcase: 2
+rate: 40, blocks: 8
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 59
+dims: 1
+tcase: 2
+rate: 48, blocks: 1
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 11
+dims: 1
+tcase: 2
+rate: 48, blocks: 2
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 28
+dims: 1
+tcase: 2
+rate: 48, blocks: 3
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 34
+dims: 1
+tcase: 2
+rate: 48, blocks: 4
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 39
+dims: 1
+tcase: 2
+rate: 48, blocks: 5
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 44
+dims: 1
+tcase: 2
+rate: 48, blocks: 6
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 49
+dims: 1
+tcase: 2
+rate: 48, blocks: 7
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 54
+dims: 1
+tcase: 2
+rate: 48, blocks: 8
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 59
+dims: 1
+tcase: 2
+rate: 56, blocks: 1
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 12
+dims: 1
+tcase: 2
+rate: 56, blocks: 2
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 29
+dims: 1
+tcase: 2
+rate: 56, blocks: 3
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 35
+dims: 1
+tcase: 2
+rate: 56, blocks: 4
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 41
+dims: 1
+tcase: 2
+rate: 56, blocks: 5
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 47
+dims: 1
+tcase: 2
+rate: 56, blocks: 6
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 53
+dims: 1
+tcase: 2
+rate: 56, blocks: 7
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 59
+dims: 1
+tcase: 2
+rate: 56, blocks: 8
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 65
+dims: 1
+tcase: 2
+rate: 64, blocks: 1
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 12
+dims: 1
+tcase: 2
+rate: 64, blocks: 2
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 29
+dims: 1
+tcase: 2
+rate: 64, blocks: 3
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 35
+dims: 1
+tcase: 2
+rate: 64, blocks: 4
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 41
+dims: 1
+tcase: 2
+rate: 64, blocks: 5
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 47
+dims: 1
+tcase: 2
+rate: 64, blocks: 6
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 53
+dims: 1
+tcase: 2
+rate: 64, blocks: 7
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 59
+dims: 1
+tcase: 2
+rate: 64, blocks: 8
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 65
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=2 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o test.o test.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=2 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o zbatch.o zbatch.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=2 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include -L/home/lloyd23/src/systemc-2.3.2/objdir/src/.libs -L/home/lloyd23/src/zfp/lib  test.o zbatch.o  -lsystemc -lpthread -lzfp -lm -o test
+dims: 2
+tcase: 2
+rate: 8, blocks: 1
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 22
+dims: 2
+tcase: 2
+rate: 8, blocks: 4
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 89
+dims: 2
+tcase: 2
+rate: 8, blocks: 9
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 169
+dims: 2
+tcase: 2
+rate: 8, blocks: 16
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 281
+dims: 2
+tcase: 2
+rate: 8, blocks: 25
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 425
+dims: 2
+tcase: 2
+rate: 8, blocks: 36
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 601
+dims: 2
+tcase: 2
+rate: 8, blocks: 49
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 809
+dims: 2
+tcase: 2
+rate: 8, blocks: 64
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1049
+dims: 2
+tcase: 2
+rate: 16, blocks: 1
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 24
+dims: 2
+tcase: 2
+rate: 16, blocks: 4
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 91
+dims: 2
+tcase: 2
+rate: 16, blocks: 9
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 171
+dims: 2
+tcase: 2
+rate: 16, blocks: 16
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 283
+dims: 2
+tcase: 2
+rate: 16, blocks: 25
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 427
+dims: 2
+tcase: 2
+rate: 16, blocks: 36
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 603
+dims: 2
+tcase: 2
+rate: 16, blocks: 49
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 811
+dims: 2
+tcase: 2
+rate: 16, blocks: 64
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1051
+dims: 2
+tcase: 2
+rate: 24, blocks: 1
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 26
+dims: 2
+tcase: 2
+rate: 24, blocks: 4
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 93
+dims: 2
+tcase: 2
+rate: 24, blocks: 9
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 173
+dims: 2
+tcase: 2
+rate: 24, blocks: 16
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 285
+dims: 2
+tcase: 2
+rate: 24, blocks: 25
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 429
+dims: 2
+tcase: 2
+rate: 24, blocks: 36
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 605
+dims: 2
+tcase: 2
+rate: 24, blocks: 49
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 813
+dims: 2
+tcase: 2
+rate: 24, blocks: 64
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1053
+dims: 2
+tcase: 2
+rate: 32, blocks: 1
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 28
+dims: 2
+tcase: 2
+rate: 32, blocks: 4
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 95
+dims: 2
+tcase: 2
+rate: 32, blocks: 9
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 175
+dims: 2
+tcase: 2
+rate: 32, blocks: 16
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 287
+dims: 2
+tcase: 2
+rate: 32, blocks: 25
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 431
+dims: 2
+tcase: 2
+rate: 32, blocks: 36
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 607
+dims: 2
+tcase: 2
+rate: 32, blocks: 49
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 815
+dims: 2
+tcase: 2
+rate: 32, blocks: 64
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1055
+dims: 2
+tcase: 2
+rate: 40, blocks: 1
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 30
+dims: 2
+tcase: 2
+rate: 40, blocks: 4
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 97
+dims: 2
+tcase: 2
+rate: 40, blocks: 9
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 177
+dims: 2
+tcase: 2
+rate: 40, blocks: 16
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 289
+dims: 2
+tcase: 2
+rate: 40, blocks: 25
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 433
+dims: 2
+tcase: 2
+rate: 40, blocks: 36
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 609
+dims: 2
+tcase: 2
+rate: 40, blocks: 49
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 817
+dims: 2
+tcase: 2
+rate: 40, blocks: 64
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1057
+dims: 2
+tcase: 2
+rate: 48, blocks: 1
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32
+dims: 2
+tcase: 2
+rate: 48, blocks: 4
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 99
+dims: 2
+tcase: 2
+rate: 48, blocks: 9
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 179
+dims: 2
+tcase: 2
+rate: 48, blocks: 16
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 291
+dims: 2
+tcase: 2
+rate: 48, blocks: 25
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 435
+dims: 2
+tcase: 2
+rate: 48, blocks: 36
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 611
+dims: 2
+tcase: 2
+rate: 48, blocks: 49
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 819
+dims: 2
+tcase: 2
+rate: 48, blocks: 64
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1059
+dims: 2
+tcase: 2
+rate: 56, blocks: 1
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 34
+dims: 2
+tcase: 2
+rate: 56, blocks: 4
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 101
+dims: 2
+tcase: 2
+rate: 56, blocks: 9
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 181
+dims: 2
+tcase: 2
+rate: 56, blocks: 16
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 293
+dims: 2
+tcase: 2
+rate: 56, blocks: 25
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 437
+dims: 2
+tcase: 2
+rate: 56, blocks: 36
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 613
+dims: 2
+tcase: 2
+rate: 56, blocks: 49
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 821
+dims: 2
+tcase: 2
+rate: 56, blocks: 64
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1061
+dims: 2
+tcase: 2
+rate: 64, blocks: 1
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 36
+dims: 2
+tcase: 2
+rate: 64, blocks: 4
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 107
+dims: 2
+tcase: 2
+rate: 64, blocks: 9
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 197
+dims: 2
+tcase: 2
+rate: 64, blocks: 16
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 323
+dims: 2
+tcase: 2
+rate: 64, blocks: 25
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 485
+dims: 2
+tcase: 2
+rate: 64, blocks: 36
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 683
+dims: 2
+tcase: 2
+rate: 64, blocks: 49
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 917
+dims: 2
+tcase: 2
+rate: 64, blocks: 64
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1187
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=3 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o test.o test.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=3 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o zbatch.o zbatch.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=3 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include -L/home/lloyd23/src/systemc-2.3.2/objdir/src/.libs -L/home/lloyd23/src/zfp/lib  test.o zbatch.o  -lsystemc -lpthread -lzfp -lm -o test
+dims: 3
+tcase: 2
+rate: 8, blocks: 1
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 76
+dims: 3
+tcase: 2
+rate: 8, blocks: 8
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 549
+dims: 3
+tcase: 2
+rate: 8, blocks: 27
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1765
+dims: 3
+tcase: 2
+rate: 8, blocks: 64
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 4133
+dims: 3
+tcase: 2
+rate: 8, blocks: 125
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 8037
+dims: 3
+tcase: 2
+rate: 8, blocks: 216
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 13861
+dims: 3
+tcase: 2
+rate: 8, blocks: 343
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 21989
+dims: 3
+tcase: 2
+rate: 8, blocks: 512
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32805
+dims: 3
+tcase: 2
+rate: 16, blocks: 1
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 84
+dims: 3
+tcase: 2
+rate: 16, blocks: 8
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 557
+dims: 3
+tcase: 2
+rate: 16, blocks: 27
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1773
+dims: 3
+tcase: 2
+rate: 16, blocks: 64
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 4141
+dims: 3
+tcase: 2
+rate: 16, blocks: 125
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 8045
+dims: 3
+tcase: 2
+rate: 16, blocks: 216
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 13869
+dims: 3
+tcase: 2
+rate: 16, blocks: 343
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 21997
+dims: 3
+tcase: 2
+rate: 16, blocks: 512
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32813
+dims: 3
+tcase: 2
+rate: 24, blocks: 1
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 92
+dims: 3
+tcase: 2
+rate: 24, blocks: 8
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 565
+dims: 3
+tcase: 2
+rate: 24, blocks: 27
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1781
+dims: 3
+tcase: 2
+rate: 24, blocks: 64
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 4149
+dims: 3
+tcase: 2
+rate: 24, blocks: 125
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 8053
+dims: 3
+tcase: 2
+rate: 24, blocks: 216
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 13877
+dims: 3
+tcase: 2
+rate: 24, blocks: 343
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 22005
+dims: 3
+tcase: 2
+rate: 24, blocks: 512
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32821
+dims: 3
+tcase: 2
+rate: 32, blocks: 1
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 100
+dims: 3
+tcase: 2
+rate: 32, blocks: 8
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 573
+dims: 3
+tcase: 2
+rate: 32, blocks: 27
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1789
+dims: 3
+tcase: 2
+rate: 32, blocks: 64
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 4157
+dims: 3
+tcase: 2
+rate: 32, blocks: 125
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 8061
+dims: 3
+tcase: 2
+rate: 32, blocks: 216
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 13885
+dims: 3
+tcase: 2
+rate: 32, blocks: 343
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 22013
+dims: 3
+tcase: 2
+rate: 32, blocks: 512
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32829
+dims: 3
+tcase: 2
+rate: 40, blocks: 1
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 108
+dims: 3
+tcase: 2
+rate: 40, blocks: 8
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 581
+dims: 3
+tcase: 2
+rate: 40, blocks: 27
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1797
+dims: 3
+tcase: 2
+rate: 40, blocks: 64
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 4165
+dims: 3
+tcase: 2
+rate: 40, blocks: 125
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 8069
+dims: 3
+tcase: 2
+rate: 40, blocks: 216
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 13893
+dims: 3
+tcase: 2
+rate: 40, blocks: 343
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 22021
+dims: 3
+tcase: 2
+rate: 40, blocks: 512
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32837
+dims: 3
+tcase: 2
+rate: 48, blocks: 1
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 116
+dims: 3
+tcase: 2
+rate: 48, blocks: 8
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 589
+dims: 3
+tcase: 2
+rate: 48, blocks: 27
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1805
+dims: 3
+tcase: 2
+rate: 48, blocks: 64
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 4173
+dims: 3
+tcase: 2
+rate: 48, blocks: 125
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 8077
+dims: 3
+tcase: 2
+rate: 48, blocks: 216
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 13901
+dims: 3
+tcase: 2
+rate: 48, blocks: 343
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 22029
+dims: 3
+tcase: 2
+rate: 48, blocks: 512
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32845
+dims: 3
+tcase: 2
+rate: 56, blocks: 1
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 124
+dims: 3
+tcase: 2
+rate: 56, blocks: 8
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 597
+dims: 3
+tcase: 2
+rate: 56, blocks: 27
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1813
+dims: 3
+tcase: 2
+rate: 56, blocks: 64
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 4181
+dims: 3
+tcase: 2
+rate: 56, blocks: 125
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 8085
+dims: 3
+tcase: 2
+rate: 56, blocks: 216
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 13909
+dims: 3
+tcase: 2
+rate: 56, blocks: 343
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 22037
+dims: 3
+tcase: 2
+rate: 56, blocks: 512
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 32853
+dims: 3
+tcase: 2
+rate: 64, blocks: 1
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 132
+dims: 3
+tcase: 2
+rate: 64, blocks: 8
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 617
+dims: 3
+tcase: 2
+rate: 64, blocks: 27
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 1871
+dims: 3
+tcase: 2
+rate: 64, blocks: 64
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 4313
+dims: 3
+tcase: 2
+rate: 64, blocks: 125
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 8339
+dims: 3
+tcase: 2
+rate: 64, blocks: 216
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 14345
+dims: 3
+tcase: 2
+rate: 64, blocks: 343
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 22727
+dims: 3
+tcase: 2
+rate: 64, blocks: 512
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+compression cycles: 33881

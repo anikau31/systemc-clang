@@ -87,6 +87,14 @@ bool Xlat::postFire() {
 
 void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &xlatout ) {
   const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
+  // look at constructor
+
+  LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
+
+  LLVM_DEBUG(mod->getConstructorStmt()->dump(llvm::dbgs()));        
+  //os_ << "dumping module constructor decl\n";                                                            
+  LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
+
   LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
   typedef std::pair<std::string, scpar::ModuleDecl::portBindingMapType> submodportbindings_t;
   std::vector<submodportbindings_t> submodportbindings;
@@ -180,13 +188,16 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 
 
     LLVM_DEBUG(llvm::dbgs() << "object name is " << objname << " and h_op is " << h_op << "\n");
-
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
 
     xlatt.xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
     // check for initializer
     VarDecl * vard = pd->getAsVarDecl();
+    if (vard) {
+      LLVM_DEBUG(llvm::dbgs() << "var decl dump follows\n");
+      LLVM_DEBUG(vard->dump(llvm::dbgs()));
+    }
     if (vard && vard->hasInit()) {
       APValue *apval = vard->getEvaluatedValue();
       if (apval && apval->isInt()) {
