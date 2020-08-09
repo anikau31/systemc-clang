@@ -156,7 +156,7 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
   // typedef_type->dump();
   // child nodes of TemplateSpecializationType are not being invoked.
   if (auto special_type = typedef_type->getAs<TemplateSpecializationType>()) {
-    TraverseType(QualType(special_type, 0));
+    TraverseType(QualType(special_type->getUnqualifiedDesugaredType(), 0));
   }
   return true;
 }
@@ -202,7 +202,7 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
 
         if (!arg_type->isBuiltinType()) {
           stack_current_node_.push(current_type_node_);
-          TraverseType(arg_list[i].getAsType());
+          TraverseType(QualType(arg_list[i].getAsType()->getUnqualifiedDesugaredType(),1));
           current_type_node_ = stack_current_node_.top();
           stack_current_node_.pop();
         } else {

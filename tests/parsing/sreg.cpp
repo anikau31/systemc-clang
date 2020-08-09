@@ -31,6 +31,8 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
 
+  llvm::DebugFlag = true;
+
   SystemCConsumer sc{from_ast};
   //Xlat sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
