@@ -17,6 +17,7 @@ class FindTemplateTypes;
 class SignalDecl : public PortDecl {
  public:
   SignalDecl();
+  SignalDecl(const PortDecl &pd);
   virtual ~SignalDecl();
   SignalDecl(const std::string &name, clang::FieldDecl *fd,
              FindTemplateTypes *tt);

@@ -116,7 +116,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
                cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
                )
              )
-           )
+           ).bind("array_type")
          );
   }
 
@@ -217,11 +217,11 @@ class PortMatcher : public MatchFinder::MatchCallback {
   void printTemplateArguments(MemberDeclType &found_ports) {
     // Input ports
     for (const auto &i : found_ports) {
-      LLVM_DEBUG(llvm::dbgs() << "name: " << get<0>(i)
-                              << ", FieldDecl*: " << get<1>(i)->getFieldDecl());
+      LLVM_DEBUG(llvm::dbgs() << "name: " << get<0>(i) << ", FieldDecl*: "
+                              << get<1>(i)->getAsFieldDecl());
       LLVM_DEBUG(
           get<1>(i)->getTemplateType()->printTemplateArguments(llvm::outs()));
-      LLVM_DEBUG(llvm::outs() << "\n");
+      LLVM_DEBUG(llvm::dbgs() << "\n");
     }
   }
 
@@ -242,13 +242,53 @@ class PortMatcher : public MatchFinder::MatchCallback {
     std::string name{};
     if (auto *fd = dyn_cast<clang::FieldDecl>(decl)) {
       name = fd->getIdentifier()->getNameStart();
-      port.push_back(std::make_tuple(
-          name, new PortDecl(name, decl, parseTemplateType(fd))));
+
+      PortDecl *new_pd{new PortDecl(name, decl, parseTemplateType(fd))};
+
+      auto field_type{fd->getType()};
+
+      /// Cast it to see if it's array type.
+      auto array_type{dyn_cast<ConstantArrayType>(field_type)};
+      /// Get the size of the array.
+      if (array_type) {
+        llvm::APInt array_size{};
+        array_type->dump();
+        if (auto cat = dyn_cast<ConstantArrayType>(array_type)) {
+          LLVM_DEBUG(cat->dump();
+                     llvm::dbgs() << "Size of array: " << cat->getSize(););
+          array_size = cat->getSize();
+        }
+
+        new_pd->setArraySize(array_size);
+        new_pd->setArrayType();
+      }
+      auto port_entry{std::make_tuple(name, new_pd)};
+      port.push_back(port_entry);
     } else {
-      auto *vd = dyn_cast<clang::VarDecl>(decl);
-      name = vd->getIdentifier()->getNameStart();
-      port.push_back(std::make_tuple(
-          name, new PortDecl(name, decl, parseTemplateType(vd))));
+      if (auto *vd = dyn_cast<clang::VarDecl>(decl)) {
+        name = vd->getIdentifier()->getNameStart();
+        PortDecl *new_pd{new PortDecl(name, decl, parseTemplateType(vd))};
+
+        auto field_type{vd->getType()};
+        /// Cast it to see if it's array type.
+        auto array_type{dyn_cast<ConstantArrayType>(field_type)};
+        /// Get the size of the array.
+        if (array_type) {
+          llvm::APInt array_size{};
+          array_type->dump();
+          if (auto cat = dyn_cast<ConstantArrayType>(array_type)) {
+            LLVM_DEBUG(cat->dump();
+                       llvm::dbgs() << "Size of array: " << cat->getSize(););
+            array_size = cat->getSize();
+          }
+
+          new_pd->setArraySize(array_size);
+          new_pd->setArrayType();
+        }
+
+        auto port_entry{std::make_tuple(name, new_pd)};
+        port.push_back(port_entry);
+      }
     }
   }
 
@@ -379,6 +419,10 @@ class PortMatcher : public MatchFinder::MatchCallback {
         checkMatch<clang::CXXRecordDecl>("desugar_sc_port", result)};
     auto other_fields{checkMatch<clang::Decl>("other_fields", result)};
     auto other_fvdecl{checkMatch<clang::Decl>("other_fvdecl", result)};
+
+    /// Array types
+    // auto array_type{checkMatch<clang::ArrayType>("array_type", result)};
+
     /// Submodules
     auto submodule_fd{checkMatch<clang::FieldDecl>("submodule_fd", result)};
 
@@ -402,6 +446,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
         auto fd = p_field;
         auto port_name{fd->getIdentifier()->getNameStart()};
         LLVM_DEBUG(llvm::dbgs() << " Found sc_out: " << port_name << "\n");
+
         insert_port(out_ports_, fd);
       }
     }

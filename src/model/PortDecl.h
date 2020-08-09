@@ -28,10 +28,14 @@ class PortDecl {
   /// Set parameters
   void setModuleName(const std::string &);
   void setBinding(clang::VarDecl *vd);
+  void setArrayType();
+  void setArraySize(llvm::APInt size);
 
   /// Get parameters
+  bool getArrayType() const;
+  llvm::APInt getArraySize();
   std::string getName() const;
-  clang::FieldDecl *getFieldDecl() const;
+  clang::FieldDecl *getAsFieldDecl() const;
   clang::VarDecl *getAsVarDecl() const;
   FindTemplateTypes *getTemplateType();
 
@@ -46,6 +50,10 @@ class PortDecl {
   /// This is the clang::Decl pointer to the FieldDecl found for the
   /// declaration.
   clang::Decl *field_decl_;
+
+  /// Is it an array type.
+  bool is_array_; 
+  llvm::APInt array_size_;
 };
 }  // namespace systemc_clang
 #endif
