@@ -204,7 +204,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     auto fd_port_arg{const_cast<MemberExpr *>(
         result.Nodes.getNodeAs<MemberExpr>("port_arg"))};
     LLVM_DEBUG(llvm::dbgs() << "@@@@@@@@@@@@@@@@@@@@@@@@ CHECK IF PORT ARG "
-                               "@@@@@@@@@@@@@@@2\n";);
+                               "@@@@@@@@@@@@@@@\n";);
     if (fd_port_arg) {
       LLVM_DEBUG(llvm::dbgs() << " ########################## PORT ARG "
                                  "####################\n";);
