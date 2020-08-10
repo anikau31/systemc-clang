@@ -13,7 +13,7 @@
 
 namespace clang { class Type; }
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using json = nlohmann::json;
 
@@ -94,5 +94,5 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   Tree<TemplateType>::TreeNodePtr current_type_node_;
   std::stack<Tree<TemplateType>::TreeNodePtr> stack_current_node_;
 };
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

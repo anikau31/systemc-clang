@@ -1,11 +1,11 @@
 #include "ProcessDecl.h"
 #include "EntryFunctionContainer.h"
+#include "clang/AST/DeclCXX.h"
 
-using namespace scpar;
-// using namespace nlohmann::json;
+using namespace systemc_clang;
 
 ProcessDecl::ProcessDecl(std::string t, std::string n,
-                         CXXMethodDecl *entryMethodDecl,
+                         clang::CXXMethodDecl *entryMethodDecl,
                          EntryFunctionContainer *e)
     : process_type_(t),
       entry_name_(n),
@@ -36,18 +36,20 @@ CXXMethodDecl *ProcessDecl::getEntryMethodDecl() const {
   return entry_method_decl_;
 }
 
-EntryFunctionContainer* ProcessDecl::getEntryFunction() { return entry_function_ptr_; }
-
-void ProcessDecl::dump(raw_ostream &os) {
-  os << "ProcessDecl " << this << " '" << entry_name_ << "' "
-     << entry_method_decl_ << " " << process_type_;
-  // TODO: Remove this tabn
-
-  os << "\nEntry function:\n";
-  entry_function_ptr_->dump(os, 1);
+EntryFunctionContainer *ProcessDecl::getEntryFunction() {
+  return entry_function_ptr_;
 }
 
-json ProcessDecl::dump_json(raw_ostream &os) const {
+void ProcessDecl::dump() {
+  LLVM_DEBUG(llvm::dbgs() << "ProcessDecl " << this << " '" << entry_name_
+                          << "' " << entry_method_decl_ << " "
+                          << process_type_;);
+
+  LLVM_DEBUG(llvm::dbgs() << "\nEntry function:\n";);
+  LLVM_DEBUG(entry_function_ptr_->dump(llvm::outs(), 1));
+}
+
+json ProcessDecl::dump_json() const {
   // These are the three fields that we need to extract from entry_function_ptr.
   json process_j;
   process_j["entry_name"] = getName();

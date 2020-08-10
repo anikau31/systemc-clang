@@ -2,11 +2,13 @@
 #define _MODULE_INSTANCE_TYPE_
 
 #include <string>
-#include "llvm/Support/raw_ostream.h"
 
 namespace clang {
 class Decl;
 }
+
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Dump"
 
 namespace sc_ast_matchers {
 struct ModuleInstanceType {
@@ -54,13 +56,13 @@ struct ModuleInstanceType {
   }
 
   void dump() {
-    llvm::outs() << "type_decl: " << decl << " inst_decl: " << instance_decl
+    LLVM_DEBUG(llvm::dbgs() << "type_decl: " << decl << " inst_decl: " << instance_decl
                  << " var_type_name: " << var_type_name
                  << " var_name: " << var_name
                  << " instance_name: " << instance_name
                  << " parent_name: " << parent_name
                  << " parent_decl: " << parent_decl
-                 << " is_field_decl: " << is_field_decl << "\n";
+                 << " is_field_decl: " << is_field_decl << "\n";);
   }
 };
 };  // namespace sc_ast_matchers

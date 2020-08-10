@@ -7,7 +7,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
 #include <map>
-namespace scpar {
+namespace systemc_clang {
 
 using namespace clang;
 using namespace std;
@@ -29,5 +29,5 @@ private:
   simulationTimeMapType simulation_time_;
   //    CallExpr *call_expr_;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

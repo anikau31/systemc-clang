@@ -19,16 +19,16 @@
 
 #include "ModuleInstanceType.h"
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 
-// Forward declarations
+/// Forward declarations
 //
 
 class ModuleDecl {
  public:
-  typedef std::pair<std::string, SignalDecl *> signalPairType;
-  typedef std::map<std::string, SignalDecl *> signalMapType;
+  typedef std::pair<std::string, SignalDecl*> signalPairType;
+  typedef std::map<std::string, SignalDecl*> signalMapType;
 
   typedef std::pair<std::string, InterfaceDecl *> interfacePairType;
   typedef std::map<std::string, InterfaceDecl *> interfaceMapType;
@@ -179,5 +179,5 @@ class ModuleDecl {
   vector<std::string> template_parameters_;
   vector<std::string> template_args_;
 };
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

@@ -16,7 +16,7 @@
 
 #include "Matchers.h"
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 using namespace sc_ast_matchers; 
@@ -77,5 +77,5 @@ protected:
   FindNetlist::instanceListModuleMapType module_instance_list_;
   entryFunctionGPUMacroMapType entry_function_gpu_macro_map_;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

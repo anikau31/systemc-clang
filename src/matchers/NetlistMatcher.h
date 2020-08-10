@@ -9,7 +9,10 @@
 
 using namespace clang;
 using namespace clang::ast_matchers;
-using namespace scpar;
+using namespace systemc_clang;
+
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Matchers"
 
 namespace sc_ast_matchers {
 
@@ -154,7 +157,9 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   // 4. Instance variable type
   //
   virtual void run(const MatchFinder::MatchResult &result) {
-    llvm::outs() << "#### ============ NETLIST HAD A MATCH ============ ####\n";
+    LLVM_DEBUG(
+        llvm::dbgs()
+            << "#### ============ NETLIST HAD A MATCH ============ ####\n";);
     bool is_ctor_binding{true};
 
     auto me{const_cast<MemberExpr *>(
@@ -181,54 +186,38 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     //
     auto test{const_cast<CallExpr *>(result.Nodes.getNodeAs<CallExpr>("test"))};
     if (test) {
-      llvm::outs() << " ########################## TEST ####################\n";
-      test->dump();
+      LLVM_DEBUG(
+          llvm::dbgs()
+              << " ########################## TEST ####################\n";);
+      LLVM_DEBUG(test->dump(););
     }
 
     auto callee{
         const_cast<Decl *>(result.Nodes.getNodeAs<Decl>("callee_method_decl"))};
     if (callee) {
-      llvm::outs()
-          << " ########################## CALLEE ####################\n";
-      callee->dump();
+      LLVM_DEBUG(
+          llvm::dbgs()
+              << " ########################## CALLEE ####################\n";);
+      LLVM_DEBUG(callee->dump(););
     }
 
     auto fd_port_arg{const_cast<MemberExpr *>(
         result.Nodes.getNodeAs<MemberExpr>("port_arg"))};
-    llvm::outs()
-        << "@@@@@@@@@@@@@@@@@@@@@@@@ CHECK IF PORT ARG @@@@@@@@@@@@@@@2\n";
+    LLVM_DEBUG(llvm::dbgs() << "@@@@@@@@@@@@@@@@@@@@@@@@ CHECK IF PORT ARG "
+                               "@@@@@@@@@@@@@@@\n";);
     if (fd_port_arg) {
-      llvm::outs()
-          << " ########################## PORT ARG ####################\n";
-      fd_port_arg->dump();
+      LLVM_DEBUG(llvm::dbgs() << " ########################## PORT ARG "
+                                 "####################\n";);
+      LLVM_DEBUG(fd_port_arg->dump(););
 
       mexpr_arg = fd_port_arg;
     }
 
-    // auto fdecl{const_cast<FunctionDecl *>(
-    // result.Nodes.getNodeAs<FunctionDecl>("functiondecl"))};
-    // auto call_expr{const_cast<CXXOperatorCallExpr *>(
-    // result.Nodes.getNodeAs<CXXOperatorCallExpr>("call_expr"))};
-    //
-    // if (fdecl) {
-    // llvm::outs() << " ### FunctionDecl\n";
-    // fdecl->dump();
-    // }
-    // if (call_expr) {
-    // llvm::outs() << " ### CXXOperatorCallExpr\n";
-    // call_expr->dump();
-    //
-    // if (dre) {
-    // llvm::outs() << " ### DeclRefExpr\n";
-    // dre->dump();
-    // }
-    // }
-    //
     std::string port_name{};
     if (mexpr_port && mexpr_instance && mexpr_arg) {
       is_ctor_binding = true;
-      llvm::outs() << "#### Found MemberExpr: "
-                   << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "#### Found MemberExpr: "
+                              << "\n";);
       port_name = mexpr_port->getMemberNameInfo().getAsString();
       auto port_type{mexpr_port->getMemberDecl()->getType().getTypePtr()};
       auto port_type_name = mexpr_port->getMemberDecl()
@@ -245,40 +234,28 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                                     ->getType()
                                     .getBaseTypeIdentifier()
                                     ->getName();
-      // mexpr_instance->dump();
-//
-      // auto pn{mexpr_arg->getMemberDecl()->getName()};
-      // MatchFinder call_registry{};
-      // CallerCalleeMatcher call_matcher{};
-      // call_matcher.registerMatchers(call_registry);
-      // call_registry.match(*mexpr_arg, *result.Context);
-      // call_matcher.dump();
-      //      auto entry{call_matcher.getCallerCallee()};
-
       /// Suppose we have s_port.data as the binding.
       /// The AST first represents .data as a MemberExpr, and then a child of
-      /// that is another MemberExpr that has the s_port. 
-      /// 
+      /// that is another MemberExpr that has the s_port.
+      ///
       /// Find the first child of the mexpr_arg.
       auto children{mexpr_arg->children()};
 
       std::string port_bound_to_var_name{};
       if (children.begin() != children.end()) {
-        llvm::outs() << " ========= KID \n";
-        Stmt *kid{ *children.begin() };
-        if (MemberExpr *member_expr_kid{dyn_cast<MemberExpr>(kid)} ) {
-
-        member_expr_kid->dump();
-        port_bound_to_var_name = member_expr_kid->getMemberDecl()->getNameAsString();
+        LLVM_DEBUG(llvm::dbgs() << " ========= KID \n";);
+        Stmt *kid{*children.begin()};
+        if (MemberExpr * member_expr_kid{dyn_cast<MemberExpr>(kid)}) {
+          LLVM_DEBUG(member_expr_kid->dump(););
+          port_bound_to_var_name =
+              member_expr_kid->getMemberDecl()->getNameAsString();
         }
-
       }
-      // for (auto const &kid : children ) {
-      // }
 
-      llvm::outs() << "=============++> port_bound_to_name: " << port_bound_to_var_name << "\n";
-      mexpr_arg->getMemberDecl()->dump();
-      mexpr_instance->dump();
+      LLVM_DEBUG(llvm::dbgs() << "=============++> port_bound_to_name: "
+                              << port_bound_to_var_name << "\n";);
+      LLVM_DEBUG(mexpr_arg->getMemberDecl()->dump(););
+      LLVM_DEBUG(mexpr_instance->dump(););
 
       auto port_arg = mexpr_arg->getMemberNameInfo().getAsString();
       auto port_arg_type{mexpr_arg->getMemberDecl()->getType().getTypePtr()};
@@ -314,36 +291,35 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     ModuleDecl *instance_module_decl{findModuleDeclInstance(instance_decl)};
     if (!instance_module_decl) {
-      llvm::outs() << "@@@@@ No instance module decl found \n";
+      LLVM_DEBUG(llvm::dbgs() << "@@@@@ No instance module decl found \n";);
     }
 
     if (instance_module_decl) {
       auto instance_constructor_name = instance_module_decl->getInstanceName();
-      llvm::outs() << "@@@@@@ instance constructor name: "
-                   << instance_constructor_name << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "@@@@@@ instance constructor name: "
+                              << instance_constructor_name << "\n";);
 
       PortBinding *pb{nullptr};
 
       if (is_ctor_binding) {
-        llvm::outs() << "=> CTOR binding\n";
-        llvm::outs() << "=> port name: " << port_name << "\n";
+        LLVM_DEBUG(llvm::dbgs() << "=> CTOR binding\n";);
+        LLVM_DEBUG(llvm::outs() << "=> port name: " << port_name << "\n";);
         pb = new PortBinding(mexpr_port, mexpr_instance, mexpr_arg);
         pb->setInstanceConstructorName(instance_module_decl->getInstanceName());
       } else {
-        llvm::outs() << "=> found instance in sc_main\n";
-        llvm::outs() << "=> me\n";
-        me->dump();
-        llvm::outs() << "=> dre_me\n";
-        dre_me->dump();
-        llvm::outs() << "=> dre\n";
-        dre->dump();
+        LLVM_DEBUG(llvm::outs() << "=> found instance in sc_main\n";);
+        LLVM_DEBUG(llvm::outs() << "=> me\n";);
+        LLVM_DEBUG(me->dump(););
+        LLVM_DEBUG(llvm::dbgs() << "=> dre_me\n";);
+        LLVM_DEBUG(dre_me->dump(););
+        LLVM_DEBUG(llvm::outs() << "=> dre\n"; dre->dump(););
+
         pb = new PortBinding(me, dre_me, dre,
                              instance_module_decl->getInstanceDecl(),
                              instance_module_decl->getInstanceName());
       }
-      llvm::outs() << "Dump the port\n";
-      pb->dump();
-      llvm::outs() << "End dump of sun\n";
+      LLVM_DEBUG(llvm::outs() << "Dump the port\n"; pb->dump();
+                 llvm::outs() << "End dump of sun\n";);
       instance_module_decl->addPortBinding(port_name, pb);
       instance_module_decl->dumpPortBinding();
     }
@@ -372,7 +348,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       }
     }
   }
-};  // namespace sc_ast_matchers
+};
 };  // namespace sc_ast_matchers
 
 #endif

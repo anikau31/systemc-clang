@@ -4,9 +4,9 @@
 #include "llvm/Support/raw_ostream.h"
 
 using namespace clang;
-using namespace scpar;
+using namespace systemc_clang;
 
-namespace scpar {
+namespace systemc_clang {
 
 class PortBindingCtor {};
 
@@ -192,6 +192,6 @@ class PortBinding {
         port_parameter_name_{port_parameter_name},
         port_parameter_dref_{port_parameter_dref} {};
         */
-};      // namespace scpar
-};      // namespace scpar
+};      // namespace systemc_clang
+};      // namespace systemc_clang
 #endif  // ifdef

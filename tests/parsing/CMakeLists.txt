@@ -1,17 +1,17 @@
 # Test CMakeFile
 
 set (TEST_LIST 
-  counter
-  test-xor-hierarchy
-  simple-parsing
-  model-from-file
-  clock-parsing
-  hotfix-40-findtemplatetypes
-  t5-template-matching
-  hotfix-105-sensitivity-list
-  sreg
+  # counter
+  # test-xor-hierarchy
+  # simple-parsing
+  # model-from-file
+  # clock-parsing
+  # hotfix-40-findtemplatetypes
+  # t5-template-matching
+  # hotfix-105-sensitivity-list
+  # sreg
   # TODO Failing test
-  #portarray-example
+  portarray-example
   )
 
 set(SCC_LIBS libsystemc-clang)

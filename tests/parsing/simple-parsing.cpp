@@ -5,7 +5,7 @@
 #include <iostream>
 #include "ClangArgs.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 // Source:
 // https://www.toptip.ca/2010/03/trim-leading-or-trailing-white-spaces.html
@@ -39,6 +39,15 @@ SC_MODULE( test ){
 
   // others
   int x;
+
+  /// Test for array of ports and signals.
+  //
+  static constexpr int MAX_DEPTH = 4;
+  const unsigned depth = MAX_DEPTH;
+
+  sc_signal<int> data[MAX_DEPTH];
+
+  sc_out<double> out_array_port[MAX_DEPTH+1];
 
   void entry_function_1() {
     while(true) {
@@ -148,12 +157,12 @@ int sc_main(int argc, char *argv[]) {
 
     // Check if the proper number of ports are found.
     REQUIRE(test_module_inst->getIPorts().size() == 3);
-    REQUIRE(test_module_inst->getOPorts().size() == 2);
+    REQUIRE(test_module_inst->getOPorts().size() == 3);
     REQUIRE(test_module_inst->getIOPorts().size() == 1);
-    REQUIRE(test_module_inst->getSignals().size() == 1);
+    REQUIRE(test_module_inst->getSignals().size() == 2);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOtherVars().size() == 1);
+    REQUIRE(test_module_inst->getOtherVars().size() == 3);
 
     //
     // Check port types
@@ -220,6 +229,11 @@ int sc_main(int argc, char *argv[]) {
       if ((name == "out1") || (name == "out2")) {
         REQUIRE(trim(dft_str) == "sc_out int");
       }
+
+      if (name == "out_array_port") {
+        REQUIRE(pd->getArrayType() == true);
+        REQUIRE(pd->getArraySize() == 5);
+      }
     }
 
     for (auto const &port : test_module_inst->getIOPorts()) {
@@ -243,6 +257,12 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
       if (name == "internal_signal") {
         REQUIRE(trim(dft_str) == "sc_signal int");
+      }
+
+      /// Check array parameters
+      if (name == "data") {
+        REQUIRE(sg->getArrayType() == true);
+        REQUIRE(sg->getArraySize() == 4);
       }
     }
 

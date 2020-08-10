@@ -1,6 +1,6 @@
 #include "FindSCMain.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 FindSCMain::FindSCMain(TranslationUnitDecl *tuDecl, llvm::raw_ostream &os)
     : os_{os}, sc_main_function_declaration_{nullptr} {

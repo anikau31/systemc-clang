@@ -1,6 +1,6 @@
 #include "FindSensitivity.h"
 #include "FindTemplateTypes.h"
-using namespace scpar;
+using namespace systemc_clang;
 
 FindSensitivity::FindSensitivity(Stmt *s, llvm::raw_ostream &os)
     : os_{os}, found_sensitive_node_{false}, clk_edge_{""} {

@@ -27,7 +27,7 @@
 #include "WaitContainer.h"
 #include "clang/AST/DeclCXX.h"
 #include "enums.h"
-namespace scpar {
+namespace systemc_clang {
 
 using namespace clang;
 using namespace std;
@@ -104,5 +104,5 @@ class EntryFunctionContainer {
   vector<Transition *> _susAuto;
   vector<SusCFG *> _susCFG;
 };
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

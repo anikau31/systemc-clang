@@ -7,12 +7,13 @@
 #include "ClangArgs.h"
 #include "Testing.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
 TEST_CASE("Only parse a single top-level module", "[parsing]") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "ports-arrays.cpp")};
+  llvm::DebugFlag = true;
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
@@ -24,10 +25,10 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   auto model{sc.getSystemCModel()};
 
   // Want to find an instance named "testing".
-  ModuleDecl *pa{model->getInstance("PORT_ARRAY")};;
+  ModuleDecl *pa{model->getInstance("port_array_instance")};;
   if (!pa) { llvm::outs() << "=> ERROR: instance PORT_ARRAY not found\n";}
 
-  SECTION("Testing PORT_ARRAY", "[port arrays]") {
+  SECTION("Testing port_array_instance", "[port arrays]") {
     // Actually found the module.
     REQUIRE(pa != nullptr);
 

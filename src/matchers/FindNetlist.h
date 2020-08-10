@@ -5,7 +5,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
 #include <map>
-namespace scpar {
+namespace systemc_clang {
 
 using namespace clang;
 using namespace std;
@@ -52,5 +52,5 @@ private:
   instancePortSignalMapType inst_port_signal_map_;
   instanceListModuleMapType inst_list_module_map_;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

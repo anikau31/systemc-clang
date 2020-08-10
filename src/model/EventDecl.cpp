@@ -2,7 +2,7 @@
 #include <string>
 #include "FindTemplateTypes.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace std;
 
 EventDecl::~EventDecl() {

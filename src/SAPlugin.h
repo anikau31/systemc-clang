@@ -17,7 +17,7 @@
 #include "SystemCClang.h"
 
 using namespace clang;
-using namespace scpar;
+using namespace systemc_clang;
 
 class SAPlugin : public SystemCConsumer {
 

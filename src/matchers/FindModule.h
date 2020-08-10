@@ -5,7 +5,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
 
-namespace scpar {
+namespace systemc_clang {
 
 using namespace clang;
 using namespace std;
@@ -29,5 +29,5 @@ private:
   string module_name_;
 //  TemplateParameterList *template_parameters_;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

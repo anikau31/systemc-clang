@@ -20,7 +20,7 @@
 #include <map>
 #include <string>
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -48,5 +48,5 @@ private:
   string name_;
   FindNotify::NotifyCallListType notify_call_list_;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

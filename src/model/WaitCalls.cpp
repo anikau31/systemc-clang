@@ -1,7 +1,7 @@
 #include "WaitCalls.h"
 #include <string>
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace std;
 
 WaitCalls::~WaitCalls() {

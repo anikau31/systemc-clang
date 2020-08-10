@@ -12,8 +12,11 @@
 #include "clang/ASTMatchers/ASTMatchersMacros.h"
 
 using namespace clang::ast_matchers;
-using namespace scpar;
+using namespace systemc_clang;
 using namespace sc_ast_matchers;
+
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Tests"
 
 class TemplateParametersMatcher : public MatchFinder::MatchCallback {
  public:
@@ -72,38 +75,34 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
     auto parm_type{result.Nodes.getNodeAs<TemplateTypeParmType>("parm_type")};
     auto template_special{
         result.Nodes.getNodeAs<TemplateSpecializationType>("template_special")};
-    llvm::outs() << "=============== TEST Template Parm Matcher ====== \n";
+    LLVM_DEBUG(llvm::outs() << "=============== TEST Template Parm Matcher ====== \n";);
     
     if (template_decl) {
-    template_decl->dump();
+    LLVM_DEBUG(template_decl->dump(););
     }
     if (template_special && fd) {
-      llvm::outs() << "########  TEmplateSpecial\n";
-      fd->dump();
-      template_special->dump();
+      LLVM_DEBUG(llvm::dbgs() << "########  TEmplateSpecial\n";);
+      LLVM_DEBUG(fd->dump(););
+      LLVM_DEBUG(template_special->dump(););
       const TemplateArgument &targ{template_special->getArg(0)};
-      //    llvm::outs() << "## get the 0 arg: " << targ.getKind() << "\n";
-      //     targ.dump(llvm::outs());
 
       switch (targ.getKind()) {
         case TemplateArgument::ArgKind::Integral: {
           auto q{targ.getAsIntegral()};
-          llvm::outs() << "@@ Integral: " << q << "\n";
+          LLVM_DEBUG(llvm::dbgs() << "@@ Integral: " << q << "\n";);
         }; break;
         case TemplateArgument::ArgKind::Type: {
           auto q{targ.getAsType()};
           auto name{q.getAsString()};
-          llvm::outs() << "@@ arg: " << name << "\n";
+          LLVM_DEBUG(llvm::dbgs() << "@@ arg: " << name << "\n";);
         }; break;
         case TemplateArgument::ArgKind::Expression: {
           Expr *expr{targ.getAsExpr()};
-          llvm::outs() << "\n@@ Expression arg: ";
+          LLVM_DEBUG(llvm::dbgs() << "\n@@ Expression arg: ";);
           DeclRefExpr *dexpr{dyn_cast<DeclRefExpr>(expr)};
-          //       expr->dump();
           if (dexpr) {
-            //        dexpr->dump();
-            llvm::outs() << "NameInfor: " << dexpr->getNameInfo().getAsString()
-                         << "\n";
+            LLVM_DEBUG(llvm::dbgs() << "NameInfor: " << dexpr->getNameInfo().getAsString()
+                         << "\n";);
           }
         }
         default: {

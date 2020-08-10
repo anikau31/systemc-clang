@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace scpar {
+namespace systemc_clang {
 
 using namespace clang;
 
@@ -56,5 +56,5 @@ private:
   // Disallow constructor with no argument
   FindEntryFunctions(llvm::raw_ostream &os);
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

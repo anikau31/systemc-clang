@@ -4,7 +4,7 @@
 
 #include "ModuleDecl.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 using namespace std;
 
 ModuleDecl::ModuleDecl()
@@ -122,14 +122,14 @@ void ModuleDecl::clearOnlyGlobal() {
 }
 
 ModuleDecl::~ModuleDecl() {
-  llvm::outs() << "\n~ModuleDecl\n";
+  DEBUG_WITH_TYPE("DebugDestructors", llvm::dbgs() << "\n~ModuleDecl\n";);
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
   instance_decl_ = nullptr;
 
-  llvm::outs() << "- name: " << getName()
+  DEBUG_WITH_TYPE("DebugDestructors", llvm::dbgs() << "- name: " << getName()
                << ", inst name: " << getInstanceName() << " pointer: " << this
-               << "\n";
+               << "\n";);
 
   // IMPORTANT: Only the instance-specific details should be deleted.
   // DO NOT delete the information collected through incomplete types.
@@ -252,18 +252,18 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
 
 
   if (port_type == "sc_signal") {
-    // FIXME: There is a conversion from PortDecl to SignalContainer required :(
-    // They are equivalent, and quite unnecessary.
-    //
+    /// SignalDecl derived from PortDecl 
     for (auto const &signal_port : found_ports) {
       auto port_decl{get<1>(signal_port)};
       auto name{port_decl->getName()};
-      auto templates{port_decl->getTemplateType()};
-      auto field_decl{port_decl->getFieldDecl()};
+      //auto templates{port_decl->getTemplateType()};
+      //auto field_decl{port_decl->getFieldDecl()};
+
       // SignalContainer
       // auto signal_container{new SignalContainer{name, templates,
       // field_decl}};
-      auto signal_entry{new SignalDecl{name, field_decl, templates}};
+      SignalDecl *signal_entry{new SignalDecl{*port_decl}}; //new SignalDecl{name, field_decl, templates}};
+      //*signal_entry = *port_decl; 
       signals_.insert(ModuleDecl::signalPairType(name, signal_entry));
     }
     // std::copy(begin(found_ports), end(found_ports), back_inserter(signals_));
@@ -491,7 +491,7 @@ void ModuleDecl::dumpProcesses(raw_ostream &os, int tabn) {
   process_j["number_of_processes"] = process_map_.size();
   for (auto pit : process_map_) {
     ProcessDecl *pd{pit.second};
-    process_j[pit.first] = pd->dump_json(os);
+    process_j[pit.first] = pd->dump_json();
   }
 
   os << "Processes\n";
@@ -541,49 +541,49 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   for (auto mit : in_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    iport_j[name] = pd->dump_json(os);
+    iport_j[name] = pd->dump_json();
   }
 
   oport_j["number_of_output_ports"] = out_ports_.size();
   for (auto mit : out_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    oport_j[name] = pd->dump_json(os);
+    oport_j[name] = pd->dump_json();
   }
 
   ioport_j["number_of_inout_ports"] = inout_ports_.size();
   for (auto mit : inout_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ioport_j[name] = pd->dump_json(os);
+    ioport_j[name] = pd->dump_json();
   }
 
   istreamport_j["number_of_instream_ports"] = istreamports_.size();
   for (auto mit : istreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    istreamport_j[name] = pd->dump_json(os);
+    istreamport_j[name] = pd->dump_json();
   }
 
   ostreamport_j["number_of_outstream_ports"] = ostreamports_.size();
   for (auto mit : ostreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ostreamport_j[name] = pd->dump_json(os);
+    ostreamport_j[name] = pd->dump_json();
   }
 
   othervars_j["number_of_other_vars"] = other_fields_.size();
   for (auto mit : other_fields_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    othervars_j[name] = pd->dump_json(os);
+    othervars_j[name] = pd->dump_json();
   }
 
   submodules_j["number_of_submodules"] = submodules_.size();
   for (auto mit : submodules_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    submodules_j[name] = pd->dump_json(os);
+    submodules_j[name] = pd->dump_json();
   }
 
 
@@ -609,7 +609,7 @@ void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
   signal_j["number_of_signals"] = signals_.size();
   for (auto sit : signals_) {
     SignalDecl *s{sit.second};
-    signal_j[sit.first] = s->dump_json(os);
+    signal_j[sit.first] = s->dump_json();
   }
 
   os << "Signals\n";

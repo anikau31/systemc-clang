@@ -27,20 +27,42 @@ SC_MODULE(ports_arrays) {
   }
 };
 
-// Testbench to generate test vectors
-int sc_main (int argc, char* argv[]) {
+SC_MODULE(DUT) {
+
   sc_signal<sc_uint<2> > a[4];
   sc_signal<sc_uint<2> > b[4];
   sc_signal<sc_uint<3> > o[4];
+  ports_arrays par;
 
-  int z;
-
-  ports_arrays prt_ar("PORT_ARRAY");
-    for (z=0; z<4; z++) {
-      prt_ar.a[z](a[z]);
-      prt_ar.b[z](b[z]);
-      prt_ar.o[z](o[z]);
+  SC_CTOR(DUT) : par("port_array_instance") {
+    for (int z=0; z<4; z++) {
+      par.a[z](a[z]);
+      par.b[z](b[z]);
+      par.o[z](o[z]);
     }
+
+  }
+
+};
+
+// Testbench to generate test vectors
+int sc_main (int argc, char* argv[]) {
+
+  DUT design("design_under_test");
+
+
+  // sc_signal<sc_uint<2> > a[4];
+  // sc_signal<sc_uint<2> > b[4];
+  // sc_signal<sc_uint<3> > o[4];
+//
+  // int z;
+//
+  // ports_arrays prt_ar("PORT_ARRAY");
+    // for (z=0; z<4; z++) {
+      // prt_ar.a[z](a[z]);
+      // prt_ar.b[z](b[z]);
+      // prt_ar.o[z](o[z]);
+    // }
 
     /*
   sc_start(0);

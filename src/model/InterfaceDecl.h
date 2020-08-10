@@ -4,7 +4,7 @@
 #include <string>
 #include "FindTemplateTypes.h"
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -30,5 +30,5 @@ class InterfaceDecl {
   std::string _name;
   FindTemplateTypes *_templateType;
 };
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

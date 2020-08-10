@@ -5,7 +5,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include <map>
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 
 class FindTLMInterfaces : public RecursiveASTVisitor<FindTLMInterfaces> {
@@ -33,5 +33,5 @@ private:
   interfaceType _outInterfaces;
   interfaceType _inoutInterfaces;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

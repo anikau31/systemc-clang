@@ -5,7 +5,7 @@
 // This is automatically generated from cmake.
 #include "ClangArgs.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 TEST_CASE("Failing: unbounded signals in modules identified",
           "[failing-tests]") {

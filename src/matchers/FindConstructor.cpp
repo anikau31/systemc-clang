@@ -1,6 +1,6 @@
 #include "FindConstructor.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 FindConstructor::FindConstructor(CXXRecordDecl *declaration,
                                  llvm::raw_ostream &os)

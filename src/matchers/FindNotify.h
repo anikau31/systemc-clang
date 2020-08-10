@@ -5,7 +5,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
 #include <map>
-namespace scpar {
+namespace systemc_clang {
 
 using namespace clang;
 using namespace std;
@@ -29,5 +29,5 @@ private:
   CallExpr *notify_call_;
   NotifyCallListType notify_call_list_;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

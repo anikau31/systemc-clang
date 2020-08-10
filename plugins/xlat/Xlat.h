@@ -14,7 +14,7 @@
 #include "XlatType.h"
 
 using namespace clang;
-using namespace scpar;
+using namespace systemc_clang;
 using namespace hnode;
 using namespace llvm;
 //static llvm::cl::OptionCategory xlat_category("systemc-clang options");
@@ -35,7 +35,7 @@ class Xlat : public SystemCConsumer {
   void xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void xlatproc(ModuleDecl::processMapType pm, hNodep & h_top, llvm::raw_ostream &os );
-  void xlatportbindings(scpar::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pb);
+  void xlatportbindings(systemc_clang::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pb);
   private:
 
     hNodep h_top;

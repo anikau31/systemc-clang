@@ -1,5 +1,5 @@
 #include "FindGlobalEvents.h"
-using namespace scpar;
+using namespace systemc_clang;
 
 FindGlobalEvents::FindGlobalEvents(TranslationUnitDecl *declaration,
                                    llvm::raw_ostream &os)

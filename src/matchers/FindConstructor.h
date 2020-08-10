@@ -4,7 +4,7 @@
 #include "EntryFunctionContainer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 
-namespace scpar {
+namespace systemc_clang {
 
 using namespace clang;
 
@@ -31,5 +31,5 @@ class FindConstructor : public RecursiveASTVisitor<FindConstructor> {
   // Private constructor
   FindConstructor(llvm::raw_ostream &);
 };
-}  // namespace scpar
+}  // namespace systemc_clang
 #endif

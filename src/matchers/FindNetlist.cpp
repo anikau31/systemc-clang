@@ -1,5 +1,5 @@
 #include "FindNetlist.h"
-using namespace scpar;
+using namespace systemc_clang;
 
 FindNetlist::FindNetlist(FunctionDecl *fdecl) : _pass{1} {
   TraverseDecl(fdecl);

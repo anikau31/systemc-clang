@@ -20,7 +20,7 @@
 #include <map>
 #include <string>
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -44,5 +44,5 @@ private:
   string event_name_;
   VarDecl *ast_node_;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

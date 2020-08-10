@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
  using json = nlohmann::json;
@@ -36,5 +36,5 @@ private:
   llvm::raw_ostream &_os;
   globalEventMapType _globalEvents;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

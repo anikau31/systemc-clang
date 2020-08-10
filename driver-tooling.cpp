@@ -3,6 +3,6 @@
 
 
 int main(int argc, const char **argv) {
-    scpar::PluginAction systemc_clang(argc, argv);
+    systemc-clang::PluginAction systemc_clang(argc, argv);
   return 0;
 }

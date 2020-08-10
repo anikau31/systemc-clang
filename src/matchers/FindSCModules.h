@@ -7,7 +7,7 @@
 #include <set>
 #include <string>
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -26,5 +26,5 @@ private:
   llvm::raw_ostream &_os;
   moduleMapType _moduleMap;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

@@ -20,7 +20,7 @@
 #include <map>
 #include <string>
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -48,5 +48,5 @@ private:
   string _name;
   FindWait::waitListType _waitList;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

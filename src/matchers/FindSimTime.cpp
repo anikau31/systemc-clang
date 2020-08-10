@@ -1,6 +1,6 @@
 #include "FindSimTime.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 FindSimTime::FindSimTime(FunctionDecl *tuDecl, llvm::raw_ostream &os)
     : os_(os) {

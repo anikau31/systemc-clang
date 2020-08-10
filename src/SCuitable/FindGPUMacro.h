@@ -7,7 +7,7 @@
 #include <map>
 #include <set>
 
-namespace scpar {
+namespace systemc_clang {
 
 using namespace std;
 using namespace clang;
@@ -85,5 +85,5 @@ private:
   std::set<ValueDecl *> lhs_decls;
   std::set<ValueDecl *> rhs_decls;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

@@ -2,21 +2,21 @@
 //#include "FindSCModules.h"
 #include <string>
 
-using namespace scpar;
+using namespace systemc_clang;
 
 Model::Model() {}
 
 Model::~Model() {
-  llvm::errs() << "\n~Model\n";
+  LLVM_DEBUG(llvm::dbgs() << "\n~Model\n";);
   for (auto &inst : module_instance_map_) {
     auto incomplete_decl{inst.first};
     auto instance_list{inst.second};
-    llvm::outs() << "Delete instances for " << incomplete_decl->getName()
-                 << ": " << instance_list.size() << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "Delete instances for " << incomplete_decl->getName()
+                 << ": " << instance_list.size() << "\n";);
     for (ModuleDecl *inst_in_list : instance_list) {
       // This is a ModuleDecl*
-      llvm::outs() << "- delete instance: " << inst_in_list->getInstanceName()
-                   << ", pointer: " << inst_in_list << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "- delete instance: " << inst_in_list->getInstanceName()
+                   << ", pointer: " << inst_in_list << "\n";);
       //
       // IMPORTANT
       // The current design creates an incomplete ModuleDecl in Matchers. The
@@ -47,7 +47,7 @@ Model::~Model() {
     delete incomplete_decl;
   }
 
-  llvm::outs() << "Done with delete\n";
+  LLVM_DEBUG(llvm::dbgs() << "Done with delete\n";);
   /*
 // Delete all ModuleDecl pointers.
 for (Model::moduleMapType::iterator mit = modules_.begin();

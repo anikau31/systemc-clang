@@ -20,7 +20,7 @@
 #include "llvm/Support/raw_ostream.h"
 #include <string>
 
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 class Utility {
@@ -91,5 +91,5 @@ public:
   }
 
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif

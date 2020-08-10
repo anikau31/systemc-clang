@@ -1,6 +1,6 @@
 #include "Automata.h"
 
-using namespace scpar;
+using namespace systemc_clang;
 
 /// Node class.
 

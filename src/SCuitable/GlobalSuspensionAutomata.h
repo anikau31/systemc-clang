@@ -4,7 +4,7 @@
 #include "FindGPUMacro.h"
 #include "Model.h"
 #include "Utility.h"
-namespace scpar {
+namespace systemc_clang {
 using namespace clang;
 using namespace std;
 
@@ -91,5 +91,5 @@ private:
   susCFGBlockGPUMacroMapType _susCFGBlockGPUMacroMap;
   commonTimeDPMapType _commonTimeDPMap;
 };
-} // namespace scpar
+} // namespace systemc_clang
 #endif
