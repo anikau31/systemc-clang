@@ -34,7 +34,7 @@ XlatMethod::XlatMethod(Stmt * stmt, hNodep & h_top, llvm::raw_ostream & os):
   os_(os){
   h_ret = NULL;
   bool ret1 = TraverseStmt(stmt);
-  h_top = h_ret;
+  h_top->child_list.push_back(h_ret);
   LLVM_DEBUG(llvm::dbgs() << "Exiting XlatMethod constructor for stmt\n");
 }
 
