@@ -151,7 +151,24 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
       }
     }
   }
-  else {  
+  else {
+    if (isa<CXXConstructExpr>(stmt)) {
+      CXXConstructExpr * exp = (CXXConstructExpr *) stmt;
+      if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
+	LLVM_DEBUG(llvm::dbgs() << "CXXConstructExpr followed by integer literal found\n");
+	LLVM_DEBUG(exp->dump(llvm::dbgs()));
+	IntegerLiteral * lit = (IntegerLiteral *) exp->getArg(0);
+	string s = lit->getValue().toString(10, true);
+	// need to add type to back of h_ret
+	FindTemplateTypes *te = new FindTemplateTypes();
+	te->Enumerate((exp->getType()).getTypePtr());
+	XlatType xlatt;
+	hNodep h_tmp = new hNode (hNode::hdlopsEnum::hNoop);
+	xlatt.xlattype(s, te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hLiteral, h_tmp);
+	h_ret = h_tmp->child_list.back();
+	return true;
+      }
+    }
     LLVM_DEBUG(llvm::dbgs() << "stmt type " << stmt->getStmtClassName() << " not recognized, calling default recursive ast visitor\n");
     hNodep oldh_ret = h_ret;
     RecursiveASTVisitor::TraverseStmt(stmt);      

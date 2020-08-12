@@ -89,11 +89,11 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
   const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
   // look at constructor
 
-  LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
+  //LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
 
-  LLVM_DEBUG(mod->getConstructorStmt()->dump(llvm::dbgs()));        
+  //LLVM_DEBUG(mod->getConstructorStmt()->dump(llvm::dbgs()));        
   //os_ << "dumping module constructor decl\n";                                                            
-  LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
+  //LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
 
   LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
   typedef std::pair<std::string, systemc_clang::ModuleDecl::portBindingMapType> submodportbindings_t;
