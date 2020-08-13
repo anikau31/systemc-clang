@@ -335,12 +335,26 @@ bool XlatMethod::TraverseDeclRefExpr(DeclRefExpr* expr)
 
   string name = (expr->getNameInfo()).getName().getAsString();
   LLVM_DEBUG(llvm::dbgs() << "name is " << name << "\n");
+
+  // if this is variable reference has a constant initializer, return that value
+  if (isa<VarDecl>(value) && ((VarDecl*)value)->isConstexpr()) {
+    VarDecl * vard = (VarDecl *) value;
+    Expr * einit = vard->getInit();
+    clang::Expr::EvalResult result;
+    if (einit->EvaluateAsInt(result, vard->getASTContext())) {
+      h_ret = new hNode(result.Val.getInt().toString(10), hNode::hdlopsEnum::hLiteral);
+      return true;
+    }
+  }
+    
   string newname = "";
   auto vname_it{vname_map.find(expr->getDecl())};
       if (vname_it != vname_map.end()) {
 	newname = vname_map[expr->getDecl()].newn;
       }
   LLVM_DEBUG(llvm::dbgs() << "new name is "<< newname << "\n");
+  LLVM_DEBUG(value->dump(llvm::errs()));
+
   h_ret = new hNode(newname.empty() ? name : newname, hNode::hdlopsEnum::hVarref);
   return true; 
 }
