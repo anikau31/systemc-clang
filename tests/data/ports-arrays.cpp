@@ -7,6 +7,8 @@ SC_MODULE(ports_arrays) {
   sc_in<sc_uint<2> > b[4];
   sc_out<sc_uint<3> > o[4];
 
+  sc_in<bool> test;
+
   int my_int_array[4];
   double my_double_array[8];
   const int x = 5;
@@ -29,16 +31,20 @@ SC_MODULE(ports_arrays) {
 
 SC_MODULE(DUT) {
 
-  sc_signal<sc_uint<2> > a[4];
+  sc_signal<sc_uint<2> > as[4];
   sc_signal<sc_uint<2> > b[4];
   sc_signal<sc_uint<3> > o[4];
   ports_arrays par;
 
+  sc_signal<bool> ts;
+
   SC_CTOR(DUT) : par("port_array_instance") {
     for (int z=0; z<4; z++) {
-      par.a[z](a[z]);
-      par.b[z](b[z]);
-      par.o[z](o[z]);
+      int x = z;
+      par.a[x](as[z]);
+      par.test(ts);
+//      par.b[z](b[z]);
+ //     par.o[z](o[z]);
     }
 
   }

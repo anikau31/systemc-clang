@@ -127,9 +127,10 @@ ModuleDecl::~ModuleDecl() {
   constructor_stmt_ = nullptr;
   instance_decl_ = nullptr;
 
-  DEBUG_WITH_TYPE("DebugDestructors", llvm::dbgs() << "- name: " << getName()
-               << ", inst name: " << getInstanceName() << " pointer: " << this
-               << "\n";);
+  DEBUG_WITH_TYPE("DebugDestructors",
+                  llvm::dbgs() << "- name: " << getName()
+                               << ", inst name: " << getInstanceName()
+                               << " pointer: " << this << "\n";);
 
   // IMPORTANT: Only the instance-specific details should be deleted.
   // DO NOT delete the information collected through incomplete types.
@@ -174,7 +175,7 @@ ModuleDecl::~ModuleDecl() {
   }
   other_fields_.clear();
 
-  for (auto &sm: submodules_) {
+  for (auto &sm : submodules_) {
     // Second is the PortDecl*.
     delete get<1>(sm);
   }
@@ -246,24 +247,23 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
   }
 
   if (port_type == "submodules") {
-    std::copy(begin(found_ports), end(found_ports),
-              back_inserter(submodules_));
+    std::copy(begin(found_ports), end(found_ports), back_inserter(submodules_));
   }
 
-
   if (port_type == "sc_signal") {
-    /// SignalDecl derived from PortDecl 
+    /// SignalDecl derived from PortDecl
     for (auto const &signal_port : found_ports) {
       auto port_decl{get<1>(signal_port)};
       auto name{port_decl->getName()};
-      //auto templates{port_decl->getTemplateType()};
-      //auto field_decl{port_decl->getFieldDecl()};
+      // auto templates{port_decl->getTemplateType()};
+      // auto field_decl{port_decl->getFieldDecl()};
 
       // SignalContainer
       // auto signal_container{new SignalContainer{name, templates,
       // field_decl}};
-      SignalDecl *signal_entry{new SignalDecl{*port_decl}}; //new SignalDecl{name, field_decl, templates}};
-      //*signal_entry = *port_decl; 
+      SignalDecl *signal_entry{new SignalDecl{
+          *port_decl}};  // new SignalDecl{name, field_decl, templates}};
+      //*signal_entry = *port_decl;
       signals_.insert(ModuleDecl::signalPairType(name, signal_entry));
     }
     // std::copy(begin(found_ports), end(found_ports), back_inserter(signals_));
@@ -468,9 +468,28 @@ void ModuleDecl::dumpPortBinding() {
     auto port_name{get<0>(pb)};
     auto binding{get<1>(pb)};
 
-    binding_j[port_name] = binding->getBoundToName();
+    json port_j;
+    port_j["port_member_name"] = port_name;
+    port_j["port_member_is_array"] = (binding->hasPortArrayParameter() ? "yes" : "no");
+    if (binding->hasPortArrayParameter()) {
+      port_j["port_member_array_index"] = binding->getPortArrayIndex()
+                                     ->getNameInfo()
+                                     .getName()
+                                     .getAsString();
+    }
+
+    port_j["bound_to_name"] =  binding->getBoundToName();
+    /// If it is an array.
+    port_j["bound_to_is_array"] = (binding->hasBoundToArrayParameter() ? "yes" : "no");
+    if (binding->hasBoundToArrayParameter()) {
+      port_j["bound_to_array_index"] = binding->getBoundToArrayIndex()
+                                     ->getNameInfo()
+                                     .getName()
+                                     .getAsString();
+    }
 
     binding->dump();
+  binding_j[port_name] = port_j;
   }
   llvm::outs() << binding_j.dump(4) << "\n";
 }
@@ -535,7 +554,8 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
 }
 
 void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
-  json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j, submodules_j;
+  json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j,
+      submodules_j;
 
   iport_j["number_of_input_ports"] = in_ports_.size();
   for (auto mit : in_ports_) {
@@ -586,7 +606,6 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
     submodules_j[name] = pd->dump_json();
   }
 
-
   os << "Start printing ports\n";
   os << "\nInput ports: " << in_ports_.size() << "\n";
   os << "\nOutput ports: " << out_ports_.size() << "\n";
@@ -601,7 +620,8 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
      << oport_j.dump(4) << "\n"
      << ioport_j.dump(4) << "\n"
      << istreamport_j.dump(4) << "\n"
-     << ostreamport_j.dump(4) << othervars_j.dump(4) << submodules_j.dump(4) << "\n";
+     << ostreamport_j.dump(4) << othervars_j.dump(4) << submodules_j.dump(4)
+     << "\n";
 }
 
 void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {

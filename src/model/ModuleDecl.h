@@ -74,10 +74,10 @@ class ModuleDecl {
   void addOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addProcess(FindEntryFunctions::entryFunctionVectorType *);
-  void addInstances(const vector<string> &);
+  void addInstances(const std::vector<std::string> &);
 
   void addPortBinding(const std::string &port_name, PortBinding *pb);
-  void addSignalBinding(map<std::string, std::string>);
+  void addSignalBinding(std::map<std::string, std::string>);
 
   void addNestedModule(ModuleDecl *submodule);
 
@@ -87,8 +87,8 @@ class ModuleDecl {
   void setModuleName(const std::string &);
   void setTemplateParameters(const vector<std::string> &);
   void setTemplateArgs(const vector<std::string> &);
-  vector<std::string> getTemplateParameters() const;
-  vector<std::string> getTemplateArgs() const;
+  std::vector<std::string> getTemplateParameters() const;
+  std::vector<std::string> getTemplateArgs() const;
 
   std::string getName() const;
   std::string getInstanceName() const;
