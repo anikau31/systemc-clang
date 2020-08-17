@@ -69,21 +69,10 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     model_ = model;
     module_matcher_ = module_matcher;
     instance_matcher_ = & (module_matcher_->getInstanceMatcher());
-      
-   auto test = functionDecl(
-       forEachDescendant(
-       cxxOperatorCallExpr(
-         hasDescendant(
-           declRefExpr(
-             hasDeclaration(varDecl().bind("bound_variable")),
-             hasParent(implicitCastExpr())
-             ).bind("declrefexpr")
-           )
-         ).bind("call_expr")
-       )
-       ).bind("functiondecl");
+    
+    /* clang-format off */
 
-   auto match_sc_main_callexpr = functionDecl(
+    auto match_sc_main_callexpr = functionDecl(
        forEachDescendant(
          cxxOperatorCallExpr(
                hasDescendant(
@@ -101,47 +90,52 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
          )
        ).bind("functiondecl");
 
-    /* clang-format on */
 
     auto match_ctor_decl =
-        namedDecl(has(compoundStmt(
-                          forEachDescendant(
-                              cxxOperatorCallExpr(
-                                  // callExpr(
-                                  // Port
-                                  // 1. MemberExpr has a descendant that is a
-                                  // MemberExpr The first MemberExpr gives the
-                                  // port bound to information. The second
-                                  // MemberExpr gives the instance information
-                                  // to whom the port belongs.
+        namedDecl(
+            has(compoundStmt(
+                    forEachDescendant(
+                        cxxOperatorCallExpr(
+                            // callExpr(
+                            // Port
+                            // 1. MemberExpr has a descendant that is a
+                            // MemberExpr The first MemberExpr gives the
+                            // port bound to information. The second
+                            // MemberExpr gives the instance information
+                            // to whom the port belongs.
 
-                                  hasDescendant(
-                                      memberExpr(has(memberExpr().bind(
+                            anyOf(hasDescendant(arraySubscriptExpr(
+                                          hasDescendant(memberExpr(has(memberExpr().bind("memberexpr_instance"))).bind(
+                                              "memberexpr_port")))
+                                          .bind("array_expr_port")),
+                                  hasDescendant(memberExpr(has(memberExpr().bind(
                                                      "memberexpr_instance")))
-                                          .bind("memberexpr_port"))
+                                          .bind("memberexpr_port")))  // anyOf
 
-                                  // Arguments
-                                  // 1. Has MemberExpr as a descendant.
-                                  //   1.a It must have an implicitCastExpr as a
-                                  //   parent 1.b But not a MemberExpr (This is
-                                  //   because it matches with the port others.
-                                  // , hasDescendant(
-                                  // memberExpr(hasParent(implicitCastExpr()),
-                                  // unless(hasDescendant(memberExpr())))
-                                  // .bind("memberexpr_arg"))
-                                  //
+                            // Arguments
+                            // 1. Has MemberExpr as a descendant.
+                            //   1.a It must have an implicitCastExpr as a
+                            //   parent 1.b But not a MemberExpr (This is
+                            //   because it matches with the port others.
+                            // , hasDescendant(
+                            // memberExpr(hasParent(implicitCastExpr()),
+                            // unless(hasDescendant(memberExpr())))
+                            // .bind("memberexpr_arg"))
+                            //
 
-                                  // Get the memberExpr for the argument.
-                                  ,
-                                  hasArgument(1, memberExpr().bind("port_arg")))
-                                  .bind("callexpr")))
-                          .bind("compoundstmt")))
+                            // Get the memberExpr for the argument.
+                            ,
+                            hasArgument(
+                                1, anyOf(arraySubscriptExpr().bind(
+                                             "array_port_arg"),
+                                         expr().bind("port_arg"))  // anyOf
+                                )  // hasArgument
+                            )
+                            .bind("callexpr")))
+                    .bind("compoundstmt")))
             .bind("functiondecl");
 
-    auto test_match_ctor_decl =
-        cxxConstructorDecl(has(compoundStmt(forEachDescendant(
-            cxxOperatorCallExpr(hasArgument(1, memberExpr().bind("port_arg")))
-                .bind("test")))));
+    /* clang-format on */
 
     // Add the two matchers.
     finder.addMatcher(match_sc_main_callexpr, this);
@@ -173,14 +167,27 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     //////////////////////////////////////////////////////
     /// TESTING
+    /// Check if expr_port is an ArraySubscriptExpr or MemberExpr
+    // auto expr_port{
+    // const_cast<Expr *>(result.Nodes.getNodeAs<Expr>("memberexpr_port"))};
+    //
     auto mexpr_port{const_cast<MemberExpr *>(
         result.Nodes.getNodeAs<MemberExpr>("memberexpr_port"))};
+    auto *array_port{const_cast<ArraySubscriptExpr *>(
+        result.Nodes.getNodeAs<ArraySubscriptExpr>("array_expr_port"))};
+
+    if (array_port) {
+      llvm::outs() << "ARRAY PORT\n";
+      array_port->dump();
+    }
+
     auto mexpr_instance{const_cast<MemberExpr *>(
         result.Nodes.getNodeAs<MemberExpr>("memberexpr_instance"))};
     auto mexpr_arg{const_cast<MemberExpr *>(
         result.Nodes.getNodeAs<MemberExpr>("memberexpr_arg"))};
 
     // DEBUGGING
+    //
     //
     //
     //
@@ -192,6 +199,10 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(test->dump(););
     }
 
+    if (mexpr_port) {
+      mexpr_port->dump();
+    }
+
     auto callee{
         const_cast<Decl *>(result.Nodes.getNodeAs<Decl>("callee_method_decl"))};
     if (callee) {
@@ -201,16 +212,46 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(callee->dump(););
     }
 
+    /// Check if it is an array.
+    /// If it is array then the way to get the MemeberExpr with the name would
+    /// be different. Otherwise, it can just be an expression.
+    auto array_port_arg{const_cast<ArraySubscriptExpr *>(
+        result.Nodes.getNodeAs<ArraySubscriptExpr>("array_port_arg"))};
+
     auto fd_port_arg{const_cast<MemberExpr *>(
         result.Nodes.getNodeAs<MemberExpr>("port_arg"))};
     LLVM_DEBUG(llvm::dbgs() << "@@@@@@@@@@@@@@@@@@@@@@@@ CHECK IF PORT ARG "
                                "@@@@@@@@@@@@@@@\n";);
+    fd_port_arg->dump();
     if (fd_port_arg) {
       LLVM_DEBUG(llvm::dbgs() << " ########################## PORT ARG "
                                  "####################\n";);
       LLVM_DEBUG(fd_port_arg->dump(););
 
       mexpr_arg = fd_port_arg;
+    }
+
+    DeclRefExpr *port_arg_array_idx_{nullptr};
+    if (array_port_arg) {
+      LLVM_DEBUG(llvm::dbgs() << "Array subscript as argument\n";);
+      LLVM_DEBUG(llvm::dbgs() << "Base\n";);
+      auto base{array_port_arg->getBase()->IgnoreImpCasts()};
+      /// Get the argument's name.
+      /// For example as[4], this is trying to get the as.
+      if (auto arg_name = dyn_cast<MemberExpr>(base)) {
+        llvm::outs() << "argument NAME: "
+                     << arg_name->getMemberDecl()->getNameAsString() << "\n";
+        mexpr_arg = arg_name;
+      }
+
+      LLVM_DEBUG(llvm::dbgs() << "Index\n";);
+      auto idx{array_port_arg->getIdx()->IgnoreImpCasts()};
+
+      if (auto idx_dref = dyn_cast<DeclRefExpr>(idx)) {
+        llvm::outs() << "array_index: " << idx_dref->getNameInfo().getName()
+                     << "\n";
+        port_arg_array_idx_ = idx_dref;
+      }
     }
 
     std::string port_name{};
@@ -304,7 +345,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       if (is_ctor_binding) {
         LLVM_DEBUG(llvm::dbgs() << "=> CTOR binding\n";);
         LLVM_DEBUG(llvm::outs() << "=> port name: " << port_name << "\n";);
-        pb = new PortBinding(mexpr_port, mexpr_instance, mexpr_arg);
+        pb = new PortBinding(array_port, mexpr_port, mexpr_instance, mexpr_arg, array_port_arg, port_arg_array_idx_);
         pb->setInstanceConstructorName(instance_module_decl->getInstanceName());
       } else {
         LLVM_DEBUG(llvm::outs() << "=> found instance in sc_main\n";);

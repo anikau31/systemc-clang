@@ -32,6 +32,9 @@ class PortBinding {
   // 3. port_parameter_dref_
   //
   MemberExpr *port_member_expr_;
+  ArraySubscriptExpr *port_member_array_port_expr_;
+  DeclRefExpr *port_member_array_idx_dref_;
+
   // Instance information
   std::string port_name_;
   std::string port_type_name_;
@@ -55,6 +58,8 @@ class PortBinding {
   std::string port_parameter_type_name_;
   std::string port_parameter_bound_to_var_name_;
   DeclRefExpr *port_parameter_dref_;
+  DeclRefExpr *port_parameter_array_idx_dref_;
+  ArraySubscriptExpr *port_parameter_array_expr_;
 
  public:
   void setInstanceVarName(const std::string &n) { instance_var_name_ = n; }
@@ -82,16 +87,38 @@ class PortBinding {
     return getInstanceType() + " " + getInstanceVarName() + " " +
            getInstanceConstructorName() + " " + getBoundToName();
   }
+  bool hasBoundToArrayParameter() const {
+    return (port_parameter_array_idx_dref_ != nullptr);
+  }
+  bool hasPortArrayParameter() const {
+    return (port_member_array_idx_dref_ != nullptr);
+  }
+  DeclRefExpr *getPortArrayIndex() const { return port_member_array_idx_dref_; }
+  DeclRefExpr *getBoundToArrayIndex() const {
+    return port_parameter_array_idx_dref_;
+  }
 
   void dump() {
     llvm::outs() << "> inst type name: " << instance_type_
                  << ", inst var name : " << instance_var_name_
                  << ", port_type name: " << port_type_name_
                  << ", port name     : " << port_name_
-                 << ", port arg type : " << port_parameter_type_name_
-                 << ", port_bound_to_var_name : "
+                 << ", port arg type : " << port_parameter_type_name_;
+
+    if (port_member_array_idx_dref_) {
+      port_member_array_idx_dref_->dump();
+      llvm::outs() << ", port_array_idx: "
+                   << port_member_array_idx_dref_->getNameInfo().getName();
+    }
+
+    llvm::outs() << ", port_bound_to_var_name : "
                  << port_parameter_bound_to_var_name_
-                 << ", port arg      : " << port_parameter_name_ << "\n";
+                 << ", port arg      : " << port_parameter_name_;
+    if (port_parameter_array_idx_dref_) {
+      llvm::outs() << ", port_arg_array_idx: "
+                   << port_parameter_array_idx_dref_->getNameInfo().getName();
+    }
+    llvm::outs() << "\n";
 
     // llvm::outs() << "> port_name: " << port_name_ << " type: " <<
     // instance_type_
@@ -100,16 +127,31 @@ class PortBinding {
     // << " bound to " << port_parameter_name_ << "\n";
   }
 
-  PortBinding(MemberExpr *me_ctor_port, MemberExpr *me_instance,
-              MemberExpr *me_arg)
-      : me_ctor_port_{me_ctor_port},
+  PortBinding(ArraySubscriptExpr *port_array, MemberExpr *me_ctor_port,
+              MemberExpr *me_instance, MemberExpr *me_arg,
+              ArraySubscriptExpr *array_port_bound_to, DeclRefExpr *array_idx)
+      : port_member_array_port_expr_{port_array},
+    port_member_array_idx_dref_{nullptr},
+        me_ctor_port_{me_ctor_port},
         me_instance_{me_instance},
-        me_arg_{me_arg} {
+        me_arg_{me_arg},
+        port_parameter_array_expr_{array_port_bound_to} {
     port_name_ = me_ctor_port_->getMemberNameInfo().getAsString();
     port_type_name_ = me_ctor_port->getMemberDecl()
                           ->getType()
                           .getBaseTypeIdentifier()
                           ->getName();
+
+    /// Get the port member's array index.
+    if (port_member_array_port_expr_) {
+      auto port_member_idx{
+          port_member_array_port_expr_->getIdx()->IgnoreImpCasts()};
+      if (auto idx_dref = dyn_cast<DeclRefExpr>(port_member_idx)) {
+        llvm::outs() << "array_index: " << idx_dref->getNameInfo().getName()
+                     << "\n";
+        port_member_array_idx_dref_ = idx_dref;
+      }
+    }
 
     instance_var_name_ = me_instance_->getMemberNameInfo().getAsString();
     instance_type_ = me_instance_->getMemberDecl()
@@ -135,6 +177,11 @@ class PortBinding {
             member_expr_kid->getMemberDecl()->getNameAsString();
       }
     }
+
+    /// Port argument is an array. Need to find its index.
+    //
+    // port_arg_array_idx_ = idx_dref->getNameInfo().getName();
+    port_parameter_array_idx_dref_ = array_idx;
   }
 
   // This is used for sc_main

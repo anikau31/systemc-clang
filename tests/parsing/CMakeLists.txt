@@ -1,16 +1,15 @@
 # Test CMakeFile
 
 set (TEST_LIST 
-  # counter
-  # test-xor-hierarchy
-  # simple-parsing
-  # model-from-file
-  # clock-parsing
-  # hotfix-40-findtemplatetypes
-  # t5-template-matching
-  # hotfix-105-sensitivity-list
-  # sreg
-  # TODO Failing test
+  counter
+  test-xor-hierarchy
+  simple-parsing
+  model-from-file
+  clock-parsing
+  hotfix-40-findtemplatetypes
+  t5-template-matching
+  hotfix-105-sensitivity-list
+  sreg
   portarray-example
   )
 
