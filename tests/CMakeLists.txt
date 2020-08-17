@@ -44,7 +44,7 @@ add_subdirectory(matchers)
 add_subdirectory(parsing)
 
 # Plugins
-add_subdirectory(xlat)
+add_subdirectory(hdl)
 
 
 include(CTest)

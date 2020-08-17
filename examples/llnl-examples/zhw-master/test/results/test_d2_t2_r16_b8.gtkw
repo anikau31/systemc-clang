@@ -1,0 +1,86 @@
+[*]
+[*] GTKWave Analyzer v3.3.97 (w)1999-2018 BSI
+[*] Fri Sep 13 01:08:40 2019
+[*]
+[dumpfile] "L:\work\helio\zhw\test\test.vcd"
+[dumpfile_mtime] "Fri Sep 13 00:43:04 2019"
+[dumpfile_size] 88378
+[savefile] "L:\work\helio\zhw\test\results\test_d2_t2_r16_b8.gtkw"
+[timestart] 0
+[size] 1910 952
+[pos] -1 -1
+*-7.900000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] SystemC.
+[treeopen] SystemC.u_dut.
+[treeopen] SystemC.u_dut.u_encode_stream.m_bits.
+[treeopen] SystemC.u_dut.u_find_emax.s_fp.
+[sst_width] 200
+[signals_width] 134
+[sst_expanded] 1
+[sst_vpaned_height] 280
+@28
+SystemC.clk
+SystemC.reset
+@200
+-find_emax
+@28
+SystemC.u_dut.u_find_emax.s_fp.data.sign
+@22
+SystemC.u_dut.u_find_emax.s_fp.data.expo[10:0]
+SystemC.u_dut.u_find_emax.s_fp.data.frac[51:0]
+@28
+SystemC.u_dut.u_find_emax.s_fp.valid
+SystemC.u_dut.u_find_emax.s_fp.ready
+@200
+-fwd_cast
+@22
+SystemC.u_dut.u_fwd_cast.s_ex.data[10:0]
+@28
+SystemC.u_dut.u_fwd_cast.s_ex.valid
+SystemC.u_dut.u_fwd_cast.s_ex.ready
+SystemC.u_dut.u_fwd_cast.s_fp.valid
+SystemC.u_dut.u_fwd_cast.s_fp.ready
+@200
+-encode_block
+@28
+SystemC.u_dut.u_encode_block.s_valid
+SystemC.u_dut.u_encode_block.s_ready
+@200
+-block_buffer
+@28
+SystemC.u_dut.u_block_buffer.s_valid
+SystemC.u_dut.u_block_buffer.s_ready
+@200
+-encode_ints
+@28
+SystemC.u_dut.u_encode_ints.s_valid
+SystemC.u_dut.u_encode_ints.s_ready
+@22
+SystemC.u_dut.u_encode_ints.k0[5:0]
+@28
+SystemC.u_dut.u_encode_ints.last1
+SystemC.u_dut.u_encode_ints.valid1
+@200
+-encode_stream
+@28
+SystemC.u_dut.u_encode_stream.s_last
+SystemC.u_dut.u_encode_stream.s_valid
+SystemC.u_dut.u_encode_stream.s_ready
+@22
+SystemC.u_dut.u_encode_stream.s_ex.data[10:0]
+@28
+SystemC.u_dut.u_encode_stream.s_ex.valid
+SystemC.u_dut.u_encode_stream.s_ex.ready
+SystemC.u_dut.u_encode_stream.cs.s[2:0]
+@22
+SystemC.u_dut.u_encode_stream.cs.planes[6:0]
+@28
+SystemC.u_dut.u_encode_stream.m_flush
+@22
+SystemC.u_dut.u_encode_stream.m_bits.data.tdata[63:0]
+@28
+SystemC.u_dut.u_encode_stream.m_bits.data.tlast
+SystemC.u_dut.u_encode_stream.m_bits.valid
+SystemC.u_dut.u_encode_stream.m_bits.ready
+[pattern_trace] 1
+[pattern_trace] 0

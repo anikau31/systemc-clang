@@ -37,7 +37,7 @@ template <typename T, int IW, bool FWFT, bool RLEV, bool FLEV>
 SC_MODULE(fifo_cc)
 {
 	static constexpr int MAX_DEPTH = (1 << IW);
-	const unsigned depth = MAX_DEPTH;
+	const unsigned depth;
 
 	sc_in<bool> clk;
 	sc_in<bool> reset;
@@ -117,15 +117,18 @@ SC_MODULE(fifo_cc)
 
 	SC_HAS_PROCESS(fifo_cc);
 
-	fifo_cc(const sc_module_name& mn_) :
-		sc_module(mn_)
+	fifo_cc(const sc_module_name& mn_, int size_ = MAX_DEPTH) :
+		sc_module(mn_), depth(size_)
 	{
+		if (size_ <= 0 || MAX_DEPTH < size_) {
+			SC_REPORT_ERROR("FIFO size out of bounds", name());
+			return;
+		}
 		SC_METHOD(mc_proc);
 			sensitive << wr_en << rd_en << full_i << empty_i << rd_idx;
-			for (int i = 0; i < MAX_DEPTH; i++) sensitive << data[i];
+			for (int i = 0; i < size_; i++) sensitive << data[i];
 		SC_METHOD(ms_proc);
 			sensitive << clk.pos();
-			reset_signal_is(reset, RLEV);
 			dont_initialize();
 	}
 

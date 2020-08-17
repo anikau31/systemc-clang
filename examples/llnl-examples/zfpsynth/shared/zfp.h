@@ -21,8 +21,8 @@ template <typename T, int IW,  bool RLEV> using sfifo_cc = rvfifo_cc<T, IW, RLEV
 #include "sreg.h"
 
 // floating-point block size given dimension
-constexpr int fpblk_sz(int dim) {return 1 << 2*dim;} // 4^dim;
-// #define fpblk_sz(dim) (1 << 2*dim)
+//constexpr int fpblk_sz(int dim) {return 1 << 2*dim;} // 4^dim;
+#define fpblk_sz(dim) (1 << 2*dim)
 
 extern sc_trace_file *tf;
 

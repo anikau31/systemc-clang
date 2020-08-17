@@ -5,6 +5,9 @@
 #include "systemc.h"
 #include "sc_rvd.h"
 #include "fifo_cc.h"
+#ifdef CHAN_NS
+using namespace CHAN_NS;
+#endif
 
 // Port & Channel Prefix
 // m: port master
@@ -36,9 +39,9 @@ public:
 
 	/* * * * * constructors * * * * */
 
-	rvfifo_cc(const sc_module_name& mn_) :
+	rvfifo_cc(const sc_module_name& mn_, int size_ = MAX_DEPTH) :
 		sc_module(mn_),
-		u_fifo("u_fifo")
+		u_fifo("u_fifo", size_)
 	{
 		u_fifo.clk(clk);
 		u_fifo.reset(reset);
