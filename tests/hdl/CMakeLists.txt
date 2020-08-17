@@ -1,6 +1,6 @@
 # Test CMakeFile
 
-if (PLUGIN_XLAT)
+if (PLUGIN_HDL)
   set (TEST_LIST 
    sreg-test
    find-emax
@@ -27,8 +27,8 @@ foreach(NAME IN LISTS TEST_LIST)
   target_link_libraries(${TARGET_NAME} 
     PUBLIC ${SCC_LIBS} ${CLANG_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
  
-  if (PLUGIN_XLAT) 
-    target_link_libraries(${TARGET_NAME} PUBLIC libxlat)
+  if (PLUGIN_HDL) 
+    target_link_libraries(${TARGET_NAME} PUBLIC libhdl)
   endif()
 
  

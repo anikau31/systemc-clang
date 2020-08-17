@@ -1,5 +1,5 @@
-#ifndef _XLATENTRYMETHOD_H_
-#define _XLATENTRYMETHOD_H_
+#ifndef _HDLBODY_H
+#define _HDLBODY_H
 
 #include <vector>
 #include <string>
@@ -24,11 +24,11 @@ using namespace systemc_clang;
 
 using namespace hnode;
 
-class XlatMethod: public RecursiveASTVisitor <XlatMethod> {
+class HDLBody: public RecursiveASTVisitor <HDLBody> {
  public:
-  XlatMethod(CXXMethodDecl * emd, hNodep &h_top, llvm::raw_ostream & os);
-  XlatMethod(Stmt * stmt, hNodep &h_top, llvm::raw_ostream & os);
-  virtual ~XlatMethod();
+  HDLBody(CXXMethodDecl * emd, hNodep &h_top, llvm::raw_ostream & os);
+  HDLBody(Stmt * stmt, hNodep &h_top, llvm::raw_ostream & os);
+  virtual ~HDLBody();
 
   bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
   bool TraverseStmt(Stmt *stmt);

@@ -1,10 +1,10 @@
-#include "XlatEntryMethod.h"
-#include "XlatType.h"
+#include "HDLBody.h"
+#include "HDLType.h"
 #include "clang/Basic/OperatorKinds.h"
 
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
-#define DEBUG_TYPE "Xlat"
+#define DEBUG_TYPE "HDL"
 
 // We have to use the Traverse pattern rather than Visitor 
 // because we need control to come back to the point of call
@@ -16,36 +16,36 @@
 using namespace std;
 using namespace hnode;
 
-XlatMethod::XlatMethod(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & os):
+HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & os):
   os_(os){ 
-  LLVM_DEBUG(llvm::dbgs() << "Entering XlatMethod constructor, has body is " << emd->hasBody()<< "\n");
+  LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor, has body is " << emd->hasBody()<< "\n");
   
   h_ret = NULL;
   bool ret1 = TraverseStmt(emd->getBody());
   AddVnames(h_top);
   h_top->child_list.push_back(h_ret);
-  LLVM_DEBUG(llvm::dbgs() << "Exiting XlatMethod constructor for method body\n");
+  LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor for method body\n");
 }
 
 // leaving this in for the future in case 
 // we need to traverse starting at a lower point in the tree.
 
-XlatMethod::XlatMethod(Stmt * stmt, hNodep & h_top, llvm::raw_ostream & os):
+HDLBody::HDLBody(Stmt * stmt, hNodep & h_top, llvm::raw_ostream & os):
   os_(os){
   h_ret = NULL;
   bool ret1 = TraverseStmt(stmt);
   h_top->child_list.push_back(h_ret);
-  LLVM_DEBUG(llvm::dbgs() << "Exiting XlatMethod constructor for stmt\n");
+  LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor for stmt\n");
 }
 
-XlatMethod::~XlatMethod() {
-  LLVM_DEBUG(llvm::dbgs() << "[[ Destructor XlatMethod ]]\n");
+HDLBody::~HDLBody() {
+  LLVM_DEBUG(llvm::dbgs() << "[[ Destructor HDLBody ]]\n");
 }
   
 // order of checking is important as some exprs
 // inherit from binaryoperator
 
-bool XlatMethod::TraverseStmt(Stmt *stmt) {
+bool HDLBody::TraverseStmt(Stmt *stmt) {
   LLVM_DEBUG(llvm::dbgs() << "In TraverseStmt\n");
 
   if (isa<CompoundStmt>(stmt)) {
@@ -162,9 +162,9 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
 	// need to add type to back of h_ret
 	FindTemplateTypes *te = new FindTemplateTypes();
 	te->Enumerate((exp->getType()).getTypePtr());
-	XlatType xlatt;
+	HDLType HDLt;
 	hNodep h_tmp = new hNode (hNode::hdlopsEnum::hNoop);
-	xlatt.xlattype(s, te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hLiteral, h_tmp);
+	HDLt.SCtype2hcode(s, te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hLiteral, h_tmp);
 	h_ret = h_tmp->child_list.back();
 	return true;
       }
@@ -190,7 +190,7 @@ bool XlatMethod::TraverseStmt(Stmt *stmt) {
   return true;  
 }
 
-bool XlatMethod::TraverseCompoundStmt(CompoundStmt* cstmt) {
+bool HDLBody::TraverseCompoundStmt(CompoundStmt* cstmt) {
     // Traverse each statement and append it to the array
   hNodep h_cstmt = new hNode(hNode::hdlopsEnum::hCStmt);
   
@@ -207,7 +207,7 @@ bool XlatMethod::TraverseCompoundStmt(CompoundStmt* cstmt) {
   return true;
 }
 
-bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
+bool HDLBody::TraverseDeclStmt(DeclStmt * declstmt) {
   //hNodep h_varlist = NULL;
   // if (!declstmt->isSingleDecl()) {
   //     h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
@@ -224,7 +224,7 @@ bool XlatMethod::TraverseDeclStmt(DeclStmt * declstmt) {
   return true;
 }
 
-bool XlatMethod::ProcessVarDecl( VarDecl * vardecl) {
+bool HDLBody::ProcessVarDecl( VarDecl * vardecl) {
   LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl var name is " << vardecl->getName() << "\n");
 
   hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
@@ -235,8 +235,8 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl) {
   FindTemplateTypes *te = new FindTemplateTypes();
 
   te->Enumerate(tp);
-  XlatType xlatt;
-  xlatt.xlattype(vardecl->getName(), te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hVardecl, h_varlist);
+  HDLType HDLt;
+  HDLt.SCtype2hcode(vardecl->getName(), te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hVardecl, h_varlist);
   hNodep h_vardecl = h_varlist->child_list.back();
   h_ret = NULL;
 
@@ -258,7 +258,7 @@ bool XlatMethod::ProcessVarDecl( VarDecl * vardecl) {
   return true;
 }
 
-bool XlatMethod::TraverseBinaryOperator(BinaryOperator* expr) 
+bool HDLBody::TraverseBinaryOperator(BinaryOperator* expr) 
 { 
   // ... handle expr. Can use
   //bool isIntegerConstantExpr(llvm::APSInt &Result, const ASTContext &Ctx,
@@ -284,7 +284,7 @@ bool XlatMethod::TraverseBinaryOperator(BinaryOperator* expr)
 
 } 
 
-bool XlatMethod::TraverseUnaryOperator(UnaryOperator* expr) 
+bool HDLBody::TraverseUnaryOperator(UnaryOperator* expr) 
 { 
   LLVM_DEBUG(llvm::dbgs() << "in TraverseUnaryOperatory expr node is \n");
   LLVM_DEBUG(expr->dump(llvm::dbgs()));
@@ -302,7 +302,7 @@ bool XlatMethod::TraverseUnaryOperator(UnaryOperator* expr)
 
 } 
 
-bool XlatMethod::TraverseIntegerLiteral(IntegerLiteral * lit)
+bool HDLBody::TraverseIntegerLiteral(IntegerLiteral * lit)
 {
   LLVM_DEBUG(llvm::dbgs() << "In integerliteral\n");
   string s = lit->getValue().toString(10, true);
@@ -311,7 +311,7 @@ bool XlatMethod::TraverseIntegerLiteral(IntegerLiteral * lit)
   return true;
 }
 
-bool XlatMethod::TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr * b) {
+bool HDLBody::TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr * b) {
   LLVM_DEBUG(llvm::dbgs() << "In boollitexpr\n");
   bool v = b->getValue();
   h_ret = new hNode(v?"1":"0", hNode::hdlopsEnum::hLiteral);
@@ -319,7 +319,7 @@ bool XlatMethod::TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr * b) {
   return true;
 }
 
-bool XlatMethod::TraverseDeclRefExpr(DeclRefExpr* expr) 
+bool HDLBody::TraverseDeclRefExpr(DeclRefExpr* expr) 
 { 
   // ... handle expr
   LLVM_DEBUG(llvm::dbgs() << "In TraverseDeclRefExpr\n");
@@ -359,7 +359,7 @@ bool XlatMethod::TraverseDeclRefExpr(DeclRefExpr* expr)
   return true; 
 }
 
-bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
+bool HDLBody::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
   LLVM_DEBUG(llvm::dbgs() << "In TraverseArraySubscriptExpr, tree follows\n");
   LLVM_DEBUG(expr->dump(llvm::dbgs()));
   hNodep h_arrexpr = new hNode("ARRAYSUBSCRIPT", hNode::hdlopsEnum::hBinop);
@@ -371,7 +371,7 @@ bool XlatMethod::TraverseArraySubscriptExpr(ArraySubscriptExpr* expr) {
   return true;
 }
 
-bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
+bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
   LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXMemberCallExpr, printing implicit object arg\n");
       // Retrieves the implicit object argument for the member call.
     //For example, in "x.f(5)", this returns the sub-expression "x".
@@ -437,7 +437,7 @@ bool XlatMethod::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     return true;
 }
 
-bool XlatMethod::isLogicalOp(clang::OverloadedOperatorKind opc) {
+bool HDLBody::isLogicalOp(clang::OverloadedOperatorKind opc) {
   switch (opc) {
   case OO_Less:
   case OO_LessEqual:
@@ -452,7 +452,7 @@ bool XlatMethod::isLogicalOp(clang::OverloadedOperatorKind opc) {
   }
 }
 
-bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
+bool HDLBody::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
 
   string operatorname = getOperatorSpelling(opcall->getOperator());
   string operatortype = (opcall->getType()).getAsString();
@@ -490,7 +490,7 @@ bool XlatMethod::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
   return true;
 }
 
-bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
+bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr){
   LLVM_DEBUG(llvm::dbgs() << "In TraverseMemberExpr\n");
   string nameinfo = (memberexpr->getMemberNameInfo()).getName().getAsString();
   LLVM_DEBUG(llvm::dbgs() << "name is " << nameinfo << ", base and memberexpr trees follow\n");
@@ -532,7 +532,7 @@ bool XlatMethod::TraverseMemberExpr(MemberExpr *memberexpr){
   return true;
 }
 
-bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
+bool HDLBody::TraverseIfStmt(IfStmt *ifs) {
   hNodep h_ifstmt, h_ifc = NULL, h_ifthen = NULL, h_ifelse = NULL;
   h_ifstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
   if (ifs->getConditionVariable()) {
@@ -560,7 +560,7 @@ bool XlatMethod::TraverseIfStmt(IfStmt *ifs) {
   return true;
 }
 
-bool XlatMethod::TraverseForStmt(ForStmt *fors) {
+bool HDLBody::TraverseForStmt(ForStmt *fors) {
   hNodep h_forstmt, h_forinit, h_forcond, h_forinc, h_forbody;
   LLVM_DEBUG(llvm::dbgs() << "For stmt\n");
   h_forstmt = new hNode(hNode::hdlopsEnum::hForStmt);
@@ -587,7 +587,7 @@ bool XlatMethod::TraverseForStmt(ForStmt *fors) {
   
   return true;
 }
-bool XlatMethod::ProcessSwitchCase(SwitchCase *sc) {
+bool HDLBody::ProcessSwitchCase(SwitchCase *sc) {
   LLVM_DEBUG(llvm::dbgs() << "In ProcessSwitchCase\n");
   hNodep hcasep;
   hNodep old_hret = h_ret;
@@ -615,7 +615,7 @@ bool XlatMethod::ProcessSwitchCase(SwitchCase *sc) {
   return true;
 }
 
-bool XlatMethod::TraverseSwitchStmt( SwitchStmt *switchs) {
+bool HDLBody::TraverseSwitchStmt( SwitchStmt *switchs) {
   hNodep h_switchstmt;
   LLVM_DEBUG(llvm::dbgs() << "Switch stmt body -----\n");
   LLVM_DEBUG(switchs->getBody()->dump(llvm::dbgs()));
@@ -662,7 +662,7 @@ bool XlatMethod::TraverseSwitchStmt( SwitchStmt *switchs) {
 }
 // wouldn't appear in a SC_METHOD, but put it in anyway
 // won't put in do stmt for now
-bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
+bool HDLBody::TraverseWhileStmt(WhileStmt *whiles) {
   hNodep h_whilestmt,  h_whilecond, h_whilebody;
   LLVM_DEBUG(llvm::dbgs() << "While stmt\n");
   h_whilestmt = new hNode(hNode::hdlopsEnum::hWhileStmt);
@@ -685,7 +685,7 @@ bool XlatMethod::TraverseWhileStmt(WhileStmt *whiles) {
   return true;
 }
 
-void XlatMethod::AddVnames(hNodep &hvns) {
+void HDLBody::AddVnames(hNodep &hvns) {
   LLVM_DEBUG(llvm::dbgs() << "Vname Dump\n");
   for (auto const &var : vname_map) {
     LLVM_DEBUG(llvm::dbgs() << "(" << var.first << "," << var.second.oldn << ", " << var.second.newn << ")\n");
@@ -694,7 +694,7 @@ void XlatMethod::AddVnames(hNodep &hvns) {
 }
 
 
-// CXXMethodDecl *XlatMethod::getEMD() {
+// CXXMethodDecl *HDLBody::getEMD() {
 //   return _emd;
 // }
 

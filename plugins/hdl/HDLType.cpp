@@ -10,16 +10,16 @@
 #include "Tree.h"
 #include "TemplateParametersMatcher.h"
 #include "SensitivityMatcher.h"
-#include "XlatType.h"
+#include "HDLType.h"
 
-void XlatType::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
+void HDLType::SCtype2hcode(string prefix,  Tree<TemplateType> *template_argtp,
 		     hNode::hdlopsEnum h_op, hNodep &h_info) {
 
-  //llvm::outs()  << "xlattype dump of templatetree args follows\n";
+  //llvm::outs()  << "HDLtype dump of templatetree args follows\n";
   //template_argtp->dump();
 
     if (!(template_argtp &&  (template_argtp->getRoot()))) {
-      llvm::errs() << "xlattype no root prefix is " << prefix << " " << template_argtp << "\n";;
+      llvm::errs() << "HDLtype no root prefix is " << prefix << " " << template_argtp << "\n";;
 
     return;
     }										 
@@ -42,7 +42,7 @@ void XlatType::xlattype(string prefix,  Tree<TemplateType> *template_argtp,
   return;
 }
 
-void XlatType::generatetype(systemc_clang::TreeNode<systemc_clang::TemplateType > * const &node,
+void HDLType::generatetype(systemc_clang::TreeNode<systemc_clang::TemplateType > * const &node,
 			systemc_clang::Tree<systemc_clang::TemplateType > * const &treehead, hNodep &h_info) {
 
   string tmps = (node->getDataPtr())->getTypeName();
@@ -75,7 +75,7 @@ void XlatType::generatetype(systemc_clang::TreeNode<systemc_clang::TemplateType 
 
 }
 
-hNodep XlatType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
+hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
   hNodep h_typdef = new hNode(typname, hNode::hdlopsEnum::hTypedef);
   llvm::errs() << "addtype entered with type name " << typname << "\n";
   const Type * typ = qtyp.getTypePtr();
@@ -133,7 +133,7 @@ hNodep XlatType::addtype(string typname, QualType qtyp, ASTContext &astcontext) 
   return h_typdef; 
 }
 
-void XlatType::addfieldtype(const FieldDecl * fld, hNodep &h_typdef) {
+void HDLType::addfieldtype(const FieldDecl * fld, hNodep &h_typdef) {
   llvm::errs() << "field of record type \n";
   fld ->dump(llvm::errs());
   llvm::errs() << "field: found name " << fld->getName() << "\n";

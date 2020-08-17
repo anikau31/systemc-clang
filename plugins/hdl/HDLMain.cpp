@@ -3,22 +3,22 @@
 #include "SystemCClang.h"
 #include "PortBinding.h"
 #include "Tree.h"
-#include "Xlat.h"
+#include "HDLMain.h"
 //#include "TemplateParametersMatcher.h"
-#include "XlatType.h"
+#include "HDLType.h"
 #include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
 
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
-#define DEBUG_TYPE "Xlat"
+#define DEBUG_TYPE "HDL"
 
 using namespace std;
 using namespace hnode;
 using namespace systemc_clang;
 
-bool Xlat::postFire() {
+bool HDLMain::postFire() {
   Model *model = getSystemCModel();
   
   std::error_code ec;
@@ -27,7 +27,7 @@ bool Xlat::postFire() {
   FileID fileID = getSourceManager().getMainFileID();
   const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
   if (!fileentry) {
-    outputfn = "xlatout";
+    outputfn = "HCodeout";
     LLVM_DEBUG(llvm::dbgs() << "Null file entry for tranlation unit for this astcontext\n");
   } else {
     outputfn = fileentry->getName();
@@ -37,11 +37,11 @@ bool Xlat::postFire() {
     LLVM_DEBUG(llvm::dbgs() << "File name is " << outputfn << "\n");
   }
 
-  llvm::raw_fd_ostream xlatout(outputfn + ".txt", ec,
+  llvm::raw_fd_ostream HCodeOut(outputfn + ".txt", ec,
                                llvm::sys::fs::CD_CreateAlways);
   LLVM_DEBUG(llvm::dbgs() << "file " << outputfn << ".txt, create error code is " << ec.value() << "\n");
       
-  LLVM_DEBUG(llvm::dbgs() << "\n SC  Xlat plugin\n");
+  LLVM_DEBUG(llvm::dbgs() << "\n SC  HDL plugin\n");
 
   // typedef std::vector< modulePairType > moduleMapType;
   // typedef std::pair<std::string, ModuleDecl *> modulePairType;
@@ -59,8 +59,8 @@ bool Xlat::postFire() {
     LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName() << " renamed " << modname<< "\n");
     hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
     mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(), modname, h_module};
-    xlatmodule(modinstance, h_module, xlatout);
-    //h_module->print(xlatout);
+    SCmodule2hcode(modinstance, h_module, HCodeOut);
+    //h_module->print(HCodeOut);
   }
   
    LLVM_DEBUG(llvm::dbgs() << "Global Method Map\n");
@@ -72,20 +72,20 @@ bool Xlat::postFire() {
 
   LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
-  while (!xlatt.usertypes.empty()) {
-    std::unordered_map<string, QualType> usertypestmp = xlatt.usertypes;
-    xlatt.usertypes.clear();
+  while (!HDLt.usertypes.empty()) {
+    std::unordered_map<string, QualType> usertypestmp = HDLt.usertypes;
+    HDLt.usertypes.clear();
     for (auto t : usertypestmp) {
       LLVM_DEBUG(llvm::dbgs() << "User Type --------\n" << t.first << ":" << t.second.getTypePtr() << "\n");
       LLVM_DEBUG(t.second->dump(llvm::dbgs()));
       LLVM_DEBUG(llvm::dbgs() << "---------\n");
-      xlatt.addtype(t.first, t.second, getContext())->print(xlatout);
+      HDLt.addtype(t.first, t.second, getContext())->print(HCodeOut);
     }
   }
   return true;
 }
 
-void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &xlatout ) {
+void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &HCodeOut ) {
   const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
   // look at constructor
 
@@ -106,26 +106,26 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
   }
           // Ports
   hNodep h_ports = new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
-  xlatport(mod->getIPorts(), hNode::hdlopsEnum::hPortin,
+  SCport2hcode(mod->getIPorts(), hNode::hdlopsEnum::hPortin,
 	   h_ports);
-  xlatport(mod->getInputStreamPorts(), hNode::hdlopsEnum::hPortin,
+  SCport2hcode(mod->getInputStreamPorts(), hNode::hdlopsEnum::hPortin,
 	   h_ports);
-  xlatport(mod->getOPorts(), hNode::hdlopsEnum::hPortout,
+  SCport2hcode(mod->getOPorts(), hNode::hdlopsEnum::hPortout,
 	   h_ports);
-  xlatport(mod->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
+  SCport2hcode(mod->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
 	   h_ports);
-  xlatport(mod->getIOPorts(), hNode::hdlopsEnum::hPortio,
+  SCport2hcode(mod->getIOPorts(), hNode::hdlopsEnum::hPortio,
 	   h_ports);
 
   // Signals
-  xlatsig(mod->getSignals(), hNode::hdlopsEnum::hSigdecl,
+  SCsig2hcode(mod->getSignals(), hNode::hdlopsEnum::hSigdecl,
 	  h_ports);
 
   h_module->child_list.push_back(h_ports);
       
   
-  xlatport(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
-  //xlatport(mod->getSubmodules(), hNode::hdlopsEnum::hModdecl, h_ports);
+  SCport2hcode(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
+  //SCport2hcode(mod->getSubmodules(), hNode::hdlopsEnum::hModdecl, h_ports);
   for (const auto &smod:submodv) {
     hNodep h_smod = new hNode(smod->getInstanceName(), hNode::hdlopsEnum::hModdecl);
     h_ports->child_list.push_back(h_smod);
@@ -139,7 +139,7 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
       // Processes
   h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
-  xlatproc(mod->getProcessMap(), h_top, llvm::dbgs());
+  SCproc2hcode(mod->getProcessMap(), h_top, llvm::dbgs());
 
   if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
@@ -149,25 +149,25 @@ void Xlat::xlatmodule(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &x
 
   for (std::pair<std::string, systemc_clang::ModuleDecl::portBindingMapType> pbm: submodportbindings) {
     hNodep h_submodule_pb = new hNode(pbm.first, hNode::hdlopsEnum::hPortbindings);
-    xlatportbindings(pbm.second, h_submodule_pb);
+    SCportbindings2hcode(pbm.second, h_submodule_pb);
     if (!h_submodule_pb->child_list.empty())
       h_module->child_list.push_back(h_submodule_pb);
   }
-  h_module->print(xlatout);
+  h_module->print(HCodeOut);
   // now generate submodules
   for (const auto &smod:submodv) {
     string modname =  mod_name_map[smod->getInstanceDecl()].newn;
     LLVM_DEBUG(llvm::dbgs() << "generate submodule " << smod->getInstanceName() << " renamed " << modname<< "\n");
     hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
-    xlatmodule(smod, h_submod, xlatout);
+    SCmodule2hcode(smod, h_submod, HCodeOut);
   }
 }
 
-void Xlat::xlatportbindings(systemc_clang::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pbs){
+void HDLMain::SCportbindings2hcode(systemc_clang::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pbs){
   for (auto const &pb : portbindingmap) {
     string port_name{get<0>(pb)};
     PortBinding *binding{get<1>(pb)};
-    LLVM_DEBUG(llvm::dbgs() << "xlat port binding found " << port_name << "<==> " << binding->getBoundToName() << " " << binding->getBoundToParameterVarName() << "\n");
+    LLVM_DEBUG(llvm::dbgs() << "SC port binding found " << port_name << "<==> " << binding->getBoundToName() << " " << binding->getBoundToParameterVarName() << "\n");
     hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
     hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
     string mapped_name = binding->getBoundToParameterVarName().empty()? binding->getBoundToName() :
@@ -178,7 +178,7 @@ void Xlat::xlatportbindings(systemc_clang::ModuleDecl::portBindingMapType portbi
   }
 }
 
-void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
+void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
                     hNodep &h_info) {
 
   for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
@@ -191,7 +191,7 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
 
-    xlatt.xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+    HDLt.SCtype2hcode(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
     // check for initializer
     VarDecl * vard = pd->getAsVarDecl();
     if (vard) {
@@ -217,7 +217,7 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 	  LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
 	  LLVM_DEBUG(initializer->dump(llvm::dbgs()));
 	  hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);
-	  XlatMethod xmethod(initializer, h_init, llvm::dbgs());
+	  HDLBody xmethod(initializer, h_init, llvm::dbgs());
 	  (h_info->child_list.back())->child_list.push_back(h_init);
 	}
 	
@@ -226,7 +226,7 @@ void Xlat::xlatport(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
   }
 }
 
-void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
+void HDLMain::SCsig2hcode(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
                    hNodep &h_info) {
 
   for (ModuleDecl::signalMapType::iterator mit = pmap.begin();
@@ -241,12 +241,12 @@ void Xlat::xlatsig(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op,
     Tree<TemplateType> *template_argtp = (pd->getTemplateTypes())->getTemplateArgTreePtr();
     //  if type is structured, it will be flattened into multiple declarations
     // each with a unique name and Typeinfo followed by Type.
-    xlatt.xlattype(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+    HDLt.SCtype2hcode(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
    
   }
 }
 
-void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
+void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top,
                     llvm::raw_ostream &os) {
 
   // typedef std::map<std::string, ProcessDecl *> processMapType;
@@ -308,7 +308,7 @@ void Xlat::xlatproc(ModuleDecl::processMapType pm, hNodep &h_top,
       }
       CXXMethodDecl *emd = efc->getEntryMethod();
       hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-      XlatMethod xmethod(emd, h_body, llvm::dbgs());  //, xlatout);
+      HDLBody xmethod(emd, h_body, llvm::dbgs()); 
       LLVM_DEBUG(llvm::dbgs() << "Method Map:\n");
       for (auto m : xmethod.methodecls) {
 	LLVM_DEBUG(llvm::dbgs() << m.first << ":" << m.second <<"\n");

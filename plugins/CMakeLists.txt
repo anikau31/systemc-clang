@@ -1,1 +1,1 @@
-add_subdirectory(xlat)
+add_subdirectory(hdl)
