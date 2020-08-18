@@ -139,7 +139,7 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ost
       // Processes
   h_top = new hNode(hNode::hdlopsEnum::hProcesses);
 
-  SCproc2hcode(mod->getProcessMap(), h_top, llvm::dbgs());
+  SCproc2hcode(mod->getProcessMap(), h_top);
 
   if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
@@ -191,7 +191,9 @@ void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
 
-    HDLt.SCtype2hcode(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+    HDLt.SCtype2hcode(objname, template_argtp,
+		      (int) pd->getArraySize().getLimitedValue(),
+		      h_op, h_info);  // passing the sigvarlist
     // check for initializer
     VarDecl * vard = pd->getAsVarDecl();
     if (vard) {
@@ -217,7 +219,7 @@ void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 	  LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
 	  LLVM_DEBUG(initializer->dump(llvm::dbgs()));
 	  hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);
-	  HDLBody xmethod(initializer, h_init, llvm::dbgs());
+	  HDLBody xmethod(initializer, h_init);
 	  (h_info->child_list.back())->child_list.push_back(h_init);
 	}
 	
@@ -239,15 +241,15 @@ void HDLMain::SCsig2hcode(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op
     SignalDecl *pd = get<1>(*mit);
 
     Tree<TemplateType> *template_argtp = (pd->getTemplateTypes())->getTemplateArgTreePtr();
-    //  if type is structured, it will be flattened into multiple declarations
-    // each with a unique name and Typeinfo followed by Type.
-    HDLt.SCtype2hcode(objname, template_argtp, h_op, h_info);  // passing the sigvarlist
+
+    HDLt.SCtype2hcode(objname, template_argtp,
+		     (int) pd->getArraySize().getLimitedValue(),
+		      h_op, h_info);  // passing the sigvarlist
    
   }
 }
 
-void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top,
-                    llvm::raw_ostream &os) {
+void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
 
   // typedef std::map<std::string, ProcessDecl *> processMapType;
   // processMapType getProcessMap();
@@ -308,7 +310,7 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top,
       }
       CXXMethodDecl *emd = efc->getEntryMethod();
       hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-      HDLBody xmethod(emd, h_body, llvm::dbgs()); 
+      HDLBody xmethod(emd, h_body); 
       LLVM_DEBUG(llvm::dbgs() << "Method Map:\n");
       for (auto m : xmethod.methodecls) {
 	LLVM_DEBUG(llvm::dbgs() << m.first << ":" << m.second <<"\n");

@@ -13,13 +13,13 @@
 #include "HDLType.h"
 
 void HDLType::SCtype2hcode(string prefix,  Tree<TemplateType> *template_argtp,
-		     hNode::hdlopsEnum h_op, hNodep &h_info) {
+			   int arr_size, hNode::hdlopsEnum h_op, hNodep &h_info) {
 
   //llvm::outs()  << "HDLtype dump of templatetree args follows\n";
   //template_argtp->dump();
 
     if (!(template_argtp &&  (template_argtp->getRoot()))) {
-      llvm::errs() << "HDLtype no root prefix is " << prefix << " " << template_argtp << "\n";;
+      LLVM_DEBUG(llvm::dbgs() << "HDLtype no root prefix is " << prefix << " " << template_argtp << "\n");
 
     return;
     }										 
@@ -31,7 +31,11 @@ void HDLType::SCtype2hcode(string prefix,  Tree<TemplateType> *template_argtp,
   hmainp->child_list.push_back(h_typeinfo);
   hNodep h_typ = new hNode(tmps, hNode::hdlopsEnum::hType);
   h_typeinfo->child_list.push_back(h_typ);
-  
+  if (arr_size >0) {
+    hNodep h_arr = new hNode("array##"+to_string(arr_size), hNode::hdlopsEnum::hType);
+    h_typ->child_list.push_back(h_arr);
+    h_typ = h_arr;
+  }
   auto const vectreeptr{ template_argtp->getChildren(template_argtp->getRoot())};
   // template arguments seem to be stored in reverse order
   for (int i=vectreeptr.size()-1; i>=0; i--) {
@@ -46,21 +50,19 @@ void HDLType::generatetype(systemc_clang::TreeNode<systemc_clang::TemplateType >
 			systemc_clang::Tree<systemc_clang::TemplateType > * const &treehead, hNodep &h_info) {
 
   string tmps = (node->getDataPtr())->getTypeName();
-  llvm::errs() << "generatetype node name is " << tmps << " type follows\n";
-  (node->getDataPtr())->getTypePtr()->dump(llvm::errs());				 
+  LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << " type follows\n");
+  (node->getDataPtr())->getTypePtr()->dump(llvm::dbgs());				 
   hNodep nodetyp = new hNode (tmps, tutil.isposint(tmps) ? hNode::hdlopsEnum::hLiteral: hNode::hdlopsEnum::hType);
   h_info->child_list.push_back(nodetyp);
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
      return;
   if (!(tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps) || tutil.isposint(tmps)))
     {
-      llvm::errs() << "adding user defined type " << tmps << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "adding user defined type " << tmps << "\n");
       const RecordType * tstp = dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());
       if (tstp) {
-	//llvm::errs() << "generatetype found record type, dump of definition follows\n";
-	llvm::errs() << "generatetype found record type\n";
+	LLVM_DEBUG(llvm::dbgs() << "generatetype found record type\n");
 	//RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
-	//tstdp->dump(llvm::errs());
 	usertypes[tmps] = ((tstp->getDecl())->getTypeForDecl())->getCanonicalTypeInternal();
       }
       usertypes[tmps] = ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
@@ -77,36 +79,36 @@ void HDLType::generatetype(systemc_clang::TreeNode<systemc_clang::TemplateType >
 
 hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
   hNodep h_typdef = new hNode(typname, hNode::hdlopsEnum::hTypedef);
-  llvm::errs() << "addtype entered with type name " << typname << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "addtype entered with type name " << typname << "\n");
   const Type * typ = qtyp.getTypePtr();
   if (typ->isBuiltinType())
     {
       hNodep hprim = new hNode(qtyp.getAsString(), hNode::hdlopsEnum::hType);
-      llvm::errs() << "addtype found prim type " << qtyp.getAsString() << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "addtype found prim type " << qtyp.getAsString() << "\n");
       h_typdef->child_list.push_back(hprim);
       return h_typdef;
     }
 
   if (const RecordType * rectype = dyn_cast<RecordType>(typ)) {
-    llvm::errs() << "addtype record type found, name is " << typname << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "addtype record type found, name is " << typname << "\n");
     if ( isa<ClassTemplateSpecializationDecl>(rectype->getDecl())) {
-      llvm::errs() << "addtype isa template specialzation decl found, name is " << typname << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "addtype isa template specialzation decl found, name is " << typname << "\n");
       ClassTemplateSpecializationDecl * ctsd = dyn_cast<ClassTemplateSpecializationDecl>(rectype->getDecl());
       ClassTemplateDecl * ctd = ctsd->getSpecializedTemplate();
-      ctd->dump(llvm::errs());
-      llvm::errs() << "####### ============================== MATCHER ========================= ##### \n";
+      LLVM_DEBUG(ctd->dump(llvm::dbgs()));
+      LLVM_DEBUG(llvm::dbgs() << "####### ============================== MATCHER ========================= ##### \n");
       TemplateParametersMatcher template_matcher{};
       MatchFinder matchRegistry{};
       template_matcher.registerMatchers(matchRegistry);
       matchRegistry.match(*ctd, astcontext); //getContext());
-      llvm::errs() << "####### ============================== END MATCHER ========================= ##### \n";
+      LLVM_DEBUG(llvm::dbgs() << "####### ============================== END MATCHER ========================= ##### \n");
       
 
       TemplateParameterList * tpl = ctd->getTemplateParameters();
-      llvm::errs() << "addtype her are template parameters\n";
+      LLVM_DEBUG(llvm::dbgs() << "addtype her are template parameters\n");
       for (auto param : *tpl) {
-	llvm::errs() << "addtype template param name is " << param->getName() << "\n";
-	//param->dump(llvm::errs());
+	LLVM_DEBUG(llvm::dbgs() << "addtype template param name is " << param->getName() << "\n");
+	//param->dump(llvm::dbgs());
 	h_typdef->child_list.push_back(new hNode(param->getName(), hNode::hdlopsEnum::hTypeTemplateParam));
       }
       std::vector<const FieldDecl *> fields;
@@ -124,7 +126,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
 	}
 	else { // record type but no fields
 	  // get the type name
-	  llvm::errs() << "Found record with no fields, name is " << (rectype->getDecl())->getName() << "\n"; 
+	  LLVM_DEBUG(llvm::dbgs() << "Found record with no fields, name is " << (rectype->getDecl())->getName() << "\n"); 
 	  h_typdef->child_list.push_back(new hNode(rectype->getDecl()->getName(), hNode::hdlopsEnum::hType));
 	      
 	}
@@ -134,9 +136,9 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
 }
 
 void HDLType::addfieldtype(const FieldDecl * fld, hNodep &h_typdef) {
-  llvm::errs() << "field of record type \n";
-  fld ->dump(llvm::errs());
-  llvm::errs() << "field: found name " << fld->getName() << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "field of record type \n");
+  LLVM_DEBUG(fld ->dump(llvm::dbgs()));
+  LLVM_DEBUG(llvm::dbgs() << "field: found name " << fld->getName() << "\n");
   // Try to get the template type of these fields.
   const Type *field_type{fld->getType().getTypePtr()};
   FindTemplateTypes find_tt{};
@@ -146,9 +148,9 @@ void HDLType::addfieldtype(const FieldDecl * fld, hNodep &h_typdef) {
   auto template_args{find_tt.getTemplateArgTreePtr()};
   hNodep hfld = new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hTypeField);
   h_typdef->child_list.push_back(hfld);
-  llvm::errs() << "calling generatetype with template args of field\n";
+  LLVM_DEBUG(llvm::dbgs() << "calling generatetype with template args of field\n");
   if (template_args->getRoot()) 
     generatetype(template_args->getRoot(), template_args, hfld);
-  else llvm::errs() << "FindTemplateTypes returned null root\n";
+  else  LLVM_DEBUG(llvm::dbgs() << "FindTemplateTypes returned null root\n");
 
 }
