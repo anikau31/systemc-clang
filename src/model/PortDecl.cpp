@@ -20,20 +20,29 @@ PortDecl::PortDecl()
     : port_name_{"NONE"},
       template_type_{nullptr},
       field_decl_{nullptr},
-      is_array_{false} {}
+      is_array_{false} {
+
+      array_size_ = 0;
+      }
 
 PortDecl::PortDecl(const std::string &name, FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
       field_decl_{nullptr},
-      is_array_{false} {}
+      is_array_{false} {
+
+      array_size_ = 0;
+      }
 
 PortDecl::PortDecl(const std::string &name, const Decl *fd,
                    FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
       field_decl_{const_cast<Decl *>(fd)},
-      is_array_{false} {}
+      is_array_{false} {
+
+      array_size_ = 0;
+      }
 
 PortDecl::PortDecl(const PortDecl &from) {
   port_name_ = from.port_name_;
