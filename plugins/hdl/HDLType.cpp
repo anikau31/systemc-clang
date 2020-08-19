@@ -29,13 +29,18 @@ void HDLType::SCtype2hcode(string prefix,  Tree<TemplateType> *template_argtp,
   std::replace(tmps.begin(), tmps.end(), ' ', '_'); // replace spaces in type name with _
   hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
   hmainp->child_list.push_back(h_typeinfo);
+
   hNodep h_typ = new hNode(tmps, hNode::hdlopsEnum::hType);
-  h_typeinfo->child_list.push_back(h_typ);
+  
   if (arr_size >0) {
     hNodep h_arr = new hNode("array##"+to_string(arr_size), hNode::hdlopsEnum::hType);
-    h_typ->child_list.push_back(h_arr);
-    h_typ = h_arr;
+    h_arr->child_list.push_back(h_typ);
+    h_typeinfo->child_list.push_back(h_arr);
   }
+  else {
+    h_typeinfo->child_list.push_back(h_typ);
+  }
+
   auto const vectreeptr{ template_argtp->getChildren(template_argtp->getRoot())};
   // template arguments seem to be stored in reverse order
   for (int i=vectreeptr.size()-1; i>=0; i--) {
