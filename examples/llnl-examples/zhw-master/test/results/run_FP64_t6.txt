@@ -1,0 +1,2121 @@
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=1 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o test.o test.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=1 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o zbatch.o zbatch.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=1 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include -L/home/lloyd23/src/systemc-2.3.2/objdir/src/.libs -L/home/lloyd23/src/zfp/lib  test.o zbatch.o  -lsystemc -lpthread -lzfp -lm -o test
+dims: 1
+tcase: 6
+rate: 8, blocks: 1
+axis length: 4
+array min  : -21.7604
+array max  : 2.71569
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 34
+libzfp compression cycles: 451
+dims: 1
+tcase: 6
+rate: 8, blocks: 2
+axis length: 8
+array min  : -174.083
+array max  : 73.3701
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 55
+libzfp compression cycles: 809
+dims: 1
+tcase: 6
+rate: 8, blocks: 3
+axis length: 12
+array min  : -587.531
+array max  : 339.837
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 74
+libzfp compression cycles: 1109
+dims: 1
+tcase: 6
+rate: 8, blocks: 4
+axis length: 16
+array min  : -1392.67
+array max  : 931.549
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 94
+libzfp compression cycles: 1479
+dims: 1
+tcase: 6
+rate: 8, blocks: 5
+axis length: 20
+array min  : -2720.05
+array max  : 1979.86
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 115
+libzfp compression cycles: 1811
+dims: 1
+tcase: 6
+rate: 8, blocks: 6
+axis length: 24
+array min  : -4700.25
+array max  : 3617.14
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 135
+libzfp compression cycles: 2060
+dims: 1
+tcase: 6
+rate: 8, blocks: 7
+axis length: 28
+array min  : -7463.82
+array max  : 5973.36
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 156
+libzfp compression cycles: 2409
+dims: 1
+tcase: 6
+rate: 8, blocks: 8
+axis length: 32
+array min  : -11141.3
+array max  : 9175.8
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 177
+libzfp compression cycles: 2747
+dims: 1
+tcase: 6
+rate: 16, blocks: 1
+axis length: 4
+array min  : -21.7604
+array max  : 2.71569
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 34
+libzfp compression cycles: 459
+dims: 1
+tcase: 6
+rate: 16, blocks: 2
+axis length: 8
+array min  : -174.083
+array max  : 73.3701
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 55
+libzfp compression cycles: 800
+dims: 1
+tcase: 6
+rate: 16, blocks: 3
+axis length: 12
+array min  : -587.531
+array max  : 339.837
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 74
+libzfp compression cycles: 1106
+dims: 1
+tcase: 6
+rate: 16, blocks: 4
+axis length: 16
+array min  : -1392.67
+array max  : 931.549
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 94
+libzfp compression cycles: 1528
+dims: 1
+tcase: 6
+rate: 16, blocks: 5
+axis length: 20
+array min  : -2720.05
+array max  : 1979.86
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 115
+libzfp compression cycles: 1800
+dims: 1
+tcase: 6
+rate: 16, blocks: 6
+axis length: 24
+array min  : -4700.25
+array max  : 3617.14
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 135
+libzfp compression cycles: 2100
+dims: 1
+tcase: 6
+rate: 16, blocks: 7
+axis length: 28
+array min  : -7463.82
+array max  : 5973.36
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 156
+libzfp compression cycles: 2429
+dims: 1
+tcase: 6
+rate: 16, blocks: 8
+axis length: 32
+array min  : -11141.3
+array max  : 9175.8
+minbits: 64, maxbits: 64, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 177
+libzfp compression cycles: 2765
+dims: 1
+tcase: 6
+rate: 24, blocks: 1
+axis length: 4
+array min  : -21.7604
+array max  : 2.71569
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 50
+libzfp compression cycles: 673
+dims: 1
+tcase: 6
+rate: 24, blocks: 2
+axis length: 8
+array min  : -174.083
+array max  : 73.3701
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 87
+libzfp compression cycles: 1239
+dims: 1
+tcase: 6
+rate: 24, blocks: 3
+axis length: 12
+array min  : -587.531
+array max  : 339.837
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 122
+libzfp compression cycles: 1742
+dims: 1
+tcase: 6
+rate: 24, blocks: 4
+axis length: 16
+array min  : -1392.67
+array max  : 931.549
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 158
+libzfp compression cycles: 2334
+dims: 1
+tcase: 6
+rate: 24, blocks: 5
+axis length: 20
+array min  : -2720.05
+array max  : 1979.86
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 195
+libzfp compression cycles: 2883
+dims: 1
+tcase: 6
+rate: 24, blocks: 6
+axis length: 24
+array min  : -4700.25
+array max  : 3617.14
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 231
+libzfp compression cycles: 3469
+dims: 1
+tcase: 6
+rate: 24, blocks: 7
+axis length: 28
+array min  : -7463.82
+array max  : 5973.36
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 268
+libzfp compression cycles: 4013
+dims: 1
+tcase: 6
+rate: 24, blocks: 8
+axis length: 32
+array min  : -11141.3
+array max  : 9175.8
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 305
+libzfp compression cycles: 4596
+dims: 1
+tcase: 6
+rate: 32, blocks: 1
+axis length: 4
+array min  : -21.7604
+array max  : 2.71569
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 50
+libzfp compression cycles: 673
+dims: 1
+tcase: 6
+rate: 32, blocks: 2
+axis length: 8
+array min  : -174.083
+array max  : 73.3701
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 87
+libzfp compression cycles: 1239
+dims: 1
+tcase: 6
+rate: 32, blocks: 3
+axis length: 12
+array min  : -587.531
+array max  : 339.837
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 122
+libzfp compression cycles: 1719
+dims: 1
+tcase: 6
+rate: 32, blocks: 4
+axis length: 16
+array min  : -1392.67
+array max  : 931.549
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 158
+libzfp compression cycles: 2352
+dims: 1
+tcase: 6
+rate: 32, blocks: 5
+axis length: 20
+array min  : -2720.05
+array max  : 1979.86
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 195
+libzfp compression cycles: 2904
+dims: 1
+tcase: 6
+rate: 32, blocks: 6
+axis length: 24
+array min  : -4700.25
+array max  : 3617.14
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 231
+libzfp compression cycles: 3455
+dims: 1
+tcase: 6
+rate: 32, blocks: 7
+axis length: 28
+array min  : -7463.82
+array max  : 5973.36
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 268
+libzfp compression cycles: 4056
+dims: 1
+tcase: 6
+rate: 32, blocks: 8
+axis length: 32
+array min  : -11141.3
+array max  : 9175.8
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 305
+libzfp compression cycles: 4625
+dims: 1
+tcase: 6
+rate: 40, blocks: 1
+axis length: 4
+array min  : -21.7604
+array max  : 2.71569
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 66
+libzfp compression cycles: 957
+dims: 1
+tcase: 6
+rate: 40, blocks: 2
+axis length: 8
+array min  : -174.083
+array max  : 73.3701
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 119
+libzfp compression cycles: 1690
+dims: 1
+tcase: 6
+rate: 40, blocks: 3
+axis length: 12
+array min  : -587.531
+array max  : 339.837
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 170
+libzfp compression cycles: 2418
+dims: 1
+tcase: 6
+rate: 40, blocks: 4
+axis length: 16
+array min  : -1392.67
+array max  : 931.549
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 222
+libzfp compression cycles: 3209
+dims: 1
+tcase: 6
+rate: 40, blocks: 5
+axis length: 20
+array min  : -2720.05
+array max  : 1979.86
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 275
+libzfp compression cycles: 3975
+dims: 1
+tcase: 6
+rate: 40, blocks: 6
+axis length: 24
+array min  : -4700.25
+array max  : 3617.14
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 327
+libzfp compression cycles: 4801
+dims: 1
+tcase: 6
+rate: 40, blocks: 7
+axis length: 28
+array min  : -7463.82
+array max  : 5973.36
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 380
+libzfp compression cycles: 5564
+dims: 1
+tcase: 6
+rate: 40, blocks: 8
+axis length: 32
+array min  : -11141.3
+array max  : 9175.8
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 433
+libzfp compression cycles: 6287
+dims: 1
+tcase: 6
+rate: 48, blocks: 1
+axis length: 4
+array min  : -21.7604
+array max  : 2.71569
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 66
+libzfp compression cycles: 870
+dims: 1
+tcase: 6
+rate: 48, blocks: 2
+axis length: 8
+array min  : -174.083
+array max  : 73.3701
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 119
+libzfp compression cycles: 1690
+dims: 1
+tcase: 6
+rate: 48, blocks: 3
+axis length: 12
+array min  : -587.531
+array max  : 339.837
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 170
+libzfp compression cycles: 2412
+dims: 1
+tcase: 6
+rate: 48, blocks: 4
+axis length: 16
+array min  : -1392.67
+array max  : 931.549
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 222
+libzfp compression cycles: 3186
+dims: 1
+tcase: 6
+rate: 48, blocks: 5
+axis length: 20
+array min  : -2720.05
+array max  : 1979.86
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 275
+libzfp compression cycles: 4010
+dims: 1
+tcase: 6
+rate: 48, blocks: 6
+axis length: 24
+array min  : -4700.25
+array max  : 3617.14
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 327
+libzfp compression cycles: 4773
+dims: 1
+tcase: 6
+rate: 48, blocks: 7
+axis length: 28
+array min  : -7463.82
+array max  : 5973.36
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 380
+libzfp compression cycles: 5601
+dims: 1
+tcase: 6
+rate: 48, blocks: 8
+axis length: 32
+array min  : -11141.3
+array max  : 9175.8
+minbits: 192, maxbits: 192, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 433
+libzfp compression cycles: 6332
+dims: 1
+tcase: 6
+rate: 56, blocks: 1
+axis length: 4
+array min  : -21.7604
+array max  : 2.71569
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 82
+libzfp compression cycles: 1144
+dims: 1
+tcase: 6
+rate: 56, blocks: 2
+axis length: 8
+array min  : -174.083
+array max  : 73.3701
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 149
+libzfp compression cycles: 2184
+dims: 1
+tcase: 6
+rate: 56, blocks: 3
+axis length: 12
+array min  : -587.531
+array max  : 339.837
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 215
+libzfp compression cycles: 3128
+dims: 1
+tcase: 6
+rate: 56, blocks: 4
+axis length: 16
+array min  : -1392.67
+array max  : 931.549
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 280
+libzfp compression cycles: 4189
+dims: 1
+tcase: 6
+rate: 56, blocks: 5
+axis length: 20
+array min  : -2720.05
+array max  : 1979.86
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 347
+libzfp compression cycles: 5200
+dims: 1
+tcase: 6
+rate: 56, blocks: 6
+axis length: 24
+array min  : -4700.25
+array max  : 3617.14
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 413
+libzfp compression cycles: 6191
+dims: 1
+tcase: 6
+rate: 56, blocks: 7
+axis length: 28
+array min  : -7463.82
+array max  : 5973.36
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 479
+libzfp compression cycles: 7225
+dims: 1
+tcase: 6
+rate: 56, blocks: 8
+axis length: 32
+array min  : -11141.3
+array max  : 9175.8
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 546
+libzfp compression cycles: 8231
+dims: 1
+tcase: 6
+rate: 64, blocks: 1
+axis length: 4
+array min  : -21.7604
+array max  : 2.71569
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 82
+libzfp compression cycles: 1179
+dims: 1
+tcase: 6
+rate: 64, blocks: 2
+axis length: 8
+array min  : -174.083
+array max  : 73.3701
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 149
+libzfp compression cycles: 2178
+dims: 1
+tcase: 6
+rate: 64, blocks: 3
+axis length: 12
+array min  : -587.531
+array max  : 339.837
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 215
+libzfp compression cycles: 3129
+dims: 1
+tcase: 6
+rate: 64, blocks: 4
+axis length: 16
+array min  : -1392.67
+array max  : 931.549
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 280
+libzfp compression cycles: 4189
+dims: 1
+tcase: 6
+rate: 64, blocks: 5
+axis length: 20
+array min  : -2720.05
+array max  : 1979.86
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 347
+libzfp compression cycles: 5243
+dims: 1
+tcase: 6
+rate: 64, blocks: 6
+axis length: 24
+array min  : -4700.25
+array max  : 3617.14
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 413
+libzfp compression cycles: 6124
+dims: 1
+tcase: 6
+rate: 64, blocks: 7
+axis length: 28
+array min  : -7463.82
+array max  : 5973.36
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 479
+libzfp compression cycles: 7159
+dims: 1
+tcase: 6
+rate: 64, blocks: 8
+axis length: 32
+array min  : -11141.3
+array max  : 9175.8
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 546
+libzfp compression cycles: 8256
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=2 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o test.o test.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=2 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o zbatch.o zbatch.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=2 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include -L/home/lloyd23/src/systemc-2.3.2/objdir/src/.libs -L/home/lloyd23/src/zfp/lib  test.o zbatch.o  -lsystemc -lpthread -lzfp -lm -o test
+dims: 2
+tcase: 6
+rate: 8, blocks: 1
+axis length: 4
+array min  : -43.5208
+array max  : 5.43177
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 64
+libzfp compression cycles: 890
+dims: 2
+tcase: 6
+rate: 8, blocks: 4
+axis length: 8
+array min  : -348.167
+array max  : 146.779
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 125
+libzfp compression cycles: 3132
+dims: 2
+tcase: 6
+rate: 8, blocks: 9
+axis length: 12
+array min  : -1175.06
+array max  : 679.756
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 228
+libzfp compression cycles: 6948
+dims: 2
+tcase: 6
+rate: 8, blocks: 16
+axis length: 16
+array min  : -2785.33
+array max  : 1863.6
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 373
+libzfp compression cycles: 12420
+dims: 2
+tcase: 6
+rate: 8, blocks: 25
+axis length: 20
+array min  : -5440.1
+array max  : 3966.42
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 569
+libzfp compression cycles: 19968
+dims: 2
+tcase: 6
+rate: 8, blocks: 36
+axis length: 24
+array min  : -9400.5
+array max  : 7234.03
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 804
+libzfp compression cycles: 28923
+dims: 2
+tcase: 6
+rate: 8, blocks: 49
+axis length: 28
+array min  : -14927.6
+array max  : 11941.9
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1080
+libzfp compression cycles: 40002
+dims: 2
+tcase: 6
+rate: 8, blocks: 64
+axis length: 32
+array min  : -22282.7
+array max  : 18357.8
+minbits: 128, maxbits: 128, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1415
+libzfp compression cycles: 53387
+dims: 2
+tcase: 6
+rate: 16, blocks: 1
+axis length: 4
+array min  : -43.5208
+array max  : 5.43177
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 73
+libzfp compression cycles: 1210
+dims: 2
+tcase: 6
+rate: 16, blocks: 4
+axis length: 8
+array min  : -348.167
+array max  : 146.779
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 157
+libzfp compression cycles: 4238
+dims: 2
+tcase: 6
+rate: 16, blocks: 9
+axis length: 12
+array min  : -1175.06
+array max  : 679.756
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 300
+libzfp compression cycles: 9398
+dims: 2
+tcase: 6
+rate: 16, blocks: 16
+axis length: 16
+array min  : -2785.33
+array max  : 1863.6
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 501
+libzfp compression cycles: 16903
+dims: 2
+tcase: 6
+rate: 16, blocks: 25
+axis length: 20
+array min  : -5440.1
+array max  : 3966.42
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 768
+libzfp compression cycles: 26696
+dims: 2
+tcase: 6
+rate: 16, blocks: 36
+axis length: 24
+array min  : -9400.5
+array max  : 7234.03
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1092
+libzfp compression cycles: 38659
+dims: 2
+tcase: 6
+rate: 16, blocks: 49
+axis length: 28
+array min  : -14927.6
+array max  : 11941.9
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1473
+libzfp compression cycles: 53358
+dims: 2
+tcase: 6
+rate: 16, blocks: 64
+axis length: 32
+array min  : -22282.7
+array max  : 18357.8
+minbits: 256, maxbits: 256, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1927
+libzfp compression cycles: 70917
+dims: 2
+tcase: 6
+rate: 24, blocks: 1
+axis length: 4
+array min  : -43.5208
+array max  : 5.43177
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 81
+libzfp compression cycles: 1473
+dims: 2
+tcase: 6
+rate: 24, blocks: 4
+axis length: 8
+array min  : -348.167
+array max  : 146.779
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 189
+libzfp compression cycles: 5344
+dims: 2
+tcase: 6
+rate: 24, blocks: 9
+axis length: 12
+array min  : -1175.06
+array max  : 679.756
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 372
+libzfp compression cycles: 11743
+dims: 2
+tcase: 6
+rate: 24, blocks: 16
+axis length: 16
+array min  : -2785.33
+array max  : 1863.6
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 629
+libzfp compression cycles: 21150
+dims: 2
+tcase: 6
+rate: 24, blocks: 25
+axis length: 20
+array min  : -5440.1
+array max  : 3966.42
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 968
+libzfp compression cycles: 33254
+dims: 2
+tcase: 6
+rate: 24, blocks: 36
+axis length: 24
+array min  : -9400.5
+array max  : 7234.03
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1380
+libzfp compression cycles: 48380
+dims: 2
+tcase: 6
+rate: 24, blocks: 49
+axis length: 28
+array min  : -14927.6
+array max  : 11941.9
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1865
+libzfp compression cycles: 66794
+dims: 2
+tcase: 6
+rate: 24, blocks: 64
+axis length: 32
+array min  : -22282.7
+array max  : 18357.8
+minbits: 384, maxbits: 384, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 2439
+libzfp compression cycles: 88333
+dims: 2
+tcase: 6
+rate: 32, blocks: 1
+axis length: 4
+array min  : -43.5208
+array max  : 5.43177
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 89
+libzfp compression cycles: 1708
+dims: 2
+tcase: 6
+rate: 32, blocks: 4
+axis length: 8
+array min  : -348.167
+array max  : 146.779
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 221
+libzfp compression cycles: 6428
+dims: 2
+tcase: 6
+rate: 32, blocks: 9
+axis length: 12
+array min  : -1175.06
+array max  : 679.756
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 444
+libzfp compression cycles: 14349
+dims: 2
+tcase: 6
+rate: 32, blocks: 16
+axis length: 16
+array min  : -2785.33
+array max  : 1863.6
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 757
+libzfp compression cycles: 25515
+dims: 2
+tcase: 6
+rate: 32, blocks: 25
+axis length: 20
+array min  : -5440.1
+array max  : 3966.42
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1168
+libzfp compression cycles: 40652
+dims: 2
+tcase: 6
+rate: 32, blocks: 36
+axis length: 24
+array min  : -9400.5
+array max  : 7234.03
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1668
+libzfp compression cycles: 58971
+dims: 2
+tcase: 6
+rate: 32, blocks: 49
+axis length: 28
+array min  : -14927.6
+array max  : 11941.9
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 2257
+libzfp compression cycles: 80280
+dims: 2
+tcase: 6
+rate: 32, blocks: 64
+axis length: 32
+array min  : -22282.7
+array max  : 18357.8
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 2951
+libzfp compression cycles: 105222
+dims: 2
+tcase: 6
+rate: 40, blocks: 1
+axis length: 4
+array min  : -43.5208
+array max  : 5.43177
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 97
+libzfp compression cycles: 1988
+dims: 2
+tcase: 6
+rate: 40, blocks: 4
+axis length: 8
+array min  : -348.167
+array max  : 146.779
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 253
+libzfp compression cycles: 7416
+dims: 2
+tcase: 6
+rate: 40, blocks: 9
+axis length: 12
+array min  : -1175.06
+array max  : 679.756
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 516
+libzfp compression cycles: 16715
+dims: 2
+tcase: 6
+rate: 40, blocks: 16
+axis length: 16
+array min  : -2785.33
+array max  : 1863.6
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 885
+libzfp compression cycles: 29799
+dims: 2
+tcase: 6
+rate: 40, blocks: 25
+axis length: 20
+array min  : -5440.1
+array max  : 3966.42
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1368
+libzfp compression cycles: 47095
+dims: 2
+tcase: 6
+rate: 40, blocks: 36
+axis length: 24
+array min  : -9400.5
+array max  : 7234.03
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1956
+libzfp compression cycles: 67981
+dims: 2
+tcase: 6
+rate: 40, blocks: 49
+axis length: 28
+array min  : -14927.6
+array max  : 11941.9
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 2649
+libzfp compression cycles: 92979
+dims: 2
+tcase: 6
+rate: 40, blocks: 64
+axis length: 32
+array min  : -22282.7
+array max  : 18357.8
+minbits: 640, maxbits: 640, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 3463
+libzfp compression cycles: 122379
+dims: 2
+tcase: 6
+rate: 48, blocks: 1
+axis length: 4
+array min  : -43.5208
+array max  : 5.43177
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 105
+libzfp compression cycles: 2285
+dims: 2
+tcase: 6
+rate: 48, blocks: 4
+axis length: 8
+array min  : -348.167
+array max  : 146.779
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 285
+libzfp compression cycles: 8566
+dims: 2
+tcase: 6
+rate: 48, blocks: 9
+axis length: 12
+array min  : -1175.06
+array max  : 679.756
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 588
+libzfp compression cycles: 19107
+dims: 2
+tcase: 6
+rate: 48, blocks: 16
+axis length: 16
+array min  : -2785.33
+array max  : 1863.6
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1013
+libzfp compression cycles: 34086
+dims: 2
+tcase: 6
+rate: 48, blocks: 25
+axis length: 20
+array min  : -5440.1
+array max  : 3966.42
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1568
+libzfp compression cycles: 53875
+dims: 2
+tcase: 6
+rate: 48, blocks: 36
+axis length: 24
+array min  : -9400.5
+array max  : 7234.03
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 2244
+libzfp compression cycles: 78156
+dims: 2
+tcase: 6
+rate: 48, blocks: 49
+axis length: 28
+array min  : -14927.6
+array max  : 11941.9
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 3041
+libzfp compression cycles: 106617
+dims: 2
+tcase: 6
+rate: 48, blocks: 64
+axis length: 32
+array min  : -22282.7
+array max  : 18357.8
+minbits: 768, maxbits: 768, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 3975
+libzfp compression cycles: 139536
+dims: 2
+tcase: 6
+rate: 56, blocks: 1
+axis length: 4
+array min  : -43.5208
+array max  : 5.43177
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 113
+libzfp compression cycles: 2531
+dims: 2
+tcase: 6
+rate: 56, blocks: 4
+axis length: 8
+array min  : -348.167
+array max  : 146.779
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 311
+libzfp compression cycles: 9681
+dims: 2
+tcase: 6
+rate: 56, blocks: 9
+axis length: 12
+array min  : -1175.06
+array max  : 679.756
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 642
+libzfp compression cycles: 21571
+dims: 2
+tcase: 6
+rate: 56, blocks: 16
+axis length: 16
+array min  : -2785.33
+array max  : 1863.6
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1104
+libzfp compression cycles: 38552
+dims: 2
+tcase: 6
+rate: 56, blocks: 25
+axis length: 20
+array min  : -5440.1
+array max  : 3966.42
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1700
+libzfp compression cycles: 60383
+dims: 2
+tcase: 6
+rate: 56, blocks: 36
+axis length: 24
+array min  : -9400.5
+array max  : 7234.03
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 2435
+libzfp compression cycles: 86990
+dims: 2
+tcase: 6
+rate: 56, blocks: 49
+axis length: 28
+array min  : -14927.6
+array max  : 11941.9
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 3295
+libzfp compression cycles: 118488
+dims: 2
+tcase: 6
+rate: 56, blocks: 64
+axis length: 32
+array min  : -22282.7
+array max  : 18357.8
+minbits: 896, maxbits: 896, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 4307
+libzfp compression cycles: 154900
+dims: 2
+tcase: 6
+rate: 64, blocks: 1
+axis length: 4
+array min  : -43.5208
+array max  : 5.43177
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 116
+libzfp compression cycles: 2554
+dims: 2
+tcase: 6
+rate: 64, blocks: 4
+axis length: 8
+array min  : -348.167
+array max  : 146.779
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 320
+libzfp compression cycles: 9822
+dims: 2
+tcase: 6
+rate: 64, blocks: 9
+axis length: 12
+array min  : -1175.06
+array max  : 679.756
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 660
+libzfp compression cycles: 21780
+dims: 2
+tcase: 6
+rate: 64, blocks: 16
+axis length: 16
+array min  : -2785.33
+array max  : 1863.6
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1136
+libzfp compression cycles: 38665
+dims: 2
+tcase: 6
+rate: 64, blocks: 25
+axis length: 20
+array min  : -5440.1
+array max  : 3966.42
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1750
+libzfp compression cycles: 60684
+dims: 2
+tcase: 6
+rate: 64, blocks: 36
+axis length: 24
+array min  : -9400.5
+array max  : 7234.03
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 2507
+libzfp compression cycles: 87155
+dims: 2
+tcase: 6
+rate: 64, blocks: 49
+axis length: 28
+array min  : -14927.6
+array max  : 11941.9
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 3393
+libzfp compression cycles: 118996
+dims: 2
+tcase: 6
+rate: 64, blocks: 64
+axis length: 32
+array min  : -22282.7
+array max  : 18357.8
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 4435
+libzfp compression cycles: 155376
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=3 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o test.o test.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=3 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include  -c -o zbatch.o zbatch.cpp
+g++ -std=c++11 -Wno-strict-overflow  -O3 -Wall -MMD -DZCHK -DDATAW=64 -DPREC=64 -DDIMS=3 -DTIMEOFDAY -I../src -I/home/lloyd23/src/systemc-2.3.2/src -I. -I/home/lloyd23/src/zfp/include -L/home/lloyd23/src/systemc-2.3.2/objdir/src/.libs -L/home/lloyd23/src/zfp/lib  test.o zbatch.o  -lsystemc -lpthread -lzfp -lm -o test
+dims: 3
+tcase: 6
+rate: 8, blocks: 1
+axis length: 4
+array min  : -65.2813
+array max  : 8.15436
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 172
+libzfp compression cycles: 5876
+dims: 3
+tcase: 6
+rate: 8, blocks: 8
+axis length: 8
+array min  : -522.25
+array max  : 220.251
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 619
+libzfp compression cycles: 45174
+dims: 3
+tcase: 6
+rate: 8, blocks: 27
+axis length: 12
+array min  : -1762.59
+array max  : 1020.29
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1836
+libzfp compression cycles: 156870
+dims: 3
+tcase: 6
+rate: 8, blocks: 64
+axis length: 16
+array min  : -4178
+array max  : 2799.01
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 4204
+libzfp compression cycles: 371985
+dims: 3
+tcase: 6
+rate: 8, blocks: 125
+axis length: 20
+array min  : -8160.16
+array max  : 5944.19
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 8109
+libzfp compression cycles: 739792
+dims: 3
+tcase: 6
+rate: 8, blocks: 216
+axis length: 24
+array min  : -14100.8
+array max  : 10848.2
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 13933
+libzfp compression cycles: 1276190
+dims: 3
+tcase: 6
+rate: 8, blocks: 343
+axis length: 28
+array min  : -22391.5
+array max  : 17915.8
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 22060
+libzfp compression cycles: 2054581
+dims: 3
+tcase: 6
+rate: 8, blocks: 512
+axis length: 32
+array min  : -33424
+array max  : 27501.3
+minbits: 512, maxbits: 512, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 32875
+libzfp compression cycles: 3055479
+dims: 3
+tcase: 6
+rate: 16, blocks: 1
+axis length: 4
+array min  : -65.2813
+array max  : 8.15436
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 180
+libzfp compression cycles: 7664
+dims: 3
+tcase: 6
+rate: 16, blocks: 8
+axis length: 8
+array min  : -522.25
+array max  : 220.251
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 627
+libzfp compression cycles: 59820
+dims: 3
+tcase: 6
+rate: 16, blocks: 27
+axis length: 12
+array min  : -1762.59
+array max  : 1020.29
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1844
+libzfp compression cycles: 205357
+dims: 3
+tcase: 6
+rate: 16, blocks: 64
+axis length: 16
+array min  : -4178
+array max  : 2799.01
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 4212
+libzfp compression cycles: 488919
+dims: 3
+tcase: 6
+rate: 16, blocks: 125
+axis length: 20
+array min  : -8160.16
+array max  : 5944.19
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 8117
+libzfp compression cycles: 961899
+dims: 3
+tcase: 6
+rate: 16, blocks: 216
+axis length: 24
+array min  : -14100.8
+array max  : 10848.2
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 13941
+libzfp compression cycles: 1668897
+dims: 3
+tcase: 6
+rate: 16, blocks: 343
+axis length: 28
+array min  : -22391.5
+array max  : 17915.8
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 22068
+libzfp compression cycles: 2669917
+dims: 3
+tcase: 6
+rate: 16, blocks: 512
+axis length: 32
+array min  : -33424
+array max  : 27501.3
+minbits: 1024, maxbits: 1024, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 32883
+libzfp compression cycles: 3965797
+dims: 3
+tcase: 6
+rate: 24, blocks: 1
+axis length: 4
+array min  : -65.2813
+array max  : 8.15436
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 188
+libzfp compression cycles: 9447
+dims: 3
+tcase: 6
+rate: 24, blocks: 8
+axis length: 8
+array min  : -522.25
+array max  : 220.251
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 635
+libzfp compression cycles: 73993
+dims: 3
+tcase: 6
+rate: 24, blocks: 27
+axis length: 12
+array min  : -1762.59
+array max  : 1020.29
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1852
+libzfp compression cycles: 253569
+dims: 3
+tcase: 6
+rate: 24, blocks: 64
+axis length: 16
+array min  : -4178
+array max  : 2799.01
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 4220
+libzfp compression cycles: 603446
+dims: 3
+tcase: 6
+rate: 24, blocks: 125
+axis length: 20
+array min  : -8160.16
+array max  : 5944.19
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 8125
+libzfp compression cycles: 1186755
+dims: 3
+tcase: 6
+rate: 24, blocks: 216
+axis length: 24
+array min  : -14100.8
+array max  : 10848.2
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 13949
+libzfp compression cycles: 2055294
+dims: 3
+tcase: 6
+rate: 24, blocks: 343
+axis length: 28
+array min  : -22391.5
+array max  : 17915.8
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 22076
+libzfp compression cycles: 3414124
+dims: 3
+tcase: 6
+rate: 24, blocks: 512
+axis length: 32
+array min  : -33424
+array max  : 27501.3
+minbits: 1536, maxbits: 1536, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 32891
+libzfp compression cycles: 4919119
+dims: 3
+tcase: 6
+rate: 32, blocks: 1
+axis length: 4
+array min  : -65.2813
+array max  : 8.15436
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 196
+libzfp compression cycles: 11269
+dims: 3
+tcase: 6
+rate: 32, blocks: 8
+axis length: 8
+array min  : -522.25
+array max  : 220.251
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 643
+libzfp compression cycles: 88475
+dims: 3
+tcase: 6
+rate: 32, blocks: 27
+axis length: 12
+array min  : -1762.59
+array max  : 1020.29
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1860
+libzfp compression cycles: 301938
+dims: 3
+tcase: 6
+rate: 32, blocks: 64
+axis length: 16
+array min  : -4178
+array max  : 2799.01
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 4228
+libzfp compression cycles: 717432
+dims: 3
+tcase: 6
+rate: 32, blocks: 125
+axis length: 20
+array min  : -8160.16
+array max  : 5944.19
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 8133
+libzfp compression cycles: 1410876
+dims: 3
+tcase: 6
+rate: 32, blocks: 216
+axis length: 24
+array min  : -14100.8
+array max  : 10848.2
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 13957
+libzfp compression cycles: 2442925
+dims: 3
+tcase: 6
+rate: 32, blocks: 343
+axis length: 28
+array min  : -22391.5
+array max  : 17915.8
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 22084
+libzfp compression cycles: 3895990
+dims: 3
+tcase: 6
+rate: 32, blocks: 512
+axis length: 32
+array min  : -33424
+array max  : 27501.3
+minbits: 2048, maxbits: 2048, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 32899
+libzfp compression cycles: 5806034
+dims: 3
+tcase: 6
+rate: 40, blocks: 1
+axis length: 4
+array min  : -65.2813
+array max  : 8.15436
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 204
+libzfp compression cycles: 13029
+dims: 3
+tcase: 6
+rate: 40, blocks: 8
+axis length: 8
+array min  : -522.25
+array max  : 220.251
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 651
+libzfp compression cycles: 102865
+dims: 3
+tcase: 6
+rate: 40, blocks: 27
+axis length: 12
+array min  : -1762.59
+array max  : 1020.29
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1868
+libzfp compression cycles: 350844
+dims: 3
+tcase: 6
+rate: 40, blocks: 64
+axis length: 16
+array min  : -4178
+array max  : 2799.01
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 4236
+libzfp compression cycles: 831784
+dims: 3
+tcase: 6
+rate: 40, blocks: 125
+axis length: 20
+array min  : -8160.16
+array max  : 5944.19
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 8141
+libzfp compression cycles: 1634657
+dims: 3
+tcase: 6
+rate: 40, blocks: 216
+axis length: 24
+array min  : -14100.8
+array max  : 10848.2
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 13965
+libzfp compression cycles: 2830085
+dims: 3
+tcase: 6
+rate: 40, blocks: 343
+axis length: 28
+array min  : -22391.5
+array max  : 17915.8
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 22092
+libzfp compression cycles: 4561853
+dims: 3
+tcase: 6
+rate: 40, blocks: 512
+axis length: 32
+array min  : -33424
+array max  : 27501.3
+minbits: 2560, maxbits: 2560, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 32907
+libzfp compression cycles: 6736267
+dims: 3
+tcase: 6
+rate: 48, blocks: 1
+axis length: 4
+array min  : -65.2813
+array max  : 8.15436
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 212
+libzfp compression cycles: 14869
+dims: 3
+tcase: 6
+rate: 48, blocks: 8
+axis length: 8
+array min  : -522.25
+array max  : 220.251
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 666
+libzfp compression cycles: 117396
+dims: 3
+tcase: 6
+rate: 48, blocks: 27
+axis length: 12
+array min  : -1762.59
+array max  : 1020.29
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 1909
+libzfp compression cycles: 398964
+dims: 3
+tcase: 6
+rate: 48, blocks: 64
+axis length: 16
+array min  : -4178
+array max  : 2799.01
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 4307
+libzfp compression cycles: 947495
+dims: 3
+tcase: 6
+rate: 48, blocks: 125
+axis length: 20
+array min  : -8160.16
+array max  : 5944.19
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 8294
+libzfp compression cycles: 1859540
+dims: 3
+tcase: 6
+rate: 48, blocks: 216
+axis length: 24
+array min  : -14100.8
+array max  : 10848.2
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 14239
+libzfp compression cycles: 3212627
+dims: 3
+tcase: 6
+rate: 48, blocks: 343
+axis length: 28
+array min  : -22391.5
+array max  : 17915.8
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 22539
+libzfp compression cycles: 5129197
+dims: 3
+tcase: 6
+rate: 48, blocks: 512
+axis length: 32
+array min  : -33424
+array max  : 27501.3
+minbits: 3072, maxbits: 3072, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 33599
+libzfp compression cycles: 7640675
+dims: 3
+tcase: 6
+rate: 56, blocks: 1
+axis length: 4
+array min  : -65.2813
+array max  : 8.15436
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 220
+libzfp compression cycles: 15718
+dims: 3
+tcase: 6
+rate: 56, blocks: 8
+axis length: 8
+array min  : -522.25
+array max  : 220.251
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 709
+libzfp compression cycles: 128862
+dims: 3
+tcase: 6
+rate: 56, blocks: 27
+axis length: 12
+array min  : -1762.59
+array max  : 1020.29
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 2047
+libzfp compression cycles: 422000
+dims: 3
+tcase: 6
+rate: 56, blocks: 64
+axis length: 16
+array min  : -4178
+array max  : 2799.01
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 4633
+libzfp compression cycles: 1004412
+dims: 3
+tcase: 6
+rate: 56, blocks: 125
+axis length: 20
+array min  : -8160.16
+array max  : 5944.19
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 8924
+libzfp compression cycles: 2037299
+dims: 3
+tcase: 6
+rate: 56, blocks: 216
+axis length: 24
+array min  : -14100.8
+array max  : 10848.2
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 15333
+libzfp compression cycles: 3403267
+dims: 3
+tcase: 6
+rate: 56, blocks: 343
+axis length: 28
+array min  : -22391.5
+array max  : 17915.8
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 24287
+libzfp compression cycles: 5409430
+dims: 3
+tcase: 6
+rate: 56, blocks: 512
+axis length: 32
+array min  : -33424
+array max  : 27501.3
+minbits: 3584, maxbits: 3584, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 36201
+libzfp compression cycles: 8061074
+dims: 3
+tcase: 6
+rate: 64, blocks: 1
+axis length: 4
+array min  : -65.2813
+array max  : 8.15436
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 228
+libzfp compression cycles: 15661
+dims: 3
+tcase: 6
+rate: 64, blocks: 8
+axis length: 8
+array min  : -522.25
+array max  : 220.251
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 773
+libzfp compression cycles: 124779
+dims: 3
+tcase: 6
+rate: 64, blocks: 27
+axis length: 12
+array min  : -1762.59
+array max  : 1020.29
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 2263
+libzfp compression cycles: 422295
+dims: 3
+tcase: 6
+rate: 64, blocks: 64
+axis length: 16
+array min  : -4178
+array max  : 2799.01
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 5145
+libzfp compression cycles: 1007442
+dims: 3
+tcase: 6
+rate: 64, blocks: 125
+axis length: 20
+array min  : -8160.16
+array max  : 5944.19
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 9924
+libzfp compression cycles: 1969985
+dims: 3
+tcase: 6
+rate: 64, blocks: 216
+axis length: 24
+array min  : -14100.8
+array max  : 10848.2
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 17061
+libzfp compression cycles: 3403660
+dims: 3
+tcase: 6
+rate: 64, blocks: 343
+axis length: 28
+array min  : -22391.5
+array max  : 17915.8
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 27031
+libzfp compression cycles: 5418181
+dims: 3
+tcase: 6
+rate: 64, blocks: 512
+axis length: 32
+array min  : -33424
+array max  : 27501.3
+minbits: 4096, maxbits: 4096, maxprec: 64, minexp: -51
+INFO: Simulating 
+Test passed!
+zfphw compression cycles: 40297
+libzfp compression cycles: 8084466
