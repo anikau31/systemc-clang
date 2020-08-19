@@ -1,14 +1,9 @@
 #ifndef _PORT_BINDING_H_
 #define _PORT_BINDING_H_
 
-#include "llvm/Support/raw_ostream.h"
-
-using namespace clang;
 using namespace systemc_clang;
 
 namespace systemc_clang {
-
-class PortBindingCtor {};
 
 class PortBinding {
  private:
@@ -20,9 +15,9 @@ class PortBinding {
   // These private members are used when the port binding is done in the
   // constructor.
   //
-  MemberExpr *me_ctor_port_;  // port
-  MemberExpr *me_instance_;   // instance on which the binding is invoked
-  MemberExpr *me_arg_;        // argument to the port
+  clang::MemberExpr *me_ctor_port_;  // port
+  clang::MemberExpr *me_instance_;   // instance on which the binding is invoked
+  clang::MemberExpr *me_arg_;        // argument to the port
 
   // The below private members are used when the port binding is found in the
   // sc_main.
@@ -31,9 +26,9 @@ class PortBinding {
   // 2. port_dref_
   // 3. port_parameter_dref_
   //
-  MemberExpr *port_member_expr_;
-  ArraySubscriptExpr *port_member_array_port_expr_;
-  DeclRefExpr *port_member_array_idx_dref_;
+  clang::MemberExpr *port_member_expr_;
+  clang::ArraySubscriptExpr *port_member_array_port_expr_;
+  clang::DeclRefExpr *port_member_array_idx_dref_;
 
   // Instance information
   std::string port_name_;
@@ -43,23 +38,23 @@ class PortBinding {
   std::string instance_var_name_;
   std::string instance_constructor_name_;
   // Declaration for the instance's type.
-  CXXRecordDecl *instance_type_decl_;
+  clang::CXXRecordDecl *instance_type_decl_;
 
   // There are only two DeclRefExpr that you really need.
   // The rest will be generated from these.
   //
   // Declaration for the instance (FieldDecl/VarDecl)
-  Decl *instance_decl_;
-  DeclRefExpr *port_dref_;
+  clang::Decl *instance_decl_;
+  clang::DeclRefExpr *port_dref_;
 
   // Declaration for the argument for the port.
   std::string port_parameter_name_;
-  const Type *port_parameter_type_;
+  const clang::Type *port_parameter_type_;
   std::string port_parameter_type_name_;
   std::string port_parameter_bound_to_var_name_;
-  DeclRefExpr *port_parameter_dref_;
-  DeclRefExpr *port_parameter_array_idx_dref_;
-  ArraySubscriptExpr *port_parameter_array_expr_;
+  clang::DeclRefExpr *port_parameter_dref_;
+  clang::DeclRefExpr *port_parameter_array_idx_dref_;
+  clang::ArraySubscriptExpr *port_parameter_array_expr_;
 
  public:
   void setInstanceVarName(const std::string &n) { instance_var_name_ = n; }
@@ -68,21 +63,25 @@ class PortBinding {
   }
 
   const std::string &getPortName() const { return port_name_; }
-  MemberExpr *getPortMemberExpr() const { return port_member_expr_; }
+  clang::MemberExpr *getPortMemberExpr() const { return port_member_expr_; }
   const std::string &getInstanceType() const { return instance_type_; }
   const std::string &getInstanceVarName() const { return instance_var_name_; }
   const std::string &getInstanceConstructorName() const {
     return instance_constructor_name_;
   }
-  CXXRecordDecl *getInstanceTypeDecl() const { return instance_type_decl_; }
-  Decl *getInstanceDecl() const { return instance_type_decl_; }
-  DeclRefExpr *getPortDeclRefExpr() const { return port_dref_; }
+  clang::CXXRecordDecl *getInstanceTypeDecl() const {
+    return instance_type_decl_;
+  }
+  clang::Decl *getInstanceDecl() const { return instance_type_decl_; }
+  clang::DeclRefExpr *getPortDeclRefExpr() const { return port_dref_; }
 
   const std::string &getBoundToName() const { return port_parameter_name_; }
   const std::string &getBoundToParameterVarName() const {
     return port_parameter_bound_to_var_name_;
   }
-  DeclRefExpr *getBoundPortDeclRefExpr() const { return port_parameter_dref_; }
+  clang::DeclRefExpr *getBoundPortDeclRefExpr() const {
+    return port_parameter_dref_;
+  }
   const std::string toString() const {
     return getInstanceType() + " " + getInstanceVarName() + " " +
            getInstanceConstructorName() + " " + getBoundToName();
@@ -93,8 +92,10 @@ class PortBinding {
   bool hasPortArrayParameter() const {
     return (port_member_array_idx_dref_ != nullptr);
   }
-  DeclRefExpr *getPortArrayIndex() const { return port_member_array_idx_dref_; }
-  DeclRefExpr *getBoundToArrayIndex() const {
+  clang::DeclRefExpr *getPortArrayIndex() const {
+    return port_member_array_idx_dref_;
+  }
+  clang::DeclRefExpr *getBoundToArrayIndex() const {
     return port_parameter_array_idx_dref_;
   }
 
@@ -127,11 +128,13 @@ class PortBinding {
     // << " bound to " << port_parameter_name_ << "\n";
   }
 
-  PortBinding(ArraySubscriptExpr *port_array, MemberExpr *me_ctor_port,
-              MemberExpr *me_instance, MemberExpr *me_arg,
-              ArraySubscriptExpr *array_port_bound_to, DeclRefExpr *array_idx)
+  PortBinding(clang::ArraySubscriptExpr *port_array,
+              clang::MemberExpr *me_ctor_port, clang::MemberExpr *me_instance,
+              clang::MemberExpr *me_arg,
+              clang::ArraySubscriptExpr *array_port_bound_to,
+              clang::DeclRefExpr *array_idx)
       : port_member_array_port_expr_{port_array},
-    port_member_array_idx_dref_{nullptr},
+        port_member_array_idx_dref_{nullptr},
         me_ctor_port_{me_ctor_port},
         me_instance_{me_instance},
         me_arg_{me_arg},
@@ -172,7 +175,8 @@ class PortBinding {
 
     if (children.begin() != children.end()) {
       Stmt *kid{*children.begin()};
-      if (MemberExpr * member_expr_kid{dyn_cast<MemberExpr>(kid)}) {
+      if (clang::MemberExpr *
+          member_expr_kid{dyn_cast<clang::MemberExpr>(kid)}) {
         port_parameter_bound_to_var_name_ =
             member_expr_kid->getMemberDecl()->getNameAsString();
       }
@@ -185,8 +189,8 @@ class PortBinding {
   }
 
   // This is used for sc_main
-  PortBinding(MemberExpr *me, DeclRefExpr *port_dref,
-              DeclRefExpr *port_arg_dref, Decl *instance_decl,
+  PortBinding(clang::MemberExpr *me, clang::DeclRefExpr *port_dref,
+              clang::DeclRefExpr *port_arg_dref, clang::Decl *instance_decl,
               const std::string &instance_constructor_name)
       : is_ctor_binding_{false},
         // Used only for ctor bindings
@@ -219,26 +223,6 @@ class PortBinding {
                                     .getBaseTypeIdentifier()
                                     ->getName();
   };
-
-  /*
-  PortBinding(const std::string &port_name, MemberExpr *port_member_expr,
-              const std::string &instance_type,
-              const std::string &instance_var_name,
-              CXXRecordDecl *instance_type_decl,
-              const std::string &instance_name, Decl *instance_decl,
-              DeclRefExpr *port_dref, const std::string &port_parameter_name,
-              DeclRefExpr *port_parameter_dref)
-      : port_name_{port_name},
-        port_member_expr_{port_member_expr},
-        instance_type_{instance_type},
-        instance_type_decl_{instance_type_decl},
-        instance_var_name_{instance_var_name},
-        instance_decl_{instance_decl},
-        instance_constructor_name_{instance_name},
-        port_dref_{port_dref},
-        port_parameter_name_{port_parameter_name},
-        port_parameter_dref_{port_parameter_dref} {};
-        */
 };      // namespace systemc_clang
 };      // namespace systemc_clang
 #endif  // ifdef
