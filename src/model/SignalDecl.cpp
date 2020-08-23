@@ -31,19 +31,22 @@ json SignalDecl::dump_json() {
   signal_j["signal_name"] = getName();
 
   // Container
-  auto template_args{PortDecl::getTemplateType()->getTemplateArgumentsType()};
+  
+  signal_j = PortDecl::dump_json();
 
-  signal_j["signal_type"] = template_args[0].getTypeName();
-  template_args.erase(begin(template_args));
-  signal_j["is_array_type"] = getArrayType();
-  if (getArrayType()) {
-    signal_j["array_size"] = getArraySize().getLimitedValue();
-  }
-
-
-  for (auto ait = begin(template_args); ait != end(template_args); ++ait) {
-    signal_j["signal_arguments"].push_back(ait->getTypeName());
-  }
-
+  //auto template_args{PortDecl::getTemplateType()->getTemplateArgumentsType()};
+//
+  // signal_j["signal_type"] = template_args[0].getTypeName();
+  // template_args.erase(begin(template_args));
+  // signal_j["is_array_type"] = getArrayType();
+  // if (getArrayType()) {
+    // signal_j["array_size"] = getArraySize().getLimitedValue();
+  // }
+//
+//
+  // for (auto ait = begin(template_args); ait != end(template_args); ++ait) {
+    // signal_j["signal_arguments"].push_back(ait->getTypeName());
+  // }
+//
   return signal_j;
 }
