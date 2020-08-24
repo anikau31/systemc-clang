@@ -130,10 +130,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // AST.
       //
       if (isa<clang::ClassTemplateSpecializationDecl>(decl)) {
-        // llvm::outs() << "TEMPLATE SPECIAL\n";
         found_template_declarations_.push_back(std::make_tuple(name, decl));
       } else {
-        // llvm::outs() << "NOT TEMPLATE SPECIAL\n";
         found_declarations_.push_back(std::make_tuple(name, decl));
       }
 
@@ -218,7 +216,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
     for (auto const &element : found_template_declarations_) {
       auto decl{get<1>(element)};
-      // std::llvm::outs() << "## ftd name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
       // InstanceMatcher::InstanceDeclType instance;
       if (instance_matcher_.findInstanceByVariableType(decl, instance_list)) {

@@ -1,7 +1,7 @@
 #ifndef _INSTANCE_MATCHER_H_
 #define _INSTANCE_MATCHER_H_
 
-#include <type_traits>
+//#include <type_traits>
 #include <vector>
 
 #include "clang/ASTMatchers/ASTMatchers.h"
@@ -14,22 +14,22 @@
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "InstanceMatcher"
 
-using namespace clang;
 using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
 
-AST_MATCHER(FieldDecl, hasTemplateDeclParent) {
+/// hasTemplateDeclParent
+/// A matcher to detect if a parent's type is a ClassTemplateDecl or not.
+//
+AST_MATCHER(clang::FieldDecl, hasTemplateDeclParent) {
   auto parent{Node.getParent()};
 
-  if (isa<ClassTemplateDecl>(parent)) {
-    // llvm::outs() << " @@@@@@@@ CTD \n";
+  if (isa<clang::ClassTemplateDecl>(parent)) {
     return false;
   }
 
-  if (isa<ClassTemplateSpecializationDecl>(parent)) {
-    // llvm::outs() << " @@@@@@@@ CTSD \n";
-  }
+  // if (isa<clang::ClassTemplateSpecializationDecl>(parent)) {
+  //}
 
   return true;
 };
@@ -69,7 +69,7 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
 
   void dump() {
     if (instance_literal_) {
-      instance_literal_->dump();
+      LLVM_DEBUG(instance_literal_->dump(););
     }
   }
 };
@@ -82,7 +82,8 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
 ///////////////////////////////////////////////////////////////////////////////
 class InstanceMatcher : public MatchFinder::MatchCallback {
  public:
-  typedef std::tuple<std::string, Decl *, ModuleInstanceType> InstanceDeclType;
+  typedef std::tuple<std::string, clang::Decl *, ModuleInstanceType>
+      InstanceDeclType;
   typedef std::vector<InstanceDeclType> InstanceDeclarationsType;
 
   /// Store all instances in a map.
@@ -90,8 +91,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   /// (instances within sub-modules) and VarDecl separate modules in sc_main().
   //
 
-  typedef std::pair<Decl *, ModuleInstanceType> ModuleInstanceTuple;
-  typedef std::map<Decl *, ModuleInstanceType> InstanceDeclarations;
+  typedef std::pair<clang::Decl *, ModuleInstanceType> ModuleInstanceTuple;
+  typedef std::map<clang::Decl *, ModuleInstanceType> InstanceDeclarations;
 
  private:
   /// Instances can come in two forms:
@@ -115,16 +116,17 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   // Finds the instance with the same type as the argument.
   // Pass by reference to the instance.
   bool findInstanceByVariableType(
-      CXXRecordDecl *decl, std::vector<InstanceDeclType> &found_instances) {
+      clang::CXXRecordDecl *decl,
+      std::vector<InstanceDeclType> &found_instances) {
     // First check in the instance_fields.
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
 
-    LLVM_DEBUG(llvm::dbgs() << "[findInstance] instance size: " << instance_map_.size()
-                 << "\n");
+    LLVM_DEBUG(llvm::dbgs() << "[findInstance] instance size: "
+                            << instance_map_.size() << "\n");
 
-    LLVM_DEBUG(llvm::dbgs() << "find decl name: " << decl->getName() << " " << decl
-                 << "\n");
+    LLVM_DEBUG(llvm::dbgs()
+               << "find decl name: " << decl->getName() << " " << decl << "\n");
 
     // Walk through all the instances.
     for (auto const &element : instance_map_) {
@@ -132,42 +134,43 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       auto instance{element.second};
 
       // TODO factor out this code to be handled for both.
-      if (auto *p_field{dyn_cast<FieldDecl>(p_field_var_decl)}) {
+      if (auto *p_field{dyn_cast<clang::FieldDecl>(p_field_var_decl)}) {
         auto qtype{p_field->getType().getTypePtr()};
-        // qtype->dump();
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
-          LLVM_DEBUG(llvm::dbgs() << "- fd " << rt << " " << p_field->getCanonicalDecl()
-                       << " ") ;
+          LLVM_DEBUG(llvm::dbgs() << "- fd " << rt << " "
+                                  << p_field->getCanonicalDecl() << " ");
           LLVM_DEBUG(instance.dump());
 
           if (rt == decl) {
-            LLVM_DEBUG(llvm::dbgs() << "- Insert fieldDecl into found instance\n");
+            LLVM_DEBUG(llvm::dbgs()
+                       << "- Insert fieldDecl into found instance\n");
             found_instances.push_back(
                 InstanceDeclType(instance.instance_name, rt, instance));
           }
         }
       } else {
         // This is a VarDecl instance.
-        auto p_var{dyn_cast<VarDecl>(p_field_var_decl)};
+        auto p_var{dyn_cast<clang::VarDecl>(p_field_var_decl)};
         auto qtype{p_var->getType().getTypePtr()};
 
         std::string dbg{"[InstanceMatcher] VarDecl"};
-        // p_var->dump();
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
           LLVM_DEBUG(llvm::dbgs() << "- vd " << rt << " "
-                       << " ");
+                                  << " ");
           LLVM_DEBUG(instance.dump());
           if (rt == decl) {
-            LLVM_DEBUG(llvm::dbgs() << "- Insert vardecl into found instance\n");
+            LLVM_DEBUG(llvm::dbgs()
+                       << "- Insert vardecl into found instance\n");
             found_instances.push_back(
                 InstanceDeclType(instance.instance_name, rt, instance));
           }
         }
       }
     }
-    LLVM_DEBUG(llvm::outs() << "=> found_instances: " << found_instances.size() << "\n");
+    LLVM_DEBUG(llvm::outs()
+               << "=> found_instances: " << found_instances.size() << "\n");
 
     return (found_instances.size() != 0);
   }
@@ -262,7 +265,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     finder.addMatcher(match_with_parent, this);
   }
 
-  void parseVarDecl(VarDecl *instance_decl, std::string &instance_name) {
+  void parseVarDecl(clang::VarDecl *instance_decl, std::string &instance_name) {
     std::string name{instance_decl->getIdentifier()->getNameStart()};
 
     /// This is the main object's constructor name
@@ -273,11 +276,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     /// auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
 
     std::string parent_name{};
-    ValueDecl *parent_rdecl{nullptr};
+    clang::ValueDecl *parent_rdecl{nullptr};
 
-    LLVM_DEBUG(llvm::dbgs() << "=> var_name " << var_name << " var_type_name "
-                 << var_type_name << " parent_name " << parent_name
-                 << "\n");  // instance_name "; // << instance_name << "\n";
+    LLVM_DEBUG(llvm::dbgs()
+               << "=> var_name " << var_name << " var_type_name "
+               << var_type_name << " parent_name " << parent_name
+               << "\n");  // instance_name "; // << instance_name << "\n";
 
     ModuleInstanceType parsed_instance{};
     parsed_instance.var_name = var_name;
@@ -292,17 +296,19 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_rdecl;
 
-    parsed_instance.dump();
+    LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
     auto found_it{instance_map_.find(instance_decl)};
     if (found_it == instance_map_.end()) {
-      LLVM_DEBUG(llvm::dbgs() << "Inserting VD instance" << "\n");
+      LLVM_DEBUG(llvm::dbgs() << "Inserting VD instance"
+                              << "\n");
       instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
           instance_decl, parsed_instance));
     }
   }
 
-  void parseFieldDecl(FieldDecl *instance_decl, ValueDecl *parent_decl) {
+  void parseFieldDecl(clang::FieldDecl *instance_decl,
+                      clang::ValueDecl *parent_decl) {
     std::string name{instance_decl->getIdentifier()->getNameStart()};
 
     // This is the main object's constructor name
@@ -313,15 +319,13 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
 
     std::string parent_name{};
-    // RecordDecl *parent_rdecl{parent_decl};
-    // parent_rdecl = instance_decl->getParent();
     if (parent_decl) {
       parent_name = parent_decl->getName();
     }
 
-    LLVM_DEBUG(llvm::dbgs() << "=> var_name " << var_name << " var_type_name "
-                 << var_type_name << " parent_name " << parent_name
-                 << "\n");
+    LLVM_DEBUG(llvm::dbgs()
+               << "=> var_name " << var_name << " var_type_name "
+               << var_type_name << " parent_name " << parent_name << "\n");
 
     ModuleInstanceType parsed_instance{};
     parsed_instance.var_name = var_name;
@@ -334,7 +338,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_decl;
 
-    parsed_instance.dump();
+    LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
     auto found_it{instance_map_.find(instance_decl)};
     if (found_it == instance_map_.end()) {
@@ -345,22 +349,23 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
-    LLVM_DEBUG(llvm::dbgs() << " ================== INSTANCE MATCHER ================= \n");
+    LLVM_DEBUG(llvm::dbgs()
+               << " ================== INSTANCE MATCHER ================= \n");
     // General decl
-    auto instance_vd =
-        const_cast<VarDecl *>(result.Nodes.getNodeAs<VarDecl>("instance_vd"));
-    auto ctor_init = const_cast<CXXCtorInitializer *>(
-        result.Nodes.getNodeAs<CXXCtorInitializer>("ctor_init"));
-    auto ctor_fd =
-        const_cast<FieldDecl *>(result.Nodes.getNodeAs<FieldDecl>("ctor_fd"));
-    auto parent_fd =
-        const_cast<ValueDecl *>(result.Nodes.getNodeAs<ValueDecl>("parent_fd"));
+    auto instance_vd = const_cast<clang::VarDecl *>(
+        result.Nodes.getNodeAs<clang::VarDecl>("instance_vd"));
+    auto ctor_init = const_cast<clang::CXXCtorInitializer *>(
+        result.Nodes.getNodeAs<clang::CXXCtorInitializer>("ctor_init"));
+    auto ctor_fd = const_cast<clang::FieldDecl *>(
+        result.Nodes.getNodeAs<FieldDecl>("ctor_fd"));
+    auto parent_fd = const_cast<clang::ValueDecl *>(
+        result.Nodes.getNodeAs<clang::ValueDecl>("parent_fd"));
 
-    auto ctor_arg =
-        const_cast<Stmt *>(result.Nodes.getNodeAs<Stmt>("ctor_arg"));
+    auto ctor_arg = const_cast<clang::Stmt *>(
+        result.Nodes.getNodeAs<clang::Stmt>("ctor_arg"));
 
-    auto test_fd =
-        const_cast<FieldDecl *>(result.Nodes.getNodeAs<FieldDecl>("test_fd"));
+    auto test_fd = const_cast<clang::FieldDecl *>(
+        result.Nodes.getNodeAs<clang::FieldDecl>("test_fd"));
     //
     if (ctor_fd && ctor_init && parent_fd) {
       LLVM_DEBUG(llvm::dbgs()
@@ -369,15 +374,15 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(ctor_fd->dump());
       parseFieldDecl(ctor_fd, parent_fd);
 
-      Expr *expr = ctor_init->getInit()->IgnoreImplicit();
-      CXXConstructExpr *cexpr = cast<CXXConstructExpr>(expr);
+      clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
+      clang::CXXConstructExpr *cexpr = cast<clang::CXXConstructExpr>(expr);
 
       MatchFinder iarg_registry{};
       InstanceArgumentMatcher iarg_matcher{};
       iarg_matcher.registerMatchers(iarg_registry);
       iarg_registry.match(*cexpr, *result.Context);
 
-      iarg_matcher.dump();
+      LLVM_DEBUG(iarg_matcher.dump(););
 
       // This retrieves the submodule instance name.
       if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
@@ -390,8 +395,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           auto &inst{found_it->second};
           inst.instance_name = submodule_instance_name;
         }
-        LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name " << submodule_instance_name
-                     << "\n");
+        LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
+                                << submodule_instance_name << "\n");
       }
     }
 
@@ -416,7 +421,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       auto instance{i.second};
 
       auto instance_field{instance.decl};
-      if (isa<FieldDecl>(instance_field)) {
+      if (isa<clang::FieldDecl>(instance_field)) {
         // if (instance.is_field_decl){
         llvm::outs() << " FieldDecl ";
       } else {
