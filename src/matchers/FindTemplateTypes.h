@@ -73,10 +73,10 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
 
   ~FindTemplateTypes();
   void Enumerate(const clang::Type *type);
-  type_vector_t getTemplateArgumentsType();
-  std::vector<std::string> getTemplateArguments();
+  //type_vector_t getTemplateArgumentsType();
+  //std::vector<std::string> getTemplateArguments();
   Tree<TemplateType> *getTemplateArgTreePtr();
-  size_t size();
+  //size_t size();
 
   void printTemplateArguments(llvm::raw_ostream &os);
   json dump_json();
@@ -88,7 +88,7 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   // The general way to handle this would be to have a vector starting from the
   // outside type to the inside type.
 
-  type_vector_t template_types_;
+  //type_vector_t template_types_;
 
   Tree<TemplateType> template_args_;
   Tree<TemplateType>::TreeNodePtr current_type_node_;

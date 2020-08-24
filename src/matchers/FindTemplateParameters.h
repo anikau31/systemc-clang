@@ -4,7 +4,9 @@
 #include <vector>
 
 #include "clang/AST/RecursiveASTVisitor.h"
-#include "llvm/Support/raw_ostream.h"
+
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Find"
 
 // Forward declarations.
 namespace clang {
@@ -16,7 +18,7 @@ namespace systemc_clang {
 class FindTemplateParameters
     : public clang::RecursiveASTVisitor<FindTemplateParameters> {
  public:
-  FindTemplateParameters(clang::CXXRecordDecl *, llvm::raw_ostream &);
+  FindTemplateParameters(clang::CXXRecordDecl *);
   virtual bool VisitCXXRecordDecl(clang::CXXRecordDecl *decl);
 
   virtual ~FindTemplateParameters();
@@ -28,7 +30,6 @@ class FindTemplateParameters
 
  private:
   clang::CXXRecordDecl *declaration_;
-  llvm::raw_ostream &os_;
   clang::TemplateParameterList *template_parameters_;
   const clang::TemplateArgumentList *template_args_;
 };

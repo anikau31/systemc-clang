@@ -37,19 +37,16 @@ FindTemplateTypes::FindTemplateTypes() {}
 
 /// Copy constructor
 FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes &rhs) {
-  copy(rhs.template_types_.begin(), rhs.template_types_.end(),
-       back_inserter(template_types_));
   template_args_ = rhs.template_args_;
 }
 
 FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
-  copy(rhs->template_types_.begin(), rhs->template_types_.end(),
-       back_inserter(template_types_));
   template_args_ = rhs->template_args_;
 }
 
 // Destructor
-FindTemplateTypes::~FindTemplateTypes() { template_types_.clear(); }
+FindTemplateTypes::~FindTemplateTypes() { 
+}
 
 void FindTemplateTypes::Enumerate(const Type *type) {
   if (!type) {
@@ -108,7 +105,7 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   //template_args_.dump();
   //printTemplateArguments(llvm::outs());
 
-  template_types_.push_back(TemplateType(sstream.str(), special_type));
+  //template_types_.push_back(TemplateType(sstream.str(), special_type));
 
   return true;
 }
@@ -120,8 +117,8 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
     if (info != nullptr) {
       // llvm::outs() << " ==> CXXRecord type: " << info->getNameStart() <<
       // "\n";
-      template_types_.push_back(
-          TemplateType(info->getNameStart(), cxx_record->getTypeForDecl()));
+      // template_types_.push_back(
+          // TemplateType(info->getNameStart(), cxx_record->getTypeForDecl()));
     }
   }
 
@@ -142,7 +139,7 @@ bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
 
   TemplateType tt{type_name.str(), bi_type};
   current_type_node_ = template_args_.addNode(tt);
-  template_types_.push_back(TemplateType(type_name, bi_type));
+  //template_types_.push_back(TemplateType(type_name, bi_type));
 
   if (template_args_.size() == 1) {
     template_args_.setRoot(current_type_node_);
@@ -180,8 +177,6 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   stack_current_node_.push(current_type_node_);
   // template_args_.dump();
 
-  template_types_.push_back(TemplateType(type_name, rt));
-
   if (auto ctsd = dyn_cast<ClassTemplateSpecializationDecl>(type_decl)) {
     // llvm::outs() << " ==> CTSD : " << ctsd->getTemplateArgs().size() << "\n";
 
@@ -196,8 +191,6 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
       //
       if (targ.getKind() == TemplateArgument::ArgKind::Type) {
         QualType template_name{targ.getAsType()};
-        //  llvm::outs() << " ====> template_type_name " <<
-        //  template_name.getAsString() << "\n";
         const Type *arg_type{targ.getAsType().getTypePtr()};
 
         if (!arg_type->isBuiltinType()) {
@@ -210,8 +203,6 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
               TemplateType{template_name.getAsString(), arg_type})};
           template_args_.addEdge(current_type_node_, new_node);
 
-          template_types_.push_back(
-              TemplateType(template_name.getAsString(), rt));
         }
       } else if (targ.getKind() == TemplateArgument::ArgKind::Integral) {
         QualType template_name{targ.getNonTypeTemplateArgumentType()};
@@ -222,8 +213,6 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
         //
         // sc_core::sc_writer_policy
         //
-        // llvm::outs() << " ====> template_type_name integral "
-        //             << template_name.getAsString() << "\n";
         // llvm::outs() << " ====> Integral : ";
         //
 
@@ -237,7 +226,6 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
               integral_string.c_str(), template_name.getTypePtr()})};
           template_args_.addEdge(current_type_node_, new_node);
 
-          template_types_.push_back(TemplateType(integral_string.c_str(), rt));
         }
       }
     }
@@ -255,18 +243,12 @@ bool FindTemplateTypes::VisitIntegerLiteral(IntegerLiteral *l) {
   //<< l->getValue().toString(10,true) <<
   //"\n"; _os << "== type ptr: " << l->getType().getTypePtr() << "\n"; _os <<
   //"== type name: " << l->getType().getAsString() << "\n";
-  // template_types_.push_back(TemplateType(l->getValue().toString(10, true),
-  // l->getType().getTypePtr()));
   //
   return false;
 }
 
 Tree<TemplateType> *FindTemplateTypes::getTemplateArgTreePtr() {
   return &template_args_;
-}
-
-FindTemplateTypes::type_vector_t FindTemplateTypes::getTemplateArgumentsType() {
-  return template_types_;
 }
 
 json FindTemplateTypes::dump_json() {
@@ -302,16 +284,3 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   os << "> Template args (DFT): " << s << "\n";
 }
 
-std::vector<std::string> FindTemplateTypes::getTemplateArguments() {
-  std::vector<std::string> template_arguments;
-  for (auto const &mit : template_types_) {
-    std::string name{mit.getTypeName()};
-    if (name == "sc_in" || name == "sc_out" || name == "sc_inout") {
-      break;
-    }
-    template_arguments.push_back(name);
-  }
-  return template_arguments;
-}
-
-size_t FindTemplateTypes::size() { return template_types_.size(); }

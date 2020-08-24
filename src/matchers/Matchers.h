@@ -3,18 +3,13 @@
 #include <map>
 #include <tuple>
 #include <vector>
-#include "FindTemplateTypes.h"
 #include "ModuleDecl.h"
-#include "PortDecl.h"
 
 #include "InstanceMatcher.h"
 #include "PortMatcher.h"
 
-#include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 
-using namespace clang;
-using namespace clang::ast_matchers;
 using namespace systemc_clang;
 
 /// Different matchers may use different DEBUG_TYPE
@@ -39,22 +34,22 @@ auto checkMatch(const std::string &name,
 class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   //
  public:
-  typedef std::vector<std::tuple<std::string, CXXRecordDecl *> >
+  typedef std::vector<std::tuple<std::string, clang::CXXRecordDecl *> >
       ModuleDeclarationType;
   /// Map to hold CXXREcordDecl to module declaration type name.
-  typedef std::pair<CXXRecordDecl *, std::string> ModuleDeclarationPairType;
-  typedef std::map<CXXRecordDecl *, std::string> ModuleDeclarationMapType;
+  typedef std::pair<clang::CXXRecordDecl *, std::string> ModuleDeclarationPairType;
+  typedef std::map<clang::CXXRecordDecl *, std::string> ModuleDeclarationMapType;
 
   // typedef std::tuple<std::string, Decl *> InstanceDeclType;
   typedef std::vector<InstanceMatcher::InstanceDeclType> InstanceListType;
-  typedef std::pair<CXXRecordDecl *, InstanceListType>
+  typedef std::pair<clang::CXXRecordDecl *, InstanceListType>
       DeclarationInstancePairType;
-  typedef std::map<CXXRecordDecl *, InstanceListType>
+  typedef std::map<clang::CXXRecordDecl *, InstanceListType>
       DeclarationsToInstancesMapType;
 
   /// This will store all the modules as ModuleDecl.
-  typedef std::pair<CXXRecordDecl *, ModuleDecl *> ModulePairType;
-  typedef std::map<CXXRecordDecl *, ModuleDecl *> ModuleMapType;
+  typedef std::pair<clang::CXXRecordDecl *, ModuleDecl *> ModulePairType;
+  typedef std::map<clang::CXXRecordDecl *, ModuleDecl *> ModuleMapType;
 
  private:
   std::string top_module_decl_;
@@ -120,8 +115,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
-    if (auto decl = const_cast<CXXRecordDecl *>(
-            result.Nodes.getNodeAs<CXXRecordDecl>("sc_module"))) {
+    if (auto decl = const_cast<clang::CXXRecordDecl *>(
+            result.Nodes.getNodeAs<clang::CXXRecordDecl>("sc_module"))) {
       LLVM_DEBUG(llvm::dbgs() << " Found sc_module: "
                    << decl->getIdentifier()->getNameStart()
                    << " CXXRecordDecl*: " << decl << "\n");
@@ -134,11 +129,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // This is necessary because of the way clang represents them in their
       // AST.
       //
-      if (isa<ClassTemplateSpecializationDecl>(decl)) {
-        // llvm::outs() << "TEMPLATE SPECIAL\n";
+      if (isa<clang::ClassTemplateSpecializationDecl>(decl)) {
         found_template_declarations_.push_back(std::make_tuple(name, decl));
       } else {
-        // llvm::outs() << "NOT TEMPLATE SPECIAL\n";
         found_declarations_.push_back(std::make_tuple(name, decl));
       }
 
@@ -146,7 +139,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       // Unpruned
       auto add_module{new ModuleDecl(name, decl)};
       modules_.insert(
-          std::pair<CXXRecordDecl *, ModuleDecl *>(decl, add_module));
+          std::pair<clang::CXXRecordDecl *, ModuleDecl *>(decl, add_module));
 
       // Instances should not be in subtree matching.
       //
@@ -183,7 +176,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
   const ModuleMapType &getFoundModuleDeclarations() const { return modules_; }
 
-  void removeModule(CXXRecordDecl *decl) {
+  void removeModule(clang::CXXRecordDecl *decl) {
     // Remove declarations from modules_
     // This is the pruning.
 
@@ -223,7 +216,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
     for (auto const &element : found_template_declarations_) {
       auto decl{get<1>(element)};
-      // std::llvm::outs() << "## ftd name: " << get<0>(element) << "\n ";
       InstanceListType instance_list;
       // InstanceMatcher::InstanceDeclType instance;
       if (instance_matcher_.findInstanceByVariableType(decl, instance_list)) {

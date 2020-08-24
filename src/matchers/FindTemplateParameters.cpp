@@ -4,10 +4,8 @@
 
 using namespace systemc_clang;
 
-FindTemplateParameters::FindTemplateParameters(CXXRecordDecl *declaration,
-                                               llvm::raw_ostream &os)
+FindTemplateParameters::FindTemplateParameters(CXXRecordDecl *declaration)
     : declaration_{declaration},
-      os_{os},
       template_parameters_{nullptr},
       template_args_{nullptr} {
   if (declaration->hasDefinition() == true) {
@@ -26,22 +24,22 @@ bool FindTemplateParameters::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
 
     if (const auto tdecl =
             dyn_cast<ClassTemplateSpecializationDecl>(declaration)) {
-      //tdecl->dump();
       template_args_ = &tdecl->getTemplateArgs();
-      os_ << "@@ template specialization args: " << module_name
-          << ", #args: " << template_args_->size() << "\n";
+      LLVM_DEBUG(llvm::dbgs()
+                     << "@@ template specialization args: " << module_name
+                     << ", #args: " << template_args_->size() << "\n";);
       for (size_t i{0}; i < template_args_->size(); ++i) {
         // Check the kind of the argument.
         switch (template_args_->get(i).getKind()) {
           case TemplateArgument::ArgKind::Integral: {
             auto q{template_args_->get(i).getAsIntegral()};
             // auto name{q.getAsString()};
-            os_ << "@@ Integral: " << q << "\n";
+            LLVM_DEBUG(llvm::dbgs() << "@@ Integral: " << q << "\n";);
           }; break;
           case TemplateArgument::ArgKind::Type: {
             auto q{template_args_->get(i).getAsType()};
             auto name{q.getAsString()};
-            os_ << "@@ arg: " << name << "\n";
+            LLVM_DEBUG(llvm::dbgs() << "@@ arg: " << name << "\n";);
           }; break;
           default: {
           }
@@ -54,7 +52,8 @@ bool FindTemplateParameters::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
     // This will provide access to the actual template parameters
     auto template_args{declaration->getDescribedClassTemplate()};
     if (template_args != nullptr) {
-      os_ << "@@ template described class args: " << module_name << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "@@ template described class args: "
+                              << module_name << "\n";);
       template_parameters_ = template_args->getTemplateParameters();
     }
   }
@@ -62,7 +61,8 @@ bool FindTemplateParameters::VisitCXXRecordDecl(CXXRecordDecl *declaration) {
   return false;
 }
 
-const std::vector<std::string> FindTemplateParameters::getTemplateParameters() const {
+const std::vector<std::string> FindTemplateParameters::getTemplateParameters()
+    const {
   std::vector<std::string> parm_list;
   if ((template_parameters_ == nullptr) ||
       (template_parameters_->size() <= 0)) {
@@ -71,7 +71,7 @@ const std::vector<std::string> FindTemplateParameters::getTemplateParameters() c
 
   for (auto parm : template_parameters_->asArray()) {
     parm_list.push_back(parm->getName());
-    os_ << "Parm: " << parm->getName() << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "Parm: " << parm->getName() << "\n";);
   }
   return parm_list;
 }
@@ -91,13 +91,13 @@ const std::vector<std::string> FindTemplateParameters::getTemplateArgs() const {
         SmallString<10> small_str;
         number.toString(small_str);
         arg_list.push_back(std::string(small_str.c_str()));
-        os_ << "Arg: " << small_str << "\n";
+        LLVM_DEBUG(llvm::dbgs() << "Arg: " << small_str << "\n";);
       }; break;
       case TemplateArgument::ArgKind::Type: {
         auto q{arg.getAsType()};
         name = q.getAsString();
         arg_list.push_back(name);
-        os_ << "Arg: " << name << "\n";
+        LLVM_DEBUG(llvm::dbgs() << "Arg: " << name << "\n";);
       }; break;
       default: {
       }

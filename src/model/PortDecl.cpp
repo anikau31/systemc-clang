@@ -20,20 +20,29 @@ PortDecl::PortDecl()
     : port_name_{"NONE"},
       template_type_{nullptr},
       field_decl_{nullptr},
-      is_array_{false} {}
+      is_array_{false} {
+
+      array_size_ = 0;
+      }
 
 PortDecl::PortDecl(const std::string &name, FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
       field_decl_{nullptr},
-      is_array_{false} {}
+      is_array_{false} {
+
+      array_size_ = 0;
+      }
 
 PortDecl::PortDecl(const std::string &name, const Decl *fd,
                    FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
       field_decl_{const_cast<Decl *>(fd)},
-      is_array_{false} {}
+      is_array_{false} {
+
+      array_size_ = 0;
+      }
 
 PortDecl::PortDecl(const PortDecl &from) {
   port_name_ = from.port_name_;
@@ -64,8 +73,8 @@ FindTemplateTypes *PortDecl::getTemplateType() { return template_type_; }
 
 json PortDecl::dump_json() {
   json port_j;
-  port_j["port_name"] = getName();
-  port_j["port_arguments"] = template_type_->dump_json();
+  port_j["signal_port_name"] = getName();
+  port_j["signal_port_arguments"] = template_type_->dump_json();
   port_j["is_array_type"] = getArrayType();
   if (getArrayType()) {
     port_j["array_size"] = getArraySize().getLimitedValue();

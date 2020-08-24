@@ -190,7 +190,7 @@ bool SystemCConsumer::fire() {
       // are the specialization values for the templates.
       //
       LLVM_DEBUG(llvm::dbgs() << "3. Set template arguments\n";);
-      FindTemplateParameters tparms{cxx_decl, os_};
+      FindTemplateParameters tparms{cxx_decl};
       add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
       add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
 
