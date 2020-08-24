@@ -25,7 +25,7 @@ Welcome to systemc-clang's documentation!
 
   developer/developer.rst
 
-  plugins/xlat.rst
+  plugins/hdl.rst
 
 .. toctree::
   :maxdepth: 2
