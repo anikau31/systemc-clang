@@ -26,8 +26,8 @@ using namespace hnode;
 
 class HDLBody: public RecursiveASTVisitor <HDLBody> {
  public:
-  HDLBody(CXXMethodDecl * emd, hNodep &h_top, llvm::raw_ostream & os);
-  HDLBody(Stmt * stmt, hNodep &h_top, llvm::raw_ostream & os);
+  HDLBody(CXXMethodDecl * emd, hNodep &h_top);
+  HDLBody(Stmt * stmt, hNodep &h_top);
   virtual ~HDLBody();
 
   bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
@@ -54,10 +54,6 @@ class HDLBody: public RecursiveASTVisitor <HDLBody> {
   std::unordered_map<string, CXXMethodDecl *> methodecls;  //  methods called in this SC_METHOD
 
  private:
-  
-  //CXXMethodDecl * _emd;
-  llvm::raw_ostream & os_;
-  //  size_t n;
   
   hNodep h_ret;   // value returned by each subexpression
   hname_map_t vname_map;

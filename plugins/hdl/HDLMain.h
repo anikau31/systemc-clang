@@ -33,7 +33,7 @@ class HDLMain: public SystemCConsumer {
   void SCmodule2hcode(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &SCout );
   void SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void SCsig2hcode(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
-  void SCproc2hcode(ModuleDecl::processMapType pm, hNodep & h_top, llvm::raw_ostream &os );
+  void SCproc2hcode(ModuleDecl::processMapType pm, hNodep & h_top);
   void SCportbindings2hcode(systemc_clang::ModuleDecl::portBindingMapType portbindingmap, hNodep &h_pb);
   private:
 

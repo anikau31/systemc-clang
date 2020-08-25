@@ -16,8 +16,7 @@
 using namespace std;
 using namespace hnode;
 
-HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & os):
-  os_(os){ 
+HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top) {
   LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor, has body is " << emd->hasBody()<< "\n");
   
   h_ret = NULL;
@@ -30,8 +29,7 @@ HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top, llvm::raw_ostream & os):
 // leaving this in for the future in case 
 // we need to traverse starting at a lower point in the tree.
 
-HDLBody::HDLBody(Stmt * stmt, hNodep & h_top, llvm::raw_ostream & os):
-  os_(os){
+HDLBody::HDLBody(Stmt * stmt, hNodep & h_top) {
   h_ret = NULL;
   bool ret1 = TraverseStmt(stmt);
   h_top->child_list.push_back(h_ret);
@@ -164,7 +162,7 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
 	te->Enumerate((exp->getType()).getTypePtr());
 	HDLType HDLt;
 	hNodep h_tmp = new hNode (hNode::hdlopsEnum::hNoop);
-	HDLt.SCtype2hcode(s, te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hLiteral, h_tmp);
+	HDLt.SCtype2hcode(s, te->getTemplateArgTreePtr(),0,  hNode::hdlopsEnum::hLiteral, h_tmp);
 	h_ret = h_tmp->child_list.back();
 	return true;
       }
@@ -236,7 +234,7 @@ bool HDLBody::ProcessVarDecl( VarDecl * vardecl) {
 
   te->Enumerate(tp);
   HDLType HDLt;
-  HDLt.SCtype2hcode(vardecl->getName(), te->getTemplateArgTreePtr(), hNode::hdlopsEnum::hVardecl, h_varlist);
+  HDLt.SCtype2hcode(vardecl->getName(), te->getTemplateArgTreePtr(), 0, hNode::hdlopsEnum::hVardecl, h_varlist);
   hNodep h_vardecl = h_varlist->child_list.back();
   h_ret = NULL;
 
@@ -353,7 +351,7 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr* expr)
 	newname = vname_map[expr->getDecl()].newn;
       }
   LLVM_DEBUG(llvm::dbgs() << "new name is "<< newname << "\n");
-  LLVM_DEBUG(value->dump(llvm::errs()));
+  LLVM_DEBUG(value->dump(llvm::dbgs()));
 
   h_ret = new hNode(newname.empty() ? name : newname, hNode::hdlopsEnum::hVarref);
   return true; 
