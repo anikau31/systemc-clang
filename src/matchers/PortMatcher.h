@@ -109,7 +109,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   ///   - It must have a type that is either an array whose type is a c++ class derived 
   ///     from a class name called "name"
   ///   - Or, it is has a type that is a c++ class that is derived from class name "name".
-  auto makeArrayType(const std::string &name) {
+  auto makeSignalArrayType(const std::string &name) {
     return //hasType(
          arrayType(
            hasElementType(hasDeclaration(
@@ -122,13 +122,13 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
   auto signalMatcher(const std::string &name) {
   return anyOf(
-          hasType(makeArrayType(name))
+          hasType(makeSignalArrayType(name))
           ,
           // 2-d
-          hasType(arrayType(hasElementType(makeArrayType(name) ))) 
+          hasType(arrayType(hasElementType(makeSignalArrayType(name) ))) 
           ,
           // 3-d
-                  hasType(arrayType(hasElementType(arrayType(hasElementType(makeArrayType(name)) ))))
+          hasType(arrayType(hasElementType(arrayType(hasElementType(makeSignalArrayType(name)) ))))
           ,
           // Regular field declaration
           hasType(
@@ -491,19 +491,11 @@ class PortMatcher : public MatchFinder::MatchCallback {
         insert_port(in_ports_, fd);
       }
     }
-    //
-    // if (sc_out_field) {
-    // llvm::outs() << "#################### SC_OUT ##################\n";
-    // sc_out_field->dump();
-    // }
 
     if (sc_out_field && other_fields) {
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto port_name{fd->getIdentifier()->getNameStart()};
-
-        p_field->dump();
-        p_field->getType().getTypePtr()->dump();
         LLVM_DEBUG(llvm::dbgs() << " Found sc_out: " << port_name << "\n");
 
         insert_port(out_ports_, fd);
@@ -589,8 +581,6 @@ class PortMatcher : public MatchFinder::MatchCallback {
           auto field_name{p_field->getIdentifier()->getNameStart()};
           LLVM_DEBUG(llvm::dbgs()
                      << " Found field other_fields: " << field_name << "\n");
-          p_field->dump();
-          p_field->getType().dump();
 
           insert_port(other_fields_, p_field);
 

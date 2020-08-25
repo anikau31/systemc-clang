@@ -78,7 +78,7 @@ class HDLPluginAction {
 llvm::cl::OptionCategory HDLcategory("HDL options");
 llvm::cl::opt<std::string> topModule(
     "top-module",
-    llvm::cl::desc("Specify top-level module declaration for entry point"),
+    llvm::cl::desc("Specify top-level module declaration for synthesis entry point"),
     llvm::cl::cat(HDLcategory));
 
 llvm::cl::opt<bool> debug_mode(
