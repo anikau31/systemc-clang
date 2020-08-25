@@ -110,19 +110,27 @@ class PortMatcher : public MatchFinder::MatchCallback {
   ///     from a class name called "name"
   ///   - Or, it is has a type that is a c++ class that is derived from class name "name".
   auto makeArrayType(const std::string &name) {
-    return hasType(
+    return //hasType(
          arrayType(
            hasElementType(hasDeclaration(
                cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
                )
              )
-           ).bind("array_type")
-         );
+           ).bind("array_type");
+         //);
   }
 
   auto signalMatcher(const std::string &name) {
   return anyOf(
-          makeArrayType(name),
+          hasType(makeArrayType(name))
+          ,
+          // 2-d
+          hasType(arrayType(hasElementType(makeArrayType(name) ))) 
+          ,
+          // 3-d
+                  hasType(arrayType(hasElementType(arrayType(hasElementType(makeArrayType(name)) ))))
+          ,
+          // Regular field declaration
           hasType(
             cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
             )

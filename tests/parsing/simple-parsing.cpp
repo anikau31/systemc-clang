@@ -49,8 +49,12 @@ SC_MODULE( test ){
 
   sc_out<double> out_array_port[MAX_DEPTH+1];
 
+  // 2d and 3d array
   sc_out<sc_uint<2>> two_dim[2][3];
   sc_in<sc_uint<2>> three_dim[2][3][4];
+
+  sc_signal<sc_uint<2>> two_dim_sig[2][3];
+  sc_signal<sc_uint<2>> three_dim_sig[2][3][4];
 
   void entry_function_1() {
     while(true) {
@@ -162,7 +166,7 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getIPorts().size() == 4);
     REQUIRE(test_module_inst->getOPorts().size() == 4);
     REQUIRE(test_module_inst->getIOPorts().size() == 1);
-    REQUIRE(test_module_inst->getSignals().size() == 2);
+    REQUIRE(test_module_inst->getSignals().size() == 4);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOtherVars().size() == 3);
@@ -287,6 +291,24 @@ int sc_main(int argc, char *argv[]) {
         REQUIRE(sg->getArrayType() == true);
         REQUIRE(sg->getArraySizes().front() == 4);
       }
+
+      if (name == "two_dim_sig") {
+        REQUIRE(sg->getArrayType() == true);
+        REQUIRE(sg->getArraySizes().size() == 2);
+        std::vector<llvm::APInt> sizes{sg->getArraySizes()};
+        REQUIRE(sizes[0].getLimitedValue() == 2);
+        REQUIRE(sizes[1].getLimitedValue() == 3);
+      }
+
+      if (name == "three_dim_sig") {
+        REQUIRE(sg->getArrayType() == true);
+        REQUIRE(sg->getArraySizes().size() == 3);
+        std::vector<llvm::APInt> sizes{sg->getArraySizes()};
+        REQUIRE(sizes[0].getLimitedValue() == 2);
+        REQUIRE(sizes[1].getLimitedValue() == 3);
+        REQUIRE(sizes[2].getLimitedValue() == 4);
+      }
+
     }
 
     INFO("Checking member ports for simple module instance.");
