@@ -135,17 +135,28 @@ class PortMatcher : public MatchFinder::MatchCallback {
       ).bind("other_fields");
   }
 
+  auto makeArrayTypeMatcher(const std::string &name) {
+    return   recordType(hasDeclaration(cxxRecordDecl(hasName(name)).bind("desugar_"+name)));
+   
+  }
   /// This is a matcher for sc_port.
   /// It has the following conditions:
   /// * It must be a FieldDecl
   ///   - It has a type that is an array whose type has a name "name"
   ///   - Or, it has a type that is a C++ class whose class name is "name".
   ///
+  /// I'm not sure how to do 1d,2d,3d array matching other than the way it is 
+  /// done. The key idea is to see that there is an arrayType() within an arrayType(), 
+  /// and so on.
   auto portNameMatcher(const std::string &name) {
       return 
           anyOf(
             hasType(
               arrayType(
+
+                anyOf(
+
+                  // 1-d
                 hasElementType(hasUnqualifiedDesugaredType(
                     recordType(
                       hasDeclaration(
@@ -153,7 +164,35 @@ class PortMatcher : public MatchFinder::MatchCallback {
                       )
                     )
                   )
-                )
+                )//hasElementType
+
+                ,
+
+                // 2-d
+                hasElementType(hasUnqualifiedDesugaredType(
+                    arrayType(hasElementType(hasUnqualifiedDesugaredType(
+                          makeArrayTypeMatcher(name)
+                          ))
+                      )//arrayType
+                  )
+                )//hasElementType
+
+                  ,
+                //3-d
+
+                hasElementType(hasUnqualifiedDesugaredType(
+                    arrayType(hasElementType(hasUnqualifiedDesugaredType(
+                          arrayType(hasElementType(hasUnqualifiedDesugaredType(
+                            makeArrayTypeMatcher(name)
+                          ))
+                            )//arrayType
+                          ))
+                      )//arrayType
+                  )
+                )//hasElementType
+
+
+                )//anyOf
               )
             ),
             hasType(hasUnqualifiedDesugaredType(
@@ -245,26 +284,30 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
       PortDecl *new_pd{new PortDecl(name, decl, parseTemplateType(fd))};
 
-      auto field_type{fd->getType()};
+      clang::QualType field_type{fd->getType()};
 
+      // Need to extract all the array index arguments.
       /// Cast it to see if it's array type.
       auto array_type{dyn_cast<ConstantArrayType>(field_type)};
-      /// Get the size of the array.
-      if (array_type) {
-        llvm::APInt array_size{};
-        array_type->dump();
-        if (auto cat = dyn_cast<ConstantArrayType>(array_type)) {
-          LLVM_DEBUG(cat->dump();
-                     llvm::dbgs() << "Size of array: " << cat->getSize(););
-          array_size = cat->getSize();
-        }
 
-        new_pd->setArraySize(array_size);
+      if (array_type) {
         new_pd->setArrayType();
+        while (array_type != nullptr) {
+          llvm::APInt array_size{};
+          array_size = array_type->getSize();
+          LLVM_DEBUG(llvm::dbgs() << "Size of array: " << array_size << "\n";);
+          array_type =
+              dyn_cast<ConstantArrayType>(array_type->getElementType());
+
+          new_pd->addArraySize(array_size);
+        }
       }
+
       auto port_entry{std::make_tuple(name, new_pd)};
       port.push_back(port_entry);
+
     } else {
+
       if (auto *vd = dyn_cast<clang::VarDecl>(decl)) {
         name = vd->getIdentifier()->getNameStart();
         PortDecl *new_pd{new PortDecl(name, decl, parseTemplateType(vd))};
@@ -272,18 +315,18 @@ class PortMatcher : public MatchFinder::MatchCallback {
         auto field_type{vd->getType()};
         /// Cast it to see if it's array type.
         auto array_type{dyn_cast<ConstantArrayType>(field_type)};
-        /// Get the size of the array.
         if (array_type) {
-          llvm::APInt array_size{};
-          array_type->dump();
-          if (auto cat = dyn_cast<ConstantArrayType>(array_type)) {
-            LLVM_DEBUG(cat->dump();
-                       llvm::dbgs() << "Size of array: " << cat->getSize(););
-            array_size = cat->getSize();
-          }
-
-          new_pd->setArraySize(array_size);
           new_pd->setArrayType();
+          while (array_type != nullptr) {
+            llvm::APInt array_size{};
+            array_size = array_type->getSize();
+            LLVM_DEBUG(llvm::dbgs()
+                           << "Size of array: " << array_size << "\n";);
+            array_type =
+                dyn_cast<ConstantArrayType>(array_type->getElementType());
+
+            new_pd->addArraySize(array_size);
+          }
         }
 
         auto port_entry{std::make_tuple(name, new_pd)};
@@ -440,11 +483,19 @@ class PortMatcher : public MatchFinder::MatchCallback {
         insert_port(in_ports_, fd);
       }
     }
+    //
+    // if (sc_out_field) {
+    // llvm::outs() << "#################### SC_OUT ##################\n";
+    // sc_out_field->dump();
+    // }
 
     if (sc_out_field && other_fields) {
       if (auto *p_field{dyn_cast<clang::FieldDecl>(other_fields)}) {
         auto fd = p_field;
         auto port_name{fd->getIdentifier()->getNameStart()};
+
+        p_field->dump();
+        p_field->getType().getTypePtr()->dump();
         LLVM_DEBUG(llvm::dbgs() << " Found sc_out: " << port_name << "\n");
 
         insert_port(out_ports_, fd);
@@ -526,14 +577,17 @@ class PortMatcher : public MatchFinder::MatchCallback {
       if (fd) {
         LLVM_DEBUG(llvm::dbgs() << "Print out the other fd\n");
 
-        if (auto *p_field{dyn_cast<FieldDecl>(fd)}) {
+        if (auto *p_field{dyn_cast<clang::FieldDecl>(fd)}) {
           auto field_name{p_field->getIdentifier()->getNameStart()};
           LLVM_DEBUG(llvm::dbgs()
                      << " Found field other_fields: " << field_name << "\n");
+          p_field->dump();
+          p_field->getType().dump();
+
           insert_port(other_fields_, p_field);
 
         } else {
-          auto *p_var{dyn_cast<VarDecl>(fd)};
+          auto *p_var{dyn_cast<clang::VarDecl>(fd)};
           auto field_name{p_var->getIdentifier()->getNameStart()};
           LLVM_DEBUG(llvm::dbgs()
                      << " Found var other_fields: " << field_name << "\n");

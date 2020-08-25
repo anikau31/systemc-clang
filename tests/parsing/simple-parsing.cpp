@@ -49,6 +49,9 @@ SC_MODULE( test ){
 
   sc_out<double> out_array_port[MAX_DEPTH+1];
 
+  sc_out<sc_uint<2>> two_dim[2][3];
+  sc_in<sc_uint<2>> three_dim[2][3][4];
+
   void entry_function_1() {
     while(true) {
      x = x+1;
@@ -156,8 +159,8 @@ int sc_main(int argc, char *argv[]) {
     auto test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
-    REQUIRE(test_module_inst->getIPorts().size() == 3);
-    REQUIRE(test_module_inst->getOPorts().size() == 3);
+    REQUIRE(test_module_inst->getIPorts().size() == 4);
+    REQUIRE(test_module_inst->getOPorts().size() == 4);
     REQUIRE(test_module_inst->getIOPorts().size() == 1);
     REQUIRE(test_module_inst->getSignals().size() == 2);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
@@ -216,6 +219,16 @@ int sc_main(int argc, char *argv[]) {
       if ((name == "in1") || (name == "in2")) {
         REQUIRE(trim(dft_str) == "sc_in int");
       }
+
+      if (name == "three_dim") {
+        REQUIRE(pd->getArrayType() == true);
+        REQUIRE(pd->getArraySizes().size() == 3);
+        std::vector<llvm::APInt> sizes{pd->getArraySizes()};
+        REQUIRE(sizes[0].getLimitedValue() == 2);
+        REQUIRE(sizes[1].getLimitedValue() == 3);
+        REQUIRE(sizes[2].getLimitedValue() == 4);
+      }
+
     }
 
     for (auto const &port : test_module_inst->getOPorts()) {
@@ -232,8 +245,18 @@ int sc_main(int argc, char *argv[]) {
 
       if (name == "out_array_port") {
         REQUIRE(pd->getArrayType() == true);
-        REQUIRE(pd->getArraySize() == 5);
+        REQUIRE(pd->getArraySizes().front() == 5);
       }
+
+      if (name == "two_dim") {
+        REQUIRE(pd->getArrayType() == true);
+        REQUIRE(pd->getArraySizes().size() == 2);
+        std::vector<llvm::APInt> sizes{pd->getArraySizes()};
+        REQUIRE(sizes[0].getLimitedValue() == 2);
+        REQUIRE(sizes[1].getLimitedValue() == 3);
+      }
+
+
     }
 
     for (auto const &port : test_module_inst->getIOPorts()) {
@@ -262,7 +285,7 @@ int sc_main(int argc, char *argv[]) {
       /// Check array parameters
       if (name == "data") {
         REQUIRE(sg->getArrayType() == true);
-        REQUIRE(sg->getArraySize() == 4);
+        REQUIRE(sg->getArraySizes().front() == 4);
       }
     }
 

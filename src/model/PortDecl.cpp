@@ -21,8 +21,6 @@ PortDecl::PortDecl()
       template_type_{nullptr},
       field_decl_{nullptr},
       is_array_{false} {
-
-      array_size_ = 0;
       }
 
 PortDecl::PortDecl(const std::string &name, FindTemplateTypes *tt)
@@ -30,8 +28,6 @@ PortDecl::PortDecl(const std::string &name, FindTemplateTypes *tt)
       template_type_{tt},
       field_decl_{nullptr},
       is_array_{false} {
-
-      array_size_ = 0;
       }
 
 PortDecl::PortDecl(const std::string &name, const Decl *fd,
@@ -40,8 +36,6 @@ PortDecl::PortDecl(const std::string &name, const Decl *fd,
       template_type_{tt},
       field_decl_{const_cast<Decl *>(fd)},
       is_array_{false} {
-
-      array_size_ = 0;
       }
 
 PortDecl::PortDecl(const PortDecl &from) {
@@ -50,16 +44,16 @@ PortDecl::PortDecl(const PortDecl &from) {
   template_type_ = new FindTemplateTypes{*from.template_type_};
   field_decl_ = from.field_decl_;
   is_array_ = from.is_array_;
-  array_size_ = from.array_size_;
+  array_sizes_ = from.array_sizes_;
 }
 
-void PortDecl::setArraySize(llvm::APInt sz) { array_size_ = sz; }
+void PortDecl::addArraySize(llvm::APInt sz) { array_sizes_.push_back(sz); }
 
 void PortDecl::setArrayType() { is_array_ = true; }
 
 bool PortDecl::getArrayType() const { return is_array_; }
 void PortDecl::setModuleName(const std::string &name) { port_name_ = name; }
-llvm::APInt PortDecl::getArraySize() { return array_size_; }
+std::vector<llvm::APInt> PortDecl::getArraySizes() { return array_sizes_; }
 std::string PortDecl::getName() const { return port_name_; }
 
 FieldDecl *PortDecl::getAsFieldDecl() const {
@@ -77,7 +71,11 @@ json PortDecl::dump_json() {
   port_j["signal_port_arguments"] = template_type_->dump_json();
   port_j["is_array_type"] = getArrayType();
   if (getArrayType()) {
-    port_j["array_size"] = getArraySize().getLimitedValue();
+    for (auto sz: getArraySizes()) {
+      std::size_t i{0};
+      port_j["array_sizes"] += sz.getLimitedValue();
+    }
+    //port_j["array_size"] = getArraySize().getLimitedValue();
   }
 
   if (getAsFieldDecl()) { 
