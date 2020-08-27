@@ -190,9 +190,10 @@ void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     LLVM_DEBUG(llvm::dbgs() << "object name is " << objname << " and h_op is " << h_op << "\n");
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
-
+    // xxxxx temporary xxxxx
+    int arr_size = pd->getArraySizes().size()>0? pd->getArraySizes()[0].getLimitedValue():0;
     HDLt.SCtype2hcode(objname, template_argtp,
-		      (int) pd->getArraySize().getLimitedValue(),
+		      arr_size,
 		      h_op, h_info);  // passing the sigvarlist
     // check for initializer
     VarDecl * vard = pd->getAsVarDecl();
@@ -242,10 +243,10 @@ void HDLMain::SCsig2hcode(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op
 
     Tree<TemplateType> *template_argtp = (pd->getTemplateTypes())->getTemplateArgTreePtr();
 
+    int arr_size = pd->getArraySizes().size()>0? pd->getArraySizes()[0].getLimitedValue():0;
     HDLt.SCtype2hcode(objname, template_argtp,
-		     (int) pd->getArraySize().getLimitedValue(),
+		      arr_size,
 		      h_op, h_info);  // passing the sigvarlist
-   
   }
 }
 
