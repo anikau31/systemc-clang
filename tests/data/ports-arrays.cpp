@@ -13,6 +13,9 @@ SC_MODULE(ports_arrays) {
   double my_double_array[8];
   const int x = 5;
 
+  sc_out<sc_uint<2>> two_d[4][4];
+  sc_out<sc_uint<2>> three_d[2][3][4];
+
   void body () {
     int i;
     for (i=0; i < 4; i ++) { 

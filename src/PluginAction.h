@@ -22,17 +22,16 @@
 
 namespace systemc_clang {
 
-  using namespace llvm;
+using namespace llvm;
 
 static llvm::cl::OptionCategory category("systemc-clang options");
-static llvm::cl::opt<std::string> topModule(
-    "top-module",
-    llvm::cl::desc("Specify top-level module declaration for entry point"),
-    llvm::cl::cat(category));
-
+// static llvm::cl::opt<std::string> topModule(
+    // "top-module",
+    // llvm::cl::desc("Specify top-level module declaration for entry point"),
+    // llvm::cl::cat(category));
+//
 static llvm::cl::opt<bool> debug_mode(
-    "debug",
-    llvm::cl::desc("Enable debug output from systemc-clang"),
+    "debug", llvm::cl::desc("Enable debug output from systemc-clang"),
     llvm::cl::cat(category));
 
 static llvm::cl::opt<std::string> debug_only(
@@ -40,12 +39,9 @@ static llvm::cl::opt<std::string> debug_only(
     llvm::cl::desc("Enable debug only for the specified DEBUG_TYPE"),
     llvm::cl::cat(category));
 
-
-
-
 class SystemCClangAXN : public ASTFrontendAction {
  public:
-  SystemCClangAXN() : top_{topModule} {};
+  SystemCClangAXN() : top_{""} {};
 
  private:
   std::string top_;
@@ -67,13 +63,13 @@ class PluginAction {
 
     /// Setup the debug mode.
     //
-    if (debug_mode || (debug_only != "") ) {
+    if (debug_mode || (debug_only != "")) {
       LLVM_DEBUG(llvm::dbgs() << "Debug mode enabled\n";);
       llvm::DebugFlag = true;
     }
 
     if (debug_only != "") {
-#ifdef  __clang__
+#ifdef __clang__
       setCurrentDebugType(debug_only.c_str());
 #else
       llvm::setCurrentDebugType(debug_only.c_str());
