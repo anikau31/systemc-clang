@@ -18,6 +18,12 @@ using namespace std;
 using namespace hnode;
 using namespace systemc_clang;
 
+std::unique_ptr<clang::tooling::FrontendActionFactory> newFrontendActionFactory(const std::string &top_module) {
+
+  return std::unique_ptr<tooling::FrontendActionFactory>(new HDLFrontendActionFactory(top_module));
+}
+
+
 bool HDLMain::postFire() {
   Model *model = getSystemCModel();
   
@@ -194,7 +200,7 @@ void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     int arr_size = pd->getArraySizes().size()>0? pd->getArraySizes()[0].getLimitedValue():0;
     HDLt.SCtype2hcode(objname, template_argtp,
 		      arr_size,
-		      h_op, h_info);  // passing the sigvarlist
+          h_op, h_info);  // passing the sigvarlist
     // check for initializer
     VarDecl * vard = pd->getAsVarDecl();
     if (vard) {

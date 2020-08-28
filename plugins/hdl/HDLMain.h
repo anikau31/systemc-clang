@@ -56,7 +56,7 @@ class HDLMain: public SystemCConsumer {
 
 class HDLAXN : public ASTFrontendAction {
  public:
-  HDLAXN() : top_{} {};
+  HDLAXN(const std::string &top) : top_{top} {};
 
  private:
   std::string top_;
@@ -68,6 +68,25 @@ class HDLAXN : public ASTFrontendAction {
   }
 };
 
+////
+class HDLFrontendActionFactory: public clang::tooling::FrontendActionFactory {
+public:
+    HDLFrontendActionFactory(const std::string &top) : top_module_declaration_{top} {
+
+    }
+
+    std::unique_ptr<clang::FrontendAction> create() override {
+      return std::unique_ptr<FrontendAction>(new HDLAXN(top_module_declaration_));
+    }
+
+protected:
+    std::string top_module_declaration_;
+};
+
+//std::unique_ptr<clang::tooling::FrontendActionFactory> newFrontendActionFactory(const std::string &top_module);
+
+
+///
 class HDLPluginAction {
  public:
   HDLPluginAction(int argc, const char **argv) {
@@ -112,7 +131,10 @@ llvm::cl::opt<std::string> debug_only(
 
 
     std::unique_ptr<FrontendActionFactory> FrontendFactory;
-    FrontendFactory = newFrontendActionFactory<HDLAXN>();
+//    FrontendFactory = newFrontendActionFactory<HDLAXN>();
+    //FrontendFactory = newFrontendActionFactory(h);
+    
+   FrontendFactory = std::unique_ptr<tooling::FrontendActionFactory>(new HDLFrontendActionFactory(topModule));
     Tool.run(FrontendFactory.get());
   };
 };
