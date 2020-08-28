@@ -1,7 +1,7 @@
 Generating HDL
 ==================
 The HDL plugin translates a synthesizable subset of System C
-constructs to hcode, a simple hardware description language netral
+constructs to hcode, a simple hardware description language neutral
 representation. Hcode can be easily transcribed to Verilog or VHDL.
 
 The root for HDL generation is the top level module, which is expected

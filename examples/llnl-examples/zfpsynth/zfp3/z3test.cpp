@@ -9,7 +9,7 @@
 #include <unistd.h> // getopt, optarg, optind
 #include <limits> // numeric_limits
 
-#include "../shared2/pulse.h"
+//#include "../shared2/pulse.h"
 #include "../shared2/zhw_encode.h"
 
 #ifndef DATAW
@@ -58,7 +58,7 @@ typedef bits_t<DATAW> enc_t;      // encoded bitstream type
 typedef zhw::sconfig_t sconfig_t; // signed configuration parameter type
 typedef zhw::uconfig_t uconfig_t; // unsigned configuration parameter type
 
-#include "tcase.h" // test cases
+//#include "tcase.h" // test cases
 
 #define DEFAULT_BLOCKS 1
 #define DEFAULT_RATE (fpn_t::bits)
@@ -86,86 +86,6 @@ static tcase<real_t,enc_t::uic_t,DIMS> *ptcase;
 // Send/Recv data on a stream.
 // Translate between the I/O buffer types and SystemC types.
 // The tb_driver is not intended to be synthesizable.
-template<typename I, typename O>
-SC_MODULE(tb_driver)
-{
-	sc_in<bool> clk;
-	sc_in<bool> reset;
-
-	sc_stream_in <I> s_port;
-	sc_stream_out<O> m_port;
-
-	sc_time t0, t1;
-	uint64_t eticks; // software encode time in cycles
-	int retval;
-
-	void ct_send()
-	{
-		real_t *buf = ptcase->get_buf_R1();
-		O flit;
-		m_port.reset();
-		wait();
-#if defined(P_DATA)
-		cout << " Uncompressed real data (input to encode)" << endl;
-		ptcase->dump(buf, blocks*BLOCK_LEN*sizeof(real_t), sizeof(real_t));
-#endif
-		t0 = sc_time_stamp();
-		for (unsigned j = 0; j < blocks; j++) {
-			for (unsigned i = 0; i < BLOCK_LEN; i++) {
-				flit = buf[j*BLOCK_LEN+i];
-				// wait();
-#if defined(P_IO)
-				cout << "tb_driver::ct_send ts: " << sc_time_stamp() << ", flit: " << flit << endl;
-#endif
-				m_port.write(flit); // write has call to wait();
-			}
-		}
-	}
-
-	void ct_recv()
-	{
-		enc_t::uic_t *buf = ptcase->get_buf_EN();
-		unsigned len = 0;
-		I flit;
-		s_port.reset();
-		wait();
-		for (unsigned j = 0; j < blocks; j++) {
-			for (unsigned i = 0; ; i++)  {
-				// wait();
-				flit = s_port.read(); // read has call to wait();
-#if defined(P_IO)
-				cout << "tb_driver::ct_recv ts: " << sc_time_stamp() << ", flit: " << flit << endl;
-#endif
-				buf[len++] = flit.tdata.to_uint64();
-				if (flit.tlast) break;
-			}
-		}
-		t1 = sc_time_stamp();
-#if defined(P_DATA)
-		cout << " Compressed data (output from encode, input to decode)" << endl;
-		ptcase->dump(buf, len*sizeof(enc_t::uic_t), sizeof(enc_t::uic_t));
-#endif
-		retval = ptcase->check_EN(len, eticks);
-		// sync after whole batch is done
-	}
-
-	// need threads for decode
-	// enc_t::uic_t *buf = ptcase->get_buf_EN();
-	// real_t *buf = ptcase->get_buf_R2();
-	// retval = ptcase->check_R2();
-
-	SC_CTOR(tb_driver) :
-		clk("clk"),
-		reset("reset"),
-		retval(1)
-	{
-		SC_CTHREAD(ct_send, clk.pos());
-			reset_signal_is(reset, RLEVEL);
-
-		SC_CTHREAD(ct_recv, clk.pos());
-			reset_signal_is(reset, RLEVEL);
-	}
-};
 
 using namespace zhw;
 
