@@ -53,9 +53,19 @@ bool HDLMain::postFire() {
   // typedef std::pair<std::string, ModuleDecl *> modulePairType;
 
   Model::moduleMapType modules = model->getModuleDecl();
-  if (modules.size() <= 0) return true;
-  Model::modulePairType modpair = modules[0]; // assume first one is top module
-  ModuleDecl * mod = modpair.second;
+  if (modules.size() <= 0) {
+    LLVM_DEBUG(llvm::dbgs() << "no modules, exiting\n");
+    return true;
+  }
+  string topmod = getTopModule();
+  LLVM_DEBUG(llvm::dbgs() << "top module is " << topmod << "\n");
+  Model::modulePairType modpair;
+  ModuleDecl * mod;
+  if (topmod.empty()) {
+    modpair = modules[0]; // assume first one is top module
+    mod = modpair.second;
+  }
+  else mod = model->getInstance(topmod);
 
   vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
   if (instanceVec.size()<=0) return true;
@@ -198,8 +208,9 @@ void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
     // xxxxx temporary xxxxx
     int arr_size = pd->getArraySizes().size()>0? pd->getArraySizes()[0].getLimitedValue():0;
+    std::vector<llvm::APInt> array_sizes = pd->getArraySizes();
     HDLt.SCtype2hcode(objname, template_argtp,
-		      arr_size,
+		      &array_sizes,
           h_op, h_info);  // passing the sigvarlist
     // check for initializer
     VarDecl * vard = pd->getAsVarDecl();
@@ -250,8 +261,9 @@ void HDLMain::SCsig2hcode(ModuleDecl::signalMapType pmap, hNode::hdlopsEnum h_op
     Tree<TemplateType> *template_argtp = (pd->getTemplateTypes())->getTemplateArgTreePtr();
 
     int arr_size = pd->getArraySizes().size()>0? pd->getArraySizes()[0].getLimitedValue():0;
+    std::vector<llvm::APInt> array_sizes = pd->getArraySizes();
     HDLt.SCtype2hcode(objname, template_argtp,
-		      arr_size,
+		      &array_sizes,
 		      h_op, h_info);  // passing the sigvarlist
   }
 }
