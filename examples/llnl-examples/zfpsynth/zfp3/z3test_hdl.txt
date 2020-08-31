@@ -321,98 +321,40 @@
           ]
         ]
       ]
-      hModdecl u_encode_stream [
+      hModdecl u_find_emax [
         hTypeinfo  NONAME [
           hType _sc_module_2 NOLIST
         ]
       ]
-      hModdecl u_find_emax [
+      hModdecl u_ssplit_ex [
         hTypeinfo  NONAME [
           hType _sc_module_3 NOLIST
         ]
       ]
-      hModdecl u_ssplit_ex [
+      hModdecl u_fwd_cast [
         hTypeinfo  NONAME [
           hType _sc_module_4 NOLIST
         ]
       ]
-      hModdecl u_fwd_cast [
+      hModdecl u_encode_block [
         hTypeinfo  NONAME [
           hType _sc_module_5 NOLIST
         ]
       ]
-      hModdecl u_encode_block [
+      hModdecl u_block_buffer [
         hTypeinfo  NONAME [
           hType _sc_module_6 NOLIST
         ]
       ]
-      hModdecl u_block_buffer [
+      hModdecl u_encode_ints [
         hTypeinfo  NONAME [
           hType _sc_module_7 NOLIST
         ]
       ]
-      hModdecl u_encode_ints [
+      hModdecl u_encode_stream [
         hTypeinfo  NONAME [
           hType _sc_module_8 NOLIST
         ]
-      ]
-    ]
-    hPortbindings u_encode_stream [
-      hPortbinding  NONAME [
-        hVarref clk NOLIST
-        hVarref clk NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref m_bits NOLIST
-        hVarref m_bits NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref m_flush NOLIST
-        hVarref c_es_flush NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref maxbits NOLIST
-        hVarref maxbits NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref maxprec NOLIST
-        hVarref maxprec NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref minbits NOLIST
-        hVarref minbits NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref minexp NOLIST
-        hVarref minexp NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref reset NOLIST
-        hVarref reset NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref s_bc NOLIST
-        hVarref c_ei_bc NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref s_bp NOLIST
-        hVarref c_ei_bp NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref s_ex NOLIST
-        hVarref c_sp_ex2 NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref s_last NOLIST
-        hVarref c_ei_last NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref s_ready NOLIST
-        hVarref c_ei_ready NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref s_valid NOLIST
-        hVarref c_ei_valid NOLIST
       ]
     ]
     hPortbindings u_find_emax [
@@ -603,164 +545,66 @@
         hVarref c_bb_valid NOLIST
       ]
     ]
-  ]
-  hModule _sc_module_2 [
-    hPortsigvarlist  NONAME [
-      hPortin clk [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
+    hPortbindings u_encode_stream [
+      hPortbinding  NONAME [
+        hVarref clk NOLIST
+        hVarref clk NOLIST
       ]
-      hPortin reset [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref m_bits NOLIST
+        hVarref m_bits NOLIST
       ]
-      hPortin minbits [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType unsigned short NOLIST
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref m_flush NOLIST
+        hVarref c_es_flush NOLIST
       ]
-      hPortin maxbits [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType unsigned short NOLIST
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref maxbits NOLIST
+        hVarref maxbits NOLIST
       ]
-      hPortin maxprec [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType unsigned short NOLIST
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref maxprec NOLIST
+        hVarref maxprec NOLIST
       ]
-      hPortin minexp [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType short NOLIST
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref minbits NOLIST
+        hVarref minbits NOLIST
       ]
-      hPortin s_bc [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType sc_uint [
-              hLiteral 6 NOLIST
-            ]
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref minexp NOLIST
+        hVarref minexp NOLIST
       ]
-      hPortin s_bp [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType sc_bv [
-              hLiteral 33 NOLIST
-            ]
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref reset NOLIST
+        hVarref reset NOLIST
       ]
-      hPortin s_last [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref s_bc NOLIST
+        hVarref c_ei_bc NOLIST
       ]
-      hPortin s_valid [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref s_bp NOLIST
+        hVarref c_ei_bp NOLIST
       ]
-      hPortin s_ex [
-        hTypeinfo  NONAME [
-          hType sc_rvd_in [
-            hType sc_uint [
-              hLiteral 11 NOLIST
-            ]
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref s_ex NOLIST
+        hVarref c_sp_ex2 NOLIST
       ]
-      hPortout s_ready [
-        hTypeinfo  NONAME [
-          hType sc_out [
-            hType _Bool NOLIST
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref s_last NOLIST
+        hVarref c_ei_last NOLIST
       ]
-      hPortout m_flush [
-        hTypeinfo  NONAME [
-          hType sc_out [
-            hType _Bool NOLIST
-          ]
-        ]
+      hPortbinding  NONAME [
+        hVarref s_ready NOLIST
+        hVarref c_ei_ready NOLIST
       ]
-      hPortout m_bits [
-        hTypeinfo  NONAME [
-          hType sc_rvd_out [
-            hType bits_t [
-              hLiteral 64 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl cs [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType state_t NOLIST
-          ]
-        ]
-      ]
-      hSigdecl ns [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType state_t NOLIST
-          ]
-        ]
-      ]
-      hVardecl pre_w [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-        hVarInit  NONAME [
-          hLiteral 7 NOLIST
-        ]
-      ]
-      hVardecl tbc_w [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-        hVarInit  NONAME [
-          hLiteral 12 NOLIST
-        ]
-      ]
-      hVardecl buf_w [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-        hVarInit  NONAME [
-          hLiteral 128 NOLIST
-        ]
-      ]
-      hVardecl pos_w [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-        hVarInit  NONAME [
-          hLiteral 8 NOLIST
-        ]
+      hPortbinding  NONAME [
+        hVarref s_valid NOLIST
+        hVarref c_ei_valid NOLIST
       ]
     ]
   ]
-  hModule _sc_module_3 [
+  hModule _sc_module_2 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -2028,7 +1872,7 @@
       ]
     ]
   ]
-  hModule _sc_module_4 [
+  hModule _sc_module_3 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -3180,7 +3024,7 @@
       ]
     ]
   ]
-  hModule _sc_module_5 [
+  hModule _sc_module_4 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -3540,7 +3384,7 @@
       ]
     ]
   ]
-  hModule _sc_module_6 [
+  hModule _sc_module_5 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -3606,6 +3450,17 @@
           ]
         ]
       ]
+      hSigdecl c_xt_data [
+        hTypeinfo  NONAME [
+          hType array##4##4 [
+            hType sc_signal [
+              hType sc_int [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
       hSigdecl c_xt_ready [
         hTypeinfo  NONAME [
           hType array##4 [
@@ -3620,6 +3475,17 @@
           ]
         ]
       ]
+      hSigdecl c_yt_data [
+        hTypeinfo  NONAME [
+          hType array##4##4 [
+            hType sc_signal [
+              hType sc_int [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
       hSigdecl c_yt_ready [
         hTypeinfo  NONAME [
           hType array##4 [
@@ -3631,28 +3497,6 @@
         hTypeinfo  NONAME [
           hType array##4 [
             hType sc_signal NOLIST
-          ]
-        ]
-      ]
-      hVardecl c_xt_data [
-        hTypeinfo  NONAME [
-          hType array##4 [
-            hType sc_signal [
-              hType sc_int [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hVardecl c_yt_data [
-        hTypeinfo  NONAME [
-          hType array##4 [
-            hType sc_signal [
-              hType sc_int [
-                hLiteral 64 NOLIST
-              ]
-            ]
           ]
         ]
       ]
@@ -3682,7 +3526,7 @@
       ]
     ]
   ]
-  hModule _sc_module_7 [
+  hModule _sc_module_6 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -3768,7 +3612,7 @@
       ]
     ]
   ]
-  hModule _sc_module_8 [
+  hModule _sc_module_7 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -3938,6 +3782,162 @@
         ]
         hVarInit  NONAME [
           hLiteral 64 NOLIST
+        ]
+      ]
+    ]
+  ]
+  hModule _sc_module_8 [
+    hPortsigvarlist  NONAME [
+      hPortin clk [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin reset [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin minbits [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType unsigned short NOLIST
+          ]
+        ]
+      ]
+      hPortin maxbits [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType unsigned short NOLIST
+          ]
+        ]
+      ]
+      hPortin maxprec [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType unsigned short NOLIST
+          ]
+        ]
+      ]
+      hPortin minexp [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType short NOLIST
+          ]
+        ]
+      ]
+      hPortin s_bc [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType sc_uint [
+              hLiteral 6 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortin s_bp [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType sc_bv [
+              hLiteral 33 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortin s_last [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin s_valid [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin s_ex [
+        hTypeinfo  NONAME [
+          hType sc_rvd_in [
+            hType sc_uint [
+              hLiteral 11 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortout s_ready [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout m_flush [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout m_bits [
+        hTypeinfo  NONAME [
+          hType sc_rvd_out [
+            hType bits_t [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl cs [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType state_t NOLIST
+          ]
+        ]
+      ]
+      hSigdecl ns [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType state_t NOLIST
+          ]
+        ]
+      ]
+      hVardecl pre_w [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hVarInit  NONAME [
+          hLiteral 7 NOLIST
+        ]
+      ]
+      hVardecl tbc_w [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hVarInit  NONAME [
+          hLiteral 12 NOLIST
+        ]
+      ]
+      hVardecl buf_w [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hVarInit  NONAME [
+          hLiteral 128 NOLIST
+        ]
+      ]
+      hVardecl pos_w [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hVarInit  NONAME [
+          hLiteral 8 NOLIST
         ]
       ]
     ]

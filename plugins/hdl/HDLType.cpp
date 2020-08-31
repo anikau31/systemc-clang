@@ -13,7 +13,7 @@
 #include "HDLType.h"
 
 void HDLType::SCtype2hcode(string prefix,  Tree<TemplateType> *template_argtp,
-			   int arr_size, hNode::hdlopsEnum h_op, hNodep &h_info) {
+			   std::vector<llvm::APInt> *arr_sizes, hNode::hdlopsEnum h_op, hNodep &h_info) {
 
   //llvm::outs()  << "HDLtype dump of templatetree args follows\n";
   //template_argtp->dump();
@@ -31,9 +31,14 @@ void HDLType::SCtype2hcode(string prefix,  Tree<TemplateType> *template_argtp,
   hmainp->child_list.push_back(h_typeinfo);
 
   hNodep h_typ = new hNode(tmps, hNode::hdlopsEnum::hType);
-  
-  if (arr_size >0) {
-    hNodep h_arr = new hNode("array##"+to_string(arr_size), hNode::hdlopsEnum::hType);
+  if ((arr_sizes) && (arr_sizes->size()>0)) {
+    string arr_string = "array";
+    int arr_size = 0;
+    for (int i = 0; i < arr_sizes->size(); i++) {
+      arr_size = arr_sizes->at(i).getLimitedValue();
+      arr_string+="##"+to_string(arr_size);
+    }
+    hNodep h_arr = new hNode(arr_string, hNode::hdlopsEnum::hType);
     h_arr->child_list.push_back(h_typ);
     h_typeinfo->child_list.push_back(h_arr);
   }

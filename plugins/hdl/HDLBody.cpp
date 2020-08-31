@@ -234,7 +234,7 @@ bool HDLBody::ProcessVarDecl( VarDecl * vardecl) {
 
   te->Enumerate(tp);
   HDLType HDLt;
-  HDLt.SCtype2hcode(vardecl->getName(), te->getTemplateArgTreePtr(), 0, hNode::hdlopsEnum::hVardecl, h_varlist);
+  HDLt.SCtype2hcode(vardecl->getName(), te->getTemplateArgTreePtr(), NULL, hNode::hdlopsEnum::hVardecl, h_varlist);
   hNodep h_vardecl = h_varlist->child_list.back();
   h_ret = NULL;
 
