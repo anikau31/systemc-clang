@@ -47,7 +47,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   typedef std::vector<std::tuple<std::string, PortDecl *> > MemberDeclType;
 
  private:
-  std::string top_module_decl_;
+  //std::string top_module_decl_;
 
  public:
   /// Separate out the member declarations found within a SystemC module.
@@ -78,8 +78,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
   }
   const MemberDeclType &getPorts() const { return sc_ports_; }
 
-  PortMatcher(const std::string &top_module = ".*")
-      : top_module_decl_{top_module} {}
+  PortMatcher() {}
+      //: top_module_decl_{top_module} {}
 
   /// AST matcher to detect field declarations.
   auto makeFieldMatcher(const std::string &name) {
@@ -351,7 +351,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     /// These matchers are used to form other matchers. 
     auto match_module_decls = 
       cxxRecordDecl(
-          matchesName(top_module_decl_), // Specifies the top-level module name.
+          //matchesName(top_module_decl_), // Specifies the top-level module name.
           hasDefinition(),               // There must be a definition.
           unless( isImplicit() ),        // Templates generate implicit structs - so ignore.
           isDerivedFrom(

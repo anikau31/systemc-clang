@@ -52,7 +52,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   typedef std::map<clang::CXXRecordDecl *, ModuleDecl *> ModuleMapType;
 
  private:
-  std::string top_module_decl_;
+  //std::string top_module_decl_;
   ModuleDeclarationType found_declarations_;
   ModuleDeclarationType found_template_declarations_;
   // One of those needs to be removed.
@@ -77,24 +77,24 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     return instance_matcher_;
   }
 
-  void set_top_module_decl(const std::string &top) {
+//  void set_top_module_decl(const std::string &top) {
     // If there is no top specified, then match all, otherwise only top module.
     // The regular expression for matchesName() matcher for ".*" matches
     // anything. That regular expression is enabled only when top module is not
     // specified.
-    if ((top == "!none") || (top == "")) {
-      top_module_decl_ = ".*";
-    } else {
-      top_module_decl_ = top;
-    }
-  }
+    // if ((top == "!none") || (top == "")) {
+      // top_module_decl_ = ".*";
+    // } else {
+      // top_module_decl_ = top;
+    // }
+ // }
 
   /// Register the matchers.
   void registerMatchers(MatchFinder &finder) {
 
     // This is in case the set method is not called explicitly.
     // Simply pass in what is the default.
-    set_top_module_decl( top_module_decl_ );
+    //set_top_module_decl( top_module_decl_ );
 
     /* clang-format off */
     auto match_module_decls = 
@@ -146,7 +146,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
       // Subtree matcher
       MatchFinder port_registry{};
-      PortMatcher port_matcher{top_module_decl_};
+      PortMatcher port_matcher{};
       port_matcher.registerMatchers(port_registry);
       port_registry.match(*decl, *result.Context);
       // decl->dump();
@@ -232,8 +232,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   }
 
   void dump() {
-    llvm::outs() << "[ModuleDeclarationMatcher] Top-level module: "
-                 << top_module_decl_ << "\n";
+    // llvm::outs() << "[ModuleDeclarationMatcher] Top-level module: "
+                 // << top_module_decl_ << "\n";
     llvm::outs()
         << "[ModuleDeclarationMatcher] Non-template module declarations: "
         << found_declarations_.size() << "\n";

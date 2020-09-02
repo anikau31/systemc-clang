@@ -43,7 +43,7 @@ void SystemCConsumer::populateNestedModules(
 
     // Insert the child into the parent.
     if (child && parent) {
-      LLVM_DEBUG(llvm::dbgs() << "ADD A CHILD PARENT RELATIONSHIP\n");
+      LLVM_DEBUG(llvm::dbgs() << "Add a child-parent relationship\n");
       parent->addNestedModule(child);
     }
   }
@@ -54,7 +54,6 @@ bool SystemCConsumer::preFire() { return true; }
 bool SystemCConsumer::postFire() { return true; }
 
 bool SystemCConsumer::fire() {
-  os_ << "Top module: " << getTopModule() << "\n";
   TranslationUnitDecl *tu{getContext().getTranslationUnitDecl()};
   // Reflection database.
   systemcModel_ = new Model{};
@@ -65,18 +64,7 @@ bool SystemCConsumer::fire() {
   // globals.dump_json();
   systemcModel_->addGlobalEvents(eventMap);
 
-  //
-  // TODO:
-  // A first pass should be made to collect all sc_module declarations.
-  // This is important so that the top-level module can be found.
-  //
-
-  // A first pass should be made to collect all sc_module declarations.
-  // This is important so that the top-level module can be found.
-  //
-
   ModuleDeclarationMatcher module_declaration_handler{};
-  module_declaration_handler.set_top_module_decl(getTopModule());
   MatchFinder matchRegistry{};
 
   /// Run all the matchers
@@ -89,23 +77,9 @@ bool SystemCConsumer::fire() {
              module_declaration_handler.dump();
              llvm::dbgs() << "================ END =============== \n";);
 
-  /// Check if the top-level module one of the sc_module declarations?
-  ///
   // Map CXXRecordDecl => ModuleDecl*
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
-  auto found_top_module{std::find_if(
-      found_module_declarations.begin(), found_module_declarations.end(),
-      [this](const ModuleDeclarationMatcher::ModulePairType &element) {
-        return (element.second->getName() == getTopModule());
-      })};
-
-  if (found_top_module != found_module_declarations.end()) {
-    LLVM_DEBUG(llvm::dbgs() << "Found the top module: "
-                            << found_top_module->second->getName() << ", "
-                            << found_top_module->second << "\n";);
-  }
-
   // ===========================================================
   // 1. Add every module declaration to the model.
   // ===========================================================
@@ -226,7 +200,7 @@ bool SystemCConsumer::fire() {
       matchRegistry.match(*constructor.getConstructorDecl(), getContext());
 
       LLVM_DEBUG(sens_matcher.dump();
-      llvm::dbgs() << "================ END =============== \n";);
+                 llvm::dbgs() << "================ END =============== \n";);
 
       for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
@@ -273,38 +247,40 @@ bool SystemCConsumer::fire() {
   // Module instance map.
   auto module_instance_map{systemcModel_->getModuleInstanceMap()};
 
-  LLVM_DEBUG(llvm::dbgs()
-      << " @@@@@@@@ =============== Populate sub-modules ============= \n";);
+  LLVM_DEBUG(llvm::dbgs() << " @@@@@@@@ =============== Populate sub-modules "
+                             "============= \n";);
   // This must have the instance matcher already run.
   // You need systemcModel_ and instance_matcher to build the hierarchy of
   // sub-modules.
   auto instance_matcher{module_declaration_handler.getInstanceMatcher()};
   auto instance_map{instance_matcher.getInstanceMap()};
-  LLVM_DEBUG(llvm::dbgs() << "- Print out all the instances in the instance map\n";);
+  LLVM_DEBUG(
+      llvm::dbgs() << "- Print out all the instances in the instance map\n";);
   populateNestedModules(instance_map);
 
-  LLVM_DEBUG(llvm::dbgs() << "===========END  Populate sub-modules ============= \n";);
+  LLVM_DEBUG(
+      llvm::dbgs() << "===========END  Populate sub-modules ============= \n";);
 
   // All instances are within the SystemC model.
   //  This must come after instances of ModuleDecl have been generated.
   //  This is because the netlist matcher inserts the port bindings into the
   //  instance.
 
-  LLVM_DEBUG(llvm::dbgs() << "=============== ##### TEST NetlistMatcher ##### \n";);
+  LLVM_DEBUG(
+      llvm::dbgs() << "=============== ##### TEST NetlistMatcher ##### \n";);
   NetlistMatcher netlist_matcher{};
   MatchFinder netlist_registry{};
   netlist_matcher.registerMatchers(netlist_registry, systemcModel_,
                                    &module_declaration_handler);
 
-
   netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   // TODO: Fix the top-level
-  if (getTopModule() == "!none") {
-    llvm::outs() << " No top module\n";
-  }
-
+  // if (getTopModule() == "!none") {
+  // llvm::outs() << " No top module\n";
+  // }
+  //
   LLVM_DEBUG(llvm::dbgs() << "Begin netlist parsing on instances: "
-               << found_instances_declaration_map.size() << "\n";);
+                          << found_instances_declaration_map.size() << "\n";);
   for (const auto &inst : module_instance_map) {
     auto incomplete_mdecl{inst.first};
     auto instance_list{inst.second};
@@ -326,8 +302,7 @@ bool SystemCConsumer::fire() {
     }
   }
   LLVM_DEBUG(netlist_matcher.dump();
-  llvm::dbgs() << "##### END TEST NetlistMatcher ##### \n";);
-
+             llvm::dbgs() << "##### END TEST NetlistMatcher ##### \n";);
 
   /*
   ////////////////////////////////////////////////////////////////
@@ -474,7 +449,8 @@ bool SystemCConsumer::fire() {
 #endif
 
      */
-  LLVM_DEBUG(llvm::dbgs() << "Parsed SystemC model from systemc-clang\n";
+  LLVM_DEBUG(
+      llvm::dbgs() << "Parsed SystemC model from systemc-clang\n";
       llvm::dbgs() << "============= MODEL ============================\n";
       systemcModel_->dump(llvm::dbgs());
       llvm::dbgs() << "==============END========================\n";);
