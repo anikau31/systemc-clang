@@ -52,6 +52,8 @@ public:
   void updateModuleDecl();
 
   const moduleMapType & getModuleDecl();
+  ModuleDecl *getModuleDecl(const std::string &decl_name);
+  ModuleDecl *getModuleDeclByInstance(const std::string &inst_name);
   ModuleDecl *getInstance(const std::string &instance_name);
   ModuleDecl *getInstance(Decl *instance_decl);
 

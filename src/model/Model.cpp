@@ -11,12 +11,14 @@ Model::~Model() {
   for (auto &inst : module_instance_map_) {
     auto incomplete_decl{inst.first};
     auto instance_list{inst.second};
-    LLVM_DEBUG(llvm::dbgs() << "Delete instances for " << incomplete_decl->getName()
-                 << ": " << instance_list.size() << "\n";);
+    LLVM_DEBUG(llvm::dbgs()
+                   << "Delete instances for " << incomplete_decl->getName()
+                   << ": " << instance_list.size() << "\n";);
     for (ModuleDecl *inst_in_list : instance_list) {
       // This is a ModuleDecl*
-      LLVM_DEBUG(llvm::dbgs() << "- delete instance: " << inst_in_list->getInstanceName()
-                   << ", pointer: " << inst_in_list << "\n";);
+      LLVM_DEBUG(llvm::dbgs()
+                     << "- delete instance: " << inst_in_list->getInstanceName()
+                     << ", pointer: " << inst_in_list << "\n";);
       //
       // IMPORTANT
       // The current design creates an incomplete ModuleDecl in Matchers. The
@@ -115,7 +117,7 @@ void Model::addNetlist(FindNetlist &n) {
 void Model::updateModuleDecl() {
   for (moduleMapType::iterator it = modules_.begin(), eit = modules_.end();
        it != eit; it++) {
-    std::string moduleName { it->first};
+    std::string moduleName{it->first};
     ModuleDecl *md = it->second;
     std::vector<std::string> instanceList;
 
@@ -162,6 +164,29 @@ void Model::updateModuleDecl() {
 //
 const Model::moduleMapType &Model::getModuleDecl() { return modules_; }
 
+ModuleDecl *Model::getModuleDeclByInstance(const std::string &inst_name) {
+  /// Iterate over all the modules and match its declaration name.
+  for (auto mod : modules_) {
+    ModuleDecl *decl{mod.second};
+    if (decl->getInstanceName() == inst_name) {
+      return decl;
+    }
+  }
+  return nullptr;
+}
+
+
+ModuleDecl *Model::getModuleDecl(const std::string &decl_name) {
+  /// Iterate over all the modules and match its declaration name.
+  for (auto mod : modules_) {
+    ModuleDecl *decl{mod.second};
+    if (decl->getName() == decl_name) {
+      return decl;
+    }
+  }
+  return nullptr;
+}
+
 // Must specify the instance name.
 ModuleDecl *Model::getInstance(const std::string &instance_name) {
   llvm::outs() << "getInstance\n";
@@ -186,7 +211,7 @@ ModuleDecl *Model::getInstance(const std::string &instance_name) {
 
 // Must provide the Instance decl.
 ModuleDecl *Model::getInstance(Decl *instance_decl) {
-  llvm::outs() << "getInstance Decl to find : " << instance_decl <<"\n";
+  llvm::outs() << "getInstance Decl to find : " << instance_decl << "\n";
   // std::map<ModuleDecl *, std::vector<ModuleDecl *>> moduleInstanceMapType;
   for (auto const &element : module_instance_map_) {
     auto instance_list{element.second};
@@ -197,9 +222,9 @@ ModuleDecl *Model::getInstance(Decl *instance_decl) {
                        return (instance->getInstanceDecl() == instance_decl);
                      });
     // for (auto const inst: instance_list) {
-      // llvm::outs() << " => inst decl " << inst->getInstanceDecl() << "\n";
+    // llvm::outs() << " => inst decl " << inst->getInstanceDecl() << "\n";
     // }
-//
+    //
     if (test_module_it != instance_list.end()) {
       llvm::outs() << "Found";
       return *test_module_it;

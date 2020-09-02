@@ -58,7 +58,24 @@ bool HDLMain::postFire() {
     return true;
   }
   string topmod = getTopModule();
-  LLVM_DEBUG(llvm::dbgs() << "top module is " << topmod << "\n");
+
+
+  /// Retrieve the ModuleDecl* for the toplevel, if specified.
+  //
+  ModuleDecl *top_module_decl{nullptr};
+  if (topmod != "") {
+    top_module_decl = model->getModuleDecl(topmod);
+    LLVM_DEBUG(llvm::dbgs() << "top module is " << topmod << ", ModuleDecl* is " << top_module_decl << "\n");
+    // LLVM_DEBUG(top_module_decl->dump(llvm::outs());); // Comment this out if you don't want to see it.
+    // If you want to get it via the instance name, then you can use getModuleDeclByInstance().
+  }
+  
+  if (top_module_decl == nullptr) {
+    LLVM_DEBUG(llvm::dbgs() << "Top module " << topmod << " not found. \n");
+    return true;
+  }
+
+
   Model::modulePairType modpair;
   ModuleDecl * mod;
   if (topmod.empty()) {
