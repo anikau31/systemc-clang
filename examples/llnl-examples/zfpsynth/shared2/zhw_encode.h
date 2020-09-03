@@ -356,17 +356,13 @@ template<typename FP, int DIM>
 struct encode_block;
 
 // vector with a size of 4.
-/* template <class T> */
-/* class sc_vector4 : public sc_vector<T> { */
-/* 	public: */
-/* 		sc_vector4() : sc_vector<T>(4) {} */
-/* 		explicit sc_vector4(const char* name_) : sc_vector<T>(name_, 4) {} */
-/* }; */
-
-template<class T> 
-struct sc_vector4 {
-  T arr[4];
+template <class T>
+class sc_vector4 : public sc_vector<T> {
+	public:
+		sc_vector4() : sc_vector<T>(4) {}
+		explicit sc_vector4(const char* name_) : sc_vector<T>(name_, 4) {}
 };
+
 
 struct encode_block<FP, 1> : sc_module
 {
