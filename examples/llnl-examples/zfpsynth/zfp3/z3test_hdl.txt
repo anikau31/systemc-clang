@@ -8,21 +8,21 @@
       hSigdecl maxbits [
         hTypeinfo  NONAME [
           hType sc_signal [
-            hType unsigned short NOLIST
+            hType unsigned_short NOLIST
           ]
         ]
       ]
       hSigdecl maxprec [
         hTypeinfo  NONAME [
           hType sc_signal [
-            hType unsigned short NOLIST
+            hType unsigned_short NOLIST
           ]
         ]
       ]
       hSigdecl minbits [
         hTypeinfo  NONAME [
           hType sc_signal [
-            hType unsigned short NOLIST
+            hType unsigned_short NOLIST
           ]
         ]
       ]
@@ -119,21 +119,21 @@
       hPortin minbits [
         hTypeinfo  NONAME [
           hType sc_in [
-            hType unsigned short NOLIST
+            hType unsigned_short NOLIST
           ]
         ]
       ]
       hPortin maxbits [
         hTypeinfo  NONAME [
           hType sc_in [
-            hType unsigned short NOLIST
+            hType unsigned_short NOLIST
           ]
         ]
       ]
       hPortin maxprec [
         hTypeinfo  NONAME [
           hType sc_in [
-            hType unsigned short NOLIST
+            hType unsigned_short NOLIST
           ]
         ]
       ]
@@ -5002,12 +5002,12 @@
                   ]
                   hCStmt  NONAME [
                     hBinop = [
-                      hBinop [] [
+                      hBinop ARRAYSUBSCRIPT [
                         hVarref _local_1 NOLIST
                         hVarref _local_3 NOLIST
                       ]
                       hMethodCall sc_dtsc_uint_bitref_rto_bool [
-                        hBinop [] [
+                        hBinop ARRAYSUBSCRIPT [
                           hSigAssignR read [
                             hBinop ARRAYSUBSCRIPT [
                               hVarref s_block NOLIST
@@ -5243,7 +5243,7 @@
                       ]
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
-                          hBinop [] [
+                          hBinop ARRAYSUBSCRIPT [
                             hSigAssignR read [
                               hBinop ARRAYSUBSCRIPT [
                                 hVarref c_bplane NOLIST
@@ -5389,12 +5389,12 @@
                       ]
                       hCStmt  NONAME [
                         hBinop = [
-                          hBinop [] [
+                          hBinop ARRAYSUBSCRIPT [
                             hVarref _local_3 NOLIST
                             hVarref _local_5 NOLIST
                           ]
                           hMethodCall sc_dtsc_bitref_rsc_dtsc_bv_baseto_bool [
-                            hBinop [] [
+                            hBinop ARRAYSUBSCRIPT [
                               hSigAssignR read [
                                 hVarref bp1 NOLIST
                               ]
@@ -5422,7 +5422,7 @@
                       ]
                       hCStmt  NONAME [
                         hBinop = [
-                          hBinop [] [
+                          hBinop ARRAYSUBSCRIPT [
                             hVarref _local_3 NOLIST
                             hUnop ++ [
                               hVarref _local_4 NOLIST
@@ -5433,7 +5433,7 @@
                         hWhileStmt  NONAME [
                           hUnop ! [
                             hMethodCall sc_dtsc_bitref_rsc_dtsc_bv_baseto_bool [
-                              hBinop [] [
+                              hBinop ARRAYSUBSCRIPT [
                                 hSigAssignR read [
                                   hVarref bp1 NOLIST
                                 ]
@@ -5446,7 +5446,7 @@
                               hVarref _local_6 NOLIST
                             ]
                             hBinop = [
-                              hBinop [] [
+                              hBinop ARRAYSUBSCRIPT [
                                 hVarref _local_3 NOLIST
                                 hUnop ++ [
                                   hVarref _local_4 NOLIST
@@ -5465,7 +5465,7 @@
                             ]
                           ]
                           hBinop = [
-                            hBinop [] [
+                            hBinop ARRAYSUBSCRIPT [
                               hVarref _local_3 NOLIST
                               hUnop ++ [
                                 hVarref _local_4 NOLIST
@@ -5482,7 +5482,7 @@
                         hLiteral 2 NOLIST
                       ]
                       hBinop = [
-                        hBinop [] [
+                        hBinop ARRAYSUBSCRIPT [
                           hVarref _local_3 NOLIST
                           hUnop ++ [
                             hVarref _local_4 NOLIST
@@ -5552,21 +5552,21 @@
       hPortin minbits [
         hTypeinfo  NONAME [
           hType sc_in [
-            hType unsigned short NOLIST
+            hType unsigned_short NOLIST
           ]
         ]
       ]
       hPortin maxbits [
         hTypeinfo  NONAME [
           hType sc_in [
-            hType unsigned short NOLIST
+            hType unsigned_short NOLIST
           ]
         ]
       ]
       hPortin maxprec [
         hTypeinfo  NONAME [
           hType sc_in [
-            hType unsigned short NOLIST
+            hType unsigned_short NOLIST
           ]
         ]
       ]
@@ -5858,7 +5858,7 @@
                 hSwitchCase  NONAME [
                   hLiteral 1 NOLIST
                   hBinop = [
-                    hBinop [] [
+                    hBinop ARRAYSUBSCRIPT [
                       hVarref _local_0##buf NOLIST
                       hLiteral 0 NOLIST
                     ]
@@ -5887,7 +5887,7 @@
                   hUnimpl  NONAME NOLIST
                 ]
                 hBinop = [
-                  hBinop [] [
+                  hBinop ARRAYSUBSCRIPT [
                     hVarref _local_0##buf NOLIST
                     hLiteral 0 NOLIST
                   ]

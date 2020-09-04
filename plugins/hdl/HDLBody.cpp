@@ -469,7 +469,9 @@ bool HDLBody::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
       h_operop = new hNode("SLICE", hNode::hdlopsEnum::hBinop);
     }
     else {
-     h_operop = new hNode (getOperatorSpelling(opcall->getOperator()), hNode::hdlopsEnum::hBinop);
+      if (operatorname=="[]") // subscript in operator call expre
+	h_operop = new hNode("ARRAYSUBSCRIPT", hNode::hdlopsEnum::hBinop);
+      else h_operop = new hNode (operatorname, hNode::hdlopsEnum::hBinop);
     }
     for (int i = 0; i < opcall->getNumArgs(); i++) {
       hNodep save_h_ret = h_ret;
