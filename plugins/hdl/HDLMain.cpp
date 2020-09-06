@@ -9,6 +9,7 @@
 #include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
+#include "clang/Basic/Diagnostic.h"
 
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
@@ -27,6 +28,12 @@ std::unique_ptr<clang::tooling::FrontendActionFactory> newFrontendActionFactory(
 bool HDLMain::postFire() {
   Model *model = getSystemCModel();
   
+  /// Get the diagnostic engine.
+  //
+  clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+  const unsigned cxx_record_id = diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Fatal, "Non-nonsynthesizable '%0' construct.");
+
+
   std::error_code ec;
   string outputfn;
 
@@ -66,6 +73,13 @@ bool HDLMain::postFire() {
   if (topmod != "") {
     top_module_decl = model->getModuleDecl(topmod);
     LLVM_DEBUG(llvm::dbgs() << "top module is " << topmod << ", ModuleDecl* is " << top_module_decl << "\n");
+
+    auto db_decl{top_module_decl->getModuleClassDecl()};
+    if (db_decl)  {
+      clang::DiagnosticBuilder diag_builder {diag_engine.Report(db_decl->getBeginLoc(), cxx_record_id)};
+      diag_builder << db_decl->getName();
+    }
+
     // LLVM_DEBUG(top_module_decl->dump(llvm::outs());); // Comment this out if you don't want to see it.
     // If you want to get it via the instance name, then you can use getModuleDeclByInstance().
   }
@@ -94,6 +108,11 @@ bool HDLMain::postFire() {
     mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(), modname, h_module};
     SCmodule2hcode(modinstance, h_module, HCodeOut);
     //h_module->print(HCodeOut);
+    //  
+    
+   //
+
+
   }
   
    LLVM_DEBUG(llvm::dbgs() << "Global Method Map\n");
