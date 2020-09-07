@@ -18,3 +18,8 @@ Installation
 To build the HDL systemc-clang, a top level CMake with -DHDL=ON should
 be performed.  The HDL plugin is compiled into systemc-clang using a
 specialization of the driver-tooling pattern.
+
+Limitations and special cases
+------------
+* Switch case clauses must have one statement, which can be a compound
+  statement "{}"
