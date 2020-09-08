@@ -93,6 +93,7 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   if (special_type->isSugared()) {
     auto ut{special_type->desugar().getTypePtr()};
     TraverseType(special_type->desugar());
+    /// We don't want it to go further since we called TraverseType().
     return false;
   }
 
