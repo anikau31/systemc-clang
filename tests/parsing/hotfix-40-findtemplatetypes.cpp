@@ -26,11 +26,13 @@ TEST_CASE("Basic parsing checks", "[parsing]") {
 #include "sreg.h"
 #include "systemc.h"
 
+
 template< int E, int F>
 struct fp_t {
 	static constexpr int ebits = E;
 	static constexpr int fbits = F;
 	static constexpr int bits = 1+E+F;
+
 
 	// exponent bias
 	// When E (bits) =  8, ebias =  127
@@ -129,10 +131,17 @@ class MyType {
 
 // https://www.doulos.com/knowhow/systemc/faq/
 
+namespace zhw {
+ constexpr int fpblk_sz(int dim) {return 1 << 2*dim;} // 4^dim;
+
+};
+
 template <typename T>
 SC_MODULE(ram) {
 
   sc_signal<T> buggy_signal;
+
+  sc_signal<sc_bv<zhw::fpblk_sz(2)>> c_bplane[4];
 
   void ram_proc(){};
 
@@ -146,9 +155,12 @@ SC_MODULE(ram) {
 };
 
 
+
 SC_MODULE( test ){
 
 	typedef sc_uint<16> expo_t;
+
+
 
   ram<fp_t<11,3>> specialized_template;
   
@@ -234,7 +246,7 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(ram_module_inst->getOutputStreamPorts().size() == 0);
 
     auto ram_signals{ram_module_inst->getSignals()};
-    REQUIRE(ram_signals.size() == 1);
+    REQUIRE(ram_signals.size() == 2);
     for (auto const &sig : ram_signals) {
       auto name{get<0>(sig)};
       SignalDecl *sg{get<1>(sig)};
@@ -242,6 +254,8 @@ int sc_main(int argc, char *argv[]) {
       // TODO: This member function should be consistent with PortDecl.
       auto template_type{sg->getTemplateTypes()};
       auto template_args{template_type->getTemplateArgTreePtr()};
+      llvm::outs() << "dump tree\n";
+      template_args->dump();
 
       // Note: template_args must be dereferenced.
       for (auto const &node : *template_args) {
@@ -308,8 +322,14 @@ int sc_main(int argc, char *argv[]) {
       // Get the tree as a string and check if it is correct.
       std::string dft_str{template_args->dft()};
       llvm::outs() << "\nCheck: " << dft_str << "\n";
-      REQUIRE(name == "buggy_signal");
-      REQUIRE(trim(dft_str) == "sc_signal fp_t 11 3");
+      if (name == "buggy_signal") {
+        REQUIRE(trim(dft_str) == "sc_signal fp_t 11 3");
+      }
+
+      if (name == "c_bplane") {
+        REQUIRE(trim(dft_str) == "sc_signal sc_bv 16");
+
+      }
     }
 
     ////////////////////////////////////////////////////////////////
