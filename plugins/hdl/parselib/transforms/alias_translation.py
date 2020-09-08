@@ -1,10 +1,15 @@
 from lark import Tree, Token
-
+from parselib.utils import dprint
 from parselib.transforms import TopDown
 
 
 class AliasTranslation(TopDown):
-    """Expands integer literal into int"""
+    """
+    This pass merges separate nodes that are created for easy recognition for grammar,
+    but actually shares the same semantics.
+    TODO: this pass does almost the same thing as the pass NodeMerging Pass, and
+    TODO: the 2 classes should be merged together
+    """
     def __init__(self):
         super().__init__()
 
@@ -45,7 +50,15 @@ class AliasTranslation(TopDown):
             tree.children = tree.children[0]
         return tree
 
+    def arraydimlength(self, tree):
+        dim = int(tree.children[0])
+        if len(tree.children) == 1:  # the last dim
+            return [dim]
+        else:
+            return [dim].extend(tree.children[1])
+
     def htypearray(self, tree):
+        self.__push_up(tree)
         sz, tpe = tree.children
-        res = ['array', tpe, int(sz)]
+        res = ['array', tpe, sz]
         return res

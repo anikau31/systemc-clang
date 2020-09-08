@@ -6,6 +6,7 @@ from .type_node import TypeNode
 
 
 class TypeCollector(Transformer):
+    """This pass collects all types within a hcode file."""
     def __init__(self, skip=None, *args, **kwargs):
         self.custom_types = dict()
         self.module_types = dict()

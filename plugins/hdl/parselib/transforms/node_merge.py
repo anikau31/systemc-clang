@@ -2,7 +2,8 @@ from parselib.transforms import TopDown
 
 
 class NodeMergePass(TopDown):
-    """This pass merges separate nodes that are created for easy recognition of grammar,
+    """
+    This pass merges separate nodes that are created for easy recognition for grammar,
     but actually shares the same semantics
     """
     def hnsbinop(self, tree):

@@ -2,6 +2,9 @@ from parselib.transforms import TopDown
 
 
 class SortVarDecl(TopDown):
+    """This pass sorts the variable declaration in modules based on their reference dependencies.
+    The tools might require that a variable is declared before used.
+    """
     def __top_sort_helper(self, u, edges, vis, res):
         vis[u] = 1  # visiting
         if u in edges:
