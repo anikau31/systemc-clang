@@ -12,6 +12,9 @@
 #include "SensitivityMatcher.h"
 #include "HDLType.h"
 
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "HDL"
+
 void HDLType::SCtype2hcode(string prefix,  Tree<TemplateType> *template_argtp,
 			   std::vector<llvm::APInt> *arr_sizes, hNode::hdlopsEnum h_op, hNodep &h_info) {
 
@@ -60,7 +63,10 @@ void HDLType::generatetype(systemc_clang::TreeNode<systemc_clang::TemplateType >
 			systemc_clang::Tree<systemc_clang::TemplateType > * const &treehead, hNodep &h_info) {
 
   string tmps = (node->getDataPtr())->getTypeName();
+  if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
+    tutil.make_ident(tmps);
   LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << " type follows\n");
+
   (node->getDataPtr())->getTypePtr()->dump(llvm::dbgs());				 
   hNodep nodetyp = new hNode (tmps, tutil.isposint(tmps) ? hNode::hdlopsEnum::hLiteral: hNode::hdlopsEnum::hType);
   h_info->child_list.push_back(nodetyp);
@@ -93,8 +99,10 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
   const Type * typ = qtyp.getTypePtr();
   if (typ->isBuiltinType())
     {
-      hNodep hprim = new hNode(qtyp.getAsString(), hNode::hdlopsEnum::hType);
-      LLVM_DEBUG(llvm::dbgs() << "addtype found prim type " << qtyp.getAsString() << "\n");
+      string tmps = qtyp.getAsString();
+      tutil.make_ident(tmps);
+      hNodep hprim = new hNode(tmps, hNode::hdlopsEnum::hType);
+      LLVM_DEBUG(llvm::dbgs() << "addtype found prim type " << tmps << "\n");
       h_typdef->child_list.push_back(hprim);
       return h_typdef;
     }

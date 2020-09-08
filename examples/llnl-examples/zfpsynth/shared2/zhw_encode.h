@@ -356,17 +356,13 @@ template<typename FP, int DIM>
 struct encode_block;
 
 // vector with a size of 4.
-/* template <class T> */
-/* class sc_vector4 : public sc_vector<T> { */
-/* 	public: */
-/* 		sc_vector4() : sc_vector<T>(4) {} */
-/* 		explicit sc_vector4(const char* name_) : sc_vector<T>(name_, 4) {} */
-/* }; */
-
-template<class T> 
-struct sc_vector4 {
-  T arr[4];
+template <class T>
+class sc_vector4 : public sc_vector<T> {
+	public:
+		sc_vector4() : sc_vector<T>(4) {}
+		explicit sc_vector4(const char* name_) : sc_vector<T>(name_, 4) {}
 };
+
 
 struct encode_block<FP, 1> : sc_module
 {
@@ -1176,7 +1172,7 @@ SC_MODULE(encode_stream)
 		m_bits.valid_w(false);
 		ts = cs; // get current state
 		switch (ts.s) {
-		case START:
+		case START: {
 			// read next max exponent, calculate precision
 			// (see zfp/src/template/codecf.c:precision)
 			ts.prec = sc_min(maxprec.read(),
@@ -1195,7 +1191,8 @@ SC_MODULE(encode_stream)
 				}
 			}
 			break;
-		case ZERO:
+		}
+		case ZERO: {
 			// encode '0' - does not check maxbits
 			ts.buf[0] = false;
 			ts.bits = 1;
@@ -1203,7 +1200,8 @@ SC_MODULE(encode_stream)
 			s_ex.ready_w(true);
 			ts.s = PAD; // next:
 			break;
-		case EXPO:
+		}
+		case EXPO: {
 			// encode '1' and exponent - does not check maxbits
 			// constraint - buffer width >= ebits+1
 			static_assert(buf_w >= FP::ebits+1, "Buffer width must be >= exponent width + 1");
@@ -1215,7 +1213,8 @@ SC_MODULE(encode_stream)
 			if (ts.planes < ts.prec) ts.s = PLANES; // next:
 			else ts.s = PAD; // next:
 			break;
-		case PLANES:
+		}
+		case PLANES: {
 			// pack bits from bit plane into output buffer
 			if (s_valid.read()) {
 				if (pack_bits(ts, s_bc.read(), s_bp.read())) {
@@ -1234,7 +1233,8 @@ SC_MODULE(encode_stream)
 				else ts.s = PAD; // next:
 			}
 			break;
-		case PAD:
+		}
+		case PAD: {
 			// discard remaining planes, look for last, do in parallel with pad
 			if (s_valid.read()) {
 				if (ts.planes < FP::bits) {
@@ -1257,6 +1257,7 @@ SC_MODULE(encode_stream)
 			// if discard, pad and flush done
 			if (dis_done && pad_done && fls_done) ts.s = START; // next:
 			break;
+		}
 		}
 		ns = ts;
 	}
