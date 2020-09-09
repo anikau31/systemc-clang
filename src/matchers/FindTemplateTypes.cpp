@@ -1,4 +1,5 @@
 #include "FindTemplateTypes.h"
+
 #include "FindMemberFieldMatcher.h"
 using namespace systemc_clang;
 using namespace sc_ast_matchers;
@@ -45,20 +46,31 @@ FindTemplateTypes::FindTemplateTypes(const FindTemplateTypes *rhs) {
 }
 
 // Destructor
-FindTemplateTypes::~FindTemplateTypes() { 
-}
+FindTemplateTypes::~FindTemplateTypes() {}
 
 void FindTemplateTypes::Enumerate(const Type *type) {
   if (!type) {
     return;
   }
 
+  llvm::outs() << "=Enumerate=\n";
+
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
 }
 
 bool FindTemplateTypes::VisitDeclRefExpr(DeclRefExpr *dre) {
-  //llvm::outs() << "=VisitDeclRefExpr=\n";
-  //llvm::outs() << "# : " << dre->getNumTemplateArgs() << "\n";
+  llvm::outs() << "=VisitDeclRefExpr=\n";
+  dre->dump();
+
+  if (FunctionDecl *fd = dyn_cast<FunctionDecl>(dre->getDecl())) {
+    llvm::outs() << " ### FUNCTION DECL\n";
+    return true;
+  }
+  if (CXXRecordDecl *fd = dyn_cast<CXXRecordDecl>(dre->getDecl())) {
+    llvm::outs() << " ### CXX DECL\n";
+  }
+
+  llvm::outs() << "type name: " << dre->getType().getAsString() << "=== \n";
 
   std::string template_parm{dre->getNameInfo().getAsString()};
 
@@ -71,24 +83,35 @@ bool FindTemplateTypes::VisitDeclRefExpr(DeclRefExpr *dre) {
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
-  //llvm::outs() << "=VisitTemplateSpecializationType=\n";
-  //special_type->dump();
+  llvm::outs() << "=VisitTemplateSpecializationType=\n";
+
+  /// The specialized template type is used for user-defined template type
+  /// arguments, and constexpr fpblk_sz (as in ZFP). The issue here is that one
+  /// is a class, and the other is a function. So, if it's a function that we
+  /// need to desugar it, and traverse its corresponding type. Otherwise, we
+  /// proceed. Get the unqualified type.
+  if (special_type->isSugared()) {
+    auto ut{special_type->desugar().getTypePtr()};
+    TraverseType(special_type->desugar());
+    /// We don't want it to go further since we called TraverseType().
+    return false;
+  }
+
   auto template_name{special_type->getTemplateName()};
-  //template_name.dump();
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
   clang::PrintingPolicy Policy(LangOpts);
+  Policy.SuppressTagKeyword = true;
 
   std::string name_string;
   llvm::raw_string_ostream sstream(name_string);
   template_name.print(sstream, Policy, 0);
-  //llvm::outs() << "== template_name: " << sstream.str() << "\n";
+  llvm::outs() << "== template_name: " << sstream.str() << "\n";
 
   auto new_node{
       template_args_.addNode(TemplateType{sstream.str(), special_type})};
 
-  /////
   current_type_node_ = new_node;
 
   if (template_args_.size() == 1) {
@@ -100,12 +123,6 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   }
 
   stack_current_node_.push(current_type_node_);
-  /////
-
-  //template_args_.dump();
-  //printTemplateArguments(llvm::outs());
-
-  //template_types_.push_back(TemplateType(sstream.str(), special_type));
 
   return true;
 }
@@ -118,7 +135,7 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
       // llvm::outs() << " ==> CXXRecord type: " << info->getNameStart() <<
       // "\n";
       // template_types_.push_back(
-          // TemplateType(info->getNameStart(), cxx_record->getTypeForDecl()));
+      // TemplateType(info->getNameStart(), cxx_record->getTypeForDecl()));
     }
   }
 
@@ -139,7 +156,7 @@ bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
 
   TemplateType tt{type_name.str(), bi_type};
   current_type_node_ = template_args_.addNode(tt);
-  //template_types_.push_back(TemplateType(type_name, bi_type));
+  // template_types_.push_back(TemplateType(type_name, bi_type));
 
   if (template_args_.size() == 1) {
     template_args_.setRoot(current_type_node_);
@@ -159,7 +176,7 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
 }
 
 bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
-  // llvm::outs() << "=VisitRecordType=\n";
+  llvm::outs() << "=VisitRecordType=\n";
   auto type_decl{rt->getDecl()};
   auto type_name{type_decl->getName()};
   // llvm::outs() << " ==> name : " << type_name << "\n";
@@ -195,14 +212,14 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
 
         if (!arg_type->isBuiltinType()) {
           stack_current_node_.push(current_type_node_);
-          TraverseType(QualType(arg_list[i].getAsType()->getUnqualifiedDesugaredType(),1));
+          TraverseType(QualType(
+              arg_list[i].getAsType()->getUnqualifiedDesugaredType(), 1));
           current_type_node_ = stack_current_node_.top();
           stack_current_node_.pop();
         } else {
           auto new_node{template_args_.addNode(
               TemplateType{template_name.getAsString(), arg_type})};
           template_args_.addEdge(current_type_node_, new_node);
-
         }
       } else if (targ.getKind() == TemplateArgument::ArgKind::Integral) {
         QualType template_name{targ.getNonTypeTemplateArgumentType()};
@@ -225,7 +242,6 @@ bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
           auto new_node{template_args_.addNode(TemplateType{
               integral_string.c_str(), template_name.getTypePtr()})};
           template_args_.addEdge(current_type_node_, new_node);
-
         }
       }
     }
@@ -283,4 +299,3 @@ void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   auto s{template_args_.dft(root_node)};
   os << "> Template args (DFT): " << s << "\n";
 }
-

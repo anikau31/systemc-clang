@@ -65,21 +65,50 @@ class PortMatcher : public MatchFinder::MatchCallback {
   MemberDeclType submodules_;
 
  public:
+  
+  /// \brief Returns the identified clock ports.
+  /// 
   const MemberDeclType &getClockPorts() const { return clock_ports_; }
+  
+  /// \brief Returns the identified input ports.
+  /// 
   const MemberDeclType &getInputPorts() const { return in_ports_; }
+  
+  /// \brief Returns the identified output ports.
+  /// 
   const MemberDeclType &getOutputPorts() const { return out_ports_; }
+  
+  /// \brief Returns the identified inout ports.
+  /// 
   const MemberDeclType &getInOutPorts() const { return inout_ports_; }
+  
+  /// \brief Returns the identified variables that are not ports or signals.
+  /// 
   const MemberDeclType &getOtherVars() const { return other_fields_; }
+
+  /// \brief Returns the identified signals.
+  /// 
   const MemberDeclType &getSignals() const { return signal_fields_; }
+
+  /// \brief Returns the identified submodules.
+  /// 
   const MemberDeclType &getSubmodules() const { return submodules_; }
+  
+  /// \brief Returns the identified sc_stream input ports.
+  /// 
   const MemberDeclType &getInputStreamPorts() const { return instream_ports_; }
+
+  /// \brief Returns the identified sc_stream output ports.
+  /// 
   const MemberDeclType &getOutputStreamPorts() const {
     return outstream_ports_;
   }
+
+  /// \brief Returns the identified ports.
   const MemberDeclType &getPorts() const { return sc_ports_; }
 
+  /// \brief Default constructor.
   PortMatcher() {}
-      //: top_module_decl_{top_module} {}
 
   /// AST matcher to detect field declarations.
   auto makeFieldMatcher(const std::string &name) {
@@ -91,15 +120,15 @@ class PortMatcher : public MatchFinder::MatchCallback {
     /// * For each child that is a FieldDecl, 
     ///   - The type of it is a C++ class whose class name is "name"
   return  cxxRecordDecl(
-      isExpansionInMainFile(),
-      isDerivedFrom(hasName("::sc_core::sc_module")),
-      forEach(
-        fieldDecl(hasType(
+    isExpansionInMainFile(),
+    isDerivedFrom(hasName("::sc_core::sc_module")),
+    forEach(
+      fieldDecl(hasType(
             cxxRecordDecl(hasName(name))
-            ) // hasType
-          ).bind(name) // fieldDecl
-        )
-      );
+          ) // hasType
+        ).bind(name) // fieldDecl
+      )
+    );
   }
 
   /// This is a matcher to identify sc_signal.
@@ -110,31 +139,49 @@ class PortMatcher : public MatchFinder::MatchCallback {
   ///     from a class name called "name"
   ///   - Or, it is has a type that is a c++ class that is derived from class name "name".
   auto makeSignalArrayType(const std::string &name) {
-    return //hasType(
-         arrayType(
-           hasElementType(hasDeclaration(
-               cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
-               )
-             )
-           ).bind("array_type");
-         //);
+    return arrayType(
+     hasElementType(
+       hasDeclaration(
+        cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
+        )
+      )
+    ).bind("array_type");
   }
 
   auto signalMatcher(const std::string &name) {
   return anyOf(
-          hasType(makeSignalArrayType(name))
-          ,
-          // 2-d
-          hasType(arrayType(hasElementType(makeSignalArrayType(name) ))) 
-          ,
-          // 3-d
-          hasType(arrayType(hasElementType(arrayType(hasElementType(makeSignalArrayType(name)) ))))
-          ,
-          // Regular field declaration
-          hasType(
-            cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
-            )
-          );
+    hasType(makeSignalArrayType(name))
+    ,
+    // 2-d
+    hasType(
+      arrayType(
+        //hasElementType(
+        hasElementType(hasUnqualifiedDesugaredType(
+          makeSignalArrayType(name) 
+          )//hasElementType
+          )
+        )//arrayType
+      )//hasType 
+    ,
+    // 3-d
+    hasType(
+      arrayType(
+        //hasElementType(
+        hasElementType(hasUnqualifiedDesugaredType(
+          arrayType(
+            hasElementType(
+              makeSignalArrayType(name)) 
+            ) //arrayType
+          )
+          ) //hasElementType
+        )//arrayType
+      )//hasType
+    ,
+    // Regular field declaration
+    hasType(
+      cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
+      )
+    );
   }
 
   auto makeSignalMatcher(const std::string &name) {
