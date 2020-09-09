@@ -939,8 +939,14 @@ SC_MODULE(encode_ints)
 
 				// Stage 1 - find most significant bit (bc1-1)
 				unsigned b = 0;
+				bool frst = 1;
 				for (unsigned i = fpblk_sz(DIM); i > 0; i--) {
-					if (c_bplane[k0.read()].read()[i-1]) {b = i; break;}
+					if (c_bplane[k0.read()].read()[i-1]) {
+					  if (frst) {
+					    frst=0;
+					    b = i;
+					  }
+					}
 				}
 				n1.write(n0.read());
 				bc1.write(b);

@@ -210,8 +210,7 @@ void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
     LLVM_DEBUG(llvm::dbgs() << "object name is " << objname << " and h_op is " << h_op << "\n");
     PortDecl *pd = get<1>(*mit);
     Tree<TemplateType> *template_argtp = (pd->getTemplateType())->getTemplateArgTreePtr();
-    // xxxxx temporary xxxxx
-    int arr_size = pd->getArraySizes().size()>0? pd->getArraySizes()[0].getLimitedValue():0;
+
     std::vector<llvm::APInt> array_sizes = pd->getArraySizes();
     HDLt.SCtype2hcode(objname, template_argtp,
 		      &array_sizes,
@@ -332,17 +331,22 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
 	h_process->child_list.push_back(h_senslist);
       }
       CXXMethodDecl *emd = efc->getEntryMethod();
-      hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-      HDLBody xmethod(emd, h_body); 
-      LLVM_DEBUG(llvm::dbgs() << "Method Map:\n");
-      for (auto m : xmethod.methodecls) {
-	LLVM_DEBUG(llvm::dbgs() << m.first << ":" << m.second <<"\n");
-	//LLVM_DEBUG(m.second->dump(llvm::dbgs()));
+      if (emd->hasBody()) {
+	hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
+	HDLBody xmethod(emd, h_body); 
+	LLVM_DEBUG(llvm::dbgs() << "Method Map:\n");
+	for (auto m : xmethod.methodecls) {
+	  LLVM_DEBUG(llvm::dbgs() << m.first << ":" << m.second <<"\n");
+	  //LLVM_DEBUG(m.second->dump(llvm::dbgs()));
+	}
+	allmethodecls.insert(xmethod.methodecls.begin(), xmethod.methodecls.end());
+	
+	h_process->child_list.push_back(h_body);
+	h_top->child_list.push_back(h_process);
       }
-      allmethodecls.insert(xmethod.methodecls.begin(), xmethod.methodecls.end());
-
-      h_process->child_list.push_back(h_body);
-      h_top->child_list.push_back(h_process);
+      else {
+	LLVM_DEBUG(llvm::dbgs() << "Entry Method is null\n");
+      }
     } else
       LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName() << " not SC_METHOD, skipping\n");
   }

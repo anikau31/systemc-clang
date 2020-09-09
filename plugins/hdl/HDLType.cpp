@@ -18,14 +18,14 @@
 void HDLType::SCtype2hcode(string prefix,  Tree<TemplateType> *template_argtp,
 			   std::vector<llvm::APInt> *arr_sizes, hNode::hdlopsEnum h_op, hNodep &h_info) {
 
-  //llvm::outs()  << "HDLtype dump of templatetree args follows\n";
-  //template_argtp->dump();
+  LLVM_DEBUG(llvm::dbgs() << "HDLtype dump of templatetree args follows\n");
+  template_argtp->dump();
 
-    if (!(template_argtp &&  (template_argtp->getRoot()))) {
-      LLVM_DEBUG(llvm::dbgs() << "HDLtype no root prefix is " << prefix << " " << template_argtp << "\n");
-
+  if (!(template_argtp &&  (template_argtp->getRoot()))) {
+    LLVM_DEBUG(llvm::dbgs() << "HDLtype no root prefix is " << prefix << " " << template_argtp << "\n");
+    
     return;
-    }										 
+  }										 
   hNodep hmainp = new hNode(prefix, h_op); // opPort|Sig|Var prefix
   h_info->child_list.push_back(hmainp);
   string tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
@@ -65,9 +65,11 @@ void HDLType::generatetype(systemc_clang::TreeNode<systemc_clang::TemplateType >
   string tmps = (node->getDataPtr())->getTypeName();
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
     tutil.make_ident(tmps);
-  LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << " type follows\n");
+  //LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << " type follows\n");
+  //(node->getDataPtr())->getTypePtr()->dump(llvm::dbgs());				 
 
-  (node->getDataPtr())->getTypePtr()->dump(llvm::dbgs());				 
+  LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps <<"\n");
+
   hNodep nodetyp = new hNode (tmps, tutil.isposint(tmps) ? hNode::hdlopsEnum::hLiteral: hNode::hdlopsEnum::hType);
   h_info->child_list.push_back(nodetyp);
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
@@ -97,6 +99,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
   hNodep h_typdef = new hNode(typname, hNode::hdlopsEnum::hTypedef);
   LLVM_DEBUG(llvm::dbgs() << "addtype entered with type name " << typname << "\n");
   const Type * typ = qtyp.getTypePtr();
+  LLVM_DEBUG(typ->dump(llvm::dbgs()));
   if (typ->isBuiltinType())
     {
       string tmps = qtyp.getAsString();

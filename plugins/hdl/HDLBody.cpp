@@ -18,7 +18,6 @@ using namespace hnode;
 
 HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top) {
   LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor, has body is " << emd->hasBody()<< "\n");
-  
   h_ret = NULL;
   bool ret1 = TraverseStmt(emd->getBody());
   AddVnames(h_top);
@@ -412,7 +411,10 @@ bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
 
     if ((methodname == "read") && (lutil.isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignR;
     else if ((methodname == "write") && (lutil.isSCType(qualmethodname))) opc = hNode::hdlopsEnum::hSigAssignL;
-    else {
+    else if (lutil.isSCType(qualmethodname)) {  // operator from simulation library
+      opc = hNode::hdlopsEnum::hNoop;
+    }
+    else{
       opc = hNode::hdlopsEnum::hMethodCall;
       lutil.make_ident(qualmethodname);
       methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
