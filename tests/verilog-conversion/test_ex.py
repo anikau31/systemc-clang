@@ -7,6 +7,7 @@ import pytest
 from util.sexpdiff import sexpdiff
 from util.vparser import VerilogParser
 
+f = pytest.sc_log
 
 def detect_module(conf, ex_id):
     """detects module in the example folder"""
@@ -23,8 +24,9 @@ def detect_module(conf, ex_id):
     return module_list[0]
 
 
-def test_ex_sexp(tmpdir, exdriver, tool_output):
+def test_ex_sexp(tmpdir, request, exdriver, tool_output):
     """tests the conversion from cpp to sexp"""
+    testname = request.node.name
     conf = exdriver.conf
     ex_id = conf.ex_id
     modname = detect_module(conf, ex_id)
@@ -38,6 +40,7 @@ def test_ex_sexp(tmpdir, exdriver, tool_output):
     sexp_name = re.sub('.cpp$', '_hdl.txt', sexp_name)
 
     if not os.path.isfile(conf.get_golden_sexp_name(sexp_name)):
+        warnings.warn(conf.get_golden_sexp_name(sexp_name))
         warnings.warn('golden file for ex_{} not found'.format(ex_id))
         pytest.skip('no golden standard to match, skipped (update required)')
 
@@ -47,20 +50,25 @@ def test_ex_sexp(tmpdir, exdriver, tool_output):
         verbose=tool_output,
         keep_sexp=True
     )
-    assert res, 'should convert to sexpression, possibly something about the '\
+    # Note: at this point, only xlat_run is valid
+    f.writelines(f'{testname},xlat_run,{res.xlat_run}\n')
+    assert res.xlat_run, 'should convert to sexpression, possibly something about the '\
                 'systemc-clang binary'
 
     diff_res, diff_str = sexpdiff(
         filename,
         conf.get_golden_sexp_name(sexp_name)
     )
+    res.xlat_match = True if not diff_res else False
+    f.writelines(f'{testname},xlat_run_match,{res.xlat_match}\n')
     if diff_res:
         print(diff_str)
 
     assert not diff_res, 'should match golden standard, or update is required'
 
-
-def test_ex_verilog(tmpdir, exdriver, tool_output):
+@pytest.mark.verilog
+def test_ex_verilog(request, tmpdir, exdriver, tool_output):
+    testname = request.node.name
     conf = exdriver.conf
     ex_id = conf.ex_id
     modname = detect_module(conf, ex_id)
@@ -74,7 +82,11 @@ def test_ex_verilog(tmpdir, exdriver, tool_output):
         output_folder=output_folder,
         verbose=tool_output
     )
-    assert res, "should convert to Verilog from cpp"
+    f.writelines(f'{testname},xlat_run,{res.xlat_run}\n')
+    f.writelines(f'{testname},convert_run,{res.convert_run}\n')
+    f.writelines(f'{testname},convert_syntax,{res.convert_syntax}\n')
+    f.writelines(f'{testname},convert_transform,{res.convert_transform}\n')
+    assert res.convert_run and res.xlat_run, "should convert to Verilog from cpp"
     diff_info = VerilogParser.diff(
         filename,
         conf.get_golden_verilog_name(v_name)
@@ -106,7 +118,7 @@ def test_ex_sexp_to_verilog(tmpdir, exdriver, tool_output):
         keep_v=True,
         verbose=tool_output
     )
-    assert res, "should convert to Verilog from sexp"
+    assert res.convert_run, "should convert to Verilog from sexp"
     print('filename: ', filename)
     print('golden: ', conf.get_golden_verilog_name(v_name))
     diff_info = VerilogParser.diff(
