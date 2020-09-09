@@ -15,7 +15,9 @@ parser.add_argument('--golden-verilog', help='The Verilog file to compare agains
 parser.add_argument('--include-path', nargs='*', help='Include path (-I) option for the systemc-clang command')
 parser.add_argument('--output-dir', help='The output folder to store the results. '
                                          'Within the folder, a timestamped subfolder will be created')
-parser.add_argument('--verbose', default=False, action='store_true', help='Whether show the output of the called tools (systemc-clang and convert.py)')
+parser.add_argument('--verbose', default=False, action='store_true', help='Whether show the output of the called tools (systemc-clang and hcode2verilog.py)')
+parser.add_argument('--no-ts', default=False, action='store_true', help='Do not create time-stamped folder')
+parser.add_argument('--force', default=False, action='store_true', help='Overwrite content if necessary')
 args = parser.parse_args()
 
 # shared variables
@@ -25,7 +27,10 @@ driver = SystemCClangDriver(conf=conf)
 
 def get_output_folder():
     """get the timestamped output folder name"""
-    dir_name = os.path.join(args.output_dir, datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+    if args.no_ts:
+        dir_name = os.path.join(args.output_dir, '')
+    else:
+        dir_name = os.path.join(args.output_dir, datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
     return dir_name
 
 def cpp_to_hdl(args, output_folder=None, rmdir=True):
@@ -33,7 +38,7 @@ def cpp_to_hdl(args, output_folder=None, rmdir=True):
     filename = args.cpp
     if not output_folder:
         output_folder = get_output_folder() + '/'
-        pathlib.Path(output_folder).mkdir(exist_ok=False)
+        pathlib.Path(output_folder).mkdir(exist_ok=args.force)
     res = False
     path = None
     try:
@@ -41,8 +46,9 @@ def cpp_to_hdl(args, output_folder=None, rmdir=True):
                 path=os.path.join(filename), 
                 output_folder=output_folder,
                 keep_sexp=True,
-                verbose=args.verbose)
-        if res and args.golden_intermediate:
+                verbose=args.verbose,
+                force=args.force)
+        if res.xlat_run and args.golden_intermediate:
             if not os.path.isfile(args.golden_intermediate):
                 raise RuntimeError("Golden file {} does not exists".format(args.golden_intermediate))
             is_diff, diff_str = sexpdiff(path, args.golden_intermediate)
@@ -59,8 +65,8 @@ def cpp_to_hdl(args, output_folder=None, rmdir=True):
         print('****** Error *****')
         print(e)
     finally:
-        if not res:
-            print('Conversion failed, please check program output')
+        if not res.xlat_run:
+            print('Conversion failed (cpp to hdl.txt), please check program output')
             if rmdir:
                 pathlib.Path(output_folder).rmdir()
         else:
@@ -83,9 +89,10 @@ def hdl_to_v(args, hdl=None, output_folder=None, rmdir=True):
                 path=filename,
                 output_folder=output_folder,
                 verbose=args.verbose,
-                keep_v=True)
+                keep_v=True,
+                force=args.force)
 
-        if res and args.golden_verilog:
+        if res.convert_run and args.golden_verilog:
             diff_info = VerilogParser.diff(
                     path,
                     args.golden_verilog)
@@ -101,23 +108,26 @@ def hdl_to_v(args, hdl=None, output_folder=None, rmdir=True):
     except:
         raise
     finally:
-        if not res:
+        if not res.convert_run or not res.convert_syntax or not res.convert_transform:
             print('Conversion failed, please check program output (with --verbose option)')
+            print('Syntax: {}'.format(res.convert_syntax))
+            print('Transform: {}'.format(res.convert_transform))
+            raise
         else:
             print('The .v file is written to {}'.format(path))
-            return path, None
+        return res, path
 
 def cpp_to_v(args):
     assert args.cpp, 'should provide c++ (--cpp)'
     filename = args.cpp
     output_folder = get_output_folder() + '/'
-    pathlib.Path(output_folder).mkdir(exist_ok=False)
+    pathlib.Path(output_folder).mkdir(exist_ok=args.force)
     res, path = cpp_to_hdl(args, output_folder=output_folder, rmdir=False)
-    if not res:
+    if not res.xlat_run:
         print('Conversion to _hdl.txt failed')
+        raise
     res, path = hdl_to_v(args, hdl=path, output_folder=output_folder, rmdir=False)
-    if not res:
-        print('Conversion to .v failed')
+
 
 def main():
 
@@ -129,7 +139,7 @@ def main():
         cpp_to_v(args)
 
     print('Using systemc-clang binary: {}'.format(SystemCClangDriver.SYSTEMC_CLANG_BIN_PATH))
-    print('Using convert.py command: {}'.format(SystemCClangDriver.PYTHON_CONVERT_TEMPLATE))
+    print('Using hcode2verilog.py command: {}'.format(SystemCClangDriver.PYTHON_CONVERT_TEMPLATE))
 
 if __name__ == '__main__':
     main()

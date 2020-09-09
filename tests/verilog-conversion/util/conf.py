@@ -4,7 +4,7 @@ import os
 
 class TestingConfigurations(object):
     """parameters in this configuration might change"""
-    TEST_DATA_ROOT = os.environ['SYSTEMC_CLANG_BUILD_DIR'] + "../systemc-clang/examples/"
+    TEST_DATA_ROOT = os.environ['SYSTEMC_CLANG'] + "/examples/"
 
     @property
     def extra_header_folders(self):
@@ -49,7 +49,7 @@ class LLNLExampleTestingConfigurations(TestingConfigurations):
         this_folders = header_folders + [
             '{}/llnl-examples/'.format(TestingConfigurations.TEST_DATA_ROOT)
         ]
-        root_folder =  os.environ['SYSTEMC_CLANG_BUILD_DIR'] + '/' + 'tests/data/verilog-conversion/llnl-examples/'
+        root_folder =  os.environ['SYSTEMC_CLANG'] + '/examples/' + 'llnl-examples/'
         golden_folder = root_folder + 'golden/'
         super(LLNLExampleTestingConfigurations, self).__init__(root_folder, golden_folder, this_folders)
 

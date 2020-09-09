@@ -9,6 +9,12 @@ from util.conf import SanityTestingConfigurations
 from util.conf import CustomTestingConfigurations
 import driver as drv
 
+def pytest_configure(config):
+    # register an additional marker
+    config.addinivalue_line(
+        "markers", "verilog: cpp to verilog tests"
+    )
+    pytest.sc_log = open('log.csv', 'w')
 
 @pytest.fixture
 def llnldriver():

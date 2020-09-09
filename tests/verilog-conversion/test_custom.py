@@ -19,7 +19,7 @@ def test_custom_sexp(tmpdir, customdriver, tool_output):
         verbose=tool_output,
         keep_sexp=True
     )
-    assert res, "should convert to sexpression"
+    assert res.xlat_run, "should convert to sexpression"
     diff_res, diff_str = sexpdiff(
         filename,
         conf.get_golden_sexp_name('{}_hdl.txt'.format(test_name))
@@ -69,7 +69,7 @@ def test_custom_sexp_to_verilog(tmpdir, customdriver, tool_output):
         keep_v=True,
         verbose=tool_output
     )
-    print('Fail to convert to Verilog, convert.py output is written in folder {}'.format(output_folder))
+    print('Fail to convert to Verilog, hcode2verilog.py output is written in folder {}'.format(output_folder))
     assert res, "should convert to Verilog from sexp"
     print('filename: ', filename)
     print('golden: ', conf.get_golden_verilog_name('{}_hdl.txt.v'.format(test_name)))
