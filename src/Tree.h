@@ -46,7 +46,7 @@ class TreeNode {
 
   TreeNode *getParent() const { return parent_; }
 
-  void dump() { llvm::errs() << "[" << toString() << "] "; }
+  void dump() { llvm::outs() << "[" << toString() << "] "; }
 
   virtual void visit() {
     llvm::outs() << "(" << parent_->toString() << ")"
@@ -105,9 +105,9 @@ class Tree {
       auto edges{entry.second};
       llvm::outs() << node->toString() << " => size: " << edges.size() << "\n";
       for (auto const &edge_node : edges) {
-        llvm::errs() << "   " << edge_node->toString();
+        llvm::outs() << "   " << edge_node->toString();
       }
-      llvm::errs() << "\n";
+      llvm::outs() << "\n";
     }
   }
 
