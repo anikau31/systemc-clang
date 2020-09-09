@@ -11,7 +11,7 @@ from .slice_merge import SliceMerge
 
 
 class VerilogTranslator:
-    """Translate xlat to verilog"""
+    """Translate hcode to verilog"""
     @staticmethod
     def translate(tree):
         prev = tree

@@ -189,7 +189,8 @@ class array(Primitive):
         self.sz = size
 
     def to_str(self, var_name, context=None):
-        return self.T.to_str('{}[0:{}]'.format(var_name, self.sz - 1), context)
+        sz_str = ''.join(['[0:{}]'.format(sz - 1) for sz in self.sz])
+        return self.T.to_str('{}{}'.format(var_name, sz_str), context)
 
 class cppbool(Primitive):
     def __new__(cls):

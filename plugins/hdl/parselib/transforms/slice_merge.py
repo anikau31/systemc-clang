@@ -5,7 +5,7 @@ from parselib.utils import dprint
 
 
 class SliceMerge(TopDown):
-    """recognize slice patterns and convert slicing into synthesizable ones"""
+    """recognize slice patterns and convert slicing into synthesizable index part select"""
     def __init__(self):
         super().__init__()
 
