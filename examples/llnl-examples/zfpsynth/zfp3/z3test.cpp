@@ -9,7 +9,7 @@
 #include <unistd.h> // getopt, optarg, optind
 #include <limits> // numeric_limits
 
-//#include "../shared2/pulse.h"
+#include "../shared2/pulse.h"
 #include "../shared2/zhw_encode.h"
 
 #ifndef DATAW
@@ -58,7 +58,7 @@ typedef bits_t<DATAW> enc_t;      // encoded bitstream type
 typedef zhw::sconfig_t sconfig_t; // signed configuration parameter type
 typedef zhw::uconfig_t uconfig_t; // unsigned configuration parameter type
 
-//#include "tcase.h" // test cases
+#include "tcase.h" // test cases
 
 #define DEFAULT_BLOCKS 1
 #define DEFAULT_RATE (fpn_t::bits)

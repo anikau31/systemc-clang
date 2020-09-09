@@ -363,7 +363,7 @@ class sc_vector4 : public sc_vector<T> {
 		explicit sc_vector4(const char* name_) : sc_vector<T>(name_, 4) {}
 };
 
-
+template<typename FP>
 struct encode_block<FP, 1> : sc_module
 {
 	typedef typename FP::si_t si_t;
@@ -530,8 +530,8 @@ struct encode_block<FP, 2> : sc_module
 #endif
 
 	SC_CTOR(encode_block) :
-	  u_xt(),
-	  u_yt()
+	  u_xt("u_xt"),
+	  u_yt("u_yt")
 	{
 		for (int j = 0; j < 4; j++) {
 			u_xt[j].clk(clk);
