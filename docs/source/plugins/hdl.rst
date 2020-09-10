@@ -26,3 +26,6 @@ Limitations and special cases
  * User types should not be in the SystemC core namespace or have sc_
    prefix. We assume those qualifiers are part of the SystemC
    simulation library.
+* Assignment operators for user-defined structs should follow the normal
+  semantics of copying all the fields. This behavior is assumed and
+  not checked.
