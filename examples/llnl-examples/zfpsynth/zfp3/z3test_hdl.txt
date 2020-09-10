@@ -684,14 +684,18 @@
       hSigdecl c_xt_ready [
         hTypeinfo  NONAME [
           hType array##4 [
-            hType sc_signal NOLIST
+            hType sc_signal [
+              hType _Bool NOLIST
+            ]
           ]
         ]
       ]
       hSigdecl c_xt_valid [
         hTypeinfo  NONAME [
           hType array##4 [
-            hType sc_signal NOLIST
+            hType sc_signal [
+              hType _Bool NOLIST
+            ]
           ]
         ]
       ]
@@ -709,20 +713,24 @@
       hSigdecl c_yt_ready [
         hTypeinfo  NONAME [
           hType array##4 [
-            hType sc_signal NOLIST
+            hType sc_signal [
+              hType _Bool NOLIST
+            ]
           ]
         ]
       ]
       hSigdecl c_yt_valid [
         hTypeinfo  NONAME [
           hType array##4 [
-            hType sc_signal NOLIST
+            hType sc_signal [
+              hType _Bool NOLIST
+            ]
           ]
         ]
       ]
       hVardecl u_xt [
         hTypeinfo  NONAME [
-          hType sc_vector4 [
+          hType sc_vector [
             hType fwd_lift [
               hType fp_t [
                 hLiteral 11 NOLIST
@@ -734,7 +742,7 @@
       ]
       hVardecl u_yt [
         hTypeinfo  NONAME [
-          hType sc_vector4 [
+          hType sc_vector [
             hType fwd_lift [
               hType fp_t [
                 hLiteral 11 NOLIST
@@ -4852,7 +4860,7 @@
           hType array##64 [
             hType sc_signal [
               hType sc_bv [
-                hType fpblk_sz NOLIST
+                hLiteral 16 NOLIST
               ]
             ]
           ]
@@ -5791,7 +5799,10 @@
               hVarref m_bits##valid NOLIST
               hLiteral 0 NOLIST
             ]
-            hUnimpl  NONAME NOLIST
+            hBinop = [
+              hVarref _local_0 NOLIST
+              hVarref cs NOLIST
+            ]
             hSwitchStmt  NONAME [
               hVarref _local_0##s NOLIST
               hCStmt  NONAME [
@@ -6276,7 +6287,6 @@
       ]
     ]
   ]
-  hTypedef fpblk_sz NOLIST
   hTypedef bits_t [
     hTypeTemplateParam D NOLIST
     hTypeField tdata [

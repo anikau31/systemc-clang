@@ -462,7 +462,7 @@ bool HDLBody::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall) {
   LLVM_DEBUG(llvm::dbgs() << "Type with name " << operatortype << " follows\n");
   LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs()));
 
-  if (lutil.isSCBuiltinType(operatortype)|| lutil.isSCType(operatortype) || (opcall->getType())->isBuiltinType()) {
+  if (lutil.isSCBuiltinType(operatortype)|| lutil.isSCType(operatortype) || (opcall->getType())->isBuiltinType() || (operatorname=="=")) {
     LLVM_DEBUG(llvm::dbgs() << "Processing operator call type\n");
     // operator for an SC type
     if ((operatorname.compare("()")==0) &&
