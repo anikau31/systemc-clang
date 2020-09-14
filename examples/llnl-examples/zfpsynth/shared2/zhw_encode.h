@@ -356,14 +356,22 @@ template<typename FP, int DIM>
 struct encode_block;
 
 // vector with a size of 4.
-template <class T>
-class sc_vector4 : public sc_vector<T> {
-	public:
-		sc_vector4() : sc_vector<T>(4) {}
-		explicit sc_vector4(const char* name_) : sc_vector<T>(name_, 4) {}
+/* template <class T> */
+/* class sc_vector4 : public sc_vector<T> { */
+/* 	public: */
+/* 		sc_vector4() : sc_vector<T>(4) {} */
+/* 		explicit sc_vector4(const char* name_) : sc_vector<T>(name_, 4) {} */
+/* }; */
+
+template<typename T>
+struct vector4_t {
+public:
+  T vector4[4];
+  
+  vector4_t(){};
 };
 
-
+template<typename FP>
 struct encode_block<FP, 1> : sc_module
 {
 	typedef typename FP::si_t si_t;
@@ -530,8 +538,8 @@ struct encode_block<FP, 2> : sc_module
 #endif
 
 	SC_CTOR(encode_block) :
-	  u_xt(),
-	  u_yt()
+	  u_xt("u_xt"),
+	  u_yt("u_yt")
 	{
 		for (int j = 0; j < 4; j++) {
 			u_xt[j].clk(clk);
@@ -939,8 +947,14 @@ SC_MODULE(encode_ints)
 
 				// Stage 1 - find most significant bit (bc1-1)
 				unsigned b = 0;
+				bool frst = 1;
 				for (unsigned i = fpblk_sz(DIM); i > 0; i--) {
-					if (c_bplane[k0.read()].read()[i-1]) {b = i; break;}
+					if (c_bplane[k0.read()].read()[i-1]) {
+					  if (frst) {
+					    frst=0;
+					    b = i;
+					  }
+					}
 				}
 				n1.write(n0.read());
 				bc1.write(b);

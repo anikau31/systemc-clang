@@ -10,6 +10,7 @@
 #include "clang/AST/Expr.h"
 #include "llvm/Support/raw_ostream.h"
 #include "clang/AST/RecursiveASTVisitor.h"
+#include "clang/Basic/Diagnostic.h"
 
 #include "llvm/ADT/StringRef.h"
 
@@ -26,8 +27,8 @@ using namespace hnode;
 
 class HDLBody: public RecursiveASTVisitor <HDLBody> {
  public:
-  HDLBody(CXXMethodDecl * emd, hNodep &h_top);
-  HDLBody(Stmt * stmt, hNodep &h_top);
+  HDLBody(CXXMethodDecl * emd, hNodep &h_top, clang::DiagnosticsEngine &diag_engine);
+  HDLBody(Stmt * stmt, hNodep &h_top, clang::DiagnosticsEngine &diag_engine);
   virtual ~HDLBody();
 
   bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
@@ -52,7 +53,8 @@ class HDLBody: public RecursiveASTVisitor <HDLBody> {
   //CXXMethodDecl *getEMD();
 
   std::unordered_map<string, CXXMethodDecl *> methodecls;  //  methods called in this SC_METHOD
-
+  clang::DiagnosticsEngine &diag_e;
+  
  private:
   
   hNodep h_ret;   // value returned by each subexpression
