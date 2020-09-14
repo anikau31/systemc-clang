@@ -5111,6 +5111,45 @@
               hType unsigned_int NOLIST
             ]
           ]
+          hVardecl _local_8 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl _local_9 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl _local_10 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_11 [
+            hTypeinfo  NONAME [
+              hType sc_bv [
+                hLiteral 33 NOLIST
+              ]
+            ]
+          ]
+          hVardecl _local_12 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl _local_13 [
+            hTypeinfo  NONAME [
+              hType sc_bv [
+                hLiteral 33 NOLIST
+              ]
+            ]
+          ]
+          hVardecl _local_14 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
           hCStmt  NONAME [
             hIfStmt  NONAME [
               hBinop == [
@@ -5393,132 +5432,670 @@
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref _local_5 NOLIST
+                      hVarref _local_6 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref _local_7 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref _local_8 NOLIST
                       hSigAssignR read [
                         hVarref n1 NOLIST
                       ]
                     ]
+                    hVarAssign  NONAME [
+                      hVarref _local_9 NOLIST
+                      hSigAssignR read [
+                        hVarref n1 NOLIST
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref _local_10 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hBinop = [
+                      hVarref _local_6 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
                     hForStmt  NONAME [
-                      hVarAssign  NONAME [
-                        hVarref _local_6 NOLIST
+                      hBinop = [
+                        hVarref _local_5 NOLIST
                         hLiteral 0 NOLIST
                       ]
                       hBinop < [
-                        hVarref _local_6 NOLIST
-                        hSigAssignR read [
-                          hVarref n1 NOLIST
-                        ]
+                        hVarref _local_5 NOLIST
+                        hLiteral 2 NOLIST
                       ]
                       hUnop ++ [
-                        hVarref _local_6 NOLIST
+                        hVarref _local_5 NOLIST
                       ]
                       hCStmt  NONAME [
-                        hBinop = [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref _local_4 NOLIST
-                            hVarref _local_6 NOLIST
+                        hIfStmt  NONAME [
+                          hBinop == [
+                            hVarref _local_5 NOLIST
+                            hSigAssignR read [
+                              hVarref n1 NOLIST
+                            ]
                           ]
-                          hNoop to_bool [
-                            hBinop ARRAYSUBSCRIPT [
-                              hSigAssignR read [
-                                hVarref bp1 NOLIST
-                              ]
+                          hCStmt  NONAME [
+                            hBinop = [
+                              hVarref _local_7 NOLIST
                               hVarref _local_6 NOLIST
                             ]
                           ]
                         ]
-                      ]
-                    ]
-                    hForStmt  NONAME [
-                      hBinop = [
-                        hVarref _local_7 NOLIST
-                        hSigAssignR read [
-                          hVarref n1 NOLIST
-                        ]
-                      ]
-                      hBinop < [
-                        hVarref _local_7 NOLIST
-                        hSigAssignR read [
-                          hVarref bc1 NOLIST
-                        ]
-                      ]
-                      hUnop ++ [
-                        hVarref _local_7 NOLIST
-                      ]
-                      hCStmt  NONAME [
-                        hBinop = [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref _local_4 NOLIST
-                            hUnop ++ [
-                              hVarref _local_5 NOLIST
-                            ]
+                        hIfStmt  NONAME [
+                          hBinop == [
+                            hVarref _local_5 NOLIST
+                            hLiteral 0 NOLIST
                           ]
-                          hLiteral 1 NOLIST
-                        ]
-                        hWhileStmt  NONAME [
-                          hUnop ! [
-                            hNoop to_bool [
+                          hCStmt  NONAME [
+                            hBinop += [
+                              hVarref _local_6 NOLIST
+                              hLiteral 2 NOLIST
+                            ]
+                            hIfStmt  NONAME [
                               hBinop ARRAYSUBSCRIPT [
                                 hSigAssignR read [
                                   hVarref bp1 NOLIST
                                 ]
-                                hVarref _local_7 NOLIST
+                                hLiteral 0 NOLIST
+                              ]
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref _local_4 NOLIST
+                                    hLiteral 0 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref _local_4 NOLIST
+                                    hLiteral 1 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref _local_4 NOLIST
+                                    hLiteral 0 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref _local_4 NOLIST
+                                    hLiteral 1 NOLIST
+                                  ]
+                                  hLiteral 0 NOLIST
+                                ]
                               ]
                             ]
                           ]
                           hCStmt  NONAME [
-                            hUnop ++ [
-                              hVarref _local_7 NOLIST
-                            ]
-                            hBinop = [
-                              hBinop ARRAYSUBSCRIPT [
-                                hVarref _local_4 NOLIST
-                                hUnop ++ [
-                                  hVarref _local_5 NOLIST
+                            hIfStmt  NONAME [
+                              hBinop && [
+                                hNoop to_bool [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1 NOLIST
+                                    ]
+                                    hVarref _local_5 NOLIST
+                                  ]
+                                ]
+                                hNoop to_bool [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1 NOLIST
+                                    ]
+                                    hBinop - [
+                                      hVarref _local_5 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
                                 ]
                               ]
-                              hLiteral 0 NOLIST
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref _local_4 NOLIST
+                                    hVarref _local_6 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref _local_4 NOLIST
+                                    hBinop + [
+                                      hVarref _local_6 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                                hBinop = [
+                                  hVarref _local_6 NOLIST
+                                  hBinop + [
+                                    hVarref _local_6 NOLIST
+                                    hLiteral 2 NOLIST
+                                  ]
+                                ]
+                              ]
+                              hIfStmt  NONAME [
+                                hBinop && [
+                                  hNoop to_bool [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1 NOLIST
+                                      ]
+                                      hVarref _local_5 NOLIST
+                                    ]
+                                  ]
+                                  hUnop ! [
+                                    hNoop to_bool [
+                                      hBinop ARRAYSUBSCRIPT [
+                                        hSigAssignR read [
+                                          hVarref bp1 NOLIST
+                                        ]
+                                        hBinop - [
+                                          hVarref _local_5 NOLIST
+                                          hLiteral 1 NOLIST
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                                hCStmt  NONAME [
+                                  hIfStmt  NONAME [
+                                    hBinop != [
+                                      hVarref _local_5 NOLIST
+                                      hBinop - [
+                                        hLiteral 2 NOLIST
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                    hCStmt  NONAME [
+                                      hBinop = [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hVarref _local_4 NOLIST
+                                          hVarref _local_6 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                      hBinop = [
+                                        hVarref _local_6 NOLIST
+                                        hBinop + [
+                                          hVarref _local_6 NOLIST
+                                          hLiteral 1 NOLIST
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                                hIfStmt  NONAME [
+                                  hBinop && [
+                                    hUnop ! [
+                                      hNoop to_bool [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hSigAssignR read [
+                                            hVarref bp1 NOLIST
+                                          ]
+                                          hVarref _local_5 NOLIST
+                                        ]
+                                      ]
+                                    ]
+                                    hUnop ! [
+                                      hNoop to_bool [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hSigAssignR read [
+                                            hVarref bp1 NOLIST
+                                          ]
+                                          hBinop - [
+                                            hVarref _local_5 NOLIST
+                                            hLiteral 1 NOLIST
+                                          ]
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                  hCStmt  NONAME [
+                                    hBinop = [
+                                      hBinop ARRAYSUBSCRIPT [
+                                        hVarref _local_4 NOLIST
+                                        hVarref _local_6 NOLIST
+                                      ]
+                                      hLiteral 0 NOLIST
+                                    ]
+                                    hBinop = [
+                                      hVarref _local_6 NOLIST
+                                      hBinop + [
+                                        hVarref _local_6 NOLIST
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                  hIfStmt  NONAME [
+                                    hBinop && [
+                                      hUnop ! [
+                                        hNoop to_bool [
+                                          hBinop ARRAYSUBSCRIPT [
+                                            hSigAssignR read [
+                                              hVarref bp1 NOLIST
+                                            ]
+                                            hVarref _local_5 NOLIST
+                                          ]
+                                        ]
+                                      ]
+                                      hNoop to_bool [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hSigAssignR read [
+                                            hVarref bp1 NOLIST
+                                          ]
+                                          hBinop - [
+                                            hVarref _local_5 NOLIST
+                                            hLiteral 1 NOLIST
+                                          ]
+                                        ]
+                                      ]
+                                    ]
+                                    hCStmt  NONAME [
+                                      hBinop = [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hVarref _local_4 NOLIST
+                                          hVarref _local_6 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                      hBinop = [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hVarref _local_4 NOLIST
+                                          hBinop + [
+                                            hVarref _local_6 NOLIST
+                                            hLiteral 1 NOLIST
+                                          ]
+                                        ]
+                                        hLiteral 0 NOLIST
+                                      ]
+                                      hBinop = [
+                                        hVarref _local_6 NOLIST
+                                        hBinop + [
+                                          hVarref _local_6 NOLIST
+                                          hLiteral 2 NOLIST
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                              ]
                             ]
                           ]
                         ]
                         hIfStmt  NONAME [
-                          hBinop != [
-                            hVarref _local_7 NOLIST
-                            hBinop - [
-                              hLiteral 2 NOLIST
-                              hLiteral 1 NOLIST
-                            ]
-                          ]
-                          hBinop = [
-                            hBinop ARRAYSUBSCRIPT [
-                              hVarref _local_4 NOLIST
-                              hUnop ++ [
+                          hBinop && [
+                            hBinop && [
+                              hBinop && [
+                                hUnop ! [
+                                  hVarref _local_10 NOLIST
+                                ]
+                                hNoop to_bool [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1 NOLIST
+                                    ]
+                                    hVarref _local_5 NOLIST
+                                  ]
+                                ]
+                              ]
+                              hBinop >= [
                                 hVarref _local_5 NOLIST
+                                hBinop - [
+                                  hSigAssignR read [
+                                    hVarref bc1 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
                               ]
                             ]
-                            hLiteral 1 NOLIST
+                            hBinop < [
+                              hVarref n1 NOLIST
+                              hSigAssignR read [
+                                hVarref bc1 NOLIST
+                              ]
+                            ]
+                          ]
+                          hCStmt  NONAME [
+                            hBinop = [
+                              hVarref _local_10 NOLIST
+                              hLiteral 1 NOLIST
+                            ]
+                            hIfStmt  NONAME [
+                              hBinop && [
+                                hNoop to_bool [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1 NOLIST
+                                    ]
+                                    hVarref _local_5 NOLIST
+                                  ]
+                                ]
+                                hUnop ! [
+                                  hNoop to_bool [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1 NOLIST
+                                      ]
+                                      hBinop - [
+                                        hVarref _local_5 NOLIST
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hIfStmt  NONAME [
+                                  hBinop != [
+                                    hVarref _local_5 NOLIST
+                                    hBinop - [
+                                      hLiteral 2 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                  hBinop = [
+                                    hVarref _local_8 NOLIST
+                                    hVarref _local_6 NOLIST
+                                  ]
+                                  hBinop = [
+                                    hVarref _local_8 NOLIST
+                                    hBinop - [
+                                      hVarref _local_6 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hIfStmt  NONAME [
+                                  hBinop != [
+                                    hVarref _local_5 NOLIST
+                                    hBinop - [
+                                      hLiteral 2 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                  hBinop = [
+                                    hVarref _local_8 NOLIST
+                                    hVarref _local_6 NOLIST
+                                  ]
+                                  hBinop = [
+                                    hVarref _local_8 NOLIST
+                                    hBinop - [
+                                      hVarref _local_6 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                ]
+                              ]
+                            ]
+                            hBinop = [
+                              hVarref _local_9 NOLIST
+                              hBinop + [
+                                hVarref _local_5 NOLIST
+                                hLiteral 1 NOLIST
+                              ]
+                            ]
                           ]
                         ]
                       ]
                     ]
+                    hVarAssign  NONAME [
+                      hVarref _local_11 NOLIST
+                      hUnop - [
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                    hIfStmt  NONAME [
+                      hBinop < [
+                        hVarref _local_8 NOLIST
+                        hLiteral 2 NOLIST
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref _local_4 NOLIST
+                          hBinop & [
+                            hVarref _local_4 NOLIST
+                            hBinop ~ [
+                              hBinop << [
+                                hVarref _local_11 NOLIST
+                                hVarref _local_8 NOLIST
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref _local_12 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
                     hIfStmt  NONAME [
                       hBinop != [
-                        hVarref _local_7 NOLIST
+                        hVarref _local_9 NOLIST
                         hLiteral 2 NOLIST
                       ]
                       hBinop = [
                         hBinop ARRAYSUBSCRIPT [
                           hVarref _local_4 NOLIST
-                          hUnop ++ [
-                            hVarref _local_5 NOLIST
-                          ]
+                          hVarref _local_8 NOLIST
                         ]
                         hLiteral 0 NOLIST
                       ]
                     ]
+                    hIfStmt  NONAME [
+                      hBinop >= [
+                        hSigAssignR read [
+                          hVarref n1 NOLIST
+                        ]
+                        hSigAssignR read [
+                          hVarref bc1 NOLIST
+                        ]
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref _local_4 NOLIST
+                          hLiteral 0 NOLIST
+                        ]
+                      ]
+                      hCStmt  NONAME [
+                        hIfStmt  NONAME [
+                          hBinop == [
+                            hSigAssignR read [
+                              hVarref n1 NOLIST
+                            ]
+                            hLiteral 0 NOLIST
+                          ]
+                          hCStmt  NONAME NOLIST
+                          hCStmt  NONAME [
+                            hIfStmt  NONAME [
+                              hBinop || [
+                                hBinop && [
+                                  hBinop ! [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1 NOLIST
+                                      ]
+                                      hSigAssignR read [
+                                        hVarref n1 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                  hBinop ! [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1 NOLIST
+                                      ]
+                                      hBinop - [
+                                        hSigAssignR read [
+                                          hVarref n1 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                                hBinop && [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1 NOLIST
+                                    ]
+                                    hSigAssignR read [
+                                      hVarref n1 NOLIST
+                                    ]
+                                  ]
+                                  hBinop ! [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1 NOLIST
+                                      ]
+                                      hBinop - [
+                                        hSigAssignR read [
+                                          hVarref n1 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hVarref _local_4 NOLIST
+                                  hBinop << [
+                                    hBinop | [
+                                      hBinop << [
+                                        hBinop >> [
+                                          hVarref _local_4 NOLIST
+                                          hVarref _local_7 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                      hLiteral 1 NOLIST
+                                    ]
+                                    hSigAssignR read [
+                                      hVarref n1 NOLIST
+                                    ]
+                                  ]
+                                ]
+                                hBinop = [
+                                  hVarref _local_12 NOLIST
+                                  hLiteral 1 NOLIST
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hVarref _local_4 NOLIST
+                                  hBinop << [
+                                    hBinop >> [
+                                      hVarref _local_4 NOLIST
+                                      hVarref _local_7 NOLIST
+                                    ]
+                                    hSigAssignR read [
+                                      hVarref n1 NOLIST
+                                    ]
+                                  ]
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref _local_13 NOLIST
+                      hUnop - [
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                    hBinop = [
+                      hVarref _local_4 NOLIST
+                      hBinop | [
+                        hBinop & [
+                          hVarref _local_4 NOLIST
+                          hBinop << [
+                            hVarref _local_13 NOLIST
+                            hSigAssignR read [
+                              hVarref n1 NOLIST
+                            ]
+                          ]
+                        ]
+                        hBinop & [
+                          hSigAssignR read [
+                            hVarref bp1 NOLIST
+                          ]
+                          hBinop ~ [
+                            hBinop << [
+                              hVarref _local_13 NOLIST
+                              hSigAssignR read [
+                                hVarref n1 NOLIST
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref _local_14 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hIfStmt  NONAME [
+                      hBinop >= [
+                        hSigAssignR read [
+                          hVarref n1 NOLIST
+                        ]
+                        hSigAssignR read [
+                          hVarref bc1 NOLIST
+                        ]
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref _local_14 NOLIST
+                          hBinop + [
+                            hSigAssignR read [
+                              hVarref n1 NOLIST
+                            ]
+                            hLiteral 0 NOLIST
+                          ]
+                        ]
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref _local_14 NOLIST
+                          hBinop + [
+                            hBinop + [
+                              hBinop - [
+                                hBinop + [
+                                  hVarref _local_8 NOLIST
+                                  hVarref _local_12 NOLIST
+                                ]
+                                hVarref _local_7 NOLIST
+                              ]
+                              hSigAssignR read [
+                                hVarref n1 NOLIST
+                              ]
+                            ]
+                            hLiteral 0 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
                     hSigAssignL write [
                       hVarref m_bc NOLIST
-                      hVarref _local_5 NOLIST
+                      hVarref _local_14 NOLIST
                     ]
                     hSigAssignL write [
                       hVarref m_bp NOLIST
