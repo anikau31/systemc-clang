@@ -4,6 +4,7 @@ import os
 
 parser = argparse.ArgumentParser('Helper script for running Verilog tests')
 parser.add_argument('-o', '--only', dest='only', type=str, help='Run only one test')
+parser.add_argument('-m', '--mark-only', dest='mark', type=str, help='Run only test with mark')
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False)
 parser.add_argument('-c', '--collect-only', dest='collect_only', action='store_true', default=False)
 
@@ -31,6 +32,8 @@ def all_tests_args():
 def one_test_args(name):
     return '{} {} -k {}'.format(test_path(), additional_options(), name).split(' ')
 
+def mark_test_args(name):
+    return '{} {} -m {}'.format(test_path(), additional_options(), name).split(' ')
 
 def collect_only_args():
     return '{} {} -s --collect-only -qq'.format(
@@ -45,6 +48,8 @@ def main():
         py.test.cmdline.main(collect_only_args())
     elif args.only:
         py.test.cmdline.main(one_test_args(args.only))
+    elif args.mark:
+        py.test.cmdline.main(mark_test_args(args.only))
     else:  # all tests
         py.test.cmdline.main(all_tests_args())
 

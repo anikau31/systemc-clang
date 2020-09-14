@@ -6,6 +6,10 @@ import warnings
 
 class PortExpansion(TopDown):
     def __init__(self):
+        """
+        Expands mixed port objects such as sc_rvd into in-port and out-port
+        This pass should come **before** typedef expansion
+        """
         super().__init__()
         self.expanded = list()
 

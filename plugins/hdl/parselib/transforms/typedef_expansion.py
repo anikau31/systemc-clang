@@ -9,7 +9,7 @@ import warnings
 from ..utils import dprint
 
 class TypedefExpansion(TopDown):
-    """Expands block assignment in the code to primitive types"""
+    """Expands block assignment of custom types into primitive types"""
     def __init__(self, types):
         super().__init__()
         self.types = types
