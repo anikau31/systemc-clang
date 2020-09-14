@@ -9,6 +9,7 @@
 #include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
+#include "clang/Basic/Diagnostic.h"
 
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
@@ -27,6 +28,7 @@ std::unique_ptr<clang::tooling::FrontendActionFactory> newFrontendActionFactory(
 bool HDLMain::postFire() {
   Model *model = getSystemCModel();
   
+
   std::error_code ec;
   string outputfn;
 
@@ -201,6 +203,8 @@ void HDLMain::SCportbindings2hcode(systemc_clang::ModuleDecl::portBindingMapType
 void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
                     hNodep &h_info) {
 
+  clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+  
   for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
        mit++) {
 
@@ -240,7 +244,7 @@ void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
 	  LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
 	  LLVM_DEBUG(initializer->dump(llvm::dbgs()));
 	  hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);
-	  HDLBody xmethod(initializer, h_init);
+	  HDLBody xmethod(initializer, h_init, diag_engine);
 	  (h_info->child_list.back())->child_list.push_back(h_init);
 	}
 	
@@ -277,6 +281,15 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
   // processMapType getProcessMap();
   // ProcessDecl::getEntryFunction() returns EntryFunctionContainer*
 
+
+  
+  /// Get the diagnostic engine.
+  //
+  clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+  
+  const unsigned cxx_record_id = diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark,
+							     "non-SC_METHOD '%0' skipped.");
+  
   for (auto const &pm_entry : pm) {
     ProcessDecl *pd{get<1>(pm_entry)};
     EntryFunctionContainer *efc{pd->getEntryFunction()};
@@ -333,7 +346,7 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
       CXXMethodDecl *emd = efc->getEntryMethod();
       if (emd->hasBody()) {
 	hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-	HDLBody xmethod(emd, h_body); 
+	HDLBody xmethod(emd, h_body, diag_engine); 
 	LLVM_DEBUG(llvm::dbgs() << "Method Map:\n");
 	for (auto m : xmethod.methodecls) {
 	  LLVM_DEBUG(llvm::dbgs() << m.first << ":" << m.second <<"\n");
@@ -347,8 +360,13 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
       else {
 	LLVM_DEBUG(llvm::dbgs() << "Entry Method is null\n");
       }
-    } else
+    } else {
+      
+      clang::DiagnosticBuilder diag_builder {diag_engine.Report((efc->getEntryMethod())->getLocation(), cxx_record_id)};
+      diag_builder <<efc->getName();
+  
       LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName() << " not SC_METHOD, skipping\n");
+    }
   }
 }
 

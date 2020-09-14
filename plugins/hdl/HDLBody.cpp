@@ -1,6 +1,7 @@
 #include "HDLBody.h"
 #include "HDLType.h"
 #include "clang/Basic/OperatorKinds.h"
+#include "clang/Basic/Diagnostic.h"
 
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
@@ -16,8 +17,8 @@
 using namespace std;
 using namespace hnode;
 
-HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top) {
-  LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor, has body is " << emd->hasBody()<< "\n");
+HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top, clang::DiagnosticsEngine &diag_engine): diag_e{diag_engine} {
+  LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor\n");
   h_ret = NULL;
   bool ret1 = TraverseStmt(emd->getBody());
   AddVnames(h_top);
@@ -28,7 +29,7 @@ HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top) {
 // leaving this in for the future in case 
 // we need to traverse starting at a lower point in the tree.
 
-HDLBody::HDLBody(Stmt * stmt, hNodep & h_top) {
+HDLBody::HDLBody(Stmt * stmt, hNodep & h_top, clang::DiagnosticsEngine &diag_engine): diag_e{diag_engine} {
   h_ret = NULL;
   bool ret1 = TraverseStmt(stmt);
   h_top->child_list.push_back(h_ret);
@@ -130,6 +131,9 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     h_ret = hcasep;
   }
   else if (isa<BreakStmt>(stmt)){
+    const unsigned cxx_record_id = diag_e.getCustomDiagID(clang::DiagnosticsEngine::Remark,
+							     "Break stmt not supported, substituting noop");
+    clang::DiagnosticBuilder diag_builder {diag_e.Report(stmt->getBeginLoc(), cxx_record_id)};
     LLVM_DEBUG(llvm::dbgs() << "Found break stmt, substituting noop\n");
     h_ret = new hNode(hNode::hdlopsEnum::hNoop);
   }
