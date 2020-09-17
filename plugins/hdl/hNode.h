@@ -55,9 +55,10 @@ namespace hnode {
   etype(hSwitchCase), \
   etype(hSwitchDefault), \
   etype(hWhileStmt),				\
+  etype(hReturnStmt),				\
   etype(hLiteral), \
   etype(hFunction), \
-  etype(hFunctionParam), \
+  etype(hFunctionParams), \
   etype(hUnimpl), \
   etype(hLast)
 

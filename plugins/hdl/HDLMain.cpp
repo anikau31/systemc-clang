@@ -84,13 +84,6 @@ bool HDLMain::postFire() {
     SCmodule2hcode(modinstance, h_module, HCodeOut);
     //h_module->print(HCodeOut);
   }
-  
-   LLVM_DEBUG(llvm::dbgs() << "Global Method Map\n");
-  for (auto m : allmethodecls) {
-    LLVM_DEBUG(llvm::dbgs() << "Method --------\n" << m.first << ":" << m.second << "\n");
-    LLVM_DEBUG(m.second->dump(llvm::dbgs()));
-    LLVM_DEBUG(llvm::dbgs() << "---------\n");
-  }
 
   LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
@@ -287,7 +280,7 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
   //
   clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
   
-  const unsigned cxx_record_id = diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark,
+  const unsigned cxx_record_id1 = diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark,
 							     "non-SC_METHOD '%0' skipped.");
   
   for (auto const &pm_entry : pm) {
@@ -346,14 +339,7 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
       CXXMethodDecl *emd = efc->getEntryMethod();
       if (emd->hasBody()) {
 	hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-	HDLBody xmethod(emd, h_body, diag_engine); 
-	LLVM_DEBUG(llvm::dbgs() << "Method Map:\n");
-	for (auto m : xmethod.methodecls) {
-	  LLVM_DEBUG(llvm::dbgs() << m.first << ":" << m.second <<"\n");
-	  //LLVM_DEBUG(m.second->dump(llvm::dbgs()));
-	}
-	allmethodecls.insert(xmethod.methodecls.begin(), xmethod.methodecls.end());
-	
+	HDLBody xmethod(emd, h_body, diag_engine); 	
 	h_process->child_list.push_back(h_body);
 	h_top->child_list.push_back(h_process);
       }
@@ -362,7 +348,7 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
       }
     } else {
       
-      clang::DiagnosticBuilder diag_builder {diag_engine.Report((efc->getEntryMethod())->getLocation(), cxx_record_id)};
+      clang::DiagnosticBuilder diag_builder {diag_engine.Report((efc->getEntryMethod())->getLocation(), cxx_record_id1)};
       diag_builder <<efc->getName();
   
       LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName() << " not SC_METHOD, skipping\n");
