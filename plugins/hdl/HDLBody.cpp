@@ -22,33 +22,6 @@ HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top, clang::DiagnosticsEngine &
   h_ret = NULL;
   bool ret1 = TraverseStmt(emd->getBody());
   AddVnames(h_top);
-  if (methodecls.size()>0) {
-    LLVM_DEBUG(llvm::dbgs() << "Method Map:\n");
-    hNodep save_hret = h_ret;
-    for (auto m : methodecls) {
-      LLVM_DEBUG(llvm::dbgs() << m.first << ":" << m.second <<"\n");
-      if (m.second->hasBody()) {
-	hNodep hfunc = new hNode(m.first, hNode::hdlopsEnum::hFunction);
-	if (m.second->getNumParams() > 0) {
-	  hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
-	  hfunc->child_list.push_back(hparams);
-	  vname_map.clear();
-	  for (int i=0; i<m.second->getNumParams(); i++) {
-	    ret1 = ProcessVarDecl(m.second->getParamDecl(i));
-	  }
-	  HDLBody xfunction(m.second->getBody(), hfunc, diag_engine);
-	  AddVnames(hparams);
-	}
-	else {
-	  HDLBody xfunction(m.second->getBody(), hfunc, diag_engine);
-	}
-	h_top->child_list.push_back(hfunc);
-	//LLVM_DEBUG(m.second->dump(llvm::dbgs()));
-      }
-    }
-    h_ret = save_hret;
-  }
-
   h_top->child_list.push_back(h_ret);
   LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor for method body\n");
 }
