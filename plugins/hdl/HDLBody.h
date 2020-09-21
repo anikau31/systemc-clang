@@ -37,12 +37,14 @@ class HDLBody: public RecursiveASTVisitor <HDLBody> {
   bool ProcessVarDecl(VarDecl * vardecl);
   bool TraverseBinaryOperator(BinaryOperator* expr);
   bool TraverseUnaryOperator(UnaryOperator* expr);
+  bool TraverseConditionalOperator(ConditionalOperator * expr);
   bool TraverseIntegerLiteral(IntegerLiteral * lit);
   bool TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr * b);
   bool TraverseDeclRefExpr(DeclRefExpr* expr);
   bool TraverseArraySubscriptExpr(ArraySubscriptExpr* expr);
   bool TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr);
   bool TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall);
+  bool TraverseCallExpr(CallExpr *callexpr);
   bool TraverseMemberExpr(MemberExpr *memberexpr);
   bool TraverseIfStmt(IfStmt *ifs);
   bool TraverseForStmt(ForStmt *fors);
@@ -52,7 +54,7 @@ class HDLBody: public RecursiveASTVisitor <HDLBody> {
   void AddVnames(hNodep &hvns);
   //CXXMethodDecl *getEMD();
 
-  std::unordered_map<string, CXXMethodDecl *> methodecls;  //  methods called in this SC_METHOD
+  std::unordered_map<string, FunctionDecl *> methodecls;  //  methods called in this SC_METHOD or function
   clang::DiagnosticsEngine &diag_e;
   
  private:

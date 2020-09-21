@@ -61,10 +61,7 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
       TraverseCXXMemberCallExpr((CXXMemberCallExpr *) stmt);
     }
     else {
-      h_ret = new hNode(stmt->getStmtClassName(), hNode::hdlopsEnum::hUnimpl);
-      LLVM_DEBUG(llvm::dbgs() << "found a call expr" << " AST follows\n ");
-      LLVM_DEBUG(stmt->dump(llvm::dbgs()));
-      return RecursiveASTVisitor::TraverseStmt(stmt);
+      TraverseCallExpr((CallExpr *) stmt);
     }
   }
   else if (isa<BinaryOperator>(stmt)) {
@@ -72,6 +69,9 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   }
   else if (isa<UnaryOperator>(stmt)) {
     TraverseUnaryOperator((UnaryOperator *) stmt);
+  }
+  else if (isa<ConditionalOperator>(stmt)) {
+    TraverseConditionalOperator((ConditionalOperator *) stmt);
   }
   else if (isa<MaterializeTemporaryExpr>(stmt)) {
     TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getSubExpr());
@@ -292,7 +292,7 @@ bool HDLBody::TraverseBinaryOperator(BinaryOperator* expr)
 
 bool HDLBody::TraverseUnaryOperator(UnaryOperator* expr) 
 { 
-  LLVM_DEBUG(llvm::dbgs() << "in TraverseUnaryOperatory expr node is \n");
+  LLVM_DEBUG(llvm::dbgs() << "in TraverseUnaryOperator expr node is \n");
   LLVM_DEBUG(expr->dump(llvm::dbgs()));
   
   auto opcstr = expr->getOpcode();
@@ -308,6 +308,21 @@ bool HDLBody::TraverseUnaryOperator(UnaryOperator* expr)
 
 } 
 
+bool HDLBody::TraverseConditionalOperator(ConditionalOperator * expr) {
+  LLVM_DEBUG(llvm::dbgs() << "in TraverseConditionalOperator expr node is \n");
+  LLVM_DEBUG(expr->dump(llvm::dbgs()));
+  
+  hNodep  h_condop = new hNode(hNode::hdlopsEnum::hCondop);
+  TraverseStmt(expr->getCond());
+  h_condop->child_list.push_back(h_ret);  // need to check if it's null or didn't get changed
+  TraverseStmt(expr->getTrueExpr());
+  h_condop->child_list.push_back(h_ret);  // need to check if it's null or didn't get changed
+  TraverseStmt(expr->getFalseExpr());
+  h_condop->child_list.push_back(h_ret);  // need to check if it's null or didn't get changed
+  h_ret = h_condop;
+  return true;
+
+}
 bool HDLBody::TraverseIntegerLiteral(IntegerLiteral * lit)
 {
   LLVM_DEBUG(llvm::dbgs() << "In integerliteral\n");
@@ -337,7 +352,8 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr* expr)
     h_ret = new hNode(cd->getInitVal().toString(10), hNode::hdlopsEnum::hLiteral);
     return true;
   }
-  // get a var name
+  
+  // get a name
 
   string name = (expr->getNameInfo()).getName().getAsString();
   LLVM_DEBUG(llvm::dbgs() << "name is " << name << "\n");
@@ -352,7 +368,17 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr* expr)
       return true;
     }
   }
-    
+
+  if (isa<FunctionDecl>(value)) {  // similar to method call
+    string qualfuncname{value->getQualifiedNameAsString()};
+    lutil.make_ident(qualfuncname);
+    methodecls[qualfuncname] = (FunctionDecl *)value; // add to list of "methods" to be generated
+    // create the call expression
+    hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
+    h_ret = hfuncall;
+    return true;
+  }
+  
   string newname = "";
   auto vname_it{vname_map.find(expr->getDecl())};
       if (vname_it != vname_map.end()) {
@@ -540,6 +566,32 @@ bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr){
     
   h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hVarref);
 
+  return true;
+}
+
+bool  HDLBody::TraverseCallExpr(CallExpr *callexpr){
+  hNodep hcall = new hNode(hNode::hdlopsEnum::hMethodCall);
+  hNodep save_hret = h_ret;
+  TraverseStmt(callexpr->getCallee());
+  // unlike methodcall, the function call name will hopefully resolve to a declref.
+  // in traversedeclref, we create the hnode for the function call
+  if ((h_ret!=save_hret) && (h_ret->getopc()==hNode::hdlopsEnum::hMethodCall)){
+    hcall = h_ret;
+  }
+  else {
+    hcall = new hNode(hNode::hdlopsEnum::hMethodCall); // function name was more complicated
+    hcall->child_list.push_back(h_ret);
+  }
+  for (auto arg:callexpr->arguments()) {
+    hNodep sret = h_ret;
+    TraverseStmt(arg);
+    if (h_ret!=sret) {
+      hcall->child_list.push_back(h_ret);
+    }
+  }
+  h_ret = hcall;
+  LLVM_DEBUG(llvm::dbgs() << "found a call expr" << " AST follows\n ");
+  LLVM_DEBUG(callexpr->dump(llvm::dbgs()));
   return true;
 }
 

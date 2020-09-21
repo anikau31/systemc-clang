@@ -168,8 +168,8 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ost
   }
 
   if (allmethodecls.size()>0) {
-    LLVM_DEBUG(llvm::dbgs() << "Module Method Map\n");
-    std::unordered_map<string, CXXMethodDecl *> modmethodecls;
+    LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
+    std::unordered_map<string, FunctionDecl *> modmethodecls;
     modmethodecls = std::move(allmethodecls);  // procedures/functions found in this module
     LLVM_DEBUG(llvm::dbgs() << "size of allmethodecls is " << allmethodecls.size() << "\n");
     LLVM_DEBUG(llvm::dbgs() << "size of modmethodecls is " << modmethodecls.size() << "\n");

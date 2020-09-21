@@ -38,7 +38,7 @@ class HDLMain: public SystemCConsumer {
   private:
 
     hNodep h_top;
-    std::unordered_map<string, CXXMethodDecl *> allmethodecls;  //  all methods called
+    std::unordered_map<string, FunctionDecl *> allmethodecls;  //  all methods/functions called
     
     HDLType HDLt;
 

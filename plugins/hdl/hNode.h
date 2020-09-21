@@ -48,6 +48,7 @@ namespace hnode {
   etype(hVarAssign), \
   etype(hBinop), \
   etype(hUnop), \
+  etype(hCondop), \
   etype(hMethodCall), \
   etype(hIfStmt), \
   etype(hForStmt), \
@@ -109,9 +110,6 @@ namespace hnode {
 	  if (*it) delete *it;
 	}
       }
-      //else cout << printname(h_op) << " '" << h_name << "' NOLIST\n";
-      //cout << "visited hNode destructor\n";
-	    
     }
 
     void set( hdlopsEnum h, string s = "") {
@@ -123,10 +121,18 @@ namespace hnode {
       h_name = s;
     }
     
-    string printname(hdlopsEnum opc) {
+    string printopc(hdlopsEnum opc) {
       return hdlop_pn[static_cast<int>(opc)];
     }
 
+    string getname() {
+      return h_name;
+    }
+
+    hdlopsEnum getopc() {
+      return h_op;
+    }
+    
     // for completeness
     hdlopsEnum str2hdlopenum(string st) {
       const int n = sizeof (hdlop_pn)/sizeof (hdlop_pn[0]);
@@ -138,7 +144,7 @@ namespace hnode {
     }
     void print(llvm::raw_fd_ostream & modelout, unsigned int indnt=2) {
       modelout.indent(indnt);
-      modelout << printname(h_op) << " ";
+      modelout << printopc(h_op) << " ";
       if (h_name == "")
 	modelout << " NONAME";
       else modelout << h_name;

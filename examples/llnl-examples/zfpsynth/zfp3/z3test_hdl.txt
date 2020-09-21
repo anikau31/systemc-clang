@@ -773,7 +773,9 @@
                     hVarref count NOLIST
                   ]
                   hBinop - [
-                    hLiteral 2 NOLIST
+                    hMethodCall zhwfpblk_sz [
+                      hLiteral 2 NOLIST
+                    ]
                     hLiteral 1 NOLIST
                   ]
                 ]
@@ -899,7 +901,9 @@
                           hVarref count NOLIST
                         ]
                         hBinop - [
-                          hLiteral 2 NOLIST
+                          hMethodCall zhwfpblk_sz [
+                            hLiteral 2 NOLIST
+                          ]
                           hLiteral 1 NOLIST
                         ]
                       ]
@@ -957,6 +961,26 @@
                     ]
                   ]
                 ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      hFunction zhwfpblk_sz [
+        hFunctionParams  NONAME [
+          hVardecl dim [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hBinop << [
+              hLiteral 1 NOLIST
+              hBinop * [
+                hLiteral 2 NOLIST
+                hVarref dim NOLIST
               ]
             ]
           ]
@@ -1179,7 +1203,9 @@
                 hBinop = [
                   hVarref count NOLIST
                   hBinop - [
-                    hLiteral 2 NOLIST
+                    hMethodCall zhwfpblk_sz [
+                      hLiteral 2 NOLIST
+                    ]
                     hLiteral 1 NOLIST
                   ]
                 ]
@@ -1256,7 +1282,9 @@
                         hBinop = [
                           hVarref count NOLIST
                           hBinop - [
-                            hLiteral 2 NOLIST
+                            hMethodCall zhwfpblk_sz [
+                              hLiteral 2 NOLIST
+                            ]
                             hLiteral 1 NOLIST
                           ]
                         ]
@@ -1343,6 +1371,26 @@
                     ]
                   ]
                 ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      hFunction zhwfpblk_sz [
+        hFunctionParams  NONAME [
+          hVardecl dim [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hBinop << [
+              hLiteral 1 NOLIST
+              hBinop * [
+                hLiteral 2 NOLIST
+                hVarref dim NOLIST
               ]
             ]
           ]
@@ -4234,7 +4282,9 @@
               ]
               hBinop < [
                 hVarref _local_2 NOLIST
-                hLiteral 2 NOLIST
+                hMethodCall zhwfpblk_sz [
+                  hLiteral 2 NOLIST
+                ]
               ]
               hUnop ++ [
                 hVarref _local_2 NOLIST
@@ -4278,7 +4328,9 @@
               ]
               hBinop < [
                 hVarref _local_3 NOLIST
-                hLiteral 2 NOLIST
+                hMethodCall zhwfpblk_sz [
+                  hLiteral 2 NOLIST
+                ]
               ]
               hUnop ++ [
                 hVarref _local_3 NOLIST
@@ -4305,6 +4357,26 @@
                     hLiteral 64 NOLIST
                   ]
                 ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      hFunction zhwfpblk_sz [
+        hFunctionParams  NONAME [
+          hVardecl dim [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hBinop << [
+              hLiteral 1 NOLIST
+              hBinop * [
+                hLiteral 2 NOLIST
+                hVarref dim NOLIST
               ]
             ]
           ]
@@ -5003,7 +5075,9 @@
                   ]
                   hBinop < [
                     hVarref _local_3 NOLIST
-                    hLiteral 2 NOLIST
+                    hMethodCall zhwfpblk_sz [
+                      hLiteral 2 NOLIST
+                    ]
                   ]
                   hUnop ++ [
                     hVarref _local_3 NOLIST
@@ -5288,7 +5362,9 @@
                     hForStmt  NONAME [
                       hVarAssign  NONAME [
                         hVarref _local_3 NOLIST
-                        hLiteral 2 NOLIST
+                        hMethodCall zhwfpblk_sz [
+                          hLiteral 2 NOLIST
+                        ]
                       ]
                       hBinop > [
                         hVarref _local_3 NOLIST
@@ -5466,7 +5542,9 @@
                       ]
                       hBinop < [
                         hVarref _local_5 NOLIST
-                        hLiteral 2 NOLIST
+                        hMethodCall zhwfpblk_sz [
+                          hLiteral 2 NOLIST
+                        ]
                       ]
                       hUnop ++ [
                         hVarref _local_5 NOLIST
@@ -5615,7 +5693,9 @@
                                     hBinop != [
                                       hVarref _local_5 NOLIST
                                       hBinop - [
-                                        hLiteral 2 NOLIST
+                                        hMethodCall zhwfpblk_sz [
+                                          hLiteral 2 NOLIST
+                                        ]
                                         hLiteral 1 NOLIST
                                       ]
                                     ]
@@ -5802,7 +5882,9 @@
                                   hBinop != [
                                     hVarref _local_5 NOLIST
                                     hBinop - [
-                                      hLiteral 2 NOLIST
+                                      hMethodCall zhwfpblk_sz [
+                                        hLiteral 2 NOLIST
+                                      ]
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
@@ -5824,7 +5906,9 @@
                                   hBinop != [
                                     hVarref _local_5 NOLIST
                                     hBinop - [
-                                      hLiteral 2 NOLIST
+                                      hMethodCall zhwfpblk_sz [
+                                        hLiteral 2 NOLIST
+                                      ]
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
@@ -5862,7 +5946,9 @@
                     hIfStmt  NONAME [
                       hBinop < [
                         hVarref _local_8 NOLIST
-                        hLiteral 2 NOLIST
+                        hMethodCall zhwbp_w [
+                          hLiteral 2 NOLIST
+                        ]
                       ]
                       hCStmt  NONAME [
                         hBinop = [
@@ -5886,7 +5972,9 @@
                     hIfStmt  NONAME [
                       hBinop != [
                         hVarref _local_9 NOLIST
-                        hLiteral 2 NOLIST
+                        hMethodCall zhwfpblk_sz [
+                          hLiteral 2 NOLIST
+                        ]
                       ]
                       hBinop = [
                         hBinop ARRAYSUBSCRIPT [
@@ -6068,7 +6156,18 @@
                             hSigAssignR read [
                               hVarref n1 NOLIST
                             ]
-                            hLiteral 0 NOLIST
+                            hCondop  NONAME [
+                              hBinop != [
+                                hSigAssignR read [
+                                  hVarref n1 NOLIST
+                                ]
+                                hMethodCall zhwfpblk_sz [
+                                  hLiteral 2 NOLIST
+                                ]
+                              ]
+                              hLiteral 1 NOLIST
+                              hLiteral 0 NOLIST
+                            ]
                           ]
                         ]
                       ]
@@ -6088,7 +6187,16 @@
                                 hVarref n1 NOLIST
                               ]
                             ]
-                            hLiteral 0 NOLIST
+                            hCondop  NONAME [
+                              hBinop != [
+                                hVarref _local_9 NOLIST
+                                hMethodCall zhwfpblk_sz [
+                                  hLiteral 2 NOLIST
+                                ]
+                              ]
+                              hLiteral 1 NOLIST
+                              hLiteral 0 NOLIST
+                            ]
                           ]
                         ]
                       ]
@@ -6128,6 +6236,48 @@
                     ]
                   ]
                 ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      hFunction zhwbp_w [
+        hFunctionParams  NONAME [
+          hVardecl dim [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hBinop + [
+              hBinop * [
+                hLiteral 2 NOLIST
+                hMethodCall zhwfpblk_sz [
+                  hVarref dim NOLIST
+                ]
+              ]
+              hLiteral 1 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hFunction zhwfpblk_sz [
+        hFunctionParams  NONAME [
+          hVardecl dim [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hBinop << [
+              hLiteral 1 NOLIST
+              hBinop * [
+                hLiteral 2 NOLIST
+                hVarref dim NOLIST
               ]
             ]
           ]
@@ -6388,20 +6538,28 @@
                   hCStmt  NONAME [
                     hBinop = [
                       hVarref _local_0##prec NOLIST
-                      hBinop + [
-                        hBinop - [
-                          hSigAssignR read [
-                            hVarref s_ex##data NOLIST
-                          ]
-                          hSigAssignR read [
-                            hVarref minexp NOLIST
-                          ]
+                      hMethodCall sc_dtsc_min [
+                        hSigAssignR read [
+                          hVarref maxprec NOLIST
                         ]
-                        hBinop * [
-                          hLiteral 2 NOLIST
+                        hMethodCall sc_dtsc_max [
+                          hLiteral 0 NOLIST
                           hBinop + [
-                            hLiteral 2 NOLIST
-                            hLiteral 1 NOLIST
+                            hBinop - [
+                              hSigAssignR read [
+                                hVarref s_ex##data NOLIST
+                              ]
+                              hSigAssignR read [
+                                hVarref minexp NOLIST
+                              ]
+                            ]
+                            hBinop * [
+                              hLiteral 2 NOLIST
+                              hBinop + [
+                                hLiteral 2 NOLIST
+                                hLiteral 1 NOLIST
+                              ]
+                            ]
                           ]
                         ]
                       ]
@@ -6750,7 +6908,10 @@
                         ]
                         hVarAssign  NONAME [
                           hVarref _local_7 NOLIST
-                          hVarref _local_6 NOLIST
+                          hMethodCall sc_dtsc_min [
+                            hVarref _local_5 NOLIST
+                            hVarref _local_6 NOLIST
+                          ]
                         ]
                         hMethodCall zhwencode_streamfp_t11_52_2_bits_t64_pack_bits [
                           hVarref _local_0 NOLIST
@@ -6843,6 +7004,62 @@
           ]
         ]
       ]
+      hFunction sc_dtsc_min [
+        hFunctionParams  NONAME [
+          hVardecl a [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 12 NOLIST
+              ]
+            ]
+          ]
+          hVardecl b [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 12 NOLIST
+              ]
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hCondop  NONAME [
+              hBinop <= [
+                hVarref a NOLIST
+                hVarref b NOLIST
+              ]
+              hVarref a NOLIST
+              hVarref b NOLIST
+            ]
+          ]
+        ]
+      ]
+      hFunction sc_dtsc_max [
+        hFunctionParams  NONAME [
+          hVardecl a [
+            hTypeinfo  NONAME [
+              hType short NOLIST
+            ]
+          ]
+          hVardecl b [
+            hTypeinfo  NONAME [
+              hType short NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hCondop  NONAME [
+              hBinop >= [
+                hVarref a NOLIST
+                hVarref b NOLIST
+              ]
+              hVarref a NOLIST
+              hVarref b NOLIST
+            ]
+          ]
+        ]
+      ]
       hFunction zhwencode_streamfp_t11_52_2_bits_t64_pack_bits [
         hFunctionParams  NONAME [
           hVardecl ts [
@@ -6875,11 +7092,14 @@
         hCStmt  NONAME [
           hBinop = [
             hVarref _local_0 NOLIST
-            hBinop - [
-              hSigAssignR read [
-                hVarref maxbits NOLIST
+            hMethodCall sc_dtsc_min [
+              hVarref bc NOLIST
+              hBinop - [
+                hSigAssignR read [
+                  hVarref maxbits NOLIST
+                ]
+                hVarref ts##bits NOLIST
               ]
-              hVarref ts##bits NOLIST
             ]
           ]
           hIfStmt  NONAME [
