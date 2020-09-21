@@ -77,7 +77,7 @@ using namespace zhw;
 SC_MODULE(mymodule) 
 {
 
-	typedef typename FP::ui_t ui_t;
+	typedef typename fpn_t::ui_t ui_t;
   sc_clock clk; 
   sc_signal<bool> reset;
 
@@ -97,23 +97,24 @@ SC_MODULE(mymodule)
   zhw::encode_ints<fpn_t, DIMS> u_dut;
 
   SC_CTOR(mymodule) : u_dut("u_dut")
-  {
-    // connect DUT
-    u_dut.clk(clk);
-    u_dut.reset(reset);
+	{
+		// connect DUT
+		u_dut.clk(clk);
+		u_dut.reset(reset);
+		u_dut.s_flush(c_driver_flush);
 
-    u_dut.s_block(c_driver_block);
-    u_dut.s_valid(c_driver_valid);
-    u_dut.s_ready(c_driver_ready);
+		u_dut.m_bc   (c_dut_bc);
+		u_dut.m_bp   (c_dut_bp);
+		u_dut.m_last (c_dut_last);
+		u_dut.m_valid(c_dut_valid);
+		u_dut.m_ready(c_dut_ready);
 
-    u_dut.s_flush(c_driver_flush);
+		u_dut.s_valid(c_driver_valid);
+		u_dut.s_ready(c_driver_ready);
+		for (int i = 0; i < fpblk_sz(DIMS); i++)
+			u_dut.s_block[i](c_driver_block[i]);
 
-    u_dut.m_bc   (c_dut_bc);
-    u_dut.m_bp   (c_dut_bp);
-    u_dut.m_last (c_dut_last);
-    u_dut.m_valid(c_dut_valid);
-    u_dut.m_ready(c_dut_ready);
-  }
+	}
 };
 
 int sc_main(int argc , char *argv[])
