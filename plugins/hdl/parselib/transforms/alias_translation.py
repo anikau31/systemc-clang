@@ -51,14 +51,27 @@ class AliasTranslation(TopDown):
         return tree
 
     def arraydimlength(self, tree):
+        self.__push_up(tree)
         dim = int(tree.children[0])
         if len(tree.children) == 1:  # the last dim
             return [dim]
         else:
-            return [dim].extend(tree.children[1])
+            return [dim] + tree.children[1]
 
     def htypearray(self, tree):
         self.__push_up(tree)
         sz, tpe = tree.children
         res = ['array', tpe, sz]
         return res
+
+    def stmt(self, tree):
+        """filters out noop"""
+        self.__push_up(tree)
+        tree.children = list(filter(lambda x: x.data != 'hnoop', tree.children))
+        return tree
+
+    def hunop(self, tree):
+        # self.__push_up(tree)
+        if isinstance(tree.children[0], Tree) and tree.children[0].data == 'hunopdec':
+            tree.children = [Token('UNOP_NON_DEC', '--'), tree.children[0].children[0]]
+        return tree

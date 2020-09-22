@@ -24,7 +24,6 @@ class SliceMerge(TopDown):
             return failed
         is_offset_1 = tr.children[0] == '-' and isinstance(tr.children[2], Tree) and tr.children[2].children[0] == 1
         if not is_offset_1:
-            dprint(tr)
             return failed
         mult_part = tr.children[1]
         if not isinstance(mult_part, Tree) or mult_part.data != 'hbinop' or mult_part.children[0] != '*':
