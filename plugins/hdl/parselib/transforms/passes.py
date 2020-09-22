@@ -8,6 +8,7 @@ from .typedef_filter import TypeDefFilter
 from .verilog_tranlation import VerilogTranslationPass
 from .port_expansion import PortExpansion
 from .slice_merge import SliceMerge
+from .node_movement import NodeMovement
 
 
 class VerilogTranslator:
@@ -15,6 +16,7 @@ class VerilogTranslator:
     @staticmethod
     def translate(tree):
         prev = tree
+        prev = NodeMovement().visit(prev)
         prev = SortVarDecl().visit(prev)
         prev = AliasTranslation().visit(prev)
         prev = LiteralExpansion().visit(prev)

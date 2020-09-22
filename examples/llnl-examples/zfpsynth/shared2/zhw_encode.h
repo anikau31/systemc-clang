@@ -1080,9 +1080,15 @@ SC_MODULE(encode_ints)
 				unsigned j = 0;
 				if(n1.read() >= bc1.read()) {
 					// loop is not executed
-					j = n1.read() + (n1.read() != fpblk_sz(DIM) ? 1 : 0);
+					j = n1.read();
+					if(n1.read() != fpblk_sz(DIM)) {
+						j = j + 1;
+					}
 				} else {
-					j = first_after_bc + delta - n1_shiftamt + n1.read() + (last_n != fpblk_sz(DIM) ? 1 : 0);
+					j = first_after_bc + delta - n1_shiftamt + n1.read();
+					if(last_n != fpblk_sz(DIM)) {
+						j = j + 1;
+					}
 				}
 				/** new code ends */
 

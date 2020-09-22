@@ -264,12 +264,12 @@ class TypedefExpansion(TopDown):
         expand them with the fields"""
         # Note: we only need fields here, and we don't need the actual type
         lhs, rhs = tree.children
-        # print('LHS ', lhs)
-        # print('RHS ', rhs)
+        # dprint('LHS ', lhs)
+        # dprint('RHS ', rhs)
         lhs_var = self.__get_expandable_var_from_tree(lhs)
         rhs_var = self.__get_expandable_var_from_tree(rhs)
         # dprint('LHS var ', lhs_var)
-        # print('RHS var ', rhs_var)
+        # dprint('RHS var ', rhs_var)
         if lhs_var is not None and (rhs_var is not None or rhs.data == 'hliteral'):
             lhs_expanded_type = self.__expanded_type(lhs_var)
             assert lhs_expanded_type is not None, '{} should have expanded type'.format(lhs_var)
@@ -301,6 +301,8 @@ class TypedefExpansion(TopDown):
                 res.append(new_assign)
             return res
         elif lhs_var is None and rhs_var is None:
+            return [tree]
+        elif lhs_var is not None and rhs_var is None:
             return [tree]
         else:
             raise RuntimeError('Error while expanding blkassign, LHS and RHS expandability does not match')
@@ -337,9 +339,24 @@ class TypedefExpansion(TopDown):
         self.expanded.pop()
         return tree
 
+
+    def hfunctionparams(self, tree):
+        self.__push_up(tree)
+        tree.children = self.__expand_vardecl_in_tree_children(tree)
+        return tree
+
     def vardecl(self, tree):
         """for variable expansion in statement"""
         self.__push_up(tree)
+        tree.children = self.__expand_vardecl_in_tree_children(tree)
+        return tree
+
+    def hfunctionlocalvars(self, tree):
+        self.__push_up(tree)
+        tree.children = self.__expand_vardecl_in_tree_children(tree)
+        return tree
+
+    def __expand_vardecl_in_tree_children(self, tree):
         new_children = []
         for node in tree.children:
             if node.data == 'vardeclinit':
@@ -360,8 +377,7 @@ class TypedefExpansion(TopDown):
                 new_children.extend(res)
             else:
                 new_children.append(node)
-        tree.children = new_children
-        return tree
+        return new_children
 
     def portbindinglist(self, tree):
         module_name, *bindings = tree.children
