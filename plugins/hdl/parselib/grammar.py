@@ -27,7 +27,7 @@ lark_grammar = Lark('''
         processlist:  "hProcesses" "NONAME" "[" hprocess* "]"
         // could be nothing
         // temporarily ignore the hMethod node
-        hprocess:  "hProcess" ID  "[" hsenslist*   "hMethod" "NONAME" "[" prevardecl hcstmt "]" "]"
+        hprocess:  "hProcess" ID  "[" hsenslist*   "hMethod" "NONAME" "[" prevardecl hfunction* hcstmt "]" "]"
         prevardecl: vardecl*
         vardecl: vardeclinit
 
@@ -43,6 +43,11 @@ lark_grammar = Lark('''
              | whilestmt
              | switchstmt
              | blkassign
+             | hnoop
+             | hreturnstmt
+             
+        ?htobool: "hNoop" "to_bool" "[" harrayref "]"
+        hnoop: "hNoop" "NONAME" "NOLIST"
 
         // Port Bindings
         portbindinglist: "hPortbindings" ID "[" portbinding* "]"
@@ -59,7 +64,7 @@ lark_grammar = Lark('''
         forstmt: "hForStmt" "NONAME" "[" forinit forcond forpostcond forbody "]"
         forinit: "hPortsigvarlist" "NONAME" "[" vardeclinit  "]"
                  | vardeclinit
-                 | "hNoop" "NONAME" "NOLIST"
+                 | hnoop
                  | blkassign
         forcond: expression
         forpostcond: expression
@@ -70,9 +75,18 @@ lark_grammar = Lark('''
         // Note: we don't make this a noraml statement as in the context of switch, 
         // we don't use general statements
         switchbody: "hCStmt" "NONAME" "[" casestmt+ "]"
-        casestmt: "hSwitchCase" "NONAME" "[" casevalue stmt "]" "hNoop" "NONAME" "NOLIST"
-                | "hSwitchCase" "NONAME" "[" casevalue "hNoop" "NONAME" "NOLIST" "]"
+        casestmt: "hSwitchCase" "NONAME" "[" casevalue stmt "]" hnoop
+                | "hSwitchCase" "NONAME" "[" casevalue hnoop "]"
+                | "hSwitchCase" "NONAME" "[" casevalue stmt "]" 
         casevalue: expression
+        
+        // Function
+        hfunction : "hFunction" ID "[" hfunctionparams hfunctionlocalvars hfunctionbody "]"
+        hfunctionlocalvars: vardeclinit*
+        hfunctionbody: hcstmt
+        hfunctionparams : "hFunctionParams" "NONAME" "[" vardeclinit* "]"
+                        | "hFunctionParams" "NONAME" "NOLIST"
+        hreturnstmt: "hReturnStmt" "NONAME" "[" expression "]"
 
         hsenslist : "hSenslist" "NONAME" "[" hsensvars "]"
                   | "hSenslist" "NONAME" "NOLIST"
@@ -96,6 +110,7 @@ lark_grammar = Lark('''
                   | syscread
                   | hmethodcall
                   |  "[" expression "]"
+                  | htobool
 
         syscread : hsigassignr "[" expression "]"
         syscwrite : hsigassignl "["  expression  expression "]"
@@ -108,11 +123,14 @@ lark_grammar = Lark('''
         // A temporary hack to handle --
         hunop:  "hUnop" UNOP_NON_SUB "[" expression "]"
              |  "hUnop" UNOP_SUB "[" expression "]"
-             |  "hUnop" "-" "-" "[" expression "]" // hack to work with --
+             |  "hBinop" UNOP_BNOT "[" expression "]"
+             |  "hBinop" UNOP_NOT "[" expression "]"
+             |  hunopdec
+        hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
         // Separate '=' out from so that it is not an expression but a standalone statement
-        blkassign: "hBinop" "=" "[" (hvarref | hliteral) (hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread) "]"
-                 | "hBinop" "=" "[" harrayref (hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread) "]"
+        blkassign: "hBinop" "=" "[" (hvarref | hliteral) (htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
+                 | "hBinop" "=" "[" harrayref (htobool | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
                  | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref)  "]"
                  | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
                  | vassign
@@ -123,7 +141,7 @@ lark_grammar = Lark('''
         ?hmodassigntype : haddassign | hsubassign
         haddassign : "+" "=" 
         hsubassign : "-" "="
-        vassign: "hVarAssign" "NONAME" "[" hvarref (hnsbinop | syscread | hliteral)"]"
+        vassign: "hVarAssign" "NONAME" "[" hvarref (hnsbinop | syscread | hliteral | hvarref | expression)"]"
         // Normal expressions that can not be expanded
         nonrefexp: hbinop
         
@@ -160,11 +178,15 @@ lark_grammar = Lark('''
         NUM: /(\+|\-)?[0-9]+/
         TYPESTR: /[a-zA-Z_][a-zA-Z_0-9]*/
         BINOP: NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE"
-        NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&" | ","
+        NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&" | ","
         ARITHOP: "+" | "-" | "*" | "/" | "^"
         UNOP_NON_SUB: "!" | "++" | "-"
         UNOP_SUB:  "-"
         UNOP_DEC:  "--"
+        // These are temporary nodes that should be removed when hBinop is fixed
+        UNOP_BOR: "|"
+        UNOP_NOT: "!"
+        UNOP_BNOT: "~"
         %import common.WS
         %ignore WS
         %import common.ESCAPED_STRING -> STRING
