@@ -370,6 +370,8 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr* expr)
   }
 
   if (isa<FunctionDecl>(value)) {  // similar to method call
+    FunctionDecl *funval = (FunctionDecl *) value;
+ 
     string qualfuncname{value->getQualifiedNameAsString()};
     lutil.make_ident(qualfuncname);
     methodecls[qualfuncname] = (FunctionDecl *)value; // add to list of "methods" to be generated
@@ -572,6 +574,16 @@ bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr){
 bool  HDLBody::TraverseCallExpr(CallExpr *callexpr){
   hNodep hcall = new hNode(hNode::hdlopsEnum::hMethodCall);
   hNodep save_hret = h_ret;
+
+  if (isa<FunctionDecl>(callexpr->getCalleeDecl()) && ((FunctionDecl *) callexpr)->isConstexpr()) {
+    Expr::EvalResult res;
+    if (callexpr->EvaluateAsRValue(res, callexpr->getCalleeDecl()->getASTContext())) {
+	
+  	h_ret = new hNode(res.Val.getInt().toString(10), hNode::hdlopsEnum::hLiteral);
+  	return true;
+      }
+    }
+     
   TraverseStmt(callexpr->getCallee());
   // unlike methodcall, the function call name will hopefully resolve to a declref.
   // in traversedeclref, we create the hnode for the function call
