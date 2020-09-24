@@ -87,7 +87,7 @@ script:
   - export CXX=$LLVM_INSTALL_DIR/bin/clang++
   - echo $CXX
   - mkdir -p TEMP; cd TEMP;
-  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DENABLE_TESTS=ON -DXLAT=ON && make;
+  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DENABLE_TESTS=ON -DHDL=ON && make;
   - echo "Run tests"
   - ctest
     #- cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on && make
