@@ -85,13 +85,6 @@ bool HDLMain::postFire() {
     //h_module->print(HCodeOut);
   }
   
-   LLVM_DEBUG(llvm::dbgs() << "Global Method Map\n");
-  for (auto m : allmethodecls) {
-    LLVM_DEBUG(llvm::dbgs() << "Method --------\n" << m.first << ":" << m.second << "\n");
-    LLVM_DEBUG(m.second->dump(llvm::dbgs()));
-    LLVM_DEBUG(llvm::dbgs() << "---------\n");
-  }
-
   LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
   while (!HDLt.usertypes.empty()) {
@@ -160,9 +153,7 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ost
  
       // Processes
   h_top = new hNode(hNode::hdlopsEnum::hProcesses);
-
   SCproc2hcode(mod->getProcessMap(), h_top);
-
   if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
   //  typedef std::pair<std::string, PortBinding *> portBindingPairType;
@@ -175,6 +166,44 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ost
     if (!h_submodule_pb->child_list.empty())
       h_module->child_list.push_back(h_submodule_pb);
   }
+
+  if (allmethodecls.size()>0) {
+    LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
+    std::unordered_map<string, FunctionDecl *> modmethodecls;
+    modmethodecls = std::move(allmethodecls);  // procedures/functions found in this module
+    LLVM_DEBUG(llvm::dbgs() << "size of allmethodecls is " << allmethodecls.size() << "\n");
+    LLVM_DEBUG(llvm::dbgs() << "size of modmethodecls is " << modmethodecls.size() << "\n");
+    for (auto m : modmethodecls) {
+      LLVM_DEBUG(llvm::dbgs() << "Method --------\n" << m.first << ":" << m.second << "\n");
+      //LLVM_DEBUG(m.second->dump(llvm::dbgs()));
+      LLVM_DEBUG(llvm::dbgs() << "---------\n");
+      clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+      if (m.second->hasBody()) {
+	hNodep hfunc = new hNode(m.first, hNode::hdlopsEnum::hFunction);
+	if (m.second->getNumParams() > 0) {
+	  hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
+	  hfunc->child_list.push_back(hparams);
+	  for (int i=0; i<m.second->getNumParams(); i++) {
+	    VarDecl *vardecl = m.second->getParamDecl(i);
+	    QualType q = vardecl->getType();
+	    const clang::Type *tp = q.getTypePtr();
+	    LLVM_DEBUG(llvm::dbgs() << "ProcessParmVarDecl type name is " << q.getAsString() << "\n");
+	    FindTemplateTypes *te = new FindTemplateTypes();
+	    te->Enumerate(tp);
+	    HDLType HDLt;
+	    HDLt.SCtype2hcode(vardecl->getName(), te->getTemplateArgTreePtr(), NULL, hNode::hdlopsEnum::hVardecl, hparams);
+	  }
+	  HDLBody xfunction(m.second->getBody(), hfunc, diag_engine);
+	}
+	else {
+	  HDLBody xfunction(m.second->getBody(), hfunc, diag_engine);
+	}
+	h_top->child_list.push_back(hfunc);
+	//LLVM_DEBUG(m.second->dump(llvm::dbgs()));
+      }
+    }
+  }
+  
   h_module->print(HCodeOut);
   // now generate submodules
   for (const auto &smod:submodv) {
@@ -287,7 +316,7 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
   //
   clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
   
-  const unsigned cxx_record_id = diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark,
+  const unsigned cxx_record_id1 = diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark,
 							     "non-SC_METHOD '%0' skipped.");
   
   for (auto const &pm_entry : pm) {
@@ -346,14 +375,8 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
       CXXMethodDecl *emd = efc->getEntryMethod();
       if (emd->hasBody()) {
 	hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-	HDLBody xmethod(emd, h_body, diag_engine); 
-	LLVM_DEBUG(llvm::dbgs() << "Method Map:\n");
-	for (auto m : xmethod.methodecls) {
-	  LLVM_DEBUG(llvm::dbgs() << m.first << ":" << m.second <<"\n");
-	  //LLVM_DEBUG(m.second->dump(llvm::dbgs()));
-	}
+	HDLBody xmethod(emd, h_body, diag_engine);
 	allmethodecls.insert(xmethod.methodecls.begin(), xmethod.methodecls.end());
-	
 	h_process->child_list.push_back(h_body);
 	h_top->child_list.push_back(h_process);
       }
@@ -362,7 +385,7 @@ void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
       }
     } else {
       
-      clang::DiagnosticBuilder diag_builder {diag_engine.Report((efc->getEntryMethod())->getLocation(), cxx_record_id)};
+      clang::DiagnosticBuilder diag_builder {diag_engine.Report((efc->getEntryMethod())->getLocation(), cxx_record_id1)};
       diag_builder <<efc->getName();
   
       LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName() << " not SC_METHOD, skipping\n");
