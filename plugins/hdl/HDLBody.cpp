@@ -26,12 +26,11 @@ HDLBody::HDLBody(CXXMethodDecl * emd, hNodep & h_top, clang::DiagnosticsEngine &
   LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor for method body\n");
 }
 
-// leaving this in for the future in case 
-// we need to traverse starting at a lower point in the tree.
-
 HDLBody::HDLBody(Stmt * stmt, hNodep & h_top, clang::DiagnosticsEngine &diag_engine): diag_e{diag_engine} {
   h_ret = NULL;
   bool ret1 = TraverseStmt(stmt);
+  AddVnames(h_top);
+
   h_top->child_list.push_back(h_ret);
   LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor for stmt\n");
 }
@@ -62,10 +61,7 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
       TraverseCXXMemberCallExpr((CXXMemberCallExpr *) stmt);
     }
     else {
-      h_ret = new hNode(stmt->getStmtClassName(), hNode::hdlopsEnum::hUnimpl);
-      LLVM_DEBUG(llvm::dbgs() << "found a call expr" << " AST follows\n ");
-      LLVM_DEBUG(stmt->dump(llvm::dbgs()));
-      return RecursiveASTVisitor::TraverseStmt(stmt);
+      TraverseCallExpr((CallExpr *) stmt);
     }
   }
   else if (isa<BinaryOperator>(stmt)) {
@@ -73,6 +69,9 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   }
   else if (isa<UnaryOperator>(stmt)) {
     TraverseUnaryOperator((UnaryOperator *) stmt);
+  }
+  else if (isa<ConditionalOperator>(stmt)) {
+    TraverseConditionalOperator((ConditionalOperator *) stmt);
   }
   else if (isa<MaterializeTemporaryExpr>(stmt)) {
     TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getSubExpr());
@@ -139,6 +138,12 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   }
   else if (isa<CXXDefaultArgExpr>(stmt)){
     TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
+  }
+  else if (isa<ReturnStmt>(stmt)){
+    hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
+    TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
+    hretstmt->child_list.push_back(h_ret);
+    h_ret = hretstmt;
   }
   else if (isa<CXXTemporaryObjectExpr>(stmt)) {
     int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
@@ -287,7 +292,7 @@ bool HDLBody::TraverseBinaryOperator(BinaryOperator* expr)
 
 bool HDLBody::TraverseUnaryOperator(UnaryOperator* expr) 
 { 
-  LLVM_DEBUG(llvm::dbgs() << "in TraverseUnaryOperatory expr node is \n");
+  LLVM_DEBUG(llvm::dbgs() << "in TraverseUnaryOperator expr node is \n");
   LLVM_DEBUG(expr->dump(llvm::dbgs()));
   
   auto opcstr = expr->getOpcode();
@@ -303,6 +308,21 @@ bool HDLBody::TraverseUnaryOperator(UnaryOperator* expr)
 
 } 
 
+bool HDLBody::TraverseConditionalOperator(ConditionalOperator * expr) {
+  LLVM_DEBUG(llvm::dbgs() << "in TraverseConditionalOperator expr node is \n");
+  LLVM_DEBUG(expr->dump(llvm::dbgs()));
+  
+  hNodep  h_condop = new hNode(hNode::hdlopsEnum::hCondop);
+  TraverseStmt(expr->getCond());
+  h_condop->child_list.push_back(h_ret);  // need to check if it's null or didn't get changed
+  TraverseStmt(expr->getTrueExpr());
+  h_condop->child_list.push_back(h_ret);  // need to check if it's null or didn't get changed
+  TraverseStmt(expr->getFalseExpr());
+  h_condop->child_list.push_back(h_ret);  // need to check if it's null or didn't get changed
+  h_ret = h_condop;
+  return true;
+
+}
 bool HDLBody::TraverseIntegerLiteral(IntegerLiteral * lit)
 {
   LLVM_DEBUG(llvm::dbgs() << "In integerliteral\n");
@@ -332,7 +352,8 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr* expr)
     h_ret = new hNode(cd->getInitVal().toString(10), hNode::hdlopsEnum::hLiteral);
     return true;
   }
-  // get a var name
+  
+  // get a name
 
   string name = (expr->getNameInfo()).getName().getAsString();
   LLVM_DEBUG(llvm::dbgs() << "name is " << name << "\n");
@@ -347,7 +368,19 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr* expr)
       return true;
     }
   }
-    
+
+  if (isa<FunctionDecl>(value)) {  // similar to method call
+    FunctionDecl *funval = (FunctionDecl *) value;
+ 
+    string qualfuncname{value->getQualifiedNameAsString()};
+    lutil.make_ident(qualfuncname);
+    methodecls[qualfuncname] = (FunctionDecl *)value; // add to list of "methods" to be generated
+    // create the call expression
+    hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
+    h_ret = hfuncall;
+    return true;
+  }
+  
   string newname = "";
   auto vname_it{vname_map.find(expr->getDecl())};
       if (vname_it != vname_map.end()) {
@@ -535,6 +568,42 @@ bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr){
     
   h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hVarref);
 
+  return true;
+}
+
+bool  HDLBody::TraverseCallExpr(CallExpr *callexpr){
+  hNodep hcall = new hNode(hNode::hdlopsEnum::hMethodCall);
+  hNodep save_hret = h_ret;
+
+  if (isa<FunctionDecl>(callexpr->getCalleeDecl()) && ((FunctionDecl *) callexpr)->isConstexpr()) {
+    Expr::EvalResult res;
+    if (callexpr->EvaluateAsRValue(res, callexpr->getCalleeDecl()->getASTContext())) {
+	
+  	h_ret = new hNode(res.Val.getInt().toString(10), hNode::hdlopsEnum::hLiteral);
+  	return true;
+      }
+    }
+     
+  TraverseStmt(callexpr->getCallee());
+  // unlike methodcall, the function call name will hopefully resolve to a declref.
+  // in traversedeclref, we create the hnode for the function call
+  if ((h_ret!=save_hret) && (h_ret->getopc()==hNode::hdlopsEnum::hMethodCall)){
+    hcall = h_ret;
+  }
+  else {
+    hcall = new hNode(hNode::hdlopsEnum::hMethodCall); // function name was more complicated
+    hcall->child_list.push_back(h_ret);
+  }
+  for (auto arg:callexpr->arguments()) {
+    hNodep sret = h_ret;
+    TraverseStmt(arg);
+    if (h_ret!=sret) {
+      hcall->child_list.push_back(h_ret);
+    }
+  }
+  h_ret = hcall;
+  LLVM_DEBUG(llvm::dbgs() << "found a call expr" << " AST follows\n ");
+  LLVM_DEBUG(callexpr->dump(llvm::dbgs()));
   return true;
 }
 
