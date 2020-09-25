@@ -18,18 +18,28 @@ It parses RTL constructs and some TLM 2.0 constructs.
 
   To compile with the HDL plugin, run cmake with the `-DHDL=on` flag. 
   
+## Documentation
+* [https://systemc-clang.readthedocs.io](https://systemc-clang.readthedocs.io) 
+
 ## Tests
   To enable compilation of tests, run cmake with the `-DENABLE_TESTS=on` flag and also the `-DSYSTEMC_DIR=<path>` flag to pass the location for SystemC.  Without specifying the `SYSTEMC_DIR` path, it will not be possible to run the unit tests.
 
   For information about running verilog conversion tests, see [this file](tests/verilog-conversion/README.md).
 
-## Contact
+## Issues
 
 If you encounter problems, please create issues with a minimally working example that illustrates the issue.  
 
-For other concerns and comments, please contact us directly.
+## Developers
+
+### Core
+
 * [Anirudh M. Kaushik](https://ece.uwaterloo.ca/~anikau31/uwhtml/team/anirudh-kaushik/)
 * [Hiren Patel](https://caesr.uwaterloo.ca)
+
+### HDL plugin
+* Maya B. Gokhale
+* Zhuanhao Wu
 
 ## License
 
