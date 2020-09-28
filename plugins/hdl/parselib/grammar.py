@@ -24,10 +24,10 @@ lark_grammar = Lark('''
         ?hvarinit: "hVarInit" "NONAME" expression
         ?hvarinitint: "hVarInit" NUM "NOLIST"
         // can be no process at all in the module
-        processlist:  "hProcesses" "NONAME" "[" hprocess* "]"
+        processlist:  "hProcesses" "NONAME" "[" (hprocess|hfunction)*"]"
         // could be nothing
         // temporarily ignore the hMethod node
-        hprocess:  "hProcess" ID  "[" hsenslist*   "hMethod" "NONAME" "[" prevardecl hfunction* hcstmt "]" "]"
+        hprocess:  "hProcess" ID  "[" hsenslist*   "hMethod" "NONAME" "[" prevardecl  hcstmt "]" "]"
         prevardecl: vardecl*
         vardecl: vardeclinit
 
@@ -81,9 +81,10 @@ lark_grammar = Lark('''
         casevalue: expression
         
         // Function
-        hfunction : "hFunction" ID "[" hfunctionparams hfunctionlocalvars hfunctionbody "]"
+        hfunction : "hFunction" ID "[" hfunctionrettype hfunctionparams hfunctionlocalvars hfunctionbody "]"
         hfunctionlocalvars: vardeclinit*
         hfunctionbody: hcstmt
+        hfunctionrettype: "hFunctionRetType" "NONAME" "[" htypeinfo "]"
         hfunctionparams : "hFunctionParams" "NONAME" "[" vardeclinit* "]"
                         | "hFunctionParams" "NONAME" "NOLIST"
         hreturnstmt: "hReturnStmt" "NONAME" "[" expression "]"
@@ -111,6 +112,9 @@ lark_grammar = Lark('''
                   | hmethodcall
                   |  "[" expression "]"
                   | htobool
+                  | hcondop
+                  
+        hcondop : "hCondop" "NONAME" "[" (hbinop | hunop) expression expression "]"
 
         syscread : hsigassignr "[" expression "]"
         syscwrite : hsigassignl "["  expression  expression "]"

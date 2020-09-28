@@ -47,7 +47,7 @@ class VerilogTranslationPass(TopDown):
 
     def hmethodcall(self, tree):
         self.__push_up(tree)
-        return '{}({})'.format(tree.children[0], ''.join(tree.children[1:]))
+        return '{}({})'.format(tree.children[0], ','.join(map(str, tree.children[1:])))
 
     def blkassign(self, tree):
         var_name = self.__get_var_name(tree.children[0])
@@ -55,7 +55,17 @@ class VerilogTranslationPass(TopDown):
         assert len(tree.children) == 2
         is_local_var = self.__is_local_varialbe(var_name)
         op = '=' if self.in_for_init or tree.must_block or is_local_var else '<='
-        res = '{} {} {}'.format(tree.children[0], op, tree.children[1])
+        l = tree.children[0]
+        r = tree.children[1]
+        if isinstance(tree.children[1], list):
+            r = tree.children[1][3]
+        if isinstance(tree.children[0], list):
+            lst = tree.children[0]
+            l = lst[0]
+            l_idx, r_idx = lst[1:3]
+            mask = '(~( (-1) << $bits({}) ) << ({} - {})) << {}'.format(l, l_idx, r_idx, r_idx)
+            r = mask
+        res = '{} {} {}'.format(l, op, r)
         return res
 
     def syscwrite(self, tree):
@@ -68,7 +78,11 @@ class VerilogTranslationPass(TopDown):
         lit, tpe = tree.children
         assert hasattr(tpe, 'width'), 'Literal width type should have width member'
         w = tpe.width  # the primitive type must have width
-        return "{}'d{}".format(w, lit)
+        return "{}{}'d{}".format('-' if lit < 0 else '', w, abs(lit))
+
+    def hcondop(self, tree):
+        self.__push_up(tree)
+        return '{} ? {} : {}'.format(tree.children[0], tree.children[1], tree.children[2])
 
     def hliteral(self, tree):
         """stops at literal, it is some kinds of terminal"""
@@ -91,7 +105,13 @@ class VerilogTranslationPass(TopDown):
             hslice = tree.children[0]
             var = hslice.children[0]
             l, r = hslice.children[1:]
-            idx = '{}:{}'.format(l, r)
+            l_const = isinstance(l, int)
+            r_const = isinstance(r, int)
+            if l_const and r_const:
+                idx = '{}:{}'.format(l, r)
+            else:
+                # for slicing that is not constant
+                return [var, l, r, '(({}) >> ({})) & (1 << ({} - {}))'.format(var, r, l, r)]
         else:
             var, idx = tree.children
         return '{}[{}]'.format(var, idx)
@@ -146,7 +166,7 @@ class VerilogTranslationPass(TopDown):
 
     def switchbody(self, tree):
         self.__push_up(tree)
-        return tree.children[0]
+        return '\n'.join(tree.children)
 
     def casestmt(self, tree):
         self.inc_indent()
@@ -368,8 +388,11 @@ class VerilogTranslationPass(TopDown):
         return (decl, var_name, init_val)
 
     def moduleinst(self, tree):
-        warnings.warn('Type parameters for modules are not supported')
         mod_name, mod_type = tree.children
+        # expand if it is an element of module array
+        mod_name = '_'.join(mod_name.split('#'))
+        if len(mod_type.children[0].children) > 1:
+            warnings.warn('Type parameters for modules are not supported')
         mod_type_name = mod_type.children[0].children[0]
         if mod_name not in self.bindings:
             warnings.warn('Port bindings for module instance name {} not found'.format(mod_name))
@@ -413,12 +436,18 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         return ', '.join(map(lambda x: x[0], tree.children))
 
+    def hfunctionrettype(self, tree):
+        self.__push_up(tree)
+        tpe = tree.children[0]
+        res = tpe.to_str(var_name='')
+        return res
+
     def hfunction(self, tree):
         self.inc_indent()
         self.__push_up(tree)
         self.dec_indent()
         ind = self.get_current_ind_prefix()
-        function_name, params, localvar, body = tree.children
+        function_name, return_type, params, localvar, body = tree.children
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         localvars = '\n'.join(map(lambda x: ind + x[0] + ';', localvar.children))
@@ -426,7 +455,7 @@ class VerilogTranslationPass(TopDown):
         body = '\n'.join(body.children)
 
         ind = self.get_current_ind_prefix()
-        res = '{}function {} ({});\n{}begin\n{}\n{}\n{}end\n{}endfunction'.format(ind, function_name,
+        res = '{}function {} {} ({});\n{}begin\n{}\n{}\n{}end\n{}endfunction'.format(ind, return_type, function_name,
                                                                                   params, ind,
                                                                                   localvars, body, ind, ind)
         return res
