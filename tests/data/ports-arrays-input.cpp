@@ -2,6 +2,21 @@
 
 #include <systemc.h>
 
+template<typename T>
+SC_MODULE(lift) {
+  sc_in<bool> clk;
+
+  T x;
+  void lift_body() {}
+
+  SC_CTOR(lift)  {
+    SC_METHOD(lift_body) {
+      sensitive << clk.pos();
+    }
+  }
+};
+
+
 SC_MODULE(ports_arrays) {
   sc_in<sc_uint<2> > a[4];
   sc_in<sc_uint<2> > b[4];
@@ -16,6 +31,9 @@ SC_MODULE(ports_arrays) {
   sc_out<sc_uint<2>> two_d[4][4];
   sc_out<sc_uint<2>> three_d[2][3][4];
 
+  lift<int> submodules[2];
+  //lift<int> submodules;
+
   void body () {
     int i;
     for (i=0; i < 4; i ++) { 
@@ -23,7 +41,11 @@ SC_MODULE(ports_arrays) {
     }
   }
 
-  SC_CTOR(ports_arrays) {
+  SC_CTOR(ports_arrays):  //submodules{"ha"} {
+    submodules{{"first_submod"}, {"second_submod"}} {
+    submodules[0].clk(test);
+    submodules[1].clk(test);
+
     int j;
     SC_METHOD(body);
       for (j=0; j<4; j++) {
