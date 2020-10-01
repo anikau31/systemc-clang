@@ -56,6 +56,11 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
                         templateTypeParmType().bind( "parm_type") 
                         ) //hasUnqualifiedDesugaredType
                       )// hasType
+                    , hasType(hasUnqualifiedDesugaredType(
+                        builtinType().bind( "builtin_type")
+                        ) //hasUnqualifiedDesugaredType
+                      )// hasType
+
                   )  // anyOf
                 ).bind("fd"))
               )
@@ -75,13 +80,22 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
     auto parm_type{result.Nodes.getNodeAs<TemplateTypeParmType>("parm_type")};
     auto template_special{
         result.Nodes.getNodeAs<TemplateSpecializationType>("template_special")};
+
+    auto builtin_type{result.Nodes.getNodeAs<Type>("builtin_type")};
+
     LLVM_DEBUG(llvm::outs() << "=============== TEST Template Parm Matcher ====== \n";);
     
     if (template_decl) {
-    LLVM_DEBUG(template_decl->dump(););
+      LLVM_DEBUG(template_decl->dump(););
     }
+
+    if (builtin_type) {
+      LLVM_DEBUG(llvm::dbgs() << "########  Builtin Type \n";);
+      LLVM_DEBUG(builtin_type->dump(););
+    }
+
     if (template_special && fd) {
-      LLVM_DEBUG(llvm::dbgs() << "########  TEmplateSpecial\n";);
+      LLVM_DEBUG(llvm::dbgs() << "########  TemplateSpecial\n";);
       LLVM_DEBUG(fd->dump(););
       LLVM_DEBUG(template_special->dump(););
       const TemplateArgument &targ{template_special->getArg(0)};
@@ -138,9 +152,12 @@ struct fp_t {
 	typedef sc_uint<E> expo_t;
 	typedef sc_uint<1> sign_t;
 
+  bool tlast;
+
 	frac_t frac;
 	expo_t expo; // biased by ebias
 	sign_t sign;
+
 
 	fp_t(ui_t ui = 0)
 	{
@@ -199,6 +216,8 @@ TemplateTest<32, double> tt{};
 return 0;
 }
      )";
+
+  llvm::DebugFlag = true;
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
