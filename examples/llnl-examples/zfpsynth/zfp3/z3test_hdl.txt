@@ -7049,6 +7049,137 @@
           ]
         ]
       ]
+      hFunction zhwencode_streamfp_t11_52_2_bits_t64_out_bits [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType _Bool NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hVardecl ts [
+            hTypeinfo  NONAME [
+              hType state_t NOLIST
+            ]
+          ]
+          hVardecl done [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+        ]
+        hVardecl _local_0 [
+          hTypeinfo  NONAME [
+            hType sc_uint [
+              hLiteral 8 NOLIST
+            ]
+          ]
+        ]
+        hVardecl _local_1 [
+          hTypeinfo  NONAME [
+            hType bits_t [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hBinop = [
+            hVarref _local_0 NOLIST
+            hBinop - [
+              hVarref ts##posw NOLIST
+              hVarref ts##posr NOLIST
+            ]
+          ]
+          hIfStmt  NONAME [
+            hBinop && [
+              hBinop >= [
+                hVarref _local_0 NOLIST
+                hLiteral 64 NOLIST
+              ]
+              hSigAssignR read [
+                hVarref m_bits##ready NOLIST
+              ]
+            ]
+            hCStmt  NONAME [
+              hBinop = [
+                hVarref _local_1##tdata NOLIST
+                hBinop SLICE [
+                  hVarref ts##buf NOLIST
+                  hBinop - [
+                    hBinop + [
+                      hVarref ts##posr NOLIST
+                      hLiteral 64 NOLIST
+                    ]
+                    hLiteral 1 NOLIST
+                  ]
+                  hVarref ts##posr NOLIST
+                ]
+              ]
+              hBinop = [
+                hVarref _local_1##tlast NOLIST
+                hBinop && [
+                  hVarref done NOLIST
+                  hBinop == [
+                    hVarref _local_0 NOLIST
+                    hLiteral 64 NOLIST
+                  ]
+                ]
+              ]
+              hSigAssignL write [
+                hVarref m_bits##data NOLIST
+                hVarref _local_1 NOLIST
+              ]
+              hSigAssignL write [
+                hVarref m_bits##valid NOLIST
+                hLiteral 1 NOLIST
+              ]
+              hBinop = [
+                hBinop SLICE [
+                  hVarref ts##buf NOLIST
+                  hBinop - [
+                    hVarref ts##posw NOLIST
+                    hLiteral 64 NOLIST
+                  ]
+                  hLiteral 0 NOLIST
+                ]
+                hBinop SLICE [
+                  hVarref ts##buf NOLIST
+                  hBinop - [
+                    hVarref ts##posw NOLIST
+                    hLiteral 1 NOLIST
+                  ]
+                  hBinop + [
+                    hVarref ts##posr NOLIST
+                    hLiteral 64 NOLIST
+                  ]
+                ]
+              ]
+              hBinop = [
+                hVarref ts##posr NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop = [
+                hVarref ts##posw NOLIST
+                hBinop - [
+                  hVarref _local_0 NOLIST
+                  hLiteral 64 NOLIST
+                ]
+              ]
+              hReturnStmt  NONAME [
+                hVarref _local_1##tlast NOLIST
+              ]
+            ]
+          ]
+          hReturnStmt  NONAME [
+            hBinop && [
+              hVarref done NOLIST
+              hBinop == [
+                hVarref _local_0 NOLIST
+                hLiteral 0 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
     ]
   ]
   hTypedef fp_t [
@@ -7078,9 +7209,7 @@
       ]
     ]
     hTypeField tlast [
-      hType sc_bv [
-        hLiteral 1 NOLIST
-      ]
+      hType _Bool NOLIST
     ]
   ]
   hTypedef state_t [

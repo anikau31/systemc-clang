@@ -1,10 +1,15 @@
 #ifndef _TEMPLATE_PARAMETERS_MATCHERS_H_
 #define _TEMPLATE_PARAMETERS_MATCHERS_H_
 
+#include "llvm/Support/Debug.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchersInternal.h"
 #include "clang/ASTMatchers/ASTMatchersMacros.h"
+
+/// Different matchers may use different DEBUG_TYPE
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "HDL"
 
 using namespace clang::ast_matchers;
 using namespace systemc_clang;
@@ -47,7 +52,8 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
                     hasType(hasUnqualifiedDesugaredType(recordType().bind("record_type")))
                     , hasType(hasUnqualifiedDesugaredType(templateSpecializationType().bind("specialization_type")))
                     , hasType(hasUnqualifiedDesugaredType(templateTypeParmType().bind("parm_type")))
-                    )
+		    , hasType(hasUnqualifiedDesugaredType(builtinType().bind( "builtin_type")))
+			) // anyOf
                   ).bind("fd"))
               )
             )
@@ -68,42 +74,42 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
     auto record_type{result.Nodes.getNodeAs<RecordType>("record_type")};
     auto parm_type{result.Nodes.getNodeAs<TemplateTypeParmType>("parm_type")};
     auto template_special{result.Nodes.getNodeAs<TemplateSpecializationType>("specialization_type")};
-    llvm::errs() << "=============== TEST Template Parm Matcher ====== \n";
+    LLVM_DEBUG(llvm::dbgs() << "=============== TEST Template Parm Matcher ====== \n");
 
     if (fd) {
-      llvm::errs() << "Found a FieldDecl\n";
+      LLVM_DEBUG(llvm::dbgs() << "Found a FieldDecl\n");
       fd->dump(llvm::errs());
       found_fields.push_back(fd);
     }
 
     if (template_special && fd) {
-      llvm::errs() << "#### TemplateSpecializationType\n";
+      LLVM_DEBUG(llvm::dbgs() << "#### TemplateSpecializationType\n");
       template_special->dump();
 
-      llvm::outs() << "##### Try to find the template types\n";
+      LLVM_DEBUG(llvm::dbgs() << "##### Try to find the template types\n");
       FindTemplateTypes ftt{};
       ftt.Enumerate(template_special);
       ftt.printTemplateArguments(llvm::outs());
-      llvm::outs() << "##### END\n";
+      LLVM_DEBUG(llvm::dbgs() <<"##### END\n");
 
       const TemplateArgument &targ{template_special->getArg(0)};
 
       switch (targ.getKind()) {
         case TemplateArgument::ArgKind::Integral: {
           auto q{targ.getAsIntegral()};
-          llvm::errs() << "@@ Integral: " << q << "\n";
+          LLVM_DEBUG(llvm::dbgs() <<"@@ Integral: " << q << "\n");
         }; break;
         case TemplateArgument::ArgKind::Type: {
           auto q{targ.getAsType()};
           auto name{q.getAsString()};
-          llvm::errs() << "@@ arg: " << name << "\n";
+          LLVM_DEBUG(llvm::dbgs() << "@@ arg: " << name << "\n");
         }; break;
         case TemplateArgument::ArgKind::Expression: {
           Expr *expr{targ.getAsExpr()};
           DeclRefExpr *dexpr{dyn_cast<DeclRefExpr>(expr)};
           if (dexpr) {
-            llvm::errs() << "Template parameter: "
-                         << dexpr->getNameInfo().getAsString() << "\n";
+            LLVM_DEBUG(llvm::dbgs() << "Template parameter: "
+		       << dexpr->getNameInfo().getAsString() << "\n");
           }
         }
         default: {
@@ -113,13 +119,13 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
 
     // Since this is a RecordType, we can reuse our template type parsing.
     if (record_type && fd) {
-      llvm::errs() << "#### RecordType\n";
+      LLVM_DEBUG(llvm::dbgs() << "#### RecordType\n");
       record_type->dump();
       FindTemplateTypes ftt{};
       ftt.Enumerate(record_type);
       ftt.printTemplateArguments(llvm::errs());
     }
-    llvm::errs() << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "\n");
   }
 
   void dump() { }
