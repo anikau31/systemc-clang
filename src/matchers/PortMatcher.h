@@ -283,18 +283,40 @@ class PortMatcher : public MatchFinder::MatchCallback {
       );
   }
 
+  auto makeArraySubModule(const std::string &name ) {
+    return arrayType(
+     hasElementType(hasUnqualifiedDesugaredType(recordType(
+       hasDeclaration(
+        cxxRecordDecl(isDerivedFrom(hasName(name))).bind("submodule")
+        ) //hasDeclaration
+       )
+       )
+       )
+     );
+  }
+
+
   auto makeMemberIsSubModule() {
     return
       fieldDecl(
           hasType(hasUnqualifiedDesugaredType(
-              recordType(
-                hasDeclaration(
-                  cxxRecordDecl(
-                    isDerivedFrom(hasName("::sc_core::sc_module")),
-                    unless(isDerivedFrom(matchesName("sc_event_queue")))
-                    ).bind("submodule")
-                  ) //hasDeclaration
-                ) //recordType
+              anyOf(
+                // 1D
+                recordType(
+                  hasDeclaration(
+                    cxxRecordDecl(
+                      isDerivedFrom(hasName("::sc_core::sc_module")),
+                      unless(isDerivedFrom(matchesName("sc_event_queue")))
+                      ).bind("submodule")
+                    ) //hasDeclaration
+                  ) //recordType
+
+                // 2D array
+                ,
+                makeArraySubModule("::sc_core::sc_module")
+
+                )
+
               ) //hasUnqualifiedDesugaredType
             ) //hasType
           ).bind("submodule_fd"); // fieldDecl;
