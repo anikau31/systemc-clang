@@ -16,7 +16,7 @@ SC_MODULE(lift) {
 
 SC_MODULE(ports_arrays) {
   lift<int> submodules[2];
-  // lift<int> submodules;
+  //lift<int> submodules_2d[2][4];
   //
 
   sc_in<sc_uint<2>> a[4];
@@ -40,11 +40,13 @@ SC_MODULE(ports_arrays) {
   }
 
   SC_CTOR(ports_arrays) : 
-             submodules{{"first_submod"}, {"second_submod"}} {
+             submodules{{"first_submod"}, {"second_submod"}}
+  {
             //
        //     submodules.clk(test);
   submodules[0].clk(test);
    submodules[1].clk(test);
+
   //
 
   int j;

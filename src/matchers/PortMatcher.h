@@ -283,25 +283,26 @@ class PortMatcher : public MatchFinder::MatchCallback {
       );
   }
 
-  auto makeArraySubModule(const std::string &name ) {
+  auto makeArraySubModule(llvm::StringRef name ) {
     return arrayType(
-     hasElementType(hasUnqualifiedDesugaredType(recordType(
-       hasDeclaration(
-        cxxRecordDecl(isDerivedFrom(hasName(name))).bind("submodule")
-        ) //hasDeclaration
-       )
-       )
-       )
+     hasElementType(hasUnqualifiedDesugaredType(
+         recordType(
+           hasDeclaration(
+            cxxRecordDecl(isDerivedFrom(hasName(name))).bind("submodule")
+            ) //hasDeclaration
+         )// recordType
+       ))
      );
   }
 
-
   auto makeMemberIsSubModule() {
+    llvm::StringRef base_class{"::sc_core::sc_module"};
+
     return
       fieldDecl(
           hasType(hasUnqualifiedDesugaredType(
               anyOf(
-                // 1D
+                // 1 instance
                 recordType(
                   hasDeclaration(
                     cxxRecordDecl(
@@ -311,11 +312,21 @@ class PortMatcher : public MatchFinder::MatchCallback {
                     ) //hasDeclaration
                   ) //recordType
 
-                // 2D array
+                // 1D array
                 ,
-                makeArraySubModule("::sc_core::sc_module")
+                makeArraySubModule(base_class)
 
-                )
+                // 2D array of modules
+                ,
+                arrayType(
+                  //hasElementType(
+                  hasElementType(hasUnqualifiedDesugaredType(
+                    makeArraySubModule(base_class) 
+                    )//hasElementType
+                    )
+                  )//arrayType
+
+                ) // anyOf
 
               ) //hasUnqualifiedDesugaredType
             ) //hasType
