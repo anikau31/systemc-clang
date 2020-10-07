@@ -319,11 +319,22 @@ class PortMatcher : public MatchFinder::MatchCallback {
                 // 2D array of modules
                 ,
                 arrayType(
-                  //hasElementType(
                   hasElementType(hasUnqualifiedDesugaredType(
                     makeArraySubModule(base_class) 
                     )//hasElementType
                     )
+                  )//arrayType
+
+                  // 3D array
+                ,
+                arrayType(
+                  hasElementType(hasUnqualifiedDesugaredType(
+                      arrayType(hasElementType(
+                        makeArraySubModule(base_class) 
+                        )//hasElementType 
+                      ) // arrayType
+                      ) //hasUnqualifiedDesugaredType
+                    ) // hasElementType
                   )//arrayType
 
                 ) // anyOf
