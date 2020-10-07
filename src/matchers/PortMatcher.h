@@ -283,18 +283,62 @@ class PortMatcher : public MatchFinder::MatchCallback {
       );
   }
 
+  auto makeArraySubModule(llvm::StringRef name ) {
+    return arrayType(
+     hasElementType(hasUnqualifiedDesugaredType(
+         recordType(
+           hasDeclaration(
+            cxxRecordDecl(isDerivedFrom(hasName(name))).bind("submodule")
+            ) //hasDeclaration
+         )// recordType
+       ))
+     );
+  }
+
   auto makeMemberIsSubModule() {
+    llvm::StringRef base_class{"::sc_core::sc_module"};
+
     return
       fieldDecl(
           hasType(hasUnqualifiedDesugaredType(
-              recordType(
-                hasDeclaration(
-                  cxxRecordDecl(
-                    isDerivedFrom(hasName("::sc_core::sc_module")),
-                    unless(isDerivedFrom(matchesName("sc_event_queue")))
-                    ).bind("submodule")
-                  ) //hasDeclaration
-                ) //recordType
+              anyOf(
+                // 1 instance
+                recordType(
+                  hasDeclaration(
+                    cxxRecordDecl(
+                      isDerivedFrom(hasName("::sc_core::sc_module")),
+                      unless(isDerivedFrom(matchesName("sc_event_queue")))
+                      ).bind("submodule")
+                    ) //hasDeclaration
+                  ) //recordType
+
+                // 1D array
+                ,
+                makeArraySubModule(base_class)
+
+                // 2D array of modules
+                ,
+                arrayType(
+                  hasElementType(hasUnqualifiedDesugaredType(
+                    makeArraySubModule(base_class) 
+                    )//hasElementType
+                    )
+                  )//arrayType
+
+                  // 3D array
+                ,
+                arrayType(
+                  hasElementType(hasUnqualifiedDesugaredType(
+                      arrayType(hasElementType(
+                        makeArraySubModule(base_class) 
+                        )//hasElementType 
+                      ) // arrayType
+                      ) //hasUnqualifiedDesugaredType
+                    ) // hasElementType
+                  )//arrayType
+
+                ) // anyOf
+
               ) //hasUnqualifiedDesugaredType
             ) //hasType
           ).bind("submodule_fd"); // fieldDecl;
