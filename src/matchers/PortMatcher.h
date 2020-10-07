@@ -111,7 +111,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   PortMatcher() {}
 
   /// AST matcher to detect field declarations.
-  auto makeFieldMatcher(const std::string &name) {
+  auto makeFieldMatcher(llvm::StringRef name) {
     /* clang-format off */
 
     /// The generic field matcher has the following conditions.
@@ -184,7 +184,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     );
   }
 
-  auto makeSignalMatcher(const std::string &name) {
+  auto makeSignalMatcher(llvm::StringRef name) {
     return fieldDecl(
         signalMatcher(name)
       ).bind("other_fields");
@@ -261,7 +261,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
           );
   }
 
-  auto makePortHasNameMatcher(const std::string &name) {
+  auto makePortHasNameMatcher(llvm::StringRef name) {
     return fieldDecl(
         portNameMatcher(name)
         ).bind("other_fields");
@@ -273,7 +273,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   ///  - It has a type that is an array whose type has a name "name".
   ///  - Or, it has a type that is a NamedDecl whose name is "name".
   ///
-  auto makePortHasNamedDeclNameMatcher(const std::string &name) {
+  auto makePortHasNamedDeclNameMatcher(llvm::StringRef name) {
     return 
       fieldDecl(
           anyOf(
@@ -283,7 +283,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
       );
   }
 
-  auto makeArraySubModule(llvm::StringRef name ) {
+  auto makeArraySubModule(llvm::StringRef name) {
     return arrayType(
      hasElementType(hasUnqualifiedDesugaredType(
          recordType(
