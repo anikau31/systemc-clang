@@ -122,7 +122,6 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                             //
 
                             // Get the memberExpr for the argument.
-                            
                             ,
                             hasArgument(
                                 1, anyOf(arraySubscriptExpr().bind(
