@@ -3508,30 +3508,6 @@
           ]
         ]
       ]
-      hVardecl u_xt [
-        hTypeinfo  NONAME [
-          hType array##4 [
-            hType fwd_lift [
-              hType fp_t [
-                hLiteral 11 NOLIST
-                hLiteral 52 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hVardecl u_yt [
-        hTypeinfo  NONAME [
-          hType array##4 [
-            hType fwd_lift [
-              hType fp_t [
-                hLiteral 11 NOLIST
-                hLiteral 52 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
