@@ -180,6 +180,12 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ost
       clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
       if (m.second->hasBody()) {
 	hNodep hfunc = new hNode(m.first, hNode::hdlopsEnum::hFunction);
+	QualType qrettype = m.second->getDeclaredReturnType();
+	const clang::Type *rettype = qrettype.getTypePtr();
+	FindTemplateTypes *te = new FindTemplateTypes();
+	te->Enumerate(rettype);
+	HDLType HDLt;
+	HDLt.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL, hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	if (m.second->getNumParams() > 0) {
 	  hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
 	  hfunc->child_list.push_back(hparams);

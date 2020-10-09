@@ -575,7 +575,8 @@ bool  HDLBody::TraverseCallExpr(CallExpr *callexpr){
   hNodep hcall = new hNode(hNode::hdlopsEnum::hMethodCall);
   hNodep save_hret = h_ret;
 
-  if (isa<FunctionDecl>(callexpr->getCalleeDecl()) && ((FunctionDecl *) callexpr)->isConstexpr()) {
+  
+  if (isa<FunctionDecl>(callexpr->getCalleeDecl()) && ((FunctionDecl *) callexpr->getCalleeDecl())->isConstexpr()) {
     Expr::EvalResult res;
     if (callexpr->EvaluateAsRValue(res, callexpr->getCalleeDecl()->getASTContext())) {
 	
