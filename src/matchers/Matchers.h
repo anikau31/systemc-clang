@@ -135,6 +135,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         found_declarations_.push_back(std::make_tuple(name, decl));
       }
 
+      /*
       // This is the new data structure that uses ModuleDecl internally.
       // Unpruned
       auto add_module{new ModuleDecl(name, decl)};
@@ -168,6 +169,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       add_module->addPorts(port_matcher.getSubmodules(),
                            "submodules");
 
+                           */
       // TODO: Add all ports (getPorts) that are derived from sc_port.
       // This was requested by Scott.  The matcher is already in place.
       //
@@ -186,7 +188,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     }
   }
 
-  void pruneMatches() {
+  void pruneMatches( ASTContext &context ) {
     // Must have found instances.
     // 1. For every module found, check if there is an instance.
     // 2. If there is an instance, then add it into the list.
@@ -204,6 +206,39 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       instance_matcher_.findInstanceByVariableType(decl, instance_list);
       declaration_instance_map_.insert( DeclarationInstancePairType(decl, instance_list) );
       pruned_declarations_map_.insert(ModuleDeclarationPairType(decl, decl->getNameAsString()));
+
+// This is the new data structure that uses ModuleDecl internally.
+      // Unpruned
+      auto add_module{new ModuleDecl(name, decl)};
+      modules_.insert(
+          std::pair<clang::CXXRecordDecl *, ModuleDecl *>(decl, add_module));
+
+      // Instances should not be in subtree matching.
+      //
+
+      // Subtree matcher
+      MatchFinder port_registry{};
+      PortMatcher port_matcher{};
+      port_matcher.registerMatchers(port_registry);
+      port_registry.match(*decl, context );
+      // decl->dump();
+      LLVM_DEBUG(llvm::dbgs() << "========== Port Matcher =============\n");
+      port_matcher.dump();
+
+      // All the ports for the CXXRecordDecl should be matched.
+      // We can populate the ModuleDecl with that information.
+      add_module->addPorts(port_matcher.getInputPorts(), "sc_in");
+      // Clock ports are also sc_in
+      add_module->addPorts(port_matcher.getClockPorts(), "sc_in");
+      add_module->addPorts(port_matcher.getOutputPorts(), "sc_out");
+      add_module->addPorts(port_matcher.getInOutPorts(), "sc_inout");
+      add_module->addPorts(port_matcher.getOtherVars(), "others");
+      add_module->addPorts(port_matcher.getSignals(), "sc_signal");
+      add_module->addPorts(port_matcher.getInputStreamPorts(), "sc_stream_in");
+      add_module->addPorts(port_matcher.getOutputStreamPorts(),
+                           "sc_stream_out");
+      add_module->addPorts(port_matcher.getSubmodules(),
+                           "submodules");
 
       // auto add_module{new ModuleDecl(name, decl)};
       // modules_.insert(std::pair<clang::CXXRecordDecl*, ModuleDecl*>(decl, add_module));

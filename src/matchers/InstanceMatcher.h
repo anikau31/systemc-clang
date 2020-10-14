@@ -383,7 +383,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.var_type_name = var_type_name;
     // This is the type's decl.
     llvm::outs() << "#### DEBUGDEBUG\n";
-    // TODO: If it's an array type then we have to get the recoddecl differently.
+    // TODO: If it's an array type then we have to get the recorddecl differently.
     instance_decl->getType()->dump();
     auto array_type {instance_decl->getType().getTypePtr()->getAsArrayTypeUnsafe()};
     // Array type.
@@ -537,9 +537,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
       auto instance_field{instance.decl};
       llvm::outs() << " instance_field*: " << instance_field << "\n";
-
-      llvm::outs() << " print instance field\n";
-      //instance_field->dump();
 
       if (dyn_cast<clang::FieldDecl>(instance_field)) {
         if (instance.is_field_decl) {

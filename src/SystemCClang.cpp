@@ -74,7 +74,7 @@ bool SystemCConsumer::fire() {
 
   matchRegistry.matchAST(getContext());
 
-  module_declaration_handler.pruneMatches();
+  module_declaration_handler.pruneMatches(getContext());
   LLVM_DEBUG(llvm::dbgs() << "== Print module declarations pruned\n";
              module_declaration_handler.dump();
              llvm::dbgs() << "================ END =============== \n";);
