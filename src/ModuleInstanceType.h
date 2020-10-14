@@ -56,13 +56,13 @@ struct ModuleInstanceType {
   }
 
   void dump() {
-    LLVM_DEBUG(llvm::dbgs() << "type_decl: " << decl << " inst_decl: " << instance_decl
-                 << " var_type_name: " << var_type_name
-                 << " var_name: " << var_name
-                 << " instance_name: " << instance_name
-                 << " parent_name: " << parent_name
-                 << " parent_decl: " << parent_decl
-                 << " is_field_decl: " << is_field_decl << "\n";);
+    LLVM_DEBUG(llvm::dbgs() << "[ModuleInstanceMap]  type_decl: " << decl
+                            << " inst_decl: " << instance_decl
+                            << " var_type_name: " << var_type_name
+                            << " var_name: " << var_name << " instance_name: "
+                            << instance_name << " parent_name: " << parent_name
+                            << " parent_decl: " << parent_decl
+                            << " is_field_decl: " << is_field_decl << "\n";);
   }
 };
 };  // namespace sc_ast_matchers

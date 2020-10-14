@@ -191,6 +191,26 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     // 1. For every module found, check if there is an instance.
     // 2. If there is an instance, then add it into the list.
 
+    llvm::outs() << "###### DUMP Instance Matches \n";
+    instance_matcher_.dump();
+
+    auto instance_map{instance_matcher_.getInstanceMap()};
+    for ( auto inst : instance_map ) {
+      llvm::outs() << "############### ====> INST: " << inst.first << "\n";
+      clang::CXXRecordDecl *decl{ dyn_cast<clang::CXXRecordDecl>( inst.second.decl) };
+      auto name{ decl->getNameAsString() };
+
+      InstanceListType instance_list;
+      instance_matcher_.findInstanceByVariableType(decl, instance_list);
+      declaration_instance_map_.insert( DeclarationInstancePairType(decl, instance_list) );
+      pruned_declarations_map_.insert(ModuleDeclarationPairType(decl, decl->getNameAsString()));
+
+      // auto add_module{new ModuleDecl(name, decl)};
+      // modules_.insert(std::pair<clang::CXXRecordDecl*, ModuleDecl*>(decl, add_module));
+
+    }
+
+    /*
     std::string dbg{"[pruneMatches]"};
     LLVM_DEBUG(llvm::dbgs() << "\n"
                  << dbg << " number_of_declarations "
@@ -199,15 +219,15 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
     for (auto const &element : found_declarations_) {
       auto decl{get<1>(element)};
-      LLVM_DEBUG(llvm::dbgs() << "- decl name: " << get<0>(element) << " " << decl << "\n ");
+      LLVM_DEBUG(llvm::dbgs() << "decl name: " << get<0>(element) << " " << decl << "\n ");
       InstanceListType instance_list;
 
       if (instance_matcher_.findInstanceByVariableType(decl, instance_list)) {
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
-        // instance_list.push_back(instance);
         declaration_instance_map_.insert(
             DeclarationInstancePairType(decl, instance_list));
+        LLVM_DEBUG(llvm::dbgs() << "INSERTED\n");
       } else {
         // Remove it from modules_
         removeModule(decl);
@@ -216,19 +236,20 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
     for (auto const &element : found_template_declarations_) {
       auto decl{get<1>(element)};
+      LLVM_DEBUG(llvm::dbgs() << "templated decl name: " << get<0>(element) << " " << decl << "\n ");
       InstanceListType instance_list;
       // InstanceMatcher::InstanceDeclType instance;
       if (instance_matcher_.findInstanceByVariableType(decl, instance_list)) {
         // pruned_declarations_.push_back(element);
         pruned_declarations_map_.insert(
             ModuleDeclarationPairType(decl, get<0>(element)));
-        // instance_list.push_back(instance);
-        declaration_instance_map_.insert(
-            DeclarationInstancePairType(decl, instance_list));
+        declaration_instance_map_.insert(DeclarationInstancePairType(decl, instance_list));
+        LLVM_DEBUG(llvm::dbgs() << "INSERTED\n");
       } else {
         removeModule(decl);
       }
     }
+    */
   }
 
   void dump() {
@@ -238,18 +259,18 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         << "[ModuleDeclarationMatcher] Non-template module declarations: "
         << found_declarations_.size() << "\n";
     for (const auto &i : found_declarations_) {
-      llvm::outs() << "[ModuleDeclarationMatcher] module name     : "
+      llvm::outs() << "module name     : "
                    << get<0>(i) << ", " << get<1>(i) << "\n";
     }
 
-    llvm::outs() << "[ModuleDeclarationMatcher] Template module declarations: "
+    llvm::outs() << "Template module declarations: "
                  << found_template_declarations_.size() << "\n";
     for (const auto &i : found_template_declarations_) {
-      llvm::outs() << "[ModuleDeclarationMatcher] template module name: "
+      llvm::outs() << "template module name: "
                    << get<0>(i) << ", " << get<1>(i) << "\n";
     }
 
-    llvm::outs() << "[ModuleDeclarationMatcher] Pruned declaration Map: "
+    llvm::outs() << "Pruned declaration Map: "
                  << pruned_declarations_map_.size() << "\n";
     for (const auto &i : pruned_declarations_map_) {
       auto decl{i.first};

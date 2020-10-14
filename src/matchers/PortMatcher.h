@@ -537,7 +537,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     finder.addMatcher(match_all_ports, this);
     finder.addMatcher(match_non_sc_types_fdecl, this);
     finder.addMatcher(match_non_sc_types_vdecl, this);
-    finder.addMatcher(match_submodules, this);
+    //finder.addMatcher(match_submodules, this);
     // finder.addMatcher(match_sc_ports, this);
   }
 

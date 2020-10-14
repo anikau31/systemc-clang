@@ -4,10 +4,8 @@
 //#include <type_traits>
 #include <vector>
 
-#include "clang/ASTMatchers/ASTMatchers.h"
-
 #include "ModuleInstanceType.h"
-
+#include "clang/ASTMatchers/ASTMatchers.h"
 #include "llvm/Support/Debug.h"
 
 /// Different matchers may use different DEBUG_TYPE
@@ -122,7 +120,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
 
-    LLVM_DEBUG(llvm::dbgs() << "[findInstance] instance size: "
+    LLVM_DEBUG(llvm::dbgs() << "\n[findInstance] instance size: "
                             << instance_map_.size() << "\n");
 
     LLVM_DEBUG(llvm::dbgs()
@@ -181,6 +179,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         .bind(bind_ctor_expr);
   }
 
+  auto makeArraySubModule(llvm::StringRef name) {
+    return arrayType(hasElementType(hasUnqualifiedDesugaredType(
+        recordType(hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name)))
+                                      .bind("submodule"))  // hasDeclaration
+                   )                                       // recordType
+        )));
+  }
+
   void registerMatchers(MatchFinder &finder) {
     /// We will have two matchers.
     ///
@@ -205,10 +211,36 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                     isMemberInitializer(),
                     forField(
                       allOf(
-                        hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
-                          cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
-                          )))
-                      ),
+
+                        anyOf(
+
+                          hasType(
+                            hasUnqualifiedDesugaredType(
+                              recordType(
+                                hasDeclaration(
+                                  cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
+                            )))
+                          )//hasType
+
+                          ,
+                          //1d
+                            hasType(
+                               hasUnqualifiedDesugaredType(
+                                 arrayType(
+                                   hasElementType(hasUnqualifiedDesugaredType(
+                                           recordType(
+                                             hasDeclaration(
+                                              cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                              ) //hasDeclaration
+                                           )// recordType
+                                         )
+                                         )
+                                   )//arrayType
+                                 )
+                               )//hasType
+
+                          ) //anyOf
+                        ,
                       fieldDecl().bind("ctor_fd") 
                       )
                     )
@@ -218,7 +250,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             ) //hasDescendant
           ); //cxxRecordDecl
 
- 
+
     auto match_with_parent = 
       valueDecl(hasType(
             hasUnqualifiedDesugaredType(
@@ -227,22 +259,41 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
 
     auto match_instances_decl = 
-      varDecl( 
+      valueDecl( 
         hasDescendant(
           match_ctor_arg("ctor_arg", "constructor_expr"))
         , 
-        hasType(
-          hasUnqualifiedDesugaredType(
-            recordType(
-              hasDeclaration(
-                cxxRecordDecl(
-                  isDerivedFrom("::sc_core::sc_module")
-                  ).bind("var_cxx_decl")
-                )
-              ).bind("record_type")
-            )
-          )
-        ).bind("instance_vd");
+        anyOf(
+            // 1d
+          hasType(
+            hasUnqualifiedDesugaredType(
+              recordType(
+                hasDeclaration(
+                  cxxRecordDecl(
+                    isDerivedFrom("::sc_core::sc_module")
+                    ).bind("var_cxx_decl")
+                  )
+                ).bind("record_type")
+              )
+            ) // hasType
+          // 2d
+          ,
+           hasType(
+             hasUnqualifiedDesugaredType(
+               arrayType(
+                 hasElementType(hasUnqualifiedDesugaredType(
+                         recordType(
+                           hasDeclaration(
+                            cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                            ) //hasDeclaration
+                         )// recordType
+                       )
+                       )
+                 )//arrayType
+               )
+             )//hasType
+        )// anyOf
+      ).bind("instance_vd");
 
     
     auto test = 
@@ -279,7 +330,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     clang::ValueDecl *parent_rdecl{nullptr};
 
     LLVM_DEBUG(llvm::dbgs()
-               << "=> var_name " << var_name << " var_type_name "
+               << "=> VD: var_name " << var_name << " var_type_name "
                << var_type_name << " parent_name " << parent_name
                << "\n");  // instance_name "; // << instance_name << "\n";
 
@@ -324,15 +375,30 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     }
 
     LLVM_DEBUG(llvm::dbgs()
-               << "=> var_name " << var_name << " var_type_name "
+               << "=> FD: var_name " << var_name << " var_type_name "
                << var_type_name << " parent_name " << parent_name << "\n");
 
     ModuleInstanceType parsed_instance{};
     parsed_instance.var_name = var_name;
     parsed_instance.var_type_name = var_type_name;
-    //    parsed_instance.instance_name = instance_name;
-    parsed_instance.decl =
+    // This is the type's decl.
+    llvm::outs() << "#### DEBUGDEBUG\n";
+    // TODO: If it's an array type then we have to get the recoddecl differently.
+    instance_decl->getType()->dump();
+    auto array_type {instance_decl->getType().getTypePtr()->getAsArrayTypeUnsafe()};
+    // Array type.
+    if (array_type) {
+      auto element_type{array_type->getElementType().getTypePtr()};
+      parsed_instance.decl = element_type->getAsCXXRecordDecl();
+    } else {
+      // Not an array type.
+      parsed_instance.decl =
         instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
+    }
+
+    llvm::outs() << "#### END DEBUGDEBUG\n";
+
+    instance_decl->dump();
     parsed_instance.instance_decl = instance_decl;
     parsed_instance.is_field_decl = true;
     parsed_instance.parent_name = parent_name;
@@ -345,6 +411,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(llvm::dbgs() << "Inserting FD instance\n");
       instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
           instance_decl, parsed_instance));
+      llvm::outs() << "INSERTED\n";
     }
   }
 
@@ -374,29 +441,76 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(ctor_fd->dump());
       parseFieldDecl(ctor_fd, parent_fd);
 
+      // llvm::outs() << "### DEBUG\n";
+      // ctor_init->getInit()->dump();
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
-      clang::CXXConstructExpr *cexpr = cast<clang::CXXConstructExpr>(expr);
+      clang::CXXConstructExpr *cexpr{dyn_cast<clang::CXXConstructExpr>(expr)};
+      clang::InitListExpr *iexpr{dyn_cast<clang::InitListExpr>(expr)};
 
-      MatchFinder iarg_registry{};
-      InstanceArgumentMatcher iarg_matcher{};
-      iarg_matcher.registerMatchers(iarg_registry);
-      iarg_registry.match(*cexpr, *result.Context);
+      // For arrays, an InitListExpr is generated.
+      // For non-arrays, CXXConstructExpr is directly castable.
+      //
+      // If it is an array, then get to its InitListExpr, and then get the first
+      // element's constructor.
+      if ((iexpr != nullptr) && (cexpr == nullptr)) {
+        llvm::outs() << "### IEXPR is not NULL\n";
 
-      LLVM_DEBUG(iarg_matcher.dump(););
+        for (auto init : iexpr->inits()) {
+          /// These must
+          cexpr = dyn_cast<clang::CXXConstructExpr>(init);
 
-      // This retrieves the submodule instance name.
-      if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
-        auto submodule_instance_name = inst_literal->getString().str();
+          // TODO: move into a function
 
-        // Find the instance if it has been already recorded.
-        auto found_it{instance_map_.find(ctor_fd)};
-        if (found_it != instance_map_.end()) {
-          // has to be a reference
-          auto &inst{found_it->second};
-          inst.instance_name = submodule_instance_name;
+          MatchFinder iarg_registry{};
+          InstanceArgumentMatcher iarg_matcher{};
+          iarg_matcher.registerMatchers(iarg_registry);
+          iarg_registry.match(*cexpr, *result.Context);
+
+          LLVM_DEBUG(iarg_matcher.dump(););
+
+          // This retrieves the submodule instance name.
+          if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
+            auto submodule_instance_name = inst_literal->getString().str();
+
+            // Find the instance if it has been already recorded.
+            auto found_it{instance_map_.find(ctor_fd)};
+            if (found_it != instance_map_.end()) {
+              // has to be a reference
+              auto &inst{found_it->second};
+              inst.instance_name = submodule_instance_name;
+            }
+            LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
+                                    << submodule_instance_name << "\n");
+          }
         }
-        LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
-                                << submodule_instance_name << "\n");
+        // cexpr = cast<clang::CXXConstructExpr>(iexpr->inits()[0]);
+      } else {
+        // TODO: We need to iterate over all the initializers, and then insert
+        // each one of them. This is mainly necessary for arrays.
+        //
+        llvm::outs() << "### DEBUG END\n";
+
+        MatchFinder iarg_registry{};
+        InstanceArgumentMatcher iarg_matcher{};
+        iarg_matcher.registerMatchers(iarg_registry);
+        iarg_registry.match(*cexpr, *result.Context);
+
+        LLVM_DEBUG(iarg_matcher.dump(););
+
+        // This retrieves the submodule instance name.
+        if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
+          auto submodule_instance_name = inst_literal->getString().str();
+
+          // Find the instance if it has been already recorded.
+          auto found_it{instance_map_.find(ctor_fd)};
+          if (found_it != instance_map_.end()) {
+            // has to be a reference
+            auto &inst{found_it->second};
+            inst.instance_name = submodule_instance_name;
+          }
+          LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
+                                  << submodule_instance_name << "\n");
+        }
       }
     }
 
@@ -405,7 +519,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (instance_vd) {
       auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
       LLVM_DEBUG(llvm::dbgs()
-                 << "## FD: " << instance_vd->getNameAsString() << " "
+                 << "## VD: " << instance_vd->getNameAsString() << " "
                  << instance_vd << " instance_name " << instance_name << "\n");
 
       parseVarDecl(instance_vd, instance_name);
@@ -416,17 +530,25 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.
+    llvm::outs() << "################## INSTANCE MATCHER DUMP \n";
     for (const auto &i : instance_map_) {
-      llvm::outs() << "decl* " << i.first;
       auto instance{i.second};
+      llvm::outs() << "decl* " << i.first << "  " << instance.instance_name;
 
       auto instance_field{instance.decl};
-      if (isa<clang::FieldDecl>(instance_field)) {
-        // if (instance.is_field_decl){
-        llvm::outs() << " FieldDecl ";
-      } else {
-        llvm::outs() << " VarDecl ";
+      llvm::outs() << " instance_field*: " << instance_field << "\n";
+
+      llvm::outs() << " print instance field\n";
+      //instance_field->dump();
+
+      if (dyn_cast<clang::FieldDecl>(instance_field)) {
+        if (instance.is_field_decl) {
+          llvm::outs() << " FieldDecl ";
+        } else {
+          llvm::outs() << " VarDecl ";
+        }
       }
+
       instance.dump();
     }
   }

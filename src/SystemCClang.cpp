@@ -26,9 +26,10 @@ void SystemCConsumer::populateNestedModules(
     // Match with the same InstanceTypeDecl
     ModuleDecl *child{
         systemcModel_->getInstance(module_inst.getInstanceDecl())};
+
     LLVM_DEBUG(llvm::dbgs() << "# child instance decl "
                             << module_inst.getInstanceDecl() << "\n");
-    module_inst.getInstanceDecl()->dump();
+    //module_inst.getInstanceDecl()->dump();
 
     ModuleDecl *parent{systemcModel_->getInstance(module_inst.getParentDecl())};
 
@@ -46,6 +47,7 @@ void SystemCConsumer::populateNestedModules(
       LLVM_DEBUG(llvm::dbgs() << "Add a child-parent relationship\n");
       parent->addNestedModule(child);
     }
+    LLVM_DEBUG(llvm::dbgs() << "\n";);
   }
 }
 

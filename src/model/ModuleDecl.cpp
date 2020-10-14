@@ -599,11 +599,10 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
     othervars_j[name] = pd->dump_json();
   }
 
-  submodules_j["number_of_submodules"] = submodules_.size();
-  for (auto mit : submodules_) {
-    auto name = get<0>(mit);
-    auto pd = get<1>(mit);
-    submodules_j[name] = pd->dump_json();
+  submodules_j["number_of_submodules"] = nested_modules_.size();
+  for (auto mit : nested_modules_) {
+    auto name = mit->getName();
+    submodules_j[name] = mit->getInstanceName();
   }
 
   os << "Start printing ports\n";
