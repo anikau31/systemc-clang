@@ -90,7 +90,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   //
 
   typedef std::pair<clang::Decl *, ModuleInstanceType> ModuleInstanceTuple;
-  typedef std::map<clang::Decl *, ModuleInstanceType> InstanceDeclarations;
+  typedef std::multimap<clang::Decl *, ModuleInstanceType> InstanceDeclarations;
 
  private:
   /// Instances can come in two forms:
@@ -359,7 +359,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   }
 
   void parseFieldDecl(clang::FieldDecl *instance_decl,
-                      clang::ValueDecl *parent_decl) {
+                      clang::ValueDecl *parent_decl, std::string instance_name ) {
     std::string name{instance_decl->getIdentifier()->getNameStart()};
 
     // This is the main object's constructor name
@@ -403,16 +403,17 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.is_field_decl = true;
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_decl;
+    parsed_instance.instance_name = instance_name;
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
-    auto found_it{instance_map_.find(instance_decl)};
-    if (found_it == instance_map_.end()) {
+    //auto found_it{instance_map_.find(instance_decl)};
+    //if (found_it == instance_map_.end()) {
       LLVM_DEBUG(llvm::dbgs() << "Inserting FD instance\n");
       instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
           instance_decl, parsed_instance));
       llvm::outs() << "INSERTED\n";
-    }
+    //}
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -439,7 +440,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                  << "#### CTOR_FD: parent_fd " << parent_fd->getNameAsString()
                  << " ctor_fd " << ctor_fd->getNameAsString() << "\n");
       LLVM_DEBUG(ctor_fd->dump());
-      parseFieldDecl(ctor_fd, parent_fd);
 
       // llvm::outs() << "### DEBUG\n";
       // ctor_init->getInit()->dump();
@@ -472,13 +472,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
             auto submodule_instance_name = inst_literal->getString().str();
 
+            parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
+
             // Find the instance if it has been already recorded.
-            auto found_it{instance_map_.find(ctor_fd)};
-            if (found_it != instance_map_.end()) {
-              // has to be a reference
-              auto &inst{found_it->second};
-              inst.instance_name = submodule_instance_name;
-            }
+            // auto found_it{instance_map_.find(ctor_fd)};
+            // if (found_it != instance_map_.end()) {
+             // auto &inst{found_it->second};
+              // inst.instance_name = submodule_instance_name;
+            // }
             LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
                                     << submodule_instance_name << "\n");
           }
@@ -501,13 +502,13 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
           auto submodule_instance_name = inst_literal->getString().str();
 
-          // Find the instance if it has been already recorded.
-          auto found_it{instance_map_.find(ctor_fd)};
-          if (found_it != instance_map_.end()) {
-            // has to be a reference
-            auto &inst{found_it->second};
-            inst.instance_name = submodule_instance_name;
-          }
+          // auto found_it{instance_map_.find(ctor_fd)};
+          // if (found_it != instance_map_.end()) {
+            // auto &inst{found_it->second};
+            // inst.instance_name = submodule_instance_name;
+          // }
+//
+          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
           LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
                                   << submodule_instance_name << "\n");
         }
