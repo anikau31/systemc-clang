@@ -349,17 +349,18 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
-    auto found_it{instance_map_.find(instance_decl)};
-    if (found_it == instance_map_.end()) {
+//    auto found_it{instance_map_.find(instance_decl)};
+ //   if (found_it == instance_map_.end()) {
       LLVM_DEBUG(llvm::dbgs() << "Inserting VD instance"
                               << "\n");
       instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
           instance_decl, parsed_instance));
-    }
+ //   }
   }
 
   void parseFieldDecl(clang::FieldDecl *instance_decl,
-                      clang::ValueDecl *parent_decl, std::string instance_name ) {
+                      clang::ValueDecl *parent_decl,
+                      std::string instance_name) {
     std::string name{instance_decl->getIdentifier()->getNameStart()};
 
     // This is the main object's constructor name
@@ -367,7 +368,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // We do not get the instance name from within the field declaration.
     // Get the type of the class of the field.
     auto var_type_name{instance_decl->getType().getAsString()};
-    // auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
 
     std::string parent_name{};
     if (parent_decl) {
@@ -381,11 +381,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     ModuleInstanceType parsed_instance{};
     parsed_instance.var_name = var_name;
     parsed_instance.var_type_name = var_type_name;
-    // This is the type's decl.
-    llvm::outs() << "#### DEBUGDEBUG\n";
-    // TODO: If it's an array type then we have to get the recorddecl differently.
     instance_decl->getType()->dump();
-    auto array_type {instance_decl->getType().getTypePtr()->getAsArrayTypeUnsafe()};
+
+    auto array_type{
+        instance_decl->getType().getTypePtr()->getAsArrayTypeUnsafe()};
     // Array type.
     if (array_type) {
       auto element_type{array_type->getElementType().getTypePtr()};
@@ -393,10 +392,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     } else {
       // Not an array type.
       parsed_instance.decl =
-        instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
+          instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
     }
-
-    llvm::outs() << "#### END DEBUGDEBUG\n";
 
     instance_decl->dump();
     parsed_instance.instance_decl = instance_decl;
@@ -407,13 +404,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
-    //auto found_it{instance_map_.find(instance_decl)};
-    //if (found_it == instance_map_.end()) {
-      LLVM_DEBUG(llvm::dbgs() << "Inserting FD instance\n");
-      instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
-          instance_decl, parsed_instance));
-      llvm::outs() << "INSERTED\n";
-    //}
+    LLVM_DEBUG(llvm::dbgs() << "Inserting FD instance\n");
+    instance_map_.insert(
+        std::pair<Decl *, ModuleInstanceType>(instance_decl, parsed_instance));
+    llvm::outs() << "INSERTED\n";
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -456,9 +450,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         llvm::outs() << "### IEXPR is not NULL\n";
 
         for (auto init : iexpr->inits()) {
-          /// These must
           cexpr = dyn_cast<clang::CXXConstructExpr>(init);
-
           // TODO: move into a function
 
           MatchFinder iarg_registry{};
@@ -473,24 +465,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             auto submodule_instance_name = inst_literal->getString().str();
 
             parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
-
-            // Find the instance if it has been already recorded.
-            // auto found_it{instance_map_.find(ctor_fd)};
-            // if (found_it != instance_map_.end()) {
-             // auto &inst{found_it->second};
-              // inst.instance_name = submodule_instance_name;
-            // }
             LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
                                     << submodule_instance_name << "\n");
           }
         }
         // cexpr = cast<clang::CXXConstructExpr>(iexpr->inits()[0]);
       } else {
-        // TODO: We need to iterate over all the initializers, and then insert
-        // each one of them. This is mainly necessary for arrays.
-        //
-        llvm::outs() << "### DEBUG END\n";
-
         MatchFinder iarg_registry{};
         InstanceArgumentMatcher iarg_matcher{};
         iarg_matcher.registerMatchers(iarg_registry);
@@ -501,13 +481,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // This retrieves the submodule instance name.
         if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
           auto submodule_instance_name = inst_literal->getString().str();
-
-          // auto found_it{instance_map_.find(ctor_fd)};
-          // if (found_it != instance_map_.end()) {
-            // auto &inst{found_it->second};
-            // inst.instance_name = submodule_instance_name;
-          // }
-//
           parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
           LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
                                   << submodule_instance_name << "\n");

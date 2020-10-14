@@ -60,42 +60,25 @@ bool SystemCConsumer::fire() {
   // Reflection database.
   systemcModel_ = new Model{};
 
-  // ANI : Do we need FindGlobalEvents?
   FindGlobalEvents globals{tu, os_};
   FindGlobalEvents::globalEventMapType eventMap{globals.getEventMap()};
-  // globals.dump_json();
   systemcModel_->addGlobalEvents(eventMap);
 
   ModuleDeclarationMatcher module_declaration_handler{};
   MatchFinder matchRegistry{};
-
-  /// Run all the matchers
   module_declaration_handler.registerMatchers(matchRegistry);
-
   matchRegistry.matchAST(getContext());
-
   module_declaration_handler.pruneMatches(getContext());
+
   LLVM_DEBUG(llvm::dbgs() << "== Print module declarations pruned\n";
              module_declaration_handler.dump();
              llvm::dbgs() << "================ END =============== \n";);
 
-  // Map CXXRecordDecl => ModuleDecl*
+  // MultiMap CXXRecordDecl => ModuleDecl*
+  // Instances with same CXXRecordDecl will have multiple entries
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
-  // ===========================================================
-  // 1. Add every module declaration to the model.
-  // ===========================================================
-  // Every module declaration that is found should be added to the model.
-  //
-
-  /*
-  for (auto const &element : found_module_declarations) {
-    auto module_declaration{new ModuleDecl{get<0>(element), get<1>(element)}};
-    systemcModel_->addModuleDecl(module_declaration);
-  }
-  */
-
-  ////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
   // Find the sc_main
   ////////////////////////////////////////////////////////////////
   FindSCMain scmain{tu, os_};
@@ -114,15 +97,10 @@ bool SystemCConsumer::fire() {
   ////////////////////////////////////////////////////////////////
   // Find the netlist.
   ////////////////////////////////////////////////////////////////
-  // This actually also finds instances, but now we have AST matchers to do it.
-  //
-  //  TEST NetlistMatcher
-  //  map: CXXRecordDecl =>  InstanceListType
-  //  -> InstanceListType: vector<InstanceMatcher::InstanceDeclType>
-  //  -> InstanceMatcher::InstanceDeclType :  std::tuple<std::string, Decl *,
-  //  ModuleInstanceType>
-  auto found_instances_declaration_map{
-      module_declaration_handler.getInstances()};
+
+  //  std::map<clang::CXXRecordDecl *, InstanceListType>
+  auto found_instances_declaration_map{module_declaration_handler.getInstances()};
+
   //
   // Create a ModuleDecl for each instance with the appropriately parsed
   // ModuleDecl.
@@ -140,7 +118,6 @@ bool SystemCConsumer::fire() {
     //
     // FIXME: This has to be replaced once xlat is fixed.
     std::vector<ModuleDecl *> module_decl_instances;
-    // ModuleDecl *p_dummy_module_decl{incomplete_module_decl};
 
     for (const auto &instance : instance_list) {
       auto add_module_decl{new ModuleDecl{*incomplete_module_decl}};
