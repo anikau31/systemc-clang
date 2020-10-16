@@ -20,7 +20,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   llvm::DebugFlag = false;
 
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "netlist-matcher-templated-model.cpp")};
+      systemc_clang::test_data_dir, "netlist-matcher-templated-input.cpp")};
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
@@ -29,10 +29,10 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   SystemCConsumer sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
-  auto module_decl{model->getModuleDecl()};
+  auto instances{model->getInstances()};
 
   // There are two module declarations found: test dut sub_module
-  REQUIRE(module_decl.size() == 3);
+  REQUIRE(instances.size() == 3);
 
   auto found_module_testing{model->getInstance("testing")};
   REQUIRE(found_module_testing != nullptr);
@@ -51,7 +51,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     REQUIRE(found_decl->getSignals().size() == 0);
     // 1 non-array, and 2 array others
     REQUIRE(found_decl->getOtherVars().size() == 0);
-    REQUIRE(found_decl->getSubmodules().size() == 1);
+    REQUIRE(found_decl->getNestedModules().size() == 1);
 
     // TODO: Check the template parameters.
     //

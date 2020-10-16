@@ -69,7 +69,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
     // Check how many nested modules it has.
     // It should have 4: N1 - N4
-    auto nested_decls{ found_module_decl->getNestedModuleDecl()};
+    auto nested_decls{ found_module_decl->getNestedModules()};
     REQUIRE(nested_decls.size() == 4);
 
     // Print out the nested declaration's. 

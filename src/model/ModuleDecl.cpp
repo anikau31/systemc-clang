@@ -373,7 +373,7 @@ const ModuleDecl::signalMapType &ModuleDecl::getSignals() const {
   return signals_;
 }
 
-const std::vector<ModuleDecl *> &ModuleDecl::getNestedModuleDecl() const {
+const std::vector<ModuleDecl *> &ModuleDecl::getNestedModules() const {
   return nested_modules_;
 }
 

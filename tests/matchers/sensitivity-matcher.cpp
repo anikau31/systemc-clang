@@ -131,10 +131,9 @@ int sc_main(int argc, char *argv[]) {
   auto model{sc.getSystemCModel()};
 
   // This provides the module declarations.
-  auto module_decl{model->getModuleDecl()};
-  auto module_instance_map{model->getModuleInstanceMap()};
+  auto instances{model->getInstances()};
 
-  REQUIRE(module_instance_map.size() == 1);
+  REQUIRE(instances.size() == 1);
   // Want to find an instance named "testing".
 
   ModuleDecl *test_module{model->getInstance("testing")};
