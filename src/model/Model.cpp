@@ -67,6 +67,11 @@ modules_.clear();
 
 Model::Model(const Model &from) { modules_ = from.modules_; }
 
+void Model::addInstance(ModuleDecl *mod) {
+  module_instances_.push_back(mod);
+}
+
+
 void Model::addModuleDecl(ModuleDecl *md) {
   // class name, instance name.
   modules_.push_back(Model::modulePairType(md->getName(), md));

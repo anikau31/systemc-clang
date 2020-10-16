@@ -106,6 +106,73 @@ bool SystemCConsumer::fire() {
   // ModuleDecl.
   //
 
+  llvm::outs() << "############# ============= NEW FIRE ============ ################\n";
+  for (const auto &inst: found_module_declarations ) {
+    auto cxx_decl{inst.first};
+    ModuleDecl *add_module_decl{ inst.second };
+
+    // setInstanceInfo done in pruneMatches 
+    //
+    FindTemplateParameters tparms{cxx_decl};
+    add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
+    add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
+
+    /// 3. Find constructor
+      //
+      //
+      LLVM_DEBUG(llvm::dbgs() << "4. Set the constructor.\n";);
+      vector<EntryFunctionContainer *> _entryFunctionContainerVector;
+      FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
+      add_module_decl->addConstructor(&constructor);
+
+      /// 4. Find ports
+      /// This is done for the declaration.
+      //
+      //
+      // 5. Find  entry functions within one sc_module.
+      LLVM_DEBUG(llvm::dbgs() << "5. Set the entry functions\n";);
+      FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
+                                     os_};
+      FindEntryFunctions::entryFunctionVectorType *entryFunctions{
+          findEntries.getEntryFunctions()};
+      LLVM_DEBUG(llvm::dbgs() << "6. Set the process\n";);
+      add_module_decl->addProcess(entryFunctions);
+
+      SensitivityMatcher sens_matcher{};
+      MatchFinder matchRegistry{};
+      sens_matcher.registerMatchers(matchRegistry);
+      matchRegistry.match(*constructor.getConstructorDecl(), getContext());
+
+      for (size_t i{0}; i < entryFunctions->size(); i++) {
+        EntryFunctionContainer *ef{(*entryFunctions)[i]};
+
+        /// Add the sensitivity information to each of the entry functions.
+        EntryFunctionContainer::SenseMapType sensitivity_info{
+            sens_matcher.getSensitivityMap()};
+        ef->addSensitivityInfo(sensitivity_info);
+
+        if (ef->getEntryMethod() == nullptr) {
+          LLVM_DEBUG(llvm::dbgs() << "ERROR";);
+          continue;
+        }
+
+        FindWait findWaits{ef->getEntryMethod(), os_};
+        ef->addWaits(findWaits);
+
+        FindNotify findNotify{ef->_entryMethodDecl, os_};
+        ef->addNotifys(findNotify);
+
+        _entryFunctionContainerVector.push_back(ef);
+      }
+
+      systemcModel_->addInstance(add_module_decl);
+
+    add_module_decl->dump(llvm::outs());
+
+    //
+  }
+  llvm::outs() << "############# =====  END NEW FIRE ============ ################\n";
+
   // Go through each instance and find its appropriate module declaration.
   for (const auto &inst : found_instances_declaration_map) {
     // This is the CXXRecordDecl
@@ -128,6 +195,8 @@ bool SystemCConsumer::fire() {
       // Insert what you know about the parsed sc_module
       // 1. Insert the instance name from Matchers
       //
+      
+      /*
       auto inst_info{get<2>(instance)};
       inst_info.dump();
 
@@ -170,16 +239,10 @@ bool SystemCConsumer::fire() {
 
       /// We should only go through one of the CXXRecordDecls
 
-      LLVM_DEBUG(
-          llvm::dbgs()
-          << "\n================ SENSITIVITY MATCHER =============== \n");
       SensitivityMatcher sens_matcher{};
       MatchFinder matchRegistry{};
       sens_matcher.registerMatchers(matchRegistry);
       matchRegistry.match(*constructor.getConstructorDecl(), getContext());
-
-      LLVM_DEBUG(sens_matcher.dump();
-                 llvm::dbgs() << "================ END =============== \n";);
 
       for (size_t i{0}; i < entryFunctions->size(); i++) {
         EntryFunctionContainer *ef{(*entryFunctions)[i]};
@@ -211,6 +274,7 @@ bool SystemCConsumer::fire() {
       //*p_dummy_module_decl = *add_module_decl;
       // systemcModel_->addModuleDecl(p_dummy_module_decl);
       module_decl_instances.push_back(add_module_decl);
+      */
     }
     LLVM_DEBUG(llvm::dbgs() << "\n";);
 

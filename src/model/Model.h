@@ -40,10 +40,11 @@ public:
   Model();
   ~Model();
 
-  //void addSCModules(FindSCModules *);
+  // deprecated
   void addModuleDecl(ModuleDecl *);
-
   void addModuleDeclInstances(ModuleDecl *, vector<ModuleDecl *>);
+
+  void addInstance( ModuleDecl * );
   void addSimulationTime(FindSimTime::simulationTimeMapType);
   void addGlobalEvents(FindGlobalEvents::globalEventMapType);
   void addNetlist(FindNetlist &);
@@ -68,8 +69,12 @@ private:
   Model(const Model &);
 
 protected:
+  // deprecated
   moduleMapType modules_;
   moduleInstanceMapType module_instance_map_;
+
+  std::vector<ModuleDecl*> module_instances_;
+
   FindSimTime::simulationTimeMapType simulation_time_;
   eventMapType event_map_;
   FunctionDecl *scmain_function_decl_;

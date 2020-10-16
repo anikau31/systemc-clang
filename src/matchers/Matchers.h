@@ -3,6 +3,7 @@
 #include <map>
 #include <tuple>
 #include <vector>
+#include <assert.h>
 
 #include "InstanceMatcher.h"
 #include "ModuleDecl.h"
@@ -194,7 +195,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     instance_matcher_.dump();
 
     auto instance_map{instance_matcher_.getInstanceMap()};
+    // Each inst is of type pair<Decl*, ModuleInstancetype>
     for (auto inst : instance_map) {
+      ModuleInstanceType instance{ inst.second };
+
       llvm::outs() << "############### ====> INST: " << inst.first << "\n";
       clang::CXXRecordDecl *decl{
           dyn_cast<clang::CXXRecordDecl>(inst.second.decl)};
@@ -206,7 +210,13 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
           DeclarationInstancePairType(decl, instance_list));
 
       // This is the new data structure that uses ModuleDecl internally.
+      if (instance_list.size() > 1 ) {
+        assert(true);
+
+      }
       auto add_module{new ModuleDecl(name, decl)};
+      add_module->setInstanceInfo(instance);
+
       modules_.insert(
           std::pair<clang::CXXRecordDecl *, ModuleDecl *>(decl, add_module));
 
