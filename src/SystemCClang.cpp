@@ -25,7 +25,7 @@ void SystemCConsumer::populateNestedModules(
     ModuleDecl *child{
         systemcModel_->getInstance(module_inst.getInstanceDecl())};
 
-    LLVM_DEBUG(llvm::dbgs() << "# child instance decl "
+    LLVM_DEBUG(llvm::dbgs() << "\n# child instance decl "
                             << module_inst.getInstanceDecl() << "\n");
     // module_inst.getInstanceDecl()->dump();
 
@@ -103,6 +103,8 @@ bool SystemCConsumer::fire() {
 
   llvm::outs()
       << "############# ============= NEW FIRE ============ ################\n";
+  llvm::outs() << "Size of module instances: " << found_module_declarations.size() << "\n";
+
   for (const auto &inst : found_module_declarations) {
     auto cxx_decl{inst.first};
     ModuleDecl *add_module_decl{inst.second};

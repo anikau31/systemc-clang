@@ -343,6 +343,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       }
       LLVM_DEBUG(llvm::dbgs() << "Dump the port\n"; pb->dump();
                  llvm::dbgs() << "End dump of sun\n";);
+
       instance_module_decl->addPortBinding(port_name, pb);
       instance_module_decl->dumpPortBinding();
     }
@@ -351,6 +352,17 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   void dump() {
     // Dump out all the module instances.
     //
+    auto instances{ model_->getInstances() };
+
+    for (auto const &inst: instances) {
+      auto port_bindings{inst->getPortBindings()};
+
+      for (auto const &p : port_bindings) {
+        p.second->dump();
+      }
+    }
+
+    /*
     auto instances_map{module_matcher_->getInstances()};
 
     for (const auto &inst : instances_map) {
@@ -370,6 +382,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         }
       }
     }
+    */
   }
 };
 };  // namespace sc_ast_matchers

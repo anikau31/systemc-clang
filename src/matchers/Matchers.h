@@ -50,7 +50,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
   /// This will store all the modules as ModuleDecl.
   typedef std::pair<clang::CXXRecordDecl *, ModuleDecl *> ModulePairType;
-  typedef std::map<clang::CXXRecordDecl *, ModuleDecl *> ModuleMapType;
+  typedef std::multimap<clang::CXXRecordDecl *, ModuleDecl *> ModuleMapType;
 
  private:
   // std::string top_module_decl_;

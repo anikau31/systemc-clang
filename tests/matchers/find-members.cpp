@@ -30,7 +30,7 @@ bool find_name(std::vector<T> &names, const T &find_name) {
 // This test works
 TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "xor-hierarchy.cpp")};
+      systemc_clang::test_data_dir, "xor-hierarchy-input.cpp")};
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)

@@ -12,7 +12,8 @@ using namespace sc_ast_matchers;
 
 TEST_CASE("Only parse a single top-level module", "[parsing]") {
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "xor-hierarchy.cpp")};
+      systemc_clang::test_data_dir, "xor-hierarchy-input.cpp")};
+  llvm::DebugFlag = true;
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
@@ -65,7 +66,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
     REQUIRE(found_decl->getSignals().size() == 3);
     REQUIRE(found_decl->getOtherVars().size() == 0);
     // Other sc_module instances are recognized as others.
-    REQUIRE(found_decl->getSubmodules().size() == 4);
+    REQUIRE(found_decl->getNestedModules().size() == 4);
 
     // Check how many nested modules it has.
     // It should have 4: N1 - N4

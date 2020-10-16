@@ -215,13 +215,17 @@ ModuleDecl *Model::getInstance(Decl *instance_decl) {
   // for (auto const &element : module_instance_map_) {
     // auto instance_list{element.second};
 //
+  for (auto const &inst: module_instances_) {
+    llvm::outs() << inst->getInstanceDecl() << ": " << inst->getInstanceName() << "\n";
+  }
+
     auto test_module_it =
         std::find_if(module_instances_.begin(), module_instances_.end(),
                      [instance_decl](const auto &instance) {
                        return (instance->getInstanceDecl() == instance_decl);
                      });
     if (test_module_it != module_instances_.end()) {
-      llvm::outs() << "Found";
+      llvm::outs() << "Found\n";
       return *test_module_it;
     }
   return nullptr;

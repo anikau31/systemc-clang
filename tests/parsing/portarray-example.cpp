@@ -73,6 +73,6 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
     REQUIRE(found_decl->getOPorts().size() == 3);
     REQUIRE(found_decl->getOtherVars().size() == 3);
-    REQUIRE(found_decl->getSubmodules().size() == 2);
+    REQUIRE(found_decl->getNestedModules().size() == 2);
   }
 }
