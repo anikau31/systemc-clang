@@ -132,7 +132,7 @@ int sc_main(int argc, char *argv[]) {
   auto model{systemc_clang_consumer.getSystemCModel()};
 
   // This provides the module declarations.
-  auto module_decl{model->getModuleDecl()};
+  auto instances{model->getInstances()};
   auto module_instance_map{model->getModuleInstanceMap()};
 
   // Want to find an instance named "testing".
@@ -142,10 +142,10 @@ int sc_main(int argc, char *argv[]) {
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
-    INFO("Checking number of sc_module declarations found: "
-         << module_decl.size());
+    INFO("Checking number of sc_module instances found: "
+         << instances.size());
 
-    REQUIRE(module_decl.size() == 3);
+    REQUIRE(instances.size() == 3);
 
     REQUIRE(test_module != nullptr);
     REQUIRE(simple_module != nullptr);

@@ -27,7 +27,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   sc.setTopModule(top);
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
-  auto module_decl{model->getModuleDecl()};
+  auto instances{model->getInstances()};
   //
   // auto found_module{std::find_if(module_decl.begin(), module_decl.end(),
   // [&top](const auto &element) {
@@ -36,7 +36,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   //
 
   // The model has 3 module declarations.
-  REQUIRE(module_decl.size() == 4);
+  REQUIRE(instances.size() == 4);
   ModuleDecl *found_module{model->getInstance("non-templated-module-instance")};
   SECTION("Testing top-level module: non_template", "[top-module]") {
     // There should be only one module.
@@ -68,12 +68,12 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   sc.setTopModule(top);
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
-  auto module_decl{model->getModuleDecl()};
+  auto instances{model->getInstances()};
 
   auto found_module_testing{model->getInstance("testing")};
   auto found_module_testing_float{model->getInstance("testing_float_double")};
 
-  REQUIRE(module_decl.size() == 4);
+  REQUIRE(instances.size() == 4);
   SECTION("Testing top-level module: test", "[top module]") {
     // There should be two modules because there are two instances.
     INFO("Top-level module specified as test.");

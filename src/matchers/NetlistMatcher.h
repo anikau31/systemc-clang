@@ -33,29 +33,30 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     // This is the instance type decl
     // llvm::outs() << "=> findModuleDeclInstance: Looking for: " << decl <<
     // "\n";
-    for (auto element : model_->getModuleInstanceMap()) {
-      auto incomplete{element.first};
+    auto instances{ model_->getInstances() };
+    //for (auto const &inst: model_->getInstances()) {
+      //auto incomplete{element.first};
       // llvm::outs() << "=> incomplete: " << incomplete->getName() << "\n";
-      auto instance_list{element.second};
+      //auto instance_list{element.second};
 
-      for (auto const &inst : instance_list) {
+      //for (auto const &inst : instance_list) {
         // This is the instance type decl.
-        clang::Decl *inst_decl{inst->getInstanceDecl()};
+     //   clang::Decl *inst_decl{inst->getInstanceDecl()};
         // llvm::outs() << "=> find: " << decl << " == " << inst_decl << "\n";
-      }
+      //}
       //
       auto found_inst_it =
-          std::find_if(instance_list.begin(), instance_list.end(),
+          std::find_if(instances.begin(), instances.end(),
                        [decl](const auto &instance) {
                          clang::Decl *i{instance->getInstanceDecl()};
                          return (instance->getInstanceDecl() == decl);
                        });
 
-      if (found_inst_it != instance_list.end()) {
+      if (found_inst_it != instances.end()) {
         // llvm::outs() << "=> found the iterator\n";
         return *found_inst_it;
       }
-    }
+    //}
     return nullptr;
   }
 

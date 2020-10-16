@@ -168,49 +168,43 @@ void Model::updateModuleDecl() {
 // }
 //
 const Model::moduleMapType &Model::getModuleDecl() { return modules_; }
+//
+// ModuleDecl *Model::getModuleDeclByInstance(const std::string &inst_name) {
+  // for (auto mod : modules_) {
+    // ModuleDecl *decl{mod.second};
+    // if (decl->getInstanceName() == inst_name) {
+      // return decl;
+    // }
+  // }
+  // return nullptr;
+// }
+//
 
-ModuleDecl *Model::getModuleDeclByInstance(const std::string &inst_name) {
-  /// Iterate over all the modules and match its declaration name.
-  for (auto mod : modules_) {
-    ModuleDecl *decl{mod.second};
-    if (decl->getInstanceName() == inst_name) {
-      return decl;
-    }
-  }
-  return nullptr;
-}
-
-
-ModuleDecl *Model::getModuleDecl(const std::string &decl_name) {
-  /// Iterate over all the modules and match its declaration name.
-  for (auto mod : modules_) {
-    ModuleDecl *decl{mod.second};
-    if (decl->getName() == decl_name) {
-      return decl;
-    }
-  }
-  return nullptr;
-}
-
+// ModuleDecl *Model::getModuleDecl(const std::string &decl_name) {
+  // for (auto mod : modules_) {
+    // ModuleDecl *decl{mod.second};
+    // if (decl->getName() == decl_name) {
+      // return decl;
+    // }
+  // }
+  // return nullptr;
+// }
+//
 // Must specify the instance name.
 ModuleDecl *Model::getInstance(const std::string &instance_name) {
   llvm::outs() << "getInstance\n";
   llvm::outs() << "- Looking for " << instance_name << "\n";
-  for (auto const &element : module_instance_map_) {
-    auto instance_list{element.second};
-
     auto test_module_it = std::find_if(
-        instance_list.begin(), instance_list.end(),
+        module_instances_.begin(), module_instances_.end(),
         [instance_name](const auto &instance) {
           llvm::outs() << "- instance name: " << instance->getInstanceName()
                        << "\n";
           return (instance->getInstanceName() == instance_name);
         });
 
-    if (test_module_it != instance_list.end()) {
+    if (test_module_it != module_instances_.end()) {
       return *test_module_it;
     }
-  }
   return nullptr;
 }
 
@@ -218,23 +212,18 @@ ModuleDecl *Model::getInstance(const std::string &instance_name) {
 ModuleDecl *Model::getInstance(Decl *instance_decl) {
   llvm::outs() << "getInstance Decl to find : " << instance_decl << "\n";
   // std::map<ModuleDecl *, std::vector<ModuleDecl *>> moduleInstanceMapType;
-  for (auto const &element : module_instance_map_) {
-    auto instance_list{element.second};
-
+  // for (auto const &element : module_instance_map_) {
+    // auto instance_list{element.second};
+//
     auto test_module_it =
-        std::find_if(instance_list.begin(), instance_list.end(),
+        std::find_if(module_instances_.begin(), module_instances_.end(),
                      [instance_decl](const auto &instance) {
                        return (instance->getInstanceDecl() == instance_decl);
                      });
-    // for (auto const inst: instance_list) {
-    // llvm::outs() << " => inst decl " << inst->getInstanceDecl() << "\n";
-    // }
-    //
-    if (test_module_it != instance_list.end()) {
+    if (test_module_it != module_instances_.end()) {
       llvm::outs() << "Found";
       return *test_module_it;
     }
-  }
   return nullptr;
 }
 
@@ -242,6 +231,11 @@ Model::entryFunctionGPUMacroMapType Model::getEntryFunctionGPUMacroMap() {
   llvm::errs() << "\n return Size : " << entry_function_gpu_macro_map_.size();
   return entry_function_gpu_macro_map_;
 }
+
+std::vector<ModuleDecl*> &Model::getInstances() {
+  return module_instances_;
+}
+
 
 Model::moduleInstanceMapType &Model::getModuleInstanceMap() {
   return module_instance_map_;
@@ -252,90 +246,11 @@ Model::eventMapType Model::getEventMapType() { return event_map_; }
 unsigned int Model::getNumEvents() { return (event_map_.size() - 3); }
 
 void Model::dump(llvm::raw_ostream &os) {
-  os << "-- Number of sc_module instances: " << modules_.size() << "\n";
-  os << "-- Number of sc_module instances in map: "
-     << module_instance_map_.size() << "\n";
+  os << "-- Number of sc_module instances: " << module_instances_.size() << "\n";
 
-  /*
-  for (const auto &mod : modules_) {
-    // <string, ModuleDecl*>
-    auto decl{mod.second};
-    os << "-- Instance name: " << decl->getInstanceName() << "\n";
-    decl->dump(os);
+  for (const auto &inst : module_instances_) {
+      os << "-- Instance name: " << inst->getInstanceName() << "\n";
+      inst->dump(os);
   }
-  */
-
-  for (const auto &instmap : module_instance_map_) {
-    auto module_decl{instmap.first};
-    auto instances{instmap.second};
-
-    for (const auto &instance : instances) {
-      os << "-- Instance name: " << instance->getInstanceName() << "\n";
-      instance->dump(os);
-    }
-  }
-  os << "Done dump in model\n";
-  /*
-
-  for (Model::moduleMapType::iterator mit = modules_.begin();
-       mit != modules_.end(); mit++) {
-    // Second is the ModuleDecl type.
-
-    os << "\n";
-    vector<ModuleDecl *> instanceVec = module_instance_map_[mit->second];
-    os << " Module " << mit->first << ": " << instanceVec.size()
-       << " instances.";
-    for (size_t i = 0; i < instanceVec.size(); i++) {
-      //			os <<", instance: " << i + 1 << " ";
-      instanceVec.at(i)->dump(os);
-    }
-  }
-  os << "\n\n";
-  */
-
-  /*
-  os << "# Global events:\n";
-  for (Model::eventMapType::iterator it = event_map_.begin(),
-                                     ite = event_map_.end();
-       it != ite; it++) {
-    os << "   Event: " << it->first << "  VarDecl: " << it->second << "\n";
-  }
-
   os << "\n";
-  os << "# Simulation time: ";
-  for (FindSimTime::simulationTimeMapType::iterator
-           it = simulation_time_.begin(),
-           eit = simulation_time_.end();
-       it != eit; it++) {
-    os << it->first << " " << it->second;
-  }
-
-  */
-  os << "\n\n";
-  os << "# Netlist: ";
-  for (FindNetlist::instanceModuleMapType::iterator
-           it = instance_module_map_.begin(),
-           eit = instance_module_map_.end();
-       it != eit; it++) {
-    os << "\n";
-    os << "Instance Name: " << it->first << ", module name : " << it->second;
-    std::string instanceName = it->first;
-    if (port_signal_instance_map_.find(instanceName) !=
-        port_signal_instance_map_.end()) {
-      FindNetlist::instancePortSignalMapType::iterator
-          instancePortSignalMapFound =
-              port_signal_instance_map_.find(instanceName);
-      FindNetlist::portSignalMapType portSignalMap =
-          instancePortSignalMapFound->second;
-      for (FindNetlist::portSignalMapType::iterator pit = portSignalMap.begin(),
-                                                    pite = portSignalMap.end();
-           pit != pite; pit++) {
-        os << "\n";
-        os << "Port: " << pit->first << " bound to signal " << pit->second;
-      }
-    } else {
-      os << "\n No instance name found ////// weird.";
-    }
-    os << "\n ------------------------------------------------------\n";
-  }
 }
