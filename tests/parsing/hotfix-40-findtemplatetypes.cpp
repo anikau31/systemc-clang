@@ -210,7 +210,6 @@ int sc_main(int argc, char *argv[]) {
 
   // This provides the module declarations.
   auto instances{model->getInstances()};
-  auto module_instance_map{model->getModuleInstanceMap()};
 
   // Want to find an instance named "testing".
 
@@ -225,7 +224,6 @@ int sc_main(int argc, char *argv[]) {
          << instances.size());
 
     // There are two modules: ram, test.
-    // REQUIRE(module_instance_map.size() == 2 );
     REQUIRE(instances.size() == 2);
     REQUIRE(ram_module != nullptr);
     REQUIRE(test_module != nullptr);

@@ -26,7 +26,6 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   // sc.setTopModule(top);
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
-  auto module_instances{model->getModuleInstanceMap()};
   /*
   auto module_decl{model->getModuleDecl()};
 

@@ -73,7 +73,6 @@ int sc_main() {
 
   // This provides the module declarations.
   auto instances{model->getInstances()};
-  auto module_instance_map{model->getModuleInstanceMap()};
 
   // Want to find an instance named "counter_instance".
   ModuleDecl *test_module{model->getInstance("counter_instance")};

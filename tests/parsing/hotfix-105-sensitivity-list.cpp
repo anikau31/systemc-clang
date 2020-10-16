@@ -59,7 +59,6 @@ int sc_main(int argc, char *argv[]) {
 
   // This provides the module declarations.
   auto instances{model->getInstances()};
-  auto module_instance_map{model->getModuleInstanceMap()};
 
   // Want to find an instance named "testing".
 

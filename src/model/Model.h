@@ -60,10 +60,9 @@ public:
 
   entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
   eventMapType getEventMapType();
-  moduleInstanceMapType & getModuleInstanceMap();
   std::vector<ModuleDecl*> &getInstances();
   unsigned int getNumEvents();
-  vector<Transition *> getGSauto();
+  std::vector<Transition *> getGSauto();
   void dump(raw_ostream &);
 
 private:
@@ -72,7 +71,7 @@ private:
 protected:
   // deprecated
   moduleMapType modules_;
-  moduleInstanceMapType module_instance_map_;
+  //moduleInstanceMapType module_instance_map_;
 
   std::vector<ModuleDecl*> module_instances_;
 

@@ -15,8 +15,9 @@ SC_MODULE(lift) {
 };
 
 SC_MODULE(ports_arrays) {
-  //lift<int> submodules[2];
-  //lift<int> submodules_2d[2][3];
+  //lift<int> submodule;
+   lift<int> submodules[2];
+  // lift<int> submodules_2d[2][3];
   //
 
   sc_in<sc_uint<2>> a[4];
@@ -39,30 +40,29 @@ SC_MODULE(ports_arrays) {
     }
   }
 
-  SC_CTOR(ports_arrays) 
-    // :
-             // submodules{{"first_submod"}, {"second_submod"}}
+  SC_CTOR(ports_arrays)
+      : 
+        //submodule{"submodule_single"}
+   submodules{{"first_submod"}, {"second_submod"}}
 
-  //, 
+  //,
   // submodules_2d{
-    // {{{"submod_0_0"}}, {{"submod_0_1"}}, {{"submod_0_2"}}},
-    // {{{"submod_1_0"}}, {{"submod_1_1"}}, {{"submod_1_2"}}},
+  // {{{"submod_0_0"}}, {{"submod_0_1"}}, {{"submod_0_2"}}},
+  // {{{"submod_1_0"}}, {{"submod_1_1"}}, {{"submod_1_2"}}},
   // }
   {
-            //
-       //     submodules.clk(test);
-  // submodules[0].clk(test);
-  // submodules[1].clk(test);
+    //
+    //submodule.clk(test);
+    submodules[0].clk(test);
+    submodules[1].clk(test);
 
-
-  int j;
-  SC_METHOD(body);
-  for (j = 0; j < 4; j++) {
-    sensitive << a[j] << b[j];
+    int j;
+    SC_METHOD(body);
+    for (j = 0; j < 4; j++) {
+      sensitive << a[j] << b[j];
+    }
   }
-}
-}
-;
+};
 
 SC_MODULE(DUT) {
   sc_signal<sc_uint<2>> as[4];
