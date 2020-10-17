@@ -7,7 +7,7 @@
 #include "FindNetlist.h"
 #include "FindSimTime.h"
 #include "ModuleDecl.h"
-//#include "FindSCModules.h"
+
 #include <map>
 #include <string>
 #include <vector>

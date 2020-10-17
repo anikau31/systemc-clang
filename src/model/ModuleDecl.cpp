@@ -40,7 +40,7 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
   out_ports_ = from.out_ports_;
   inout_ports_ = from.inout_ports_;
   other_fields_ = from.other_fields_;
-  submodules_ = from.submodules_;
+  //submodules_ = from.submodules_;
 
   istreamports_ = from.istreamports_;
   ostreamports_ = from.ostreamports_;
@@ -77,7 +77,7 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   out_ports_ = from.out_ports_;
   inout_ports_ = from.inout_ports_;
   other_fields_ = from.other_fields_;
-  submodules_ = from.submodules_;
+  //submodules_ = from.submodules_;
 
   istreamports_ = from.istreamports_;
   ostreamports_ = from.ostreamports_;
@@ -115,7 +115,7 @@ void ModuleDecl::clearOnlyGlobal() {
   out_ports_.clear();
   inout_ports_.clear();
   other_fields_.clear();
-  submodules_.clear();
+  //submodules_.clear();
   istreamports_.clear();
   ostreamports_.clear();
   signals_.clear();
@@ -174,12 +174,11 @@ ModuleDecl::~ModuleDecl() {
     delete get<1>(other);
   }
   other_fields_.clear();
-
-  for (auto &sm : submodules_) {
-    // Second is the PortDecl*.
-    delete get<1>(sm);
-  }
-  submodules_.clear();
+//
+  // for (auto &sm : submodules_) {
+    // delete get<1>(sm);
+  // }
+  // submodules_.clear();
 
   // Delete EntryFunction container
   for (auto &ef : vef_) {
@@ -246,9 +245,9 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
               back_inserter(other_fields_));
   }
 
-  if (port_type == "submodules") {
-    std::copy(begin(found_ports), end(found_ports), back_inserter(submodules_));
-  }
+  // if (port_type == "submodules") {
+    // std::copy(begin(found_ports), end(found_ports), back_inserter(submodules_));
+  // }
 
   if (port_type == "sc_signal") {
     /// SignalDecl derived from PortDecl
@@ -387,7 +386,7 @@ ModuleDecl::portMapType ModuleDecl::getIOPorts() { return inout_ports_; }
 
 ModuleDecl::portMapType ModuleDecl::getOtherVars() { return other_fields_; }
 
-ModuleDecl::portMapType ModuleDecl::getSubmodules() { return submodules_; }
+//ModuleDecl::portMapType ModuleDecl::getSubmodules() { return submodules_; }
 
 ModuleDecl::portMapType ModuleDecl::getInputStreamPorts() {
   return istreamports_;
@@ -612,7 +611,7 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   os << "\nIstream ports: " << istreamports_.size() << "\n";
   os << "\nOstream ports: " << ostreamports_.size() << "\n";
   os << "\nOther fields: " << other_fields_.size() << "\n";
-  os << "\nSubmodules: " << submodules_.size() << "\n";
+  os << "\nSubmodules: " << nested_modules_.size() << "\n";
 
   os << "Ports\n";
   os << iport_j.dump(4) << "\n"
