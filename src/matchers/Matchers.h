@@ -54,11 +54,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
  private:
   // std::string top_module_decl_;
-  ModuleDeclarationType found_declarations_;
-  ModuleDeclarationType found_template_declarations_;
   // One of those needs to be removed.
-  // ModuleDeclarationType pruned_declarations_;
-  // ModuleDeclarationMapType pruned_declarations_map_;
 
   DeclarationsToInstancesMapType declaration_instance_map_;
 
@@ -119,21 +115,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
                               << decl->getIdentifier()->getNameStart()
                               << " CXXRecordDecl*: " << decl << "\n");
       std::string name{decl->getIdentifier()->getNameStart()};
-      // decl->dump();
-      //
-      // TODO: Should we need this separation now?
-      // It seems that we can simply store them whether they are template
-      // specializations or not.
-      // This is necessary because of the way clang represents them in their
-      // AST.
-      //
-      if (isa<clang::ClassTemplateSpecializationDecl>(decl)) {
-        found_template_declarations_.push_back(std::make_tuple(name, decl));
-      } else {
-        found_declarations_.push_back(std::make_tuple(name, decl));
-      }
-
-      /*
+            /*
       // This is the new data structure that uses ModuleDecl internally.
       // Unpruned
       auto add_module{new ModuleDecl(name, decl)};
@@ -246,22 +228,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   }
 
   void dump() {
-    // llvm::outs() << "[ModuleDeclarationMatcher] Top-level module: "
-    // << top_module_decl_ << "\n";
-    llvm::outs()
-        << "[ModuleDeclarationMatcher] Non-template module declarations: "
-        << found_declarations_.size() << "\n";
-    for (const auto &i : found_declarations_) {
-      llvm::outs() << "module name     : " << get<0>(i) << ", " << get<1>(i)
-                   << "\n";
-    }
-
-    llvm::outs() << "Template module declarations: "
-                 << found_template_declarations_.size() << "\n";
-    for (const auto &i : found_template_declarations_) {
-      llvm::outs() << "template module name: " << get<0>(i) << ", " << get<1>(i)
-                   << "\n";
-    }
     llvm::outs() << "[DBG] Module declarations: " << modules_.size() << "\n";
     for (const auto &i : modules_) {
       auto cxx_decl{i.first};
@@ -271,7 +237,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
       llvm::outs() << "CXXRecordDecl* " << cxx_decl
                    << ", module name: " << decl_name << "\n";
-      // module_decl->dump(llvm::outs());
     }
 
     // Print the instances.
