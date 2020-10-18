@@ -100,6 +100,8 @@ class ModuleDecl {
   Decl *getInstanceDecl();
   bool isInstanceFieldDecl() const;
 
+  ModuleInstanceType getInstanceInfo();
+
   bool isModuleClassDeclNull();
   portMapType getOPorts();
   portMapType getIPorts();

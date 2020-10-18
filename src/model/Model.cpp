@@ -6,6 +6,25 @@ using namespace systemc_clang;
 
 Model::Model() {}
 
+void Model::populateNestedModules() {
+  llvm::outs() << "!@!@!@@!@@@@@@@@@@@@@@@@@@@@@@@@ POP NESTED @@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+  for (ModuleDecl *inst: module_instances_) {
+    ModuleInstanceType instance_info{ inst->getInstanceInfo() };
+    instance_info.dump();
+    llvm::outs() << "ModuleDecl's instance delc: " << inst->getInstanceDecl() << "  " << inst->getName() << "\n";
+
+     ModuleDecl *parent{ getInstance(instance_info.getParentDecl()) };
+
+     if ((parent != nullptr) && (parent != inst) ) {
+      parent->addNestedModule(inst);
+      llvm::outs() << "Add child " << inst->getName() << " into " << parent->getName() << "\n";
+
+     }
+  }
+  llvm::outs() << "!@!@!@@!@@@@@@@@@@@@@@@@@@@@@@@@ END POP NESTED @@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+}
+
+
 Model::~Model() {
   LLVM_DEBUG(llvm::dbgs() << "\n"
                           << "~Model\n";);

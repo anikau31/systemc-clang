@@ -15,26 +15,11 @@
 using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
-
-/// hasTemplateDeclParent
-/// A matcher to detect if a parent's type is a ClassTemplateDecl or not.
-//
-AST_MATCHER(clang::FieldDecl, hasTemplateDeclParent) {
-  auto parent{Node.getParent()};
-
-  if (isa<clang::ClassTemplateDecl>(parent)) {
-    return false;
-  }
-
-  // if (isa<clang::ClassTemplateSpecializationDecl>(parent)) {
-  //}
-
-  return true;
-};
+  using namespace clang;
 
 class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
  private:
-  clang::StringLiteral *instance_literal_;
+  clang::StringLiteral* instance_literal_;
 
  public:
   clang::StringLiteral *getInstanceLiteral() const { return instance_literal_; }
@@ -42,21 +27,21 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
   void registerMatchers(MatchFinder &finder) {
     instance_literal_ = nullptr;
     auto arg_matcher =
-        cxxConstructExpr(hasDescendant(cxxConstructExpr(
-                             hasArgument(0, stringLiteral().bind("inst_arg")))))
-            .bind("ctor_expr");
-
-    // cxxConstructExpr(hasArgument(0,
-    // stringLiteral().bind("inst_arg"))).bind("ctor_expr");
+        cxxConstructExpr(hasDescendant(
+              cxxConstructExpr(hasArgument(0, 
+                  stringLiteral().bind("inst_arg"))
+                )
+              )
+            ).bind("ctor_expr");
 
     finder.addMatcher(arg_matcher, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
-    auto ctor_expr = const_cast<CXXConstructExpr *>(
-        result.Nodes.getNodeAs<CXXConstructExpr>("ctor_expr"));
-    auto inst_arg = const_cast<StringLiteral *>(
-        result.Nodes.getNodeAs<StringLiteral>("inst_arg"));
+    auto ctor_expr = const_cast<clang::CXXConstructExpr *>(
+        result.Nodes.getNodeAs<clang::CXXConstructExpr>("ctor_expr"));
+    auto inst_arg = const_cast<clang::StringLiteral *>(
+        result.Nodes.getNodeAs<clang::StringLiteral>("inst_arg"));
 
     LLVM_DEBUG(llvm::dbgs() << "## InstanceArgumentMatcher\n");
     if (ctor_expr && inst_arg) {
@@ -132,7 +117,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       auto instance{element.second};
 
       // TODO factor out this code to be handled for both.
-      if (auto *p_field{dyn_cast<clang::FieldDecl>(p_field_var_decl)}) {
+      if (auto *p_field{clang::dyn_cast<clang::FieldDecl>(p_field_var_decl)}) {
         auto qtype{p_field->getType().getTypePtr()};
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
@@ -149,7 +134,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         }
       } else {
         // This is a VarDecl instance.
-        auto p_var{dyn_cast<clang::VarDecl>(p_field_var_decl)};
+        auto p_var{clang::dyn_cast<clang::VarDecl>(p_field_var_decl)};
         auto qtype{p_var->getType().getTypePtr()};
 
         std::string dbg{"[InstanceMatcher] VarDecl"};
@@ -349,13 +334,13 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
-//    auto found_it{instance_map_.find(instance_decl)};
- //   if (found_it == instance_map_.end()) {
-      LLVM_DEBUG(llvm::dbgs() << "Inserting VD instance"
-                              << "\n");
-      instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
-          instance_decl, parsed_instance));
- //   }
+    //    auto found_it{instance_map_.find(instance_decl)};
+    //   if (found_it == instance_map_.end()) {
+    LLVM_DEBUG(llvm::dbgs() << "Inserting VD instance"
+                            << "\n");
+    instance_map_.insert(
+        std::pair<Decl *, ModuleInstanceType>(instance_decl, parsed_instance));
+    //   }
   }
 
   void parseFieldDecl(clang::FieldDecl *instance_decl,
@@ -438,8 +423,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       // llvm::outs() << "### DEBUG\n";
       // ctor_init->getInit()->dump();
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
-      clang::CXXConstructExpr *cexpr{dyn_cast<clang::CXXConstructExpr>(expr)};
-      clang::InitListExpr *iexpr{dyn_cast<clang::InitListExpr>(expr)};
+      clang::CXXConstructExpr *cexpr{clang::dyn_cast<clang::CXXConstructExpr>(expr)};
+      clang::InitListExpr *iexpr{clang::dyn_cast<clang::InitListExpr>(expr)};
 
       // For arrays, an InitListExpr is generated.
       // For non-arrays, CXXConstructExpr is directly castable.
@@ -450,7 +435,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         llvm::outs() << "### IEXPR is not NULL\n";
 
         for (auto init : iexpr->inits()) {
-          cexpr = dyn_cast<clang::CXXConstructExpr>(init);
+          cexpr = clang::dyn_cast<clang::CXXConstructExpr>(init);
           // TODO: move into a function
 
           MatchFinder iarg_registry{};
@@ -512,7 +497,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       auto instance_field{instance.decl};
       llvm::outs() << " instance_field*: " << instance_field << "\n";
 
-      if (dyn_cast<clang::FieldDecl>(instance_field)) {
+      if (clang::dyn_cast<clang::FieldDecl>(instance_field)) {
         if (instance.is_field_decl) {
           llvm::outs() << " FieldDecl ";
         } else {

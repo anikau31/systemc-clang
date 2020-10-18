@@ -196,6 +196,9 @@ void ModuleDecl::setInstanceInfo(
   instance_info_ = info;
 }
 
+
+ModuleInstanceType ModuleDecl::getInstanceInfo() { return instance_info_; }
+
 // void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name;
 // }
 //
@@ -601,7 +604,7 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
   submodules_j["number_of_submodules"] = nested_modules_.size();
   for (auto mit : nested_modules_) {
     auto name = mit->getName();
-    submodules_j[name] = mit->getInstanceName();
+    submodules_j[name].push_back(mit->getInstanceName());
   }
 
   os << "Start printing ports\n";

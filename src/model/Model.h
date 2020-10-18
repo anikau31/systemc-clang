@@ -48,6 +48,7 @@ class Model {
   void addSCMain(FunctionDecl *);
   void addEntryFunctionGPUMacroMap(entryFunctionGPUMacroMapType);
   void updateModuleDecl();
+  void populateNestedModules();
 
   // const moduleMapType &getModuleDecl();
   ModuleDecl *getInstance(const std::string &instance_name);

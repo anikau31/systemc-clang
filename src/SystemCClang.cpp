@@ -44,6 +44,9 @@ void SystemCConsumer::populateNestedModules(
     if (child && parent) {
       LLVM_DEBUG(llvm::dbgs() << "Add a child-parent relationship\n");
       parent->addNestedModule(child);
+      llvm::outs() << " =============================== DEBUG ==========================\n";
+      parent->dump(llvm::outs());
+      llvm::outs() << " ========================  END  DEBUG ==========================\n";
     }
     LLVM_DEBUG(llvm::dbgs() << "\n";);
   }
@@ -179,7 +182,9 @@ bool SystemCConsumer::fire() {
   auto instance_map{instance_matcher.getInstanceMap()};
   LLVM_DEBUG(
       llvm::dbgs() << "- Print out all the instances in the instance map\n";);
-  populateNestedModules(instance_map);
+  //populateNestedModules(instance_map);
+  systemcModel_->populateNestedModules();
+
 
   LLVM_DEBUG(
       llvm::dbgs() << "===========END  Populate sub-modules ============= \n";);
