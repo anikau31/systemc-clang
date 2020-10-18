@@ -13,45 +13,6 @@ using namespace clang;
 
 using namespace sc_ast_matchers;
 
-// Private methods
-void SystemCConsumer::populateNestedModules(
-    const InstanceMatcher::InstanceDeclarations &instance_map) {
-  // Decl* => ModuleInstanceType
-  for (auto const &inst : instance_map) {
-    // get<0>(inst) is the Decl*, and get<1>(inst) is the ModuleInstanceType
-    ModuleInstanceType module_inst{get<1>(inst)};
-    LLVM_DEBUG(module_inst.dump());
-    // Match with the same InstanceTypeDecl
-    ModuleDecl *child{
-        systemcModel_->getInstance(module_inst.getInstanceDecl())};
-
-    LLVM_DEBUG(llvm::dbgs() << "\n# child instance decl "
-                            << module_inst.getInstanceDecl() << "\n");
-    // module_inst.getInstanceDecl()->dump();
-
-    ModuleDecl *parent{systemcModel_->getInstance(module_inst.getParentDecl())};
-
-    if (child) {
-      LLVM_DEBUG(llvm::dbgs() << "- child " << child->getName() << " : "
-                              << child->getInstanceName() << "\n");
-    }
-    if (parent) {
-      LLVM_DEBUG(llvm::dbgs() << "- parent " << parent->getName() << " : "
-                              << parent->getInstanceName() << "\n");
-    }
-
-    // Insert the child into the parent.
-    if (child && parent) {
-      LLVM_DEBUG(llvm::dbgs() << "Add a child-parent relationship\n");
-      parent->addNestedModule(child);
-      llvm::outs() << " =============================== DEBUG ==========================\n";
-      parent->dump(llvm::outs());
-      llvm::outs() << " ========================  END  DEBUG ==========================\n";
-    }
-    LLVM_DEBUG(llvm::dbgs() << "\n";);
-  }
-}
-
 bool SystemCConsumer::preFire() { return true; }
 
 bool SystemCConsumer::postFire() { return true; }
@@ -182,7 +143,6 @@ bool SystemCConsumer::fire() {
   auto instance_map{instance_matcher.getInstanceMap()};
   LLVM_DEBUG(
       llvm::dbgs() << "- Print out all the instances in the instance map\n";);
-  //populateNestedModules(instance_map);
   systemcModel_->populateNestedModules();
 
 

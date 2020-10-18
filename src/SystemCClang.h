@@ -36,7 +36,6 @@
 #include "matchers/FindNetlist.h"
 #include "matchers/FindNotify.h"
 #include "matchers/FindSCMain.h"
-//#include "matchers/FindSensitivity.h"
 #include "matchers/FindSimTime.h"
 #include "matchers/FindTLMInterfaces.h"
 #include "matchers/FindTemplateParameters.h"
@@ -80,10 +79,6 @@ class SystemCConsumer : public ASTConsumer,
   virtual bool postFire();
 
   virtual void HandleTranslationUnit(ASTContext &context);
-
- private:
-  void populateNestedModules(
-      const InstanceMatcher::InstanceDeclarations &instance_map);
 
  private:
   std::string top_;

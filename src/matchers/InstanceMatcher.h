@@ -224,6 +224,34 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                                  )
                                )//hasType
 
+                              , 
+                            //2d
+                              hasType(
+                               hasUnqualifiedDesugaredType(
+                                 arrayType(
+                                   hasElementType(hasUnqualifiedDesugaredType(
+                                       arrayType(hasElementType(hasUnqualifiedDesugaredType(
+                                       //
+                                       //
+                                           recordType(
+                                             hasDeclaration(
+                                              cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                              ) //hasDeclaration
+                                           )// recordType
+                                           //
+                                           //
+                                           )
+                                         )
+                                         )
+                                           )
+                                         )
+                                   )//arrayType
+                                 )
+                               )//hasType
+
+
+
+
                           ) //anyOf
                         ,
                       fieldDecl().bind("ctor_fd") 
@@ -420,11 +448,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                  << " ctor_fd " << ctor_fd->getNameAsString() << "\n");
       LLVM_DEBUG(ctor_fd->dump());
 
-      // llvm::outs() << "### DEBUG\n";
-      // ctor_init->getInit()->dump();
+      llvm::outs() << "### DEBUG\n";
+      //ctor_init->getInit()->dump();
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
       clang::CXXConstructExpr *cexpr{clang::dyn_cast<clang::CXXConstructExpr>(expr)};
       clang::InitListExpr *iexpr{clang::dyn_cast<clang::InitListExpr>(expr)};
+
 
       // For arrays, an InitListExpr is generated.
       // For non-arrays, CXXConstructExpr is directly castable.
@@ -435,6 +464,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         llvm::outs() << "### IEXPR is not NULL\n";
 
         for (auto init : iexpr->inits()) {
+          llvm::outs() << "    Go through the initializer list\n";
           cexpr = clang::dyn_cast<clang::CXXConstructExpr>(init);
           // TODO: move into a function
 
@@ -442,6 +472,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           InstanceArgumentMatcher iarg_matcher{};
           iarg_matcher.registerMatchers(iarg_registry);
           iarg_registry.match(*cexpr, *result.Context);
+          llvm::outs() << "     Complete instance matcher\n";
 
           LLVM_DEBUG(iarg_matcher.dump(););
 

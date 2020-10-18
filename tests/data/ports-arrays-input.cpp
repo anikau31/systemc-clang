@@ -53,9 +53,10 @@ SC_MODULE(ports_arrays) {
   {
     //
     //submodule.clk(test);
-    submodules[0].clk(test);
-    submodules[1].clk(test);
-
+     submodules[0].clk(test);
+     submodules[1].clk(test);
+//
+    //submodules_2d[0][0].clk(test);
     int j;
     SC_METHOD(body);
     for (j = 0; j < 4; j++) {

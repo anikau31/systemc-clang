@@ -19,12 +19,6 @@ using namespace systemc_clang;
 
 namespace sc_ast_matchers {
 
-template <typename NodeType>
-auto checkMatch(const std::string &name,
-                const MatchFinder::MatchResult &result) {
-  return result.Nodes.getNodeAs<NodeType>(name);
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 /// Class ModuleDeclarationMatcher
