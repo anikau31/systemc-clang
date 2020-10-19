@@ -461,9 +461,10 @@ bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
 
     hNode * h_callp = new hNode(methodname, opc); // list to hold call expr node
 
+    hNodep save_hret = h_ret;
     TraverseStmt(arg); // traverse the x in x.f(5)
 
-    if (h_ret) h_callp -> child_list.push_back(h_ret);
+    if (h_ret && (h_ret != save_hret)) h_callp -> child_list.push_back(h_ret);
 
     for (auto arg : callexpr->arguments()) {
       hNodep save_h_ret = h_ret;

@@ -6566,9 +6566,6 @@
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hMethodCall zhwencode_streamfp_t11_52_2_bits_t64_pack_bits [
-                            hSigAssignR read [
-                              hVarref s_valid NOLIST
-                            ]
                             hVarref _local_0 NOLIST
                             hSigAssignR read [
                               hVarref s_bc NOLIST
@@ -6640,7 +6637,6 @@
                     hBinop = [
                       hVarref _local_4 NOLIST
                       hMethodCall zhwencode_streamfp_t11_52_2_bits_t64_out_bits [
-                        hVarref _local_4 NOLIST
                         hVarref _local_0 NOLIST
                         hBinop && [
                           hVarref _local_2 NOLIST
@@ -6797,7 +6793,6 @@
                     hBinop = [
                       hVarref _local_4 NOLIST
                       hMethodCall zhwencode_streamfp_t11_52_2_bits_t64_out_bits [
-                        hVarref _local_4 NOLIST
                         hVarref _local_0 NOLIST
                         hVarref _local_3 NOLIST
                       ]
