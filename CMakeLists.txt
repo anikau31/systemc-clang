@@ -75,6 +75,13 @@ if (("${HDL}" STREQUAL "ON") OR ("${HDL}" STREQUAL "on"))
   set( PLUGIN_HDL ON)
 endif()
 
+# Disallow in-source builds.
+# Source: https://github.com/opencv/opencv/pull/8582/files<Paste>
+if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}") 
+  message(FATAL_ERROR "
+  FATAL: In-source builds are prohibited.
+         Create a separate directory for build files.")
+endif() 
 
 # Keep tests off by default
 if ("${ENABLE_TESTS}" STREQUAL "")
@@ -83,7 +90,9 @@ else()
   set( TESTS_ON ${ENABLE_TESTS})
   # Check that SYSTEMC_DIR is defined
   if ("${SYSTEMC_DIR}" STREQUAL "")
-    message(FATAL_ERROR "SYSTEMC_DIR should specify path to SystemC. ${HAD_ERROR}")
+    message(FATAL_ERROR "
+    FATAL: SYSTEMC_DIR not set.
+           Specify the path to SystemC in SYSTEMC_DIR. ${HAD_ERROR}")
   endif()
 
 endif()
@@ -99,7 +108,9 @@ else()
   if (V_TESTS_ON)
     if ("${HDL}" STREQUAL "")
       set( PLUGIN_HDL ON )
-      message(WARNING "HDL enabled. HDL must be turned on in order to run Verilog tests")
+      message(WARNING "
+			WARNING: HDL enabled. 
+						   HDL must be turned on in order to run Verilog tests")
     endif()
   endif()
 endif()
@@ -264,7 +275,9 @@ find_program(LLVM_CONFIG_EXE
   PATHS ${LLVM_INSTALL_DIR}/bin/ NO_DEFAULT_PATH)
 
 if(NOT LLVM_CONFIG_EXE)
-  message(FATAL_ERROR "llvm-config not found -- ${LLVM_CONFIG_EXE} ")
+  message(FATAL_ERROR "
+	FATAL: llvm-config not found.
+				 Please review LLVM/Clang installation. -- ${LLVM_CONFIG_EXE} ")
 endif()
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
