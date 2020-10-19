@@ -34,6 +34,7 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
               )
             ).bind("ctor_expr");
 
+
     finder.addMatcher(arg_matcher, this);
   }
 
@@ -449,8 +450,9 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(ctor_fd->dump());
 
       llvm::outs() << "### DEBUG\n";
-      //ctor_init->getInit()->dump();
+      ctor_init->getInit()->dump();
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
+      expr->dump();
       clang::CXXConstructExpr *cexpr{clang::dyn_cast<clang::CXXConstructExpr>(expr)};
       clang::InitListExpr *iexpr{clang::dyn_cast<clang::InitListExpr>(expr)};
 

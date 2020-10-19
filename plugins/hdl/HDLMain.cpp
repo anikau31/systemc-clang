@@ -87,14 +87,14 @@ bool HDLMain::postFire() {
   // vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
   // if (instanceVec.size()<=0) return true;
 //
-  for (auto modinstance: module_instances) { // generate module def for each instance
+//  for (auto modinstance: module_instances) { // generate module def for each instance
     string modname = mod_newn.newname();
-    LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName() << " renamed " << modname<< "\n");
+ //   LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName() << " renamed " << modname<< "\n");
     hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
-    mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(), modname, h_module};
-    SCmodule2hcode(modinstance, h_module, HCodeOut);
+    // mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(), modname, h_module};
+    // SCmodule2hcode(modinstance, h_module, HCodeOut);
     //h_module->print(HCodeOut);
-  }
+//  }
   
   LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
