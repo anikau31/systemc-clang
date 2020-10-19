@@ -54,29 +54,40 @@ bool HDLMain::postFire() {
   // typedef std::vector< modulePairType > moduleMapType;
   // typedef std::pair<std::string, ModuleDecl *> modulePairType;
 
-  Model::moduleMapType modules = model->getModuleDecl();
-  if (modules.size() <= 0) {
-    LLVM_DEBUG(llvm::dbgs() << "no modules, exiting\n");
+  //Model::moduleMapType modules = model->getModuleDecl();
+
+  // The module instances are returned. 
+  std::vector<systemc_clang::ModuleDecl *> module_instances{ model->getInstances() };
+
+  if (module_instances.size() <= 0) {
+    LLVM_DEBUG(llvm::dbgs() << "no module instances exiting\n");
     return true;
   }
 
-  string topmod = getTopModule();
+  std::string topmod = getTopModule();
 
-  Model::modulePairType modpair;
-  ModuleDecl * mod{nullptr};
+  //Model::modulePairType modpair;
+  ModuleDecl *mod{nullptr};
 
   if (topmod != "") {
-    mod = model->getModuleDecl(topmod);
+    // Look through the module instances, and see if the instance name matches to the name provided as an argument. 
+    for (auto const &inst: module_instances) {
+      if (inst->getInstanceName() == topmod) {
+        mod = inst;
+      }
+    }
+    //mod = model->getModuleDecl(topmod);
   }
+
   if (mod==NULL) { // no top level or couldn't find it
-    modpair = modules[0]; // assume first one is top module
-    mod = modpair.second;
+    mod = module_instances[0]; //modules[0]; // assume first one is top module
+    //mod = modpair.second;
   }
 
-  vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
-  if (instanceVec.size()<=0) return true;
-
-  for (auto modinstance: instanceVec) { // generate module def for each instance
+  // vector<ModuleDecl *> instanceVec =model->getModuleInstanceMap()[mod];
+  // if (instanceVec.size()<=0) return true;
+//
+  for (auto modinstance: module_instances) { // generate module def for each instance
     string modname = mod_newn.newname();
     LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName() << " renamed " << modname<< "\n");
     hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
@@ -101,7 +112,7 @@ bool HDLMain::postFire() {
 }
 
 void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module, llvm::raw_fd_ostream &HCodeOut ) {
-  const std::vector<ModuleDecl*> &submodv = mod->getNestedModuleDecl();
+  const std::vector<ModuleDecl*> &submodv = mod->getNestedModules();
   // look at constructor
 
   //LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
