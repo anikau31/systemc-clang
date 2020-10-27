@@ -153,7 +153,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         }
       }
     }
-    LLVM_DEBUG(llvm::outs()
+    LLVM_DEBUG(llvm::dbgs()
                << "=> found_instances: " << found_instances.size() << "\n");
 
     return (found_instances.size() != 0);
@@ -474,7 +474,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           InstanceArgumentMatcher iarg_matcher{};
           iarg_matcher.registerMatchers(iarg_registry);
           iarg_registry.match(*cexpr, *result.Context);
-          llvm::outs() << "     Complete instance matcher\n";
 
           LLVM_DEBUG(iarg_matcher.dump(););
 
@@ -522,19 +521,19 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.
-    llvm::outs() << "################## INSTANCE MATCHER DUMP \n";
+    LLVM_DEBUG(llvm::dbgs() << "################## INSTANCE MATCHER DUMP \n";);
     for (const auto &i : instance_map_) {
       auto instance{i.second};
-      llvm::outs() << "decl* " << i.first << "  " << instance.instance_name;
+      LLVM_DEBUG(llvm::dbgs() << "decl* " << i.first << "  " << instance.instance_name;);
 
       auto instance_field{instance.decl};
-      llvm::outs() << " instance_field*: " << instance_field << "\n";
+      LLVM_DEBUG(llvm::dbgs() << " instance_field*: " << instance_field << "\n";);
 
       if (clang::dyn_cast<clang::FieldDecl>(instance_field)) {
         if (instance.is_field_decl) {
-          llvm::outs() << " FieldDecl ";
+          LLVM_DEBUG(llvm::dbgs() << " FieldDecl ";);
         } else {
-          llvm::outs() << " VarDecl ";
+          LLVM_DEBUG(llvm::dbgs() << " VarDecl ";);
         }
       }
 
