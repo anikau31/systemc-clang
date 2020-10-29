@@ -1,11 +1,11 @@
 #ifndef _TEMPLATE_PARAMETERS_MATCHERS_H_
 #define _TEMPLATE_PARAMETERS_MATCHERS_H_
 
-#include "llvm/Support/Debug.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchersInternal.h"
 #include "clang/ASTMatchers/ASTMatchersMacros.h"
+#include "llvm/Support/Debug.h"
 
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
@@ -16,10 +16,10 @@ using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
 class TemplateParametersMatcher : public MatchFinder::MatchCallback {
- private:
-  std::vector<const FieldDecl*> found_fields;
+private:
+  std::vector<const FieldDecl *> found_fields;
 
- public:
+public:
   void registerMatchers(MatchFinder &finder) {
     // Overview of the matcher
     // Terminology: template parameter refers to the template typename name, and
@@ -73,8 +73,10 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
 
     auto record_type{result.Nodes.getNodeAs<RecordType>("record_type")};
     auto parm_type{result.Nodes.getNodeAs<TemplateTypeParmType>("parm_type")};
-    auto template_special{result.Nodes.getNodeAs<TemplateSpecializationType>("specialization_type")};
-    LLVM_DEBUG(llvm::dbgs() << "=============== TEST Template Parm Matcher ====== \n");
+    auto template_special{result.Nodes.getNodeAs<TemplateSpecializationType>(
+        "specialization_type")};
+    LLVM_DEBUG(llvm::dbgs()
+               << "=============== TEST Template Parm Matcher ====== \n");
 
     if (fd) {
       LLVM_DEBUG(llvm::dbgs() << "Found a FieldDecl\n");
@@ -90,30 +92,31 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
       FindTemplateTypes ftt{};
       ftt.Enumerate(template_special);
       ftt.printTemplateArguments(llvm::outs());
-      LLVM_DEBUG(llvm::dbgs() <<"##### END\n");
+      LLVM_DEBUG(llvm::dbgs() << "##### END\n");
 
       const TemplateArgument &targ{template_special->getArg(0)};
 
       switch (targ.getKind()) {
-        case TemplateArgument::ArgKind::Integral: {
-          auto q{targ.getAsIntegral()};
-          LLVM_DEBUG(llvm::dbgs() <<"@@ Integral: " << q << "\n");
-        }; break;
-        case TemplateArgument::ArgKind::Type: {
-          auto q{targ.getAsType()};
-          auto name{q.getAsString()};
-          LLVM_DEBUG(llvm::dbgs() << "@@ arg: " << name << "\n");
-        }; break;
-        case TemplateArgument::ArgKind::Expression: {
-          Expr *expr{targ.getAsExpr()};
-          DeclRefExpr *dexpr{dyn_cast<DeclRefExpr>(expr)};
-          if (dexpr) {
-            LLVM_DEBUG(llvm::dbgs() << "Template parameter: "
-		       << dexpr->getNameInfo().getAsString() << "\n");
-          }
+      case TemplateArgument::ArgKind::Integral: {
+        auto q{targ.getAsIntegral()};
+        LLVM_DEBUG(llvm::dbgs() << "@@ Integral: " << q << "\n");
+      }; break;
+      case TemplateArgument::ArgKind::Type: {
+        auto q{targ.getAsType()};
+        auto name{q.getAsString()};
+        LLVM_DEBUG(llvm::dbgs() << "@@ arg: " << name << "\n");
+      }; break;
+      case TemplateArgument::ArgKind::Expression: {
+        Expr *expr{targ.getAsExpr()};
+        DeclRefExpr *dexpr{dyn_cast<DeclRefExpr>(expr)};
+        if (dexpr) {
+          LLVM_DEBUG(llvm::dbgs()
+                     << "Template parameter: "
+                     << dexpr->getNameInfo().getAsString() << "\n");
         }
-        default: {
-        }
+      }
+      default: {
+      }
       };
     }
 
@@ -128,10 +131,8 @@ class TemplateParametersMatcher : public MatchFinder::MatchCallback {
     LLVM_DEBUG(llvm::dbgs() << "\n");
   }
 
-  void dump() { }
-  void getFields( std::vector<const FieldDecl *> &flds) {
-    flds = found_fields;
-  }
+  void dump() {}
+  void getFields(std::vector<const FieldDecl *> &flds) { flds = found_fields; }
 };
 
 #endif
