@@ -15,11 +15,11 @@
 using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
-  using namespace clang;
+using namespace clang;
 
 class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
  private:
-  clang::StringLiteral* instance_literal_;
+  clang::StringLiteral *instance_literal_;
 
  public:
   clang::StringLiteral *getInstanceLiteral() const { return instance_literal_; }
@@ -27,13 +27,9 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
   void registerMatchers(MatchFinder &finder) {
     instance_literal_ = nullptr;
     auto arg_matcher =
-        cxxConstructExpr(hasDescendant(
-              cxxConstructExpr(hasArgument(0, 
-                  stringLiteral().bind("inst_arg"))
-                )
-              )
-            ).bind("ctor_expr");
-
+        cxxConstructExpr(hasDescendant(cxxConstructExpr(
+                             hasArgument(0, stringLiteral().bind("inst_arg")))))
+            .bind("ctor_expr");
 
     finder.addMatcher(arg_matcher, this);
   }
@@ -76,7 +72,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   //
 
   typedef std::pair<clang::Decl *, ModuleInstanceType> ModuleInstanceTuple;
-  typedef std::multimap<clang::Decl *, ModuleInstanceType> InstanceDeclarations;
+  typedef std::map<clang::Decl *, ModuleInstanceType> InstanceDeclarations;
 
  private:
   /// Instances can come in two forms:
@@ -204,8 +200,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                             hasUnqualifiedDesugaredType(
                               recordType(
                                 hasDeclaration(
-                                  cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
-                            )))
+                                  cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                )//hasDeclaration
+                              )//recordType
+                            )//hasUnqualifiedDesugaredType
                           )//hasType
 
                           ,
@@ -214,16 +212,16 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                                hasUnqualifiedDesugaredType(
                                  arrayType(
                                    hasElementType(hasUnqualifiedDesugaredType(
-                                           recordType(
-                                             hasDeclaration(
-                                              cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
-                                              ) //hasDeclaration
-                                           )// recordType
-                                         )
-                                         )
-                                   )//arrayType
-                                 )
-                               )//hasType
+                                        recordType(
+                                          hasDeclaration(
+                                            cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                          ) //hasDeclaration
+                                         )// recordType
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                 )//arrayType
+                               )//hasUnqualifiedDesugaredType
+                             )//hasType
 
                               , 
                             //2d
@@ -234,23 +232,21 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                                        arrayType(hasElementType(hasUnqualifiedDesugaredType(
                                        //
                                        //
-                                           recordType(
-                                             hasDeclaration(
-                                              cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
-                                              ) //hasDeclaration
-                                           )// recordType
-                                           //
-                                           //
-                                           )
-                                         )
-                                         )
-                                           )
-                                         )
-                                   )//arrayType
-                                 )
-                               )//hasType
-
-
+                                         recordType(
+                                           hasDeclaration(
+                                             cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                           ) //hasDeclaration
+                                         )// recordType
+                                         //
+                                         //
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                       )//arrayType
+                                   )//hasUnqualifiedDesugaredType
+                                   )//hasElementType
+                                 )//arrayType
+                               )//hasUnqualifiedDesugaredType
+                             )//hasType
 
 
                           ) //anyOf
@@ -358,6 +354,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // This is the FieldDecl.
     parsed_instance.instance_decl = instance_decl;
     parsed_instance.is_field_decl = false;
+    // FIXME: No parsing of VarDecl's as arrays?
+    parsed_instance.is_array = false;
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_rdecl;
 
@@ -403,6 +401,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (array_type) {
       auto element_type{array_type->getElementType().getTypePtr()};
       parsed_instance.decl = element_type->getAsCXXRecordDecl();
+      parsed_instance.is_array = true;
     } else {
       // Not an array type.
       parsed_instance.decl =
@@ -415,13 +414,28 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_decl;
     parsed_instance.instance_name = instance_name;
+    parsed_instance.add_instance_name( instance_name );
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
     LLVM_DEBUG(llvm::dbgs() << "Inserting FD instance\n");
-    instance_map_.insert(
-        std::pair<Decl *, ModuleInstanceType>(instance_decl, parsed_instance));
-    llvm::outs() << "INSERTED\n";
+
+    /// Find if an instance already exists. If it does exist.
+    //
+
+    auto exists_instance{ instance_map_.find(instance_decl)};
+
+    // Instance is NOT found
+    if (exists_instance == instance_map_.end() ) {
+      instance_map_.insert(
+          std::pair<Decl *, ModuleInstanceType>(instance_decl, parsed_instance));
+      llvm::outs() << "INSERTED\n";
+    } else {
+      // Instance IS found.
+   
+      exists_instance->second.add_instance_name( instance_name );   
+      llvm::outs() << "INSERTED INSTANCE NAME\n";
+    }
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -453,9 +467,9 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       ctor_init->getInit()->dump();
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
       expr->dump();
-      clang::CXXConstructExpr *cexpr{clang::dyn_cast<clang::CXXConstructExpr>(expr)};
+      clang::CXXConstructExpr *cexpr{
+          clang::dyn_cast<clang::CXXConstructExpr>(expr)};
       clang::InitListExpr *iexpr{clang::dyn_cast<clang::InitListExpr>(expr)};
-
 
       // For arrays, an InitListExpr is generated.
       // For non-arrays, CXXConstructExpr is directly castable.
@@ -524,10 +538,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     LLVM_DEBUG(llvm::dbgs() << "################## INSTANCE MATCHER DUMP \n";);
     for (const auto &i : instance_map_) {
       auto instance{i.second};
-      LLVM_DEBUG(llvm::dbgs() << "decl* " << i.first << "  " << instance.instance_name;);
+      LLVM_DEBUG(llvm::dbgs()
+                     << "decl* " << i.first << "  " << instance.instance_name;);
 
       auto instance_field{instance.decl};
-      LLVM_DEBUG(llvm::dbgs() << " instance_field*: " << instance_field << "\n";);
+      LLVM_DEBUG(llvm::dbgs()
+                     << " instance_field*: " << instance_field << "\n";);
 
       if (clang::dyn_cast<clang::FieldDecl>(instance_field)) {
         if (instance.is_field_decl) {
