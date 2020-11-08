@@ -126,11 +126,11 @@ ModuleDecl::~ModuleDecl() {
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
   instance_decl_ = nullptr;
-
-  DEBUG_WITH_TYPE("DebugDestructors",
-                  llvm::dbgs() << "- name: " << getName()
-                               << ", inst name: " << getInstanceName()
-                               << " pointer: " << this << "\n";);
+//
+  // DEBUG_WITH_TYPE("DebugDestructors",
+                  // llvm::dbgs() << "- name: " << getName()
+                               // << ", inst name: " << getInstanceName()
+                               // << " pointer: " << this << "\n";);
 
   // IMPORTANT: Only the instance-specific details should be deleted.
   // DO NOT delete the information collected through incomplete types.
@@ -417,7 +417,7 @@ ModuleDecl::portBindingMapType ModuleDecl::getPortBindings() {
 
 string ModuleDecl::getName() const { return module_name_; }
 
-string ModuleDecl::getInstanceName() const {
+std::string ModuleDecl::getInstanceName() const {
   return instance_info_.instance_name;
 }
 
@@ -457,8 +457,15 @@ void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
   //
   for (auto const &submod : nested_modules_) {
     os << "nested module  " << submod << " module type name "
-       << submod->getName() << "  instance name " << submod->getInstanceName()
-       << "\n";
+       << submod->getName();
+    
+    if ( submod->getInstanceInfo().getInstanceNames().size() > 0 ) {
+      os << "  instance name: ";
+    }
+    for (auto const &name: submod->getInstanceInfo().getInstanceNames() ) {
+      os << name << "  ";
+    }
+   os << "\n";
   }
 }
 
@@ -601,10 +608,15 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
     othervars_j[name] = pd->dump_json();
   }
 
-  submodules_j["number_of_submodules"] = nested_modules_.size();
+  submodules_j["number_of_submodule_fields"] = nested_modules_.size();
   for (auto mit : nested_modules_) {
-    auto name = mit->getName();
-    submodules_j[name].push_back(mit->getInstanceName());
+    auto module_name {mit->getName()};
+    // submodules_j[name].push_back(mit->getInstanceName());
+
+    auto instance_info{ mit->getInstanceInfo() };
+    for (auto const &inst_name: instance_info.getInstanceNames()) {
+      submodules_j[module_name].push_back(inst_name);
+    }
   }
 
   os << "Start printing ports\n";
@@ -671,7 +683,7 @@ json ModuleDecl::dump_json() {
   }
 
   for (auto const &submod : nested_modules_) {
-    module_j["nested_modules"].push_back(submod->getInstanceName());
+    module_j["nested_modules"].push_back(submod->getInstanceInfo().getInstanceNames());
   }
 
   llvm::outs() << module_j.dump(4);

@@ -23,6 +23,12 @@ struct ModuleInstanceType {
   clang::Decl *decl;
   clang::Decl *instance_decl;
   clang::ValueDecl *parent_decl;
+  bool is_array;
+  // Arrays can have multiple names.
+  std::vector<std::string> instance_names;
+
+  void add_instance_name( const std::string &name ) { instance_names.push_back(name); }
+  std::vector<std::string> getInstanceNames() { return instance_names; }
 
   // Array fields
   bool is_array_;
@@ -41,7 +47,6 @@ struct ModuleInstanceType {
     array_sizes_ = sizes;
   }
   std::vector<llvm::APInt> getArraySizes() { return array_sizes_; }
-
 
   ModuleInstanceType()
       : var_name{},
@@ -65,15 +70,15 @@ struct ModuleInstanceType {
     parent_decl = rhs.parent_decl;
     is_array_ = rhs.is_array_;
     array_sizes_ = rhs.array_sizes_;
-
+    instance_names = rhs.instance_names;
   }
 
   bool operator==(const ModuleInstanceType &rhs) {
     return std::tie(var_name, var_type_name, instance_name, parent_name,
-                    is_field_decl, decl, instance_decl, parent_decl, is_array_, array_sizes_) ==
+                    is_field_decl, decl, instance_decl, parent_decl, is_array_, array_sizes_, instance_names) ==
            std::tie(rhs.var_name, rhs.var_type_name, rhs.instance_name,
                     rhs.parent_name, rhs.is_field_decl, rhs.decl,
-                    rhs.instance_decl, rhs.parent_decl, rhs.is_array_, rhs.array_sizes_);
+                    rhs.instance_decl, rhs.parent_decl, rhs.is_array_, rhs.array_sizes_, instance_names);
   }
 
   void dump() {
@@ -90,6 +95,15 @@ struct ModuleInstanceType {
     for (auto const &size: array_sizes_) {
       llvm::outs() << size << "  ";
     }
+    
+    if (instance_names.size() > 0 )  {
+      llvm::outs() << "instance_names: ";
+    }
+
+    for (const auto &name: instance_names) {
+      llvm::outs() << name;
+    }
+      llvm::outs() << "\n";
   }
 };
 };  // namespace sc_ast_matchers

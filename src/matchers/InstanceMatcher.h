@@ -72,7 +72,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   //
 
   typedef std::pair<clang::Decl *, ModuleInstanceType> ModuleInstanceTuple;
-  typedef std::multimap<clang::Decl *, ModuleInstanceType> InstanceDeclarations;
+  typedef std::map<clang::Decl *, ModuleInstanceType> InstanceDeclarations;
 
  private:
   /// Instances can come in two forms:
@@ -200,8 +200,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                             hasUnqualifiedDesugaredType(
                               recordType(
                                 hasDeclaration(
-                                  cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
-                            )))
+                                  cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                )//hasDeclaration
+                              )//recordType
+                            )//hasUnqualifiedDesugaredType
                           )//hasType
 
                           ,
@@ -210,16 +212,16 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                                hasUnqualifiedDesugaredType(
                                  arrayType(
                                    hasElementType(hasUnqualifiedDesugaredType(
-                                           recordType(
-                                             hasDeclaration(
-                                              cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
-                                              ) //hasDeclaration
-                                           )// recordType
-                                         )
-                                         )
-                                   )//arrayType
-                                 )
-                               )//hasType
+                                        recordType(
+                                          hasDeclaration(
+                                            cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                          ) //hasDeclaration
+                                         )// recordType
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                 )//arrayType
+                               )//hasUnqualifiedDesugaredType
+                             )//hasType
 
                               , 
                             //2d
@@ -230,23 +232,21 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                                        arrayType(hasElementType(hasUnqualifiedDesugaredType(
                                        //
                                        //
-                                           recordType(
-                                             hasDeclaration(
-                                              cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
-                                              ) //hasDeclaration
-                                           )// recordType
-                                           //
-                                           //
-                                           )
-                                         )
-                                         )
-                                           )
-                                         )
-                                   )//arrayType
-                                 )
-                               )//hasType
-
-
+                                         recordType(
+                                           hasDeclaration(
+                                             cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                           ) //hasDeclaration
+                                         )// recordType
+                                         //
+                                         //
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                       )//arrayType
+                                   )//hasUnqualifiedDesugaredType
+                                   )//hasElementType
+                                 )//arrayType
+                               )//hasUnqualifiedDesugaredType
+                             )//hasType
 
 
                           ) //anyOf
@@ -354,6 +354,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // This is the FieldDecl.
     parsed_instance.instance_decl = instance_decl;
     parsed_instance.is_field_decl = false;
+    // FIXME: No parsing of VarDecl's as arrays?
+    parsed_instance.is_array = false;
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_rdecl;
 
@@ -412,14 +414,29 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_decl;
     parsed_instance.instance_name = instance_name;
+    parsed_instance.add_instance_name( instance_name );
 
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
     LLVM_DEBUG(llvm::dbgs() << "Inserting FD instance\n");
-    instance_map_.insert(
-        std::pair<Decl *, ModuleInstanceType>(instance_decl, parsed_instance));
-    llvm::outs() << "INSERTED\n";
+
+    /// Find if an instance already exists. If it does exist.
+    //
+
+    auto exists_instance{ instance_map_.find(instance_decl)};
+
+    // Instance is NOT found
+    if (exists_instance == instance_map_.end() ) {
+      instance_map_.insert(
+          std::pair<Decl *, ModuleInstanceType>(instance_decl, parsed_instance));
+      llvm::outs() << "INSERTED\n";
+    } else {
+      // Instance IS found.
+   
+      exists_instance->second.add_instance_name( instance_name );   
+      llvm::outs() << "INSERTED INSTANCE NAME\n";
+    }
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {

@@ -15,7 +15,7 @@ SC_MODULE(lift) {
 };
 
 SC_MODULE(ports_arrays) {
-  // lift<int> submodule;
+  //lift<int> submodule;
    lift<int> submodules[2];
   // lift<int> submodules_2d[2][3];
   //
@@ -62,7 +62,7 @@ SC_MODULE(ports_arrays) {
 //
     // 2d
     // submodules_2d[0][0].clk(test);
-    int j;
+   int j;
     SC_METHOD(body);
     for (j = 0; j < 4; j++) {
       sensitive << a[j] << b[j];
