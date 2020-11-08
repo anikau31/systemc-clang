@@ -53,6 +53,7 @@ class Model {
   // const moduleMapType &getModuleDecl();
   ModuleDecl *getInstance(const std::string &instance_name);
   ModuleDecl *getInstance(Decl *instance_decl);
+  ModuleDecl *getRootModuleInstance() const; 
 
   entryFunctionGPUMacroMapType getEntryFunctionGPUMacroMap();
   eventMapType getEventMapType();
@@ -66,6 +67,7 @@ class Model {
 
  protected:
   std::vector<ModuleDecl *> module_instances_;
+  ModuleDecl *root_module_inst_;
 
   FindSimTime::simulationTimeMapType simulation_time_;
   eventMapType event_map_;

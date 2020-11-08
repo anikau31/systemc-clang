@@ -15,11 +15,11 @@
 using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
-  using namespace clang;
+using namespace clang;
 
 class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
  private:
-  clang::StringLiteral* instance_literal_;
+  clang::StringLiteral *instance_literal_;
 
  public:
   clang::StringLiteral *getInstanceLiteral() const { return instance_literal_; }
@@ -27,13 +27,9 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
   void registerMatchers(MatchFinder &finder) {
     instance_literal_ = nullptr;
     auto arg_matcher =
-        cxxConstructExpr(hasDescendant(
-              cxxConstructExpr(hasArgument(0, 
-                  stringLiteral().bind("inst_arg"))
-                )
-              )
-            ).bind("ctor_expr");
-
+        cxxConstructExpr(hasDescendant(cxxConstructExpr(
+                             hasArgument(0, stringLiteral().bind("inst_arg")))))
+            .bind("ctor_expr");
 
     finder.addMatcher(arg_matcher, this);
   }
@@ -453,9 +449,9 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       ctor_init->getInit()->dump();
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
       expr->dump();
-      clang::CXXConstructExpr *cexpr{clang::dyn_cast<clang::CXXConstructExpr>(expr)};
+      clang::CXXConstructExpr *cexpr{
+          clang::dyn_cast<clang::CXXConstructExpr>(expr)};
       clang::InitListExpr *iexpr{clang::dyn_cast<clang::InitListExpr>(expr)};
-
 
       // For arrays, an InitListExpr is generated.
       // For non-arrays, CXXConstructExpr is directly castable.
@@ -524,10 +520,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     LLVM_DEBUG(llvm::dbgs() << "################## INSTANCE MATCHER DUMP \n";);
     for (const auto &i : instance_map_) {
       auto instance{i.second};
-      LLVM_DEBUG(llvm::dbgs() << "decl* " << i.first << "  " << instance.instance_name;);
+      LLVM_DEBUG(llvm::dbgs()
+                     << "decl* " << i.first << "  " << instance.instance_name;);
 
       auto instance_field{instance.decl};
-      LLVM_DEBUG(llvm::dbgs() << " instance_field*: " << instance_field << "\n";);
+      LLVM_DEBUG(llvm::dbgs()
+                     << " instance_field*: " << instance_field << "\n";);
 
       if (clang::dyn_cast<clang::FieldDecl>(instance_field)) {
         if (instance.is_field_decl) {

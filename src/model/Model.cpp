@@ -4,26 +4,35 @@
 
 using namespace systemc_clang;
 
-Model::Model() {}
+Model::Model() : root_module_inst_{nullptr} {}
 
 void Model::populateNestedModules() {
-  llvm::outs() << "!@!@!@@!@@@@@@@@@@@@@@@@@@@@@@@@ POP NESTED @@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-  for (ModuleDecl *inst: module_instances_) {
-    ModuleInstanceType instance_info{ inst->getInstanceInfo() };
+  llvm::outs() << "===== TEST to see who has parents ==== \n";
+  for (ModuleDecl *inst : module_instances_) {
+    ModuleInstanceType instance_info{inst->getInstanceInfo()};
     instance_info.dump();
-    llvm::outs() << "ModuleDecl's instance delc: " << inst->getInstanceDecl() << "  " << inst->getName() << "\n";
+    llvm::outs() << "ModuleDecl's instance delc: " << inst->getInstanceDecl()
+                 << "  " << inst->getName() << "\n";
 
-     ModuleDecl *parent{ getInstance(instance_info.getParentDecl()) };
+    ModuleDecl *parent{getInstance(instance_info.getParentDecl())};
 
-     if ((parent != nullptr) && (parent != inst) ) {
+    if ((parent != nullptr) && (parent != inst)) {
       parent->addNestedModule(inst);
-      llvm::outs() << "Add child " << inst->getName() << " into " << parent->getName() << "\n";
-
-     }
+      llvm::outs() << "Add child " << inst->getName() << " into "
+                   << parent->getName() << "\n";
+    } else {
+      /// This is a ModuleDecl that has no parent. This means that it is a root
+      /// note.
+      llvm::outs() << "Root ModuleDecl: " << inst->getName() << "\n";
+      if (root_module_inst_) {
+        llvm::errs() << "Multiple root module instances are not allowed\n";
+      }
+      root_module_inst_ = inst;
+    }
   }
-  llvm::outs() << "!@!@!@@!@@@@@@@@@@@@@@@@@@@@@@@@ END POP NESTED @@@@@@@@@@@@@@@@@@@@@@@@@@\n";
 }
 
+ModuleDecl *Model::getRootModuleInstance() const { return root_module_inst_; }
 
 Model::~Model() {
   LLVM_DEBUG(llvm::dbgs() << "\n"
@@ -60,6 +69,9 @@ Model::~Model() {
     //
     inst->clearOnlyGlobal();
     delete inst;
+
+    // This is deleted in the vector.
+    root_module_inst_ = nullptr;
   }
 
   LLVM_DEBUG(llvm::dbgs() << "Done with delete\n";);

@@ -114,10 +114,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     for (auto inst : instance_map) {
       ModuleInstanceType instance{inst.second};
 
-      llvm::outs() << "############### ====> INST: " << inst.first << "\n";
       clang::CXXRecordDecl *decl{
           dyn_cast<clang::CXXRecordDecl>(inst.second.decl)};
       auto name{decl->getNameAsString()};
+      llvm::outs() << "############### ====> INST: " << inst.first << ", name: " << name << ", instance_name: " << inst.second.instance_name << "\n";
 
       InstanceListType instance_list;
       instance_matcher_.findInstanceByVariableType(decl, instance_list);
