@@ -399,6 +399,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (array_type) {
       auto element_type{array_type->getElementType().getTypePtr()};
       parsed_instance.decl = element_type->getAsCXXRecordDecl();
+      parsed_instance.addArraySizes(GetASTInfo::getConstantArraySizes(instance_decl)) ;
     } else {
       // Not an array type.
       parsed_instance.decl =
@@ -411,6 +412,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_decl;
     parsed_instance.instance_name = instance_name;
+
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches

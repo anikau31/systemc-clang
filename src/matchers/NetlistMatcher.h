@@ -33,29 +33,28 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     // This is the instance type decl
     // llvm::outs() << "=> findModuleDeclInstance: Looking for: " << decl <<
     // "\n";
-    auto instances{ model_->getInstances() };
-    //for (auto const &inst: model_->getInstances()) {
-      //auto incomplete{element.first};
-      // llvm::outs() << "=> incomplete: " << incomplete->getName() << "\n";
-      //auto instance_list{element.second};
+    auto instances{model_->getInstances()};
+    // for (auto const &inst: model_->getInstances()) {
+    // auto incomplete{element.first};
+    // llvm::outs() << "=> incomplete: " << incomplete->getName() << "\n";
+    // auto instance_list{element.second};
 
-      //for (auto const &inst : instance_list) {
-        // This is the instance type decl.
-     //   clang::Decl *inst_decl{inst->getInstanceDecl()};
-        // llvm::outs() << "=> find: " << decl << " == " << inst_decl << "\n";
-      //}
-      //
-      auto found_inst_it =
-          std::find_if(instances.begin(), instances.end(),
-                       [decl](const auto &instance) {
-                         clang::Decl *i{instance->getInstanceDecl()};
-                         return (instance->getInstanceDecl() == decl);
-                       });
+    // for (auto const &inst : instance_list) {
+    // This is the instance type decl.
+    //   clang::Decl *inst_decl{inst->getInstanceDecl()};
+    // llvm::outs() << "=> find: " << decl << " == " << inst_decl << "\n";
+    //}
+    //
+    auto found_inst_it = std::find_if(
+        instances.begin(), instances.end(), [decl](const auto &instance) {
+          clang::Decl *i{instance->getInstanceDecl()};
+          return (instance->getInstanceDecl() == decl);
+        });
 
-      if (found_inst_it != instances.end()) {
-        // llvm::outs() << "=> found the iterator\n";
-        return *found_inst_it;
-      }
+    if (found_inst_it != instances.end()) {
+      // llvm::outs() << "=> found the iterator\n";
+      return *found_inst_it;
+    }
     //}
     return nullptr;
   }
@@ -76,19 +75,18 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
          cxxOperatorCallExpr(
                hasDescendant(
                  declRefExpr(
-               hasDeclaration(varDecl().bind("bound_variable")), // Match the sig1
-               hasParent(implicitCastExpr()) // There must be (.) 
-               ).bind("declrefexpr")
-                 )
-               ,
-             hasDescendant(memberExpr(
-               forEach(declRefExpr().bind("declrefexpr_in_memberexpr"))
-               ).bind("memberexpr")
+                   hasDeclaration(varDecl().bind("bound_variable")), // Match the sig1
+                   hasParent(implicitCastExpr()) // There must be (.) 
+                 ).bind("declrefexpr")
                )
-           ).bind("callexpr")
-         )
-       ).bind("functiondecl");
-
+               ,
+               hasDescendant(memberExpr(
+                 forEach(declRefExpr().bind("declrefexpr_in_memberexpr"))
+                 ).bind("memberexpr")
+               ) //hasDescendant
+         ).bind("callexpr")
+       )
+     ).bind("functiondecl");
 
     auto match_ctor_decl =
         namedDecl(
@@ -124,13 +122,13 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
                             // Get the memberExpr for the argument.
                             ,
-                            hasArgument(
-                                1, anyOf(arraySubscriptExpr().bind(
-                                             "array_port_arg"),
-                                         expr().bind("port_arg"))  // anyOf
-                                )  // hasArgument
-                            )
-                            .bind("callexpr")))
+                            hasArgument(1, 
+                                anyOf(
+                                  arraySubscriptExpr().bind("array_port_arg"),
+                                         expr().bind("port_arg")
+                                 )  // anyOf
+                            )  // hasArgument
+                      ).bind("callexpr")))
                     .bind("compoundstmt")))
             .bind("functiondecl");
 
@@ -311,7 +309,8 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     }
     // instance_decl->dump();
 
-    systemc_clang::ModuleDecl *instance_module_decl{findModuleDeclInstance(instance_decl)};
+    systemc_clang::ModuleDecl *instance_module_decl{
+        findModuleDeclInstance(instance_decl)};
     if (!instance_module_decl) {
       LLVM_DEBUG(llvm::dbgs() << "@@@@@ No instance module decl found \n";);
     }
@@ -352,9 +351,9 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   void dump() {
     // Dump out all the module instances.
     //
-    auto instances{ model_->getInstances() };
+    auto instances{model_->getInstances()};
 
-    for (auto const &inst: instances) {
+    for (auto const &inst : instances) {
       auto port_bindings{inst->getPortBindings()};
 
       for (auto const &p : port_bindings) {
