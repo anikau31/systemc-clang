@@ -401,6 +401,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (array_type) {
       auto element_type{array_type->getElementType().getTypePtr()};
       parsed_instance.decl = element_type->getAsCXXRecordDecl();
+      parsed_instance.setArrayType();
       parsed_instance.addArraySizes(GetASTInfo::getConstantArraySizes(instance_decl)) ;
     } else {
       // Not an array type.

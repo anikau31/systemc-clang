@@ -673,6 +673,15 @@ json ModuleDecl::dump_json() {
 
   module_j["module_name"] = module_name_;
   module_j["instance_name"] = instance_name_;
+  module_j["is_array"] = "false";
+  if (instance_info_.isArrayType()) {
+    module_j["is_array"] = "true";
+    // Write out all the sizes.
+    for (auto const &size: instance_info_.getArraySizes() ) {
+      module_j["array_sizes"] += size.getLimitedValue();
+    }
+  }
+
   // Template parameters.
   for (auto const &parm : template_parameters_) {
     module_j["template_parameters"].push_back(parm);
