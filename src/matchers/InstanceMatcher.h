@@ -26,10 +26,15 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
 
   void registerMatchers(MatchFinder &finder) {
     instance_literal_ = nullptr;
-    auto arg_matcher =
-        cxxConstructExpr(hasDescendant(cxxConstructExpr(
-                             hasArgument(0, stringLiteral().bind("inst_arg")))))
-            .bind("ctor_expr");
+    // clang-format off
+    auto arg_matcher = cxxConstructExpr(hasDescendant(
+          cxxConstructExpr(hasArgument(0, 
+            stringLiteral().bind("inst_arg")
+              )
+            )
+          )
+        ).bind("ctor_expr");
+    // clang-format on
 
     finder.addMatcher(arg_matcher, this);
   }
@@ -402,7 +407,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       auto element_type{array_type->getElementType().getTypePtr()};
       parsed_instance.decl = element_type->getAsCXXRecordDecl();
       parsed_instance.setArrayType();
-      parsed_instance.addArraySizes(GetASTInfo::getConstantArraySizes(instance_decl)) ;
+      parsed_instance.addArraySizes(
+          GetASTInfo::getConstantArraySizes(instance_decl));
     } else {
       // Not an array type.
       parsed_instance.decl =
@@ -415,8 +421,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_decl;
     parsed_instance.instance_name = instance_name;
-    parsed_instance.add_instance_name( instance_name );
-
+    parsed_instance.add_instance_name(instance_name);
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
@@ -425,17 +430,17 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     /// Find if an instance already exists. If it does exist.
     //
 
-    auto exists_instance{ instance_map_.find(instance_decl)};
+    auto exists_instance{instance_map_.find(instance_decl)};
 
     // Instance is NOT found
-    if (exists_instance == instance_map_.end() ) {
-      instance_map_.insert(
-          std::pair<Decl *, ModuleInstanceType>(instance_decl, parsed_instance));
+    if (exists_instance == instance_map_.end()) {
+      instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
+          instance_decl, parsed_instance));
       llvm::outs() << "INSERTED\n";
     } else {
       // Instance IS found.
-   
-      exists_instance->second.add_instance_name( instance_name );   
+
+      exists_instance->second.add_instance_name(instance_name);
       llvm::outs() << "INSERTED INSTANCE NAME\n";
     }
   }
@@ -473,11 +478,17 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           clang::dyn_cast<clang::CXXConstructExpr>(expr)};
       clang::InitListExpr *iexpr{clang::dyn_cast<clang::InitListExpr>(expr)};
 
-      // For arrays, an InitListExpr is generated.
-      // For non-arrays, CXXConstructExpr is directly castable.
-      //
-      // If it is an array, then get to its InitListExpr, and then get the first
-      // element's constructor.
+      /// For arrays, an InitListExpr is generated.
+      /// For non-arrays, CXXConstructExpr is directly castable.
+      ///
+      /// If it is an array, then get to its InitListExpr, and then get the first
+      /// element's constructor.
+
+      if (iexpr) {
+        GetASTInfo::getArrayInstanceIndex( iexpr );
+
+      }
+
       if ((iexpr != nullptr) && (cexpr == nullptr)) {
         llvm::outs() << "### IEXPR is not NULL\n";
 

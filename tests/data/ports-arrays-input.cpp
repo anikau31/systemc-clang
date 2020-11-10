@@ -16,8 +16,8 @@ SC_MODULE(lift) {
 
 SC_MODULE(ports_arrays) {
   //lift<int> submodule;
-   lift<int> submodules[2];
-  // lift<int> submodules_2d[2][3];
+  //  lift<int> submodules[2];
+  lift<int> submodules_2d[2][3];
   //
 
   sc_in<sc_uint<2>> a[4];
@@ -45,23 +45,23 @@ SC_MODULE(ports_arrays) {
 //        submodule{"submodule_single"}
         //
 // //         1d
-         submodules{{"first_submod"}, {"second_submod"}}
+ //        submodules{{"first_submod"}, {"second_submod"}}
 
   //,
-  // submodules_2d{
-  // {{{"submod_0_0"}}, {{"submod_0_1"}}, {{"submod_0_2"}}},
-  // {{{"submod_1_0"}}, {{"submod_1_1"}}, {{"submod_1_2"}}},
-  // }
+  submodules_2d{
+  {{{"submod_0_0"}}, {{"submod_0_1"}}, {{"submod_0_2"}}},
+  {{{"submod_1_0"}}, {{"submod_1_1"}}, {{"submod_1_2"}}},
+  }
   {
     //
   //  submodule.clk(test);
     //
     // // 1d
-    submodules[0].clk(test);
-    submodules[1].clk(test);
+    // submodules[0].clk(test);
+    // submodules[1].clk(test);
 //
     // 2d
-    // submodules_2d[0][0].clk(test);
+     submodules_2d[0][0].clk(test);
    int j;
     SC_METHOD(body);
     for (j = 0; j < 4; j++) {
