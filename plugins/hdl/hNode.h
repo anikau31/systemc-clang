@@ -9,6 +9,12 @@
 
 using namespace systemc_clang;
 
+//!
+//! The hNode class defines the language-neutral HDL opcodes describing
+//! systemc constructs and more generally statements and expression that
+//! may occur in an SC_MODULE or SC_METHOD. Accessor and print methods
+//! are provided.
+//!
 namespace hnode {
   class hNode;
 
@@ -166,6 +172,11 @@ namespace hnode {
     }
 
   };
+
+  //!
+  //! The util class provides small utility functions to generate and
+  //! recognize C++ and SystemC conformant identifiers.
+  //!
   
   class util { 
   public:

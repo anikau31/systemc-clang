@@ -26,6 +26,15 @@ std::unique_ptr<clang::tooling::FrontendActionFactory> newFrontendActionFactory(
       new HDLFrontendActionFactory(top_module));
 }
 
+//!
+//! Entry point for HDL generation
+//!
+//! Starting with top level module, process systemc objects
+//! Generate hcode for modules and submodules, including their
+//! ports and variables, port bindings, sensitivity lists
+//! Generate hcode for SC_METHOD body declarations
+//!
+
 bool HDLMain::postFire() {
   Model *model = getSystemCModel();
 

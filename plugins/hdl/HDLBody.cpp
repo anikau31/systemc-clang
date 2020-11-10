@@ -19,6 +19,15 @@
 using namespace std;
 using namespace hnode;
 
+//!
+//! Entry point for SC_METHOD body generation
+//!
+//! Starting with outer compount statement,
+//! generate hcode for each statement,
+//! recursively traversing expressions
+//! 
+
+
 HDLBody::HDLBody(CXXMethodDecl *emd, hNodep &h_top,
                  clang::DiagnosticsEngine &diag_engine)
     : diag_e{diag_engine} {
@@ -209,6 +218,11 @@ bool HDLBody::TraverseCompoundStmt(CompoundStmt *cstmt) {
   h_ret = h_cstmt;
   return true;
 }
+
+//!
+//! Process local variable and signal declarations,
+//! promoting to module level with unique names
+//!
 
 bool HDLBody::TraverseDeclStmt(DeclStmt *declstmt) {
   // hNodep h_varlist = NULL;

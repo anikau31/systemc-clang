@@ -15,6 +15,13 @@
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "HDL"
 
+//!
+//! Resolve types of systemc variables, signals, and ports
+//! including templated types and generate primitive type declarations
+//! Relies on TemplateTree matcher provided by front end and can
+//! handle structured types.
+//!
+
 void HDLType::SCtype2hcode(string prefix, Tree<TemplateType> *template_argtp,
                            std::vector<llvm::APInt> *arr_sizes,
                            hNode::hdlopsEnum h_op, hNodep &h_info) {
