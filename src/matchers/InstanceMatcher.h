@@ -252,7 +252,40 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                                  )//arrayType
                                )//hasUnqualifiedDesugaredType
                              )//hasType
+                             ,
+                             // 3d
+                             hasType(
+                               hasUnqualifiedDesugaredType(
+                                 arrayType(
+                                   hasElementType(hasUnqualifiedDesugaredType(
+                                       arrayType(hasElementType(hasUnqualifiedDesugaredType(
+                                         arrayType(hasElementType(hasUnqualifiedDesugaredType(
 
+
+                                       //
+                                       //
+                                         recordType(
+                                           hasDeclaration(
+                                             cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                           ) //hasDeclaration
+                                         )// recordType
+                                         //
+                                         //
+
+
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                       )//arrayType
+
+
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                       )//arrayType
+                                   )//hasUnqualifiedDesugaredType
+                                   )//hasElementType
+                                 )//arrayType
+                               )//hasUnqualifiedDesugaredType
+                             )//hasType
 
                           ) //anyOf
                         ,
