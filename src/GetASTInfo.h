@@ -10,13 +10,20 @@
 
 namespace sc_ast_matchers {
 
-typedef std::vector<llvm::APInt> ArraySizesType;
-
 class GetASTInfo {
  private:
   GetASTInfo(){};
 
  public:
+  typedef std::pair<std::string,
+                    std::tuple<std::size_t, std::size_t, std::size_t>>
+      IndexPairType;
+  typedef std::map<std::string,
+                   std::tuple<std::size_t, std::size_t, std::size_t>>
+      IndexMapType;
+  // typedef std::map<std::string, std::tuple<std::size_t, std::size_t,
+  // std::size_t>> indices;
+  typedef std::vector<llvm::APInt> ArraySizesType;
   /// \brief Returns the indices associated with each element of an array of
   /// objects that is instantiated using a constructor.
   ///
@@ -30,11 +37,13 @@ class GetASTInfo {
   ///
   /// This should identify the appropriate index for each instance of object A.
   /// That is, array_a[0][1] should be associated with instance named "0_1".
-  static void getArrayInstanceIndex(clang::InitListExpr *init_expr_list) {
+  static IndexMapType getArrayInstanceIndex(
+      clang::InitListExpr *init_expr_list) {
     /// Assumption: We will only support 1D, 2D and 3D arrays.
-    /// TODO: Update to support for 3D
 
+    IndexMapType indices;
     /// Retrieve the number of initializer lists.
+    llvm::outs() << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
     llvm::outs() << "Number of inits: " << init_expr_list->getNumInits()
                  << "\n";
     clang::Expr **iexpr_set{init_expr_list->getInits()};
@@ -44,7 +53,7 @@ class GetASTInfo {
       clang::Expr *iexpr{iexpr_set[i]};
 
       // Level 1
-      iexpr->dump();
+      // iexpr->dump();
 
       /// Level 2
       if (auto init_expr_list_2d =
@@ -54,7 +63,7 @@ class GetASTInfo {
           llvm::outs() << "Iterate over 2d init lists: " << j << "\n";
           clang::Expr *iexpr_2d{iexpr_2d_set[j]};
 
-          iexpr_2d->dump();
+          // iexpr_2d->dump();
           /// Get the constructor argument.
           if (auto cexpr = clang::dyn_cast<clang::CXXConstructExpr>(iexpr_2d)) {
             clang::CXXConstructExpr *nested_cexpr{
@@ -62,22 +71,43 @@ class GetASTInfo {
                     cexpr->getArg(0)->IgnoreImplicit())};
             clang::StringLiteral *slit{clang::dyn_cast<clang::StringLiteral>(
                 nested_cexpr->getArg(0)->IgnoreImpCasts())};
-            llvm::outs() << "Argument: " << slit->getString().str() << " \n";
+            llvm::outs() << "Argument 2d: [" << i << ", " << j << "] "
+                         << slit->getString().str() << " \n";
           }
 
           /// Level 3
           if (auto init_expr_list_3d =
                   clang::dyn_cast<clang::InitListExpr>(iexpr_2d)) {
+            clang::Expr **iexpr_3d_set{init_expr_list_3d->getInits()};
             for (std::size_t k{0}; k < init_expr_list_3d->getNumInits(); ++k) {
-              clang::Expr **iexpr_3d_set{init_expr_list_3d->getInits()};
               llvm::outs() << "Iterate over 3d init lists: " << k << "\n";
               clang::Expr *iexpr_3d{iexpr_3d_set[k]};
-              iexpr_3d->dump();
+              // iexpr_3d->dump();
+
+              if (auto cexpr =
+                      clang::dyn_cast<clang::CXXConstructExpr>(iexpr_3d)) {
+                clang::CXXConstructExpr *nested_cexpr{
+                    clang::dyn_cast<clang::CXXConstructExpr>(
+                        cexpr->getArg(0)->IgnoreImplicit())};
+                auto cxxbindexpr{clang::dyn_cast<clang::CXXBindTemporaryExpr>(
+                    nested_cexpr->getArg(0)->IgnoreParenImpCasts())};
+                auto cxxctor{clang::dyn_cast<clang::CXXConstructExpr>(
+                    cxxbindexpr->getSubExpr()->IgnoreParenImpCasts())};
+                clang::StringLiteral *slit{
+                    clang::dyn_cast<clang::StringLiteral>(
+                        cxxctor->getArg(0)->IgnoreImpCasts())};
+                // slit->dump();
+                llvm::outs() << "Argument 3d: [" << i << ", " << j << ", " << k
+                             << "] " << slit->getString().str() << " \n";
+                indices.insert(IndexPairType(slit->getString().str(),
+                                         std::make_tuple(i, j, k)));
+              }
             }
           }
         }
       }
     }
+    return indices;
   }
 
   /// \brief Returns the sizes of an array that are provided when the array is
