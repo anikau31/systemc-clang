@@ -483,6 +483,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       parsed_instance.setArrayType();
       parsed_instance.addArraySizes(
           GetASTInfo::getConstantArraySizes(instance_decl));
+      parsed_instance.setArrayParameters(index_map[instance_name]);
+      llvm::outs() << "Dimension of array: " << parsed_instance.getArrayDimension() << "\n";
     } else {
       // Not an array type.
       parsed_instance.type_decl =
