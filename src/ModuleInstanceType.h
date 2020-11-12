@@ -20,7 +20,7 @@ struct ModuleInstanceType {
   std::string
       parent_name;  // This is the name of the class that holds the field.
   bool is_field_decl;
-  clang::Decl *decl;
+  clang::Decl *type_decl;
   clang::Decl *instance_decl;
   clang::ValueDecl *parent_decl;
   bool is_array;
@@ -35,7 +35,7 @@ struct ModuleInstanceType {
   std::vector<llvm::APInt> array_sizes_;
 
 
-  clang::Decl *getInstanceTypeDecl() const { return decl; }
+  clang::Decl *getInstanceTypeDecl() const { return type_decl; }
   clang::Decl *getInstanceDecl() const { return instance_decl; }
   clang::ValueDecl *getParentDecl() const { return parent_decl; }
 
@@ -54,7 +54,7 @@ struct ModuleInstanceType {
         instance_name{},
         parent_name{},
         is_field_decl{false},
-        decl{nullptr},
+        type_decl{nullptr},
         instance_decl{nullptr},
         parent_decl{nullptr},
         is_array_{false} {}
@@ -65,7 +65,7 @@ struct ModuleInstanceType {
     instance_name = rhs.instance_name;
     parent_name = rhs.parent_name;
     is_field_decl = rhs.is_field_decl;
-    decl = rhs.decl;
+    type_decl = rhs.type_decl;
     instance_decl = rhs.instance_decl;
     parent_decl = rhs.parent_decl;
     is_array_ = rhs.is_array_;
@@ -75,14 +75,14 @@ struct ModuleInstanceType {
 
   bool operator==(const ModuleInstanceType &rhs) {
     return std::tie(var_name, var_type_name, instance_name, parent_name,
-                    is_field_decl, decl, instance_decl, parent_decl, is_array_, array_sizes_, instance_names) ==
+                    is_field_decl, type_decl, instance_decl, parent_decl, is_array_, array_sizes_, instance_names) ==
            std::tie(rhs.var_name, rhs.var_type_name, rhs.instance_name,
-                    rhs.parent_name, rhs.is_field_decl, rhs.decl,
+                    rhs.parent_name, rhs.is_field_decl, rhs.type_decl,
                     rhs.instance_decl, rhs.parent_decl, rhs.is_array_, rhs.array_sizes_, instance_names);
   }
 
   void dump() {
-    llvm::outs() << "ModuleInstanceMap --  type_decl: " << decl
+    llvm::outs() << "ModuleInstanceMap --  type_decl: " << type_decl
                             << " inst_decl: " << instance_decl
                             << " var_type_name: " << var_type_name
                             << " var_name: " << var_name << " instance_name: "

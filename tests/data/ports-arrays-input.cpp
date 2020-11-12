@@ -15,10 +15,15 @@ SC_MODULE(lift) {
 };
 
 SC_MODULE(ports_arrays) {
-  //lift<int> submodule;
+  // lift<int> submodule;
   //  lift<int> submodules[2];
-  lift<int> submodules_2d[2][3];
   //
+  //
+  //  2d
+  lift<int> submodules_2d[2][3];
+
+  // 3d
+  //lift<int> submodules_3d[2][3][2];
 
   sc_in<sc_uint<2>> a[4];
   sc_in<sc_uint<2>> b[4];
@@ -41,28 +46,47 @@ SC_MODULE(ports_arrays) {
   }
 
   SC_CTOR(ports_arrays)
-      : 
-//        submodule{"submodule_single"}
-        //
-// //         1d
- //        submodules{{"first_submod"}, {"second_submod"}}
+      :  //        submodule{"submodule_single"}
+         //
+         // //         1d
+                // submodules{{"first_submod"}, {"second_submod"}}
 
-  //,
-  submodules_2d{
-  {{{"submod_0_0"}}, {{"submod_0_1"}}, {{"submod_0_2"}}},
-  {{{"submod_1_0"}}, {{"submod_1_1"}}, {{"submod_1_2"}}},
-  }
+        //,
+        // 2d
+        submodules_2d{
+            {{{"submod_0_0"}}, {{"submod_0_1"}}, {{"submod_0_2"}}},
+            {{{"submod_1_0"}}, {{"submod_1_1"}}, {{"submod_1_2"}}},
+        }
+//
+        // 3d
+        // 2,3,2
+        // submodules_3d{
+          // { { {"submod_0_0_0"}, {"submod_0_0_1"} },
+            // { {"submod_0_1_0"}, {"submod_0_1_1"} },
+            // { {"submod_0_2_0"}, {"submod_0_2_1"} }
+          // },
+          // { { {"submod_1_0_0"}, {"submod_1_0_1"} },
+            // { {"submod_1_1_0"}, {"submod_1_1_1"} },
+            // { {"submod_1_2_0"}, {"submod_1_2_1"} }
+          // }
+        // }  // end 3d
   {
     //
-  //  submodule.clk(test);
+    //  submodule.clk(test);
     //
     // // 1d
     // submodules[0].clk(test);
     // submodules[1].clk(test);
 //
+    //
     // 2d
-     submodules_2d[0][0].clk(test);
-   int j;
+    submodules_2d[0][0].clk(test);
+
+    //
+    // 3d
+    // submodules_3d[0][0][0].clk(test);
+
+    int j;
     SC_METHOD(body);
     for (j = 0; j < 4; j++) {
       sensitive << a[j] << b[j];

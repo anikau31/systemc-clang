@@ -409,8 +409,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   }
 
   void parseFieldDecl(clang::FieldDecl *instance_decl,
-                      clang::ValueDecl *parent_decl,
-                      std::string instance_name) {
+                      clang::ValueDecl *parent_decl, std::string instance_name,
+                      GetASTInfo::IndexMapType &index_map) {
     std::string name{instance_decl->getIdentifier()->getNameStart()};
 
     // This is the main object's constructor name
@@ -424,9 +424,16 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       parent_name = parent_decl->getName();
     }
 
+    auto array_indices{index_map[instance_name]};
     LLVM_DEBUG(llvm::dbgs()
                << "=> FD: var_name " << var_name << " var_type_name "
-               << var_type_name << " parent_name " << parent_name << "\n");
+               << var_type_name << " parent_name " << parent_name
+               << " instance name " << instance_name << "[ "
+               << std::get<0>(array_indices) << ", "
+               << std::get<1>(array_indices) << ", "
+               << std::get<2>(array_indices)
+               << "]"
+                  "\n");
 
     ModuleInstanceType parsed_instance{};
     parsed_instance.var_name = var_name;
@@ -460,8 +467,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       }
     }
 
-    LLVM_DEBUG(llvm::outs() << " All dim. arrays: " << array_1d << "  " << array_2d << "  "
-                 << array_3d << "\n";);
+    LLVM_DEBUG(llvm::outs() << " All dim. arrays: " << array_1d << "  "
+                            << array_2d << "  " << array_3d << "\n";);
 
     // auto array_type{
     // instance_decl->getType().getTypePtr()->getAsArrayTypeUnsafe()};
@@ -567,31 +574,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                      << "\n";
         for (auto const &init : index_map) {
           auto submodule_instance_name{init.first};
-          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
+          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name,
+                         index_map);
           LLVM_DEBUG(llvm::dbgs() << "#==> submodule_instance_name "
                                   << submodule_instance_name << "\n");
         }
 
-        // for (auto init : iexpr->inits()) {
-        // llvm::outs() << "    Go through the initializer list\n";
-        // cexpr = clang::dyn_cast<clang::CXXConstructExpr>(init);
-        //
-        // MatchFinder iarg_registry{};
-        // InstanceArgumentMatcher iarg_matcher{};
-        // iarg_matcher.registerMatchers(iarg_registry);
-        // iarg_registry.match(*cexpr, *result.Context);
-        //
-        // LLVM_DEBUG(iarg_matcher.dump(););
-        //
-        // This retrieves the submodule instance name.
-        // if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
-        // auto submodule_instance_name = inst_literal->getString().str();
-        //
-        // parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
-        // LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
-        // << submodule_instance_name << "\n");
-        // }
-        // }
       } else {
         MatchFinder iarg_registry{};
         InstanceArgumentMatcher iarg_matcher{};
@@ -604,7 +592,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         // This retrieves the submodule instance name.
         if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
           auto submodule_instance_name = inst_literal->getString().str();
-          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
+          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name,
+                         index_map);
           LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
                                   << submodule_instance_name << "\n");
         }
