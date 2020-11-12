@@ -387,7 +387,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.var_type_name = var_type_name;
     parsed_instance.instance_name = instance_name;
     // This is the Type of the FieldDecl.
-    parsed_instance.decl =
+    parsed_instance.type_decl =
         instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
     // This is the FieldDecl.
     parsed_instance.instance_decl = instance_decl;
@@ -433,19 +433,56 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.var_type_name = var_type_name;
     instance_decl->getType()->dump();
 
-    auto array_type{
-        instance_decl->getType().getTypePtr()->getAsArrayTypeUnsafe()};
+    /// Get all the 1D, 2D and 3D array type pointers.
+    const ArrayType *array_1d{
+        instance_decl->getType().getTypePtrOrNull()->getAsArrayTypeUnsafe()};
+    const ArrayType *array_2d{nullptr};
+    const ArrayType *array_3d{nullptr};
+    const ArrayType *array_type{nullptr};
+
+    /// We need to set the array_type pointer to the deepest array. That is if
+    /// it is a 3D array then we need to set it to the third dimension element
+    /// type to get the correct CXXRecordDecl.
+    //
+    if (array_1d) {
+      array_type = array_1d;
+      array_2d =
+          array_1d->getElementType().getTypePtrOrNull()->getAsArrayTypeUnsafe();
+      if (array_2d) {
+        array_type = array_2d;
+        array_3d = array_2d->getElementType()
+                       .getTypePtrOrNull()
+                       ->getAsArrayTypeUnsafe();
+
+        if (array_3d) {
+          array_type = array_3d;
+        }
+      }
+    }
+
+    LLVM_DEBUG(llvm::outs() << " All dim. arrays: " << array_1d << "  " << array_2d << "  "
+                 << array_3d << "\n";);
+
+    // auto array_type{
+    // instance_decl->getType().getTypePtr()->getAsArrayTypeUnsafe()};
     // Array type.
     if (array_type) {
       auto element_type{array_type->getElementType().getTypePtr()};
-      parsed_instance.decl = element_type->getAsCXXRecordDecl();
+      parsed_instance.type_decl = element_type->getAsCXXRecordDecl();
+      llvm::outs()
+          << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IS ARRAY type decl null: "
+          << parsed_instance.type_decl << "\n";
+      element_type->dump();
       parsed_instance.setArrayType();
       parsed_instance.addArraySizes(
           GetASTInfo::getConstantArraySizes(instance_decl));
     } else {
       // Not an array type.
-      parsed_instance.decl =
+      parsed_instance.type_decl =
           instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
+      llvm::outs()
+          << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ NOT ARRAY type decl null: "
+          << parsed_instance.type_decl << "\n";
     }
 
     instance_decl->dump();
@@ -497,16 +534,21 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     auto test_fd = const_cast<clang::FieldDecl *>(
         result.Nodes.getNodeAs<clang::FieldDecl>("test_fd"));
     //
+    //
+    //
     if (ctor_fd && ctor_init && parent_fd) {
       LLVM_DEBUG(llvm::dbgs()
                  << "#### CTOR_FD: parent_fd " << parent_fd->getNameAsString()
                  << " ctor_fd " << ctor_fd->getNameAsString() << "\n");
-      LLVM_DEBUG(ctor_fd->dump());
+      // LLVM_DEBUG(ctor_fd->dump());
 
-      llvm::outs() << "### DEBUG\n";
-      ctor_init->getInit()->dump();
+      // llvm::outs() << "### DEBUG\n";
+      //  ctor_init->getInit()->dump();
+
+      auto index_map{GetASTInfo::getArrayInstanceIndex(ctor_init)};
+
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
-      expr->dump();
+      // expr->dump();
       clang::CXXConstructExpr *cexpr{
           clang::dyn_cast<clang::CXXConstructExpr>(expr)};
       clang::InitListExpr *iexpr{clang::dyn_cast<clang::InitListExpr>(expr)};
@@ -514,39 +556,42 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       /// For arrays, an InitListExpr is generated.
       /// For non-arrays, CXXConstructExpr is directly castable.
       ///
-      /// If it is an array, then get to its InitListExpr, and then get the first
-      /// element's constructor.
-
-      if (iexpr) {
-        GetASTInfo::getArrayInstanceIndex( iexpr );
-
-      }
+      /// If it is an array, then get to its InitListExpr, and then get the
+      /// first element's constructor.
+      //
 
       if ((iexpr != nullptr) && (cexpr == nullptr)) {
         llvm::outs() << "### IEXPR is not NULL\n";
 
-        for (auto init : iexpr->inits()) {
-          llvm::outs() << "    Go through the initializer list\n";
-          cexpr = clang::dyn_cast<clang::CXXConstructExpr>(init);
-          // TODO: move into a function
-
-          MatchFinder iarg_registry{};
-          InstanceArgumentMatcher iarg_matcher{};
-          iarg_matcher.registerMatchers(iarg_registry);
-          iarg_registry.match(*cexpr, *result.Context);
-
-          LLVM_DEBUG(iarg_matcher.dump(););
-
-          // This retrieves the submodule instance name.
-          if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
-            auto submodule_instance_name = inst_literal->getString().str();
-
-            parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
-            LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
-                                    << submodule_instance_name << "\n");
-          }
+        llvm::outs() << "######## Going through index map: " << index_map.size()
+                     << "\n";
+        for (auto const &init : index_map) {
+          auto submodule_instance_name{init.first};
+          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
+          LLVM_DEBUG(llvm::dbgs() << "#==> submodule_instance_name "
+                                  << submodule_instance_name << "\n");
         }
-        // cexpr = cast<clang::CXXConstructExpr>(iexpr->inits()[0]);
+
+        // for (auto init : iexpr->inits()) {
+        // llvm::outs() << "    Go through the initializer list\n";
+        // cexpr = clang::dyn_cast<clang::CXXConstructExpr>(init);
+        //
+        // MatchFinder iarg_registry{};
+        // InstanceArgumentMatcher iarg_matcher{};
+        // iarg_matcher.registerMatchers(iarg_registry);
+        // iarg_registry.match(*cexpr, *result.Context);
+        //
+        // LLVM_DEBUG(iarg_matcher.dump(););
+        //
+        // This retrieves the submodule instance name.
+        // if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
+        // auto submodule_instance_name = inst_literal->getString().str();
+        //
+        // parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name);
+        // LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
+        // << submodule_instance_name << "\n");
+        // }
+        // }
       } else {
         MatchFinder iarg_registry{};
         InstanceArgumentMatcher iarg_matcher{};
@@ -555,6 +600,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
         LLVM_DEBUG(iarg_matcher.dump(););
 
+        llvm::outs() << "#### IndexMap: " << index_map.size() << "\n";
         // This retrieves the submodule instance name.
         if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
           auto submodule_instance_name = inst_literal->getString().str();
@@ -587,10 +633,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(llvm::dbgs()
                      << "decl* " << i.first << "  " << instance.instance_name;);
 
-      auto instance_field{instance.decl};
+      auto instance_field{instance.type_decl};
       LLVM_DEBUG(llvm::dbgs()
                      << " instance_field*: " << instance_field << "\n";);
-
+      //
       if (clang::dyn_cast<clang::FieldDecl>(instance_field)) {
         if (instance.is_field_decl) {
           LLVM_DEBUG(llvm::dbgs() << " FieldDecl ";);
