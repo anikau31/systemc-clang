@@ -1,6 +1,7 @@
 #ifndef _HDL_H
 #define _HDL_H
 
+// clang-format off
 #include "SystemCClang.h"
 //#include "PluginAction.h"
 
@@ -11,6 +12,7 @@
 #include "hNode.h"
 #include "HDLBody.h"
 #include "HDLType.h"
+// clang-format on
 
 using namespace clang;
 using namespace systemc_clang;
