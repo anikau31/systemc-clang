@@ -1,6 +1,7 @@
 #ifndef _HDLBODY_H
 #define _HDLBODY_H
 
+// clang-format off
 #include <vector>
 #include <string>
 #include <unordered_set>
@@ -18,6 +19,7 @@
 
 #include "SystemCClang.h"
 #include "hNode.h"
+// clang-format on
 
 using namespace clang;
 using namespace systemc_clang;
