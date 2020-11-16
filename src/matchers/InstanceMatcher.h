@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ModuleInstanceType.h"
+#include "ArrayTypeUtils.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "llvm/Support/Debug.h"
 
@@ -16,6 +17,7 @@ using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
 using namespace clang;
+using namespace utils::array_type;
 
 class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
  private:
@@ -410,7 +412,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   void parseFieldDecl(clang::FieldDecl *instance_decl,
                       clang::ValueDecl *parent_decl, std::string instance_name,
-                      GetASTInfo::IndexMapType &index_map) {
+                      IndexMapType &index_map) {
     std::string name{instance_decl->getIdentifier()->getNameStart()};
 
     // This is the main object's constructor name
@@ -482,7 +484,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       element_type->dump();
       parsed_instance.setArrayType();
       parsed_instance.addArraySizes(
-          GetASTInfo::getConstantArraySizes(instance_decl));
+          getConstantArraySizes(instance_decl));
       parsed_instance.setArrayParameters(index_map[instance_name]);
       llvm::outs() << "Dimension of array: " << parsed_instance.getArrayDimension() << "\n";
     } else {
@@ -554,7 +556,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       // llvm::outs() << "### DEBUG\n";
       //  ctor_init->getInit()->dump();
 
-      auto index_map{GetASTInfo::getArrayInstanceIndex(ctor_init)};
+      auto index_map{getArrayInstanceIndex(ctor_init)};
 
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
       // expr->dump();

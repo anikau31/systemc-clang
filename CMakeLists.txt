@@ -367,6 +367,7 @@ include_directories(
   "src/"
   "src/matchers"
   "src/model"
+  "src/utils"
   )
 
 set( SRC_LIB libsystemc-clang )
@@ -402,7 +403,7 @@ add_executable(
   ${ROOT_CPP} 
   )
 
-target_link_libraries(${TARGET} ${SRC_LIB}) #nlohmann_json::nlohmann_json)
+target_link_libraries(${TARGET} ${SRC_LIB}) 
 
 foreach (clang_lib ${CLANG_LIBS})
   target_link_libraries( ${TARGET} ${clang_lib} )

@@ -12,7 +12,6 @@ set( SCC_MODEL
   WaitCalls.cpp
   NotifyCalls.cpp
   EventContainer.cpp
-  #SignalContainer.cpp
   )
 
 include_directories(${SCC_INCLUDES})

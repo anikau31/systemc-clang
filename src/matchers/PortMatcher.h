@@ -17,7 +17,7 @@
 #include <vector>
 #include "ModuleDecl.h"
 #include "PortDecl.h"
-#include "GetASTInfo.h"
+#include "ArrayTypeUtils.h"
 
 #include "clang/ASTMatchers/ASTMatchers.h"
 
@@ -29,6 +29,7 @@ using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
 
+using namespace utils::array_type;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -386,9 +387,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
       PortDecl *new_pd{new PortDecl(name, decl, parseTemplateType(fd))};
 
 
-      //GetASTInfo ast_info{};
 
-      std::vector<llvm::APInt> sizes{ GetASTInfo::getConstantArraySizes(fd) };
+      std::vector<llvm::APInt> sizes{ getConstantArraySizes(fd) };
 
       if (sizes.size() > 0 ) {
         new_pd->setArrayType();
