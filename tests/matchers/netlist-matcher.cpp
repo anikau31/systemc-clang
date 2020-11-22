@@ -18,6 +18,7 @@ using namespace sc_ast_matchers;
 TEST_CASE("Testing top-level module: test", "[top-module]") {
   /// Enable debug
   llvm::DebugFlag = true;
+  llvm::setCurrentDebugType("NetlistMatcher");
 
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "netlist-matcher-input.cpp")};
