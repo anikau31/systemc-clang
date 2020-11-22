@@ -1,6 +1,5 @@
 #include "ArrayTypeUtils.h"
 
-
 namespace sc_ast_matchers {
 namespace utils {
 namespace array_type {
@@ -130,6 +129,26 @@ ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd) {
   }
 
   return sizes;
+}
+
+ArraySizesType getArraySubscripts(const clang::Expr *expr) {
+  ArraySizesType subscripts;
+
+  /// Check if it is an ArraySubscriptExpr
+  auto arr_sub_expr{clang::dyn_cast<clang::ArraySubscriptExpr>(expr)};
+  while (arr_sub_expr != nullptr) {
+    auto int_lit{
+        clang::dyn_cast<clang::IntegerLiteral>(arr_sub_expr->getIdx())};
+    llvm::outs() << "SUBSCRIPT: " << int_lit->getValue() << "\n";
+    subscripts.push_back(int_lit->getValue());
+
+    /// INFO: For some reason, dyn_cast on the ArraySubscriptExpr to get the
+    /// ImplicitCastExpr does not work. So the way to get to it is to call
+    /// getBase(), which makes sense that it accesses the nested array instance.
+    arr_sub_expr = clang::dyn_cast<clang::ArraySubscriptExpr>(
+        arr_sub_expr->getBase()->IgnoreParenImpCasts());
+  }
+  return subscripts;
 }
 
 }  // namespace array_type
