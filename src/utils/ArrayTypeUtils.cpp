@@ -151,6 +151,25 @@ ArraySizesType getArraySubscripts(const clang::Expr *expr) {
   return subscripts;
 }
 
+const clang::MemberExpr *getArrayMemberExprName(const clang::Expr *expr) {
+  /// Check if it is an ArraySubscriptExpr
+  auto arr_sub_expr{clang::dyn_cast<clang::ArraySubscriptExpr>(expr)};
+  while (arr_sub_expr != nullptr) {
+    auto nested_sub_expr{clang::dyn_cast<clang::ArraySubscriptExpr>(
+        arr_sub_expr->getBase()->IgnoreParenImpCasts())};
+
+    /// Get access to the MemberExpr name.
+    if (nested_sub_expr == nullptr) {
+      const clang::MemberExpr *name_me{clang::dyn_cast<clang::MemberExpr>(
+          arr_sub_expr->getBase()->IgnoreParenImpCasts())};
+      llvm::outs() << "me_name: "<< name_me->getMemberNameInfo().getAsString() << "\n";
+      return name_me;
+    }
+    arr_sub_expr = nested_sub_expr;
+  }
+  return nullptr;
+}
+
 }  // namespace array_type
 
 }  // namespace utils

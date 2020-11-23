@@ -47,9 +47,12 @@ IndexMapType getArrayInstanceIndex(clang::CXXCtorInitializer *ctor_init);
 ///
 ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd);
 
-/// Returns the array subscripts used in an ArraySubscriptExpr
+/// Returns the array subscripts used in an ArraySubscriptExpr. 
+/// For example, arr[0][1] would return 0, 1.
 ArraySizesType getArraySubscripts( const clang::Expr * expr);
 
+
+const clang::MemberExpr* getArrayMemberExprName(const clang::Expr *expr);
 };  // namespace array_type
 };  // namespace array_type
 
