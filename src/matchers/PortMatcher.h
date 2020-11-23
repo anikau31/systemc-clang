@@ -111,7 +111,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   PortMatcher() {}
 
   /// AST matcher to detect field declarations.
-  auto makeFieldMatcher(const std::string &name) {
+  auto makeFieldMatcher(llvm::StringRef name) {
     /* clang-format off */
 
     /// The generic field matcher has the following conditions.
@@ -184,7 +184,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     );
   }
 
-  auto makeSignalMatcher(const std::string &name) {
+  auto makeSignalMatcher(llvm::StringRef name) {
     return fieldDecl(
         signalMatcher(name)
       ).bind("other_fields");
@@ -261,7 +261,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
           );
   }
 
-  auto makePortHasNameMatcher(const std::string &name) {
+  auto makePortHasNameMatcher(llvm::StringRef name) {
     return fieldDecl(
         portNameMatcher(name)
         ).bind("other_fields");
@@ -273,7 +273,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
   ///  - It has a type that is an array whose type has a name "name".
   ///  - Or, it has a type that is a NamedDecl whose name is "name".
   ///
-  auto makePortHasNamedDeclNameMatcher(const std::string &name) {
+  auto makePortHasNamedDeclNameMatcher(llvm::StringRef name) {
     return 
       fieldDecl(
           anyOf(
@@ -283,18 +283,62 @@ class PortMatcher : public MatchFinder::MatchCallback {
       );
   }
 
+  auto makeArraySubModule(llvm::StringRef name) {
+    return arrayType(
+     hasElementType(hasUnqualifiedDesugaredType(
+         recordType(
+           hasDeclaration(
+            cxxRecordDecl(isDerivedFrom(hasName(name))).bind("submodule")
+            ) //hasDeclaration
+         )// recordType
+       ))
+     );
+  }
+
   auto makeMemberIsSubModule() {
+    llvm::StringRef base_class{"::sc_core::sc_module"};
+
     return
       fieldDecl(
           hasType(hasUnqualifiedDesugaredType(
-              recordType(
-                hasDeclaration(
-                  cxxRecordDecl(
-                    isDerivedFrom(hasName("::sc_core::sc_module")),
-                    unless(isDerivedFrom(matchesName("sc_event_queue")))
-                    ).bind("submodule")
-                  ) //hasDeclaration
-                ) //recordType
+              anyOf(
+                // 1 instance
+                recordType(
+                  hasDeclaration(
+                    cxxRecordDecl(
+                      isDerivedFrom(hasName("::sc_core::sc_module")),
+                      unless(isDerivedFrom(matchesName("sc_event_queue")))
+                      ).bind("submodule")
+                    ) //hasDeclaration
+                  ) //recordType
+
+                // 1D array
+                ,
+                makeArraySubModule(base_class)
+
+                // 2D array of modules
+                ,
+                arrayType(
+                  hasElementType(hasUnqualifiedDesugaredType(
+                    makeArraySubModule(base_class) 
+                    )//hasElementType
+                    )
+                  )//arrayType
+
+                  // 3D array
+                ,
+                arrayType(
+                  hasElementType(hasUnqualifiedDesugaredType(
+                      arrayType(hasElementType(
+                        makeArraySubModule(base_class) 
+                        )//hasElementType 
+                      ) // arrayType
+                      ) //hasUnqualifiedDesugaredType
+                    ) // hasElementType
+                  )//arrayType
+
+                ) // anyOf
+
               ) //hasUnqualifiedDesugaredType
             ) //hasType
           ).bind("submodule_fd"); // fieldDecl;

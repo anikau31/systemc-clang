@@ -389,7 +389,7 @@
                   ]
                   hBinop < [
                     hVarref _local_3 NOLIST
-                    hLiteral 2 NOLIST
+                    hLiteral 16 NOLIST
                   ]
                   hUnop ++ [
                     hVarref _local_3 NOLIST
@@ -674,7 +674,7 @@
                     hForStmt  NONAME [
                       hVarAssign  NONAME [
                         hVarref _local_3 NOLIST
-                        hLiteral 2 NOLIST
+                        hLiteral 16 NOLIST
                       ]
                       hBinop > [
                         hVarref _local_3 NOLIST
@@ -852,7 +852,7 @@
                       ]
                       hBinop < [
                         hVarref _local_5 NOLIST
-                        hLiteral 2 NOLIST
+                        hLiteral 16 NOLIST
                       ]
                       hUnop ++ [
                         hVarref _local_5 NOLIST
@@ -1001,7 +1001,7 @@
                                     hBinop != [
                                       hVarref _local_5 NOLIST
                                       hBinop - [
-                                        hLiteral 2 NOLIST
+                                        hLiteral 16 NOLIST
                                         hLiteral 1 NOLIST
                                       ]
                                     ]
@@ -1188,7 +1188,7 @@
                                   hBinop != [
                                     hVarref _local_5 NOLIST
                                     hBinop - [
-                                      hLiteral 2 NOLIST
+                                      hLiteral 16 NOLIST
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
@@ -1210,7 +1210,7 @@
                                   hBinop != [
                                     hVarref _local_5 NOLIST
                                     hBinop - [
-                                      hLiteral 2 NOLIST
+                                      hLiteral 16 NOLIST
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
@@ -1248,7 +1248,7 @@
                     hIfStmt  NONAME [
                       hBinop < [
                         hVarref _local_8 NOLIST
-                        hLiteral 2 NOLIST
+                        hLiteral 33 NOLIST
                       ]
                       hCStmt  NONAME [
                         hBinop = [
@@ -1272,7 +1272,7 @@
                     hIfStmt  NONAME [
                       hBinop != [
                         hVarref _local_9 NOLIST
-                        hLiteral 2 NOLIST
+                        hLiteral 16 NOLIST
                       ]
                       hBinop = [
                         hBinop ARRAYSUBSCRIPT [
@@ -1459,7 +1459,7 @@
                             hSigAssignR read [
                               hVarref n1 NOLIST
                             ]
-                            hLiteral 2 NOLIST
+                            hLiteral 16 NOLIST
                           ]
                           hCStmt  NONAME [
                             hBinop = [
@@ -1491,7 +1491,7 @@
                         hIfStmt  NONAME [
                           hBinop != [
                             hVarref _local_9 NOLIST
-                            hLiteral 2 NOLIST
+                            hLiteral 16 NOLIST
                           ]
                           hCStmt  NONAME [
                             hBinop = [

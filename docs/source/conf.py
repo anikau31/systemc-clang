@@ -30,7 +30,7 @@ if read_the_docs_build:
 # -- Project information -----------------------------------------------------
 
 project = 'systemc-clang'
-copyright = '2020, Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel'
+copyright = '2020: Core -- Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel; 2020: HDL Plugin -- Maya Gokhale'
 author = 'Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel'
 
 # The full version, including alpha/beta/rc tags

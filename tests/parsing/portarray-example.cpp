@@ -12,7 +12,7 @@ using namespace sc_ast_matchers;
 
 TEST_CASE("Only parse a single top-level module", "[parsing]") {
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "ports-arrays.cpp")};
+      systemc_clang::test_data_dir, "ports-arrays-input.cpp")};
   llvm::DebugFlag = true;
 
   ASTUnit *from_ast =
@@ -73,5 +73,6 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
     REQUIRE(found_decl->getOPorts().size() == 3);
     REQUIRE(found_decl->getOtherVars().size() == 3);
+    REQUIRE(found_decl->getSubmodules().size() == 2);
   }
 }

@@ -486,8 +486,10 @@ struct encode_block<FP, 2> : sc_module
 	sc_signal<bool> c_yt_ready[4];
 
 	/*-------- modules --------*/
-	sc_vector4<fwd_lift<FP> > u_xt;
-	sc_vector4<fwd_lift<FP> > u_yt;
+	// sc_vector4<fwd_lift<FP> > u_xt;
+	// sc_vector4<fwd_lift<FP> > u_yt;
+	fwd_lift<FP> u_xt[4];
+	fwd_lift<FP> u_yt[4];
 
 	void mc_proc()
 	{
@@ -538,8 +540,10 @@ struct encode_block<FP, 2> : sc_module
 #endif
 
 	SC_CTOR(encode_block) :
-	  u_xt("u_xt"),
-	  u_yt("u_yt")
+	  // u_xt("u_xt"),
+	  // y_xt("u_yt")
+	  u_xt{{"u_xt_0"}, {"u_xt_1"}, {"u_xt_2"}, {"u_xt_3"}},
+	  u_yt{{"u_yt_0"}, {"u_yt_1"}, {"u_yt_2"}, {"u_yt_3"}}
 	{
 		for (int j = 0; j < 4; j++) {
 			u_xt[j].clk(clk);
@@ -608,9 +612,12 @@ struct encode_block<FP, 3> : sc_module
 	sc_signal<bool> c_zt_ready[4][4];
 
 	/*-------- modules --------*/
-	sc_vector4<sc_vector4<fwd_lift<FP> > > u_xt;
-	sc_vector4<sc_vector4<fwd_lift<FP> > > u_yt;
-	sc_vector4<sc_vector4<fwd_lift<FP> > > u_zt;
+	// sc_vector4<sc_vector4<fwd_lift<FP> > > u_xt;
+	// sc_vector4<sc_vector4<fwd_lift<FP> > > u_yt;
+	// sc_vector4<sc_vector4<fwd_lift<FP> > > u_zt;
+	fwd_lift<FP>  u_xt[4][4];
+	fwd_lift<FP>  u_yt[4][4];
+	fwd_lift<FP>  u_zt[4][4];
 
 	void mc_proc()
 	{
@@ -737,9 +744,27 @@ struct encode_block<FP, 3> : sc_module
 #endif
 
 	SC_CTOR(encode_block) :
-	    u_xt("u_xt"),
-	    u_yt("u_yt"),
-	    u_zt("u_zt")
+	  // u_xt("u_xt"),
+	  // u_yt("u_yt"),
+	  // u_zt("u_zt")
+	  u_xt{
+	  	{{"u_xt_0_0"}, {"u_xt_0_1"}, {"u_xt_0_2"}, {"u_xt_0_3"}}, 
+	  		{{"u_xt_1_0"}, {"u_xt_1_1"}, {"u_xt_1_2"}, {"u_xt_1_3"}}, 
+	  		{{"u_xt_2_0"}, {"u_xt_2_1"}, {"u_xt_2_2"}, {"u_xt_2_3"}}, 
+	  		{{"u_xt_3_0"}, {"u_xt_3_1"}, {"u_xt_3_2"}, {"u_xt_3_3"}}
+	  },
+	  u_yt{
+	  	{{"u_yt_0_0"}, {"u_yt_0_1"}, {"u_yt_0_2"}, {"u_yt_0_3"}}, 
+	  	{{"u_yt_1_0"}, {"u_yt_1_1"}, {"u_yt_1_2"}, {"u_yt_1_3"}}, 
+	  	{{"u_yt_2_0"}, {"u_yt_2_1"}, {"u_yt_2_2"}, {"u_yt_2_3"}}, 
+	  	{{"u_yt_3_0"}, {"u_yt_3_1"}, {"u_yt_3_2"}, {"u_yt_3_3"}}
+	  },
+	  u_zt{
+	  	{{"u_zt_0_0"}, {"u_zt_0_1"}, {"u_zt_0_2"}, {"u_zt_0_3"}}, 
+	  	{{"u_zt_1_0"}, {"u_zt_1_1"}, {"u_zt_1_2"}, {"u_zt_1_3"}}, 
+	  	{{"u_zt_2_0"}, {"u_zt_2_1"}, {"u_zt_2_2"}, {"u_zt_2_3"}}, 
+	  	{{"u_zt_3_0"}, {"u_zt_3_1"}, {"u_zt_3_2"}, {"u_zt_3_3"}}
+	  }
 	{
 		for (int k = 0; k < 4; k++) {
 			for (int j = 0; j < 4; j++) {
