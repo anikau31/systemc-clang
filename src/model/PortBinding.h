@@ -3,21 +3,42 @@
 
 using namespace systemc_clang;
 
+#include "ArrayTypeUtils.h"
 namespace systemc_clang {
+
+using namespace sc_ast_matchers::utils::array_type;
 
 class PortBinding {
  private:
+  /// Reword
+  //
+  /// Caller
+  clang::Expr *caller_expr_;
+  clang::ArraySubscriptExpr *caller_array_expr_;
+  const clang::MemberExpr *caller_member_expr_;
+  std::vector<llvm::APInt> caller_array_subscripts_;
+
+  /// Callee
+  clang::Expr *callee_expr_;
+  const clang::MemberExpr *callee_me_expr_;  // port
+  clang::ArraySubscriptExpr *callee_array_expr_;
+  std::vector<llvm::APInt> callee_array_subscripts_;
+
   // Which of the two bindings is done (sc_main or ctor)
   //
   bool is_ctor_binding_;
 
-  //
-  // These private members are used when the port binding is done in the
-  // constructor.
-  //
-  clang::MemberExpr *me_ctor_port_;  // port
-  clang::MemberExpr *me_instance_;   // instance on which the binding is invoked
-  clang::MemberExpr *me_arg_;        // argument to the port
+  ///
+  /// These private members are used when the port binding is done in the
+  /// constructor.
+  ///
+  ///  sub_module_member.input(inS);
+  /// callee_me_expr_   = input
+  /// me_instance_    = sub_module_member
+  /// me_arg_         = inS
+
+  clang::MemberExpr *me_instance_;  // instance on which the binding is invoked
+  clang::MemberExpr *me_arg_;       // argument to the port
 
   // The below private members are used when the port binding is found in the
   // sc_main.
@@ -26,7 +47,6 @@ class PortBinding {
   // 2. port_dref_
   // 3. port_parameter_dref_
   //
-  clang::MemberExpr *port_member_expr_;
   clang::ArraySubscriptExpr *port_member_array_port_expr_;
   clang::DeclRefExpr *port_member_array_idx_dref_;
 
@@ -63,7 +83,9 @@ class PortBinding {
   }
 
   const std::string &getPortName() const { return port_name_; }
-  clang::MemberExpr *getPortMemberExpr() const { return port_member_expr_; }
+  const clang::MemberExpr *getCallerMemberExpr() const {
+    return caller_member_expr_;
+  }
   const std::string &getInstanceType() const { return instance_type_; }
   const std::string &getInstanceVarName() const { return instance_var_name_; }
   const std::string &getInstanceConstructorName() const {
@@ -128,6 +150,32 @@ class PortBinding {
     // << " bound to " << port_parameter_name_ << "\n";
   }
 
+  PortBinding(clang::Expr *caller_expr, clang::Expr *callee_expr)
+      : caller_expr_{caller_expr}, callee_expr_{callee_expr} {
+    /// Cast to see if it's an array.
+    caller_array_expr_ = dyn_cast<clang::ArraySubscriptExpr>(caller_expr);
+
+    /// If it is an array.
+    if (caller_array_expr_) {
+      caller_member_expr_ = getArrayMemberExprName(caller_array_expr_);
+      caller_array_subscripts_= getArraySubscripts(caller_array_expr_);
+    }
+
+    callee_array_expr_ = dyn_cast<clang::ArraySubscriptExpr>(callee_expr);
+    if (callee_array_expr_) {
+      callee_me_expr_ = getArrayMemberExprName(callee_array_expr_);
+      callee_array_subscripts_ = getArraySubscripts(callee_array_expr_);
+    }
+
+    port_name_ = callee_me_expr_->getMemberNameInfo().getAsString();
+    port_type_name_ = callee_me_expr_->getMemberDecl()
+                          ->getType()
+                          .getBaseTypeIdentifier()
+                          ->getName();
+
+
+
+  }
   PortBinding(clang::ArraySubscriptExpr *port_array,
               clang::MemberExpr *me_ctor_port, clang::MemberExpr *me_instance,
               clang::MemberExpr *me_arg,
@@ -135,11 +183,11 @@ class PortBinding {
               clang::DeclRefExpr *array_idx)
       : port_member_array_port_expr_{port_array},
         port_member_array_idx_dref_{nullptr},
-        me_ctor_port_{me_ctor_port},
+        callee_me_expr_{me_ctor_port},
         me_instance_{me_instance},
         me_arg_{me_arg},
         port_parameter_array_expr_{array_port_bound_to} {
-    port_name_ = me_ctor_port_->getMemberNameInfo().getAsString();
+    port_name_ = callee_me_expr_->getMemberNameInfo().getAsString();
     port_type_name_ = me_ctor_port->getMemberDecl()
                           ->getType()
                           .getBaseTypeIdentifier()
@@ -194,7 +242,7 @@ class PortBinding {
               const std::string &instance_constructor_name)
       : is_ctor_binding_{false},
         // Used only for ctor bindings
-        me_ctor_port_{nullptr},
+        callee_me_expr_{nullptr},
         me_instance_{nullptr},
         me_arg_{nullptr},
         // Used only for sc_main bindings
