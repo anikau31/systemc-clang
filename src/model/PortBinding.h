@@ -51,8 +51,8 @@ class PortBinding {
   clang::DeclRefExpr *port_member_array_idx_dref_;
 
   // Instance information
-  std::string port_name_;
-  std::string port_type_name_;
+  std::string callee_name_;
+  std::string callee_type_name_;
 
   std::string instance_type_;
   std::string instance_var_name_;
@@ -82,7 +82,7 @@ class PortBinding {
     instance_constructor_name_ = n;
   }
 
-  const std::string &getPortName() const { return port_name_; }
+  const std::string &getPortName() const { return callee_name_; }
   const clang::MemberExpr *getCallerMemberExpr() const {
     return caller_me_expr_;
   }
@@ -122,13 +122,13 @@ class PortBinding {
   }
 
   void dump() {
-    llvm::outs() << "port name     : " << port_name_ << "  "
-                 << "port type name: " << port_type_name_;
+    llvm::outs() << "port name     : " << callee_name_ << "  "
+                 << "port type name: " << callee_type_name_;
     /*
     llvm::outs() << "> inst type name: " << instance_type_
                  << ", inst var name : " << instance_var_name_
-                 << ", port_type name: " << port_type_name_
-                 << ", port name     : " << port_name_
+                 << ", port_type name: " << callee_type_name_
+                 << ", port name     : " << callee_name_
                  << ", port arg type : " << port_parameter_type_name_;
 
     if (port_member_array_idx_dref_) {
@@ -147,7 +147,7 @@ class PortBinding {
     */
     llvm::outs() << "\n";
 
-    // llvm::outs() << "> port_name: " << port_name_ << " type: " <<
+    // llvm::outs() << "> port_name: " << callee_name_ << " type: " <<
     // instance_type_
     // << " var_name: " << instance_var_name_
     // << " constructor_name: " << instance_constructor_name_
@@ -177,11 +177,10 @@ class PortBinding {
 
     if (callee_me_expr_) {
     llvm::outs() << "Get port name\n";
-    callee_me_expr_->dump();
 
-    port_name_ = callee_me_expr_->getMemberNameInfo().getAsString();
+    callee_name_ = callee_me_expr_->getMemberNameInfo().getAsString();
     llvm::outs() << "Get port type\n";
-    port_type_name_ = callee_me_expr_->getMemberDecl()
+    callee_type_name_ = callee_me_expr_->getMemberDecl()
                           ->getType()
                           .getBaseTypeIdentifier()
                           ->getName();
@@ -198,8 +197,8 @@ class PortBinding {
         me_instance_{me_instance},
         me_arg_{me_arg},
         port_parameter_array_expr_{array_port_bound_to} {
-    port_name_ = callee_me_expr_->getMemberNameInfo().getAsString();
-    port_type_name_ = me_ctor_port->getMemberDecl()
+    callee_name_ = callee_me_expr_->getMemberNameInfo().getAsString();
+    callee_type_name_ = me_ctor_port->getMemberDecl()
                           ->getType()
                           .getBaseTypeIdentifier()
                           ->getName();
@@ -263,8 +262,8 @@ class PortBinding {
         instance_constructor_name_{instance_constructor_name} {
     // Get the type of the instance (sc_module class name).
 
-    port_name_ = me->getMemberDecl()->getNameAsString();
-    port_type_name_ =
+    callee_name_ = me->getMemberDecl()->getNameAsString();
+    callee_type_name_ =
         me->getMemberDecl()->getType().getBaseTypeIdentifier()->getName();
 
     instance_type_ =
