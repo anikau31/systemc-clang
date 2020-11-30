@@ -91,9 +91,20 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
        )
      ).bind("functiondecl");
 
-    const auto caller_array_subscript =  memberExpr(
-                                    has(arraySubscriptExpr().bind("caller_expr")  )
-                                  ).bind("caller_me_expr");
+
+    const auto caller_array_subscript =
+                                  arraySubscriptExpr(
+                                    hasParent(
+                                      memberExpr().bind("caller_port_me_expr")
+                                      )
+                                    ).bind("caller_expr") ;
+
+
+/*
+    const auto caller_array_subscript =  memberExpr(ignoringImplicit(
+                                    has(arraySubscriptExpr().bind("caller_expr")  ) )
+                                  ).bind("caller_port_me_expr");
+                                  */
 
     const auto match_callers = 
       anyOf( 
@@ -103,9 +114,9 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       );
 
     const auto callee_array_subscript =  
-      memberExpr(
-        has(arraySubscriptExpr().bind("callee_expr")  )
-      ).bind("callee_me_expr");
+      memberExpr(ignoringImplicit(
+        has(arraySubscriptExpr().bind("callee_expr")  ) )
+      ).bind("callee_port_me_expr");
 
     const auto match_callees = 
       anyOf( 
@@ -209,7 +220,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     /* clang-format on */
 
     // Add the two matchers.
-    //finder.addMatcher(match_sc_main_callexpr, this);
+    // finder.addMatcher(match_sc_main_callexpr, this);
     // finder.addMatcher(match_ctor_decl, this);
     finder.addMatcher(test_match_ctor_decl, this);
   }
@@ -240,25 +251,33 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         result.Nodes.getNodeAs<clang::Expr>("callee_expr"))};
 
     auto caller_array_expr{const_cast<clang::ArraySubscriptExpr *>(
-    result.Nodes.getNodeAs<clang::ArraySubscriptExpr>("caller_expr"))};
+        result.Nodes.getNodeAs<clang::ArraySubscriptExpr>("caller_expr"))};
     auto callee_array_expr{const_cast<clang::ArraySubscriptExpr *>(
         result.Nodes.getNodeAs<clang::ArraySubscriptExpr>("callee_expr"))};
+
+    /// MemberExpr that gives the method name (port name).
+    auto caller_port_me_expr{const_cast<clang::MemberExpr *>(
+        result.Nodes.getNodeAs<clang::MemberExpr>("caller_port_me_expr"))};
+  auto callee_me_expr{const_cast<clang::MemberExpr *>(
+        result.Nodes.getNodeAs<clang::MemberExpr>("callee_port_me_expr"))};
+
 
     if (caller_array_expr) {
       llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY EXPR \n";
       caller_array_expr->dump();
-      getArraySubscripts(caller_array_expr);
-      getArrayMemberExprName(caller_array_expr);
-    } else  if (caller_expr) {
+      if (caller_port_me_expr) {
+        caller_port_me_expr->dump();
+      }
+
+    } else if (caller_expr) {
       llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER EXPR\n";
       caller_expr->dump();
 
       if (auto me_caller_expr =
               clang::dyn_cast<clang::MemberExpr>(caller_expr)) {
-        me_caller_expr->dump();
+        //me_caller_expr->dump();
       }
     }
-
 
     if (callee_array_expr) {
       llvm::outs()
@@ -266,16 +285,23 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       callee_expr->dump();
       getArraySubscripts(callee_expr);
       getArrayMemberExprName(callee_expr);
-    } else  if (callee_expr) {
+
+    } else if (callee_expr) {
+
+      llvm::outs() << "METHOD name\n";
+      callee_me_expr->dump();
+
       if (auto me_callee_expr =
               clang::dyn_cast<clang::MemberExpr>(callee_expr)) {
-        llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEE EXPR\n";
-        me_callee_expr->dump();
+//        llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEE EXPR\n";
+        //me_callee_expr->dump();
       }
     }
 
     if (caller_expr || callee_expr) {
-      PortBinding *pb{new PortBinding(caller_expr, callee_expr)};
+      PortBinding *pb{new PortBinding(caller_expr, caller_port_me_expr,
+          callee_expr, callee_me_expr
+          )};
       pb->dump();
     }
 
