@@ -113,16 +113,27 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         hasDescendant(expr().bind("caller_expr") ) //hasDescendant
       );
 
+    const auto callee_array_subscript =
+                                  arraySubscriptExpr(
+                                    hasParent(
+                                      memberExpr().bind("callee_port_me_expr")
+                                      )
+                                    ).bind("callee_expr") ;
+
+
+/*
     const auto callee_array_subscript =  
       memberExpr(ignoringImplicit(
         has(arraySubscriptExpr().bind("callee_expr")  ) )
       ).bind("callee_port_me_expr");
+      */
+
 
     const auto match_callees = 
       anyOf( 
-        hasDescendant(callee_array_subscript) //hasDescendant
+        ignoringImplicit(has(callee_array_subscript))
       ,
-        hasDescendant(expr().bind("callee_expr") ) //hasDescendant
+        ignoringImplicit(expr().bind("callee_expr") ) //hasDescendant
       );
 
 
@@ -258,9 +269,8 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     /// MemberExpr that gives the method name (port name).
     auto caller_port_me_expr{const_cast<clang::MemberExpr *>(
         result.Nodes.getNodeAs<clang::MemberExpr>("caller_port_me_expr"))};
-  auto callee_me_expr{const_cast<clang::MemberExpr *>(
+    auto callee_port_me_expr{const_cast<clang::MemberExpr *>(
         result.Nodes.getNodeAs<clang::MemberExpr>("callee_port_me_expr"))};
-
 
     if (caller_array_expr) {
       llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY EXPR \n";
@@ -275,33 +285,29 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
       if (auto me_caller_expr =
               clang::dyn_cast<clang::MemberExpr>(caller_expr)) {
-        //me_caller_expr->dump();
+        // me_caller_expr->dump();
       }
     }
 
+    /// Callee handling.
+    ///
+    /// Callee array expressions.
     if (callee_array_expr) {
       llvm::outs()
           << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEEE ARRAAY EXPR\n";
       callee_expr->dump();
-      getArraySubscripts(callee_expr);
-      getArrayMemberExprName(callee_expr);
+      if (callee_port_me_expr) {
+        callee_port_me_expr->dump();
+      }
 
     } else if (callee_expr) {
-
-      llvm::outs() << "METHOD name\n";
-      callee_me_expr->dump();
-
-      if (auto me_callee_expr =
-              clang::dyn_cast<clang::MemberExpr>(callee_expr)) {
-//        llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEE EXPR\n";
-        //me_callee_expr->dump();
-      }
+      llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEE EXPR\n";
+      callee_expr->dump();
     }
 
     if (caller_expr || callee_expr) {
       PortBinding *pb{new PortBinding(caller_expr, caller_port_me_expr,
-          callee_expr, callee_me_expr
-          )};
+                                      callee_expr, callee_port_me_expr)};
       pb->dump();
     }
 

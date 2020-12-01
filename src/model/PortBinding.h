@@ -21,8 +21,8 @@ class PortBinding {
 
   /// Callee
   clang::Expr *callee_expr_;
-  const clang::MemberExpr *callee_port_me_expr_;  // port
-  const clang::MemberExpr *callee_instance_me_expr_; //instance
+  const clang::MemberExpr *callee_port_me_expr_;      // port
+  const clang::MemberExpr *callee_instance_me_expr_;  // instance
   clang::ArraySubscriptExpr *callee_array_expr_;
   std::vector<llvm::APInt> callee_array_subscripts_;
 
@@ -131,9 +131,19 @@ class PortBinding {
   void dump() {
     llvm::outs() << "caller instance name : " << caller_instance_name_ << "  "
                  << "caller port name     : " << caller_port_name_ << "  "
-                 << "\nCALLEE\n" 
-                 << "callee port name     : " << callee_instance_name_ << "  "
-                 << "callee port type name: " << callee_type_name_;
+                 << "subscripts: ";
+    for (const auto sub : caller_array_subscripts_) {
+      llvm::outs() << " " << sub;
+    }
+
+    llvm::outs() << "\nCALLEE\n"
+                 << "callee instance name  : " << callee_instance_name_ << "  "
+                 << "callee port name      : " << callee_port_name_ << "  "
+                 << "subscripts: ";
+    for (const auto sub : callee_array_subscripts_) {
+      llvm::outs() << " " << sub;
+    }
+
     /*
     llvm::outs() << "> inst type name: " << instance_type_
                  << ", inst var name : " << instance_var_name_
@@ -165,15 +175,19 @@ class PortBinding {
   }
 
   PortBinding(clang::Expr *caller_expr, clang::MemberExpr *caller_port_me_expr,
-      clang::Expr *callee_expr, clang::MemberExpr *callee_port_me_expr)
-      : caller_expr_{caller_expr}, callee_expr_{callee_expr}, caller_port_me_expr_{caller_port_me_expr}, callee_port_me_expr_{callee_port_me_expr}  {
+              clang::Expr *callee_expr, clang::MemberExpr *callee_port_me_expr)
+      : caller_expr_{caller_expr},
+        callee_expr_{callee_expr},
+        caller_port_me_expr_{caller_port_me_expr},
+        callee_port_me_expr_{callee_port_me_expr} {
     /// Cast to see if it's an array.
     caller_array_expr_ = dyn_cast<clang::ArraySubscriptExpr>(caller_expr);
 
     llvm::outs() << "==> Extract caller port name\n";
     if (caller_port_me_expr_) {
       caller_port_me_expr_->dump();
-      caller_port_name_ = caller_port_me_expr_->getMemberNameInfo().getAsString();
+      caller_port_name_ =
+          caller_port_me_expr_->getMemberNameInfo().getAsString();
     }
 
     /// If it is an array.
@@ -184,41 +198,33 @@ class PortBinding {
       caller_instance_me_expr_ = dyn_cast<clang::MemberExpr>(caller_expr);
     }
 
-llvm::outs() << "==> Extract callee port name\n";
+    if (caller_instance_me_expr_) {
+      caller_instance_name_ =
+          caller_instance_me_expr_->getMemberNameInfo().getAsString();
+    }
+
+    llvm::outs() << "==> Extract callee port name\n";
     if (callee_port_me_expr_) {
       callee_port_me_expr_->dump();
-      callee_port_name_ = callee_port_me_expr_->getMemberNameInfo().getAsString();
+      callee_port_name_ =
+          callee_port_me_expr_->getMemberNameInfo().getAsString();
+          llvm::outs() << " **** callee_port_name_: " << callee_port_name_ << "\n";
     }
 
-if (caller_instance_me_expr_) {
-      caller_instance_name_ = caller_instance_me_expr_->getMemberNameInfo().getAsString();
-    }
-
-
-    // Callee
+    // Callee is an array
     callee_array_expr_ = dyn_cast<clang::ArraySubscriptExpr>(callee_expr);
     if (callee_array_expr_) {
-      caller_instance_me_expr_ = getArrayMemberExprName(caller_array_expr_);
+      llvm::outs() << "extract callee name\n";
+      callee_instance_me_expr_ = getArrayMemberExprName(callee_array_expr_);
       callee_array_subscripts_ = getArraySubscripts(callee_array_expr_);
     } else {
       callee_instance_me_expr_ = dyn_cast<clang::MemberExpr>(callee_expr);
     }
-
-if (callee_instance_me_expr_) {
-      callee_instance_name_ = callee_instance_me_expr_->getMemberNameInfo().getAsString();
+    if (callee_instance_me_expr_) {
+      callee_instance_name_ =
+          callee_instance_me_expr_->getMemberNameInfo().getAsString();
     }
 
-
-    if (callee_port_me_expr_) {
-      callee_port_me_expr_->dump();
-    llvm::outs() << "Get port type\n";
-    //callee_me_expr_->getMemberDecl()->dump();
-    callee_port_me_expr_->getBase()->dump();
-    callee_type_name_ = callee_port_me_expr_->getMemberDecl()
-                          ->getType()
-                          .getBaseTypeIdentifier()
-                          ->getName();
-    }
   }
   PortBinding(clang::ArraySubscriptExpr *port_array,
               clang::MemberExpr *me_ctor_port, clang::MemberExpr *me_instance,
@@ -231,11 +237,12 @@ if (callee_instance_me_expr_) {
         me_instance_{me_instance},
         me_arg_{me_arg},
         port_parameter_array_expr_{array_port_bound_to} {
-    callee_instance_name_ = callee_port_me_expr_->getMemberNameInfo().getAsString();
+    callee_instance_name_ =
+        callee_port_me_expr_->getMemberNameInfo().getAsString();
     callee_type_name_ = me_ctor_port->getMemberDecl()
-                          ->getType()
-                          .getBaseTypeIdentifier()
-                          ->getName();
+                            ->getType()
+                            .getBaseTypeIdentifier()
+                            ->getName();
 
     /// Get the port member's array index.
     if (port_member_array_port_expr_) {
