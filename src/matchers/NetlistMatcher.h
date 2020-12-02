@@ -93,14 +93,20 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     /// Either a port (with sc_port base class) or module (with sc_module base class) can be bound.
     /// This will match if either one of those is the type.
-    const auto has_module_or_port_types =  anyOf(
+const auto not_sc_sensitive = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_core::sc_sensitive")))); 
+const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_core::sc_event_finder")))); 
+    const auto has_allowed_types =  anyOf(
                                         hasType(cxxRecordDecl(isDerivedFrom("sc_core::sc_module"))),
-                                        hasType(cxxRecordDecl(isDerivedFrom("sc_core::sc_port")))
+                                        hasType(cxxRecordDecl(isDerivedFrom("sc_core::sc_port"))),
+                                        hasType(cxxRecordDecl(isDerivedFrom("sc_core::sc_signal"))),
+                                        not_sc_sensitive,
+                                        not_sc_event_finder
                                       );
+
 
     const auto caller_array_subscript =
                                   arraySubscriptExpr(
-                                      has_module_or_port_types,
+                                      has_allowed_types,
                                     hasParent(
                                       memberExpr().bind("caller_port_me_expr")
                                       )
@@ -118,13 +124,13 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       anyOf( 
         hasDescendant(caller_array_subscript) //hasDescendant
       ,
-        hasDescendant(memberExpr(hasDescendant(memberExpr().bind("caller_expr"))).bind("caller_port_me_expr"))
+        hasDescendant(memberExpr(hasDescendant(memberExpr(has_allowed_types).bind("caller_expr"))).bind("caller_port_me_expr"))
         //expr().bind("caller_expr") ) //hasDescendant
       );
 
     const auto callee_array_subscript =
                                   arraySubscriptExpr(
-                                      has_module_or_port_types,
+                                      has_allowed_types,
                                     hasParent(
                                       memberExpr().bind("callee_port_me_expr")
                                       )
@@ -144,7 +150,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       anyOf( 
         ignoringImplicit(has(callee_array_subscript))
       ,
-        ignoringImplicit(expr().bind("callee_expr") ) //hasDescendant
+        ignoringImplicit(expr(has_allowed_types).bind("callee_expr") ) //hasDescendant
       );
 
 
@@ -285,19 +291,10 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
 
     if (caller_array_expr) {
       llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY EXPR \n";
-      caller_array_expr->dump();
-      if (caller_port_me_expr) {
-        caller_port_me_expr->dump();
-      }
-
+      
     } else if (caller_expr) {
       llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER EXPR\n";
       caller_expr->dump();
-
-      if (auto me_caller_expr =
-              clang::dyn_cast<clang::MemberExpr>(caller_expr)) {
-        // me_caller_expr->dump();
-      }
     }
 
     /// Callee handling.
@@ -307,9 +304,6 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       llvm::outs()
           << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEEE ARRAAY EXPR\n";
       callee_expr->dump();
-      if (callee_port_me_expr) {
-        callee_port_me_expr->dump();
-      }
 
     } else if (callee_expr) {
       llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEE EXPR\n";
