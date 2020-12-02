@@ -91,9 +91,16 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
        )
      ).bind("functiondecl");
 
+    /// Either a port (with sc_port base class) or module (with sc_module base class) can be bound.
+    /// This will match if either one of those is the type.
+    const auto has_module_or_port_types =  anyOf(
+                                        hasType(cxxRecordDecl(isDerivedFrom("sc_core::sc_module"))),
+                                        hasType(cxxRecordDecl(isDerivedFrom("sc_core::sc_port")))
+                                      );
 
     const auto caller_array_subscript =
                                   arraySubscriptExpr(
+                                      has_module_or_port_types,
                                     hasParent(
                                       memberExpr().bind("caller_port_me_expr")
                                       )
@@ -105,16 +112,19 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                                     has(arraySubscriptExpr().bind("caller_expr")  ) )
                                   ).bind("caller_port_me_expr");
                                   */
-
+    
+    /// Callers are nested within the CXXOperatorCallExpr; hence, the hasDescendant().
     const auto match_callers = 
       anyOf( 
         hasDescendant(caller_array_subscript) //hasDescendant
       ,
-        hasDescendant(expr().bind("caller_expr") ) //hasDescendant
+        hasDescendant(memberExpr(hasDescendant(memberExpr().bind("caller_expr"))).bind("caller_port_me_expr"))
+        //expr().bind("caller_expr") ) //hasDescendant
       );
 
     const auto callee_array_subscript =
                                   arraySubscriptExpr(
+                                      has_module_or_port_types,
                                     hasParent(
                                       memberExpr().bind("callee_port_me_expr")
                                       )
@@ -129,6 +139,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       */
 
 
+    /// Callees are children of the cxxOperatorCallExpr; hence, the use of has().
     const auto match_callees = 
       anyOf( 
         ignoringImplicit(has(callee_array_subscript))
