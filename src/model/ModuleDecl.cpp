@@ -375,7 +375,7 @@ const ModuleDecl::signalMapType &ModuleDecl::getSignals() const {
   return signals_;
 }
 
-const std::vector<ModuleDecl *> &ModuleDecl::getNestedModules() const {
+const std::vector<ModuleDecl *> &ModuleDecl::getNestedModuleInstances() const {
   return nested_modules_;
 }
 
@@ -478,6 +478,13 @@ void ModuleDecl::dumpPortBinding() {
     auto binding{get<1>(pb)};
 
     json port_j;
+    port_j["caller_instance_type_name"] = binding->getCallerInstanceTypeName();
+    port_j["caller_instance_name"] = binding->getCallerInstanceName();
+    port_j["caller_port_name"] = binding->getCallerPortName();
+    port_j["callee_instance_name"] = binding->getCalleeInstanceName();
+    port_j["callee_port_name"] = binding->getCalleePortName();
+
+    /*
     port_j["port_member_name"] = port_name;
     port_j["port_member_is_array"] = (binding->hasPortArrayParameter() ? "yes" : "no");
     if (binding->hasPortArrayParameter()) {
@@ -496,6 +503,7 @@ void ModuleDecl::dumpPortBinding() {
                                      .getName()
                                      .getAsString();
     }
+    */
 
     binding->dump();
   binding_j[port_name] = port_j;

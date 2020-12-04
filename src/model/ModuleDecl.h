@@ -126,7 +126,7 @@ class ModuleDecl {
   int getNumInstances();
   const signalMapType &getSignals() const;
 
-  const std::vector<ModuleDecl*> &getNestedModules() const ;
+  const std::vector<ModuleDecl*> &getNestedModuleInstances() const ;
 
   void dumpPorts(raw_ostream &, int);
   void dumpPortBinding();
