@@ -55,7 +55,7 @@ class PortBinding {
   // Instance information
   std::string caller_instance_name_;
   std::string caller_port_name_;
-  std::string caller_type_name_;
+  std::string caller_instance_type_name_;
 
   std::string callee_instance_name_;
   std::string callee_port_name_;
@@ -84,6 +84,21 @@ class PortBinding {
   clang::ArraySubscriptExpr *port_parameter_array_expr_;
 
  public:
+  const std::string getCallerInstanceName() const {
+    return caller_instance_name_;
+  }
+  const std::string getCallerInstanceTypeName() const {
+    return caller_instance_type_name_;
+  }
+  const std::string getCallerPortName() const { return caller_port_name_; }
+
+  const std::string getCalleeInstanceName() const {
+    return callee_instance_name_;
+  }
+  const std::string getCalleePortName() const { return callee_port_name_; }
+
+  /// old
+
   void setInstanceVarName(const std::string &n) { instance_var_name_ = n; }
   void setInstanceConstructorName(const std::string &n) {
     instance_constructor_name_ = n;
@@ -112,8 +127,22 @@ class PortBinding {
     return port_parameter_dref_;
   }
   const std::string toString() const {
-    return getInstanceType() + " " + getInstanceVarName() + " " +
-           getInstanceConstructorName() + " " + getBoundToName();
+    std::string return_str{getCallerInstanceTypeName()};
+    if (getCallerInstanceName() != "") {
+      return_str = return_str + " " + getCallerInstanceName();
+    }
+    if (getInstanceConstructorName() != "") {
+      return_str = return_str + " " + getInstanceConstructorName();
+    }
+
+    if (getCalleeInstanceName() != "") {
+      return_str = return_str + " " + getCalleeInstanceName();
+    }
+    
+    if (getCalleePortName() != "") {
+      return_str = return_str + " " + getCalleePortName();
+    }
+    return return_str;
   }
   bool hasBoundToArrayParameter() const {
     return (port_parameter_array_idx_dref_ != nullptr);
@@ -129,7 +158,9 @@ class PortBinding {
   }
 
   void dump() {
-    llvm::outs() << "caller instance name : " << caller_instance_name_ << "  "
+    llvm::outs() << "caller instance type name : " << caller_instance_type_name_
+                 << "  "
+                 << "caller instance name : " << caller_instance_name_ << "  "
                  << "caller port name     : " << caller_port_name_ << "  "
                  << "subscripts: ";
     for (const auto sub : caller_array_subscripts_) {
@@ -185,7 +216,7 @@ class PortBinding {
 
     llvm::outs() << "==> Extract caller port name\n";
     if (caller_port_me_expr_) {
-      caller_port_me_expr_->dump();
+      // caller_port_me_expr_->dump();
       caller_port_name_ =
           caller_port_me_expr_->getMemberNameInfo().getAsString();
     }
@@ -201,14 +232,21 @@ class PortBinding {
     if (caller_instance_me_expr_) {
       caller_instance_name_ =
           caller_instance_me_expr_->getMemberNameInfo().getAsString();
+      llvm::outs() << "========= CALLER ME EXPR ======== \n";
+      caller_instance_me_expr_->dump();
+      caller_instance_type_name_ = caller_instance_me_expr_->getMemberDecl()
+                                       ->getType()
+                                       .getBaseTypeIdentifier()
+                                       ->getName();
+      llvm::outs() << "========= END CALLER ME EXPR ======== \n";
     }
 
     llvm::outs() << "==> Extract callee port name\n";
     if (callee_port_me_expr_) {
-      callee_port_me_expr_->dump();
+      // callee_port_me_expr_->dump();
       callee_port_name_ =
           callee_port_me_expr_->getMemberNameInfo().getAsString();
-          llvm::outs() << " **** callee_port_name_: " << callee_port_name_ << "\n";
+      llvm::outs() << " **** callee_port_name_: " << callee_port_name_ << "\n";
     }
 
     // Callee is an array
@@ -224,7 +262,6 @@ class PortBinding {
       callee_instance_name_ =
           callee_instance_me_expr_->getMemberNameInfo().getAsString();
     }
-
   }
   PortBinding(clang::ArraySubscriptExpr *port_array,
               clang::MemberExpr *me_ctor_port, clang::MemberExpr *me_instance,
