@@ -178,7 +178,8 @@ bool SystemCConsumer::fire() {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
         ctordecl->getBody(fd);
 
-        LLVM_DEBUG(llvm::dbgs() << "==============> RUN netlist matcher\n";);
+        LLVM_DEBUG(llvm::dbgs() << "==============> RUN netlist matcher: " << mdecl->getInstanceName() << "\n";);
+        //fd->dump();
         netlist_registry.match(*fd, getContext());
         LLVM_DEBUG(llvm::dbgs() << "==============> DONE netlist matcher\n";);
       //}

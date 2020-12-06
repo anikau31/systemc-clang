@@ -10,6 +10,7 @@ using namespace sc_ast_matchers::utils::array_type;
 
 class PortBinding {
  private:
+  typedef std::vector<llvm::APInt> ArraySubscriptsType;
   /// Reword
   //
   /// Caller
@@ -97,6 +98,13 @@ class PortBinding {
   }
   const std::string getCalleePortName() const { return callee_port_name_; }
 
+  ArraySubscriptsType getCallerArraySubscripts() const {
+    return caller_array_subscripts_;
+  }
+  ArraySubscriptsType getCalleeArraySubscripts() const {
+    return callee_array_subscripts_;
+  }
+
   /// old
 
   void setInstanceVarName(const std::string &n) { instance_var_name_ = n; }
@@ -135,10 +143,18 @@ class PortBinding {
       return_str = return_str + " " + getInstanceConstructorName();
     }
 
+    for (const auto &sub : getCallerArraySubscripts()) {
+      return_str += " " + sub.toString(32, true);
+    }
+
     if (getCalleeInstanceName() != "") {
       return_str = return_str + " " + getCalleeInstanceName();
     }
-    
+
+    for (const auto &sub : getCalleeArraySubscripts()) {
+      return_str += " " + sub.toString(32, true);
+    }
+
     if (getCalleePortName() != "") {
       return_str = return_str + " " + getCalleePortName();
     }
@@ -174,28 +190,6 @@ class PortBinding {
     for (const auto sub : callee_array_subscripts_) {
       llvm::outs() << " " << sub;
     }
-
-    /*
-    llvm::outs() << "> inst type name: " << instance_type_
-                 << ", inst var name : " << instance_var_name_
-                 << ", port_type name: " << callee_type_name_
-                 << ", port name     : " << callee_instance_name_
-                 << ", port arg type : " << port_parameter_type_name_;
-
-    if (port_member_array_idx_dref_) {
-      port_member_array_idx_dref_->dump();
-      llvm::outs() << ", port_array_idx: "
-                   << port_member_array_idx_dref_->getNameInfo().getName();
-    }
-
-    llvm::outs() << ", port_bound_to_var_name : "
-                 << port_parameter_bound_to_var_name_
-                 << ", port arg      : " << port_parameter_name_;
-    if (port_parameter_array_idx_dref_) {
-      llvm::outs() << ", port_arg_array_idx: "
-                   << port_parameter_array_idx_dref_->getNameInfo().getName();
-    }
-    */
     llvm::outs() << "\n";
 
     // llvm::outs() << "> port_name: " << callee_instance_name_ << " type: " <<
@@ -263,102 +257,7 @@ class PortBinding {
           callee_instance_me_expr_->getMemberNameInfo().getAsString();
     }
   }
-  PortBinding(clang::ArraySubscriptExpr *port_array,
-              clang::MemberExpr *me_ctor_port, clang::MemberExpr *me_instance,
-              clang::MemberExpr *me_arg,
-              clang::ArraySubscriptExpr *array_port_bound_to,
-              clang::DeclRefExpr *array_idx)
-      : port_member_array_port_expr_{port_array},
-        port_member_array_idx_dref_{nullptr},
-        callee_port_me_expr_{me_ctor_port},
-        me_instance_{me_instance},
-        me_arg_{me_arg},
-        port_parameter_array_expr_{array_port_bound_to} {
-    callee_instance_name_ =
-        callee_port_me_expr_->getMemberNameInfo().getAsString();
-    callee_type_name_ = me_ctor_port->getMemberDecl()
-                            ->getType()
-                            .getBaseTypeIdentifier()
-                            ->getName();
 
-    /// Get the port member's array index.
-    if (port_member_array_port_expr_) {
-      auto port_member_idx{
-          port_member_array_port_expr_->getIdx()->IgnoreImpCasts()};
-      if (auto idx_dref = dyn_cast<DeclRefExpr>(port_member_idx)) {
-        llvm::outs() << "array_index: " << idx_dref->getNameInfo().getName()
-                     << "\n";
-        port_member_array_idx_dref_ = idx_dref;
-      }
-    }
-
-    instance_var_name_ = me_instance_->getMemberNameInfo().getAsString();
-    instance_type_ = me_instance_->getMemberDecl()
-                         ->getType()
-                         .getBaseTypeIdentifier()
-                         ->getName();
-    instance_type_decl_ = me_instance->getMemberDecl()
-                              ->getType()
-                              .getTypePtr()
-                              ->getAsCXXRecordDecl();
-
-    port_parameter_name_ = me_arg->getMemberNameInfo().getAsString();
-    port_parameter_type_ = me_arg->getMemberDecl()->getType().getTypePtr();
-    port_parameter_type_name_ =
-        me_arg->getMemberDecl()->getType().getBaseTypeIdentifier()->getName();
-
-    auto children{me_arg->children()};
-
-    if (children.begin() != children.end()) {
-      Stmt *kid{*children.begin()};
-      if (clang::MemberExpr *
-          member_expr_kid{dyn_cast<clang::MemberExpr>(kid)}) {
-        port_parameter_bound_to_var_name_ =
-            member_expr_kid->getMemberDecl()->getNameAsString();
-      }
-    }
-
-    /// Port argument is an array. Need to find its index.
-    //
-    // port_arg_array_idx_ = idx_dref->getNameInfo().getName();
-    port_parameter_array_idx_dref_ = array_idx;
-  }
-
-  // This is used for sc_main
-  PortBinding(clang::MemberExpr *me, clang::DeclRefExpr *port_dref,
-              clang::DeclRefExpr *port_arg_dref, clang::Decl *instance_decl,
-              const std::string &instance_constructor_name)
-      : is_ctor_binding_{false},
-        // Used only for ctor bindings
-        callee_port_me_expr_{nullptr},
-        me_instance_{nullptr},
-        me_arg_{nullptr},
-        // Used only for sc_main bindings
-        port_dref_{port_dref},
-        port_parameter_dref_{port_arg_dref},
-        instance_decl_{instance_decl},
-        instance_constructor_name_{instance_constructor_name} {
-    // Get the type of the instance (sc_module class name).
-
-    callee_instance_name_ = me->getMemberDecl()->getNameAsString();
-    callee_type_name_ =
-        me->getMemberDecl()->getType().getBaseTypeIdentifier()->getName();
-
-    instance_type_ =
-        port_dref_->getDecl()->getType().getBaseTypeIdentifier()->getName();
-    instance_decl_ = port_dref_->getDecl();
-    instance_var_name_ = port_dref_->getFoundDecl()->getName();
-    instance_type_decl_ =
-        port_dref_->getDecl()->getType().getTypePtr()->getAsCXXRecordDecl();
-
-    port_parameter_name_ = port_parameter_dref_->getFoundDecl()->getName();
-    port_parameter_type_ =
-        port_parameter_dref_->getDecl()->getType().getTypePtr();
-    port_parameter_type_name_ = port_parameter_dref_->getDecl()
-                                    ->getType()
-                                    .getBaseTypeIdentifier()
-                                    ->getName();
-  };
 };      // namespace systemc_clang
 };      // namespace systemc_clang
 #endif  // ifdef

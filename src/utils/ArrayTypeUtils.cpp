@@ -140,7 +140,7 @@ ArraySizesType getArraySubscripts(const clang::Expr *expr) {
     auto int_lit{
         clang::dyn_cast<clang::IntegerLiteral>(arr_sub_expr->getIdx())};
     llvm::outs() << "SUBSCRIPT: " << int_lit->getValue() << "\n";
-    subscripts.push_back(int_lit->getValue());
+    subscripts.insert(subscripts.begin(), int_lit->getValue());
 
     /// INFO: For some reason, dyn_cast on the ArraySubscriptExpr to get the
     /// ImplicitCastExpr does not work. So the way to get to it is to call

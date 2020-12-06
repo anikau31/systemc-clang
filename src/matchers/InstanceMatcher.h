@@ -478,22 +478,24 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (array_type) {
       auto element_type{array_type->getElementType().getTypePtr()};
       parsed_instance.type_decl = element_type->getAsCXXRecordDecl();
-      llvm::outs()
-          << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IS ARRAY type decl null: "
-          << parsed_instance.type_decl << "\n";
+      LLVM_DEBUG(
+          llvm::outs()
+              << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IS ARRAY type decl null: "
+              << parsed_instance.type_decl << "\n";);
       element_type->dump();
       parsed_instance.setArrayType();
-      parsed_instance.addArraySizes(
-          getConstantArraySizes(instance_decl));
+      parsed_instance.addArraySizes(getConstantArraySizes(instance_decl));
       parsed_instance.setArrayParameters(index_map[instance_name]);
-      llvm::outs() << "Dimension of array: " << parsed_instance.getArrayDimension() << "\n";
+      LLVM_DEBUG(llvm::outs() << "Dimension of array: "
+                              << parsed_instance.getArrayDimension() << "\n";);
     } else {
       // Not an array type.
       parsed_instance.type_decl =
           instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
-      llvm::outs()
-          << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ NOT ARRAY type decl null: "
-          << parsed_instance.type_decl << "\n";
+      LLVM_DEBUG(
+          llvm::outs()
+              << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ NOT ARRAY type decl null: "
+              << parsed_instance.type_decl << "\n";);
     }
 
     instance_decl->dump();
@@ -517,12 +519,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (exists_instance == instance_map_.end()) {
       instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
           instance_decl, parsed_instance));
-      llvm::outs() << "INSERTED\n";
+      LLVM_DEBUG(llvm::outs() << "INSERTED\n";);
     } else {
       // Instance IS found.
 
       exists_instance->second.add_instance_name(instance_name);
-      llvm::outs() << "INSERTED INSTANCE NAME\n";
+      LLVM_DEBUG(llvm::outs() << "INSERTED INSTANCE NAME\n";);
     }
   }
 
@@ -572,10 +574,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       //
 
       if ((iexpr != nullptr) && (cexpr == nullptr)) {
-        llvm::outs() << "### IEXPR is not NULL\n";
+        LLVM_DEBUG(llvm::outs() << "### IEXPR is not NULL\n";
 
-        llvm::outs() << "######## Going through index map: " << index_map.size()
-                     << "\n";
+                   llvm::outs() << "######## Going through index map: "
+                                << index_map.size() << "\n";);
         for (auto const &init : index_map) {
           auto submodule_instance_name{init.first};
           parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name,
@@ -590,9 +592,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         iarg_matcher.registerMatchers(iarg_registry);
         iarg_registry.match(*cexpr, *result.Context);
 
-        LLVM_DEBUG(iarg_matcher.dump(););
+        LLVM_DEBUG(iarg_matcher.dump();
 
         llvm::outs() << "#### IndexMap: " << index_map.size() << "\n";
+        );
         // This retrieves the submodule instance name.
         if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
           auto submodule_instance_name = inst_literal->getString().str();
