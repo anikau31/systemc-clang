@@ -293,19 +293,43 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
       llvm::outs() << "Try to add it into the module\n";
       caller_expr->dump();
       // Have to add the port binding into the appropriate module instance.
-      auto caller_me_expr{clang::dyn_cast<clang::MemberExpr>(caller_expr)};
-      if (caller_me_expr ) {
+      // 
+      // Get the appropriate MemberExpr for either array or non-array. 
+      const clang::MemberExpr *caller_me_expr{nullptr};
+      if (caller_array_expr) {
+        caller_me_expr = getArrayMemberExprName(caller_array_expr);
+      } else if (caller_expr){
+        caller_me_expr = clang::dyn_cast<clang::MemberExpr>(caller_expr);
+      }
+
+      if (caller_me_expr) {
         caller_me_expr->dump();
         auto caller_instance_decl{caller_me_expr->getMemberDecl()};
         auto caller_instance_type{caller_instance_decl->getType().getTypePtr()};
-        systemc_clang::ModuleDecl *instance_module_decl{findModuleDeclInstance(caller_instance_decl)};
+        ModuleDecl *instance_module_decl{
+            findModuleDeclInstance(caller_instance_decl)};
         llvm::outs() << "INSTANCE MODULE :"
                      << instance_module_decl->getInstanceName() << "\n";
         llvm::outs() << " port name : " << pb->getCallerPortName() << "\n";
-      instance_module_decl->addPortBinding(pb->getCallerPortName(), pb);
-      pb->setInstanceConstructorName(instance_module_decl->getInstanceName());
-      //instance_module_decl->dumpPortBinding();
+        llvm::outs() << " PARENT@@@@ : " << instance_module_decl->getInstanceInfo().getParentDecl()->getName() << "\n";
+        // Get the parent ModuleDecl and insert the port binding into that one.
+        ModuleDecl *parent_decl{findModuleDeclInstance(instance_module_decl->getInstanceInfo().getParentDecl())};
+        llvm::outs() << " PARENT@@@@ INST NAME: " << parent_decl->getInstanceName() << "\n";
+        /// This string is necessary since addPortbinding stores a map of string => Portbinding.
+        /// Thus just using port name is not unique.
+        std::string binding_name{ pb->getCallerInstanceName() + pb->getCallerPortName() };
+        parent_decl->addPortBinding(binding_name, pb);
+        pb->setInstanceConstructorName(instance_module_decl->getInstanceName());
+        // instance_module_decl->dumpPortBinding();
       }
+
+      // if (caller_array_expr) {
+        // if (auto caller_array_me_expr =
+                // getArrayMemberExprName(caller_array_expr)) {
+          // llvm::outs() << "CALLER_ARRAY_ME_EXPR\n";
+          // caller_array_me_expr->dump();
+        // }
+      // }
     }
 
     /*
