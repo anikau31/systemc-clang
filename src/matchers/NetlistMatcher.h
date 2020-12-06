@@ -292,6 +292,7 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
 
       llvm::outs() << "Try to add it into the module\n";
       caller_expr->dump();
+
       // Have to add the port binding into the appropriate module instance.
       // 
       // Get the appropriate MemberExpr for either array or non-array. 
@@ -315,6 +316,7 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
         // Get the parent ModuleDecl and insert the port binding into that one.
         ModuleDecl *parent_decl{findModuleDeclInstance(instance_module_decl->getInstanceInfo().getParentDecl())};
         llvm::outs() << " PARENT@@@@ INST NAME: " << parent_decl->getInstanceName() << "\n";
+
         /// This string is necessary since addPortbinding stores a map of string => Portbinding.
         /// Thus just using port name is not unique.
         std::string binding_name{ pb->getCallerInstanceName() + pb->getCallerPortName() };
@@ -323,13 +325,6 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
         // instance_module_decl->dumpPortBinding();
       }
 
-      // if (caller_array_expr) {
-        // if (auto caller_array_me_expr =
-                // getArrayMemberExprName(caller_array_expr)) {
-          // llvm::outs() << "CALLER_ARRAY_ME_EXPR\n";
-          // caller_array_me_expr->dump();
-        // }
-      // }
     }
 
     /*
