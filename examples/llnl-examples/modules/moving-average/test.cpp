@@ -51,7 +51,7 @@ SC_MODULE(tb_driver)
 
     c_sync_send = sync;
 #ifndef __SYNTHESIS__
-    if (sync || !sync) {
+    if (sync) {
       cout << name() << "::mc_send ts: " << sc_time_stamp()
 	   << ", flit: " << flit << ", sync:" << sync
 	   << ", c_sync_send: " << c_sync_send
@@ -65,8 +65,8 @@ SC_MODULE(tb_driver)
     if (reset == RLEVEL) {
       scount = 0;
     } else {
-      //if (c_sync_send) scount = scount.read() + 1;
-      scount = scount.read() + 1;
+      if (c_sync_send) scount = scount.read() + 1;
+      //scount = scount.read() + 1;
     }
   }
 
@@ -120,16 +120,17 @@ SC_MODULE(tb_driver)
 #endif
   SC_CTOR(tb_driver)
   {
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < BLOCK_LEN; i++)
       block[i] = i;
     SC_METHOD(mc_send);
-    sensitive << m_port.ready_chg();
+    sensitive << m_port.ready_chg() << clk.pos();
     sensitive << scount;
     SC_METHOD(ms_send);
     sensitive << clk.pos();
     dont_initialize();
 
     SC_METHOD(mc_recv);
+    sensitive << clk.pos();
     sensitive << min_port.valid_chg() <<min_port.data_chg();
     sensitive << max_port.valid_chg() <<max_port.data_chg();
     sensitive << avg_port.valid_chg() <<avg_port.data_chg();
