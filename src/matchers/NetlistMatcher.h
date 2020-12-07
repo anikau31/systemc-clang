@@ -154,11 +154,14 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
       );
 
 
+    auto not_operator_less_than = unless(callee(cxxMethodDecl(hasName("operator<<"))));
+
     auto test_match_ctor_decl = 
       namedDecl(
             has(compoundStmt(
                     forEachDescendant(
                         cxxOperatorCallExpr(
+                          not_operator_less_than, 
                           /// The memberExpr gives the port name.
                           /// The arraySubscriptExpr gives the ArraySubscriptExpr to the array.
                           match_callers
@@ -168,8 +171,8 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
                           )
 
                       ).bind("opcall")))
-                    .bind("compoundstmt")))
-            .bind("functiondecl");
+                    .bind("compoundstmt"))
+            ).bind("named_decl");
 
 
     auto match_ctor_decl =
@@ -240,9 +243,14 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
 
     /// Rework
 
-    auto opcall{const_cast<clang::Expr *>(
-        result.Nodes.getNodeAs<clang::Expr>("opcall"))};
+    auto named_decl{const_cast<clang::NamedDecl*>(
+        result.Nodes.getNodeAs<clang::NamedDecl>("named_decl"))};
+    auto opcall{const_cast<clang::CXXOperatorCallExpr*>(
+        result.Nodes.getNodeAs<clang::CXXOperatorCallExpr>("opcall"))};
     opcall->dump();
+    llvm::outs() << " get type \n";
+    opcall->getDirectCallee()->dump();
+    llvm::outs() << "name: " << opcall->getDirectCallee()->getNameAsString() << "\n";
 
     auto caller_expr{const_cast<clang::Expr *>(
         result.Nodes.getNodeAs<clang::Expr>("caller_expr"))};
@@ -294,12 +302,12 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
       caller_expr->dump();
 
       // Have to add the port binding into the appropriate module instance.
-      // 
-      // Get the appropriate MemberExpr for either array or non-array. 
+      //
+      // Get the appropriate MemberExpr for either array or non-array.
       const clang::MemberExpr *caller_me_expr{nullptr};
       if (caller_array_expr) {
         caller_me_expr = getArrayMemberExprName(caller_array_expr);
-      } else if (caller_expr){
+      } else if (caller_expr) {
         caller_me_expr = clang::dyn_cast<clang::MemberExpr>(caller_expr);
       }
 
@@ -312,19 +320,25 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
         llvm::outs() << "INSTANCE MODULE :"
                      << instance_module_decl->getInstanceName() << "\n";
         llvm::outs() << " port name : " << pb->getCallerPortName() << "\n";
-        llvm::outs() << " PARENT@@@@ : " << instance_module_decl->getInstanceInfo().getParentDecl()->getName() << "\n";
+        llvm::outs() << " PARENT@@@@ : "
+                     << instance_module_decl->getInstanceInfo()
+                            .getParentDecl()
+                            ->getName()
+                     << "\n";
         // Get the parent ModuleDecl and insert the port binding into that one.
-        ModuleDecl *parent_decl{findModuleDeclInstance(instance_module_decl->getInstanceInfo().getParentDecl())};
-        llvm::outs() << " PARENT@@@@ INST NAME: " << parent_decl->getInstanceName() << "\n";
+        ModuleDecl *parent_decl{findModuleDeclInstance(
+            instance_module_decl->getInstanceInfo().getParentDecl())};
+        llvm::outs() << " PARENT@@@@ INST NAME: "
+                     << parent_decl->getInstanceName() << "\n";
 
-        /// This string is necessary since addPortbinding stores a map of string => Portbinding.
-        /// Thus just using port name is not unique.
-        std::string binding_name{ pb->getCallerInstanceName() + pb->getCallerPortName() };
+        /// This string is necessary since addPortbinding stores a map of string
+        /// => Portbinding. Thus just using port name is not unique.
+        std::string binding_name{pb->getCallerInstanceName() +
+                                 pb->getCallerPortName()};
         parent_decl->addPortBinding(binding_name, pb);
         pb->setInstanceConstructorName(instance_module_decl->getInstanceName());
         // instance_module_decl->dumpPortBinding();
       }
-
     }
 
     /*
