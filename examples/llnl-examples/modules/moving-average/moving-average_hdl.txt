@@ -160,6 +160,13 @@
           ]
         ]
       ]
+      hSigdecl datardy [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
       hSigdecl insert [
         hTypeinfo  NONAME [
           hType sc_signal [
@@ -202,39 +209,39 @@
     hProcesses  NONAME [
       hProcess mc_proc [
         hSenslist  NONAME [
-          hSensvar avg_out [
-            hSensvar ready NOLIST
-            hSensvar value_changed_event NOLIST
-          ]
-          hSensvar datastrm [
-            hSensvar valid NOLIST
+          hSensvar clk [
+            hSensedge pos NOLIST
           ]
         ]
         hMethod  NONAME [
           hCStmt  NONAME [
-            hBinop () [
+            hSigAssignL write [
               hVarref min_out##valid NOLIST
-              hVarref datastrm##ready NOLIST
+              hVarref datardy NOLIST
             ]
-            hBinop () [
+            hSigAssignL write [
               hVarref min_out##data NOLIST
               hVarref cur_min NOLIST
             ]
-            hBinop () [
+            hSigAssignL write [
               hVarref max_out##valid NOLIST
-              hVarref datastrm##ready NOLIST
+              hVarref datardy NOLIST
             ]
-            hBinop () [
+            hSigAssignL write [
               hVarref max_out##data NOLIST
               hVarref cur_max NOLIST
             ]
-            hBinop () [
+            hSigAssignL write [
               hVarref avg_out##valid NOLIST
-              hVarref datastrm##ready NOLIST
+              hVarref datardy NOLIST
             ]
-            hBinop () [
+            hSigAssignL write [
               hVarref avg_out##data NOLIST
               hVarref cur_avg NOLIST
+            ]
+            hSigAssignL write [
+              hVarref datastrm##ready NOLIST
+              hLiteral 1 NOLIST
             ]
           ]
         ]
@@ -320,10 +327,16 @@
                     ]
                   ]
                 ]
+                hBinop = [
+                  hVarref datardy NOLIST
+                  hLiteral 1 NOLIST
+                ]
               ]
               hCStmt  NONAME [
                 hIfStmt  NONAME [
-                  hVarref datastrm##valid NOLIST
+                  hSigAssignR read [
+                    hVarref datastrm##valid NOLIST
+                  ]
                   hCStmt  NONAME [
                     hIfStmt  NONAME [
                       hBinop > [
@@ -379,27 +392,27 @@
                     ]
                     hSigAssignL write [
                       hVarref cur_avg NOLIST
-                      hBinop + [
-                        hBinop / [
-                          hBinop + [
-                            hNoop to_uint [
-                              hSigAssignR read [
-                                hVarref sum NOLIST
-                              ]
-                            ]
-                            hNoop to_int [
-                              hSigAssignR read [
-                                hVarref datastrm##data NOLIST
-                              ]
+                      hBinop / [
+                        hBinop + [
+                          hNoop to_uint [
+                            hSigAssignR read [
+                              hVarref sum NOLIST
                             ]
                           ]
+                          hNoop to_int [
+                            hSigAssignR read [
+                              hVarref datastrm##data NOLIST
+                            ]
+                          ]
+                        ]
+                        hBinop + [
                           hNoop to_uint [
                             hSigAssignR read [
                               hVarref n NOLIST
                             ]
                           ]
+                          hLiteral 1 NOLIST
                         ]
-                        hLiteral 1 NOLIST
                       ]
                     ]
                     hSigAssignL write [
@@ -460,6 +473,10 @@
                           hLiteral 1 NOLIST
                         ]
                       ]
+                    ]
+                    hBinop = [
+                      hVarref datardy NOLIST
+                      hLiteral 1 NOLIST
                     ]
                   ]
                 ]

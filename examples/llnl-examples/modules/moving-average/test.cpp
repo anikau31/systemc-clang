@@ -8,8 +8,12 @@
 #define RLEVEL false
 #endif
 
+#ifndef DATAW
+#define DATAW 64   // bitstream data width
+#endif
+
 #include "shared2/pulse.h"
-#include "moving_average.h"
+#include "moving-average.h"
 
 #define BLOCK_LEN 256
 
@@ -30,10 +34,11 @@ SC_MODULE(tb_driver)
   sc_signal<int> rcount;
   /*-------- data ---------*/
   O block[BLOCK_LEN];
-  /*-------- channels --------*/
+
+    /*-------- channels --------*/
   sc_signal<bool> c_sync_send;
   sc_signal<bool> c_sync_recv;
-
+  
   /*-------- send processes --------*/
   void mc_send()
   {
@@ -46,8 +51,11 @@ SC_MODULE(tb_driver)
 
     c_sync_send = sync;
 #ifndef __SYNTHESIS__
-    if (sync) {
-      cout << name() << "::mc_send ts: " << sc_time_stamp() << ", flit: " << flit << endl;
+    if (sync || !sync) {
+      cout << name() << "::mc_send ts: " << sc_time_stamp()
+	   << ", flit: " << flit << ", sync:" << sync
+	   << ", c_sync_send: " << c_sync_send
+	   << ", m_port.ready_r: " << m_port.ready_r() << endl;
     }
 #endif
   }
@@ -57,14 +65,15 @@ SC_MODULE(tb_driver)
     if (reset == RLEVEL) {
       scount = 0;
     } else {
-      if (c_sync_send) scount = scount.read() + 1;
+      //if (c_sync_send) scount = scount.read() + 1;
+      scount = scount.read() + 1;
     }
   }
 
   /*-------- recv processes --------*/
   void mc_recv()
   {
-    bool sync = min_port.valid_r() & max_port.valid_r() & avg_port.valid_r(); // always ready
+    bool sync = min_port.valid_r() && max_port.valid_r() && avg_port.valid_r(); // always ready
     //s_port.valid_r(); // always ready
     //I flit = s_port.data_r();
     I minval = min_port.data_r();
@@ -80,7 +89,9 @@ SC_MODULE(tb_driver)
     c_sync_recv = sync;
 #ifndef __SYNTHESIS__
     if (sync) {
-      cout << name() << "::mc_recv ts: " << sc_time_stamp() << ", flit: " << flit << endl;
+      cout << name() << "::mc_recv ts: " << sc_time_stamp() <<
+	", minval: " << minval << ", maxval: " << maxval <<
+	", avgval: " << avgval <<endl;
     }
 #endif
   }
@@ -94,6 +105,19 @@ SC_MODULE(tb_driver)
     }
   }
 
+  #if defined(VCD)
+  void start_of_simulation()
+  {
+    sc_trace(tf, m_port,   (std::string(name())+".datastrm").c_str());
+    sc_trace(tf, min_port,   (std::string(name())+".min_port").c_str());
+    sc_trace(tf, max_port,   (std::string(name())+".max_port").c_str());
+    sc_trace(tf, avg_port,   (std::string(name())+".avg_port").c_str());
+    sc_trace(tf, scount,  (std::string(name())+".scount").c_str());
+    sc_trace(tf, rcount,  (std::string(name())+".rcount").c_str());
+    sc_trace(tf, c_sync_send,   (std::string(name())+".c_sync_send").c_str());
+    sc_trace(tf, c_sync_recv,   (std::string(name())+".c_sync_recv").c_str());
+  }
+#endif
   SC_CTOR(tb_driver)
   {
     for (int i = 0; i < 100; i++)
@@ -135,9 +159,11 @@ int sc_main(int argc , char *argv[])
   sc_stream <data_t>  dut_max("dut_max");
   sc_stream <data_t>  dut_avg("dut_avg");
 
+  sc_signal<bool> c_error("c_error");
+  
   pulse<0,2,RLEVEL> u_pulse("u_pulse");
-  tb_driver<enc_t, fpn_t> u_tb_driver("u_tb_driver");
-  moving_average<DATAW> u_dut;
+  tb_driver<data_t, data_t> u_tb_driver("u_tb_driver");
+  moving_average<DATAW> u_dut("moving_average");
 
 
   // connect reset
@@ -156,7 +182,7 @@ int sc_main(int argc , char *argv[])
   // connect DUT
   u_dut.clk(clk);
   u_dut.reset(reset);
-  u_dut.s_fp(driv_data);
+  u_dut.datastrm(driv_data);
   u_dut.min_out(dut_min);
   u_dut.max_out(dut_max);
   u_dut.avg_out(dut_avg);
@@ -166,10 +192,10 @@ int sc_main(int argc , char *argv[])
   tf->set_time_unit(1, SC_NS);
   sc_trace(tf, clk, clk.name());
   sc_trace(tf, reset, reset.name());
-  sc_trace(tf, driv_data, driv_data.name());
-  sc_trace(tf,dut_min, dut_min.name());
-  sc_trace(tf,dut_max, dut_max.name());
-  sc_trace(tf,dut_avg, dut_avg.name());
+  sc_trace(tf, driv_data, "driv_data");//driv_data.name());
+  sc_trace(tf,dut_min, "min"); //dut_min.name());
+  sc_trace(tf,dut_max, "max"); //dut_max.name());
+  sc_trace(tf,dut_avg, "avg"); //dut_avg.name());
   sc_trace(tf, c_error, c_error.name());
 #endif
 
