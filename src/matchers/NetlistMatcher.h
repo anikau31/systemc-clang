@@ -125,7 +125,14 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
       anyOf( 
         hasDescendant(caller_array_subscript) //hasDescendant
       ,
-        hasDescendant(memberExpr(hasDescendant(memberExpr(has_allowed_types).bind("caller_expr"))).bind("caller_port_me_expr"))
+        hasDescendant(
+          memberExpr(hasDescendant(
+              memberExpr(has_allowed_types).bind("caller_expr")
+              ) //hasDescendant
+              ,
+              // The port could be an array as well.
+              optionally(hasAncestor(arraySubscriptExpr().bind("caller_array_port_expr")))
+            ).bind("caller_port_me_expr"))
       );
 
     const auto callee_array_subscript =
@@ -174,51 +181,6 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
                     .bind("compoundstmt"))
             ).bind("named_decl");
 
-
-    auto match_ctor_decl =
-        namedDecl(
-            has(compoundStmt(
-                    forEachDescendant(
-                        cxxOperatorCallExpr(
-                            // callExpr(
-                            // Port
-                            // 1. MemberExpr has a descendant that is a
-                            // MemberExpr The first MemberExpr gives the
-                            //{}/ port bound to information. The second
-                            // MemberExpr gives the instance information
-                            // to whom the port belongs.
-
-                            anyOf(hasDescendant(arraySubscriptExpr(
-                                          hasDescendant(memberExpr(has(memberExpr().bind("memberexpr_instance"))).bind(
-                                              "memberexpr_port")))
-                                          .bind("array_expr_port")),
-                                  hasDescendant(memberExpr(has(memberExpr().bind(
-                                                     "memberexpr_instance")))
-                                          .bind("memberexpr_port")))  // anyOf
-
-                            // Arguments
-                            // 1. Has MemberExpr as a descendant.
-                            //   1.a It must have an implicitCastExpr as a
-                            //   parent 1.b But not a MemberExpr (This is
-                            //   because it matches with the port others.
-                            // , hasDescendant(
-                            // memberExpr(hasParent(implicitCastExpr()),
-                            // unless(hasDescendant(memberExpr())))
-                            // .bind("memberexpr_arg"))
-                            //
-
-                            // Get the memberExpr for the argument.
-                            ,
-                            hasArgument(1, 
-                                anyOf(
-                                  arraySubscriptExpr().bind("array_port_arg"),
-                                         expr().bind("port_arg")
-                                 )  // anyOf
-                            )  // hasArgument
-                      ).bind("callexpr")))
-                    .bind("compoundstmt")))
-            .bind("functiondecl");
-
     /* clang-format on */
 
     // Add the two matchers.
@@ -262,20 +224,25 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
     auto callee_array_expr{const_cast<clang::ArraySubscriptExpr *>(
         result.Nodes.getNodeAs<clang::ArraySubscriptExpr>("callee_expr"))};
 
+    auto caller_array_port_expr{const_cast<clang::ArraySubscriptExpr *>(
+        result.Nodes.getNodeAs<clang::ArraySubscriptExpr>("caller_array_port_expr"))};
+
     /// MemberExpr that gives the method name (port name).
     auto caller_port_me_expr{const_cast<clang::MemberExpr *>(
         result.Nodes.getNodeAs<clang::MemberExpr>("caller_port_me_expr"))};
     auto callee_port_me_expr{const_cast<clang::MemberExpr *>(
         result.Nodes.getNodeAs<clang::MemberExpr>("callee_port_me_expr"))};
 
-    /*
         if (caller_array_expr) {
-          llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY EXPR
-       \n";
-
-        } else if (caller_expr) {
+          llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY EXPR\n";
+        } 
+        if (caller_expr) {
           llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER EXPR\n";
           caller_expr->dump();
+        } 
+        if (caller_array_port_expr) {
+          llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY PORT EXPR\n";
+          caller_array_port_expr->dump();
         }
 
         /// Callee handling.
@@ -290,10 +257,9 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
           llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEE EXPR\n";
           callee_expr->dump();
         }
-        */
 
     if (caller_expr && callee_expr) {
-      PortBinding *pb{new PortBinding(caller_expr, caller_port_me_expr,
+      PortBinding *pb{new PortBinding(caller_expr, caller_array_port_expr, caller_port_me_expr,
                                       callee_expr, callee_port_me_expr)};
 
       pb->dump();

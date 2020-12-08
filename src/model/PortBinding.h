@@ -17,6 +17,8 @@ class PortBinding {
   clang::Expr *caller_expr_;
   clang::ArraySubscriptExpr *caller_array_expr_;
   const clang::MemberExpr *caller_instance_me_expr_;
+  clang::Expr *caller_port_array_expr_;
+  ArraySubscriptsType caller_port_array_subscripts_;
   const clang::MemberExpr *caller_port_me_expr_;
   std::vector<llvm::APInt> caller_array_subscripts_;
 
@@ -177,9 +179,15 @@ class PortBinding {
     llvm::outs() << "caller instance type name : " << caller_instance_type_name_
                  << "  "
                  << "caller instance name : " << caller_instance_name_ << "  "
-                 << "caller port name     : " << caller_port_name_ << "  "
                  << "subscripts: ";
     for (const auto sub : caller_array_subscripts_) {
+      llvm::outs() << " " << sub;
+    }
+    llvm::outs() << "\n";
+
+    llvm::outs() << "caller port name     : " << caller_port_name_ << "  "
+    << "subscripts: ";
+    for (const auto sub : caller_port_array_subscripts_) {
       llvm::outs() << " " << sub;
     }
 
@@ -199,16 +207,24 @@ class PortBinding {
     // << " bound to " << port_parameter_name_ << "\n";
   }
 
-  PortBinding(clang::Expr *caller_expr, clang::MemberExpr *caller_port_me_expr,
-              clang::Expr *callee_expr, clang::MemberExpr *callee_port_me_expr)
+  PortBinding(clang::Expr *caller_expr, clang::Expr *caller_port_expr,
+              clang::MemberExpr *caller_port_me_expr, clang::Expr *callee_expr,
+              clang::MemberExpr *callee_port_me_expr)
       : caller_expr_{caller_expr},
         callee_expr_{callee_expr},
+        caller_port_array_expr_{caller_port_expr},
         caller_port_me_expr_{caller_port_me_expr},
         callee_port_me_expr_{callee_port_me_expr} {
     /// Cast to see if it's an array.
     caller_array_expr_ = dyn_cast<clang::ArraySubscriptExpr>(caller_expr);
 
     llvm::outs() << "==> Extract caller port name\n";
+    // Check to see if the port is initself an array
+    if (caller_port_array_expr_) {
+      caller_port_array_subscripts_ =
+          getArraySubscripts(caller_port_array_expr_);
+    }
+
     if (caller_port_me_expr_) {
       // caller_port_me_expr_->dump();
       caller_port_name_ =

@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "GetASTInfo.h"
-
 namespace clang {
 class Decl;
 }

@@ -40,7 +40,7 @@ file(COPY ../examples/llnl-examples DESTINATION ${CMAKE_BINARY_DIR}/tests/data )
 set(TEST_DIR "tests")
 
 # add_subdirectory(unit)
-# add_subdirectory(matchers)
+ add_subdirectory(matchers)
  add_subdirectory(parsing)
 
 # Plugins

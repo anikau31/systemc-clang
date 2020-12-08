@@ -137,6 +137,7 @@ ArraySizesType getArraySubscripts(const clang::Expr *expr) {
   /// Check if it is an ArraySubscriptExpr
   auto arr_sub_expr{clang::dyn_cast<clang::ArraySubscriptExpr>(expr)};
   while (arr_sub_expr != nullptr) {
+    arr_sub_expr->dump();
     auto int_lit{
         clang::dyn_cast<clang::IntegerLiteral>(arr_sub_expr->getIdx())};
     llvm::outs() << "SUBSCRIPT: " << int_lit->getValue() << "\n";

@@ -74,6 +74,6 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
     REQUIRE(found_decl->getOPorts().size() == 3);
     REQUIRE(found_decl->getOtherVars().size() == 3);
     // there are two submodules but in an array
-    REQUIRE(found_decl->getNestedModules().size() == 1);
+    REQUIRE(found_decl->getNestedModuleInstances().size() == 1);
   }
 }
