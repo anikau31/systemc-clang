@@ -121,7 +121,6 @@ int sc_main(int argc, char *argv[]) {
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
           .release();
 
-
   /// Turn debug on
   //
   llvm::DebugFlag = true;
@@ -138,11 +137,11 @@ int sc_main(int argc, char *argv[]) {
 
   ModuleDecl *test_module{model->getInstance("testing")};
   ModuleDecl *simple_module{model->getInstance("simple_module_instance")};
+  ModuleDecl *dut{model->getInstance("d")};
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
-    INFO("Checking number of sc_module instances found: "
-         << instances.size());
+    INFO("Checking number of sc_module instances found: " << instances.size());
 
     REQUIRE(instances.size() == 3);
 
@@ -189,7 +188,6 @@ int sc_main(int argc, char *argv[]) {
         llvm::outs() << "\n- name: " << name
                      << ", type name: " << type_data->getTypeName() << " ";
 
-    
         // Access the parent of the current node.
         // If the node is a pointer to itself, then the node itself is the
         // parent. Otherwise, it points to the parent node.
@@ -231,7 +229,6 @@ int sc_main(int argc, char *argv[]) {
         REQUIRE(sizes[1].getLimitedValue() == 3);
         REQUIRE(sizes[2].getLimitedValue() == 4);
       }
-
     }
 
     for (auto const &port : test_module_inst->getOPorts()) {
@@ -258,8 +255,6 @@ int sc_main(int argc, char *argv[]) {
         REQUIRE(sizes[0].getLimitedValue() == 2);
         REQUIRE(sizes[1].getLimitedValue() == 3);
       }
-
-
     }
 
     for (auto const &port : test_module_inst->getIOPorts()) {
@@ -307,7 +302,6 @@ int sc_main(int argc, char *argv[]) {
         REQUIRE(sizes[1].getLimitedValue() == 3);
         REQUIRE(sizes[2].getLimitedValue() == 4);
       }
-
     }
 
     INFO("Checking member ports for simple module instance.");
@@ -374,28 +368,36 @@ int sc_main(int argc, char *argv[]) {
     //
     //
 
-    // test_module_inst
-    auto port_bindings{test_module_inst->getPortBindings()};
-    std::vector<std::string> test_ports{"in1", "in_out", "out1"};
+    /// Port bindings
+    //
+    // Instance: testing
+    REQUIRE(test_module->getPortBindings().size() == 0);
 
-    for (auto const &pname : test_ports) {
-      auto found_it{port_bindings.find(pname)};
-      // Actually found the name
-      REQUIRE(found_it != port_bindings.end());
-      // Check now if the names
-      std::string port_name{found_it->first};
-      PortBinding *binding{found_it->second};
-      std::string as_string{binding->toString()};
+    // Instance: d
+    auto port_bindings{dut->getPortBindings()};
 
-      if (port_name == "in1") {
-        REQUIRE(as_string == "test test_instance testing sig1");
-      }
-      if (port_name == "in_out") {
-        REQUIRE(as_string == "test test_instance testing double_sig");
-      }
-      if (port_name == "out1") {
-        REQUIRE(as_string == "test test_instance testing sig1");
+    int check_count{3};
+    for (auto const &binding : port_bindings) {
+      PortBinding *pb{binding.second};
+      std::string port_name{pb->getCallerPortName()};
+      std::string caller_name{pb->getCallerInstanceName()};
+      std::string as_string{pb->toString()};
+      llvm::outs() << "check string: " << as_string << "\n";
+      if (caller_name == "test_instance") {
+        if (port_name == "in1") {
+          REQUIRE(as_string == "test test_instance testing in1 sig1");
+          --check_count;
+        }
+        if (port_name == "in_out") {
+          REQUIRE(as_string == "test test_instance testing in_out double_sig");
+          --check_count;
+        }
+        if (port_name == "out1") {
+          REQUIRE(as_string == "test test_instance testing out1 sig1");
+          --check_count;
+        }
       }
     }
+    REQUIRE(check_count == 0);
   }
 }
