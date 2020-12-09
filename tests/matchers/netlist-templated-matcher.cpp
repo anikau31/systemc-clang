@@ -51,42 +51,38 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     REQUIRE(found_decl->getSignals().size() == 0);
     // 1 non-array, and 2 array others
     REQUIRE(found_decl->getOtherVars().size() == 0);
-    REQUIRE(found_decl->getNestedModules().size() == 1);
+    REQUIRE(found_decl->getNestedModuleInstances().size() == 1);
 
     // TODO: Check the template parameters.
     //
 
     // test_module_inst
+    found_decl = model->getInstance("dut");
     auto port_bindings{found_decl->getPortBindings()};
-    std::vector<std::string> test_ports{"clk", "inS", "outS"};
 
-    LLVM_DEBUG(llvm::dbgs() << "Number of port bindings: "
-                            << port_bindings.size() << "\n";);
-    // Print all the port binding information
-    for (auto const &p : port_bindings) {
-      auto pb{p.second};
-      LLVM_DEBUG(pb->dump(););
-    }
-
-    for (auto const &pname : test_ports) {
-      auto found_it{port_bindings.find(pname)};
-      // Actually found the name
-      REQUIRE(found_it != port_bindings.end());
-      // Check now if the names
-      std::string port_name{found_it->first};
-      PortBinding *binding{found_it->second};
-      std::string as_string{binding->toString()};
-
-      if (port_name == "clk") {
-        REQUIRE(as_string == "test test_instance testing clk");
-      }
-      if (port_name == "inS") {
-        REQUIRE(as_string == "test test_instance testing sig1");
-      }
-      if (port_name == "outS") {
-        REQUIRE(as_string == "test test_instance testing sig1");
+    int check_count{3};
+    for (auto const &binding : port_bindings) {
+      PortBinding *pb{binding.second};
+      std::string port_name{pb->getCallerPortName()};
+      std::string caller_name{pb->getCallerInstanceName()};
+      std::string as_string{pb->toString()};
+      llvm::outs() << "check string: " << as_string << "\n";
+      if (caller_name == "test_instance") {
+        if (port_name == "clk") {
+          REQUIRE(as_string == "test test_instance testing clk clk");
+          --check_count;
+        }
+        if (port_name == "inS") {
+          REQUIRE(as_string == "test test_instance testing inS sig1");
+          --check_count;
+        }
+        if (port_name == "outS") {
+          REQUIRE(as_string == "test test_instance testing outS sig1");
+          --check_count;
+        }
       }
     }
+    REQUIRE(check_count == 0);
   }
 
   SECTION("Testing submodule", "[submodule]") {
@@ -97,24 +93,63 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     REQUIRE(found_decl->getOtherVars().size() == 0);
 
     auto port_bindings{found_decl->getPortBindings()};
-    std::vector<std::string> test_ports{"input", "output"};
+    REQUIRE(port_bindings.size() == 0);
+  }
 
-    for (auto const &pname : test_ports) {
-      auto found_it{port_bindings.find(pname)};
-      // Actually found the name
-      REQUIRE(found_it != port_bindings.end());
-      // Check now if the names
-      std::string port_name{found_it->first};
-      PortBinding *binding{found_it->second};
-      std::string as_string{binding->toString()};
 
-      if (port_name == "input") {
-        REQUIRE(as_string == "submodule sub_module_member SUBMODULE inS");
-      }
+  /// Instance testing.
+  SECTION("Test port bindings for instance testing", "[testing]") {
+    auto found_decl{found_module_testing};
+    REQUIRE(found_decl->getIPorts().size() == 4);
+    REQUIRE(found_decl->getOPorts().size() == 2);
+    // This is 4 because sc_buffer is also inheriting from the signal interface.
+    REQUIRE(found_decl->getSignals().size() == 0);
+    // 1 non-array, and 2 array others
+    REQUIRE(found_decl->getOtherVars().size() == 0);
+    REQUIRE(found_decl->getNestedModuleInstances().size() == 4);
 
-      if (port_name == "output") {
-        REQUIRE(as_string == "submodule sub_module_member SUBMODULE outS");
+    /// TODO: Check for submodules, and port bindings.
+    auto port_bindings{found_decl->getPortBindings()};
+    std::string instance_name{"testing"};
+    LLVM_DEBUG(llvm::dbgs() << "Number of port bindings: "
+                            << port_bindings.size() << "\n";);
+
+    // Print all the port binding information
+    for (auto const &p : port_bindings) {
+      auto pb{p.second};
+      LLVM_DEBUG(llvm::dbgs() << "bind_name: " << p.first << "\n");
+      LLVM_DEBUG(pb->dump(););
+    }
+
+    /// Ensure that all checks are encountered.
+    int check_count{2};
+    for (auto const &binding : port_bindings) {
+      PortBinding *pb{binding.second};
+      std::string caller_name{pb->getCallerInstanceName()};
+      std::string port_name{pb->getCallerPortName()};
+      std::string as_string{pb->toString()};
+
+      llvm::outs() << "\n";
+      llvm::outs() << "check string: " << as_string << "\n";
+      llvm::outs() << "inst name: " << pb->getCallerInstanceName()
+                   << ", port name: " << pb->getCallerPortName() << "\n\n";
+
+      if (caller_name == "sub_module_member") {
+        if (port_name == "input") {
+          REQUIRE(as_string == "submodule sub_module_member SUBMODULE input inS");
+          llvm::outs() << "@@@@@ 1st\n";
+          --check_count;
+        }
+        if (port_name == "output") {
+          REQUIRE(as_string == "submodule sub_module_member SUBMODULE output outS");
+          --check_count;
+        }
       }
     }
+    REQUIRE(check_count == 0);
   }
+
 }
+
+
+

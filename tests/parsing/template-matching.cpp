@@ -15,7 +15,7 @@ using namespace sc_ast_matchers;
 
 TEST_CASE("Only parse a single top-level module", "[parsing]") {
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "templated-module.cpp")};
+      systemc_clang::test_data_dir, "templated-module-input.cpp")};
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
@@ -54,7 +54,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
 TEST_CASE("Testing top-level module: test", "[top-module]") {
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "templated-module.cpp")};
+      systemc_clang::test_data_dir, "templated-module-input.cpp")};
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
@@ -72,6 +72,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
 
   auto found_module_testing{model->getInstance("testing")};
   auto found_module_testing_float{model->getInstance("testing_float_double")};
+  auto dut{model->getInstance("d")};
 
   REQUIRE(instances.size() == 4);
   SECTION("Testing top-level module: test", "[top module]") {
@@ -93,8 +94,40 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     // TODO: Check the template parameters.
     //
 
-    // test_module_inst
-    INFO("KNOWN FAILING: Need to fix the parsing of ports for templated modules"); 
+    //
+    //
+    //
+    
+    // Instance: testing
+    REQUIRE(found_module_testing->getPortBindings().size() == 0);
+    // Instance: d
+    auto port_bindings{dut->getPortBindings()};
+
+    int check_count{3};
+    for (auto const &binding : port_bindings) {
+      PortBinding *pb{binding.second};
+      std::string port_name{pb->getCallerPortName()};
+      std::string caller_name{pb->getCallerInstanceName()};
+      std::string as_string{pb->toString()};
+      llvm::outs() << "check string: " << as_string << "\n";
+      if (caller_name == "test_instance") {
+        if (port_name == "clk") {
+          REQUIRE(as_string == "test test_instance testing clk clk");
+          --check_count;
+        }
+        if (port_name == "inS") {
+          REQUIRE(as_string == "test test_instance testing inS sig1");
+          --check_count;
+        }
+        if (port_name == "outS") {
+          REQUIRE(as_string == "test test_instance testing outS sig1");
+          --check_count;
+        }
+      }
+    }
+    REQUIRE(check_count == 0);
+
+  /*
     auto port_bindings{found_decl->getPortBindings()};
     std::vector<std::string> test_ports{"clk", "inS", "outS"};
 
@@ -123,6 +156,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
         REQUIRE(as_string == "test test_instance testing sig1");
       }
     }
+    */
 
 
     auto found_decl2{found_module_testing_float};
@@ -134,7 +168,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     // 1 non-array, and 2 array others
     REQUIRE(found_decl2->getOtherVars().size() == 2);
 
+  }
     // TODO: Check the template parameters.
     //
-  }
 }

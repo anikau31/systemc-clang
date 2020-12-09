@@ -1,12 +1,12 @@
 # Test CMakeFile
 
 set (TEST_LIST 
-  # instance-matcher
+  instance-matcher
   netlist-matcher
-  # netlist-templated-matcher
-  # find-members
-  # sensitivity-matcher
-  # template-parameters-matcher
+  netlist-templated-matcher
+  find-members
+  sensitivity-matcher
+  template-parameters-matcher
   )
 
 set(SCC_LIBS libsystemc-clang)
