@@ -21,6 +21,7 @@ typedef std::map<std::string, std::tuple<std::size_t, std::size_t, std::size_t>>
 // typedef std::map<std::string, std::tuple<std::size_t, std::size_t,
 // std::size_t>> indices;
 typedef std::vector<llvm::APInt> ArraySizesType;
+typedef std::vector<const clang::Expr *> ArraySizesExprType;
 
 /// Returns the indices associated with each element of an array of objects
 /// that is instantiated using a constructor.
@@ -47,15 +48,14 @@ IndexMapType getArrayInstanceIndex(clang::CXXCtorInitializer *ctor_init);
 ///
 ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd);
 
-/// Returns the array subscripts used in an ArraySubscriptExpr. 
+/// Returns the array subscripts used in an ArraySubscriptExpr.
 /// For example, arr[0][1] would return 0, 1.
-ArraySizesType getArraySubscripts( const clang::Expr * expr);
+ArraySizesExprType getArraySubscripts(const clang::Expr *expr);
 
-
-const clang::MemberExpr* getArrayMemberExprName(const clang::Expr *expr);
+const clang::MemberExpr *getArrayMemberExprName(const clang::Expr *expr);
 };  // namespace array_type
-};  // namespace array_type
-
 };  // namespace utils
+
+};  // namespace sc_ast_matchers
 
 #endif

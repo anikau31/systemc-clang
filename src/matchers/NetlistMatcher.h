@@ -125,13 +125,31 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
       anyOf( 
         hasDescendant(caller_array_subscript) //hasDescendant
       ,
+        /// This priority is imporant. anyOf() priority is in the order of
+        /// specification. Thus, we check if there is an ArraySubscriptExpr for the
+        /// port, and only if it is not then we check a non-array port. The caller port
+        /// could also be a array, so we need to check if the ancestor has an
+        /// ArraySubscriptExpr. This should have worked better with using optionally(),
+        /// but it didn't work.
         hasDescendant(
-          memberExpr(hasDescendant(
+          memberExpr(
+            hasDescendant(
               memberExpr(has_allowed_types).bind("caller_expr")
               ) //hasDescendant
               ,
               // The port could be an array as well.
-              optionally(hasAncestor(arraySubscriptExpr().bind("caller_array_port_expr")))
+              hasAncestor(arraySubscriptExpr().bind("caller_array_port_expr"))
+            ).bind("caller_port_me_expr"))
+
+      ,
+        hasDescendant(
+          memberExpr(
+            hasDescendant(
+              memberExpr(has_allowed_types).bind("caller_expr")
+              ) //hasDescendant
+              //,
+              // The port could be an array as well.
+              //optionally(hasAncestor(arraySubscriptExpr().bind("caller_array_port_expr")))
             ).bind("caller_port_me_expr"))
       );
 
@@ -205,14 +223,15 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
 
     /// Rework
 
-    auto named_decl{const_cast<clang::NamedDecl*>(
+    auto named_decl{const_cast<clang::NamedDecl *>(
         result.Nodes.getNodeAs<clang::NamedDecl>("named_decl"))};
-    auto opcall{const_cast<clang::CXXOperatorCallExpr*>(
+    auto opcall{const_cast<clang::CXXOperatorCallExpr *>(
         result.Nodes.getNodeAs<clang::CXXOperatorCallExpr>("opcall"))};
     opcall->dump();
     llvm::outs() << " get type \n";
     opcall->getDirectCallee()->dump();
-    llvm::outs() << "name: " << opcall->getDirectCallee()->getNameAsString() << "\n";
+    llvm::outs() << "name: " << opcall->getDirectCallee()->getNameAsString()
+                 << "\n";
 
     auto caller_expr{const_cast<clang::Expr *>(
         result.Nodes.getNodeAs<clang::Expr>("caller_expr"))};
@@ -225,7 +244,8 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
         result.Nodes.getNodeAs<clang::ArraySubscriptExpr>("callee_expr"))};
 
     auto caller_array_port_expr{const_cast<clang::ArraySubscriptExpr *>(
-        result.Nodes.getNodeAs<clang::ArraySubscriptExpr>("caller_array_port_expr"))};
+        result.Nodes.getNodeAs<clang::ArraySubscriptExpr>(
+            "caller_array_port_expr"))};
 
     /// MemberExpr that gives the method name (port name).
     auto caller_port_me_expr{const_cast<clang::MemberExpr *>(
@@ -233,34 +253,36 @@ const auto not_sc_event_finder = unless(hasType(cxxRecordDecl(isDerivedFrom("sc_
     auto callee_port_me_expr{const_cast<clang::MemberExpr *>(
         result.Nodes.getNodeAs<clang::MemberExpr>("callee_port_me_expr"))};
 
-        if (caller_array_expr) {
-          llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY EXPR\n";
-        } 
-        if (caller_expr) {
-          llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER EXPR\n";
-          caller_expr->dump();
-        } 
-        if (caller_array_port_expr) {
-          llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY PORT EXPR\n";
-          caller_array_port_expr->dump();
-        }
+    if (caller_array_expr) {
+      llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY EXPR\n";
+    }
+    if (caller_expr) {
+      llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER EXPR\n";
+      caller_expr->dump();
+    }
+    if (caller_array_port_expr) {
+      llvm::outs()
+          << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLER ARRAY PORT EXPR\n";
+      caller_array_port_expr->dump();
+    }
 
-        /// Callee handling.
-        ///
-        /// Callee array expressions.
-        if (callee_array_expr) {
-          llvm::outs()
-              << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEEE ARRAAY EXPR\n";
-          callee_expr->dump();
+    /// Callee handling.
+    ///
+    /// Callee array expressions.
+    if (callee_array_expr) {
+      llvm::outs()
+          << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEEE ARRAAY EXPR\n";
+      callee_expr->dump();
 
-        } else if (callee_expr) {
-          llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEE EXPR\n";
-          callee_expr->dump();
-        }
+    } else if (callee_expr) {
+      llvm::outs() << "=========== @@@@@@@@@@@@@@@@@@@@@ CALLEEEE EXPR\n";
+      callee_expr->dump();
+    }
 
     if (caller_expr && callee_expr) {
-      PortBinding *pb{new PortBinding(caller_expr, caller_array_port_expr, caller_port_me_expr,
-                                      callee_expr, callee_port_me_expr)};
+      PortBinding *pb{new PortBinding(caller_expr, caller_array_port_expr,
+                                      caller_port_me_expr, callee_expr,
+                                      callee_port_me_expr)};
 
       pb->dump();
 

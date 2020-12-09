@@ -83,38 +83,39 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
       std::string port_name{pb->getCallerPortName()};
       std::string as_string{pb->toString()};
 
+      llvm::outs() << "\n";
       llvm::outs() << "check string: " << as_string << "\n";
       llvm::outs() << "inst name: " << pb->getCallerInstanceName()
-                   << ", port name: " << pb->getCallerPortName() << "\n";
+                   << ", port name: " << pb->getCallerPortName() << "\n\n";
 
       if (caller_name == "sub_module_member") {
         if (port_name == "input") {
-          REQUIRE(as_string == "submodule sub_module_member SUBMODULE inS");
+          REQUIRE(as_string == "submodule sub_module_member SUBMODULE input inS");
           llvm::outs() << "@@@@@ 1st\n";
           --check_count;
         }
         if (port_name == "output") {
-          REQUIRE(as_string == "submodule sub_module_member SUBMODULE outS");
+          REQUIRE(as_string == "submodule sub_module_member SUBMODULE output outS");
           --check_count;
         }
       }
 
       if (caller_name == "submod_1d") {
         if (port_name == "output") {
-          REQUIRE(as_string == "submodule submod_1d 1d_submod_0 0 outS");
+          REQUIRE(as_string == "submodule submod_1d 1d_submod_0 0 output outS");
           --check_count;
         }
       }
 
       if (caller_name == "submodules_2d") {
         if (port_name == "input") {
-          REQUIRE(as_string == "submodule submodules_2d submod_0_0 1 2 inS");
+          REQUIRE(as_string == "submodule submodules_2d submod_0_0 1 2 input inS");
           --check_count;
         }
 
         if (port_name == "output") {
           REQUIRE(as_string ==
-                  "submodule submodules_2d submod_0_0 0 1 submodules_2d 1 2 "
+                  "submodule submodules_2d submod_0_0 0 1 output submodules_2d 1 2 "
                   "output");
           --check_count;
         }
@@ -122,7 +123,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
         if (caller_name == "submodules_3d") {
           if (port_name == "input") {
             REQUIRE(as_string ==
-                    "submodule submdules_3d submod_0_0_0 1 3 1 inS");
+                    "submodule submdules_3d submod_0_0_0 1 3 1 input inS");
             --check_count;
           }
         }
@@ -162,15 +163,15 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
       llvm::outs() << "check string: " << as_string << "\n";
       if (caller_name == "test_instance") {
         if (port_name == "clk") {
-          REQUIRE(as_string == "test test_instance testing clk");
+          REQUIRE(as_string == "test test_instance testing clk clk");
           --check_count;
         }
         if (port_name == "inS") {
-          REQUIRE(as_string == "test test_instance testing sig1");
+          REQUIRE(as_string == "test test_instance testing inS sig1");
           --check_count;
         }
         if (port_name == "outS") {
-          REQUIRE(as_string == "test test_instance testing sig1");
+          REQUIRE(as_string == "test test_instance testing outS sig1");
           --check_count;
         }
       }

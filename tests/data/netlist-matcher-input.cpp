@@ -5,10 +5,7 @@ SC_MODULE(submodule) {
   sc_out<int> output;
 
   void entry() {}
-  SC_CTOR(submodule) {
-    SC_METHOD(entry) ;
-
-  }
+  SC_CTOR(submodule) { SC_METHOD(entry); }
 };
 
 SC_MODULE(test) {
@@ -28,48 +25,44 @@ SC_MODULE(test) {
   submodule submodules_3d[2][3][2];
 
   void entry() {
-    while (true) {}
+    while (true) {
+    }
   }
 
-  SC_CTOR(test) : 
-    // single 
-    // 0d
-    sub_module_member("SUBMODULE"),
-    //1d
-    submod_1d{{"1d_submod_0"}, {"1d_submod_1"}},
-      // 2d
+  SC_CTOR(test)
+      :  // single
+         // 0d
+        sub_module_member("SUBMODULE"),
+        // 1d
+        submod_1d{{"1d_submod_0"}, {"1d_submod_1"}},
+        // 2d
         submodules_2d{
             {{{"submod_0_0"}}, {{"submod_0_1"}}, {{"submod_0_2"}}},
             {{{"submod_1_0"}}, {{"submod_1_1"}}, {{"submod_1_2"}}},
         },
-//
- // 3d
- submodules_3d{
-          { { {"submod_0_0_0"}, {"submod_0_0_1"} },
-            { {"submod_0_1_0"}, {"submod_0_1_1"} },
-            { {"submod_0_2_0"}, {"submod_0_2_1"} }
-          },
-          { { {"submod_1_0_0"}, {"submod_1_0_1"} },
-            { {"submod_1_1_0"}, {"submod_1_1_1"} },
-            { {"submod_1_2_0"}, {"submod_1_2_1"} }
-          }
-        } 
+        //
+        // 3d
+        submodules_3d{{{{"submod_0_0_0"}, {"submod_0_0_1"}},
+                       {{"submod_0_1_0"}, {"submod_0_1_1"}},
+                       {{"submod_0_2_0"}, {"submod_0_2_1"}}},
+                      {{{"submod_1_0_0"}, {"submod_1_0_1"}},
+                       {{"submod_1_1_0"}, {"submod_1_1_1"}},
+                       {{"submod_1_2_0"}, {"submod_1_2_1"}}}}
 
-    {
+  {
+    // 0d
+    sub_module_member.input(inS);
+    sub_module_member.output(outS);
 
-// 0d
-     sub_module_member.input(inS);
-     sub_module_member.output(outS);
+    // 1d
+    submod_1d[0].output(outS);
 
-      // 1d
-      submod_1d[0].output(outS);
+    // 2d
+    submodules_2d[1][2].input(inS);
 
-      // 2d
-      submodules_2d[1][2].input( inS );
+    submodules_2d[0][1].output(submodules_2d[1][2].output);
 
-      submodules_2d[0][1].output( submodules_2d[1][2].output );
-
-      submodules_3d[1][2][1].input( inS );
+    submodules_3d[1][2][1].input(inS);
 
     SC_METHOD(entry);
     sensitive << clk.pos();

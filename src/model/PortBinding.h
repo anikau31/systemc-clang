@@ -10,7 +10,8 @@ using namespace sc_ast_matchers::utils::array_type;
 
 class PortBinding {
  private:
-  typedef std::vector<llvm::APInt> ArraySubscriptsType;
+  typedef std::vector<const clang::Expr *> ArraySubscriptsExprType;
+  // typedef std::vector<clang::Expr*> ArraySubscriptsType;
   /// Reword
   //
   /// Caller
@@ -18,16 +19,16 @@ class PortBinding {
   clang::ArraySubscriptExpr *caller_array_expr_;
   const clang::MemberExpr *caller_instance_me_expr_;
   clang::Expr *caller_port_array_expr_;
-  ArraySubscriptsType caller_port_array_subscripts_;
+  ArraySubscriptsExprType caller_port_array_subscripts_;
   const clang::MemberExpr *caller_port_me_expr_;
-  std::vector<llvm::APInt> caller_array_subscripts_;
+  ArraySubscriptsExprType caller_array_subscripts_;
 
   /// Callee
   clang::Expr *callee_expr_;
   const clang::MemberExpr *callee_port_me_expr_;      // port
   const clang::MemberExpr *callee_instance_me_expr_;  // instance
   clang::ArraySubscriptExpr *callee_array_expr_;
-  std::vector<llvm::APInt> callee_array_subscripts_;
+  ArraySubscriptsExprType callee_array_subscripts_;
 
   // Which of the two bindings is done (sc_main or ctor)
   //
@@ -100,10 +101,15 @@ class PortBinding {
   }
   const std::string getCalleePortName() const { return callee_port_name_; }
 
-  ArraySubscriptsType getCallerArraySubscripts() const {
+  ArraySubscriptsExprType getCallerArraySubscripts() const {
     return caller_array_subscripts_;
   }
-  ArraySubscriptsType getCalleeArraySubscripts() const {
+
+  ArraySubscriptsExprType getCallerPortArraySubscripts() const {
+    return caller_port_array_subscripts_;
+  }
+
+  ArraySubscriptsExprType getCalleeArraySubscripts() const {
     return callee_array_subscripts_;
   }
 
@@ -146,7 +152,34 @@ class PortBinding {
     }
 
     for (const auto &sub : getCallerArraySubscripts()) {
-      return_str += " " + sub.toString(32, true);
+      auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
+      auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
+
+      if (is_int_lit) {
+        return_str += " " + is_int_lit->getValue().toString(32, true);
+      }
+
+      if (is_dref_expr) {
+        return_str += " " + is_dref_expr->getNameInfo().getName().getAsString();
+      }
+    }
+
+    /// Caller port name
+    if (getCallerPortName() != "") {
+      return_str = return_str + " " + getCallerPortName();
+    }
+
+    for (const auto &sub : getCallerPortArraySubscripts()) {
+      auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
+      auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
+
+      if (is_int_lit) {
+        return_str += " " + is_int_lit->getValue().toString(32, true);
+      }
+
+      if (is_dref_expr) {
+        return_str += " " + is_dref_expr->getNameInfo().getName().getAsString();
+      }
     }
 
     if (getCalleeInstanceName() != "") {
@@ -154,7 +187,16 @@ class PortBinding {
     }
 
     for (const auto &sub : getCalleeArraySubscripts()) {
-      return_str += " " + sub.toString(32, true);
+      auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
+      auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
+
+      if (is_int_lit) {
+        return_str += " " + is_int_lit->getValue().toString(32, true);
+      }
+
+      if (is_dref_expr) {
+        return_str += " " + is_dref_expr->getNameInfo().getName().getAsString();
+      }
     }
 
     if (getCalleePortName() != "") {
@@ -181,14 +223,33 @@ class PortBinding {
                  << "caller instance name : " << caller_instance_name_ << "  "
                  << "subscripts: ";
     for (const auto sub : caller_array_subscripts_) {
-      llvm::outs() << " " << sub;
+      auto int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
+      if (int_lit) {
+        llvm::outs() << " " << int_lit->getValue();
+      }
+
+      auto decl_ref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
+      if (decl_ref_expr) {
+        llvm::outs() << " "
+                     << decl_ref_expr->getNameInfo().getName().getAsString();
+      }
     }
+
     llvm::outs() << "\n";
 
     llvm::outs() << "caller port name     : " << caller_port_name_ << "  "
-    << "subscripts: ";
-    for (const auto sub : caller_port_array_subscripts_) {
-      llvm::outs() << " " << sub;
+                 << "subscripts: ";
+    for (const auto &sub : caller_port_array_subscripts_) {
+      auto int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
+      if (int_lit) {
+        llvm::outs() << " " << int_lit->getValue();
+      }
+
+      auto decl_ref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
+      if (decl_ref_expr) {
+        llvm::outs() << " "
+                     << decl_ref_expr->getNameInfo().getName().getAsString();
+      }
     }
 
     llvm::outs() << "\nCALLEE\n"
@@ -196,8 +257,18 @@ class PortBinding {
                  << "callee port name      : " << callee_port_name_ << "  "
                  << "subscripts: ";
     for (const auto sub : callee_array_subscripts_) {
-      llvm::outs() << " " << sub;
+      auto int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
+      if (int_lit) {
+        llvm::outs() << " " << int_lit->getValue();
+      }
+
+      auto decl_ref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
+      if (decl_ref_expr) {
+        llvm::outs() << " "
+                     << decl_ref_expr->getNameInfo().getName().getAsString();
+      }
     }
+
     llvm::outs() << "\n";
 
     // llvm::outs() << "> port_name: " << callee_instance_name_ << " type: " <<

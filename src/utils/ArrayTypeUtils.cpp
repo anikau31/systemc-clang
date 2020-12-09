@@ -131,17 +131,37 @@ ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd) {
   return sizes;
 }
 
-ArraySizesType getArraySubscripts(const clang::Expr *expr) {
-  ArraySizesType subscripts;
+ArraySizesExprType getArraySubscripts(const clang::Expr *expr) {
+  ArraySizesExprType subscripts;
 
   /// Check if it is an ArraySubscriptExpr
   auto arr_sub_expr{clang::dyn_cast<clang::ArraySubscriptExpr>(expr)};
   while (arr_sub_expr != nullptr) {
-    arr_sub_expr->dump();
+    arr_sub_expr->getIdx()->dump();
+
+    /// The index could be an integer or a variable name a[x].
+    /// The integer a[4] is represented as an IntegerLiteral, and the variable
+    /// name uses a DeclRefExpr.
+
     auto int_lit{
         clang::dyn_cast<clang::IntegerLiteral>(arr_sub_expr->getIdx())};
-    llvm::outs() << "SUBSCRIPT: " << int_lit->getValue() << "\n";
-    subscripts.insert(subscripts.begin(), int_lit->getValue());
+    auto decl_ref_expr{clang::dyn_cast<clang::DeclRefExpr>(
+        arr_sub_expr->getIdx()->IgnoreImpCasts())};
+
+    if (int_lit) {
+      llvm::outs() << "SUBSCRIPT: " << int_lit->getValue() << "\n";
+      // subscripts.insert(subscripts.begin(), int_lit->getValue());
+      subscripts.insert(subscripts.begin(), arr_sub_expr->getIdx());
+    }
+
+    if (decl_ref_expr) {
+      llvm::outs() << "SUBSCRIPT: " << decl_ref_expr->getNameInfo().getName().getAsString()
+                   << "\n";
+      subscripts.insert(subscripts.begin(), decl_ref_expr);
+      /// TODO: Need to insert into subscripts, but it should really be Expr
+      /// that is the value element. So, change subscripts to hold that, and
+      /// then use it to hold both IntegerLiteral and DeclRefExpr.
+    }
 
     /// INFO: For some reason, dyn_cast on the ArraySubscriptExpr to get the
     /// ImplicitCastExpr does not work. So the way to get to it is to call
@@ -163,7 +183,8 @@ const clang::MemberExpr *getArrayMemberExprName(const clang::Expr *expr) {
     if (nested_sub_expr == nullptr) {
       const clang::MemberExpr *name_me{clang::dyn_cast<clang::MemberExpr>(
           arr_sub_expr->getBase()->IgnoreParenImpCasts())};
-      llvm::outs() << "me_name: "<< name_me->getMemberNameInfo().getAsString() << "\n";
+      llvm::outs() << "me_name: " << name_me->getMemberNameInfo().getAsString()
+                   << "\n";
       return name_me;
     }
     arr_sub_expr = nested_sub_expr;
