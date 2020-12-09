@@ -100,13 +100,13 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   /// Instance testing.
   SECTION("Test port bindings for instance testing", "[testing]") {
     auto found_decl{found_module_testing};
-    REQUIRE(found_decl->getIPorts().size() == 4);
+    REQUIRE(found_decl->getIPorts().size() == 3);
     REQUIRE(found_decl->getOPorts().size() == 2);
     // This is 4 because sc_buffer is also inheriting from the signal interface.
     REQUIRE(found_decl->getSignals().size() == 0);
     // 1 non-array, and 2 array others
     REQUIRE(found_decl->getOtherVars().size() == 0);
-    REQUIRE(found_decl->getNestedModuleInstances().size() == 4);
+    REQUIRE(found_decl->getNestedModuleInstances().size() == 1);
 
     /// TODO: Check for submodules, and port bindings.
     auto port_bindings{found_decl->getPortBindings()};
