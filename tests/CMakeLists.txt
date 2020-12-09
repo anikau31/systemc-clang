@@ -44,7 +44,7 @@ set(TEST_DIR "tests")
  add_subdirectory(parsing)
 
 # Plugins
-# add_subdirectory(hdl)
+ add_subdirectory(hdl)
 
 
 include(CTest)
