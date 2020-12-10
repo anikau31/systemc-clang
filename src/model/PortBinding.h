@@ -9,52 +9,28 @@ namespace systemc_clang {
 using namespace sc_ast_matchers::utils::array_type;
 
 class PortBinding {
- private:
+ public:
   typedef std::vector<const clang::Expr *> ArraySubscriptsExprType;
-  // typedef std::vector<clang::Expr*> ArraySubscriptsType;
-  /// Reword
+
+ private:
   //
   /// Caller
-  clang::Expr *caller_expr_;
-  clang::ArraySubscriptExpr *caller_array_expr_;
+  const clang::Expr *caller_expr_;
+  const clang::ArraySubscriptExpr *caller_array_expr_;
   const clang::MemberExpr *caller_instance_me_expr_;
-  clang::Expr *caller_port_array_expr_;
+  const clang::Expr *caller_port_array_expr_;
   ArraySubscriptsExprType caller_port_array_subscripts_;
   const clang::MemberExpr *caller_port_me_expr_;
   ArraySubscriptsExprType caller_array_subscripts_;
 
   /// Callee
-  clang::Expr *callee_expr_;
+  const clang::Expr *callee_expr_;
   const clang::MemberExpr *callee_port_me_expr_;      // port
   const clang::MemberExpr *callee_instance_me_expr_;  // instance
-  clang::ArraySubscriptExpr *callee_array_expr_;
+  const clang::ArraySubscriptExpr *callee_array_expr_;
   ArraySubscriptsExprType callee_array_subscripts_;
 
-  // Which of the two bindings is done (sc_main or ctor)
-  //
-  bool is_ctor_binding_;
-
-  ///
-  /// These private members are used when the port binding is done in the
-  /// constructor.
-  ///
-  ///  sub_module_member.input(inS);
-  /// callee_port_me_expr_   = input
-  /// me_instance_    = sub_module_member
-  /// me_arg_         = inS
-
-  clang::MemberExpr *me_instance_;  // instance on which the binding is invoked
-  clang::MemberExpr *me_arg_;       // argument to the port
-
-  // The below private members are used when the port binding is found in the
-  // sc_main.
-  // There are only three pointers set, and rest are generated.
-  // 1. port_member_expr_
-  // 2. port_dref_
-  // 3. port_parameter_dref_
-  //
-  clang::ArraySubscriptExpr *port_member_array_port_expr_;
-  clang::DeclRefExpr *port_member_array_idx_dref_;
+  /// We no longer support sc_main parsing.
 
   // Instance information
   std::string caller_instance_name_;
@@ -69,23 +45,7 @@ class PortBinding {
   std::string instance_var_name_;
   std::string instance_constructor_name_;
   // Declaration for the instance's type.
-  clang::CXXRecordDecl *instance_type_decl_;
-
-  // There are only two DeclRefExpr that you really need.
-  // The rest will be generated from these.
-  //
-  // Declaration for the instance (FieldDecl/VarDecl)
-  clang::Decl *instance_decl_;
-  clang::DeclRefExpr *port_dref_;
-
-  // Declaration for the argument for the port.
-  std::string port_parameter_name_;
-  const clang::Type *port_parameter_type_;
-  std::string port_parameter_type_name_;
-  std::string port_parameter_bound_to_var_name_;
-  clang::DeclRefExpr *port_parameter_dref_;
-  clang::DeclRefExpr *port_parameter_array_idx_dref_;
-  clang::ArraySubscriptExpr *port_parameter_array_expr_;
+  const clang::CXXRecordDecl *instance_type_decl_;
 
  public:
   const std::string getCallerInstanceName() const {
@@ -113,11 +73,11 @@ class PortBinding {
     return callee_array_subscripts_;
   }
 
-  /// old
-
-  void setInstanceVarName(const std::string &n) { instance_var_name_ = n; }
-  void setInstanceConstructorName(const std::string &n) {
-    instance_constructor_name_ = n;
+  void setInstanceVarName(const std::string &name) {
+    instance_var_name_ = name;
+  }
+  void setInstanceConstructorName(const std::string &name) {
+    instance_constructor_name_ = name;
   }
 
   const std::string &getPortName() const { return callee_instance_name_; }
@@ -129,19 +89,14 @@ class PortBinding {
   const std::string &getInstanceConstructorName() const {
     return instance_constructor_name_;
   }
-  clang::CXXRecordDecl *getInstanceTypeDecl() const {
+  const clang::CXXRecordDecl *getInstanceTypeDecl() const {
     return instance_type_decl_;
   }
-  clang::Decl *getInstanceDecl() const { return instance_type_decl_; }
-  clang::DeclRefExpr *getPortDeclRefExpr() const { return port_dref_; }
 
-  const std::string &getBoundToName() const { return port_parameter_name_; }
-  const std::string &getBoundToParameterVarName() const {
-    return port_parameter_bound_to_var_name_;
-  }
-  clang::DeclRefExpr *getBoundPortDeclRefExpr() const {
-    return port_parameter_dref_;
-  }
+  /// Convert the port binding information into a single string.
+  ///
+  /// This is mainly used in the regression tests.
+  /// The returned string is compared with what is expected.
   const std::string toString() const {
     std::string return_str{getCallerInstanceTypeName()};
     if (getCallerInstanceName() != "") {
@@ -204,19 +159,9 @@ class PortBinding {
     }
     return return_str;
   }
-  bool hasBoundToArrayParameter() const {
-    return (port_parameter_array_idx_dref_ != nullptr);
-  }
-  bool hasPortArrayParameter() const {
-    return (port_member_array_idx_dref_ != nullptr);
-  }
-  clang::DeclRefExpr *getPortArrayIndex() const {
-    return port_member_array_idx_dref_;
-  }
-  clang::DeclRefExpr *getBoundToArrayIndex() const {
-    return port_parameter_array_idx_dref_;
-  }
 
+  /// Dumps to llvm::outs() the recorded port binding information.
+  ///
   void dump() {
     llvm::outs() << "caller instance type name : " << caller_instance_type_name_
                  << "  "
@@ -270,14 +215,13 @@ class PortBinding {
     }
 
     llvm::outs() << "\n";
-
-    // llvm::outs() << "> port_name: " << callee_instance_name_ << " type: " <<
-    // instance_type_
-    // << " var_name: " << instance_var_name_
-    // << " constructor_name: " << instance_constructor_name_
-    // << " bound to " << port_parameter_name_ << "\n";
   }
 
+  /// Constructor that records the port binding.
+  ///
+  /// \param caller_expr provides access to the caller information irrespective
+  /// of whether it is an array or not. \param caller_port_expr provides access
+  /// to the caller's port.
   PortBinding(clang::Expr *caller_expr, clang::Expr *caller_port_expr,
               clang::MemberExpr *caller_port_me_expr, clang::Expr *callee_expr,
               clang::MemberExpr *callee_port_me_expr)
