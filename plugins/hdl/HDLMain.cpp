@@ -119,7 +119,7 @@ bool HDLMain::postFire() {
 
 void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module,
                              llvm::raw_fd_ostream &HCodeOut) {
-  const std::vector<ModuleDecl *> &submodv = mod->getNestedModuleDecl();
+  const std::vector<ModuleDecl *> &submodv = mod->getNestedModuleInstances();
   // look at constructor
 
   // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");

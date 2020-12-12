@@ -11,7 +11,7 @@ using namespace systemc_clang;
 
 TEST_CASE("sreg example", "[llnl-examples]") {
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "nested-stream-ports.cpp")};
+      systemc_clang::test_data_dir, "nested-stream-ports-input.cpp")};
   INFO(systemc_clang::test_data_dir);
 
   auto catch_test_args = systemc_clang::catch_test_args;
@@ -22,7 +22,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
       tooling::buildASTFromCodeWithArgs(code, catch_test_args).release();
 
   SystemCConsumer sc{from_ast};
-  //HDLMain sc{from_ast};
+  // HDLMain sc{from_ast};
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   // These are instances.
@@ -45,19 +45,16 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     REQUIRE(mymod != nullptr);
 
     // Get the nested modules.
-    auto nested_mdecls{ mymod->getNestedModuleDecl()};
-    llvm::outs() << "######################## NESTED SUBMODULE " << nested_mdecls.size() << "\n";
+    auto nested_mdecls{mymod->getNestedModuleInstances()};
+    llvm::outs() << "######################## NESTED SUBMODULE "
+                 << nested_mdecls.size() << "\n";
 
-       // Only u_dut should be nested in mymodule.
-    REQUIRE( nested_mdecls.size() == 1 ); 
+    // Only u_dut should be nested in mymodule.
+    REQUIRE(nested_mdecls.size() == 1);
 
-    for (auto const &mdecl : nested_mdecls ) {
-
-       REQUIRE (mdecl->getInstanceName() == "SUBMODULE");
-       
+    for (auto const &mdecl : nested_mdecls) {
+      REQUIRE(mdecl->getInstanceName() == "SUBMODULE");
     }
-//
-
-    
+    //
   }
 }
