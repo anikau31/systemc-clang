@@ -4,10 +4,9 @@
 //#include <type_traits>
 #include <vector>
 
-#include "clang/ASTMatchers/ASTMatchers.h"
-
 #include "ModuleInstanceType.h"
-
+#include "ArrayTypeUtils.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
 #include "llvm/Support/Debug.h"
 
 /// Different matchers may use different DEBUG_TYPE
@@ -17,22 +16,8 @@
 using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
-
-/// hasTemplateDeclParent
-/// A matcher to detect if a parent's type is a ClassTemplateDecl or not.
-//
-AST_MATCHER(clang::FieldDecl, hasTemplateDeclParent) {
-  auto parent{Node.getParent()};
-
-  if (isa<clang::ClassTemplateDecl>(parent)) {
-    return false;
-  }
-
-  // if (isa<clang::ClassTemplateSpecializationDecl>(parent)) {
-  //}
-
-  return true;
-};
+using namespace clang;
+using namespace utils::array_type;
 
 class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
  private:
@@ -43,22 +28,24 @@ class InstanceArgumentMatcher : public MatchFinder::MatchCallback {
 
   void registerMatchers(MatchFinder &finder) {
     instance_literal_ = nullptr;
-    auto arg_matcher =
-        cxxConstructExpr(hasDescendant(cxxConstructExpr(
-                             hasArgument(0, stringLiteral().bind("inst_arg")))))
-            .bind("ctor_expr");
-
-    // cxxConstructExpr(hasArgument(0,
-    // stringLiteral().bind("inst_arg"))).bind("ctor_expr");
+    // clang-format off
+    auto arg_matcher = cxxConstructExpr(hasDescendant(
+          cxxConstructExpr(hasArgument(0, 
+            stringLiteral().bind("inst_arg")
+              )
+            )
+          )
+        ).bind("ctor_expr");
+    // clang-format on
 
     finder.addMatcher(arg_matcher, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
-    auto ctor_expr = const_cast<CXXConstructExpr *>(
-        result.Nodes.getNodeAs<CXXConstructExpr>("ctor_expr"));
-    auto inst_arg = const_cast<StringLiteral *>(
-        result.Nodes.getNodeAs<StringLiteral>("inst_arg"));
+    auto ctor_expr = const_cast<clang::CXXConstructExpr *>(
+        result.Nodes.getNodeAs<clang::CXXConstructExpr>("ctor_expr"));
+    auto inst_arg = const_cast<clang::StringLiteral *>(
+        result.Nodes.getNodeAs<clang::StringLiteral>("inst_arg"));
 
     LLVM_DEBUG(llvm::dbgs() << "## InstanceArgumentMatcher\n");
     if (ctor_expr && inst_arg) {
@@ -122,7 +109,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // Check to see if the pointer to the type is the same as the sc_module
     // type.
 
-    LLVM_DEBUG(llvm::dbgs() << "[findInstance] instance size: "
+    LLVM_DEBUG(llvm::dbgs() << "\n[findInstance] instance size: "
                             << instance_map_.size() << "\n");
 
     LLVM_DEBUG(llvm::dbgs()
@@ -134,7 +121,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       auto instance{element.second};
 
       // TODO factor out this code to be handled for both.
-      if (auto *p_field{dyn_cast<clang::FieldDecl>(p_field_var_decl)}) {
+      if (auto *p_field{clang::dyn_cast<clang::FieldDecl>(p_field_var_decl)}) {
         auto qtype{p_field->getType().getTypePtr()};
         if (qtype->isRecordType()) {
           auto rt{qtype->getAsCXXRecordDecl()};
@@ -151,7 +138,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         }
       } else {
         // This is a VarDecl instance.
-        auto p_var{dyn_cast<clang::VarDecl>(p_field_var_decl)};
+        auto p_var{clang::dyn_cast<clang::VarDecl>(p_field_var_decl)};
         auto qtype{p_var->getType().getTypePtr()};
 
         std::string dbg{"[InstanceMatcher] VarDecl"};
@@ -169,7 +156,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         }
       }
     }
-    LLVM_DEBUG(llvm::outs()
+    LLVM_DEBUG(llvm::dbgs()
                << "=> found_instances: " << found_instances.size() << "\n");
 
     return (found_instances.size() != 0);
@@ -179,6 +166,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                       const std::string &bind_ctor_expr) {
     return cxxConstructExpr(hasArgument(0, stringLiteral().bind(bind_arg_name)))
         .bind(bind_ctor_expr);
+  }
+
+  auto makeArraySubModule(llvm::StringRef name) {
+    return arrayType(hasElementType(hasUnqualifiedDesugaredType(
+        recordType(hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name)))
+                                      .bind("submodule"))  // hasDeclaration
+                   )                                       // recordType
+        )));
   }
 
   void registerMatchers(MatchFinder &finder) {
@@ -205,10 +200,97 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                     isMemberInitializer(),
                     forField(
                       allOf(
-                        hasType(hasUnqualifiedDesugaredType(recordType(hasDeclaration(
-                          cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
-                          )))
-                      ),
+
+                        anyOf(
+
+                          hasType(
+                            hasUnqualifiedDesugaredType(
+                              recordType(
+                                hasDeclaration(
+                                  cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                )//hasDeclaration
+                              )//recordType
+                            )//hasUnqualifiedDesugaredType
+                          )//hasType
+
+                          ,
+                          //1d
+                            hasType(
+                               hasUnqualifiedDesugaredType(
+                                 arrayType(
+                                   hasElementType(hasUnqualifiedDesugaredType(
+                                        recordType(
+                                          hasDeclaration(
+                                            cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                          ) //hasDeclaration
+                                         )// recordType
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                 )//arrayType
+                               )//hasUnqualifiedDesugaredType
+                             )//hasType
+
+                              , 
+                            //2d
+                              hasType(
+                               hasUnqualifiedDesugaredType(
+                                 arrayType(
+                                   hasElementType(hasUnqualifiedDesugaredType(
+                                       arrayType(hasElementType(hasUnqualifiedDesugaredType(
+                                       //
+                                       //
+                                         recordType(
+                                           hasDeclaration(
+                                             cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                           ) //hasDeclaration
+                                         )// recordType
+                                         //
+                                         //
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                       )//arrayType
+                                   )//hasUnqualifiedDesugaredType
+                                   )//hasElementType
+                                 )//arrayType
+                               )//hasUnqualifiedDesugaredType
+                             )//hasType
+                             ,
+                             // 3d
+                             hasType(
+                               hasUnqualifiedDesugaredType(
+                                 arrayType(
+                                   hasElementType(hasUnqualifiedDesugaredType(
+                                       arrayType(hasElementType(hasUnqualifiedDesugaredType(
+                                         arrayType(hasElementType(hasUnqualifiedDesugaredType(
+
+
+                                       //
+                                       //
+                                         recordType(
+                                           hasDeclaration(
+                                             cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                                           ) //hasDeclaration
+                                         )// recordType
+                                         //
+                                         //
+
+
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                       )//arrayType
+
+
+                                       )//hasUnqualifiedDesugaredType
+                                       )//hasElementType
+                                       )//arrayType
+                                   )//hasUnqualifiedDesugaredType
+                                   )//hasElementType
+                                 )//arrayType
+                               )//hasUnqualifiedDesugaredType
+                             )//hasType
+
+                          ) //anyOf
+                        ,
                       fieldDecl().bind("ctor_fd") 
                       )
                     )
@@ -218,7 +300,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
             ) //hasDescendant
           ); //cxxRecordDecl
 
- 
+
     auto match_with_parent = 
       valueDecl(hasType(
             hasUnqualifiedDesugaredType(
@@ -227,22 +309,41 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
 
     auto match_instances_decl = 
-      varDecl( 
+      valueDecl( 
         hasDescendant(
           match_ctor_arg("ctor_arg", "constructor_expr"))
         , 
-        hasType(
-          hasUnqualifiedDesugaredType(
-            recordType(
-              hasDeclaration(
-                cxxRecordDecl(
-                  isDerivedFrom("::sc_core::sc_module")
-                  ).bind("var_cxx_decl")
-                )
-              ).bind("record_type")
-            )
-          )
-        ).bind("instance_vd");
+        anyOf(
+            // 1d
+          hasType(
+            hasUnqualifiedDesugaredType(
+              recordType(
+                hasDeclaration(
+                  cxxRecordDecl(
+                    isDerivedFrom("::sc_core::sc_module")
+                    ).bind("var_cxx_decl")
+                  )
+                ).bind("record_type")
+              )
+            ) // hasType
+          // 2d
+          ,
+           hasType(
+             hasUnqualifiedDesugaredType(
+               arrayType(
+                 hasElementType(hasUnqualifiedDesugaredType(
+                         recordType(
+                           hasDeclaration(
+                            cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                            ) //hasDeclaration
+                         )// recordType
+                       )
+                       )
+                 )//arrayType
+               )
+             )//hasType
+        )// anyOf
+      ).bind("instance_vd");
 
     
     auto test = 
@@ -279,7 +380,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     clang::ValueDecl *parent_rdecl{nullptr};
 
     LLVM_DEBUG(llvm::dbgs()
-               << "=> var_name " << var_name << " var_type_name "
+               << "=> VD: var_name " << var_name << " var_type_name "
                << var_type_name << " parent_name " << parent_name
                << "\n");  // instance_name "; // << instance_name << "\n";
 
@@ -288,27 +389,30 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.var_type_name = var_type_name;
     parsed_instance.instance_name = instance_name;
     // This is the Type of the FieldDecl.
-    parsed_instance.decl =
+    parsed_instance.type_decl =
         instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
     // This is the FieldDecl.
     parsed_instance.instance_decl = instance_decl;
     parsed_instance.is_field_decl = false;
+    // FIXME: No parsing of VarDecl's as arrays?
+    parsed_instance.is_array = false;
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_rdecl;
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
-    auto found_it{instance_map_.find(instance_decl)};
-    if (found_it == instance_map_.end()) {
-      LLVM_DEBUG(llvm::dbgs() << "Inserting VD instance"
-                              << "\n");
-      instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
-          instance_decl, parsed_instance));
-    }
+    //    auto found_it{instance_map_.find(instance_decl)};
+    //   if (found_it == instance_map_.end()) {
+    LLVM_DEBUG(llvm::dbgs() << "Inserting VD instance"
+                            << "\n");
+    instance_map_.insert(
+        std::pair<Decl *, ModuleInstanceType>(instance_decl, parsed_instance));
+    //   }
   }
 
   void parseFieldDecl(clang::FieldDecl *instance_decl,
-                      clang::ValueDecl *parent_decl) {
+                      clang::ValueDecl *parent_decl, std::string instance_name,
+                      IndexMapType &index_map) {
     std::string name{instance_decl->getIdentifier()->getNameStart()};
 
     // This is the main object's constructor name
@@ -316,35 +420,111 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     // We do not get the instance name from within the field declaration.
     // Get the type of the class of the field.
     auto var_type_name{instance_decl->getType().getAsString()};
-    // auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
 
     std::string parent_name{};
     if (parent_decl) {
       parent_name = parent_decl->getName();
     }
 
+    auto array_indices{index_map[instance_name]};
     LLVM_DEBUG(llvm::dbgs()
-               << "=> var_name " << var_name << " var_type_name "
-               << var_type_name << " parent_name " << parent_name << "\n");
+               << "=> FD: var_name " << var_name << " var_type_name "
+               << var_type_name << " parent_name " << parent_name
+               << " instance name " << instance_name << "[ "
+               << std::get<0>(array_indices) << ", "
+               << std::get<1>(array_indices) << ", "
+               << std::get<2>(array_indices)
+               << "]"
+                  "\n");
 
     ModuleInstanceType parsed_instance{};
     parsed_instance.var_name = var_name;
     parsed_instance.var_type_name = var_type_name;
-    //    parsed_instance.instance_name = instance_name;
-    parsed_instance.decl =
-        instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
+    instance_decl->getType()->dump();
+
+    /// Get all the 1D, 2D and 3D array type pointers.
+    const ArrayType *array_1d{
+        instance_decl->getType().getTypePtrOrNull()->getAsArrayTypeUnsafe()};
+    const ArrayType *array_2d{nullptr};
+    const ArrayType *array_3d{nullptr};
+    const ArrayType *array_type{nullptr};
+
+    /// We need to set the array_type pointer to the deepest array. That is if
+    /// it is a 3D array then we need to set it to the third dimension element
+    /// type to get the correct CXXRecordDecl.
+    //
+    if (array_1d) {
+      array_type = array_1d;
+      array_2d =
+          array_1d->getElementType().getTypePtrOrNull()->getAsArrayTypeUnsafe();
+      if (array_2d) {
+        array_type = array_2d;
+        array_3d = array_2d->getElementType()
+                       .getTypePtrOrNull()
+                       ->getAsArrayTypeUnsafe();
+
+        if (array_3d) {
+          array_type = array_3d;
+        }
+      }
+    }
+
+    LLVM_DEBUG(llvm::outs() << " All dim. arrays: " << array_1d << "  "
+                            << array_2d << "  " << array_3d << "\n";);
+
+    // auto array_type{
+    // instance_decl->getType().getTypePtr()->getAsArrayTypeUnsafe()};
+    // Array type.
+    if (array_type) {
+      auto element_type{array_type->getElementType().getTypePtr()};
+      parsed_instance.type_decl = element_type->getAsCXXRecordDecl();
+      LLVM_DEBUG(
+          llvm::outs()
+              << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IS ARRAY type decl null: "
+              << parsed_instance.type_decl << "\n";);
+      element_type->dump();
+      parsed_instance.setArrayType();
+      parsed_instance.addArraySizes(getConstantArraySizes(instance_decl));
+      parsed_instance.setArrayParameters(index_map[instance_name]);
+      LLVM_DEBUG(llvm::outs() << "Dimension of array: "
+                              << parsed_instance.getArrayDimension() << "\n";);
+    } else {
+      // Not an array type.
+      parsed_instance.type_decl =
+          instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
+      LLVM_DEBUG(
+          llvm::outs()
+              << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ NOT ARRAY type decl null: "
+              << parsed_instance.type_decl << "\n";);
+    }
+
+    instance_decl->dump();
     parsed_instance.instance_decl = instance_decl;
     parsed_instance.is_field_decl = true;
     parsed_instance.parent_name = parent_name;
     parsed_instance.parent_decl = parent_decl;
+    parsed_instance.instance_name = instance_name;
+    parsed_instance.add_instance_name(instance_name);
 
     LLVM_DEBUG(parsed_instance.dump(););
     // Don't add repeated matches
-    auto found_it{instance_map_.find(instance_decl)};
-    if (found_it == instance_map_.end()) {
-      LLVM_DEBUG(llvm::dbgs() << "Inserting FD instance\n");
+    LLVM_DEBUG(llvm::dbgs() << "Inserting FD instance\n");
+
+    /// Find if an instance already exists. If it does exist.
+    //
+
+    auto exists_instance{instance_map_.find(instance_decl)};
+
+    // Instance is NOT found
+    if (exists_instance == instance_map_.end()) {
       instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
           instance_decl, parsed_instance));
+      LLVM_DEBUG(llvm::outs() << "INSERTED\n";);
+    } else {
+      // Instance IS found.
+
+      exists_instance->second.add_instance_name(instance_name);
+      LLVM_DEBUG(llvm::outs() << "INSERTED INSTANCE NAME\n";);
     }
   }
 
@@ -367,36 +547,63 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     auto test_fd = const_cast<clang::FieldDecl *>(
         result.Nodes.getNodeAs<clang::FieldDecl>("test_fd"));
     //
+    //
+    //
     if (ctor_fd && ctor_init && parent_fd) {
       LLVM_DEBUG(llvm::dbgs()
                  << "#### CTOR_FD: parent_fd " << parent_fd->getNameAsString()
                  << " ctor_fd " << ctor_fd->getNameAsString() << "\n");
-      LLVM_DEBUG(ctor_fd->dump());
-      parseFieldDecl(ctor_fd, parent_fd);
+      // LLVM_DEBUG(ctor_fd->dump());
+
+      // llvm::outs() << "### DEBUG\n";
+      //  ctor_init->getInit()->dump();
+
+      auto index_map{getArrayInstanceIndex(ctor_init)};
 
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
-      clang::CXXConstructExpr *cexpr = cast<clang::CXXConstructExpr>(expr);
+      // expr->dump();
+      clang::CXXConstructExpr *cexpr{
+          clang::dyn_cast<clang::CXXConstructExpr>(expr)};
+      clang::InitListExpr *iexpr{clang::dyn_cast<clang::InitListExpr>(expr)};
 
-      MatchFinder iarg_registry{};
-      InstanceArgumentMatcher iarg_matcher{};
-      iarg_matcher.registerMatchers(iarg_registry);
-      iarg_registry.match(*cexpr, *result.Context);
+      /// For arrays, an InitListExpr is generated.
+      /// For non-arrays, CXXConstructExpr is directly castable.
+      ///
+      /// If it is an array, then get to its InitListExpr, and then get the
+      /// first element's constructor.
+      //
 
-      LLVM_DEBUG(iarg_matcher.dump(););
+      if ((iexpr != nullptr) && (cexpr == nullptr)) {
+        LLVM_DEBUG(llvm::outs() << "### IEXPR is not NULL\n";
 
-      // This retrieves the submodule instance name.
-      if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
-        auto submodule_instance_name = inst_literal->getString().str();
-
-        // Find the instance if it has been already recorded.
-        auto found_it{instance_map_.find(ctor_fd)};
-        if (found_it != instance_map_.end()) {
-          // has to be a reference
-          auto &inst{found_it->second};
-          inst.instance_name = submodule_instance_name;
+                   llvm::outs() << "######## Going through index map: "
+                                << index_map.size() << "\n";);
+        for (auto const &init : index_map) {
+          auto submodule_instance_name{init.first};
+          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name,
+                         index_map);
+          LLVM_DEBUG(llvm::dbgs() << "#==> submodule_instance_name "
+                                  << submodule_instance_name << "\n");
         }
-        LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
-                                << submodule_instance_name << "\n");
+
+      } else {
+        MatchFinder iarg_registry{};
+        InstanceArgumentMatcher iarg_matcher{};
+        iarg_matcher.registerMatchers(iarg_registry);
+        iarg_registry.match(*cexpr, *result.Context);
+
+        LLVM_DEBUG(iarg_matcher.dump();
+
+        llvm::outs() << "#### IndexMap: " << index_map.size() << "\n";
+        );
+        // This retrieves the submodule instance name.
+        if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
+          auto submodule_instance_name = inst_literal->getString().str();
+          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name,
+                         index_map);
+          LLVM_DEBUG(llvm::dbgs() << "=> submodule_instance_name "
+                                  << submodule_instance_name << "\n");
+        }
       }
     }
 
@@ -405,7 +612,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (instance_vd) {
       auto instance_name{cast<StringLiteral>(ctor_arg)->getString().str()};
       LLVM_DEBUG(llvm::dbgs()
-                 << "## FD: " << instance_vd->getNameAsString() << " "
+                 << "## VD: " << instance_vd->getNameAsString() << " "
                  << instance_vd << " instance_name " << instance_name << "\n");
 
       parseVarDecl(instance_vd, instance_name);
@@ -416,17 +623,24 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.
+    LLVM_DEBUG(llvm::dbgs() << "################## INSTANCE MATCHER DUMP \n";);
     for (const auto &i : instance_map_) {
-      llvm::outs() << "decl* " << i.first;
       auto instance{i.second};
+      LLVM_DEBUG(llvm::dbgs()
+                     << "decl* " << i.first << "  " << instance.instance_name;);
 
-      auto instance_field{instance.decl};
-      if (isa<clang::FieldDecl>(instance_field)) {
-        // if (instance.is_field_decl){
-        llvm::outs() << " FieldDecl ";
-      } else {
-        llvm::outs() << " VarDecl ";
+      auto instance_field{instance.type_decl};
+      LLVM_DEBUG(llvm::dbgs()
+                     << " instance_field*: " << instance_field << "\n";);
+      //
+      if (clang::dyn_cast<clang::FieldDecl>(instance_field)) {
+        if (instance.is_field_decl) {
+          LLVM_DEBUG(llvm::dbgs() << " FieldDecl ";);
+        } else {
+          LLVM_DEBUG(llvm::dbgs() << " VarDecl ";);
+        }
       }
+
       instance.dump();
     }
   }

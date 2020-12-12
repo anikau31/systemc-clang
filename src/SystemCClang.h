@@ -36,13 +36,12 @@
 #include "matchers/FindNetlist.h"
 #include "matchers/FindNotify.h"
 #include "matchers/FindSCMain.h"
-//#include "matchers/FindSensitivity.h"
 #include "matchers/FindSimTime.h"
 #include "matchers/FindTLMInterfaces.h"
 #include "matchers/FindTemplateParameters.h"
 #include "matchers/FindWait.h"
-#include "model/Model.h"
 #include "matchers/InstanceMatcher.h"
+#include "model/Model.h"
 
 //#include "SCuitable/FindGPUMacro.h"
 //#include "SCuitable/GlobalSuspensionAutomata.h"
@@ -55,7 +54,7 @@ namespace systemc_clang {
 
     This class drives the AST consumer for parsing SystemC constructs.
 
-    
+
     */
 class SystemCConsumer : public ASTConsumer,
                         public RecursiveASTVisitor<SystemCConsumer> {
@@ -82,9 +81,6 @@ class SystemCConsumer : public ASTConsumer,
   virtual void HandleTranslationUnit(ASTContext &context);
 
  private:
-void populateNestedModules(const InstanceMatcher::InstanceDeclarations &instance_map);
-
- private:
   std::string top_;
   Model *systemcModel_;
   ASTContext &context_;
@@ -96,10 +92,10 @@ void populateNestedModules(const InstanceMatcher::InstanceDeclarations &instance
 //
 //
 
-/** 
+/**
  *
- * @mainpage 
- * systemc-clang is a parser for SystemC constructs built using clang. 
+ * @mainpage
+ * systemc-clang is a parser for SystemC constructs built using clang.
  *
  *
  */
@@ -108,7 +104,6 @@ class SystemCClang : public SystemCConsumer {
   SystemCClang(CompilerInstance &ci, const std::string &top)
       : SystemCConsumer(ci, top) {}
 };
-
 
 }  // End namespace systemc_clang
 #endif

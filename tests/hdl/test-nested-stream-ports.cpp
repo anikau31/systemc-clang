@@ -26,14 +26,6 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   // These are instances.
-  auto module_decl{model->getModuleDecl()};
-
-  llvm::outs() << "\n";
-  for (const auto &decl : module_decl) {
-    llvm::outs() << "[ " << decl.first << "    ]" << decl.second << "   "
-                 << decl.second->getInstanceName() << "\n";
-  }
-
   // Testing instances.
 
   auto mymod{model->getInstance("mymodule_instance")};
@@ -45,7 +37,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     REQUIRE(mymod != nullptr);
 
     // Get the nested modules.
-    auto nested_mdecls{ mymod->getNestedModuleDecl()};
+    auto nested_mdecls{ mymod->getNestedModules()};
     llvm::outs() << "######################## NESTED SUBMODULE " << nested_mdecls.size() << "\n";
 
        // Only u_dut should be nested in mymodule.

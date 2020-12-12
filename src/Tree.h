@@ -99,7 +99,7 @@ class Tree {
     root_ = nullptr;
   }
 
-  void dump( ) {
+  void dump() {
     for (auto const &entry : adj_list_) {
       auto node{entry.first};
       auto edges{entry.second};
