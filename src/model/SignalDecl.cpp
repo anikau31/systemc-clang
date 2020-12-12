@@ -1,6 +1,7 @@
 #include <string>
 
 #include "clang/AST/DeclCXX.h"
+#include "llvm/Support/Debug.h"
 
 #include "SignalDecl.h"
 #include "FindTemplateTypes.h"

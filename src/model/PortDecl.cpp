@@ -2,6 +2,7 @@
 
 #include "FindTemplateTypes.h"
 #include "PortDecl.h"
+#include "llvm/Support/Debug.h"
 
 using namespace systemc_clang;
 
