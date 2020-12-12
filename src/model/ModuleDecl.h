@@ -21,6 +21,7 @@
 
 namespace systemc_clang {
 using namespace clang;
+using namespace sc_ast_matchers;
 
 /// Forward declarations
 //
@@ -99,6 +100,8 @@ class ModuleDecl {
   Decl *getInstanceDecl();
   bool isInstanceFieldDecl() const;
 
+  ModuleInstanceType getInstanceInfo();
+
   bool isModuleClassDeclNull();
   portMapType getOPorts();
   portMapType getIPorts();
@@ -141,7 +144,7 @@ class ModuleDecl {
  private:
   std::string module_name_;
   std::string instance_name_;
-  sc_ast_matchers::ModuleInstanceType instance_info_;
+  ModuleInstanceType instance_info_;
 
   // Declaration
   CXXRecordDecl *class_decl_;
@@ -156,7 +159,7 @@ class ModuleDecl {
   portMapType out_ports_;
   portMapType inout_ports_;
   portMapType other_fields_;
-  portMapType submodules_;
+  //portMapType submodules_;
 
   portMapType istreamports_;
   portMapType ostreamports_;

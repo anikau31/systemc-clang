@@ -46,7 +46,7 @@ SC_MODULE(counter) {
 // Top level module.
 SC_MODULE(DUT) {
   counter count;
-  sc_clk clock;
+  sc_clock clock;
   sc_signal< sc_uint<32> > counter_out;
 
   SC_CTOR(DUT): count{"counter_instance"} {
@@ -72,19 +72,18 @@ int sc_main() {
   Model *model{consumer.getSystemCModel()};
 
   // This provides the module declarations.
-  auto module_decl{model->getModuleDecl()};
-  auto module_instance_map{model->getModuleInstanceMap()};
+  auto instances{model->getInstances()};
 
   // Want to find an instance named "counter_instance".
   ModuleDecl *test_module{model->getInstance("counter_instance")};
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
-    INFO("Checking number of sc_module declarations found: "
-         << module_decl.size());
+    INFO("Checking number of sc_module instances found: "
+         << instances.size());
 
     // DUT and 
-    REQUIRE(module_decl.size() == 2);
+    REQUIRE(instances.size() == 2);
 
     REQUIRE(test_module != nullptr);
 

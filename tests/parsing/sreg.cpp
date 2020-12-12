@@ -38,12 +38,11 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   // These are instances.
-  auto module_decl{model->getModuleDecl()};
+  auto instances{model->getInstances()};
 
   llvm::outs() << "\n";
-  for (const auto &decl : module_decl) {
-    llvm::outs() << "[ " << decl.first << "    ]" << decl.second << "   "
-         << decl.second->getInstanceName() << "\n";
+  for (const auto &decl : instances) {
+    llvm::outs()  << decl->getInstanceName() << "\n";
   }
 
   // Testing instances.
@@ -52,37 +51,14 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   auto sreg_bypass{model->getInstance("sreg_bypass")};
   auto sreg_fwd{model->getInstance("sreg_fwd")};
   auto sreg_fwd_rev{model->getInstance("sreg_fwd_rev")};
-
-  /*
-  auto test_module{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "testing";
-      })};
-
-  auto sreg_bypass{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "sreg_bypass";
-      })};
-
-  auto sreg_fwd{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "sreg_fwd";
-      })};
-
-  auto sreg_fwd_rev{std::find_if(
-      module_decl.begin(), module_decl.end(), [](const auto &element) {
-        return element.second->getInstanceName() == "sreg_fwd_rev";
-      })};
-      */
-
   //
   // Begin the tests.
   //
   //
   SECTION("sreg instance and port tests", "[instances]") {
     INFO("ERROR: number of sc_module declarations found: "
-         << module_decl.size());
-    CHECK(module_decl.size() == 4);
+         << instances.size());
+    CHECK(instances.size() == 4);
 
     REQUIRE(test_module != nullptr);
     REQUIRE(sreg_bypass != nullptr);
