@@ -66,30 +66,15 @@ bool HDLMain::postFire() {
   // typedef std::vector< modulePairType > moduleMapType;
   // typedef std::pair<std::string, ModuleDecl *> modulePairType;
 
-  Model::moduleMapType modules = model->getModuleDecl();
-  if (modules.size() <= 0) {
-    LLVM_DEBUG(llvm::dbgs() << "no modules, exiting\n");
-    return true;
-  }
-
-  string topmod = getTopModule();
 
   Model::modulePairType modpair;
-  ModuleDecl *mod{nullptr};
-
-  if (topmod != "") {
-    mod = model->getModuleDecl(topmod);
-  }
-  if (mod == NULL) {       // no top level or couldn't find it
-    modpair = modules[0];  // assume first one is top module
-    mod = modpair.second;
+  ModuleDecl *modinstance{model->getRootModuleInstance()};
+  if (modinstance == nullptr) {
+    LLVM_DEBUG(llvm::dbgs() << "\nRoot instance not found, exiting\n");
+    return false;
   }
 
-  vector<ModuleDecl *> instanceVec = model->getModuleInstanceMap()[mod];
-  if (instanceVec.size() <= 0) return true;
-
-  for (auto modinstance :
-       instanceVec) {  // generate module def for each instance
+  // generate module instance for top module and its submodules
     string modname = mod_newn.newname();
     LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName()
                             << " renamed " << modname << "\n");
@@ -98,7 +83,7 @@ bool HDLMain::postFire() {
                                                     modname, h_module};
     SCmodule2hcode(modinstance, h_module, HCodeOut);
     // h_module->print(HCodeOut);
-  }
+  
 
   LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
@@ -129,17 +114,17 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module,
   // LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
 
   LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
-  typedef std::pair<std::string, systemc_clang::ModuleDecl::portBindingMapType>
-      submodportbindings_t;
-  std::vector<submodportbindings_t> submodportbindings;
-  for (auto &smod : submodv) {
-    LLVM_DEBUG(llvm::dbgs() << "get submodule portbindings"
-                            << smod->getInstanceName() << "\n");
-    if ((smod->getPortBindings()).size() > 0) {
-      submodportbindings.push_back(submodportbindings_t(
-          smod->getInstanceName(), smod->getPortBindings()));
-    }
-  }
+  // typedef std::pair<std::string, systemc_clang::ModuleDecl::portBindingMapType>
+  //     submodportbindings_t;
+  // std::vector<submodportbindings_t> submodportbindings;
+  // for (auto &smod : submodv) {
+  //   LLVM_DEBUG(llvm::dbgs() << "get submodule portbindings"
+  //                           << smod->getInstanceName() << "\n");
+  //   if ((smod->getPortBindings()).size() > 0) {
+  //     submodportbindings.push_back(submodportbindings_t(
+  //         smod->getInstanceName(), smod->getPortBindings()));
+  //   }
+  // }
   // Ports
   hNodep h_ports =
       new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
@@ -179,14 +164,13 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module,
   //  typedef std::map<std::string, PortBinding *> portBindingMapType;
   //   portBindingMapType getPortBindings();
 
-  for (std::pair<std::string, systemc_clang::ModuleDecl::portBindingMapType>
-           pbm : submodportbindings) {
-    hNodep h_submodule_pb =
-        new hNode(pbm.first, hNode::hdlopsEnum::hPortbindings);
-    SCportbindings2hcode(pbm.second, h_submodule_pb);
-    if (!h_submodule_pb->child_list.empty())
-      h_module->child_list.push_back(h_submodule_pb);
-  }
+  systemc_clang::ModuleDecl::portBindingMapType pbm{mod->getPortBindings()};
+  hNodep h_submodule_pb =
+    new hNode(mod->getInstanceName()+"_portbindings", hNode::hdlopsEnum::hPortbindings);
+    SCportbindings2hcode(pbm, h_submodule_pb);
+  if (!h_submodule_pb->child_list.empty())
+    h_module->child_list.push_back(h_submodule_pb);
+  
 
   if (allmethodecls.size() > 0) {
     LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
@@ -252,17 +236,18 @@ void HDLMain::SCportbindings2hcode(
     systemc_clang::ModuleDecl::portBindingMapType portbindingmap,
     hNodep &h_pbs) {
   for (auto const &pb : portbindingmap) {
-    string port_name{get<0>(pb)};
     PortBinding *binding{get<1>(pb)};
+    string port_name{binding->getCallerPortName()};
     LLVM_DEBUG(llvm::dbgs() << "SC port binding found " << port_name << "<==> "
-                            << binding->getBoundToName() << " "
-                            << binding->getBoundToParameterVarName() << "\n");
+	       << binding->getCalleeInstanceName() << "\n");
+                            
     hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
+    // caller module name 
+    hpb->child_list.push_back(new hNode(binding->getCallerInstanceName(),
+					hNode::hdlopsEnum::hVarref)); 
     hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
-    string mapped_name = binding->getBoundToParameterVarName().empty()
-                             ? binding->getBoundToName()
-                             : binding->getBoundToParameterVarName() + "##" +
-                                   binding->getBoundToName();
+    string mapped_name =  binding->getCalleeInstanceName();
+                             
     // hpb->child_list.push_back(new hNode(binding->getBoundToName(),
     // hNode::hdlopsEnum::hVarref));
     hpb->child_list.push_back(
