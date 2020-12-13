@@ -3,6 +3,7 @@
 
 #include <string>
 
+/// Forward declarations.
 namespace clang {
 class Decl;
 }
@@ -11,6 +12,7 @@ class Decl;
 #define DEBUG_TYPE "Dump"
 
 namespace sc_ast_matchers {
+
 struct ModuleInstanceType {
   std::string var_name;
   std::string var_type_name;

@@ -5,7 +5,6 @@
 #include "ModuleDecl.h"
 
 using namespace systemc_clang;
-using namespace std;
 
 ModuleDecl::ModuleDecl()
     : module_name_{"NONE"},
@@ -15,14 +14,14 @@ ModuleDecl::ModuleDecl()
       constructor_decl_{nullptr},
       instance_decl_{nullptr} {}
 
-ModuleDecl::ModuleDecl(const string &name, CXXRecordDecl *decl)
+ModuleDecl::ModuleDecl(const std::string &name, clang::CXXRecordDecl *decl)
     : module_name_{name},
       instance_name_{"NONE"},
       class_decl_{decl},
       instance_decl_{nullptr} {}
 
 ModuleDecl::ModuleDecl(
-    const std::tuple<const std::string &, CXXRecordDecl *> &element)
+    const std::tuple<const std::string &, clang::CXXRecordDecl *> &element)
     : module_name_{get<0>(element)}, class_decl_{get<1>(element)} {}
 
 ModuleDecl::ModuleDecl(const ModuleDecl &from) {
@@ -126,24 +125,16 @@ ModuleDecl::~ModuleDecl() {
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
   instance_decl_ = nullptr;
-  //
-  // DEBUG_WITH_TYPE("DebugDestructors",
-  // llvm::dbgs() << "- name: " << getName()
-  // << ", inst name: " << getInstanceName()
-  // << " pointer: " << this << "\n";);
-
   // IMPORTANT: Only the instance-specific details should be deleted.
   // DO NOT delete the information collected through incomplete types.
   //
 
-  // llvm::outs() << "- deleting entry function pointers\n";
   for (auto &v : vef_) {
     if (v != nullptr) {
       delete v;
     }
     v = nullptr;
   }
-  // llvm::outs() << "Exit deleting ModuleDecl\n";
   // Delete all pointers in ports.
   for (auto &input_port : in_ports_) {
     // It is a tuple
@@ -174,12 +165,6 @@ ModuleDecl::~ModuleDecl() {
     delete get<1>(other);
   }
   other_fields_.clear();
-  //
-  // for (auto &sm : submodules_) {
-  // delete get<1>(sm);
-  // }
-  // submodules_.clear();
-
   // Delete EntryFunction container
   for (auto &ef : vef_) {
     delete ef;
@@ -198,26 +183,22 @@ void ModuleDecl::setInstanceInfo(
 
 ModuleInstanceType ModuleDecl::getInstanceInfo() { return instance_info_; }
 
-// void ModuleDecl::setInstanceName(const string &name) { instance_name_ = name;
-// }
-//
-// void ModuleDecl::setInstanceDecl(Decl *decl) { instance_decl_ = decl; }
-//
-void ModuleDecl::setTemplateParameters(const vector<string> &parm_list) {
+void ModuleDecl::setTemplateParameters(
+    const std::vector<std::string> &parm_list) {
   template_parameters_ = parm_list;
 }
 
-void ModuleDecl::setTemplateArgs(const vector<string> &parm_list) {
+void ModuleDecl::setTemplateArgs(const std::vector<std::string> &parm_list) {
   template_args_ = parm_list;
 }
 
-vector<string> ModuleDecl::getTemplateParameters() const {
+std::vector<std::string> ModuleDecl::getTemplateParameters() const {
   return template_parameters_;
 }
 
-void ModuleDecl::setModuleName(const string &name) { module_name_ = name; }
+void ModuleDecl::setModuleName(const std::string &name) { module_name_ = name; }
 
-void ModuleDecl::addInstances(const vector<string> &instanceList) {
+void ModuleDecl::addInstances(const std::vector<std::string> &instanceList) {
   instance_list_ = instanceList;
 }
 
@@ -247,28 +228,16 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
               back_inserter(other_fields_));
   }
 
-  // if (port_type == "submodules") {
-  // std::copy(begin(found_ports), end(found_ports),
-  // back_inserter(submodules_));
-  // }
-
   if (port_type == "sc_signal") {
     /// SignalDecl derived from PortDecl
     for (auto const &signal_port : found_ports) {
       auto port_decl{get<1>(signal_port)};
       auto name{port_decl->getName()};
-      // auto templates{port_decl->getTemplateType()};
-      // auto field_decl{port_decl->getFieldDecl()};
 
       // SignalContainer
-      // auto signal_container{new SignalContainer{name, templates,
-      // field_decl}};
-      SignalDecl *signal_entry{new SignalDecl{
-          *port_decl}};  // new SignalDecl{name, field_decl, templates}};
-      //*signal_entry = *port_decl;
+      SignalDecl *signal_entry{new SignalDecl{*port_decl}};
       signals_.insert(ModuleDecl::signalPairType(name, signal_entry));
     }
-    // std::copy(begin(found_ports), end(found_ports), back_inserter(signals_));
   }
 
   if (port_type == "sc_stream_in") {
@@ -283,7 +252,7 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
 
 void ModuleDecl::addInputInterfaces(FindTLMInterfaces::interfaceType p) {
   for (auto mit : p) {
-    string n = mit.first;
+    std::string n{mit.first};
     FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
     InterfaceDecl *pd = new InterfaceDecl(n, tt);
 
@@ -293,7 +262,7 @@ void ModuleDecl::addInputInterfaces(FindTLMInterfaces::interfaceType p) {
 
 void ModuleDecl::addOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   for (auto mit : p) {
-    string name = mit.first;
+    std::string name{mit.first};
     FindTemplateTypes *tt = new FindTemplateTypes(*mit.second);
     InterfaceDecl *pd = new InterfaceDecl(name, tt);
 
@@ -302,8 +271,6 @@ void ModuleDecl::addOutputInterfaces(FindTLMInterfaces::interfaceType p) {
 }
 
 void ModuleDecl::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
-  //  for (FindTLMInterfaces::interfaceType::iterator mit = p.begin(), mite =
-  //  p.end();    mit != mite; mit++) {
   for (auto mit : p) {
     iointerfaces_.insert(
         interfacePairType(mit.first, new InterfaceDecl(mit.first, mit.second)));
@@ -319,9 +286,9 @@ void ModuleDecl::addConstructor(Stmt *constructor) {
   constructor_stmt_ = constructor;
 }
 
-Stmt *ModuleDecl::getConstructorStmt() const { return constructor_stmt_; }
+clang::Stmt *ModuleDecl::getConstructorStmt() const { return constructor_stmt_; }
 
-CXXConstructorDecl *ModuleDecl::getConstructorDecl() const {
+clang::CXXConstructorDecl *ModuleDecl::getConstructorDecl() const {
   return constructor_decl_;
 }
 
@@ -331,8 +298,8 @@ void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
     EntryFunctionContainer *ef = (*efv)[i];
 
     // Set the entry name.
-    string entryName = ef->_entryName;
-    string entryType = "";
+    std::string entryName{ef->_entryName};
+    std::string entryType{""};
 
     // Set the process type
     switch (ef->_procType) {
@@ -363,7 +330,9 @@ void ModuleDecl::addNestedModule(ModuleDecl *nested_module) {
   nested_modules_.push_back(nested_module);
 }
 
-vector<string> ModuleDecl::getInstanceList() { return instance_list_; }
+std::vector<std::string> ModuleDecl::getInstanceList() {
+  return instance_list_;
+}
 
 std::vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
   return vef_;
@@ -389,7 +358,6 @@ ModuleDecl::portMapType ModuleDecl::getIOPorts() { return inout_ports_; }
 
 ModuleDecl::portMapType ModuleDecl::getOtherVars() { return other_fields_; }
 
-// ModuleDecl::portMapType ModuleDecl::getSubmodules() { return submodules_; }
 
 ModuleDecl::portMapType ModuleDecl::getInputStreamPorts() {
   return istreamports_;
@@ -415,7 +383,7 @@ ModuleDecl::portBindingMapType ModuleDecl::getPortBindings() {
   return port_bindings_;
 }
 
-string ModuleDecl::getName() const { return module_name_; }
+std::string ModuleDecl::getName() const { return module_name_; }
 
 std::string ModuleDecl::getInstanceName() const {
   return instance_info_.instance_name;
@@ -423,27 +391,14 @@ std::string ModuleDecl::getInstanceName() const {
 
 bool ModuleDecl::isModuleClassDeclNull() { return (class_decl_ == nullptr); }
 
-CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
+clang::CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
   assert(!(class_decl_ == nullptr));
   return class_decl_;
 }
 
-// FieldDecl *ModuleDecl::getInstanceFieldDecl() { return instance_field_decl_;
-// } VarDecl *ModuleDecl::getInstanceVarDecl() { return instance_var_decl_; }
 
 Decl *ModuleDecl::getInstanceDecl() { return instance_info_.getInstanceDecl(); }
 
-// bool ModuleDecl::isInstanceFieldDecl() const {
-// if ((instance_field_decl_ != nullptr) && (instance_var_decl_ == nullptr)) {
-// return true;
-// }
-// if ((instance_field_decl_ == nullptr) && (instance_var_decl_ != nullptr)) {
-// return false;
-// }
-//
-// return false;
-// }
-//
 void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
   if (instance_list_.empty()) {
     os << " none \n";

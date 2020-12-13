@@ -28,8 +28,8 @@ using namespace sc_ast_matchers;
 
 class ModuleDecl {
  public:
-  typedef std::pair<std::string, SignalDecl*> signalPairType;
-  typedef std::map<std::string, SignalDecl*> signalMapType;
+  typedef std::pair<std::string, SignalDecl *> signalPairType;
+  typedef std::map<std::string, SignalDecl *> signalMapType;
 
   typedef std::pair<std::string, InterfaceDecl *> interfacePairType;
   typedef std::map<std::string, InterfaceDecl *> interfaceMapType;
@@ -57,8 +57,8 @@ class ModuleDecl {
 
  public:
   ModuleDecl();
-  ModuleDecl(const std::string &, CXXRecordDecl *);
-  ModuleDecl(const std::tuple<const std::string &, CXXRecordDecl *> &);
+  ModuleDecl(const std::string &, clang::CXXRecordDecl *);
+  ModuleDecl(const std::tuple<const std::string &, clang::CXXRecordDecl *> &);
 
   // Copy constructor.
   ModuleDecl(const ModuleDecl &from);
@@ -70,7 +70,7 @@ class ModuleDecl {
   void addPorts(const PortType &found_ports, const std::string &port_type);
 
   void addConstructor(FindConstructor *);
-  void addConstructor(Stmt *);
+  void addConstructor(clang::Stmt *);
   void addInputInterfaces(FindTLMInterfaces::interfaceType);
   void addOutputInterfaces(FindTLMInterfaces::interfaceType);
   void addInputOutputInterfaces(FindTLMInterfaces::interfaceType);
@@ -94,10 +94,10 @@ class ModuleDecl {
   std::string getName() const;
   std::string getInstanceName() const;
 
-  CXXRecordDecl *getModuleClassDecl();
-  FieldDecl *getInstanceFieldDecl();
-  VarDecl *getInstanceVarDecl();
-  Decl *getInstanceDecl();
+  clang::CXXRecordDecl *getModuleClassDecl();
+  clang::FieldDecl *getInstanceFieldDecl();
+  clang::VarDecl *getInstanceVarDecl();
+  clang::Decl *getInstanceDecl();
   bool isInstanceFieldDecl() const;
 
   ModuleInstanceType getInstanceInfo();
@@ -115,18 +115,18 @@ class ModuleDecl {
 
   processMapType getProcessMap();
 
-  Stmt *getConstructorStmt() const;
-  CXXConstructorDecl *getConstructorDecl() const;
+  clang::Stmt *getConstructorStmt() const;
+  clang::CXXConstructorDecl *getConstructorDecl() const;
 
   interfaceMapType getIInterfaces();
   interfaceMapType getOInterfaces();
   interfaceMapType getIOInterfaces();
-  vector<std::string> getInstanceList();
-  vector<EntryFunctionContainer *> getEntryFunctionContainer();
+  std::vector<std::string> getInstanceList();
+  std::vector<EntryFunctionContainer *> getEntryFunctionContainer();
   int getNumInstances();
   const signalMapType &getSignals() const;
 
-  const std::vector<ModuleDecl*> &getNestedModuleInstances() const ;
+  const std::vector<ModuleDecl *> &getNestedModuleInstances() const;
 
   void dumpPorts(raw_ostream &, int);
   void dumpPortBinding();
@@ -147,19 +147,19 @@ class ModuleDecl {
   ModuleInstanceType instance_info_;
 
   // Declaration
-  CXXRecordDecl *class_decl_;
+  clang::CXXRecordDecl *class_decl_;
   // Constructor statement
-  Stmt *constructor_stmt_;
-  CXXConstructorDecl *constructor_decl_;
+  clang::Stmt *constructor_stmt_;
+  clang::CXXConstructorDecl *constructor_decl_;
   // Instance fieldDecl or varDecl
-  Decl *instance_decl_;
+  clang::Decl *instance_decl_;
 
   processMapType process_map_;
   portMapType in_ports_;
   portMapType out_ports_;
   portMapType inout_ports_;
   portMapType other_fields_;
-  //portMapType submodules_;
+  // portMapType submodules_;
 
   portMapType istreamports_;
   portMapType ostreamports_;
@@ -171,16 +171,16 @@ class ModuleDecl {
   interfaceMapType iointerfaces_;
   signalMapType signals_;
 
-  vector<std::string> instance_list_;
+  std::vector<std::string> instance_list_;
   portSignalMapType port_signal_map_;
-  vector<EntryFunctionContainer *> vef_;
+  std::vector<EntryFunctionContainer *> vef_;
 
   // Nested modules
-  std::vector<ModuleDecl*> nested_modules_;
+  std::vector<ModuleDecl *> nested_modules_;
 
   // Class template parameters.
-  vector<std::string> template_parameters_;
-  vector<std::string> template_args_;
+  std::vector<std::string> template_parameters_;
+  std::vector<std::string> template_args_;
 };
 }  // namespace systemc_clang
 #endif
