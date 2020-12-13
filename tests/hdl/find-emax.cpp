@@ -40,7 +40,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     REQUIRE(mymod != nullptr);
 
     // Get the nested modules.
-    auto nested_mdecls{mymod->getNestedModules()};
+    auto nested_mdecls{mymod->getNestedModuleInstances()};
     llvm::outs() << "######################## NESTED SUBMODULE "
                  << nested_mdecls.size() << "\n";
 
