@@ -135,7 +135,7 @@ lark_grammar = Lark('''
         // Separate '=' out from so that it is not an expression but a standalone statement
         blkassign: "hBinop" "=" "[" (hvarref | hliteral) (htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
                  | "hBinop" "=" "[" harrayref (htobool | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
-                 | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref)  "]"
+                 | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool)  "]"
                  | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
                  | vassign
                  | hmodassign
