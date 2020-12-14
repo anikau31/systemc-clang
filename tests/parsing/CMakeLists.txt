@@ -2,12 +2,12 @@
 
 set (TEST_LIST 
   counter
-  test-xor-hierarchy
+  xor-hierarchy
   simple-parsing
   model-from-file
   clock-parsing
   hotfix-40-findtemplatetypes
-  t5-template-matching
+  template-matching
   hotfix-105-sensitivity-list
   sreg
   portarray-example

@@ -15,8 +15,9 @@
 #define _PORT_MATCHER_H_
 
 #include <vector>
-#include "ModuleDecl.h"
+#include "ModuleInstance.h"
 #include "PortDecl.h"
+#include "ArrayTypeUtils.h"
 
 #include "clang/ASTMatchers/ASTMatchers.h"
 
@@ -27,6 +28,8 @@
 using namespace clang::ast_matchers;
 
 namespace sc_ast_matchers {
+
+using namespace utils::array_type;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -383,14 +386,29 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
       PortDecl *new_pd{new PortDecl(name, decl, parseTemplateType(fd))};
 
-      clang::QualType field_type{fd->getType()};
 
+
+      std::vector<llvm::APInt> sizes{ getConstantArraySizes(fd) };
+
+      if (sizes.size() > 0 ) {
+        new_pd->setArrayType();
+        for (auto const &array_size : sizes ) {
+          new_pd->addArraySize(array_size);
+        }
+      }
+
+
+     /*
+      clang::QualType field_type{fd->getType()};
       // Need to extract all the array index arguments.
       /// Cast it to see if it's array type.
       auto array_type{dyn_cast<ConstantArrayType>(field_type)};
 
       if (array_type) {
         new_pd->setArrayType();
+
+
+
         while (array_type != nullptr) {
           llvm::APInt array_size{};
           array_size = array_type->getSize();
@@ -401,6 +419,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
           new_pd->addArraySize(array_size);
         }
       }
+      */
 
       auto port_entry{std::make_tuple(name, new_pd)};
       port.push_back(port_entry);
@@ -537,7 +556,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     finder.addMatcher(match_all_ports, this);
     finder.addMatcher(match_non_sc_types_fdecl, this);
     finder.addMatcher(match_non_sc_types_vdecl, this);
-    finder.addMatcher(match_submodules, this);
+    //finder.addMatcher(match_submodules, this);
     // finder.addMatcher(match_sc_ports, this);
   }
 

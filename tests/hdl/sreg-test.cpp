@@ -26,15 +26,7 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   // These are instances.
-  auto module_decl{model->getModuleDecl()};
-
-  llvm::outs() << "\n";
-  for (const auto &decl : module_decl) {
-    llvm::outs() << "[ " << decl.first << "    ]" << decl.second << "   "
-                 << decl.second->getInstanceName() << "\n";
-  }
-
-  // Testing instances.
+    // Testing instances.
 
   auto test_module{model->getInstance("testing")};
   auto sreg_bypass{model->getInstance("sreg_bypass")};
@@ -45,9 +37,6 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   //
   //
   SECTION("sreg instance and port tests", "[instances]") {
-    INFO("ERROR: number of sc_module declarations found: "
-         << module_decl.size());
-    CHECK(module_decl.size() == 4);
 
     REQUIRE(test_module != nullptr);
     REQUIRE(sreg_bypass != nullptr);

@@ -53,24 +53,24 @@ void FindTemplateTypes::Enumerate(const Type *type) {
     return;
   }
 
-  llvm::outs() << "=Enumerate=\n";
+  //llvm::outs() << "=Enumerate=\n";
 
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
 }
 
 bool FindTemplateTypes::VisitDeclRefExpr(DeclRefExpr *dre) {
-  llvm::outs() << "=VisitDeclRefExpr=\n";
+  //llvm::outs() << "=VisitDeclRefExpr=\n";
   dre->dump();
 
   if (FunctionDecl *fd = dyn_cast<FunctionDecl>(dre->getDecl())) {
-    llvm::outs() << " ### FUNCTION DECL\n";
+    //llvm::outs() << " ### FUNCTION DECL\n";
     return true;
   }
   if (CXXRecordDecl *fd = dyn_cast<CXXRecordDecl>(dre->getDecl())) {
-    llvm::outs() << " ### CXX DECL\n";
+    //llvm::outs() << " ### CXX DECL\n";
   }
 
-  llvm::outs() << "type name: " << dre->getType().getAsString() << "=== \n";
+  //llvm::outs() << "type name: " << dre->getType().getAsString() << "=== \n";
 
   std::string template_parm{dre->getNameInfo().getAsString()};
 
@@ -83,7 +83,7 @@ bool FindTemplateTypes::VisitDeclRefExpr(DeclRefExpr *dre) {
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
-  llvm::outs() << "=VisitTemplateSpecializationType=\n";
+  //llvm::outs() << "=VisitTemplateSpecializationType=\n";
 
   /// The specialized template type is used for user-defined template type
   /// arguments, and constexpr fpblk_sz (as in ZFP). The issue here is that one
@@ -143,7 +143,7 @@ bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
 }
 
 bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
-  llvm::outs() << "=VisitBuiltinType= \n";
+  //llvm::outs() << "=VisitBuiltinType= \n";
   // bi_type->dump();
 
   clang::LangOptions LangOpts;
@@ -176,7 +176,7 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
 }
 
 bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
-  llvm::outs() << "=VisitRecordType=\n";
+  //llvm::outs() << "=VisitRecordType=\n";
   auto type_decl{rt->getDecl()};
   auto type_name{type_decl->getName()};
   // llvm::outs() << " ==> name : " << type_name << "\n";

@@ -209,24 +209,22 @@ int sc_main(int argc, char *argv[]) {
   auto model{sc.getSystemCModel()};
 
   // This provides the module declarations.
-  auto module_decl{model->getModuleDecl()};
-  auto module_instance_map{model->getModuleInstanceMap()};
+  auto instances{model->getInstances()};
 
   // Want to find an instance named "testing".
 
   // Submodule needs to be indexed using variable name
-  ModuleDecl *ram_module{model->getInstance("ram_module")};
+  ModuleInstance *ram_module{model->getInstance("ram_module")};
   // VarDecl uses the name supplied to constructor
-  ModuleDecl *test_module{model->getInstance("testing")};
+  ModuleInstance *test_module{model->getInstance("testing")};
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
-    INFO("Checking number of sc_module declarations found: "
-         << module_decl.size());
+    INFO("Checking number of sc_module instances found: "
+         << instances.size());
 
     // There are two modules: ram, test.
-    // REQUIRE(module_instance_map.size() == 2 );
-    REQUIRE(module_decl.size() == 2);
+    REQUIRE(instances.size() == 2);
     REQUIRE(ram_module != nullptr);
     REQUIRE(test_module != nullptr);
 
@@ -236,7 +234,7 @@ int sc_main(int argc, char *argv[]) {
     ////////////////////////////////////////////////////////////////
     // Test ram_module
     //
-    ModuleDecl *ram_module_inst{ram_module};
+    ModuleInstance *ram_module_inst{ram_module};
 
     REQUIRE(ram_module_inst->getIPorts().size() == 0);
     REQUIRE(ram_module_inst->getOPorts().size() == 0);
@@ -336,7 +334,7 @@ int sc_main(int argc, char *argv[]) {
     // Test test_module
     //
 
-    ModuleDecl *test_module_inst{test_module};
+    ModuleInstance *test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
     //

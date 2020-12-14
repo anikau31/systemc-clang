@@ -57,26 +57,25 @@ int sc_main(int argc, char *argv[]) {
   auto model{sc.getSystemCModel()};
 
   // This provides the module declarations.
-  auto module_decl{model->getModuleDecl()};
-  auto module_instance_map{model->getModuleInstanceMap()};
+  auto instances{model->getInstances()};
 
   // Want to find an instance named "testing".
 
-  ModuleDecl *test_module{model->getInstance("testing")};
+  ModuleInstance *test_module{model->getInstance("testing")};
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module declarations found: "
-         << module_decl.size());
+         << instances.size());
 
-    REQUIRE(module_decl.size() == 1);
+    REQUIRE(instances.size() == 1);
 
     REQUIRE(test_module != nullptr);
 
     INFO("Checking clock port parsing.");
     // These checks should be performed on the declarations.
 
-    ModuleDecl *test_module_inst{test_module};
+    ModuleInstance *test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
     //

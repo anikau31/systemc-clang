@@ -1,5 +1,5 @@
 set( SCC_MODEL
-  ModuleDecl.cpp
+  ModuleInstance.cpp
   EntryFunctionContainer.cpp
   WaitContainer.cpp
   NotifyContainer.cpp
@@ -12,7 +12,6 @@ set( SCC_MODEL
   WaitCalls.cpp
   NotifyCalls.cpp
   EventContainer.cpp
-  #SignalContainer.cpp
   )
 
 include_directories(${SCC_INCLUDES})
