@@ -64,11 +64,11 @@ bool HDLMain::postFire() {
   LLVM_DEBUG(llvm::dbgs() << "\n SC  HDL plugin\n");
 
   // typedef std::vector< modulePairType > moduleMapType;
-  // typedef std::pair<std::string, ModuleDecl *> modulePairType;
+  // typedef std::pair<std::string, ModuleInstance *> modulePairType;
 
 
   Model::modulePairType modpair;
-  ModuleDecl *modinstance{model->getRootModuleInstance()};
+  ModuleInstance *modinstance{model->getRootModuleInstance()};
   if (modinstance == nullptr) {
     LLVM_DEBUG(llvm::dbgs() << "\nRoot instance not found, exiting\n");
     return false;
@@ -102,9 +102,9 @@ bool HDLMain::postFire() {
   return true;
 }
 
-void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module,
+void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
                              llvm::raw_fd_ostream &HCodeOut) {
-  const std::vector<ModuleDecl *> &submodv = mod->getNestedModuleInstances();
+  const std::vector<ModuleInstance *> &submodv = mod->getNestedModuleInstances();
   // look at constructor
 
   // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
@@ -114,7 +114,7 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module,
   // LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
 
   LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
-  // typedef std::pair<std::string, systemc_clang::ModuleDecl::portBindingMapType>
+  // typedef std::pair<std::string, systemc_clang::ModuleInstance::portBindingMapType>
   //     submodportbindings_t;
   // std::vector<submodportbindings_t> submodportbindings;
   // for (auto &smod : submodv) {
@@ -164,7 +164,7 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module,
   //  typedef std::map<std::string, PortBinding *> portBindingMapType;
   //   portBindingMapType getPortBindings();
 
-  systemc_clang::ModuleDecl::portBindingMapType pbm{mod->getPortBindings()};
+  systemc_clang::ModuleInstance::portBindingMapType pbm{mod->getPortBindings()};
   hNodep h_submodule_pb =
     new hNode(mod->getInstanceName()+"_portbindings", hNode::hdlopsEnum::hPortbindings);
     SCportbindings2hcode(pbm, h_submodule_pb);
@@ -233,7 +233,7 @@ void HDLMain::SCmodule2hcode(ModuleDecl *mod, hNodep &h_module,
 }
 
 void HDLMain::SCportbindings2hcode(
-    systemc_clang::ModuleDecl::portBindingMapType portbindingmap,
+    systemc_clang::ModuleInstance::portBindingMapType portbindingmap,
     hNodep &h_pbs) {
   for (auto const &pb : portbindingmap) {
     PortBinding *binding{get<1>(pb)};
@@ -256,11 +256,11 @@ void HDLMain::SCportbindings2hcode(
   }
 }
 
-void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
+void HDLMain::SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
                            hNodep &h_info) {
   clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 
-  for (ModuleDecl::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
+  for (ModuleInstance::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
        mit++) {
     string objname = get<0>(*mit);
 
@@ -306,9 +306,9 @@ void HDLMain::SCport2hcode(ModuleDecl::portMapType pmap, hNode::hdlopsEnum h_op,
   }
 }
 
-void HDLMain::SCsig2hcode(ModuleDecl::signalMapType pmap,
+void HDLMain::SCsig2hcode(ModuleInstance::signalMapType pmap,
                           hNode::hdlopsEnum h_op, hNodep &h_info) {
-  for (ModuleDecl::signalMapType::iterator mit = pmap.begin();
+  for (ModuleInstance::signalMapType::iterator mit = pmap.begin();
        mit != pmap.end(); mit++) {
     string objname = get<0>(*mit);
 
@@ -328,7 +328,7 @@ void HDLMain::SCsig2hcode(ModuleDecl::signalMapType pmap,
   }
 }
 
-void HDLMain::SCproc2hcode(ModuleDecl::processMapType pm, hNodep &h_top) {
+void HDLMain::SCproc2hcode(ModuleInstance::processMapType pm, hNodep &h_top) {
   // typedef std::map<std::string, ProcessDecl *> processMapType;
   // processMapType getProcessMap();
   // ProcessDecl::getEntryFunction() returns EntryFunctionContainer*
