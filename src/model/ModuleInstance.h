@@ -1,5 +1,5 @@
-#ifndef _MODULE_DECL_H_
-#define _MODULE_DECL_H_
+#ifndef _MODULE_INSTANCE_H_
+#define _MODULE_INSTANCE_H_
 
 /* clang-format off */
 #include <map>
@@ -128,14 +128,14 @@ class ModuleDecl {
 
   const std::vector<ModuleDecl *> &getNestedModuleInstances() const;
 
-  void dumpPorts(raw_ostream &, int);
+  void dumpPorts(llvm::raw_ostream &, int);
   void dumpPortBinding();
-  void dumpInterfaces(raw_ostream &, int);
-  void dumpProcesses(raw_ostream &, int);
-  void dumpSignals(raw_ostream &, int);
-  void dump(raw_ostream &);
-  void dumpInstances(raw_ostream &, int);
-  void dumpSignalBinding(raw_ostream &, int);
+  void dumpInterfaces(llvm::raw_ostream &, int);
+  void dumpProcesses(llvm::raw_ostream &, int);
+  void dumpSignals(llvm::raw_ostream &, int);
+  void dump(llvm::raw_ostream &);
+  void dumpInstances(llvm::raw_ostream &, int);
+  void dumpSignalBinding(llvm::raw_ostream &, int);
 
   void clearOnlyGlobal();
 
@@ -159,7 +159,6 @@ class ModuleDecl {
   portMapType out_ports_;
   portMapType inout_ports_;
   portMapType other_fields_;
-  // portMapType submodules_;
 
   portMapType istreamports_;
   portMapType ostreamports_;
@@ -175,10 +174,10 @@ class ModuleDecl {
   portSignalMapType port_signal_map_;
   std::vector<EntryFunctionContainer *> vef_;
 
-  // Nested modules
+  /// Nested modules
   std::vector<ModuleDecl *> nested_modules_;
 
-  // Class template parameters.
+  /// Class template parameters.
   std::vector<std::string> template_parameters_;
   std::vector<std::string> template_args_;
 };

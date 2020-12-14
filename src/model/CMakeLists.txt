@@ -1,5 +1,5 @@
 set( SCC_MODEL
-  ModuleDecl.cpp
+  ModuleInstance.cpp
   EntryFunctionContainer.cpp
   WaitContainer.cpp
   NotifyContainer.cpp

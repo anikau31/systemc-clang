@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "InstanceMatcher.h"
-#include "ModuleDecl.h"
+#include "ModuleInstance.h"
 #include "PortMatcher.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 

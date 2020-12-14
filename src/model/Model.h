@@ -6,7 +6,7 @@
 #include "FindGlobalEvents.h"
 #include "FindNetlist.h"
 #include "FindSimTime.h"
-#include "ModuleDecl.h"
+#include "ModuleInstance.h"
 
 #include <map>
 #include <string>

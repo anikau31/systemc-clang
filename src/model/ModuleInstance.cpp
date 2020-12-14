@@ -2,7 +2,7 @@
 #include <string>
 #include <tuple>
 
-#include "ModuleDecl.h"
+#include "ModuleInstance.h"
 
 using namespace systemc_clang;
 

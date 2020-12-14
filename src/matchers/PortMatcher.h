@@ -15,7 +15,7 @@
 #define _PORT_MATCHER_H_
 
 #include <vector>
-#include "ModuleDecl.h"
+#include "ModuleInstance.h"
 #include "PortDecl.h"
 #include "ArrayTypeUtils.h"
 
