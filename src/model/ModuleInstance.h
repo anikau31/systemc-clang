@@ -26,7 +26,7 @@ using namespace sc_ast_matchers;
 /// Forward declarations
 //
 
-class ModuleDecl {
+class ModuleInstance {
  public:
   typedef std::pair<std::string, SignalDecl *> signalPairType;
   typedef std::map<std::string, SignalDecl *> signalMapType;
@@ -56,16 +56,16 @@ class ModuleDecl {
   typedef std::vector<std::tuple<std::string, PortDecl *> > portMapType;
 
  public:
-  ModuleDecl();
-  ModuleDecl(const std::string &, clang::CXXRecordDecl *);
-  ModuleDecl(const std::tuple<const std::string &, clang::CXXRecordDecl *> &);
+  ModuleInstance();
+  ModuleInstance(const std::string &, clang::CXXRecordDecl *);
+  ModuleInstance(const std::tuple<const std::string &, clang::CXXRecordDecl *> &);
 
   // Copy constructor.
-  ModuleDecl(const ModuleDecl &from);
+  ModuleInstance(const ModuleInstance &from);
 
   // Assignment operator.
-  ModuleDecl &operator=(const ModuleDecl &from);
-  ~ModuleDecl();
+  ModuleInstance &operator=(const ModuleInstance &from);
+  ~ModuleInstance();
 
   void addPorts(const PortType &found_ports, const std::string &port_type);
 
@@ -80,7 +80,7 @@ class ModuleDecl {
   void addPortBinding(const std::string &port_name, PortBinding *pb);
   void addSignalBinding(std::map<std::string, std::string>);
 
-  void addNestedModule(ModuleDecl *submodule);
+  void addNestedModule(ModuleInstance *submodule);
 
   void setInstanceInfo(const sc_ast_matchers::ModuleInstanceType &info);
   void setInstanceName(const std::string &);
@@ -126,7 +126,7 @@ class ModuleDecl {
   int getNumInstances();
   const signalMapType &getSignals() const;
 
-  const std::vector<ModuleDecl *> &getNestedModuleInstances() const;
+  const std::vector<ModuleInstance *> &getNestedModuleInstances() const;
 
   void dumpPorts(llvm::raw_ostream &, int);
   void dumpPortBinding();
@@ -175,7 +175,7 @@ class ModuleDecl {
   std::vector<EntryFunctionContainer *> vef_;
 
   /// Nested modules
-  std::vector<ModuleDecl *> nested_modules_;
+  std::vector<ModuleInstance *> nested_modules_;
 
   /// Class template parameters.
   std::vector<std::string> template_parameters_;

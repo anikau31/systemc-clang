@@ -214,9 +214,9 @@ int sc_main(int argc, char *argv[]) {
   // Want to find an instance named "testing".
 
   // Submodule needs to be indexed using variable name
-  ModuleDecl *ram_module{model->getInstance("ram_module")};
+  ModuleInstance *ram_module{model->getInstance("ram_module")};
   // VarDecl uses the name supplied to constructor
-  ModuleDecl *test_module{model->getInstance("testing")};
+  ModuleInstance *test_module{model->getInstance("testing")};
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
@@ -234,7 +234,7 @@ int sc_main(int argc, char *argv[]) {
     ////////////////////////////////////////////////////////////////
     // Test ram_module
     //
-    ModuleDecl *ram_module_inst{ram_module};
+    ModuleInstance *ram_module_inst{ram_module};
 
     REQUIRE(ram_module_inst->getIPorts().size() == 0);
     REQUIRE(ram_module_inst->getOPorts().size() == 0);
@@ -334,7 +334,7 @@ int sc_main(int argc, char *argv[]) {
     // Test test_module
     //
 
-    ModuleDecl *test_module_inst{test_module};
+    ModuleInstance *test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
     //

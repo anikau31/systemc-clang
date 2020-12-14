@@ -36,7 +36,7 @@ bool SystemCConsumer::fire() {
              module_declaration_handler.dump();
              llvm::dbgs() << "================ END =============== \n";);
 
-  // MultiMap CXXRecordDecl => ModuleDecl*
+  // MultiMap CXXRecordDecl => ModuleInstance*
   // Instances with same CXXRecordDecl will have multiple entries
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
@@ -61,8 +61,8 @@ bool SystemCConsumer::fire() {
       module_declaration_handler.getInstances()};
 
   //
-  // Create a ModuleDecl for each instance with the appropriately parsed
-  // ModuleDecl.
+  // Create a ModuleInstance for each instance with the appropriately parsed
+  // ModuleInstance.
   //
 
   llvm::outs()
@@ -71,7 +71,7 @@ bool SystemCConsumer::fire() {
 
   for (const auto &inst : found_module_declarations) {
     auto cxx_decl{inst.first};
-    ModuleDecl *add_module_decl{inst.second};
+    ModuleInstance *add_module_decl{inst.second};
 
     // setInstanceInfo done in pruneMatches
     //
@@ -150,7 +150,7 @@ bool SystemCConsumer::fire() {
       llvm::dbgs() << "===========END  Populate sub-modules ============= \n";);
 
   // All instances are within the SystemC model.
-  //  This must come after instances of ModuleDecl have been generated.
+  //  This must come after instances of ModuleInstance have been generated.
   //  This is because the netlist matcher inserts the port bindings into the
   //  instance.
 
@@ -164,15 +164,15 @@ bool SystemCConsumer::fire() {
   netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   LLVM_DEBUG(llvm::dbgs() << "Begin netlist parsing on instances: "
                           << found_instances_declaration_map.size() << "\n";);
-  // vector of ModuleDecl*
+  // vector of ModuleInstance*
   auto instances{systemcModel_->getInstances()};
   for (const auto &inst : instances) {
     // auto incomplete_mdecl{inst.first};
     // auto instance_list{inst.second};
 //
     // for (auto const &instance : instance_list) {
-      // ModuleDecl *mdecl{systemcModel_->getInstance(get<0>(instance))};
-      ModuleDecl *mdecl{inst};
+      // ModuleInstance *mdecl{systemcModel_->getInstance(get<0>(instance))};
+      ModuleInstance *mdecl{inst};
       auto ctordecl{mdecl->getConstructorDecl()};
       if (ctordecl != nullptr) {
         const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};

@@ -37,7 +37,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
   // The model has 3 module declarations.
   REQUIRE(instances.size() == 4);
-  ModuleDecl *found_module{model->getInstance("non-templated-module-instance")};
+  ModuleInstance *found_module{model->getInstance("non-templated-module-instance")};
   SECTION("Testing top-level module: non_template", "[top-module]") {
     // There should be only one module.
     INFO("Top-level module specified as non_template.");

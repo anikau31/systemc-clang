@@ -136,7 +136,7 @@ int sc_main(int argc, char *argv[]) {
   REQUIRE(instances.size() == 1);
   // Want to find an instance named "testing".
 
-  ModuleDecl *test_module{model->getInstance("testing")};
+  ModuleInstance *test_module{model->getInstance("testing")};
   auto processes{test_module->getProcessMap()};
   auto first_proc{processes.begin()};
   ProcessDecl *proc{first_proc->second};

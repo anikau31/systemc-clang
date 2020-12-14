@@ -75,7 +75,7 @@ int sc_main() {
   auto instances{model->getInstances()};
 
   // Want to find an instance named "counter_instance".
-  ModuleDecl *test_module{model->getInstance("counter_instance")};
+  ModuleInstance *test_module{model->getInstance("counter_instance")};
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
@@ -90,7 +90,7 @@ int sc_main() {
     INFO("Checking clock port parsing.");
     // These checks should be performed on the declarations.
 
-    ModuleDecl *test_module_inst{test_module};
+    ModuleInstance *test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
     //

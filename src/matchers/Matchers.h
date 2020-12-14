@@ -44,16 +44,16 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       DeclarationsToInstancesMapType;
 
   /// This will store all the modules as ModuleDecl.
-  typedef std::pair<clang::CXXRecordDecl *, ModuleDecl *> ModulePairType;
-  typedef std::multimap<clang::CXXRecordDecl *, ModuleDecl *> ModuleMapType;
+  typedef std::pair<clang::CXXRecordDecl *, ModuleInstance *> ModulePairType;
+  typedef std::multimap<clang::CXXRecordDecl *, ModuleInstance *> ModuleMapType;
 
  private:
   // One of those needs to be removed.
   DeclarationsToInstancesMapType declaration_instance_map_;
 
   /// This will store the module instances as pair of CXXRecordDecl*,
-  /// ModuleDecl*. The CXXRecordDecl* is the type of the sc_module, and
-  /// ModuleDecl holds additional parsed information.
+  /// ModuleInstance*. The CXXRecordDecl* is the type of the sc_module, and
+  /// ModuleInstance holds additional parsed information.
   ModuleMapType modules_;
 
   // Match nested instances
@@ -128,11 +128,11 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       if (instance_list.size() > 1) {
         assert(true);
       }
-      auto add_module{new ModuleDecl(name, decl)};
+      auto add_module{new ModuleInstance(name, decl)};
       add_module->setInstanceInfo(instance);
 
       modules_.insert(
-          std::pair<clang::CXXRecordDecl *, ModuleDecl *>(decl, add_module));
+          std::pair<clang::CXXRecordDecl *, ModuleInstance *>(decl, add_module));
 
       MatchFinder port_registry{};
       PortMatcher port_matcher{};
@@ -143,7 +143,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       port_matcher.dump();
 
       // All the ports for the CXXRecordDecl should be matched.
-      // We can populate the ModuleDecl with that information.
+      // We can populate the ModuleInstance with that information.
       add_module->addPorts(port_matcher.getInputPorts(), "sc_in");
       // Clock ports are also sc_in
       add_module->addPorts(port_matcher.getClockPorts(), "sc_in");

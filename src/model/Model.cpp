@@ -8,22 +8,22 @@ Model::Model() : root_module_inst_{nullptr} {}
 
 void Model::populateNestedModules() {
   llvm::outs() << "===== TEST to see who has parents ==== \n";
-  for (ModuleDecl *inst : module_instances_) {
+  for (ModuleInstance *inst : module_instances_) {
     ModuleInstanceType instance_info{inst->getInstanceInfo()};
     instance_info.dump();
-    llvm::outs() << "ModuleDecl's instance delc: " << inst->getInstanceDecl()
+    llvm::outs() << "ModuleInstance's instance delc: " << inst->getInstanceDecl()
                  << "  " << inst->getName() << "\n";
 
-    ModuleDecl *parent{getInstance(instance_info.getParentDecl())};
+    ModuleInstance *parent{getInstance(instance_info.getParentDecl())};
 
     if ((parent != nullptr) && (parent != inst)) {
       parent->addNestedModule(inst);
       llvm::outs() << "Add child " << inst->getName() << " into "
                    << parent->getName() << "\n";
     } else {
-      /// This is a ModuleDecl that has no parent. This means that it is a root
+      /// This is a ModuleInstance that has no parent. This means that it is a root
       /// note.
-      llvm::outs() << "Root ModuleDecl: " << inst->getName() << "\n";
+      llvm::outs() << "Root ModuleInstance: " << inst->getName() << "\n";
       if (root_module_inst_) {
         llvm::errs() << "Multiple root module instances are not allowed\n";
       }
@@ -32,7 +32,7 @@ void Model::populateNestedModules() {
   }
 }
 
-ModuleDecl *Model::getRootModuleInstance() const { return root_module_inst_; }
+ModuleInstance *Model::getRootModuleInstance() const { return root_module_inst_; }
 
 Model::~Model() {
   LLVM_DEBUG(llvm::dbgs() << "\n"
@@ -41,27 +41,27 @@ Model::~Model() {
     // auto incomplete_decl{inst.first};
     // auto instance_list{inst.second};
     LLVM_DEBUG(llvm::dbgs() << "Delete instances for " << inst->getName(););
-    // for (ModuleDecl *inst_in_list : instance_list) {
-    // This is a ModuleDecl*
+    // for (ModuleInstance *inst_in_list : instance_list) {
+    // This is a ModuleInstance*
     LLVM_DEBUG(llvm::dbgs() << "- delete instance: " << inst->getInstanceName()
                             << ", pointer: " << inst << "\n";);
     //
     // IMPORTANT
-    // The current design creates an incomplete ModuleDecl in Matchers. The
+    // The current design creates an incomplete ModuleInstance in Matchers. The
     // ports are populated there.  Then, for each instance that is recognized,
-    // a new ModuleDecl is created, and information from the incomplete
-    // ModuleDecl is copied into the new instance-specific ModuleDecl. When
-    // deleting an instance of ModuleDecl, we have to be careful.  This is
-    // because we do not want to delete the instance-specific ModuleDecl,
+    // a new ModuleInstance is created, and information from the incomplete
+    // ModuleInstance is copied into the new instance-specific ModuleInstance. When
+    // deleting an instance of ModuleInstance, we have to be careful.  This is
+    // because we do not want to delete the instance-specific ModuleInstance,
     // which has structures with pointers in it (PortDecl), and then delete
-    // the incomplete ModuleDecl because the latter will cause a double free
+    // the incomplete ModuleInstance because the latter will cause a double free
     // memory error.  This is because the deletion of the instance-specific
-    // ModuleDecl will free the objects identified in the incomplete
-    // ModuleDecl.
+    // ModuleInstance will free the objects identified in the incomplete
+    // ModuleInstance.
     //
     // The current solution is to clear the information for the
-    // instance-specific ModuleDecl before deleting it.  Then, the deletion of
-    // the incomplete ModuleDecl will free the other objects such as PortDecl.
+    // instance-specific ModuleInstance before deleting it.  Then, the deletion of
+    // the incomplete ModuleInstance will free the other objects such as PortDecl.
     // clearOnlyGlobal does exactly this.
     //
     // TODO: ENHANCEMENT: This is one major refactoring that should be done at
@@ -79,7 +79,7 @@ Model::~Model() {
 //
 // Model::Model(const Model &from) { modules_ = from.modules_; }
 //
-void Model::addInstance(ModuleDecl *mod) { module_instances_.push_back(mod); }
+void Model::addInstance(ModuleInstance *mod) { module_instances_.push_back(mod); }
 
 void Model::addSimulationTime(FindSimTime::simulationTimeMapType simTime) {
   simulation_time_ = simTime;
@@ -103,7 +103,7 @@ void Model::addGlobalEvents(FindGlobalEvents::globalEventMapType eventMap) {
 
 void Model::addSCMain(FunctionDecl *fnDecl) { scmain_function_decl_ = fnDecl; }
 
-ModuleDecl *Model::getInstance(const std::string &instance_name) {
+ModuleInstance *Model::getInstance(const std::string &instance_name) {
   llvm::outs() << "getInstance\n";
   llvm::outs() << "- Looking for " << instance_name << "\n";
   auto test_module_it = std::find_if(
@@ -121,7 +121,7 @@ ModuleDecl *Model::getInstance(const std::string &instance_name) {
 }
 
 // Must provide the Instance decl.
-ModuleDecl *Model::getInstance(Decl *instance_decl) {
+ModuleInstance *Model::getInstance(Decl *instance_decl) {
   llvm::outs() << "getInstance Decl to find : " << instance_decl << "\n";
 
   auto test_module_it =
@@ -141,7 +141,7 @@ Model::entryFunctionGPUMacroMapType Model::getEntryFunctionGPUMacroMap() {
   return entry_function_gpu_macro_map_;
 }
 
-std::vector<ModuleDecl *> &Model::getInstances() { return module_instances_; }
+std::vector<ModuleInstance *> &Model::getInstances() { return module_instances_; }
 
 Model::eventMapType Model::getEventMapType() { return event_map_; }
 

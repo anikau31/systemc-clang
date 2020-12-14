@@ -30,7 +30,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
   ModuleDeclarationMatcher *module_matcher_;
   std::string top_;
 
-  ModuleDecl *findModuleDeclInstance(clang::Decl *decl) {
+  ModuleInstance *findModuleDeclInstance(clang::Decl *decl) {
     auto instances{model_->getInstances()};
     auto found_inst_it = std::find_if(
         instances.begin(), instances.end(), [decl](const auto &instance) {
@@ -264,7 +264,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         caller_me_expr->dump();
         auto caller_instance_decl{caller_me_expr->getMemberDecl()};
         auto caller_instance_type{caller_instance_decl->getType().getTypePtr()};
-        ModuleDecl *instance_module_decl{
+        ModuleInstance *instance_module_decl{
             findModuleDeclInstance(caller_instance_decl)};
         llvm::outs() << "INSTANCE MODULE :"
                      << instance_module_decl->getInstanceName() << "\n";
@@ -274,8 +274,8 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                             .getParentDecl()
                             ->getName()
                      << "\n";
-        // Get the parent ModuleDecl and insert the port binding into that one.
-        ModuleDecl *parent_decl{findModuleDeclInstance(
+        // Get the parent ModuleInstance and insert the port binding into that one.
+        ModuleInstance *parent_decl{findModuleDeclInstance(
             instance_module_decl->getInstanceInfo().getParentDecl())};
         llvm::outs() << " PARENT@@@@ INST NAME: "
                      << parent_decl->getInstanceName() << "\n";

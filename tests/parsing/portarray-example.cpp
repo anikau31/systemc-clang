@@ -25,7 +25,7 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   auto model{sc.getSystemCModel()};
 
   // Want to find an instance named "testing".
-  ModuleDecl *pa{model->getInstance("port_array_instance")};
+  ModuleInstance *pa{model->getInstance("port_array_instance")};
   if (!pa) {
     llvm::outs() << "=> ERROR: instance PORT_ARRAY not found\n";
   }

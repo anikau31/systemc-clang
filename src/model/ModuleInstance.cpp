@@ -6,7 +6,7 @@
 
 using namespace systemc_clang;
 
-ModuleDecl::ModuleDecl()
+ModuleInstance::ModuleInstance()
     : module_name_{"NONE"},
       instance_name_{"NONE"},
       class_decl_{nullptr},
@@ -14,17 +14,17 @@ ModuleDecl::ModuleDecl()
       constructor_decl_{nullptr},
       instance_decl_{nullptr} {}
 
-ModuleDecl::ModuleDecl(const std::string &name, clang::CXXRecordDecl *decl)
+ModuleInstance::ModuleInstance(const std::string &name, clang::CXXRecordDecl *decl)
     : module_name_{name},
       instance_name_{"NONE"},
       class_decl_{decl},
       instance_decl_{nullptr} {}
 
-ModuleDecl::ModuleDecl(
+ModuleInstance::ModuleInstance(
     const std::tuple<const std::string &, clang::CXXRecordDecl *> &element)
     : module_name_{get<0>(element)}, class_decl_{get<1>(element)} {}
 
-ModuleDecl::ModuleDecl(const ModuleDecl &from) {
+ModuleInstance::ModuleInstance(const ModuleInstance &from) {
   module_name_ = from.module_name_;
   instance_name_ = from.instance_name_;
   instance_info_ = from.instance_info_;
@@ -61,7 +61,7 @@ ModuleDecl::ModuleDecl(const ModuleDecl &from) {
   nested_modules_ = from.nested_modules_;
 }
 
-ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
+ModuleInstance &ModuleInstance::operator=(const ModuleInstance &from) {
   module_name_ = from.module_name_;
   instance_name_ = from.instance_name_;
   instance_info_ = from.instance_info_;
@@ -101,7 +101,7 @@ ModuleDecl &ModuleDecl::operator=(const ModuleDecl &from) {
   return *this;
 }
 
-void ModuleDecl::clearOnlyGlobal() {
+void ModuleInstance::clearOnlyGlobal() {
   // This only clears the globally (not instance-specific) allocated structures.
   // these are AST nodes
   class_decl_ = nullptr;
@@ -120,8 +120,8 @@ void ModuleDecl::clearOnlyGlobal() {
   signals_.clear();
 }
 
-ModuleDecl::~ModuleDecl() {
-  DEBUG_WITH_TYPE("DebugDestructors", llvm::dbgs() << "\n~ModuleDecl\n";);
+ModuleInstance::~ModuleInstance() {
+  DEBUG_WITH_TYPE("DebugDestructors", llvm::dbgs() << "\n~ModuleInstance\n";);
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
   instance_decl_ = nullptr;
@@ -176,42 +176,42 @@ ModuleDecl::~ModuleDecl() {
   }
 }
 
-void ModuleDecl::setInstanceInfo(
+void ModuleInstance::setInstanceInfo(
     const sc_ast_matchers::ModuleInstanceType &info) {
   instance_info_ = info;
 }
 
-ModuleInstanceType ModuleDecl::getInstanceInfo() { return instance_info_; }
+ModuleInstanceType ModuleInstance::getInstanceInfo() { return instance_info_; }
 
-void ModuleDecl::setTemplateParameters(
+void ModuleInstance::setTemplateParameters(
     const std::vector<std::string> &parm_list) {
   template_parameters_ = parm_list;
 }
 
-void ModuleDecl::setTemplateArgs(const std::vector<std::string> &parm_list) {
+void ModuleInstance::setTemplateArgs(const std::vector<std::string> &parm_list) {
   template_args_ = parm_list;
 }
 
-std::vector<std::string> ModuleDecl::getTemplateParameters() const {
+std::vector<std::string> ModuleInstance::getTemplateParameters() const {
   return template_parameters_;
 }
 
-void ModuleDecl::setModuleName(const std::string &name) { module_name_ = name; }
+void ModuleInstance::setModuleName(const std::string &name) { module_name_ = name; }
 
-void ModuleDecl::addInstances(const std::vector<std::string> &instanceList) {
+void ModuleInstance::addInstances(const std::vector<std::string> &instanceList) {
   instance_list_ = instanceList;
 }
 
-void ModuleDecl::addPortBinding(const std::string &port_name, PortBinding *pb) {
+void ModuleInstance::addPortBinding(const std::string &port_name, PortBinding *pb) {
   port_bindings_.insert(portBindingPairType(port_name, pb));
 }
 
-void ModuleDecl::addSignalBinding(
+void ModuleInstance::addSignalBinding(
     std::map<std::string, std::string> portSignalMap) {
   port_signal_map_.insert(portSignalMap.begin(), portSignalMap.end());
 }
 
-void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
+void ModuleInstance::addPorts(const ModuleInstance::PortType &found_ports,
                           const std::string &port_type) {
   if (port_type == "sc_in") {
     std::copy(begin(found_ports), end(found_ports), back_inserter(in_ports_));
@@ -236,7 +236,7 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
 
       // SignalContainer
       SignalDecl *signal_entry{new SignalDecl{*port_decl}};
-      signals_.insert(ModuleDecl::signalPairType(name, signal_entry));
+      signals_.insert(ModuleInstance::signalPairType(name, signal_entry));
     }
   }
 
@@ -250,7 +250,7 @@ void ModuleDecl::addPorts(const ModuleDecl::PortType &found_ports,
   }
 }
 
-void ModuleDecl::addInputInterfaces(FindTLMInterfaces::interfaceType p) {
+void ModuleInstance::addInputInterfaces(FindTLMInterfaces::interfaceType p) {
   for (auto mit : p) {
     std::string n{mit.first};
     FindTemplateTypes *tt = new FindTemplateTypes(mit.second);
@@ -260,7 +260,7 @@ void ModuleDecl::addInputInterfaces(FindTLMInterfaces::interfaceType p) {
   }
 }
 
-void ModuleDecl::addOutputInterfaces(FindTLMInterfaces::interfaceType p) {
+void ModuleInstance::addOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   for (auto mit : p) {
     std::string name{mit.first};
     FindTemplateTypes *tt = new FindTemplateTypes(*mit.second);
@@ -270,29 +270,29 @@ void ModuleDecl::addOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   }
 }
 
-void ModuleDecl::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
+void ModuleInstance::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   for (auto mit : p) {
     iointerfaces_.insert(
         interfacePairType(mit.first, new InterfaceDecl(mit.first, mit.second)));
   }
 }
 
-void ModuleDecl::addConstructor(FindConstructor *ctor) {
+void ModuleInstance::addConstructor(FindConstructor *ctor) {
   constructor_stmt_ = ctor->getConstructorStmt();
   constructor_decl_ = ctor->getConstructorDecl();
 }
 
-void ModuleDecl::addConstructor(Stmt *constructor) {
+void ModuleInstance::addConstructor(Stmt *constructor) {
   constructor_stmt_ = constructor;
 }
 
-clang::Stmt *ModuleDecl::getConstructorStmt() const { return constructor_stmt_; }
+clang::Stmt *ModuleInstance::getConstructorStmt() const { return constructor_stmt_; }
 
-clang::CXXConstructorDecl *ModuleDecl::getConstructorDecl() const {
+clang::CXXConstructorDecl *ModuleInstance::getConstructorDecl() const {
   return constructor_decl_;
 }
 
-void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
+void ModuleInstance::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
   vef_ = *efv;
   for (unsigned int i = 0; i < efv->size(); ++i) {
     EntryFunctionContainer *ef = (*efv)[i];
@@ -326,80 +326,80 @@ void ModuleDecl::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
   }
 }
 
-void ModuleDecl::addNestedModule(ModuleDecl *nested_module) {
+void ModuleInstance::addNestedModule(ModuleInstance *nested_module) {
   nested_modules_.push_back(nested_module);
 }
 
-std::vector<std::string> ModuleDecl::getInstanceList() {
+std::vector<std::string> ModuleInstance::getInstanceList() {
   return instance_list_;
 }
 
-std::vector<EntryFunctionContainer *> ModuleDecl::getEntryFunctionContainer() {
+std::vector<EntryFunctionContainer *> ModuleInstance::getEntryFunctionContainer() {
   return vef_;
 }
 
-int ModuleDecl::getNumInstances() { return instance_list_.size(); }
+int ModuleInstance::getNumInstances() { return instance_list_.size(); }
 
-const ModuleDecl::signalMapType &ModuleDecl::getSignals() const {
+const ModuleInstance::signalMapType &ModuleInstance::getSignals() const {
   return signals_;
 }
 
-const std::vector<ModuleDecl *> &ModuleDecl::getNestedModuleInstances() const {
+const std::vector<ModuleInstance *> &ModuleInstance::getNestedModuleInstances() const {
   return nested_modules_;
 }
 
-ModuleDecl::processMapType ModuleDecl::getProcessMap() { return process_map_; }
+ModuleInstance::processMapType ModuleInstance::getProcessMap() { return process_map_; }
 
-ModuleDecl::portMapType ModuleDecl::getOPorts() { return out_ports_; }
+ModuleInstance::portMapType ModuleInstance::getOPorts() { return out_ports_; }
 
-ModuleDecl::portMapType ModuleDecl::getIPorts() { return in_ports_; }
+ModuleInstance::portMapType ModuleInstance::getIPorts() { return in_ports_; }
 
-ModuleDecl::portMapType ModuleDecl::getIOPorts() { return inout_ports_; }
+ModuleInstance::portMapType ModuleInstance::getIOPorts() { return inout_ports_; }
 
-ModuleDecl::portMapType ModuleDecl::getOtherVars() { return other_fields_; }
+ModuleInstance::portMapType ModuleInstance::getOtherVars() { return other_fields_; }
 
 
-ModuleDecl::portMapType ModuleDecl::getInputStreamPorts() {
+ModuleInstance::portMapType ModuleInstance::getInputStreamPorts() {
   return istreamports_;
 }
 
-ModuleDecl::portMapType ModuleDecl::getOutputStreamPorts() {
+ModuleInstance::portMapType ModuleInstance::getOutputStreamPorts() {
   return ostreamports_;
 }
 
-ModuleDecl::interfaceMapType ModuleDecl::getOInterfaces() {
+ModuleInstance::interfaceMapType ModuleInstance::getOInterfaces() {
   return ointerfaces_;
 }
 
-ModuleDecl::interfaceMapType ModuleDecl::getIInterfaces() {
+ModuleInstance::interfaceMapType ModuleInstance::getIInterfaces() {
   return iinterfaces_;
 }
 
-ModuleDecl::interfaceMapType ModuleDecl::getIOInterfaces() {
+ModuleInstance::interfaceMapType ModuleInstance::getIOInterfaces() {
   return iointerfaces_;
 }
 
-ModuleDecl::portBindingMapType ModuleDecl::getPortBindings() {
+ModuleInstance::portBindingMapType ModuleInstance::getPortBindings() {
   return port_bindings_;
 }
 
-std::string ModuleDecl::getName() const { return module_name_; }
+std::string ModuleInstance::getName() const { return module_name_; }
 
-std::string ModuleDecl::getInstanceName() const {
+std::string ModuleInstance::getInstanceName() const {
   return instance_info_.instance_name;
 }
 
-bool ModuleDecl::isModuleClassDeclNull() { return (class_decl_ == nullptr); }
+bool ModuleInstance::isModuleClassDeclNull() { return (class_decl_ == nullptr); }
 
-clang::CXXRecordDecl *ModuleDecl::getModuleClassDecl() {
+clang::CXXRecordDecl *ModuleInstance::getModuleClassDecl() {
   assert(!(class_decl_ == nullptr));
   return class_decl_;
 }
 
 
-Decl *ModuleDecl::getInstanceDecl() { return instance_info_.getInstanceDecl(); }
+Decl *ModuleInstance::getInstanceDecl() { return instance_info_.getInstanceDecl(); }
 
-void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
+void ModuleInstance::dumpInstances(raw_ostream &os, int tabn) {
   if (instance_list_.empty()) {
     os << " none \n";
   }
@@ -424,7 +424,7 @@ void ModuleDecl::dumpInstances(raw_ostream &os, int tabn) {
   }
 }
 
-void ModuleDecl::dumpPortBinding() {
+void ModuleInstance::dumpPortBinding() {
   json binding_j;
 
   binding_j["number_of_ports_bound"] = port_bindings_.size();
@@ -493,7 +493,7 @@ void ModuleDecl::dumpPortBinding() {
   llvm::outs() << binding_j.dump(4) << "\n";
 }
 
-void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {
+void ModuleInstance::dumpSignalBinding(raw_ostream &os, int tabn) {
   if (port_signal_map_.empty()) {
     os << " none\n";
     return;
@@ -504,7 +504,7 @@ void ModuleDecl::dumpSignalBinding(raw_ostream &os, int tabn) {
   }
 }
 
-void ModuleDecl::dumpProcesses(raw_ostream &os, int tabn) {
+void ModuleInstance::dumpProcesses(raw_ostream &os, int tabn) {
   json process_j;
   process_j["number_of_processes"] = process_map_.size();
   for (auto pit : process_map_) {
@@ -516,7 +516,7 @@ void ModuleDecl::dumpProcesses(raw_ostream &os, int tabn) {
   os << process_j.dump(4) << "\n";
 }
 
-void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
+void ModuleInstance::dumpInterfaces(raw_ostream &os, int tabn) {
   os << "Input interfaces: " << iinterfaces_.size() << "\n";
 
   if (iinterfaces_.size() == 0) {
@@ -552,7 +552,7 @@ void ModuleDecl::dumpInterfaces(raw_ostream &os, int tabn) {
   }
 }
 
-void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
+void ModuleInstance::dumpPorts(raw_ostream &os, int tabn) {
   json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j,
       submodules_j;
 
@@ -627,7 +627,7 @@ void ModuleDecl::dumpPorts(raw_ostream &os, int tabn) {
      << "\n";
 }
 
-void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
+void ModuleInstance::dumpSignals(raw_ostream &os, int tabn) {
   json signal_j;
   signal_j["number_of_signals"] = signals_.size();
   for (auto sit : signals_) {
@@ -639,7 +639,7 @@ void ModuleDecl::dumpSignals(raw_ostream &os, int tabn) {
   os << signal_j.dump(4) << "\n";
 }
 
-void ModuleDecl::dump(llvm::raw_ostream &os) {
+void ModuleInstance::dump(llvm::raw_ostream &os) {
   os << "Module declaration name: " << module_name_;
   os << "\n# Instances:\n";
   dumpInstances(os, 4);
@@ -658,7 +658,7 @@ void ModuleDecl::dump(llvm::raw_ostream &os) {
   os << "\n=======================================================\n";
 }
 
-json ModuleDecl::dump_json() {
+json ModuleInstance::dump_json() {
   json module_j;
 
   module_j["module_name"] = module_name_;
