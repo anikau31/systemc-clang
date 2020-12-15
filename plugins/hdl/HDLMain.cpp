@@ -67,7 +67,6 @@ bool HDLMain::postFire() {
   // typedef std::pair<std::string, ModuleInstance *> modulePairType;
 
 
-  Model::modulePairType modpair;
   ModuleInstance *modinstance{model->getRootModuleInstance()};
   if (modinstance == nullptr) {
     LLVM_DEBUG(llvm::dbgs() << "\nRoot instance not found, exiting\n");
@@ -224,11 +223,13 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
   h_module->print(HCodeOut);
   // now generate submodules
   for (const auto &smod : submodv) {
-    string modname = mod_name_map[smod->getInstanceDecl()].newn;
-    LLVM_DEBUG(llvm::dbgs() << "generate submodule " << smod->getInstanceName()
+    for (int i = 0; i < smod->getInstanceInfo().instance_names.size(); i++) {
+      string modname = mod_name_map[smod->getInstanceDecl()].newn;
+      LLVM_DEBUG(llvm::dbgs() << "generate submodule " << smod->getInstanceInfo().instance_names[i] //getInstanceName()
                             << " renamed " << modname << "\n");
-    hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
-    SCmodule2hcode(smod, h_submod, HCodeOut);
+      hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
+      SCmodule2hcode(smod, h_submod, HCodeOut);
+    }
   }
 }
 
@@ -241,10 +242,10 @@ void HDLMain::SCportbindings2hcode(
     LLVM_DEBUG(llvm::dbgs() << "SC port binding found " << port_name << "<==> "
 	       << binding->getCalleeInstanceName() << "\n");
                             
-    hNodep hpb = new hNode(hNode::hdlopsEnum::hPortbinding);
+    hNodep hpb = new hNode(binding->getCallerInstanceName(), hNode::hdlopsEnum::hPortbinding);
     // caller module name 
-    hpb->child_list.push_back(new hNode(binding->getCallerInstanceName(),
-					hNode::hdlopsEnum::hVarref)); 
+    //hpb->child_list.push_back(new hNode(binding->getCallerInstanceName(),
+    //	hNode::hdlopsEnum::hVarref)); 
     hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
     string mapped_name =  binding->getCalleeInstanceName();
                              
