@@ -56,10 +56,10 @@ bool SystemCConsumer::fire() {
     LLVM_DEBUG(llvm::dbgs() << "\n Could not find SCMain";);
   }
 
-
-  auto found_instances_declaration_map{
-      module_declaration_handler.getInstances()};
-
+//
+  // auto found_instances_declaration_map{
+      // module_declaration_handler.getInstances()};
+//
   //
   // Create a ModuleInstance for each instance with the appropriately parsed
   // ModuleInstance.
@@ -162,8 +162,8 @@ bool SystemCConsumer::fire() {
                                    &module_declaration_handler);
 
   netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
-  LLVM_DEBUG(llvm::dbgs() << "Begin netlist parsing on instances: "
-                          << found_instances_declaration_map.size() << "\n";);
+  // LLVM_DEBUG(llvm::dbgs() << "Begin netlist parsing on instances: "
+                          // << found_instances_declaration_map.size() << "\n";);
   // vector of ModuleInstance*
   auto instances{systemcModel_->getInstances()};
   for (const auto &inst : instances) {

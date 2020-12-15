@@ -38,10 +38,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
   // typedef std::tuple<std::string, Decl *> InstanceDeclType;
   typedef std::vector<InstanceMatcher::InstanceDeclType> InstanceListType;
-  typedef std::pair<clang::CXXRecordDecl *, InstanceListType>
-      DeclarationInstancePairType;
-  typedef std::map<clang::CXXRecordDecl *, InstanceListType>
-      DeclarationsToInstancesMapType;
 
   /// This will store all the modules as ModuleDecl.
   typedef std::pair<clang::CXXRecordDecl *, ModuleInstance *> ModulePairType;
@@ -49,7 +45,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
  private:
   // One of those needs to be removed.
-  DeclarationsToInstancesMapType declaration_instance_map_;
+  //DeclarationsToInstancesMapType declaration_instance_map_;
 
   /// This will store the module instances as pair of CXXRecordDecl*,
   /// ModuleInstance*. The CXXRecordDecl* is the type of the sc_module, and
@@ -60,31 +56,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   InstanceMatcher instance_matcher_;
 
  public:
-  const DeclarationsToInstancesMapType &getInstances() {
-    return declaration_instance_map_;
-  };
-
   const InstanceMatcher &getInstanceMatcher() { return instance_matcher_; }
 
   /// Register the matchers.
   void registerMatchers(MatchFinder &finder) {
-    // This is in case the set method is not called explicitly.
-    // Simply pass in what is the default.
-
-    /* clang-format off */
-    auto match_module_decls = 
-      cxxRecordDecl(
-          hasDefinition(),            // There must be a definition.
-          unless( isImplicit() ),     // Templates generate implicit structs - so ignore.
-          isDerivedFrom(hasName("::sc_core::sc_module")),
-          unless(isDerivedFrom(matchesName("sc_event_queue")))
-        ).bind("sc_module");
-    /* clang-format on */
-
-    /// Add all the matchers.
-    // TODO: Deprecated.
-    // finder.addMatcher(match_module_decls, this);
-
     // Add instance matcher
     instance_matcher_.registerMatchers(finder);
   }
@@ -121,9 +96,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
       InstanceListType instance_list;
       instance_matcher_.findInstanceByVariableType(decl, instance_list);
-      declaration_instance_map_.insert(
-          DeclarationInstancePairType(decl, instance_list));
-
+      // declaration_instance_map_.insert(
+//
       // This is the new data structure that uses ModuleDecl internally.
       if (instance_list.size() > 1) {
         assert(true);
