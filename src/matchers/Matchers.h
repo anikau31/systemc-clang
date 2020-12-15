@@ -1,9 +1,7 @@
 #ifndef _MATCHERS_H_
 #define _MATCHERS_H_
-#include <assert.h>
 
 #include <map>
-#include <tuple>
 #include <vector>
 
 #include "InstanceMatcher.h"
@@ -23,20 +21,10 @@ namespace sc_ast_matchers {
 //
 /// Class ModuleDeclarationMatcher
 //
-//
 ///////////////////////////////////////////////////////////////////////////////
 class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
-  //
  public:
-  typedef std::vector<std::tuple<std::string, clang::CXXRecordDecl *> >
-      ModuleDeclarationType;
-  /// Map to hold CXXREcordDecl to module declaration type name.
-  typedef std::pair<clang::CXXRecordDecl *, std::string>
-      ModuleDeclarationPairType;
-  typedef std::map<clang::CXXRecordDecl *, std::string>
-      ModuleDeclarationMapType;
 
-  // typedef std::tuple<std::string, Decl *> InstanceDeclType;
   typedef std::vector<InstanceMatcher::InstanceDeclType> InstanceListType;
 
   /// This will store all the modules as ModuleDecl.
@@ -44,8 +32,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   typedef std::multimap<clang::CXXRecordDecl *, ModuleInstance *> ModuleMapType;
 
  private:
-  // One of those needs to be removed.
-  //DeclarationsToInstancesMapType declaration_instance_map_;
 
   /// This will store the module instances as pair of CXXRecordDecl*,
   /// ModuleInstance*. The CXXRecordDecl* is the type of the sc_module, and
@@ -65,13 +51,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
-    if (auto decl = const_cast<clang::CXXRecordDecl *>(
-            result.Nodes.getNodeAs<clang::CXXRecordDecl>("sc_module"))) {
-      LLVM_DEBUG(llvm::dbgs() << " Found sc_module: "
-                              << decl->getIdentifier()->getNameStart()
-                              << " CXXRecordDecl*: " << decl << "\n");
-      std::string name{decl->getIdentifier()->getNameStart()};
-    }
   }
 
   const ModuleMapType &getFoundModuleDeclarations() const { return modules_; }
@@ -140,26 +119,13 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       auto module_decl{i.second};
       auto decl_name{module_decl->getName()};
 
-      llvm::outs() << "CXXRecordDecl* " << cxx_decl
-                   << ", module name: " << decl_name << "\n";
+      LLVM_DEBUG(llvm::outs() << "CXXRecordDecl* " << cxx_decl
+                   << ", module name: " << decl_name << "\n";);
     }
 
     // Print the instances.
     instance_matcher_.dump();
-    //
-    // llvm::outs() << "\n[DBG] Dump map of decl->instances: "
-    // << modules_.size() << "\n";
-    //
-    // for (const auto &i : declaration_instance_map_) {
-    // auto decl{i.first};
-    // auto instance_list{i.second};
-    //
-    // llvm::outs() << "- decl: " << decl->getIdentifier()->getNameStart();
-    // for (const auto &instance : instance_list) {
-    // llvm::outs() << ", instance name: " << get<0>(instance)
-    // << ", inst type decl: " << get<1>(instance) << "\n";
-    // }
-    // }
+    
   }
 };
 
