@@ -44,7 +44,7 @@ class HDLMain: public SystemCConsumer {
     
     HDLType HDLt;
 
-    hname_map_t mod_name_map;
+    hmodinst_name_map_t mod_name_map;
     name_serve mod_newn{"_sc_module_"};
 };
 

@@ -256,8 +256,9 @@ namespace hnode {
     hNodep h_vardeclp;
   } names_t;
 
-  typedef std::map<Decl *, names_t> hname_map_t;
-
+ typedef std::map<Decl *, names_t> hdecl_name_map_t;
+ typedef std::map<ModuleInstance *, names_t> hmodinst_name_map_t;
+ 
   class name_serve {
   private:
     int cnt;

@@ -78,8 +78,9 @@ bool HDLMain::postFire() {
     LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName()
                             << " renamed " << modname << "\n");
     hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
-    mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(),
-                                                    modname, h_module};
+    //mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(),
+    mod_name_map[modinstance] = {modinstance->getName(),
+				 modname, h_module};
     SCmodule2hcode(modinstance, h_module, HCodeOut);
     // h_module->print(HCodeOut);
   
@@ -142,16 +143,27 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
   SCport2hcode(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
   // SCport2hcode(mod->getSubmodules(), hNode::hdlopsEnum::hModdecl, h_ports);
   for (const auto &smod : submodv) {
-    hNodep h_smod =
-        new hNode(smod->getInstanceName(), hNode::hdlopsEnum::hModdecl);
-    h_ports->child_list.push_back(h_smod);
-    hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
+    if (smod->getInstanceInfo().isArrayType()) {
+      LLVM_DEBUG(llvm::dbgs() << "Array submodule " << smod->getInstanceName() << "\n");
+    }
+    else LLVM_DEBUG(llvm::dbgs() << "Non-Array submodule " << smod->getInstanceName() << "\n");
+    const std::vector<std::string> &instnames{smod->getInstanceInfo().getInstanceNames()};
     string newmodname = mod_newn.newname();
-    mod_name_map[smod->getInstanceDecl()] = {smod->getInstanceName(),
-                                             newmodname, h_smod};
-    h_smodtypinfo->child_list.push_back(
-        new hNode(newmodname, hNode::hdlopsEnum::hType));
-    h_smod->child_list.push_back(h_smodtypinfo);
+    for (auto instname: instnames) {
+	LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
+      
+	hNodep h_smod =
+	  new hNode(instname, hNode::hdlopsEnum::hModdecl);
+	h_ports->child_list.push_back(h_smod);
+	hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
+	//string newmodname = mod_newn.newname();
+	//    mod_name_map[smod->getInstanceDecl()] = {smod->getInstanceName(),
+	mod_name_map[smod] = {instname,
+			      newmodname, h_smod};
+	h_smodtypinfo->child_list.push_back(
+					    new hNode(newmodname, hNode::hdlopsEnum::hType));
+	h_smod->child_list.push_back(h_smodtypinfo);
+    }
   }
 
   // Processes
@@ -223,13 +235,14 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
   h_module->print(HCodeOut);
   // now generate submodules
   for (const auto &smod : submodv) {
-    for (int i = 0; i < smod->getInstanceInfo().instance_names.size(); i++) {
-      string modname = mod_name_map[smod->getInstanceDecl()].newn;
-      LLVM_DEBUG(llvm::dbgs() << "generate submodule " << smod->getInstanceInfo().instance_names[i] //getInstanceName()
+    //for (int i = 0; i < smod->getInstanceInfo().instance_names.size(); i++) {
+    //string modname = mod_name_map[smod->getInstanceDecl()].newn;
+      string modname = mod_name_map[smod].newn;
+      LLVM_DEBUG(llvm::dbgs() << "generate submodule " << smod->getName() //smod->getInstanceInfo().instance_names[i] //getInstanceName()
                             << " renamed " << modname << "\n");
       hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
       SCmodule2hcode(smod, h_submod, HCodeOut);
-    }
+      // }
   }
 }
 

@@ -62,7 +62,7 @@ class HDLBody: public RecursiveASTVisitor <HDLBody> {
  private:
   
   hNodep h_ret;   // value returned by each subexpression
-  hname_map_t vname_map;
+  hdecl_name_map_t vname_map;
   name_serve lname;
 
   bool isLogicalOp(clang::OverloadedOperatorKind opc);
