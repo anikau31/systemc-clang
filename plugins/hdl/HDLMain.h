@@ -36,7 +36,7 @@ class HDLMain: public SystemCConsumer {
   void SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void SCsig2hcode(ModuleInstance::signalMapType pmap, hNode::hdlopsEnum h_op, hNodep &h_info);
   void SCproc2hcode(ModuleInstance::processMapType pm, hNodep & h_top);
-  void SCportbindings2hcode(systemc_clang::ModuleInstance::portBindingMapType portbindingmap, hNodep &h_pb);
+  void SCportbindings2hcode(ModuleInstance * mod, hNodep &h_pb);
   private:
 
     hNodep h_top;

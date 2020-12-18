@@ -163,6 +163,7 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
 	h_smodtypinfo->child_list.push_back(
 					    new hNode(newmodname, hNode::hdlopsEnum::hType));
 	h_smod->child_list.push_back(h_smodtypinfo);
+	systemc_clang::ModuleInstance::portBindingMapType pbm{mod->getPortBindings()};
     }
   }
 
@@ -175,10 +176,9 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
   //  typedef std::map<std::string, PortBinding *> portBindingMapType;
   //   portBindingMapType getPortBindings();
 
-  systemc_clang::ModuleInstance::portBindingMapType pbm{mod->getPortBindings()};
   hNodep h_submodule_pb =
     new hNode(mod->getInstanceName()+"_portbindings", hNode::hdlopsEnum::hPortbindings);
-    SCportbindings2hcode(pbm, h_submodule_pb);
+    SCportbindings2hcode(mod, h_submodule_pb);
   if (!h_submodule_pb->child_list.empty())
     h_module->child_list.push_back(h_submodule_pb);
   
@@ -246,26 +246,51 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
   }
 }
 
-void HDLMain::SCportbindings2hcode(
-    systemc_clang::ModuleInstance::portBindingMapType portbindingmap,
+void HDLMain::SCportbindings2hcode(ModuleInstance* mod,
+				   //systemc_clang::ModuleInstance::portBindingMapType portbindingmap,
     hNodep &h_pbs) {
+  systemc_clang::ModuleInstance::portBindingMapType portbindingmap{mod->getPortBindings()};
   for (auto const &pb : portbindingmap) {
     PortBinding *binding{get<1>(pb)};
     string port_name{binding->getCallerPortName()};
-    LLVM_DEBUG(llvm::dbgs() << "SC port binding found " << port_name << "<==> "
+    LLVM_DEBUG(llvm::dbgs() << "SC port binding found Caller port name  " << port_name
+	       << " caller instance name " << binding->getCallerInstanceName()
+	       << " <==> callee port name " << binding->getCalleePortName() <<
+	       " callee instance name " 
 	       << binding->getCalleeInstanceName() << "\n");
-                            
+    if (binding->getCallerArraySubscripts().size() >0)
+      {
+	LLVM_DEBUG(llvm::dbgs() << "Caller Subscript vector length is " <<
+		   binding->getCallerArraySubscripts().size() << "\n");
+	for (auto subscriptex: binding->getCallerArraySubscripts()) {
+	  LLVM_DEBUG(subscriptex->dump(llvm::dbgs()));
+	}
+      }
+    if (binding->getCalleeArraySubscripts().size()>0) {
+      LLVM_DEBUG(llvm::dbgs() << "Callee Subscript vector length is " <<
+		 binding->getCalleeArraySubscripts().size() << "\n");
+      for (auto subscriptex: binding->getCalleeArraySubscripts()) {
+	LLVM_DEBUG(subscriptex->dump(llvm::dbgs()));
+      }
+    }
+      
     hNodep hpb = new hNode(binding->getCallerInstanceName(), hNode::hdlopsEnum::hPortbinding);
     // caller module name 
-    //hpb->child_list.push_back(new hNode(binding->getCallerInstanceName(),
-    //	hNode::hdlopsEnum::hVarref)); 
-    hpb->child_list.push_back(new hNode(port_name, hNode::hdlopsEnum::hVarref));
+    hNodep hpb_caller = new hNode(port_name, hNode::hdlopsEnum::hVarref);
+    if (binding->getCallerPortArraySubscripts().size() >0) {
+      hpb_caller->child_list.push_back(new hNode("INDEX", hNode::hdlopsEnum::hLiteral)); //placeholder
+    }
+    hpb->child_list.push_back(hpb_caller);
     string mapped_name =  binding->getCalleeInstanceName();
                              
     // hpb->child_list.push_back(new hNode(binding->getBoundToName(),
     // hNode::hdlopsEnum::hVarref));
-    hpb->child_list.push_back(
-        new hNode(mapped_name, hNode::hdlopsEnum::hVarref));
+    hNodep hpb_callee = new hNode(mapped_name, hNode::hdlopsEnum::hVarref);
+    if (binding->getCalleeArraySubscripts().size() >0) {
+      hpb_callee->child_list.push_back(new hNode("INDEX", hNode::hdlopsEnum::hLiteral)); //placeholder
+    }
+    hpb->child_list.push_back(hpb_callee);
+    
     h_pbs->child_list.push_back(hpb);
   }
 }

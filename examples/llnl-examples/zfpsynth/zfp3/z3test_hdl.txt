@@ -363,8 +363,12 @@
         hVarref clk NOLIST
       ]
       hPortbinding u_block_buffer [
-        hVarref m_block NOLIST
-        hVarref c_bb_block NOLIST
+        hVarref m_block [
+          hLiteral INDEX NOLIST
+        ]
+        hVarref c_bb_block [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_block_buffer [
         hVarref m_ready NOLIST
@@ -379,8 +383,12 @@
         hVarref reset NOLIST
       ]
       hPortbinding u_block_buffer [
-        hVarref s_block NOLIST
-        hVarref c_eb_block NOLIST
+        hVarref s_block [
+          hLiteral INDEX NOLIST
+        ]
+        hVarref c_eb_block [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_block_buffer [
         hVarref s_ready NOLIST
@@ -395,8 +403,12 @@
         hVarref clk NOLIST
       ]
       hPortbinding u_encode_block [
-        hVarref m_block NOLIST
-        hVarref c_eb_block NOLIST
+        hVarref m_block [
+          hLiteral INDEX NOLIST
+        ]
+        hVarref c_eb_block [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_encode_block [
         hVarref m_ready NOLIST
@@ -411,8 +423,12 @@
         hVarref reset NOLIST
       ]
       hPortbinding u_encode_block [
-        hVarref s_block NOLIST
-        hVarref c_fc_block NOLIST
+        hVarref s_block [
+          hLiteral INDEX NOLIST
+        ]
+        hVarref c_fc_block [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_encode_block [
         hVarref s_ready NOLIST
@@ -451,8 +467,12 @@
         hVarref reset NOLIST
       ]
       hPortbinding u_encode_ints [
-        hVarref s_block NOLIST
-        hVarref c_bb_block NOLIST
+        hVarref s_block [
+          hLiteral INDEX NOLIST
+        ]
+        hVarref c_bb_block [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_encode_ints [
         hVarref s_flush NOLIST
@@ -547,8 +567,12 @@
         hVarref clk NOLIST
       ]
       hPortbinding u_fwd_cast [
-        hVarref m_block NOLIST
-        hVarref c_fc_block NOLIST
+        hVarref m_block [
+          hLiteral INDEX NOLIST
+        ]
+        hVarref c_fc_block [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_fwd_cast [
         hVarref m_ready NOLIST
@@ -1336,7 +1360,9 @@
       ]
       hPortbinding u_xt [
         hVarref m_port NOLIST
-        hVarref c_xt_data NOLIST
+        hVarref c_xt_data [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_xt [
         hVarref m_ready NOLIST
@@ -1344,7 +1370,9 @@
       ]
       hPortbinding u_xt [
         hVarref m_valid NOLIST
-        hVarref c_xt_valid NOLIST
+        hVarref c_xt_valid [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_xt [
         hVarref reset NOLIST
@@ -1356,7 +1384,9 @@
       ]
       hPortbinding u_xt [
         hVarref s_ready NOLIST
-        hVarref c_xt_ready NOLIST
+        hVarref c_xt_ready [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_xt [
         hVarref s_valid NOLIST
@@ -1368,7 +1398,9 @@
       ]
       hPortbinding u_yt [
         hVarref m_port NOLIST
-        hVarref c_yt_data NOLIST
+        hVarref c_yt_data [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_yt [
         hVarref m_ready NOLIST
@@ -1376,7 +1408,9 @@
       ]
       hPortbinding u_yt [
         hVarref m_valid NOLIST
-        hVarref c_yt_valid NOLIST
+        hVarref c_yt_valid [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_yt [
         hVarref reset NOLIST
@@ -1384,15 +1418,21 @@
       ]
       hPortbinding u_yt [
         hVarref s_port NOLIST
-        hVarref c_xt_data NOLIST
+        hVarref c_xt_data [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_yt [
         hVarref s_ready NOLIST
-        hVarref c_yt_ready NOLIST
+        hVarref c_yt_ready [
+          hLiteral INDEX NOLIST
+        ]
       ]
       hPortbinding u_yt [
         hVarref s_valid NOLIST
-        hVarref c_xt_valid NOLIST
+        hVarref c_xt_valid [
+          hLiteral INDEX NOLIST
+        ]
       ]
     ]
   ]
