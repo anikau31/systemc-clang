@@ -61,7 +61,7 @@ include(Catch)
 add_definitions(-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
 
 # Disable exceptions in nlohmann::json.
-add_definitions(-DJSON_EXCEPTIONS)
+add_definitions(-DJSON_EXCEPTION)
 
 # Set the path for where LLVM/clang is installed.
 set( LLVM_INSTALL_DIR $ENV{LLVM_INSTALL_DIR} )
