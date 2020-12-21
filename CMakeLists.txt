@@ -20,6 +20,7 @@ set(CMAKE_CXX_STANDARD 14)
 # Always keep it on
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
 #  Make verbose on?
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
@@ -44,6 +45,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 #
 # Prepare "Catch" library for other executables
 set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
+# Disable throwing exceptions in catch2
+add_definitions (-DCATCH_CONFIG_DISABLE_EXCEPTIONS)
 
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
@@ -56,6 +59,7 @@ include(Catch)
 # Required packages
 # Include the these flags whenever you compile.
 add_definitions (-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
+
 
 # Set the path for where LLVM/clang is installed.
 set( LLVM_INSTALL_DIR $ENV{LLVM_INSTALL_DIR} )
