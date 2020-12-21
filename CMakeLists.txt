@@ -58,8 +58,10 @@ include(Catch)
 
 # Required packages
 # Include the these flags whenever you compile.
-add_definitions (-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
+add_definitions(-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
 
+# Disable exceptions in nlohmann::json.
+add_definitions(-DJSON_EXCEPTIONS)
 
 # Set the path for where LLVM/clang is installed.
 set( LLVM_INSTALL_DIR $ENV{LLVM_INSTALL_DIR} )
