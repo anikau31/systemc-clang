@@ -419,7 +419,7 @@ class TypedefExpansion(TopDown):
         module_name, *bindings = tree.children
         new_bindings = []
         for binding in bindings:
-            sub, par = binding.children
+            mod_name, sub, par = binding.children
             sub_v = sub.children[0]
             par_v = par.children[0]
             typeinfo = self.__expanded_type(par_v.value)
@@ -433,7 +433,7 @@ class TypedefExpansion(TopDown):
                     new_sub.children[0].value += '_' + field.children[0]
                     new_par.children[0].value += '_' + field.children[0]
                     new_binding = copy.copy(binding)
-                    new_binding.children = [new_sub, new_par]
+                    new_binding.children = [mod_name, new_sub, new_par]
                     b.append(new_binding)
                 new_bindings.extend(b)
             else:

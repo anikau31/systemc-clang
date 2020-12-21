@@ -47,11 +47,20 @@ lark_grammar = Lark('''
              | hreturnstmt
              
         ?htobool: "hNoop" "to_bool" "[" harrayref "]"
+        htouint: "hNoop" "to_uint" "[" syscread "]"
+        htoint: "hNoop" "to_int" "[" syscread "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
 
         // Port Bindings
         portbindinglist: "hPortbindings" ID "[" portbinding* "]"
-        portbinding: "hPortbinding" "NONAME" "[" hvarref hvarref "]"
+        // hPortbinding u_dut [
+        //   hVarref avg_out NOLIST
+        //   hVarref dut_avg NOLIST
+        // ]
+        portbinding: "hPortbinding" ID "[" hvarref hvarref "]"
+                   | "hPortbinding" ID "[" hbindingref hbindingref "]"
+                   | "hPortbinding" ID "[" hvarref hbindingref "]"
+        hbindingref: "hVarref" ID "[" hliteral "]"
 
 
         // This is solely for maintaining the semicolon
@@ -112,6 +121,8 @@ lark_grammar = Lark('''
                   | hmethodcall
                   |  "[" expression "]"
                   | htobool
+                  | htouint
+                  | htoint
                   | hcondop
                   
         hcondop : "hCondop" "NONAME" "[" (hbinop | hunop) expression expression "]"

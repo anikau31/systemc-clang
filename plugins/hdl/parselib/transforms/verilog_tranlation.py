@@ -442,6 +442,15 @@ class VerilogTranslationPass(TopDown):
         res = tpe.to_str(var_name='')
         return res
 
+    def htouint(self, tree):
+        self.__push_up(tree)
+        return '$unsigned({})'.format(tree.children[0])
+
+
+    def htoint(self, tree):
+        self.__push_up(tree)
+        return '$signed({})'.format(tree.children[0])
+
     def hfunction(self, tree):
         self.inc_indent()
         self.__push_up(tree)
