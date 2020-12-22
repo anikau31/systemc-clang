@@ -59,7 +59,8 @@ HDLBody::~HDLBody() {
 
 bool HDLBody::TraverseStmt(Stmt *stmt) {
   LLVM_DEBUG(llvm::dbgs() << "In TraverseStmt\n");
-
+  if (stmt == nullptr) return true;  // null statement, keep going
+  
   if (isa<CompoundStmt>(stmt)) {
     LLVM_DEBUG(llvm::dbgs()
                << "calling traverse compoundstmt from traversestmt\n");
@@ -141,8 +142,10 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
   } else if (isa<ReturnStmt>(stmt)) {
     hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
-    TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
-    hretstmt->child_list.push_back(h_ret);
+    if (((ReturnStmt *)stmt)->getRetValue() !=nullptr) {
+      TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
+      hretstmt->child_list.push_back(h_ret);
+    }
     h_ret = hretstmt;
   } else if (isa<CXXTemporaryObjectExpr>(stmt)) {
     int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();

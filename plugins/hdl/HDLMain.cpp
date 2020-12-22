@@ -11,6 +11,8 @@
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
 #include "clang/Basic/Diagnostic.h"
+#include "HDLHnode.cpp"
+
 // clang-format on
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
@@ -19,6 +21,7 @@
 using namespace std;
 using namespace hnode;
 using namespace systemc_clang;
+using namespace processhnode;
 
 std::unique_ptr<clang::tooling::FrontendActionFactory> newFrontendActionFactory(
     const std::string &top_module) {
@@ -110,21 +113,22 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
   // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
 
   // LLVM_DEBUG(mod->getConstructorStmt()->dump(llvm::dbgs()));
-  // os_ << "dumping module constructor decl\n";
-  // LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
+  LLVM_DEBUG( llvm::dbgs() << "dumping module constructor decl body\n");
+  LLVM_DEBUG(mod->getConstructorDecl()->getBody()->dump());
+  LLVM_DEBUG( llvm::dbgs() << "end dumping module constructor decl body\n");
+  //LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
 
+  clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+  
+  hNodep hconstructor = new hNode(mod->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
+  HDLBody xconstructor(mod->getConstructorDecl()->getBody(), hconstructor, diag_engine);
+  LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
+  hconstructor->print(llvm::dbgs());
+  h_module->child_list.push_back(ProcessCXXConstructorHcode(hconstructor));
+  //hconstructor->print(HCodeOut);
+  
   LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
-  // typedef std::pair<std::string, systemc_clang::ModuleInstance::portBindingMapType>
-  //     submodportbindings_t;
-  // std::vector<submodportbindings_t> submodportbindings;
-  // for (auto &smod : submodv) {
-  //   LLVM_DEBUG(llvm::dbgs() << "get submodule portbindings"
-  //                           << smod->getInstanceName() << "\n");
-  //   if ((smod->getPortBindings()).size() > 0) {
-  //     submodportbindings.push_back(submodportbindings_t(
-  //         smod->getInstanceName(), smod->getPortBindings()));
-  //   }
-  // }
+
   // Ports
   hNodep h_ports =
       new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
@@ -141,7 +145,7 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
   h_module->child_list.push_back(h_ports);
 
   SCport2hcode(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
-  // SCport2hcode(mod->getSubmodules(), hNode::hdlopsEnum::hModdecl, h_ports);
+
   for (const auto &smod : submodv) {
     if (smod->getInstanceInfo().isArrayType()) {
       LLVM_DEBUG(llvm::dbgs() << "Array submodule " << smod->getInstanceName() << "\n");
@@ -156,8 +160,7 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
 	  new hNode(instname, hNode::hdlopsEnum::hModdecl);
 	h_ports->child_list.push_back(h_smod);
 	hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-	//string newmodname = mod_newn.newname();
-	//    mod_name_map[smod->getInstanceDecl()] = {smod->getInstanceName(),
+
 	mod_name_map[smod] = {instname,
 			      newmodname, h_smod};
 	h_smodtypinfo->child_list.push_back(
@@ -332,7 +335,7 @@ void HDLMain::SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h
       if (fieldd) {
         LLVM_DEBUG(llvm::dbgs() << "field decl dump follows\n");
         LLVM_DEBUG(fieldd->dump(llvm::dbgs()));
-        Expr *initializer = fieldd->getInClassInitializer();
+        Expr* initializer = fieldd->getInClassInitializer();
         if (initializer != NULL) {
           LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
           LLVM_DEBUG(initializer->dump(llvm::dbgs()));

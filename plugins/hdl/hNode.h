@@ -25,6 +25,7 @@ namespace hnode {
 #define HNODEen \
   etype(hNoop), \
   etype(hModule), \
+  etype(hModinitblock), \
   etype(hPortbindings), \
   etype(hPortbinding), \
   etype(hProcesses), \
@@ -149,7 +150,8 @@ namespace hnode {
       }
       return hLast;
     }
-    void print(llvm::raw_fd_ostream & modelout, unsigned int indnt=2) {
+    //void print(llvm::raw_fd_ostream & modelout, unsigned int indnt=2) {
+    void print(llvm::raw_ostream & modelout, unsigned int indnt=2) {
       modelout.indent(indnt);
       modelout << printopc(h_op) << " ";
       if (h_name == "")
