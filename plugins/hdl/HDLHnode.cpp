@@ -1,6 +1,9 @@
+// clang-format off
 #include "hNode.h"
 #include <assert.h>
 #include "HDLHnode.h"
+
+// clang-format on
 
 //!
 //! Re-write hcode generated from CXXConstructorDecl for an SC_MODULE:
@@ -9,7 +12,7 @@
 //! Discard instantiations of SC_METHOD and similar decls
 //! Discard Unimplemented op codes, typically sensitivity lists
 //!
-namespace processhnode {
+namespace systemc_hdl {
 
   void RemoveSCMethod(hNodep &hp) {
  
@@ -22,15 +25,18 @@ namespace processhnode {
 
     for_each(hp->child_list.begin(), hp->child_list.end(), RemoveSCMethod);      
   }
+
+  //std::vector<string, tuple<int low, int hi, int step>> for_index_map;
+
+  void ProcessForLoop(hNodep &hp) {
+    
+  }
   
   hNodep ProcessCXXConstructorHcode(hNodep xconstructor) {
     if (xconstructor==nullptr) return xconstructor;
     RemoveSCMethod(xconstructor);
+    ProcessForLoop(xconstructor);
     return xconstructor;
-  }
-
-  hNodep ProcessCStmt(hNodep hcstmt, int lev) {
-    return hcstmt;
   }
 
 }

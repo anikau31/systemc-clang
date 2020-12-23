@@ -20,7 +20,7 @@ using namespace hnode;
 using namespace llvm;
 //static llvm::cl::OptionCategory HDLcategory("systemc-clang options");
 
-
+namespace systemc_hdl {
 class HDLMain: public SystemCConsumer {
 
   public:
@@ -140,5 +140,5 @@ llvm::cl::opt<std::string> debug_only(
     Tool.run(FrontendFactory.get());
   };
 };
-
+}
 #endif

@@ -21,13 +21,16 @@
 using namespace std;
 using namespace hnode;
 using namespace systemc_clang;
-using namespace processhnode;
+using namespace clang;
+
+namespace systemc_hdl {
 
 std::unique_ptr<clang::tooling::FrontendActionFactory> newFrontendActionFactory(
     const std::string &top_module) {
   return std::unique_ptr<tooling::FrontendActionFactory>(
       new HDLFrontendActionFactory(top_module));
 }
+
 
 //!
 //! Entry point for HDL generation
@@ -37,7 +40,6 @@ std::unique_ptr<clang::tooling::FrontendActionFactory> newFrontendActionFactory(
 //! ports and variables, port bindings, sensitivity lists
 //! Generate hcode for SC_METHOD body declarations
 //!
-
 bool HDLMain::postFire() {
   Model *model = getSystemCModel();
 
@@ -113,19 +115,10 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
   // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
 
   // LLVM_DEBUG(mod->getConstructorStmt()->dump(llvm::dbgs()));
-  LLVM_DEBUG( llvm::dbgs() << "dumping module constructor decl body\n");
-  LLVM_DEBUG(mod->getConstructorDecl()->getBody()->dump());
-  LLVM_DEBUG( llvm::dbgs() << "end dumping module constructor decl body\n");
+  //LLVM_DEBUG( llvm::dbgs() << "dumping module constructor decl body\n");
+  //LLVM_DEBUG(mod->getConstructorDecl()->getBody()->dump());
+  //LLVM_DEBUG( llvm::dbgs() << "end dumping module constructor decl body\n");
   //LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
-
-  clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
-  
-  hNodep hconstructor = new hNode(mod->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
-  HDLBody xconstructor(mod->getConstructorDecl()->getBody(), hconstructor, diag_engine);
-  LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
-  hconstructor->print(llvm::dbgs());
-  h_module->child_list.push_back(ProcessCXXConstructorHcode(hconstructor));
-  //hconstructor->print(HCodeOut);
   
   LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
 
@@ -164,9 +157,8 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
 	mod_name_map[smod] = {instname,
 			      newmodname, h_smod};
 	h_smodtypinfo->child_list.push_back(
-					    new hNode(newmodname, hNode::hdlopsEnum::hType));
+					new hNode(newmodname, hNode::hdlopsEnum::hType));
 	h_smod->child_list.push_back(h_smodtypinfo);
-	systemc_clang::ModuleInstance::portBindingMapType pbm{mod->getPortBindings()};
     }
   }
 
@@ -175,6 +167,19 @@ void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
   SCproc2hcode(mod->getProcessMap(), h_top);
   if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
+  {
+    // init block 
+    clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+    hNodep hconstructor = new hNode(mod->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
+    HDLBody xconstructor(mod->getConstructorDecl()->getBody(), hconstructor, diag_engine);
+    LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
+    hconstructor->print(llvm::dbgs());
+    h_module->child_list.push_back(ProcessCXXConstructorHcode(hconstructor));
+    //hconstructor->print(HCodeOut);
+
+    // diag_engine scope ends
+  }
+  
   //  typedef std::pair<std::string, PortBinding *> portBindingPairType;
   //  typedef std::map<std::string, PortBinding *> portBindingMapType;
   //   portBindingMapType getPortBindings();
@@ -461,4 +466,5 @@ void HDLMain::SCproc2hcode(ModuleInstance::processMapType pm, hNodep &h_top) {
                               << " not SC_METHOD, skipping\n");
     }
   }
+}
 }

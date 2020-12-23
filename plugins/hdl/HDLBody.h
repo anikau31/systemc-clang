@@ -27,6 +27,7 @@ using namespace systemc_clang;
 
 using namespace hnode;
 
+namespace systemc_hdl {
 class HDLBody: public RecursiveASTVisitor <HDLBody> {
  public:
   HDLBody(CXXMethodDecl * emd, hNodep &h_top, clang::DiagnosticsEngine &diag_engine);
@@ -69,6 +70,6 @@ class HDLBody: public RecursiveASTVisitor <HDLBody> {
 
   util lutil;
 };
-
+}
 
 #endif

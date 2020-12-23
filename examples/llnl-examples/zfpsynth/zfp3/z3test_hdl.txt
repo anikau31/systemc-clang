@@ -1,62 +1,4 @@
   hModule _sc_module_0 [
-    hModinitblock mymod [
-      hCStmt  NONAME [
-        hBinop = [
-          hVarref minbits NOLIST
-          hLiteral 64 NOLIST
-        ]
-        hBinop = [
-          hVarref maxbits NOLIST
-          hLiteral 64 NOLIST
-        ]
-        hBinop = [
-          hVarref maxprec NOLIST
-          hLiteral 64 NOLIST
-        ]
-        hBinop = [
-          hVarref minexp NOLIST
-          hBinop - [
-            hBinop - [
-              hLiteral 1 NOLIST
-              hLiteral 1023 NOLIST
-            ]
-            hLiteral 52 NOLIST
-          ]
-        ]
-        hBinop () [
-          hVarref u_dut##clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hBinop () [
-          hVarref u_dut##reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hBinop () [
-          hVarref u_dut##minbits NOLIST
-          hVarref minbits NOLIST
-        ]
-        hBinop () [
-          hVarref u_dut##maxbits NOLIST
-          hVarref maxbits NOLIST
-        ]
-        hBinop () [
-          hVarref u_dut##maxprec NOLIST
-          hVarref maxprec NOLIST
-        ]
-        hBinop () [
-          hVarref u_dut##minexp NOLIST
-          hVarref minexp NOLIST
-        ]
-        hBinop () [
-          hVarref u_dut##s_fp NOLIST
-          hVarref c_driver_fp NOLIST
-        ]
-        hBinop () [
-          hVarref u_dut##m_bits NOLIST
-          hVarref c_dut_enc NOLIST
-        ]
-      ]
-    ]
     hPortsigvarlist  NONAME [
       hSigdecl clk [
         hTypeinfo  NONAME [
@@ -123,6 +65,64 @@
         ]
       ]
     ]
+    hModinitblock mymod [
+      hCStmt  NONAME [
+        hBinop = [
+          hVarref minbits NOLIST
+          hLiteral 64 NOLIST
+        ]
+        hBinop = [
+          hVarref maxbits NOLIST
+          hLiteral 64 NOLIST
+        ]
+        hBinop = [
+          hVarref maxprec NOLIST
+          hLiteral 64 NOLIST
+        ]
+        hBinop = [
+          hVarref minexp NOLIST
+          hBinop - [
+            hBinop - [
+              hLiteral 1 NOLIST
+              hLiteral 1023 NOLIST
+            ]
+            hLiteral 52 NOLIST
+          ]
+        ]
+        hBinop () [
+          hVarref u_dut##clk NOLIST
+          hVarref clk NOLIST
+        ]
+        hBinop () [
+          hVarref u_dut##reset NOLIST
+          hVarref reset NOLIST
+        ]
+        hBinop () [
+          hVarref u_dut##minbits NOLIST
+          hVarref minbits NOLIST
+        ]
+        hBinop () [
+          hVarref u_dut##maxbits NOLIST
+          hVarref maxbits NOLIST
+        ]
+        hBinop () [
+          hVarref u_dut##maxprec NOLIST
+          hVarref maxprec NOLIST
+        ]
+        hBinop () [
+          hVarref u_dut##minexp NOLIST
+          hVarref minexp NOLIST
+        ]
+        hBinop () [
+          hVarref u_dut##s_fp NOLIST
+          hVarref c_driver_fp NOLIST
+        ]
+        hBinop () [
+          hVarref u_dut##m_bits NOLIST
+          hVarref c_dut_enc NOLIST
+        ]
+      ]
+    ]
     hPortbindings mymod_portbindings [
       hPortbinding u_dut [
         hVarref clk NOLIST
@@ -159,6 +159,262 @@
     ]
   ]
   hModule _sc_module_1 [
+    hPortsigvarlist  NONAME [
+      hPortin clk [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin reset [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin minbits [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType unsigned_short NOLIST
+          ]
+        ]
+      ]
+      hPortin maxbits [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType unsigned_short NOLIST
+          ]
+        ]
+      ]
+      hPortin maxprec [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType unsigned_short NOLIST
+          ]
+        ]
+      ]
+      hPortin minexp [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType short NOLIST
+          ]
+        ]
+      ]
+      hPortin s_fp [
+        hTypeinfo  NONAME [
+          hType sc_rvd_in [
+            hType fp_t [
+              hLiteral 11 NOLIST
+              hLiteral 52 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortout m_bits [
+        hTypeinfo  NONAME [
+          hType sc_rvd_out [
+            hType bits_t [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl c_bb_block [
+        hTypeinfo  NONAME [
+          hType array##16 [
+            hType sc_signal [
+              hType sc_uint [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl c_bb_ready [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c_bb_valid [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c_eb_block [
+        hTypeinfo  NONAME [
+          hType array##16 [
+            hType sc_signal [
+              hType sc_uint [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl c_eb_ready [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c_eb_valid [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c_ei_bc [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 6 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl c_ei_bp [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_bv [
+              hLiteral 33 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl c_ei_last [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c_ei_ready [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c_ei_valid [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c_es_flush [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c_fc_block [
+        hTypeinfo  NONAME [
+          hType array##16 [
+            hType sc_signal [
+              hType sc_int [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl c_fc_ready [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c_fc_valid [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hVardecl c_fe_fp [
+        hTypeinfo  NONAME [
+          hType sc_rvd [
+            hType fp_t [
+              hLiteral 11 NOLIST
+              hLiteral 52 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hVardecl c_fe_ex [
+        hTypeinfo  NONAME [
+          hType sc_rvd [
+            hType sc_uint [
+              hLiteral 11 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hVardecl c_sp_ex1 [
+        hTypeinfo  NONAME [
+          hType sc_rvd [
+            hType sc_uint [
+              hLiteral 11 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hVardecl c_sp_ex2 [
+        hTypeinfo  NONAME [
+          hType sc_rvd [
+            hType sc_uint [
+              hLiteral 11 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hModdecl u_encode_block [
+        hTypeinfo  NONAME [
+          hType _sc_module_2 NOLIST
+        ]
+      ]
+      hModdecl u_find_emax [
+        hTypeinfo  NONAME [
+          hType _sc_module_3 NOLIST
+        ]
+      ]
+      hModdecl u_ssplit_ex [
+        hTypeinfo  NONAME [
+          hType _sc_module_4 NOLIST
+        ]
+      ]
+      hModdecl u_fwd_cast [
+        hTypeinfo  NONAME [
+          hType _sc_module_5 NOLIST
+        ]
+      ]
+      hModdecl u_block_buffer [
+        hTypeinfo  NONAME [
+          hType _sc_module_6 NOLIST
+        ]
+      ]
+      hModdecl u_encode_ints [
+        hTypeinfo  NONAME [
+          hType _sc_module_7 NOLIST
+        ]
+      ]
+      hModdecl u_encode_stream [
+        hTypeinfo  NONAME [
+          hType _sc_module_8 NOLIST
+        ]
+      ]
+    ]
     hModinitblock u_dut [
       hVardecl _local_0 [
         hTypeinfo  NONAME [
@@ -539,262 +795,6 @@
         ]
       ]
     ]
-    hPortsigvarlist  NONAME [
-      hPortin clk [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortin reset [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortin minbits [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType unsigned_short NOLIST
-          ]
-        ]
-      ]
-      hPortin maxbits [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType unsigned_short NOLIST
-          ]
-        ]
-      ]
-      hPortin maxprec [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType unsigned_short NOLIST
-          ]
-        ]
-      ]
-      hPortin minexp [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType short NOLIST
-          ]
-        ]
-      ]
-      hPortin s_fp [
-        hTypeinfo  NONAME [
-          hType sc_rvd_in [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hPortout m_bits [
-        hTypeinfo  NONAME [
-          hType sc_rvd_out [
-            hType bits_t [
-              hLiteral 64 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl c_bb_block [
-        hTypeinfo  NONAME [
-          hType array##16 [
-            hType sc_signal [
-              hType sc_uint [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hSigdecl c_bb_ready [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl c_bb_valid [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl c_eb_block [
-        hTypeinfo  NONAME [
-          hType array##16 [
-            hType sc_signal [
-              hType sc_uint [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hSigdecl c_eb_ready [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl c_eb_valid [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl c_ei_bc [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType sc_uint [
-              hLiteral 6 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl c_ei_bp [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType sc_bv [
-              hLiteral 33 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl c_ei_last [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl c_ei_ready [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl c_ei_valid [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl c_es_flush [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl c_fc_block [
-        hTypeinfo  NONAME [
-          hType array##16 [
-            hType sc_signal [
-              hType sc_int [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hSigdecl c_fc_ready [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl c_fc_valid [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hVardecl c_fe_fp [
-        hTypeinfo  NONAME [
-          hType sc_rvd [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hVardecl c_fe_ex [
-        hTypeinfo  NONAME [
-          hType sc_rvd [
-            hType sc_uint [
-              hLiteral 11 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hVardecl c_sp_ex1 [
-        hTypeinfo  NONAME [
-          hType sc_rvd [
-            hType sc_uint [
-              hLiteral 11 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hVardecl c_sp_ex2 [
-        hTypeinfo  NONAME [
-          hType sc_rvd [
-            hType sc_uint [
-              hLiteral 11 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hModdecl u_encode_block [
-        hTypeinfo  NONAME [
-          hType _sc_module_2 NOLIST
-        ]
-      ]
-      hModdecl u_find_emax [
-        hTypeinfo  NONAME [
-          hType _sc_module_3 NOLIST
-        ]
-      ]
-      hModdecl u_ssplit_ex [
-        hTypeinfo  NONAME [
-          hType _sc_module_4 NOLIST
-        ]
-      ]
-      hModdecl u_fwd_cast [
-        hTypeinfo  NONAME [
-          hType _sc_module_5 NOLIST
-        ]
-      ]
-      hModdecl u_block_buffer [
-        hTypeinfo  NONAME [
-          hType _sc_module_6 NOLIST
-        ]
-      ]
-      hModdecl u_encode_ints [
-        hTypeinfo  NONAME [
-          hType _sc_module_7 NOLIST
-        ]
-      ]
-      hModdecl u_encode_stream [
-        hTypeinfo  NONAME [
-          hType _sc_module_8 NOLIST
-        ]
-      ]
-    ]
     hPortbindings u_dut_portbindings [
       hPortbinding u_block_buffer [
         hVarref clk NOLIST
@@ -1055,180 +1055,6 @@
     ]
   ]
   hModule _sc_module_2 [
-    hModinitblock u_encode_block [
-      hVardecl _local_0 [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-      ]
-      hVardecl _local_1 [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-      ]
-      hVardecl _local_2 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
-      hVardecl _local_3 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
-      hCStmt  NONAME [
-        hForStmt  NONAME [
-          hVarAssign  NONAME [
-            hVarref _local_0 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hBinop < [
-            hVarref _local_0 NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hUnop ++ [
-            hVarref _local_0 NOLIST
-          ]
-          hCStmt  NONAME [
-            hBinop () [
-              hVarref clk NOLIST
-              hVarref clk NOLIST
-            ]
-            hBinop () [
-              hVarref reset NOLIST
-              hVarref reset NOLIST
-            ]
-            hBinop () [
-              hVarref s_valid NOLIST
-              hVarref s_valid NOLIST
-            ]
-            hBinop () [
-              hVarref s_ready NOLIST
-              hBinop ARRAYSUBSCRIPT [
-                hVarref c_xt_ready NOLIST
-                hVarref _local_0 NOLIST
-              ]
-            ]
-            hBinop () [
-              hVarref m_valid NOLIST
-              hBinop ARRAYSUBSCRIPT [
-                hVarref c_xt_valid NOLIST
-                hVarref _local_0 NOLIST
-              ]
-            ]
-            hBinop () [
-              hVarref m_ready NOLIST
-              hVarref m_ready NOLIST
-            ]
-            hBinop () [
-              hVarref clk NOLIST
-              hVarref clk NOLIST
-            ]
-            hBinop () [
-              hVarref reset NOLIST
-              hVarref reset NOLIST
-            ]
-            hBinop () [
-              hVarref s_valid NOLIST
-              hBinop ARRAYSUBSCRIPT [
-                hVarref c_xt_valid NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hBinop () [
-              hVarref s_ready NOLIST
-              hBinop ARRAYSUBSCRIPT [
-                hVarref c_yt_ready NOLIST
-                hVarref _local_0 NOLIST
-              ]
-            ]
-            hBinop () [
-              hVarref m_valid NOLIST
-              hBinop ARRAYSUBSCRIPT [
-                hVarref c_yt_valid NOLIST
-                hVarref _local_0 NOLIST
-              ]
-            ]
-            hBinop () [
-              hVarref m_ready NOLIST
-              hVarref m_ready NOLIST
-            ]
-            hForStmt  NONAME [
-              hVarAssign  NONAME [
-                hVarref _local_1 NOLIST
-                hLiteral 0 NOLIST
-              ]
-              hBinop < [
-                hVarref _local_1 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hUnop ++ [
-                hVarref _local_1 NOLIST
-              ]
-              hCStmt  NONAME [
-                hBinop () [
-                  hBinop ARRAYSUBSCRIPT [
-                    hVarref s_port NOLIST
-                    hVarref _local_1 NOLIST
-                  ]
-                  hBinop ARRAYSUBSCRIPT [
-                    hVarref s_block NOLIST
-                    hBinop + [
-                      hBinop * [
-                        hVarref _local_0 NOLIST
-                        hLiteral 4 NOLIST
-                      ]
-                      hVarref _local_1 NOLIST
-                    ]
-                  ]
-                ]
-                hBinop () [
-                  hBinop ARRAYSUBSCRIPT [
-                    hVarref m_port NOLIST
-                    hVarref _local_1 NOLIST
-                  ]
-                  hBinop ARRAYSUBSCRIPT [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref c_xt_data NOLIST
-                      hVarref _local_0 NOLIST
-                    ]
-                    hVarref _local_1 NOLIST
-                  ]
-                ]
-                hBinop () [
-                  hBinop ARRAYSUBSCRIPT [
-                    hVarref s_port NOLIST
-                    hVarref _local_1 NOLIST
-                  ]
-                  hBinop ARRAYSUBSCRIPT [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref c_xt_data NOLIST
-                      hVarref _local_1 NOLIST
-                    ]
-                    hVarref _local_0 NOLIST
-                  ]
-                ]
-                hBinop () [
-                  hBinop ARRAYSUBSCRIPT [
-                    hVarref m_port NOLIST
-                    hVarref _local_1 NOLIST
-                  ]
-                  hBinop ARRAYSUBSCRIPT [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref c_yt_data NOLIST
-                      hVarref _local_1 NOLIST
-                    ]
-                    hVarref _local_0 NOLIST
-                  ]
-                ]
-              ]
-            ]
-          ]
-        ]
-        hCStmt  NONAME NOLIST
-        hCStmt  NONAME NOLIST
-      ]
-    ]
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -1965,6 +1791,180 @@
         ]
       ]
     ]
+    hModinitblock u_encode_block [
+      hVardecl _local_0 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _local_2 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
+      hVardecl _local_3 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
+      hCStmt  NONAME [
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref _local_0 NOLIST
+            hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref _local_0 NOLIST
+            hLiteral 4 NOLIST
+          ]
+          hUnop ++ [
+            hVarref _local_0 NOLIST
+          ]
+          hCStmt  NONAME [
+            hBinop () [
+              hVarref clk NOLIST
+              hVarref clk NOLIST
+            ]
+            hBinop () [
+              hVarref reset NOLIST
+              hVarref reset NOLIST
+            ]
+            hBinop () [
+              hVarref s_valid NOLIST
+              hVarref s_valid NOLIST
+            ]
+            hBinop () [
+              hVarref s_ready NOLIST
+              hBinop ARRAYSUBSCRIPT [
+                hVarref c_xt_ready NOLIST
+                hVarref _local_0 NOLIST
+              ]
+            ]
+            hBinop () [
+              hVarref m_valid NOLIST
+              hBinop ARRAYSUBSCRIPT [
+                hVarref c_xt_valid NOLIST
+                hVarref _local_0 NOLIST
+              ]
+            ]
+            hBinop () [
+              hVarref m_ready NOLIST
+              hVarref m_ready NOLIST
+            ]
+            hBinop () [
+              hVarref clk NOLIST
+              hVarref clk NOLIST
+            ]
+            hBinop () [
+              hVarref reset NOLIST
+              hVarref reset NOLIST
+            ]
+            hBinop () [
+              hVarref s_valid NOLIST
+              hBinop ARRAYSUBSCRIPT [
+                hVarref c_xt_valid NOLIST
+                hLiteral 0 NOLIST
+              ]
+            ]
+            hBinop () [
+              hVarref s_ready NOLIST
+              hBinop ARRAYSUBSCRIPT [
+                hVarref c_yt_ready NOLIST
+                hVarref _local_0 NOLIST
+              ]
+            ]
+            hBinop () [
+              hVarref m_valid NOLIST
+              hBinop ARRAYSUBSCRIPT [
+                hVarref c_yt_valid NOLIST
+                hVarref _local_0 NOLIST
+              ]
+            ]
+            hBinop () [
+              hVarref m_ready NOLIST
+              hVarref m_ready NOLIST
+            ]
+            hForStmt  NONAME [
+              hVarAssign  NONAME [
+                hVarref _local_1 NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop < [
+                hVarref _local_1 NOLIST
+                hLiteral 4 NOLIST
+              ]
+              hUnop ++ [
+                hVarref _local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop () [
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref s_port NOLIST
+                    hVarref _local_1 NOLIST
+                  ]
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref s_block NOLIST
+                    hBinop + [
+                      hBinop * [
+                        hVarref _local_0 NOLIST
+                        hLiteral 4 NOLIST
+                      ]
+                      hVarref _local_1 NOLIST
+                    ]
+                  ]
+                ]
+                hBinop () [
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref m_port NOLIST
+                    hVarref _local_1 NOLIST
+                  ]
+                  hBinop ARRAYSUBSCRIPT [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref c_xt_data NOLIST
+                      hVarref _local_0 NOLIST
+                    ]
+                    hVarref _local_1 NOLIST
+                  ]
+                ]
+                hBinop () [
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref s_port NOLIST
+                    hVarref _local_1 NOLIST
+                  ]
+                  hBinop ARRAYSUBSCRIPT [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref c_xt_data NOLIST
+                      hVarref _local_1 NOLIST
+                    ]
+                    hVarref _local_0 NOLIST
+                  ]
+                ]
+                hBinop () [
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref m_port NOLIST
+                    hVarref _local_1 NOLIST
+                  ]
+                  hBinop ARRAYSUBSCRIPT [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref c_yt_data NOLIST
+                      hVarref _local_1 NOLIST
+                    ]
+                    hVarref _local_0 NOLIST
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+      ]
+    ]
     hPortbindings u_encode_block_portbindings [
       hPortbinding u_xt [
         hVarref clk NOLIST
@@ -2049,6 +2049,725 @@
     ]
   ]
   hModule _sc_module_9 [
+    hPortsigvarlist  NONAME [
+      hPortin clk [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin reset [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin s_port [
+        hTypeinfo  NONAME [
+          hType array##4 [
+            hType sc_in [
+              hType sc_int [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hPortin s_valid [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin m_ready [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout s_ready [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout m_port [
+        hTypeinfo  NONAME [
+          hType array##4 [
+            hType sc_out [
+              hType sc_int [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hPortout m_valid [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl v [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_bv [
+              hLiteral 6 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl w [
+        hTypeinfo  NONAME [
+          hType array##6 [
+            hType sc_signal [
+              hType sc_int [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl x [
+        hTypeinfo  NONAME [
+          hType array##6 [
+            hType sc_signal [
+              hType sc_int [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl y [
+        hTypeinfo  NONAME [
+          hType array##6 [
+            hType sc_signal [
+              hType sc_int [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl z [
+        hTypeinfo  NONAME [
+          hType array##6 [
+            hType sc_signal [
+              hType sc_int [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hVardecl stages [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hVarInit  NONAME [
+          hLiteral 6 NOLIST
+        ]
+      ]
+    ]
+    hProcesses  NONAME [
+      hProcess mc_proc [
+        hSenslist  NONAME [
+          hSensvar m_ready NOLIST
+          hSensvar v NOLIST
+        ]
+        hMethod  NONAME [
+          hCStmt  NONAME [
+            hSigAssignL write [
+              hVarref s_ready NOLIST
+              hSigAssignR read [
+                hVarref m_ready NOLIST
+              ]
+            ]
+            hSigAssignL write [
+              hBinop ARRAYSUBSCRIPT [
+                hVarref m_port NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop ARRAYSUBSCRIPT [
+                hVarref x NOLIST
+                hBinop - [
+                  hLiteral 6 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+            hSigAssignL write [
+              hBinop ARRAYSUBSCRIPT [
+                hVarref m_port NOLIST
+                hLiteral 1 NOLIST
+              ]
+              hBinop ARRAYSUBSCRIPT [
+                hVarref y NOLIST
+                hBinop - [
+                  hLiteral 6 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+            hSigAssignL write [
+              hBinop ARRAYSUBSCRIPT [
+                hVarref m_port NOLIST
+                hLiteral 2 NOLIST
+              ]
+              hBinop ARRAYSUBSCRIPT [
+                hVarref z NOLIST
+                hBinop - [
+                  hLiteral 6 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+            hSigAssignL write [
+              hBinop ARRAYSUBSCRIPT [
+                hVarref m_port NOLIST
+                hLiteral 3 NOLIST
+              ]
+              hBinop ARRAYSUBSCRIPT [
+                hVarref w NOLIST
+                hBinop - [
+                  hLiteral 6 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+            hSigAssignL write [
+              hVarref m_valid NOLIST
+              hNoop to_bool [
+                hBinop ARRAYSUBSCRIPT [
+                  hSigAssignR read [
+                    hVarref v NOLIST
+                  ]
+                  hBinop - [
+                    hLiteral 6 NOLIST
+                    hLiteral 1 NOLIST
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      hProcess ms_proc [
+        hSenslist  NONAME [
+          hSensvar clk [
+            hSensedge pos NOLIST
+          ]
+        ]
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hIfStmt  NONAME [
+              hBinop == [
+                hVarref reset NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hCStmt  NONAME [
+                hForStmt  NONAME [
+                  hVarAssign  NONAME [
+                    hVarref _local_0 NOLIST
+                    hLiteral 0 NOLIST
+                  ]
+                  hBinop < [
+                    hVarref _local_0 NOLIST
+                    hLiteral 6 NOLIST
+                  ]
+                  hUnop ++ [
+                    hVarref _local_0 NOLIST
+                  ]
+                  hCStmt  NONAME [
+                    hSigAssignL write [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref x NOLIST
+                        hVarref _local_0 NOLIST
+                      ]
+                      hLiteral 0 [
+                        hTypeinfo  NONAME [
+                          hType sc_int [
+                            hLiteral 64 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref y NOLIST
+                        hVarref _local_0 NOLIST
+                      ]
+                      hLiteral 0 [
+                        hTypeinfo  NONAME [
+                          hType sc_int [
+                            hLiteral 64 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref z NOLIST
+                        hVarref _local_0 NOLIST
+                      ]
+                      hLiteral 0 [
+                        hTypeinfo  NONAME [
+                          hType sc_int [
+                            hLiteral 64 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref w NOLIST
+                        hVarref _local_0 NOLIST
+                      ]
+                      hLiteral 0 [
+                        hTypeinfo  NONAME [
+                          hType sc_int [
+                            hLiteral 64 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+                hSigAssignL write [
+                  hVarref v NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_bv [
+                        hLiteral 6 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+              hIfStmt  NONAME [
+                hSigAssignR read [
+                  hVarref m_ready NOLIST
+                ]
+                hCStmt  NONAME [
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref x NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hBinop >> [
+                      hBinop + [
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref s_port NOLIST
+                            hLiteral 0 NOLIST
+                          ]
+                        ]
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref s_port NOLIST
+                            hLiteral 3 NOLIST
+                          ]
+                        ]
+                      ]
+                      hLiteral 1 NOLIST
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref y NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref s_port NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref z NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hBinop >> [
+                      hBinop + [
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref s_port NOLIST
+                            hLiteral 2 NOLIST
+                          ]
+                        ]
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref s_port NOLIST
+                            hLiteral 1 NOLIST
+                          ]
+                        ]
+                      ]
+                      hLiteral 1 NOLIST
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref w NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref s_port NOLIST
+                        hLiteral 3 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref x NOLIST
+                      hLiteral 1 NOLIST
+                    ]
+                    hBinop >> [
+                      hBinop + [
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref x NOLIST
+                            hLiteral 0 NOLIST
+                          ]
+                        ]
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref z NOLIST
+                            hLiteral 0 NOLIST
+                          ]
+                        ]
+                      ]
+                      hLiteral 1 NOLIST
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref y NOLIST
+                      hLiteral 1 NOLIST
+                    ]
+                    hBinop - [
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref y NOLIST
+                          hLiteral 0 NOLIST
+                        ]
+                      ]
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref z NOLIST
+                          hLiteral 0 NOLIST
+                        ]
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref z NOLIST
+                      hLiteral 1 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref z NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref w NOLIST
+                      hLiteral 1 NOLIST
+                    ]
+                    hBinop - [
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref w NOLIST
+                          hLiteral 0 NOLIST
+                        ]
+                      ]
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref x NOLIST
+                          hLiteral 0 NOLIST
+                        ]
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref x NOLIST
+                      hLiteral 2 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref x NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref y NOLIST
+                      hLiteral 2 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref y NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref z NOLIST
+                      hLiteral 2 NOLIST
+                    ]
+                    hBinop - [
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref z NOLIST
+                          hLiteral 1 NOLIST
+                        ]
+                      ]
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref x NOLIST
+                          hLiteral 1 NOLIST
+                        ]
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref w NOLIST
+                      hLiteral 2 NOLIST
+                    ]
+                    hBinop >> [
+                      hBinop + [
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref w NOLIST
+                            hLiteral 1 NOLIST
+                          ]
+                        ]
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref y NOLIST
+                            hLiteral 1 NOLIST
+                          ]
+                        ]
+                      ]
+                      hLiteral 1 NOLIST
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref x NOLIST
+                      hLiteral 3 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref x NOLIST
+                        hLiteral 2 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref y NOLIST
+                      hLiteral 3 NOLIST
+                    ]
+                    hBinop - [
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref y NOLIST
+                          hLiteral 2 NOLIST
+                        ]
+                      ]
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref w NOLIST
+                          hLiteral 2 NOLIST
+                        ]
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref z NOLIST
+                      hLiteral 3 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref z NOLIST
+                        hLiteral 2 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref w NOLIST
+                      hLiteral 3 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref w NOLIST
+                        hLiteral 2 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref x NOLIST
+                      hLiteral 4 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref x NOLIST
+                        hLiteral 3 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref y NOLIST
+                      hLiteral 4 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref y NOLIST
+                        hLiteral 3 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref z NOLIST
+                      hLiteral 4 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref z NOLIST
+                        hLiteral 3 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref w NOLIST
+                      hLiteral 4 NOLIST
+                    ]
+                    hBinop + [
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref w NOLIST
+                          hLiteral 3 NOLIST
+                        ]
+                      ]
+                      hBinop >> [
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref y NOLIST
+                            hLiteral 3 NOLIST
+                          ]
+                        ]
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref x NOLIST
+                      hLiteral 5 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref x NOLIST
+                        hLiteral 4 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref y NOLIST
+                      hLiteral 5 NOLIST
+                    ]
+                    hBinop - [
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref y NOLIST
+                          hLiteral 4 NOLIST
+                        ]
+                      ]
+                      hBinop >> [
+                        hSigAssignR read [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref w NOLIST
+                            hLiteral 4 NOLIST
+                          ]
+                        ]
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref z NOLIST
+                      hLiteral 5 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref z NOLIST
+                        hLiteral 4 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref w NOLIST
+                      hLiteral 5 NOLIST
+                    ]
+                    hSigAssignR read [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref w NOLIST
+                        hLiteral 4 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hVarref v NOLIST
+                    hBinop | [
+                      hBinop << [
+                        hSigAssignR read [
+                          hVarref v NOLIST
+                        ]
+                        hLiteral 1 NOLIST
+                      ]
+                      hSigAssignR read [
+                        hVarref s_valid NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
     hModinitblock u_xt_0 [
       hVardecl _local_0 [
         hTypeinfo  NONAME [
@@ -2065,6 +2784,8 @@
         hCStmt  NONAME NOLIST
       ]
     ]
+  ]
+  hModule _sc_module_10 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -2784,8 +3505,6 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_10 [
     hModinitblock u_yt_0 [
       hVardecl _local_0 [
         hTypeinfo  NONAME [
@@ -2802,775 +3521,8 @@
         hCStmt  NONAME NOLIST
       ]
     ]
-    hPortsigvarlist  NONAME [
-      hPortin clk [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortin reset [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortin s_port [
-        hTypeinfo  NONAME [
-          hType array##4 [
-            hType sc_in [
-              hType sc_int [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hPortin s_valid [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortin m_ready [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortout s_ready [
-        hTypeinfo  NONAME [
-          hType sc_out [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortout m_port [
-        hTypeinfo  NONAME [
-          hType array##4 [
-            hType sc_out [
-              hType sc_int [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hPortout m_valid [
-        hTypeinfo  NONAME [
-          hType sc_out [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl v [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType sc_bv [
-              hLiteral 6 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl w [
-        hTypeinfo  NONAME [
-          hType array##6 [
-            hType sc_signal [
-              hType sc_int [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hSigdecl x [
-        hTypeinfo  NONAME [
-          hType array##6 [
-            hType sc_signal [
-              hType sc_int [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hSigdecl y [
-        hTypeinfo  NONAME [
-          hType array##6 [
-            hType sc_signal [
-              hType sc_int [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hSigdecl z [
-        hTypeinfo  NONAME [
-          hType array##6 [
-            hType sc_signal [
-              hType sc_int [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hVardecl stages [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-        hVarInit  NONAME [
-          hLiteral 6 NOLIST
-        ]
-      ]
-    ]
-    hProcesses  NONAME [
-      hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar m_ready NOLIST
-          hSensvar v NOLIST
-        ]
-        hMethod  NONAME [
-          hCStmt  NONAME [
-            hSigAssignL write [
-              hVarref s_ready NOLIST
-              hSigAssignR read [
-                hVarref m_ready NOLIST
-              ]
-            ]
-            hSigAssignL write [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref m_port NOLIST
-                hLiteral 0 NOLIST
-              ]
-              hBinop ARRAYSUBSCRIPT [
-                hVarref x NOLIST
-                hBinop - [
-                  hLiteral 6 NOLIST
-                  hLiteral 1 NOLIST
-                ]
-              ]
-            ]
-            hSigAssignL write [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref m_port NOLIST
-                hLiteral 1 NOLIST
-              ]
-              hBinop ARRAYSUBSCRIPT [
-                hVarref y NOLIST
-                hBinop - [
-                  hLiteral 6 NOLIST
-                  hLiteral 1 NOLIST
-                ]
-              ]
-            ]
-            hSigAssignL write [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref m_port NOLIST
-                hLiteral 2 NOLIST
-              ]
-              hBinop ARRAYSUBSCRIPT [
-                hVarref z NOLIST
-                hBinop - [
-                  hLiteral 6 NOLIST
-                  hLiteral 1 NOLIST
-                ]
-              ]
-            ]
-            hSigAssignL write [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref m_port NOLIST
-                hLiteral 3 NOLIST
-              ]
-              hBinop ARRAYSUBSCRIPT [
-                hVarref w NOLIST
-                hBinop - [
-                  hLiteral 6 NOLIST
-                  hLiteral 1 NOLIST
-                ]
-              ]
-            ]
-            hSigAssignL write [
-              hVarref m_valid NOLIST
-              hNoop to_bool [
-                hBinop ARRAYSUBSCRIPT [
-                  hSigAssignR read [
-                    hVarref v NOLIST
-                  ]
-                  hBinop - [
-                    hLiteral 6 NOLIST
-                    hLiteral 1 NOLIST
-                  ]
-                ]
-              ]
-            ]
-          ]
-        ]
-      ]
-      hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
-        hMethod  NONAME [
-          hVardecl _local_0 [
-            hTypeinfo  NONAME [
-              hType int NOLIST
-            ]
-          ]
-          hCStmt  NONAME [
-            hIfStmt  NONAME [
-              hBinop == [
-                hVarref reset NOLIST
-                hLiteral 0 NOLIST
-              ]
-              hCStmt  NONAME [
-                hForStmt  NONAME [
-                  hVarAssign  NONAME [
-                    hVarref _local_0 NOLIST
-                    hLiteral 0 NOLIST
-                  ]
-                  hBinop < [
-                    hVarref _local_0 NOLIST
-                    hLiteral 6 NOLIST
-                  ]
-                  hUnop ++ [
-                    hVarref _local_0 NOLIST
-                  ]
-                  hCStmt  NONAME [
-                    hSigAssignL write [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref x NOLIST
-                        hVarref _local_0 NOLIST
-                      ]
-                      hLiteral 0 [
-                        hTypeinfo  NONAME [
-                          hType sc_int [
-                            hLiteral 64 NOLIST
-                          ]
-                        ]
-                      ]
-                    ]
-                    hSigAssignL write [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref y NOLIST
-                        hVarref _local_0 NOLIST
-                      ]
-                      hLiteral 0 [
-                        hTypeinfo  NONAME [
-                          hType sc_int [
-                            hLiteral 64 NOLIST
-                          ]
-                        ]
-                      ]
-                    ]
-                    hSigAssignL write [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref z NOLIST
-                        hVarref _local_0 NOLIST
-                      ]
-                      hLiteral 0 [
-                        hTypeinfo  NONAME [
-                          hType sc_int [
-                            hLiteral 64 NOLIST
-                          ]
-                        ]
-                      ]
-                    ]
-                    hSigAssignL write [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref w NOLIST
-                        hVarref _local_0 NOLIST
-                      ]
-                      hLiteral 0 [
-                        hTypeinfo  NONAME [
-                          hType sc_int [
-                            hLiteral 64 NOLIST
-                          ]
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-                hSigAssignL write [
-                  hVarref v NOLIST
-                  hLiteral 0 [
-                    hTypeinfo  NONAME [
-                      hType sc_bv [
-                        hLiteral 6 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-              hIfStmt  NONAME [
-                hSigAssignR read [
-                  hVarref m_ready NOLIST
-                ]
-                hCStmt  NONAME [
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref x NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hBinop >> [
-                      hBinop + [
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref s_port NOLIST
-                            hLiteral 0 NOLIST
-                          ]
-                        ]
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref s_port NOLIST
-                            hLiteral 3 NOLIST
-                          ]
-                        ]
-                      ]
-                      hLiteral 1 NOLIST
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref y NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref s_port NOLIST
-                        hLiteral 1 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref z NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hBinop >> [
-                      hBinop + [
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref s_port NOLIST
-                            hLiteral 2 NOLIST
-                          ]
-                        ]
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref s_port NOLIST
-                            hLiteral 1 NOLIST
-                          ]
-                        ]
-                      ]
-                      hLiteral 1 NOLIST
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref w NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref s_port NOLIST
-                        hLiteral 3 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref x NOLIST
-                      hLiteral 1 NOLIST
-                    ]
-                    hBinop >> [
-                      hBinop + [
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref x NOLIST
-                            hLiteral 0 NOLIST
-                          ]
-                        ]
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref z NOLIST
-                            hLiteral 0 NOLIST
-                          ]
-                        ]
-                      ]
-                      hLiteral 1 NOLIST
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref y NOLIST
-                      hLiteral 1 NOLIST
-                    ]
-                    hBinop - [
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref y NOLIST
-                          hLiteral 0 NOLIST
-                        ]
-                      ]
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref z NOLIST
-                          hLiteral 0 NOLIST
-                        ]
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref z NOLIST
-                      hLiteral 1 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref z NOLIST
-                        hLiteral 0 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref w NOLIST
-                      hLiteral 1 NOLIST
-                    ]
-                    hBinop - [
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref w NOLIST
-                          hLiteral 0 NOLIST
-                        ]
-                      ]
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref x NOLIST
-                          hLiteral 0 NOLIST
-                        ]
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref x NOLIST
-                      hLiteral 2 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref x NOLIST
-                        hLiteral 1 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref y NOLIST
-                      hLiteral 2 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref y NOLIST
-                        hLiteral 1 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref z NOLIST
-                      hLiteral 2 NOLIST
-                    ]
-                    hBinop - [
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref z NOLIST
-                          hLiteral 1 NOLIST
-                        ]
-                      ]
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref x NOLIST
-                          hLiteral 1 NOLIST
-                        ]
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref w NOLIST
-                      hLiteral 2 NOLIST
-                    ]
-                    hBinop >> [
-                      hBinop + [
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref w NOLIST
-                            hLiteral 1 NOLIST
-                          ]
-                        ]
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref y NOLIST
-                            hLiteral 1 NOLIST
-                          ]
-                        ]
-                      ]
-                      hLiteral 1 NOLIST
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref x NOLIST
-                      hLiteral 3 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref x NOLIST
-                        hLiteral 2 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref y NOLIST
-                      hLiteral 3 NOLIST
-                    ]
-                    hBinop - [
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref y NOLIST
-                          hLiteral 2 NOLIST
-                        ]
-                      ]
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref w NOLIST
-                          hLiteral 2 NOLIST
-                        ]
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref z NOLIST
-                      hLiteral 3 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref z NOLIST
-                        hLiteral 2 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref w NOLIST
-                      hLiteral 3 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref w NOLIST
-                        hLiteral 2 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref x NOLIST
-                      hLiteral 4 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref x NOLIST
-                        hLiteral 3 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref y NOLIST
-                      hLiteral 4 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref y NOLIST
-                        hLiteral 3 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref z NOLIST
-                      hLiteral 4 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref z NOLIST
-                        hLiteral 3 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref w NOLIST
-                      hLiteral 4 NOLIST
-                    ]
-                    hBinop + [
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref w NOLIST
-                          hLiteral 3 NOLIST
-                        ]
-                      ]
-                      hBinop >> [
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref y NOLIST
-                            hLiteral 3 NOLIST
-                          ]
-                        ]
-                        hLiteral 1 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref x NOLIST
-                      hLiteral 5 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref x NOLIST
-                        hLiteral 4 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref y NOLIST
-                      hLiteral 5 NOLIST
-                    ]
-                    hBinop - [
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref y NOLIST
-                          hLiteral 4 NOLIST
-                        ]
-                      ]
-                      hBinop >> [
-                        hSigAssignR read [
-                          hBinop ARRAYSUBSCRIPT [
-                            hVarref w NOLIST
-                            hLiteral 4 NOLIST
-                          ]
-                        ]
-                        hLiteral 1 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref z NOLIST
-                      hLiteral 5 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref z NOLIST
-                        hLiteral 4 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hBinop ARRAYSUBSCRIPT [
-                      hVarref w NOLIST
-                      hLiteral 5 NOLIST
-                    ]
-                    hSigAssignR read [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref w NOLIST
-                        hLiteral 4 NOLIST
-                      ]
-                    ]
-                  ]
-                  hSigAssignL write [
-                    hVarref v NOLIST
-                    hBinop | [
-                      hBinop << [
-                        hSigAssignR read [
-                          hVarref v NOLIST
-                        ]
-                        hLiteral 1 NOLIST
-                      ]
-                      hSigAssignR read [
-                        hVarref s_valid NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            ]
-          ]
-        ]
-      ]
-    ]
   ]
   hModule _sc_module_3 [
-    hModinitblock u_find_emax [
-      hVardecl _local_0 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
-      hVardecl _local_1 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
-      hCStmt  NONAME [
-        hBinop () [
-          hVarref u_que_fp##clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hBinop () [
-          hVarref u_que_fp##reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hBinop () [
-          hVarref u_que_fp##s_port NOLIST
-          hVarref c_fp NOLIST
-        ]
-        hBinop () [
-          hVarref u_que_fp##m_port NOLIST
-          hVarref m_fp NOLIST
-        ]
-        hBinop () [
-          hVarref u_reg_ex##clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hBinop () [
-          hVarref u_reg_ex##reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hBinop () [
-          hVarref u_reg_ex##s_port NOLIST
-          hVarref c_ex NOLIST
-        ]
-        hBinop () [
-          hVarref u_reg_ex##m_port NOLIST
-          hVarref m_ex NOLIST
-        ]
-        hCStmt  NONAME NOLIST
-        hCStmt  NONAME NOLIST
-      ]
-    ]
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -3955,6 +3907,54 @@
         ]
       ]
     ]
+    hModinitblock u_find_emax [
+      hVardecl _local_0 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
+      hVardecl _local_1 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
+      hCStmt  NONAME [
+        hBinop () [
+          hVarref u_que_fp##clk NOLIST
+          hVarref clk NOLIST
+        ]
+        hBinop () [
+          hVarref u_que_fp##reset NOLIST
+          hVarref reset NOLIST
+        ]
+        hBinop () [
+          hVarref u_que_fp##s_port NOLIST
+          hVarref c_fp NOLIST
+        ]
+        hBinop () [
+          hVarref u_que_fp##m_port NOLIST
+          hVarref m_fp NOLIST
+        ]
+        hBinop () [
+          hVarref u_reg_ex##clk NOLIST
+          hVarref clk NOLIST
+        ]
+        hBinop () [
+          hVarref u_reg_ex##reset NOLIST
+          hVarref reset NOLIST
+        ]
+        hBinop () [
+          hVarref u_reg_ex##s_port NOLIST
+          hVarref c_ex NOLIST
+        ]
+        hBinop () [
+          hVarref u_reg_ex##m_port NOLIST
+          hVarref m_ex NOLIST
+        ]
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+      ]
+    ]
     hPortbindings u_find_emax_portbindings [
       hPortbinding u_reg_ex [
         hVarref clk NOLIST
@@ -3975,42 +3975,6 @@
     ]
   ]
   hModule _sc_module_11 [
-    hModinitblock u_que_fp [
-      hCStmt  NONAME [
-        hBinop () [
-          hVarref u_fifo##clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##din NOLIST
-          hVarref s_port##data NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##wr_en NOLIST
-          hVarref s_port##valid NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##full NOLIST
-          hVarref s_port##ready NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##dout NOLIST
-          hVarref m_port##data NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##rd_en NOLIST
-          hVarref m_port##ready NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##empty NOLIST
-          hVarref m_port##valid NOLIST
-        ]
-      ]
-    ]
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -4060,57 +4024,44 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_13 [
-    hModinitblock u_fifo [
-      hVardecl _local_0 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
-      hVardecl _local_1 [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-      ]
-      hVardecl _local_2 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
+    hModinitblock u_que_fp [
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop || [
-            hBinop <= [
-              hVarref size_ NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hBinop < [
-              hLiteral 32 NOLIST
-              hVarref size_ NOLIST
-            ]
-          ]
-          hCStmt  NONAME [
-            hReturnStmt  NONAME NOLIST
-          ]
+        hBinop () [
+          hVarref u_fifo##clk NOLIST
+          hVarref clk NOLIST
         ]
-        hCStmt  NONAME NOLIST
-        hForStmt  NONAME [
-          hVarAssign  NONAME [
-            hVarref _local_1 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hBinop < [
-            hVarref _local_1 NOLIST
-            hVarref size_ NOLIST
-          ]
-          hUnop ++ [
-            hVarref _local_1 NOLIST
-          ]
+        hBinop () [
+          hVarref u_fifo##reset NOLIST
+          hVarref reset NOLIST
         ]
-        hCStmt  NONAME NOLIST
+        hBinop () [
+          hVarref u_fifo##din NOLIST
+          hVarref s_port##data NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##wr_en NOLIST
+          hVarref s_port##valid NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##full NOLIST
+          hVarref s_port##ready NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##dout NOLIST
+          hVarref m_port##data NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##rd_en NOLIST
+          hVarref m_port##ready NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##empty NOLIST
+          hVarref m_port##valid NOLIST
+        ]
       ]
     ]
+  ]
+  hModule _sc_module_13 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -4516,9 +4467,7 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_12 [
-    hModinitblock u_reg_ex [
+    hModinitblock u_fifo [
       hVardecl _local_0 [
         hTypeinfo  NONAME [
           hType sc_process_handle NOLIST
@@ -4526,7 +4475,7 @@
       ]
       hVardecl _local_1 [
         hTypeinfo  NONAME [
-          hType unsigned_int NOLIST
+          hType int NOLIST
         ]
       ]
       hVardecl _local_2 [
@@ -4535,6 +4484,21 @@
         ]
       ]
       hCStmt  NONAME [
+        hIfStmt  NONAME [
+          hBinop || [
+            hBinop <= [
+              hVarref size_ NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hBinop < [
+              hLiteral 32 NOLIST
+              hVarref size_ NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hReturnStmt  NONAME NOLIST
+          ]
+        ]
         hCStmt  NONAME NOLIST
         hForStmt  NONAME [
           hVarAssign  NONAME [
@@ -4543,7 +4507,7 @@
           ]
           hBinop < [
             hVarref _local_1 NOLIST
-            hLiteral 2 NOLIST
+            hVarref size_ NOLIST
           ]
           hUnop ++ [
             hVarref _local_1 NOLIST
@@ -4552,6 +4516,8 @@
         hCStmt  NONAME NOLIST
       ]
     ]
+  ]
+  hModule _sc_module_12 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -4904,50 +4870,42 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_4 [
-    hModinitblock u_ssplit_ex [
+    hModinitblock u_reg_ex [
       hVardecl _local_0 [
         hTypeinfo  NONAME [
           hType sc_process_handle NOLIST
         ]
       ]
+      hVardecl _local_1 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+      ]
+      hVardecl _local_2 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
       hCStmt  NONAME [
-        hBinop () [
-          hVarref u_que1##clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hBinop () [
-          hVarref u_que1##reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hBinop () [
-          hVarref u_que1##s_port NOLIST
-          hVarref c_port1 NOLIST
-        ]
-        hBinop () [
-          hVarref u_que1##m_port NOLIST
-          hVarref m_port1 NOLIST
-        ]
-        hBinop () [
-          hVarref u_que2##clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hBinop () [
-          hVarref u_que2##reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hBinop () [
-          hVarref u_que2##s_port NOLIST
-          hVarref c_port2 NOLIST
-        ]
-        hBinop () [
-          hVarref u_que2##m_port NOLIST
-          hVarref m_port2 NOLIST
+        hCStmt  NONAME NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref _local_1 NOLIST
+            hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref _local_1 NOLIST
+            hLiteral 2 NOLIST
+          ]
+          hUnop ++ [
+            hVarref _local_1 NOLIST
+          ]
         ]
         hCStmt  NONAME NOLIST
       ]
     ]
+  ]
+  hModule _sc_module_4 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -5088,44 +5046,50 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_14 [
-    hModinitblock u_que1 [
+    hModinitblock u_ssplit_ex [
+      hVardecl _local_0 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
       hCStmt  NONAME [
         hBinop () [
-          hVarref u_fifo##clk NOLIST
+          hVarref u_que1##clk NOLIST
           hVarref clk NOLIST
         ]
         hBinop () [
-          hVarref u_fifo##reset NOLIST
+          hVarref u_que1##reset NOLIST
           hVarref reset NOLIST
         ]
         hBinop () [
-          hVarref u_fifo##din NOLIST
-          hVarref s_port##data NOLIST
+          hVarref u_que1##s_port NOLIST
+          hVarref c_port1 NOLIST
         ]
         hBinop () [
-          hVarref u_fifo##wr_en NOLIST
-          hVarref s_port##valid NOLIST
+          hVarref u_que1##m_port NOLIST
+          hVarref m_port1 NOLIST
         ]
         hBinop () [
-          hVarref u_fifo##full NOLIST
-          hVarref s_port##ready NOLIST
+          hVarref u_que2##clk NOLIST
+          hVarref clk NOLIST
         ]
         hBinop () [
-          hVarref u_fifo##dout NOLIST
-          hVarref m_port##data NOLIST
+          hVarref u_que2##reset NOLIST
+          hVarref reset NOLIST
         ]
         hBinop () [
-          hVarref u_fifo##rd_en NOLIST
-          hVarref m_port##ready NOLIST
+          hVarref u_que2##s_port NOLIST
+          hVarref c_port2 NOLIST
         ]
         hBinop () [
-          hVarref u_fifo##empty NOLIST
-          hVarref m_port##valid NOLIST
+          hVarref u_que2##m_port NOLIST
+          hVarref m_port2 NOLIST
         ]
+        hCStmt  NONAME NOLIST
       ]
     ]
+  ]
+  hModule _sc_module_14 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -5173,57 +5137,44 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_16 [
-    hModinitblock u_fifo [
-      hVardecl _local_0 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
-      hVardecl _local_1 [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-      ]
-      hVardecl _local_2 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
+    hModinitblock u_que1 [
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop || [
-            hBinop <= [
-              hVarref size_ NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hBinop < [
-              hLiteral 2 NOLIST
-              hVarref size_ NOLIST
-            ]
-          ]
-          hCStmt  NONAME [
-            hReturnStmt  NONAME NOLIST
-          ]
+        hBinop () [
+          hVarref u_fifo##clk NOLIST
+          hVarref clk NOLIST
         ]
-        hCStmt  NONAME NOLIST
-        hForStmt  NONAME [
-          hVarAssign  NONAME [
-            hVarref _local_1 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hBinop < [
-            hVarref _local_1 NOLIST
-            hVarref size_ NOLIST
-          ]
-          hUnop ++ [
-            hVarref _local_1 NOLIST
-          ]
+        hBinop () [
+          hVarref u_fifo##reset NOLIST
+          hVarref reset NOLIST
         ]
-        hCStmt  NONAME NOLIST
+        hBinop () [
+          hVarref u_fifo##din NOLIST
+          hVarref s_port##data NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##wr_en NOLIST
+          hVarref s_port##valid NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##full NOLIST
+          hVarref s_port##ready NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##dout NOLIST
+          hVarref m_port##data NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##rd_en NOLIST
+          hVarref m_port##ready NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##empty NOLIST
+          hVarref m_port##valid NOLIST
+        ]
       ]
     ]
+  ]
+  hModule _sc_module_16 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -5626,44 +5577,57 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_15 [
-    hModinitblock u_que2 [
-      hCStmt  NONAME [
-        hBinop () [
-          hVarref u_fifo##clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##din NOLIST
-          hVarref s_port##data NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##wr_en NOLIST
-          hVarref s_port##valid NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##full NOLIST
-          hVarref s_port##ready NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##dout NOLIST
-          hVarref m_port##data NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##rd_en NOLIST
-          hVarref m_port##ready NOLIST
-        ]
-        hBinop () [
-          hVarref u_fifo##empty NOLIST
-          hVarref m_port##valid NOLIST
+    hModinitblock u_fifo [
+      hVardecl _local_0 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
         ]
       ]
+      hVardecl _local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _local_2 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
+      hCStmt  NONAME [
+        hIfStmt  NONAME [
+          hBinop || [
+            hBinop <= [
+              hVarref size_ NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hBinop < [
+              hLiteral 2 NOLIST
+              hVarref size_ NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hReturnStmt  NONAME NOLIST
+          ]
+        ]
+        hCStmt  NONAME NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref _local_1 NOLIST
+            hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref _local_1 NOLIST
+            hVarref size_ NOLIST
+          ]
+          hUnop ++ [
+            hVarref _local_1 NOLIST
+          ]
+        ]
+        hCStmt  NONAME NOLIST
+      ]
     ]
+  ]
+  hModule _sc_module_15 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -5711,57 +5675,44 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_17 [
-    hModinitblock u_fifo [
-      hVardecl _local_0 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
-      hVardecl _local_1 [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-      ]
-      hVardecl _local_2 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
+    hModinitblock u_que2 [
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop || [
-            hBinop <= [
-              hVarref size_ NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hBinop < [
-              hLiteral 16 NOLIST
-              hVarref size_ NOLIST
-            ]
-          ]
-          hCStmt  NONAME [
-            hReturnStmt  NONAME NOLIST
-          ]
+        hBinop () [
+          hVarref u_fifo##clk NOLIST
+          hVarref clk NOLIST
         ]
-        hCStmt  NONAME NOLIST
-        hForStmt  NONAME [
-          hVarAssign  NONAME [
-            hVarref _local_1 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hBinop < [
-            hVarref _local_1 NOLIST
-            hVarref size_ NOLIST
-          ]
-          hUnop ++ [
-            hVarref _local_1 NOLIST
-          ]
+        hBinop () [
+          hVarref u_fifo##reset NOLIST
+          hVarref reset NOLIST
         ]
-        hCStmt  NONAME NOLIST
+        hBinop () [
+          hVarref u_fifo##din NOLIST
+          hVarref s_port##data NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##wr_en NOLIST
+          hVarref s_port##valid NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##full NOLIST
+          hVarref s_port##ready NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##dout NOLIST
+          hVarref m_port##data NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##rd_en NOLIST
+          hVarref m_port##ready NOLIST
+        ]
+        hBinop () [
+          hVarref u_fifo##empty NOLIST
+          hVarref m_port##valid NOLIST
+        ]
       ]
     ]
+  ]
+  hModule _sc_module_17 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -6164,9 +6115,7 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_5 [
-    hModinitblock u_fwd_cast [
+    hModinitblock u_fifo [
       hVardecl _local_0 [
         hTypeinfo  NONAME [
           hType sc_process_handle NOLIST
@@ -6174,14 +6123,49 @@
       ]
       hVardecl _local_1 [
         hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _local_2 [
+        hTypeinfo  NONAME [
           hType sc_process_handle NOLIST
         ]
       ]
       hCStmt  NONAME [
+        hIfStmt  NONAME [
+          hBinop || [
+            hBinop <= [
+              hVarref size_ NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hBinop < [
+              hLiteral 16 NOLIST
+              hVarref size_ NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hReturnStmt  NONAME NOLIST
+          ]
+        ]
         hCStmt  NONAME NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref _local_1 NOLIST
+            hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref _local_1 NOLIST
+            hVarref size_ NOLIST
+          ]
+          hUnop ++ [
+            hVarref _local_1 NOLIST
+          ]
+        ]
         hCStmt  NONAME NOLIST
       ]
     ]
+  ]
+  hModule _sc_module_5 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -6540,9 +6524,7 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_6 [
-    hModinitblock u_block_buffer [
+    hModinitblock u_fwd_cast [
       hVardecl _local_0 [
         hTypeinfo  NONAME [
           hType sc_process_handle NOLIST
@@ -6550,58 +6532,16 @@
       ]
       hVardecl _local_1 [
         hTypeinfo  NONAME [
-          hType int NOLIST
+          hType sc_process_handle NOLIST
         ]
       ]
       hCStmt  NONAME [
-        hBinop () [
-          hVarref u_bbuf##clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hBinop () [
-          hVarref u_bbuf##reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hBinop () [
-          hVarref u_bbuf##din NOLIST
-          hVarref c_bi NOLIST
-        ]
-        hBinop () [
-          hVarref u_bbuf##wr_en NOLIST
-          hVarref s_valid NOLIST
-        ]
-        hBinop () [
-          hVarref u_bbuf##full NOLIST
-          hVarref s_ready NOLIST
-        ]
-        hBinop () [
-          hVarref u_bbuf##dout NOLIST
-          hVarref c_bo NOLIST
-        ]
-        hBinop () [
-          hVarref u_bbuf##rd_en NOLIST
-          hVarref m_ready NOLIST
-        ]
-        hBinop () [
-          hVarref u_bbuf##empty NOLIST
-          hVarref m_valid NOLIST
-        ]
         hCStmt  NONAME NOLIST
-        hForStmt  NONAME [
-          hVarAssign  NONAME [
-            hVarref _local_1 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hBinop < [
-            hVarref _local_1 NOLIST
-            hLiteral 16 NOLIST
-          ]
-          hUnop ++ [
-            hVarref _local_1 NOLIST
-          ]
-        ]
+        hCStmt  NONAME NOLIST
       ]
     ]
+  ]
+  hModule _sc_module_6 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -6806,6 +6746,66 @@
         ]
       ]
     ]
+    hModinitblock u_block_buffer [
+      hVardecl _local_0 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
+      hVardecl _local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hCStmt  NONAME [
+        hBinop () [
+          hVarref u_bbuf##clk NOLIST
+          hVarref clk NOLIST
+        ]
+        hBinop () [
+          hVarref u_bbuf##reset NOLIST
+          hVarref reset NOLIST
+        ]
+        hBinop () [
+          hVarref u_bbuf##din NOLIST
+          hVarref c_bi NOLIST
+        ]
+        hBinop () [
+          hVarref u_bbuf##wr_en NOLIST
+          hVarref s_valid NOLIST
+        ]
+        hBinop () [
+          hVarref u_bbuf##full NOLIST
+          hVarref s_ready NOLIST
+        ]
+        hBinop () [
+          hVarref u_bbuf##dout NOLIST
+          hVarref c_bo NOLIST
+        ]
+        hBinop () [
+          hVarref u_bbuf##rd_en NOLIST
+          hVarref m_ready NOLIST
+        ]
+        hBinop () [
+          hVarref u_bbuf##empty NOLIST
+          hVarref m_valid NOLIST
+        ]
+        hCStmt  NONAME NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref _local_1 NOLIST
+            hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref _local_1 NOLIST
+            hLiteral 16 NOLIST
+          ]
+          hUnop ++ [
+            hVarref _local_1 NOLIST
+          ]
+        ]
+      ]
+    ]
     hPortbindings u_block_buffer_portbindings [
       hPortbinding u_bbuf [
         hVarref clk NOLIST
@@ -6842,55 +6842,6 @@
     ]
   ]
   hModule _sc_module_18 [
-    hModinitblock u_bbuf [
-      hVardecl _local_0 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
-      hVardecl _local_1 [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-      ]
-      hVardecl _local_2 [
-        hTypeinfo  NONAME [
-          hType sc_process_handle NOLIST
-        ]
-      ]
-      hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop || [
-            hBinop <= [
-              hVarref size_ NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hBinop < [
-              hLiteral 2 NOLIST
-              hVarref size_ NOLIST
-            ]
-          ]
-          hCStmt  NONAME [
-            hReturnStmt  NONAME NOLIST
-          ]
-        ]
-        hCStmt  NONAME NOLIST
-        hForStmt  NONAME [
-          hVarAssign  NONAME [
-            hVarref _local_1 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hBinop < [
-            hVarref _local_1 NOLIST
-            hVarref size_ NOLIST
-          ]
-          hUnop ++ [
-            hVarref _local_1 NOLIST
-          ]
-        ]
-        hCStmt  NONAME NOLIST
-      ]
-    ]
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -7293,9 +7244,7 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_7 [
-    hModinitblock u_encode_ints [
+    hModinitblock u_bbuf [
       hVardecl _local_0 [
         hTypeinfo  NONAME [
           hType sc_process_handle NOLIST
@@ -7312,6 +7261,21 @@
         ]
       ]
       hCStmt  NONAME [
+        hIfStmt  NONAME [
+          hBinop || [
+            hBinop <= [
+              hVarref size_ NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hBinop < [
+              hLiteral 2 NOLIST
+              hVarref size_ NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hReturnStmt  NONAME NOLIST
+          ]
+        ]
         hCStmt  NONAME NOLIST
         hForStmt  NONAME [
           hVarAssign  NONAME [
@@ -7320,7 +7284,7 @@
           ]
           hBinop < [
             hVarref _local_1 NOLIST
-            hLiteral 16 NOLIST
+            hVarref size_ NOLIST
           ]
           hUnop ++ [
             hVarref _local_1 NOLIST
@@ -7329,6 +7293,8 @@
         hCStmt  NONAME NOLIST
       ]
     ]
+  ]
+  hModule _sc_module_7 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -8738,9 +8704,7 @@
         ]
       ]
     ]
-  ]
-  hModule _sc_module_8 [
-    hModinitblock u_encode_stream [
+    hModinitblock u_encode_ints [
       hVardecl _local_0 [
         hTypeinfo  NONAME [
           hType sc_process_handle NOLIST
@@ -8748,14 +8712,34 @@
       ]
       hVardecl _local_1 [
         hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _local_2 [
+        hTypeinfo  NONAME [
           hType sc_process_handle NOLIST
         ]
       ]
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref _local_1 NOLIST
+            hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref _local_1 NOLIST
+            hLiteral 16 NOLIST
+          ]
+          hUnop ++ [
+            hVarref _local_1 NOLIST
+          ]
+        ]
         hCStmt  NONAME NOLIST
       ]
     ]
+  ]
+  hModule _sc_module_8 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -9768,6 +9752,22 @@
             ]
           ]
         ]
+      ]
+    ]
+    hModinitblock u_encode_stream [
+      hVardecl _local_0 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
+      hVardecl _local_1 [
+        hTypeinfo  NONAME [
+          hType sc_process_handle NOLIST
+        ]
+      ]
+      hCStmt  NONAME [
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
       ]
     ]
   ]

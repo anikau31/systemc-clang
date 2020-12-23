@@ -27,6 +27,7 @@ using namespace hnode;
 //! recursively traversing expressions
 //! 
 
+namespace systemc_hdl {
 
 HDLBody::HDLBody(CXXMethodDecl *emd, hNodep &h_top,
                  clang::DiagnosticsEngine &diag_engine)
@@ -814,3 +815,4 @@ void HDLBody::AddVnames(hNodep &hvns) {
 // CXXMethodDecl *HDLBody::getEMD() {
 //   return _emd;
 // }
+}
