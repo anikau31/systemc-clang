@@ -82,7 +82,8 @@ namespace hnode {
     
     string h_name;
     hdlopsEnum h_op;
-    list<hNodep> child_list;
+    //list<hNodep> child_list;
+    std::vector<hNodep> child_list;
  
 #undef etype
 #define etype(x) #x
@@ -111,7 +112,8 @@ namespace hnode {
     ~hNode() {
       //return;
       if (!child_list.empty()) {
-	list<hNodep>::iterator it;
+	//list<hNodep>::iterator it;
+	vector<hNodep>::iterator it;
 	for (it = child_list.begin(); it != child_list.end(); it++) {
 	  /* if (*it) */
 	  /*   cout << "child list element " << *it << "\n"; */
