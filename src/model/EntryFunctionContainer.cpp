@@ -203,12 +203,13 @@ void EntryFunctionContainer::dump(raw_ostream &os, int tabn) {
     (*it)->dump(os, newTabn);
   }
 
-  os << "\n Suspension CFG";
-  os << "\n ###############";
-  dumpSusCFG(os);
-  os << "\n ###############";
-  os << "\n Suspension Automaton";
-  os << "\n @@@@@@@@@@@@@@@@";
-  dumpSauto(os);
-  os << "\n @@@@@@@@@@@@@@@@";
+  //
+  // os << "\n Suspension CFG";
+  // os << "\n ###############";
+  // dumpSusCFG(os);
+  // os << "\n ###############";
+  // os << "\n Suspension Automaton";
+  // os << "\n @@@@@@@@@@@@@@@@";
+  // dumpSauto(os);
+  // os << "\n @@@@@@@@@@@@@@@@";
 }

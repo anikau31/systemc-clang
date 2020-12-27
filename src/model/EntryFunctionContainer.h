@@ -48,7 +48,7 @@ class EntryFunctionContainer {
   typedef map<int, SuspensionAutomata::susCFGVectorType> instanceSusCFGMapType;
 
   // Sensitivity information
-  typedef std::tuple<std::string, ValueDecl*, MemberExpr*, DeclRefExpr*>
+  typedef std::tuple<std::string, clang::ValueDecl*, clang::MemberExpr*, clang::DeclRefExpr*, clang::ArraySubscriptExpr*>
       SensitivityTupleType;
   typedef std::pair<std::string, std::vector<SensitivityTupleType>>
       SensitivityPairType;

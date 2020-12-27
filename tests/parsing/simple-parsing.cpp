@@ -63,8 +63,10 @@ SC_MODULE( test ){
     }
   }
   SC_CTOR( test ) {
+   int x{2};
     SC_METHOD(entry_function_1);
     sensitive << clk.pos();
+    sensitive << out_array_port[x -1];
   }
 };
 
@@ -124,6 +126,7 @@ int sc_main(int argc, char *argv[]) {
   /// Turn debug on
   //
   llvm::DebugFlag = true;
+  // llvm::setCurrentDebugType("SensitivityMatcher");
 
   SystemCConsumer systemc_clang_consumer{from_ast};
   systemc_clang_consumer.HandleTranslationUnit(from_ast->getASTContext());
@@ -168,6 +171,36 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOtherVars().size() == 3);
+
+    // Check process information
+    //
+
+    // processMapType
+    auto process_map{test_module_inst->getProcessMap()};
+    REQUIRE(process_map.size() == 1);
+
+    for (auto const &proc : process_map) {
+      llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* LOOKING FOR "
+                      "ENTRYFUNC\n";
+      auto entry_func{proc.second->getEntryFunction()};
+      if (entry_func) {
+        llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* INSIDE "
+                        "LOOKING FOR ENTRYFUNC\n";
+        auto sense_map{entry_func->getSenseMap()};
+        REQUIRE(sense_map.size() == 2);
+
+        int check{2};
+        for (auto const &sense : sense_map) {
+          llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* : "
+                       << sense.first << "\n";
+          if ((sense.first == "entry_function_1_handle__clkpos") ||
+              (sense.first == "entry_function_1_handle__out_array_port")) {
+            --check;
+          }
+        }
+        REQUIRE(check == 0);
+      }
+    }
 
     //
     // Check port types
