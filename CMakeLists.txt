@@ -213,8 +213,8 @@ endif()
 # switch to the variable named VARNAME.
 #
 # Example usage: llvm_config(LLVM_CXXFLAGS "--cxxflags")
-function(llvm_config VARNAME switch)
-  set(CONFIG_COMMAND ${LLVM_CONFIG_EXE} ${switch})
+function(llvm_config VARNAME switch comp)
+  set(CONFIG_COMMAND ${LLVM_CONFIG_EXE} ${switch} ${comp})
 
   execute_process(
     COMMAND ${CONFIG_COMMAND} 
@@ -310,17 +310,17 @@ endif()
 #################################################################################
 
 # Set the corresponding LLVM flags using llvm-config
-llvm_config(LLVM_CXX_FLAGS "--cxxflags")
-llvm_config(LLVM_LIBS "--libs")
-llvm_config(LLVM_LD_FLAGS "--ldflags")
-llvm_config(CLANG_VERSION "--version")
+llvm_config(LLVM_CXX_FLAGS "--cxxflags" "")
+llvm_config(LLVM_LIBS "--libs" "")
+llvm_config(LLVM_LD_FLAGS "--ldflags" "")
+llvm_config(CLANG_VERSION "--version" "")
 
 #
 # There was an issue with the system-libs not being added. Something seems to have changed from version 7+ 
 # with respect to llvm-config --libs. 
 #
 # https://github.com/halide/Halide/issues/1112
-llvm_config(LLVM_SYSTEM_LIBS "--system-libs")
+llvm_config(LLVM_SYSTEM_LIBS "--system-libs" "")
 
 set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}" )
 
@@ -345,17 +345,18 @@ set(CLANG_LIBS
   clangParse
   clangSema
   clangStaticAnalyzerFrontend
-  clangStaticAnalyzerCheckers
   clangStaticAnalyzerCore
   clangAnalysis
-  clangARCMigrate
-  clangRewriteFrontend
-  clangRewrite
   clangEdit
   clangAST
   clangLex
   clangBasic
   clangASTMatchers
+  #clangStaticAnalyzerCheckers
+  #clangARCMigrate
+  #clangRewriteFrontend
+  #clangRewrite
+
   )
 
 set(CMAKE_MODULE_LINKER_FLAGS

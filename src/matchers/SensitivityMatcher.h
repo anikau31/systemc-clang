@@ -28,7 +28,6 @@
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "SensitivityMatcher"
 
-
 namespace sc_ast_matchers {
 using namespace clang::ast_matchers;
 using namespace sc_ast_matchers::utils::array_type;
@@ -45,13 +44,14 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
   /// 1. name
   /// 2. FieldDecl/VarDecl = ValueDecl. Pointer to field declaration.
   /// 3. The MemberExpr from where I got this information.
-  typedef std::vector<std::tuple<std::string, clang::ValueDecl *,
-                                 clang::MemberExpr *, clang::DeclRefExpr *>>
+  typedef std::vector<
+      std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
+                 clang::DeclRefExpr *, clang::ArraySubscriptExpr *>>
       CallerCalleeType;
 
   /// Store the information.
   std::vector<std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
-                         clang::DeclRefExpr *>>
+                         clang::DeclRefExpr *, clang::ArraySubscriptExpr *>>
       calls_;
 
   clang::DeclRefExpr *vd_;
@@ -80,8 +80,8 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
 
     if (me) {
       std::string name{me->getMemberDecl()->getNameAsString()};
-      calls_.insert(calls_.begin(),
-                    std::make_tuple(name, me->getMemberDecl(), me, vd_));
+      calls_.insert(calls_.begin(), std::make_tuple(name, me->getMemberDecl(),
+                                                    me, vd_, nullptr));
     }
   }
 
@@ -109,8 +109,9 @@ class SensitiveOperatorCallMatcher : public MatchFinder::MatchCallback {
   clang::CXXMemberCallExpr *getMemberExprCallExpr() { return cxx_mcall_; }
 
   clang::MemberExpr *getMemberExprWithoutCall() { return me_wo_mcall_; }
-  const clang::ArraySubscriptExpr *getMemberArraySubscriptExpr() { return array_fd_; }
-
+  const clang::ArraySubscriptExpr *getMemberArraySubscriptExpr() {
+    return array_fd_;
+  }
 
   /// This is the main matcher for identifying sensitivity lists.
   ///
@@ -166,7 +167,7 @@ class SensitiveOperatorCallMatcher : public MatchFinder::MatchCallback {
             ) //hasArgument
           ).bind("cxx_operator_call_expr");
 
-    /* clang-format on*/
+    ///  clang-format on
 
     finder.addMatcher(match_opcall, this);
   }
@@ -193,6 +194,7 @@ class SensitiveOperatorCallMatcher : public MatchFinder::MatchCallback {
 };
 
 
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 /// Class SensitivityMatcher
@@ -206,7 +208,8 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
   /// that may be used in the sensitivity list. The MemberExpr is just a way to
   /// represent where this particular ValueDecl was found for further parsing.
   /// The VarDecl* is the process handle to which this sensitivity is bound to.
-  typedef std::tuple<std::string, clang::ValueDecl*, clang::MemberExpr*, clang::DeclRefExpr*>
+
+  typedef std::tuple<std::string, clang::ValueDecl*, clang::MemberExpr*, clang::DeclRefExpr*, clang::ArraySubscriptExpr*> 
       SensitivityTupleType;
 
   /// This is the pair for inserting key-value entries in the map.
@@ -270,9 +273,10 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
 
   /// This is the callback function whenever there is a match.
   virtual void run(const MatchFinder::MatchResult &result) {
-    //LLVM_DEBUG(llvm::dbgs()
-    DEBUG_WITH_TYPE("matcher-header", llvm::dbgs()
-               << "====== SENSITIVITY MATCHER EXECUTED ======= \n");
+    // LLVM_DEBUG(llvm::dbgs()
+    DEBUG_WITH_TYPE("matcher-header",
+                    llvm::dbgs()
+                        << "====== SENSITIVITY MATCHER EXECUTED ======= \n");
 
     clang::CXXMemberCallExpr *cxx_mcall{};
     clang::MemberExpr *me_wo_mcall{};
@@ -302,7 +306,8 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
 
       cxx_mcall = sop_matcher.getMemberExprCallExpr();
       me_wo_mcall = sop_matcher.getMemberExprWithoutCall();
-      array_expr = const_cast<clang::ArraySubscriptExpr*>(sop_matcher.getMemberArraySubscriptExpr());
+      array_expr = const_cast<clang::ArraySubscriptExpr *>(
+          sop_matcher.getMemberArraySubscriptExpr());
     }
 
     /// If the argument to the operator<<() is a MemberExpr.
@@ -340,16 +345,30 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
 
       if (array_expr) {
         llvm::outs() << "@@@@ Parse the array \n";
-        getArrayMemberExprName(array_expr)->dump();
+        auto me{getArrayMemberExprName(array_expr)};
+        std::string name{me->getMemberDecl()->getNameAsString()};
+        auto entry{std::make_tuple(name, me->getMemberDecl(), const_cast<clang::MemberExpr*>(me), process_handle_,
+                                   array_expr)};
+        std::vector<
+            std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
+                       clang::DeclRefExpr *, clang::ArraySubscriptExpr *>>
+            calls;
+        calls.insert(calls.begin(),
+                     std::make_tuple(name, me->getMemberDecl(),
+                                     const_cast<clang::MemberExpr *>(me),
+                                     process_handle_, array_expr));
 
+        sensitivity_.insert(SensitivityPairType(generateSensitivityName(calls), calls));
+        //    std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
+        //                clang::DeclRefExpr *, clang::ArraySubscriptExpr *>>
       }
     }
     LLVM_DEBUG(dump());
   }
 
   /// \brief Dump out the detected sensitivity list for every process.
-  /// 
-  /// This is going to print out the sensitivity list. 
+  ///
+  /// This is going to print out the sensitivity list.
   void dump() {
     for (auto const entry : sensitivity_) {
       auto generated_name{entry.first};
@@ -360,6 +379,11 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
         LLVM_DEBUG(llvm::dbgs()
                    << std::get<0>(call) << "  " << std::get<1>(call) << "  "
                    << std::get<2>(call) << "\n");
+
+        if (auto array_expr = std::get<4>(call)) {
+          llvm::dbgs() << "ArraySubscriptExpr\n";
+          array_expr->dump();
+        }
       }
     }
   }
