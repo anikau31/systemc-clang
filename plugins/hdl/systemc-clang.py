@@ -2,7 +2,9 @@
 systemc-clang driver, a commandline utility for calling systemc-clang end-to-end from c++ to Verilog
 
 Usage:
-    python /path/to/systemc-clang.py SYSTEMC_CLANG_PARAMS --- -o /path/to/output/verilog.v
+    python /path/to/systemc-clang.py SYSTEMC_CLANG_PARAMS --- [options]
+    options include:
+    -o, --output: specify Verilog output folder
 
 Example:
     python ../llnl/systemc-clang.py ~/working/systemc-clang/examples/llnl-examples/zfpsynth/zfp3/z3test.cpp \

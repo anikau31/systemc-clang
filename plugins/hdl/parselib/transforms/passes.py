@@ -9,12 +9,15 @@ from .verilog_tranlation import VerilogTranslationPass
 from .port_expansion import PortExpansion
 from .slice_merge import SliceMerge
 from .node_movement import NodeMovement
+from .function_param_marker import FunctionParamMarker
 
 
 class VerilogTranslator:
     """Translate hcode to verilog"""
     @staticmethod
     def translate(tree):
+        # we need some form of `level' of the tree, lower level meaning it is loosing more information, but more lenient
+        # to hardware language
         prev = tree
         prev = NodeMovement().visit(prev)
         prev = SortVarDecl().visit(prev)
@@ -27,6 +30,7 @@ class VerilogTranslator:
         prev = PortExpansion().visit(prev)
         # note typedef should be after port expansion to prevent duplicate valid/ready
         prev = TypedefExpansion(f.types).visit(prev)
+        prev = FunctionParamMarker().visit(prev)
         prev = VerilogTranslationPass().visit(prev)
         return prev
 

@@ -3,7 +3,6 @@ from .top_down import TopDown
 from ..primitives import *
 from ..utils import dprint
 from lark import Tree
-import traceback
 
 
 class VerilogTranslationPass(TopDown):
@@ -57,14 +56,28 @@ class VerilogTranslationPass(TopDown):
         op = '=' if self.in_for_init or tree.must_block or is_local_var else '<='
         l = tree.children[0]
         r = tree.children[1]
-        if isinstance(tree.children[1], list):
-            r = tree.children[1][3]
-        if isinstance(tree.children[0], list):
-            lst = tree.children[0]
-            l = lst[0]
-            l_idx, r_idx = lst[1:3]
-            mask = '(~( (-1) << $bits({}) ) << ({} - {})) << {}'.format(l, l_idx, r_idx, r_idx)
-            r = mask
+
+        if type(l) == Tree and l.data == 'harrayref':
+            # __A[__r:__s] = __X
+            __A = l.children[0]
+            __r = l.children[1]
+            __s = l.children[2]
+            l = __A
+            if type(r) == Tree and r.data == 'harrayref':  # special case for irreducible RHS
+                __X = r.children[3]
+                __B = r.children[0]
+            else:
+                __X = r
+                __B = r
+            r = "(({} & ~(~($bits({})'('b0)) << (({})-({})+1))) << ({})) | (({}) & ((~($bits({})'('b0)) ) << (({}) + 1) | ~(( ~($bits({})'('b0)) ) << ({}))))".format(
+                __X, __B,
+                __r, __s,
+                __s, __A,
+                __A, __r, __A, __s
+            )
+        elif type(r) == Tree and r.data == 'harrayref':
+            r = r.children[3]
+
         res = '{} {} {}'.format(l, op, r)
         return res
 
@@ -111,7 +124,8 @@ class VerilogTranslationPass(TopDown):
                 idx = '{}:{}'.format(l, r)
             else:
                 # for slicing that is not constant
-                return [var, l, r, '(({}) >> ({})) & (1 << ({} - {}))'.format(var, r, l, r)]
+                tree.children = [var, l, r, "(({}) >> ({})) & ~(~($bits({})'('b0)) << (({}) - ({}) + 1))".format(var, r, var, l, r)]
+                return tree  # irreducible hslice node
         else:
             var, idx = tree.children
         return '{}[{}]'.format(var, idx)
@@ -214,7 +228,7 @@ class VerilogTranslationPass(TopDown):
                         assert False, 'Unrecognized construct: {}'.format(x[1])
                 res = x[0] + x[1] + x[2]
                 return res
-            except:
+            except Exception as e:
                 print(x[0])
                 print(x[1])
                 print(x[2])
@@ -379,10 +393,13 @@ class VerilogTranslationPass(TopDown):
     def vardeclinit(self, tree):
         self.__push_up(tree)
         init_val = None
+        tpe = None
         if len(tree.children) == 2:
             var_name, tpe = tree.children
-        if len(tree.children) == 3:
+        elif len(tree.children) == 3:
             var_name, tpe, init_val = tree.children
+        else:
+            assert False, 'children size of vardeclinit is not 2 or 3, there might be a bug in the translator'
         ctx = TypeContext(suffix='')
         decl = tpe.to_str(var_name, context=ctx)
         return (decl, var_name, init_val)
@@ -445,7 +462,6 @@ class VerilogTranslationPass(TopDown):
     def htouint(self, tree):
         self.__push_up(tree)
         return '$unsigned({})'.format(tree.children[0])
-
 
     def htoint(self, tree):
         self.__push_up(tree)
@@ -550,7 +566,8 @@ class VerilogTranslationPass(TopDown):
                 res += proc + '\n'
 
         if functionlist:
-            for f in functionlist:
-                res += f + '\n'
+            # for f in functionlist:
+            #     res += f + '\n'
+            assert False, "functionlist should be empty, there may be a bug in the code"
         res += "endmodule"
         return res
