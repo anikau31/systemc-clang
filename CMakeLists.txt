@@ -20,6 +20,7 @@ set(CMAKE_CXX_STANDARD 14)
 # Always keep it on
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
 #  Make verbose on?
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
@@ -44,6 +45,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 #
 # Prepare "Catch" library for other executables
 set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
+# Disable throwing exceptions in catch2
+#add_definitions (-DCATCH_CONFIG_DISABLE_EXCEPTIONS)
 
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
@@ -55,7 +58,10 @@ include(Catch)
 
 # Required packages
 # Include the these flags whenever you compile.
-add_definitions (-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
+add_definitions(-D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
+
+# Disable exceptions in nlohmann::json.
+add_definitions(-DJSON_EXCEPTION)
 
 # Set the path for where LLVM/clang is installed.
 set( LLVM_INSTALL_DIR $ENV{LLVM_INSTALL_DIR} )
@@ -207,8 +213,8 @@ endif()
 # switch to the variable named VARNAME.
 #
 # Example usage: llvm_config(LLVM_CXXFLAGS "--cxxflags")
-function(llvm_config VARNAME switch)
-  set(CONFIG_COMMAND ${LLVM_CONFIG_EXE} ${switch})
+function(llvm_config VARNAME switch comp)
+  set(CONFIG_COMMAND ${LLVM_CONFIG_EXE} ${switch} ${comp})
 
   execute_process(
     COMMAND ${CONFIG_COMMAND} 
@@ -304,17 +310,17 @@ endif()
 #################################################################################
 
 # Set the corresponding LLVM flags using llvm-config
-llvm_config(LLVM_CXX_FLAGS "--cxxflags")
-llvm_config(LLVM_LIBS "--libs")
-llvm_config(LLVM_LD_FLAGS "--ldflags")
-llvm_config(CLANG_VERSION "--version")
+llvm_config(LLVM_CXX_FLAGS "--cxxflags" "")
+llvm_config(LLVM_LIBS "--libs" "")
+llvm_config(LLVM_LD_FLAGS "--ldflags" "")
+llvm_config(CLANG_VERSION "--version" "")
 
 #
 # There was an issue with the system-libs not being added. Something seems to have changed from version 7+ 
 # with respect to llvm-config --libs. 
 #
 # https://github.com/halide/Halide/issues/1112
-llvm_config(LLVM_SYSTEM_LIBS "--system-libs")
+llvm_config(LLVM_SYSTEM_LIBS "--system-libs" "")
 
 set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}" )
 
@@ -339,17 +345,18 @@ set(CLANG_LIBS
   clangParse
   clangSema
   clangStaticAnalyzerFrontend
-  clangStaticAnalyzerCheckers
   clangStaticAnalyzerCore
   clangAnalysis
-  clangARCMigrate
-  clangRewriteFrontend
-  clangRewrite
   clangEdit
   clangAST
   clangLex
   clangBasic
   clangASTMatchers
+  #clangStaticAnalyzerCheckers
+  #clangARCMigrate
+  #clangRewriteFrontend
+  #clangRewrite
+
   )
 
 set(CMAKE_MODULE_LINKER_FLAGS

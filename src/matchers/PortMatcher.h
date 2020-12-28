@@ -42,9 +42,6 @@ using namespace utils::array_type;
 
 class PortMatcher : public MatchFinder::MatchCallback {
  public:
-  // typedef std::pair<std::string, ModuleDecl*> ModulePairType;
-  // typedef std::vector<ModulePairType> ModuleMapType;
-
   /// A vector of tuples that holds the name of the port, and a pointer to
   /// PortDecl.
   typedef std::vector<std::tuple<std::string, PortDecl *> > MemberDeclType;
@@ -69,48 +66,48 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
  public:
   
-  /// \brief Returns the identified clock ports.
+  /// Returns the identified clock ports.
   /// 
   const MemberDeclType &getClockPorts() const { return clock_ports_; }
   
-  /// \brief Returns the identified input ports.
+  /// Returns the identified input ports.
   /// 
   const MemberDeclType &getInputPorts() const { return in_ports_; }
   
-  /// \brief Returns the identified output ports.
+  /// Returns the identified output ports.
   /// 
   const MemberDeclType &getOutputPorts() const { return out_ports_; }
   
-  /// \brief Returns the identified inout ports.
+  /// Returns the identified inout ports.
   /// 
   const MemberDeclType &getInOutPorts() const { return inout_ports_; }
   
-  /// \brief Returns the identified variables that are not ports or signals.
+  /// Returns the identified variables that are not ports or signals.
   /// 
   const MemberDeclType &getOtherVars() const { return other_fields_; }
 
-  /// \brief Returns the identified signals.
+  /// Returns the identified signals.
   /// 
   const MemberDeclType &getSignals() const { return signal_fields_; }
 
-  /// \brief Returns the identified submodules.
+  /// Returns the identified submodules.
   /// 
   const MemberDeclType &getSubmodules() const { return submodules_; }
   
-  /// \brief Returns the identified sc_stream input ports.
+  /// Returns the identified sc_stream input ports.
   /// 
   const MemberDeclType &getInputStreamPorts() const { return instream_ports_; }
 
-  /// \brief Returns the identified sc_stream output ports.
+  /// Returns the identified sc_stream output ports.
   /// 
   const MemberDeclType &getOutputStreamPorts() const {
     return outstream_ports_;
   }
 
-  /// \brief Returns the identified ports.
+  /// Returns the identified ports.
   const MemberDeclType &getPorts() const { return sc_ports_; }
 
-  /// \brief Default constructor.
+  /// Default constructor.
   PortMatcher() {}
 
   /// AST matcher to detect field declarations.
