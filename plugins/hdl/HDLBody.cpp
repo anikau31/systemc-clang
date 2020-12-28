@@ -591,7 +591,10 @@ namespace systemc_hdl {
       else {
 	LLVM_DEBUG(llvm::dbgs() << "Value returned from member expr base was not Varref\n");
 	h_ret->print(llvm::dbgs());
-	h_ret->child_list.push_back(new hNode(nameinfo, hNode::hdlopsEnum::hVarref));
+	hNodep memexprnode = new hNode(nameinfo, hNode::hdlopsEnum::hVarref);
+	memexprnode->child_list.push_back(h_ret);
+	h_ret = memexprnode;
+	//h_ret->child_list.push_back(new hNode(nameinfo, hNode::hdlopsEnum::hVarref));
        
 	return true;
       }

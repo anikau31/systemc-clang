@@ -142,7 +142,8 @@ namespace hnode {
     hdlopsEnum getopc() {
       return h_op;
     }
-    
+
+   
     // for completeness
     hdlopsEnum str2hdlopenum(string st) {
       const int n = sizeof (hdlop_pn)/sizeof (hdlop_pn[0]);
@@ -153,7 +154,7 @@ namespace hnode {
       return hLast;
     }
     //void print(llvm::raw_fd_ostream & modelout, unsigned int indnt=2) {
-    void print(llvm::raw_ostream & modelout, unsigned int indnt=2) {
+    void print(llvm::raw_ostream & modelout=llvm::outs(), unsigned int indnt=2) {
       modelout.indent(indnt);
       modelout << printopc(h_op) << " ";
       if (h_name == "")

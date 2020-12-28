@@ -25,14 +25,17 @@ namespace systemc_hdl {
     typedef struct {
       string name;
       int lo, hi, step;
+      int curix;
     } for_info_t;
-      
+
     hNodep ProcessCXXConstructorHcode(hNodep xconstructor);
     void HDLLoop(hNodep &hp, std::vector<for_info_t> &for_info);
 
     void PushRange(hNodep &hp, std::vector<for_info_t> &for_info);
     void PopRange(std::vector<for_info_t> &for_info);
-    void UnrollBinding(hNodep &hp, int unrollfactor, std::vector<for_info_t> &for_info);
+    void UnrollBinding(hNodep &hp, std::vector<for_info_t> &for_info);
+    void SubstituteIndex(hNodep &hp, std::vector<for_info_t> &for_info);
+    hNodep HnodeDeepCopy(hNodep hp);
   private:
     hNodep hnewpb;
 

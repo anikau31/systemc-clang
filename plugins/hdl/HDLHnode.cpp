@@ -60,7 +60,7 @@ namespace systemc_hdl {
   
   void HDLConstructorHcode::PushRange(hNodep &hp, std::vector<for_info_t> &for_info) {
 
-    for_info_t tmp{"FORNAME", 0, 1, 1};
+    for_info_t tmp{"FORNAME", 0, 1, 1, 0};
     
     hNodep hlo = hp->child_list[0];
     hNodep hi = hp->child_list[1];
@@ -74,8 +74,6 @@ namespace systemc_hdl {
       tmp.name = hlo->child_list[0]->h_name;
       tmp.lo = stoi(hlo->child_list[1]->h_name);
     }
-    //else 
-    
     if ((hi->h_op == hNode::hdlopsEnum::hBinop) && 
 	(hlo->child_list.size() == 2) &&
 	(hlo->child_list[0]-> h_op == hNode::hdlopsEnum::hVarref) &&
@@ -90,59 +88,191 @@ namespace systemc_hdl {
   void HDLConstructorHcode::PopRange(std::vector<for_info_t> &for_info) {
       for_info.pop_back();
   }
-  
-  void HDLConstructorHcode::UnrollBinding(hNodep &hp, int unrollfactor, std::vector<for_info_t> &for_info) {
 
+  void HDLConstructorHcode::SubstituteIndex(hNodep &hp, std::vector<for_info_t> &for_info) {
+    for (int i=0; i < for_info.size(); i++) {
+      if ((hp->h_op == hNode::hdlopsEnum::hVarref) && (hp->h_name == for_info[i].name)) {
+	hp->h_name = to_string(for_info[i].curix);
+	hp->h_op = hNode::hdlopsEnum::hLiteral;
+	break;
+      }  
+    }
+    for (hNodep hpi : hp->child_list)
+      SubstituteIndex(hpi, for_info);
+  }
+
+  hNodep HDLConstructorHcode::HnodeDeepCopy(hNodep hp) {
+    hNodep h_ret = new hNode(hp->h_name, hp->h_op);
+    for (hNodep hchild : hp->child_list) {
+      h_ret->child_list.push_back(HnodeDeepCopy(hchild));
+    }
+    return h_ret;
+  }
+  
+  // Generate a port binding
     // need to dismantle modname##field:
     // modname is the h_name for the portbinding
     // and field is the varref, e.g.
-    // hBinop () [
+    // Case 0: hBinop () [
           // hVarref u_fwd_cast##clk NOLIST
           // hVarref clk NOLIST
-    // but if the submod port is ARRAYSUBSCRIPT
-    // tree will look like
-    // hBinop () [
-    //           hBinop ARRAYSUBSCRIPT [
-    //             hVarref u_xt NOLIST
-    //             hVarref _local_0 NOLIST
-    //             hVarref reset NOLIST
-    //           ]
-    //           hVarref reset NOLIST
-    
-    string submodport = hp->child_list[0]->h_name;
-    static const string fielddelim{"##"};
-    string thismodsig = hp->child_list[1]->h_name;
-    if (for_info.size()>0) { // in a for loop
-      for (int i = 0; i < unrollfactor; i++) {
-	hNodep hpb = new hNode( hNode::hdlopsEnum::hPortbinding);
-	hpb->child_list.push_back(new hNode(submodport+to_string(i), hNode::hdlopsEnum::hVarref));
-	hpb->child_list.push_back(new hNode(thismodsig+to_string(i), hNode::hdlopsEnum::hVarref));
-	hnewpb->child_list.push_back(hpb);
+    // but if the submod instance/port is ARRAYSUBSCRIPT in loop,
+    // can have (if submodule is not an array of submods)
+    // Case 1: hBinop () [
+    //         hBinop ARRAYSUBSCRIPT [
+    //           hVarref u_fwd_cast##m_block NOLIST
+    //           hVarref _local_0 NOLIST
+    //         ]
+    //         hBinop ARRAYSUBSCRIPT [
+    //           hVarref c_fc_block NOLIST
+    //           hVarref _local_0 NOLIST
+    //         ]
+    //       ]
+    //     ]
 
-      }
-    }
-    else {
-      hNodep hpb = new hNode( hNode::hdlopsEnum::hPortbinding);
-      hpb->child_list.push_back(new hNode(submodport, hNode::hdlopsEnum::hVarref));
+    // or it will look like this if submod is array ( u_yt[_local_0].clk:clk )
+    // Case 2: hBinop () [
+    // hVarref clk [
+    //     hBinop ARRAYSUBSCRIPT [
+    //       hVarref u_yt NOLIST
+    //       hVarref _local_0 NOLIST
+    //     ]
+    //   ]
+    //   hVarref clk NOLIST
+    // ]
+    // or for module instance array ref and port array ref
+    // 
+    // Case 3: hBinop () [
+    // hBinop ARRAYSUBSCRIPT [
+    //     hVarref m_port [
+    //       hBinop ARRAYSUBSCRIPT [
+    //         hVarref u_xt NOLIST
+    //         hVarref _local_0 NOLIST
+    //       ]
+    //     ]
+    //     hVarref _local_1 NOLIST
+    //   ]
+    //   hBinop ARRAYSUBSCRIPT [
+    //     hBinop ARRAYSUBSCRIPT [
+    //       hVarref c_xt_data NOLIST
+    //       hVarref _local_0 NOLIST
+    //     ]
+    //     hVarref _local_1 NOLIST
+    //   ]
+    // ]
+  void HDLConstructorHcode::UnrollBinding(hNodep &hp_orig, std::vector<for_info_t> &for_info) {
+
+    static const string fielddelim{"##"};
+    static const string tokendelim{"_"};
+    static const string pbstring{"()"};
+    static const string arrsub{"ARRAYSUBSCRIPT"};
+    
+    assert ((hp_orig->h_op == hNode::hdlopsEnum::hBinop) && (hp_orig->h_name == pbstring));
+
+    // Case 0
+    if (for_info.size() == 0 ) { // simple case, not in a for loop
+      string submodport = hp_orig->child_list[0]->h_name;
+      string thismodsig = hp_orig->child_list[1]->h_name;
+      // part before delimiter is submodule name, after delimiter is port name
+      hNodep hpb = new hNode(submodport.substr(0, submodport.find(fielddelim)),
+			     hNode::hdlopsEnum::hPortbinding);
+      hpb->child_list.push_back(new hNode(submodport.substr(submodport.find(fielddelim)+fielddelim.size()),
+					  hNode::hdlopsEnum::hVarref));
       hpb->child_list.push_back(new hNode(thismodsig, hNode::hdlopsEnum::hVarref));
       hnewpb->child_list.push_back(hpb);
+      return;
     }
+
+    hNodep hp = HnodeDeepCopy(hp_orig);  // will be modifying subtrees, so make a copy
+    
+    hNodep hsubmodport = hp->child_list[0];  // submoduleport being bound
+    hNodep hthismodsig = hp->child_list[1];
+
+    // need to duplicate parts of the binding tree that are arraysubscripts
+    // those nodes will have the loop variable replaced by current index.
+    
+    string submodport{"XXX"}, thismodsig{"YYY"};
+    string submod{"SUBMOD"};
+    
+    // Case 2
+    if ((hsubmodport->h_op ==  hNode::hdlopsEnum::hVarref) && (hsubmodport->child_list.size() > 0)) {
+      
+    // in a for loop, unroll the port bindings
+     // hVarref clk [
+    //     hBinop ARRAYSUBSCRIPT [
+    //       hVarref u_yt NOLIST
+    //       hVarref _local_0 NOLIST // changed to hLiteral by Substitute index
+    //     ]
+    //   ]
+    //   hVarref clk NOLIST
+    // ]
+      hNodep hportchild = hsubmodport->child_list[0];
+      while ((hportchild != nullptr) && (hportchild->h_name == arrsub)) {
+	if ((hportchild->child_list[0]->h_op == hNode::hdlopsEnum::hVarref) &&
+	    (hportchild->child_list[0]->child_list.size() == 0)) { // simple varref
+	  submod = hportchild->child_list[0]->h_name;  // will add instance suffix in loop
+	  break;
+	}
+	hportchild = hportchild->child_list[0];
+      }
+    }
+    else if (hsubmodport->h_name ==  arrsub) { // check Case 1, 3
+      hNodep hportchild = hsubmodport->child_list[0];
+      hNodep hparent = hportchild;
+      
+      while ((hportchild != nullptr) && (hportchild->h_name == arrsub)) {
+	hparent = hportchild;
+	hportchild = hportchild->child_list[0];
+      }
+      if ((hportchild != nullptr) && (hportchild->h_op == hNode::hdlopsEnum::hVarref) &&
+	  (hportchild->child_list.size() == 0)) {
+	submod = hportchild->h_name;  
+	size_t found = submod.find(fielddelim);
+	if ( found != std::string::npos) { // module name prefix, not a vector of modules
+	  hportchild->h_name = submod.substr(found+fielddelim.size());
+	  submod = submod.substr(0, found);
+	}
+	else { // need to handle Case 3 by removing the (arraysubscript submod ix) node
+	  hNodep hsubmodixname = hparent->child_list[1];
+	  string ixname = hsubmodixname->h_name;
+	  for (int i = 0; i < for_info.size(); i++) {
+	    if (for_info[i].name == ixname) {
+	      submod+=ixname+to_string(for_info[i].curix);
+	      break;
+	    }
+	  }
+	} 
+      }	
+    }
+    
+    hNodep hpb = new hNode( submod+tokendelim, hNode::hdlopsEnum::hPortbinding);
+    //hpb->child_list.push_back(new hNode(submodport+tokendelim+to_string(i), hNode::hdlopsEnum::hVarref));
+    //hpb->child_list.push_back(new hNode(thismodsig+tokendelim+to_string(i), hNode::hdlopsEnum::hVarref));
+
+    hpb->child_list.push_back(hsubmodport);
+    hpb->child_list.push_back(hthismodsig);
+    SubstituteIndex(hpb, for_info);
+    hnewpb->child_list.push_back(hpb);
   }
   
   void HDLConstructorHcode::HDLLoop(hNodep &hp, std::vector<for_info_t> &for_info ) {
     if ((hp->h_op == hNode::hdlopsEnum::hForStmt) && (hp->child_list.size() > 3)) {
       PushRange(hp, for_info); // fill in name, lo, hi, step
-      for (int i=3; i<hp->child_list.size(); i++) {
-	if (isInitPB(hp->child_list[i])) {// hcode indicating port binding
-	  UnrollBinding(hp->child_list[i], for_info.back().hi, for_info); // unroll all bindings up to this range
+      for (int forloopix = for_info.back().lo; forloopix < for_info.back().hi; forloopix+=for_info.back().step) {
+	for_info.back().curix = forloopix;
+	for (int i=3; i<hp->child_list.size(); i++) {
+	  if (isInitPB(hp->child_list[i])) {// hcode indicating port binding
+	    UnrollBinding(hp->child_list[i], for_info); // unroll all bindings up to this range
+	  }
+	  else if ((hp->child_list[i]->h_op == hNode::hdlopsEnum::hForStmt) ||
+		   (hp->child_list[i]->h_op == hNode::hdlopsEnum::hCStmt)	)
+	    HDLLoop(hp->child_list[i], for_info);
 	}
-	else if ((hp->child_list[i]->h_op == hNode::hdlopsEnum::hForStmt) ||
-		 (hp->child_list[i]->h_op == hNode::hdlopsEnum::hCStmt)	)
-	  HDLLoop(hp->child_list[i], for_info);
       }
+      for_info.pop_back();
     }
     else if (isInitPB(hp)) {
-      UnrollBinding(hp, 1, for_info);
+      UnrollBinding(hp, for_info);
     }
     else if (hp->h_op == hNode::hdlopsEnum::hCStmt) {
       for (hNodep hpc:hp->child_list) {
