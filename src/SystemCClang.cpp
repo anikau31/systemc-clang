@@ -1,15 +1,29 @@
 #include "SystemCClang.h"
 
-#include "Matchers.h"
+#include "matchers/FindConstructor.h"
+#include "matchers/FindEntryFunctions.h"
+#include "matchers/FindEvents.h"
+#include "matchers/FindGlobalEvents.h"
+#include "matchers/FindNetlist.h"
+#include "matchers/FindNotify.h"
+#include "matchers/FindSCMain.h"
+#include "matchers/FindSimTime.h"
+#include "matchers/FindTLMInterfaces.h"
+#include "matchers/FindTemplateParameters.h"
+#include "matchers/FindWait.h"
+
+#include "matchers/Matchers.h"
 #include "ModuleInstanceType.h"
-#include "NetlistMatcher.h"
-#include "SensitivityMatcher.h"
+#include "matchers/NetlistMatcher.h"
+#include "matchers/SensitivityMatcher.h"
+
+//#include "model/Model.h"
+
 #include "clang/AST/ASTImporter.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 
 using namespace systemc_clang;
-using namespace clang;
 
 using namespace sc_ast_matchers;
 
@@ -18,7 +32,7 @@ bool SystemCConsumer::preFire() { return true; }
 bool SystemCConsumer::postFire() { return true; }
 
 bool SystemCConsumer::fire() {
-  TranslationUnitDecl *tu{getContext().getTranslationUnitDecl()};
+  clang::TranslationUnitDecl *tu{getContext().getTranslationUnitDecl()};
   // Reflection database.
   systemcModel_ = new Model{};
 
@@ -46,7 +60,7 @@ bool SystemCConsumer::fire() {
   FindSCMain scmain{tu, os_};
 
   if (scmain.isSCMainFound()) {
-    FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
+    clang::FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
 
     // TODO: find any instances in sc_main.
 
@@ -55,11 +69,6 @@ bool SystemCConsumer::fire() {
   } else {
     LLVM_DEBUG(llvm::dbgs() << "\n Could not find SCMain";);
   }
-
-//
-  // auto found_instances_declaration_map{
-      // module_declaration_handler.getInstances()};
-//
   //
   // Create a ModuleInstance for each instance with the appropriately parsed
   // ModuleInstance.
@@ -67,7 +76,8 @@ bool SystemCConsumer::fire() {
 
   llvm::outs()
       << "############# ============= NEW FIRE ============ ################\n";
-  llvm::outs() << "Size of module instances: " << found_module_declarations.size() << "\n";
+  llvm::outs() << "Size of module instances: "
+               << found_module_declarations.size() << "\n";
 
   for (const auto &inst : found_module_declarations) {
     auto cxx_decl{inst.first};
@@ -133,7 +143,6 @@ bool SystemCConsumer::fire() {
   llvm::outs()
       << "############# =====  END NEW FIRE ============ ################\n";
 
-
   LLVM_DEBUG(llvm::dbgs() << " @@@@@@@@ =============== Populate sub-modules "
                              "============= \n";);
   // This must have the instance matcher already run.
@@ -144,7 +153,6 @@ bool SystemCConsumer::fire() {
   LLVM_DEBUG(
       llvm::dbgs() << "- Print out all the instances in the instance map\n";);
   systemcModel_->populateNestedModules();
-
 
   LLVM_DEBUG(
       llvm::dbgs() << "===========END  Populate sub-modules ============= \n";);
@@ -163,25 +171,26 @@ bool SystemCConsumer::fire() {
 
   netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
   // LLVM_DEBUG(llvm::dbgs() << "Begin netlist parsing on instances: "
-                          // << found_instances_declaration_map.size() << "\n";);
+  // << found_instances_declaration_map.size() << "\n";);
   // vector of ModuleInstance*
   auto instances{systemcModel_->getInstances()};
   for (const auto &inst : instances) {
     // auto incomplete_mdecl{inst.first};
     // auto instance_list{inst.second};
-//
+    //
     // for (auto const &instance : instance_list) {
-      // ModuleInstance *mdecl{systemcModel_->getInstance(get<0>(instance))};
-      ModuleInstance *mdecl{inst};
-      auto ctordecl{mdecl->getConstructorDecl()};
-      if (ctordecl != nullptr) {
-        const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
-        ctordecl->getBody(fd);
+    // ModuleInstance *mdecl{systemcModel_->getInstance(get<0>(instance))};
+    ModuleInstance *mdecl{inst};
+    auto ctordecl{mdecl->getConstructorDecl()};
+    if (ctordecl != nullptr) {
+      const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
+      ctordecl->getBody(fd);
 
-        LLVM_DEBUG(llvm::dbgs() << "==============> RUN netlist matcher: " << mdecl->getInstanceName() << "\n";);
-        //fd->dump();
-        netlist_registry.match(*fd, getContext());
-        LLVM_DEBUG(llvm::dbgs() << "==============> DONE netlist matcher\n";);
+      LLVM_DEBUG(llvm::dbgs() << "==============> RUN netlist matcher: "
+                              << mdecl->getInstanceName() << "\n";);
+      // fd->dump();
+      netlist_registry.match(*fd, getContext());
+      LLVM_DEBUG(llvm::dbgs() << "==============> DONE netlist matcher\n";);
       //}
     }
   }
@@ -196,7 +205,7 @@ bool SystemCConsumer::fire() {
   return true;
 }
 
-void SystemCConsumer::HandleTranslationUnit(ASTContext &context) {
+void SystemCConsumer::HandleTranslationUnit(clang::ASTContext &context) {
   // ///////////////////////////////////////////////////////////////
   // / Pass 1: Find the necessary information.
   // ///////////////////////////////////////////////////////////////
@@ -217,14 +226,14 @@ void SystemCConsumer::HandleTranslationUnit(ASTContext &context) {
   postFire();
 }
 
-SystemCConsumer::SystemCConsumer(ASTUnit *from_ast, std::string top)
+SystemCConsumer::SystemCConsumer(clang::ASTUnit *from_ast, std::string top)
     : os_{llvm::errs()},
       sm_{from_ast->getSourceManager()},
       context_{from_ast->getASTContext()},
       top_{top},
       systemcModel_{nullptr} {}
 
-SystemCConsumer::SystemCConsumer(CompilerInstance &ci, std::string top)
+SystemCConsumer::SystemCConsumer(clang::CompilerInstance &ci, std::string top)
     : os_{llvm::errs()},
       sm_{ci.getSourceManager()},
       context_{ci.getASTContext()},
@@ -246,6 +255,6 @@ Model *SystemCConsumer::getSystemCModel() { return systemcModel_; }
 
 const std::string &SystemCConsumer::getTopModule() const { return top_; }
 
-ASTContext &SystemCConsumer::getContext() const { return context_; }
+clang::ASTContext &SystemCConsumer::getContext() const { return context_; }
 
-SourceManager &SystemCConsumer::getSourceManager() const { return sm_; }
+clang::SourceManager &SystemCConsumer::getSourceManager() const { return sm_; }

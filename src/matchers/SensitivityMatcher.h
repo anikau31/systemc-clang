@@ -181,8 +181,8 @@ class SensitiveOperatorCallMatcher : public MatchFinder::MatchCallback {
       llvm::outs() << " @@@@@@@@@@@@@@@@@@@@@@@@ ARRAY FD @@@@@@@@@@@@@@@@@@@@@@@\n";
       array_fd->dump();
       array_fd_ = array_fd;
-
     }
+
     auto cxx_mcall{const_cast<clang::CXXMemberCallExpr*>(
         result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("cxx_mcall"))};
     auto me_wo_mcall{
@@ -343,12 +343,15 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
             SensitivityPairType(generateSensitivityName(entry), entry));
       }
 
+      /// If the argument is an ArraySubscriptExpr, then only provide access to
+      /// the pointer to ArraySubscriptExpr.
       if (array_expr) {
         llvm::outs() << "@@@@ Parse the array \n";
         auto me{getArrayMemberExprName(array_expr)};
         std::string name{me->getMemberDecl()->getNameAsString()};
-        auto entry{std::make_tuple(name, me->getMemberDecl(), const_cast<clang::MemberExpr*>(me), process_handle_,
-                                   array_expr)};
+        auto entry{std::make_tuple(name, me->getMemberDecl(),
+                                   const_cast<clang::MemberExpr *>(me),
+                                   process_handle_, array_expr)};
         std::vector<
             std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
                        clang::DeclRefExpr *, clang::ArraySubscriptExpr *>>
@@ -358,9 +361,8 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
                                      const_cast<clang::MemberExpr *>(me),
                                      process_handle_, array_expr));
 
-        sensitivity_.insert(SensitivityPairType(generateSensitivityName(calls), calls));
-        //    std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
-        //                clang::DeclRefExpr *, clang::ArraySubscriptExpr *>>
+        sensitivity_.insert(
+            SensitivityPairType(generateSensitivityName(calls), calls));
       }
     }
     LLVM_DEBUG(dump());

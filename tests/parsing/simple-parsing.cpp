@@ -66,7 +66,7 @@ SC_MODULE( test ){
    int x{2};
     SC_METHOD(entry_function_1);
     sensitive << clk.pos();
-    sensitive << out_array_port[x -1];
+    sensitive << out_array_port[x -1] << data[x + 2];
   }
 };
 
@@ -180,21 +180,19 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(process_map.size() == 1);
 
     for (auto const &proc : process_map) {
-      llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* LOOKING FOR "
-                      "ENTRYFUNC\n";
       auto entry_func{proc.second->getEntryFunction()};
       if (entry_func) {
-        llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* INSIDE "
-                        "LOOKING FOR ENTRYFUNC\n";
         auto sense_map{entry_func->getSenseMap()};
-        REQUIRE(sense_map.size() == 2);
+        REQUIRE(sense_map.size() == 3);
 
-        int check{2};
+        int check{3};
         for (auto const &sense : sense_map) {
           llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* : "
                        << sense.first << "\n";
           if ((sense.first == "entry_function_1_handle__clkpos") ||
-              (sense.first == "entry_function_1_handle__out_array_port")) {
+              (sense.first == "entry_function_1_handle__out_array_port") ||
+              (sense.first == "entry_function_1_handle__data") 
+              ) {
             --check;
           }
         }
