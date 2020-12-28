@@ -184,12 +184,12 @@ namespace systemc_hdl {
     //  typedef std::pair<std::string, PortBinding *> portBindingPairType;
     //  typedef std::map<std::string, PortBinding *> portBindingMapType;
     //   portBindingMapType getPortBindings();
-
-    hNodep h_submodule_pb =
-      new hNode(mod->getInstanceName()+"_portbindings", hNode::hdlopsEnum::hPortbindings);
-    SCportbindings2hcode(mod, h_submodule_pb);
-    if (!h_submodule_pb->child_list.empty())
-      h_module->child_list.push_back(h_submodule_pb);
+    // We are doing port bindings in the init block now
+    // hNodep h_submodule_pb =
+    //   new hNode(mod->getInstanceName()+"_portbindings", hNode::hdlopsEnum::hPortbindings);
+    // SCportbindings2hcode(mod, h_submodule_pb);
+    // if (!h_submodule_pb->child_list.empty())
+    //   h_module->child_list.push_back(h_submodule_pb);
   
 
     if (allmethodecls.size() > 0) {

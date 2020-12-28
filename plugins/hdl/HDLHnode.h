@@ -12,12 +12,17 @@ using namespace systemc_clang;
 using namespace hnode;
 
 namespace systemc_hdl {
-  void RemoveSCMethod(hNodep &hp);
+  //  void RemoveSCMethod(hNodep &hp);
   
   static inline bool isInitPB(hNodep hp) {
     return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
       (hp->h_name == "()");
   }
+
+  static const string fielddelim{"##"};
+  static const string tokendelim{"_"};
+  static const string pbstring{"()"};
+  static const string arrsub{"ARRAYSUBSCRIPT"};
   
   class HDLConstructorHcode {
   public:
@@ -36,6 +41,8 @@ namespace systemc_hdl {
     void UnrollBinding(hNodep &hp, std::vector<for_info_t> &for_info);
     void SubstituteIndex(hNodep &hp, std::vector<for_info_t> &for_info);
     hNodep HnodeDeepCopy(hNodep hp);
+    void RemoveSCMethod(hNodep &hp);
+    void CleanupInitHcode(hNodep &hp);
   private:
     hNodep hnewpb;
 
