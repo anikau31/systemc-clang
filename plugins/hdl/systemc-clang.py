@@ -58,7 +58,9 @@ class SystemCClang:
         if not os.path.isfile(self.systemc_clang_binary):
             raise MissingSystemCClang
 
-    def __init__(self, systemc_clang_build_dir=None, llvm_install_path=None):
+    def __init__(
+        self, systemc_clang_build_dir=None, llvm_install_path=None, systemc_path=None
+    ):
         if systemc_clang_build_dir:
             self._systemc_clang_build_dir = systemc_clang_build_dir
         else:
@@ -68,6 +70,11 @@ class SystemCClang:
             self._llvm_install_path = llvm_install_path
         else:
             self._llvm_install_path = os.environ["LLVM_INSTALL_DIR"]
+
+        if systemc_path:
+            self._systemc_path = systemc_path
+        else:
+            self._systemc_path = os.environ["SYSTEMC"]
 
         self.__check_systemc_clang_executable_exists()
 
@@ -92,12 +99,20 @@ class SystemCClang:
         """
         return os.path.join(self.llvm_install_path, "lib/clang/10.0.0/include")
 
+    @property
+    def systemc_path(self):
+        return self._systemc_path
+
+    @property
+    def systemc_inc_dir(self):
+        return os.path.join(self.systemc_path, "include")
+
     def execute(self, args):
         """
         executes systemc-clang as if it is on the commandline
         """
         bin_path = self.systemc_clang_binary
-        args_to_sysc = args + ["-I", self.llvm_inc_dir]
+        args_to_sysc = args + ["-I", self.llvm_inc_dir, "-I", self.systemc_inc_dir]
         result = subprocess.run(
             [bin_path, *args_to_sysc], stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )  # in case the command fail, an exception will be raised
@@ -151,7 +166,7 @@ def get_argv():
     if argv.count("---") == 1:
         sep_idx = argv.index("---")
         argv_sysc = argv[:sep_idx]
-        argv_python = argv[sep_idx + 1 :]
+        argv_python = argv[sep_idx + 1:]
     elif argv.count("---") == 0:
         argv_sysc = argv
         argv_python = []
@@ -160,14 +175,17 @@ def get_argv():
     return argv_sysc, argv_python
 
 
-def main(argv_sysc, argv_python):
-    args = parser.parse_args(argv_python)
+def invoke_sysc(argv_sysc):
     wrapper = SystemCClang()
     targets = wrapper.execute(argv_sysc)
     if len(targets) > 1:
         logging.warning("Up to 1 target is translated currently")
     target = targets[0]
-    print(target)
+    return target
+
+
+def invoke_translation(target, argv_python):
+    args = parser.parse_args(argv_python)
     with open(target, "r") as fin:
         res = translate_text(fin.read())
 
@@ -176,6 +194,11 @@ def main(argv_sysc, argv_python):
         outfile = target + ".v"
     with open(outfile, "w") as fout:
         fout.writelines(res)
+
+
+def main(argv_sysc, argv_python):
+    target = invoke_sysc(argv_sysc)
+    invoke_translation(target, argv_python)
 
 
 if __name__ == "__main__":

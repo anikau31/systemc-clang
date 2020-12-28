@@ -1,5 +1,8 @@
 """Fixtures for testing"""
 import os
+import sys
+from pathlib import Path
+sys.path.append(str(Path(os.environ['SYSTEMC_CLANG']) / 'plugins' / 'hdl'))
 import glob
 import pytest
 from util.conf import LLNLExampleTestingConfigurations
@@ -14,7 +17,7 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "verilog: cpp to verilog tests"
     )
-    pytest.sc_log = open('log.csv', 'w')
+    pytest.sc_log = None # open('log.csv', 'w')
 
 @pytest.fixture
 def llnldriver():
