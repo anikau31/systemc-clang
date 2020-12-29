@@ -37,7 +37,7 @@ namespace systemc_hdl {
     bool ret1 = TraverseStmt(emd->getBody());
     AddVnames(h_top);
     h_top->child_list.push_back(h_ret);
-    LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor for method body\n");
+    LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor (method body)\n");
   }
 
   HDLBody::HDLBody(Stmt *stmt, hNodep &h_top,
@@ -45,10 +45,10 @@ namespace systemc_hdl {
     : diag_e{diag_engine} {
     h_ret = NULL;
     bool ret1 = TraverseStmt(stmt);
-    AddVnames(h_top);
+    AddVnames(h_top, true);
 
     h_top->child_list.push_back(h_ret);
-    LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor for stmt\n");
+    LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor (stmt)\n");
   }
 
   HDLBody::~HDLBody() {
@@ -528,7 +528,8 @@ namespace systemc_hdl {
     LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs()));
 
     if (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype) ||
-	(opcall->getType())->isBuiltinType() || (operatorname == "=")) {
+	(opcall->getType())->isBuiltinType() || (operatorname == "=") ||
+	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos))) {
       LLVM_DEBUG(llvm::dbgs() << "Processing operator call type\n");
       // operator for an SC type
       if ((operatorname.compare("()") == 0) &&
@@ -561,6 +562,7 @@ namespace systemc_hdl {
 	       << clang::getOperatorSpelling(opcall->getOperator())
 	       << " num arguments " << opcall->getNumArgs()
 	       << " skipping\n");
+    LLVM_DEBUG(opcall->dump(llvm::dbgs()));
     h_ret = new hNode(hNode::hdlopsEnum::hUnimpl);
     return true;
   }
@@ -814,11 +816,17 @@ namespace systemc_hdl {
     return true;
   }
 
-  void HDLBody::AddVnames(hNodep &hvns) {
+  void HDLBody::AddVnames(hNodep &hvns, bool instmt) {
     LLVM_DEBUG(llvm::dbgs() << "Vname Dump\n");
     for (auto const &var : vname_map) {
       LLVM_DEBUG(llvm::dbgs() << "(" << var.first << "," << var.second.oldn
 		 << ", " << var.second.newn << ")\n");
+      if (instmt) {
+	// mark this var decl as a renamed var decl and tack on the original name
+	// used in later processing of hcode
+	var.second.h_vardeclp->h_op = hNode::hdlopsEnum::hVardeclrn;
+	var.second.h_vardeclp->child_list.push_back(new hNode(var.second.oldn, hNode::hdlopsEnum::hLiteral));
+      }
       hvns->child_list.push_back(var.second.h_vardeclp);
     }
   }

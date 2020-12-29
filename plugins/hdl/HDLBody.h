@@ -54,7 +54,7 @@ namespace systemc_hdl {
     bool TraverseSwitchStmt(SwitchStmt *switchs);
     bool ProcessSwitchCase(SwitchCase *cases);
     bool TraverseWhileStmt(WhileStmt *whiles);
-    void AddVnames(hNodep &hvns);
+    void AddVnames(hNodep &hvns, bool instmt=false);
     //CXXMethodDecl *getEMD();
 
     std::unordered_map<string, FunctionDecl *> methodecls;  //  methods called in this SC_METHOD or function

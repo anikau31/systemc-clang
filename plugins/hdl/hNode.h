@@ -16,6 +16,7 @@ using namespace systemc_clang;
 //! are provided.
 //!
 namespace hnode {
+
   class hNode;
 
   typedef hNode * hNodep;
@@ -47,6 +48,7 @@ namespace hnode {
   etype(hInt), \
   etype(hSigdecl), \
   etype(hVardecl), \
+  etype(hVardeclrn), \
   etype(hModdecl), \
   etype(hVarref), \
   etype(hVarInit), \
@@ -176,6 +178,11 @@ namespace hnode {
       }
     }
 
+      // default arguments don't work in lldb
+    void dumphcode() {
+      print(llvm::outs(), 2);
+    }
+  
   };
 
   //!

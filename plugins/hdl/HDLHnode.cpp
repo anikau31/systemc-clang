@@ -16,6 +16,12 @@
 //!
 namespace systemc_hdl {
 
+  bool is_numeric(string &s) {
+    for (char c : s) {
+      if (!isdigit(c)) return false;
+    }
+    return true;
+  }
   void HDLConstructorHcode::RemoveSCMethod(hNodep &hp) {
  
     hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [] (hNodep x) {
@@ -34,10 +40,13 @@ namespace systemc_hdl {
   void HDLConstructorHcode::CleanupInitHcode(hNodep &hp) {
     hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [] (hNodep x) {
 	  return (((x->h_op==hNode::hdlopsEnum::hBinop) &&
-		   (x->h_name==pbstring)) ||
+		   (x->h_name==pbstring) || (x->h_name==sensop)) ||
+		  ((x->h_op == hNode::hdlopsEnum::hSensvar) && // gratuitous sim method sens vars
+		   (x->h_name.find(localstr) != std::string::npos)) ||
 		  (x->h_op==hNode::hdlopsEnum::hForStmt) ||
+		  (x->h_op == hNode::hdlopsEnum::hVardeclrn)  || // renamed index variables
 		  ((x->h_op==hNode::hdlopsEnum::hCStmt) &&
-		   (x->child_list.size()==0)) ||
+		   (x->child_list.empty())) ||
 		  ((x->h_op == hNode::hdlopsEnum::hNoop) &&
 		   (x->h_name==arrsub)));}), hp->child_list.end());
     for (hNodep hpi :hp->child_list)
@@ -45,7 +54,8 @@ namespace systemc_hdl {
   }
     
   //!
-  //! for loop range for port bindings is expecting 3 simple range arguments:
+  //! for loop range for port bindings is expecting 3 simple range arguments. They must be
+  //! numeric constants. If not, defaults are used.
   //! eg.
   //!
        //! hForStmt  NONAME [
@@ -80,21 +90,24 @@ namespace systemc_hdl {
     hNodep hlo = hp->child_list[0];
     hNodep hi = hp->child_list[1];
     hNodep hstep = hp->child_list[2];
-    
 
     if ((hlo->h_op == hNode::hdlopsEnum::hVarAssign) && 
 	(hlo->child_list.size() == 2) &&
 	(hlo->child_list[0]-> h_op == hNode::hdlopsEnum::hVarref) &&
 	(hlo->child_list[1]->h_op ==  hNode::hdlopsEnum::hLiteral)) {
       tmp.name = hlo->child_list[0]->h_name;
-      tmp.lo = stoi(hlo->child_list[1]->h_name);
+      //FIXME -- put in error message if not a numeric constant
+      if (is_numeric(hlo->child_list[1]->h_name))
+	tmp.lo = stoi(hlo->child_list[1]->h_name);
     }
     if ((hi->h_op == hNode::hdlopsEnum::hBinop) && 
 	(hlo->child_list.size() == 2) &&
 	(hlo->child_list[0]-> h_op == hNode::hdlopsEnum::hVarref) &&
 	(hlo->child_list[1]->h_op ==  hNode::hdlopsEnum::hLiteral)) {
       // check that names are same ... tmp.name = hlo->child_list[0]->h_name;
-      tmp.hi = stoi(hi->child_list[1]->h_name);
+      //FIXME -- put in error message if not a numeric constant
+      if (is_numeric(hi->child_list[1]->h_name))
+	tmp.hi = stoi(hi->child_list[1]->h_name);
     }
     for_info.push_back(tmp);
 
@@ -180,7 +193,7 @@ namespace systemc_hdl {
     assert ((hp_orig->h_op == hNode::hdlopsEnum::hBinop) && (hp_orig->h_name == pbstring));
 
     // Case 0
-    if (for_info.size() == 0 ) { // simple case, not in a for loop
+    if (for_info.empty()) { // simple case, not in a for loop
       string submodport = hp_orig->child_list[0]->h_name;
       string thismodsig = hp_orig->child_list[1]->h_name;
       // part before delimiter is submodule name, after delimiter is port name
@@ -217,7 +230,7 @@ namespace systemc_hdl {
       hNodep hparent = hsubmodport;
       while ((hportchild != nullptr) && (hportchild->h_name == arrsub)) {
 	if ((hportchild->child_list[0]->h_op == hNode::hdlopsEnum::hVarref) &&
-	    (hportchild->child_list[0]->child_list.size() == 0)) { // simple varref
+	    (hportchild->child_list[0]->child_list.empty())) { // simple varref
 	  submod = hportchild->child_list[0]->h_name;  
 	  break;
 	}
@@ -247,7 +260,7 @@ namespace systemc_hdl {
 	hportchild = hportchild->child_list[0];
       }
       if ((hportchild != nullptr) && (hportchild->h_op == hNode::hdlopsEnum::hVarref)) {
-	if (hportchild->child_list.size() == 0) { // Case 1
+	if (hportchild->child_list.empty()) { // Case 1
 	  submod = hportchild->h_name;  
 	  size_t found = submod.find(fielddelim);
 	  if ( found != std::string::npos) { // module name prefix, not a vector of modules
@@ -279,6 +292,32 @@ namespace systemc_hdl {
     SubstituteIndex(hpb, for_info);
     hnewpb->child_list.push_back(hpb);
   }
+
+  void HDLConstructorHcode::UnrollSensitem(hNodep &hp_orig, std::vector<for_info_t> &for_info) {
+    // hBinop << [
+    //      hVarref sensitive NOLIST
+    //      hNoop pos [
+    //        hVarref clk NOLIST
+    //      ]
+    //    ]
+
+    // check for list of sens items
+    if (isInitSensitem(hp_orig->child_list[0])) {
+      UnrollSensitem(hp_orig->child_list[0], for_info);
+      }
+
+    // at a primitive sens item
+    hNodep hp = HnodeDeepCopy(hp_orig); // need to keep the subtrees when the original tree gets released
+
+    hp->h_op = hNode::hdlopsEnum::hSensvar;
+    hp->h_name = hp->child_list[1]->h_name;
+    delete hp->child_list[0]; // release that hnode
+    hp->child_list.erase(hp->child_list.begin()); // remove the first item
+    if (!for_info.empty()) {
+      SubstituteIndex(hp, for_info);
+    }
+    hnewsens->child_list.push_back(hp);
+  }
   
   void HDLConstructorHcode::HDLLoop(hNodep &hp, std::vector<for_info_t> &for_info ) {
     if ((hp->h_op == hNode::hdlopsEnum::hForStmt) && (hp->child_list.size() > 3)) {
@@ -287,7 +326,10 @@ namespace systemc_hdl {
 	for_info.back().curix = forloopix;
 	for (int i=3; i<hp->child_list.size(); i++) {
 	  if (isInitPB(hp->child_list[i])) {// hcode indicating port binding
-	    UnrollBinding(hp->child_list[i], for_info); // unroll all bindings up to this range
+	    UnrollBinding(hp->child_list[i], for_info); // unroll all bindings in this range
+	  }
+	  else if (isInitSensitem(hp->child_list[i])) { // hcode indicating sensitivity item
+	    UnrollSensitem(hp->child_list[i], for_info); // unroll all sensitems in this range
 	  }
 	  else if ((hp->child_list[i]->h_op == hNode::hdlopsEnum::hForStmt) ||
 		   (hp->child_list[i]->h_op == hNode::hdlopsEnum::hCStmt)	)
@@ -298,6 +340,9 @@ namespace systemc_hdl {
     }
     else if (isInitPB(hp)) {
       UnrollBinding(hp, for_info);
+    }
+    else if (isInitSensitem(hp)) {
+      UnrollSensitem(hp, for_info);
     }
     else if (hp->h_op == hNode::hdlopsEnum::hCStmt) {
       for (hNodep hpc:hp->child_list) {
@@ -311,12 +356,23 @@ namespace systemc_hdl {
     std::vector<for_info_t> for_info; 
 
     if (xconstructor==nullptr) return xconstructor;
+
+    // this is a workaround to make lldb find dumphcode
+    // since lldb doesn't pick up default parameters in print
+    // and doesn't recognize llvm::outs()
+    { int junk =2; if (junk!=2) xconstructor->dumphcode();}
+    
     RemoveSCMethod(xconstructor);
     hnewpb = new hNode(xconstructor->h_name, hNode::hdlopsEnum::hPortbindings);
+    // FIXME name should be the SC_METHOD name
+    hnewsens = new hNode(xconstructor->h_name, hNode::hdlopsEnum::hSenslist); 
     for (hNodep hp : xconstructor->child_list)
       HDLLoop(hp, for_info);
     if (!hnewpb->child_list.empty()) {
-    xconstructor->child_list.push_back(hnewpb);
+      xconstructor->child_list.push_back(hnewpb);
+    }
+    if (!hnewsens->child_list.empty()) {
+      xconstructor->child_list.push_back(hnewsens);
     }
     CleanupInitHcode(xconstructor);
     return xconstructor;
