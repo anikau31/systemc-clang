@@ -41,6 +41,11 @@ bool HDLMain::postFire() {
   std::error_code ec;
   string outputfn;
 
+  /// File namd passed from command line argument.
+  //
+
+  LLVM_DEBUG(llvm::dbgs() << "HDL-FILE-OUTPUT: " << hdl_file_out_ << "\n"; );
+
   FileID fileID = getSourceManager().getMainFileID();
   const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
   if (!fileentry) {
