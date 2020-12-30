@@ -12,7 +12,6 @@
 #include "llvm/Support/Debug.h"
 #include "clang/Basic/Diagnostic.h"
 #include "HDLHnode.h"
-
 // clang-format on
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
@@ -31,23 +30,31 @@ namespace systemc_hdl {
 	   new HDLFrontendActionFactory(top_module));
   }
 
+  
+//!
+//! Entry point for HDL generation
+//!
+//! Starting with top level module, process systemc objects
+//! Generate hcode for modules and submodules, including their
+//! ports and variables, port bindings, sensitivity lists
+//! Generate hcode for SC_METHOD body declarations
+//!
 
-  //!
-  //! Entry point for HDL generation
-  //!
-  //! Starting with top level module, process systemc objects
-  //! Generate hcode for modules and submodules, including their
-  //! ports and variables, port bindings, sensitivity lists
-  //! Generate hcode for SC_METHOD body declarations
-  //!
-  bool HDLMain::postFire() {
-    Model *model = getSystemCModel();
+bool HDLMain::postFire() {
+  Model *model = getSystemCModel();
 
-    std::error_code ec;
-    string outputfn;
+  std::error_code ec;
+  string outputfn;
 
-    FileID fileID = getSourceManager().getMainFileID();
-    const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
+  /// File name passed from command line argument.
+  //
+
+  LLVM_DEBUG(llvm::dbgs() << "HDL-FILE-OUTPUT: " << hdl_file_out_ << "\n"; );
+
+  FileID fileID = getSourceManager().getMainFileID();
+  const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
+
+  if (hdl_file_out_ == "") {
     if (!fileentry) {
       outputfn = "HCodeout";
       LLVM_DEBUG(llvm::dbgs()
@@ -59,10 +66,17 @@ namespace systemc_hdl {
 
       LLVM_DEBUG(llvm::dbgs() << "File name is " << outputfn << "\n");
     }
+  } else {
+    outputfn = hdl_file_out_;
+  }
 
-    llvm::raw_fd_ostream HCodeOut(outputfn + ".txt", ec,
+
+  LLVM_DEBUG(llvm::dbgs() << "File name is " << outputfn << "\n");
+
+
+  llvm::raw_fd_ostream HCodeOut(outputfn + ".txt", ec,
 				  llvm::sys::fs::CD_CreateAlways);
-    LLVM_DEBUG(llvm::dbgs() << "file " << outputfn
+  LLVM_DEBUG(llvm::dbgs() << "file " << outputfn
 	       << ".txt, create error code is " << ec.value()
 	       << "\n");
 
