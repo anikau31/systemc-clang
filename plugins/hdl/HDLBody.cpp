@@ -32,8 +32,9 @@ namespace systemc_hdl {
   HDLBody::HDLBody(CXXMethodDecl *emd, hNodep &h_top,
 		   clang::DiagnosticsEngine &diag_engine)
     : diag_e{diag_engine} {
-    LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor\n");
+    LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor (method body\n");
     h_ret = NULL;
+    add_info = false;
     bool ret1 = TraverseStmt(emd->getBody());
     AddVnames(h_top);
     h_top->child_list.push_back(h_ret);
@@ -41,14 +42,19 @@ namespace systemc_hdl {
   }
 
   HDLBody::HDLBody(Stmt *stmt, hNodep &h_top,
-		   clang::DiagnosticsEngine &diag_engine)
-    : diag_e{diag_engine} {
-    h_ret = NULL;
-    bool ret1 = TraverseStmt(stmt);
-    AddVnames(h_top, true);
+		   clang::DiagnosticsEngine &diag_engine, bool add_info)
+    : diag_e{diag_engine}, add_info{add_info} {
 
-    h_top->child_list.push_back(h_ret);
-    LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor (stmt)\n");
+      // add_info determines whether additional information is added to hcode operands that
+      // is needed by downstream hcode processing of the cxxdeclconstructor to recover
+      // port bindings and sensitivity lists
+      
+      h_ret = NULL;
+      bool ret1 = TraverseStmt(stmt);
+      AddVnames(h_top);
+
+      h_top->child_list.push_back(h_ret);
+      LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor (stmt)\n");
   }
 
   HDLBody::~HDLBody() {
@@ -390,12 +396,12 @@ namespace systemc_hdl {
 	return true;
       }
     }
-
     if (isa<FunctionDecl>(value)) {  // similar to method call
       FunctionDecl *funval = (FunctionDecl *)value;
 
       string qualfuncname{value->getQualifiedNameAsString()};
       lutil.make_ident(qualfuncname);
+      if (add_info) qualfuncname += ":"+ name; // !!! add unqualified name for future hcode processing
       methodecls[qualfuncname] =
         (FunctionDecl *)value;  // add to list of "methods" to be generated
       // create the call expression
@@ -482,6 +488,7 @@ namespace systemc_hdl {
     } else {
       opc = hNode::hdlopsEnum::hMethodCall;
       lutil.make_ident(qualmethodname);
+      if (add_info) qualmethodname+= ":"+ methodname;  // include unqualified name for future hcode processing !!!
       methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
       methodname = qualmethodname;
     }
@@ -816,12 +823,12 @@ namespace systemc_hdl {
     return true;
   }
 
-  void HDLBody::AddVnames(hNodep &hvns, bool instmt) {
+  void HDLBody::AddVnames(hNodep &hvns) {
     LLVM_DEBUG(llvm::dbgs() << "Vname Dump\n");
     for (auto const &var : vname_map) {
       LLVM_DEBUG(llvm::dbgs() << "(" << var.first << "," << var.second.oldn
 		 << ", " << var.second.newn << ")\n");
-      if (instmt) {
+      if (add_info) {
 	// mark this var decl as a renamed var decl and tack on the original name
 	// used in later processing of hcode
 	var.second.h_vardeclp->h_op = hNode::hdlopsEnum::hVardeclrn;

@@ -15,10 +15,12 @@ namespace systemc_hdl {
   
   static const string fielddelim{"##"};
   static const string tokendelim{"_"};
+  static const string qualnamedelim(":");
   static const string pbstring{"()"};
   static const string arrsub{"ARRAYSUBSCRIPT"};
   static const string sensop{"<<"};
   static const string localstr{"_local_"};
+  static const string strsccore("sc_coresc");
 
   static inline bool isInitPB(hNodep hp) {
     return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
@@ -29,6 +31,12 @@ namespace systemc_hdl {
       (hp->h_name == sensop);
   }
 
+  static inline bool isMethodCall(hNodep hp) {
+    return ((hp->h_op == hNode::hdlopsEnum::hVarAssign) &&
+	    (hp->child_list.size() == 2) &&
+	    (hp->child_list[1]->h_op == hNode::hdlopsEnum::hMethodCall));
+  }
+  
   class HDLConstructorHcode {
   public:
     HDLConstructorHcode() {};
@@ -44,6 +52,7 @@ namespace systemc_hdl {
     void PushRange(hNodep &hp, std::vector<for_info_t> &for_info);
     void PopRange(std::vector<for_info_t> &for_info);
     void UnrollBinding(hNodep &hp_orig, std::vector<for_info_t> &for_info);
+    bool SetupSenslist(hNodep hp);
     void UnrollSensitem(hNodep &hp_orig, std::vector<for_info_t> &for_info);
     void SubstituteIndex(hNodep &hp, std::vector<for_info_t> &for_info);
     hNodep HnodeDeepCopy(hNodep hp);
@@ -51,7 +60,7 @@ namespace systemc_hdl {
     void CleanupInitHcode(hNodep &hp);
   private:
     hNodep hnewpb;  // port binding list
-    hNodep hnewsens; // sensitivity list
+    std::vector<hNodep> hnewsens; // sensitivity lists
 
   };
 }

@@ -25,14 +25,14 @@ namespace systemc_hdl {
   void HDLConstructorHcode::RemoveSCMethod(hNodep &hp) {
  
     hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [] (hNodep x) {
-	  return (((x->h_op==hNode::hdlopsEnum::hVarAssign) &&
-		   (x->child_list.size()==2) &&
-		   (x->child_list.back()->h_op != hNode::hdlopsEnum::hLiteral))
-		  || (x->h_op == hNode::hdlopsEnum::hVardecl) // index variables
-		  || (x->h_op == hNode::hdlopsEnum::hMethodCall) // sc_method
-		  || (x->h_op == hNode::hdlopsEnum::hUnimpl));}), hp->child_list.end() );
+	  return (
+		  //((x->h_op==hNode::hdlopsEnum::hVarAssign) &&
+		  //(x->child_list.size()==2) &&
+		  //(x->child_list.back()->h_op != hNode::hdlopsEnum::hLiteral)) ||
+		  (x->h_op == hNode::hdlopsEnum::hVardecl) || // index variables
+		  //(x->h_op == hNode::hdlopsEnum::hMethodCall) || // sc_method
+		  (x->h_op == hNode::hdlopsEnum::hUnimpl));}), hp->child_list.end() );
 
-    //for_each(hp->child_list.begin(), hp->child_list.end(), RemoveSCMethod);
     for (hNodep hpi :hp->child_list)
       RemoveSCMethod(hpi);      
   }
@@ -47,6 +47,8 @@ namespace systemc_hdl {
 		  (x->h_op == hNode::hdlopsEnum::hVardeclrn)  || // renamed index variables
 		  ((x->h_op==hNode::hdlopsEnum::hCStmt) &&
 		   (x->child_list.empty())) ||
+		  (x->h_op==hNode::hdlopsEnum::hVarAssign) ||
+		  ((x->h_op==hNode::hdlopsEnum::hMethodCall) && (x->h_name.find(strsccore) !=std::string::npos)) ||
 		  ((x->h_op == hNode::hdlopsEnum::hNoop) &&
 		   (x->h_name==arrsub)));}), hp->child_list.end());
     for (hNodep hpi :hp->child_list)
@@ -292,7 +294,38 @@ namespace systemc_hdl {
     SubstituteIndex(hpb, for_info);
     hnewpb->child_list.push_back(hpb);
   }
+  bool HDLConstructorHcode::SetupSenslist(hNodep hp) {
 
+    // hMethodCall sc_coresc_simcontextcreate_method_process:create_method_process [
+    //         hMethodCall sc_coresc_get_curr_simcontext:sc_get_curr_simcontext NOLIST
+    //         hUnimpl StringLiteral NOLIST
+    //         hLiteral 0 NOLIST
+    //         hUnop & [
+    //           hMethodCall zhwencode_blockfp_t11_52_2mc_proc:mc_proc NOLIST
+    //         ]
+    //         hUnimpl CXXThisExpr NOLIST
+    //         hLiteral 0 NOLIST
+    //       ]
+
+    if (hp->h_op == hNode::hdlopsEnum::hMethodCall) {
+      for (hNodep hpi: hp->child_list) {
+	if (hpi->h_op == hNode::hdlopsEnum::hUnop) {
+	  std::size_t found = (hpi->child_list[0]->h_name).find(qualnamedelim);
+	  if ( found != std::string::npos) { // should be SC_METHOD name
+	    hnewsens.push_back(new hNode(hpi->child_list[0]->h_name.substr(found+1),
+				       hNode::hdlopsEnum::hSenslist));
+	    return true; // got the name
+	  }
+	  else { // couldn't find the ":"
+	    hnewsens.push_back(new hNode(hpi->child_list[0]->h_name, hNode::hdlopsEnum::hSenslist));
+	    return true;
+	  }
+	}
+      }
+    }
+    return false;
+  }
+    
   void HDLConstructorHcode::UnrollSensitem(hNodep &hp_orig, std::vector<for_info_t> &for_info) {
     // hBinop << [
     //      hVarref sensitive NOLIST
@@ -316,11 +349,18 @@ namespace systemc_hdl {
     if (!for_info.empty()) {
       SubstituteIndex(hp, for_info);
     }
-    hnewsens->child_list.push_back(hp);
+    hnewsens.back()->child_list.push_back(hp);
   }
   
   void HDLConstructorHcode::HDLLoop(hNodep &hp, std::vector<for_info_t> &for_info ) {
-    if ((hp->h_op == hNode::hdlopsEnum::hForStmt) && (hp->child_list.size() > 3)) {
+    // check in order of expected frequency
+    if (isInitPB(hp)) {
+      UnrollBinding(hp, for_info);
+    }
+    else if (isInitSensitem(hp)) {
+      UnrollSensitem(hp, for_info);
+    }
+    else if ((hp->h_op == hNode::hdlopsEnum::hForStmt) && (hp->child_list.size() > 3)) {
       PushRange(hp, for_info); // fill in name, lo, hi, step
       for (int forloopix = for_info.back().lo; forloopix < for_info.back().hi; forloopix+=for_info.back().step) {
 	for_info.back().curix = forloopix;
@@ -332,23 +372,24 @@ namespace systemc_hdl {
 	    UnrollSensitem(hp->child_list[i], for_info); // unroll all sensitems in this range
 	  }
 	  else if ((hp->child_list[i]->h_op == hNode::hdlopsEnum::hForStmt) ||
-		   (hp->child_list[i]->h_op == hNode::hdlopsEnum::hCStmt)	)
+		   (hp->child_list[i]->h_op == hNode::hdlopsEnum::hCStmt))
 	    HDLLoop(hp->child_list[i], for_info);
 	}
       }
       for_info.pop_back();
-    }
-    else if (isInitPB(hp)) {
-      UnrollBinding(hp, for_info);
-    }
-    else if (isInitSensitem(hp)) {
-      UnrollSensitem(hp, for_info);
     }
     else if (hp->h_op == hNode::hdlopsEnum::hCStmt) {
       for (hNodep hpc:hp->child_list) {
 	HDLLoop(hpc, for_info);
       }
     }
+    else if (isMethodCall(hp)) { // hVarAssign child[1] is a method call;
+      if (!SetupSenslist(hp->child_list[1])) { // points to first hMethodCall, push SC_METHOD name onto hnewsens
+	// oops couldn't parse it
+	hnewsens.push_back(new hNode( "METHOD ???", hNode::hdlopsEnum::hSenslist));
+      }
+    }
+
   }
   
   
@@ -365,14 +406,18 @@ namespace systemc_hdl {
     RemoveSCMethod(xconstructor);
     hnewpb = new hNode(xconstructor->h_name, hNode::hdlopsEnum::hPortbindings);
     // FIXME name should be the SC_METHOD name
-    hnewsens = new hNode(xconstructor->h_name, hNode::hdlopsEnum::hSenslist); 
+    //hnewsens = new hNode(xconstructor->h_name, hNode::hdlopsEnum::hSenslist); 
     for (hNodep hp : xconstructor->child_list)
       HDLLoop(hp, for_info);
     if (!hnewpb->child_list.empty()) {
       xconstructor->child_list.push_back(hnewpb);
     }
-    if (!hnewsens->child_list.empty()) {
-      xconstructor->child_list.push_back(hnewsens);
+    if (!hnewsens.empty()) {
+      for (hNodep onesens: hnewsens) {
+	if (!onesens->child_list.empty()) {
+	  xconstructor->child_list.push_back(onesens);
+	}
+      }
     }
     CleanupInitHcode(xconstructor);
     return xconstructor;

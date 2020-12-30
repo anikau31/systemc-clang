@@ -31,7 +31,7 @@ namespace systemc_hdl {
   class HDLBody: public RecursiveASTVisitor <HDLBody> {
   public:
     HDLBody(CXXMethodDecl * emd, hNodep &h_top, clang::DiagnosticsEngine &diag_engine);
-    HDLBody(Stmt * stmt, hNodep &h_top, clang::DiagnosticsEngine &diag_engine);
+    HDLBody(Stmt * stmt, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, bool add_info = true);
     virtual ~HDLBody();
 
     bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
@@ -54,7 +54,7 @@ namespace systemc_hdl {
     bool TraverseSwitchStmt(SwitchStmt *switchs);
     bool ProcessSwitchCase(SwitchCase *cases);
     bool TraverseWhileStmt(WhileStmt *whiles);
-    void AddVnames(hNodep &hvns, bool instmt=false);
+    void AddVnames(hNodep &hvns);
     //CXXMethodDecl *getEMD();
 
     std::unordered_map<string, FunctionDecl *> methodecls;  //  methods called in this SC_METHOD or function
@@ -66,6 +66,8 @@ namespace systemc_hdl {
     hdecl_name_map_t vname_map;
     name_serve lname;
 
+    bool add_info;
+    
     bool isLogicalOp(clang::OverloadedOperatorKind opc);
 
     util lutil;

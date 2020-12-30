@@ -231,9 +231,9 @@ namespace systemc_hdl {
 	      HDLt.SCtype2hcode(vardecl->getName(), te->getTemplateArgTreePtr(),
 				NULL, hNode::hdlopsEnum::hVardecl, hparams);
 	    }
-	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine);
+	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, false); // suppress output of unqualified name
 	  } else {
-	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine);
+	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, false); // suppress output of unqualified name
 	  }
 	  h_top->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
@@ -394,6 +394,7 @@ namespace systemc_hdl {
       if (efc->getProcessType() == PROCESS_TYPE::METHOD) {
 	hNodep h_process = new hNode(efc->getName(), hNode::hdlopsEnum::hProcess);
 	LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName() << "\n");
+#if 0
 	// Sensitivity list
 	EntryFunctionContainer::SenseMapType sensmap = efc->getSenseMap();
 	if (!sensmap.empty()) {
@@ -447,6 +448,7 @@ namespace systemc_hdl {
 	  }
 	  h_process->child_list.push_back(h_senslist);
 	}
+#endif
 	CXXMethodDecl *emd = efc->getEntryMethod();
 	if (emd->hasBody()) {
 	  hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);

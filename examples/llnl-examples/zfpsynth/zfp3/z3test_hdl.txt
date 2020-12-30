@@ -1724,9 +1724,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar m_ready NOLIST
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hSigAssignL write [
@@ -1739,11 +1736,6 @@
         ]
       ]
       hProcess ms_fwd_order [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hIfStmt  NONAME [
@@ -3433,10 +3425,12 @@
           ]
         ]
       ]
-      hSenslist u_encode_block [
+      hSenslist mc_proc [
         hSensvar m_ready [
           hVarref m_ready NOLIST
         ]
+      ]
+      hSenslist ms_fwd_order [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -3575,14 +3569,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar m_ready NOLIST
-          hSensvar v NOLIST
-          hSensvar w NOLIST
-          hSensvar x NOLIST
-          hSensvar y NOLIST
-          hSensvar z NOLIST
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hSigAssignL write [
@@ -3661,11 +3647,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -4174,7 +4155,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_xt_0 [
+      hSenslist mc_proc [
         hSensvar m_ready [
           hVarref m_ready NOLIST
         ]
@@ -4217,6 +4198,8 @@
         hSensvar v [
           hVarref v NOLIST
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -4355,14 +4338,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar m_ready NOLIST
-          hSensvar v NOLIST
-          hSensvar w NOLIST
-          hSensvar x NOLIST
-          hSensvar y NOLIST
-          hSensvar z NOLIST
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hSigAssignL write [
@@ -4441,11 +4416,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -4954,7 +4924,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_yt_0 [
+      hSenslist mc_proc [
         hSensvar m_ready [
           hVarref m_ready NOLIST
         ]
@@ -4997,6 +4967,8 @@
         hSensvar v [
           hVarref v NOLIST
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -5114,25 +5086,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar c_ex [
-            hSensvar ready NOLIST
-            hSensvar value_changed_event NOLIST
-          ]
-          hSensvar c_fp [
-            hSensvar ready NOLIST
-            hSensvar value_changed_event NOLIST
-          ]
-          hSensvar c_sync NOLIST
-          hSensvar emax NOLIST
-          hSensvar emax_v NOLIST
-          hSensvar s_fp [
-            hSensvar data NOLIST
-          ]
-          hSensvar s_fp [
-            hSensvar valid NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hSigAssignL write [
@@ -5184,11 +5137,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -5429,7 +5377,7 @@
           hVarref m_ex NOLIST
         ]
       ]
-      hSenslist u_find_emax [
+      hSenslist mc_proc [
         hSensvar s_fp##valid [
           hVarref s_fp##valid NOLIST
         ]
@@ -5455,6 +5403,8 @@
         hSensvar c_sync [
           hVarref c_sync NOLIST
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -5689,14 +5639,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar data NOLIST
-          hSensvar empty_i NOLIST
-          hSensvar full_i NOLIST
-          hSensvar rd_en NOLIST
-          hSensvar rd_idx NOLIST
-          hSensvar wr_en NOLIST
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hIfStmt  NONAME [
@@ -5749,11 +5691,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -5978,7 +5915,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_fifo [
+      hSenslist mc_proc [
         hSensvar wr_en [
           hVarref wr_en NOLIST
         ]
@@ -6000,6 +5937,8 @@
             hLiteral 0 NOLIST
           ]
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -6118,18 +6057,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar data NOLIST
-          hSensvar empty_i NOLIST
-          hSensvar full_i NOLIST
-          hSensvar m_port [
-            hSensvar ready NOLIST
-          ]
-          hSensvar rd_idx NOLIST
-          hSensvar s_port [
-            hSensvar valid NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hSigAssignL write [
@@ -6179,11 +6106,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -6367,7 +6289,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_reg_ex [
+      hSenslist mc_proc [
         hSensvar s_port##valid [
           hVarref s_port##valid NOLIST
         ]
@@ -6395,6 +6317,8 @@
             hLiteral 1 NOLIST
           ]
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -6477,22 +6401,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar c_port1 [
-            hSensvar ready NOLIST
-            hSensvar value_changed_event NOLIST
-          ]
-          hSensvar c_port2 [
-            hSensvar ready NOLIST
-            hSensvar value_changed_event NOLIST
-          ]
-          hSensvar s_port [
-            hSensvar data NOLIST
-          ]
-          hSensvar s_port [
-            hSensvar valid NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hSigAssignL write [
@@ -6582,7 +6490,7 @@
           hVarref m_port2 NOLIST
         ]
       ]
-      hSenslist u_ssplit_ex [
+      hSenslist mc_proc [
         hSensvar s_port##data [
           hVarref s_port##data NOLIST
         ]
@@ -6823,14 +6731,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar data NOLIST
-          hSensvar empty_i NOLIST
-          hSensvar full_i NOLIST
-          hSensvar rd_en NOLIST
-          hSensvar rd_idx NOLIST
-          hSensvar wr_en NOLIST
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hIfStmt  NONAME [
@@ -6883,11 +6783,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -7112,7 +7007,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_fifo [
+      hSenslist mc_proc [
         hSensvar wr_en [
           hVarref wr_en NOLIST
         ]
@@ -7134,6 +7029,8 @@
             hLiteral 0 NOLIST
           ]
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -7363,14 +7260,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar data NOLIST
-          hSensvar empty_i NOLIST
-          hSensvar full_i NOLIST
-          hSensvar rd_en NOLIST
-          hSensvar rd_idx NOLIST
-          hSensvar wr_en NOLIST
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hIfStmt  NONAME [
@@ -7423,11 +7312,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -7652,7 +7536,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_fifo [
+      hSenslist mc_proc [
         hSensvar wr_en [
           hVarref wr_en NOLIST
         ]
@@ -7674,6 +7558,8 @@
             hLiteral 0 NOLIST
           ]
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -7770,24 +7656,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar c_int NOLIST
-          hSensvar c_sync NOLIST
-          hSensvar count NOLIST
-          hSensvar m_ready NOLIST
-          hSensvar s_ex [
-            hSensvar data NOLIST
-          ]
-          hSensvar s_ex [
-            hSensvar valid NOLIST
-          ]
-          hSensvar s_fp [
-            hSensvar data NOLIST
-          ]
-          hSensvar s_fp [
-            hSensvar valid NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -7939,11 +7807,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hIfStmt  NONAME [
@@ -8046,7 +7909,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_fwd_cast [
+      hSenslist mc_proc [
         hSensvar s_ex##valid [
           hVarref s_ex##valid NOLIST
         ]
@@ -8071,6 +7934,8 @@
         hSensvar c_int [
           hVarref c_int NOLIST
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -8171,10 +8036,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar c_bo NOLIST
-          hSensvar s_block NOLIST
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -8323,7 +8184,7 @@
           hVarref m_valid NOLIST
         ]
       ]
-      hSenslist u_block_buffer [
+      hSenslist mc_proc [
         hSensvar ARRAYSUBSCRIPT [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
@@ -8561,14 +8422,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar data NOLIST
-          hSensvar empty_i NOLIST
-          hSensvar full_i NOLIST
-          hSensvar rd_en NOLIST
-          hSensvar rd_idx NOLIST
-          hSensvar wr_en NOLIST
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hIfStmt  NONAME [
@@ -8621,11 +8474,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -8850,7 +8698,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_bbuf [
+      hSenslist mc_proc [
         hSensvar wr_en [
           hVarref wr_en NOLIST
         ]
@@ -8872,6 +8720,8 @@
             hLiteral 0 NOLIST
           ]
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -9055,14 +8905,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar flush1 NOLIST
-          hSensvar k0 NOLIST
-          hSensvar m_ready NOLIST
-          hSensvar s_block NOLIST
-          hSensvar s_flush NOLIST
-          hSensvar s_valid NOLIST
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -9194,11 +9036,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -10296,7 +10133,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_encode_ints [
+      hSenslist mc_proc [
         hSensvar ARRAYSUBSCRIPT [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
@@ -10408,6 +10245,8 @@
         hSensvar s_flush [
           hVarref s_flush NOLIST
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
@@ -10573,26 +10412,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar cs NOLIST
-          hSensvar m_bits [
-            hSensvar ready NOLIST
-          ]
-          hSensvar maxbits NOLIST
-          hSensvar maxprec NOLIST
-          hSensvar minbits NOLIST
-          hSensvar minexp NOLIST
-          hSensvar s_bc NOLIST
-          hSensvar s_bp NOLIST
-          hSensvar s_ex [
-            hSensvar data NOLIST
-          ]
-          hSensvar s_ex [
-            hSensvar valid NOLIST
-          ]
-          hSensvar s_last NOLIST
-          hSensvar s_valid NOLIST
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -11102,11 +10921,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hIfStmt  NONAME [
@@ -11225,13 +11039,12 @@
             ]
           ]
         ]
-        hVardeclrn _local_0 [
+        hVardecl _local_0 [
           hTypeinfo  NONAME [
             hType sc_uint [
               hLiteral 12 NOLIST
             ]
           ]
-          hLiteral n NOLIST
         ]
         hCStmt  NONAME [
           hBinop = [
@@ -11318,21 +11131,19 @@
             ]
           ]
         ]
-        hVardeclrn _local_0 [
+        hVardecl _local_0 [
           hTypeinfo  NONAME [
             hType sc_uint [
               hLiteral 8 NOLIST
             ]
           ]
-          hLiteral bbits NOLIST
         ]
-        hVardeclrn _local_1 [
+        hVardecl _local_1 [
           hTypeinfo  NONAME [
             hType bits_t [
               hLiteral 64 NOLIST
             ]
           ]
-          hLiteral flit NOLIST
         ]
         hCStmt  NONAME [
           hBinop = [
@@ -11439,7 +11250,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist u_encode_stream [
+      hSenslist mc_proc [
         hSensvar s_ex##valid [
           hVarref s_ex##valid NOLIST
         ]
@@ -11476,6 +11287,8 @@
         hSensvar cs [
           hVarref cs NOLIST
         ]
+      ]
+      hSenslist ms_proc [
         hSensvar pos [
           hNoop pos [
             hVarref clk NOLIST
