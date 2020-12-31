@@ -16,6 +16,7 @@ using namespace systemc_clang;
 //! are provided.
 //!
 namespace hnode {
+
   class hNode;
 
   typedef hNode * hNodep;
@@ -25,6 +26,7 @@ namespace hnode {
 #define HNODEen \
   etype(hNoop), \
   etype(hModule), \
+  etype(hModinitblock), \
   etype(hPortbindings), \
   etype(hPortbinding), \
   etype(hProcesses), \
@@ -46,6 +48,7 @@ namespace hnode {
   etype(hInt), \
   etype(hSigdecl), \
   etype(hVardecl), \
+  etype(hVardeclrn), \
   etype(hModdecl), \
   etype(hVarref), \
   etype(hVarInit), \
@@ -81,7 +84,8 @@ namespace hnode {
     
     string h_name;
     hdlopsEnum h_op;
-    list<hNodep> child_list;
+    //list<hNodep> child_list;
+    std::vector<hNodep> child_list;
  
 #undef etype
 #define etype(x) #x
@@ -110,7 +114,8 @@ namespace hnode {
     ~hNode() {
       //return;
       if (!child_list.empty()) {
-	list<hNodep>::iterator it;
+	//list<hNodep>::iterator it;
+	vector<hNodep>::iterator it;
 	for (it = child_list.begin(); it != child_list.end(); it++) {
 	  /* if (*it) */
 	  /*   cout << "child list element " << *it << "\n"; */
@@ -139,7 +144,8 @@ namespace hnode {
     hdlopsEnum getopc() {
       return h_op;
     }
-    
+
+   
     // for completeness
     hdlopsEnum str2hdlopenum(string st) {
       const int n = sizeof (hdlop_pn)/sizeof (hdlop_pn[0]);
@@ -149,7 +155,8 @@ namespace hnode {
       }
       return hLast;
     }
-    void print(llvm::raw_fd_ostream & modelout, unsigned int indnt=2) {
+    //void print(llvm::raw_fd_ostream & modelout, unsigned int indnt=2) {
+    void print(llvm::raw_ostream & modelout=llvm::outs(), unsigned int indnt=2) {
       modelout.indent(indnt);
       modelout << printopc(h_op) << " ";
       if (h_name == "")
@@ -171,6 +178,11 @@ namespace hnode {
       }
     }
 
+      // default arguments don't work in lldb
+    void dumphcode() {
+      print(llvm::outs(), 2);
+    }
+  
   };
 
   //!
@@ -256,8 +268,9 @@ namespace hnode {
     hNodep h_vardeclp;
   } names_t;
 
-  typedef std::map<Decl *, names_t> hname_map_t;
-
+ typedef std::map<Decl *, names_t> hdecl_name_map_t;
+ typedef std::map<ModuleInstance *, names_t> hmodinst_name_map_t;
+ 
   class name_serve {
   private:
     int cnt;

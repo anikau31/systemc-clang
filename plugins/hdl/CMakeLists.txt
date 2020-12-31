@@ -5,4 +5,5 @@ add_library(libhdl
   HDLMain.cpp
   HDLBody.cpp
   HDLType.cpp
+  HDLHnode.cpp
   )
