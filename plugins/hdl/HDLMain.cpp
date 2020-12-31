@@ -46,8 +46,14 @@ namespace systemc_hdl {
     std::error_code ec;
     string outputfn;
 
+    /// File name passed from command line argument.
+    //
+
+    LLVM_DEBUG(llvm::dbgs() << "HDL-FILE-OUTPUT: " << hdl_file_out_ << "\n"; );
+    
     FileID fileID = getSourceManager().getMainFileID();
     const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
+    if (hdl_file_out_ == "") {
     if (!fileentry) {
       outputfn = "HCodeout";
       LLVM_DEBUG(llvm::dbgs()
@@ -58,6 +64,9 @@ namespace systemc_hdl {
       outputfn = regex_replace(outputfn, r, "_hdl");
 
       LLVM_DEBUG(llvm::dbgs() << "File name is " << outputfn << "\n");
+    }
+    } else {
+      outputfn = hdl_file_out_;
     }
 
     llvm::raw_fd_ostream HCodeOut(outputfn + ".txt", ec,
