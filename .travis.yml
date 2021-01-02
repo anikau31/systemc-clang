@@ -18,7 +18,6 @@ addons:
     - cmake
     - ccache
     - ninja-build
-      #    - libelf-dev 
 
 git:
   submodules: false
