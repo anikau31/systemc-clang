@@ -17,8 +17,8 @@ addons:
     - g++
     - cmake
     - ccache
-    - libelf-dev 
     - ninja-build
+      #    - libelf-dev 
 
 git:
   submodules: false
@@ -37,6 +37,7 @@ cache:
   - TARGET_ARCH=linux64 
   - SYSTEMC=systemc-2.3.3
   - CXX=clang++
+  - CLANG_VERSION=10.0.0
 
     # systemc compilation 
     # credit: https://github.com/janweinstock/vcml/blob/master/.travis.yml
@@ -64,11 +65,11 @@ install:
     cd DEPENDS
     wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
     tar xf clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-    mv clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04 clang-10.0.0
+    mv clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04 clang-$CLANG_VERSION
 
     # Debug
     # Setup flags
-    export LLVM_INSTALL_DIR=`pwd`/clang-10.0.0
+    export LLVM_INSTALL_DIR=`pwd`/clang-$CLANG_VERSION
     export LLVMCONFIG=$LLVM_INSTALL_DIR/bin/llvm-config
     export LLVM_LD_FLAGS=-L$LLVM_INSTALL_DIR/lib
     export LLVM_CXX_FLAGS="-I/home/travis/build/rseac/systemc-clang/DEPENDS/clang-10.0.0/include  -fPIC -fvisibility-inlines-hidden -std=c++14 -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -pedantic -Wno-long-long -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -ffunction-sections -fdata-sections -O3 -DNDEBUG  -fno-exceptions -fno-rtti -D_GNU_SOURCE -fvisibility-inlines-hidden -Wsign-compare"
