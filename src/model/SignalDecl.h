@@ -25,7 +25,7 @@ class SignalDecl : public PortDecl {
   /// Get parameters
   std::string getName();
   FindTemplateTypes *getTemplateTypes();
-  clang::FieldDecl *getASTNode();
+  const clang::FieldDecl *getASTNode() const;
 
   json dump_json();
 };
