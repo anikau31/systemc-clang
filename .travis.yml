@@ -87,7 +87,10 @@ script:
   - export CXX=$LLVM_INSTALL_DIR/bin/clang++
   - echo $CXX
   - mkdir -p TEMP; cd TEMP;
-  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DENABLE_TESTS=ON -DHDL=ON -G "Ninja" && ninja ;
+  # Install python dep.
+  - python install -r $SYSTEMC/requirements.txt
+  # Build SystemC-clang
+  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DENABLE_TESTS=ON -DHDL=ON -DENABLE_VERILOG_TESTS=ON -G "Ninja" && ninja ;
   - echo "Run tests"
   - ctest
     #- cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on && make
