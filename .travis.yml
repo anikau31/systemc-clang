@@ -18,7 +18,6 @@ addons:
     - cmake
     - ccache
     - ninja-build
-    - python3
     - clang-10
 
 git:
@@ -28,6 +27,8 @@ git:
 before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
+    # This is necessary for the python tests
+  - sudo apt install python3
 
 cache:
   directories:
