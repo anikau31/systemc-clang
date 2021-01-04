@@ -50,7 +50,7 @@ install:
   - tar zxvf systemc-2.3.3.tar.gz; mv systemc-2.3.3/systemc/* systemc-2.3.3/
   - ls -l $SYSTEMC_HOME/
   # Install python dep.
-  - pip install -r $SYSTEMC/requirements.txt
+  - pip install -r requirements.txt
     #- echo $LLVM_LD_FLAGS
     #- | # Build SystemC
       # if [ ! -d $SYSTEMC_HOME ]; then
