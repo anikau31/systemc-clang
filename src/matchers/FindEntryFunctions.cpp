@@ -72,7 +72,7 @@ bool FindEntryFunctions::VisitStringLiteral(StringLiteral *s) {
   switch (pass_) {
     case 2: {
       // os_ << "\nVisitStringLiteral\n";
-      entry_name_ = s->getString();
+      entry_name_ = s->getString().str();
 
       /// FIXME: Where do we erase these?
       /// Create the object to handle multiple entry functions.

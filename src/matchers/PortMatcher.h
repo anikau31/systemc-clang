@@ -186,7 +186,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
   auto makeSignalMatcher(llvm::StringRef name) {
     return fieldDecl(
-        signalMatcher(name)
+        signalMatcher(name.str())
       ).bind("other_fields");
   }
 
@@ -263,7 +263,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
   auto makePortHasNameMatcher(llvm::StringRef name) {
     return fieldDecl(
-        portNameMatcher(name)
+        portNameMatcher(name.str())
         ).bind("other_fields");
   }
 
@@ -277,8 +277,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
     return 
       fieldDecl(
           anyOf(
-            hasType(arrayType(hasElementType(asString(name)))),
-            hasType(namedDecl(hasName(name)))
+            hasType(arrayType(hasElementType(asString(name.str())))),
+            hasType(namedDecl(hasName(name.str())))
           )
       );
   }
@@ -288,7 +288,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
      hasElementType(hasUnqualifiedDesugaredType(
          recordType(
            hasDeclaration(
-            cxxRecordDecl(isDerivedFrom(hasName(name))).bind("submodule")
+            cxxRecordDecl(isDerivedFrom(hasName(name.str()))).bind("submodule")
             ) //hasDeclaration
          )// recordType
        ))

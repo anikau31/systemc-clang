@@ -423,7 +423,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     std::string parent_name{};
     if (parent_decl) {
-      parent_name = parent_decl->getName();
+      parent_name = parent_decl->getName().str();
     }
 
     auto array_indices{index_map[instance_name]};
