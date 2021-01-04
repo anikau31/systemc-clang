@@ -1,5 +1,5 @@
 sudo: false
-dist: bionic
+dist: xenial
 language: c++ 
 
 compiler: 
@@ -19,6 +19,7 @@ addons:
     - ccache
     - ninja-build
     - python3
+    - clang-10
 
 git:
   submodules: false
@@ -63,9 +64,9 @@ install:
   - cd ..
   - | # Build clang 
     cd DEPENDS
-    wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-    tar xf clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-    mv clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04 clang-$CLANG_VERSION
+    # wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    # tar xf clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    # mv clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04 clang-$CLANG_VERSION
 
     # Debug
     # Setup flags
