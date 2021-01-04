@@ -1,4 +1,5 @@
 // clang-format off
+#include "SystemCClang.h"
 #include "HDLBody.h"
 #include "HDLType.h"
 #include "clang/Basic/OperatorKinds.h"
@@ -30,8 +31,8 @@ using namespace hnode;
 namespace systemc_hdl {
 
   HDLBody::HDLBody(CXXMethodDecl *emd, hNodep &h_top,
-		   clang::DiagnosticsEngine &diag_engine)
-    : diag_e{diag_engine} {
+		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context )
+    : diag_e{diag_engine}, ast_context_{ast_context} {
     LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor (method body\n");
     h_ret = NULL;
     add_info = false;
@@ -42,8 +43,8 @@ namespace systemc_hdl {
   }
 
   HDLBody::HDLBody(Stmt *stmt, hNodep &h_top,
-		   clang::DiagnosticsEngine &diag_engine, bool add_info)
-    : diag_e{diag_engine}, add_info{add_info} {
+		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, bool add_info)
+    : diag_e{diag_engine}, add_info{add_info}, ast_context_{ast_context} {
 
       // add_info determines whether additional information is added to hcode operands that
       // is needed by downstream hcode processing of the cxxdeclconstructor to recover
@@ -172,7 +173,7 @@ namespace systemc_hdl {
 	if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
 	  LLVM_DEBUG(llvm::dbgs()
 		     << "CXXConstructExpr followed by integer literal found\n");
-	  LLVM_DEBUG(exp->dump(llvm::dbgs()));
+	  LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
 	  IntegerLiteral *lit = (IntegerLiteral *)exp->getArg(0);
 	  string s = lit->getValue().toString(10, true);
 	  // need to add type to back of h_ret
@@ -265,7 +266,7 @@ namespace systemc_hdl {
 
     te->Enumerate(tp);
     HDLType HDLt;
-    HDLt.SCtype2hcode(vardecl->getName(), te->getTemplateArgTreePtr(), NULL,
+    HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(), NULL,
 		      hNode::hdlopsEnum::hVardecl, h_varlist);
     hNodep h_vardecl = h_varlist->child_list.back();
     h_ret = NULL;
@@ -276,7 +277,7 @@ namespace systemc_hdl {
 
     string newn = lname.newname();
     h_vardecl->set(newn);  // replace original name with new name
-    names_t names = {vardecl->getName(), newn, h_vardecl};
+    names_t names = {vardecl->getName().str(), newn, h_vardecl};
     vname_map[vardecl] = names;
 
     if (h_ret) {
@@ -295,7 +296,7 @@ namespace systemc_hdl {
     //                         bool isEvaluated = true) const;
 
     hNodep h_binop =
-      new hNode(expr->getOpcodeStr(),
+      new hNode(expr->getOpcodeStr().str(),
                 hNode::hdlopsEnum::hBinop);  // node to hold binop expr
     LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
 	       << expr->getOpcodeStr() << "\n");
@@ -317,12 +318,12 @@ namespace systemc_hdl {
 
   bool HDLBody::TraverseUnaryOperator(UnaryOperator *expr) {
     LLVM_DEBUG(llvm::dbgs() << "in TraverseUnaryOperator expr node is \n");
-    LLVM_DEBUG(expr->dump(llvm::dbgs()));
+    LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_); );
 
     auto opcstr = expr->getOpcode();
 
     hNodep h_unop =
-      new hNode(expr->getOpcodeStr(opcstr),
+      new hNode(expr->getOpcodeStr(opcstr).str(),
                 hNode::hdlopsEnum::hUnop);  // node to hold unop expr
 
     TraverseStmt(expr->getSubExpr());
@@ -335,7 +336,7 @@ namespace systemc_hdl {
 
   bool HDLBody::TraverseConditionalOperator(ConditionalOperator *expr) {
     LLVM_DEBUG(llvm::dbgs() << "in TraverseConditionalOperator expr node is \n");
-    LLVM_DEBUG(expr->dump(llvm::dbgs()));
+    LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_); );
 
     hNodep h_condop = new hNode(hNode::hdlopsEnum::hCondop);
     TraverseStmt(expr->getCond());
@@ -425,7 +426,7 @@ namespace systemc_hdl {
 
   bool HDLBody::TraverseArraySubscriptExpr(ArraySubscriptExpr *expr) {
     LLVM_DEBUG(llvm::dbgs() << "In TraverseArraySubscriptExpr, tree follows\n");
-    LLVM_DEBUG(expr->dump(llvm::dbgs()));
+    LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_));
     hNodep h_arrexpr = new hNode("ARRAYSUBSCRIPT", hNode::hdlopsEnum::hBinop);
     TraverseStmt(expr->getLHS());
     h_arrexpr->child_list.push_back(h_ret);
@@ -442,7 +443,7 @@ namespace systemc_hdl {
     // For example, in "x.f(5)", this returns the sub-expression "x".
     Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
 
-    LLVM_DEBUG(arg->dump(llvm::dbgs()));
+    LLVM_DEBUG(arg->dump(llvm::dbgs(), ast_context_));
     QualType argtyp = arg->getType();
     LLVM_DEBUG(llvm::dbgs() << "type of x in x.f(5) is " << argtyp.getAsString()
 	       << "\n");
@@ -532,7 +533,7 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr, Operator name is "
 	       << operatorname << "\n");
     LLVM_DEBUG(llvm::dbgs() << "Type with name " << operatortype << " follows\n");
-    LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs()));
+    LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
 
     if (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype) ||
 	(opcall->getType())->isBuiltinType() || (operatorname == "=") ||
@@ -559,7 +560,7 @@ namespace systemc_hdl {
 	  h_operop->child_list.push_back(h_ret);
 	LLVM_DEBUG(llvm::dbgs()
 		   << "operator call argument " << i << " follows\n");
-	LLVM_DEBUG(opcall->getArg(i)->dump(llvm::dbgs()));
+	LLVM_DEBUG(opcall->getArg(i)->dump(llvm::dbgs(), ast_context_));
       }
       h_ret = h_operop;
       return true;
@@ -569,7 +570,7 @@ namespace systemc_hdl {
 	       << clang::getOperatorSpelling(opcall->getOperator())
 	       << " num arguments " << opcall->getNumArgs()
 	       << " skipping\n");
-    LLVM_DEBUG(opcall->dump(llvm::dbgs()));
+    LLVM_DEBUG(opcall->dump(llvm::dbgs(), ast_context_));
     h_ret = new hNode(hNode::hdlopsEnum::hUnimpl);
     return true;
   }
@@ -580,7 +581,7 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "name is " << nameinfo
 	       << ", base and memberexpr trees follow\n");
     LLVM_DEBUG(llvm::dbgs() << "base is \n");
-    LLVM_DEBUG(memberexpr->getBase()->dump(llvm::dbgs()));
+    LLVM_DEBUG(memberexpr->getBase()->dump(llvm::dbgs(), ast_context_); );
     LLVM_DEBUG(llvm::dbgs() << "memberdecl is \n");
     LLVM_DEBUG(memberexpr->getMemberDecl()->dump(llvm::dbgs()));
 
@@ -666,7 +667,7 @@ namespace systemc_hdl {
     h_ret = hcall;
     LLVM_DEBUG(llvm::dbgs() << "found a call expr"
 	       << " AST follows\n ");
-    LLVM_DEBUG(callexpr->dump(llvm::dbgs()));
+    LLVM_DEBUG(callexpr->dump(llvm::dbgs(), ast_context_););
     return true;
   }
 
@@ -715,7 +716,7 @@ namespace systemc_hdl {
     TraverseStmt(fors->getInc());
     h_forinc = h_ret;
     LLVM_DEBUG(llvm::dbgs() << "For loop body\n");
-    LLVM_DEBUG(fors->getBody()->dump(llvm::dbgs()));
+    LLVM_DEBUG(fors->getBody()->dump(llvm::dbgs(), ast_context_ ););
     TraverseStmt(fors->getBody());
     h_forbody = h_ret;
     h_forstmt->child_list.push_back(h_forinit);
@@ -757,7 +758,7 @@ namespace systemc_hdl {
   bool HDLBody::TraverseSwitchStmt(SwitchStmt *switchs) {
     hNodep h_switchstmt;
     LLVM_DEBUG(llvm::dbgs() << "Switch stmt body -----\n");
-    LLVM_DEBUG(switchs->getBody()->dump(llvm::dbgs()));
+    LLVM_DEBUG(switchs->getBody()->dump(llvm::dbgs(), ast_context_););
     LLVM_DEBUG(llvm::dbgs() << "End Switch stmt body -----\n");
 
     h_switchstmt = new hNode(hNode::hdlopsEnum::hSwitchStmt);
