@@ -1,5 +1,5 @@
 sudo: false
-dist: xenial
+dist: bionic
 language: c++ 
 
 compiler: 
@@ -84,7 +84,7 @@ before_script:
 
 script:
   # Install python dep.
-  - pip install -r requirements.txt
+  - pip3 install -r requirements.txt
   - export SYSTEMC=$SYSTEMC_HOME/
   - export CC=$LLVM_INSTALL_DIR/bin/clang
   - echo $CC
