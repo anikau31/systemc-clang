@@ -98,7 +98,7 @@ script:
   - echo $CXX
   - mkdir -p TEMP; cd TEMP;
   # Build SystemC-clang
-  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DENABLE_TESTS=ON -DHDL=ON -DENABLE_VERILOG_TESTS=ON -G "Ninja" && ninja ;
+  - cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on -DENABLE_TESTS=ON -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -G "Ninja" && ninja ;
   - echo "Run tests"
   - ctest
     #- cmake ../ -DCMAKE_VERBOSE_MAKEFILE=on && make
