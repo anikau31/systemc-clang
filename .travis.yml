@@ -18,7 +18,7 @@ addons:
     - cmake
     - ccache
     - ninja-build
-    - clang-10
+      #    - clang-10
     - python3
 
 git:
@@ -40,7 +40,7 @@ cache:
   - TARGET_ARCH=linux64 
   - SYSTEMC=systemc-2.3.3
   - CXX=clang++
-  - CLANG_VERSION=10.0.0
+  - CLANG_VERSION=11.0.0
 
     # systemc compilation 
     # credit: https://github.com/janweinstock/vcml/blob/master/.travis.yml
@@ -66,6 +66,10 @@ install:
   - cd ..
   - | # Build clang 
     cd DEPENDS
+    wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz
+    tar xf clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz
+    mv clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04 clang-$CLANG_VERSION
+
     # wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
     # tar xf clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
     # mv clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04 clang-$CLANG_VERSION
@@ -88,11 +92,9 @@ script:
   # Install python dep.
   - pip install -r requirements.txt
   - export SYSTEMC=$SYSTEMC_HOME/
-  - export CC=clang
-    #- export CC=$LLVM_INSTALL_DIR/bin/clang
+  - export CC=$LLVM_INSTALL_DIR/bin/clang
   - echo $CC
-  - export CXX=clang++
-    #- export CXX=$LLVM_INSTALL_DIR/bin/clang++
+  - export CXX=$LLVM_INSTALL_DIR/bin/clang++
   - echo $CXX
   - mkdir -p TEMP; cd TEMP;
   # Build SystemC-clang
