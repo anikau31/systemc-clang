@@ -5,6 +5,7 @@ from util.vparser import VerilogParser
 from shutil import copy
 import os
 
+@pytest.mark.skip(reason="test deprecated")
 def test_custom_sexp(tmpdir, customdriver, tool_output):
     conf = customdriver.conf
     test_name = conf.test_name
@@ -33,6 +34,7 @@ def test_custom_sexp(tmpdir, customdriver, tool_output):
     assert not diff_res, 'should match golden standard'
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_custom_verilog(tmpdir, customdriver, tool_output):
     conf = customdriver.conf
     test_name = conf.test_name
@@ -57,6 +59,7 @@ def test_custom_verilog(tmpdir, customdriver, tool_output):
     assert diff_info is None, 'should be no diff in Verilog'
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_custom_sexp_to_verilog(tmpdir, customdriver, tool_output):
     conf = customdriver.conf
     test_name = conf.test_name

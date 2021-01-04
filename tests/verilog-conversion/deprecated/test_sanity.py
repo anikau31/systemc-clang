@@ -5,6 +5,7 @@ from util.vparser import VerilogParser
 from shutil import copy
 import os
 
+@pytest.mark.skip(reason="test deprecated")
 def test_sanity_add_sexp(tmpdir, sanitydriver, tool_output):
     conf = sanitydriver.conf
     filename = conf.get_module_name('module1.cpp')
@@ -28,6 +29,7 @@ def test_sanity_add_sexp(tmpdir, sanitydriver, tool_output):
     assert not diff_res, 'should match golden standard'
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_sanity_add_verilog(tmpdir, sanitydriver, tool_output):
     conf = sanitydriver.conf
     filename = conf.get_module_name('module1.cpp')
@@ -46,6 +48,7 @@ def test_sanity_add_verilog(tmpdir, sanitydriver, tool_output):
     assert diff_info is None, 'should be no diff in Verilog'
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_sanity_add_sexp_to_verilog(tmpdir, sanitydriver, tool_output):
     conf = sanitydriver.conf
     filename = conf.get_golden_sexp_name('module1_hdl.txt')

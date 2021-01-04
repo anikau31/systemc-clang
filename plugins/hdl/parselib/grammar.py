@@ -5,7 +5,8 @@ lark_grammar = Lark('''
 
         modulelist: (hmodule)*
         typelist: (htypedef)*
-        hmodule:  "hModule" ID "[" modportsiglist? (portbindinglist|processlist)* "]"
+        // hmodule:  "hModule" ID "[" modportsiglist? (portbindinglist|processlist)* "]"
+        hmodule:  "hModule" ID "[" modportsiglist? (portbindinglist|hmodinitblock|processlist)* "]"
 
         modportsiglist: "hPortsigvarlist" "NONAME" "[" modportsigdecl+ "]" 
 
@@ -50,6 +51,12 @@ lark_grammar = Lark('''
         htouint: "hNoop" "to_uint" "[" syscread "]"
         htoint: "hNoop" "to_int" "[" syscread "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
+        
+        // hmodinitblock: 
+        // first component is the id of the module (in parent?)
+        // second component is initialization list              
+        // third component is port binding list
+        hmodinitblock: "hModinitblock" ID "[" hcstmt portbindinglist* hsenslist*"]"
 
         // Port Bindings
         portbindinglist: "hPortbindings" ID "[" portbinding* "]"
@@ -60,7 +67,13 @@ lark_grammar = Lark('''
         portbinding: "hPortbinding" ID "[" hvarref hvarref "]"
                    | "hPortbinding" ID "[" hbindingref hbindingref "]"
                    | "hPortbinding" ID "[" hvarref hbindingref "]"
+                   | "hPortbinding" ID "[" hbindingarrayref hbindingarrayref "]"  
+                   | "hPortbinding" ID "[" hvarref hbindingarrayref "]"  
+                   // TODO: replace portbinding with succinct syntax
         hbindingref: "hVarref" ID "[" hliteral "]"
+        // compared array ref in normal expressions
+        // we use a more restrictive form here
+        hbindingarrayref: "hBinop" "ARRAYSUBSCRIPT" "[" (hvarref|hbindingarrayref) (hliteral|hbinop) "]"  
 
 
         // This is solely for maintaining the semicolon
@@ -100,6 +113,7 @@ lark_grammar = Lark('''
 
         hsenslist : "hSenslist" "NONAME" "[" hsensvars "]"
                   | "hSenslist" "NONAME" "NOLIST"
+                  | "hSenslist" ID "NOLIST"
         hsensvar :  "hSensvar" ID "[" (hsensedge|hsensvar)* "]"
                  |  "hSensvar" ID "NOLIST"
         hsensvars : hsensvar*

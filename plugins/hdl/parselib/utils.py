@@ -1,6 +1,7 @@
 """Utility library"""
 from inspect import currentframe, getframeinfo, stack
 import os
+from lark import Tree
 
 def tidify(verilog, current_indent = 0, indent_width = 2):
     """makes the generated verilog looks a bit better, may be subject to changes later"""
@@ -44,3 +45,8 @@ def dprint(*arg, **kwargs):
     frameinfo = currentframe()
     caller = getframeinfo(stack()[1][0])
     print(os.path.basename(caller.filename), ': L', frameinfo.f_back.f_lineno, ":", "\u001b[31m", *arg, "\u001b[0m", **kwargs)
+
+
+def is_tree_type(t, name):
+    """Check whether t is lark Tree and whether the tree type is name"""
+    return isinstance(t, Tree) and t.data == name

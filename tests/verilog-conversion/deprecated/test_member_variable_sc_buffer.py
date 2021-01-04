@@ -1,8 +1,10 @@
 """test for test_member_variable_sc_buffer.cpp"""
 import os
 from shutil import copy
+import pytest
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_member_variable_sc_buffer_verilog(tmpdir, testfolderdriver, tool_output):
     """testing the conversion from cpp to sexp"""
     conf = testfolderdriver.conf

@@ -24,6 +24,7 @@ def detect_module(conf, ex_id):
     return module_list[0]
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_ex_sexp(tmpdir, request, exdriver, tool_output):
     """tests the conversion from cpp to sexp"""
     testname = request.node.name
@@ -66,6 +67,7 @@ def test_ex_sexp(tmpdir, request, exdriver, tool_output):
 
     assert not diff_res, 'should match golden standard, or update is required'
 
+@pytest.mark.skip(reason="test deprecated")
 @pytest.mark.verilog
 def test_ex_verilog(request, tmpdir, exdriver, tool_output):
     testname = request.node.name
@@ -95,6 +97,7 @@ def test_ex_verilog(request, tmpdir, exdriver, tool_output):
     assert diff_info is None, 'should be no diff in Verilog'
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_ex_sexp_to_verilog(tmpdir, exdriver, tool_output):
     conf = exdriver.conf
     ex_id = conf.ex_id

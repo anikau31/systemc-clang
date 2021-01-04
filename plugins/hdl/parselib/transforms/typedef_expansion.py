@@ -6,7 +6,7 @@ from ..compound import aggregate
 from lark import Tree, Token
 import copy
 import warnings
-from ..utils import dprint
+from ..utils import dprint, is_tree_type
 
 class TypedefExpansion(TopDown):
     """Expands block assignment of custom types into primitive types"""
@@ -415,13 +415,25 @@ class TypedefExpansion(TopDown):
                 new_children.append(node)
         return new_children
 
+    def hmodinitblock(self, tree):
+        """
+        expands the hmodinitblock
+        hmodinitblock includes a initialization block and portdecl block, both of which can include
+        aggregated types
+        """
+        self.__push_up(tree)
+        return tree
+
     def portbindinglist(self, tree):
         module_name, *bindings = tree.children
         new_bindings = []
         for binding in bindings:
             mod_name, sub, par = binding.children
             sub_v = sub.children[0]
-            par_v = par.children[0]
+            if is_tree_type(par, 'hbindingarrayref'):
+                par_v = par.children[0].children[0]
+            else:
+                par_v = par.children[0]
             typeinfo = self.__expanded_type(par_v.value)
             if typeinfo:
                 type_name = self.__get_expandable_type_from_htype(typeinfo).children[0]

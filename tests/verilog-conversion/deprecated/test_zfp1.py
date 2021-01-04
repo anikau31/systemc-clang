@@ -6,11 +6,12 @@ import os
 
 f = pytest.sc_log
 
+@pytest.mark.skip(reason="test deprecated")
 @pytest.mark.verilog
-def test_zfp2_verilog(request, tmpdir, llnldriver, tool_output):
+def test_zfp1_verilog(request, tmpdir, llnldriver, tool_output):
     testname = request.node.name
     conf = llnldriver.conf
-    filename = conf.get_module_name('zfpsynth/zfp2/test.cpp')
+    filename = conf.get_module_name('zfpsynth/zfp1/test.cpp')
     print(filename)
     output_folder = tmpdir
     res, filename = llnldriver.generate_verilog(

@@ -1,7 +1,7 @@
 import warnings
 from .top_down import TopDown
 from ..primitives import *
-from ..utils import dprint
+from ..utils import dprint, is_tree_type
 from lark import Tree
 
 
@@ -383,7 +383,7 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         name, *args = tree.children
         tpe = Primitive.get_primitive(name)
-        assert tpe is not None
+        assert tpe is not None, 'Type {} is not defined'.format(name)
         return tpe(*args)
 
     def hreturnstmt(self, tree):
@@ -421,9 +421,29 @@ class VerilogTranslationPass(TopDown):
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         binding_str = []
+        array_bindings = {}
         for binding in bindings:
-            sub, par = binding.children
-            binding_str.append(ind + '.{}({})'.format(sub.children[0].value, par.children[0].value))
+            # for backward compatibility, we keep the case where binding is a list
+            if type(binding) == list:
+                sub, par = binding
+            else:
+                warnings.warn('Using Tree as binding is deprecated', DeprecationWarning)
+                sub, par = binding.children
+            if is_tree_type(sub, 'hbindingarrayref'):
+                sub_name = sub.children[0].children[0].value  # assuming varref
+                if sub_name not in array_bindings:
+                    array_bindings[sub_name] = {}
+                array_bindings[sub_name][sub.children[1].children[0]] = par
+            else:
+                binding_str.append(ind + '.{}({})'.format(sub.children[0].value, par.children[0].value))
+        for sub_name, bindings in array_bindings.items():
+            # for now, we keep a dict of array binding
+            array_seq = [None] * len(bindings)
+            for idx, b in bindings.items():
+                array_seq[idx] = '{}[{}]'.format(b.children[0].children[0].value, b.children[1].children[0])
+            binding_str.append(ind + ".{}('{{ {} }})".format(
+                sub_name, ','.join(array_seq)
+            ))
         res += ',\n'.join(binding_str)
         res += '\n'
         self.dec_indent()
@@ -488,9 +508,26 @@ class VerilogTranslationPass(TopDown):
     def hmodule(self, tree):
         # print("Processing Module: ", tree.children[0])
         # print("Retrieving Portbindings")
+        initialization_block = []
         for t in tree.children:
             if isinstance(t, Tree) and t.data == 'portbindinglist':
                 self.bindings[t.children[0]] = t.children[1]
+            elif is_tree_type(t, 'hmodinitblock'):
+                name, initblock, portbindings = t.children
+                self.inc_indent()
+                self.inc_indent()
+                self.__push_up(initblock)
+                self.dec_indent()
+                self.dec_indent()
+                for bds in portbindings.children[1]:
+                    mod_name = bds.children[0]
+                    bindings = bds.children[1:]
+                    if mod_name not in self.bindings:
+                        self.bindings[mod_name] = []
+                    self.bindings[mod_name].append(bindings)
+                # has something wihtin the initialization block
+                if initblock.children:
+                    initialization_block.append(initblock.children[0])
         tree.children = list(filter(lambda x: not isinstance(x, Tree) or x.data != 'portbindinglist', tree.children))
         self.inc_indent()
         self.__push_up(tree)
@@ -555,6 +592,14 @@ class VerilogTranslationPass(TopDown):
                 else:
                     decl += ';'
                 res += ind + decl + '\n'
+            self.dec_indent()
+        # generate initialization block
+        if initialization_block:
+            self.inc_indent()
+            ind = self.get_current_ind_prefix()
+            res += '{}initial begin\n'.format(ind)
+            res += '\n'.join(initialization_block)
+            res += '\n{}end\n'.format(ind)
             self.dec_indent()
         # generate module instantiations
         if len(mods) > 0:

@@ -5,6 +5,7 @@ from shutil import copy
 import os
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_sreg_sexp(tmpdir, llnldriver, tool_output):
     conf = llnldriver.conf
     filename = conf.get_module_name('sreg.cpp')
@@ -28,6 +29,7 @@ def test_sreg_sexp(tmpdir, llnldriver, tool_output):
     assert not diff_res, 'should match golden standard'
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_sreg_verilog(tmpdir, llnldriver, tool_output):
     conf = llnldriver.conf
     filename = conf.get_module_name('sreg.cpp')
@@ -46,6 +48,7 @@ def test_sreg_verilog(tmpdir, llnldriver, tool_output):
     assert diff_info is None, 'should be no diff in Verilog'
 
 
+@pytest.mark.skip(reason="test deprecated")
 def test_sreg_sexp_to_verilog(tmpdir, llnldriver, tool_output):
     conf = llnldriver.conf
     filename = conf.get_golden_sexp_name('sreg_hdl.txt')

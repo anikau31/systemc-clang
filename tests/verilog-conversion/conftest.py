@@ -12,12 +12,38 @@ from util.conf import SanityTestingConfigurations
 from util.conf import CustomTestingConfigurations
 import driver as drv
 
+
+# Handy paths
+examples = Path(os.environ['SYSTEMC_CLANG']) / 'examples'
+testdata = Path(os.environ['SYSTEMC_CLANG']) / 'tests' / 'verilog-conversion' / 'data'
+zfpsynth = examples / 'llnl-examples' / 'zfpsynth' 
+zfpshared2 = zfpsynth / 'shared2'
+
+
+# Helper functions
+def load_file(path):
+    with open(path, 'r') as f:
+        return f.read()
+
+
+def load_module(mod_name):
+    raise NotImplementedError
+
+test_data = [
+        ('add',    load_file(testdata / 'add.cpp'), None),
+        # ('z3test', load_file(zfpsynth / 'zfp3/z3test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp3']),
+        # ('z4test', load_file(zfpsynth / 'zfp4/z4test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp4']),
+        # ('z5test', load_file(zfpsynth / 'zfp5/z5test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp5'])
+    ]
+
+
 def pytest_configure(config):
     # register an additional marker
     config.addinivalue_line(
         "markers", "verilog: cpp to verilog tests"
     )
     pytest.sc_log = None # open('log.csv', 'w')
+    
 
 @pytest.fixture
 def llnldriver():
@@ -80,8 +106,20 @@ def customdriver(request):
 def tool_output(pytestconfig):
     return pytestconfig.getoption("tool_output")
 
+
 def pytest_addoption(parser):
     """add options for controlling the running of tests"""
     # whether output the clang output
     parser.addoption("--tool-output", action="store_true", default=False)
 
+
+@pytest.fixture
+def default_params():
+    return ['-x', 'c++', '-w', '-c', '-std=c++14', '_-D__STDC_CONSTANT_MACROS',  '-D__STDC_LIMIT_MACROS', '-DRVD']
+
+
+@pytest.fixture
+def simple_add_cpp():
+    test_set = test_data[0]
+    assert test_set[0] == 'add'
+    return test_set[1]
