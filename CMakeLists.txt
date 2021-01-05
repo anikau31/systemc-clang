@@ -242,6 +242,12 @@ function(llvm_config VARNAME switch comp)
     endif()
   endif()
 
+  # Clang 11.0.0 generates -lxml2, which causes issues on OSX.
+  # For now, just remove it as it is produced from --system-libs.
+  #if (APPLE ) 
+  string(REGEX REPLACE " -lxml2" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+  #endif()
+
   # remove certain options clang doesn't like
   if(IS_CLANG)
     string(REGEX REPLACE "-Wl,--no-keep-files-mapped" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
@@ -321,6 +327,7 @@ llvm_config(CLANG_VERSION "--version" "")
 #
 # https://github.com/halide/Halide/issues/1112
 llvm_config(LLVM_SYSTEM_LIBS "--system-libs" "")
+message(STATUS "LLVM_SYSTEM_LIBS: ${LLVM_SYSTEM_LIBS}")
 
 set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}" )
 
@@ -440,6 +447,7 @@ message(STATUS "Build Verilog tests   : ${V_TESTS_ON}")
 message(STATUS "")
 message(STATUS "[ Environment ]")
 message(STATUS "CMAKE_GENERATOR       : ${CMAKE_GENERATOR}")
+message(STATUS "CMAKE_HOST_NAME       : ${CMAKE_HOST_NAME}")
 message(STATUS "Compiler ID           : ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "Compiler version      : ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "Compiler path         : ${CMAKE_CXX_COMPILER}")
