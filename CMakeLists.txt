@@ -246,6 +246,7 @@ function(llvm_config VARNAME switch comp)
   # For now, just remove it as it is produced from --system-libs.
   #if (APPLE ) 
   string(REGEX REPLACE " -lxml2" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+  string(REGEX REPLACE " -llibxml2.tbd" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}") 
   #endif()
 
   # remove certain options clang doesn't like
@@ -329,7 +330,8 @@ llvm_config(CLANG_VERSION "--version" "")
 llvm_config(LLVM_SYSTEM_LIBS "--system-libs" "")
 message(STATUS "LLVM_SYSTEM_LIBS: ${LLVM_SYSTEM_LIBS}")
 
-set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}" )
+#set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}" )
+set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}  -fvisibility=hidden -fvisibility-inlines-hidden" )
 
 if (USE_SILENT_BUILD)
   set (CMAKE_CXX_FLAGS
