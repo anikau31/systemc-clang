@@ -23,7 +23,6 @@ if(V_TESTS_ON)
       message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
   endif()
 
-  file(COPY verilog-conversion/run-verilog-tests.py DESTINATION ${CMAKE_BINARY_DIR}/)
 endif()
 
 # Test files so far are t#.cpp
@@ -55,11 +54,11 @@ include(CTest)
 # for pytest tests
 if(V_TESTS_ON)
   # integrate into ctest
-  add_test(NAME verilog-tests
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR})
-  add_test(NAME verilog-sanity-tests
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k test_sanity)
-  add_test(NAME verilog-custom-tests
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -m pytest --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k test_custom)
+  add_test(NAME verilog-syntax-error
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k syntax_error)
+  add_test(NAME verilog-generate-file
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k generate_file)
+  add_test(NAME verilog-translation-add
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[add- )
 endif()
 

@@ -20,7 +20,7 @@ def vivado_tcl_template():
 
 @test_steps('hcode', 'translation', 'synthesis')
 @pytest.mark.parametrize("name,content,extra_args", test_data, ids=[x[0] for x in test_data])
-def test_translation(tmp_path, name, content, extra_args, default_params, vivado_tcl_template):
+def test_translation(tmp_path, name, content, extra_args, default_params, vivado_tcl_template, has_vivado):
     # move files to the target directory
     target_path = tmp_path / '{}.cpp'.format(name)
     hcode_target_path = tmp_path / '{}_hdl.txt'.format(name)
@@ -39,13 +39,16 @@ def test_translation(tmp_path, name, content, extra_args, default_params, vivado
     yield
 
     # synthesis: synthesis
-    tcl_path = tmp_path / '{}.tcl'.format(name)
-    with open(tcl_path, 'w') as f:
-        f.writelines(vivado_tcl_template.format(name + '_hdl.txt.v'))  # TODO: change this to customized suffix
-    synth_res = subprocess.run(
-            ['vivado', '-mode', 'batch', '-source',  str(tmp_path / '{}.tcl'.format(name))], 
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.PIPE,
-            cwd=tmp_path)
-    assert synth_res.returncode == 0
+    if has_vivado:
+        tcl_path = tmp_path / '{}.tcl'.format(name)
+        with open(tcl_path, 'w') as f:
+            f.writelines(vivado_tcl_template.format(name + '_hdl.txt.v'))  # TODO: change this to customized suffix
+        synth_res = subprocess.run(
+                ['vivado', '-mode', 'batch', '-source',  str(tmp_path / '{}.tcl'.format(name))], 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE,
+                cwd=tmp_path)
+        assert synth_res.returncode == 0
+    else:
+        pytest.skip('Vivado is not found on this host, synthesis test is skipped')
     yield

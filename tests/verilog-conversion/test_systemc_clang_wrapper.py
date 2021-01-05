@@ -1,5 +1,6 @@
 import pytest
 from conftest import test_data
+from pathlib import Path
 
 sysc_clang = __import__('systemc-clang')
 
@@ -28,6 +29,6 @@ def test_generate_file(tmp_path, simple_add_cpp, default_params):
         f.writelines(simple_add_cpp)
 
     target = sysc_clang.invoke_sysc([str(target_path), '--debug', '--'] + default_params)
-    assert Path(target).exist()
+    assert Path(target).exists(), 'hcode file is not found'
 
 

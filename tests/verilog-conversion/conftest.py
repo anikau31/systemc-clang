@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.append(str(Path(os.environ['SYSTEMC_CLANG']) / 'plugins' / 'hdl'))
 import glob
 import pytest
+import shutil
 from util.conf import LLNLExampleTestingConfigurations
 from util.conf import ExampleTestingConfigurations
 from util.conf import TestingConfigurations
@@ -17,6 +18,7 @@ import driver as drv
 examples = Path(os.environ['SYSTEMC_CLANG']) / 'examples'
 testdata = Path(os.environ['SYSTEMC_CLANG']) / 'tests' / 'verilog-conversion' / 'data'
 zfpsynth = examples / 'llnl-examples' / 'zfpsynth' 
+zfpshared = zfpsynth / 'shared'
 zfpshared2 = zfpsynth / 'shared2'
 
 
@@ -31,6 +33,12 @@ def load_module(mod_name):
 
 test_data = [
         ('add',    load_file(testdata / 'add.cpp'), None),
+        # ('sreg',   load_file(), []),
+        # ('member-variable-sc-buffer',   load_file(), []),
+        # # shared
+        # ('z1test', load_file(zfpsynth / 'zfp1/z1test.cpp'), ['-I', zfpshared.stem, '-I', zfpsynth / 'zfp1']),
+        # ('z2test', load_file(zfpsynth / 'zfp2/z2test.cpp'), ['-I', zfpshared.stem, '-I', zfpsynth / 'zfp2']),
+        # # shared2
         # ('z3test', load_file(zfpsynth / 'zfp3/z3test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp3']),
         # ('z4test', load_file(zfpsynth / 'zfp4/z4test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp4']),
         # ('z5test', load_file(zfpsynth / 'zfp5/z5test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp5'])
@@ -123,3 +131,10 @@ def simple_add_cpp():
     test_set = test_data[0]
     assert test_set[0] == 'add'
     return test_set[1]
+
+@pytest.fixture
+def has_vivado():
+    if shutil.which('vivado'):
+        return True
+    else:
+        return False
