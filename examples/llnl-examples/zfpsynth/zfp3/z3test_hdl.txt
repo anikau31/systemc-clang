@@ -3426,15 +3426,15 @@
         ]
       ]
       hSenslist mc_proc [
-        hSensvar m_ready [
+        hSensvar NONAME [
           hVarref m_ready NOLIST
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_fwd_order [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -4156,10 +4156,11 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar m_ready [
+        hSensvar NONAME [
           hVarref m_ready NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref x NOLIST
             hBinop - [
@@ -4167,8 +4168,9 @@
               hLiteral 1 NOLIST
             ]
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref y NOLIST
             hBinop - [
@@ -4176,8 +4178,9 @@
               hLiteral 1 NOLIST
             ]
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref z NOLIST
             hBinop - [
@@ -4185,8 +4188,9 @@
               hLiteral 1 NOLIST
             ]
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref w NOLIST
             hBinop - [
@@ -4194,16 +4198,17 @@
               hLiteral 1 NOLIST
             ]
           ]
+          hNoop always NOLIST
         ]
-        hSensvar v [
+        hSensvar NONAME [
           hVarref v NOLIST
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -4925,10 +4930,11 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar m_ready [
+        hSensvar NONAME [
           hVarref m_ready NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref x NOLIST
             hBinop - [
@@ -4936,8 +4942,9 @@
               hLiteral 1 NOLIST
             ]
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref y NOLIST
             hBinop - [
@@ -4945,8 +4952,9 @@
               hLiteral 1 NOLIST
             ]
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref z NOLIST
             hBinop - [
@@ -4954,8 +4962,9 @@
               hLiteral 1 NOLIST
             ]
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref w NOLIST
             hBinop - [
@@ -4963,16 +4972,17 @@
               hLiteral 1 NOLIST
             ]
           ]
+          hNoop always NOLIST
         ]
-        hSensvar v [
+        hSensvar NONAME [
           hVarref v NOLIST
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -5378,37 +5388,43 @@
         ]
       ]
       hSenslist mc_proc [
-        hSensvar s_fp##valid [
+        hSensvar NONAME [
           hVarref s_fp##valid NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_fp##data [
+        hSensvar NONAME [
           hVarref s_fp##data NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar value_changed_event [
+        hSensvar NONAME [
           hNoop value_changed_event [
             hVarref c_fp##ready NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar value_changed_event [
+        hSensvar NONAME [
           hNoop value_changed_event [
             hVarref c_ex##ready NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar emax [
+        hSensvar NONAME [
           hVarref emax NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar emax_v [
+        hSensvar NONAME [
           hVarref emax_v NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar c_sync [
+        hSensvar NONAME [
           hVarref c_sync NOLIST
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -5916,33 +5932,38 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar wr_en [
+        hSensvar NONAME [
           hVarref wr_en NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar rd_en [
+        hSensvar NONAME [
           hVarref rd_en NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar full_i [
+        hSensvar NONAME [
           hVarref full_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar empty_i [
+        hSensvar NONAME [
           hVarref empty_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar rd_idx [
+        hSensvar NONAME [
           hVarref rd_idx NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref data NOLIST
             hLiteral 0 NOLIST
           ]
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -6290,39 +6311,45 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar s_port##valid [
+        hSensvar NONAME [
           hVarref s_port##valid NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar m_port##ready [
+        hSensvar NONAME [
           hVarref m_port##ready NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar full_i [
+        hSensvar NONAME [
           hVarref full_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar empty_i [
+        hSensvar NONAME [
           hVarref empty_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar rd_idx [
+        hSensvar NONAME [
           hVarref rd_idx NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref data NOLIST
             hLiteral 0 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref data NOLIST
             hLiteral 1 NOLIST
           ]
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -6491,21 +6518,25 @@
         ]
       ]
       hSenslist mc_proc [
-        hSensvar s_port##data [
+        hSensvar NONAME [
           hVarref s_port##data NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_port##valid [
+        hSensvar NONAME [
           hVarref s_port##valid NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar value_changed_event [
+        hSensvar NONAME [
           hNoop value_changed_event [
             hVarref c_port1##ready NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar value_changed_event [
+        hSensvar NONAME [
           hNoop value_changed_event [
             hVarref c_port2##ready NOLIST
           ]
+          hNoop always NOLIST
         ]
       ]
     ]
@@ -7008,33 +7039,38 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar wr_en [
+        hSensvar NONAME [
           hVarref wr_en NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar rd_en [
+        hSensvar NONAME [
           hVarref rd_en NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar full_i [
+        hSensvar NONAME [
           hVarref full_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar empty_i [
+        hSensvar NONAME [
           hVarref empty_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar rd_idx [
+        hSensvar NONAME [
           hVarref rd_idx NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref data NOLIST
             hLiteral 0 NOLIST
           ]
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -7537,33 +7573,38 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar wr_en [
+        hSensvar NONAME [
           hVarref wr_en NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar rd_en [
+        hSensvar NONAME [
           hVarref rd_en NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar full_i [
+        hSensvar NONAME [
           hVarref full_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar empty_i [
+        hSensvar NONAME [
           hVarref empty_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar rd_idx [
+        hSensvar NONAME [
           hVarref rd_idx NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref data NOLIST
             hLiteral 0 NOLIST
           ]
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -7910,36 +7951,43 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar s_ex##valid [
+        hSensvar NONAME [
           hVarref s_ex##valid NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_ex##data [
+        hSensvar NONAME [
           hVarref s_ex##data NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_fp##valid [
+        hSensvar NONAME [
           hVarref s_fp##valid NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_fp##data [
+        hSensvar NONAME [
           hVarref s_fp##data NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar m_ready [
+        hSensvar NONAME [
           hVarref m_ready NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar count [
+        hSensvar NONAME [
           hVarref count NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar c_sync [
+        hSensvar NONAME [
           hVarref c_sync NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar c_int [
+        hSensvar NONAME [
           hVarref c_int NOLIST
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -8185,104 +8233,121 @@
         ]
       ]
       hSenslist mc_proc [
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 0 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 1 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 2 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 3 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 4 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 5 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 6 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 7 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 8 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 9 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 10 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 11 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 12 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 13 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 14 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 15 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar c_bo [
+        hSensvar NONAME [
           hVarref c_bo NOLIST
+          hNoop always NOLIST
         ]
       ]
     ]
@@ -8699,33 +8764,38 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar wr_en [
+        hSensvar NONAME [
           hVarref wr_en NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar rd_en [
+        hSensvar NONAME [
           hVarref rd_en NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar full_i [
+        hSensvar NONAME [
           hVarref full_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar empty_i [
+        hSensvar NONAME [
           hVarref empty_i NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar rd_idx [
+        hSensvar NONAME [
           hVarref rd_idx NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref data NOLIST
             hLiteral 0 NOLIST
           ]
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -10134,123 +10204,143 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 0 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 1 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 2 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 3 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 4 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 5 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 6 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 7 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 8 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 9 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 10 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 11 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 12 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 13 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 14 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar ARRAYSUBSCRIPT [
+        hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
             hLiteral 15 NOLIST
           ]
+          hNoop always NOLIST
         ]
-        hSensvar k0 [
+        hSensvar NONAME [
           hVarref k0 NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar flush1 [
+        hSensvar NONAME [
           hVarref flush1 NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar m_ready [
+        hSensvar NONAME [
           hVarref m_ready NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_valid [
+        hSensvar NONAME [
           hVarref s_valid NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_flush [
+        hSensvar NONAME [
           hVarref s_flush NOLIST
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
@@ -11251,48 +11341,59 @@
         hCStmt  NONAME NOLIST
       ]
       hSenslist mc_proc [
-        hSensvar s_ex##valid [
+        hSensvar NONAME [
           hVarref s_ex##valid NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_ex##data [
+        hSensvar NONAME [
           hVarref s_ex##data NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar m_bits##ready [
+        hSensvar NONAME [
           hVarref m_bits##ready NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar minbits [
+        hSensvar NONAME [
           hVarref minbits NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar maxbits [
+        hSensvar NONAME [
           hVarref maxbits NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar maxprec [
+        hSensvar NONAME [
           hVarref maxprec NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar minexp [
+        hSensvar NONAME [
           hVarref minexp NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_bc [
+        hSensvar NONAME [
           hVarref s_bc NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_bp [
+        hSensvar NONAME [
           hVarref s_bp NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_last [
+        hSensvar NONAME [
           hVarref s_last NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar s_valid [
+        hSensvar NONAME [
           hVarref s_valid NOLIST
+          hNoop always NOLIST
         ]
-        hSensvar cs [
+        hSensvar NONAME [
           hVarref cs NOLIST
+          hNoop always NOLIST
         ]
       ]
       hSenslist ms_proc [
-        hSensvar pos [
-          hNoop pos [
-            hVarref clk NOLIST
-          ]
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]
