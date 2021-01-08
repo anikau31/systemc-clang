@@ -72,4 +72,4 @@ RUN pip3 install -r systemc-clang/requirements.txt
 ENV SYSTEMC_CLANG_BUILD_DIR=/systemc-clang-build
 ENV SYSTEMC_CLANG=/systemc-clang
 WORKDIR /systemc-clang-build
-RUN cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=ON -DENABLE_TESTS=ON -G "Ninja" && ninja
+RUN cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -DENABLE_TESTS=ON -G "Ninja" && ninja
