@@ -67,9 +67,9 @@ WORKDIR /
 # The following setup will be dependent on usage (either development or test)
 # Ideally, we would use a multistage docker file, but we won't save much space as the unzipped clang is very large
 RUN mkdir systemc-clang
-COPY . /systemc-clang/
-RUN pip3 install -r systemc-clang/requirements.txt
+# COPY . /systemc-clang/
+# RUN pip3 install -r systemc-clang/requirements.txt
 ENV SYSTEMC_CLANG_BUILD_DIR=/systemc-clang-build
 ENV SYSTEMC_CLANG=/systemc-clang
 WORKDIR /systemc-clang-build
-RUN cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -DENABLE_TESTS=ON -G "Ninja" && ninja
+# RUN cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -DENABLE_TESTS=ON -G "Ninja" && ninja
