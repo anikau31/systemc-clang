@@ -16,7 +16,7 @@ script:
   # setup environment and build executables and tests
   # - echo "Setup the docker image"
   #- docker image build --no-cache -t ${TRAVIS_REPO_SLUG}:${TRAVIS_COMMIT} .
-  - docker run rseac/systemc-clang:clang-11.0.0 -c "${SYSTEMC_CLANG}/scripts/build-travis.sh" 
+  - docker run rseac/systemc-clang:clang-11.0.0 -c "pwd; echo ${SYSTEMC_CLANG}; sh ../systemc-clang/scripts/build-travis.sh" 
   - docker ps -a
   # - echo "Build information"
   # - echo "Build directory: ${TRAVIS_BUILD_DIR}"
