@@ -8,6 +8,7 @@ branches:
   only:
     - master
 
+
 before_install:
   - docker pull rseac/systemc-clang:clang-11.0.0
 
@@ -15,6 +16,12 @@ script:
   # setup environment and build executables and tests
   # - echo "Setup the docker image"
   #- docker image build --no-cache -t ${TRAVIS_REPO_SLUG}:${TRAVIS_COMMIT} .
+  - echo "Build information"
+  - echo "Build directory: ${TRAVIS_BUILD_DIR}"
+  - mkdir $SYSTEMC_CLANG_BUILD_DIR; cd $SYSTEMC_CLANG_BUILD_DIR;
+  - echo "Build systemc-clang"
+  - cmake ${TRAVIS_BUILD_DIR} -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -DENABLE_TESTS=ON -G "Ninja" && ninja
   - echo "Run tests"
-    #- docker run ${TRAVIS_REPO_SLUG}:${TRAVIS_COMMIT} ctest
-  - docker run rseac/systemc-clang:clang-11.0.0 ctest
+  - ctest
+
+
