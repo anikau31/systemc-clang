@@ -14,15 +14,5 @@ before_install:
 
 script:
   # setup environment and build executables and tests
-  # - echo "Setup the docker image"
-  #- docker image build --no-cache -t ${TRAVIS_REPO_SLUG}:${TRAVIS_COMMIT} .
   - docker run -v ${TRAVIS_BUILD_DIR}:/systemc-clang rseac/systemc-clang:clang-11.0.0 /bin/bash -c "cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -DENABLE_TESTS=ON -G \"Ninja\" && ninja &&  && ctest" 
-  # - echo "
-  # - echo "Build directory: ${TRAVIS_BUILD_DIR}"
-  # - mkdir $SYSTEMC_CLANG_BUILD_DIR; cd $SYSTEMC_CLANG_BUILD_DIR;
-  # - echo "Build systemc-clang"
-  # - cmake ${TRAVIS_BUILD_DIR} -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -DENABLE_TESTS=ON -G "Ninja" && ninja
-  # - echo "Run tests"
-  # - ctest
-#
 
