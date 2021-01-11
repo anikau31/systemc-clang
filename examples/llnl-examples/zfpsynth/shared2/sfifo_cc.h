@@ -100,16 +100,16 @@ SC_MODULE(sfifo_cc) // Stream FIFO with Common Clock
 
 	SC_HAS_PROCESS(sfifo_cc);
 
-	sfifo_cc(const sc_module_name& mn_, int size_ = MAX_DEPTH) :
-		sc_module(mn_), depth(size_)
+	sfifo_cc(const sc_module_name& mn_):
+		sc_module(mn_), depth(MAX_DEPTH)
 	{
-		if (size_ <= 0 || MAX_DEPTH < size_) {
+		if (depth <= 0) {
 			SC_REPORT_ERROR("FIFO size out of bounds", name());
 			return;
 		}
 		SC_METHOD(mc_proc);
 			sensitive << s_port.valid_chg() << m_port.ready_chg() << full_i << empty_i << rd_idx;
-			for (int i = 0; i < size_; i++) sensitive << data[i];
+			for (int i = 0; i < MAX_DEPTH; i++) sensitive << data[i];
 		SC_METHOD(ms_proc);
 			sensitive << clk.pos();
 			dont_initialize();

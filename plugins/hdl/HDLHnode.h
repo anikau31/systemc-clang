@@ -18,6 +18,7 @@ namespace systemc_hdl {
   static const string qualnamedelim(":");
   static const string pbstring{"()"};
   static const string arrsub{"ARRAYSUBSCRIPT"};
+  static const string noname{"NONAME"};
   static const string sensop{"<<"};
   static const string localstr{"_local_"};
   static const string strsccore("sc_coresc");
@@ -35,6 +36,10 @@ namespace systemc_hdl {
     return ((hp->h_op == hNode::hdlopsEnum::hVarAssign) &&
 	    (hp->child_list.size() == 2) &&
 	    (hp->child_list[1]->h_op == hNode::hdlopsEnum::hMethodCall));
+  }
+
+  static inline bool isEdge(string &s) {
+    return (s=="pos" || s=="neg");
   }
   
   class HDLConstructorHcode {
