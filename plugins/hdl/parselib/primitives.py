@@ -183,9 +183,9 @@ class sc_int(Primitive):
             if context.suffix is not None:
                 suffix = context.suffix
         if var_name:
-            return f'{prefix}logic [{self.width-1}:0] {var_name}{suffix}'
+            return f'{prefix}logic signed[{self.width-1}:0] {var_name}{suffix}'
         else:
-            return f'{prefix}logic [{self.width-1}:0]'
+            return f'{prefix}logic signed[{self.width-1}:0]'
 
 
 class sc_signal(Primitive):

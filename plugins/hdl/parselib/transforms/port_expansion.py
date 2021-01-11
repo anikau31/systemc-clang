@@ -3,6 +3,7 @@ from lark import Token, Tree
 from ..utils import dprint
 import copy
 import warnings
+import logging
 
 
 class PortExpansion(TopDown):
@@ -117,7 +118,7 @@ class PortExpansion(TopDown):
 
     def __expand_vardecl(self, tree):
         if len(tree.children) == 3:
-            warnings.warn('Expansion of sc_rvd with initial value is not supported')
+            # warnings.warn('Expansion of sc_rvd with initial value is not supported')
             return [tree]
         bundle_name, bundle_type = tree.children
         bundle_to_expand = ['sc_rvd']

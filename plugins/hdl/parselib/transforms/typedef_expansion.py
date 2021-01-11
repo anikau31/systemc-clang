@@ -6,7 +6,8 @@ from ..compound import aggregate
 from lark import Tree, Token
 import copy
 import warnings
-from ..utils import dprint, is_tree_type
+from ..utils import dprint, is_tree_type, get_ids_in_tree, alternate_ids
+
 
 class TypedefExpansion(TopDown):
     """Expands block assignment of custom types into primitive types"""
@@ -294,7 +295,7 @@ class TypedefExpansion(TopDown):
                 if lhs_type.children[0] != rhs_type.children[0]:
                     raise RuntimeError('Type does not match between LHS and RHS')
             else:
-                warnings.warn('Treating CXXDefaultArgExpr as 0')
+                # warnings.warn('Treating CXXDefaultArgExpr as 0')
                 assert rhs.data == 'hliteral'
             type_name = lhs_type.children[0]
             type_params = lhs_type.children[1:]
@@ -431,19 +432,26 @@ class TypedefExpansion(TopDown):
             mod_name, sub, par = binding.children
             sub_v = sub.children[0]
             if is_tree_type(par, 'hbindingarrayref'):
-                par_v = par.children[0].children[0]
+                par_v = get_ids_in_tree(par)[0]
             else:
                 par_v = par.children[0]
             typeinfo = self.__expanded_type(par_v.value)
-            if typeinfo:
+            if typeinfo:  # if the bindinding is on a customized type
                 type_name = self.__get_expandable_type_from_htype(typeinfo).children[0]
                 tpe = self.types[type_name]
                 b = []
                 for field in tpe.fields:
                     new_sub = copy.deepcopy(sub)
                     new_par = copy.deepcopy(par)
-                    new_sub.children[0].value += '_' + field.children[0]
-                    new_par.children[0].value += '_' + field.children[0]
+
+                    # TODO: this doesn't seem good, should have a more general wrapper
+                    def __alternate(x):
+                        x.value += '_' + field.children[0]
+
+                    alternate_ids(new_sub, [__alternate])
+                    alternate_ids(new_par, [__alternate])
+                    # new_sub.children[0].value += '_' + field.children[0]
+                    # new_par.children[0].value += '_' + field.children[0]
                     new_binding = copy.copy(binding)
                     new_binding.children = [mod_name, new_sub, new_par]
                     b.append(new_binding)

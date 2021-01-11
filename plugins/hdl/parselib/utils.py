@@ -50,3 +50,33 @@ def dprint(*arg, **kwargs):
 def is_tree_type(t, name):
     """Check whether t is lark Tree and whether the tree type is name"""
     return isinstance(t, Tree) and t.data == name
+
+
+def is_tree_types(t, names):
+    """Check whether t is lark Tree and whether the tree type is name"""
+    if not isinstance(names, list):
+        raise ValueError('name argument should be list')
+    return isinstance(t, Tree) and t.data in names
+
+
+def get_ids_in_tree(tree):
+    """get all ids"""
+    __id_types = ['hvarref']
+    if not isinstance(tree, Tree):
+        raise ValueError('Only Tree type is accepted')
+    res = []
+    for t in tree.iter_subtrees():
+        if is_tree_types(t, __id_types):
+            assert t.children[0], 'hvarref should only contain one children'
+            res.append(t.children[0])
+    return res
+
+
+def alternate_ids(tree, ops):
+    """Change the ids within a tree, given operations ops as an array of lambdas"""
+    ids = get_ids_in_tree(tree)
+    if len(ops) != len(ids):
+        raise ValueError('ops should have the same length as ids')
+    for idx, _ in enumerate(ids):
+        ops[idx](ids[idx])
+

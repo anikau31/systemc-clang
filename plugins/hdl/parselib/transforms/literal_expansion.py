@@ -3,6 +3,8 @@ import warnings
 from lark import Token
 
 from parselib.transforms import TopDown
+from ..utils import dprint, is_tree_type
+from ..grammar import UnexpectedHCodeStructureError
 
 
 class LiteralExpansion(TopDown):
@@ -43,21 +45,9 @@ class LiteralExpansion(TopDown):
 
     def hsensvar(self, tree):
         self.__push_up(tree)
-        if len(tree.children) == 1:
-            return tree.children[0]
-        else:
-            if len(tree.children) > 2:
-                warnings.warn('more than two children are present in sensitivity list, taking only the first one')
-                tree.children = tree.children[:2]
-            var, edge = tree.children
-            if edge:
-                if edge == 'pos':
-                    return 'posedge ' + var
-                elif edge == 'neg':
-                    return 'negedge ' + var
-                else:
-                    return var + '_' + edge
-            return var
+        if len(tree.children) != 2:
+            raise UnexpectedHCodeStructureError('hSensvar node should have 2 children')
+        return tree
 
     def npa(self, tree):
         return tree.children[0]

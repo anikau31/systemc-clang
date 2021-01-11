@@ -6,7 +6,7 @@ lark_grammar = Lark('''
         modulelist: (hmodule)*
         typelist: (htypedef)*
         // hmodule:  "hModule" ID "[" modportsiglist? (portbindinglist|processlist)* "]"
-        hmodule:  "hModule" ID "[" modportsiglist? (portbindinglist|hmodinitblock|processlist)* "]"
+        hmodule:  "hModule" ID "[" modportsiglist? (hmodinitblock|processlist)* "]"
 
         modportsiglist: "hPortsigvarlist" "NONAME" "[" modportsigdecl+ "]" 
 
@@ -28,7 +28,7 @@ lark_grammar = Lark('''
         processlist:  "hProcesses" "NONAME" "[" (hprocess|hfunction)*"]"
         // could be nothing
         // temporarily ignore the hMethod node
-        hprocess:  "hProcess" ID  "[" hsenslist*   "hMethod" "NONAME" "[" prevardecl  hcstmt "]" "]"
+        hprocess:  "hProcess" ID  "[" "hMethod" "NONAME" "[" prevardecl  hcstmt "]" "]"
         prevardecl: vardecl*
         vardecl: vardeclinit
 
@@ -110,15 +110,14 @@ lark_grammar = Lark('''
         hfunctionparams : "hFunctionParams" "NONAME" "[" vardeclinit* "]"
                         | "hFunctionParams" "NONAME" "NOLIST"
         hreturnstmt: "hReturnStmt" "NONAME" "[" expression "]"
+                   | "hReturnStmt" "NONAME" "NOLIST"  // return;
 
-        hsenslist : "hSenslist" "NONAME" "[" hsensvars "]"
-                  | "hSenslist" "NONAME" "NOLIST"
+        hsenslist : "hSenslist" ID "[" hsensvar* "]"
                   | "hSenslist" ID "NOLIST"
-        hsensvar :  "hSensvar" ID "[" (hsensedge|hsensvar)* "]"
-                 |  "hSensvar" ID "NOLIST"
-        hsensvars : hsensvar*
+        hsensvar :  "hSensvar" "NONAME" "[" (expression|hvalchange) "hNoop" npa "NOLIST" "]"
 
-        hsensedge : "hSensedge" npa "NOLIST"
+        hvalchange: "hNoop" "value_changed_event" "[" expression "]"
+        hsensedge : "hNoop" npa "NOLIST"
         !npa : "neg" | "pos" | "always"
 
         // if and if-else, not handling if-elseif case
@@ -221,3 +220,7 @@ lark_grammar = Lark('''
         %import common.ESCAPED_STRING -> STRING
         ''', parser='lalr', debug=True, propagate_positions=True)
 
+
+class UnexpectedHCodeStructureError(Exception):
+    """raised when a hcode node is not as expected"""
+    pass

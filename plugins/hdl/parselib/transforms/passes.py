@@ -10,6 +10,7 @@ from .port_expansion import PortExpansion
 from .slice_merge import SliceMerge
 from .node_movement import NodeMovement
 from .function_param_marker import FunctionParamMarker
+from .reorder_mod_init_block import ReorderModInitBlock
 
 
 class VerilogTranslator:
@@ -19,6 +20,7 @@ class VerilogTranslator:
         # we need some form of `level' of the tree, lower level meaning it is loosing more information, but more lenient
         # to hardware language
         prev = tree
+        prev = ReorderModInitBlock().visit(prev)
         prev = NodeMovement().visit(prev)
         prev = SortVarDecl().visit(prev)
         prev = AliasTranslation().visit(prev)
