@@ -12,7 +12,6 @@
 //! Pass variable initialization statements through
 //! Unroll for loops enclosing port bindings and generate unrolled port bindings
 //! Discard instantiations of SC_METHOD and similar decls
-//! Discard Unimplemented op codes, typically sensitivity lists
 //!
 namespace systemc_hdl {
 
@@ -42,7 +41,7 @@ namespace systemc_hdl {
 	  return (((x->h_op==hNode::hdlopsEnum::hBinop) &&
 		   (x->h_name==pbstring) || (x->h_name==sensop)) ||
 		  ((x->h_op == hNode::hdlopsEnum::hSensvar) && // gratuitous sim method sens vars
-		   (x->h_name.find(localstr) != std::string::npos)) ||
+		   (x->child_list[0]->h_name.find(localstr) != std::string::npos)) ||
 		  (x->h_op==hNode::hdlopsEnum::hForStmt) ||
 		  (x->h_op == hNode::hdlopsEnum::hVardeclrn)  || // renamed index variables
 		  ((x->h_op==hNode::hdlopsEnum::hCStmt) &&
@@ -343,12 +342,32 @@ namespace systemc_hdl {
     hNodep hp = HnodeDeepCopy(hp_orig); // need to keep the subtrees when the original tree gets released
 
     hp->h_op = hNode::hdlopsEnum::hSensvar;
-    hp->h_name = hp->child_list[1]->h_name;
+    hp->h_name = noname;
+    
     delete hp->child_list[0]; // release that hnode
     hp->child_list.erase(hp->child_list.begin()); // remove the first item
     if (!for_info.empty()) {
       SubstituteIndex(hp, for_info);
     }
+
+    // check for edge sensitivity
+    // eg
+    //    hSensvar pos [  <-- hp
+    //      hNoop pos [   <-- hedge
+    //        hVarref clk NOLIST <-- hedge->child_list[0]
+    //      ]
+    //    ]
+
+    if (isEdge(hp->child_list[0]->h_name)) {
+      hNodep hedge = hp->child_list[0];
+      hp->child_list[0] = hedge->child_list[0];
+      hedge->child_list.pop_back();
+      hp->child_list.push_back(hedge);
+    }
+    else {
+      hp->child_list.push_back(new hNode("always", hNode::hdlopsEnum::hNoop));
+    };
+    
     hnewsens.back()->child_list.push_back(hp);
   }
   

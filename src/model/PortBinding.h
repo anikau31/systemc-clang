@@ -262,7 +262,7 @@ class PortBinding {
       caller_instance_type_name_ = caller_instance_me_expr_->getMemberDecl()
                                        ->getType()
                                        .getBaseTypeIdentifier()
-                                       ->getName();
+                                       ->getName().str();
       llvm::outs() << "========= END CALLER ME EXPR ======== \n";
     }
 

@@ -3,6 +3,7 @@
 ## Preliminaries
 
 **Before going through this documentation, make sure you have built the systemc-clang successfully, this means that the `scripts/paths.sh` script is sourced appropriately.**
+In addition, ensure that you are using [Release 2.2.0](https://github.com/anikau31/systemc-clang/releases/tag/2.2.0).
 
 ### Repository path
 We use the environment variable `$SYSTEMC_CLANG` to specify the systemc-clang git repository directory.  This is the source directory.

@@ -54,7 +54,7 @@ bool FindNetlist::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *ce) {
         if (DeclRefExpr *de =
                 dyn_cast<DeclRefExpr>(me->getBase()->IgnoreImpCasts())) {
           moduleName =
-              de->getDecl()->getType().getBaseTypeIdentifier()->getName();
+              de->getDecl()->getType().getBaseTypeIdentifier()->getName().str();
           instanceName = de->getFoundDecl()->getNameAsString();
         }
         portName = me->getMemberDecl()->getNameAsString();

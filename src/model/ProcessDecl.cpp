@@ -32,7 +32,7 @@ std::string ProcessDecl::getType() const { return process_type_; }
 
 std::string ProcessDecl::getName() const { return entry_name_; }
 
-clang::CXXMethodDecl *ProcessDecl::getEntryMethodDecl() const {
+const clang::CXXMethodDecl *ProcessDecl::getEntryMethodDecl() const {
   return entry_method_decl_;
 }
 
