@@ -30,6 +30,7 @@ namespace systemc_hdl {
 		  //(x->child_list.back()->h_op != hNode::hdlopsEnum::hLiteral)) ||
 		  (x->h_op == hNode::hdlopsEnum::hVardecl) || // index variables
 		  //(x->h_op == hNode::hdlopsEnum::hMethodCall) || // sc_method
+		  (x->h_op == hNode::hdlopsEnum::hReturnStmt) || // remove return stmt in init block
 		  (x->h_op == hNode::hdlopsEnum::hUnimpl));}), hp->child_list.end() );
 
     for (hNodep hpi :hp->child_list)
@@ -365,6 +366,21 @@ namespace systemc_hdl {
       hp->child_list.push_back(hedge);
     }
     else {
+      
+      if (isSimEvent(hp->child_list[0]->h_name)) {
+
+      // hSensvar NONAME [
+      //     hNoop value_changed_event [
+      //       hVarref c_fp##ready NOLIST
+      //     ]
+      //     hNoop always NOLIST
+      //   ]
+      
+      hNodep htmp =  hp->child_list[0]->child_list[0];
+      hp->child_list.erase(hp->child_list.begin());
+      hp->child_list.push_back(htmp);
+      }
+   
       hp->child_list.push_back(new hNode("always", hNode::hdlopsEnum::hNoop));
     };
     
