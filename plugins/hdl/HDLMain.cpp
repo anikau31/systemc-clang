@@ -50,7 +50,7 @@ namespace systemc_hdl {
     //
 
     LLVM_DEBUG(llvm::dbgs() << "HDL-FILE-OUTPUT: " << hdl_file_out_ << "\n"; );
-    
+
     FileID fileID = getSourceManager().getMainFileID();
     const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
     if (hdl_file_out_ == "") {
@@ -59,7 +59,7 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs()
 		 << "Null file entry for tranlation unit for this astcontext\n");
     } else {
-      outputfn = fileentry->getName();
+      outputfn = fileentry->getName().str();
       regex r("\\.cpp");
       outputfn = regex_replace(outputfn, r, "_hdl");
 
@@ -97,7 +97,7 @@ namespace systemc_hdl {
 				 modname, h_module};
     SCmodule2hcode(modinstance, h_module, HCodeOut);
     // h_module->print(HCodeOut);
-  
+
 
     LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
@@ -108,7 +108,7 @@ namespace systemc_hdl {
 	LLVM_DEBUG(llvm::dbgs()
 		   << "User Type --------\n"
 		   << t.first << ":" << t.second.getTypePtr() << "\n");
-	LLVM_DEBUG(t.second->dump(llvm::dbgs()));
+	LLVM_DEBUG(t.second->dump(llvm::dbgs(), getContext()));
 	LLVM_DEBUG(llvm::dbgs() << "---------\n");
 	HDLt.addtype(t.first, t.second, getContext())->print(HCodeOut);
       }
@@ -128,7 +128,7 @@ namespace systemc_hdl {
     LLVM_DEBUG(mod->getConstructorDecl()->getBody()->dump());
     LLVM_DEBUG( llvm::dbgs() << "end dumping module constructor decl body\n");
     //LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
-  
+
     LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
 
     // Ports
@@ -157,7 +157,7 @@ namespace systemc_hdl {
       string newmodname = mod_newn.newname();
       for (auto instname: instnames) {
 	LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
-      
+
 	hNodep h_smod =
 	  new hNode(instname, hNode::hdlopsEnum::hModdecl);
 	h_ports->child_list.push_back(h_smod);
@@ -177,10 +177,10 @@ namespace systemc_hdl {
     if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
     {
-      // init block 
+      // init block
       clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
       hNodep hconstructor = new hNode(mod->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
-      HDLBody xconstructor(mod->getConstructorDecl()->getBody(), hconstructor, diag_engine);
+      HDLBody xconstructor(mod->getConstructorDecl()->getBody(), hconstructor, diag_engine, getContext());
       LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
       hconstructor->print(llvm::dbgs());
       HDLConstructorHcode hcxxbody;
@@ -189,7 +189,7 @@ namespace systemc_hdl {
 
       // diag_engine scope ends
     }
-  
+
     //  typedef std::pair<std::string, PortBinding *> portBindingPairType;
     //  typedef std::map<std::string, PortBinding *> portBindingMapType;
     //   portBindingMapType getPortBindings();
@@ -199,7 +199,7 @@ namespace systemc_hdl {
     // SCportbindings2hcode(mod, h_submodule_pb);
     // if (!h_submodule_pb->child_list.empty())
     //   h_module->child_list.push_back(h_submodule_pb);
-  
+
 
     if (allmethodecls.size() > 0) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
@@ -237,12 +237,12 @@ namespace systemc_hdl {
 	      FindTemplateTypes *te = new FindTemplateTypes();
 	      te->Enumerate(tp);
 	      HDLType HDLt;
-	      HDLt.SCtype2hcode(vardecl->getName(), te->getTemplateArgTreePtr(),
+	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
 				NULL, hNode::hdlopsEnum::hVardecl, hparams);
 	    }
-	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, false); // suppress output of unqualified name
+	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), false); // suppress output of unqualified name
 	  } else {
-	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, false); // suppress output of unqualified name
+	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), false); // suppress output of unqualified name
 	  }
 	  h_top->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
@@ -274,33 +274,33 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "SC port binding found Caller port name  " << port_name
 		 << " caller instance name " << binding->getCallerInstanceName()
 		 << " <==> callee port name " << binding->getCalleePortName() <<
-		 " callee instance name " 
+		 " callee instance name "
 		 << binding->getCalleeInstanceName() << "\n");
       if (binding->getCallerArraySubscripts().size() >0)
 	{
 	  LLVM_DEBUG(llvm::dbgs() << "Caller Subscript vector length is " <<
 		     binding->getCallerArraySubscripts().size() << "\n");
 	  for (auto subscriptex: binding->getCallerArraySubscripts()) {
-	    LLVM_DEBUG(subscriptex->dump(llvm::dbgs()));
+	    LLVM_DEBUG(subscriptex->dump(llvm::dbgs(), getContext()));
 	  }
 	}
       if (binding->getCalleeArraySubscripts().size()>0) {
 	LLVM_DEBUG(llvm::dbgs() << "Callee Subscript vector length is " <<
 		   binding->getCalleeArraySubscripts().size() << "\n");
 	for (auto subscriptex: binding->getCalleeArraySubscripts()) {
-	  LLVM_DEBUG(subscriptex->dump(llvm::dbgs()));
+	  LLVM_DEBUG(subscriptex->dump(llvm::dbgs(), getContext()));
 	}
       }
-      
+
       hNodep hpb = new hNode(binding->getCallerInstanceName(), hNode::hdlopsEnum::hPortbinding);
-      // caller module name 
+      // caller module name
       hNodep hpb_caller = new hNode(port_name, hNode::hdlopsEnum::hVarref);
       if (binding->getCallerPortArraySubscripts().size() >0) {
 	hpb_caller->child_list.push_back(new hNode("INDEX", hNode::hdlopsEnum::hLiteral)); //placeholder
       }
       hpb->child_list.push_back(hpb_caller);
       string mapped_name =  binding->getCalleeInstanceName();
-                             
+
       // hpb->child_list.push_back(new hNode(binding->getBoundToName(),
       // hNode::hdlopsEnum::hVarref));
       hNodep hpb_callee = new hNode(mapped_name, hNode::hdlopsEnum::hVarref);
@@ -308,7 +308,7 @@ namespace systemc_hdl {
 	hpb_callee->child_list.push_back(new hNode("INDEX", hNode::hdlopsEnum::hLiteral)); //placeholder
       }
       hpb->child_list.push_back(hpb_callee);
-    
+
       h_pbs->child_list.push_back(hpb);
     }
   }
@@ -353,9 +353,9 @@ namespace systemc_hdl {
 	  Expr* initializer = fieldd->getInClassInitializer();
 	  if (initializer != NULL) {
 	    LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
-	    LLVM_DEBUG(initializer->dump(llvm::dbgs()));
+	    LLVM_DEBUG(initializer->dump(llvm::dbgs(), getContext()));
 	    hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);
-	    HDLBody xmethod(initializer, h_init, diag_engine);
+	    HDLBody xmethod(initializer, h_init, diag_engine, getContext());
 	    (h_info->child_list.back())->child_list.push_back(h_init);
 	  }
 	}
@@ -461,7 +461,7 @@ namespace systemc_hdl {
 	CXXMethodDecl *emd = efc->getEntryMethod();
 	if (emd->hasBody()) {
 	  hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-	  HDLBody xmethod(emd, h_body, diag_engine);
+	  HDLBody xmethod(emd, h_body, diag_engine, getContext());
 	  allmethodecls.insert(xmethod.methodecls.begin(),
 			       xmethod.methodecls.end());
 	  h_process->child_list.push_back(h_body);

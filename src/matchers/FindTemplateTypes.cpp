@@ -178,7 +178,7 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
 bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
   //llvm::outs() << "=VisitRecordType=\n";
   auto type_decl{rt->getDecl()};
-  auto type_name{type_decl->getName()};
+  auto type_name{type_decl->getName().str()};
   // llvm::outs() << " ==> name : " << type_name << "\n";
 
   current_type_node_ = template_args_.addNode(TemplateType(type_name, rt));

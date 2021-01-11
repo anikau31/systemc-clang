@@ -6,6 +6,7 @@
 #include "clang/AST/DeclCXX.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/Support/Debug.h"
 #include <ctype.h>
 #include <string>
 #include <tuple>
@@ -115,7 +116,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
   LLVM_DEBUG(llvm::dbgs() << "addtype entered with type name " << typname
                           << "\n");
   const Type *typ = qtyp.getTypePtr();
-  LLVM_DEBUG(typ->dump(llvm::dbgs()));
+  LLVM_DEBUG( typ->dump(llvm::dbgs(), astcontext ); );
   if (typ->isBuiltinType()) {
     string tmps = qtyp.getAsString();
     tutil.make_ident(tmps);
@@ -152,7 +153,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
                                 << param->getName() << "\n");
         // param->dump(llvm::dbgs());
         h_typdef->child_list.push_back(
-            new hNode(param->getName(), hNode::hdlopsEnum::hTypeTemplateParam));
+            new hNode(param->getName().str(), hNode::hdlopsEnum::hTypeTemplateParam));
       }
       std::vector<const FieldDecl *> fields;
       template_matcher.getFields(fields);
@@ -170,7 +171,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
       LLVM_DEBUG(llvm::dbgs() << "Found record with no fields, name is "
                               << (rectype->getDecl())->getName() << "\n");
       h_typdef->child_list.push_back(
-          new hNode(rectype->getDecl()->getName(), hNode::hdlopsEnum::hType));
+          new hNode(rectype->getDecl()->getName().str(), hNode::hdlopsEnum::hType));
     }
   }
 

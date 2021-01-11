@@ -2,6 +2,7 @@
 #include "FindTemplateTypes.h"
 //#include "clang/AST/Type.h"
 
+#include "llvm/Support/Debug.h"
 using namespace systemc_clang;
 
 FindTemplateParameters::FindTemplateParameters(CXXRecordDecl *declaration)
@@ -70,7 +71,7 @@ const std::vector<std::string> FindTemplateParameters::getTemplateParameters()
   }
 
   for (auto parm : template_parameters_->asArray()) {
-    parm_list.push_back(parm->getName());
+    parm_list.push_back(parm->getName().str());
     LLVM_DEBUG(llvm::dbgs() << "Parm: " << parm->getName() << "\n";);
   }
   return parm_list;

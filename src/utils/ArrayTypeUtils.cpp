@@ -1,5 +1,7 @@
 #include "ArrayTypeUtils.h"
 
+#include "llvm/Support/Debug.h"
+
 namespace sc_ast_matchers {
 namespace utils {
 namespace array_type {

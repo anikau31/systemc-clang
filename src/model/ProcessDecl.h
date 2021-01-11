@@ -7,7 +7,7 @@
 
 /// clang forward declarations.
 namespace clang {
-  class CXXMethodDecl;
+class CXXMethodDecl;
 };
 
 namespace systemc_clang {
@@ -23,12 +23,12 @@ class ProcessDecl {
               EntryFunctionContainer *);
 
   ProcessDecl(const ProcessDecl &);
-  ~ProcessDecl();
+  virtual ~ProcessDecl();
 
   /// Get methods.
   std::string getType() const;
   std::string getName() const;
-  clang::CXXMethodDecl *getEntryMethodDecl() const;
+  const clang::CXXMethodDecl *getEntryMethodDecl() const;
   EntryFunctionContainer *getEntryFunction();
 
   /// Dump.
@@ -36,14 +36,13 @@ class ProcessDecl {
   json dump_json() const;
 
  protected:
-  // Process information
+  /// Process information
   std::string process_type_;
-  // Name of the entry function
+  /// Name of the entry function
   std::string entry_name_;
-  // Each process can have 1 entry function.
-  clang::CXXMethodDecl *entry_method_decl_;
-  // This is a container that holds information about the
-  // entry function.
+  /// Each process can have 1 entry function.
+  const clang::CXXMethodDecl *entry_method_decl_;
+  /// This is a container that holds information about the entry function.
   EntryFunctionContainer *entry_function_ptr_;
 };  // End class ProcessDecl
 
