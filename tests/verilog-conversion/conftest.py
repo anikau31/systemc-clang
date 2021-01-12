@@ -31,17 +31,18 @@ def load_file(path):
 def load_module(mod_name):
     raise NotImplementedError
 
+        # (name, design, extra_args, golden)
 test_data = [
-        ('add',    load_file(testdata / 'add.cpp'), None),
-        # ('sreg',   load_file(), []),
-        # ('member-variable-sc-buffer',   load_file(), []),
+        ('add',    load_file(testdata / 'add.cpp'), None, load_file(testdata / 'add_hdl.txt.v')),
+        # ('sreg',   load_file(), [], None),
+        # ('member-variable-sc-buffer',   load_file(), [], None),
         # # shared
-        # ('z1test', load_file(zfpsynth / 'zfp1/z1test.cpp'), ['-I', zfpshared.stem, '-I', zfpsynth / 'zfp1']),
-        # ('z2test', load_file(zfpsynth / 'zfp2/z2test.cpp'), ['-I', zfpshared.stem, '-I', zfpsynth / 'zfp2']),
+        # ('z1test', load_file(zfpsynth / 'zfp1/z1test.cpp'), ['-I', zfpshared.stem, '-I', zfpsynth / 'zfp1'], None),
+        # ('z2test', load_file(zfpsynth / 'zfp2/z2test.cpp'), ['-I', zfpshared.stem, '-I', zfpsynth / 'zfp2'], None),
         # # shared2
-        # ('z3test', load_file(zfpsynth / 'zfp3/z3test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp3']),
-        # ('z4test', load_file(zfpsynth / 'zfp4/z4test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp4']),
-        # ('z5test', load_file(zfpsynth / 'zfp5/z5test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp5'])
+        # ('z3test', load_file(zfpsynth / 'zfp3/z3test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp3', None]),
+        # ('z4test', load_file(zfpsynth / 'zfp4/z4test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp4', None]),
+        # ('z5test', load_file(zfpsynth / 'zfp5/z5test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp5', None])
     ]
 
 

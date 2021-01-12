@@ -1,6 +1,7 @@
 import pytest
 import os
 import subprocess
+import difflib
 from pathlib import Path
 from pytest_steps import test_steps
 from conftest import test_data
@@ -18,12 +19,13 @@ def vivado_tcl_template():
             )
 
 
-@test_steps('hcode', 'translation', 'synthesis')
-@pytest.mark.parametrize("name,content,extra_args", test_data, ids=[x[0] for x in test_data])
-def test_translation(tmp_path, name, content, extra_args, default_params, vivado_tcl_template, has_vivado):
+@test_steps('hcode', 'translation', 'translation-match-check', 'synthesis')
+@pytest.mark.parametrize("name,content,extra_args,golden", test_data, ids=[x[0] for x in test_data])
+def test_translation(tmp_path, name, content, extra_args, golden, default_params, vivado_tcl_template, has_vivado):
     # move files to the target directory
     target_path = tmp_path / '{}.cpp'.format(name)
     hcode_target_path = tmp_path / '{}_hdl.txt'.format(name)
+    verilog_target_path = tmp_path / '{}_hdl.txt.v'.format(name)
     with open(target_path, 'w') as f:
         f.writelines(content)
 
@@ -37,6 +39,24 @@ def test_translation(tmp_path, name, content, extra_args, default_params, vivado
     # step: translation
     sysc_clang.invoke_translation(target, [])
     yield
+
+    # step: translation-match (checks whether the translation matches a golden file, if exists)
+    if golden is None:
+        pytest.skip('Golden Verilog file is not included, translation-match test is skipped')
+    else:
+        with open(verilog_target_path, 'r') as f:
+            data = f.read()
+        golden_lines = golden.splitlines(keepends=True)
+        target_lines = data.splitlines(keepends=True)
+        seq_matcher = difflib.SequenceMatcher(lambda x: x in " \t\n", golden, data)
+        ops = list(seq_matcher.get_opcodes())
+        cond = len(ops) == 1 and ops[0][0] == 'equal'
+        if not cond:
+            differ = difflib.Differ(charjunk=lambda x: x in " \t\n")
+            diff_res = list(differ.compare(golden_lines, target_lines))
+            assert False, '\nTranslated file and golden file mismatch, diff result:\n' + ''.join(diff_res)
+    yield
+
 
     # synthesis: synthesis
     if has_vivado:
