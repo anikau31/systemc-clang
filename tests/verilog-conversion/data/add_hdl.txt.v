@@ -13,4 +13,3 @@ module _sc_module_0 (
     out_port <= (in_port_1) + (in_port_2);
   end
 endmodule
-
