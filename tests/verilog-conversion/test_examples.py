@@ -46,14 +46,20 @@ def test_translation(tmp_path, name, content, extra_args, golden, default_params
     else:
         with open(verilog_target_path, 'r') as f:
             data = f.read()
+        golden = golden.strip()
+        data = data.strip()
         golden_lines = golden.splitlines(keepends=True)
         target_lines = data.splitlines(keepends=True)
-        seq_matcher = difflib.SequenceMatcher(lambda x: x in " \t\n", golden, data)
+        seq_matcher = difflib.SequenceMatcher(lambda x: x in " \t\n\r", golden, data)
         ops = list(seq_matcher.get_opcodes())
         cond = len(ops) == 1 and ops[0][0] == 'equal'
         if not cond:
-            differ = difflib.Differ(charjunk=lambda x: x in " \t\n")
+            differ = difflib.Differ(charjunk=lambda x: x in " \t\n\r")
             diff_res = list(differ.compare(golden_lines, target_lines))
+            print("OPS to correct the results: ")
+            for tag, i1, i2, j1, j2 in ops:
+                print('{:7}   a[{}:{}] --> b[{}:{}] {!r:>8} --> {!r}'.format( 
+                    tag, i1, i2, j1, j2, golden[i1:i2], data[j1:j2]))
             assert False, '\nTranslated file and golden file mismatch, diff result:\n' + ''.join(diff_res)
     yield
 
