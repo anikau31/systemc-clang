@@ -38,11 +38,11 @@ RUN mkdir /opt/systemc-2.3.3 && curl -L https://github.com/rseac/systemc-travisc
 RUN apt-get update && apt-get install -y -q --no-install-recommends \
   g++ \
   cmake \
-  ccache \
+#  ccache \
   ninja-build \
   python3 \
   python3-pip \
-  git \
+#  git \
   libz-dev \
   libncurses-dev
 
