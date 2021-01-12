@@ -39,9 +39,15 @@ namespace systemc_hdl {
   }
 
   static inline bool isEdge(string &s) {
-    return (s=="pos" || s=="neg");
+    return (s=="pos" ||
+	    s=="posedge" ||
+	    s=="neg" ||
+	    s=="negedge");
   }
-  
+
+  static inline bool isSimEvent(string &s) {
+    return (s=="value_changed_event");
+  }
   class HDLConstructorHcode {
   public:
     HDLConstructorHcode() {};
