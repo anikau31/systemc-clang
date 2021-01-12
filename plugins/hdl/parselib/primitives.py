@@ -81,6 +81,18 @@ class sc_in(Primitive):
         input_context = TypeContext(prefix='input', suffix=',').update_not_none(context)
         return self.T.to_str(var_name=var_name, context=input_context)
 
+class __func_inout(Primitive):
+    def __init__(self, T):
+        self.T = T
+
+    @staticmethod
+    def get_context():
+        return TypeContext(prefix='inout')
+
+    def to_str(self, var_name, context=None):
+        input_context = TypeContext(prefix='inout', suffix=',').update_not_none(context)
+        return self.T.to_str(var_name=var_name, context=input_context)
+
 class sc_rvd_out(Primitive):
     def __init__(self, T):
         self.T = T
@@ -171,9 +183,9 @@ class sc_int(Primitive):
             if context.suffix is not None:
                 suffix = context.suffix
         if var_name:
-            return f'{prefix}logic [{self.width-1}:0] {var_name}{suffix}'
+            return f'{prefix}logic signed[{self.width-1}:0] {var_name}{suffix}'
         else:
-            return f'{prefix}logic [{self.width-1}:0]'
+            return f'{prefix}logic signed[{self.width-1}:0]'
 
 
 class sc_signal(Primitive):

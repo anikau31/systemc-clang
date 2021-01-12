@@ -1,9 +1,9 @@
 import warnings
 from .top_down import TopDown
 from ..primitives import *
-from ..utils import dprint
+from ..utils import dprint, is_tree_type
 from lark import Tree
-import traceback
+import logging
 
 
 class VerilogTranslationPass(TopDown):
@@ -47,7 +47,7 @@ class VerilogTranslationPass(TopDown):
 
     def hmethodcall(self, tree):
         self.__push_up(tree)
-        return '{}({})'.format(tree.children[0], ''.join(tree.children[1:]))
+        return '{}({})'.format(tree.children[0], ','.join(map(str, tree.children[1:])))
 
     def blkassign(self, tree):
         var_name = self.__get_var_name(tree.children[0])
@@ -55,7 +55,31 @@ class VerilogTranslationPass(TopDown):
         assert len(tree.children) == 2
         is_local_var = self.__is_local_varialbe(var_name)
         op = '=' if self.in_for_init or tree.must_block or is_local_var else '<='
-        res = '{} {} {}'.format(tree.children[0], op, tree.children[1])
+        l = tree.children[0]
+        r = tree.children[1]
+
+        if type(l) == Tree and l.data == 'harrayref':
+            # __A[__r:__s] = __X
+            __A = l.children[0]
+            __r = l.children[1]
+            __s = l.children[2]
+            l = __A
+            if type(r) == Tree and r.data == 'harrayref':  # special case for irreducible RHS
+                __X = r.children[3]
+                __B = r.children[0]
+            else:
+                __X = r
+                __B = r
+            r = "(({} & ~(~($bits({})'('b0)) << (({})-({})+1))) << ({})) | (({}) & ((~($bits({})'('b0)) ) << (({}) + 1) | ~(( ~($bits({})'('b0)) ) << ({}))))".format(
+                __X, __B,
+                __r, __s,
+                __s, __A,
+                __A, __r, __A, __s
+            )
+        elif type(r) == Tree and r.data == 'harrayref':
+            r = r.children[3]
+
+        res = '{} {} {}'.format(l, op, r)
         return res
 
     def syscwrite(self, tree):
@@ -68,7 +92,11 @@ class VerilogTranslationPass(TopDown):
         lit, tpe = tree.children
         assert hasattr(tpe, 'width'), 'Literal width type should have width member'
         w = tpe.width  # the primitive type must have width
-        return "{}'d{}".format(w, lit)
+        return "{}{}'d{}".format('-' if lit < 0 else '', w, abs(lit))
+
+    def hcondop(self, tree):
+        self.__push_up(tree)
+        return '{} ? {} : {}'.format(tree.children[0], tree.children[1], tree.children[2])
 
     def hliteral(self, tree):
         """stops at literal, it is some kinds of terminal"""
@@ -91,7 +119,14 @@ class VerilogTranslationPass(TopDown):
             hslice = tree.children[0]
             var = hslice.children[0]
             l, r = hslice.children[1:]
-            idx = '{}:{}'.format(l, r)
+            l_const = isinstance(l, int)
+            r_const = isinstance(r, int)
+            if l_const and r_const:
+                idx = '{}:{}'.format(l, r)
+            else:
+                # for slicing that is not constant
+                tree.children = [var, l, r, "(({}) >> ({})) & ~(~($bits({})'('b0)) << (({}) - ({}) + 1))".format(var, r, var, l, r)]
+                return tree  # irreducible hslice node
         else:
             var, idx = tree.children
         return '{}[{}]'.format(var, idx)
@@ -146,7 +181,7 @@ class VerilogTranslationPass(TopDown):
 
     def switchbody(self, tree):
         self.__push_up(tree)
-        return tree.children[0]
+        return '\n'.join(tree.children)
 
     def casestmt(self, tree):
         self.inc_indent()
@@ -188,13 +223,13 @@ class VerilogTranslationPass(TopDown):
             try:
                 if isinstance(x[1], Tree):
                     if x[1].data == 'expression_in_stmt':
-                        warnings.warn('Expression as a statement may not have an effect')
+                        # logging.warning('Expression as a statement may not have an effect. On line: {}'.format(x[1].line))
                         x = (x[0], x[1].children[0], x[2])
                     else:
                         assert False, 'Unrecognized construct: {}'.format(x[1])
                 res = x[0] + x[1] + x[2]
                 return res
-            except:
+            except Exception as e:
                 print(x[0])
                 print(x[1])
                 print(x[2])
@@ -304,15 +339,30 @@ class VerilogTranslationPass(TopDown):
 
     def hsenslist(self, tree):
         self.__push_up(tree)
-        assert len(tree.children) == 1
-        sensvars = tree.children[0]
-        if len(sensvars.children) > 0:
-            return ' or '.join(sensvars.children)
-        elif len(sensvars.children) == 0:
-            return '*'
+        proc_name = tree.children[0]
+        assert proc_name not in self.senselist, 'Duplicated process: {}'.format(proc_name)
+        self.senselist[proc_name] = []
+        for sv in tree.children[1:]:
+            sens_var, sens_edge = sv.children
+            if sens_edge == 'always':
+                sen_str = sens_var
+            elif sens_edge == 'pos':
+                sen_str = 'posedge {}'.format(sens_var)
+            elif sens_edge == 'neg':
+                sen_str = 'negedge {}'.format(sens_var)
+            else:
+                raise ValueError('Edge can only be one of pos/neg/always')
+            self.senselist[proc_name].append(sen_str)
+        return None
+
+    def hvalchange(self, tree):
+        warnings.warn('value change is deprecated, but is detected in hcode', DeprecationWarning)
+        self.__push_up(tree)
+        return tree.children[0]
 
     def hprocess(self, tree):
-        proc_name, senslist, prevardecl, *body = tree.children
+        senslist = None
+        proc_name, prevardecl, *body = tree.children
         for n in prevardecl.children:
             var_name = n.children[0].children[0]  # get the variable name of local variables
             self.__add_local_variables(var_name)
@@ -320,13 +370,14 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         self.dec_indent()
 
-        proc_name, senslist, prevardecl, *body = tree.children
+        proc_name, prevardecl, *body = tree.children
 
 
         ind = self.get_current_ind_prefix()
         decls = list(map(lambda x: x[0] + ';', prevardecl.children))
         decls_init = list(map(lambda x: '{} = {};'.format(x[1], x[2]), filter(lambda x: len(x) == 3 and x[2] is not None, prevardecl.children)))
-        res = ind + 'always @({}) begin: {}\n'.format(senslist, proc_name)
+        # dprint(self.senselist)
+        res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.senselist[proc_name]), proc_name)
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         res += ind + ('\n' + ind).join(decls) + '\n'
@@ -349,27 +400,52 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         name, *args = tree.children
         tpe = Primitive.get_primitive(name)
-        assert tpe is not None
+        assert tpe is not None, 'Type {} is not defined'.format(name)
         return tpe(*args)
 
     def hreturnstmt(self, tree):
         self.__push_up(tree)
-        return 'return {}'.format(tree.children[0])
+        logging.warning(
+            """Return statement is detected and omitted.\n"""
+            """  A return statement may not produce expected result,\n"""
+            """  consider removing it in the C++ code.\n"""
+            """  On line: {}""".format(tree.line)
+        )
+        if len(tree.children) == 1:
+            # return 'return {}'.format(tree.children[0])
+            return ''
+        elif len(tree.children) == 0:
+            # return 'return'
+            return ''
+        else:
+            assert len(tree.children) in [0, 1], 'return statement can only have 0 or 1 return value'
 
     def vardeclinit(self, tree):
         self.__push_up(tree)
         init_val = None
+        tpe = None
         if len(tree.children) == 2:
             var_name, tpe = tree.children
-        if len(tree.children) == 3:
+        elif len(tree.children) == 3:
             var_name, tpe, init_val = tree.children
+        else:
+            assert False, 'children size of vardeclinit is not 2 or 3, there might be a bug in the translator'
         ctx = TypeContext(suffix='')
         decl = tpe.to_str(var_name, context=ctx)
         return (decl, var_name, init_val)
 
+    def expand_binding_ref(self, tree):
+        if not is_tree_type(tree, 'hbindingarrayref'):
+            raise ValueError('expand_binding_ref only accepts hbindingarrayref')
+        self.__push_back(tree)
+        return '{}[{}]'.format(tree.children[0], tree.children[1])
+
     def moduleinst(self, tree):
-        warnings.warn('Type parameters for modules are not supported')
         mod_name, mod_type = tree.children
+        # expand if it is an element of module array
+        mod_name = '_'.join(mod_name.split('#'))
+        if len(mod_type.children[0].children) > 1:
+            warnings.warn('Type parameters for modules are not supported')
         mod_type_name = mod_type.children[0].children[0]
         if mod_name not in self.bindings:
             warnings.warn('Port bindings for module instance name {} not found'.format(mod_name))
@@ -381,9 +457,36 @@ class VerilogTranslationPass(TopDown):
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         binding_str = []
+        array_bindings = {}
         for binding in bindings:
-            sub, par = binding.children
-            binding_str.append(ind + '.{}({})'.format(sub.children[0].value, par.children[0].value))
+            # for backward compatibility, we keep the case where binding is a list
+            if type(binding) == list:
+                sub, par = binding
+            else:
+                warnings.warn('Using Tree as binding is deprecated', DeprecationWarning)
+                sub, par = binding.children
+            if is_tree_type(sub, 'hbindingarrayref'):
+                sub_name = sub.children[0].children[0].value  # assuming varref
+                if sub_name not in array_bindings:
+                    array_bindings[sub_name] = {}
+                array_bindings[sub_name][sub.children[1].children[0]] = par
+            else:
+                # at this point, the par should be able to be fully expanded even if it is an array
+                if is_tree_type(par, 'hbindingarrayref'):
+                    par = self.expand_binding_ref(par)
+                else:
+                    par = par.children[0].value
+                binding_str.append(ind + '.{}({})'.format(sub.children[0].value, par))
+        for sub_name, bindings in array_bindings.items():
+            # for now, we keep a dict of array binding
+            array_seq = [None] * len(bindings)
+            for idx, b in bindings.items():
+                # dprint(self.expand_binding_ref(b))
+                # array_seq[idx] = '{}[{}]'.format(b.children[0].children[0].value, b.children[1].children[0])
+                array_seq[idx] = self.expand_binding_ref(b)
+            binding_str.append(ind + ".{}('{{ {} }})".format(
+                sub_name, ','.join(array_seq)
+            ))
         res += ',\n'.join(binding_str)
         res += '\n'
         self.dec_indent()
@@ -413,12 +516,26 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         return ', '.join(map(lambda x: x[0], tree.children))
 
+    def hfunctionrettype(self, tree):
+        self.__push_up(tree)
+        tpe = tree.children[0]
+        res = tpe.to_str(var_name='')
+        return res
+
+    def htouint(self, tree):
+        self.__push_up(tree)
+        return '$unsigned({})'.format(tree.children[0])
+
+    def htoint(self, tree):
+        self.__push_up(tree)
+        return '$signed({})'.format(tree.children[0])
+
     def hfunction(self, tree):
         self.inc_indent()
         self.__push_up(tree)
         self.dec_indent()
         ind = self.get_current_ind_prefix()
-        function_name, params, localvar, body = tree.children
+        function_name, return_type, params, localvar, body = tree.children
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         localvars = '\n'.join(map(lambda x: ind + x[0] + ';', localvar.children))
@@ -426,17 +543,51 @@ class VerilogTranslationPass(TopDown):
         body = '\n'.join(body.children)
 
         ind = self.get_current_ind_prefix()
-        res = '{}function {} ({});\n{}begin\n{}\n{}\n{}end\n{}endfunction'.format(ind, function_name,
+        res = '{}function {} {} ({});\n{}begin\n{}\n{}\n{}end\n{}endfunction'.format(ind, return_type, function_name,
                                                                                   params, ind,
                                                                                   localvars, body, ind, ind)
         return res
 
     def hmodule(self, tree):
-        # print("Processing Module: ", tree.children[0])
+        # dprint("Processing Module: ", tree.children[0])
         # print("Retrieving Portbindings")
+        self.current_module = tree.children[0]
+        self.senselist = {}
+        initialization_block = []
+        encountered_initblock = False
         for t in tree.children:
             if isinstance(t, Tree) and t.data == 'portbindinglist':
                 self.bindings[t.children[0]] = t.children[1]
+            elif is_tree_type(t, 'hmodinitblock'):  # currently we only have one block
+                if encountered_initblock:
+                    raise ValueError('Only one hmodinitblock should present')
+                encountered_initblock = True
+                name = t.children[0]
+                initblock, portbindings, senslist = None, None, []
+                for ch in t.children[1:]:
+                    if ch.data == 'hcstmt':  # TODO: have a dedicated node for initial block
+                        initblock = ch
+                    elif ch.data == 'portbindinglist':
+                        portbindings = ch
+                    elif ch.data == 'hsenslist':
+                        senslist.append(ch)
+                    else:
+                        raise ValueError(ch.pretty())
+                self.inc_indent()
+                self.inc_indent()
+                self.__push_up(initblock)
+                self.dec_indent()
+                self.dec_indent()
+                if portbindings:
+                    for bds in portbindings.children[1]:
+                        mod_name = bds.children[0]
+                        bindings = bds.children[1:]
+                        if mod_name not in self.bindings:
+                            self.bindings[mod_name] = []
+                        self.bindings[mod_name].append(bindings)
+                # has something within the initialization block
+                if initblock and initblock.children:
+                    initialization_block.append(initblock.children[0])
         tree.children = list(filter(lambda x: not isinstance(x, Tree) or x.data != 'portbindinglist', tree.children))
         self.inc_indent()
         self.__push_up(tree)
@@ -502,6 +653,14 @@ class VerilogTranslationPass(TopDown):
                     decl += ';'
                 res += ind + decl + '\n'
             self.dec_indent()
+        # generate initialization block
+        if initialization_block:
+            self.inc_indent()
+            ind = self.get_current_ind_prefix()
+            res += '{}initial begin\n'.format(ind)
+            res += '\n'.join(initialization_block)
+            res += '\n{}end\n'.format(ind)
+            self.dec_indent()
         # generate module instantiations
         if len(mods) > 0:
             for m in mods:
@@ -512,7 +671,8 @@ class VerilogTranslationPass(TopDown):
                 res += proc + '\n'
 
         if functionlist:
-            for f in functionlist:
-                res += f + '\n'
+            # for f in functionlist:
+            #     res += f + '\n'
+            assert False, "functionlist should be empty, there may be a bug in the code"
         res += "endmodule"
         return res

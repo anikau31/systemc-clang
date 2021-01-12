@@ -1,7 +1,9 @@
 from .top_down import TopDown
 from lark import Token, Tree
+from ..utils import dprint
 import copy
 import warnings
+import logging
 
 
 class PortExpansion(TopDown):
@@ -81,7 +83,7 @@ class PortExpansion(TopDown):
         return [data_port_decl, valid_port_decl, ready_port_decl]
 
     def __expand_sc_rvd_binding_pair(self, tree):
-        sub, par = tree.children
+        _, sub, par = tree.children
         par_name, par_type = self.__get_expanded(par.children[0])
         if par_type:
             assert par_type in ['sc_rvd', 'sc_rvd_in', 'sc_rvd_out']
@@ -89,11 +91,11 @@ class PortExpansion(TopDown):
             sub_fields = ['data', 'valid', 'ready']
             res = []
             for t, f in zip(new_trees, sub_fields):
-                sub, par = t.children
+                _, sub, par = t.children
                 sub_v = sub.children[0]
                 par_v = par.children[0]
-                t.children[0].children[0].value = sub_v + '_' + f
-                t.children[1].children[0].value = par_v + '_' + f
+                t.children[0 + 1].children[0].value = sub_v + '_' + f
+                t.children[1 + 1].children[0].value = par_v + '_' + f
                 res.append(t)
             return res
         else:
@@ -116,7 +118,7 @@ class PortExpansion(TopDown):
 
     def __expand_vardecl(self, tree):
         if len(tree.children) == 3:
-            warnings.warn('Expansion of sc_rvd with initial value is not supported')
+            # warnings.warn('Expansion of sc_rvd with initial value is not supported')
             return [tree]
         bundle_name, bundle_type = tree.children
         bundle_to_expand = ['sc_rvd']

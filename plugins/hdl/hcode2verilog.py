@@ -8,6 +8,12 @@ import argparse
 logging.basicConfig(level=logging.DEBUG)
 
 
+def translate_text(file_content):
+    t = lark_grammar.parse(file_content)
+    x = VerilogTranslator
+    return x.translate(t)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('input', type=str, help='Input file name (normally the _hdl.txt file)')

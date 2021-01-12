@@ -5,7 +5,8 @@ lark_grammar = Lark('''
 
         modulelist: (hmodule)*
         typelist: (htypedef)*
-        hmodule:  "hModule" ID "[" modportsiglist? (portbindinglist|processlist)* "]"
+        // hmodule:  "hModule" ID "[" modportsiglist? (portbindinglist|processlist)* "]"
+        hmodule:  "hModule" ID "[" modportsiglist? (hmodinitblock|processlist)* "]"
 
         modportsiglist: "hPortsigvarlist" "NONAME" "[" modportsigdecl+ "]" 
 
@@ -24,10 +25,10 @@ lark_grammar = Lark('''
         ?hvarinit: "hVarInit" "NONAME" expression
         ?hvarinitint: "hVarInit" NUM "NOLIST"
         // can be no process at all in the module
-        processlist:  "hProcesses" "NONAME" "[" hprocess* "]"
+        processlist:  "hProcesses" "NONAME" "[" (hprocess|hfunction)*"]"
         // could be nothing
         // temporarily ignore the hMethod node
-        hprocess:  "hProcess" ID  "[" hsenslist*   "hMethod" "NONAME" "[" prevardecl hfunction* hcstmt "]" "]"
+        hprocess:  "hProcess" ID  "[" "hMethod" "NONAME" "[" prevardecl  hcstmt "]" "]"
         prevardecl: vardecl*
         vardecl: vardeclinit
 
@@ -47,11 +48,32 @@ lark_grammar = Lark('''
              | hreturnstmt
              
         ?htobool: "hNoop" "to_bool" "[" harrayref "]"
+        htouint: "hNoop" "to_uint" "[" syscread "]"
+        htoint: "hNoop" "to_int" "[" syscread "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
+        
+        // hmodinitblock: 
+        // first component is the id of the module (in parent?)
+        // second component is initialization list              
+        // third component is port binding list
+        hmodinitblock: "hModinitblock" ID "[" hcstmt portbindinglist* hsenslist*"]"
 
         // Port Bindings
         portbindinglist: "hPortbindings" ID "[" portbinding* "]"
-        portbinding: "hPortbinding" "NONAME" "[" hvarref hvarref "]"
+        // hPortbinding u_dut [
+        //   hVarref avg_out NOLIST
+        //   hVarref dut_avg NOLIST
+        // ]
+        portbinding: "hPortbinding" ID "[" hvarref hvarref "]"
+                   | "hPortbinding" ID "[" hbindingref hbindingref "]"
+                   | "hPortbinding" ID "[" hvarref hbindingref "]"
+                   | "hPortbinding" ID "[" hbindingarrayref hbindingarrayref "]"  
+                   | "hPortbinding" ID "[" hvarref hbindingarrayref "]"  
+                   // TODO: replace portbinding with succinct syntax
+        hbindingref: "hVarref" ID "[" hliteral "]"
+        // compared array ref in normal expressions
+        // we use a more restrictive form here
+        hbindingarrayref: "hBinop" "ARRAYSUBSCRIPT" "[" (hvarref|hbindingarrayref) (hliteral|hbinop) "]"  
 
 
         // This is solely for maintaining the semicolon
@@ -81,20 +103,21 @@ lark_grammar = Lark('''
         casevalue: expression
         
         // Function
-        hfunction : "hFunction" ID "[" hfunctionparams hfunctionlocalvars hfunctionbody "]"
+        hfunction : "hFunction" ID "[" hfunctionrettype hfunctionparams hfunctionlocalvars hfunctionbody "]"
         hfunctionlocalvars: vardeclinit*
         hfunctionbody: hcstmt
+        hfunctionrettype: "hFunctionRetType" "NONAME" "[" htypeinfo "]"
         hfunctionparams : "hFunctionParams" "NONAME" "[" vardeclinit* "]"
                         | "hFunctionParams" "NONAME" "NOLIST"
         hreturnstmt: "hReturnStmt" "NONAME" "[" expression "]"
+                   | "hReturnStmt" "NONAME" "NOLIST"  // return;
 
-        hsenslist : "hSenslist" "NONAME" "[" hsensvars "]"
-                  | "hSenslist" "NONAME" "NOLIST"
-        hsensvar :  "hSensvar" ID "[" (hsensedge|hsensvar)* "]"
-                 |  "hSensvar" ID "NOLIST"
-        hsensvars : hsensvar*
+        hsenslist : "hSenslist" ID "[" hsensvar* "]"
+                  | "hSenslist" ID "NOLIST"
+        hsensvar :  "hSensvar" "NONAME" "[" (expression|hvalchange) "hNoop" npa "NOLIST" "]"
 
-        hsensedge : "hSensedge" npa "NOLIST"
+        hvalchange: "hNoop" "value_changed_event" "[" expression "]"
+        hsensedge : "hNoop" npa "NOLIST"
         !npa : "neg" | "pos" | "always"
 
         // if and if-else, not handling if-elseif case
@@ -111,6 +134,11 @@ lark_grammar = Lark('''
                   | hmethodcall
                   |  "[" expression "]"
                   | htobool
+                  | htouint
+                  | htoint
+                  | hcondop
+                  
+        hcondop : "hCondop" "NONAME" "[" (hbinop | hunop) expression expression "]"
 
         syscread : hsigassignr "[" expression "]"
         syscwrite : hsigassignl "["  expression  expression "]"
@@ -131,7 +159,7 @@ lark_grammar = Lark('''
         // Separate '=' out from so that it is not an expression but a standalone statement
         blkassign: "hBinop" "=" "[" (hvarref | hliteral) (htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
                  | "hBinop" "=" "[" harrayref (htobool | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
-                 | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref)  "]"
+                 | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool)  "]"
                  | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
                  | vassign
                  | hmodassign
@@ -192,3 +220,7 @@ lark_grammar = Lark('''
         %import common.ESCAPED_STRING -> STRING
         ''', parser='lalr', debug=True, propagate_positions=True)
 
+
+class UnexpectedHCodeStructureError(Exception):
+    """raised when a hcode node is not as expected"""
+    pass

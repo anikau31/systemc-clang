@@ -6,7 +6,8 @@ from ..compound import aggregate
 from lark import Tree, Token
 import copy
 import warnings
-from ..utils import dprint
+from ..utils import dprint, is_tree_type, get_ids_in_tree, alternate_ids
+
 
 class TypedefExpansion(TopDown):
     """Expands block assignment of custom types into primitive types"""
@@ -195,7 +196,21 @@ class TypedefExpansion(TopDown):
                 if not Primitive.get_primitive(type_name) and not type_name in self.types:
                     # module instantiate
                     new_children.append(Tree('moduleinst', node.children, node.meta))
+                    # dprint(new_children[-1])
+                    # assert False
                     continue
+                if type_name == 'array':
+                    # array of module instantiations
+                    sub_type_name = var_type.children[1].children[0]
+                    if not Primitive.get_primitive(sub_type_name) and not type_name in self.types:
+                        # inst_name, module_name, array_size
+                        inst_arr_name = node.children[0]
+                        n_inst = var_type.children[2][0]
+                        inst_type = Tree('htypeinfo', children=[var_type.children[1]])
+                        for i in range(n_inst):
+                            inst_name = inst_arr_name + '#' + str(i)
+                            new_children.append(Tree('moduleinst', [inst_name, inst_type], node.meta))
+                        continue
                 for var_type_name in itertools.chain.from_iterable(var_tokens):
                     if var_type_name in self.types:  # detect the first type that is in the typedef list
                         self.__set_expanded(var_name, var_type)
@@ -280,7 +295,7 @@ class TypedefExpansion(TopDown):
                 if lhs_type.children[0] != rhs_type.children[0]:
                     raise RuntimeError('Type does not match between LHS and RHS')
             else:
-                warnings.warn('Treating CXXDefaultArgExpr as 0')
+                # warnings.warn('Treating CXXDefaultArgExpr as 0')
                 assert rhs.data == 'hliteral'
             type_name = lhs_type.children[0]
             type_params = lhs_type.children[1:]
@@ -341,8 +356,30 @@ class TypedefExpansion(TopDown):
 
 
     def hfunctionparams(self, tree):
+        self.expanded.append(dict())
         self.__push_up(tree)
         tree.children = self.__expand_vardecl_in_tree_children(tree)
+        self.expanded.pop()
+        return tree
+
+    def hmethodcall(self, tree):
+        self.__push_up(tree)
+        new_children = []
+        for sense_var in tree.children[1:]:
+            var_name = sense_var.children[0]
+            var_type = self.__expanded_type(var_name)
+            # dprint(var_name, self.__expanded_type(var_name))
+            if var_type:
+                var_type = self.__get_expandable_type_from_htype(var_type)
+                type_name = var_type.children[0]
+                type_params = var_type.children[1:]
+                tpe = self.types[type_name]
+                fields = tpe.get_fields_with_instantiation(type_params, self.types)
+                for field_name, _ in fields:
+                    new_children.append(var_name + '_' + field_name)
+            else:
+                new_children.append(sense_var)
+        tree.children[1:] = new_children
         return tree
 
     def vardecl(self, tree):
@@ -379,25 +416,44 @@ class TypedefExpansion(TopDown):
                 new_children.append(node)
         return new_children
 
+    def hmodinitblock(self, tree):
+        """
+        expands the hmodinitblock
+        hmodinitblock includes a initialization block and portdecl block, both of which can include
+        aggregated types
+        """
+        self.__push_up(tree)
+        return tree
+
     def portbindinglist(self, tree):
         module_name, *bindings = tree.children
         new_bindings = []
         for binding in bindings:
-            sub, par = binding.children
+            mod_name, sub, par = binding.children
             sub_v = sub.children[0]
-            par_v = par.children[0]
+            if is_tree_type(par, 'hbindingarrayref'):
+                par_v = get_ids_in_tree(par)[0]
+            else:
+                par_v = par.children[0]
             typeinfo = self.__expanded_type(par_v.value)
-            if typeinfo:
+            if typeinfo:  # if the bindinding is on a customized type
                 type_name = self.__get_expandable_type_from_htype(typeinfo).children[0]
                 tpe = self.types[type_name]
                 b = []
                 for field in tpe.fields:
                     new_sub = copy.deepcopy(sub)
                     new_par = copy.deepcopy(par)
-                    new_sub.children[0].value += '_' + field.children[0]
-                    new_par.children[0].value += '_' + field.children[0]
+
+                    # TODO: this doesn't seem good, should have a more general wrapper
+                    def __alternate(x):
+                        x.value += '_' + field.children[0]
+
+                    alternate_ids(new_sub, [__alternate])
+                    alternate_ids(new_par, [__alternate])
+                    # new_sub.children[0].value += '_' + field.children[0]
+                    # new_par.children[0].value += '_' + field.children[0]
                     new_binding = copy.copy(binding)
-                    new_binding.children = [new_sub, new_par]
+                    new_binding.children = [mod_name, new_sub, new_par]
                     b.append(new_binding)
                 new_bindings.extend(b)
             else:
