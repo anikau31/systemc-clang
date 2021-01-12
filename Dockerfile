@@ -36,23 +36,25 @@ RUN mkdir /opt/systemc-2.3.3 && curl -L https://github.com/rseac/systemc-travisc
 
 # Install other requirements
 RUN apt-get update && apt-get install -y -q --no-install-recommends \
-  g++ \
+#g++ \
   cmake \
-  ccache \
+#ccache \
   ninja-build \
   python3 \
-  python3-pip \
-  git \
-  libz-dev \
-  libncurses-dev
+  python3-pip 
+#git \
+#  libz-dev \
+#  libncurses-dev
 
 
 # Set up environment variables across images
-ENV SYSTEMC=/opt/systemc-2.3.3
-ENV CXX=g++
-ENV CC=gcc
-
 ENV LLVM_INSTALL_DIR=/opt/clang-$CLANG_VERSION
+ENV SYSTEMC=/opt/systemc-2.3.3
+ENV CXX=$LLVM_INSTALL_DIR/bin/clang++
+#g++
+ENV CC=$LLVM_INSTALL_DIR/bin/clang
+#gcc
+
 ENV LLVMCONFIG=$LLVM_INSTALL_DIR/bin/llvm-config
 ENV LLVM_LD_FLAGS=-L$LLVM_INSTALL_DIR/lib
 ENV LLVM_CXX_FLAGS="-I/home/travis/build/rseac/systemc-clang/DEPENDS/clang-$CLANG_VERSION/include  -fPIC -fvisibility-inlines-hidden -std=c++14 -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -pedantic -Wno-long-long -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -ffunction-sections -fdata-sections -O3 -DNDEBUG  -fno-exceptions -fno-rtti -D_GNU_SOURCE -fvisibility-inlines-hidden -Wsign-compare"
