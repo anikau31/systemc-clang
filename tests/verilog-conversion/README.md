@@ -1,3 +1,4 @@
+<!-- The scripts mentioned in this folder should be in sync with the tests/verilog-conversion/run_example.sh so that the commands can be tested -->
 # Python Tests for Verilog Conversion and Utilites for Development
 
 ## Preliminaries
@@ -18,18 +19,14 @@ cmake/  CMakeLists.txt  doc/  driver-tooling.cpp  driver-xlat.cpp  examples/  ex
 #### Python version
 We use Python 3 in this documentation.
 ```
-$ python --version
+$ python3 --version
 Python 3.7.5
 ```
 
 #### Dependencies
-- Install `iverilog`. On Ubuntu, use 
-```bash 
-$ sudo apt install iverilog
-```
-- We use certain Python packages for the testing infrastructure. These packages are listed in `requirements.txt`.  To install them, run
+- We use certain Python packages for the testing infrastructure and the translation to Verilog. These packages are listed in `requirements.txt`.  To install them, run
 ```bash
-$ pip install -r $SYSTEMC_CLANG/requirements.txt
+$ pip3 install -r $SYSTEMC_CLANG/requirements.txt
 ``` 
 
 ## The Convesion Tool
@@ -43,7 +40,7 @@ The tool does the following.
 
 The tool is located at `$SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py`.  It can be invoked as follows.
 ```bash
-$ python $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py -h
+$ python3 $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py -h
 usage: A tool for running and comparing against a golden standard
        [-h] [--cpp CPP] [--hdl HDL]
        [--golden-intermediate GOLDEN_INTERMEDIATE]
@@ -105,7 +102,7 @@ int sc_main(int argc, char *argv[]){
 
 Alternatively, you can also copy this example file from `$SYSTEMC_CLANG`:
 ```bash
-$ cp $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/add.cpp .
+$ cp $SYSTEMC_CLANG/tests/verilog-conversion/data/add.cpp .
 ```
 
 This is the SystemC model that we will be using in this documentation.
@@ -121,7 +118,7 @@ add.cpp  results
 
 Next, we convert `add.cpp` to `add_hdl.txt` using our script:
 ```bash
-$ python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
+$ python3 -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
      cpp-to-hdl \
      --output-dir ./results/  \
      --cpp add.cpp \
@@ -131,14 +128,11 @@ Note that the `-B` flag prevents `.pyc` file generation, which keeps the directo
 
 The output should be similar to:
 ```
-path:  add.cpp
-sexp_loc:  add_hdl.txt
-sexp_filename:  add_hdl.txt
-output_filename:  /home/allen/working/systemc-clang-test-tool/results/2020-03-05_11-49-11/add_hdl.txt
-cmd:  /home/allen/working/clang+llvm-9.0.0//bin/systemc-clang add.cpp -- -I /home/allen/working/systemc//include/ -std=c++14 -I /usr/include/ -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -x c++ -w -c -I .
-The _hdl.txt file is written to: /home/allen/working/systemc-clang-test-tool/results/2020-03-05_11-49-11/add_hdl.txt
-Using systemc-clang binary: /home/allen/working/clang+llvm-9.0.0//bin/systemc-clang
-Using hcode2verilog.py command: python /home/allen/working/systemc-clang//plugins/xlat/hcode2verilog.py
+path: add.cpp
+/systemc-clang-build/systemc-clang add.cpp --debug -- -x c++ -w -c -std=c++14 _-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DRVD -I /opt/clang-11.0.0/lib/clang/11.0.0/include -I /opt/systemc-2.3.3/include
+sexp_loc: add_hdl.txt
+sexp_filename: add_hdl.txt
+The _hdl.txt file is written to: /tmp/tmp.kUUW0fiyam/systemc-clang-test-tool/results/2021-01-13_06-02-11/add_hdl.txt
 ```
 
 Note that the `cmd: ...` shows the real command that is running within the script. 
@@ -146,32 +140,30 @@ Also, your time-stamp is likely different from what we have in the output above.
 
 If we check the output folder, we observe something similar to:
 ```bash
-$ ls results/2020-03-05_11-49-11/
-add_hdl.txt  systemc-clang.stderr  systemc-clang.stdout
-```
+$ ls -R
+.:
+add.cpp  results
 
-Apart from the output file `add_hdl.txt`, the standard output/standard error of the systemc-clang tool is also captured, which is useful when debugging.
+./results:
+2021-01-13_06-26-00
 
-Now, copy the `add_hdl.txt` file for later use, and the directory structure should be as follows:
+./results/2021-01-13_06-26-00:
+add_hdl.txt.txt
 ```
-$ cp results/2020-03-05_11-49-11/add_hdl.txt . && ls
-add.cpp  add_hdl.txt  results
-```
-
 Apart from the conversion, one can specify a golden standard file with `--hdl` option, and the tool will do a diff at the end of the conversion against the specified golden standard.
 
 For example, create a directory called `golden`, copy our provided golden standard file `add_hdl.txt` to the `golden` and confirm the directory structure:
 ```bash
-$ mkdir golden && cp $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt golden/
+$ mkdir golden && cp $SYSTEMC_CLANG/tests/verilog-conversion/data/add_hdl.txt golden/
 $ ls .
 add.cpp  golden  results
 $ ls golden/
 add_hdl.txt
 ```
 
-Next, run the tool again, with `--hdl` option enabled:
+Next, run the tool again, with `--golden-intermediate` option enabled:
 ```
-$ python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
+$ python3 -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
      cpp-to-hdl \
      --output-dir ./results/  \
      --cpp add.cpp \
@@ -181,8 +173,20 @@ $ python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
 
 If the generated file and the golden standard file are different, the diff will be presented to the console, and will be stored in the time-stamped folder, together with the generated `add_hdl.txt` file.
 ```
-$ ls results/2020-03-05_12-16-33/
-add_hdl.txt  diff  systemc-clang.stderr  systemc-clang.stdout
+$ ls -R
+.:
+add.cpp  golden  results
+
+./golden:
+add_hdl.txt
+
+./results:
+...  2021-01-13_22-36-23
+
+...
+
+./results/2021-01-13_22-36-23:
+add_hdl.txt  diff.hdl
 ```
 
 If the generated file and the golden standard file are the same, the diff will not output to the screen.
@@ -191,23 +195,23 @@ The `hdl-to-v` works similarly and it converts `_hdl.txt` file to Verilog file.
 
 #### Converting add_hdl.txt to add_hdl.txt.v
    ```bash
-   python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
+   python3 -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
      hdl-to-v \
      --output-dir results/ \
-     --hdl results/2020-03-05_11-49-11/add_hdl.txt \
+     --hdl golden/add_hdl.txt \
      --verbose
    ```
-   Note that here the `--hdl` is specified with a previously generated `_hdl.txt` file.
+   Note that here the `--hdl` is specified with the golden `_hdl.txt` file.
    The generated file will be placed into a timestamped directory in `/tmp/`, for example, `/tmp/2020-02-17_01-28-52/sreg-driver.v`
 
 #### Converting add_hdl.txt to add.v and show the diff of an existing Verilog file
    ```
-   python -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
+   python3 -B $SYSTEMC_CLANG/tests/verilog-conversion/run-compare.py \
      hdl-to-v \
      --output-dir results/ \
-     --hdl results/2020-03-05_11-49-11/add_hdl.txt \
+     --hdl golden/add_hdl.txt \
      --verbose \
-     --golden-verilog $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt.v
+     --golden-verilog $SYSTEMC_CLANG/tests/verilog-conversion/add_hdl.txt.v
    ```
 
 Now, you should be able to use the `run-compare.py` script when doing development.
@@ -259,30 +263,24 @@ $ make
 Now you should be prepared to run the tests, try the following command:
 
 ```bash
-$ python -B run-verilog-tests.py -o test_custom -v
-================================================ test session starts =================================================
-platform linux -- Python 3.7.5, pytest-5.0.1, py-1.8.0, pluggy-0.13.1 -- /home/allen/anaconda3/envs/systemc-clang/bin/python
+$ python3 -B -m pytest -v --color=yes $SYSTEMC_CLANG/tests -k examples
+==================================================== test session starts =====================================================
+platform linux -- Python 3.8.5, pytest-5.0.1, py-1.10.0, pluggy-0.13.1 -- /usr/bin/python3
 cachedir: .pytest_cache
-rootdir: /home/allen/working
-collected 55 items / 49 deselected / 6 selected
+rootdir: /systemc-clang/tests
+plugins: steps-1.7.3
+collected 6 items / 2 deselected / 4 selected
 
-... /test_custom.py::test_custom_sexp[xor] PASSED                         [ 16%]
-... /test_custom.py::test_custom_sexp[add] PASSED                         [ 33%]
-... /test_custom.py::test_custom_verilog[xor] PASSED                      [ 50%]
-... /test_custom.py::test_custom_verilog[add] PASSED                      [ 66%]
-... /test_custom.py::test_custom_sexp_to_verilog[xor] PASSED              [ 83%]
-... /test_custom.py::test_custom_sexp_to_verilog[add] PASSED              [100%]
+../systemc-clang/tests/verilog-conversion/test_examples.py::test_translation[add-hcode] PASSED                         [ 25%]
+../systemc-clang/tests/verilog-conversion/test_examples.py::test_translation[add-translation] PASSED                   [ 50%]
+../systemc-clang/tests/verilog-conversion/test_examples.py::test_translation[add-translation-match-check] PASSED       [ 75%]
+../systemc-clang/tests/verilog-conversion/test_examples.py::test_translation[add-synthesis] SKIPPED                    [100%]
 
-====================================== 6 passed, 49 deselected in 2.61 seconds =======================================
+===================================== 3 passed, 1 skipped, 2 deselected in 1.03 seconds ======================================
 ```
 
-For clarity, the output does not show the full path of the tests, which should be straight forward.
-
-In this command, we are using the `run-verilog-tests.py` script, which provides an interface for running tests.
-* The `-o` option selects the tests whose names match the specified value to run. In this case, all tests with a name containing `test_custom` will be run.
-* The `-v` option shows detailed output.
-
-Notice the `[xor]` and `[add]` prefix. These are the names of the **test data** of the design.
+Notice the `add` prefix in `[add-hcode], [add-translation], [add-translation-match-check]` and `[add-synthesis]`. 
+These are the names of the **test data** of the design.
 At a high level, when a user needs to add a test to the framework, this user provides the necessary files, or **test data**, for each SystemC design and organizes them in the `$SYSTEMC_CLANG` directory in a certain way.
 
 The **test data** is composed of three parts. 
@@ -290,42 +288,35 @@ The **test data** is composed of three parts.
 2. A golden standard `_hdl.txt` file that is generated by XLAT
 3. A golden standard Verilog file that is generated by hcode2verilog.py
 
-In our example above, we provided the **test data** for two designs: `add` and `xor`.
+In our example above, we provided the **test data** for one designs: `add`.
 
-To observe how these files are organized, you can see the folder `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/` (Note: you may not have the `tree` command installed, but you can still verify the directory structure): 
+To observe how these files are organized, you can see the folder `$SYSTEMC_CLANG/tests/verilog-conversion/data/` (Note: you may not have the `tree` command installed, but you can still verify the directory structure): 
 ```bash
-$ tree $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/
-  $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/
-  ├── add
-  │   ├── add.cpp
-  │   └── golden
-  │       ├── add_hdl.txt
-  │       └── add_hdl.txt.v
-  └── xor
-      ├── golden
-      │   ├── xor_hdl.txt
-      │   └── xor_hdl.txt.v
-      └── xor.cpp
+$ tree $SYSTEMC_CLANG/tests/verilog-conversion/data
+...
+├── add.cpp
+├── add_hdl.txt
+└── add_hdl.txt.v
 ```
 
-Take the `add` for example, its **test data** include a SystemC design file `add/add.cpp`, a golden stardard for \_hdl.txt `add/golden/add_hdl.txt` and a golden standard for Verilog `add/golden/add_hdl.txt.v`.
+Take the `add` for example, its **test data** include a SystemC design file `add.cpp`, a golden stardard for \_hdl.txt `add_hdl.txt` and a golden standard for Verilog `add_hdl.txt.v`.
 
 We will show how to add your tests later.
 But now, let's go back to the output of the test that we just run and focus only on the `add` to see what it is testing:
 ```
 ...
-... /test_custom.py::test_custom_sexp[add] PASSED                         [ 33%]
+test_examples.py::test_translation[add-hcode] PASSED                         [ 25%]
+test_examples.py::test_translation[add-translation] PASSED                   [ 50%]
+test_examples.py::test_translation[add-translation-match-check] PASSED       [ 75%]
+test_examples.py::test_translation[add-synthesis] SKIPPED                    [100%]
 ...
-... /test_custom.py::test_custom_verilog[add] PASSED                      [ 66%]
-...
-... /test_custom.py::test_custom_sexp_to_verilog[add] PASSED              [100%]
-
 ```
 
 Within the test framework, we provide a simple way for a user to add tests for the following purpose:
-1. Test the conversion from a SystemC design file to \_hdl.txt and compare the generated \_hdl.txt against a golden standard, which corresponds to the `test_custom_sexp[add]`
-2. Test the conversion from \_hdl.txt to Verilog and compare the generated Verilog against a golden standard, which corresponds to the `test_custom_verilog[add]`
-3. Test the conversion from a SystemC design file to Verilog and compared the generated \_hdl.txt and Verilog to golden standard files, which corresponds to the `test_custom_sexp_to_vereilog[add]`
+1. Test the conversion from a SystemC design file to \_hdl.txt and compare the generated \_hdl.txt against a golden standard, which corresponds to the `test_translation[add-hcode]`
+2. Test the conversion from \_hdl.txt to Verilog without triggering any exception, which corresponds to `test_translation[add-translation]`.
+3. Compare the generated Verilog against a golden standard, which corresponds to the `test_translation[add-translation-match-check]`
+4. Test that the translated Verilog is synthesizable, which corresponds to `test_translation[add-synthesis]`. Note that currently we check the synthesizability only when the Vivado tool is found in the environmental variables.
 
 ## Adding your own test
 
@@ -333,133 +324,35 @@ We describe how a user can add a test to the framework.
 We will make another module to test: a `sub` module that takes two inputs and outputs their difference by doing subtraction.
 We assume that all commands done in this section are done in the path `$SYSTEMC_CLANG_BUILD_DIR`.
 
-To add a test, create another folder in `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/`:
-```
-mkdir $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub
+To add a test, first add test spec in the `test_data` list in `$SYSTEMC_CLANG/tests/conftest.py`:
+```python
+test_data = [
+    ┊   ('add',    load_file(testdata / 'add.cpp'), None, load_file(testdata / 'add_hdl.txt.v')),
+    ┊   ('sub',    load_file(testdata / 'sub.cpp'), None, load_file(testdata / 'sub_hdl.txt.v')),  # the added new spec
+    ...
+]
 ```
 
-> If you run the test now with `python -B run-verilog-tests.py -o test_custom -v`, you will not see the difference and there will only be tests for `xor` and `add`
+A spec is composed of a four element tuple: `(name, design, extra_args, golden)` where `name` is the name of the test, `design` is the C++ design, `extra_args` are extra arguments passed to the systemc-clang binary such as extra include directories and `golden` is the golden Verilog file to be checked against.
 
-Next re-run `cmake` to make sure the tests are copied. Note that you don't need to remove `CMakefiles/` and `CMakeCache.txt`.
+We provide handy variables/helper functions such as `load_file` to load the content from a file and `testdata` to refer to `$SYSTEMC_CLANG/tests/verilog-conversion/data`.
+The definition of these helpers can be found on top of the `conftest.py` file.
+
+Now, we run the tests again:
 ```bash
-$ cd $SYSTEMC_CLANG_BUILD_DIR
-$ rm -rf tests/data/verilog-conversion-custom/
-$ cmake ../systemc-clang -DENABLE_TESTS=on -DXLAT=on -DENABLE_VERILOG_TESTS=on
-```
-
-And now, we run the tests again with:
-```bash
-$ python -B run-verilog-tests.py -o test_custom -v
+$ python3 -B -m pytest -v --color=yes $SYSTEMC_CLANG/tests -k examples
 ...
-... /test_custom.py::test_custom_sexp[xor] PASSED          [ 11%]
-... /test_custom.py::test_custom_sexp[sub] FAILED          [ 22%]
-... /test_custom.py::test_custom_sexp[add] PASSED          [ 33%]
-... /test_custom.py::test_custom_verilog[xor] PASSED       [ 44%]
-... /test_custom.py::test_custom_verilog[sub] FAILED       [ 55%]
-... /test_custom.py::test_custom_verilog[add] PASSED       [ 66%]
-... /test_custom.py::test_custom_sexp_to_verilog[xor] PASSED [ 77%]
-... /test_custom.py::test_custom_sexp_to_verilog[sub] FAILED [ 88%]
-... /test_custom.py::test_custom_sexp_to_verilog[add] PASSED [100%]
+/systemc-clang/tests/verilog-conversion/conftest.py:38: in <module>
+    ('sub',    load_file(testdata / 'sub.cpp'), None, load_file(testdata / 'sub_hdl.txt.v')),
+/systemc-clang/tests/verilog-conversion/conftest.py:27: in load_file
+    with open(path, 'r') as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/systemc-clang/tests/verilog-conversion/data/sub.cpp'
 ...
 
 ```
 
-We can observe from the **start of the log** that the `[sub]` test is added, but it is failing.
-
-The error information is logged after the tests fail and is divided by the name of the tests, which are colored red in terminal:
-
-```
-...
-============================================== FAILURES ===============================================
-________________________________________ test_custom_sexp[sub] ________________________________________
-
-tmpdir = local('/tmp/pytest-of-allen/pytest-8/test_custom_sexp_sub_0')
-customdriver = <driver.SystemCClangDriver object at 0x7fd15e49bd50>, tool_output = False
-...
-______________________________________ test_custom_verilog[sub] _______________________________________
-
-tmpdir = local('/tmp/pytest-of-allen/pytest-8/test_custom_verilog_sub_0')
-customdriver = <driver.SystemCClangDriver object at 0x7fd15c43af50>, tool_output = False
-
-...
-__________________________________ test_custom_sexp_to_verilog[sub] ___________________________________
-
-tmpdir = local('/tmp/pytest-of-allen/pytest-8/test_custom_sexp_to_verilog_su0')
-customdriver = <driver.SystemCClangDriver object at 0x7fd15c486bd0>, tool_output = False
-...
-========================== 3 failed, 6 passed, 49 deselected in 2.68 seconds ==========================
-...
-```
-
-The error information of each tests provides some information about how the test fails but that is test-specific.
-
-We now look at the `test_custom_sexp[sub]`. To run this test only, use the following command:
-```bash
-$ python -B run-verilog-tests.py -o test_custom_sexp[sub] -v
-=====================test session starts ================
-platform linux -- Python 3.7.5, pytest-5.0.1, py-1.8.0, pluggy-0.13.1 -- /home/allen/anaconda3/envs/systemc-clang/bin/python
-cachedir: .pytest_cache
-rootdir: /home/allen/working
-collected 58 items / 57 deselected / 1 selected
-
-../systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp[sub] FAILED          [100%]
-
-========================FAILURES ========================
-_________________test_custom_sexp[sub] __________________
-
-tmpdir = local('/tmp/pytest-of-allen/pytest-9/test_custom_sexp_sub_0')
-customdriver = <driver.SystemCClangDriver object at 0x7f29f2ced090>, tool_output = False
-
-    def test_custom_sexp(tmpdir, customdriver, tool_output):
-        conf = customdriver.conf
-        test_name = conf.test_name
-        filename = conf.get_module_name('{}.cpp'.format(test_name))
-        output_folder = tmpdir
->       copy(filename, output_folder)
-
-../systemc-clang/tests/verilog-conversion/test_custom.py:13:
-...
-../../anaconda3/envs/systemc-clang/lib/python3.7/shutil.py:248: in copy
-    copyfile(src, dst, follow_symlinks=follow_symlinks)
-  
-  ...
-
-src = '/home/allen/working/systemc-clang-build//tests/data/verilog-conversion-custom/sub//sub.cpp'
-dst = '/tmp/pytest-of-allen/pytest-9/test_custom_sexp_sub_0/sub.cpp'
-
-    def copyfile(src, dst, *, follow_symlinks=True):
-        """Copy data from src to dst.
-
-        If follow_symlinks is not set and src is a symbolic link, a new
-        symlink will be created instead of copying the file it points to.
-
-        """
-        if _samefile(src, dst):
-            raise SameFileError("{!r} and {!r} are the same file".format(src, dst))
-
-        for fn in [src, dst]:
-            try:
-                st = os.stat(fn)
-            except OSError:
-                # File most likely does not exist
-                pass
-            else:
-                # XXX What about other special files? (sockets, devices...)
-                if stat.S_ISFIFO(st.st_mode):
-                    raise SpecialFileError("`%s` is a named pipe" % fn)
-
-        if not follow_symlinks and os.path.islink(src):
-            os.symlink(os.readlink(src), dst)
-        else:
->           with open(src, 'rb') as fsrc:
-E           FileNotFoundError: [Errno 2] No such file or directory: '/home/allen/working/systemc-clang-build//tests/data/verilog-conversion-custom/sub//sub.cpp'
-
-../../anaconda3/envs/systemc-clang/lib/python3.7/shutil.py:120: FileNotFoundError
-```
-
-On the last lines of the output, it indicates that the file `home/allen/working/systemc-clang-build//tests/data/verilog-conversion-custom/sub//sub.cpp` is not found.
-
-This is true because we did not add any SystemC model file.  Now we create `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub/sub.cpp` with the following content:
+We can observe that the tests are failing because we have not added the `sub` design.
+This is true because we did not add any SystemC model file.  Now we create `$SYSTEMC_CLANG/tests/verilog-conversion/data/sub.cpp` with the following content:
 ```c++
 // sub.cpp
 #include "systemc.h"
@@ -500,140 +393,91 @@ int sc_main(int argc, char *argv[]){
 
 ```
 
-Next **run `cmake`** and run the the test again:
+We then use the golden standard of the `add` module, which is incorrect for `sub`, to show how to interpret the error information.
 ```bash
-$ cmake ../systemc-clang -DENABLE_TESTS=on -DXLAT=on -DENABLE_VERILOG_TESTS=on
-$ python -B run-verilog-tests.py -o test_custom_sexp[sub] -v
-...
-_________________test_custom_sexp[sub] ___________________
-
-tmpdir = local('/tmp/pytest-of-allen/pytest-11/test_custom_sexp_sub_0')
-customdriver = <driver.SystemCClangDriver object at 0x7f2eeaea21d0>, tool_output = False
-
-...
-
-../systemc-clang/tests/verilog-conversion/test_custom.py:25:
-
-this_filename = '/tmp/pytest-of-allen/pytest-11/test_custom_sexp_sub_0/sub_hdl.txt'
-that_filename = '/home/allen/working/systemc-clang-build//tests/data/verilog-conversion-custom/sub/golden//sub_hdl.txt'
-
-    def sexpdiff(this_filename, that_filename):
-        # Test the equality of golden versus the generated
-        with open(this_filename, 'r') as f:
-            sexp_lines = f.readlines()
->       with open(that_filename, 'r') as f:
-E       FileNotFoundError: [Errno 2] No such file or directory: '/home/allen/working/systemc-clang-build//tests/data/verilog-conversion-custom/sub/golden//sub_hdl.txt'
-
-../systemc-clang/tests/verilog-conversion/util/sexpdiff.py:8: FileNotFoundError
+$ cp $SYSTEMC_CLANG/tests/verilog-conversion/data/{add,sub}_hdl.txt.v
 ```
 
-This time, the golden standard \_hdl.txt file is missing, as the information states: `E       FileNotFoundError: [Errno 2] No such file or directory: '/home/allen/working/systemc-clang-build//tests/data/verilog-conversion-custom/sub/golden//sub_hdl.txt'`.
-
-Here, we use the golden standard of the `add` module, which is incorrect for `sub`, to show how to interpret the error information.
-
-To add a golden standard file, create a folder named `golden` under `sub` and put the golden standard file inside:
-```
-$ mkdir $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub/golden
-$ cp $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt \
-     $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub/golden/sub_hdl.txt
-```
-
-Now, the `verilog-conversion-custom` folder looks similar to:
+Now the `$SYSTEMC_CLANG/tests/verilog-conversion/data` folder looks similar to:
 ```bash
-$ tree $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/
-/home/allen/working/systemc-clang//tests/data/verilog-conversion-custom/
-├── add
-│   ├── add.cpp
-│   └── golden
-│       ├── add_hdl.txt
-│       └── add_hdl.txt.v
-├── sub
-│   ├── golden
-│   │   └── sub_hdl.txt
-│   └── sub.cpp
-└── xor
-    ├── golden
-    │   ├── xor_hdl.txt
-    │   └── xor_hdl.txt.v
-    └── xor.cpp
+$ tree $SYSTEMC_CLANG/tests/verilog-conversion/data
+├── add.cpp
+├── add_hdl.txt
+├── add_hdl.txt.v
+├── sub.cpp
+└── sub_hdl.txt.v
 ```
 
-**Run `cmake`** and run the the test again:
+Now we run the test again and can observe that the `sub` tests are present and `[sub-translation-match-check]` is failing:
 ```bash
-$ cmake ../systemc-clang -DENABLE_TESTS=on -DXLAT=on -DENABLE_VERILOG_TESTS=on
-$ python -B run-verilog-tests.py -o test_custom_sexp[sub] -v
+$ python3 -B -m pytest -v --color=yes $SYSTEMC_CLANG/tests -k examples
 ...
-______________ test_custom_sexp[sub] ____________
-tmpdir = local('/tmp/pytest-of-allen/pytest-14/test_custom_sexp_sub_0')
-customdriver = <driver.SystemCClangDriver object at 0x7fc2f46b7b10>, tool_output = False
+test_examples.py::test_translation[sub-hcode] PASSED                                         [ 62%]
+test_examples.py::test_translation[sub-translation] PASSED                                   [ 75%]
+test_examples.py::test_translation[sub-translation-match-check] FAILED                       [ 87%]
+test_examples.py::test_translation[sub-synthesis] SKIPPED                                    [100%]
 ...
->       assert not diff_res, 'should match golden standard'
-E       AssertionError: should match golden standard
-E       assert not True
+_____ test_translation[sub-translation-match-check] _____
 
-../systemc-clang/tests/verilog-conversion/test_custom.py:33: AssertionError
--------------- Captured stdout call -------------
 ...
--   hModule topadd2_0 [
-?              ^^^
-+   hModule topsub2_0 [
-?              ^^^
-      hPortsigvarlist  NONAME [
-        hPortin in_port_1 NOLIST
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-13/test_translation_sub_hcode_0'), name = 'sub'
 ...
-        hTypeinfo  NONAME [
-          hType sc_in NOLIST
--             hBinop + [
-?                    ^
-+             hBinop - [
-?                    ^
+>               assert False, '\nTranslated file and golden file mismatch, diff result:\n' + ''.join(diff_res)
+E               AssertionError:
+E                 Translated file and golden file mismatch, diff result:
+E                   module _sc_module_0 (
+E                     input logic [0:0] clk,
+E                     input logic signed[31:0] in_port_1,
+E                     input logic signed[31:0] in_port_2,
+E                     output logic signed[31:0] out_port
+E                   );
+E                     initial begin
+E
+E                     end
+E                     always @(posedge clk) begin: topEntry
+E
+E
+E                 -     out_port <= (in_port_1) + (in_port_2);
+E                 ?                             ^
+E                 +     out_port <= (in_port_1) - (in_port_2);
+E                 ?                             ^
+E                     end
+E                   endmodule
+E               assert False
+
+/systemc-clang/tests/verilog-conversion/test_examples.py:63: AssertionError
+
+...
 ```
 
-Now, the test fails because the module name and the operation symbol does not match.
+Now, the test fails because the operation symbol does not match.
 
-Here, we can fix the golden standard file by replacing `topadd2_0` with `topsub2_0` and replacing `hBinop +` with `hBinop -`.
-These changes are made in `$SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub/golden/sub_hdl.txt`
+Here, we can fix the Verilog golden standard file by replacing `+` with `-`.
+The change is made in `$SYSTEMC_CLANG/tests/verilog-conversion/data/sub_hdl.txt.v`
 
-Also, pay attention to the line where it says `tmpdir`, it logs the temporary directory where the program output are stored:
+Also, pay attention to the line where it says `tmp_path`, it logs the temporary directory where the program output are stored:
 ```bash
-$ ls /tmp/pytest-of-allen/pytest-14/test_custom_sexp_sub_0
-diff  sub.cpp  sub_hdl.txt  systemc-clang.stderr  systemc-clang.stdout
+$ ls /tmp/pytest-of-root/pytest-13/test_translation_sub_hcode_0
+sub.cpp  sub_hdl.txt  sub_hdl.txt.v
 ```
 These files are useful for debugging purpose.
 
 
-After making changes to the golden standard file, **Run `cmake`** and run the the test again and it should pass:
+After making changes to the golden standard file, run the the test again and it should pass:
 ```bash
-$ cmake ../systemc-clang -DENABLE_TESTS=on -DXLAT=on -DENABLE_VERILOG_TESTS=on
-$ python -B run-verilog-tests.py -o test_custom_sexp[sub] -v
-```
-
-Similarly, we can copy the golden Verilog file of `add`:
-```
-$ cp $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/add/golden/add_hdl.txt.v $SYSTEMC_CLANG/tests/data/verilog-conversion-custom/sub/golden/sub_hdl.txt.v
-```
-Then we make changes to the file so that it ends up being the following form:
-```verilog
-module topsub2_0(
-input wire [31:0] in_port_1,
-input wire [31:0] in_port_2,
-input wire clk,
-output reg [31:0] out_port
-);
-
-
-always @(posedge clk) begin: topEntry
-
-out_port <= (in_port_1) - (in_port_2);
-end // topEntry
-endmodule // topsub2_0
-```
-
-
-After making changes to the golden standard Verilog, **Run `cmake`** and run the the test again and it should pass:
-```bash
-$ cmake ../systemc-clang -DENABLE_TESTS=on -DXLAT=on -DENABLE_VERILOG_TESTS=on
-$ python -B run-verilog-tests.py -o test_custom -v
+$ python3 -B -m pytest -v --color=yes $SYSTEMC_CLANG/tests -k examples
+...
+test_examples.py::test_translation[add-hcode] PASSED                                         [ 12%]
+test_examples.py::test_translation[add-translation] PASSED                                   [ 25%]
+test_examples.py::test_translation[add-translation-match-check] PASSED                       [ 37%]
+test_examples.py::test_translation[add-synthesis] SKIPPED                                    [ 50%]
+test_examples.py::test_translation[sub-hcode] PASSED                                         [ 62%]
+test_examples.py::test_translation[sub-translation] PASSED                                   [ 75%]
+test_examples.py::test_translation[sub-translation-match-check] PASSED                       [ 87%]
+test_examples.py::test_translation[sub-synthesis] SKIPPED                                    [100%]
+...
 ```
 
 Now, we have covered the basics of adding a test to the test framework.
@@ -646,20 +490,21 @@ Now, we have covered the basics of adding a test to the test framework.
 There are other tests as well when running the python scripts.
 You can view all the tests using the following script:
 ```bash
-$ python -B run-verilog-tests.py --collect-only -v
-systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp[xor]
-systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp[sub]
-systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp[add]
-systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_verilog[xor]
-systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_verilog[sub]
-systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_verilog[add]
-systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp_to_verilog[xor]
-systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp_to_verilog[sub]
-systemc-clang/tests/verilog-conversion/test_custom.py::test_custom_sexp_to_verilog[add]
+$ python3 -B -m pytest -v --color=yes $SYSTEMC_CLANG/tests --collect-only -v
+collected 10 items
+<Module verilog-conversion/test_examples.py>
+  <Function test_translation[add-hcode]>
+  <Function test_translation[add-translation]>
+  <Function test_translation[add-translation-match-check]>
+  <Function test_translation[add-synthesis]>
+  <Function test_translation[sub-hcode]>
+  <Function test_translation[sub-translation]>
+  <Function test_translation[sub-translation-match-check]>
+  <Function test_translation[sub-synthesis]>
+<Module verilog-conversion/test_systemc_clang_wrapper.py>
+  <Function test_syntax_error>
+  <Function test_generate_file>
 ...
 ```
 
 Some of the tests are for sanity check, to make sure that the tools are set-up correctly.
-
-Some of the tests are for the example folder because they don't follow certain naming convention and they need different driver for detecting modules.
-

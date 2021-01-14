@@ -31,6 +31,7 @@ def load_file(path):
 def load_module(mod_name):
     raise NotImplementedError
 
+# NOTE: The usage of this list is specified in the README.md 
         # (name, design, extra_args, golden)
 test_data = [
         ('add',    load_file(testdata / 'add.cpp'), None, load_file(testdata / 'add_hdl.txt.v')),
@@ -103,12 +104,12 @@ def get_custom_tests():
     return list(map(lambda x: os.path.basename(x), folder_list))
 
 
-@pytest.fixture(params=get_custom_tests())
-def customdriver(request):
-    """fixture for custom test driver"""
-    conf = CustomTestingConfigurations(request.param)
-    custom_driver = drv.SystemCClangDriver(conf)
-    return custom_driver
+# @pytest.fixture(params=get_custom_tests())
+# def customdriver(request):
+#     """fixture for custom test driver"""
+#     conf = CustomTestingConfigurations(request.param)
+#     custom_driver = drv.SystemCClangDriver(conf)
+#     return custom_driver
 
 
 @pytest.fixture()

@@ -60,7 +60,7 @@ def test_translation(tmp_path, name, content, extra_args, golden, default_params
             for tag, i1, i2, j1, j2 in ops:
                 print('{:7}   a[{}:{}] --> b[{}:{}] {!r:>8} --> {!r}'.format( 
                     tag, i1, i2, j1, j2, golden[i1:i2], data[j1:j2]))
-            assert False, '\nTranslated file and golden file mismatch, diff result:\n' + ''.join(diff_res)
+                assert False, '\nTranslated file: \n' + str(verilog_target_path) + '\nTranslated file and golden file mismatch, diff result:\n' + ''.join(diff_res)
     yield
 
 
