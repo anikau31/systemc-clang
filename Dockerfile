@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y -q --no-install-recommends \
   ninja-build \
   python3 \
   python3-pip \
-#  git \
+  git \
   libz-dev \
   libncurses-dev
 

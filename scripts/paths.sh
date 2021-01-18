@@ -12,6 +12,7 @@ export LLVM_INSTALL_DIR=/home/$USER/bin/clang-10.0.0/
 # SET this.
 export SYSTEMC=/home/$USER/code/systemc-2.3.3/systemc/
 
+
 # Path for the systemc-clang build directory
 # SET this.
 export SYSTEMC_CLANG_BUILD_DIR=/home/$USER/code/systemc-clang-build/
@@ -33,3 +34,5 @@ export LLVM_LIBS=`$LLVMCONFIG --libs`
 export LLVM_LD_FLAGS=`$LLVMCONFIG --ldflags`
 export LLVM_LD_FLAGS=`echo $LLVM_LD_FLAGS | sed 's/ *$//g'`
 
+# DO NOT SET THIS
+export SYSTEMC_CLANG=$SYSTEMC
