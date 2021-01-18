@@ -33,6 +33,3 @@ set -x LLVM_CXX_FLAGS "$LLVM_CXX_FLAGS -fvisibility-inlines-hidden -fno-aligned-
 set -x LLVM_LIBS (eval $LLVMCONFIG --libs)
 set -x LLVM_LD_FLAGS (eval $LLVMCONFIG --ldflags)
 set -x LLVM_LD_FLAGS (echo $LLVM_LD_FLAGS | sed 's/ *$//g')
-
-# DO NOT SET
-set -x SYSTEMC_CLANG $SYSTEMC
