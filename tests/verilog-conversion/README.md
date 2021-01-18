@@ -3,10 +3,11 @@
 
 ## Preliminaries
 
-**Before going through this documentation, make sure you have built the systemc-clang successfully, this means that the `scripts/paths.sh` script is sourced appropriately.**
+**Before going through this documentation, make sure you have built the systemc-clang successfully, this means that the `scripts/paths.sh` script is sourced appropriately.** 
 In addition, ensure that you are using [Release 2.2.0](https://github.com/anikau31/systemc-clang/releases/tag/2.2.0).
 
 ### Repository path
+There are a few key environment variables that must be set. So, ensure that they are correctly set after executing `scripts/path.sh`. These environment variables are: `SYSTEMC_CLANG_BUILD_DIR` and `SYSTEMC_CLANG`.
 We use the environment variable `$SYSTEMC_CLANG` to specify the systemc-clang git repository directory.  This is the source directory.
 
 ```bash
@@ -29,7 +30,7 @@ Python 3.7.5
 $ pip3 install -r $SYSTEMC_CLANG/requirements.txt
 ``` 
 
-## The Convesion Tool
+## The Conversion Tool
 
 We provide a command-line tool that helps the development process for testing.
 The tool does the following.
