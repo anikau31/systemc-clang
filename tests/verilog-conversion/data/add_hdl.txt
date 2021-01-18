@@ -1,0 +1,62 @@
+  hModule _sc_module_0 [
+    hPortsigvarlist  NONAME [
+      hPortin clk [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin in_port_1 [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType int NOLIST
+          ]
+        ]
+      ]
+      hPortin in_port_2 [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType int NOLIST
+          ]
+        ]
+      ]
+      hPortout out_port [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType int NOLIST
+          ]
+        ]
+      ]
+    ]
+    hProcesses  NONAME [
+      hProcess topEntry [
+        hMethod  NONAME [
+          hCStmt  NONAME [
+            hSigAssignL write [
+              hVarref out_port NOLIST
+              hBinop + [
+                hSigAssignR read [
+                  hVarref in_port_1 NOLIST
+                ]
+                hSigAssignR read [
+                  hVarref in_port_2 NOLIST
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+    hModinitblock t1 [
+      hCStmt  NONAME [
+        hCStmt  NONAME NOLIST
+      ]
+      hSenslist topEntry [
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
+        ]
+      ]
+    ]
+  ]

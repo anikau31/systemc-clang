@@ -109,7 +109,7 @@ class SystemCClang:
     def systemc_inc_dir(self):
         return os.path.join(self.systemc_path, "include")
 
-    def execute(self, args):
+    def execute(self, args, target_name=None):
         """
         executes systemc-clang as if it is on the commandline
         """
@@ -140,17 +140,39 @@ class SystemCClang:
     @staticmethod
     def __get_systemc_clang_output_files(argv):
         sources = SystemCClang.__get_sources_from_args(argv)
-        target = [x.replace(".cpp", "_hdl.txt") for x in sources]
+        target = SystemCClang.__get_hdl_file_out(argv)
+        if target is None:
+            target = [x.replace(".cpp", "_hdl.txt") for x in sources]
+        else:
+            target = [str(Path(target).absolute()) + '.txt']
         return target
+
+    @staticmethod
+    def __get_hdl_file_out(argv):
+        if len(argv) == 1:
+            return None
+        for idx, arg in enumerate(argv):
+            if arg == '-hdl-file-out':
+                if idx + 1 >= len(argv):
+                    raise ValueError('-hdl-file-out option is specified but no output file is specified')
+                return argv[idx + 1]
+        return None
 
     @staticmethod
     def __get_sources_from_args(argv):
         sources = []
-        for arg in argv:
-            if not arg.startswith("--"):
-                sources.append(arg)
-            else:
-                break
+        if len(argv) == 1:
+            sources.append(argv[0])
+        elif len(argv) > 1:
+            for idx, arg in enumerate(argv):
+                if idx == 0:
+                    if arg != '-hdl-file-out':
+                        sources.append(arg)
+                elif not arg.startswith('--'):
+                    if argv[idx - 1] != '-hdl-file-out':
+                        sources.append(arg)
+                else:
+                    break
         return sources
 
 
