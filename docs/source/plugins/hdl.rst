@@ -18,7 +18,7 @@ be performed.  The HDL plugin is compiled into systemc-clang using a
 specialization of the driver-tooling pattern.
 
 Limitations and special cases
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Switch case clauses must have one statement, which can be a compound statement "{}"
  * User types should not be in the SystemC core namespace or have `sc_` prefix. We assume those qualifiers are part of the SystemC
    simulation library.

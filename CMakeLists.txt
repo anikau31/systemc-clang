@@ -384,6 +384,7 @@ include_directories(
   "src/matchers"
   "src/model"
   "src/utils"
+  "src/SCuitable"
   )
 
 set( SRC_LIB libsystemc-clang )
