@@ -34,7 +34,7 @@ copyright = '2020: Core -- Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel; 2020
 author = 'Anirudh M. Kaushik, Zhuanhao Wu and Hiren Patel'
 
 # The full version, including alpha/beta/rc tags
-release = '2.0.0'
+release = '2.2.0'
 
 
 # -- General configuration ---------------------------------------------------
