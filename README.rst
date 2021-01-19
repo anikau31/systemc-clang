@@ -1,3 +1,5 @@
+.. |systemc-clang| replace:: ``systemc-clang``
+
 A SystemC Parser using the Clang Front-end
 ==========================================
 
@@ -20,7 +22,7 @@ Installation
 Plugin HDL
 -----------
 
-To compile with the HDL plugin, run cmake with the `-DHDL=on` flag. 
+To compile with the HDL plugin, run cmake with the ``-DHDL=on`` flag. 
  
 Documentation
 --------------
@@ -29,7 +31,7 @@ Documentation
 
 Tests
 -------
-To enable compilation of tests, run cmake with the `-DENABLE_TESTS=on` flag and also the `-DSYSTEMC_DIR=<path>` flag to pass the location for SystemC.  Without specifying the `SYSTEMC_DIR` path, it will not be possible to run the unit tests.
+To enable compilation of tests, run cmake with the ``-DENABLE_TESTS=on`` flag and also the ``-DSYSTEMC_DIR=<path>`` flag to pass the location for SystemC.  Without specifying the `SYSTEMC_DIR` path, it will not be possible to run the unit tests.
 
 For information about running verilog conversion tests, see `this file <tests/verilog-conversion/README.md>`_.
 
@@ -41,7 +43,7 @@ If you encounter problems, please create issues with a minimally working example
 Development Docker image
 ------------------------
 
-We build all the dependencies necessary for `systemc-clang` in a `Docker image <https://hub.docker.com/r/rseac/systemc-clang/tags?page=1&ordering=last_updated>`_ that you may use. 
+We build all the dependencies necessary for ``systemc-clang`` in a `Docker image <https://hub.docker.com/r/rseac/systemc-clang/tags?page=1&ordering=last_updated>`_ that you may use. 
 
 Developers
 ----------
@@ -60,4 +62,4 @@ HDL plugin
 License
 -------
 
-`systemc-clang` follows the same licensing as clang. Please look at `LICENSE <LICENSE>`_.
+|systemc-clang|| follows the same licensing as clang. Please look at `LICENSE <LICENSE>`_.
