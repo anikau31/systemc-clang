@@ -34,5 +34,3 @@ export LLVM_LIBS=`$LLVMCONFIG --libs`
 export LLVM_LD_FLAGS=`$LLVMCONFIG --ldflags`
 export LLVM_LD_FLAGS=`echo $LLVM_LD_FLAGS | sed 's/ *$//g'`
 
-# DO NOT SET THIS
-export SYSTEMC_CLANG=$SYSTEMC

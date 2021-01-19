@@ -1,41 +1,65 @@
+.. |systemc-clang| replace:: ``systemc-clang``
+
 A SystemC Parser using the Clang Front-end
 ==========================================
 
-`systemc-clang <https://git.uwaterloo.ca/caesr-pub//systemc-clang>`__
-parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0
-constructs. This is the maintained repository of an older version
-available on `github <https://github.com/anikau31/systemc-clang>`__.
+`systemc-clang <https://git.uwaterloo.ca/caesr-pub//systemc-clang>`_ parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. 
 
 Requirements
 ------------
 
--  `llvm/clang <https://releases.llvm.org/download.html>`__\ (version
-   7.0.0)
--  `SystemC <http://systemc.org>`__ version 2.3.3. Please see `SystemC
-   Installation
-   notes <https://github.com/anikau31/systemc-clang/blob/master/doc/systemc-install.mkd>`__
--  c++14 is required. We are using some features that necessitate c++14.
-   Down-porting it is also possible, but not supported.
+*  `llvm/clang <https://releases.llvm.org/download.html>`_ (version 11.0.0)
+*  `SystemC <http://systemc.org>`_ version 2.3.3. Please see `SystemC Installation notes <https://github.com/anikau31/systemc-clang/blob/master/doc/systemc-install.mkd>`_
+*  c++14 is required. We are using some features that necessitate c++14. Down-porting it is also possible, but not supported.
 
 Installation
 ------------
 
--  `Linux <INSTALL-linux.md>`__
--  `OSX <INSTALL-osx.md>`__
+*  `Linux <docs/source/install/install.rst>`_
+.. *  `Linux <docINSTALL-linux.md>`_
+.. *  `OSX <INSTALL-osx.md>`_
 
-Contact
+Plugin HDL
+-----------
+
+To compile with the HDL plugin, run cmake with the ``-DHDL=on`` flag. 
+ 
+Documentation
+--------------
+
+* `https://systemc-clang.readthedocs.io <https://systemc-clang.readthedocs.io>`_
+
+Tests
+-------
+To enable compilation of tests, run cmake with the ``-DENABLE_TESTS=on`` flag and also the ``-DSYSTEMC_DIR=<path>`` flag to pass the location for SystemC.  Without specifying the `SYSTEMC_DIR` path, it will not be possible to run the unit tests.
+
+For information about running verilog conversion tests, see `this file <tests/verilog-conversion/README.md>`_.
+
+Issues
 -------
 
-If you encounter problems, please create issues with a minimally working
-example that illustrates the issue.
+If you encounter problems, please create issues with a minimally working example that illustrates the issue.  
 
-For other concerns and comments, please contact us directly. \* `Anirudh
-M.
-Kaushik <https://ece.uwaterloo.ca/~anikau31/uwhtml/team/anirudh-kaushik/>`__
-\* `Hiren Patel <https://caesr.uwaterloo.ca>`__
+Development Docker image
+------------------------
+
+We build all the dependencies necessary for ``systemc-clang`` in a `Docker image <https://hub.docker.com/r/rseac/systemc-clang/tags?page=1&ordering=last_updated>`_ that you may use. 
+
+Developers
+----------
+
+Core
+^^^^
+
+* `Anirudh M. Kaushik <https://ece.uwaterloo.ca/~anikau31/uwhtml/team/anirudh-kaushik/>`_
+* `Hiren Patel <https://caesr.uwaterloo.ca>`_
+
+HDL plugin
+^^^^^^^^^^^
+* Maya B. Gokhale
+* Zhuanhao Wu
 
 License
 -------
 
-systemc-clang follows the same licensing as clang. Please look at
-`LICENSE <https://git.uwaterloo.ca/caesr-pub/systemc-clang/LICENSE.md>`__.
+|systemc-clang|| follows the same licensing as clang. Please look at `LICENSE <LICENSE>`_.
