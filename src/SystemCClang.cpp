@@ -34,11 +34,11 @@ bool SystemCConsumer::postFire() { return true; }
 bool SystemCConsumer::fire() {
   clang::TranslationUnitDecl *tu{getContext().getTranslationUnitDecl()};
   // Reflection database.
-  systemcModel_ = new Model{};
+  systemc_model_ = new Model{};
 
   FindGlobalEvents globals{tu, os_};
   FindGlobalEvents::globalEventMapType eventMap{globals.getEventMap()};
-  systemcModel_->addGlobalEvents(eventMap);
+  systemc_model_->addGlobalEvents(eventMap);
 
   ModuleDeclarationMatcher module_declaration_handler{};
   MatchFinder matchRegistry{};
@@ -65,7 +65,7 @@ bool SystemCConsumer::fire() {
     // TODO: find any instances in sc_main.
 
     FindSimTime scstart{fnDecl, os_};
-    systemcModel_->addSimulationTime(scstart.returnSimTime());
+    systemc_model_->addSimulationTime(scstart.returnSimTime());
   } else {
     LLVM_DEBUG(llvm::dbgs() << "\n Could not find SCMain";);
   }
@@ -136,7 +136,7 @@ bool SystemCConsumer::fire() {
       _entryFunctionContainerVector.push_back(ef);
     }
 
-    systemcModel_->addInstance(add_module_decl);
+    systemc_model_->addInstance(add_module_decl);
 
     //
   }
@@ -146,13 +146,13 @@ bool SystemCConsumer::fire() {
   LLVM_DEBUG(llvm::dbgs() << " @@@@@@@@ =============== Populate sub-modules "
                              "============= \n";);
   // This must have the instance matcher already run.
-  // You need systemcModel_ and instance_matcher to build the hierarchy of
+  // You need systemc_model_ and instance_matcher to build the hierarchy of
   // sub-modules.
   auto instance_matcher{module_declaration_handler.getInstanceMatcher()};
   auto instance_map{instance_matcher.getInstanceMap()};
   LLVM_DEBUG(
       llvm::dbgs() << "- Print out all the instances in the instance map\n";);
-  systemcModel_->populateNestedModules();
+  systemc_model_->populateNestedModules();
 
   LLVM_DEBUG(
       llvm::dbgs() << "===========END  Populate sub-modules ============= \n";);
@@ -166,20 +166,13 @@ bool SystemCConsumer::fire() {
       llvm::dbgs() << "=============== ##### TEST NetlistMatcher ##### \n";);
   NetlistMatcher netlist_matcher{};
   MatchFinder netlist_registry{};
-  netlist_matcher.registerMatchers(netlist_registry, systemcModel_,
+  netlist_matcher.registerMatchers(netlist_registry, systemc_model_,
                                    &module_declaration_handler);
 
   netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
-  // LLVM_DEBUG(llvm::dbgs() << "Begin netlist parsing on instances: "
-  // << found_instances_declaration_map.size() << "\n";);
-  // vector of ModuleInstance*
-  auto instances{systemcModel_->getInstances()};
+
+  auto instances{systemc_model_->getInstances()};
   for (const auto &inst : instances) {
-    // auto incomplete_mdecl{inst.first};
-    // auto instance_list{inst.second};
-    //
-    // for (auto const &instance : instance_list) {
-    // ModuleInstance *mdecl{systemcModel_->getInstance(get<0>(instance))};
     ModuleInstance *mdecl{inst};
     auto ctordecl{mdecl->getConstructorDecl()};
     if (ctordecl != nullptr) {
@@ -200,7 +193,7 @@ bool SystemCConsumer::fire() {
   LLVM_DEBUG(
       llvm::dbgs() << "\nParsed SystemC model from systemc-clang\n";
       llvm::dbgs() << "============= MODEL ============================\n";
-      systemcModel_->dump(llvm::dbgs());
+      systemc_model_->dump(llvm::dbgs());
       llvm::dbgs() << "==============END========================\n";);
   return true;
 }
@@ -231,19 +224,19 @@ SystemCConsumer::SystemCConsumer(clang::ASTUnit *from_ast, std::string top)
       sm_{from_ast->getSourceManager()},
       context_{from_ast->getASTContext()},
       top_{top},
-      systemcModel_{nullptr} {}
+      systemc_model_{nullptr} {}
 
 SystemCConsumer::SystemCConsumer(clang::CompilerInstance &ci, std::string top)
     : os_{llvm::errs()},
       sm_{ci.getSourceManager()},
       context_{ci.getASTContext()},
       top_{top},
-      systemcModel_{nullptr} {}
+      systemc_model_{nullptr} {}
 
 SystemCConsumer::~SystemCConsumer() {
-  if (systemcModel_ != nullptr) {
-    delete systemcModel_;
-    systemcModel_ = nullptr;
+  if (systemc_model_ != nullptr) {
+    delete systemc_model_;
+    systemc_model_ = nullptr;
   }
 }
 
@@ -251,7 +244,7 @@ void SystemCConsumer::setTopModule(const std::string &top_module_decl) {
   top_ = top_module_decl;
 }
 
-Model *SystemCConsumer::getSystemCModel() { return systemcModel_; }
+Model *SystemCConsumer::getSystemCModel() { return systemc_model_; }
 
 const std::string &SystemCConsumer::getTopModule() const { return top_; }
 

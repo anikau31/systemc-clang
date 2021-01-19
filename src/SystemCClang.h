@@ -63,7 +63,7 @@ class SystemCConsumer : public ASTConsumer,
 
  private:
   std::string top_;
-  Model *systemcModel_;
+  Model *systemc_model_;
   clang::ASTContext &context_;
   clang::SourceManager &sm_;
 };  // End class SystemCConsumer
