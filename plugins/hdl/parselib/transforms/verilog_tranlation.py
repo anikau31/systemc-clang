@@ -2,7 +2,7 @@ import warnings
 from .top_down import TopDown
 from ..primitives import *
 from ..utils import dprint, is_tree_type
-from lark import Tree
+from lark import Tree, Token
 import logging
 
 
@@ -344,6 +344,8 @@ class VerilogTranslationPass(TopDown):
         self.senselist[proc_name] = []
         for sv in tree.children[1:]:
             sens_var, sens_edge = sv.children
+            if isinstance(sens_var, Token):
+                sens_var = sens_var.value
             if sens_edge == 'always':
                 sen_str = sens_var
             elif sens_edge == 'pos':
@@ -412,8 +414,7 @@ class VerilogTranslationPass(TopDown):
             """  On line: {}""".format(tree.line)
         )
         if len(tree.children) == 1:
-            # return 'return {}'.format(tree.children[0])
-            return ''
+            return 'return {}'.format(tree.children[0])
         elif len(tree.children) == 0:
             # return 'return'
             return ''
@@ -433,6 +434,14 @@ class VerilogTranslationPass(TopDown):
         ctx = TypeContext(suffix='')
         decl = tpe.to_str(var_name, context=ctx)
         return (decl, var_name, init_val)
+
+    def hbindingarrayref(self, tree):
+        """
+        this expansion should only be invoked by expanding_binding_ref and should not be invoked elsewhere
+        the reason is that we need to collect binding information per arry-like port
+        """
+        self.__push_up(tree)
+        return '{}[{}]'.format(tree.children[0], tree.children[1])
 
     def expand_binding_ref(self, tree):
         if not is_tree_type(tree, 'hbindingarrayref'):
@@ -466,9 +475,12 @@ class VerilogTranslationPass(TopDown):
                 warnings.warn('Using Tree as binding is deprecated', DeprecationWarning)
                 sub, par = binding.children
             if is_tree_type(sub, 'hbindingarrayref'):
+                # The .xxx part is an array
                 sub_name = sub.children[0].children[0].value  # assuming varref
                 if sub_name not in array_bindings:
                     array_bindings[sub_name] = {}
+                if sub.children[0].data == 'hbindingarrayref':
+                    raise ValueError('nested 2-D array port is not supported')
                 array_bindings[sub_name][sub.children[1].children[0]] = par
             else:
                 # at this point, the par should be able to be fully expanded even if it is an array
@@ -555,6 +567,7 @@ class VerilogTranslationPass(TopDown):
         self.senselist = {}
         initialization_block = []
         encountered_initblock = False
+        self.bindings = dict()
         for t in tree.children:
             if isinstance(t, Tree) and t.data == 'portbindinglist':
                 self.bindings[t.children[0]] = t.children[1]
