@@ -46,8 +46,8 @@ extensions = ['recommonmark'
         , 'sphinx.ext.autodoc'
         , 'sphinx.ext.viewcode'
         # , 'sphinx.ext.'
-        , 'breathe'
-        , 'exhale'
+        #, 'breathe'
+        #, 'exhale'
         ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -75,11 +75,11 @@ html_theme = 'sphinx_rtd_theme' #'alabaster'
 # -- Breath and Exhale 
 
 
-breathe_default_project = "systemc-clang"
+#breathe_default_project = "systemc-clang"
 #
-breathe_projects = {
-    "systemc-clang": "./doxydoc/xml"
-}
+#breathe_projects = {
+#    "systemc-clang": "./doxydoc/xml"
+#}
 
 exhale_args = {
     "containmentFolder":     "./api",
