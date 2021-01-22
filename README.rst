@@ -2,6 +2,11 @@
 
 .. image:: https://travis-ci.com/anikau31/systemc-clang.svg?branch=master :target: https://travis-ci.com/anikau31/systemc-clang
 A SystemC Parser using the Clang Front-end 
+
+.. image:: https://readthedocs.org/projects/systemc-clang/badge/?version=latest
+:target: https://systemc-clang.readthedocs.io/en/latest/?badge=latest
+:alt: Documentation Status
+
 ==========================================
 
 `systemc-clang <https://git.uwaterloo.ca/caesr-pub//systemc-clang>`_ parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. 
