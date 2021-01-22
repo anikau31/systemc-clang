@@ -1,8 +1,9 @@
 .. |systemc-clang| replace:: ``systemc-clang``
 
-.. image:: 
-  https://travis-ci.com/anikau31/systemc-clang.svg?branch=master :target: https://travis-ci.com/anikau31/systemc-clang 
-  https://readthedocs.org/projects/systemc-clang/badge/?version=latest :target: https://systemc-clang.readthedocs.io/en/latest/?badge=latest :alt: Documentation Status
+.. image:: https://travis-ci.com/anikau31/systemc-clang.svg?branch=master :target: https://travis-ci.com/anikau31/systemc-clang 
+  :width: 10%
+.. image::  https://readthedocs.org/projects/systemc-clang/badge/?version=latest :target: https://systemc-clang.readthedocs.io/en/latest/?badge=latest :alt: Documentation Status
+  :width: 10%
 
 A SystemC Parser using the Clang Front-end 
 ==========================================
