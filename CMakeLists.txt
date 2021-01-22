@@ -40,7 +40,10 @@ set(SCC_MINOR_VERSION ${SCC_MAJOR_VERSION}.2)
 # Provide path for scripts
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-# 
+ 
+##################################################
+# Catch2
+##################################################
 # This is the library to use for unit tests
 #
 # Prepare "Catch" library for other executables
@@ -122,11 +125,14 @@ set( SYSTEMC_DIR $ENV{SYSTEMC} )
 set( EXTRA_INCLUDE_DIR $ENV{EXTRA_INCLUDE_DIR} )
 
 # Default plugin status 
-set( PLUGIN_HDL OFF )
-if (("${HDL}" STREQUAL "ON") OR ("${HDL}" STREQUAL "on"))
-  set( PLUGIN_HDL ON)
-endif()
+option( HDL "Compile HDL plugin" OFF )
 
+set( PLUGIN_HDL ${HDL})
+
+# if (("${HDL}" STREQUAL "ON") OR ("${HDL}" STREQUAL "on"))
+  # set( PLUGIN_HDL ON)
+# endif()
+#
 # Disallow in-source builds.
 # Source: https://github.com/opencv/opencv/pull/8582/files<Paste>
 if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}") 
