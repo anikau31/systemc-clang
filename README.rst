@@ -4,8 +4,8 @@
     :target: https://travis-ci.com/anikau31/systemc-clang
 
 .. image:: https://readthedocs.org/projects/systemc-clang/badge/?version=latest
-:target: https://systemc-clang.readthedocs.io/en/latest/?badge=latest
-:alt: Documentation Status
+  :target: https://systemc-clang.readthedocs.io/en/latest/?badge=latest
+  :alt: Documentation Status
 
 
 A SystemC Parser using the Clang Front-end 
