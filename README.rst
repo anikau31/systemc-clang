@@ -23,9 +23,8 @@ Requirements
 Installation
 ------------
 
-*  `Linux <docs/source/install/install.rst>`_
-.. *  `Linux <docINSTALL-linux.md>`_
-.. *  `OSX <INSTALL-osx.md>`_
+*  `Linux <docs/source/install/install-linux.rst>`_
+*  `MacOS <docs/source/install/install-osx.rst>`_
 
 Plugin HDL
 -----------
