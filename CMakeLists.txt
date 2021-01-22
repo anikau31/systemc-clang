@@ -76,9 +76,10 @@ include(Catch)
 # Doxygen
 ##################################################
 # look for Doxygen package
-option(BUILD_DOC "Build documentation" ON)
+option(BUILD_DOC "Build documentation" OFF)
 find_package(Doxygen)
 
+if (BUILD_DOC)
 if (DOXYGEN_FOUND)
     # set input and output files
     set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/source//Doxyfile.in)
@@ -99,6 +100,7 @@ else (DOXYGEN_FOUND)
   message(FATAL_ERROR "FATAL: DOXYGEN not found.")
 
 endif (DOXYGEN_FOUND)
+endif (BUILD_DOC)
 ##################################################
 # Required packages
 # Include the these flags whenever you compile.
@@ -409,6 +411,7 @@ message(STATUS "Python found          : ${PYTHONINTERP_FOUND}")
 message(STATUS "Python interpreter    : ${PYTHON_EXECUTABLE}")
 message(STATUS "")
 message(STATUS "[ Docymentation ]")
+message(STATUS "Build docs            : ${BUILD_DOC}")
 message(STATUS "Doxygen found         : ${DOXYGEN_FOUND}")
 message(STATUS "Sphinx found          : ${SPHINX_FOUND}")
 message(STATUS "")
