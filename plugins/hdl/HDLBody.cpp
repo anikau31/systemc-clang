@@ -220,7 +220,14 @@ namespace systemc_hdl {
     for (clang::Stmt *stmt : cstmt->body()) {
       TraverseStmt(stmt);
       if (h_ret) {
-	h_cstmt->child_list.push_back(h_ret);
+	if ((isAssignOp(h_ret) ) && (h_ret->child_list.size() == 2) &&
+	    (isAssignOp(h_ret->child_list[1]))){
+	  hNodep htmp = NormalizeHcode(h_ret); // break up assignment chain
+	  //h_ret = NormalizeHcode(h_ret); // break up assignment chain
+	  h_cstmt->child_list.insert(h_cstmt->child_list.end(),
+				     htmp->child_list.begin(), htmp->child_list.end());
+	}
+	else h_cstmt->child_list.push_back(h_ret);
       } else
 	LLVM_DEBUG(llvm::dbgs() << "stmt result was empty\n");
       h_ret = NULL;
@@ -839,6 +846,24 @@ namespace systemc_hdl {
     }
   }
 
+  hNodep HDLBody::NormalizeHcode(hNodep hinp) {
+    // break up chain of assignments a = b = c = d = 0;
+    // at entry there is a chain of at least two: a = b = 0;
+    
+    hNodep hassignchain = new hNode(hNode::hdlopsEnum::hCStmt);
+    hNodep htmp = hinp; // (= a subtree)
+    do {
+      hNodep htmp2 = htmp->child_list[1]; // (= b subtree)
+      htmp->child_list[1] = htmp2->child_list[0];  // (= a b)
+      hassignchain->child_list.push_back(htmp);
+      htmp = htmp2; // (= b subtree)
+    }
+    while (isAssignOp(htmp->child_list[1]));
+    hassignchain->child_list.push_back(htmp);
+    std::reverse(hassignchain->child_list.begin(), hassignchain->child_list.end());
+    return hassignchain;
+  }
+					  
   // CXXMethodDecl *HDLBody::getEMD() {
   //   return _emd;
   // }
