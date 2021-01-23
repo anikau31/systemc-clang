@@ -19,11 +19,14 @@ specialization of the driver-tooling pattern.
 
 Limitations and special cases
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Currently HDL is generated for SC_METHOD, but not yet SC_THREAD or SC_CTHREAD.
 * Switch case clauses must have one statement, which can be a compound statement "{}"
-
- * User types should not be in the SystemC core namespace or have `sc_` prefix. We assume those qualifiers are part of the SystemC
-   simulation library.
-
+* User types should not be in the SystemC core namespace or have `sc_`
+  prefix. We assume those qualifiers are part of the SystemC simulation library.
 * Assignment operators for user-defined structs should follow the normal
   semantics of copying all the fields. This behavior is assumed and
   not checked.
+* "For" loops that instantiate arrays of SC_MODULEs and arrays of port bindings must follow a 
+  simple form of "index=start; index<=end; index++". "For" loops in this form are unrolled into
+  synthesizable Verilog. 

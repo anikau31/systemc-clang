@@ -403,6 +403,9 @@ namespace systemc_hdl {
       if (efc->getProcessType() == PROCESS_TYPE::METHOD) {
 	hNodep h_process = new hNode(efc->getName(), hNode::hdlopsEnum::hProcess);
 	LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName() << "\n");
+	// we are doing sensitivity list processing in the mod init block. 
+	// for now, this obsolete code is ifdef'ed out in case we want to
+	// use parts of it later.
 #if 0
 	// Sensitivity list
 	EntryFunctionContainer::SenseMapType sensmap = efc->getSenseMap();

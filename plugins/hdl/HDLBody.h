@@ -55,6 +55,9 @@ namespace systemc_hdl {
     bool ProcessSwitchCase(SwitchCase *cases);
     bool TraverseWhileStmt(WhileStmt *whiles);
     void AddVnames(hNodep &hvns);
+
+    hNodep NormalizeHcode(hNodep hinp);
+    
     //CXXMethodDecl *getEMD();
 
     std::unordered_map<string, FunctionDecl *> methodecls;  //  methods called in this SC_METHOD or function
@@ -69,7 +72,12 @@ namespace systemc_hdl {
     bool add_info;
     
     bool isLogicalOp(clang::OverloadedOperatorKind opc);
-
+    
+    inline bool isAssignOp(hNodep hp) {
+      return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
+	(hp->h_name == "=");
+    }
+    
     util lutil;
 
     const ASTContext &ast_context_;
