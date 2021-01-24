@@ -50,7 +50,7 @@ extensions = ['recommonmark'
         , 'sphinx.ext.autosectionlabel'
         # , 'sphinx.ext.'
         , 'breathe'
-        #, 'exhale'
+        , 'exhale'
         ]
 
 # Add any paths that contain templates here, relative to this directory.
