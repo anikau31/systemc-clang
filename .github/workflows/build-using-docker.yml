@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 
       image: rseac/systemc-clang:clang-11.0.0
-      options: -v $GITHUB_WORKSPACE:/systemc-clang
+      volumes: $GITHUB_WORKSPACE:/systemc-clang
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
