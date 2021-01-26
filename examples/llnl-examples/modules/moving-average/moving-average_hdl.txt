@@ -54,30 +54,33 @@
         ]
       ]
     ]
-    hPortbindings u_dut [
-      hPortbinding  NONAME [
-        hVarref avg_out NOLIST
-        hVarref dut_avg NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref clk NOLIST
-        hVarref clk NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref datastrm NOLIST
-        hVarref driv_data NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref max_out NOLIST
-        hVarref dut_max NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref min_out NOLIST
-        hVarref dut_min NOLIST
-      ]
-      hPortbinding  NONAME [
-        hVarref reset NOLIST
-        hVarref reset NOLIST
+    hModinitblock mymod [
+      hCStmt  NONAME NOLIST
+      hPortbindings mymod [
+        hPortbinding u_dut [
+          hVarref clk NOLIST
+          hVarref clk NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref reset NOLIST
+          hVarref reset NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref datastrm NOLIST
+          hVarref driv_data NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref min_out NOLIST
+          hVarref dut_min NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref max_out NOLIST
+          hVarref dut_max NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref avg_out NOLIST
+          hVarref dut_avg NOLIST
+        ]
       ]
     ]
   ]
@@ -208,11 +211,6 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hCStmt  NONAME [
             hSigAssignL write [
@@ -247,11 +245,6 @@
         ]
       ]
       hProcess ms_proc [
-        hSenslist  NONAME [
-          hSensvar clk [
-            hSensedge pos NOLIST
-          ]
-        ]
         hMethod  NONAME [
           hVardecl _local_0 [
             hTypeinfo  NONAME [
@@ -286,20 +279,22 @@
                   ]
                 ]
                 hBinop = [
-                  hVarref cur_min NOLIST
-                  hBinop = [
-                    hVarref cur_max NOLIST
-                    hBinop = [
-                      hVarref cur_avg NOLIST
-                      hLiteral 0 [
-                        hTypeinfo  NONAME [
-                          hType sc_uint [
-                            hLiteral 64 NOLIST
-                          ]
-                        ]
+                  hVarref cur_avg NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_uint [
+                        hLiteral 64 NOLIST
                       ]
                     ]
                   ]
+                ]
+                hBinop = [
+                  hVarref cur_max NOLIST
+                  hVarref cur_avg NOLIST
+                ]
+                hBinop = [
+                  hVarref cur_min NOLIST
+                  hVarref cur_max NOLIST
                 ]
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
@@ -483,6 +478,24 @@
               ]
             ]
           ]
+        ]
+      ]
+    ]
+    hModinitblock u_dut [
+      hCStmt  NONAME [
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+      ]
+      hSenslist mc_proc [
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
+        ]
+      ]
+      hSenslist ms_proc [
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
         ]
       ]
     ]

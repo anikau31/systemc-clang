@@ -45,9 +45,12 @@ release = '2.2.0'
 extensions = ['recommonmark'
         , 'sphinx.ext.autodoc'
         , 'sphinx.ext.viewcode'
+        , 'sphinx.ext.todo'
+        , 'sphinx.ext.intersphinx'
+        , 'sphinx.ext.autosectionlabel'
         # , 'sphinx.ext.'
         , 'breathe'
-        , 'exhale'
+        #, 'exhale'
         ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -76,7 +79,7 @@ html_theme = 'sphinx_rtd_theme' #'alabaster'
 
 
 breathe_default_project = "systemc-clang"
-#
+
 breathe_projects = {
     "systemc-clang": "./doxydoc/xml"
 }
