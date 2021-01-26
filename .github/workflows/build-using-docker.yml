@@ -44,5 +44,5 @@ jobs:
           cd /__w/; 
           mkdir systemc-clang-build; 
           cd systemc-clang-build; 
-          cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=ON -G Ninja && ninja && ctest
+          cmake /systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=ON -G Ninja && ninja && ctest
         
