@@ -35,6 +35,9 @@ Documentation
 --------------
 
 * `https://systemc-clang.readthedocs.io <https://systemc-clang.readthedocs.io>`_
+* It is possible to build the documentation by specifying the ``-DBUILD_DOC=ON`` flag. This will provide the following targets
+  ** ``doxygen``: Builds Doxygen documentation.
+  ** ``sphinx`` : Builds Sphinx documentation.
 
 Tests
 -------

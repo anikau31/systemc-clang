@@ -49,7 +49,7 @@ extensions = ['recommonmark'
         , 'sphinx.ext.intersphinx'
         , 'sphinx.ext.autosectionlabel'
         # , 'sphinx.ext.'
-        #, 'breathe'
+        , 'breathe'
         #, 'exhale'
         ]
 
@@ -78,11 +78,11 @@ html_theme = 'sphinx_rtd_theme' #'alabaster'
 # -- Breath and Exhale 
 
 
-#breathe_default_project = "systemc-clang"
-#
-#breathe_projects = {
-#    "systemc-clang": "./doxydoc/xml"
-#}
+breathe_default_project = "systemc-clang"
+
+breathe_projects = {
+    "systemc-clang": "./doxydoc/xml"
+}
 
 exhale_args = {
     "containmentFolder":     "./api",
