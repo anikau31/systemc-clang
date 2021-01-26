@@ -35,8 +35,6 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          ls -l /__w/
-          ls -l /__w/systemc-clang/
           ls -l /systemc-clang/
 
 
@@ -45,5 +43,6 @@ jobs:
         run: |
           cd /__w/; 
           mkdir systemc-clang-build; 
-          #cd systemc-clang-build; cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=ON -G Ninja && ninja && ctest
+          cd systemc-clang-build; 
+          cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=ON -G Ninja && ninja && ctest
         
