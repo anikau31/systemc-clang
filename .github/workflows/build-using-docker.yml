@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 
       image: "rseac/systemc-clang:clang-11.0.0"
+      options: -v ${{github.workspace}}:/systemc-clang
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -36,9 +37,13 @@ jobs:
         run: |
           ls -l /__w/
           ls -l /__w/systemc-clang/
+          ls -l /systemc-clang/
 
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
-        run: cd /__w/; mkdir systemc-clang-build; cd systemc-clang-build; cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=ON -G Ninja && ninja && ctest
+        run: |
+          cd /__w/; 
+          mkdir systemc-clang-build; 
+          #cd systemc-clang-build; cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=ON -G Ninja && ninja && ctest
         
