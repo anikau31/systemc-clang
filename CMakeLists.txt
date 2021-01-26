@@ -58,6 +58,9 @@ target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 include(CTest)
 include(Catch)
 
+option(BUILD_DOC "Set this option to build with documentation targets" OFF)
+
+if (BUILD_DOC)
 ##################################################
 # Sphinx
 ##################################################
@@ -110,6 +113,8 @@ add_custom_target(docs
     COMMENT "Generating Doxygen and Sphinx documentation"
     VERBATIM )
 endif()
+
+endif (BUILD_DOC)
 ##################################################
 # Required packages
 # Include the these flags whenever you compile.
@@ -423,8 +428,11 @@ message(STATUS "Python found          : ${PYTHONINTERP_FOUND}")
 message(STATUS "Python interpreter    : ${PYTHON_EXECUTABLE}")
 message(STATUS "")
 message(STATUS "[ Docymentation ]")
+message(STATUS "Build documentation   : ${BUILD_DOC}")
+if (BUILD_DOC)
 message(STATUS "Doxygen found         : ${DOXYGEN_FOUND}")
 message(STATUS "Sphinx found          : ${SPHINX_FOUND}")
+endif (BUILD_DOC)
 message(STATUS "")
 message(STATUS "[ Git info.     ]")
 message(STATUS "Git repo url          : ${GIT_REPO_URL}")
