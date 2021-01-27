@@ -26,15 +26,22 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      # - name: Print context
+        # run: |
+          # echo "GITHUB_WORKSPACE = $GITHUB_WORKSPACE"
+          # echo "github.workspace = ${{ github.workspace }}"
+          # echo "$GITHUB_CONTEXT"
       # Runs a single command using the runners shell
-      - name: Echo SYSTEMC_CLANG variable
-       run: |
-         echo $SYSTEMC_CLANG
-          
+      # - name: Run a one-line script
+        # run: |
+          # ls -l /systemc-clang/
+#
+
       # Runs a set of commands using the runners shell
       - name: Build systemc-clang and run tests
-         run: |
-          mkdir systemc-clang-build
-          cd systemc-clang-build
+        run: |
+          mkdir /systemc-clang-build 
+          cd /systemc-clang-build 
           cmake /systemc-clang -DHDL=ON -DENABLE_TESTS=ON -DENABLE_VERILOG_TESTS=ON -G Ninja && ninja && python3 -B -m pytest -v --color=yes /systemc-clang/tests -k examples #ctest -VV
-#
+        
