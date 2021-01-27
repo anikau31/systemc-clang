@@ -38,7 +38,7 @@ RUN mkdir /opt/systemc-2.3.3 && curl -L https://github.com/rseac/systemc-travisc
 RUN apt-get update && apt-get install -y -q --no-install-recommends \
   g++ \
   cmake \
-#  ccache \
+  ccache \
   ninja-build \
   python3 \
   python3-pip \
@@ -46,6 +46,12 @@ RUN apt-get update && apt-get install -y -q --no-install-recommends \
   libz-dev \
   libncurses-dev
 
+  
+# Install doxygen and graphviz
+RUN apt-get install -y doxygen graphviz
+
+# Install sphinx
+RUN pip3 install -U sphinx 
 
 # Set up environment variables across images
 ENV SYSTEMC=/opt/systemc-2.3.3

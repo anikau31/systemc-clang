@@ -1,5 +1,8 @@
 .. |systemc-clang| replace:: ``systemc-clang``
 
+.. image:: https://github.com/anikau31/systemc-clang/workflows/CI/badge.svg
+  :target: https://github.com/anikau31/systemc-clang/actions 
+
 .. image:: https://travis-ci.com/anikau31/systemc-clang.svg?branch=master
     :target: https://travis-ci.com/anikau31/systemc-clang
 
