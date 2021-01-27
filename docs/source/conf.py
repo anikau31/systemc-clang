@@ -49,7 +49,7 @@ extensions = ['recommonmark'
         , 'sphinx.ext.intersphinx'
         , 'sphinx.ext.autosectionlabel'
         # , 'sphinx.ext.'
-        , 'breathe'
+        #, 'breathe'
         #, 'exhale'
         ]
 
