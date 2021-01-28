@@ -3,9 +3,6 @@
 .. image:: https://github.com/anikau31/systemc-clang/workflows/CI/badge.svg
   :target: https://github.com/anikau31/systemc-clang/actions 
 
-.. image:: https://travis-ci.com/anikau31/systemc-clang.svg?branch=master
-    :target: https://travis-ci.com/anikau31/systemc-clang
-
 .. image:: https://readthedocs.org/projects/systemc-clang/badge/?version=latest
   :target: https://systemc-clang.readthedocs.io/en/latest/?badge=latest
   :alt: Documentation Status
