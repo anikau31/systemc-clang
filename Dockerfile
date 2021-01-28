@@ -72,12 +72,15 @@ WORKDIR /
 
 # The following setup will be dependent on usage (either development or test)
 # Ideally, we would use a multistage docker file, but we won't save much space as the unzipped clang is very large
-#RUN mkdir systemc-clang
-# RUN pip3 install -r systemc-clang/requirements.txt
+
+# The build directory
 ENV SYSTEMC_CLANG_BUILD_DIR=/systemc-clang-build
+# The source directory
 ENV SYSTEMC_CLANG=/systemc-clang
 WORKDIR /systemc-clang-build
 #COPY scripts/build-travis.sh /systemc-clang-build
 COPY requirements.txt /systemc-clang-build
+COPY docs/source/requirements.txt /systemc-clang-build/requirements-docs.txt
 RUN pip3 install -r $SYSTEMC_CLANG_BUILD_DIR/requirements.txt
+RUN pip3 install -r $SYSTEMC_CLANG_BUILD_DIR/requirements-docs.txt
 # RUN cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -DENABLE_TESTS=ON -G "Ninja" && ninja
