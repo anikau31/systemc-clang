@@ -65,7 +65,7 @@ Developers
 Core
 ^^^^
 
-* `Anirudh M. Kaushik <https://ece.uwaterloo.ca/~anikau31/uwhtml/team/anirudh-kaushik/>`_
+* `Anirudh M. Kaushik <https://ece.uwaterloo.ca/~amkaushi/>`_
 * `Hiren Patel <https://caesr.uwaterloo.ca>`_
 
 HDL plugin
