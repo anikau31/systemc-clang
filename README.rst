@@ -14,7 +14,7 @@
 A SystemC Parser using the Clang Front-end 
 ==========================================
 
-`systemc-clang <https://git.uwaterloo.ca/caesr-pub//systemc-clang>`_ parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. 
+`systemc-clang <https://github.com/anikau31/systemc-clang>`_ parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. 
 
 Requirements
 ------------
@@ -26,8 +26,7 @@ Requirements
 Installation
 ------------
 
-*  `Linux <docs/source/install/install-linux.rst>`_
-*  `MacOS <docs/source/install/install-osx.rst>`_
+*  Please see `this <https://systemc-clang.readthedocs.io/en/latest/install/install.html>`_
 
 Plugin HDL
 -----------
@@ -39,8 +38,8 @@ Documentation
 
 * `https://systemc-clang.readthedocs.io <https://systemc-clang.readthedocs.io>`_
 * It is possible to build the documentation by specifying the ``-DBUILD_DOC=ON`` flag. This will provide the following targets
-  ** ``doxygen``: Builds Doxygen documentation.
-  ** ``sphinx`` : Builds Sphinx documentation.
+  * ``doxygen``: Builds Doxygen documentation.
+  * ``sphinx`` : Builds Sphinx documentation.
 
 Tests
 -------
