@@ -14,13 +14,13 @@
 A SystemC Parser using the Clang Front-end 
 ==========================================
 
-`systemc-clang <https://github.com/anikau31/systemc-clang>`_ parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. 
+`systemc-clang <https://github.com/anikau31/systemc-clang>`_ parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. There is a HDL synthesis plugin that generates Verilog from SystemC RTL descriptions. 
 
 Requirements
 ------------
 
 *  `llvm/clang <https://releases.llvm.org/download.html>`_ (version 11.0.0)
-*  `SystemC <http://systemc.org>`_ version 2.3.3. Please see `SystemC Installation notes <https://github.com/anikau31/systemc-clang/blob/master/doc/systemc-install.mkd>`_
+*  `SystemC <http://systemc.org>`_ version 2.3.3. 
 *  c++14 is required. We are using some features that necessitate c++14. Down-porting it is also possible, but not supported.
 
 Installation
@@ -37,9 +37,11 @@ Documentation
 --------------
 
 * `https://systemc-clang.readthedocs.io <https://systemc-clang.readthedocs.io>`_
+
 * It is possible to build the documentation by specifying the ``-DBUILD_DOC=ON`` flag. This will provide the following targets
-  * ``doxygen``: Builds Doxygen documentation.
-  * ``sphinx`` : Builds Sphinx documentation.
+
+    * ``doxygen``: Builds Doxygen documentation. 
+    * ``sphinx`` : Builds Sphinx documentation.
 
 Tests
 -------
