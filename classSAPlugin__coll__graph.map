@@ -1,0 +1,9 @@
+<map id="SAPlugin" name="SAPlugin">
+<area shape="rect" id="node1" title=" " alt="" coords="189,364,265,391"/>
+<area shape="rect" id="node2" href="$classsystemc__clang_1_1SystemCConsumer.html" title="This is the main consumer class that beings the parsing of SystemC." alt="" coords="113,288,340,315"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,191,112,218"/>
+<area shape="rect" id="node4" title=" " alt="" coords="137,184,317,225"/>
+<area shape="rect" id="node5" href="$classsystemc__clang_1_1Model.html" title=" " alt="" coords="341,191,491,218"/>
+<area shape="rect" id="node6" href="$classsystemc__clang_1_1ModuleInstance.html" title="Forward declarations." alt="" coords="313,95,519,121"/>
+<area shape="rect" id="node7" href="$structsc__ast__matchers_1_1ModuleInstanceType.html" title=" " alt="" coords="292,5,540,32"/>
+</map>
