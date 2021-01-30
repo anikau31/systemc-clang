@@ -10,7 +10,7 @@ EventDecl::~EventDecl() {
 
 EventDecl::EventDecl() : name_{"NONE"}, ast_node_{nullptr} {}
 
-EventDecl::EventDecl(const string &name, clang::FieldDecl *fd)
+EventDecl::EventDecl(const std::string &name, clang::FieldDecl *fd)
     : name_{name}, ast_node_{fd} {}
 
 EventDecl::EventDecl(const EventDecl &from) {
