@@ -4,13 +4,13 @@
 
 using namespace systemc_clang;
 
-ProcessDecl::ProcessDecl(std::string t, std::string n,
-                         clang::CXXMethodDecl *entryMethodDecl,
-                         EntryFunctionContainer *e)
-    : process_type_(t),
-      entry_name_(n),
-      entry_method_decl_(entryMethodDecl),
-      entry_function_ptr_(e) {}
+ProcessDecl::ProcessDecl(std::string process_type, std::string entry_name,
+                         clang::CXXMethodDecl *entry_method_decl,
+                         EntryFunctionContainer *entry_fn)
+    : process_type_(process_type),
+      entry_name_(entry_name),
+      entry_method_decl_(entry_method_decl),
+      entry_function_ptr_(entry_fn) {}
 
 ProcessDecl::~ProcessDecl() {
   // The following points do NOT need to be deleted:entry_method_decl_,
