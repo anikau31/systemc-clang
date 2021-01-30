@@ -130,7 +130,7 @@ bool SystemCConsumer::fire() {
       FindWait findWaits{ef->getEntryMethod(), os_};
       ef->addWaits(findWaits);
 
-      FindNotify findNotify{ef->_entryMethodDecl, os_};
+      FindNotify findNotify{ef->getEntryMethod(), os_};
       ef->addNotifys(findNotify);
 
       _entryFunctionContainerVector.push_back(ef);
