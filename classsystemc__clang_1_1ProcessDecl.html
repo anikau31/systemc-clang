@@ -89,11 +89,13 @@ Collaboration diagram for systemc_clang::ProcessDecl:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2abc565903341e8d2eeb276a30118c0c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ProcessDecl.html#a2abc565903341e8d2eeb276a30118c0c">ProcessDecl</a> (std::string, std::string, clang::CXXMethodDecl *, <a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html">EntryFunctionContainer</a> *)</td></tr>
-<tr class="separator:a2abc565903341e8d2eeb276a30118c0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0168c6643f9f020a5c3d4c245d1b1699"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ProcessDecl.html#a0168c6643f9f020a5c3d4c245d1b1699">ProcessDecl</a> (std::string process_type, std::string entry_name, clang::CXXMethodDecl *entry_method_decl, <a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html">EntryFunctionContainer</a> *entry_fn)</td></tr>
+<tr class="separator:a0168c6643f9f020a5c3d4c245d1b1699"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c271d9e309ae525b2e125e2d67dc609"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ProcessDecl.html#a0c271d9e309ae525b2e125e2d67dc609">ProcessDecl</a> (const <a class="el" href="classsystemc__clang_1_1ProcessDecl.html">ProcessDecl</a> &amp;)</td></tr>
+<tr class="memdesc:a0c271d9e309ae525b2e125e2d67dc609"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <a href="classsystemc__clang_1_1ProcessDecl.html#a0c271d9e309ae525b2e125e2d67dc609">More...</a><br /></td></tr>
 <tr class="separator:a0c271d9e309ae525b2e125e2d67dc609"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0abe95118862ed44b88cafcaebdaf479"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ProcessDecl.html#a0abe95118862ed44b88cafcaebdaf479">~ProcessDecl</a> ()</td></tr>
+<tr class="memdesc:a0abe95118862ed44b88cafcaebdaf479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classsystemc__clang_1_1ProcessDecl.html#a0abe95118862ed44b88cafcaebdaf479">More...</a><br /></td></tr>
 <tr class="separator:a0abe95118862ed44b88cafcaebdaf479"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a640153a556d93a7163b8161f32c18157"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ProcessDecl.html#a640153a556d93a7163b8161f32c18157">getType</a> () const</td></tr>
 <tr class="memdesc:a640153a556d93a7163b8161f32c18157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get methods.  <a href="classsystemc__clang_1_1ProcessDecl.html#a640153a556d93a7163b8161f32c18157">More...</a><br /></td></tr>
@@ -126,8 +128,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a69f8bb48ef4b77a58135f7ac8713fbf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a2abc565903341e8d2eeb276a30118c0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2abc565903341e8d2eeb276a30118c0c">&#9670;&nbsp;</a></span>ProcessDecl() <span class="overload">[1/2]</span></h2>
+<a id="a0168c6643f9f020a5c3d4c245d1b1699"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0168c6643f9f020a5c3d4c245d1b1699">&#9670;&nbsp;</a></span>ProcessDecl() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -136,25 +138,25 @@ Protected Attributes</h2></td></tr>
           <td class="memname">ProcessDecl::ProcessDecl </td>
           <td>(</td>
           <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>t</em>, </td>
+          <td class="paramname"><em>process_type</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>n</em>, </td>
+          <td class="paramname"><em>entry_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">clang::CXXMethodDecl *&#160;</td>
-          <td class="paramname"><em>entryMethodDecl</em>, </td>
+          <td class="paramname"><em>entry_method_decl</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html">EntryFunctionContainer</a> *&#160;</td>
-          <td class="paramname"><em>e</em>&#160;</td>
+          <td class="paramname"><em>entry_fn</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -163,6 +165,15 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Constructor.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">process_type</td><td>Specified whether it is an SC_METHOD, SC_THREAD or SC_CTHREAD. </td></tr>
+    <tr><td class="paramname">entry_name</td><td>The name of the entry function (function associated with the process). entry_method_decl The CXXMethodDecl for the entry function. </td></tr>
+    <tr><td class="paramname">entry_fn</td><td>The container that holds entry function information. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -181,6 +192,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Copy constructor. </p>
 
 </div>
 </div>
@@ -206,6 +219,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Destructor. </p>
 
 </div>
 </div>
