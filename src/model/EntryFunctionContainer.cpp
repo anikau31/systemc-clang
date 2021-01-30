@@ -1,5 +1,4 @@
 #include "EntryFunctionContainer.h"
-#include "enums.h"
 
 using namespace systemc_clang;
 
@@ -8,30 +7,30 @@ EntryFunctionContainer::~EntryFunctionContainer() {
 }
 
 EntryFunctionContainer::EntryFunctionContainer()
-    : _entryName("NONE"),
-      _procType(PROCESS_TYPE::NONE),
-      _entryMethodDecl(nullptr) {}
+    : entry_name_("NONE"),
+      process_type_(PROCESS_TYPE::NONE),
+      entry_method_decl_(nullptr) {}
 
 EntryFunctionContainer::EntryFunctionContainer(string n, PROCESS_TYPE p,
-                                               CXXMethodDecl *d, Stmt *s)
-    : _entryName(n), _procType(p), _entryMethodDecl(d) {}
+                                               clang::CXXMethodDecl *d, clang::Stmt *s)
+    : entry_name_(n), process_type_(p), entry_method_decl_(d) {}
 
 EntryFunctionContainer::EntryFunctionContainer(
     const EntryFunctionContainer &from) {
-  _entryName = from._entryName;
-  _procType = from._procType;
-  _entryMethodDecl = from._entryMethodDecl;
+  entry_name_ = from.entry_name_;
+  process_type_ = from.process_type_;
+  entry_method_decl_ = from.entry_method_decl_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-string EntryFunctionContainer::getName() { return _entryName; }
+string EntryFunctionContainer::getName() { return entry_name_; }
 
 EntryFunctionContainer::SenseMapType EntryFunctionContainer::getSenseMap() {
   return senseMap_;
 }
 
-CXXMethodDecl *EntryFunctionContainer::getEntryMethod() {
-  return _entryMethodDecl;
+clang::CXXMethodDecl *EntryFunctionContainer::getEntryMethod() {
+  return entry_method_decl_;
 }
 
 EntryFunctionContainer::waitContainerListType
@@ -44,29 +43,23 @@ EntryFunctionContainer::getNotifyCalls() {
   return _notifyCalls;
 }
 
-PROCESS_TYPE EntryFunctionContainer::getProcessType() { return _procType; }
+PROCESS_TYPE EntryFunctionContainer::getProcessType() { return process_type_; }
 
 SuspensionAutomata::susCFGVectorType EntryFunctionContainer::getSusCFG() {
   return _susCFG;
-  // return _instanceSusCFGMap[numInstance];
 }
 
 SuspensionAutomata::transitionVectorType EntryFunctionContainer::getSusAuto() {
   return _susAuto;
-  // return _instanceSautoMap[numInstance];
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void EntryFunctionContainer::setName(string n) { _entryName = n; }
+void EntryFunctionContainer::setName(string n) { entry_name_ = n; }
 
-void EntryFunctionContainer::setProcessType(PROCESS_TYPE p) { _procType = p; }
+void EntryFunctionContainer::setProcessType(PROCESS_TYPE p) { process_type_ = p; }
 
-void EntryFunctionContainer::setEntryMethod(CXXMethodDecl *d) {
-  _entryMethodDecl = d;
+void EntryFunctionContainer::setEntryMethod(clang::CXXMethodDecl *d) {
+  entry_method_decl_ = d;
 }
-//
-// void EntryFunctionContainer::addSensitivityInfo(FindSensitivity &s) {
-  // _senseMap = s.getSenseMap();
-// }
 
 void EntryFunctionContainer::addSensitivityInfo(SenseMapType &sm) {
   senseMap_ = sm;

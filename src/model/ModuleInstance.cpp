@@ -298,11 +298,11 @@ void ModuleInstance::addProcess(FindEntryFunctions::entryFunctionVectorType *efv
     EntryFunctionContainer *ef = (*efv)[i];
 
     // Set the entry name.
-    std::string entryName{ef->_entryName};
+    std::string entryName{ef->getName()};
     std::string entryType{""};
 
     // Set the process type
-    switch (ef->_procType) {
+    switch (ef->getProcessType()) {
       case PROCESS_TYPE::THREAD: {
         entryType = "SC_THREAD";
         break;
@@ -322,7 +322,7 @@ void ModuleInstance::addProcess(FindEntryFunctions::entryFunctionVectorType *efv
     }
     process_map_.insert(processPairType(
         entryName,
-        new ProcessDecl(entryType, entryName, ef->_entryMethodDecl, ef)));
+        new ProcessDecl(entryType, entryName, ef->getEntryMethod(), ef)));
   }
 }
 

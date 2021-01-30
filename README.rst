@@ -33,7 +33,8 @@ To compile with the HDL plugin, run cmake with the ``-DHDL=on`` flag.
 Documentation
 --------------
 
-* `https://systemc-clang.readthedocs.io <https://systemc-clang.readthedocs.io>`_
+* RTD: `https://systemc-clang.readthedocs.io <https://systemc-clang.readthedocs.io>`_
+* Doxygen: `https://anikau31.github.io/systemc-clang/index.html <https://anikau31.github.io/systemc-clang/index.html>`_
 
 * It is possible to build the documentation by specifying the ``-DBUILD_DOC=ON`` flag. This will provide the following targets
 
