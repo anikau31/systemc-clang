@@ -11,17 +11,18 @@
 
 namespace systemc_clang {
 //
-// class TreeNode
+/// class TreeNode<T>
 //
 //
 template <typename T>
 class TreeNode {
  private:
-  T data_;
-  bool discovered_;
-  TreeNode *parent_;
+  T data_;            /// Data item.
+  bool discovered_;   /// Whether this node was discovered or not.
+  TreeNode *parent_;  /// Parent node.
 
  public:
+  /// Constructor.
   TreeNode(T data) : data_{data}, discovered_{false}, parent_{this} {};
 
   TreeNode(const TreeNode &from) {
@@ -30,7 +31,7 @@ class TreeNode {
     parent_ = from.parent_;
   }
 
-  ~TreeNode() {
+  virtual ~TreeNode() {
     // parent_ = nullptr;
   }
 
@@ -253,11 +254,11 @@ class Tree {
   }
 
  public:
-  // Iterators
+  /// Iterators
   //
   //
   //
-  // class dft_iterator
+  /// class dft_iterator
   //
   class const_dft_iterator {
    public:
@@ -301,8 +302,8 @@ class Tree {
   }
 
   //
-  // class dft_iterator
-  //
+  /// class dft_iterator
+  ///
   class dft_iterator {
    public:
     typedef std::vector<TreeNodePtr> *TreeDFTPtr;
