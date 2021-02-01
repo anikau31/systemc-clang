@@ -78,7 +78,7 @@ var searchData=
   ['arraytypeutils_2ecpp_212',['ArrayTypeUtils.cpp',['../ArrayTypeUtils_8cpp.html',1,'']]],
   ['arraytypeutils_2eh_213',['ArrayTypeUtils.h',['../ArrayTypeUtils_8h.html',1,'']]],
   ['ast_5fcontext_5f_214',['ast_context_',['../classsystemc__hdl_1_1HDLBody.html#a09991f11eb7e41766147a1ac9ee1f4ba',1,'systemc_hdl::HDLBody']]],
-  ['ast_5fnode_5f_215',['ast_node_',['../classsystemc__clang_1_1EventContainer.html#ab797ede613f8bd446bb241c9d9a72be9',1,'systemc_clang::EventContainer']]],
+  ['ast_5fnode_5f_215',['ast_node_',['../classsystemc__clang_1_1EventContainer.html#ab797ede613f8bd446bb241c9d9a72be9',1,'systemc_clang::EventContainer::ast_node_()'],['../classsystemc__clang_1_1EventDecl.html#a1eee9f1db428b3e794e679e4975f4069',1,'systemc_clang::EventDecl::ast_node_()']]],
   ['aststate_216',['ASTSTATE',['../namespacesystemc__clang.html#a0891e13e2390eb5b553cdb2444cc6ed0',1,'systemc_clang']]],
   ['automata_2ecpp_217',['Automata.cpp',['../Automata_8cpp.html',1,'']]],
   ['automata_2eh_218',['Automata.h',['../Automata_8h.html',1,'']]]

@@ -74,50 +74,40 @@ $(function() {
 <a href="EventDecl_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _EVENT_DECL_H_</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define _EVENT_DECL_H_</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Utility_8h.html">Utility.h</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;clang/AST/DeclCXX.h&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;clang/AST/DeclCXX.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacesystemc__clang.html">systemc_clang</a> {</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacesystemc__clang.html">systemc_clang</a> {</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">using namespace </span><a class="code" href="namespaceclang.html">clang</a>;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">using namespace </span>std;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classsystemc__clang_1_1EventDecl.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classsystemc__clang_1_1EventDecl.html">EventDecl</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  <span class="comment">// Typedefs.</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <span class="comment">//    typedef pair &lt; string, FieldDecl * &gt;eventPairType;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  <span class="comment">//    typedef map &lt; string, FieldDecl * &gt;eventMapType;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="comment">// Constructors.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <a class="code" href="classsystemc__clang_1_1EventDecl.html">EventDecl</a>();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <a class="code" href="classsystemc__clang_1_1EventDecl.html">EventDecl</a>(<span class="keyword">const</span> <span class="keywordtype">string</span> &amp;, FieldDecl *);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="comment">// Copy constructor.</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <a class="code" href="classsystemc__clang_1_1EventDecl.html">EventDecl</a>(<span class="keyword">const</span> <a class="code" href="classsystemc__clang_1_1EventDecl.html">EventDecl</a> &amp;);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="comment">// Destructor.</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  ~<a class="code" href="classsystemc__clang_1_1EventDecl.html">EventDecl</a>();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="keywordtype">string</span> getName();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  FieldDecl *getASTNode();</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="comment">// Print</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="keywordtype">void</span> dump(raw_ostream &amp;, <span class="keywordtype">int</span> tabn = 0);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keywordtype">void</span> ptrCheck();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classsystemc__clang_1_1EventDecl.html#ac7357257225eb731d6a785cb38bad571">   39</a></span>&#160;  <span class="keywordtype">string</span> <a class="code" href="classsystemc__clang_1_1EventDecl.html#ac7357257225eb731d6a785cb38bad571">_name</a>;</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classsystemc__clang_1_1EventDecl.html#a016d73afa2247cfd5c3f27a10fd0c7de">   40</a></span>&#160;  FieldDecl *<a class="code" href="classsystemc__clang_1_1EventDecl.html#a016d73afa2247cfd5c3f27a10fd0c7de">_astNode</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;};</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;} <span class="comment">// namespace systemc_clang</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aUtility_8h_html"><div class="ttname"><a href="Utility_8h.html">Utility.h</a></div><div class="ttdoc">A set of utility functions in the Utility class.</div></div>
-<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html">systemc_clang::EventDecl</a></div><div class="ttdef"><b>Definition:</b> EventDecl.h:13</div></div>
-<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html_a016d73afa2247cfd5c3f27a10fd0c7de"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html#a016d73afa2247cfd5c3f27a10fd0c7de">systemc_clang::EventDecl::_astNode</a></div><div class="ttdeci">FieldDecl * _astNode</div><div class="ttdef"><b>Definition:</b> EventDecl.h:40</div></div>
-<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html_ac7357257225eb731d6a785cb38bad571"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html#ac7357257225eb731d6a785cb38bad571">systemc_clang::EventDecl::_name</a></div><div class="ttdeci">string _name</div><div class="ttdef"><b>Definition:</b> EventDecl.h:39</div></div>
-<div class="ttc" id="anamespaceclang_html"><div class="ttname"><a href="namespaceclang.html">clang</a></div><div class="ttdoc">Forward declarations.</div><div class="ttdef"><b>Definition:</b> FindMemberFieldMatcher.h:14</div></div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classsystemc__clang_1_1EventDecl.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="classsystemc__clang_1_1EventDecl.html">EventDecl</a> {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;  <a class="code" href="classsystemc__clang_1_1EventDecl.html#a18838003bf22ecfcf44e4c0525dad502">EventDecl</a>();</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;  <a class="code" href="classsystemc__clang_1_1EventDecl.html#a18838003bf22ecfcf44e4c0525dad502">EventDecl</a>(<span class="keyword">const</span> std::string &amp;, clang::FieldDecl *);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <a class="code" href="classsystemc__clang_1_1EventDecl.html#a18838003bf22ecfcf44e4c0525dad502">EventDecl</a>(<span class="keyword">const</span> <a class="code" href="classsystemc__clang_1_1EventDecl.html">EventDecl</a> &amp;);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keyword">virtual</span> <a class="code" href="classsystemc__clang_1_1EventDecl.html#af2eb6c188af1f3d21cc909710252bb12">~EventDecl</a>();</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  std::string <a class="code" href="classsystemc__clang_1_1EventDecl.html#a0bd62f5c6e79ccf9ea234f974858c18d">getName</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="keyword">const</span> clang::FieldDecl *<a class="code" href="classsystemc__clang_1_1EventDecl.html#a91e2244638f1ce2d7b90eb9a836e3f81">getASTNode</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsystemc__clang_1_1EventDecl.html#a96b99f1b49dfbcc2e636e5b2da604b23">dump</a>(llvm::raw_ostream &amp;);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classsystemc__clang_1_1EventDecl.html#a66e51ad163fd2172a9632b98be35c62b">   33</a></span>&#160;  std::string <a class="code" href="classsystemc__clang_1_1EventDecl.html#a66e51ad163fd2172a9632b98be35c62b">name_</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classsystemc__clang_1_1EventDecl.html#a1eee9f1db428b3e794e679e4975f4069">   34</a></span>&#160;  clang::FieldDecl *<a class="code" href="classsystemc__clang_1_1EventDecl.html#a1eee9f1db428b3e794e679e4975f4069">ast_node_</a>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}  <span class="comment">// namespace systemc_clang</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html">systemc_clang::EventDecl</a></div><div class="ttdef"><b>Definition:</b> EventDecl.h:9</div></div>
+<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html_a0bd62f5c6e79ccf9ea234f974858c18d"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html#a0bd62f5c6e79ccf9ea234f974858c18d">systemc_clang::EventDecl::getName</a></div><div class="ttdeci">std::string getName() const</div><div class="ttdoc">Return the name of the sc_event.</div><div class="ttdef"><b>Definition:</b> EventDecl.cpp:21</div></div>
+<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html_a18838003bf22ecfcf44e4c0525dad502"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html#a18838003bf22ecfcf44e4c0525dad502">systemc_clang::EventDecl::EventDecl</a></div><div class="ttdeci">EventDecl()</div><div class="ttdoc">Constructors.</div><div class="ttdef"><b>Definition:</b> EventDecl.cpp:11</div></div>
+<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html_a1eee9f1db428b3e794e679e4975f4069"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html#a1eee9f1db428b3e794e679e4975f4069">systemc_clang::EventDecl::ast_node_</a></div><div class="ttdeci">clang::FieldDecl * ast_node_</div><div class="ttdef"><b>Definition:</b> EventDecl.h:34</div></div>
+<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html_a66e51ad163fd2172a9632b98be35c62b"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html#a66e51ad163fd2172a9632b98be35c62b">systemc_clang::EventDecl::name_</a></div><div class="ttdeci">std::string name_</div><div class="ttdef"><b>Definition:</b> EventDecl.h:33</div></div>
+<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html_a91e2244638f1ce2d7b90eb9a836e3f81"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html#a91e2244638f1ce2d7b90eb9a836e3f81">systemc_clang::EventDecl::getASTNode</a></div><div class="ttdeci">const clang::FieldDecl * getASTNode() const</div><div class="ttdoc">Return the FieldDecl node for the sc_event declaration.</div><div class="ttdef"><b>Definition:</b> EventDecl.cpp:23</div></div>
+<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html_a96b99f1b49dfbcc2e636e5b2da604b23"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html#a96b99f1b49dfbcc2e636e5b2da604b23">systemc_clang::EventDecl::dump</a></div><div class="ttdeci">void dump(llvm::raw_ostream &amp;)</div><div class="ttdef"><b>Definition:</b> EventDecl.cpp:25</div></div>
+<div class="ttc" id="aclasssystemc__clang_1_1EventDecl_html_af2eb6c188af1f3d21cc909710252bb12"><div class="ttname"><a href="classsystemc__clang_1_1EventDecl.html#af2eb6c188af1f3d21cc909710252bb12">systemc_clang::EventDecl::~EventDecl</a></div><div class="ttdeci">virtual ~EventDecl()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> EventDecl.cpp:6</div></div>
 <div class="ttc" id="anamespacesystemc__clang_html"><div class="ttname"><a href="namespacesystemc__clang.html">systemc_clang</a></div><div class="ttdef"><b>Definition:</b> FindArgument.h:8</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
