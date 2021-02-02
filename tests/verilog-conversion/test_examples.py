@@ -32,7 +32,7 @@ def test_translation(tmp_path, name, content, extra_args, golden, default_params
     # step: hcode
     if extra_args is None:
         extra_args = []
-    target = sysc_clang.invoke_sysc([str(target_path), '--debug', '--'] + default_params + extra_args)
+    target = sysc_clang.invoke_sysc([str(target_path), '--debug', '--'] + list(default_params) + list(map(str, extra_args)))
     assert hcode_target_path.exists(), 'hCode txt should be present'
     yield
 
