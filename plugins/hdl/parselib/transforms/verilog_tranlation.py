@@ -1,8 +1,9 @@
 import warnings
 from .top_down import TopDown
 from ..primitives import *
-from ..utils import dprint, is_tree_type
+from ..utils import dprint, is_tree_type, get_ids_in_tree_dfs
 from lark import Tree, Token
+import pprint
 import logging
 
 
@@ -20,6 +21,8 @@ class VerilogTranslationPass(TopDown):
         self.bindings = dict()
         self.local_variables = set()
         self.in_for_init = False
+        self.module_var_type = None
+        self.current_proc_name = None
 
     def start(self, tree):
         self.__push_up(tree)
@@ -50,11 +53,38 @@ class VerilogTranslationPass(TopDown):
         return '{}({})'.format(tree.children[0], ','.join(map(str, tree.children[1:])))
 
     def blkassign(self, tree):
+        # dprint("--------------START----------------")
+        current_proc = self.get_current_proc_name()
+        sense_list = self.get_sense_list()
+
+        # dprint(self.current_module, ':', current_proc)
+        # dprint('Sensitivity: ', pprint.pformat(self.get_sense_list()))
+        # dprint('Var w/ type: ', pprint.pformat(self.module_var_type))
         var_name = self.__get_var_name(tree.children[0])
+        tpe = self.get_current_module_var_type_or_default(var_name)
+        # if tpe is None, it is either a local variable within a process or block, in this case, it should be =
+        # if current_proc not in ['#initblock#', '#function#']:  # TODO: use a more programmatic way
+        # dprint("--------------END-------------------")
+        blocking = True
+        # while using non-blocking assignments in function is not recommended, we will need to use
+        # non-blocking assignments in a function so that its value can get properly assigned
+        # An example of such is the m_bits_data_valid signal in encode_stream
+        # In SystemC, when a signal is used in RHS, it will be added to the sensitivity list
+        if current_proc in sense_list or current_proc in ['#function#']:
+            # sense_list = sense_list[current_proc]
+            # tpe is only recorded if the declaration crosses process boundary
+            if tpe is not None:
+                if isinstance(tpe, array):
+                    dprint(tpe.get_element_type())
+                if isinstance(tpe, sc_signal) or \
+                        isinstance(tpe, sc_out) or \
+                        isinstance(tpe, array) and isinstance(tpe.get_element_type(), sc_signal):
+                    dprint('Changed to non-blocking assignment: '.format(var_name))
+                    blocking = False
         self.__push_up(tree)
         assert len(tree.children) == 2
         is_local_var = self.__is_local_varialbe(var_name)
-        op = '=' if self.in_for_init or tree.must_block or is_local_var else '<='
+        op = '=' if self.in_for_init or blocking or is_local_var else '<='
         l = tree.children[0]
         r = tree.children[1]
 
@@ -83,6 +113,7 @@ class VerilogTranslationPass(TopDown):
         return res
 
     def syscwrite(self, tree):
+        raise RuntimeError('Unsupported node: syscwrite')
         self.__push_up(tree)
         res = '{} {} {}'.format(tree.children[1], tree.children[0], tree.children[2])
         return res
@@ -145,9 +176,12 @@ class VerilogTranslationPass(TopDown):
         else:
             op = tree.children[0]
             if op == '=':
-                op = '<='
+                pass
+                # op = '<='
             if op == ',':  # concatenation
                 res = '{{({}), ({})}}'.format(tree.children[1], tree.children[2])
+            elif op == '>>':  # Note: shift right
+                res = '({}) {} ({})'.format(tree.children[1], '>>>', tree.children[2])
             else:
                 res = '({}) {} ({})'.format(tree.children[1], op, tree.children[2])
         return res
@@ -337,6 +371,9 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         return tree.children[0]
 
+    def get_sense_list(self):
+        return self.senselist
+
     def hsenslist(self, tree):
         self.__push_up(tree)
         proc_name = tree.children[0]
@@ -362,9 +399,18 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         return tree.children[0]
 
+    def set_current_proc_name(self, name):
+        self.current_proc_name = name
+
+    def reset_current_proc_name(self):
+        self.current_proc_name = None
+
+    def get_current_proc_name(self):
+        return self.current_proc_name
+
     def hprocess(self, tree):
-        senslist = None
         proc_name, prevardecl, *body = tree.children
+        self.set_current_proc_name(proc_name)
         for n in prevardecl.children:
             var_name = n.children[0].children[0]  # get the variable name of local variables
             self.__add_local_variables(var_name)
@@ -389,6 +435,7 @@ class VerilogTranslationPass(TopDown):
         res += '\n'.join(body) + '\n'
         res += ind + 'end'
         self.__reset_local_variables()
+        self.reset_current_proc_name()
         return res
 
     def __reset_local_variables(self):
@@ -433,6 +480,10 @@ class VerilogTranslationPass(TopDown):
             assert False, 'children size of vardeclinit is not 2 or 3, there might be a bug in the translator'
         ctx = TypeContext(suffix='')
         decl = tpe.to_str(var_name, context=ctx)
+        if self.get_current_proc_name() is None:
+            # we only check variables that are across processes, otherwise, there is no point in having non-blocking
+            # assignment
+            self.insert_current_module_var_type(var_name, tpe)
         return (decl, var_name, init_val)
 
     def hbindingarrayref(self, tree):
@@ -543,6 +594,7 @@ class VerilogTranslationPass(TopDown):
         return '$signed({})'.format(tree.children[0])
 
     def hfunction(self, tree):
+        self.set_current_proc_name('#function#')
         self.inc_indent()
         self.__push_up(tree)
         self.dec_indent()
@@ -558,13 +610,53 @@ class VerilogTranslationPass(TopDown):
         res = '{}function {} {} ({});\n{}begin\n{}\n{}\n{}end\n{}endfunction'.format(ind, return_type, function_name,
                                                                                   params, ind,
                                                                                   localvars, body, ind, ind)
+        self.reset_current_proc_name()
         return res
 
+    def collect_type(self, port_or_sig):
+        assert isinstance(port_or_sig, Tree) and \
+               port_or_sig.data in ['sigdecltype', 'portdecltype'], \
+               'collect_type must be invoked with portdecltype or sigdecltype, but got: {}'.format(port_or_sig)
+        id = port_or_sig.children[0].children[0]
+        tpe = port_or_sig.children[1]
+        self.insert_current_module_var_type(id, tpe)
+
+    def sigdecltype(self, tree):
+        self.__push_up(tree)
+        self.collect_type(tree)
+        return tree
+
+    def portdecltype(self, tree):
+        self.__push_up(tree)
+        self.collect_type(tree)
+        return tree
+
+    def modportsiglist(self, tree):
+        self.__push_up(tree)
+        return tree
+
+    def get_current_module_var_type(self, id):
+        return self.module_var_type[id]
+
+    def get_current_module_var_type_or_default(self, id, default=None):
+        if id not in self.module_var_type:
+            return default
+        return self.module_var_type[id]
+
+    def reset_current_module_var_type(self):
+        self.module_var_type = dict()
+
+    def insert_current_module_var_type(self, id, tpe):
+        if id in self.module_var_type:
+            raise ValueError('Duplicate signal declaration: {}'.format(id))
+        self.module_var_type[id] = tpe
+
     def hmodule(self, tree):
-        # dprint("Processing Module: ", tree.children[0])
+        dprint("Processing Module: ", tree.children[0])
         # print("Retrieving Portbindings")
         self.current_module = tree.children[0]
         self.senselist = {}
+        self.reset_current_module_var_type()
         initialization_block = []
         encountered_initblock = False
         self.bindings = dict()
@@ -588,7 +680,9 @@ class VerilogTranslationPass(TopDown):
                         raise ValueError(ch.pretty())
                 self.inc_indent()
                 self.inc_indent()
+                self.set_current_proc_name('#initblock#')
                 self.__push_up(initblock)
+                self.reset_current_proc_name()
                 self.dec_indent()
                 self.dec_indent()
                 if portbindings:
@@ -629,6 +723,7 @@ class VerilogTranslationPass(TopDown):
             mods = list(filter(lambda x: isinstance(x, Tree) and x.data == 'moduleinst', modportsiglist.children))
         else:
             ports, sigs = None, None
+
 
         res = 'module {} ('.format(module_name) + '\n'
         # Generate ports
