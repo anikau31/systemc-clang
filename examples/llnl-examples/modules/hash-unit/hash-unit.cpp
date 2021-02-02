@@ -35,7 +35,7 @@ sc_trace_file *tf;
 
 #define SEED 24409
 
-// The module wrapper for moving_average
+// The module wrapper for hash-unit
 SC_MODULE(mymodule) 
 {
 
