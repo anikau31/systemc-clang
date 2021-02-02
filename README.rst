@@ -1,7 +1,7 @@
 .. |systemc-clang| replace:: ``systemc-clang``
 
-.. image:: https://travis-ci.com/anikau31/systemc-clang.svg?branch=master
-    :target: https://travis-ci.com/anikau31/systemc-clang
+.. image:: https://github.com/anikau31/systemc-clang/workflows/CI/badge.svg
+  :target: https://github.com/anikau31/systemc-clang/actions 
 
 .. image:: https://readthedocs.org/projects/systemc-clang/badge/?version=latest
   :target: https://systemc-clang.readthedocs.io/en/latest/?badge=latest
@@ -11,20 +11,19 @@
 A SystemC Parser using the Clang Front-end 
 ==========================================
 
-`systemc-clang <https://git.uwaterloo.ca/caesr-pub//systemc-clang>`_ parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. 
+`systemc-clang <https://github.com/anikau31/systemc-clang>`_ parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. There is a HDL synthesis plugin that generates Verilog from SystemC RTL descriptions. 
 
 Requirements
 ------------
 
 *  `llvm/clang <https://releases.llvm.org/download.html>`_ (version 11.0.0)
-*  `SystemC <http://systemc.org>`_ version 2.3.3. Please see `SystemC Installation notes <https://github.com/anikau31/systemc-clang/blob/master/doc/systemc-install.mkd>`_
+*  `SystemC <http://systemc.org>`_ version 2.3.3. 
 *  c++14 is required. We are using some features that necessitate c++14. Down-porting it is also possible, but not supported.
 
 Installation
 ------------
 
-*  `Linux <docs/source/install/install-linux.rst>`_
-*  `MacOS <docs/source/install/install-osx.rst>`_
+*  Please see `this <https://systemc-clang.readthedocs.io/en/latest/install/install.html>`_
 
 Plugin HDL
 -----------
@@ -34,10 +33,13 @@ To compile with the HDL plugin, run cmake with the ``-DHDL=on`` flag.
 Documentation
 --------------
 
-* `https://systemc-clang.readthedocs.io <https://systemc-clang.readthedocs.io>`_
+* RTD: `https://systemc-clang.readthedocs.io <https://systemc-clang.readthedocs.io>`_
+* Doxygen: `https://anikau31.github.io/systemc-clang/index.html <https://anikau31.github.io/systemc-clang/index.html>`_
+
 * It is possible to build the documentation by specifying the ``-DBUILD_DOC=ON`` flag. This will provide the following targets
-  ** ``doxygen``: Builds Doxygen documentation.
-  ** ``sphinx`` : Builds Sphinx documentation.
+
+    * ``doxygen``: Builds Doxygen documentation. 
+    * ``sphinx`` : Builds Sphinx documentation.
 
 Tests
 -------
@@ -61,7 +63,7 @@ Developers
 Core
 ^^^^
 
-* `Anirudh M. Kaushik <https://ece.uwaterloo.ca/~anikau31/uwhtml/team/anirudh-kaushik/>`_
+* `Anirudh M. Kaushik <https://ece.uwaterloo.ca/~amkaushi/>`_
 * `Hiren Patel <https://caesr.uwaterloo.ca>`_
 
 HDL plugin
