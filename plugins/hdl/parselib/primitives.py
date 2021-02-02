@@ -200,6 +200,12 @@ class array(Primitive):
         self.T = T
         self.sz = size
 
+    def get_element_type(self):
+        if isinstance(self.T, array):
+            return self.T.get_element_type()
+        else:
+            return self.T
+
     def to_str(self, var_name, context=None):
         sz_str = ''.join(['[0:{}]'.format(sz - 1) for sz in self.sz])
         return self.T.to_str('{}{}'.format(var_name, sz_str), context)

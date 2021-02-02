@@ -108,8 +108,8 @@ SC_MODULE(mymodule)
   SC_CTOR(mymodule) : u_dut("u_dut")
   {
 
-    minbits = fpn_t::bits; /* minimum number of bits per 4^d block */
-    maxbits = fpn_t::bits; /* maximum number of bits per 4^d block */
+    minbits = 1024;        /* minimum number of bits per 4^d block */
+    maxbits = 1024;        /* maximum number of bits per 4^d block */
     maxprec = fpn_t::bits; /* maximum precision (# bit planes coded) */
     minexp = 1-fpn_t::ebias-fpn_t::fbits;
 

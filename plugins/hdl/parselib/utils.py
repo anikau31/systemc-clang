@@ -72,6 +72,50 @@ def get_ids_in_tree(tree):
     return res
 
 
+def get_ids_in_tree_dfs(tree):
+    """get all ids"""
+    # __id_types = ['hvarref']
+    # if not isinstance(tree, Tree):
+    #     raise ValueError('Only Tree type is accepted')
+    # res = []
+    # for t in tree.iter_subtrees():
+    #     if is_tree_types(t, __id_types):
+    #         assert t.children[0], 'hvarref should only contain one children'
+    #         res.append(t.children[0])
+    # return res
+
+    res = []
+    dfs_stack = list()
+    dfs_stack.append(tree)
+    i = 0
+    while len(dfs_stack) != 0:
+        t = dfs_stack.pop(0)
+        for idx in range(len(t.children)):
+            nxt = t.children[idx]
+            if isinstance(nxt, Tree):
+                dfs_stack.append(nxt)
+            elif is_tree_types(t, __id_types):
+                assert t.children[0], 'hvarref should only contain one children'
+                res.append(t.children[0])
+    return res
+
+
+def set_ids_in_tree_dfs(tree, ids):
+    __id_types = ['hvarref']
+    dfs_stack = list()
+    dfs_stack.append(tree)
+    i = 0
+    while len(dfs_stack) != 0:
+        t = dfs_stack.pop(0)
+        for idx in range(len(t.children)):
+            nxt = t.children[idx]
+            if isinstance(nxt, Tree):
+                dfs_stack.append(nxt)
+            elif is_tree_types(t, __id_types):
+                t.children[idx] = ids[i](t.children[idx])
+                i += 1
+
+
 def alternate_ids(tree, ops):
     """Change the ids within a tree, given operations ops as an array of lambdas"""
     ids = get_ids_in_tree(tree)

@@ -123,7 +123,7 @@ class SystemCClang:
         err = result.stderr.decode("utf-8")
         res = list(re.finditer(r"^.*fatal error.*$", err, re.MULTILINE))
         if result.returncode != 0:
-            raise SystemCClangFatalError('systemc-clang binary exits with non-zero return code')
+            raise SystemCClangFatalError('systemc-clang binary exits with non-zero return code: \n{}'.format(err))
         if res:
             msg = "\n".join(x.group() for x in res)
             raise SystemCClangFatalError(
