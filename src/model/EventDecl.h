@@ -1,43 +1,37 @@
 #ifndef _EVENT_DECL_H_
 #define _EVENT_DECL_H_
 
-#include "Utility.h"
 #include "clang/AST/DeclCXX.h"
-#include <map>
 #include <string>
 
 namespace systemc_clang {
-using namespace clang;
-using namespace std;
 
 class EventDecl {
-public:
-  // Typedefs.
-  //    typedef pair < string, FieldDecl * >eventPairType;
-  //    typedef map < string, FieldDecl * >eventMapType;
-
-  // Constructors.
+ public:
+  /// Constructors.
   EventDecl();
-  EventDecl(const string &, FieldDecl *);
+  EventDecl(const std::string &, clang::FieldDecl *);
 
-  // Copy constructor.
+  /// Copy constructor.
   EventDecl(const EventDecl &);
 
-  // Destructor.
-  ~EventDecl();
+  /// Destructor.
+  virtual ~EventDecl();
 
-  /// Get parameters
-  string getName();
-  FieldDecl *getASTNode();
-  // Print
-  void dump(raw_ostream &, int tabn = 0);
+  /// Return the name of the sc_event.
+  std::string getName() const;
 
-private:
-  void ptrCheck();
+  /// Return the FieldDecl node for the sc_event declaration.
+  const clang::FieldDecl *getASTNode() const;
 
-private:
-  string _name;
-  FieldDecl *_astNode;
+  /// Dump output.
+  ///
+  /// \param os Output to the stream.
+  void dump(llvm::raw_ostream &);
+
+ private:
+  std::string name_;
+  clang::FieldDecl *ast_node_;
 };
-} // namespace systemc_clang
+}  // namespace systemc_clang
 #endif

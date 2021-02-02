@@ -18,7 +18,6 @@
 #include <map>
 #include <string>
 #include "FindNotify.h"
-//#include "FindSensitivity.h"
 #include "SensitivityMatcher.h"
 #include "FindWait.h"
 #include "NotifyContainer.h"
@@ -26,29 +25,45 @@
 #include "Utility.h"
 #include "WaitContainer.h"
 #include "clang/AST/DeclCXX.h"
-#include "enums.h"
+
 namespace systemc_clang {
 
-using namespace clang;
-using namespace std;
+enum class ASTSTATE {
+  EMPTY,
+  DECLSTMT,
+  MEMBEREXPR,
+  CXXOPERATORCALLEXPR,
+  CXXCONSTRUCTEXPR
+};  // End enum ASTSTATE
+
+enum class ReadWrite { RWINIT, READ, WRITE };  // End enum ReadWrite
+
+enum class PROCESS_TYPE {
+  NONE,
+  THREAD,
+  CTHREAD,
+  METHOD
+};  // End enum PROCESS_TYPE
 
 class EntryFunctionContainer {
  public:
-  // typedefs
-  typedef vector<WaitContainer *> waitContainerListType;
-  typedef vector<NotifyContainer *> notifyContainerListType;
+  /// typedefs
+  typedef std::vector<WaitContainer *> waitContainerListType;
+  typedef std::vector<NotifyContainer *> notifyContainerListType;
 
-  typedef pair<int, SuspensionAutomata::transitionVectorType>
+  typedef std::pair<int, SuspensionAutomata::transitionVectorType>
       instanceSautoPairType;
-  typedef map<int, SuspensionAutomata::transitionVectorType>
+  typedef std::map<int, SuspensionAutomata::transitionVectorType>
       instanceSautoMapType;
 
-  typedef pair<int, SuspensionAutomata::susCFGVectorType>
+  typedef std::pair<int, SuspensionAutomata::susCFGVectorType>
       instanceSusCFGPairType;
-  typedef map<int, SuspensionAutomata::susCFGVectorType> instanceSusCFGMapType;
+  typedef std::map<int, SuspensionAutomata::susCFGVectorType>
+      instanceSusCFGMapType;
 
   // Sensitivity information
-  typedef std::tuple<std::string, clang::ValueDecl*, clang::MemberExpr*, clang::DeclRefExpr*, clang::ArraySubscriptExpr*>
+  typedef std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
+                     clang::DeclRefExpr *, clang::ArraySubscriptExpr *>
       SensitivityTupleType;
   typedef std::pair<std::string, std::vector<SensitivityTupleType>>
       SensitivityPairType;
@@ -56,13 +71,16 @@ class EntryFunctionContainer {
   typedef std::map<std::string, std::vector<SensitivityTupleType>> SenseMapType;
 
   EntryFunctionContainer();
-  EntryFunctionContainer(string, PROCESS_TYPE, CXXMethodDecl *, Stmt *);
+  EntryFunctionContainer(std::string, PROCESS_TYPE, clang::CXXMethodDecl *,
+                         clang::Stmt *);
   EntryFunctionContainer(const EntryFunctionContainer &);
-  ~EntryFunctionContainer();
+
+  /// Destructor.
+  virtual ~EntryFunctionContainer();
 
   // Accessors.
-  string getName();
-  CXXMethodDecl *getEntryMethod();
+  std::string getName();
+  clang::CXXMethodDecl *getEntryMethod();
   // Stmt *getConstructorStmt ();
   PROCESS_TYPE getProcessType();
 
@@ -75,34 +93,33 @@ class EntryFunctionContainer {
   instanceSusCFGMapType getInstanceSusCFGMap();
 
   // Add waits.
-  //void addSensitivityInfo(FindSensitivity &);
+  // void addSensitivityInfo(FindSensitivity &);
   void addSensitivityInfo(SenseMapType &);
   void addWaits(FindWait &);
   void addNotifys(FindNotify &);
   void addSusCFGAuto(SuspensionAutomata &);
   // void setConstructorStmt (Stmt *);
-  void setName(string);
+  void setName(std::string);
   void setProcessType(PROCESS_TYPE);
-  void setEntryMethod(CXXMethodDecl *);
-  void dumpSusCFG(raw_ostream &);
-  void dumpSauto(raw_ostream &);
-  void dump(raw_ostream &, int);
+  void setEntryMethod(clang::CXXMethodDecl *);
+  void dumpSusCFG(llvm::raw_ostream &);
+  void dumpSauto(llvm::raw_ostream &);
+  void dump(llvm::raw_ostream &, int);
 
   // private:
-  string _entryName;
-  PROCESS_TYPE _procType;
-  CXXMethodDecl *_entryMethodDecl;
+  std::string entry_name_;
+  PROCESS_TYPE process_type_;
+  clang::CXXMethodDecl *entry_method_decl_;
 
   // Hold all the waits.
   waitContainerListType _waitCalls;
   notifyContainerListType _notifyCalls;
 
   // Sensitivity information
-  //FindSensitivity::senseMapType _senseMap;
   SenseMapType senseMap_;
 
-  vector<Transition *> _susAuto;
-  vector<SusCFG *> _susCFG;
+  std::vector<Transition *> _susAuto;
+  std::vector<SusCFG *> _susCFG;
 };
 }  // namespace systemc_clang
 #endif

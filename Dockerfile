@@ -38,7 +38,7 @@ RUN mkdir /opt/systemc-2.3.3 && curl -L https://github.com/rseac/systemc-travisc
 RUN apt-get update && apt-get install -y -q --no-install-recommends \
   g++ \
   cmake \
-#  ccache \
+  ccache \
   ninja-build \
   python3 \
   python3-pip \
@@ -46,6 +46,12 @@ RUN apt-get update && apt-get install -y -q --no-install-recommends \
   libz-dev \
   libncurses-dev
 
+  
+# Install doxygen and graphviz
+RUN apt-get install -y doxygen graphviz
+
+# Install sphinx
+RUN pip3 install -U sphinx 
 
 # Set up environment variables across images
 ENV SYSTEMC=/opt/systemc-2.3.3
@@ -66,12 +72,15 @@ WORKDIR /
 
 # The following setup will be dependent on usage (either development or test)
 # Ideally, we would use a multistage docker file, but we won't save much space as the unzipped clang is very large
-#RUN mkdir systemc-clang
-# RUN pip3 install -r systemc-clang/requirements.txt
+
+# The build directory
 ENV SYSTEMC_CLANG_BUILD_DIR=/systemc-clang-build
+# The source directory
 ENV SYSTEMC_CLANG=/systemc-clang
 WORKDIR /systemc-clang-build
 #COPY scripts/build-travis.sh /systemc-clang-build
 COPY requirements.txt /systemc-clang-build
+COPY docs/source/requirements.txt /systemc-clang-build/requirements-docs.txt
 RUN pip3 install -r $SYSTEMC_CLANG_BUILD_DIR/requirements.txt
+RUN pip3 install -r $SYSTEMC_CLANG_BUILD_DIR/requirements-docs.txt
 # RUN cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -DENABLE_TESTS=ON -G "Ninja" && ninja

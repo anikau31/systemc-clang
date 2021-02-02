@@ -19,10 +19,22 @@ class EntryFunctionContainer;
 
 class ProcessDecl {
  public:
-  ProcessDecl(std::string, std::string, clang::CXXMethodDecl *,
-              EntryFunctionContainer *);
+  /// Constructor.
+  ///
+  /// \param process_type Specified whether it is an SC_METHOD, SC_THREAD or
+  ///  SC_CTHREAD.
+  /// \param entry_name The name of the entry function (function associated with
+  /// the process).
+  /// entry_method_decl The CXXMethodDecl for the entry function.
+  /// \param entry_fn The container that holds entry function information.
+  ProcessDecl(std::string process_type, std::string entry_name,
+              clang::CXXMethodDecl *entry_method_decl,
+              EntryFunctionContainer *entry_fn);
 
+  /// Copy constructor.
   ProcessDecl(const ProcessDecl &);
+
+  /// Destructor.
   virtual ~ProcessDecl();
 
   /// Get methods.
