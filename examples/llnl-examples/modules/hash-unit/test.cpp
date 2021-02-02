@@ -25,6 +25,8 @@ template <typename T, int IW,  bool RLEV> using sfifo_cc = rvfifo_cc<T, IW, RLEV
 #include "shash.h"
 
 #define BLOCK_LEN 256
+#define C_INIT 0xDEADBEEFDEADBEEFULL
+#define SEED 24409ULL
 
 SC_MODULE(tb_driver)
 {
@@ -57,7 +59,9 @@ SC_MODULE(tb_driver)
 
     hdatatoshash.data_w(flit);
     hdatatoshash.valid_w(valid);
-
+    htaptoshash.data_w((sc_uint<64>(C_INIT),sc_uint<64>(C_INIT),sc_uint<64>(SEED),sc_uint<64>(SEED)));
+    htaptoshash.valid_w(valid);
+    
     c_sync_send = sync;
 #ifndef __SYNTHESIS__
     if (sync) {
@@ -93,7 +97,7 @@ SC_MODULE(tb_driver)
 #ifndef __SYNTHESIS__
     if (sync) {
       cout << name() << "::mc_recv ts: " << sc_time_stamp() <<
-	", htapfromshash: " << htapfromshash <<endl;
+	", htapfromshash: " << htapfromshash.data_r() <<endl;
     }
 #endif
   }
@@ -125,6 +129,7 @@ SC_MODULE(tb_driver)
       block[i] = i;
     SC_METHOD(mc_send);
     sensitive << hdatatoshash.ready_chg() << clk.pos();
+    sensitive << htaptoshash.ready_chg();
     sensitive << scount;
     SC_METHOD(ms_send);
     sensitive << clk.pos();
