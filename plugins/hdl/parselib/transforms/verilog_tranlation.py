@@ -74,12 +74,12 @@ class VerilogTranslationPass(TopDown):
             # sense_list = sense_list[current_proc]
             # tpe is only recorded if the declaration crosses process boundary
             if tpe is not None:
-                if isinstance(tpe, array):
-                    dprint(tpe.get_element_type())
+                # if isinstance(tpe, array):
+                #     dprint(tpe.get_element_type())
                 if isinstance(tpe, sc_signal) or \
                         isinstance(tpe, sc_out) or \
                         isinstance(tpe, array) and isinstance(tpe.get_element_type(), sc_signal):
-                    dprint('Changed to non-blocking assignment: '.format(var_name))
+                #    dprint('Changed to non-blocking assignment: '.format(var_name))
                     blocking = False
         self.__push_up(tree)
         assert len(tree.children) == 2
@@ -652,7 +652,7 @@ class VerilogTranslationPass(TopDown):
         self.module_var_type[id] = tpe
 
     def hmodule(self, tree):
-        dprint("Processing Module: ", tree.children[0])
+        # dprint("Processing Module: ", tree.children[0])
         # print("Retrieving Portbindings")
         self.current_module = tree.children[0]
         self.senselist = {}
