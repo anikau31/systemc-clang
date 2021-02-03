@@ -69,11 +69,11 @@
       hCStmt  NONAME [
         hBinop = [
           hVarref minbits NOLIST
-          hLiteral 64 NOLIST
+          hLiteral 1024 NOLIST
         ]
         hBinop = [
           hVarref maxbits NOLIST
-          hLiteral 64 NOLIST
+          hLiteral 1024 NOLIST
         ]
         hBinop = [
           hVarref maxprec NOLIST

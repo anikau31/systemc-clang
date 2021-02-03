@@ -6,7 +6,7 @@ from ..compound import aggregate
 from lark import Tree, Token
 import copy
 import warnings
-from ..utils import dprint, is_tree_type, get_ids_in_tree, alternate_ids
+from ..utils import dprint, is_tree_type, get_ids_in_tree, alternate_ids, set_ids_in_tree_dfs
 
 
 class TypedefExpansion(TopDown):
@@ -280,7 +280,7 @@ class TypedefExpansion(TopDown):
         # Note: we only need fields here, and we don't need the actual type
         lhs, rhs = tree.children
         # dprint('LHS ', lhs)
-        # dprint('RHS ', rhs)
+        # dprint('RHS ', rhs, tree.data)
         lhs_var = self.__get_expandable_var_from_tree(lhs)
         rhs_var = self.__get_expandable_var_from_tree(rhs)
         # dprint('LHS var ', lhs_var)
@@ -459,6 +459,39 @@ class TypedefExpansion(TopDown):
             else:
                 new_bindings.append(binding)
         tree.children = [module_name, new_bindings]
+        return tree
+
+    def hsenslist(self, tree):
+        self.__push_up(tree)
+        new_children = []
+        # tree.children[0] is the proc_name
+        for sense_var in tree.children[1:]:
+            # var_name = sense_var.children[0].children[0]  # hvarref
+            var_ids = get_ids_in_tree(sense_var.children[0])
+            if len(var_ids) != 1:
+                raise ValueError('Sensitivity variable should only have one ID')
+            var_name = var_ids[0]
+            var_type = self.__expanded_type(var_name)
+
+            if var_type:
+                var_type = self.__get_expandable_type_from_htype(var_type)
+                type_name = var_type.children[0]
+                type_params = var_type.children[1:]
+                tpe = self.types[type_name]
+                fields = tpe.get_fields_with_instantiation(type_params, self.types)
+
+                def __alternate(x, y):
+                    return x + '_' + y
+
+                for field_name, _ in fields:
+                    new_sense_var = copy.deepcopy(sense_var)
+                    # alternate_ids(new_sense_var, [lambda x: __alternate(x, field_name)])
+                    set_ids_in_tree_dfs(new_sense_var, [lambda x: __alternate(x, field_name)])
+                    new_children.append(new_sense_var)
+
+            else:
+                new_children.append(sense_var)
+        tree.children[1:] = new_children
         return tree
 
     def hmodule(self, tree):

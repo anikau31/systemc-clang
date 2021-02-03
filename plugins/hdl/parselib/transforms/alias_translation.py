@@ -33,14 +33,19 @@ class AliasTranslation(TopDown):
         return '+'
 
     def blkassign(self, tree):
-        tree.must_block = False
+        # we should detect blocking assignment in a different way
+        tree.must_block = True
         if tree.children[0].data == 'vassign':
             tree.children = tree.children[0].children
             tree.must_block = True
+        elif tree.children[0].data == 'nblkassign':
+            tree.children = tree.children[0].children
+            tree.must_block = False
         elif tree.children[0].data == 'hmodassign':
             self.__push_up(tree)
             op, l, r = tree.children[0].children
             tree.children = [l, Tree('hbinop', [Token('BINOP', op), l, r], meta=tree.meta)]
+            tree.must_block = False
         return tree
 
     def htype(self, tree):
