@@ -73,13 +73,18 @@ class SystemCConsumer : public ASTConsumer,
 //
 //
 
-/**
+/*!
  *
- * @mainpage
- * systemc-clang is a parser for SystemC constructs built using clang.
+ * \mainpage systemc-clang is a parser for SystemC constructs built using clang.
+ * There is a HDL plugin that generates Verilog.
  *
+ * \section Documentation
+ *
+ * There is a read the docs documentation available at: <a
+ * href="https://systemc-clang.readthedocs.io/">https://systemc-clang.readthedocs.io/</a>
  *
  */
+
 class SystemCClang : public SystemCConsumer {
  public:
   SystemCClang(clang::CompilerInstance &ci, const std::string &top)
