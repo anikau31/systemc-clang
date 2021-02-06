@@ -43,14 +43,14 @@ def validate_args(args):
     has_golden_verilog = args.golden_verilog is not None
 
     if use_cpp ^ has_cpp:
-        raise ValueError("Action '{}' and --cpp is not compatible".format(args.action))
+        raise ValueError("Action '{}' and --cpp is not compatible, --cpp must be present exactly when the action is one of cpp-to-v or cpp-to-hdl".format(args.action))
     if use_hdl ^ has_hdl:
-        raise ValueError("Action '{}' and --hdl is not compatible".format(args.action))
+        raise ValueError("Action '{}' and --hdl is not compatible, --hdl must be present exactly when the action is hdl-to-v".format(args.action))
 
     if has_golden_interm and not gen_hdl:
-        raise ValueError("Action '{}' and --golden-intermediate is not compatible".format(args.action))
+        raise ValueError("Action '{}' and --golden-intermediate is not compatible, --golden-intermediate may only be present when the action is one of cpp-to-v or cpp-to-hdl".format(args.action))
     if has_golden_verilog and not gen_verilog:
-        raise ValueError("Action '{}' and --golden-verilog is not compatible".format(args.action))
+        raise ValueError("Action '{}' and --golden-verilog is not compatible, --golden-verilog may only be present when the action is one of cpp-to-v or hdl-to-v".format(args.action))
 
 
 def cpp_to_hdl(args):
