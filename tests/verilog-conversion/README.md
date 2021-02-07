@@ -35,7 +35,7 @@ $ pip3 install -r $SYSTEMC_CLANG/requirements.txt
 We provide a command-line tool that helps the development process for testing.
 The tool does the following.
 
-- Convert the SystemC model to a file with the suffix `_hdl.txt`.  The resulting file has the intermediate representation from which we synthesize Verilog.
+- Convert the SystemC model to an intermediate file with the suffix `_hdl.txt`.  The resulting file has the intermediate representation from which we synthesize Verilog.
 - Convert the file suffixed with `_hdl.txt` to Verilog.
 - The conversion result will be stored in time-stamped folders
 
@@ -51,6 +51,22 @@ usage: A tool for running and comparing against a golden standard
        {cpp-to-hdl,hdl-to-v,cpp-to-v}
        ...
  ```
+
+Each of the option is explained as follows:
+- The positional argument takes `cpp-to-hdl`, `hdl-to-v` or `cpp-to-v`.  
+`cpp-to-v` converts a SystemC design to Verilog.  
+`hdl-to-v` converts an intermediate file to Verilog.  
+`cpp-to-hdl` converts a SystemC design to an intermediate file.  
+- `-h` prints help message.
+- `--cpp` specifies the SystemC design C++ file and is only valid when choosing `cpp-to-hdl` or `cpp-to-v`.
+- `--hdl` specifies the intermediate file and is only valid when choosing `hdl-to-v`.
+- `--golden-intermediate` specifies a golden intermediate file to check for the differences between the golden file and the output and is only valid when choosing `cpp-to-hdl` or `cpp-to-v`.
+- `--golden-verilog` specifies a golden Verilog file to check for the differences between the golden file and the output and is only valid when choosing `hdl-to-v` or `cpp-to-v`.
+- `--include-path` specifies include paths for the SystemC design.
+- `--output-dir` sepecifies the output directory to place the time-stamped output.
+- `--verbose` enables detailed output.
+
+
 
 ### Examples
 In this section, we provide examples on how to use the testing tool.
@@ -151,7 +167,7 @@ add.cpp  results
 ./results/2021-01-13_06-26-00:
 add_hdl.txt.txt
 ```
-Apart from the conversion, one can specify a golden standard file with `--hdl` option, and the tool will do a diff at the end of the conversion against the specified golden standard.
+Apart from the conversion, one can specify a golden standard file with `--golden-intermediate` option, and the tool will do a diff at the end of the conversion against the specified golden standard.
 
 For example, create a directory called `golden`, copy our provided golden standard file `add_hdl.txt` to the `golden` and confirm the directory structure:
 ```bash
@@ -192,7 +208,8 @@ add_hdl.txt  diff.hdl
 
 If the generated file and the golden standard file are the same, the diff will not output to the screen.
 
-The `hdl-to-v` works similarly and it converts `_hdl.txt` file to Verilog file.  
+The `hdl-to-v` works similarly and it converts `_hdl.txt` file to Verilog file. 
+The `_hdl.txt` file is supplied with the option `--hdl`.
 
 #### Converting add_hdl.txt to add_hdl.txt.v
    ```bash
