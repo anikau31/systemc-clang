@@ -61,6 +61,7 @@ SC_MODULE(moving_average)
   {
     if (reset == RLEVEL) {
       n = 0; insert = 0; cur_min = cur_max = cur_avg = 0;
+      sum = 0;
       for (int i=0; i<WINDOW_SIZE; i++)
 	window[i] = 0; datardy = true;
     } else {
