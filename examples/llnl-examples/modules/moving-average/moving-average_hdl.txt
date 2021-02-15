@@ -296,6 +296,16 @@
                   hVarref cur_min NOLIST
                   hVarref cur_max NOLIST
                 ]
+                hBinop = [
+                  hVarref sum NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_uint [
+                        hLiteral 64 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
                     hVarref _local_0 NOLIST
