@@ -139,7 +139,7 @@ class ModuleInstance {
 
   void clearOnlyGlobal();
 
-  json dump_json();
+  std::string dump_json();
 
  private:
   std::string module_name_;

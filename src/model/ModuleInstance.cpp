@@ -684,34 +684,49 @@ void ModuleInstance::dump(llvm::raw_ostream &os) {
   os << "\n=======================================================\n";
 }
 
-json ModuleInstance::dump_json() {
-  json module_j;
+std::string ModuleInstance::dump_json() {
+  std::string str{};
 
-  module_j["module_name"] = module_name_;
-  module_j["instance_name"] = instance_name_;
-  module_j["is_array"] = "false";
+  str += "module_name: " + module_name_ + "  " + "instance_name: " + instance_name_ + "\n";
+  
+  // json module_j;
+//
+  // module_j["module_name"] = module_name_;
+  // module_j["instance_name"] = instance_name_;
+  // module_j["is_array"] = "false";
   if (instance_info_.isArrayType()) {
-    module_j["is_array"] = "true";
+    str += "is_array: true\n";
+    str += "array_sizes: ";
     // Write out all the sizes.
     for (auto const &size : instance_info_.getArraySizes()) {
-      module_j["array_sizes"] += size.getLimitedValue();
+    //  module_j["array_sizes"] += size.getLimitedValue();
+      str += size.getLimitedValue() + "  ";
     }
   }
 
+  str += "\n";
+
   // Template parameters.
+  str += "template_parameters: " + std::to_string(template_parameters_.size()) + "\n";
   for (auto const &parm : template_parameters_) {
-    module_j["template_parameters"].push_back(parm);
+    //module_j["template_parameters"].push_back(parm);
+    str +="  " + parm;
   }
 
+  str += "template_args: " + std::to_string(template_args_.size()) + "\n";
   for (auto const &parm : template_args_) {
-    module_j["template_args"].push_back(parm);
+    //module_j["template_args"].push_back(parm);
+    str +="  " + parm;
   }
 
+  str += "nested_modules: " + std::to_string(nested_modules_.size()) + "\n";
   for (auto const &submod : nested_modules_) {
-    module_j["nested_modules"].push_back(
-        submod->getInstanceInfo().getInstanceNames());
+    for (auto const &name : submod->getInstanceInfo().getInstanceNames()) {
+      str +="  " +  name;
+    }
   }
 
-  llvm::outs() << module_j.dump(4);
-  return module_j;
+  str += "\n";
+  llvm::outs() << str;
+  return str;
 }
