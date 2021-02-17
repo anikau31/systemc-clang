@@ -628,15 +628,18 @@ void ModuleInstance::dumpPorts(raw_ostream &os, int tabn) {
 }
 
 void ModuleInstance::dumpSignals(raw_ostream &os, int tabn) {
-  json signal_j;
-  signal_j["number_of_signals"] = signals_.size();
+  std::string str{};
+
+  str += "number_of_signals: " + std::to_string(signals_.size()) + "\n";
+
   for (auto sit : signals_) {
     SignalDecl *s{sit.second};
-    signal_j[sit.first] = s->dump_json();
+    str += sit.first + " " + s->asString() + "\n";
   }
+  str += "\n";
 
   os << "Signals\n";
-  os << signal_j.dump(4) << "\n";
+  os << str;
 }
 
 void ModuleInstance::dump(llvm::raw_ostream &os) {
