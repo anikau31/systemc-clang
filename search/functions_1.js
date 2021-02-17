@@ -24,7 +24,7 @@ var searchData=
   ['addnode_1791',['addNode',['../classsystemc__clang_1_1Graph.html#ae60f539c9249bb68663a23920579d99e',1,'systemc_clang::Graph::addNode()'],['../classsystemc__clang_1_1Graph.html#a2dc46182b1e2e167148c44a57e1db489',1,'systemc_clang::Graph::addNode(int)'],['../classsystemc__clang_1_1Tree.html#a85d319130ef0379d333898f0de3ba743',1,'systemc_clang::Tree::addNode()']]],
   ['addnotifys_1792',['addNotifys',['../classsystemc__clang_1_1EntryFunctionContainer.html#a78ecb16fc0215807a09edc69736feae7',1,'systemc_clang::EntryFunctionContainer']]],
   ['addoutputinterfaces_1793',['addOutputInterfaces',['../classsystemc__clang_1_1ModuleInstance.html#a6afc511b5fe04a0a472a629fc7a7c1f9',1,'systemc_clang::ModuleInstance']]],
-  ['addparentblock_1794',['addParentBlock',['../classsystemc__clang_1_1SusCFG.html#a3953990c2bfa5f8df6a979098306e3b4',1,'systemc_clang::SusCFG::addParentBlock(SusCFG *)'],['../classsystemc__clang_1_1SusCFG.html#a5efdf503741c4b287448f388515a4e8d',1,'systemc_clang::SusCFG::addParentBlock(CFGBlock *)']]],
+  ['addparentblock_1794',['addParentBlock',['../classsystemc__clang_1_1SusCFG.html#a5efdf503741c4b287448f388515a4e8d',1,'systemc_clang::SusCFG::addParentBlock(CFGBlock *)'],['../classsystemc__clang_1_1SusCFG.html#a3953990c2bfa5f8df6a979098306e3b4',1,'systemc_clang::SusCFG::addParentBlock(SusCFG *)']]],
   ['addportbinding_1795',['addPortBinding',['../classsystemc__clang_1_1ModuleInstance.html#a46bc1df14b8da69b29d4bb380fca7e1d',1,'systemc_clang::ModuleInstance']]],
   ['addports_1796',['addPorts',['../classsystemc__clang_1_1ModuleInstance.html#af3573478433d9fa95957b30ee76a0238',1,'systemc_clang::ModuleInstance']]],
   ['addpredblocks_1797',['addPredBlocks',['../classsystemc__clang_1_1SusCFG.html#a38f88af422e1427ddb0aeb4e6b5a1d04',1,'systemc_clang::SusCFG']]],
@@ -51,5 +51,6 @@ var searchData=
   ['analyze_5fvalue_5fdecl_1818',['analyze_value_decl',['../classsystemc__clang_1_1FindGPUMacro.html#a4b22fcf68700ffc2f5248b9ab6320eb8',1,'systemc_clang::FindGPUMacro']]],
   ['annotatetransitionsdpseg_1819',['annotateTransitionsDPSeg',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a2e2a5da7293995d455107f520b7a91cf',1,'systemc_clang::GlobalSuspensionAutomata']]],
   ['arrangegpususcfgblocks_1820',['arrangeGPUSusCFGBlocks',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#acad967eb6262a3354775642a5189b92c',1,'systemc_clang::GlobalSuspensionAutomata']]],
-  ['arraydimlength_1821',['arraydimlength',['../classparselib_1_1transforms_1_1alias__translation_1_1AliasTranslation.html#a7e7c56dbcbcac74731388e012ef3b3cb',1,'parselib::transforms::alias_translation::AliasTranslation']]]
+  ['arraydimlength_1821',['arraydimlength',['../classparselib_1_1transforms_1_1alias__translation_1_1AliasTranslation.html#a7e7c56dbcbcac74731388e012ef3b3cb',1,'parselib::transforms::alias_translation::AliasTranslation']]],
+  ['asstring_1822',['asString',['../classsystemc__clang_1_1PortDecl.html#a492f16d90d0553082e482a942042a692',1,'systemc_clang::PortDecl::asString()'],['../classsystemc__clang_1_1ProcessDecl.html#a8b7d38cfa105b762c09b4d6df8dca3ed',1,'systemc_clang::ProcessDecl::asString()'],['../classsystemc__clang_1_1SignalDecl.html#aea5cc56c9a1c56c10ac5222b4557862e',1,'systemc_clang::SignalDecl::asString()']]]
 ];
