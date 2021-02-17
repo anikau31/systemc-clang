@@ -2,7 +2,6 @@
 #define _PROCESS_DECL_H_
 
 #include <string>
-#include "json.hpp"
 #include "systemc-clang.h"
 
 /// clang forward declarations.
@@ -11,8 +10,6 @@ class CXXMethodDecl;
 };
 
 namespace systemc_clang {
-
-using json = nlohmann::json;
 
 /// Forward declarations.
 class EntryFunctionContainer;
@@ -44,8 +41,9 @@ class ProcessDecl {
   EntryFunctionContainer *getEntryFunction();
 
   /// Dump.
+  std::string asString() const;
+
   void dump();
-  json dump_json() const;
 
  protected:
   /// Process information

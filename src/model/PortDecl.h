@@ -1,13 +1,9 @@
 #ifndef _PORT_DECL_H_
 #define _PORT_DECL_H_
 
-#include "json.hpp"
-
 #include <string>
 
 namespace systemc_clang {
-//using namespace clang;
-using json = nlohmann::json;
 
 /// Forward declarations
 //
@@ -33,14 +29,14 @@ class PortDecl {
 
   /// Get parameters
   bool getArrayType() const;
-  std::vector<llvm::APInt> getArraySizes();
+  std::vector<llvm::APInt> getArraySizes() const;
   std::string getName() const;
   clang::FieldDecl *getAsFieldDecl() const;
   clang::VarDecl *getAsVarDecl() const;
   FindTemplateTypes *getTemplateType();
 
-  /// Produce json dump.
-  json dump_json();
+  /// Produce dump.
+  std::string asString() const;
 
  private:
   /// Name of the port
