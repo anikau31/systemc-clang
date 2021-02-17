@@ -525,15 +525,18 @@ void ModuleInstance::dumpSignalBinding(raw_ostream &os, int tabn) {
 }
 
 void ModuleInstance::dumpProcesses(raw_ostream &os, int tabn) {
-  json process_j;
-  process_j["number_of_processes"] = process_map_.size();
+  std::string str{};
+
+  str += "number_of_processes: " + std::to_string(process_map_.size()) + "\n";
+
   for (auto pit : process_map_) {
     ProcessDecl *pd{pit.second};
-    process_j[pit.first] = pd->dump_json();
+    str += pit.first + ": " + pd->asString() + "\n";
   }
+  str += "\n";
 
   os << "Processes\n";
-  os << process_j.dump(4) << "\n";
+  os << str ;
 }
 
 void ModuleInstance::dumpInterfaces(raw_ostream &os, int tabn) {

@@ -49,20 +49,22 @@ void ProcessDecl::dump() {
   LLVM_DEBUG(entry_function_ptr_->dump(llvm::outs(), 1));
 }
 
-json ProcessDecl::dump_json() const {
-  // These are the three fields that we need to extract from entry_function_ptr.
-  json process_j;
-  process_j["entry_name"] = getName();
-  process_j["process_type"] = getType();
-  process_j["entry_method_declaration"] = to_string(getEntryMethodDecl());
+std::string ProcessDecl::asString() const {
+  std::string str{};
+
+  str += "entry_name: " + getName() + "\n";
+  str += "process_type: " + getType() + "\n";
+  str += "entry_method_declaration: " + to_string(getEntryMethodDecl());
+
   if (entry_function_ptr_ != nullptr) {
     auto sense_map{entry_function_ptr_->getSenseMap()};
-    process_j["number_of_sensitivity_signals"] = sense_map.size();
+    str += "number_of_sensitivity_signals: " + std::to_string(sense_map.size()) + "\n";
 
     for (auto const &sense : sense_map) {
-      process_j["sensitivity_list"][sense.first] = sense.second.size();
+      str += "sensitivity_list[" + sense.first + "]" + std::to_string(sense.second.size()) + "\n";
     }
   }
-
-  return process_j;
+  return str;
 }
+
+

@@ -44,8 +44,9 @@ class ProcessDecl {
   EntryFunctionContainer *getEntryFunction();
 
   /// Dump.
+  std::string asString() const;
+
   void dump();
-  json dump_json() const;
 
  protected:
   /// Process information

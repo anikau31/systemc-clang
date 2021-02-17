@@ -35,7 +35,7 @@ class PortDecl {
   clang::VarDecl *getAsVarDecl() const;
   FindTemplateTypes *getTemplateType();
 
-  /// Produce json dump.
+  /// Produce dump.
   std::string asString() const;
 
  private:
