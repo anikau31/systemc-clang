@@ -33,14 +33,15 @@ class PortDecl {
 
   /// Get parameters
   bool getArrayType() const;
-  std::vector<llvm::APInt> getArraySizes();
+  std::vector<llvm::APInt> getArraySizes() const;
   std::string getName() const;
   clang::FieldDecl *getAsFieldDecl() const;
   clang::VarDecl *getAsVarDecl() const;
   FindTemplateTypes *getTemplateType();
 
   /// Produce json dump.
-  json dump_json();
+  //json dump_json();
+  std::string asString() const;
 
  private:
   /// Name of the port

@@ -560,42 +560,42 @@ void ModuleInstance::dumpPorts(raw_ostream &os, int tabn) {
   for (auto mit : in_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    iport_j[name] = pd->dump_json();
+    iport_j[name] = pd->asString(); //dump_json();
   }
 
   oport_j["number_of_output_ports"] = out_ports_.size();
   for (auto mit : out_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    oport_j[name] = pd->dump_json();
+    oport_j[name] = pd->asString(); //dump_json();
   }
 
   ioport_j["number_of_inout_ports"] = inout_ports_.size();
   for (auto mit : inout_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ioport_j[name] = pd->dump_json();
+    ioport_j[name] = pd->asString(); //dump_json();
   }
 
   istreamport_j["number_of_instream_ports"] = istreamports_.size();
   for (auto mit : istreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    istreamport_j[name] = pd->dump_json();
+    istreamport_j[name] = pd->asString(); //dump_json();
   }
 
   ostreamport_j["number_of_outstream_ports"] = ostreamports_.size();
   for (auto mit : ostreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ostreamport_j[name] = pd->dump_json();
+    ostreamport_j[name] = pd->asString(); // dump_json();
   }
 
   othervars_j["number_of_other_vars"] = other_fields_.size();
   for (auto mit : other_fields_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    othervars_j[name] = pd->dump_json();
+    othervars_j[name] = pd->asString(); //dump_json();
   }
 
   submodules_j["number_of_submodule_fields"] = nested_modules_.size();

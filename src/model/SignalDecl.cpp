@@ -32,7 +32,7 @@ json SignalDecl::dump_json() {
   json signal_j;
   signal_j["signal_name"] = getName();
 
-  signal_j = PortDecl::dump_json();
+  signal_j = PortDecl::asString(); //dump_json();
 
   return signal_j;
 }
