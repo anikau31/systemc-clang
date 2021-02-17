@@ -536,7 +536,7 @@ void ModuleInstance::dumpProcesses(raw_ostream &os, int tabn) {
   str += "\n";
 
   os << "Processes\n";
-  os << str ;
+  os << str;
 }
 
 void ModuleInstance::dumpInterfaces(raw_ostream &os, int tabn) {
@@ -575,79 +575,68 @@ void ModuleInstance::dumpInterfaces(raw_ostream &os, int tabn) {
   }
 }
 
-void ModuleInstance::dumpPorts(raw_ostream &os, int tabn) {
-  json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j,
-      submodules_j;
+void ModuleInstance::dumpPorts(raw_ostream &os) {
+  std::string str{};
 
-  iport_j["number_of_input_ports"] = in_ports_.size();
+  str += "number_of_input_ports: " + std::to_string(in_ports_.size()) + "\n";
   for (auto mit : in_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    iport_j[name] = pd->asString();  // dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  oport_j["number_of_output_ports"] = out_ports_.size();
+  str += "number_of_output_ports: " + std::to_string(out_ports_.size()) + "\n";
   for (auto mit : out_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    oport_j[name] = pd->asString();  // dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  ioport_j["number_of_inout_ports"] = inout_ports_.size();
+  str += "number_of_inout_ports: " + std::to_string(inout_ports_.size()) + "\n";
   for (auto mit : inout_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ioport_j[name] = pd->asString();  // dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  istreamport_j["number_of_instream_ports"] = istreamports_.size();
+  str += "number_of_instream_ports: " + std::to_string(istreamports_.size()) +
+         "\n";
   for (auto mit : istreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    istreamport_j[name] = pd->asString();  // dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  ostreamport_j["number_of_outstream_ports"] = ostreamports_.size();
+  str += "number_of_outstream_ports: " + std::to_string(ostreamports_.size()) +
+         "\n";
   for (auto mit : ostreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ostreamport_j[name] = pd->asString();  // dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  othervars_j["number_of_other_vars"] = other_fields_.size();
+  str += "number_of_other_vars: " + std::to_string(other_fields_.size()) + "\n";
   for (auto mit : other_fields_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    othervars_j[name] = pd->asString();  // dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  submodules_j["number_of_submodule_fields"] = nested_modules_.size();
+  str += "number_of_nested_modules: " + std::to_string(nested_modules_.size()) +
+         "\n";
   for (auto mit : nested_modules_) {
     auto module_name{mit->getName()};
-    // submodules_j[name].push_back(mit->getInstanceName());
 
     auto instance_info{mit->getInstanceInfo()};
+    str += "module_name: " + module_name;
     for (auto const &inst_name : instance_info.getInstanceNames()) {
-      submodules_j[module_name].push_back(inst_name);
+      str += "  " + inst_name;
     }
   }
+  str += "\n";
 
-  os << "Start printing ports\n";
-  os << "\nInput ports: " << in_ports_.size() << "\n";
-  os << "\nOutput ports: " << out_ports_.size() << "\n";
-  os << "\nInout ports: " << inout_ports_.size() << "\n";
-  os << "\nIstream ports: " << istreamports_.size() << "\n";
-  os << "\nOstream ports: " << ostreamports_.size() << "\n";
-  os << "\nOther fields: " << other_fields_.size() << "\n";
-  os << "\nSubmodules: " << nested_modules_.size() << "\n";
-
-  os << "Ports\n";
-  os << iport_j.dump(4) << "\n"
-     << oport_j.dump(4) << "\n"
-     << ioport_j.dump(4) << "\n"
-     << istreamport_j.dump(4) << "\n"
-     << ostreamport_j.dump(4) << othervars_j.dump(4) << submodules_j.dump(4)
-     << "\n";
+  os << "Dump ports\n";
+  os << str;
 }
 
 void ModuleInstance::dumpSignals(raw_ostream &os, int tabn) {
@@ -670,7 +659,7 @@ void ModuleInstance::dump(llvm::raw_ostream &os) {
   os << "\n# Instances:\n";
   dumpInstances(os, 4);
   os << "# Port Declaration:\n";
-  dumpPorts(os, 4);
+  dumpPorts(os);
   os << "\n# Signal Declaration:\n";
   dumpSignals(os, 4);
   os << "\n# Processes:\n";
@@ -684,34 +673,51 @@ void ModuleInstance::dump(llvm::raw_ostream &os) {
   os << "\n=======================================================\n";
 }
 
-json ModuleInstance::dump_json() {
-  json module_j;
+std::string ModuleInstance::dump_json() {
+  std::string str{};
 
-  module_j["module_name"] = module_name_;
-  module_j["instance_name"] = instance_name_;
-  module_j["is_array"] = "false";
+  str += "module_name: " + module_name_ + "  " +
+         "instance_name: " + instance_name_ + "\n";
+
+  // json module_j;
+  //
+  // module_j["module_name"] = module_name_;
+  // module_j["instance_name"] = instance_name_;
+  // module_j["is_array"] = "false";
   if (instance_info_.isArrayType()) {
-    module_j["is_array"] = "true";
+    str += "is_array: true\n";
+    str += "array_sizes: ";
     // Write out all the sizes.
     for (auto const &size : instance_info_.getArraySizes()) {
-      module_j["array_sizes"] += size.getLimitedValue();
+      //  module_j["array_sizes"] += size.getLimitedValue();
+      str += size.getLimitedValue() + "  ";
     }
   }
 
+  str += "\n";
+
   // Template parameters.
+  str += "template_parameters: " + std::to_string(template_parameters_.size()) +
+         "\n";
   for (auto const &parm : template_parameters_) {
-    module_j["template_parameters"].push_back(parm);
+    // module_j["template_parameters"].push_back(parm);
+    str += "  " + parm;
   }
 
+  str += "template_args: " + std::to_string(template_args_.size()) + "\n";
   for (auto const &parm : template_args_) {
-    module_j["template_args"].push_back(parm);
+    // module_j["template_args"].push_back(parm);
+    str += "  " + parm;
   }
 
+  str += "nested_modules: " + std::to_string(nested_modules_.size()) + "\n";
   for (auto const &submod : nested_modules_) {
-    module_j["nested_modules"].push_back(
-        submod->getInstanceInfo().getInstanceNames());
+    for (auto const &name : submod->getInstanceInfo().getInstanceNames()) {
+      str += "  " + name;
+    }
   }
 
-  llvm::outs() << module_j.dump(4);
-  return module_j;
+  str += "\n";
+  llvm::outs() << str;
+  return str;
 }
