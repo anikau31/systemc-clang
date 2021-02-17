@@ -97,25 +97,4 @@ std::string PortDecl::asString() const {
   str += "\n";
   return str;
 }
-//
-// json PortDecl::dump_json() {
-  // json port_j;
-  // port_j["signal_port_name"] = getName();
-  // port_j["signal_port_arguments"] = template_type_->dump_json();
-  // port_j["is_array_type"] = getArrayType();
-  // if (getArrayType()) {
-    // for (auto sz: getArraySizes()) {
-      // std::size_t i{0};
-      // port_j["array_sizes"] += sz.getLimitedValue();
-    // }
-  // }
-//
-  // if (getAsFieldDecl()) {
-    // port_j["decl_type"] = "FieldDecl";
-  // } else {
-    // if (getAsVarDecl()) {
-      // port_j["decl_type"] = "VarDecl";
-    // }
-  // }
-  // return port_j;
-// }
+
