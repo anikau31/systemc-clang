@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <stack>
-#include "json.hpp"
+//#include "json.hpp"
 
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
@@ -15,7 +15,7 @@ namespace clang { class Type; }
 
 namespace systemc_clang {
 using namespace clang;
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
 // Forward declarations
 //
@@ -34,6 +34,8 @@ class TemplateType {
 
   std::string getTypeName() const;
   std::string toString() const;
+
+
   const clang::Type *getTypePtr() const;
   void dump();
 
@@ -75,12 +77,14 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   void Enumerate(const clang::Type *type);
   //type_vector_t getTemplateArgumentsType();
   //std::vector<std::string> getTemplateArguments();
-  Tree<TemplateType> *getTemplateArgTreePtr();
+  Tree<TemplateType> *getTemplateArgTreePtr() ;
   //size_t size();
 
   void printTemplateArguments(llvm::raw_ostream &os);
-  json dump_json();
+  //json dump_json();
 
+  /// Returns the TemplateType data as a std::string.
+  std::string asString() ;
  private:
   // (std::string, Type*)
   // Classes such as sc_port and sc_in can have nested types within it.

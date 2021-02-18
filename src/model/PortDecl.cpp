@@ -74,7 +74,7 @@ std::string PortDecl::asString() const {
   std::string str{};
 
   str += "signal_port_name: " + getName() + "\n";
-  str += "signal_port_arguments: " + template_type_->dump_json().dump() + "\n";
+  str += "signal_port_arguments: " + template_type_->asString() + "\n";
   str += "is_array_type: " + std::string{getArrayType()} + "\n";
 
   if (getArrayType()) {
