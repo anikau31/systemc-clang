@@ -46,7 +46,8 @@ IndexMapType getArrayInstanceIndex(clang::CXXCtorInitializer *ctor_init);
 /// AType a[4][5];
 /// Would return 4 and 5 in a vector.
 ///
-ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd);
+//ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd);
+ArraySizesType getConstantArraySizes(const clang::ValueDecl *fd);
 
 /// Returns the array subscripts used in an ArraySubscriptExpr.
 /// For example, arr[0][1] would return 0, 1.

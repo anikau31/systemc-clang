@@ -3,6 +3,7 @@
 #include <tuple>
 #include "SystemCClang.h"
 #include "PortBinding.h"
+#include "ArrayTypeUtils.h"
 #include "Tree.h"
 #include "HDLMain.h"
 //#include "TemplateParametersMatcher.h"
@@ -237,8 +238,11 @@ namespace systemc_hdl {
 	      FindTemplateTypes *te = new FindTemplateTypes();
 	      te->Enumerate(tp);
 	      HDLType HDLt;
+	      std::vector<llvm::APInt> array_sizes = sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
 	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
-				NULL, hNode::hdlopsEnum::hVardecl, hparams);
+				&array_sizes, vardecl->getType()->isReferenceType()?
+				hNode::hdlopsEnum::hFunctionParamIO:
+				hNode::hdlopsEnum::hFunctionParamI, hparams);
 	    }
 	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), false); // suppress output of unqualified name
 	  } else {
