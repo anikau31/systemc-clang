@@ -20,7 +20,6 @@
 #include "ModuleInstanceType.h"
 
 namespace systemc_clang {
-using namespace clang;
 using namespace sc_ast_matchers;
 
 /// Forward declarations
