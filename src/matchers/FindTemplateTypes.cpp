@@ -297,25 +297,6 @@ std::string FindTemplateTypes::asString() {
   return str;
 }
 
-// json FindTemplateTypes::dump_json() {
-  // json tree_j;
-//
-  // auto args{getTemplateArgTreePtr()};
-//
-  // for (auto const &node : *args) {
-    // auto type_data{node->getDataPtr()};
-    // auto parent_node{node->getParent()};
-    // auto parent_data{parent_node->getDataPtr()};
-    // if (parent_node->getDataPtr() == node->getDataPtr()) {
-      // tree_j[type_data->getTypeName()] = nullptr;
-    // } else {
-      // tree_j[parent_data->getTypeName()].push_back(type_data->getTypeName());
-    // }
-  // }
-  // llvm::outs() << tree_j.dump(4);
-  // return tree_j;
-// }
-
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
   auto root_node{template_args_.getRoot()};
   auto s{template_args_.dft(root_node)};

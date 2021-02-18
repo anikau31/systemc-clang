@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <stack>
-//#include "json.hpp"
 
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
@@ -15,7 +14,6 @@ namespace clang { class Type; }
 
 namespace systemc_clang {
 using namespace clang;
-//using json = nlohmann::json;
 
 // Forward declarations
 //
@@ -29,7 +27,7 @@ class TemplateType {
 
   // Overloaded constructor
   TemplateType(std::string, const clang::Type *);
-  ~TemplateType();
+  virtual ~TemplateType();
   TemplateType(const TemplateType &);
 
   std::string getTypeName() const;
@@ -81,7 +79,6 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   //size_t size();
 
   void printTemplateArguments(llvm::raw_ostream &os);
-  //json dump_json();
 
   /// Returns the TemplateType data as a std::string.
   std::string asString() ;
