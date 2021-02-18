@@ -129,7 +129,7 @@ class ModuleInstance {
   const std::vector<ModuleInstance *> &getNestedModuleInstances() const;
 
   void dumpPorts(llvm::raw_ostream &);
-  void dumpPortBinding();
+  std::string dumpPortBinding();
   void dumpInterfaces(llvm::raw_ostream &, int);
   void dumpProcesses(llvm::raw_ostream &, int);
   void dumpSignals(llvm::raw_ostream &, int);

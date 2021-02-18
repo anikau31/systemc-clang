@@ -444,73 +444,98 @@ void ModuleInstance::dumpInstances(raw_ostream &os, int tabn) {
   }
 }
 
-void ModuleInstance::dumpPortBinding() {
-  json binding_j;
+std::string ModuleInstance::dumpPortBinding() {
 
-  binding_j["number_of_ports_bound"] = port_bindings_.size();
+  std::string str{};
+
+  //json binding_j;
+
+  str += "number_of_ports_bound: " + std::to_string(port_bindings_.size()) + "\n";
+
+  //binding_j["number_of_ports_bound"] = port_bindings_.size();
   for (auto const &pb : port_bindings_) {
     auto port_name{get<0>(pb)};
     auto binding{get<1>(pb)};
 
-    json port_j;
-    port_j["caller_instance_type_name"] = binding->getCallerInstanceTypeName();
-    port_j["caller_instance_name"] = binding->getCallerInstanceName();
+    str += "caller_instance_type_name: " + binding->getCallerInstanceTypeName() + "\n";
+    str += "caller_instance_name: " + binding->getCallerInstanceName() + "\n";
+
+    // json port_j;
+    // port_j["caller_instance_type_name"] = binding->getCallerInstanceTypeName();
+    // port_j["caller_instance_name"] = binding->getCallerInstanceName();
 
     for (const auto &sub : binding->getCallerArraySubscripts()) {
       auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
+        str += "caller_array_subscripts: ";
       if (is_int_lit) {
-        port_j["caller_array_subscripts"].push_back(
-            is_int_lit->getValue().toString(32, true));
+        str += "  " + is_int_lit->getValue().toString(32, true);
+        // port_j["caller_array_subscripts"].push_back(
+            // is_int_lit->getValue().toString(32, true));
       }
 
       if (is_dref_expr) {
-        port_j["caller_array_subscripts"].push_back(
-            is_dref_expr->getNameInfo().getName().getAsString());
+        str += "caller_array_subscripts: " +  is_dref_expr->getNameInfo().getName().getAsString() + "\n";
+
+        // port_j["caller_array_subscripts"].push_back(
+            // is_dref_expr->getNameInfo().getName().getAsString());
       }
     }
 
-    port_j["caller_port_name"] = binding->getCallerPortName();
+    str += "caller_port_name: " + binding->getCallerPortName() + "\n";
+
+    // port_j["caller_port_name"] = binding->getCallerPortName();
 
     for (const auto &sub : binding->getCallerPortArraySubscripts()) {
       auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
+      str += "caller_port_array_subscripts: ";
       if (is_int_lit) {
-        port_j["caller_port_array_subscripts"].push_back(
-            is_int_lit->getValue().toString(32, true));
+        str += "  " + is_int_lit->getValue().toString(32, true);
+        // port_j["caller_port_array_subscripts"].push_back(
+            // is_int_lit->getValue().toString(32, true));
       }
 
       if (is_dref_expr) {
-        port_j["caller_port_array_subscripts"].push_back(
-            is_dref_expr->getNameInfo().getName().getAsString());
+        str += "caller_port_array_subscripts: " +  is_dref_expr->getNameInfo().getName().getAsString() + "\n";
+        // port_j["caller_port_array_subscripts"].push_back(
+            // is_dref_expr->getNameInfo().getName().getAsString());
       }
     }
 
-    port_j["callee_instance_name"] = binding->getCalleeInstanceName();
+    str += "callee_instance_name:: " + binding->getCalleeInstanceName() + "\n";
+    // port_j["callee_instance_name"] = binding->getCalleeInstanceName();
 
     for (const auto &sub : binding->getCalleeArraySubscripts()) {
       auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
+      str += "callee_port_array_subscripts: ";
       if (is_int_lit) {
-        port_j["callee_port_array_subscripts"].push_back(
-            is_int_lit->getValue().toString(32, true));
+        str += "  " + is_int_lit->getValue().toString(32, true);
+        // port_j["callee_port_array_subscripts"].push_back(
+            // is_int_lit->getValue().toString(32, true));
       }
 
       if (is_dref_expr) {
-        port_j["callee_port_array_subscripts"].push_back(
-            is_dref_expr->getNameInfo().getName().getAsString());
+        str += "callee_port_array_subscripts: " +  is_dref_expr->getNameInfo().getName().getAsString() + "\n";
+        // port_j["callee_port_array_subscripts"].push_back(
+            // is_dref_expr->getNameInfo().getName().getAsString());
       }
     }
 
-    port_j["callee_port_name"] = binding->getCalleePortName();
+    str += "callee_port_name: " + binding->getCalleePortName() + "\n";
+    // port_j["callee_port_name"] = binding->getCalleePortName();
 
+    str += "\n\n";
     binding->dump();
-    binding_j[port_name] = port_j;
+    // binding_j[port_name] = port_j;
+
   }
-  llvm::outs() << binding_j.dump(4) << "\n";
+  llvm::outs() << str; //binding_j.dump(4) << "\n";
+  return str;
 }
 
 void ModuleInstance::dumpSignalBinding(raw_ostream &os, int tabn) {
