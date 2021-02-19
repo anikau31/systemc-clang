@@ -1,13 +1,21 @@
 var searchData=
 [
-  ['portbindingmaptype_2857',['portBindingMapType',['../classsystemc__clang_1_1ModuleInstance.html#a8fc3d86b879f530c74b1de52d7fe1e65',1,'systemc_clang::ModuleInstance']]],
-  ['portbindingpairtype_2858',['portBindingPairType',['../classsystemc__clang_1_1ModuleInstance.html#a5c80f5683875180d6854faa1c7c958da',1,'systemc_clang::ModuleInstance']]],
-  ['portmaptype_2859',['portMapType',['../classsystemc__clang_1_1ModuleInstance.html#ae5e4d7d956225b28aac30182a5649f84',1,'systemc_clang::ModuleInstance']]],
-  ['portsignalmaptype_2860',['portSignalMapType',['../classsystemc__clang_1_1FindNetlist.html#a9f9a1a9b49e67f0d8861887ccbdabc01',1,'systemc_clang::FindNetlist::portSignalMapType()'],['../classsystemc__clang_1_1ModuleInstance.html#ab9826602b77bf4d1b56a2f9dac9fff52',1,'systemc_clang::ModuleInstance::portSignalMapType()']]],
-  ['portsignalpairtype_2861',['portSignalPairType',['../classsystemc__clang_1_1FindNetlist.html#a149fe83ade7e3468bc49ae42dee28a46',1,'systemc_clang::FindNetlist::portSignalPairType()'],['../classsystemc__clang_1_1ModuleInstance.html#a225eb7d03ade18036aa5700538476541',1,'systemc_clang::ModuleInstance::portSignalPairType()']]],
-  ['porttype_2862',['PortType',['../classsystemc__clang_1_1FindPorts.html#a1989d200f0df2b414b1b5a57259533e3',1,'systemc_clang::FindPorts::PortType()'],['../classsystemc__clang_1_1ModuleInstance.html#a2c28ab5fe658b9833300e3d979912f42',1,'systemc_clang::ModuleInstance::PortType()']]],
-  ['processmaptype_2863',['processMapType',['../classsystemc__clang_1_1ModuleInstance.html#aa971eba18c75ee5a38fcfc9739bbf9a5',1,'systemc_clang::ModuleInstance']]],
-  ['processpairtype_2864',['processPairType',['../classsystemc__clang_1_1ModuleInstance.html#a4674bdaba29e097bef92dccd45888fdd',1,'systemc_clang::ModuleInstance']]],
-  ['processwaiteventmaptype_2865',['processWaitEventMapType',['../classsystemc__clang_1_1FindWait.html#a28514012ba754642f54158332a72a156',1,'systemc_clang::FindWait']]],
-  ['processwaiteventpairtype_2866',['processWaitEventPairType',['../classsystemc__clang_1_1FindWait.html#a743222c57a9b5094771dadcddedbf992',1,'systemc_clang::FindWait']]]
+  ['sensemaptype_2865',['SenseMapType',['../classsystemc__clang_1_1EntryFunctionContainer.html#a4d69296f0e62e5aea47b39f1d8f96df8',1,'systemc_clang::EntryFunctionContainer::SenseMapType()'],['../classsc__ast__matchers_1_1SensitivityMatcher.html#a96b39bcbdce6458e57f9abf038d48a20',1,'sc_ast_matchers::SensitivityMatcher::SenseMapType()']]],
+  ['sensitivitypairtype_2866',['SensitivityPairType',['../classsc__ast__matchers_1_1SensitivityMatcher.html#a4a1b0e3b68182be4384fe67f247b9555',1,'sc_ast_matchers::SensitivityMatcher::SensitivityPairType()'],['../classsystemc__clang_1_1EntryFunctionContainer.html#ae93e3b03da5f801347140c88ce04ab1a',1,'systemc_clang::EntryFunctionContainer::SensitivityPairType()']]],
+  ['sensitivitytupletype_2867',['SensitivityTupleType',['../classsc__ast__matchers_1_1SensitivityMatcher.html#aafd4cb069bd8191fe9dff6e4034cbc60',1,'sc_ast_matchers::SensitivityMatcher::SensitivityTupleType()'],['../classsystemc__clang_1_1EntryFunctionContainer.html#a3ac8bb98d34e7725edf0124f188bac18',1,'systemc_clang::EntryFunctionContainer::SensitivityTupleType()']]],
+  ['signalmaptype_2868',['signalMapType',['../classsystemc__clang_1_1ModuleInstance.html#adad65a1c03e742c7c8eb6d0bd1a57271',1,'systemc_clang::ModuleInstance']]],
+  ['signalpairtype_2869',['signalPairType',['../classsystemc__clang_1_1ModuleInstance.html#a10db7a1b668cf6e6d295ecd7c1b680bd',1,'systemc_clang::ModuleInstance']]],
+  ['simulationtimemaptype_2870',['simulationTimeMapType',['../classsystemc__clang_1_1FindSimTime.html#a825b0d05702c9257ea2e4b7abf29b1a6',1,'systemc_clang::FindSimTime']]],
+  ['simulationtimepairtype_2871',['simulationTimePairType',['../classsystemc__clang_1_1FindSimTime.html#a30ac43e1375ecb5fae8c458752de70b4',1,'systemc_clang::FindSimTime']]],
+  ['statecommoncodeblockmaptype_2872',['stateCommonCodeBlockMapType',['../classsystemc__clang_1_1SuspensionAutomata.html#aae6a731fdb21d67d95137f94512a5405',1,'systemc_clang::SuspensionAutomata']]],
+  ['statecommoncodeblockpairtype_2873',['stateCommonCodeBlockPairType',['../classsystemc__clang_1_1SuspensionAutomata.html#a2a99d042221a40e8516a9dfe8db991b0',1,'systemc_clang::SuspensionAutomata']]],
+  ['statetransitionsmaptype_2874',['stateTransitionsMapType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a878dca3e21d6fbd0d71240b2810b4621',1,'systemc_clang::GlobalSuspensionAutomata']]],
+  ['statetransitionspairtype_2875',['stateTransitionsPairType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#aaee6cb4d3d4f63c2f860b0b83022bf78',1,'systemc_clang::GlobalSuspensionAutomata']]],
+  ['suscfgblockgpumacromaptype_2876',['susCFGBlockGPUMacroMapType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a7e094423fe02ec74ca351dc96080b727',1,'systemc_clang::GlobalSuspensionAutomata']]],
+  ['suscfgblockgpumacropairtype_2877',['susCFGBlockGPUMacroPairType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a56876eccc173ec3bb55c2f9fd44624e7',1,'systemc_clang::GlobalSuspensionAutomata']]],
+  ['suscfgstatemaptype_2878',['susCFGStateMapType',['../classsystemc__clang_1_1SuspensionAutomata.html#af04f9c5b80049692098b3be1bc279797',1,'systemc_clang::SuspensionAutomata']]],
+  ['suscfgstatepairtype_2879',['susCFGStatePairType',['../classsystemc__clang_1_1SuspensionAutomata.html#a2cd80713088bf072fc588d70f07b36f0',1,'systemc_clang::SuspensionAutomata']]],
+  ['suscfgsuccidmaptype_2880',['susCFGSuccIDMapType',['../classsystemc__clang_1_1SuspensionAutomata.html#a875e6dbf8445290e70d50ba0127b6e58',1,'systemc_clang::SuspensionAutomata']]],
+  ['suscfgsuccidpairtype_2881',['susCFGSuccIDPairType',['../classsystemc__clang_1_1SuspensionAutomata.html#a17b2c1b494ee49c87c2356af922c4457',1,'systemc_clang::SuspensionAutomata']]],
+  ['suscfgvectortype_2882',['susCFGVectorType',['../classsystemc__clang_1_1SuspensionAutomata.html#a28e552a993a2ea6ba41eec08e2e903b2',1,'systemc_clang::SuspensionAutomata']]]
 ];
