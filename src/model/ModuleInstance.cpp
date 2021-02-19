@@ -444,73 +444,79 @@ void ModuleInstance::dumpInstances(raw_ostream &os, int tabn) {
   }
 }
 
-void ModuleInstance::dumpPortBinding() {
-  json binding_j;
+std::string ModuleInstance::dumpPortBinding() {
+  std::string str{};
 
-  binding_j["number_of_ports_bound"] = port_bindings_.size();
+  str +=
+      "number_of_ports_bound: " + std::to_string(port_bindings_.size()) + "\n";
+
+  // binding_j["number_of_ports_bound"] = port_bindings_.size();
   for (auto const &pb : port_bindings_) {
     auto port_name{get<0>(pb)};
     auto binding{get<1>(pb)};
 
-    json port_j;
-    port_j["caller_instance_type_name"] = binding->getCallerInstanceTypeName();
-    port_j["caller_instance_name"] = binding->getCallerInstanceName();
+    str +=
+        "caller_instance_type_name: " + binding->getCallerInstanceTypeName() +
+        "\n";
+    str += "caller_instance_name: " + binding->getCallerInstanceName() + "\n";
 
     for (const auto &sub : binding->getCallerArraySubscripts()) {
       auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
+      str += "caller_array_subscripts: ";
       if (is_int_lit) {
-        port_j["caller_array_subscripts"].push_back(
-            is_int_lit->getValue().toString(32, true));
+        str += "  " + is_int_lit->getValue().toString(32, true);
       }
 
       if (is_dref_expr) {
-        port_j["caller_array_subscripts"].push_back(
-            is_dref_expr->getNameInfo().getName().getAsString());
+        str += "caller_array_subscripts: " +
+               is_dref_expr->getNameInfo().getName().getAsString() + "\n";
+
       }
     }
 
-    port_j["caller_port_name"] = binding->getCallerPortName();
+    str += "caller_port_name: " + binding->getCallerPortName() + "\n";
 
     for (const auto &sub : binding->getCallerPortArraySubscripts()) {
       auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
+      str += "caller_port_array_subscripts: ";
       if (is_int_lit) {
-        port_j["caller_port_array_subscripts"].push_back(
-            is_int_lit->getValue().toString(32, true));
+        str += "  " + is_int_lit->getValue().toString(32, true);
       }
 
       if (is_dref_expr) {
-        port_j["caller_port_array_subscripts"].push_back(
-            is_dref_expr->getNameInfo().getName().getAsString());
+        str += "caller_port_array_subscripts: " +
+               is_dref_expr->getNameInfo().getName().getAsString() + "\n";
       }
     }
 
-    port_j["callee_instance_name"] = binding->getCalleeInstanceName();
+    str += "callee_instance_name:: " + binding->getCalleeInstanceName() + "\n";
 
     for (const auto &sub : binding->getCalleeArraySubscripts()) {
       auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
+      str += "callee_port_array_subscripts: ";
       if (is_int_lit) {
-        port_j["callee_port_array_subscripts"].push_back(
-            is_int_lit->getValue().toString(32, true));
+        str += "  " + is_int_lit->getValue().toString(32, true);
       }
 
       if (is_dref_expr) {
-        port_j["callee_port_array_subscripts"].push_back(
-            is_dref_expr->getNameInfo().getName().getAsString());
+        str += "callee_port_array_subscripts: " +
+               is_dref_expr->getNameInfo().getName().getAsString() + "\n";
       }
     }
 
-    port_j["callee_port_name"] = binding->getCalleePortName();
+    str += "callee_port_name: " + binding->getCalleePortName() + "\n";
 
+    str += "\n\n";
     binding->dump();
-    binding_j[port_name] = port_j;
   }
-  llvm::outs() << binding_j.dump(4) << "\n";
+  llvm::outs() << str;  
+  return str;
 }
 
 void ModuleInstance::dumpSignalBinding(raw_ostream &os, int tabn) {
@@ -678,18 +684,11 @@ std::string ModuleInstance::dump_json() {
 
   str += "module_name: " + module_name_ + "  " +
          "instance_name: " + instance_name_ + "\n";
-
-  // json module_j;
-  //
-  // module_j["module_name"] = module_name_;
-  // module_j["instance_name"] = instance_name_;
-  // module_j["is_array"] = "false";
   if (instance_info_.isArrayType()) {
     str += "is_array: true\n";
     str += "array_sizes: ";
     // Write out all the sizes.
     for (auto const &size : instance_info_.getArraySizes()) {
-      //  module_j["array_sizes"] += size.getLimitedValue();
       str += size.getLimitedValue() + "  ";
     }
   }
@@ -700,13 +699,11 @@ std::string ModuleInstance::dump_json() {
   str += "template_parameters: " + std::to_string(template_parameters_.size()) +
          "\n";
   for (auto const &parm : template_parameters_) {
-    // module_j["template_parameters"].push_back(parm);
     str += "  " + parm;
   }
 
   str += "template_args: " + std::to_string(template_args_.size()) + "\n";
   for (auto const &parm : template_args_) {
-    // module_j["template_args"].push_back(parm);
     str += "  " + parm;
   }
 
