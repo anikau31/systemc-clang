@@ -188,6 +188,18 @@ class sc_int(Primitive):
             return f'{prefix}logic signed[{self.width-1}:0]'
 
 
+class sc_biguint(Primitive):
+    def __new__(cls, width):
+        return sc_uint(width)
+
+
+class void(Primitive):
+    def to_str(self, var_name):
+        if var_name:
+            raise ValueError('Void type can only be used in function return types and should not have name')
+        return 'void'
+
+
 class sc_signal(Primitive):
     def __init__(self, T):
         self.T = T
