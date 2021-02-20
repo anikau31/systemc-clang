@@ -3,13 +3,9 @@
 
 #include <string>
 
-#include "json.hpp"
-
 #include "PortDecl.h"
 
 namespace systemc_clang {
-
-using json = nlohmann::json;
 
 /// Forward declarations
 class FindTemplateTypes;
@@ -35,13 +31,13 @@ class SignalDecl : public PortDecl {
   ///
   /// \param name Name of the signal declaration.
   /// \param fd The FieldDecl pointer from the AST that refers to the signal
-  /// declaration. 
+  /// declaration.
   /// \param tt The template types that are found.
   SignalDecl(const std::string &name, clang::FieldDecl *fd,
              FindTemplateTypes *tt);
 
   /// Get parameters
-  std::string getName();
+  std::string getName() const;
 
   /// Return the template types that were found.
   FindTemplateTypes *getTemplateTypes();
@@ -49,8 +45,9 @@ class SignalDecl : public PortDecl {
   /// Return the AST node found for the signal declaration.
   const clang::FieldDecl *getASTNode() const;
 
-  /// Dump json.
-  json dump_json();
+  /// Dump to string.
+  std::string asString() const;
+
 };
 }  // namespace systemc_clang
 #endif

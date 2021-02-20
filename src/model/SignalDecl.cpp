@@ -18,7 +18,7 @@ SignalDecl::SignalDecl(const std::string &name, clang::FieldDecl *fd,
 
 SignalDecl::SignalDecl(const PortDecl &pd) : PortDecl{pd} {}
 
-std::string SignalDecl::getName() { return PortDecl::getName(); }
+std::string SignalDecl::getName() const { return PortDecl::getName(); }
 
 FindTemplateTypes *SignalDecl::getTemplateTypes() {
   return PortDecl::getTemplateType();
@@ -28,11 +28,12 @@ const clang::FieldDecl *SignalDecl::getASTNode() const {
   return PortDecl::getAsFieldDecl();
 }
 
-json SignalDecl::dump_json() {
-  json signal_j;
-  signal_j["signal_name"] = getName();
+std::string SignalDecl::asString() const {
+  std::string str{};
 
-  signal_j = PortDecl::dump_json();
+  str += "signal_name: " + getName() + "\n";
+  str += PortDecl::asString() + "\n";
 
-  return signal_j;
+  return str;
 }
+

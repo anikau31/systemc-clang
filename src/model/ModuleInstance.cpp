@@ -14,7 +14,8 @@ ModuleInstance::ModuleInstance()
       constructor_decl_{nullptr},
       instance_decl_{nullptr} {}
 
-ModuleInstance::ModuleInstance(const std::string &name, clang::CXXRecordDecl *decl)
+ModuleInstance::ModuleInstance(const std::string &name,
+                               clang::CXXRecordDecl *decl)
     : module_name_{name},
       instance_name_{"NONE"},
       class_decl_{decl},
@@ -188,7 +189,8 @@ void ModuleInstance::setTemplateParameters(
   template_parameters_ = parm_list;
 }
 
-void ModuleInstance::setTemplateArgs(const std::vector<std::string> &parm_list) {
+void ModuleInstance::setTemplateArgs(
+    const std::vector<std::string> &parm_list) {
   template_args_ = parm_list;
 }
 
@@ -196,13 +198,17 @@ std::vector<std::string> ModuleInstance::getTemplateParameters() const {
   return template_parameters_;
 }
 
-void ModuleInstance::setModuleName(const std::string &name) { module_name_ = name; }
+void ModuleInstance::setModuleName(const std::string &name) {
+  module_name_ = name;
+}
 
-void ModuleInstance::addInstances(const std::vector<std::string> &instanceList) {
+void ModuleInstance::addInstances(
+    const std::vector<std::string> &instanceList) {
   instance_list_ = instanceList;
 }
 
-void ModuleInstance::addPortBinding(const std::string &port_name, PortBinding *pb) {
+void ModuleInstance::addPortBinding(const std::string &port_name,
+                                    PortBinding *pb) {
   port_bindings_.insert(portBindingPairType(port_name, pb));
 }
 
@@ -212,7 +218,7 @@ void ModuleInstance::addSignalBinding(
 }
 
 void ModuleInstance::addPorts(const ModuleInstance::PortType &found_ports,
-                          const std::string &port_type) {
+                              const std::string &port_type) {
   if (port_type == "sc_in") {
     std::copy(begin(found_ports), end(found_ports), back_inserter(in_ports_));
   }
@@ -270,7 +276,8 @@ void ModuleInstance::addOutputInterfaces(FindTLMInterfaces::interfaceType p) {
   }
 }
 
-void ModuleInstance::addInputOutputInterfaces(FindTLMInterfaces::interfaceType p) {
+void ModuleInstance::addInputOutputInterfaces(
+    FindTLMInterfaces::interfaceType p) {
   for (auto mit : p) {
     iointerfaces_.insert(
         interfacePairType(mit.first, new InterfaceDecl(mit.first, mit.second)));
@@ -286,13 +293,16 @@ void ModuleInstance::addConstructor(Stmt *constructor) {
   constructor_stmt_ = constructor;
 }
 
-clang::Stmt *ModuleInstance::getConstructorStmt() const { return constructor_stmt_; }
+clang::Stmt *ModuleInstance::getConstructorStmt() const {
+  return constructor_stmt_;
+}
 
 clang::CXXConstructorDecl *ModuleInstance::getConstructorDecl() const {
   return constructor_decl_;
 }
 
-void ModuleInstance::addProcess(FindEntryFunctions::entryFunctionVectorType *efv) {
+void ModuleInstance::addProcess(
+    FindEntryFunctions::entryFunctionVectorType *efv) {
   vef_ = *efv;
   for (unsigned int i = 0; i < efv->size(); ++i) {
     EntryFunctionContainer *ef = (*efv)[i];
@@ -334,7 +344,8 @@ std::vector<std::string> ModuleInstance::getInstanceList() {
   return instance_list_;
 }
 
-std::vector<EntryFunctionContainer *> ModuleInstance::getEntryFunctionContainer() {
+std::vector<EntryFunctionContainer *>
+ModuleInstance::getEntryFunctionContainer() {
   return vef_;
 }
 
@@ -344,20 +355,26 @@ const ModuleInstance::signalMapType &ModuleInstance::getSignals() const {
   return signals_;
 }
 
-const std::vector<ModuleInstance *> &ModuleInstance::getNestedModuleInstances() const {
+const std::vector<ModuleInstance *> &ModuleInstance::getNestedModuleInstances()
+    const {
   return nested_modules_;
 }
 
-ModuleInstance::processMapType ModuleInstance::getProcessMap() { return process_map_; }
+ModuleInstance::processMapType ModuleInstance::getProcessMap() {
+  return process_map_;
+}
 
 ModuleInstance::portMapType ModuleInstance::getOPorts() { return out_ports_; }
 
 ModuleInstance::portMapType ModuleInstance::getIPorts() { return in_ports_; }
 
-ModuleInstance::portMapType ModuleInstance::getIOPorts() { return inout_ports_; }
+ModuleInstance::portMapType ModuleInstance::getIOPorts() {
+  return inout_ports_;
+}
 
-ModuleInstance::portMapType ModuleInstance::getOtherVars() { return other_fields_; }
-
+ModuleInstance::portMapType ModuleInstance::getOtherVars() {
+  return other_fields_;
+}
 
 ModuleInstance::portMapType ModuleInstance::getInputStreamPorts() {
   return istreamports_;
@@ -389,15 +406,18 @@ std::string ModuleInstance::getInstanceName() const {
   return instance_info_.instance_name;
 }
 
-bool ModuleInstance::isModuleClassDeclNull() { return (class_decl_ == nullptr); }
+bool ModuleInstance::isModuleClassDeclNull() {
+  return (class_decl_ == nullptr);
+}
 
 clang::CXXRecordDecl *ModuleInstance::getModuleClassDecl() {
   assert(!(class_decl_ == nullptr));
   return class_decl_;
 }
 
-
-Decl *ModuleInstance::getInstanceDecl() { return instance_info_.getInstanceDecl(); }
+Decl *ModuleInstance::getInstanceDecl() {
+  return instance_info_.getInstanceDecl();
+}
 
 void ModuleInstance::dumpInstances(raw_ostream &os, int tabn) {
   if (instance_list_.empty()) {
@@ -424,73 +444,79 @@ void ModuleInstance::dumpInstances(raw_ostream &os, int tabn) {
   }
 }
 
-void ModuleInstance::dumpPortBinding() {
-  json binding_j;
+std::string ModuleInstance::dumpPortBinding() {
+  std::string str{};
 
-  binding_j["number_of_ports_bound"] = port_bindings_.size();
+  str +=
+      "number_of_ports_bound: " + std::to_string(port_bindings_.size()) + "\n";
+
+  // binding_j["number_of_ports_bound"] = port_bindings_.size();
   for (auto const &pb : port_bindings_) {
     auto port_name{get<0>(pb)};
     auto binding{get<1>(pb)};
 
-    json port_j;
-    port_j["caller_instance_type_name"] = binding->getCallerInstanceTypeName();
-    port_j["caller_instance_name"] = binding->getCallerInstanceName();
+    str +=
+        "caller_instance_type_name: " + binding->getCallerInstanceTypeName() +
+        "\n";
+    str += "caller_instance_name: " + binding->getCallerInstanceName() + "\n";
 
     for (const auto &sub : binding->getCallerArraySubscripts()) {
       auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
+      str += "caller_array_subscripts: ";
       if (is_int_lit) {
-        port_j["caller_array_subscripts"].push_back(
-            is_int_lit->getValue().toString(32, true));
+        str += "  " + is_int_lit->getValue().toString(32, true);
       }
 
       if (is_dref_expr) {
-        port_j["caller_array_subscripts"].push_back(
-            is_dref_expr->getNameInfo().getName().getAsString());
+        str += "caller_array_subscripts: " +
+               is_dref_expr->getNameInfo().getName().getAsString() + "\n";
+
       }
     }
 
-    port_j["caller_port_name"] = binding->getCallerPortName();
+    str += "caller_port_name: " + binding->getCallerPortName() + "\n";
 
     for (const auto &sub : binding->getCallerPortArraySubscripts()) {
       auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
+      str += "caller_port_array_subscripts: ";
       if (is_int_lit) {
-        port_j["caller_port_array_subscripts"].push_back(
-            is_int_lit->getValue().toString(32, true));
+        str += "  " + is_int_lit->getValue().toString(32, true);
       }
 
       if (is_dref_expr) {
-        port_j["caller_port_array_subscripts"].push_back(
-            is_dref_expr->getNameInfo().getName().getAsString());
+        str += "caller_port_array_subscripts: " +
+               is_dref_expr->getNameInfo().getName().getAsString() + "\n";
       }
     }
 
-    port_j["callee_instance_name"] = binding->getCalleeInstanceName();
+    str += "callee_instance_name:: " + binding->getCalleeInstanceName() + "\n";
 
     for (const auto &sub : binding->getCalleeArraySubscripts()) {
       auto is_int_lit{clang::dyn_cast<clang::IntegerLiteral>(sub)};
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
+      str += "callee_port_array_subscripts: ";
       if (is_int_lit) {
-        port_j["callee_port_array_subscripts"].push_back(
-            is_int_lit->getValue().toString(32, true));
+        str += "  " + is_int_lit->getValue().toString(32, true);
       }
 
       if (is_dref_expr) {
-        port_j["callee_port_array_subscripts"].push_back(
-            is_dref_expr->getNameInfo().getName().getAsString());
+        str += "callee_port_array_subscripts: " +
+               is_dref_expr->getNameInfo().getName().getAsString() + "\n";
       }
     }
 
-    port_j["callee_port_name"] = binding->getCalleePortName();
+    str += "callee_port_name: " + binding->getCalleePortName() + "\n";
 
+    str += "\n\n";
     binding->dump();
-    binding_j[port_name] = port_j;
   }
-  llvm::outs() << binding_j.dump(4) << "\n";
+  llvm::outs() << str;  
+  return str;
 }
 
 void ModuleInstance::dumpSignalBinding(raw_ostream &os, int tabn) {
@@ -505,15 +531,18 @@ void ModuleInstance::dumpSignalBinding(raw_ostream &os, int tabn) {
 }
 
 void ModuleInstance::dumpProcesses(raw_ostream &os, int tabn) {
-  json process_j;
-  process_j["number_of_processes"] = process_map_.size();
+  std::string str{};
+
+  str += "number_of_processes: " + std::to_string(process_map_.size()) + "\n";
+
   for (auto pit : process_map_) {
     ProcessDecl *pd{pit.second};
-    process_j[pit.first] = pd->dump_json();
+    str += pit.first + ": " + pd->asString() + "\n";
   }
+  str += "\n";
 
   os << "Processes\n";
-  os << process_j.dump(4) << "\n";
+  os << str;
 }
 
 void ModuleInstance::dumpInterfaces(raw_ostream &os, int tabn) {
@@ -552,91 +581,83 @@ void ModuleInstance::dumpInterfaces(raw_ostream &os, int tabn) {
   }
 }
 
-void ModuleInstance::dumpPorts(raw_ostream &os, int tabn) {
-  json iport_j, oport_j, ioport_j, othervars_j, istreamport_j, ostreamport_j,
-      submodules_j;
+void ModuleInstance::dumpPorts(raw_ostream &os) {
+  std::string str{};
 
-  iport_j["number_of_input_ports"] = in_ports_.size();
+  str += "number_of_input_ports: " + std::to_string(in_ports_.size()) + "\n";
   for (auto mit : in_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    iport_j[name] = pd->dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  oport_j["number_of_output_ports"] = out_ports_.size();
+  str += "number_of_output_ports: " + std::to_string(out_ports_.size()) + "\n";
   for (auto mit : out_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    oport_j[name] = pd->dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  ioport_j["number_of_inout_ports"] = inout_ports_.size();
+  str += "number_of_inout_ports: " + std::to_string(inout_ports_.size()) + "\n";
   for (auto mit : inout_ports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ioport_j[name] = pd->dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  istreamport_j["number_of_instream_ports"] = istreamports_.size();
+  str += "number_of_instream_ports: " + std::to_string(istreamports_.size()) +
+         "\n";
   for (auto mit : istreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    istreamport_j[name] = pd->dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  ostreamport_j["number_of_outstream_ports"] = ostreamports_.size();
+  str += "number_of_outstream_ports: " + std::to_string(ostreamports_.size()) +
+         "\n";
   for (auto mit : ostreamports_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    ostreamport_j[name] = pd->dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  othervars_j["number_of_other_vars"] = other_fields_.size();
+  str += "number_of_other_vars: " + std::to_string(other_fields_.size()) + "\n";
   for (auto mit : other_fields_) {
     auto name = get<0>(mit);
     auto pd = get<1>(mit);
-    othervars_j[name] = pd->dump_json();
+    str += "name: " + name + "  " + pd->asString() + "\n";
   }
 
-  submodules_j["number_of_submodule_fields"] = nested_modules_.size();
+  str += "number_of_nested_modules: " + std::to_string(nested_modules_.size()) +
+         "\n";
   for (auto mit : nested_modules_) {
     auto module_name{mit->getName()};
-    // submodules_j[name].push_back(mit->getInstanceName());
 
     auto instance_info{mit->getInstanceInfo()};
+    str += "module_name: " + module_name;
     for (auto const &inst_name : instance_info.getInstanceNames()) {
-      submodules_j[module_name].push_back(inst_name);
+      str += "  " + inst_name;
     }
   }
+  str += "\n";
 
-  os << "Start printing ports\n";
-  os << "\nInput ports: " << in_ports_.size() << "\n";
-  os << "\nOutput ports: " << out_ports_.size() << "\n";
-  os << "\nInout ports: " << inout_ports_.size() << "\n";
-  os << "\nIstream ports: " << istreamports_.size() << "\n";
-  os << "\nOstream ports: " << ostreamports_.size() << "\n";
-  os << "\nOther fields: " << other_fields_.size() << "\n";
-  os << "\nSubmodules: " << nested_modules_.size() << "\n";
-
-  os << "Ports\n";
-  os << iport_j.dump(4) << "\n"
-     << oport_j.dump(4) << "\n"
-     << ioport_j.dump(4) << "\n"
-     << istreamport_j.dump(4) << "\n"
-     << ostreamport_j.dump(4) << othervars_j.dump(4) << submodules_j.dump(4)
-     << "\n";
+  os << "Dump ports\n";
+  os << str;
 }
 
 void ModuleInstance::dumpSignals(raw_ostream &os, int tabn) {
-  json signal_j;
-  signal_j["number_of_signals"] = signals_.size();
+  std::string str{};
+
+  str += "number_of_signals: " + std::to_string(signals_.size()) + "\n";
+
   for (auto sit : signals_) {
     SignalDecl *s{sit.second};
-    signal_j[sit.first] = s->dump_json();
+    str += sit.first + " " + s->asString() + "\n";
   }
+  str += "\n";
 
   os << "Signals\n";
-  os << signal_j.dump(4) << "\n";
+  os << str;
 }
 
 void ModuleInstance::dump(llvm::raw_ostream &os) {
@@ -644,7 +665,7 @@ void ModuleInstance::dump(llvm::raw_ostream &os) {
   os << "\n# Instances:\n";
   dumpInstances(os, 4);
   os << "# Port Declaration:\n";
-  dumpPorts(os, 4);
+  dumpPorts(os);
   os << "\n# Signal Declaration:\n";
   dumpSignals(os, 4);
   os << "\n# Processes:\n";
@@ -658,34 +679,42 @@ void ModuleInstance::dump(llvm::raw_ostream &os) {
   os << "\n=======================================================\n";
 }
 
-json ModuleInstance::dump_json() {
-  json module_j;
+std::string ModuleInstance::dump_json() {
+  std::string str{};
 
-  module_j["module_name"] = module_name_;
-  module_j["instance_name"] = instance_name_;
-  module_j["is_array"] = "false";
+  str += "module_name: " + module_name_ + "  " +
+         "instance_name: " + instance_name_ + "\n";
   if (instance_info_.isArrayType()) {
-    module_j["is_array"] = "true";
+    str += "is_array: true\n";
+    str += "array_sizes: ";
     // Write out all the sizes.
     for (auto const &size : instance_info_.getArraySizes()) {
-      module_j["array_sizes"] += size.getLimitedValue();
+      str += size.getLimitedValue() + "  ";
     }
   }
 
+  str += "\n";
+
   // Template parameters.
+  str += "template_parameters: " + std::to_string(template_parameters_.size()) +
+         "\n";
   for (auto const &parm : template_parameters_) {
-    module_j["template_parameters"].push_back(parm);
+    str += "  " + parm;
   }
 
+  str += "template_args: " + std::to_string(template_args_.size()) + "\n";
   for (auto const &parm : template_args_) {
-    module_j["template_args"].push_back(parm);
+    str += "  " + parm;
   }
 
+  str += "nested_modules: " + std::to_string(nested_modules_.size()) + "\n";
   for (auto const &submod : nested_modules_) {
-    module_j["nested_modules"].push_back(
-        submod->getInstanceInfo().getInstanceNames());
+    for (auto const &name : submod->getInstanceInfo().getInstanceNames()) {
+      str += "  " + name;
+    }
   }
 
-  llvm::outs() << module_j.dump(4);
-  return module_j;
+  str += "\n";
+  llvm::outs() << str;
+  return str;
 }

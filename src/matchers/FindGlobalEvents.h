@@ -1,35 +1,32 @@
 #ifndef _FIND_GLOBAL_EVENTS_H_
 #define _FIND_GLOBAL_EVENTS_H_
 #include "systemc-clang.h"
-#include "json.hpp"
 
 #include "clang/AST/Decl.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
+
 #include <map>
 #include <string>
 #include <vector>
 
 namespace systemc_clang {
-using namespace clang;
-using namespace std;
- using json = nlohmann::json;
  
-class FindGlobalEvents : public RecursiveASTVisitor<FindGlobalEvents> {
+class FindGlobalEvents : public clang::RecursiveASTVisitor<FindGlobalEvents> {
 public:
-  typedef map<string, VarDecl *> globalEventMapType;
-  typedef pair<string, VarDecl *> kvType;
+  typedef std::map<std::string, clang::VarDecl *> globalEventMapType;
+  typedef std::pair<std::string, clang::VarDecl *> kvType;
 
-  FindGlobalEvents(TranslationUnitDecl *, llvm::raw_ostream &);
+  FindGlobalEvents(clang::TranslationUnitDecl *, llvm::raw_ostream &);
   virtual ~FindGlobalEvents();
 
-  virtual bool VisitVarDecl(VarDecl *);
+  virtual bool VisitVarDecl(clang::VarDecl *);
 
   globalEventMapType getEventMap();
-  vector<string> getEventNames();
+  std::vector<std::string> getEventNames();
 
   void dump();
-  json dump_json();
+  std::string asString() const;
 
 
 private:

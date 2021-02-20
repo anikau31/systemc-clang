@@ -20,7 +20,6 @@
 #include "ModuleInstanceType.h"
 
 namespace systemc_clang {
-using namespace clang;
 using namespace sc_ast_matchers;
 
 /// Forward declarations
@@ -128,8 +127,8 @@ class ModuleInstance {
 
   const std::vector<ModuleInstance *> &getNestedModuleInstances() const;
 
-  void dumpPorts(llvm::raw_ostream &, int);
-  void dumpPortBinding();
+  void dumpPorts(llvm::raw_ostream &);
+  std::string dumpPortBinding();
   void dumpInterfaces(llvm::raw_ostream &, int);
   void dumpProcesses(llvm::raw_ostream &, int);
   void dumpSignals(llvm::raw_ostream &, int);
@@ -139,7 +138,7 @@ class ModuleInstance {
 
   void clearOnlyGlobal();
 
-  json dump_json();
+  std::string dump_json();
 
  private:
   std::string module_name_;

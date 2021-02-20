@@ -31,11 +31,11 @@ PortDecl::PortDecl(const std::string &name, FindTemplateTypes *tt)
       is_array_{false} {
       }
 
-PortDecl::PortDecl(const std::string &name, const Decl *fd,
+PortDecl::PortDecl(const std::string &name, const clang::Decl *fd,
                    FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
-      field_decl_{const_cast<Decl *>(fd)},
+      field_decl_{const_cast<clang::Decl*>(fd)},
       is_array_{false} {
       }
 
@@ -53,38 +53,48 @@ void PortDecl::addArraySize(llvm::APInt sz) { array_sizes_.push_back(sz); }
 void PortDecl::setArrayType() { is_array_ = true; }
 
 bool PortDecl::getArrayType() const { return is_array_; }
+
 void PortDecl::setModuleName(const std::string &name) { port_name_ = name; }
-std::vector<llvm::APInt> PortDecl::getArraySizes() { return array_sizes_; }
+
+std::vector<llvm::APInt> PortDecl::getArraySizes() const { return array_sizes_; }
+
 std::string PortDecl::getName() const { return port_name_; }
 
-FieldDecl *PortDecl::getAsFieldDecl() const {
-  return dyn_cast<FieldDecl>(field_decl_);
+clang::FieldDecl *PortDecl::getAsFieldDecl() const {
+  return dyn_cast<clang::FieldDecl>(field_decl_);
 }
 
-VarDecl *PortDecl::getAsVarDecl() const {
-  return dyn_cast<VarDecl>(field_decl_);
+clang::VarDecl *PortDecl::getAsVarDecl() const {
+  return dyn_cast<clang::VarDecl>(field_decl_);
 }
+
 FindTemplateTypes *PortDecl::getTemplateType() { return template_type_; }
 
-json PortDecl::dump_json() {
-  json port_j;
-  port_j["signal_port_name"] = getName();
-  port_j["signal_port_arguments"] = template_type_->dump_json();
-  port_j["is_array_type"] = getArrayType();
+std::string PortDecl::asString() const {
+  std::string str{};
+
+  str += "signal_port_name: " + getName() + "\n";
+  str += "signal_port_arguments: " + template_type_->asString() + "\n";
+  str += "is_array_type: " + std::string{getArrayType()} + "\n";
+
   if (getArrayType()) {
-    for (auto sz: getArraySizes()) {
+    str += "array_sizes: ";
+    for (const auto sz: getArraySizes()) {
       std::size_t i{0};
-      port_j["array_sizes"] += sz.getLimitedValue();
+      str += sz.getLimitedValue() + " ";
     }
-    //port_j["array_size"] = getArraySize().getLimitedValue();
   }
+  str += "\n";
 
   if (getAsFieldDecl()) { 
-    port_j["decl_type"] = "FieldDecl";
+    str += "decl_type: FieldDecl";
   } else {
     if (getAsVarDecl()) {
-      port_j["decl_type"] = "VarDecl";
+      str += "decl_type: VarDecl";
     }
   }
-  return port_j;
+
+  str += "\n";
+  return str;
 }
+

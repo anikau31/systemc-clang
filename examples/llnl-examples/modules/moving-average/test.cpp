@@ -162,7 +162,7 @@ int sc_main(int argc , char *argv[])
 
   sc_signal<bool> c_error("c_error");
   
-  pulse<0,2,RLEVEL> u_pulse("u_pulse");
+  pulse<0,3,RLEVEL> u_pulse("u_pulse");
   tb_driver<data_t, data_t> u_tb_driver("u_tb_driver");
   moving_average<DATAW> u_dut("moving_average");
 

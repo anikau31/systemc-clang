@@ -1,7 +1,7 @@
 #include "FindGlobalEvents.h"
 using namespace systemc_clang;
 
-FindGlobalEvents::FindGlobalEvents(TranslationUnitDecl *declaration,
+FindGlobalEvents::FindGlobalEvents(clang::TranslationUnitDecl *declaration,
                                    llvm::raw_ostream &os)
     : _os(os) {
   TraverseDecl(declaration);
@@ -9,11 +9,11 @@ FindGlobalEvents::FindGlobalEvents(TranslationUnitDecl *declaration,
 
 FindGlobalEvents::~FindGlobalEvents() {}
 
-bool FindGlobalEvents::VisitVarDecl(VarDecl *variable_declaration) {
-  QualType variable_type{variable_declaration->getType()};
+bool FindGlobalEvents::VisitVarDecl(clang::VarDecl *variable_declaration) {
+  clang::QualType variable_type{variable_declaration->getType()};
 
   if (variable_type.getAsString() == "class sc_core::sc_event") {
-    if (IdentifierInfo *info = variable_declaration->getIdentifier()) {
+    if (clang::IdentifierInfo *info = variable_declaration->getIdentifier()) {
       _globalEvents.insert(kvType(info->getNameStart(), variable_declaration));
     }
   }
@@ -34,12 +34,18 @@ void FindGlobalEvents::dump() {
   _os << "\n ============== END FindGlobalEvents ===============";
 }
 
-json FindGlobalEvents::dump_json() {
-  json globals_j{};
+std::string FindGlobalEvents::asString() const {
+  std::string str{};
+
+  if (_globalEvents.size() > 0) {
+    str += "global_declarations: ";
+  }
 
   for (auto const &event : _globalEvents) {
-    globals_j["global_declarations"].emplace_back(event.first);
+    str += "  " + event.first;
   }
-  llvm::outs() << globals_j.dump(4) << "\n";
-  return globals_j;
+
+  str += "\n";
+  llvm::outs() << str;
+  return str;
 }

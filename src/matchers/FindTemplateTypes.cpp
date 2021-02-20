@@ -267,10 +267,10 @@ Tree<TemplateType> *FindTemplateTypes::getTemplateArgTreePtr() {
   return &template_args_;
 }
 
-json FindTemplateTypes::dump_json() {
-  json tree_j;
+std::string FindTemplateTypes::asString() {
+  std::string str{};
 
-  auto args{getTemplateArgTreePtr()};
+  auto const args{getTemplateArgTreePtr()};
 
   for (auto const &node : *args) {
     // Returns a TreeNodePtr
@@ -280,18 +280,21 @@ json FindTemplateTypes::dump_json() {
     if (parent_node->getDataPtr() == node->getDataPtr()) {
       // llvm::outs() << "\nInsert parent node: " << type_data->getTypeName()
       //             << "\n";
-      tree_j[type_data->getTypeName()] = nullptr;
+      //tree_j[type_data->getTypeName()] = nullptr;
+      str += "type_name: " + type_data->getTypeName() + ": nullptr \n";
     } else {
       // FIXME: This does not print the tree properly.
       // There does not seem to be a simple way to access the appropriate
       // location for the insertion of the new values in this JSON.
       // TODO: Perhaps the way to do this is to construct a string that JSON can
       // use.
-      tree_j[parent_data->getTypeName()].push_back(type_data->getTypeName());
+      //tree_j[parent_data->getTypeName()].push_back(type_data->getTypeName());
+      str += "parent_type_name: " + parent_data->getTypeName() + ": " + type_data->getTypeName();
     }
   }
-  llvm::outs() << tree_j.dump(4);
-  return tree_j;
+  str += "\n";
+  llvm::outs() << str; //tree_j.dump(4);
+  return str;
 }
 
 void FindTemplateTypes::printTemplateArguments(llvm::raw_ostream &os) {
