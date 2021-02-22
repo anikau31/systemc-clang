@@ -20,4 +20,4 @@ if [ -z "$SYSTEMC" ]; then
     exit;
 fi
 
-$SYSTEMC_CLANG_BUILD_DIR/systemc-clang $1 -- -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -I$LLVM_INSTALL_DIR/lib/clang/11.0.0/include/ -I/usr/include -I$SYSTEMC/include -x c++ -w -c 
+$SYSTEMC_CLANG_BUILD_DIR/systemc-clang $1 -debug -- -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -I$LLVM_INSTALL_DIR/lib/clang/11.0.0/include/ -I/usr/include -I$SYSTEMC/include -x c++ -w -c 
