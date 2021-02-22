@@ -60,7 +60,8 @@ class FunctionParamMarker(TopDown):
             # param = vardeclinit
             par_name = param.children[0]
             param_type = 'sc_in'
-            if par_name in self.__driven_signals:  # determines whether such signal is driven within the function body
+            # if par_name in self.__driven_signals:  # determines whether such signal is driven within the function body
+            if param.data in ['funcparamio']:  # determines whether such signal is driven within the function body
                 param_type = '__func_inout'
 
             param = param.children[1]
@@ -68,10 +69,6 @@ class FunctionParamMarker(TopDown):
             original_param_children = copy.deepcopy(param.children)
             param.children = [Tree('htype', children=[Token('TYPESTR', param_type), *original_param_children])]
 
-        return tree
-
-    def hfunctionparams(self, tree):
-        """identify the input/output direction of the function params"""
         return tree
 
 
