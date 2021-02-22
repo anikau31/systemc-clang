@@ -79,6 +79,7 @@ $(function() {
 <code>#include &lt;tuple&gt;</code><br />
 <code>#include &quot;<a class="el" href="SystemCClang_8h_source.html">SystemCClang.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ArrayTypeUtils_8h_source.html">ArrayTypeUtils.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Tree_8h_source.html">Tree.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="HDLMain_8h_source.html">HDLMain.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="HDLType_8h_source.html">HDLType.h</a>&quot;</code><br />
@@ -92,56 +93,56 @@ Include dependency graph for HDLMain.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="HDLMain_8cpp__incl.png" border="0" usemap="#aplugins_2hdl_2HDLMain_8cpp" alt=""/></div>
 <map name="aplugins_2hdl_2HDLMain_8cpp" id="aplugins_2hdl_2HDLMain_8cpp">
-<area shape="rect" title=" " alt="" coords="697,5,863,32"/>
-<area shape="rect" title=" " alt="" coords="257,80,311,107"/>
-<area shape="rect" title=" " alt="" coords="727,229,777,256"/>
-<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="1986,229,2105,256"/>
-<area shape="rect" href="SensitivityMatcher_8h.html" title=" " alt="" coords="537,468,676,495"/>
-<area shape="rect" title=" " alt="" coords="5,550,152,577"/>
-<area shape="rect" href="PortBinding_8h.html" title=" " alt="" coords="227,550,325,577"/>
-<area shape="rect" href="Tree_8h.html" title=" " alt="" coords="852,468,911,495"/>
-<area shape="rect" href="HDLMain_8h.html" title=" " alt="" coords="985,80,1071,107"/>
-<area shape="rect" title=" " alt="" coords="2128,229,2293,256"/>
-<area shape="rect" href="HDLType_8h.html" title=" " alt="" coords="778,155,865,181"/>
-<area shape="rect" title=" " alt="" coords="1953,80,2127,107"/>
-<area shape="rect" href="HDLHnode_8h.html" title=" " alt="" coords="1729,155,1826,181"/>
-<area shape="rect" title=" " alt="" coords="1986,311,2169,338"/>
-<area shape="rect" title=" " alt="" coords="2257,550,2476,577"/>
-<area shape="rect" title=" " alt="" coords="2193,311,2388,338"/>
-<area shape="rect" title=" " alt="" coords="2413,311,2635,338"/>
-<area shape="rect" title=" " alt="" coords="2659,304,2858,345"/>
-<area shape="rect" title=" " alt="" coords="2881,304,3081,345"/>
-<area shape="rect" title=" " alt="" coords="3105,311,3260,338"/>
-<area shape="rect" href="Model_8h.html" title=" " alt="" coords="1547,311,1653,338"/>
-<area shape="rect" href="EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="1301,393,1467,420"/>
-<area shape="rect" title=" " alt="" coords="1479,550,1526,577"/>
-<area shape="rect" title=" " alt="" coords="1349,550,1403,577"/>
-<area shape="rect" title=" " alt="" coords="661,707,720,733"/>
-<area shape="rect" title=" " alt="" coords="1489,707,1639,733"/>
-<area shape="rect" href="EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="1540,468,1660,495"/>
-<area shape="rect" href="FindGlobalEvents_8h.html" title=" " alt="" coords="1685,468,1819,495"/>
-<area shape="rect" href="FindNetlist_8h.html" title=" " alt="" coords="2387,468,2482,495"/>
-<area shape="rect" href="FindSimTime_8h.html" title=" " alt="" coords="2101,468,2211,495"/>
-<area shape="rect" href="ModuleInstance_8h.html" title=" " alt="" coords="1138,468,1262,495"/>
-<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="1138,393,1225,420"/>
-<area shape="rect" href="FindGPUMacro_8h.html" title=" " alt="" coords="1843,468,2026,495"/>
-<area shape="rect" title=" " alt="" coords="451,543,653,584"/>
-<area shape="rect" title=" " alt="" coords="729,550,959,577"/>
-<area shape="rect" href="ArrayTypeUtils_8h.html" title=" " alt="" coords="208,632,325,659"/>
-<area shape="rect" title=" " alt="" coords="124,707,249,733"/>
-<area shape="rect" title=" " alt="" coords="273,707,423,733"/>
-<area shape="rect" title=" " alt="" coords="1999,550,2183,577"/>
-<area shape="rect" title=" " alt="" coords="1114,550,1171,577"/>
-<area shape="rect" title=" " alt="" coords="983,550,1038,577"/>
-<area shape="rect" title=" " alt="" coords="852,229,996,256"/>
-<area shape="rect" title=" " alt="" coords="941,155,1115,181"/>
-<area shape="rect" href="hNode_8h.html" title=" " alt="" coords="1786,229,1857,256"/>
-<area shape="rect" href="HDLBody_8h.html" title=" " alt="" coords="1392,155,1480,181"/>
-<area shape="rect" title=" " alt="" coords="1785,311,1860,338"/>
-<area shape="rect" title=" " alt="" coords="1369,229,1473,256"/>
-<area shape="rect" title=" " alt="" coords="1498,229,1561,256"/>
-<area shape="rect" title=" " alt="" coords="1585,229,1711,256"/>
-<area shape="rect" title=" " alt="" coords="1172,229,1295,256"/>
+<area shape="rect" title=" " alt="" coords="909,5,1075,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,59,107"/>
+<area shape="rect" title=" " alt="" coords="1029,229,1080,256"/>
+<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="2210,229,2329,256"/>
+<area shape="rect" href="SensitivityMatcher_8h.html" title=" " alt="" coords="732,468,871,495"/>
+<area shape="rect" title=" " alt="" coords="133,550,280,577"/>
+<area shape="rect" href="ArrayTypeUtils_8h.html" title=" " alt="" coords="336,632,453,659"/>
+<area shape="rect" href="PortBinding_8h.html" title=" " alt="" coords="304,550,403,577"/>
+<area shape="rect" href="Tree_8h.html" title=" " alt="" coords="1088,468,1147,495"/>
+<area shape="rect" href="HDLMain_8h.html" title=" " alt="" coords="1334,80,1421,107"/>
+<area shape="rect" title=" " alt="" coords="3469,229,3635,256"/>
+<area shape="rect" href="HDLType_8h.html" title=" " alt="" coords="1081,155,1167,181"/>
+<area shape="rect" title=" " alt="" coords="2307,80,2482,107"/>
+<area shape="rect" href="HDLHnode_8h.html" title=" " alt="" coords="1191,155,1289,181"/>
+<area shape="rect" title=" " alt="" coords="2473,311,2655,338"/>
+<area shape="rect" title=" " alt="" coords="2407,550,2625,577"/>
+<area shape="rect" title=" " alt="" coords="2680,311,2875,338"/>
+<area shape="rect" title=" " alt="" coords="2899,311,3122,338"/>
+<area shape="rect" title=" " alt="" coords="3146,304,3345,345"/>
+<area shape="rect" title=" " alt="" coords="2069,304,2269,345"/>
+<area shape="rect" title=" " alt="" coords="2293,311,2448,338"/>
+<area shape="rect" href="Model_8h.html" title=" " alt="" coords="1736,311,1843,338"/>
+<area shape="rect" href="EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="1585,393,1751,420"/>
+<area shape="rect" title=" " alt="" coords="1766,550,1813,577"/>
+<area shape="rect" title=" " alt="" coords="1509,550,1563,577"/>
+<area shape="rect" title=" " alt="" coords="1205,707,1264,733"/>
+<area shape="rect" title=" " alt="" coords="2035,707,2186,733"/>
+<area shape="rect" href="EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="1827,468,1947,495"/>
+<area shape="rect" href="FindGlobalEvents_8h.html" title=" " alt="" coords="1971,468,2106,495"/>
+<area shape="rect" href="FindNetlist_8h.html" title=" " alt="" coords="2130,468,2225,495"/>
+<area shape="rect" href="FindSimTime_8h.html" title=" " alt="" coords="2401,468,2511,495"/>
+<area shape="rect" href="ModuleInstance_8h.html" title=" " alt="" coords="1374,468,1498,495"/>
+<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="1371,393,1458,420"/>
+<area shape="rect" href="FindGPUMacro_8h.html" title=" " alt="" coords="2535,468,2718,495"/>
+<area shape="rect" title=" " alt="" coords="528,543,731,584"/>
+<area shape="rect" title=" " alt="" coords="755,550,986,577"/>
+<area shape="rect" title=" " alt="" coords="252,707,377,733"/>
+<area shape="rect" title=" " alt="" coords="401,707,551,733"/>
+<area shape="rect" title=" " alt="" coords="2148,550,2332,577"/>
+<area shape="rect" title=" " alt="" coords="1089,550,1146,577"/>
+<area shape="rect" title=" " alt="" coords="1010,550,1065,577"/>
+<area shape="rect" title=" " alt="" coords="1251,229,1395,256"/>
+<area shape="rect" title=" " alt="" coords="2006,155,2181,181"/>
+<area shape="rect" href="hNode_8h.html" title=" " alt="" coords="1155,229,1226,256"/>
+<area shape="rect" href="HDLBody_8h.html" title=" " alt="" coords="1796,155,1884,181"/>
+<area shape="rect" title=" " alt="" coords="1155,311,1229,338"/>
+<area shape="rect" title=" " alt="" coords="2005,229,2109,256"/>
+<area shape="rect" title=" " alt="" coords="1470,229,1533,256"/>
+<area shape="rect" title=" " alt="" coords="1557,229,1683,256"/>
+<area shape="rect" title=" " alt="" coords="1707,229,1829,256"/>
 </map>
 </div>
 </div><table class="memberdecls">

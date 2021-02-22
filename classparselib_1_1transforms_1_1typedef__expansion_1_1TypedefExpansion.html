@@ -166,8 +166,8 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a5f54894aa30dfb360d060af713948f4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab77ebcd3ab80a2f3bcb10f9f4aa0cb39"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html#ab77ebcd3ab80a2f3bcb10f9f4aa0cb39">__set_expanded</a> (self, var_name, var_type)</td></tr>
 <tr class="separator:ab77ebcd3ab80a2f3bcb10f9f4aa0cb39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a128749a3317f5b8fd82551f74adb6e99"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html#a128749a3317f5b8fd82551f74adb6e99">__expand_vardecl_in_tree_children</a> (self, tree)</td></tr>
-<tr class="separator:a128749a3317f5b8fd82551f74adb6e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cddc68771501e55d43e5b89220ea104"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html#a5cddc68771501e55d43e5b89220ea104">__expand_decl_in_tree_children</a> (self, tree, expand_data=None)</td></tr>
+<tr class="separator:a5cddc68771501e55d43e5b89220ea104"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><pre class="fragment">Expands block assignment of custom types into primitive types</pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -277,6 +277,48 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <pre class="fragment">detects the expandable variable on lhs and rhs and
 expand them with the fields</pre> 
+</div>
+</div>
+<a id="a5cddc68771501e55d43e5b89220ea104"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cddc68771501e55d43e5b89220ea104">&#9670;&nbsp;</a></span>__expand_decl_in_tree_children()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def parselib.transforms.typedef_expansion.TypedefExpansion.__expand_decl_in_tree_children </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>tree</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>expand_data</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
 </div>
 </div>
 <a id="a8c664a5fba120a348c064acda0bb6500"></a>
@@ -458,42 +500,6 @@ Tree(portdecltype, [Tree(inportdecl, [Token(ID, 'clk')]), Tree(htypeinfo,
           <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>typeinfo</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a128749a3317f5b8fd82551f74adb6e99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a128749a3317f5b8fd82551f74adb6e99">&#9670;&nbsp;</a></span>__expand_vardecl_in_tree_children()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">def parselib.transforms.typedef_expansion.TypedefExpansion.__expand_vardecl_in_tree_children </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>tree</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
