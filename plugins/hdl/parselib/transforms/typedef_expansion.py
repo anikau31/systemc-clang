@@ -100,7 +100,7 @@ class TypedefExpansion(TopDown):
         return res
 
     def __expand_vardecltype(self, tree):
-        assert tree.data == 'vardeclinit'
+        assert tree.data in ['vardeclinit', 'funcparami', 'funcparamio']
         if len(tree.children) == 2:
             # the case without initial value
             expanded_ports = self.__expand_helper(Tree('stub', [tree.children[0]]), tree.children[1])
@@ -133,7 +133,7 @@ class TypedefExpansion(TopDown):
             # print(res)
             return res
         else:
-            assert False, 'vardeclinit should contain 2 or 3 sub-trees'
+            assert False, 'vardeclinit/funcparami/funcparamio should contain 2 or 3 sub-trees'
 
     def __expand_sigdecltype(self, tree):
         return self.__expand_portdecltype(tree)
@@ -358,7 +358,7 @@ class TypedefExpansion(TopDown):
     def hfunctionparams(self, tree):
         self.expanded.append(dict())
         self.__push_up(tree)
-        tree.children = self.__expand_vardecl_in_tree_children(tree)
+        tree.children = self.__expand_decl_in_tree_children(tree, ['funcparami', 'funcparamio'])
         self.expanded.pop()
         return tree
 
@@ -385,18 +385,20 @@ class TypedefExpansion(TopDown):
     def vardecl(self, tree):
         """for variable expansion in statement"""
         self.__push_up(tree)
-        tree.children = self.__expand_vardecl_in_tree_children(tree)
+        tree.children = self.__expand_decl_in_tree_children(tree)
         return tree
 
     def hfunctionlocalvars(self, tree):
         self.__push_up(tree)
-        tree.children = self.__expand_vardecl_in_tree_children(tree)
+        tree.children = self.__expand_decl_in_tree_children(tree)
         return tree
 
-    def __expand_vardecl_in_tree_children(self, tree):
+    def __expand_decl_in_tree_children(self, tree, expand_data=None):
+        if expand_data is None:
+            expand_data = ['vardeclinit']
         new_children = []
         for node in tree.children:
-            if node.data == 'vardeclinit':
+            if node.data in expand_data:
                 var_name = node.children[0]
                 var_type = node.children[1].children[0]
                 var_tokens = map(lambda x:

@@ -70,6 +70,8 @@ namespace hnode {
   etype(hFunction), \
   etype(hFunctionRetType), \
   etype(hFunctionParams), \
+  etype(hFunctionParamI), \
+  etype(hFunctionParamIO), \
   etype(hUnimpl), \
   etype(hLast)
 

@@ -114,10 +114,16 @@ IndexMapType getArrayInstanceIndex(
   return indices;
 }
 
-ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd) {
+//ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd) {
+ArraySizesType getConstantArraySizes(const clang::ValueDecl *fd) {
   ArraySizesType sizes;
 
   clang::QualType field_type{fd->getType()};
+  clang::QualType save_field_type = field_type;
+  if (field_type->isReferenceType()) {
+    // need a qualtype
+    field_type = field_type->getPointeeType()->getLocallyUnqualifiedSingleStepDesugaredType();
+  }
 
   auto array_type{clang::dyn_cast<clang::ConstantArrayType>(field_type)};
   while (array_type != nullptr) {
