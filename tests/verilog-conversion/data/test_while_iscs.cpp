@@ -37,7 +37,7 @@ public:
         SC_METHOD(while_stmt6); sensitive << dummy;
         SC_METHOD(while_stmt7); sensitive << dummy;
         SC_METHOD(while_const); sensitive << dummy;
-        
+
         SC_METHOD(while_sc_type); sensitive << a;
     }
     
@@ -185,9 +185,10 @@ public:
     sc_signal<bool> b{"b"};
     sc_signal<bool> c{"c"};
 
-    A a_mod{"a_mod"};
+    //A a_mod{"a_mod"};
+    A a_mod;
 
-    SC_CTOR(B_top) {
+    SC_CTOR(B_top) : a_mod{"a_mod"} {
         a_mod.a(a);
         a_mod.b(b);
         a_mod.c(c);
