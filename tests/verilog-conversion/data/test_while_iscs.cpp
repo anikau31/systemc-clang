@@ -185,7 +185,7 @@ public:
     sc_signal<bool> b{"b"};
     sc_signal<bool> c{"c"};
 
-    //A a_mod{"a_mod"};
+    // A a_mod{"a_mod"};
     A a_mod;
 
     SC_CTOR(B_top) : a_mod{"a_mod"} {
