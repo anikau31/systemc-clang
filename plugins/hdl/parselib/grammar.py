@@ -22,6 +22,8 @@ lark_grammar = Lark('''
         inportdecl:  "hPortin" ID 
         outportdecl: "hPortout" ID
         vardeclinit: "hVardecl" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
+        funcparami: "hFunctionParamI" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
+        funcparamio: "hFunctionParamIO" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
         ?hvarinit: "hVarInit" "NONAME" expression
         ?hvarinitint: "hVarInit" NUM "NOLIST"
         // can be no process at all in the module
@@ -107,7 +109,7 @@ lark_grammar = Lark('''
         hfunctionlocalvars: vardeclinit*
         hfunctionbody: hcstmt
         hfunctionrettype: "hFunctionRetType" "NONAME" "[" htypeinfo "]"
-        hfunctionparams : "hFunctionParams" "NONAME" "[" vardeclinit* "]"
+        hfunctionparams : "hFunctionParams" "NONAME" "[" (funcparami|funcparamio)* "]"
                         | "hFunctionParams" "NONAME" "NOLIST"
         hreturnstmt: "hReturnStmt" "NONAME" "[" expression "]"
                    | "hReturnStmt" "NONAME" "NOLIST"  // return;
@@ -137,7 +139,9 @@ lark_grammar = Lark('''
                   | htouint
                   | htoint
                   | hcondop
+                  | hlrotate
                   
+        hlrotate : "hNoop" "lrotate" "[" expression expression "]"
         hcondop : "hCondop" "NONAME" "[" (hbinop | hunop) expression expression "]"
 
         syscread : hsigassignr "[" expression "]"
@@ -157,13 +161,14 @@ lark_grammar = Lark('''
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
         // Separate '=' out from so that it is not an expression but a standalone statement
-        blkassign: "hBinop" "=" "[" (hvarref | hliteral) (htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
+        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral) (htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
                  | "hBinop" "=" "[" harrayref (htobool | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
                  | nblkassign
                  | vassign
                  | hmodassign
         nblkassign: "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool)  "]"
                   | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
+        hconcat: "hBinop" "," "[" (expression|harrayref|hconcat) (expression|harrayref|hconcat) "]"
                  
         // Temporary hack to handle -= / +=
         hmodassign : "hBinop" hmodassigntype "[" hvarref hliteral "]"

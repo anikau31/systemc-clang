@@ -3,6 +3,7 @@ from .top_down import TopDown
 from ..primitives import *
 from ..utils import dprint, is_tree_type, get_ids_in_tree_dfs
 from lark import Tree, Token
+from functools import reduce
 import pprint
 import logging
 
@@ -48,6 +49,14 @@ class VerilogTranslationPass(TopDown):
                 return self.__get_var_name(tree.children[0])
         assert False, 'Cannot extract variable name from {}'.format(tree)
 
+    def __get_var_names(self, tree):
+        """return a list of variable names"""
+        if isinstance(tree, Tree) and tree.data in ['hconcat']:
+            return reduce(lambda x, y: x + y, [self.__get_var_names(sub) for sub in tree.children])
+        else:
+            return [self.__get_var_name(tree)]
+
+
     def hmethodcall(self, tree):
         self.__push_up(tree)
         return '{}({})'.format(tree.children[0], ','.join(map(str, tree.children[1:])))
@@ -60,8 +69,23 @@ class VerilogTranslationPass(TopDown):
         # dprint(self.current_module, ':', current_proc)
         # dprint('Sensitivity: ', pprint.pformat(self.get_sense_list()))
         # dprint('Var w/ type: ', pprint.pformat(self.module_var_type))
-        var_name = self.__get_var_name(tree.children[0])
-        tpe = self.get_current_module_var_type_or_default(var_name)
+        var_names = self.__get_var_names(tree.children[0])
+        tpes = [self.get_current_module_var_type_or_default(vn) for vn in var_names]
+        all_none = all(t is None for t in tpes)
+        all_non_none = all(t is not None for t in tpes)
+        if not all_none and not all_non_none:
+            raise ValueError('LHS of assignment must be all local variables or all non-local variables. On line: {}.'.format(tree.line))
+        is_nb = [isinstance(tpe, sc_signal) or
+                     isinstance(tpe, sc_out) or
+                     isinstance(tpe, array) and isinstance(tpe.get_element_type(), sc_signal) for tpe in tpes]
+        # is_nb checks whether one of the type needs to be non-blocking assignment
+        all_nb = all(is_nb)
+        all_b = all(not p for p in is_nb)
+        if not all_nb and not all_b:
+            raise ValueError('The assignment must not mix blocking assignment and non-blocking assignment. On line: {}.'.format(tree.line))
+
+        # var_name = self.__get_var_name(tree.children[0])
+        # tpe = self.get_current_module_var_type_or_default(var_name)
         # if tpe is None, it is either a local variable within a process or block, in this case, it should be =
         # if current_proc not in ['#initblock#', '#function#']:  # TODO: use a more programmatic way
         # dprint("--------------END-------------------")
@@ -73,17 +97,18 @@ class VerilogTranslationPass(TopDown):
         if current_proc in sense_list or current_proc in ['#function#']:
             # sense_list = sense_list[current_proc]
             # tpe is only recorded if the declaration crosses process boundary
-            if tpe is not None:
-                # if isinstance(tpe, array):
+            # if tpe is not None:
+            if all_non_none:
                 #     dprint(tpe.get_element_type())
-                if isinstance(tpe, sc_signal) or \
-                        isinstance(tpe, sc_out) or \
-                        isinstance(tpe, array) and isinstance(tpe.get_element_type(), sc_signal):
+                # if isinstance(tpe, sc_signal) or \
+                #         isinstance(tpe, sc_out) or \
+                #         isinstance(tpe, array) and isinstance(tpe.get_element_type(), sc_signal):
                 #    dprint('Changed to non-blocking assignment: '.format(var_name))
+                if all_nb:
                     blocking = False
         self.__push_up(tree)
         assert len(tree.children) == 2
-        is_local_var = self.__is_local_varialbe(var_name)
+        is_local_var = self.__all_local_variables(var_names)
         op = '=' if self.in_for_init or blocking or is_local_var else '<='
         l = tree.children[0]
         r = tree.children[1]
@@ -144,14 +169,31 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         return tree.children[1]
 
+    def __check_const(self, tree):
+        """check whether the tree valuates to constant"""
+        if isinstance(tree, int):
+            return True
+        elif is_tree_type(tree, 'hliteral'):
+            return True
+        elif is_tree_type(tree, 'hbinop'):
+            return self.__check_const(tree.children[1]) and self.__check_const(tree.children[2])
+        return False
+
     def harrayref(self, tree):
+        # Check whether
+        if isinstance(tree.children[0], Tree) and tree.children[0].data == 'hslice':
+            hslice = tree.children[0]
+            l, r = hslice.children[1:]
+            l_const = self.__check_const(l)
+            r_const = self.__check_const(r)
+
         self.__push_up(tree)
         if isinstance(tree.children[0], Tree) and tree.children[0].data == 'hslice':
             hslice = tree.children[0]
             var = hslice.children[0]
             l, r = hslice.children[1:]
-            l_const = isinstance(l, int)
-            r_const = isinstance(r, int)
+            # l_const = isinstance(l, int)
+            # r_const = isinstance(r, int)
             if l_const and r_const:
                 idx = '{}:{}'.format(l, r)
             else:
@@ -160,14 +202,18 @@ class VerilogTranslationPass(TopDown):
                 return tree  # irreducible hslice node
         else:
             var, idx = tree.children
-        return '{}[{}]'.format(var, idx)
+        res = '{}[{}]'.format(var, idx)
+        return res
 
     def hsigassignl(self, tree):
         warnings.warn('Implementing SigAssignL as non-blocking')
         return '<='
 
-    def __is_local_varialbe(self, var_name):
+    def __is_local_variable(self, var_name):
         return var_name in self.local_variables
+
+    def __all_local_variables(self, var_names):
+        return all(self.__is_local_variable(var_name) for var_name in var_names)
 
     def hbinop(self, tree):
         self.__push_up(tree)
@@ -468,6 +514,24 @@ class VerilogTranslationPass(TopDown):
         else:
             assert len(tree.children) in [0, 1], 'return statement can only have 0 or 1 return value'
 
+    def __gen_funcparam(self, tree):
+        self.__push_up(tree)
+        var_name, tpe = tree.children
+        ctx = TypeContext(suffix='')
+        decl = tpe.to_str(var_name, context=ctx)
+        # if self.get_current_proc_name() is None:
+        #     # we only check variables that are across processes, otherwise, there is no point in having non-blocking
+        #     # assignment
+        #     self.insert_current_module_var_type(var_name, tpe)
+        return decl, var_name, None
+
+    def funcparami(self, tree):
+        return self.__gen_funcparam(tree)
+
+    def funcparamio(self, tree):
+        return self.__gen_funcparam(tree)
+
+
     def vardeclinit(self, tree):
         self.__push_up(tree)
         init_val = None
@@ -558,6 +622,17 @@ class VerilogTranslationPass(TopDown):
         tree.children = [res]
         return tree
 
+    def hlrotate(self, tree):
+        self.__push_up(tree)
+        val, rot = tree.children
+        return '({} << {}) | ($unsigned({}) >> ($bits({}) - {}))'.format(val, rot, val, val, rot)
+
+    def hconcat(self, tree):
+        self.__push_up(tree)
+        l, r = tree.children[0], tree.children[1]
+        res = '{{ {}, {} }}'.format(l, r)
+        return res
+
     def vardecl(self, tree):
         self.__push_up(tree)
         return tree.children
@@ -574,6 +649,7 @@ class VerilogTranslationPass(TopDown):
         # Note: htypeinfo should return an object that can be used to apply to a variable
         self.__push_up(tree)
         return tree.children[0]
+
 
     def hfunctionparams(self, tree):
         self.__push_up(tree)
