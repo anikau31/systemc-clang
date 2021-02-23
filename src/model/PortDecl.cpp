@@ -81,7 +81,7 @@ std::string PortDecl::asString() const {
     str += "array_sizes: ";
     for (const auto sz: getArraySizes()) {
       std::size_t i{0};
-      str += sz.getLimitedValue() + " ";
+      str += sz.toString(10, true) + " "; // sz.getLimitedValue() + " ";
     }
   }
   str += "\n";

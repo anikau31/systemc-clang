@@ -689,7 +689,7 @@ std::string ModuleInstance::dump_json() {
     str += "array_sizes: ";
     // Write out all the sizes.
     for (auto const &size : instance_info_.getArraySizes()) {
-      str += size.getLimitedValue() + "  ";
+      str += size.toString(10, true) + "  "; //getLimitedValue() + "  ";
     }
   }
 
