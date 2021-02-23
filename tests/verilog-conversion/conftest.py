@@ -63,6 +63,13 @@ test_data = [
         ("-I", zfpshared2.stem, "-I", modules_examples / "moving-average"),
         None,
     ),
+    #  (
+        #  "test_while_iscs",
+        #  load_file(testdata / "test_while_iscs.cpp"),
+        #  None,
+        #  load_file(testdata / "test_while_iscs_hdl.txt.v"),
+    #  ),
+
 ]
 
 
