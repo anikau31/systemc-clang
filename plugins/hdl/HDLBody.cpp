@@ -283,6 +283,8 @@ namespace systemc_hdl {
     }
 
     string newn = lname.newname();
+    // prepend original name to new name so it retains association
+    newn = vardecl->getName().str() + newn;
     h_vardecl->set(newn);  // replace original name with new name
     names_t names = {vardecl->getName().str(), newn, h_vardecl};
     vname_map[vardecl] = names;
