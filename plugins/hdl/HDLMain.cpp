@@ -224,6 +224,7 @@ namespace systemc_hdl {
 	  FindTemplateTypes *te = new FindTemplateTypes();
 	  te->Enumerate(rettype);
 	  HDLType HDLt;
+	  // what about returning an array type? this isn't handled 
 	  HDLt.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	  if (m.second->getNumParams() > 0) {

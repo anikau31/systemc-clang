@@ -224,8 +224,9 @@ namespace hnode {
      inline bool isSCBuiltinType(string tstring){
       // linear search sorry, but at least the length
       // isn't hard coded in ...
+       int found = tstring.find_last_of(" "); // skip qualifiers if any
       for (int i=0; i < numstr; i++) {
-	if (tstring.substr(0, scbtlen[i]) == scbuiltintype[i])
+	if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i])
 	  return true;
       }
       return false;
