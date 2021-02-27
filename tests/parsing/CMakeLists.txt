@@ -11,6 +11,7 @@ set (TEST_LIST
   hotfix-105-sensitivity-list
   sreg
   portarray-example
+  inherit
   )
 
 set(SCC_LIBS libsystemc-clang)
