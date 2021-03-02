@@ -345,25 +345,16 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         )// anyOf
       ).bind("instance_vd");
 
-    
-    auto test = 
-      fieldDecl(
-        hasType(
-          hasUnqualifiedDesugaredType(
-            recordType(
-              hasDeclaration(
-                cxxRecordDecl(isDerivedFrom("::sc_core::sc_module"))
-                ) //hasDeclaration
-              )  //recordType
-          ) //hasUnqualifiedDesugaredType
-        ) //hasType
-      ).bind("test_fd");
-    /* clang-format on */
+       /* clang-format on */
 
     /// Add the two matchers.
     //
     finder.addMatcher(match_instances_decl, this);
     finder.addMatcher(match_with_parent, this);
+  }
+
+  void getFirstCtorArgument(const CXXRecordDecl* cxx_decl) {
+
   }
 
   void parseVarDecl(clang::VarDecl *instance_decl, std::string &instance_name) {

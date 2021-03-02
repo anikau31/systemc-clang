@@ -1,0 +1,1089 @@
+  hModule _sc_module_0 [
+    hPortsigvarlist  NONAME [
+      hSigdecl a [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl b [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl c [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hModdecl a_mod [
+        hTypeinfo  NONAME [
+          hType _sc_module_1 NOLIST
+        ]
+      ]
+    ]
+    hModinitblock b_mod [
+      hCStmt  NONAME NOLIST
+      hPortbindings b_mod [
+        hPortbinding a_mod [
+          hVarref a NOLIST
+          hVarref a NOLIST
+        ]
+        hPortbinding a_mod [
+          hVarref b NOLIST
+          hVarref b NOLIST
+        ]
+        hPortbinding a_mod [
+          hVarref c NOLIST
+          hVarref c NOLIST
+        ]
+      ]
+    ]
+  ]
+  hModule _sc_module_1 [
+    hPortsigvarlist  NONAME [
+      hPortin a [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+        hVarInit  NONAME [
+          hUnimpl StringLiteral NOLIST
+        ]
+      ]
+      hPortout b [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+        hVarInit  NONAME [
+          hUnimpl StringLiteral NOLIST
+        ]
+      ]
+      hPortout c [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+        hVarInit  NONAME [
+          hUnimpl StringLiteral NOLIST
+        ]
+      ]
+      hSigdecl dummy [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hVardecl p [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hVardecl m [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl k [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl n [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl q [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+    ]
+    hProcesses  NONAME [
+      hProcess while_with_binary_oper1 [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_1 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop || [
+                hVarref _local_0 NOLIST
+                hVarref _local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_1 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_2 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper1a [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_1 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop || [
+                hVarref _local_0 NOLIST
+                hVarref _local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_1 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_2 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper1b [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_1 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop || [
+                hVarref _local_0 NOLIST
+                hVarref _local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_2 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper1c [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_1 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop || [
+                hVarref _local_0 NOLIST
+                hVarref _local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_1 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_2 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper1d [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_3 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_3 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop || [
+                hBinop || [
+                  hVarref _local_0 NOLIST
+                  hVarref _local_1 NOLIST
+                ]
+                hVarref _local_2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_3 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_1 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_3 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper1e [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_3 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_3 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop || [
+                hBinop || [
+                  hVarref _local_0 NOLIST
+                  hVarref _local_1 NOLIST
+                ]
+                hVarref _local_2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_3 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_3 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper1f [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_3 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_3 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop || [
+                hBinop || [
+                  hVarref _local_0 NOLIST
+                  hVarref _local_1 NOLIST
+                ]
+                hVarref _local_2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_3 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_3 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper2 [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_1 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop && [
+                hVarref _local_0 NOLIST
+                hVarref _local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_2 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper2a [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_1 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop && [
+                hVarref _local_0 NOLIST
+                hVarref _local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_2 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper2b [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_1 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop && [
+                hVarref _local_0 NOLIST
+                hVarref _local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_2 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper2c [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_1 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop && [
+                hVarref _local_0 NOLIST
+                hVarref _local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_2 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper2d [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_3 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_3 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop && [
+                hBinop && [
+                  hVarref _local_0 NOLIST
+                  hVarref _local_1 NOLIST
+                ]
+                hVarref _local_2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_3 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_3 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper2e [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_3 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_3 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop && [
+                hBinop && [
+                  hVarref _local_0 NOLIST
+                  hVarref _local_1 NOLIST
+                ]
+                hVarref _local_2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_3 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_1 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_3 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper2f [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_3 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_3 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop && [
+                hVarref _local_0 NOLIST
+                hBinop & [
+                  hVarref _local_1 NOLIST
+                  hVarref _local_2 NOLIST
+                ]
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_3 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_3 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper3 [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_3 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_3 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop && [
+                hVarref _local_0 NOLIST
+                hBinop || [
+                  hVarref _local_1 NOLIST
+                  hVarref _local_2 NOLIST
+                ]
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_3 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_3 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hProcess while_with_binary_oper4 [
+        hMethod  NONAME [
+          hVardecl _local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_1 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_2 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl _local_3 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref _local_2 NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref _local_3 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hWhileStmt  NONAME [
+              hBinop || [
+                hBinop && [
+                  hVarref _local_0 NOLIST
+                  hVarref _local_1 NOLIST
+                ]
+                hVarref _local_2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref _local_3 NOLIST
+                  hLiteral 1 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_0 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_1 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref _local_2 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref _local_3 NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+    ]
+    hModinitblock a_mod [
+      hCStmt  NONAME [
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+      ]
+      hSenslist while_with_binary_oper1 [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper1a [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper1b [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper1c [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper1d [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper1e [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper1f [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper2 [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper2a [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper2b [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper2c [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper2d [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper2e [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper2f [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper3 [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist while_with_binary_oper4 [
+        hSensvar NONAME [
+          hVarref a NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+    ]
+  ]
