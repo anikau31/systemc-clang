@@ -117,13 +117,13 @@ int sc_main(int argc, char *argv[]) {
     auto test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
-    REQUIRE(test_module_inst->getIPorts().size() == 2);
-    REQUIRE(test_module_inst->getOPorts().size() == 4);
-    REQUIRE(test_module_inst->getIOPorts().size() == 1);
-    REQUIRE(test_module_inst->getSignals().size() == 4);
+    REQUIRE(test_module_inst->getIPorts().size() == 3);
+    REQUIRE(test_module_inst->getOPorts().size() == 1);
+    REQUIRE(test_module_inst->getIOPorts().size() == 0);
+    REQUIRE(test_module_inst->getSignals().size() == 1);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOtherVars().size() == 3);
+    REQUIRE(test_module_inst->getOtherVars().size() == 0);
 
     // Check process information
     //
@@ -136,15 +136,13 @@ int sc_main(int argc, char *argv[]) {
       auto entry_func{proc.second->getEntryFunction()};
       if (entry_func) {
         auto sense_map{entry_func->getSenseMap()};
-        REQUIRE(sense_map.size() == 3);
+        REQUIRE(sense_map.size() == 1);
 
-        int check{3};
+        int check{1};
         for (auto const &sense : sense_map) {
           llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* : "
                        << sense.first << "\n";
-          if ((sense.first == "entry_function_1_handle__clkpos") ||
-              (sense.first == "entry_function_1_handle__out_array_port") ||
-              (sense.first == "entry_function_1_handle__data")) {
+          if ((sense.first == "entry_function_1_handle__clkpos")) {
             --check;
           }
         }
@@ -163,8 +161,6 @@ int sc_main(int argc, char *argv[]) {
       Tree<TemplateType> *template_args{template_type->getTemplateArgTreePtr()};
 
       // Print out each argument individually using the iterators.
-      //
-
       // Note: template_args must be dereferenced.
       for (auto const &node : *template_args) {
         const TemplateType *type_data{node->getDataPtr()};
@@ -203,15 +199,6 @@ int sc_main(int argc, char *argv[]) {
       if ((name == "in1") || (name == "in2")) {
         REQUIRE(trim(dft_str) == "sc_in int");
       }
-
-      if (name == "three_dim") {
-        REQUIRE(pd->getArrayType() == true);
-        REQUIRE(pd->getArraySizes().size() == 3);
-        std::vector<llvm::APInt> sizes{pd->getArraySizes()};
-        REQUIRE(sizes[0].getLimitedValue() == 2);
-        REQUIRE(sizes[1].getLimitedValue() == 3);
-        REQUIRE(sizes[2].getLimitedValue() == 4);
-      }
     }
 
     for (auto const &port : test_module_inst->getOPorts()) {
@@ -226,29 +213,6 @@ int sc_main(int argc, char *argv[]) {
         REQUIRE(trim(dft_str) == "sc_out int");
       }
 
-      if (name == "out_array_port") {
-        REQUIRE(pd->getArrayType() == true);
-        REQUIRE(pd->getArraySizes().front() == 5);
-      }
-
-      if (name == "two_dim") {
-        REQUIRE(pd->getArrayType() == true);
-        REQUIRE(pd->getArraySizes().size() == 2);
-        std::vector<llvm::APInt> sizes{pd->getArraySizes()};
-        REQUIRE(sizes[0].getLimitedValue() == 2);
-        REQUIRE(sizes[1].getLimitedValue() == 3);
-      }
-    }
-
-    for (auto const &port : test_module_inst->getIOPorts()) {
-      auto name{get<0>(port)};
-      PortDecl *pd{get<1>(port)};
-      auto template_type{pd->getTemplateType()};
-      auto template_args{template_type->getTemplateArgTreePtr()};
-
-      std::string dft_str{template_args->dft()};
-
-      if ((name == "in_out")) REQUIRE(trim(dft_str) == "sc_inout double");
     }
 
     for (auto const &sig : test_module_inst->getSignals()) {
@@ -263,90 +227,8 @@ int sc_main(int argc, char *argv[]) {
         REQUIRE(trim(dft_str) == "sc_signal int");
       }
 
-      /// Check array parameters
-      if (name == "data") {
-        REQUIRE(sg->getArrayType() == true);
-        REQUIRE(sg->getArraySizes().front() == 4);
-      }
-
-      if (name == "two_dim_sig") {
-        REQUIRE(sg->getArrayType() == true);
-        REQUIRE(sg->getArraySizes().size() == 2);
-        std::vector<llvm::APInt> sizes{sg->getArraySizes()};
-        REQUIRE(sizes[0].getLimitedValue() == 2);
-        REQUIRE(sizes[1].getLimitedValue() == 3);
-      }
-
-      if (name == "three_dim_sig") {
-        REQUIRE(sg->getArrayType() == true);
-        REQUIRE(sg->getArraySizes().size() == 3);
-        std::vector<llvm::APInt> sizes{sg->getArraySizes()};
-        REQUIRE(sizes[0].getLimitedValue() == 2);
-        REQUIRE(sizes[1].getLimitedValue() == 3);
-        REQUIRE(sizes[2].getLimitedValue() == 4);
-      }
     }
 
-    INFO("Checking member ports for simple module instance.");
-    auto simple_module_inst{simple_module};
-
-    // Check if the proper number of ports are found.
-    REQUIRE(simple_module_inst->getIPorts().size() == 3);
-    REQUIRE(simple_module_inst->getOPorts().size() == 1);
-    REQUIRE(simple_module_inst->getIOPorts().size() == 0);
-    REQUIRE(simple_module_inst->getSignals().size() == 0);
-    REQUIRE(simple_module_inst->getOtherVars().size() == 1);
-    REQUIRE(simple_module_inst->getInputStreamPorts().size() == 0);
-    REQUIRE(simple_module_inst->getOutputStreamPorts().size() == 0);
-
-    //
-    // Check port types
-    //
-    //
-    for (auto const &port : simple_module_inst->getIPorts()) {
-      auto name{get<0>(port)};
-      PortDecl *pd{get<1>(port)};
-      auto template_type{pd->getTemplateType()};
-      auto template_args{template_type->getTemplateArgTreePtr()};
-
-      std::string dft_str{template_args->dft()};
-
-      if (name == "clk") {
-        REQUIRE(trim(dft_str) == "sc_in _Bool");
-      }
-      if ((name == "one") || (name == "two")) {
-        REQUIRE(trim(dft_str) == "sc_in int");
-      }
-    }
-
-    for (auto const &port : simple_module_inst->getOPorts()) {
-      auto name{get<0>(port)};
-      PortDecl *pd{get<1>(port)};
-      auto template_type{pd->getTemplateType()};
-      auto template_args{template_type->getTemplateArgTreePtr()};
-
-      std::string dft_str{template_args->dft()};
-
-      if ((name == "out_one")) {
-        REQUIRE(trim(dft_str) == "sc_out int");
-      }
-    }
-
-    for (auto const &ovar : simple_module_inst->getOtherVars()) {
-      auto name{get<0>(ovar)};
-      PortDecl *pd{get<1>(ovar)};
-      auto template_type{pd->getTemplateType()};
-      auto template_args{template_type->getTemplateArgTreePtr()};
-
-      std::string dft_str{template_args->dft()};
-
-      if ((name == "xy")) {
-        REQUIRE(trim(dft_str) == "int");
-      }
-    }
-
-    //
-    //
     // Check netlist
     //
     //
@@ -359,7 +241,7 @@ int sc_main(int argc, char *argv[]) {
     // Instance: d
     auto port_bindings{dut->getPortBindings()};
 
-    int check_count{3};
+    int check_count{2};
     for (auto const &binding : port_bindings) {
       PortBinding *pb{binding.second};
       std::string port_name{pb->getCallerPortName()};
@@ -369,10 +251,6 @@ int sc_main(int argc, char *argv[]) {
       if (caller_name == "test_instance") {
         if (port_name == "in1") {
           REQUIRE(as_string == "test test_instance testing in1 sig1");
-          --check_count;
-        }
-        if (port_name == "in_out") {
-          REQUIRE(as_string == "test test_instance testing in_out double_sig");
           --check_count;
         }
         if (port_name == "out1") {

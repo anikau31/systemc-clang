@@ -345,20 +345,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         )// anyOf
       ).bind("instance_vd");
 
-    
-    auto test = 
-      fieldDecl(
-        hasType(
-          hasUnqualifiedDesugaredType(
-            recordType(
-              hasDeclaration(
-                cxxRecordDecl(isDerivedFrom("::sc_core::sc_module"))
-                ) //hasDeclaration
-              )  //recordType
-          ) //hasUnqualifiedDesugaredType
-        ) //hasType
-      ).bind("test_fd");
-    /* clang-format on */
+       /* clang-format on */
 
     /// Add the two matchers.
     //
