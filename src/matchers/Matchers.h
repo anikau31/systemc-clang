@@ -55,37 +55,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
   const ModuleMapType &getFoundModuleDeclarations() const { return modules_; }
 
-  void pruneMatches(ASTContext &context) {
-    // Must have found instances.
-    // 1. For every module found, check if there is an instance.
-    // 2. If there is an instance, then add it into the list.
-
-    llvm::outs() << "###### DUMP Instance Matches \n";
-    instance_matcher_.dump();
-
-    auto instance_map{instance_matcher_.getInstanceMap()};
-    // Each inst is of type pair<Decl*, ModuleInstancetype>
-    for (auto inst : instance_map) {
-      ModuleInstanceType instance{inst.second};
-
-      clang::CXXRecordDecl *decl{
-          dyn_cast<clang::CXXRecordDecl>(inst.second.getInstanceTypeDecl())};
-      auto name{decl->getNameAsString()};
-      llvm::outs() << "############### ====> INST: " << inst.first << ", name: " << name << ", instance_name: " << inst.second.instance_name << "\n";
-
-      InstanceListType instance_list;
-      instance_matcher_.findInstanceByVariableType(decl, instance_list);
-      // declaration_instance_map_.insert(
-//
-      // This is the new data structure that uses ModuleDecl internally.
-      if (instance_list.size() > 1) {
-        assert(true);
-      }
-      auto add_module{new ModuleInstance(name, decl)};
-      add_module->setInstanceInfo(instance);
-
-      modules_.insert(
-          std::pair<clang::CXXRecordDecl *, ModuleInstance *>(decl, add_module));
+  void runPortMatcher(ASTContext &context, clang::CXXRecordDecl *decl, ModuleInstance *add_module) {
 
       MatchFinder port_registry{};
       PortMatcher port_matcher{};
@@ -108,6 +78,54 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       add_module->addPorts(port_matcher.getOutputStreamPorts(),
                            "sc_stream_out");
       add_module->addPorts(port_matcher.getSubmodules(), "submodules");
+
+
+  }
+
+  void pruneMatches(ASTContext &context) {
+    // Must have found instances.
+    // 1. For every module found, check if there is an instance.
+    // 2. If there is an instance, then add it into the list.
+
+    llvm::outs() << "###### DUMP Instance Matches \n";
+    instance_matcher_.dump();
+
+    auto instance_map{instance_matcher_.getInstanceMap()};
+    // Each inst is of type pair<Decl*, ModuleInstancetype>
+    for (auto inst : instance_map) {
+      ModuleInstanceType instance{inst.second};
+
+      clang::CXXRecordDecl *decl{
+          dyn_cast<clang::CXXRecordDecl>(inst.second.getInstanceTypeDecl())};
+      auto name{decl->getNameAsString()};
+      llvm::outs() << "############### ====> INST: " << inst.first << ", name: " << name << ", instance_name: " << inst.second.instance_name << "\n";
+
+      InstanceListType instance_list;
+      instance_matcher_.findInstanceByVariableType(decl, instance_list);
+      // This is the new data structure that uses ModuleDecl internally.
+      if (instance_list.size() > 1) {
+        assert(true);
+      }
+
+      auto add_module{new ModuleInstance(name, decl)};
+      add_module->setInstanceInfo(instance);
+
+      modules_.insert(
+          std::pair<clang::CXXRecordDecl *, ModuleInstance *>(decl, add_module));
+
+      runPortMatcher(context, decl, add_module);
+
+      /// Find if the instance CXXREcordDecl has a base class, and parse that too.
+      /// Any ports, signals, etc. should be incorporated into the module instance.
+      for (auto &base: decl->bases()) {
+        llvm::dbgs() << "=============================== BASES =======================\n";
+        clang::CXXRecordDecl *base_decl{base.getType().getTypePtr()->getAsCXXRecordDecl()};
+        /// Process all base classes that are not SystemC modules.
+        if (base_decl->getNameAsString() != "sc_module") {
+          runPortMatcher(context, base_decl, add_module);
+        }
+      }
+
     }
   }
 
