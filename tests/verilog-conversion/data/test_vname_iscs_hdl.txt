@@ -48,6 +48,13 @@
           ]
         ]
       ]
+      hVardecl m [
+        hTypeinfo  NONAME [
+          hType sc_uint [
+            hLiteral 1 NOLIST
+          ]
+        ]
+      ]
     ]
     hProcesses  NONAME [
       hProcess var1 [
