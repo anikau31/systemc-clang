@@ -273,7 +273,8 @@ namespace systemc_hdl {
 
     te->Enumerate(tp);
     HDLType HDLt;
-    HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(), NULL,
+    std::vector<llvm::APInt> array_sizes = sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
+    HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(), &array_sizes,
 		      hNode::hdlopsEnum::hVardecl, h_varlist);
     hNodep h_vardecl = h_varlist->child_list.back();
     h_ret = NULL;
