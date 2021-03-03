@@ -1,4 +1,4 @@
-  hModule _sc_module_0 [
+  hModule B_top_sc_module_0 [
     hPortsigvarlist  NONAME [
       hSigdecl a [
         hTypeinfo  NONAME [
@@ -23,7 +23,7 @@
       ]
       hModdecl a_mod [
         hTypeinfo  NONAME [
-          hType _sc_module_1 NOLIST
+          hType A_sc_module_1 NOLIST
         ]
       ]
     ]
@@ -45,7 +45,7 @@
       ]
     ]
   ]
-  hModule _sc_module_1 [
+  hModule A_sc_module_1 [
     hPortsigvarlist  NONAME [
       hPortin a [
         hTypeinfo  NONAME [

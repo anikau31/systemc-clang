@@ -89,7 +89,7 @@ namespace systemc_hdl {
     }
 
     // generate module instance for top module and its submodules
-    string modname = mod_newn.newname();
+    string modname = modinstance->getName()+mod_newn.newname(); // include original name for readability
     LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName()
 	       << " renamed " << modname << "\n");
     hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
@@ -155,7 +155,7 @@ namespace systemc_hdl {
       }
       else LLVM_DEBUG(llvm::dbgs() << "Non-Array submodule " << smod->getInstanceName() << "\n");
       const std::vector<std::string> &instnames{smod->getInstanceInfo().getInstanceNames()};
-      string newmodname = mod_newn.newname();
+      string newmodname = smod->getName()+mod_newn.newname();
       for (auto instname: instnames) {
 	LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
 
