@@ -1,4 +1,4 @@
-module _sc_module_0 (
+module topadd2_sc_module_0 (
   input logic [0:0] clk,
   input logic signed[31:0] in_port_1,
   input logic signed[31:0] in_port_2,
