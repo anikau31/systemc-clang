@@ -72,8 +72,12 @@ FindTemplateTypes *PortDecl::getTemplateType() { return template_type_; }
 
 std::string PortDecl::asString() const {
   std::string str{};
+  std::string class_name{};
+  if (auto fd = getAsFieldDecl()) {
+    class_name = fd->getParent()->getName().str();
+  }
 
-  str += "signal_port_name: " + getName() + "\n";
+  str += "signal_port_name: " + class_name + "::" +  getName() + "\n";
   str += "signal_port_arguments: " + template_type_->asString() + "\n";
   str += "is_array_type: " + std::string{getArrayType()} + "\n";
 
