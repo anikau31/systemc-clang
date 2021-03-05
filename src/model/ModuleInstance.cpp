@@ -661,7 +661,7 @@ void ModuleInstance::dumpSignals(raw_ostream &os, int tabn) {
 }
 
 void ModuleInstance::dump(llvm::raw_ostream &os) {
-  os << "Module declaration name: " << module_name_;
+  os << "Name: " << module_name_;
   os << "\n# Instances:\n";
   dumpInstances(os, 4);
   os << "# Port Declaration:\n";
