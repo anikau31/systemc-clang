@@ -1,4 +1,4 @@
-  hModule _sc_module_0 [
+  hModule topadd2_sc_module_0 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [

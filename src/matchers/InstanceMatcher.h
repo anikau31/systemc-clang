@@ -345,25 +345,16 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         )// anyOf
       ).bind("instance_vd");
 
-    
-    auto test = 
-      fieldDecl(
-        hasType(
-          hasUnqualifiedDesugaredType(
-            recordType(
-              hasDeclaration(
-                cxxRecordDecl(isDerivedFrom("::sc_core::sc_module"))
-                ) //hasDeclaration
-              )  //recordType
-          ) //hasUnqualifiedDesugaredType
-        ) //hasType
-      ).bind("test_fd");
-    /* clang-format on */
+       /* clang-format on */
 
     /// Add the two matchers.
     //
     finder.addMatcher(match_instances_decl, this);
     finder.addMatcher(match_with_parent, this);
+  }
+
+  void getFirstCtorArgument(const CXXRecordDecl* cxx_decl) {
+
   }
 
   void parseVarDecl(clang::VarDecl *instance_decl, std::string &instance_name) {
@@ -553,11 +544,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(llvm::dbgs()
                  << "#### CTOR_FD: parent_fd " << parent_fd->getNameAsString()
                  << " ctor_fd " << ctor_fd->getNameAsString() << "\n");
-      // LLVM_DEBUG(ctor_fd->dump());
+      LLVM_DEBUG(ctor_fd->dump());
 
       // llvm::outs() << "### DEBUG\n";
       //  ctor_init->getInit()->dump();
-
       auto index_map{getArrayInstanceIndex(ctor_init)};
 
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
@@ -590,12 +580,22 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         MatchFinder iarg_registry{};
         InstanceArgumentMatcher iarg_matcher{};
         iarg_matcher.registerMatchers(iarg_registry);
-        iarg_registry.match(*cexpr, *result.Context);
+        // iarg_registry.match(*cexpr, *result.Context);
+
+        if (ctor_fd->hasInClassInitializer()) {
+          LLVM_DEBUG(llvm::dbgs() << "### In-class initializer\n";);
+          const Expr *in_class_init{ctor_fd->getInClassInitializer()};
+          iarg_registry.match(*in_class_init->IgnoreImplicit(),
+                              *result.Context);
+        } else {
+          LLVM_DEBUG(llvm::dbgs() << "### Constructor initializer\n";);
+          iarg_registry.match(*cexpr, *result.Context);
+        }
 
         LLVM_DEBUG(iarg_matcher.dump();
 
-        llvm::outs() << "#### IndexMap: " << index_map.size() << "\n";
-        );
+                   llvm::outs()
+                   << "#### IndexMap: " << index_map.size() << "\n";);
         // This retrieves the submodule instance name.
         if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {
           auto submodule_instance_name = inst_literal->getString().str();

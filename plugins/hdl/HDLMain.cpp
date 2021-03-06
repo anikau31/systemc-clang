@@ -3,6 +3,7 @@
 #include <tuple>
 #include "SystemCClang.h"
 #include "PortBinding.h"
+#include "ArrayTypeUtils.h"
 #include "Tree.h"
 #include "HDLMain.h"
 //#include "TemplateParametersMatcher.h"
@@ -88,7 +89,7 @@ namespace systemc_hdl {
     }
 
     // generate module instance for top module and its submodules
-    string modname = mod_newn.newname();
+    string modname = modinstance->getName()+mod_newn.newname(); // include original name for readability
     LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName()
 	       << " renamed " << modname << "\n");
     hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
@@ -154,7 +155,7 @@ namespace systemc_hdl {
       }
       else LLVM_DEBUG(llvm::dbgs() << "Non-Array submodule " << smod->getInstanceName() << "\n");
       const std::vector<std::string> &instnames{smod->getInstanceInfo().getInstanceNames()};
-      string newmodname = mod_newn.newname();
+      string newmodname = smod->getName()+mod_newn.newname();
       for (auto instname: instnames) {
 	LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
 
@@ -223,6 +224,7 @@ namespace systemc_hdl {
 	  FindTemplateTypes *te = new FindTemplateTypes();
 	  te->Enumerate(rettype);
 	  HDLType HDLt;
+	  // what about returning an array type? this isn't handled 
 	  HDLt.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	  if (m.second->getNumParams() > 0) {
@@ -237,8 +239,11 @@ namespace systemc_hdl {
 	      FindTemplateTypes *te = new FindTemplateTypes();
 	      te->Enumerate(tp);
 	      HDLType HDLt;
+	      std::vector<llvm::APInt> array_sizes = sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
 	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
-				NULL, hNode::hdlopsEnum::hVardecl, hparams);
+				&array_sizes, vardecl->getType()->isReferenceType()?
+				hNode::hdlopsEnum::hFunctionParamIO:
+				hNode::hdlopsEnum::hFunctionParamI, hparams);
 	    }
 	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), false); // suppress output of unqualified name
 	  } else {
