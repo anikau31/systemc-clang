@@ -102,6 +102,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   // Finds the instance with the same type as the argument.
   // Pass by reference to the instance.
+
   bool findInstanceByVariableType(
       clang::CXXRecordDecl *decl,
       std::vector<InstanceDeclType> &found_instances) {
@@ -351,10 +352,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     //
     finder.addMatcher(match_instances_decl, this);
     finder.addMatcher(match_with_parent, this);
-  }
-
-  void getFirstCtorArgument(const CXXRecordDecl* cxx_decl) {
-
   }
 
   void parseVarDecl(clang::VarDecl *instance_decl, std::string &instance_name) {

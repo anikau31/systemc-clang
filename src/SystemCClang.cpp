@@ -44,7 +44,7 @@ bool SystemCConsumer::fire() {
   MatchFinder matchRegistry{};
   module_declaration_handler.registerMatchers(matchRegistry);
   matchRegistry.matchAST(getContext());
-  module_declaration_handler.pruneMatches(getContext());
+  module_declaration_handler.processInstanceCXXDecls(getContext());
 
   LLVM_DEBUG(llvm::dbgs() << "== Print module declarations pruned\n";
              module_declaration_handler.dump();
