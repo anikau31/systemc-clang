@@ -283,16 +283,17 @@ namespace systemc_hdl {
       TraverseStmt(declinit);
     }
 
-    string newn = lname.newname();
+    vname_map.add_entry(vardecl, vardecl->getName().str(), h_vardecl);
+    //string newn = lname.newname();
     // prepend original name to new name so it retains association
-    newn = vardecl->getName().str() + newn;
-    h_vardecl->set(newn);  // replace original name with new name
-    names_t names = {vardecl->getName().str(), newn, h_vardecl};
-    vname_map[vardecl] = names;
+    //newn = vardecl->getName().str() + newn;
+    //h_vardecl->set(newn);  // replace original name with new name
+    //names_t names = {vardecl->getName().str(), newn, h_vardecl};
+    //vname_map[vardecl] = names;
 
     if (h_ret) {
       hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
-      varinitp->child_list.push_back(new hNode(newn, hNode::hdlopsEnum::hVarref));
+      varinitp->child_list.push_back(new hNode(vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref));
       varinitp->child_list.push_back(h_ret);
       h_ret = varinitp;
     }
@@ -421,11 +422,12 @@ namespace systemc_hdl {
       return true;
     }
 
-    string newname = "";
-    auto vname_it{vname_map.find(expr->getDecl())};
-    if (vname_it != vname_map.end()) {
-      newname = vname_map[expr->getDecl()].newn;
-    }
+    // string newname = "";
+    // auto vname_it{vname_map.find(expr->getDecl())};
+    // if (vname_it != vname_map.end()) {
+    //   newname = vname_map[expr->getDecl()].newn;
+    // }
+    string newname = vname_map.find_entry_newn(expr->getDecl());
     LLVM_DEBUG(llvm::dbgs() << "new name is " << newname << "\n");
     LLVM_DEBUG(value->dump(llvm::dbgs()));
 
@@ -836,7 +838,7 @@ namespace systemc_hdl {
 
   void HDLBody::AddVnames(hNodep &hvns) {
     LLVM_DEBUG(llvm::dbgs() << "Vname Dump\n");
-    for (auto const &var : vname_map) {
+    for (auto const &var : vname_map.hdecl_name_map) {
       LLVM_DEBUG(llvm::dbgs() << "(" << var.first << "," << var.second.oldn
 		 << ", " << var.second.newn << ")\n");
       if (add_info) {

@@ -66,9 +66,10 @@ namespace systemc_hdl {
   private:
   
     hNodep h_ret;   // value returned by each subexpression
-    hdecl_name_map_t vname_map;
-    name_serve lname;
+    //hdecl_name_map_t vname_map;
+    //name_serve lname;
 
+    hdecl_name_map_t vname_map;
     bool add_info;
     
     bool isLogicalOp(clang::OverloadedOperatorKind opc);

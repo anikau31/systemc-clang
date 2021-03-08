@@ -36,11 +36,12 @@ namespace systemc_hdl {
    void SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
                        llvm::raw_fd_ostream &SCout);
    void SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
-                     hNodep &h_info);
+                     hNodep &h_info,  hdecl_name_map_t &mod_vname_map);
    void SCsig2hcode(ModuleInstance::signalMapType pmap, hNode::hdlopsEnum h_op,
-                    hNodep &h_info);
+                    hNodep &h_info, hdecl_name_map_t &mod_vname_map);
     void SCproc2hcode(ModuleInstance::processMapType pm, hNodep & h_top);
     //void SCportbindings2hcode(ModuleInstance * mod, hNodep &h_pb);
+    //following is obsolete and no longer called
     void SCportbindings2hcode(
 			      //systemc_clang::ModuleInstance::portBindingMapType portbindingmap,
 			      ModuleInstance* mod,
@@ -53,9 +54,11 @@ namespace systemc_hdl {
     
     HDLType HDLt;
 
-    hmodinst_name_map_t mod_name_map;
-    name_serve mod_newn{"_sc_module_"};
-
+    //hmodinst_name_map_t mod_name_map;
+    //name_serve mod_newn{"_sc_module_"};
+    
+    hmodinst_name_map_t mod_name_map{"_sc_module_"};
+    
     /// Command line options
     std::string hdl_file_out_;
   };

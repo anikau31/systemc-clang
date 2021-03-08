@@ -89,13 +89,22 @@ namespace systemc_hdl {
     }
 
     // generate module instance for top module and its submodules
-    string modname = modinstance->getName()+mod_newn.newname(); // include original name for readability
+
+    //string modname = modinstance->getName()+mod_newn.newname(); // include original name for readability
+
+    hNodep h_module = new hNode(hNode::hdlopsEnum::hModule);
+    
+    // need to provide an old name for module instance decl
+    // since it's not derived from clang NamedDecl and doesn't have
+    // a str() class to dereference llvm:StringRef
+    
+    mod_name_map.add_entry(modinstance, modinstance->getName(), h_module);
     LLVM_DEBUG(llvm::dbgs() << "\ntop level module " << modinstance->getName()
-	       << " renamed " << modname << "\n");
-    hNodep h_module = new hNode(modname, hNode::hdlopsEnum::hModule);
-    //mod_name_map[modinstance->getInstanceDecl()] = {modinstance->getName(),
-    mod_name_map[modinstance] = {modinstance->getName(),
-				 modname, h_module};
+	       << " renamed " << h_module->getname() << "\n");
+
+    //mod_name_map[modinstance] = {modinstance->getName(),
+    //				 modname, h_module};
+    
     SCmodule2hcode(modinstance, h_module, HCodeOut);
     // h_module->print(HCodeOut);
 
@@ -131,23 +140,23 @@ namespace systemc_hdl {
     //LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
 
     LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
-
+    hdecl_name_map_t mod_vname_map;
     // Ports
     hNodep h_ports =
       new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
-    SCport2hcode(mod->getIPorts(), hNode::hdlopsEnum::hPortin, h_ports);
-    SCport2hcode(mod->getInputStreamPorts(), hNode::hdlopsEnum::hPortin, h_ports);
-    SCport2hcode(mod->getOPorts(), hNode::hdlopsEnum::hPortout, h_ports);
+    SCport2hcode(mod->getIPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
+    SCport2hcode(mod->getInputStreamPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
+    SCport2hcode(mod->getOPorts(), hNode::hdlopsEnum::hPortout, h_ports, mod_vname_map);
     SCport2hcode(mod->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
-		 h_ports);
-    SCport2hcode(mod->getIOPorts(), hNode::hdlopsEnum::hPortio, h_ports);
+		 h_ports, mod_vname_map);
+    SCport2hcode(mod->getIOPorts(), hNode::hdlopsEnum::hPortio, h_ports, mod_vname_map);
 
     // Signals
-    SCsig2hcode(mod->getSignals(), hNode::hdlopsEnum::hSigdecl, h_ports);
+    SCsig2hcode(mod->getSignals(), hNode::hdlopsEnum::hSigdecl, h_ports, mod_vname_map);
 
     h_module->child_list.push_back(h_ports);
 
-    SCport2hcode(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports);
+    SCport2hcode(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports, mod_vname_map);
 
     for (const auto &smod : submodv) {
       if (smod->getInstanceInfo().isArrayType()) {
@@ -155,7 +164,8 @@ namespace systemc_hdl {
       }
       else LLVM_DEBUG(llvm::dbgs() << "Non-Array submodule " << smod->getInstanceName() << "\n");
       const std::vector<std::string> &instnames{smod->getInstanceInfo().getInstanceNames()};
-      string newmodname = smod->getName()+mod_newn.newname();
+      //string newmodname = smod->getName()+mod_newn.newname();
+      bool frsttime = true;
       for (auto instname: instnames) {
 	LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
 
@@ -163,11 +173,15 @@ namespace systemc_hdl {
 	  new hNode(instname, hNode::hdlopsEnum::hModdecl);
 	h_ports->child_list.push_back(h_smod);
 	hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-
-	mod_name_map[smod] = {instname,
-			      newmodname, h_smod};
+	if (frsttime) { // only enter the first one into the map
+	  mod_name_map.add_entry(smod, smod->getName(), h_smod);
+	  h_smod->set(instname); // override name inserted by map service
+	  frsttime = false;
+	  //mod_name_map[smod] = {instname,
+	  //		      newmodname, h_smod};
+	}
 	h_smodtypinfo->child_list.push_back(
-					    new hNode(newmodname, hNode::hdlopsEnum::hType));
+					    new hNode(mod_name_map.find_entry_newn(smod), hNode::hdlopsEnum::hType));
 	h_smod->child_list.push_back(h_smodtypinfo);
       }
     }
@@ -194,7 +208,9 @@ namespace systemc_hdl {
     //  typedef std::pair<std::string, PortBinding *> portBindingPairType;
     //  typedef std::map<std::string, PortBinding *> portBindingMapType;
     //   portBindingMapType getPortBindings();
+    
     // We are doing port bindings in the init block now
+    
     // hNodep h_submodule_pb =
     //   new hNode(mod->getInstanceName()+"_portbindings", hNode::hdlopsEnum::hPortbindings);
     // SCportbindings2hcode(mod, h_submodule_pb);
@@ -260,7 +276,7 @@ namespace systemc_hdl {
     for (const auto &smod : submodv) {
       //for (int i = 0; i < smod->getInstanceInfo().instance_names.size(); i++) {
       //string modname = mod_name_map[smod->getInstanceDecl()].newn;
-      string modname = mod_name_map[smod].newn;
+      string modname = mod_name_map.find_entry_newn(smod);
       LLVM_DEBUG(llvm::dbgs() << "generate submodule " << smod->getName() //smod->getInstanceInfo().instance_names[i] //getInstanceName()
 		 << " renamed " << modname << "\n");
       hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
@@ -268,7 +284,8 @@ namespace systemc_hdl {
       // }
     }
   }
-
+  // this is obsolete. It has been supeseded by HDLHnode.cpp
+  // due to possibility of for-loops enclosing port bindings
   void HDLMain::SCportbindings2hcode(ModuleInstance* mod,
 				     //systemc_clang::ModuleInstance::portBindingMapType portbindingmap,
 				     hNodep &h_pbs) {
@@ -319,20 +336,34 @@ namespace systemc_hdl {
   }
 
   void HDLMain::SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
-			     hNodep &h_info) {
+			     hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
     clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 
+    std::unordered_set<string> module_vars;
     for (ModuleInstance::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
 	 mit++) {
       string objname = get<0>(*mit);
 
       LLVM_DEBUG(llvm::dbgs() << "object name is " << objname << " and h_op is "
 		 << h_op << "\n");
+
       PortDecl *pd = get<1>(*mit);
       Tree<TemplateType> *template_argtp =
         (pd->getTemplateType())->getTemplateArgTreePtr();
 
       std::vector<llvm::APInt> array_sizes = pd->getArraySizes();
+      
+      // if this is a duplicate name due to inheritance
+      // create a new name and add it to the module level vname map
+      // this map will be passed to all calls to HDLBody to merge into
+      // its vname_map
+      
+      if (module_vars.count(objname)) {
+	LLVM_DEBUG(llvm::dbgs() << "duplicate object " << objname << "\n");
+	//string newn = mod_newn.newname();
+	//objname+="_var"+newn;
+      }
+      else module_vars.insert(objname);
       HDLt.SCtype2hcode(objname, template_argtp, &array_sizes, h_op,
 			h_info);  // passing the sigvarlist
       // check for initializer
@@ -369,7 +400,7 @@ namespace systemc_hdl {
   }
 
   void HDLMain::SCsig2hcode(ModuleInstance::signalMapType pmap,
-			    hNode::hdlopsEnum h_op, hNodep &h_info) {
+			    hNode::hdlopsEnum h_op, hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
     for (ModuleInstance::signalMapType::iterator mit = pmap.begin();
 	 mit != pmap.end(); mit++) {
       string objname = get<0>(*mit);

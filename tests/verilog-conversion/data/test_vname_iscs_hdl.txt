@@ -1,14 +1,14 @@
-  hModule _sc_module_0 [
+  hModule B_top_sc_module_0 [
     hPortsigvarlist  NONAME [
       hModdecl a_mod [
         hTypeinfo  NONAME [
-          hType _sc_module_1 NOLIST
+          hType A_sc_module_1 NOLIST
         ]
       ]
     ]
     hModinitblock b_mod NOLIST
   ]
-  hModule _sc_module_1 [
+  hModule A_sc_module_1 [
     hPortsigvarlist  NONAME [
       hSigdecl dummy [
         hTypeinfo  NONAME [

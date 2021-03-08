@@ -271,9 +271,13 @@ namespace hnode {
     hNodep h_vardeclp;
   } names_t;
 
- typedef std::map<Decl *, names_t> hdecl_name_map_t;
- typedef std::map<ModuleInstance *, names_t> hmodinst_name_map_t;
+
+  // map from variable declaration p to new name
+  //typedef std::map<Decl *, names_t> hdecl_name_map_t;
  
+  // map from module instance declaration p to new name
+  // typedef std::map<ModuleInstance *, names_t> hmodinst_name_map_t;
+  
   class name_serve {
   private:
     int cnt;
@@ -283,8 +287,43 @@ namespace hnode {
     string newname() {
       return (prefix+to_string(cnt++));
     }
+    void set_prefix(string prfx) { prefix = prfx; }
   };
+
+
+  //!
+  //! The newname_map_t class generates new names for identifiers
+  //! and inserts the old name, new name, and pointer to clang ast
+  //! node for the identifier into a map. 
+  //!
+
+  
+  template <class T>
+    class newname_map_t {
+  private:
+    name_serve ns;
+  public:
+    std::map<T, names_t> hdecl_name_map;
+    newname_map_t(string prefix = "_local_") { ns.set_prefix(prefix); }
+    void add_entry(T declp, string old_name, hNodep hnp )
+    {
+      
+      string newn = old_name+ns.newname();
+      hnp->set(newn);
+      names_t names = {old_name, newn, hnp};
+      hdecl_name_map[declp] = names;
+    }
+    string find_entry_newn(T declp) {
+      auto vname_it{hdecl_name_map.find(declp)};
+      if (vname_it != hdecl_name_map.end()) 
+	return hdecl_name_map[declp].newn;
+      else return "";
+    }
     
+  };
+
+  typedef newname_map_t<NamedDecl *> hdecl_name_map_t;
+  typedef newname_map_t<ModuleInstance *> hmodinst_name_map_t;
 } // end namespace hnode
 
 #endif
