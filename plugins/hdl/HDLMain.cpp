@@ -140,7 +140,9 @@ namespace systemc_hdl {
     //LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
 
     LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
+    
     hdecl_name_map_t mod_vname_map("_scclang_global_");
+    module_vars.clear();
     // Ports
     hNodep h_ports =
       new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
