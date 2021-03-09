@@ -277,13 +277,17 @@ namespace hnode {
  
   // map from module instance declaration p to new name
   // typedef std::map<ModuleInstance *, names_t> hmodinst_name_map_t;
-  
+
+  const static std::string gvar_prefix{"_scclang_global_"};
+  const static std::string lvar_prefix{"_local_"};
+    
   class name_serve {
   private:
     int cnt;
     string prefix;
   public:
-  name_serve(string prefx="_local_") : prefix(prefx), cnt(0){ }
+ 
+  name_serve(string prefx=lvar_prefix) : prefix(prefx), cnt(0){ }
     string newname() {
       return (prefix+to_string(cnt++));
     }
@@ -319,6 +323,7 @@ namespace hnode {
 	return hdecl_name_map[declp].newn;
       else return "";
     }
+    bool empty() { return hdecl_name_map.empty(); }
     
   };
 

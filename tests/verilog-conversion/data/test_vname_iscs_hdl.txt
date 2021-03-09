@@ -48,7 +48,7 @@
           ]
         ]
       ]
-      hVardecl m [
+      hVardecl m_scclang_global_0 [
         hTypeinfo  NONAME [
           hType sc_uint [
             hLiteral 1 NOLIST
@@ -136,9 +136,7 @@
               hVarref i_local_0 NOLIST
             ]
             hBinop = [
-              hVarref m [
-                hUnimpl CXXThisExpr NOLIST
-              ]
+              hVarref m_scclang_global_0 NOLIST
               hLiteral 0 NOLIST
             ]
             hBinop = [
@@ -169,9 +167,7 @@
           ]
           hCStmt  NONAME [
             hBinop = [
-              hVarref m [
-                hUnimpl CXXThisExpr NOLIST
-              ]
+              hVarref m_scclang_global_0 NOLIST
               hLiteral 0 NOLIST
             ]
             hBinop = [
@@ -192,9 +188,7 @@
               hBinop = [
                 hVarref k NOLIST
                 hBinop + [
-                  hVarref m [
-                    hUnimpl CXXThisExpr NOLIST
-                  ]
+                  hVarref m_scclang_global_0 NOLIST
                   hVarref m_local_0 NOLIST
                 ]
               ]
@@ -202,9 +196,7 @@
             hBinop = [
               hVarref j NOLIST
               hBinop + [
-                hVarref m [
-                  hUnimpl CXXThisExpr NOLIST
-                ]
+                hVarref m_scclang_global_0 NOLIST
                 hVarref m NOLIST
               ]
             ]

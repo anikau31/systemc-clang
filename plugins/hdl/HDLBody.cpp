@@ -31,11 +31,14 @@ using namespace hnode;
 namespace systemc_hdl {
 
   HDLBody::HDLBody(CXXMethodDecl *emd, hNodep &h_top,
-		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context )
+		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map )
     : diag_e{diag_engine}, ast_context_{ast_context} {
     LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor (method body\n");
     h_ret = NULL;
     add_info = false;
+    if (!mod_vname_map.hdecl_name_map.empty())
+      vname_map.hdecl_name_map.insert(mod_vname_map.hdecl_name_map.begin(),
+				      mod_vname_map.hdecl_name_map.end());
     bool ret1 = TraverseStmt(emd->getBody());
     AddVnames(h_top);
     h_top->child_list.push_back(h_ret);
@@ -43,7 +46,7 @@ namespace systemc_hdl {
   }
 
   HDLBody::HDLBody(Stmt *stmt, hNodep &h_top,
-		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, bool add_info)
+		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, bool add_info)
     : diag_e{diag_engine}, add_info{add_info}, ast_context_{ast_context} {
 
       // add_info determines whether additional information is added to hcode operands that
@@ -51,6 +54,9 @@ namespace systemc_hdl {
       // port bindings and sensitivity lists
       
       h_ret = NULL;
+      if (!mod_vname_map.hdecl_name_map.empty())
+	vname_map.hdecl_name_map.insert(mod_vname_map.hdecl_name_map.begin(),
+					mod_vname_map.hdecl_name_map.end());
       bool ret1 = TraverseStmt(stmt);
       AddVnames(h_top);
 
@@ -201,6 +207,7 @@ namespace systemc_hdl {
       for (auto arg : stmt->children()) {
 	LLVM_DEBUG(llvm::dbgs() << "child stmt type "
 		   << ((Stmt *)arg)->getStmtClassName() << "\n");
+	if( isa<CXXThisExpr>(arg)) continue;
 	TraverseStmt(arg);
 	if (h_ret == oldh_ret) {
 	  LLVM_DEBUG(llvm::dbgs() << "child stmt not handled\n");
@@ -429,7 +436,7 @@ namespace systemc_hdl {
     // }
     string newname = vname_map.find_entry_newn(expr->getDecl());
     LLVM_DEBUG(llvm::dbgs() << "new name is " << newname << "\n");
-    LLVM_DEBUG(value->dump(llvm::dbgs()));
+    LLVM_DEBUG(expr->getDecl()->dump(llvm::dbgs()));
 
     h_ret =
       new hNode(newname.empty() ? name : newname, hNode::hdlopsEnum::hVarref);
@@ -591,17 +598,17 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "In TraverseMemberExpr\n");
     string nameinfo = (memberexpr->getMemberNameInfo()).getName().getAsString();
     LLVM_DEBUG(llvm::dbgs() << "name is " << nameinfo
-	       << ", base and memberexpr trees follow\n");
+	       << ", base and memberdecl trees follow\n");
     LLVM_DEBUG(llvm::dbgs() << "base is \n");
     LLVM_DEBUG(memberexpr->getBase()->dump(llvm::dbgs(), ast_context_); );
     LLVM_DEBUG(llvm::dbgs() << "memberdecl is \n");
     LLVM_DEBUG(memberexpr->getMemberDecl()->dump(llvm::dbgs()));
 
-    // traverse the memberexpr in case it is a nested structure
+    // traverse the memberexpr base in case it is a nested structure
     hNodep old_h_ret = h_ret;
     TraverseStmt(memberexpr->getBase());  // get hcode for the base
     if (h_ret != old_h_ret) {
-      if (h_ret->h_op == hNode::hdlopsEnum::hVarref) {
+      if (h_ret->h_op == hNode::hdlopsEnum::hVarref){
 	// concatenate base name in front of field name
 	hNodep memexprnode = new hNode(h_ret->h_name + "##" + nameinfo,
 				       hNode::hdlopsEnum::hVarref);
@@ -613,32 +620,20 @@ namespace systemc_hdl {
       else {
 	LLVM_DEBUG(llvm::dbgs() << "Value returned from member expr base was not Varref\n");
 	h_ret->print(llvm::dbgs());
-	hNodep memexprnode = new hNode(nameinfo, hNode::hdlopsEnum::hVarref);
+	string newname = vname_map.find_entry_newn(memberexpr->getMemberDecl());
+	LLVM_DEBUG(llvm::dbgs() << "member with base expr new name is " << newname << "\n");
+	hNodep memexprnode = new hNode(newname.empty()? nameinfo : newname, hNode::hdlopsEnum::hVarref);
 	memexprnode->child_list.push_back(h_ret);
 	h_ret = memexprnode;
-	//h_ret->child_list.push_back(new hNode(nameinfo, hNode::hdlopsEnum::hVarref));
-       
 	return true;
       }
 
     }
-    // auto *baseexpr = dyn_cast<MemberExpr>(memberexpr->getBase()); // nested
-    // field decl if (baseexpr) {
-    //   hNodep old_h_ret = h_ret;
-    //   TraverseStmt(baseexpr);
-    //   if (h_ret != old_h_ret) {
-    //     if (h_ret->h_op == hNode::hdlopsEnum::hLiteral) {
-    // 	//concatenate base name in front of field name
-    // 	hNodep memexprnode = new hNode(h_ret->h_name+"##"+nameinfo,
-    // hNode::hdlopsEnum::hLiteral); 	delete h_ret; 	h_ret = memexprnode;  //
-    // replace returned h_ret with single node, field names concatenated 	return
-    // h_ret;
-    //     }
-    //   }
 
-    //}
+    string newname = vname_map.find_entry_newn(memberexpr->getMemberDecl());
+    LLVM_DEBUG(llvm::dbgs() << "member expr new name is " << newname << "\n");
 
-    h_ret = new hNode(nameinfo, hNode::hdlopsEnum::hVarref);
+    h_ret = new hNode(newname.empty()? nameinfo : newname, hNode::hdlopsEnum::hVarref);
 
     return true;
   }
@@ -841,13 +836,16 @@ namespace systemc_hdl {
     for (auto const &var : vname_map.hdecl_name_map) {
       LLVM_DEBUG(llvm::dbgs() << "(" << var.first << "," << var.second.oldn
 		 << ", " << var.second.newn << ")\n");
-      if (add_info) {
+      if (add_info && (var.second.newn.find(gvar_prefix)==std::string::npos)) {
+	// if this isn't a global variable 
 	// mark this var decl as a renamed var decl and tack on the original name
 	// used in later processing of hcode
 	var.second.h_vardeclp->h_op = hNode::hdlopsEnum::hVardeclrn;
 	var.second.h_vardeclp->child_list.push_back(new hNode(var.second.oldn, hNode::hdlopsEnum::hLiteral));
       }
-      hvns->child_list.push_back(var.second.h_vardeclp);
+      if (var.second.newn.find(gvar_prefix)==std::string::npos)
+	// don't add global variable to local list
+	hvns->child_list.push_back(var.second.h_vardeclp);
     }
   }
 

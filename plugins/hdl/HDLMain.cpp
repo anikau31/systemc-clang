@@ -140,7 +140,7 @@ namespace systemc_hdl {
     //LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
 
     LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
-    hdecl_name_map_t mod_vname_map;
+    hdecl_name_map_t mod_vname_map("_scclang_global_");
     // Ports
     hNodep h_ports =
       new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
@@ -188,14 +188,14 @@ namespace systemc_hdl {
 
     // Processes
     h_top = new hNode(hNode::hdlopsEnum::hProcesses);
-    SCproc2hcode(mod->getProcessMap(), h_top);
+    SCproc2hcode(mod->getProcessMap(), h_top, mod_vname_map);
     if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
 
     {
       // init block
       clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
       hNodep hconstructor = new hNode(mod->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
-      HDLBody xconstructor(mod->getConstructorDecl()->getBody(), hconstructor, diag_engine, getContext());
+      HDLBody xconstructor(mod->getConstructorDecl()->getBody(), hconstructor, diag_engine, getContext(), mod_vname_map);
       LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
       hconstructor->print(llvm::dbgs());
       HDLConstructorHcode hcxxbody;
@@ -261,9 +261,9 @@ namespace systemc_hdl {
 				hNode::hdlopsEnum::hFunctionParamIO:
 				hNode::hdlopsEnum::hFunctionParamI, hparams);
 	    }
-	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), false); // suppress output of unqualified name
+	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
 	  } else {
-	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), false); // suppress output of unqualified name
+	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
 	  }
 	  h_top->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
@@ -339,7 +339,6 @@ namespace systemc_hdl {
 			     hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
     clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 
-    std::unordered_set<string> module_vars;
     for (ModuleInstance::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
 	 mit++) {
       string objname = get<0>(*mit);
@@ -352,7 +351,10 @@ namespace systemc_hdl {
         (pd->getTemplateType())->getTemplateArgTreePtr();
 
       std::vector<llvm::APInt> array_sizes = pd->getArraySizes();
-      
+
+      HDLt.SCtype2hcode(objname, template_argtp, &array_sizes, h_op,
+			h_info);  // passing the sigvarlist
+
       // if this is a duplicate name due to inheritance
       // create a new name and add it to the module level vname map
       // this map will be passed to all calls to HDLBody to merge into
@@ -360,12 +362,16 @@ namespace systemc_hdl {
       
       if (module_vars.count(objname)) {
 	LLVM_DEBUG(llvm::dbgs() << "duplicate object " << objname << "\n");
+	NamedDecl * portdecl = pd->getAsVarDecl();
+	if (!portdecl)
+	  portdecl = pd->getAsFieldDecl();
+	if (portdecl)
+	  mod_vname_map.add_entry(portdecl, objname, h_info->child_list.back());
 	//string newn = mod_newn.newname();
 	//objname+="_var"+newn;
       }
       else module_vars.insert(objname);
-      HDLt.SCtype2hcode(objname, template_argtp, &array_sizes, h_op,
-			h_info);  // passing the sigvarlist
+
       // check for initializer
       VarDecl *vard = pd->getAsVarDecl();
       if (vard) {
@@ -391,7 +397,7 @@ namespace systemc_hdl {
 	    LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
 	    LLVM_DEBUG(initializer->dump(llvm::dbgs(), getContext()));
 	    hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);
-	    HDLBody xmethod(initializer, h_init, diag_engine, getContext());
+	    HDLBody xmethod(initializer, h_init, diag_engine, getContext(), mod_vname_map);
 	    (h_info->child_list.back())->child_list.push_back(h_init);
 	  }
 	}
@@ -418,10 +424,27 @@ namespace systemc_hdl {
       std::vector<llvm::APInt> array_sizes = pd->getArraySizes();
       HDLt.SCtype2hcode(objname, template_argtp, &array_sizes, h_op,
 			h_info);  // passing the sigvarlist
+
+      // if this is a duplicate name due to inheritance
+      // create a new name and add it to the module level vname map
+      // this map will be passed to all calls to HDLBody to merge into
+      // its vname_map
+      
+      if (module_vars.count(objname)) {
+	LLVM_DEBUG(llvm::dbgs() << "duplicate object " << objname << "\n");
+	NamedDecl * portdecl = pd->getAsVarDecl();
+	if (!portdecl)
+	  portdecl = pd->getAsFieldDecl();
+	if (portdecl)
+	  mod_vname_map.add_entry(portdecl, objname, h_info->child_list.back());
+	//string newn = mod_newn.newname();
+	//objname+="_var"+newn;
+      }
+      else module_vars.insert(objname);
     }
   }
 
-  void HDLMain::SCproc2hcode(ModuleInstance::processMapType pm, hNodep &h_top) {
+  void HDLMain::SCproc2hcode(ModuleInstance::processMapType pm, hNodep &h_top, hdecl_name_map_t &mod_vname_map) {
     // typedef std::map<std::string, ProcessDecl *> processMapType;
     // processMapType getProcessMap();
     // ProcessDecl::getEntryFunction() returns EntryFunctionContainer*
@@ -500,7 +523,7 @@ namespace systemc_hdl {
 	CXXMethodDecl *emd = efc->getEntryMethod();
 	if (emd->hasBody()) {
 	  hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-	  HDLBody xmethod(emd, h_body, diag_engine, getContext());
+	  HDLBody xmethod(emd, h_body, diag_engine, getContext(), mod_vname_map);
 	  allmethodecls.insert(xmethod.methodecls.begin(),
 			       xmethod.methodecls.end());
 	  h_process->child_list.push_back(h_body);
