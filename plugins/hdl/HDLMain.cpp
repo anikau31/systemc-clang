@@ -276,10 +276,9 @@ namespace systemc_hdl {
     h_module->print(HCodeOut);
     // now generate submodules
     for (const auto &smod : submodv) {
-      //for (int i = 0; i < smod->getInstanceInfo().instance_names.size(); i++) {
-      //string modname = mod_name_map[smod->getInstanceDecl()].newn;
+
       string modname = mod_name_map.find_entry_newn(smod);
-      LLVM_DEBUG(llvm::dbgs() << "generate submodule " << smod->getName() //smod->getInstanceInfo().instance_names[i] //getInstanceName()
+      LLVM_DEBUG(llvm::dbgs() << "generate submodule " << smod->getName() 
 		 << " renamed " << modname << "\n");
       hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
       SCmodule2hcode(smod, h_submod, HCodeOut);
@@ -413,6 +412,8 @@ namespace systemc_hdl {
 	 mit != pmap.end(); mit++) {
       string objname = get<0>(*mit);
 
+      // Unfortunately due to portdecl and sigdecl having incompatible data structures,
+      // the same code has to be repeated in both.
       LLVM_DEBUG(llvm::dbgs() << "object name is " << objname << "\n");
 
       SignalDecl *pd = get<1>(*mit);
