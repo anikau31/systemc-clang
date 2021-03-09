@@ -122,12 +122,17 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         clang::CXXRecordDecl *base_decl{base.getType().getTypePtr()->getAsCXXRecordDecl()};
         /// Process all base classes that are not SystemC modules.
         if (base_decl->getNameAsString() != "sc_module") {
+          llvm::dbgs() << "Base class: " << base_decl->getNameAsString() << "\n";
           runPortMatcher(context, base_decl, add_module);
 
           /// Run instance matcher on base class.
           //
-          // MatchFinder base_instance_registry{};
-          // base_instance_registry.match(*base_decl, context);
+          MatchFinder base_instance_registry{};
+          instance_matcher_.registerMatchers(base_instance_registry);
+          base_instance_registry.match(*base_decl, context);
+          llvm::dbgs() << "      DUMP     \n";
+          instance_matcher_.dump();
+          
         }
       }
 

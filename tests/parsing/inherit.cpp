@@ -23,12 +23,23 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
   std::string code = R"(
 #include "systemc.h"
 
+class NestedModule : public sc_module {
+public: 
+sc_in_clk nested_clk;
+
+SC_CTOR(NestedModule) {}
+
+};
+
+
 class Base : public sc_module {
 public: 
 sc_in_clk clk;
 sc_in<int> in1;
 
-SC_CTOR(Base) {}
+NestedModule nested_module;
+
+SC_CTOR(Base) : nested_module("NestedModule") {}
 
 };
 
