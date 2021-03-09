@@ -1,7 +1,8 @@
 <map id="systemc_hdl::HDLBody" name="systemc_hdl::HDLBody">
-<area shape="rect" id="node1" title=" " alt="" coords="229,109,386,136"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,185,47"/>
-<area shape="rect" id="node3" href="$classhnode_1_1util.html" title=" " alt="" coords="210,13,290,39"/>
-<area shape="rect" id="node4" href="$classhnode_1_1hNode.html" title=" " alt="" coords="314,13,415,39"/>
-<area shape="rect" id="node5" href="$classhnode_1_1name__serve.html" title=" " alt="" coords="440,13,575,39"/>
+<area shape="rect" id="node1" title=" " alt="" coords="508,107,665,134"/>
+<area shape="rect" id="node2" title=" " alt="" coords="205,5,385,47"/>
+<area shape="rect" id="node3" href="$classhnode_1_1newname__map__t.html" title=" " alt="" coords="220,71,371,112"/>
+<area shape="rect" id="node4" href="$classhnode_1_1name__serve.html" title=" " alt="" coords="5,78,140,105"/>
+<area shape="rect" id="node5" href="$classhnode_1_1util.html" title=" " alt="" coords="255,137,335,163"/>
+<area shape="rect" id="node6" href="$classhnode_1_1hNode.html" title=" " alt="" coords="245,187,346,214"/>
 </map>
