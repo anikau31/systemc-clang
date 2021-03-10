@@ -30,8 +30,8 @@ using namespace hnode;
 namespace systemc_hdl {
   class HDLBody: public RecursiveASTVisitor <HDLBody> {
   public:
-    HDLBody(CXXMethodDecl * emd, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context);
-    HDLBody(Stmt * stmt, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, bool add_info = true);
+    HDLBody(CXXMethodDecl * emd, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map);
+    HDLBody(Stmt * stmt, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map, bool add_info = true);
     virtual ~HDLBody();
 
     bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
@@ -66,9 +66,10 @@ namespace systemc_hdl {
   private:
   
     hNodep h_ret;   // value returned by each subexpression
-    hdecl_name_map_t vname_map;
-    name_serve lname;
+    //hdecl_name_map_t vname_map;
+    //name_serve lname;
 
+    hdecl_name_map_t vname_map;
     bool add_info;
     
     bool isLogicalOp(clang::OverloadedOperatorKind opc);

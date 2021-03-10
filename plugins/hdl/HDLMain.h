@@ -36,25 +36,32 @@ namespace systemc_hdl {
    void SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
                        llvm::raw_fd_ostream &SCout);
    void SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
-                     hNodep &h_info);
+                     hNodep &h_info,  hdecl_name_map_t &mod_vname_map);
    void SCsig2hcode(ModuleInstance::signalMapType pmap, hNode::hdlopsEnum h_op,
-                    hNodep &h_info);
-    void SCproc2hcode(ModuleInstance::processMapType pm, hNodep & h_top);
+                    hNodep &h_info, hdecl_name_map_t &mod_vname_map);
+   void SCproc2hcode(ModuleInstance::processMapType pm, hNodep & h_top, hdecl_name_map_t &mod_vname_map);
     //void SCportbindings2hcode(ModuleInstance * mod, hNodep &h_pb);
+    //following is obsolete and no longer called
     void SCportbindings2hcode(
 			      //systemc_clang::ModuleInstance::portBindingMapType portbindingmap,
 			      ModuleInstance* mod,
        hNodep &h_pb);
+    
+    
   private:
 
     hNodep h_top;
     std::unordered_map<string, FunctionDecl *>
        allmethodecls;  //  all methods/functions called
-    
+
+    std::unordered_set<string> module_vars;
+
     HDLType HDLt;
 
-    hmodinst_name_map_t mod_name_map;
-    name_serve mod_newn{"_sc_module_"};
+    //hmodinst_name_map_t mod_name_map;
+    //name_serve mod_newn{"_sc_module_"};
+    
+    hmodinst_name_map_t mod_name_map{"_sc_module_"};
 
     /// Command line options
     std::string hdl_file_out_;
