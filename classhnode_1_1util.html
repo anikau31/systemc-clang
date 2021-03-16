@@ -85,15 +85,17 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2f939b759f2612426d6e6832256c4228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40c1447431ed1788a1a4a03e13f7005d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a40c1447431ed1788a1a4a03e13f7005d">~util</a> ()</td></tr>
 <tr class="separator:a40c1447431ed1788a1a4a03e13f7005d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53db35005ca79755b09244b48dffe069"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a53db35005ca79755b09244b48dffe069">isSCBuiltinType</a> (string tstring)</td></tr>
-<tr class="separator:a53db35005ca79755b09244b48dffe069"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9963a7be4acd67aeb84f11a44ad9cd40"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a9963a7be4acd67aeb84f11a44ad9cd40">isSCBuiltinType</a> (const string &amp;tstring)</td></tr>
+<tr class="separator:a9963a7be4acd67aeb84f11a44ad9cd40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:af510b612fdd0ce12ab898c842d3f6736"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#af510b612fdd0ce12ab898c842d3f6736">make_ident</a> (string &amp;nm)</td></tr>
 <tr class="separator:af510b612fdd0ce12ab898c842d3f6736"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97860daf2ea8e7d8680a28896c2548b7"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a97860daf2ea8e7d8680a28896c2548b7">isSCType</a> (string tstring)</td></tr>
-<tr class="separator:a97860daf2ea8e7d8680a28896c2548b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2be8ad623002038dc6e331adc3d2487"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#ae2be8ad623002038dc6e331adc3d2487">isSCType</a> (const string &amp;tstring)</td></tr>
+<tr class="separator:ae2be8ad623002038dc6e331adc3d2487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93b0dfd124e07343270874ecb28d1fce"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a93b0dfd124e07343270874ecb28d1fce">is_sc_macro</a> (const std::string &amp;str_in)</td></tr>
+<tr class="separator:a93b0dfd124e07343270874ecb28d1fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec9118a21d646bbc50205199825839fd"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#aec9118a21d646bbc50205199825839fd">isposint</a> (const std::string &amp;str)</td></tr>
 <tr class="separator:aec9118a21d646bbc50205199825839fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -160,6 +162,32 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a93b0dfd124e07343270874ecb28d1fce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93b0dfd124e07343270874ecb28d1fce">&#9670;&nbsp;</a></span>is_sc_macro()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool hnode::util::is_sc_macro </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>str_in</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aec9118a21d646bbc50205199825839fd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aec9118a21d646bbc50205199825839fd">&#9670;&nbsp;</a></span>isposint()</h2>
 
@@ -186,8 +214,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a53db35005ca79755b09244b48dffe069"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53db35005ca79755b09244b48dffe069">&#9670;&nbsp;</a></span>isSCBuiltinType()</h2>
+<a id="a9963a7be4acd67aeb84f11a44ad9cd40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9963a7be4acd67aeb84f11a44ad9cd40">&#9670;&nbsp;</a></span>isSCBuiltinType()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -198,7 +226,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool hnode::util::isSCBuiltinType </td>
           <td>(</td>
-          <td class="paramtype">string&#160;</td>
+          <td class="paramtype">const string &amp;&#160;</td>
           <td class="paramname"><em>tstring</em></td><td>)</td>
           <td></td>
         </tr>
@@ -212,8 +240,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a97860daf2ea8e7d8680a28896c2548b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a97860daf2ea8e7d8680a28896c2548b7">&#9670;&nbsp;</a></span>isSCType()</h2>
+<a id="ae2be8ad623002038dc6e331adc3d2487"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2be8ad623002038dc6e331adc3d2487">&#9670;&nbsp;</a></span>isSCType()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -224,7 +252,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">static bool hnode::util::isSCType </td>
           <td>(</td>
-          <td class="paramtype">string&#160;</td>
+          <td class="paramtype">const string &amp;&#160;</td>
           <td class="paramname"><em>tstring</em></td><td>)</td>
           <td></td>
         </tr>
