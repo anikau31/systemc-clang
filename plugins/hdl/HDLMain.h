@@ -58,6 +58,8 @@ namespace systemc_hdl {
 
     HDLType HDLt;
 
+    util mutil;
+
     //hmodinst_name_map_t mod_name_map;
     //name_serve mod_newn{"_sc_module_"};
     
