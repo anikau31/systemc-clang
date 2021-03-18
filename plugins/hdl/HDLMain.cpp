@@ -258,10 +258,15 @@ namespace systemc_hdl {
 	      te->Enumerate(tp);
 	      HDLType HDLt;
 	      std::vector<llvm::APInt> array_sizes = sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
+	      hNode::hdlopsEnum paramtype;
+	      // special case if sc_min, max, abs, treat parameters as input
+	      // unfortunately simulation library makes them I/O
+	      if (mutil.is_sc_macro(m.first)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
+	      else if (vardecl->getType()->isReferenceType())
+		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
+	      else paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
-				&array_sizes, vardecl->getType()->isReferenceType()?
-				hNode::hdlopsEnum::hFunctionParamIO:
-				hNode::hdlopsEnum::hFunctionParamI, hparams);
+				&array_sizes, paramtype, hparams);
 	    }
 	    HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
 	  } else {

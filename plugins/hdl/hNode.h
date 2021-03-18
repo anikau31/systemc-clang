@@ -221,7 +221,7 @@ namespace hnode {
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
 
     }
-     inline bool isSCBuiltinType(string tstring){
+     inline bool isSCBuiltinType(const string &tstring){
       // linear search sorry, but at least the length
       // isn't hard coded in ...
        int found = tstring.find_last_of(" "); // skip qualifiers if any
@@ -232,7 +232,7 @@ namespace hnode {
       return false;
     }
     
-    static inline bool isSCType(string tstring) {
+    static inline bool isSCType(const string &tstring) {
       // linear search and the length is hard coded in ...
       // used in the method name logic
       string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_rvd", "sc_inout",
@@ -257,6 +257,16 @@ namespace hnode {
       /* 	      (tstring.substr(0,5) == "sc_dt")); */
     }
 
+
+    
+    static inline bool is_sc_macro(const std::string &str_in) {
+      string sc_macro_strings [] = {"sc_min", "sc_max", "sc_abs"};
+      for (string str : sc_macro_strings) {
+	if (str_in.find(str) != string::npos) return true;
+      }
+      return false;
+    }
+    
     static inline bool isposint(const std::string &str) {
       // https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
       // towards the middle
