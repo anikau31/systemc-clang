@@ -162,6 +162,8 @@ class VerilogTranslationPass(TopDown):
 
     def hvarref(self, tree):
         assert len(tree.children) == 1
+        if is_tree_type(tree.children[0], 'func_param_name_stub'):
+            return tree.children[0].children[0]
         return tree.children[0]
 
     def syscread(self, tree):
@@ -650,6 +652,13 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         return tree.children[0]
 
+    def func_param_name_stub(self, tree):
+        self.__push_up(tree)
+        tree.insert_name(self.module_var_type.keys())
+        var_name, tpe = tree.children
+        ctx = TypeContext(suffix='')
+        decl = tpe.to_str(var_name, context=ctx)
+        return decl, var_name, None
 
     def hfunctionparams(self, tree):
         self.__push_up(tree)
@@ -669,13 +678,20 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         return '$signed({})'.format(tree.children[0])
 
+    def hfunctionlocalvars(self, tree):
+        self.__push_up(tree)
+        return tree
+
     def hfunction(self, tree):
         self.set_current_proc_name('#function#')
         self.inc_indent()
         self.__push_up(tree)
         self.dec_indent()
         ind = self.get_current_ind_prefix()
+
         function_name, return_type, params, localvar, body = tree.children
+
+
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         localvars = '\n'.join(map(lambda x: ind + x[0] + ';', localvar.children))
@@ -683,7 +699,7 @@ class VerilogTranslationPass(TopDown):
         body = '\n'.join(body.children)
 
         ind = self.get_current_ind_prefix()
-        res = '{}function {} {} ({});\n{}begin\n{}\n{}\n{}end\n{}endfunction'.format(ind, return_type, function_name,
+        res = '{}function automatic {} {} ({});\n{}begin\n{}\n{}\n{}end\n{}endfunction'.format(ind, return_type, function_name,
                                                                                   params, ind,
                                                                                   localvars, body, ind, ind)
         self.reset_current_proc_name()
