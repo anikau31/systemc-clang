@@ -11319,14 +11319,14 @@
           ]
         ]
         hFunctionParams  NONAME [
-          hFunctionParamIO a [
+          hFunctionParamI a [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 12 NOLIST
               ]
             ]
           ]
-          hFunctionParamIO b [
+          hFunctionParamI b [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 12 NOLIST
@@ -11485,12 +11485,12 @@
           ]
         ]
         hFunctionParams  NONAME [
-          hFunctionParamIO a [
+          hFunctionParamI a [
             hTypeinfo  NONAME [
               hType short NOLIST
             ]
           ]
-          hFunctionParamIO b [
+          hFunctionParamI b [
             hTypeinfo  NONAME [
               hType short NOLIST
             ]
