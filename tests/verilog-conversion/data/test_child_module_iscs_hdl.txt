@@ -1,0 +1,103 @@
+  hModule B_top_sc_module_0 [
+    hPortsigvarlist  NONAME [
+      hSigdecl s1 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hModdecl c_mod [
+        hTypeinfo  NONAME [
+          hType C_sc_module_1 NOLIST
+        ]
+      ]
+    ]
+    hModinitblock b_mod [
+      hCStmt  NONAME NOLIST
+      hPortbindings b_mod [
+        hPortbinding c_mod [
+          hVarref a##in NOLIST
+          hVarref s1 NOLIST
+        ]
+        hPortbinding c_mod [
+          hVarref a##out NOLIST
+          hVarref s1 NOLIST
+        ]
+      ]
+    ]
+  ]
+  hModule C_sc_module_1 [
+    hPortsigvarlist  NONAME [
+      hSigdecl s [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hModdecl a [
+        hTypeinfo  NONAME [
+          hType A_sc_module_2 NOLIST
+        ]
+      ]
+    ]
+    hProcesses  NONAME [
+      hProcess proc [
+        hMethod  NONAME [
+          hVardecl b_local_0 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hBinop = [
+              hVarref a##out NOLIST
+              hVarref b_local_0 NOLIST
+            ]
+          ]
+        ]
+      ]
+    ]
+    hModinitblock c_mod [
+      hCStmt  NONAME [
+        hCStmt  NONAME NOLIST
+      ]
+      hSenslist proc [
+        hSensvar NONAME [
+          hVarref s NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+    ]
+  ]
+  hModule A_sc_module_2 [
+    hPortsigvarlist  NONAME [
+      hPortin in [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+        hVarInit  NONAME [
+          hUnimpl StringLiteral NOLIST
+        ]
+      ]
+      hPortout out [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+        hVarInit  NONAME [
+          hUnimpl StringLiteral NOLIST
+        ]
+      ]
+      hVardecl var [
+        hTypeinfo  NONAME [
+          hType _Bool NOLIST
+        ]
+      ]
+    ]
+    hModinitblock a NOLIST
+  ]
