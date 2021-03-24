@@ -148,12 +148,16 @@ Model::eventMapType Model::getEventMapType() { return event_map_; }
 unsigned int Model::getNumEvents() { return (event_map_.size() - 3); }
 
 void Model::dump(llvm::raw_ostream &os) {
-  os << "-- Number of sc_module instances: " << module_instances_.size()
-     << "\n";
+  os << "sc_module instances [" << module_instances_.size() << "]: ";
 
   for (const auto &inst : module_instances_) {
-    os << "-- Instance name: " << inst->getInstanceName() << "\n";
-    inst->dump(os);
+    os << inst->getInstanceName() << "   ";
   }
   os << "\n";
+
+  os << "Print out instance information";
+  for (const auto &inst : module_instances_) {
+    inst->dump(os);
+  }
+
 }

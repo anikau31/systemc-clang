@@ -25,10 +25,9 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
 
 class NestedModule : public sc_module {
 public: 
-sc_in_clk nested_clk;
-
-SC_CTOR(NestedModule) {}
-
+  sc_out<double> nested_port;
+  
+  SC_CTOR(NestedModule) {}
 };
 
 
@@ -37,9 +36,9 @@ public:
 sc_in_clk clk;
 sc_in<int> in1;
 
-NestedModule nested_module;
+NestedModule nested_instance;
 
-SC_CTOR(Base) : nested_module("NestedModule") {}
+SC_CTOR(Base) : nested_instance{"NestedModule"} {}
 
 };
 

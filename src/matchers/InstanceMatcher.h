@@ -102,6 +102,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   // Finds the instance with the same type as the argument.
   // Pass by reference to the instance.
+
   bool findInstanceByVariableType(
       clang::CXXRecordDecl *decl,
       std::vector<InstanceDeclType> &found_instances) {
@@ -168,12 +169,11 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         .bind(bind_ctor_expr);
   }
 
-  auto makeArraySubModule(llvm::StringRef name) {
-    return arrayType(hasElementType(hasUnqualifiedDesugaredType(
-        recordType(hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name)))
-                                      .bind("submodule"))  // hasDeclaration
-                   )                                       // recordType
-        )));
+  auto match_is_derived_sc_module( const std::string &bind_name ) {
+    return recordType(hasDeclaration(
+        cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
+            .bind(bind_name))  // hasDeclaration
+    );                           // recordType;
   }
 
   void registerMatchers(MatchFinder &finder) {
@@ -202,15 +202,9 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                       allOf(
 
                         anyOf(
-
                           hasType(
-                            hasUnqualifiedDesugaredType(
-                              recordType(
-                                hasDeclaration(
-                                  cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
-                                )//hasDeclaration
-                              )//recordType
-                            )//hasUnqualifiedDesugaredType
+                            hasUnqualifiedDesugaredType(match_is_derived_sc_module("submodule")
+                                     )//hasUnqualifiedDesugaredType
                           )//hasType
 
                           ,
@@ -218,13 +212,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                             hasType(
                                hasUnqualifiedDesugaredType(
                                  arrayType(
-                                   hasElementType(hasUnqualifiedDesugaredType(
-                                        recordType(
-                                          hasDeclaration(
-                                            cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
-                                          ) //hasDeclaration
-                                         )// recordType
-                                       )//hasUnqualifiedDesugaredType
+                                   hasElementType(hasUnqualifiedDesugaredType(match_is_derived_sc_module("submodule")
+                                                                 )//hasUnqualifiedDesugaredType
                                        )//hasElementType
                                  )//arrayType
                                )//hasUnqualifiedDesugaredType
@@ -236,15 +225,8 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                                hasUnqualifiedDesugaredType(
                                  arrayType(
                                    hasElementType(hasUnqualifiedDesugaredType(
-                                       arrayType(hasElementType(hasUnqualifiedDesugaredType(
+                                       arrayType(hasElementType(hasUnqualifiedDesugaredType(match_is_derived_sc_module("submodule")
                                        //
-                                       //
-                                         recordType(
-                                           hasDeclaration(
-                                             cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
-                                           ) //hasDeclaration
-                                         )// recordType
-                                         //
                                          //
                                        )//hasUnqualifiedDesugaredType
                                        )//hasElementType
@@ -261,19 +243,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                                  arrayType(
                                    hasElementType(hasUnqualifiedDesugaredType(
                                        arrayType(hasElementType(hasUnqualifiedDesugaredType(
-                                         arrayType(hasElementType(hasUnqualifiedDesugaredType(
-
-
-                                       //
-                                       //
-                                         recordType(
-                                           hasDeclaration(
-                                             cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
-                                           ) //hasDeclaration
-                                         )// recordType
-                                         //
-                                         //
-
+                                         arrayType(hasElementType(hasUnqualifiedDesugaredType(match_is_derived_sc_module("submodule")
 
                                        )//hasUnqualifiedDesugaredType
                                        )//hasElementType
@@ -316,14 +286,17 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         anyOf(
             // 1d
           hasType(
-            hasUnqualifiedDesugaredType(
-              recordType(
-                hasDeclaration(
-                  cxxRecordDecl(
-                    isDerivedFrom("::sc_core::sc_module")
-                    ).bind("var_cxx_decl")
-                  )
-                ).bind("record_type")
+            hasUnqualifiedDesugaredType(match_is_derived_sc_module("var_cxx_decl").bind("record_type")
+
+              ///
+              // recordType(
+                // hasDeclaration(
+                  // cxxRecordDecl(
+                    // isDerivedFrom("::sc_core::sc_module")
+                    // ).bind("var_cxx_decl")
+                  // )
+                // ).bind("record_type")
+
               )
             ) // hasType
           // 2d
@@ -332,11 +305,16 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
              hasUnqualifiedDesugaredType(
                arrayType(
                  hasElementType(hasUnqualifiedDesugaredType(
-                         recordType(
-                           hasDeclaration(
-                            cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
-                            ) //hasDeclaration
-                         )// recordType
+
+                     match_is_derived_sc_module("submodule")
+                     ///
+                         // recordType(
+                           // hasDeclaration(
+                            // cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module"))).bind("submodule")
+                            // ) //hasDeclaration
+                         // )// recordType
+                         ///
+                         //
                        )
                        )
                  )//arrayType
@@ -345,16 +323,12 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         )// anyOf
       ).bind("instance_vd");
 
-       /* clang-format on */
+    /* clang-format on */
 
     /// Add the two matchers.
     //
     finder.addMatcher(match_instances_decl, this);
     finder.addMatcher(match_with_parent, this);
-  }
-
-  void getFirstCtorArgument(const CXXRecordDecl* cxx_decl) {
-
   }
 
   void parseVarDecl(clang::VarDecl *instance_decl, std::string &instance_name) {
@@ -419,9 +393,9 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
     auto array_indices{index_map[instance_name]};
     LLVM_DEBUG(llvm::dbgs()
-               << "=> FD: var_name " << var_name << " var_type_name "
+               << "=> FD: var_name: " << var_name << " var_type_name, "
                << var_type_name << " parent_name " << parent_name
-               << " instance name " << instance_name << "[ "
+               << ", instance name " << instance_name << "[ "
                << std::get<0>(array_indices) << ", "
                << std::get<1>(array_indices) << ", "
                << std::get<2>(array_indices)
@@ -546,12 +520,9 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
                  << " ctor_fd " << ctor_fd->getNameAsString() << "\n");
       LLVM_DEBUG(ctor_fd->dump());
 
-      // llvm::outs() << "### DEBUG\n";
-      //  ctor_init->getInit()->dump();
       auto index_map{getArrayInstanceIndex(ctor_init)};
 
       clang::Expr *expr = ctor_init->getInit()->IgnoreImplicit();
-      // expr->dump();
       clang::CXXConstructExpr *cexpr{
           clang::dyn_cast<clang::CXXConstructExpr>(expr)};
       clang::InitListExpr *iexpr{clang::dyn_cast<clang::InitListExpr>(expr)};

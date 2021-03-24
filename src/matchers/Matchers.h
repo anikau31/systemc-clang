@@ -82,7 +82,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
   }
 
-  void pruneMatches(ASTContext &context) {
+  void processInstanceCXXDecls(ASTContext &context) {
     // Must have found instances.
     // 1. For every module found, check if there is an instance.
     // 2. If there is an instance, then add it into the list.
@@ -122,6 +122,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         clang::CXXRecordDecl *base_decl{base.getType().getTypePtr()->getAsCXXRecordDecl()};
         /// Process all base classes that are not SystemC modules.
         if (base_decl->getNameAsString() != "sc_module") {
+          llvm::dbgs() << "Base class: " << base_decl->getNameAsString() << "\n";
           runPortMatcher(context, base_decl, add_module);
         }
       }
