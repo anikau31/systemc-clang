@@ -221,7 +221,7 @@ namespace hnode {
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
 
     }
-     inline bool isSCBuiltinType(string tstring){
+     inline bool isSCBuiltinType(const string &tstring){
       // linear search sorry, but at least the length
       // isn't hard coded in ...
        int found = tstring.find_last_of(" "); // skip qualifiers if any
@@ -232,7 +232,7 @@ namespace hnode {
       return false;
     }
     
-    static inline bool isSCType(string tstring) {
+    static inline bool isSCType(const string &tstring) {
       // linear search and the length is hard coded in ...
       // used in the method name logic
       string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_rvd", "sc_inout",
@@ -257,6 +257,16 @@ namespace hnode {
       /* 	      (tstring.substr(0,5) == "sc_dt")); */
     }
 
+
+    
+    static inline bool is_sc_macro(const std::string &str_in) {
+      string sc_macro_strings [] = {"sc_min", "sc_max", "sc_abs"};
+      for (string str : sc_macro_strings) {
+	if (str_in.find(str) != string::npos) return true;
+      }
+      return false;
+    }
+    
     static inline bool isposint(const std::string &str) {
       // https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
       // towards the middle
@@ -271,20 +281,64 @@ namespace hnode {
     hNodep h_vardeclp;
   } names_t;
 
- typedef std::map<Decl *, names_t> hdecl_name_map_t;
- typedef std::map<ModuleInstance *, names_t> hmodinst_name_map_t;
+
+  // map from variable declaration p to new name
+  //typedef std::map<Decl *, names_t> hdecl_name_map_t;
  
+  // map from module instance declaration p to new name
+  // typedef std::map<ModuleInstance *, names_t> hmodinst_name_map_t;
+
+  const static std::string gvar_prefix{"_scclang_global_"};
+  const static std::string lvar_prefix{"_local_"};
+    
   class name_serve {
   private:
     int cnt;
     string prefix;
   public:
-  name_serve(string prefx="_local_") : prefix(prefx), cnt(0){ }
+ 
+  name_serve(string prefx=lvar_prefix) : prefix(prefx), cnt(0){ }
     string newname() {
       return (prefix+to_string(cnt++));
     }
+    void set_prefix(string prfx) { prefix = prfx; }
   };
+
+
+  //!
+  //! The newname_map_t class generates new names for identifiers
+  //! and inserts the old name, new name, and pointer to clang ast
+  //! node for the identifier into a map. 
+  //!
+
+  
+  template <class T>
+    class newname_map_t {
+  private:
+    name_serve ns;
+  public:
+    std::map<T, names_t> hdecl_name_map;
+    newname_map_t(string prefix = "_local_") { ns.set_prefix(prefix); }
+    void add_entry(T declp, string old_name, hNodep hnp )
+    {
+      
+      string newn = old_name+ns.newname();
+      hnp->set(newn);
+      names_t names = {old_name, newn, hnp};
+      hdecl_name_map[declp] = names;
+    }
+    string find_entry_newn(T declp) {
+      auto vname_it{hdecl_name_map.find(declp)};
+      if (vname_it != hdecl_name_map.end()) 
+	return hdecl_name_map[declp].newn;
+      else return "";
+    }
+    bool empty() { return hdecl_name_map.empty(); }
     
+  };
+
+  typedef newname_map_t<NamedDecl *> hdecl_name_map_t;
+  typedef newname_map_t<ModuleInstance *> hmodinst_name_map_t;
 } // end namespace hnode
 
 #endif
