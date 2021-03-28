@@ -145,13 +145,13 @@ namespace systemc_hdl {
 	hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
       h_ret = hcasep;
     } else if (isa<BreakStmt>(stmt)) {
-      const unsigned cxx_record_id =
-        diag_e.getCustomDiagID(clang::DiagnosticsEngine::Remark,
-                               "Break stmt not supported, substituting noop");
-      clang::DiagnosticBuilder diag_builder{
-        diag_e.Report(stmt->getBeginLoc(), cxx_record_id)};
-      LLVM_DEBUG(llvm::dbgs() << "Found break stmt, substituting noop\n");
-      h_ret = new hNode(hNode::hdlopsEnum::hNoop);
+      //const unsigned cxx_record_id =
+        //diag_e.getCustomDiagID(clang::DiagnosticsEngine::Remark,
+	//          "Break stmt not supported, substituting noop");
+	//clang::DiagnosticBuilder diag_builder{
+	//diag_e.Report(stmt->getBeginLoc(), cxx_record_id)};
+      LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
+      h_ret = new hNode(hNode::hdlopsEnum::hBreak);
     } else if (isa<CXXDefaultArgExpr>(stmt)) {
       TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
     } else if (isa<ReturnStmt>(stmt)) {
