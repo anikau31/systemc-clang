@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "InstanceMatcher.h"
+#include "CXXRecordDeclUtils.h"
 #include "ModuleInstance.h"
 #include "PortMatcher.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
@@ -17,6 +18,7 @@ using namespace systemc_clang;
 
 namespace sc_ast_matchers {
 
+  using namespace utils::cxx_construct_decl_utils;
 ///////////////////////////////////////////////////////////////////////////////
 //
 /// Class ModuleDeclarationMatcher
@@ -55,7 +57,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
   const ModuleMapType &getFoundModuleDeclarations() const { return modules_; }
 
-  void runPortMatcher(ASTContext &context, clang::CXXRecordDecl *decl, ModuleInstance *add_module) {
+  void runPortMatcher(ASTContext &context, const clang::CXXRecordDecl *decl, ModuleInstance *add_module) {
 
       MatchFinder port_registry{};
       PortMatcher port_matcher{};
@@ -117,9 +119,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
       /// Find if the instance CXXREcordDecl has a base class, and parse that too.
       /// Any ports, signals, etc. should be incorporated into the module instance.
-      for (auto &base: decl->bases()) {
+      for (const auto &base_decl: getAllBaseClasses(decl)) {
         llvm::dbgs() << "=============================== BASES =======================\n";
-        clang::CXXRecordDecl *base_decl{base.getType().getTypePtr()->getAsCXXRecordDecl()};
+ //       const clang::CXXRecordDecl *base_decl{base.getType().getTypePtr()->getAsCXXRecordDecl()};
         /// Process all base classes that are not SystemC modules.
         if (base_decl->getNameAsString() != "sc_module") {
           llvm::dbgs() << "Base class: " << base_decl->getNameAsString() << "\n";
