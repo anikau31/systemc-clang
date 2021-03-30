@@ -111,8 +111,14 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "Found if stmt\n");
       TraverseIfStmt((IfStmt *)stmt);
     } else if (isa<ForStmt>(stmt)) {
-      LLVM_DEBUG(llvm::dbgs() << "Found if stmt\n");
+      LLVM_DEBUG(llvm::dbgs() << "Found for stmt\n");
       TraverseForStmt((ForStmt *)stmt);
+    } else if (isa<WhileStmt>(stmt)) {
+      LLVM_DEBUG(llvm::dbgs() << "Found while stmt\n");
+      TraverseWhileStmt((WhileStmt *)stmt);
+    } else if (isa<DoStmt>(stmt)) {
+      LLVM_DEBUG(llvm::dbgs() << "Found do-while stmt\n");
+      TraverseDoStmt((DoStmt *)stmt);
     } else if (isa<SwitchStmt>(stmt)) {
       LLVM_DEBUG(llvm::dbgs() << "Found switch stmt\n");
       TraverseSwitchStmt((SwitchStmt *)stmt);
@@ -709,7 +715,7 @@ namespace systemc_hdl {
     hNodep h_forstmt, h_forinit, h_forcond, h_forinc, h_forbody;
     LLVM_DEBUG(llvm::dbgs() << "For stmt\n");
     h_forstmt = new hNode(hNode::hdlopsEnum::hForStmt);
-    if (isa<CompoundStmt>(fors->getInit()))
+    if ((fors->getInit()!=NULL) && (isa<CompoundStmt>(fors->getInit())))
       LLVM_DEBUG(llvm::dbgs()
 		 << "Compound stmt not handled in for init, skipping\n");
     else {
@@ -805,8 +811,7 @@ namespace systemc_hdl {
 
     return true;
   }
-  // wouldn't appear in a SC_METHOD, but put it in anyway
-  // won't put in do stmt for now
+  
   bool HDLBody::TraverseWhileStmt(WhileStmt *whiles) {
     hNodep h_whilestmt, h_whilecond, h_whilebody;
     LLVM_DEBUG(llvm::dbgs() << "While stmt\n");
@@ -821,6 +826,27 @@ namespace systemc_hdl {
       h_whilecond = h_ret;
     }
 
+    // Get the body
+    TraverseStmt(whiles->getBody());
+    h_whilebody = h_ret;
+    h_whilestmt->child_list.push_back(h_whilecond);
+    h_whilestmt->child_list.push_back(h_whilebody);
+    h_ret = h_whilestmt;
+
+    return true;
+  }
+
+  // unfortunately clang ast doesn't do inheritance on the classes
+  // so code is duplicated
+  
+    bool HDLBody::TraverseDoStmt(DoStmt *whiles) {
+    hNodep h_whilestmt, h_whilecond, h_whilebody;
+    LLVM_DEBUG(llvm::dbgs() << "Do stmt\n");
+    h_whilestmt = new hNode(hNode::hdlopsEnum::hDoStmt);
+    // Get condition
+    TraverseStmt(whiles->getCond());
+    h_whilecond = h_ret;
+   
     // Get the body
     TraverseStmt(whiles->getBody());
     h_whilebody = h_ret;

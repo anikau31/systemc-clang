@@ -66,6 +66,7 @@ namespace hnode {
   etype(hSwitchDefault), \
   etype(hBreak), \
   etype(hWhileStmt),   	\
+  etype(hDoStmt),   	\
   etype(hReturnStmt),  	\
   etype(hLiteral), \
   etype(hFunction), \
