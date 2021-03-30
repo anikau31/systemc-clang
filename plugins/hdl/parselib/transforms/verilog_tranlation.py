@@ -24,6 +24,21 @@ class VerilogTranslationPass(TopDown):
         self.in_for_init = False
         self.module_var_type = None
         self.current_proc_name = None
+        self.__current_scope_type = [None]
+
+    def get_current_scope_type(self):
+        """denotes one of four types of scope: loop, switch, branch, None
+        currently, this is only useful for determine the handling of breaks
+        """
+        return self.__current_scope_type[-1]
+
+    def push_current_scope_type(self, scope):
+        assert scope in ['loop', 'switch', 'branch'], 'Incorrect scope type'
+        self.__current_scope_type.append(scope)
+
+    def pop_current_scope_type(self):
+        self.__current_scope_type.pop()
+
 
     def start(self, tree):
         self.__push_up(tree)
@@ -262,7 +277,9 @@ class VerilogTranslationPass(TopDown):
         return tree.children[0]
 
     def switchbody(self, tree):
+        self.push_current_scope_type('switch')
         self.__push_up(tree)
+        self.pop_current_scope_type()
         return '\n'.join(tree.children)
 
     def casestmt(self, tree):
@@ -285,11 +302,17 @@ class VerilogTranslationPass(TopDown):
         res = '{}case({})\n{}\n{}endcase'.format(ind, tree.children[0], tree.children[1], ind)
         return res
 
+    def breakstmt(self, tree):
+        if self.get_current_scope_type() in ['switch']:
+            return None
+        else:
+            return 'break;'
+
     def stmt(self, tree):
         indentation = []
         sep = []
-        noindent = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt']
-        nosemico = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt']
+        noindent = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt']
+        nosemico = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt']
         for x in tree.children:
             if x.data in noindent:
                 indentation.append('')
@@ -316,7 +339,9 @@ class VerilogTranslationPass(TopDown):
                 print(x[1])
                 print(x[2])
                 raise
-        res = '\n'.join(map(f_concat, zip(indentation, tree.children, sep)))
+        res = '\n'.join(map(f_concat,
+                            filter(lambda x: x[1] is not None, zip(indentation, tree.children, sep))
+                            ))
         return res
 
     def hnoop(self, tree):
@@ -324,6 +349,7 @@ class VerilogTranslationPass(TopDown):
         return ""
 
     def whilestmt(self, tree):
+        self.push_current_scope_type('loop')
         self.inc_indent()
         self.__push_up(tree)
         self.dec_indent()
@@ -331,6 +357,7 @@ class VerilogTranslationPass(TopDown):
         res = "{}while({}) begin\n".format(prefix, tree.children[0])
         res += ''.join(tree.children[1:])
         res += '{}end'.format(prefix)
+        self.pop_current_scope_type()
         return res
 
     def stmts(self, tree):
@@ -352,6 +379,7 @@ class VerilogTranslationPass(TopDown):
         self.current_indent = self.indent_stack.pop()
 
     def ifstmt(self, tree):
+        self.push_current_scope_type('branch')
         self.inc_indent()
         self.__push_up(tree)
         self.dec_indent()
@@ -364,6 +392,8 @@ class VerilogTranslationPass(TopDown):
             res += ' else begin\n' + tree.children[2]
             res += '\n'
             res += ind + 'end\n'
+
+        self.pop_current_scope_type()
         return res
 
     def forinit(self, tree):
@@ -391,6 +421,7 @@ class VerilogTranslationPass(TopDown):
 
     def forstmt(self, tree):
 
+        self.push_current_scope_type('loop')
         new_children = []
         self.push_indent()
         new_children.extend(self.visit(t) for t in tree.children[:3])
@@ -406,6 +437,7 @@ class VerilogTranslationPass(TopDown):
         res = ind + 'for ({};{};{}) begin\n'.format(for_init, for_cond, for_post)
         res += for_body + '\n'
         res += ind + 'end'
+        self.pop_current_scope_type()
         return res
 
     def hsensvars(self, tree):
