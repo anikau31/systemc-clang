@@ -18,17 +18,15 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
   std::queue<const clang::CXXRecordDecl *> decl_queue;
   std::vector<const clang::CXXRecordDecl *> bases;
 
-  decl_queue.push(decl);
+  // decl_queue.push(decl);
+  const clang::CXXRecordDecl *top_decl{decl};
 
-  while (!decl_queue.empty()) {
-    const clang::CXXRecordDecl *top_decl{decl_queue.front()};
-    decl_queue.pop();
-
+  while (top_decl) {
     auto name{top_decl->getNameAsString()};
 
     llvm::dbgs() << "Processing base named: " << name << "\n";
-    if ((name != "sc_object") && (name != "sc_process_host") &&
-        (name != "sc_module")) {
+    if ((top_decl != decl) && (name != "sc_object") &&
+        (name != "sc_process_host") && (name != "sc_module")) {
       llvm::dbgs() << "+ Insert into bases\n";
       bases.push_back(top_decl);
     }
@@ -38,6 +36,14 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
           base.getType().getTypePtr()->getAsCXXRecordDecl()};
 
       decl_queue.push(base_decl);
+    }
+
+    if (!decl_queue.empty()) {
+      top_decl = decl_queue.front();
+      decl_queue.pop();
+    } else {
+      top_decl = nullptr;
+
     }
   }
 
@@ -65,8 +71,8 @@ std::vector<ModuleInitializerTupleType> getModuleInitializerNames(
   llvm::dbgs() << "CtorInit dump\n";
   str_expr->dump();
 
-  clang::StringLiteral *str_lit{ llvm::dyn_cast<clang::StringLiteral>(str_expr) };
-  if (str_lit) {// = llvm::dyn_cast<clang::StringLiteral>(str_expr)) {
+  clang::StringLiteral *str_lit{llvm::dyn_cast<clang::StringLiteral>(str_expr)};
+  if (str_lit) {  // = llvm::dyn_cast<clang::StringLiteral>(str_expr)) {
     llvm::dbgs() << "Get first arg: " << str_lit->getString() << "\n";
   }
 
@@ -78,19 +84,25 @@ std::vector<ModuleInitializerTupleType> getModuleInitializerNames(
                  << "\n";
     fd->dump();
     /// Check the type of the FieldDecl.
-    auto decl{fd->getType().getTypePtr()->getUnqualifiedDesugaredType()->getAsCXXRecordDecl()};
+    auto decl{fd->getType()
+                  .getTypePtr()
+                  ->getUnqualifiedDesugaredType()
+                  ->getAsCXXRecordDecl()};
 
     if (decl) {
       llvm::dbgs() << "decl: " << decl->getNameAsString() << "\n";
       for (const auto &base : decl->bases()) {
-        clang::CXXRecordDecl *base_decl{
-            base.getType().getTypePtr()->getUnqualifiedDesugaredType()->getAsCXXRecordDecl()};
+        clang::CXXRecordDecl *base_decl{base.getType()
+                                            .getTypePtr()
+                                            ->getUnqualifiedDesugaredType()
+                                            ->getAsCXXRecordDecl()};
         if (base_decl) {
           llvm::dbgs() << "base decl: " << base_decl->getNameAsString() << "\n";
 
           if (base_decl->getNameAsString() == "sc_module") {
             llvm::dbgs() << "Module class\n";
-            module_info.push_back(std::make_tuple(fd, str_lit->getString().str(), init));
+            module_info.push_back(
+                std::make_tuple(fd, str_lit->getString().str(), init));
           }
         }
       }

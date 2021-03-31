@@ -1,7 +1,7 @@
 # Test CMakeFile
 
 set (TEST_LIST 
-  tree-test
+  tree-test.cpp
   )
 
 set(SCC_LIBS libsystemc-clang)

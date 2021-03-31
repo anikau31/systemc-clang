@@ -115,12 +115,14 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       modules_.insert(
           std::pair<clang::CXXRecordDecl *, ModuleInstance *>(decl, add_module));
 
+      llvm::dbgs() << "[Running port matcher]\n";
       runPortMatcher(context, decl, add_module);
 
+      llvm::dbgs() << "[Running Base class logic]\n";
       /// Find if the instance CXXREcordDecl has a base class, and parse that too.
       /// Any ports, signals, etc. should be incorporated into the module instance.
       for (const auto &base_decl: getAllBaseClasses(decl)) {
-        llvm::dbgs() << "=============================== BASES =======================\n";
+        llvm::dbgs() << "=============================== BASES for " << name << " =======================\n";
  //       const clang::CXXRecordDecl *base_decl{base.getType().getTypePtr()->getAsCXXRecordDecl()};
         /// Process all base classes that are not SystemC modules.
         if (base_decl->getNameAsString() != "sc_module") {
