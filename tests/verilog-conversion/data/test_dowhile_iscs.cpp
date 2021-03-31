@@ -41,6 +41,7 @@ public:
     void do_while1() {
         int i = 0;          // B4
         q = &i;
+            q++;            // B2
         
         do {
             q++;            // B2

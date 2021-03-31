@@ -131,6 +131,9 @@
                 hVarref i_local_0 NOLIST
               ]
             ]
+            hUnop ++ [
+              hVarref q NOLIST
+            ]
             hBinop < [
               hVarref i_local_0 NOLIST
               hLiteral 2 NOLIST
