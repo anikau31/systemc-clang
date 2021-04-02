@@ -92,14 +92,25 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   /// types.
   //
   /// deprecated
-  InstanceDeclarationsType instances_;
+  //InstanceDeclarationsType instances_;
 
   /// Map of Decl* => ModuleInstanceType
   InstanceDeclarations instance_map_;
 
+  clang::ValueDecl *parent_fd_;
  public:
+  InstanceMatcher& operator=( const InstanceMatcher& from ) {
+    llvm::dbgs() << "==================== OPERATOR:" << instance_map_.size() << "=\n";
+    instance_map_.insert( from.instance_map_.begin(), from.instance_map_.end() );
+    llvm::dbgs() << "==================== END OPERATOR:" << instance_map_.size() << "=\n";
+    return *this;
+  }
+
   const InstanceDeclarations &getInstanceMap() { return instance_map_; }
 
+  void setParentFieldDecl(clang::ValueDecl *parent_fd) {
+    parent_fd_ = parent_fd;
+  }
   // Finds the instance with the same type as the argument.
   // Pass by reference to the instance.
 
@@ -169,14 +180,15 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         .bind(bind_ctor_expr);
   }
 
-  auto match_is_derived_sc_module( const std::string &bind_name ) {
+  auto match_is_derived_sc_module(const std::string &bind_name) {
     return recordType(hasDeclaration(
         cxxRecordDecl(isDerivedFrom(hasName("::sc_core::sc_module")))
             .bind(bind_name))  // hasDeclaration
-    );                           // recordType;
+    );                         // recordType;
   }
 
   void registerMatchers(MatchFinder &finder) {
+    parent_fd_ = nullptr;
     /// We will have two matchers.
     ///
     /// Match when the following conditions are satisifed:
@@ -271,6 +283,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
           ); //cxxRecordDecl
 
 
+
     auto match_with_parent = 
       valueDecl(hasType(
             hasUnqualifiedDesugaredType(
@@ -323,12 +336,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         )// anyOf
       ).bind("instance_vd");
 
+   auto match_base_decl =  match_cxx_ctor_init;
     /* clang-format on */
 
     /// Add the two matchers.
     //
     finder.addMatcher(match_instances_decl, this);
     finder.addMatcher(match_with_parent, this);
+    finder.addMatcher(match_base_decl, this);
   }
 
   void parseVarDecl(clang::VarDecl *instance_decl, std::string &instance_name) {
@@ -503,17 +518,26 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         result.Nodes.getNodeAs<clang::CXXCtorInitializer>("ctor_init"));
     auto ctor_fd = const_cast<clang::FieldDecl *>(
         result.Nodes.getNodeAs<FieldDecl>("ctor_fd"));
-    auto parent_fd = const_cast<clang::ValueDecl *>(
-        result.Nodes.getNodeAs<clang::ValueDecl>("parent_fd"));
+
+    /// If parent_fd_ has been set, then use that.  Otherwise, pick it up from
+    /// the matcher.
+    clang::ValueDecl *parent_fd{parent_fd_};
+    if (!parent_fd) {
+      parent_fd = const_cast<clang::ValueDecl *>(
+          result.Nodes.getNodeAs<clang::ValueDecl>("parent_fd"));
+    }
 
     auto ctor_arg = const_cast<clang::Stmt *>(
         result.Nodes.getNodeAs<clang::Stmt>("ctor_arg"));
 
-    auto test_fd = const_cast<clang::FieldDecl *>(
-        result.Nodes.getNodeAs<clang::FieldDecl>("test_fd"));
-    //
-    //
-    //
+    if (parent_fd == nullptr) {
+      llvm::dbgs() << "####@@@@@ PARENTFD IS NULL @@@@####\n";
+    }
+    
+    /// ctor_fd:    Field initialized in the constructor.
+    /// ctor_init:  Constructor initializer.
+    /// parent_fd:  The FieldDecl whose CXXRecordDecl has the initialization.
+    ///             Thus, it is the parent FieldDecl.
     if (ctor_fd && ctor_init && parent_fd) {
       LLVM_DEBUG(llvm::dbgs()
                  << "#### CTOR_FD: parent_fd " << parent_fd->getNameAsString()
@@ -594,7 +618,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
 
   void dump() {
     // Instances holds both FieldDecl and VarDecl as its base class Decl.
-    LLVM_DEBUG(llvm::dbgs() << "################## INSTANCE MATCHER DUMP \n";);
+    LLVM_DEBUG(llvm::dbgs() << "# INSTANCE MATCHER DUMP \n";);
     for (const auto &i : instance_map_) {
       auto instance{i.second};
       LLVM_DEBUG(llvm::dbgs()
@@ -604,14 +628,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(llvm::dbgs()
                      << " instance_field*: " << instance_field << "\n";);
       //
-      if (clang::dyn_cast<clang::FieldDecl>(instance_field)) {
-        if (instance.is_field_decl) {
-          LLVM_DEBUG(llvm::dbgs() << " FieldDecl ";);
-        } else {
-          LLVM_DEBUG(llvm::dbgs() << " VarDecl ";);
-        }
-      }
-
+      // if (clang::dyn_cast<clang::FieldDecl>(instance_field)) {
+      // if (instance.is_field_decl) {
+      // LLVM_DEBUG(llvm::dbgs() << " FieldDecl ";);
+      // } else {
+      // LLVM_DEBUG(llvm::dbgs() << " VarDecl ";);
+      // }
+      // }
+      //
       instance.dump();
     }
   }

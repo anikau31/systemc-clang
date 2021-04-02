@@ -25,12 +25,15 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
     auto name{top_decl->getNameAsString()};
 
     llvm::dbgs() << "Processing base named: " << name << "\n";
+
+    /// Do not insert into bases the decl class.
     if ((top_decl != decl) && (name != "sc_object") &&
         (name != "sc_process_host") && (name != "sc_module")) {
       llvm::dbgs() << "+ Insert into bases\n";
       bases.push_back(top_decl);
     }
 
+    /// Go through all the bases of the base declaration.
     for (auto &base : top_decl->bases()) {
       const clang::CXXRecordDecl *base_decl{
           base.getType().getTypePtr()->getAsCXXRecordDecl()};
