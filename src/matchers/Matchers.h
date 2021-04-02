@@ -95,15 +95,18 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       ModuleInstanceType instance{inst.second};
       clang::CXXRecordDecl *decl{
           dyn_cast<clang::CXXRecordDecl>(inst.second.getInstanceTypeDecl())};
+      clang::ValueDecl *vd {
+          dyn_cast<clang::ValueDecl>(inst.second.getInstanceDecl())};
+
       auto base_decls{getAllBaseClasses(decl)};
       for (const auto &base_decl : base_decls) {
-        llvm::dbgs() << "=============================== BASES =======================\n";
+        llvm::dbgs() << "=============================== BASES " << decl->getNameAsString() << " =======================\n";
         llvm::dbgs() << "Run base instance matcher: "
                      << base_decl->getNameAsString() << " \n";
         InstanceMatcher base_instance_matcher;
         MatchFinder base_instance_reg{};
         base_instance_matcher.registerMatchers(base_instance_reg);
-        base_instance_matcher.setParentFieldDecl(instance.getParentDecl());
+        base_instance_matcher.setParentFieldDecl(vd);
         base_instance_reg.match(*base_decl, context);
         llvm::dbgs() << "+ Dump base instance matcher\n";
         base_instance_matcher.dump();
