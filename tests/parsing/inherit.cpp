@@ -24,7 +24,6 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
 
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "inherit-input.cpp")};
-  llvm::DebugFlag = true;
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
@@ -45,17 +44,33 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
 
   // Want to find an instance named "testing".
 
+  ModuleInstance *nested_module{model->getInstance("NestedModule")};
   ModuleInstance *test_module{model->getInstance("testing")};
-  ModuleInstance *simple_module{model->getInstance("simple_module_instance")};
   ModuleInstance *dut{model->getInstance("d")};
 
   SECTION("Found sc_module instances", "[instances]") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: " << instances.size());
 
-    REQUIRE(instances.size() == 2);
+    REQUIRE(instances.size() == 3);
+
+    /// Ensure that all the modules are found.
+    auto all_modules {( (nested_module != nullptr) && (test_module != nullptr) && (dut  != nullptr))};
+    REQUIRE( all_modules );
 
     REQUIRE(test_module != nullptr);
+
+    INFO("Checking member ports for NestedModule instance.");
+    REQUIRE(nested_module->getIPorts().size() == 1);
+    REQUIRE(nested_module->getOPorts().size() == 0);
+    REQUIRE(nested_module->getIOPorts().size() == 0);
+    REQUIRE(nested_module->getSignals().size() == 0);
+    REQUIRE(nested_module->getInputStreamPorts().size() == 0);
+    REQUIRE(nested_module->getOutputStreamPorts().size() == 0);
+    REQUIRE(nested_module->getOtherVars().size() == 0);
+    REQUIRE(nested_module->getNestedModuleInstances().size() == 0);
+
+
 
     INFO("Checking member ports for test instance.");
     // These checks should be performed on the declarations.
@@ -77,6 +92,9 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOtherVars().size() == 0);
+
+    /// This one comes from the base class.
+    REQUIRE(test_module_inst->getNestedModuleInstances().size() == 1);
 
     // Check process information
     //

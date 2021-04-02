@@ -113,7 +113,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         llvm::dbgs() << "+ End dump base instance matcher\n";
 
         /// Copy contents over.
-        instance_matcher_.operator=(base_instance_matcher);
+        instance_matcher_= base_instance_matcher;
       }
     }
     /// Base classes may add instances. So we must get the updated instance_map.
@@ -150,29 +150,13 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       /// Find if the instance CXXREcordDecl has a base class, and parse that
       /// too. Any ports, signals, etc. should be incorporated into the module
       /// instance.
-      /*
       auto base_decls{getAllBaseClasses(decl)};
       for (const auto &base_decl : base_decls) {
         llvm::dbgs() << "=============================== BASES for " << name
                      << " =======================\n";
         llvm::dbgs() << "Base class: " << base_decl->getNameAsString() << "\n";
         runPortMatcher(context, base_decl, add_module);
-
-        llvm::dbgs() << "Run base instance matcher: "
-                     << base_decl->getNameAsString() << " \n";
-        InstanceMatcher base_instance_matcher;
-        MatchFinder base_instance_reg{};
-        base_instance_matcher.registerMatchers(base_instance_reg);
-        base_instance_matcher.setParentFieldDecl(instance.getParentDecl());
-        base_instance_reg.match(*base_decl, context);
-        llvm::dbgs() << "+ Dump base instance matcher\n";
-        base_instance_matcher.dump();
-        llvm::dbgs() << "+ End dump base instance matcher\n";
-
-        /// Copy contents over.
-        instance_matcher_.operator=(base_instance_matcher);
       }
-      */
     }
   }
 
