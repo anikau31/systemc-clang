@@ -122,8 +122,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aae4820979b827babc2122b17c53a5595"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cdced231707237391633b2490ab076e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#ac9eb5a346eddccc3bf5e4def371c4a00">ModuleMapType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a4cdced231707237391633b2490ab076e">getFoundModuleDeclarations</a> () const</td></tr>
 <tr class="separator:a4cdced231707237391633b2490ab076e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae697d9faf70364c0e21938dd573cbf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#aae697d9faf70364c0e21938dd573cbf8">runPortMatcher</a> (ASTContext &amp;context, clang::CXXRecordDecl *decl, <a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *add_module)</td></tr>
-<tr class="separator:aae697d9faf70364c0e21938dd573cbf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb6447a29cae8e5d617757958626102"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a6bb6447a29cae8e5d617757958626102">runPortMatcher</a> (ASTContext &amp;context, const clang::CXXRecordDecl *decl, <a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *add_module)</td></tr>
+<tr class="separator:a6bb6447a29cae8e5d617757958626102"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e88cf084dca7917cf10d50f2d02490d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a5e88cf084dca7917cf10d50f2d02490d">processInstanceCXXDecls</a> (ASTContext &amp;context)</td></tr>
 <tr class="separator:a5e88cf084dca7917cf10d50f2d02490d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a920e15b79dd21c03d36ae5b50a74ea11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a920e15b79dd21c03d36ae5b50a74ea11">dump</a> ()</td></tr>
@@ -282,8 +282,10 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Go through every instance found (ValueDecl), and find if there are any instances in any of its base classes, and add them to the instance_map.</p>
+<p>Copy contents over.</p>
+<p>Base classes may add instances. So we must get the updated instance_map.</p>
 <p>Find if the instance CXXREcordDecl has a base class, and parse that too. Any ports, signals, etc. should be incorporated into the module instance.</p>
-<p>Process all base classes that are not SystemC modules.</p>
 
 </div>
 </div>
@@ -341,8 +343,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aae697d9faf70364c0e21938dd573cbf8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae697d9faf70364c0e21938dd573cbf8">&#9670;&nbsp;</a></span>runPortMatcher()</h2>
+<a id="a6bb6447a29cae8e5d617757958626102"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bb6447a29cae8e5d617757958626102">&#9670;&nbsp;</a></span>runPortMatcher()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -359,7 +361,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">clang::CXXRecordDecl *&#160;</td>
+          <td class="paramtype">const clang::CXXRecordDecl *&#160;</td>
           <td class="paramname"><em>decl</em>, </td>
         </tr>
         <tr>
