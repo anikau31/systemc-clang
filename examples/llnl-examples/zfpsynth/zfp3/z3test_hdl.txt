@@ -10933,7 +10933,7 @@
                         ]
                       ]
                     ]
-                    hNoop  NONAME NOLIST
+                    hBreak  NONAME NOLIST
                   ]
                 ]
                 hSwitchCase  NONAME [
@@ -10962,7 +10962,7 @@
                       hVarref ts_local_0##s NOLIST
                       hLiteral 4 NOLIST
                     ]
-                    hNoop  NONAME NOLIST
+                    hBreak  NONAME NOLIST
                   ]
                 ]
                 hSwitchCase  NONAME [
@@ -11017,7 +11017,7 @@
                         hLiteral 4 NOLIST
                       ]
                     ]
-                    hNoop  NONAME NOLIST
+                    hBreak  NONAME NOLIST
                   ]
                 ]
                 hSwitchCase  NONAME [
@@ -11130,7 +11130,7 @@
                         ]
                       ]
                     ]
-                    hNoop  NONAME NOLIST
+                    hBreak  NONAME NOLIST
                   ]
                 ]
                 hSwitchCase  NONAME [
@@ -11274,7 +11274,7 @@
                         hLiteral 0 NOLIST
                       ]
                     ]
-                    hNoop  NONAME NOLIST
+                    hBreak  NONAME NOLIST
                   ]
                 ]
               ]

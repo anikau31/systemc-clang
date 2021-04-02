@@ -54,6 +54,7 @@ namespace systemc_hdl {
     bool TraverseSwitchStmt(SwitchStmt *switchs);
     bool ProcessSwitchCase(SwitchCase *cases);
     bool TraverseWhileStmt(WhileStmt *whiles);
+    bool TraverseDoStmt(DoStmt *whiles);
     void AddVnames(hNodep &hvns);
 
     hNodep NormalizeHcode(hNodep hinp);
