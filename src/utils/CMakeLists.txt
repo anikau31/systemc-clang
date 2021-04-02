@@ -1,5 +1,6 @@
 set( SCC_UTILS
-  ArrayTypeUtils 
+  ArrayTypeUtils.cpp
+  CXXRecordDeclUtils.cpp
   )
 
 include_directories(${SCC_INCLUDES})
