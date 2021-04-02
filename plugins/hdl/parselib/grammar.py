@@ -48,6 +48,9 @@ lark_grammar = Lark('''
              | blkassign
              | hnoop
              | hreturnstmt
+             | breakstmt
+             
+        breakstmt: "hBreak" "NONAME" "NOLIST"
              
         ?htobool: "hNoop" "to_bool" "[" harrayref "]"
         htouint: "hNoop" "to_uint" "[" syscread "]"

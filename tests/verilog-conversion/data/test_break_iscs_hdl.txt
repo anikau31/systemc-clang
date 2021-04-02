@@ -152,7 +152,7 @@
                   hSigAssignR read [
                     hVarref a NOLIST
                   ]
-                  hNoop  NONAME NOLIST
+                  hBreak  NONAME NOLIST
                 ]
                 hBinop = [
                   hVarref k_local_0 NOLIST
@@ -222,7 +222,7 @@
                       hSigAssignR read [
                         hVarref a NOLIST
                       ]
-                      hNoop  NONAME NOLIST
+                      hBreak  NONAME NOLIST
                     ]
                     hBinop = [
                       hVarref k_local_0 NOLIST
@@ -300,13 +300,13 @@
                       hSigAssignR read [
                         hVarref a NOLIST
                       ]
-                      hNoop  NONAME NOLIST
+                      hBreak  NONAME NOLIST
                     ]
                     hIfStmt  NONAME [
                       hSigAssignR read [
                         hVarref b NOLIST
                       ]
-                      hNoop  NONAME NOLIST
+                      hBreak  NONAME NOLIST
                     ]
                     hBinop = [
                       hVarref k_local_0 NOLIST
@@ -382,7 +382,7 @@
                           hSigAssignR read [
                             hVarref b NOLIST
                           ]
-                          hNoop  NONAME NOLIST
+                          hBreak  NONAME NOLIST
                         ]
                         hBinop = [
                           hVarref k_local_0 NOLIST
@@ -391,7 +391,7 @@
                             hLiteral 1 NOLIST
                           ]
                         ]
-                        hNoop  NONAME NOLIST
+                        hBreak  NONAME NOLIST
                       ]
                     ]
                     hBinop = [
@@ -469,13 +469,13 @@
                           hSigAssignR read [
                             hVarref b NOLIST
                           ]
-                          hNoop  NONAME NOLIST
+                          hBreak  NONAME NOLIST
                         ]
                         hBinop = [
                           hVarref k_local_0 NOLIST
                           hLiteral 1 NOLIST
                         ]
-                        hNoop  NONAME NOLIST
+                        hBreak  NONAME NOLIST
                       ]
                     ]
                     hBinop = [
@@ -545,7 +545,7 @@
                       hSigAssignR read [
                         hVarref b NOLIST
                       ]
-                      hNoop  NONAME NOLIST
+                      hBreak  NONAME NOLIST
                     ]
                     hBinop = [
                       hVarref k_local_0 NOLIST
@@ -557,7 +557,7 @@
                   hSigAssignR read [
                     hVarref b NOLIST
                   ]
-                  hNoop  NONAME NOLIST
+                  hBreak  NONAME NOLIST
                 ]
                 hBinop = [
                   hVarref k_local_0 NOLIST
@@ -595,7 +595,7 @@
                   hSigAssignR read [
                     hVarref a NOLIST
                   ]
-                  hNoop  NONAME NOLIST
+                  hBreak  NONAME NOLIST
                 ]
                 hUnop -- [
                   hVarref i_local_0 NOLIST
@@ -626,7 +626,7 @@
                       hSigAssignR read [
                         hVarref a NOLIST
                       ]
-                      hNoop  NONAME NOLIST
+                      hBreak  NONAME NOLIST
                     ]
                     hUnop ++ [
                       hVarref j_local_1 NOLIST
