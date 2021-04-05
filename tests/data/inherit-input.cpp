@@ -14,7 +14,10 @@ class Base : public sc_module {
 
   NestedModule nested_module;
 
-  SC_CTOR(Base) : nested_module("NestedModule") {}
+  SC_CTOR(Base) : nested_module("NestedModule") {
+    nested_module.nested_clk(clk);
+
+  }
 };
 
 class test : public Base {
