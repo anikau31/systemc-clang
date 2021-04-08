@@ -181,7 +181,7 @@ bool SystemCConsumer::fire() {
 
       LLVM_DEBUG(llvm::dbgs() << "==============> RUN netlist matcher: "
                               << mdecl->getInstanceName() << "\n";);
-      // fd->dump();
+      //fd->dump();
       netlist_registry.match(*fd, getContext());
       LLVM_DEBUG(llvm::dbgs() << "==============> DONE netlist matcher\n";);
       //}
