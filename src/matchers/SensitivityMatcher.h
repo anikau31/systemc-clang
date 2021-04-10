@@ -178,8 +178,6 @@ class SensitiveOperatorCallMatcher : public MatchFinder::MatchCallback {
     auto array_fd{result.Nodes.getNodeAs<clang::ArraySubscriptExpr>("array_fd")};
 
     if (array_fd) {
-      llvm::outs() << " @@@@@@@@@@@@@@@@@@@@@@@@ ARRAY FD @@@@@@@@@@@@@@@@@@@@@@@\n";
-      array_fd->dump();
       array_fd_ = array_fd;
     }
 
@@ -289,7 +287,6 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
         result.Nodes.getNodeAs<clang::CXXOperatorCallExpr>("opcall"))};
 
     if (opcall) {
-      opcall->dump();
       // Check if there is process handle
       if (process_handle) {
         clang::ValueDecl *vd{process_handle->getDecl()};

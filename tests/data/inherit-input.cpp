@@ -14,7 +14,16 @@ class Base : public sc_module {
 
   NestedModule nested_module;
 
-  SC_CTOR(Base) : nested_module("NestedModule") {}
+  void proc() { }
+
+  SC_CTOR(Base) : nested_module("NestedModule") {
+    SC_METHOD(proc);
+    sensitive << clk.pos();
+
+    nested_module.nested_clk(clk);
+
+  }
+
 };
 
 class test : public Base {

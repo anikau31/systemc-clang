@@ -134,9 +134,16 @@
             hUnop ++ [
               hVarref q NOLIST
             ]
-            hBinop < [
-              hVarref i_local_0 NOLIST
-              hLiteral 2 NOLIST
+            hDoStmt  NONAME [
+              hBinop < [
+                hVarref i_local_0 NOLIST
+                hLiteral 2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hUnop ++ [
+                  hVarref q NOLIST
+                ]
+              ]
             ]
           ]
         ]
@@ -162,9 +169,34 @@
               hVarref i_local_1 NOLIST
               hLiteral 0 NOLIST
             ]
-            hBinop < [
-              hVarref i_local_1 NOLIST
-              hLiteral 3 NOLIST
+            hDoStmt  NONAME [
+              hBinop < [
+                hVarref i_local_1 NOLIST
+                hLiteral 3 NOLIST
+              ]
+              hCStmt  NONAME [
+                hUnop ++ [
+                  hVarref i_local_1 NOLIST
+                ]
+                hIfStmt  NONAME [
+                  hBinop > [
+                    hVarref m NOLIST
+                    hLiteral 0 NOLIST
+                  ]
+                  hCStmt  NONAME [
+                    hBinop = [
+                      hVarref j_local_0 NOLIST
+                      hLiteral 2 NOLIST
+                    ]
+                  ]
+                  hCStmt  NONAME [
+                    hBinop = [
+                      hVarref j_local_0 NOLIST
+                      hLiteral 3 NOLIST
+                    ]
+                  ]
+                ]
+              ]
             ]
             hBinop = [
               hVarref j_local_0 NOLIST
@@ -232,9 +264,19 @@
                 ]
               ]
             ]
-            hBinop < [
-              hVarref i_local_0 NOLIST
-              hLiteral 2 NOLIST
+            hDoStmt  NONAME [
+              hBinop < [
+                hVarref i_local_0 NOLIST
+                hLiteral 2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hUnop ++ [
+                  hVarref k_local_2 NOLIST
+                ]
+                hUnop ++ [
+                  hVarref i_local_0 NOLIST
+                ]
+              ]
             ]
             hBinop = [
               hVarref j_local_1 NOLIST
@@ -296,9 +338,19 @@
                 ]
               ]
             ]
-            hBinop < [
-              hVarref i_local_0 NOLIST
-              hLiteral 2 NOLIST
+            hDoStmt  NONAME [
+              hBinop < [
+                hVarref i_local_0 NOLIST
+                hLiteral 2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hUnop ++ [
+                  hVarref k_local_2 NOLIST
+                ]
+                hUnop ++ [
+                  hVarref i_local_0 NOLIST
+                ]
+              ]
             ]
             hBinop = [
               hVarref j_local_1 NOLIST
@@ -344,9 +396,38 @@
               hVarref i_local_2 NOLIST
               hLiteral 0 NOLIST
             ]
-            hBinop < [
-              hVarref i_local_2 NOLIST
-              hLiteral 2 NOLIST
+            hDoStmt  NONAME [
+              hBinop < [
+                hVarref i_local_2 NOLIST
+                hLiteral 2 NOLIST
+              ]
+              hCStmt  NONAME [
+                hVarAssign  NONAME [
+                  hVarref j_local_3 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hUnop ++ [
+                  hVarref i_local_2 NOLIST
+                ]
+                hDoStmt  NONAME [
+                  hBinop < [
+                    hVarref j_local_3 NOLIST
+                    hLiteral 3 NOLIST
+                  ]
+                  hCStmt  NONAME [
+                    hBinop = [
+                      hVarref k_local_0 NOLIST
+                      hBinop + [
+                        hVarref k_local_0 NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                    hUnop ++ [
+                      hVarref j_local_3 NOLIST
+                    ]
+                  ]
+                ]
+              ]
             ]
           ]
         ]
@@ -389,9 +470,23 @@
                 hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
-                hBinop < [
-                  hVarref i_local_2 NOLIST
-                  hLiteral 2 NOLIST
+                hDoStmt  NONAME [
+                  hBinop < [
+                    hVarref i_local_2 NOLIST
+                    hLiteral 2 NOLIST
+                  ]
+                  hCStmt  NONAME [
+                    hBinop = [
+                      hVarref k_local_0 NOLIST
+                      hBinop + [
+                        hVarref k_local_0 NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                    hUnop ++ [
+                      hVarref i_local_2 NOLIST
+                    ]
+                  ]
                 ]
               ]
               hCStmt  NONAME [
@@ -416,9 +511,19 @@
               hVarref k_local_0 NOLIST
               hLiteral 0 NOLIST
             ]
-            hBinop < [
-              hVarref k_local_0 NOLIST
-              hLiteral 3 NOLIST
+            hDoStmt  NONAME [
+              hBinop < [
+                hVarref k_local_0 NOLIST
+                hLiteral 3 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref k_local_0 NOLIST
+                  hMethodCall Af [
+                    hVarref k_local_0 NOLIST
+                  ]
+                ]
+              ]
             ]
           ]
         ]
