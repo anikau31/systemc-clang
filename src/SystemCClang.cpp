@@ -176,63 +176,6 @@ bool SystemCConsumer::fire() {
 
     processModuleDeclaration(cxx_decl, add_module_decl);
     
-
-    /*
-
-    // setInstanceInfo done in pruneMatches
-    //
-    FindTemplateParameters tparms{cxx_decl};
-    add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
-    add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
-
-    /// 3. Find constructor
-    //
-    //
-    LLVM_DEBUG(llvm::dbgs() << "4. Set the constructor.\n";);
-    vector<EntryFunctionContainer *> _entryFunctionContainerVector;
-    FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
-    add_module_decl->addConstructor(&constructor);
-
-    /// 4. Find ports
-    /// This is done for the declaration.
-    //
-    //
-    // 5. Find  entry functions within one sc_module.
-    LLVM_DEBUG(llvm::dbgs() << "5. Set the entry functions\n";);
-    FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(), os_};
-    FindEntryFunctions::entryFunctionVectorType *entryFunctions{
-        findEntries.getEntryFunctions()};
-    LLVM_DEBUG(llvm::dbgs() << "6. Set the process\n";);
-    add_module_decl->addProcess(entryFunctions);
-
-    SensitivityMatcher sens_matcher{};
-    MatchFinder matchRegistry{};
-    sens_matcher.registerMatchers(matchRegistry);
-    matchRegistry.match(*constructor.getConstructorDecl(), getContext());
-
-    for (size_t i{0}; i < entryFunctions->size(); i++) {
-      EntryFunctionContainer *ef{(*entryFunctions)[i]};
-
-      /// Add the sensitivity information to each of the entry functions.
-      EntryFunctionContainer::SenseMapType sensitivity_info{
-          sens_matcher.getSensitivityMap()};
-      ef->addSensitivityInfo(sensitivity_info);
-
-      if (ef->getEntryMethod() == nullptr) {
-        LLVM_DEBUG(llvm::dbgs() << "ERROR";);
-        continue;
-      }
-
-      FindWait findWaits{ef->getEntryMethod(), os_};
-      ef->addWaits(findWaits);
-
-      FindNotify findNotify{ef->getEntryMethod(), os_};
-      ef->addNotifys(findNotify);
-
-      _entryFunctionContainerVector.push_back(ef);
-    }
-    */
-
     systemc_model_->addInstance(add_module_decl);
 
   }
@@ -264,36 +207,6 @@ bool SystemCConsumer::fire() {
 
 
   processNetlist(&scmain, &module_declaration_handler);
-
-  /*
-  LLVM_DEBUG(
-      llvm::dbgs() << "=============== ##### TEST NetlistMatcher ##### \n";);
-  NetlistMatcher netlist_matcher{};
-  MatchFinder netlist_registry{};
-  netlist_matcher.registerMatchers(netlist_registry, systemc_model_,
-                                   &module_declaration_handler);
-
-  netlist_registry.match(*scmain.getSCMainFunctionDecl(), getContext());
-
-  auto instances{systemc_model_->getInstances()};
-  for (const auto &inst : instances) {
-    ModuleInstance *mdecl{inst};
-    auto ctordecl{mdecl->getConstructorDecl()};
-    if (ctordecl != nullptr) {
-      const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
-      ctordecl->getBody(fd);
-
-      LLVM_DEBUG(llvm::dbgs() << "==============> RUN netlist matcher: "
-                              << mdecl->getInstanceName() << "\n";);
-      // fd->dump();
-      netlist_registry.match(*fd, getContext());
-      LLVM_DEBUG(llvm::dbgs() << "==============> DONE netlist matcher\n";);
-      //}
-    }
-  }
-  LLVM_DEBUG(netlist_matcher.dump();
-             llvm::dbgs() << "##### END TEST NetlistMatcher ##### \n";);
-             */
 
   LLVM_DEBUG(
       llvm::dbgs() << "\nParsed SystemC model from systemc-clang\n";
