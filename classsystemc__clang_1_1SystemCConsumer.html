@@ -117,6 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8144d02a15221bb1e3809835c566e73d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87c3945a47ef25c30a372898789251cf"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#a87c3945a47ef25c30a372898789251cf">~SystemCConsumer</a> ()</td></tr>
 <tr class="separator:a87c3945a47ef25c30a372898789251cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33ab18f0a7d9b87a1dce53d2df59cf7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#a33ab18f0a7d9b87a1dce53d2df59cf7d">processModuleDeclaration</a> (clang::CXXRecordDecl *cxx_decl, <a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *add_module_decl)</td></tr>
+<tr class="separator:a33ab18f0a7d9b87a1dce53d2df59cf7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1eda508d3a15cb37f332205f8127e04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__clang_1_1Model.html">Model</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#ae1eda508d3a15cb37f332205f8127e04">getSystemCModel</a> ()</td></tr>
 <tr class="separator:ae1eda508d3a15cb37f332205f8127e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a302f2c0ce93bacfe2287d4e76a537e"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#a1a302f2c0ce93bacfe2287d4e76a537e">getTopModule</a> () const</td></tr>
@@ -260,11 +262,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<ol type="1">
-<li>Find constructor</li>
-<li>Find ports This is done for the declaration.</li>
-</ol>
-<p>Add the sensitivity information to each of the entry functions.</p>
 
 </div>
 </div>
@@ -411,6 +408,39 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a33ab18f0a7d9b87a1dce53d2df59cf7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33ab18f0a7d9b87a1dce53d2df59cf7d">&#9670;&nbsp;</a></span>processModuleDeclaration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SystemCConsumer::processModuleDeclaration </td>
+          <td>(</td>
+          <td class="paramtype">clang::CXXRecordDecl *&#160;</td>
+          <td class="paramname"><em>cxx_decl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *&#160;</td>
+          <td class="paramname"><em>add_module_decl</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<ol type="1">
+<li>Find constructor</li>
+<li>Find ports This is done for the declaration.</li>
+</ol>
+<p>Add the sensitivity information to each of the entry functions.</p>
 
 </div>
 </div>
