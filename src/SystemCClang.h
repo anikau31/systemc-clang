@@ -24,6 +24,8 @@
 #include "clang/Tooling/Tooling.h"
 
 #include "model/Model.h"
+#include "matchers/FindSCMain.h"
+#include "matchers/Matchers.h"
 
 //#include "SCuitable/FindGPUMacro.h"
 //#include "SCuitable/GlobalSuspensionAutomata.h"
@@ -31,12 +33,16 @@
 
 namespace systemc_clang {
 using namespace clang::tooling;
+using namespace sc_ast_matchers;
 /** @brief This is the main consumer class that beings the parsing of SystemC.
 
     This class drives the AST consumer for parsing SystemC constructs.
 
 
     */
+
+/// Forward declarations
+
 class SystemCConsumer : public ASTConsumer,
                         public RecursiveASTVisitor<SystemCConsumer> {
   // TODO: This should be made private at some point.
@@ -49,6 +55,8 @@ class SystemCConsumer : public ASTConsumer,
   virtual ~SystemCConsumer();
 
   void processModuleDeclaration(clang::CXXRecordDecl *cxx_decl, ModuleInstance *add_module_decl);
+
+  void processNetlist(FindSCMain *scmain, ModuleDeclarationMatcher *module_declaration_handler);
 
   Model *getSystemCModel();
   const std::string &getTopModule() const;

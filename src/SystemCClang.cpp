@@ -6,13 +6,12 @@
 #include "matchers/FindGlobalEvents.h"
 #include "matchers/FindNetlist.h"
 #include "matchers/FindNotify.h"
-#include "matchers/FindSCMain.h"
 #include "matchers/FindSimTime.h"
 #include "matchers/FindTLMInterfaces.h"
 #include "matchers/FindTemplateParameters.h"
 #include "matchers/FindWait.h"
 
-#include "matchers/Matchers.h"
+//#include "matchers/Matchers.h"
 #include "ModuleInstanceType.h"
 #include "matchers/NetlistMatcher.h"
 #include "matchers/SensitivityMatcher.h"
@@ -87,6 +86,38 @@ void SystemCConsumer::processModuleDeclaration(
 
       _entryFunctionContainerVector.push_back(ef);
     }
+
+
+}
+
+void SystemCConsumer::processNetlist(FindSCMain *scmain, ModuleDeclarationMatcher *module_declaration_handler) {
+LLVM_DEBUG(
+      llvm::dbgs() << "=============== ##### TEST NetlistMatcher ##### \n";);
+  NetlistMatcher netlist_matcher{};
+  MatchFinder netlist_registry{};
+  netlist_matcher.registerMatchers(netlist_registry, systemc_model_,
+                                   module_declaration_handler);
+
+  netlist_registry.match(*(scmain->getSCMainFunctionDecl()), getContext());
+
+  auto instances{systemc_model_->getInstances()};
+  for (const auto &inst : instances) {
+    ModuleInstance *mdecl{inst};
+    auto ctordecl{mdecl->getConstructorDecl()};
+    if (ctordecl != nullptr) {
+      const FunctionDecl *fd{dyn_cast<FunctionDecl>(ctordecl)};
+      ctordecl->getBody(fd);
+
+      LLVM_DEBUG(llvm::dbgs() << "==============> RUN netlist matcher: "
+                              << mdecl->getInstanceName() << "\n";);
+      // fd->dump();
+      netlist_registry.match(*fd, getContext());
+      LLVM_DEBUG(llvm::dbgs() << "==============> DONE netlist matcher\n";);
+      //}
+    }
+  }
+  LLVM_DEBUG(netlist_matcher.dump();
+             llvm::dbgs() << "##### END TEST NetlistMatcher ##### \n";);
 
 
 }
@@ -232,6 +263,9 @@ bool SystemCConsumer::fire() {
   //  instance.
 
 
+  processNetlist(&scmain, &module_declaration_handler);
+
+  /*
   LLVM_DEBUG(
       llvm::dbgs() << "=============== ##### TEST NetlistMatcher ##### \n";);
   NetlistMatcher netlist_matcher{};
@@ -259,6 +293,7 @@ bool SystemCConsumer::fire() {
   }
   LLVM_DEBUG(netlist_matcher.dump();
              llvm::dbgs() << "##### END TEST NetlistMatcher ##### \n";);
+             */
 
   LLVM_DEBUG(
       llvm::dbgs() << "\nParsed SystemC model from systemc-clang\n";
