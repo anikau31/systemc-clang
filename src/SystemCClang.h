@@ -48,6 +48,8 @@ class SystemCConsumer : public ASTConsumer,
   SystemCConsumer(clang::ASTUnit *from_ast, std::string top = "!none");
   virtual ~SystemCConsumer();
 
+  void processModuleDeclaration(clang::CXXRecordDecl *cxx_decl, ModuleInstance *add_module_decl);
+
   Model *getSystemCModel();
   const std::string &getTopModule() const;
   void setTopModule(const std::string &top_module_decl);

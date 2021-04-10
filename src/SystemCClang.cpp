@@ -31,57 +31,9 @@ bool SystemCConsumer::preFire() { return true; }
 
 bool SystemCConsumer::postFire() { return true; }
 
-bool SystemCConsumer::fire() {
-  clang::TranslationUnitDecl *tu{getContext().getTranslationUnitDecl()};
-  // Reflection database.
-  systemc_model_ = new Model{};
+void SystemCConsumer::processModuleDeclaration(
+    clang::CXXRecordDecl *cxx_decl, ModuleInstance *add_module_decl) {
 
-  FindGlobalEvents globals{tu, os_};
-  FindGlobalEvents::globalEventMapType eventMap{globals.getEventMap()};
-  systemc_model_->addGlobalEvents(eventMap);
-
-  ModuleDeclarationMatcher module_declaration_handler{};
-  MatchFinder matchRegistry{};
-  module_declaration_handler.registerMatchers(matchRegistry);
-  matchRegistry.matchAST(getContext());
-  module_declaration_handler.processInstanceCXXDecls(getContext());
-
-  LLVM_DEBUG(llvm::dbgs() << "== Print module declarations pruned\n";
-             module_declaration_handler.dump();
-             llvm::dbgs() << "================ END =============== \n";);
-
-  // MultiMap CXXRecordDecl => ModuleInstance*
-  // Instances with same CXXRecordDecl will have multiple entries
-  auto found_module_declarations{
-      module_declaration_handler.getFoundModuleDeclarations()};
-  ////////////////////////////////////////////////////////////////
-  // Find the sc_main
-  ////////////////////////////////////////////////////////////////
-  FindSCMain scmain{tu, os_};
-
-  if (scmain.isSCMainFound()) {
-    clang::FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
-
-    // TODO: find any instances in sc_main.
-
-    FindSimTime scstart{fnDecl, os_};
-    systemc_model_->addSimulationTime(scstart.returnSimTime());
-  } else {
-    LLVM_DEBUG(llvm::dbgs() << "\n Could not find SCMain";);
-  }
-  //
-  // Create a ModuleInstance for each instance with the appropriately parsed
-  // ModuleInstance.
-  //
-
-  llvm::outs()
-      << "############# ============= NEW FIRE ============ ################\n";
-  llvm::outs() << "Size of module instances: "
-               << found_module_declarations.size() << "\n";
-
-  for (const auto &inst : found_module_declarations) {
-    auto cxx_decl{inst.first};
-    ModuleInstance *add_module_decl{inst.second};
 
     // setInstanceInfo done in pruneMatches
     //
@@ -136,31 +88,149 @@ bool SystemCConsumer::fire() {
       _entryFunctionContainerVector.push_back(ef);
     }
 
+
+}
+
+bool SystemCConsumer::fire() {
+  clang::TranslationUnitDecl *tu{getContext().getTranslationUnitDecl()};
+  // Reflection database.
+  systemc_model_ = new Model{};
+
+  FindGlobalEvents globals{tu, os_};
+  FindGlobalEvents::globalEventMapType eventMap{globals.getEventMap()};
+  systemc_model_->addGlobalEvents(eventMap);
+
+  ModuleDeclarationMatcher module_declaration_handler{};
+  MatchFinder matchRegistry{};
+  module_declaration_handler.registerMatchers(matchRegistry);
+  matchRegistry.matchAST(getContext());
+  module_declaration_handler.processInstanceCXXDecls(getContext());
+
+  LLVM_DEBUG(llvm::dbgs() << "== Print module declarations pruned\n";
+             module_declaration_handler.dump();
+             llvm::dbgs() << "================ END =============== \n";);
+
+  // MultiMap CXXRecordDecl => ModuleInstance*
+  // Instances with same CXXRecordDecl will have multiple entries
+  auto found_module_declarations{
+      module_declaration_handler.getFoundModuleDeclarations()};
+  ////////////////////////////////////////////////////////////////
+  // Find the sc_main
+  ////////////////////////////////////////////////////////////////
+  FindSCMain scmain{tu, os_};
+
+  if (scmain.isSCMainFound()) {
+    clang::FunctionDecl *fnDecl{scmain.getSCMainFunctionDecl()};
+
+    // TODO: find any instances in sc_main.
+
+    FindSimTime scstart{fnDecl, os_};
+    systemc_model_->addSimulationTime(scstart.returnSimTime());
+  } else {
+    LLVM_DEBUG(llvm::dbgs() << "\n Could not find SCMain";);
+  }
+  //
+  // Create a ModuleInstance for each instance with the appropriately parsed
+  // ModuleInstance.
+  //
+
+  llvm::outs()
+      << "############# ============= NEW FIRE ============ ################\n";
+  llvm::outs() << "Size of module instances: "
+               << found_module_declarations.size() << "\n";
+
+  for (const auto &inst : found_module_declarations) {
+    auto cxx_decl{inst.first};
+    ModuleInstance *add_module_decl{inst.second};
+
+    processModuleDeclaration(cxx_decl, add_module_decl);
+    
+
+    /*
+
+    // setInstanceInfo done in pruneMatches
+    //
+    FindTemplateParameters tparms{cxx_decl};
+    add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
+    add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
+
+    /// 3. Find constructor
+    //
+    //
+    LLVM_DEBUG(llvm::dbgs() << "4. Set the constructor.\n";);
+    vector<EntryFunctionContainer *> _entryFunctionContainerVector;
+    FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
+    add_module_decl->addConstructor(&constructor);
+
+    /// 4. Find ports
+    /// This is done for the declaration.
+    //
+    //
+    // 5. Find  entry functions within one sc_module.
+    LLVM_DEBUG(llvm::dbgs() << "5. Set the entry functions\n";);
+    FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(), os_};
+    FindEntryFunctions::entryFunctionVectorType *entryFunctions{
+        findEntries.getEntryFunctions()};
+    LLVM_DEBUG(llvm::dbgs() << "6. Set the process\n";);
+    add_module_decl->addProcess(entryFunctions);
+
+    SensitivityMatcher sens_matcher{};
+    MatchFinder matchRegistry{};
+    sens_matcher.registerMatchers(matchRegistry);
+    matchRegistry.match(*constructor.getConstructorDecl(), getContext());
+
+    for (size_t i{0}; i < entryFunctions->size(); i++) {
+      EntryFunctionContainer *ef{(*entryFunctions)[i]};
+
+      /// Add the sensitivity information to each of the entry functions.
+      EntryFunctionContainer::SenseMapType sensitivity_info{
+          sens_matcher.getSensitivityMap()};
+      ef->addSensitivityInfo(sensitivity_info);
+
+      if (ef->getEntryMethod() == nullptr) {
+        LLVM_DEBUG(llvm::dbgs() << "ERROR";);
+        continue;
+      }
+
+      FindWait findWaits{ef->getEntryMethod(), os_};
+      ef->addWaits(findWaits);
+
+      FindNotify findNotify{ef->getEntryMethod(), os_};
+      ef->addNotifys(findNotify);
+
+      _entryFunctionContainerVector.push_back(ef);
+    }
+    */
+
     systemc_model_->addInstance(add_module_decl);
 
-    //
   }
+
   llvm::outs()
       << "############# =====  END NEW FIRE ============ ################\n";
 
-  LLVM_DEBUG(llvm::dbgs() << " @@@@@@@@ =============== Populate sub-modules "
-                             "============= \n";);
+
+  LLVM_DEBUG(llvm::dbgs() << "=============== Populate sub-modules ============= \n";);
   // This must have the instance matcher already run.
   // You need systemc_model_ and instance_matcher to build the hierarchy of
   // sub-modules.
   auto instance_matcher{module_declaration_handler.getInstanceMatcher()};
   auto instance_map{instance_matcher.getInstanceMap()};
+
   LLVM_DEBUG(
       llvm::dbgs() << "- Print out all the instances in the instance map\n";);
-  systemc_model_->populateNestedModules();
 
+  systemc_model_->populateNestedModules();
   LLVM_DEBUG(
       llvm::dbgs() << "===========END  Populate sub-modules ============= \n";);
 
+  // Netlist matcher code
+  //
   // All instances are within the SystemC model.
   //  This must come after instances of ModuleInstance have been generated.
   //  This is because the netlist matcher inserts the port bindings into the
   //  instance.
+
 
   LLVM_DEBUG(
       llvm::dbgs() << "=============== ##### TEST NetlistMatcher ##### \n";);
@@ -181,7 +251,7 @@ bool SystemCConsumer::fire() {
 
       LLVM_DEBUG(llvm::dbgs() << "==============> RUN netlist matcher: "
                               << mdecl->getInstanceName() << "\n";);
-      //fd->dump();
+      // fd->dump();
       netlist_registry.match(*fd, getContext());
       LLVM_DEBUG(llvm::dbgs() << "==============> DONE netlist matcher\n";);
       //}
