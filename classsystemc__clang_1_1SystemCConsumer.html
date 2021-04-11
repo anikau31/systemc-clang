@@ -119,6 +119,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a87c3945a47ef25c30a372898789251cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33ab18f0a7d9b87a1dce53d2df59cf7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#a33ab18f0a7d9b87a1dce53d2df59cf7d">processModuleDeclaration</a> (clang::CXXRecordDecl *cxx_decl, <a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *add_module_decl)</td></tr>
 <tr class="separator:a33ab18f0a7d9b87a1dce53d2df59cf7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abae8e220b87934fdbec5d0e9ee61e801"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#abae8e220b87934fdbec5d0e9ee61e801">processNetlist</a> (<a class="el" href="classsystemc__clang_1_1FindSCMain.html">FindSCMain</a> *scmain, <a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html">ModuleDeclarationMatcher</a> *module_declaration_handler)</td></tr>
+<tr class="separator:abae8e220b87934fdbec5d0e9ee61e801"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1eda508d3a15cb37f332205f8127e04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__clang_1_1Model.html">Model</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#ae1eda508d3a15cb37f332205f8127e04">getSystemCModel</a> ()</td></tr>
 <tr class="separator:ae1eda508d3a15cb37f332205f8127e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a302f2c0ce93bacfe2287d4e76a537e"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#a1a302f2c0ce93bacfe2287d4e76a537e">getTopModule</a> () const</td></tr>
@@ -156,7 +158,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This is the main consumer class that beings the parsing of SystemC. </p>
-<p>This class drives the AST consumer for parsing SystemC constructs. </p>
+<p>This class drives the AST consumer for parsing SystemC constructs. Forward declarations </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7329006e29dd8aaade834857342ca945"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7329006e29dd8aaade834857342ca945">&#9670;&nbsp;</a></span>SystemCConsumer() <span class="overload">[1/2]</span></h2>
@@ -441,6 +443,34 @@ Private Attributes</h2></td></tr>
 <li>Find ports This is done for the declaration.</li>
 </ol>
 <p>Add the sensitivity information to each of the entry functions.</p>
+
+</div>
+</div>
+<a id="abae8e220b87934fdbec5d0e9ee61e801"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abae8e220b87934fdbec5d0e9ee61e801">&#9670;&nbsp;</a></span>processNetlist()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SystemCConsumer::processNetlist </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classsystemc__clang_1_1FindSCMain.html">FindSCMain</a> *&#160;</td>
+          <td class="paramname"><em>scmain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html">ModuleDeclarationMatcher</a> *&#160;</td>
+          <td class="paramname"><em>module_declaration_handler</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
