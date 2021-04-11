@@ -15,10 +15,10 @@ ModuleInstance::ModuleInstance()
       instance_decl_{nullptr} {}
 
 ModuleInstance::ModuleInstance(const std::string &name,
-                               clang::CXXRecordDecl *decl)
+                               const clang::CXXRecordDecl *decl)
     : module_name_{name},
       instance_name_{"NONE"},
-      class_decl_{decl},
+      class_decl_{const_cast<clang::CXXRecordDecl*>(decl)},
       instance_decl_{nullptr} {}
 
 ModuleInstance::ModuleInstance(
@@ -34,13 +34,13 @@ ModuleInstance::ModuleInstance(const ModuleInstance &from) {
   constructor_stmt_ = from.constructor_stmt_;
   constructor_decl_ = from.constructor_decl_;
   instance_decl_ = from.instance_decl_;
+  base_instances_ = from.base_instances_;
 
   process_map_ = from.process_map_;
   in_ports_ = from.in_ports_;
   out_ports_ = from.out_ports_;
   inout_ports_ = from.inout_ports_;
   other_fields_ = from.other_fields_;
-  // submodules_ = from.submodules_;
 
   istreamports_ = from.istreamports_;
   ostreamports_ = from.ostreamports_;
@@ -71,6 +71,9 @@ ModuleInstance &ModuleInstance::operator=(const ModuleInstance &from) {
   constructor_stmt_ = from.constructor_stmt_;
   constructor_decl_ = from.constructor_decl_;
   instance_decl_ = from.instance_decl_;
+
+  /// Base instances
+  base_instances_ = from.base_instances_;
 
   process_map_ = from.process_map_;
   in_ports_ = from.in_ports_;
@@ -129,6 +132,10 @@ ModuleInstance::~ModuleInstance() {
   // IMPORTANT: Only the instance-specific details should be deleted.
   // DO NOT delete the information collected through incomplete types.
   //
+
+  for (auto base: base_instances_) {
+    delete base;
+  }
 
   for (auto &v : vef_) {
     if (v != nullptr) {
@@ -200,6 +207,10 @@ std::vector<std::string> ModuleInstance::getTemplateParameters() const {
 
 void ModuleInstance::setModuleName(const std::string &name) {
   module_name_ = name;
+}
+
+void ModuleInstance::addBaseInstance(ModuleInstance *base) {
+  base_instances_.push_back(base);
 }
 
 void ModuleInstance::addInstances(
@@ -363,6 +374,8 @@ const std::vector<ModuleInstance *> &ModuleInstance::getNestedModuleInstances()
 ModuleInstance::processMapType ModuleInstance::getProcessMap() {
   return process_map_;
 }
+
+std::vector<ModuleInstance*> ModuleInstance::getBaseIntances() { return base_instances_; }
 
 ModuleInstance::portMapType ModuleInstance::getOPorts() { return out_ports_; }
 
@@ -660,6 +673,13 @@ void ModuleInstance::dumpSignals(raw_ostream &os, int tabn) {
   os << str;
 }
 
+void ModuleInstance::dump_base_instances(llvm::raw_ostream &os) {
+  os << "Dump base instances: " << base_instances_.size() << "\n";
+  for (const auto base: base_instances_) {
+    base->dump(os);
+  }
+}
+
 void ModuleInstance::dump(llvm::raw_ostream &os) {
   os << "Name: " << module_name_;
   os << "\n# Instances:\n";
@@ -676,6 +696,8 @@ void ModuleInstance::dump(llvm::raw_ostream &os) {
   dumpSignalBinding(os, 4);
 
   dump_json();
+
+  dump_base_instances(os);
   os << "\n=======================================================\n";
 }
 

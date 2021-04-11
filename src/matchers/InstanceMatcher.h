@@ -530,9 +530,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     auto ctor_arg = const_cast<clang::Stmt *>(
         result.Nodes.getNodeAs<clang::Stmt>("ctor_arg"));
 
-    if (parent_fd == nullptr) {
-      llvm::dbgs() << "####@@@@@ PARENTFD IS NULL @@@@####\n";
-    }
     
     /// ctor_fd:    Field initialized in the constructor.
     /// ctor_init:  Constructor initializer.
