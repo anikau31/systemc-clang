@@ -558,109 +558,106 @@ $(function() {
 <div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;    <span class="keyword">auto</span> ctor_arg = <span class="keyword">const_cast&lt;</span>clang::Stmt *<span class="keyword">&gt;</span>(</div>
 <div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;        result.Nodes.getNodeAs&lt;clang::Stmt&gt;(<span class="stringliteral">&quot;ctor_arg&quot;</span>));</div>
 <div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160; </div>
-<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;    <span class="keywordflow">if</span> (parent_fd == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;      llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;####@@@@@ PARENTFD IS NULL @@@@####\n&quot;</span>;</div>
-<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;    }</div>
-<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;    </div>
-<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;    <span class="keywordflow">if</span> (ctor_fd &amp;&amp; ctor_init &amp;&amp; parent_fd) {</div>
-<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;      LLVM_DEBUG(llvm::dbgs()</div>
-<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;                 &lt;&lt; <span class="stringliteral">&quot;#### CTOR_FD: parent_fd &quot;</span> &lt;&lt; parent_fd-&gt;getNameAsString()</div>
-<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;                 &lt;&lt; <span class="stringliteral">&quot; ctor_fd &quot;</span> &lt;&lt; ctor_fd-&gt;getNameAsString() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;      LLVM_DEBUG(ctor_fd-&gt;dump());</div>
-<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160; </div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;      <span class="keyword">auto</span> index_map{<a class="code" href="namespacesc__ast__matchers_1_1utils_1_1array__type.html#a8caeed19d064a60af5447e3b3b2bc7b7">getArrayInstanceIndex</a>(ctor_init)};</div>
-<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160; </div>
-<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;      clang::Expr *expr = ctor_init-&gt;getInit()-&gt;IgnoreImplicit();</div>
-<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;      clang::CXXConstructExpr *cexpr{</div>
-<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;          clang::dyn_cast&lt;clang::CXXConstructExpr&gt;(expr)};</div>
-<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;      clang::InitListExpr *iexpr{clang::dyn_cast&lt;clang::InitListExpr&gt;(expr)};</div>
-<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160; </div>
-<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;      <span class="comment">//</span></div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;    </div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;    <span class="keywordflow">if</span> (ctor_fd &amp;&amp; ctor_init &amp;&amp; parent_fd) {</div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;      LLVM_DEBUG(llvm::dbgs()</div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;                 &lt;&lt; <span class="stringliteral">&quot;#### CTOR_FD: parent_fd &quot;</span> &lt;&lt; parent_fd-&gt;getNameAsString()</div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;                 &lt;&lt; <span class="stringliteral">&quot; ctor_fd &quot;</span> &lt;&lt; ctor_fd-&gt;getNameAsString() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;      LLVM_DEBUG(ctor_fd-&gt;dump());</div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160; </div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;      <span class="keyword">auto</span> index_map{<a class="code" href="namespacesc__ast__matchers_1_1utils_1_1array__type.html#a8caeed19d064a60af5447e3b3b2bc7b7">getArrayInstanceIndex</a>(ctor_init)};</div>
+<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160; </div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;      clang::Expr *expr = ctor_init-&gt;getInit()-&gt;IgnoreImplicit();</div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;      clang::CXXConstructExpr *cexpr{</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;          clang::dyn_cast&lt;clang::CXXConstructExpr&gt;(expr)};</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;      clang::InitListExpr *iexpr{clang::dyn_cast&lt;clang::InitListExpr&gt;(expr)};</div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160; </div>
+<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;      <span class="comment">//</span></div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160; </div>
+<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;      <span class="keywordflow">if</span> ((iexpr != <span class="keyword">nullptr</span>) &amp;&amp; (cexpr == <span class="keyword">nullptr</span>)) {</div>
+<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;        LLVM_DEBUG(llvm::outs() &lt;&lt; <span class="stringliteral">&quot;### IEXPR is not NULL\n&quot;</span>;</div>
 <div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160; </div>
-<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;      <span class="keywordflow">if</span> ((iexpr != <span class="keyword">nullptr</span>) &amp;&amp; (cexpr == <span class="keyword">nullptr</span>)) {</div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;        LLVM_DEBUG(llvm::outs() &lt;&lt; <span class="stringliteral">&quot;### IEXPR is not NULL\n&quot;</span>;</div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160; </div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;                   llvm::outs() &lt;&lt; <span class="stringliteral">&quot;######## Going through index map: &quot;</span></div>
-<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;                                &lt;&lt; index_map.size() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;);</div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;init : index_map) {</div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;          <span class="keyword">auto</span> submodule_instance_name{init.first};</div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name,</div>
-<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;                         index_map);</div>
-<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;          LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;#==&gt; submodule_instance_name &quot;</span></div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;                                  &lt;&lt; submodule_instance_name &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;        }</div>
-<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160; </div>
-<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;        MatchFinder iarg_registry{};</div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;        <a class="code" href="classsc__ast__matchers_1_1InstanceArgumentMatcher.html">InstanceArgumentMatcher</a> iarg_matcher{};</div>
-<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;        iarg_matcher.<a class="code" href="classsc__ast__matchers_1_1InstanceArgumentMatcher.html#ad0650ca47aff7cb5080c07be9e360dea">registerMatchers</a>(iarg_registry);</div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;        <span class="comment">// iarg_registry.match(*cexpr, *result.Context);</span></div>
-<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160; </div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;        <span class="keywordflow">if</span> (ctor_fd-&gt;hasInClassInitializer()) {</div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;          LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;### In-class initializer\n&quot;</span>;);</div>
-<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;          <span class="keyword">const</span> Expr *in_class_init{ctor_fd-&gt;getInClassInitializer()};</div>
-<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;          iarg_registry.match(*in_class_init-&gt;IgnoreImplicit(),</div>
-<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;                              *result.Context);</div>
-<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;          LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;### Constructor initializer\n&quot;</span>;);</div>
-<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;          iarg_registry.match(*cexpr, *result.Context);</div>
-<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;        }</div>
-<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160; </div>
-<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;        LLVM_DEBUG(iarg_matcher.dump();</div>
-<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160; </div>
-<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;                   llvm::outs()</div>
-<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;                   &lt;&lt; <span class="stringliteral">&quot;#### IndexMap: &quot;</span> &lt;&lt; index_map.size() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;);</div>
-<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;        <span class="comment">// This retrieves the submodule instance name.</span></div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;        <span class="keywordflow">if</span> (<span class="keyword">auto</span> inst_literal = iarg_matcher.getInstanceLiteral()) {</div>
-<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;          <span class="keyword">auto</span> submodule_instance_name = inst_literal-&gt;getString().str();</div>
-<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name,</div>
-<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;                         index_map);</div>
-<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;          LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;=&gt; submodule_instance_name &quot;</span></div>
-<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;                                  &lt;&lt; submodule_instance_name &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;        }</div>
-<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;      }</div>
-<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;    }</div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160; </div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;    <span class="comment">// Is it a FieldDecl or VarDecl</span></div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160; </div>
-<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;    <span class="keywordflow">if</span> (instance_vd) {</div>
-<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;      <span class="keyword">auto</span> instance_name{cast&lt;StringLiteral&gt;(ctor_arg)-&gt;getString().str()};</div>
-<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;      LLVM_DEBUG(llvm::dbgs()</div>
-<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;                 &lt;&lt; <span class="stringliteral">&quot;## VD: &quot;</span> &lt;&lt; instance_vd-&gt;getNameAsString() &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
-<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;                 &lt;&lt; instance_vd &lt;&lt; <span class="stringliteral">&quot; instance_name &quot;</span> &lt;&lt; instance_name &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160; </div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;      parseVarDecl(instance_vd, instance_name);</div>
-<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;    }</div>
-<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;  }</div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160; </div>
-<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;  <span class="comment">// This is the callback function whenever there is a match.</span></div>
-<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160; </div>
-<div class="line"><a name="l00619"></a><span class="lineno"><a class="line" href="classsc__ast__matchers_1_1InstanceMatcher.html#a5b6ac85a7e4666104cd786415326fe87">  619</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsc__ast__matchers_1_1InstanceMatcher.html#a5b6ac85a7e4666104cd786415326fe87">dump</a>() {</div>
-<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;    <span class="comment">// Instances holds both FieldDecl and VarDecl as its base class Decl.</span></div>
-<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;    LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;# INSTANCE MATCHER DUMP \n&quot;</span>;);</div>
-<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : instance_map_) {</div>
-<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;      <span class="keyword">auto</span> instance{i.second};</div>
-<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;      LLVM_DEBUG(llvm::dbgs()</div>
-<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;                     &lt;&lt; <span class="stringliteral">&quot;decl* &quot;</span> &lt;&lt; i.first &lt;&lt; <span class="stringliteral">&quot;  &quot;</span> &lt;&lt; instance.instance_name;);</div>
-<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160; </div>
-<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;      <span class="keyword">auto</span> instance_field{instance.type_decl};</div>
-<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;      LLVM_DEBUG(llvm::dbgs()</div>
-<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;                     &lt;&lt; <span class="stringliteral">&quot; instance_field*: &quot;</span> &lt;&lt; instance_field &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;);</div>
-<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;      <span class="comment">//</span></div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;      <span class="comment">// if (clang::dyn_cast&lt;clang::FieldDecl&gt;(instance_field)) {</span></div>
-<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;      <span class="comment">// if (instance.is_field_decl) {</span></div>
-<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;      <span class="comment">// LLVM_DEBUG(llvm::dbgs() &lt;&lt; &quot; FieldDecl &quot;;);</span></div>
-<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;      <span class="comment">// } else {</span></div>
-<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;      <span class="comment">// LLVM_DEBUG(llvm::dbgs() &lt;&lt; &quot; VarDecl &quot;;);</span></div>
-<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;      <span class="comment">// }</span></div>
-<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;      <span class="comment">// }</span></div>
-<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;      <span class="comment">//</span></div>
-<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;      instance.dump();</div>
-<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;    }</div>
-<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;  }</div>
-<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;};</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;};  <span class="comment">// namespace sc_ast_matchers</span></div>
-<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;                   llvm::outs() &lt;&lt; <span class="stringliteral">&quot;######## Going through index map: &quot;</span></div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;                                &lt;&lt; index_map.size() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;);</div>
+<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;init : index_map) {</div>
+<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;          <span class="keyword">auto</span> submodule_instance_name{init.first};</div>
+<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name,</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;                         index_map);</div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;          LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;#==&gt; submodule_instance_name &quot;</span></div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;                                  &lt;&lt; submodule_instance_name &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;        }</div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160; </div>
+<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;        MatchFinder iarg_registry{};</div>
+<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;        <a class="code" href="classsc__ast__matchers_1_1InstanceArgumentMatcher.html">InstanceArgumentMatcher</a> iarg_matcher{};</div>
+<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;        iarg_matcher.<a class="code" href="classsc__ast__matchers_1_1InstanceArgumentMatcher.html#ad0650ca47aff7cb5080c07be9e360dea">registerMatchers</a>(iarg_registry);</div>
+<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;        <span class="comment">// iarg_registry.match(*cexpr, *result.Context);</span></div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160; </div>
+<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;        <span class="keywordflow">if</span> (ctor_fd-&gt;hasInClassInitializer()) {</div>
+<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;          LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;### In-class initializer\n&quot;</span>;);</div>
+<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;          <span class="keyword">const</span> Expr *in_class_init{ctor_fd-&gt;getInClassInitializer()};</div>
+<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;          iarg_registry.match(*in_class_init-&gt;IgnoreImplicit(),</div>
+<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;                              *result.Context);</div>
+<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;          LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;### Constructor initializer\n&quot;</span>;);</div>
+<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;          iarg_registry.match(*cexpr, *result.Context);</div>
+<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;        }</div>
+<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160; </div>
+<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;        LLVM_DEBUG(iarg_matcher.dump();</div>
+<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160; </div>
+<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;                   llvm::outs()</div>
+<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;                   &lt;&lt; <span class="stringliteral">&quot;#### IndexMap: &quot;</span> &lt;&lt; index_map.size() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;);</div>
+<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;        <span class="comment">// This retrieves the submodule instance name.</span></div>
+<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;        <span class="keywordflow">if</span> (<span class="keyword">auto</span> inst_literal = iarg_matcher.getInstanceLiteral()) {</div>
+<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;          <span class="keyword">auto</span> submodule_instance_name = inst_literal-&gt;getString().str();</div>
+<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;          parseFieldDecl(ctor_fd, parent_fd, submodule_instance_name,</div>
+<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;                         index_map);</div>
+<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;          LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;=&gt; submodule_instance_name &quot;</span></div>
+<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;                                  &lt;&lt; submodule_instance_name &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;        }</div>
+<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;      }</div>
+<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;    }</div>
+<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160; </div>
+<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;    <span class="comment">// Is it a FieldDecl or VarDecl</span></div>
+<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160; </div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;    <span class="keywordflow">if</span> (instance_vd) {</div>
+<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;      <span class="keyword">auto</span> instance_name{cast&lt;StringLiteral&gt;(ctor_arg)-&gt;getString().str()};</div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;      LLVM_DEBUG(llvm::dbgs()</div>
+<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;                 &lt;&lt; <span class="stringliteral">&quot;## VD: &quot;</span> &lt;&lt; instance_vd-&gt;getNameAsString() &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
+<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;                 &lt;&lt; instance_vd &lt;&lt; <span class="stringliteral">&quot; instance_name &quot;</span> &lt;&lt; instance_name &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160; </div>
+<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;      parseVarDecl(instance_vd, instance_name);</div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;    }</div>
+<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;  }</div>
+<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160; </div>
+<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;  <span class="comment">// This is the callback function whenever there is a match.</span></div>
+<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160; </div>
+<div class="line"><a name="l00616"></a><span class="lineno"><a class="line" href="classsc__ast__matchers_1_1InstanceMatcher.html#a5b6ac85a7e4666104cd786415326fe87">  616</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsc__ast__matchers_1_1InstanceMatcher.html#a5b6ac85a7e4666104cd786415326fe87">dump</a>() {</div>
+<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;    <span class="comment">// Instances holds both FieldDecl and VarDecl as its base class Decl.</span></div>
+<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;    LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;# INSTANCE MATCHER DUMP \n&quot;</span>;);</div>
+<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : instance_map_) {</div>
+<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;      <span class="keyword">auto</span> instance{i.second};</div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;      LLVM_DEBUG(llvm::dbgs()</div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;                     &lt;&lt; <span class="stringliteral">&quot;decl* &quot;</span> &lt;&lt; i.first &lt;&lt; <span class="stringliteral">&quot;  &quot;</span> &lt;&lt; instance.instance_name;);</div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160; </div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;      <span class="keyword">auto</span> instance_field{instance.type_decl};</div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;      LLVM_DEBUG(llvm::dbgs()</div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;                     &lt;&lt; <span class="stringliteral">&quot; instance_field*: &quot;</span> &lt;&lt; instance_field &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;);</div>
+<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;      <span class="comment">//</span></div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;      <span class="comment">// if (clang::dyn_cast&lt;clang::FieldDecl&gt;(instance_field)) {</span></div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;      <span class="comment">// if (instance.is_field_decl) {</span></div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;      <span class="comment">// LLVM_DEBUG(llvm::dbgs() &lt;&lt; &quot; FieldDecl &quot;;);</span></div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;      <span class="comment">// } else {</span></div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;      <span class="comment">// LLVM_DEBUG(llvm::dbgs() &lt;&lt; &quot; VarDecl &quot;;);</span></div>
+<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;      <span class="comment">// }</span></div>
+<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;      <span class="comment">// }</span></div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;      <span class="comment">//</span></div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;      instance.dump();</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;    }</div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;  }</div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;};</div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;};  <span class="comment">// namespace sc_ast_matchers</span></div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aArrayTypeUtils_8h_html"><div class="ttname"><a href="ArrayTypeUtils_8h.html">ArrayTypeUtils.h</a></div></div>
 <div class="ttc" id="aModuleInstanceType_8h_html"><div class="ttname"><a href="ModuleInstanceType_8h.html">ModuleInstanceType.h</a></div></div>
 <div class="ttc" id="aclasssc__ast__matchers_1_1InstanceArgumentMatcher_html"><div class="ttname"><a href="classsc__ast__matchers_1_1InstanceArgumentMatcher.html">sc_ast_matchers::InstanceArgumentMatcher</a></div><div class="ttdef"><b>Definition:</b> InstanceMatcher.h:22</div></div>
@@ -675,7 +672,7 @@ $(function() {
 <div class="ttc" id="aclasssc__ast__matchers_1_1InstanceMatcher_html_a2da868d9005b524c65f6dc808f6a6e2b"><div class="ttname"><a href="classsc__ast__matchers_1_1InstanceMatcher.html#a2da868d9005b524c65f6dc808f6a6e2b">sc_ast_matchers::InstanceMatcher::ModuleInstanceTuple</a></div><div class="ttdeci">std::pair&lt; clang::Decl *, ModuleInstanceType &gt; ModuleInstanceTuple</div><div class="ttdef"><b>Definition:</b> InstanceMatcher.h:81</div></div>
 <div class="ttc" id="aclasssc__ast__matchers_1_1InstanceMatcher_html_a365a93a3acf5d3e4296b0fc3b72de11d"><div class="ttname"><a href="classsc__ast__matchers_1_1InstanceMatcher.html#a365a93a3acf5d3e4296b0fc3b72de11d">sc_ast_matchers::InstanceMatcher::InstanceDeclarationsType</a></div><div class="ttdeci">std::vector&lt; InstanceDeclType &gt; InstanceDeclarationsType</div><div class="ttdef"><b>Definition:</b> InstanceMatcher.h:74</div></div>
 <div class="ttc" id="aclasssc__ast__matchers_1_1InstanceMatcher_html_a5376976183a68f8d45e6988fa20562a6"><div class="ttname"><a href="classsc__ast__matchers_1_1InstanceMatcher.html#a5376976183a68f8d45e6988fa20562a6">sc_ast_matchers::InstanceMatcher::getInstanceMap</a></div><div class="ttdeci">const InstanceDeclarations &amp; getInstanceMap()</div><div class="ttdef"><b>Definition:</b> InstanceMatcher.h:109</div></div>
-<div class="ttc" id="aclasssc__ast__matchers_1_1InstanceMatcher_html_a5b6ac85a7e4666104cd786415326fe87"><div class="ttname"><a href="classsc__ast__matchers_1_1InstanceMatcher.html#a5b6ac85a7e4666104cd786415326fe87">sc_ast_matchers::InstanceMatcher::dump</a></div><div class="ttdeci">void dump()</div><div class="ttdef"><b>Definition:</b> InstanceMatcher.h:619</div></div>
+<div class="ttc" id="aclasssc__ast__matchers_1_1InstanceMatcher_html_a5b6ac85a7e4666104cd786415326fe87"><div class="ttname"><a href="classsc__ast__matchers_1_1InstanceMatcher.html#a5b6ac85a7e4666104cd786415326fe87">sc_ast_matchers::InstanceMatcher::dump</a></div><div class="ttdeci">void dump()</div><div class="ttdef"><b>Definition:</b> InstanceMatcher.h:616</div></div>
 <div class="ttc" id="aclasssc__ast__matchers_1_1InstanceMatcher_html_a61ea2dbc605e396c7ac81758fb2f198d"><div class="ttname"><a href="classsc__ast__matchers_1_1InstanceMatcher.html#a61ea2dbc605e396c7ac81758fb2f198d">sc_ast_matchers::InstanceMatcher::parent_fd_</a></div><div class="ttdeci">clang::ValueDecl * parent_fd_</div><div class="ttdef"><b>Definition:</b> InstanceMatcher.h:100</div></div>
 <div class="ttc" id="aclasssc__ast__matchers_1_1InstanceMatcher_html_a70b046aa0e773c870c2f169dc09b11a6"><div class="ttname"><a href="classsc__ast__matchers_1_1InstanceMatcher.html#a70b046aa0e773c870c2f169dc09b11a6">sc_ast_matchers::InstanceMatcher::InstanceDeclType</a></div><div class="ttdeci">std::tuple&lt; std::string, clang::Decl *, ModuleInstanceType &gt; InstanceDeclType</div><div class="ttdef"><b>Definition:</b> InstanceMatcher.h:73</div></div>
 <div class="ttc" id="aclasssc__ast__matchers_1_1InstanceMatcher_html_a770fd63f4e6a2ae106fda6d1d91f590e"><div class="ttname"><a href="classsc__ast__matchers_1_1InstanceMatcher.html#a770fd63f4e6a2ae106fda6d1d91f590e">sc_ast_matchers::InstanceMatcher::parseVarDecl</a></div><div class="ttdeci">void parseVarDecl(clang::VarDecl *instance_decl, std::string &amp;instance_name)</div><div class="ttdef"><b>Definition:</b> InstanceMatcher.h:349</div></div>
