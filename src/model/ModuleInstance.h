@@ -56,8 +56,9 @@ class ModuleInstance {
 
  public:
   ModuleInstance();
-  ModuleInstance(const std::string &, clang::CXXRecordDecl *);
-  ModuleInstance(const std::tuple<const std::string &, clang::CXXRecordDecl *> &);
+  ModuleInstance(const std::string &, const clang::CXXRecordDecl *);
+  ModuleInstance(
+      const std::tuple<const std::string &, clang::CXXRecordDecl *> &);
 
   // Copy constructor.
   ModuleInstance(const ModuleInstance &from);
@@ -78,6 +79,7 @@ class ModuleInstance {
 
   void addPortBinding(const std::string &port_name, PortBinding *pb);
   void addSignalBinding(std::map<std::string, std::string>);
+  void addBaseInstance(ModuleInstance *);
 
   void addNestedModule(ModuleInstance *submodule);
 
@@ -110,6 +112,7 @@ class ModuleInstance {
   portMapType getInputStreamPorts();
   portMapType getOutputStreamPorts();
 
+  std::vector<ModuleInstance *> getBaseIntances();
   portBindingMapType getPortBindings();
 
   processMapType getProcessMap();
@@ -135,6 +138,7 @@ class ModuleInstance {
   void dump(llvm::raw_ostream &);
   void dumpInstances(llvm::raw_ostream &, int);
   void dumpSignalBinding(llvm::raw_ostream &, int);
+  void dump_base_instances(llvm::raw_ostream &os);
 
   void clearOnlyGlobal();
 
@@ -144,6 +148,8 @@ class ModuleInstance {
   std::string module_name_;
   std::string instance_name_;
   ModuleInstanceType instance_info_;
+
+  std::vector<ModuleInstance *> base_instances_;
 
   // Declaration
   clang::CXXRecordDecl *class_decl_;
