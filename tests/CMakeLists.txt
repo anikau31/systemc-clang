@@ -42,7 +42,7 @@ set(TEST_DIR "tests")
  add_subdirectory(matchers)
  add_subdirectory(parsing)
 
-# Plugins
+# # Plugins
  add_subdirectory(hdl)
 
 
