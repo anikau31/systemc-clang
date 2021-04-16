@@ -112,7 +112,7 @@ class ModuleInstance {
   portMapType getInputStreamPorts();
   portMapType getOutputStreamPorts();
 
-  std::vector<ModuleInstance *> getBaseIntances();
+  std::vector<ModuleInstance *> getBaseInstances();
   portBindingMapType getPortBindings();
 
   processMapType getProcessMap();

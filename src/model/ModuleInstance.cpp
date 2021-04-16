@@ -375,7 +375,7 @@ ModuleInstance::processMapType ModuleInstance::getProcessMap() {
   return process_map_;
 }
 
-std::vector<ModuleInstance*> ModuleInstance::getBaseIntances() { return base_instances_; }
+std::vector<ModuleInstance*> ModuleInstance::getBaseInstances() { return base_instances_; }
 
 ModuleInstance::portMapType ModuleInstance::getOPorts() { return out_ports_; }
 
