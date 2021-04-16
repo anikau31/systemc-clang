@@ -119,6 +119,15 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     /// Base classes may add instances. So we must get the updated instance_map.
     instance_map = instance_matcher_.getInstanceMap();
 
+    for (auto inst : instance_map) {
+      llvm::dbgs() << "@@@@@@@@@@@@@ INSTANCE MAP with base classes @@@@@@@@@@@\n";
+
+      clang::CXXRecordDecl *decl{
+          dyn_cast<clang::CXXRecordDecl>(inst.second.getInstanceTypeDecl())};
+      auto name{decl->getNameAsString()};
+      llvm::dbgs() << "class: " << name << "\n";
+    }
+
     // Each inst is of type pair<Decl*, ModuleInstancetype>
     for (auto inst : instance_map) {
       ModuleInstanceType instance{inst.second};
@@ -129,13 +138,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       llvm::outs() << "############### ====> INST: " << inst.first
                    << ", name: " << name
                    << ", instance_name: " << inst.second.instance_name << "\n";
-
-      InstanceListType instance_list;
-      instance_matcher_.findInstanceByVariableType(decl, instance_list);
-      // This is the new data structure that uses ModuleDecl internally.
-      if (instance_list.size() > 1) {
-        assert(true);
-      }
 
       auto add_module{new ModuleInstance(name, decl)};
       add_module->setInstanceInfo(instance);

@@ -181,6 +181,28 @@ bool SystemCConsumer::fire() {
       processModuleDeclaration(const_cast<clang::CXXRecordDecl*>(base), base_module_instance);
       llvm::dbgs() << " ############### Base module instance ################# \n";
       add_module_decl->addBaseInstance( base_module_instance);
+
+      /*
+  for (const auto &base_decl : base_decls) {
+        llvm::dbgs() << "=============================== BASES " << decl->getNameAsString() << " =======================\n";
+        llvm::dbgs() << "Run base instance matcher: "
+                     << base_decl->getNameAsString() << " \n";
+        InstanceMatcher base_instance_matcher;
+        MatchFinder base_instance_reg{};
+        base_instance_matcher.registerMatchers(base_instance_reg);
+        base_instance_matcher.setParentFieldDecl(vd);
+        base_instance_reg.match(*base_decl, context);
+        llvm::dbgs() << "+ Dump base instance matcher\n";
+        base_instance_matcher.dump();
+        llvm::dbgs() << "+ End dump base instance matcher\n";
+
+        /// Copy contents over.
+        instance_matcher_= base_instance_matcher;
+      }
+
+  */
+
+
     }
 
     systemc_model_->addInstance(add_module_decl);
