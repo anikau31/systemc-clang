@@ -8,6 +8,18 @@
 #include "CXXRecordDeclUtils.h"
 #include "ModuleInstance.h"
 #include "PortMatcher.h"
+
+#include "FindConstructor.h"
+#include "FindEntryFunctions.h"
+#include "FindEvents.h"
+#include "FindGlobalEvents.h"
+#include "FindNetlist.h"
+#include "FindNotify.h"
+#include "FindSimTime.h"
+#include "FindTLMInterfaces.h"
+#include "FindTemplateParameters.h"
+#include "FindWait.h"
+
 #include "clang/ASTMatchers/ASTMatchers.h"
 
 using namespace systemc_clang;
@@ -78,31 +90,81 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     add_module->addPorts(port_matcher.getSubmodules(), "submodules");
   }
 
-  void processInstanceCXXDecls(ASTContext &context) {
-    // Must have found instances.
-    // 1. For every module found, check if there is an instance.
-    // 2. If there is an instance, then add it into the list.
+  void runModuleDeclarationMatchers(ASTContext &context,
+                                    clang::CXXRecordDecl *cxx_decl,
+                                    ModuleInstance *add_module_decl) {
+    // setInstanceInfo done in pruneMatches
+    //
+    FindTemplateParameters tparms{cxx_decl};
+    add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
+    add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
 
-    llvm::outs() << "###### DUMP Instance Matches \n";
-    instance_matcher_.dump();
+    /// 3. Find constructor
+    //
+    //
+    LLVM_DEBUG(llvm::dbgs() << "4. Set the constructor.\n";);
+    vector<EntryFunctionContainer *> _entryFunctionContainerVector;
+    FindConstructor constructor{add_module_decl->getModuleClassDecl(),
+                                llvm::dbgs()};
+    add_module_decl->addConstructor(&constructor);
 
+    /// 4. Find ports
+    /// This is done for the declaration.
+    //
+    //
+    // 5. Find  entry functions within one sc_module.
+    LLVM_DEBUG(llvm::dbgs() << "5. Set the entry functions\n";);
+    FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
+                                   llvm::dbgs()};
+    FindEntryFunctions::entryFunctionVectorType *entryFunctions{
+        findEntries.getEntryFunctions()};
+    LLVM_DEBUG(llvm::dbgs() << "6. Set the process\n";);
+    add_module_decl->addProcess(entryFunctions);
+
+    SensitivityMatcher sens_matcher{};
+    MatchFinder matchRegistry{};
+    sens_matcher.registerMatchers(matchRegistry);
+    matchRegistry.match(*constructor.getConstructorDecl(), context);
+
+    for (size_t i{0}; i < entryFunctions->size(); i++) {
+      EntryFunctionContainer *ef{(*entryFunctions)[i]};
+
+      /// Add the sensitivity information to each of the entry functions.
+      EntryFunctionContainer::SenseMapType sensitivity_info{
+          sens_matcher.getSensitivityMap()};
+      ef->addSensitivityInfo(sensitivity_info);
+
+      if (ef->getEntryMethod() == nullptr) {
+        LLVM_DEBUG(llvm::dbgs() << "ERROR";);
+        continue;
+      }
+
+      FindWait findWaits{ef->getEntryMethod(), llvm::dbgs()};
+      ef->addWaits(findWaits);
+
+      FindNotify findNotify{ef->getEntryMethod(), llvm::dbgs()};
+      ef->addNotifys(findNotify);
+
+      _entryFunctionContainerVector.push_back(ef);
+    }
+  }
+
+  void matchInstancesInBaseClasses(ASTContext &context) {
     auto instance_map{instance_matcher_.getInstanceMap()};
-
-    /// Go through every instance found (ValueDecl), and find if there are any
-    /// instances in any of its base classes, and add them to the instance_map.
-
-    for (const auto inst : instance_map) {
+    for (const auto &inst : instance_map) {
       ModuleInstanceType instance{inst.second};
       clang::CXXRecordDecl *decl{
           dyn_cast<clang::CXXRecordDecl>(inst.second.getInstanceTypeDecl())};
-      clang::ValueDecl *vd {
+      clang::ValueDecl *vd{
           dyn_cast<clang::ValueDecl>(inst.second.getInstanceDecl())};
 
       auto base_decls{getAllBaseClasses(decl)};
       for (const auto &base_decl : base_decls) {
-        llvm::dbgs() << "=============================== BASES " << decl->getNameAsString() << " =======================\n";
+        llvm::dbgs() << "=============================== BASES "
+                     << decl->getNameAsString() << " =======================\n";
         llvm::dbgs() << "Run base instance matcher: "
                      << base_decl->getNameAsString() << " \n";
+
         InstanceMatcher base_instance_matcher;
         MatchFinder base_instance_reg{};
         base_instance_matcher.registerMatchers(base_instance_reg);
@@ -113,23 +175,46 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         llvm::dbgs() << "+ End dump base instance matcher\n";
 
         /// Copy contents over.
-        instance_matcher_= base_instance_matcher;
+        instance_matcher_ = base_instance_matcher;
       }
     }
+  }
+
+  void processInstanceCXXDecls(ASTContext &context) {
+    // Must have found instances.
+    // 1. For every module found, check if there is an instance.
+    // 2. If there is an instance, then add it into the list.
+
+    llvm::outs() << "###### DUMP Instance Matches \n";
+    instance_matcher_.dump();
+
+    auto instance_map{instance_matcher_.getInstanceMap()};
+
+    /// 1. The instances found so far are only the ValueDecls.
+    /// However, there can be instances in base classes of the declarations of
+    /// these ValueDecls that are not going to be recognized. As a result, we
+    /// need to find those instances within the base classes of the identified
+    /// ValueDecls.
+    matchInstancesInBaseClasses(context);
+
     /// Base classes may add instances. So we must get the updated instance_map.
     instance_map = instance_matcher_.getInstanceMap();
 
-    for (auto inst : instance_map) {
-      llvm::dbgs() << "@@@@@@@@@@@@@ INSTANCE MAP with base classes @@@@@@@@@@@\n";
+    /// DEBUG: output all the classes that have been identified. =======
+    for (const auto &inst: instance_map) {
+      llvm::dbgs()
+          << "@@@@@@@@@@@@@ INSTANCE MAP with base instances @@@@@@@@@@@\n";
 
       clang::CXXRecordDecl *decl{
           dyn_cast<clang::CXXRecordDecl>(inst.second.getInstanceTypeDecl())};
       auto name{decl->getNameAsString()};
       llvm::dbgs() << "class: " << name << "\n";
     }
+    /// END DEBUG ===========================================
 
-    // Each inst is of type pair<Decl*, ModuleInstancetype>
-    for (auto inst : instance_map) {
+    /// Go through each identified instance, and identify any ports and module information.
+    /// 
+    for (const auto &inst: instance_map) {
       ModuleInstanceType instance{inst.second};
 
       clang::CXXRecordDecl *decl{
@@ -142,9 +227,13 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       auto add_module{new ModuleInstance(name, decl)};
       add_module->setInstanceInfo(instance);
 
+      /// TODO: Why do we need this when we can just access the instances and then get the decl?
       modules_.insert(std::pair<clang::CXXRecordDecl *, ModuleInstance *>(
           decl, add_module));
 
+
+      llvm::dbgs() << "[Running module declaration matchers]\n";
+      runModuleDeclarationMatchers(context, decl, add_module);
       llvm::dbgs() << "[Running port matcher]\n";
       runPortMatcher(context, decl, add_module);
 
@@ -154,10 +243,17 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       /// instance.
       auto base_decls{getAllBaseClasses(decl)};
       for (const auto &base_decl : base_decls) {
+        auto name{base_decl->getNameAsString()};
+        ModuleInstance *base_module_instance{
+            new ModuleInstance{name, base_decl}};
         llvm::dbgs() << "=============================== BASES for " << name
                      << " =======================\n";
         llvm::dbgs() << "Base class: " << base_decl->getNameAsString() << "\n";
-        runPortMatcher(context, base_decl, add_module);
+
+        runModuleDeclarationMatchers(
+            context, const_cast<clang::CXXRecordDecl *>(base_decl), base_module_instance);
+        runPortMatcher(context, base_decl, base_module_instance);
+        add_module->addBaseInstance(base_module_instance);
       }
     }
   }
