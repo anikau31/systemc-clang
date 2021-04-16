@@ -85,7 +85,7 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
     auto test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
-    REQUIRE(test_module_inst->getIPorts().size() == 3);
+    REQUIRE(test_module_inst->getIPorts().size() == 1);
     REQUIRE(test_module_inst->getOPorts().size() == 1);
     REQUIRE(test_module_inst->getIOPorts().size() == 0);
     REQUIRE(test_module_inst->getSignals().size() == 1);
@@ -95,6 +95,11 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
 
     /// This one comes from the base class.
     REQUIRE(test_module_inst->getNestedModuleInstances().size() == 1);
+
+    /// Check how many base classes it really has.
+    REQUIRE(test_module_inst->getBaseInstances().size() == 1);
+    auto base_decl{ test_module_inst->getBaseInstances().front()};
+    REQUIRE(base_decl->getModuleClassDecl()->getNameAsString() == "Base");
 
     // Check process information
     //
