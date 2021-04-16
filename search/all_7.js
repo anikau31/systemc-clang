@@ -38,7 +38,7 @@ var searchData=
   ['getasfielddecl_533',['getAsFieldDecl',['../classsystemc__clang_1_1PortDecl.html#a92bfdf72e9248a8a590a2b027df750d2',1,'systemc_clang::PortDecl']]],
   ['getastnode_534',['getASTNode',['../classsystemc__clang_1_1SignalDecl.html#a66b8f2838d8af4f850c87e58ad1fd295',1,'systemc_clang::SignalDecl::getASTNode()'],['../classsystemc__clang_1_1WaitContainer.html#a6dcbd3a3b98c33634f3a17075245acd1',1,'systemc_clang::WaitContainer::getASTNode()'],['../classsystemc__clang_1_1NotifyContainer.html#a645f34bea02fe0e3d770696a2da1b910',1,'systemc_clang::NotifyContainer::getASTNode()'],['../classsystemc__clang_1_1EventContainer.html#ae58ef7362327a2cb3064871b8b792fbd',1,'systemc_clang::EventContainer::getASTNode()'],['../classsystemc__clang_1_1EventDecl.html#a91e2244638f1ce2d7b90eb9a836e3f81',1,'systemc_clang::EventDecl::getASTNode()']]],
   ['getasvardecl_535',['getAsVarDecl',['../classsystemc__clang_1_1PortDecl.html#a2500d6bc9d55fc9ebd369958b262f514',1,'systemc_clang::PortDecl']]],
-  ['getbaseintances_536',['getBaseIntances',['../classsystemc__clang_1_1ModuleInstance.html#a6dc8c709c5904cface6f4703c359717d',1,'systemc_clang::ModuleInstance']]],
+  ['getbaseinstances_536',['getBaseInstances',['../classsystemc__clang_1_1ModuleInstance.html#a7b03f1e84f89459b873b1ae7564e425e',1,'systemc_clang::ModuleInstance']]],
   ['getblock_537',['getBlock',['../classsystemc__clang_1_1SusCFG.html#a5896f7a1e1132bfea080ff478698f8c1',1,'systemc_clang::SusCFG']]],
   ['getblockid_538',['getBlockID',['../classsystemc__clang_1_1SusCFG.html#a87b1bd459e23e5a90f714167047d9def',1,'systemc_clang::SusCFG']]],
   ['getblockidx_539',['getBlockIdx',['../classsystemc__clang_1_1GPUMacro.html#aa93a604a0d682d38ea524d6ee2bc79d6',1,'systemc_clang::GPUMacro']]],

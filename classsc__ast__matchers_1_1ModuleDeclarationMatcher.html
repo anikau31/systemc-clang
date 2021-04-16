@@ -124,6 +124,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4cdced231707237391633b2490ab076e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bb6447a29cae8e5d617757958626102"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a6bb6447a29cae8e5d617757958626102">runPortMatcher</a> (ASTContext &amp;context, const clang::CXXRecordDecl *decl, <a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *add_module)</td></tr>
 <tr class="separator:a6bb6447a29cae8e5d617757958626102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada4785da1fa4db40043570493a93f792"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#ada4785da1fa4db40043570493a93f792">runModuleDeclarationMatchers</a> (ASTContext &amp;context, clang::CXXRecordDecl *cxx_decl, <a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *add_module_decl)</td></tr>
+<tr class="separator:ada4785da1fa4db40043570493a93f792"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81c1cef440ac0466db48be48bc26dc85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a81c1cef440ac0466db48be48bc26dc85">matchInstancesInBaseClasses</a> (ASTContext &amp;context)</td></tr>
+<tr class="separator:a81c1cef440ac0466db48be48bc26dc85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e88cf084dca7917cf10d50f2d02490d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a5e88cf084dca7917cf10d50f2d02490d">processInstanceCXXDecls</a> (ASTContext &amp;context)</td></tr>
 <tr class="separator:a5e88cf084dca7917cf10d50f2d02490d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a920e15b79dd21c03d36ae5b50a74ea11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a920e15b79dd21c03d36ae5b50a74ea11">dump</a> ()</td></tr>
@@ -259,6 +263,33 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a81c1cef440ac0466db48be48bc26dc85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81c1cef440ac0466db48be48bc26dc85">&#9670;&nbsp;</a></span>matchInstancesInBaseClasses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sc_ast_matchers::ModuleDeclarationMatcher::matchInstancesInBaseClasses </td>
+          <td>(</td>
+          <td class="paramtype">ASTContext &amp;&#160;</td>
+          <td class="paramname"><em>context</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Copy contents over.</p>
+
+</div>
+</div>
 <a id="a5e88cf084dca7917cf10d50f2d02490d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5e88cf084dca7917cf10d50f2d02490d">&#9670;&nbsp;</a></span>processInstanceCXXDecls()</h2>
 
@@ -282,9 +313,14 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Go through every instance found (ValueDecl), and find if there are any instances in any of its base classes, and add them to the instance_map.</p>
-<p>Copy contents over.</p>
+<ol type="1">
+<li>The instances found so far are only the ValueDecls. However, there can be instances in base classes of the declarations of these ValueDecls that are not going to be recognized. As a result, we need to find those instances within the base classes of the identified ValueDecls.</li>
+</ol>
 <p>Base classes may add instances. So we must get the updated instance_map.</p>
+<p>DEBUG: output all the classes that have been identified. =======</p>
+<p>END DEBUG ===========================================</p>
+<p>Go through each identified instance, and identify any ports and module information.</p>
+<p>TODO: Why do we need this when we can just access the instances and then get the decl?</p>
 <p>Find if the instance CXXREcordDecl has a base class, and parse that too. Any ports, signals, etc. should be incorporated into the module instance.</p>
 
 </div>
@@ -340,6 +376,53 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ada4785da1fa4db40043570493a93f792"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada4785da1fa4db40043570493a93f792">&#9670;&nbsp;</a></span>runModuleDeclarationMatchers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sc_ast_matchers::ModuleDeclarationMatcher::runModuleDeclarationMatchers </td>
+          <td>(</td>
+          <td class="paramtype">ASTContext &amp;&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">clang::CXXRecordDecl *&#160;</td>
+          <td class="paramname"><em>cxx_decl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *&#160;</td>
+          <td class="paramname"><em>add_module_decl</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<ol type="1">
+<li>Find constructor</li>
+<li>Find ports This is done for the declaration.</li>
+</ol>
+<p>Add the sensitivity information to each of the entry functions.</p>
 
 </div>
 </div>
