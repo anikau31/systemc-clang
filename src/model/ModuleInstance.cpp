@@ -677,6 +677,7 @@ void ModuleInstance::dump_base_instances(llvm::raw_ostream &os) {
   os << "Dump base instances: " << base_instances_.size() << "\n";
   for (const auto base: base_instances_) {
     base->dump(os);
+    
   }
 }
 
