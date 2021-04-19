@@ -95,23 +95,69 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
     REQUIRE(test_module_inst->getNestedModuleInstances().size() == 1);
 
     /// Check how many base classes it really has.
-    REQUIRE(test_module_inst->getBaseInstances().size() == 1);
-    /// mi = ModuleInstance (this is not really a module instance but a base
-    /// class ... ??)
-    auto base_mi{test_module_inst->getBaseInstances().front()};
+    /// B and A
+    REQUIRE(test_module_inst->getBaseInstances().size() == 3);
 
-    ///
-    auto base_decl{base_mi->getModuleClassDecl()};
-    REQUIRE(base_decl->getNameAsString() == "Base");
-    /// Check the ports in this.
-    REQUIRE(base_mi->getIPorts().size() == 2);
-    auto zero_ports {base_mi->getOPorts().size() == 0 &&
-             base_mi->getIOPorts().size() == 0 &&
-             base_mi->getSignals().size() == 0 &&
-             base_mi->getOtherVars().size() == 0
-    };
-    REQUIRE( zero_ports == true );
+    int check{3};
+    for (const auto &base : test_module_inst->getBaseInstances()) {
+      llvm::dbgs() << "Base name: " << base->getName() << "\n";
 
+      if (base->getName() == "C") {
+        --check;
+
+        /// mi = ModuleInstance (this is not really a module instance but a base
+        /// class ... ??)
+        auto base_mi{base};
+
+        auto base_decl{base_mi->getModuleClassDecl()};
+        REQUIRE(base_decl->getNameAsString() == "C");
+        /// Check the ports in this.
+        REQUIRE(base_mi->getIPorts().size() == 2);
+        auto ports{base_mi->getOPorts().size() == 0 &&
+                        base_mi->getIOPorts().size() == 0 &&
+                        base_mi->getSignals().size() == 0 &&
+                        base_mi->getOtherVars().size() == 0};
+        REQUIRE(ports == true);
+      }
+
+
+      if (base->getName() == "B") {
+        --check;
+
+        /// mi = ModuleInstance (this is not really a module instance but a base
+        /// class ... ??)
+        auto base_mi{base};
+
+        auto base_decl{base_mi->getModuleClassDecl()};
+        REQUIRE(base_decl->getNameAsString() == "B");
+        /// Check the ports in this.
+        REQUIRE(base_mi->getIPorts().size() == 1);
+        auto ports{base_mi->getOPorts().size() == 1 &&
+                        base_mi->getIOPorts().size() == 0 &&
+                        base_mi->getSignals().size() == 0 &&
+                        base_mi->getOtherVars().size() == 0};
+        REQUIRE(ports == true);
+      }
+
+      if (base->getName() == "A") {
+        --check;
+
+        /// mi = ModuleInstance (this is not really a module instance but a base
+        /// class ... ??)
+        auto base_mi{base};
+
+        auto base_decl{base_mi->getModuleClassDecl()};
+        REQUIRE(base_decl->getNameAsString() == "A");
+        /// Check the ports in this.
+        REQUIRE(base_mi->getIPorts().size() == 2);
+        auto zero_ports{base_mi->getOPorts().size() == 0 &&
+                        base_mi->getIOPorts().size() == 0 &&
+                        base_mi->getSignals().size() == 0 &&
+                        base_mi->getOtherVars().size() == 0};
+        REQUIRE(zero_ports == true);
+      }
+    }
+    REQUIRE(check == 0);
     // Check process information
     //
 
@@ -137,7 +183,8 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
       }
     }
 
-    /// FIXME: There is a bug here in the sensitivity map generation for the NestedModule. 
+    /// FIXME: There is a bug here in the sensitivity map generation for the
+    /// NestedModule.
     /*
     auto base_process_map{base_mi->getProcessMap()};
     REQUIRE(base_process_map.size() == 1);
