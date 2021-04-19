@@ -96,6 +96,7 @@ struct ModuleInstanceType {
     array_sizes_ = rhs.array_sizes_;
     instance_names = rhs.instance_names;
     array_parameters_ = rhs.array_parameters_;
+    return *this;
   }
 
 
