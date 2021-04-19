@@ -7,7 +7,7 @@ class NestedModule : public sc_module {
   SC_CTOR(NestedModule) {}
 };
 
-class Base : public sc_module {
+class A : public sc_module {
  public:
   sc_in_clk clk;
   sc_in<int> in1;
@@ -16,7 +16,7 @@ class Base : public sc_module {
 
   void proc() { }
 
-  SC_CTOR(Base) : nested_module("NestedModule") {
+  SC_CTOR(A) : nested_module("NestedModule") {
     SC_METHOD(proc);
     sensitive << clk.pos();
 
@@ -26,7 +26,45 @@ class Base : public sc_module {
 
 };
 
-class test : public Base {
+class B: public A {
+ public:
+  sc_in_clk b_clk;
+  sc_out<double> b_out;
+
+  void b_function() {
+    while (true) {
+    }
+  }
+
+  SC_HAS_PROCESS(B);
+
+  B(const sc_module_name &name) : A(name) {
+    SC_METHOD(b_function);
+    sensitive << b_clk.pos();
+  }
+};
+
+
+class C: public B {
+ public:
+  sc_in_clk c_clk;
+  sc_in<double> c_out;
+
+  void c_function() {
+    while (true) {
+    }
+  }
+
+  SC_HAS_PROCESS(C);
+
+  C(const sc_module_name &name) : B(name) {
+    SC_METHOD(c_function);
+    sensitive << c_clk.pos();
+  }
+};
+
+
+class test : public C {
  public:
   sc_in<int> in2;
   sc_out<int> out1;
@@ -39,7 +77,7 @@ class test : public Base {
 
   SC_HAS_PROCESS(test);
 
-  test(const sc_module_name &name) : Base(name) {
+  test(const sc_module_name &name) : C(name) {
     SC_METHOD(entry_function_1);
     sensitive << clk.pos();
   }
