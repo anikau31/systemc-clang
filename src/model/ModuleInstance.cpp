@@ -706,7 +706,7 @@ std::string ModuleInstance::dump_json() {
   std::string str{};
 
   str += "module_name: " + module_name_ + "  " +
-         "instance_name: " + instance_name_ + "\n";
+         "instance_name: " + instance_info_.instance_name + "\n";
   if (instance_info_.isArrayType()) {
     str += "is_array: true\n";
     str += "array_sizes: ";
