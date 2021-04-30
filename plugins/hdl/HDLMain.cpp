@@ -129,6 +129,10 @@ namespace systemc_hdl {
   void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
 			       llvm::raw_fd_ostream &HCodeOut) {
     const std::vector<ModuleInstance *> &submodv = mod->getNestedModuleInstances();
+    const std::vector<ModuleInstance *> &basemods = mod->getBaseInstances();
+    LLVM_DEBUG( llvm::dbgs() << "dumping base instances \n");
+    mod->dump_base_instances(llvm::dbgs());
+    LLVM_DEBUG( llvm::dbgs() << "end base instances \n");
     // look at constructor
 
     // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
