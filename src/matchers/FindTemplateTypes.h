@@ -10,6 +10,9 @@
 
 #include "Tree.h"
 
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "Templates"
+
 namespace clang { class Type; }
 
 namespace systemc_clang {
@@ -61,6 +64,7 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   // This allows for template instantiations to be visited using RAV.
   bool shouldVisitTemplateInstantiations() const;
 
+  bool VisitEnumType(EnumType *e);
   bool VisitIntegerLiteral(IntegerLiteral *l);
   bool VisitTemplateSpecializationType(
       TemplateSpecializationType *special_type);
