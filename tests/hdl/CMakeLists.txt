@@ -2,9 +2,9 @@
 
 if (PLUGIN_HDL)
   set (TEST_LIST 
-   sreg-test
-   find-emax
-   test-nested-stream-ports
+   sreg-test.cpp
+   find-emax.cpp
+   test-nested-stream-ports.cpp
   )
 endif()
 
