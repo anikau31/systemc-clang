@@ -20,7 +20,7 @@ class A : public sc_module {
     SC_METHOD(proc);
     sensitive << clk.pos();
 
-//    nested_module.nested_clk(clk);
+    nested_module.nested_clk(clk);
 
   }
 

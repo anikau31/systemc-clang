@@ -114,12 +114,11 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
         /// Check the ports in this.
         REQUIRE(base_mi->getIPorts().size() == 2);
         auto ports{base_mi->getOPorts().size() == 0 &&
-                        base_mi->getIOPorts().size() == 0 &&
-                        base_mi->getSignals().size() == 0 &&
-                        base_mi->getOtherVars().size() == 0};
+                   base_mi->getIOPorts().size() == 0 &&
+                   base_mi->getSignals().size() == 0 &&
+                   base_mi->getOtherVars().size() == 0};
         REQUIRE(ports == true);
       }
-
 
       if (base->getName() == "B") {
         --check;
@@ -133,9 +132,9 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
         /// Check the ports in this.
         REQUIRE(base_mi->getIPorts().size() == 1);
         auto ports{base_mi->getOPorts().size() == 1 &&
-                        base_mi->getIOPorts().size() == 0 &&
-                        base_mi->getSignals().size() == 0 &&
-                        base_mi->getOtherVars().size() == 0};
+                   base_mi->getIOPorts().size() == 0 &&
+                   base_mi->getSignals().size() == 0 &&
+                   base_mi->getOtherVars().size() == 0};
         REQUIRE(ports == true);
       }
 
@@ -155,6 +154,32 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
                         base_mi->getSignals().size() == 0 &&
                         base_mi->getOtherVars().size() == 0};
         REQUIRE(zero_ports == true);
+
+        /// Check the base process sensitivity map
+        auto base_process_map{base_mi->getProcessMap()};
+        REQUIRE(base_process_map.size() == 1);
+
+        for (auto const &proc : base_process_map) {
+          auto entry_func{proc.second->getEntryFunction()};
+          if (entry_func) {
+            auto sense_map{entry_func->getSenseMap()};
+            for (auto const &sense : sense_map) {
+              llvm::dbgs() << "=> " << sense.first << "\n";
+            }
+
+            REQUIRE(sense_map.size() == 1);
+
+            int check{1};
+            for (auto const &sense : sense_map) {
+              llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* : "
+                           << sense.first << "\n";
+              if ((sense.first == "proc_handle__clkpos")) {
+                --check;
+              }
+            }
+            REQUIRE(check == 0);
+          }
+        }
       }
     }
     REQUIRE(check == 0);
@@ -182,35 +207,6 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
         REQUIRE(check == 0);
       }
     }
-
-    /// FIXME: There is a bug here in the sensitivity map generation for the
-    /// NestedModule.
-    /*
-    auto base_process_map{base_mi->getProcessMap()};
-    REQUIRE(base_process_map.size() == 1);
-
-    for (auto const &proc : base_process_map) {
-      auto entry_func{proc.second->getEntryFunction()};
-      if (entry_func) {
-        auto sense_map{entry_func->getSenseMap()};
-        for (auto const &sense : sense_map) {
-          llvm::dbgs() << "=> " << sense.first << "\n";
-        }
-
-        REQUIRE(sense_map.size() == 1);
-
-        int check{1};
-        for (auto const &sense : sense_map) {
-          llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* : "
-                       << sense.first << "\n";
-          if ((sense.first == "proc_handle__clkpos")) {
-            --check;
-          }
-        }
-        REQUIRE(check == 0);
-      }
-    }
-    */
     //
     // Check port types
     //
