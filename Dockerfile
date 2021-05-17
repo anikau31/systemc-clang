@@ -21,7 +21,7 @@ WORKDIR /tmp
 
 # Set up llvm/clang
 # in /tmp now
-ENV CLANG_VERSION=11.0.0
+ENV CLANG_VERSION=12.0.0
 ENV TARGET_ARCH=linux64
 
 # run systemc
@@ -29,9 +29,9 @@ RUN mkdir /opt/systemc-2.3.3 && curl -L https://github.com/rseac/systemc-travisc
       | tar -xzC /tmp/ \
       && mv systemc-2.3.3/systemc/* /opt/systemc-2.3.3 \
       && rm -rf systemc-2.3.3 \
-      && mkdir /opt/clang-$CLANG_VERSION && curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz \
+      && mkdir /opt/clang-$CLANG_VERSION && curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.0/clang+llvm-12.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz \
       |  tar -xJC /tmp/  \
-      && mv clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04/* /opt/clang-$CLANG_VERSION/ \
+      && mv clang+llvm-12.0.0-x86_64-linux-gnu-ubuntu-20.04/* /opt/clang-$CLANG_VERSION/ \
       && rm -rf /tmp/*
 
 # Install other requirements
