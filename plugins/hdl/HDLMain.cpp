@@ -133,6 +133,7 @@ namespace systemc_hdl {
     LLVM_DEBUG( llvm::dbgs() << "dumping base instances \n");
     mod->dump_base_instances(llvm::dbgs());
     LLVM_DEBUG( llvm::dbgs() << "end base instances \n");
+ 
     // look at constructor
 
     // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
@@ -294,6 +295,7 @@ namespace systemc_hdl {
       // }
     }
   }
+
   // this is obsolete. It has been supeseded by HDLHnode.cpp
   // due to possibility of for-loops enclosing port bindings
   void HDLMain::SCportbindings2hcode(ModuleInstance* mod,
