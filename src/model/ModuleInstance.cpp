@@ -351,7 +351,7 @@ void ModuleInstance::addNestedModule(ModuleInstance *nested_module) {
   nested_modules_.push_back(nested_module);
 }
 
-std::vector<std::string> ModuleInstance::getInstanceList() {
+const std::vector<std::string> &ModuleInstance::getInstanceList() {
   return instance_list_;
 }
 
@@ -371,45 +371,45 @@ const std::vector<ModuleInstance *> &ModuleInstance::getNestedModuleInstances()
   return nested_modules_;
 }
 
-ModuleInstance::processMapType ModuleInstance::getProcessMap() {
+const ModuleInstance::processMapType &ModuleInstance::getProcessMap() {
   return process_map_;
 }
 
-std::vector<ModuleInstance*> ModuleInstance::getBaseInstances() { return base_instances_; }
+const std::vector<ModuleInstance*> &ModuleInstance::getBaseInstances() { return base_instances_; }
 
-ModuleInstance::portMapType ModuleInstance::getOPorts() { return out_ports_; }
+const ModuleInstance::portMapType &ModuleInstance::getOPorts() { return out_ports_; }
 
-ModuleInstance::portMapType ModuleInstance::getIPorts() { return in_ports_; }
+const ModuleInstance::portMapType &ModuleInstance::getIPorts() { return in_ports_; }
 
-ModuleInstance::portMapType ModuleInstance::getIOPorts() {
+const ModuleInstance::portMapType &ModuleInstance::getIOPorts() {
   return inout_ports_;
 }
 
-ModuleInstance::portMapType ModuleInstance::getOtherVars() {
+const ModuleInstance::portMapType &ModuleInstance::getOtherVars() {
   return other_fields_;
 }
 
-ModuleInstance::portMapType ModuleInstance::getInputStreamPorts() {
+const ModuleInstance::portMapType &ModuleInstance::getInputStreamPorts() {
   return istreamports_;
 }
 
-ModuleInstance::portMapType ModuleInstance::getOutputStreamPorts() {
+const ModuleInstance::portMapType &ModuleInstance::getOutputStreamPorts() {
   return ostreamports_;
 }
 
-ModuleInstance::interfaceMapType ModuleInstance::getOInterfaces() {
+const ModuleInstance::interfaceMapType &ModuleInstance::getOInterfaces() {
   return ointerfaces_;
 }
 
-ModuleInstance::interfaceMapType ModuleInstance::getIInterfaces() {
+const ModuleInstance::interfaceMapType &ModuleInstance::getIInterfaces() {
   return iinterfaces_;
 }
 
-ModuleInstance::interfaceMapType ModuleInstance::getIOInterfaces() {
+const ModuleInstance::interfaceMapType &ModuleInstance::getIOInterfaces() {
   return iointerfaces_;
 }
 
-ModuleInstance::portBindingMapType ModuleInstance::getPortBindings() {
+const ModuleInstance::portBindingMapType &ModuleInstance::getPortBindings() {
   return port_bindings_;
 }
 
