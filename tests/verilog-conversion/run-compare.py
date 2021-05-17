@@ -32,7 +32,7 @@ def default_options():
         "c++",
         "-w",
         "-c",
-        "-std=c++14",
+        "-std=c++17",
         "_-D__STDC_CONSTANT_MACROS",
         "-D__STDC_LIMIT_MACROS",
         "-DRVD",
