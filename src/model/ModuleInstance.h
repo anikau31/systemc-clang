@@ -104,26 +104,26 @@ class ModuleInstance {
   ModuleInstanceType getInstanceInfo();
 
   bool isModuleClassDeclNull();
-  portMapType getOPorts();
-  portMapType getIPorts();
-  portMapType getIOPorts();
-  portMapType getOtherVars();
-  portMapType getSubmodules();
-  portMapType getInputStreamPorts();
-  portMapType getOutputStreamPorts();
+  const portMapType &getOPorts();
+  const portMapType &getIPorts();
+  const portMapType &getIOPorts();
+  const portMapType &getOtherVars();
+  const portMapType &getSubmodules();
+  const portMapType &getInputStreamPorts();
+  const portMapType &getOutputStreamPorts();
 
-  std::vector<ModuleInstance *> getBaseInstances();
-  portBindingMapType getPortBindings();
+  const std::vector<ModuleInstance *> &getBaseInstances();
+  const portBindingMapType &getPortBindings();
 
-  processMapType getProcessMap();
+  const processMapType &getProcessMap();
 
   clang::Stmt *getConstructorStmt() const;
   clang::CXXConstructorDecl *getConstructorDecl() const;
 
-  interfaceMapType getIInterfaces();
-  interfaceMapType getOInterfaces();
-  interfaceMapType getIOInterfaces();
-  std::vector<std::string> getInstanceList();
+  const interfaceMapType &getIInterfaces();
+  const interfaceMapType &getOInterfaces();
+  const interfaceMapType &getIOInterfaces();
+  const std::vector<std::string> &getInstanceList();
   std::vector<EntryFunctionContainer *> getEntryFunctionContainer();
   int getNumInstances();
   const signalMapType &getSignals() const;
