@@ -325,6 +325,275 @@
         ]
       ]
     ]
+    hProcesses  NONAME [
+      hProcess var1 [
+        hMethod  NONAME [
+          hVardecl i_local_0 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hVardecl i_local_1 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hVardecl j_local_2 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hVardecl k_local_3 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl m_local_4 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 3 NOLIST
+              ]
+            ]
+          ]
+          hCStmt  NONAME [
+            hForStmt  NONAME [
+              hVarAssign  NONAME [
+                hVarref i_local_1 NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop < [
+                hVarref i_local_1 NOLIST
+                hLiteral 5 NOLIST
+              ]
+              hUnop ++ [
+                hVarref i_local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hForStmt  NONAME [
+                  hVarAssign  NONAME [
+                    hVarref j_local_2 NOLIST
+                    hLiteral 0 NOLIST
+                  ]
+                  hBinop < [
+                    hVarref j_local_2 NOLIST
+                    hLiteral 5 NOLIST
+                  ]
+                  hUnop ++ [
+                    hVarref j_local_2 NOLIST
+                  ]
+                  hCStmt  NONAME [
+                    hBinop = [
+                      hVarref k NOLIST
+                      hBinop != [
+                        hVarref j_local_2 NOLIST
+                        hVarref i_local_1 NOLIST
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref k_local_3 NOLIST
+                      hBinop == [
+                        hVarref j_local_2 NOLIST
+                        hVarref i_local_1 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref k NOLIST
+              hVarref i_local_0 NOLIST
+            ]
+            hBinop = [
+              hVarref m_scclang_global_0 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hBinop = [
+              hVarref m NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hVarAssign  NONAME [
+              hVarref m_local_4 NOLIST
+              hLiteral 2 [
+                hTypeinfo  NONAME [
+                  hType sc_uint [
+                    hLiteral 3 NOLIST
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      hProcess var2 [
+        hMethod  NONAME [
+          hVardecl m_local_0 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 3 NOLIST
+              ]
+            ]
+          ]
+          hCStmt  NONAME [
+            hBinop = [
+              hVarref m_scclang_global_0 NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hBinop = [
+              hVarref m NOLIST
+              hLiteral 1 NOLIST
+            ]
+            hCStmt  NONAME [
+              hVarAssign  NONAME [
+                hVarref m_local_0 NOLIST
+                hLiteral 2 [
+                  hTypeinfo  NONAME [
+                    hType sc_uint [
+                      hLiteral 3 NOLIST
+                    ]
+                  ]
+                ]
+              ]
+              hBinop = [
+                hVarref k NOLIST
+                hBinop + [
+                  hVarref m_scclang_global_0 NOLIST
+                  hVarref m_local_0 NOLIST
+                ]
+              ]
+            ]
+            hBinop = [
+              hVarref j NOLIST
+              hBinop + [
+                hVarref m_scclang_global_0 NOLIST
+                hVarref m NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hProcess var3 [
+        hMethod  NONAME [
+          hVardecl i_1_local_0 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 2 NOLIST
+              ]
+            ]
+          ]
+          hVardecl i_2_local_1 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 3 NOLIST
+              ]
+            ]
+          ]
+          hVardecl i_local_2 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 4 NOLIST
+              ]
+            ]
+          ]
+          hVardecl l_local_3 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 2 NOLIST
+              ]
+            ]
+          ]
+          hVardecl l_1_local_4 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 3 NOLIST
+              ]
+            ]
+          ]
+          hVardecl n_1_local_5 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 1 NOLIST
+              ]
+            ]
+          ]
+          hVardecl n_2_local_6 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 2 NOLIST
+              ]
+            ]
+          ]
+          hVardecl n_3_local_7 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 3 NOLIST
+              ]
+            ]
+          ]
+          hVardecl n_local_8 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 4 NOLIST
+              ]
+            ]
+          ]
+          hVardecl n_local_9 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 5 NOLIST
+              ]
+            ]
+          ]
+          hVardecl x_1_local_10 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 1 NOLIST
+              ]
+            ]
+          ]
+          hVardecl x_2_local_11 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 2 NOLIST
+              ]
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref i_1_local_0 NOLIST
+              hLiteral 1 [
+                hTypeinfo  NONAME [
+                  hType sc_uint [
+                    hLiteral 2 NOLIST
+                  ]
+                ]
+              ]
+            ]
+            hVarAssign  NONAME [
+              hVarref i_2_local_1 NOLIST
+              hLiteral 2 [
+                hTypeinfo  NONAME [
+                  hType sc_uint [
+                    hLiteral 3 NOLIST
+                  ]
+                ]
+              ]
+            ]
+            hVarAssign  NONAME [
+              hVarref i_local_2 NOLIST
+              hLiteral 3 [
+                hTypeinfo  NONAME [
+                  hType sc_uint [
+                    hLiteral 4 NOLIST
+                  ]
+                ]
+              ]
+            ]
+            hCStmt  NONAME NOLIST
+          ]
+        ]
+      ]
+    ]
     hModinitblock a_mod [
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST

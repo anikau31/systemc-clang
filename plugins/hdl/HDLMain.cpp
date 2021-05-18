@@ -133,7 +133,7 @@ namespace systemc_hdl {
     LLVM_DEBUG( llvm::dbgs() << "dumping base instances \n");
     mod->dump_base_instances(llvm::dbgs());
     LLVM_DEBUG( llvm::dbgs() << "end base instances \n");
- 
+
     // look at constructor
 
     // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
@@ -151,20 +151,24 @@ namespace systemc_hdl {
     // Ports
     hNodep h_ports =
       new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
-    SCport2hcode(mod->getIPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
-    SCport2hcode(mod->getInputStreamPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
-    SCport2hcode(mod->getOPorts(), hNode::hdlopsEnum::hPortout, h_ports, mod_vname_map);
-    SCport2hcode(mod->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
-		 h_ports, mod_vname_map);
-    SCport2hcode(mod->getIOPorts(), hNode::hdlopsEnum::hPortio, h_ports, mod_vname_map);
-
-    // Signals
-    SCsig2hcode(mod->getSignals(), hNode::hdlopsEnum::hSigdecl, h_ports, mod_vname_map);
-
     h_module->child_list.push_back(h_ports);
 
-    SCport2hcode(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports, mod_vname_map);
-
+    ModuleInstance *mod_i = mod;
+    for (int i = 0; i <= basemods.size(); i++) {
+      SCport2hcode(mod_i->getIPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
+      SCport2hcode(mod_i->getInputStreamPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
+      SCport2hcode(mod_i->getOPorts(), hNode::hdlopsEnum::hPortout, h_ports, mod_vname_map);
+      SCport2hcode(mod_i->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
+		   h_ports, mod_vname_map);
+      SCport2hcode(mod_i->getIOPorts(), hNode::hdlopsEnum::hPortio, h_ports, mod_vname_map);
+      
+      // Signals
+      SCsig2hcode(mod_i->getSignals(), hNode::hdlopsEnum::hSigdecl, h_ports, mod_vname_map);
+      
+      SCport2hcode(mod_i->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports, mod_vname_map);
+      if (i == basemods.size()) break;
+      mod_i = basemods[i];
+    }
     for (const auto &smod : submodv) {
       if (smod->getInstanceInfo().isArrayType()) {
 	LLVM_DEBUG(llvm::dbgs() << "Array submodule " << smod->getInstanceName() << "\n");
@@ -195,8 +199,13 @@ namespace systemc_hdl {
 
     // Processes
     h_top = new hNode(hNode::hdlopsEnum::hProcesses);
-    SCproc2hcode(mod->getProcessMap(), h_top, mod_vname_map);
-    if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
+    mod_i = mod;
+    for (int i = 0; i <= basemods.size(); i++) {
+      SCproc2hcode(mod_i->getProcessMap(), h_top, mod_vname_map);
+      if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
+      if (i == basemods.size()) break;
+      mod_i = basemods[i];
+    }
 
     {
       // init block
