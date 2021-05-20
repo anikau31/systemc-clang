@@ -51,7 +51,7 @@ function(llvm_config VARNAME switch comp)
     string(REGEX REPLACE "-Wno-unknown-warning-option" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
     string(REGEX REPLACE "-Wno-unused-command-line-argument" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
     # Replace llvm-config's c++11 generation
-    #string(REGEX REPLACE "-std=c++11" "" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
+    string(REPLACE "-std=c++14" "-std=c++17" CONFIG_OUTPUT "${CONFIG_OUTPUT}")
   endif()
 
   # make result available outside
