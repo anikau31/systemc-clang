@@ -201,7 +201,7 @@ void ModuleInstance::setTemplateArgs(
   template_args_ = parm_list;
 }
 
-std::vector<std::string> ModuleInstance::getTemplateParameters() const {
+const std::vector<std::string> &ModuleInstance::getTemplateParameters() const {
   return template_parameters_;
 }
 
@@ -355,12 +355,12 @@ const std::vector<std::string> &ModuleInstance::getInstanceList() {
   return instance_list_;
 }
 
-std::vector<EntryFunctionContainer *>
-ModuleInstance::getEntryFunctionContainer() {
+const std::vector<EntryFunctionContainer *>
+&ModuleInstance::getEntryFunctionContainer() {
   return vef_;
 }
 
-int ModuleInstance::getNumInstances() { return instance_list_.size(); }
+int ModuleInstance::getNumInstances() const { return instance_list_.size(); }
 
 const ModuleInstance::signalMapType &ModuleInstance::getSignals() const {
   return signals_;
