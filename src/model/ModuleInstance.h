@@ -55,7 +55,10 @@ class ModuleInstance {
   typedef std::vector<std::tuple<std::string, PortDecl *> > portMapType;
 
  public:
+  /// Default constructor.
   ModuleInstance();
+
+  /// Overloaded constructors.
   ModuleInstance(const std::string &, const clang::CXXRecordDecl *);
   ModuleInstance(
       const std::tuple<const std::string &, clang::CXXRecordDecl *> &);
@@ -65,7 +68,7 @@ class ModuleInstance {
 
   // Assignment operator.
   ModuleInstance &operator=(const ModuleInstance &from);
-  ~ModuleInstance();
+  virtual ~ModuleInstance();
 
   void addPorts(const PortType &found_ports, const std::string &port_type);
 
@@ -89,8 +92,7 @@ class ModuleInstance {
   void setModuleName(const std::string &);
   void setTemplateParameters(const vector<std::string> &);
   void setTemplateArgs(const vector<std::string> &);
-  std::vector<std::string> getTemplateParameters() const;
-  std::vector<std::string> getTemplateArgs() const;
+  const std::vector<std::string> &getTemplateParameters() const;
 
   std::string getName() const;
   std::string getInstanceName() const;
@@ -124,8 +126,8 @@ class ModuleInstance {
   const interfaceMapType &getOInterfaces();
   const interfaceMapType &getIOInterfaces();
   const std::vector<std::string> &getInstanceList();
-  std::vector<EntryFunctionContainer *> getEntryFunctionContainer();
-  int getNumInstances();
+  const std::vector<EntryFunctionContainer *> &getEntryFunctionContainer();
+  int getNumInstances() const;
   const signalMapType &getSignals() const;
 
   const std::vector<ModuleInstance *> &getNestedModuleInstances() const;
