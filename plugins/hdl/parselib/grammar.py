@@ -15,7 +15,7 @@ lark_grammar = Lark('''
                       | vardeclinit 
                       | moddecl
         moddecl: "hModdecl" ID "[" htypeinfo "]"
-        portdecltype: portdecl "[" htypeinfo "]"
+        portdecltype: portdecl "[" htypeinfo hvarinit? "]"
         sigdecltype: sigdecl "[" htypeinfo "]"
         sigdecl:  "hSigdecl" ID  
         ?portdecl: inportdecl | outportdecl

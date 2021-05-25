@@ -64,5 +64,7 @@ if(V_TESTS_ON)
     COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[z3test- )
   add_test(NAME verilog-translation-moving-average
     COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[moving-average- )
+  add_test(NAME verilog-translation-while-iscs
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_while_iscs- )
 endif()
 
