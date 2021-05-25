@@ -146,7 +146,7 @@ Note that the `-B` flag prevents `.pyc` file generation, which keeps the directo
 The output should be similar to:
 ```
 path: add.cpp
-/systemc-clang-build/systemc-clang add.cpp --debug -- -x c++ -w -c -std=c++14 _-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DRVD -I /opt/clang-11.0.0/lib/clang/11.0.0/include -I /opt/systemc-2.3.3/include
+/systemc-clang-build/systemc-clang add.cpp --debug -- -x c++ -w -c -std=c++17 _-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DRVD -I /opt/clang-11.0.0/lib/clang/11.0.0/include -I /opt/systemc-2.3.3/include
 sexp_loc: add_hdl.txt
 sexp_filename: add_hdl.txt
 The _hdl.txt file is written to: /tmp/tmp.kUUW0fiyam/systemc-clang-test-tool/results/2021-01-13_06-02-11/add_hdl.txt

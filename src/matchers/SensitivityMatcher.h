@@ -165,6 +165,12 @@ class SensitiveOperatorCallMatcher : public MatchFinder::MatchCallback {
                 )//anyOf
               ) // allOf
             ) //hasArgument
+            , 
+            // Match only those that are of sc_sensitive class
+            hasType(hasUnqualifiedDesugaredType(
+                  recordType(hasDeclaration(cxxRecordDecl(isSameOrDerivedFrom("sc_sensitive"))))
+                  )//hasUnqualifiedDesugaredType
+                )// hasType
           ).bind("cxx_operator_call_expr");
 
     ///  clang-format on
@@ -180,6 +186,9 @@ class SensitiveOperatorCallMatcher : public MatchFinder::MatchCallback {
     if (array_fd) {
       array_fd_ = array_fd;
     }
+
+    auto cxxcall{result.Nodes.getNodeAs<clang::CXXOperatorCallExpr>("cxx_operator_call_expr")};
+    cxxcall->dump();
 
     auto cxx_mcall{const_cast<clang::CXXMemberCallExpr*>(
         result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("cxx_mcall"))};

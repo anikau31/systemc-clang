@@ -368,6 +368,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     parsed_instance.var_name = var_name;
     parsed_instance.var_type_name = var_type_name;
     parsed_instance.instance_name = instance_name;
+    parsed_instance.add_instance_name(instance_name);
     // This is the Type of the FieldDecl.
     parsed_instance.type_decl =
         instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();

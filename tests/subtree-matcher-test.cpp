@@ -197,7 +197,7 @@ int sc_main(int argc, char *argv[]) {
       "-I/home/twiga/bin/clang-9.0.0/lib/clang/9.0.0/include", 
       "-I/home/twiga/code/systemc-2.3.3/systemc/include/", 
       "-I/home/twiga/bin/clang-9.0.0/include", 
-      "-std=c++14"
+      "-std=c++17"
   };
 
 std::unique_ptr<ASTUnit> from_ast =  tooling::buildASTFromCodeWithArgs( code, args );

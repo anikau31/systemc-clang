@@ -83,6 +83,23 @@ struct ModuleInstanceType {
     array_parameters_ = rhs.array_parameters_;
   }
 
+  ModuleInstanceType &operator=(const ModuleInstanceType &rhs) {
+    var_name = rhs.var_name;
+    var_type_name = rhs.var_type_name;
+    instance_name = rhs.instance_name;
+    parent_name = rhs.parent_name;
+    is_field_decl = rhs.is_field_decl;
+    type_decl = rhs.type_decl;
+    instance_decl = rhs.instance_decl;
+    parent_decl = rhs.parent_decl;
+    is_array_ = rhs.is_array_;
+    array_sizes_ = rhs.array_sizes_;
+    instance_names = rhs.instance_names;
+    array_parameters_ = rhs.array_parameters_;
+    return *this;
+  }
+
+
   bool operator==(const ModuleInstanceType &rhs) {
     return std::tie(var_name, var_type_name, instance_name, parent_name,
                     is_field_decl, type_decl, instance_decl, parent_decl,

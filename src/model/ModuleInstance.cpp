@@ -201,7 +201,7 @@ void ModuleInstance::setTemplateArgs(
   template_args_ = parm_list;
 }
 
-std::vector<std::string> ModuleInstance::getTemplateParameters() const {
+const std::vector<std::string> &ModuleInstance::getTemplateParameters() const {
   return template_parameters_;
 }
 
@@ -351,16 +351,16 @@ void ModuleInstance::addNestedModule(ModuleInstance *nested_module) {
   nested_modules_.push_back(nested_module);
 }
 
-std::vector<std::string> ModuleInstance::getInstanceList() {
+const std::vector<std::string> &ModuleInstance::getInstanceList() {
   return instance_list_;
 }
 
-std::vector<EntryFunctionContainer *>
-ModuleInstance::getEntryFunctionContainer() {
+const std::vector<EntryFunctionContainer *>
+&ModuleInstance::getEntryFunctionContainer() {
   return vef_;
 }
 
-int ModuleInstance::getNumInstances() { return instance_list_.size(); }
+int ModuleInstance::getNumInstances() const { return instance_list_.size(); }
 
 const ModuleInstance::signalMapType &ModuleInstance::getSignals() const {
   return signals_;
@@ -371,45 +371,45 @@ const std::vector<ModuleInstance *> &ModuleInstance::getNestedModuleInstances()
   return nested_modules_;
 }
 
-ModuleInstance::processMapType ModuleInstance::getProcessMap() {
+const ModuleInstance::processMapType &ModuleInstance::getProcessMap() {
   return process_map_;
 }
 
-std::vector<ModuleInstance*> ModuleInstance::getBaseIntances() { return base_instances_; }
+const std::vector<ModuleInstance*> &ModuleInstance::getBaseInstances() { return base_instances_; }
 
-ModuleInstance::portMapType ModuleInstance::getOPorts() { return out_ports_; }
+const ModuleInstance::portMapType &ModuleInstance::getOPorts() { return out_ports_; }
 
-ModuleInstance::portMapType ModuleInstance::getIPorts() { return in_ports_; }
+const ModuleInstance::portMapType &ModuleInstance::getIPorts() { return in_ports_; }
 
-ModuleInstance::portMapType ModuleInstance::getIOPorts() {
+const ModuleInstance::portMapType &ModuleInstance::getIOPorts() {
   return inout_ports_;
 }
 
-ModuleInstance::portMapType ModuleInstance::getOtherVars() {
+const ModuleInstance::portMapType &ModuleInstance::getOtherVars() {
   return other_fields_;
 }
 
-ModuleInstance::portMapType ModuleInstance::getInputStreamPorts() {
+const ModuleInstance::portMapType &ModuleInstance::getInputStreamPorts() {
   return istreamports_;
 }
 
-ModuleInstance::portMapType ModuleInstance::getOutputStreamPorts() {
+const ModuleInstance::portMapType &ModuleInstance::getOutputStreamPorts() {
   return ostreamports_;
 }
 
-ModuleInstance::interfaceMapType ModuleInstance::getOInterfaces() {
+const ModuleInstance::interfaceMapType &ModuleInstance::getOInterfaces() {
   return ointerfaces_;
 }
 
-ModuleInstance::interfaceMapType ModuleInstance::getIInterfaces() {
+const ModuleInstance::interfaceMapType &ModuleInstance::getIInterfaces() {
   return iinterfaces_;
 }
 
-ModuleInstance::interfaceMapType ModuleInstance::getIOInterfaces() {
+const ModuleInstance::interfaceMapType &ModuleInstance::getIOInterfaces() {
   return iointerfaces_;
 }
 
-ModuleInstance::portBindingMapType ModuleInstance::getPortBindings() {
+const ModuleInstance::portBindingMapType &ModuleInstance::getPortBindings() {
   return port_bindings_;
 }
 
@@ -677,6 +677,7 @@ void ModuleInstance::dump_base_instances(llvm::raw_ostream &os) {
   os << "Dump base instances: " << base_instances_.size() << "\n";
   for (const auto base: base_instances_) {
     base->dump(os);
+    
   }
 }
 
@@ -705,7 +706,7 @@ std::string ModuleInstance::dump_json() {
   std::string str{};
 
   str += "module_name: " + module_name_ + "  " +
-         "instance_name: " + instance_name_ + "\n";
+         "instance_name: " + instance_info_.instance_name + "\n";
   if (instance_info_.isArrayType()) {
     str += "is_array: true\n";
     str += "array_sizes: ";

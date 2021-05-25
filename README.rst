@@ -16,9 +16,9 @@ A SystemC Parser using the Clang Front-end
 Requirements
 ------------
 
-*  `llvm/clang <https://releases.llvm.org/download.html>`_ (version 11.0.0)
+*  `llvm/clang <https://releases.llvm.org/download.html>`_ (version 12.0.0)
 *  `SystemC <http://systemc.org>`_ version 2.3.3. 
-*  c++14 is required. We are using some features that necessitate c++14. Down-porting it is also possible, but not supported.
+*  c++14 is required. We are using some features that necessitate c++17. Down-porting it is also possible, but not supported.
 
 Installation
 ------------

@@ -290,6 +290,7 @@ namespace systemc_hdl {
     HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(), &array_sizes,
 		      hNode::hdlopsEnum::hVardecl, h_varlist);
     hNodep h_vardecl = h_varlist->child_list.back();
+
     h_ret = NULL;
 
     if (Expr *declinit = vardecl->getInit()) {

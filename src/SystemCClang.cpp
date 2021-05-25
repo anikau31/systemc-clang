@@ -1,17 +1,7 @@
 #include "SystemCClang.h"
 
-#include "matchers/FindConstructor.h"
-#include "matchers/FindEntryFunctions.h"
-#include "matchers/FindEvents.h"
-#include "matchers/FindGlobalEvents.h"
-#include "matchers/FindNetlist.h"
-#include "matchers/FindNotify.h"
 #include "matchers/FindSimTime.h"
-#include "matchers/FindTLMInterfaces.h"
-#include "matchers/FindTemplateParameters.h"
-#include "matchers/FindWait.h"
 
-//#include "matchers/Matchers.h"
 #include "ModuleInstanceType.h"
 #include "matchers/NetlistMatcher.h"
 #include "matchers/SensitivityMatcher.h"
@@ -30,62 +20,6 @@ using namespace sc_ast_matchers::utils::cxx_construct_decl_utils;
 bool SystemCConsumer::preFire() { return true; }
 
 bool SystemCConsumer::postFire() { return true; }
-
-void SystemCConsumer::processModuleDeclaration(
-    clang::CXXRecordDecl *cxx_decl, ModuleInstance *add_module_decl) {
-  // setInstanceInfo done in pruneMatches
-  //
-  FindTemplateParameters tparms{cxx_decl};
-  add_module_decl->setTemplateParameters(tparms.getTemplateParameters());
-  add_module_decl->setTemplateArgs(tparms.getTemplateArgs());
-
-  /// 3. Find constructor
-  //
-  //
-  LLVM_DEBUG(llvm::dbgs() << "4. Set the constructor.\n";);
-  vector<EntryFunctionContainer *> _entryFunctionContainerVector;
-  FindConstructor constructor{add_module_decl->getModuleClassDecl(), os_};
-  add_module_decl->addConstructor(&constructor);
-
-  /// 4. Find ports
-  /// This is done for the declaration.
-  //
-  //
-  // 5. Find  entry functions within one sc_module.
-  LLVM_DEBUG(llvm::dbgs() << "5. Set the entry functions\n";);
-  FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(), os_};
-  FindEntryFunctions::entryFunctionVectorType *entryFunctions{
-      findEntries.getEntryFunctions()};
-  LLVM_DEBUG(llvm::dbgs() << "6. Set the process\n";);
-  add_module_decl->addProcess(entryFunctions);
-
-  SensitivityMatcher sens_matcher{};
-  MatchFinder matchRegistry{};
-  sens_matcher.registerMatchers(matchRegistry);
-  matchRegistry.match(*constructor.getConstructorDecl(), getContext());
-
-  for (size_t i{0}; i < entryFunctions->size(); i++) {
-    EntryFunctionContainer *ef{(*entryFunctions)[i]};
-
-    /// Add the sensitivity information to each of the entry functions.
-    EntryFunctionContainer::SenseMapType sensitivity_info{
-        sens_matcher.getSensitivityMap()};
-    ef->addSensitivityInfo(sensitivity_info);
-
-    if (ef->getEntryMethod() == nullptr) {
-      LLVM_DEBUG(llvm::dbgs() << "ERROR";);
-      continue;
-    }
-
-    FindWait findWaits{ef->getEntryMethod(), os_};
-    ef->addWaits(findWaits);
-
-    FindNotify findNotify{ef->getEntryMethod(), os_};
-    ef->addNotifys(findNotify);
-
-    _entryFunctionContainerVector.push_back(ef);
-  }
-}
 
 void SystemCConsumer::processNetlist(
     FindSCMain *scmain, ModuleDeclarationMatcher *module_declaration_handler) {
@@ -136,11 +70,6 @@ bool SystemCConsumer::fire() {
   LLVM_DEBUG(llvm::dbgs() << "== Print module declarations pruned\n";
              module_declaration_handler.dump();
              llvm::dbgs() << "================ END =============== \n";);
-
-  // MultiMap CXXRecordDecl => ModuleInstance*
-  // Instances with same CXXRecordDecl will have multiple entries
-  auto found_module_declarations{
-      module_declaration_handler.getFoundModuleDeclarations()};
   ////////////////////////////////////////////////////////////////
   // Find the sc_main
   ////////////////////////////////////////////////////////////////
@@ -161,6 +90,11 @@ bool SystemCConsumer::fire() {
   // ModuleInstance.
   //
 
+  // MultiMap CXXRecordDecl => ModuleInstance*
+  // Instances with same CXXRecordDecl will have multiple entries
+  auto found_module_declarations{
+      module_declaration_handler.getFoundModuleDeclarations()};
+
   llvm::outs()
       << "############# ============= NEW FIRE ============ ################\n";
   llvm::outs() << "Size of module instances: "
@@ -171,17 +105,39 @@ bool SystemCConsumer::fire() {
     ModuleInstance *add_module_decl{inst.second};
 
     /// Process the module declaration first.
-    processModuleDeclaration(cxx_decl, add_module_decl);
+    //processModuleDeclaration(cxx_decl, add_module_decl);
 
     /// Process the base classes for the module declaration.
-    auto base_decls{getAllBaseClasses(cxx_decl)};
-    for (const auto &base: base_decls) {
-      auto name{ base->getNameAsString() };
-      ModuleInstance *base_module_instance{ new ModuleInstance{name, base} };
-      processModuleDeclaration(const_cast<clang::CXXRecordDecl*>(base), base_module_instance);
-      llvm::dbgs() << " ############### Base module instance ################# \n";
-      add_module_decl->addBaseInstance( base_module_instance);
-    }
+    //auto base_decls{getAllBaseClasses(cxx_decl)};
+    //for (const auto &base: base_decls) {
+      // auto name{ base->getNameAsString() };
+      // ModuleInstance *base_module_instance{ new ModuleInstance{name, base} };
+      //processModuleDeclaration(const_cast<clang::CXXRecordDecl*>(base), base_module_instance);
+      //llvm::dbgs() << " ############### Base module instance ################# \n";
+      //add_module_decl->addBaseInstance( base_module_instance);
+
+      /*
+  for (const auto &base_decl : base_decls) {
+        llvm::dbgs() << "=============================== BASES " << decl->getNameAsString() << " =======================\n";
+        llvm::dbgs() << "Run base instance matcher: "
+                     << base_decl->getNameAsString() << " \n";
+        InstanceMatcher base_instance_matcher;
+        MatchFinder base_instance_reg{};
+        base_instance_matcher.registerMatchers(base_instance_reg);
+        base_instance_matcher.setParentFieldDecl(vd);
+        base_instance_reg.match(*base_decl, context);
+        llvm::dbgs() << "+ Dump base instance matcher\n";
+        base_instance_matcher.dump();
+        llvm::dbgs() << "+ End dump base instance matcher\n";
+
+        /// Copy contents over.
+        instance_matcher_= base_instance_matcher;
+      }
+
+  */
+
+
+    //}
 
     systemc_model_->addInstance(add_module_decl);
   }

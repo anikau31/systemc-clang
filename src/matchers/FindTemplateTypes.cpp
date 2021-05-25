@@ -165,6 +165,28 @@ bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
   return false;
 }
 
+bool FindTemplateTypes::VisitEnumType(EnumType *e) {
+  LLVM_DEBUG(
+      llvm::dbgs() << "=VisitEnumType=\n";
+      e->dump();
+  );
+
+  auto type_name{e->getDecl()->getName()};
+  llvm::dbgs() << "type_name: " << type_name << "\n";
+  TemplateType tt{type_name.str(), e->desugar().getTypePtr()};
+
+  e->desugar().getTypePtr()->dump();
+  auto tp{e->desugar().getTypePtr()};
+
+  current_type_node_ = template_args_.addNode(tt);
+
+  if (template_args_.size() == 1) {
+    template_args_.setRoot(current_type_node_);
+  }
+
+  return false;
+}
+
 bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
   // llvm::outs() << "=VisitTypedefType=\n";
   // typedef_type->dump();

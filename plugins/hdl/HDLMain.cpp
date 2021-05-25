@@ -129,6 +129,11 @@ namespace systemc_hdl {
   void HDLMain::SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
 			       llvm::raw_fd_ostream &HCodeOut) {
     const std::vector<ModuleInstance *> &submodv = mod->getNestedModuleInstances();
+    const std::vector<ModuleInstance *> &basemods = mod->getBaseInstances();
+    LLVM_DEBUG( llvm::dbgs() << "dumping base instances \n");
+    mod->dump_base_instances(llvm::dbgs());
+    LLVM_DEBUG( llvm::dbgs() << "end base instances \n");
+
     // look at constructor
 
     // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
@@ -146,20 +151,24 @@ namespace systemc_hdl {
     // Ports
     hNodep h_ports =
       new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
-    SCport2hcode(mod->getIPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
-    SCport2hcode(mod->getInputStreamPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
-    SCport2hcode(mod->getOPorts(), hNode::hdlopsEnum::hPortout, h_ports, mod_vname_map);
-    SCport2hcode(mod->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
-		 h_ports, mod_vname_map);
-    SCport2hcode(mod->getIOPorts(), hNode::hdlopsEnum::hPortio, h_ports, mod_vname_map);
-
-    // Signals
-    SCsig2hcode(mod->getSignals(), hNode::hdlopsEnum::hSigdecl, h_ports, mod_vname_map);
-
     h_module->child_list.push_back(h_ports);
 
-    SCport2hcode(mod->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports, mod_vname_map);
-
+    ModuleInstance *mod_i = mod;
+    for (int i = 0; i <= basemods.size(); i++) {
+      SCport2hcode(mod_i->getIPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
+      SCport2hcode(mod_i->getInputStreamPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
+      SCport2hcode(mod_i->getOPorts(), hNode::hdlopsEnum::hPortout, h_ports, mod_vname_map);
+      SCport2hcode(mod_i->getOutputStreamPorts(), hNode::hdlopsEnum::hPortout,
+		   h_ports, mod_vname_map);
+      SCport2hcode(mod_i->getIOPorts(), hNode::hdlopsEnum::hPortio, h_ports, mod_vname_map);
+      
+      // Signals
+      SCsig2hcode(mod_i->getSignals(), hNode::hdlopsEnum::hSigdecl, h_ports, mod_vname_map);
+      
+      SCport2hcode(mod_i->getOtherVars(), hNode::hdlopsEnum::hVardecl, h_ports, mod_vname_map);
+      if (i == basemods.size()) break;
+      mod_i = basemods[i];
+    }
     for (const auto &smod : submodv) {
       if (smod->getInstanceInfo().isArrayType()) {
 	LLVM_DEBUG(llvm::dbgs() << "Array submodule " << smod->getInstanceName() << "\n");
@@ -190,19 +199,29 @@ namespace systemc_hdl {
 
     // Processes
     h_top = new hNode(hNode::hdlopsEnum::hProcesses);
-    SCproc2hcode(mod->getProcessMap(), h_top, mod_vname_map);
-    if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
+    mod_i = mod;
+    for (int i = 0; i <= basemods.size(); i++) {
+      SCproc2hcode(mod_i->getProcessMap(), h_top, mod_vname_map);
+      if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
+      if (i == basemods.size()) break;
+      mod_i = basemods[i];
+    }
 
     {
       // init block
       clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
       hNodep hconstructor = new hNode(mod->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
-      HDLBody xconstructor(mod->getConstructorDecl()->getBody(), hconstructor, diag_engine, getContext(), mod_vname_map);
-      LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
-      hconstructor->print(llvm::dbgs());
-      HDLConstructorHcode hcxxbody;
-      h_module->child_list.push_back(hcxxbody.ProcessCXXConstructorHcode(hconstructor));
-      //hconstructor->print(HCodeOut);
+      mod_i = mod;
+      for (int i = 0; i <= basemods.size(); i++) {
+	HDLBody xconstructor(mod_i->getConstructorDecl()->getBody(), hconstructor, diag_engine, getContext(), mod_vname_map);
+	LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
+	hconstructor->print(llvm::dbgs());
+	HDLConstructorHcode hcxxbody;
+	h_module->child_list.push_back(hcxxbody.ProcessCXXConstructorHcode(hconstructor));
+	//hconstructor->print(HCodeOut);
+	if (i == basemods.size()) break;
+	mod_i = basemods[i];
+      }
 
       // diag_engine scope ends
     }
@@ -290,6 +309,7 @@ namespace systemc_hdl {
       // }
     }
   }
+
   // this is obsolete. It has been supeseded by HDLHnode.cpp
   // due to possibility of for-loops enclosing port bindings
   void HDLMain::SCportbindings2hcode(ModuleInstance* mod,

@@ -9,7 +9,7 @@ Usage:
 Example:
     python ../llnl/systemc-clang.py ~/working/systemc-clang/examples/llnl-examples/zfpsynth/zfp3/z3test.cpp \
         --debug -- -I ../systemc/include/ -I ../systemc-clang/examples/llnl-examples/zfpsynth/shared2/ -x c++ -w -c  \
-        -std=c++14 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DRVD \
+        -std=c++17 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DRVD \
         --- -o ./z3test_hdl.txt.v
 """
 import os
@@ -96,10 +96,10 @@ class SystemCClang:
     def llvm_inc_dir(self):
         """
         returns the include directory necessary for systemc-clang to locate headers.
-        Currently, it only supports version 11.0.0
+        Currently, it only supports version 12.0.0
         """
         # TDOO: dynamically determines clang version
-        return os.path.join(self.llvm_install_path, "lib/clang/11.0.0/include")
+        return os.path.join(self.llvm_install_path, "lib/clang/12.0.0/include")
 
     @property
     def systemc_path(self):
