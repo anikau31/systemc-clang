@@ -15,7 +15,7 @@ lark_grammar = Lark('''
                       | vardeclinit 
                       | moddecl
         moddecl: "hModdecl" ID "[" htypeinfo "]"
-        portdecltype: portdecl "[" htypeinfo "]"
+        portdecltype: portdecl "[" htypeinfo hvarinit? "]"
         sigdecltype: sigdecl "[" htypeinfo "]"
         sigdecl:  "hSigdecl" ID  
         ?portdecl: inportdecl | outportdecl
@@ -160,6 +160,8 @@ lark_grammar = Lark('''
              |  "hUnop" UNOP_SUB "[" expression "]"
              |  "hBinop" UNOP_BNOT "[" expression "]"
              |  "hBinop" UNOP_NOT "[" expression "]"
+             |  "hPostfix" (UNOP_NON_SUB | UNOP_SUB) "[" expression "]"
+             |  "hPrefix" (UNOP_NON_SUB | UNOP_SUB) "[" expression "]"
              |  hunopdec
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
