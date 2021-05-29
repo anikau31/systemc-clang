@@ -2290,7 +2290,6 @@
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hPortbindings u_encode_block [
         hPortbinding u_xt_0 [
@@ -4155,7 +4154,6 @@
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
@@ -4930,7 +4928,6 @@
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
@@ -5355,7 +5352,6 @@
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hPortbindings u_find_emax [
         hPortbinding u_que_fp [
@@ -5913,17 +5909,10 @@
             hLiteral 32 NOLIST
             hLiteral 0 NOLIST
           ]
-          hCStmt  NONAME [
-            hMethodCall sc_core__sc_report_handler__report:report [
-              hLiteral 2 NOLIST
-              hMethodCall sc_core__sc_object__name:name NOLIST
-              hLiteral 123 NOLIST
-            ]
-          ]
+          hCStmt  NONAME NOLIST
         ]
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
@@ -6520,7 +6509,6 @@
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
@@ -7228,17 +7216,10 @@
             hLiteral 2 NOLIST
             hLiteral 0 NOLIST
           ]
-          hCStmt  NONAME [
-            hMethodCall sc_core__sc_report_handler__report:report [
-              hLiteral 2 NOLIST
-              hMethodCall sc_core__sc_object__name:name NOLIST
-              hLiteral 123 NOLIST
-            ]
-          ]
+          hCStmt  NONAME NOLIST
         ]
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
@@ -7763,17 +7744,10 @@
             hLiteral 16 NOLIST
             hLiteral 0 NOLIST
           ]
-          hCStmt  NONAME [
-            hMethodCall sc_core__sc_report_handler__report:report [
-              hLiteral 2 NOLIST
-              hMethodCall sc_core__sc_object__name:name NOLIST
-              hLiteral 123 NOLIST
-            ]
-          ]
+          hCStmt  NONAME NOLIST
         ]
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
@@ -8257,7 +8231,6 @@
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
@@ -9054,17 +9027,10 @@
             hLiteral 2 NOLIST
             hLiteral 0 NOLIST
           ]
-          hCStmt  NONAME [
-            hMethodCall sc_core__sc_report_handler__report:report [
-              hLiteral 2 NOLIST
-              hMethodCall sc_core__sc_object__name:name NOLIST
-              hLiteral 123 NOLIST
-            ]
-          ]
+          hCStmt  NONAME NOLIST
         ]
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
@@ -10512,7 +10478,6 @@
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
@@ -11650,7 +11615,6 @@
       hCStmt  NONAME [
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
-        hMethodCall sc_core__sc_module__dont_initialize:dont_initialize NOLIST
       ]
       hSenslist mc_proc [
         hSensvar NONAME [
