@@ -311,8 +311,8 @@ class VerilogTranslationPass(TopDown):
     def stmt(self, tree):
         indentation = []
         sep = []
-        noindent = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt']
-        nosemico = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt']
+        noindent = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt', 'whilestmt']
+        nosemico = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt', 'whilestmt']
         for x in tree.children:
             if x.data in noindent:
                 indentation.append('')
@@ -356,7 +356,7 @@ class VerilogTranslationPass(TopDown):
         prefix = self.get_current_ind_prefix()
         res = "{}while({}) begin\n".format(prefix, tree.children[0])
         res += ''.join(tree.children[1:])
-        res += '{}end'.format(prefix)
+        res += '\n{}end'.format(prefix)
         self.pop_current_scope_type()
         return res
 
@@ -505,7 +505,7 @@ class VerilogTranslationPass(TopDown):
         decls = list(map(lambda x: x[0] + ';', prevardecl.children))
         decls_init = list(map(lambda x: '{} = {};'.format(x[1], x[2]), filter(lambda x: len(x) == 3 and x[2] is not None, prevardecl.children)))
         # dprint(self.senselist)
-        res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.senselist[proc_name]), proc_name)
+        res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         res += ind + ('\n' + ind).join(decls) + '\n'
