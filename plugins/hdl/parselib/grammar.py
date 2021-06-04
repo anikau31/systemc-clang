@@ -160,6 +160,8 @@ lark_grammar = Lark('''
              |  "hUnop" UNOP_SUB "[" expression "]"
              |  "hBinop" UNOP_BNOT "[" expression "]"
              |  "hBinop" UNOP_NOT "[" expression "]"
+             |  "hPostfix" (UNOP_INC | UNOP_DEC) "[" expression "]"
+             |  "hPrefix" (UNOP_INC | UNOP_DEC) "[" expression "]"
              |  hunopdec
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
@@ -220,6 +222,7 @@ lark_grammar = Lark('''
         UNOP_NON_SUB: "!" | "++" | "-"
         UNOP_SUB:  "-"
         UNOP_DEC:  "--"
+        UNOP_INC:  "++"
         // These are temporary nodes that should be removed when hBinop is fixed
         UNOP_BOR: "|"
         UNOP_NOT: "!"
