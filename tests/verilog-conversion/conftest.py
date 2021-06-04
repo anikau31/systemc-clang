@@ -35,18 +35,19 @@ def load_module(mod_name):
 
 def get_iscs_tests():
     """retreive intel systemc compiler tests, these tests follow a certain pattern"""
-    test_binary_iscs.cpp
-    test_break_iscs.cpp
-    test_child_module_iscs.cpp
-    test_dowhile_iscs.cpp
-    test_for_fcall_fail_iscs.cpp
-    test_for_iscs.cpp
-    test_forloop_other_types_iscs.cpp
-    test_virtual1_iscs.cpp
-    test_vname_iscs.cpp
-    test_while_const_iscs.cpp
-    test_while_iscs.cpp
-    pass
+    [
+        "test_binary_iscs.cpp",
+        "test_break_iscs.cpp",
+        "test_child_module_iscs.cpp",
+        "test_dowhile_iscs.cpp",
+        "test_for_fcall_fail_iscs.cpp",
+        "test_for_iscs.cpp",
+        "test_forloop_other_types_iscs.cpp",
+        "test_virtual1_iscs.cpp",
+        "test_vname_iscs.cpp",
+        "test_while_const_iscs.cpp",
+        "test_while_iscs.cpp",
+    ]
 
 
 # NOTE: The usage of this list is specified in the README.md
@@ -78,72 +79,72 @@ test_data = [
         ("-I", zfpshared2.stem, "-I", modules_examples / "moving-average"),
         None,
     ),
-    (
-       "test_while_iscs",
-       load_file(testdata / "test_while_iscs.cpp"),
-       None,
-       None, # load_file(testdata / "test_while_iscs_hdl.txt.v"),
-    ),
-    (
-       "test_binary_iscs",
-       load_file(testdata / "test_binary_iscs.cpp"),
-       None,
-       None, # load_file(testdata / "test_binary_iscs_hdl.txt.v"),
-    ),
-    (
-       "test_break_iscs",
-       load_file(testdata / "test_break_iscs.cpp"),
-       None,
-       None, # load_file(testdata / "test_break_iscs_hdl.txt.v"),
-    ),
-    (
-       "test_for_iscs",
-       load_file(testdata / "test_for_iscs.cpp"),
-       None,
-       None, # load_file(testdata / "test_for_iscs_hdl.txt.v"),
-    ),
-    ( 
-       "test_child_module_iscs",
-       load_file(testdata / "test_child_module_iscs.cpp"),
-       None,
-       None,
-    ),
-    ( 
-        "test_dowhile_iscs",
-        load_file(testdata / "test_dowhile_iscs.cpp"),
-        None,
-        None
-    ),
-    ( 
-        "test_for_fcall_fail_iscs",
-        load_file(testdata / "test_for_fcall_fail_iscs.cpp"),
-        None,
-        None,
-    ),
-    ( 
-        "test_forloop_other_types_iscs",
-        load_file(testdata / "test_forloop_other_types_iscs.cpp"),
-        None,
-        None
-    ),
-    ( 
-        "test_virtual1_iscs",
-        load_file(testdata / "test_virtual1_iscs.cpp"),
-        None,
-        None
-    ),
-    ( 
-        "test_vname_iscs",
-        load_file(testdata / "test_vname_iscs.cpp"),
-        None,
-        None
-    ),
-    ( 
-        "test_while_const_iscs",
-        load_file(testdata / "test_while_const_iscs.cpp"),
-        None,
-        None,
-    ),
+    # (
+    #    "test_while_iscs",
+    #    load_file(testdata / "test_while_iscs.cpp"),
+    #    None,
+    #    None, # load_file(testdata / "test_while_iscs_hdl.txt.v"),
+    # ),
+    # (
+    #    "test_binary_iscs",
+    #    load_file(testdata / "test_binary_iscs.cpp"),
+    #    None,
+    #    None, # load_file(testdata / "test_binary_iscs_hdl.txt.v"),
+    # ),
+    # (
+    #    "test_break_iscs",
+    #    load_file(testdata / "test_break_iscs.cpp"),
+    #    None,
+    #    None, # load_file(testdata / "test_break_iscs_hdl.txt.v"),
+    # ),
+    # (
+    #    "test_for_iscs",
+    #    load_file(testdata / "test_for_iscs.cpp"),
+    #    None,
+    #    None, # load_file(testdata / "test_for_iscs_hdl.txt.v"),
+    # ),
+    # ( 
+    #    "test_child_module_iscs",
+    #    load_file(testdata / "test_child_module_iscs.cpp"),
+    #    None,
+    #    None,
+    # ),
+    # ( 
+    #     "test_dowhile_iscs",
+    #     load_file(testdata / "test_dowhile_iscs.cpp"),
+    #     None,
+    #     None
+    # ),
+    # ( 
+    #     "test_for_fcall_fail_iscs",
+    #     load_file(testdata / "test_for_fcall_fail_iscs.cpp"),
+    #     None,
+    #     None,
+    # ),
+    # ( 
+    #     "test_forloop_other_types_iscs",
+    #     load_file(testdata / "test_forloop_other_types_iscs.cpp"),
+    #     None,
+    #     None
+    # ),
+    # ( 
+    #     "test_virtual1_iscs",
+    #     load_file(testdata / "test_virtual1_iscs.cpp"),
+    #     None,
+    #     None
+    # ),
+    # ( 
+    #     "test_vname_iscs",
+    #     load_file(testdata / "test_vname_iscs.cpp"),
+    #     None,
+    #     None
+    # ),
+    # ( 
+    #     "test_while_const_iscs",
+    #     load_file(testdata / "test_while_const_iscs.cpp"),
+    #     None,
+    #     None,
+    # ),
 
 ]
 
