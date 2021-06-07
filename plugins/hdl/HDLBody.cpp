@@ -158,6 +158,9 @@ namespace systemc_hdl {
 	//diag_e.Report(stmt->getBeginLoc(), cxx_record_id)};
       LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
       h_ret = new hNode(hNode::hdlopsEnum::hBreak);
+    } else if (isa<ContinueStmt>(stmt)) {
+      LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
+      h_ret = new hNode(hNode::hdlopsEnum::hContinue);
     } else if (isa<CXXDefaultArgExpr>(stmt)) {
       TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
     } else if (isa<ReturnStmt>(stmt)) {
@@ -347,10 +350,20 @@ namespace systemc_hdl {
 
     auto opcstr = expr->getOpcode();
 
-    hNodep h_unop =
-      new hNode(expr->getOpcodeStr(opcstr).str(),
+    hNodep h_unop;
+     
+    if ((expr->getOpcodeStr(opcstr).str() == "++") ||
+	(expr->getOpcodeStr(opcstr).str() == "--")) {
+      if (expr->isPostfix())
+	h_unop = new hNode(expr->getOpcodeStr(opcstr).str(),
+		       hNode::hdlopsEnum::hPostfix);
+      else 
+	h_unop = new hNode(expr->getOpcodeStr(opcstr).str(),
+			   hNode::hdlopsEnum::hPrefix);
+    }
+    else h_unop = new hNode(expr->getOpcodeStr(opcstr).str(),
                 hNode::hdlopsEnum::hUnop);  // node to hold unop expr
-
+    
     TraverseStmt(expr->getSubExpr());
     h_unop->child_list.push_back(h_ret);
 
@@ -574,10 +587,17 @@ namespace systemc_hdl {
       } else {
 	if (operatorname == "[]")  // subscript in operator call expre
 	  h_operop = new hNode("ARRAYSUBSCRIPT", hNode::hdlopsEnum::hBinop);
+	else if ((operatorname == "++")||(operatorname == "--")) {
+	  if (opcall->getNumArgs()==2) h_operop =  new hNode(operatorname, hNode::hdlopsEnum::hPostfix);
+	  else  h_operop =  new hNode(operatorname, hNode::hdlopsEnum::hPrefix);
+	}
 	else
 	  h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
       }
-      for (int i = 0; i < opcall->getNumArgs(); i++) {
+      int nargs = (h_operop->getopc() == hNode::hdlopsEnum::hPostfix ||
+		   h_operop->getopc() == hNode::hdlopsEnum::hPrefix) ? 1:
+	opcall->getNumArgs();
+      for (int i = 0; i < nargs; i++) {
 	hNodep save_h_ret = h_ret;
 	TraverseStmt(opcall->getArg(i));
 	if (h_ret == save_h_ret)

@@ -102,6 +102,9 @@ class PortExpansion(TopDown):
             return [tree]
 
     def __expand_port(self, tree):
+        # TODO: remove this hack when hcode fixed
+        if len(tree.children) == 3:
+            tree.children = tree.children[0:2]
         port_name, port_type = tree.children
         port_to_expand = ['sc_rvd_in', 'sc_rvd_out']
         port_type_name = port_type.children[0].children[0]

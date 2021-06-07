@@ -57,6 +57,8 @@ namespace hnode {
   etype(hVarAssign), \
   etype(hBinop), \
   etype(hUnop), \
+  etype(hPostfix), \
+  etype(hPrefix), \
   etype(hCondop), \
   etype(hMethodCall), \
   etype(hIfStmt), \
@@ -65,6 +67,7 @@ namespace hnode {
   etype(hSwitchCase), \
   etype(hSwitchDefault), \
   etype(hBreak), \
+  etype(hContinue), \
   etype(hWhileStmt),   	\
   etype(hDoStmt),   	\
   etype(hReturnStmt),  	\
@@ -219,6 +222,7 @@ namespace hnode {
       // std::remove_if(str.begin(), str.end(), [](char chr){ return chr == '&' || chr == ' ';}),
       //str.end());
       std::replace(nm.begin(), nm.end(), ' ', '_');
+      std::replace(nm.begin(), nm.end(), ':', '_');
       nm.erase(std::remove_if(nm.begin(), nm.end(),
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
 

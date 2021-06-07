@@ -21,7 +21,7 @@ namespace systemc_hdl {
   static const string noname{"NONAME"};
   static const string sensop{"<<"};
   static const string localstr{"_local_"};
-  static const string strsccore("sc_coresc");
+  static const string strsccore("sc_core__sc");
 
   static inline bool isInitPB(hNodep hp) {
     return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
