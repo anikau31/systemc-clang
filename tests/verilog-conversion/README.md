@@ -30,7 +30,56 @@ Python 3.7.5
 $ pip3 install -r $SYSTEMC_CLANG/requirements.txt
 ``` 
 
-## The Conversion Tool
+## The conversion script
+
+We provide command-line scripts as shortcuts to generate different types of targets within the flow, as shown in the following examples.
+
+### Generating SystemVerilog from C++
+
+Use the `systemc-clang.py` script with the same parameters passed to the `systemc-clang` binary and both the `_hdl.txt` and the SystemVerilog file will be created in the same directory as the source C++ file.
+Notice that you may also provide include directory for LLVM as well as SystemC, but the script can also pickup these directories from the environment variables.
+
+```bash
+$ ls /tmp/test
+add.cpp
+
+$ scripts/run-cpp-sv.sh /tmp/test/add.cpp
+...
+
+$ ls /tmp/test
+add.cpp  add_hdl.txt  add_hdl.txt.v
+```
+
+### Generating `_hdl.txt`
+
+Use the `systemc-clang` binary to generate `_hdl.txt` file from C++. 
+Notice that you need to specify the LLVM directory as well as the SystemC directory.
+```bash
+$ ls /tmp/test
+add.cpp
+
+$ scripts/run.sh /tmp/test/add.cpp
+
+$ ls /tmp/test
+add.cpp  add_hdl.txt
+```
+
+### Generating SystemVerilog from `_hdl.txt`
+
+Use the `hcode2verilog.py` script to translate `_hdl.txt` into SystemVerilog file.
+```bash
+$ ls /tmp/test
+add_hdl.txt
+
+$ scripts/run-hcode-sv.sh ./add_hdl.txt
+...
+
+$ ls /tmp/test
+add_hdl.txt  add_hdl.txt.v
+```
+
+
+## The conversion tool
 
 We provide a command-line tool that helps the development process for testing.
 The tool does the following.
