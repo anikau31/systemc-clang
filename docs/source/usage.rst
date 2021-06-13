@@ -20,6 +20,7 @@ The distribution provides the following useful scripts to execute ``systemc-clan
 
 * ``run.sh``: executes ``systemc-clang``.
 * ``run-gdb.sh``: executes gdb with ``systemc-clang``.
+* ``run-cpp-sv.sh``: executes ``systemc-clang`` and generates SystemVerilog file.
 
 Both of these scripts require setting some environment variables. 
 Most of these are defined in the following scripts to make it easier for users.
@@ -37,3 +38,7 @@ These can be changed in the file itself.
 Once the appropriate environment variables are set, the scripts used to run ``systemc-clang`` can be executed successfully.
 ::
   $ scripts/run.sh test.cpp
+
+Also, one may generate the SystemVerilog file from C++ with the following command.
+::
+  $ scripts/run-cpp-sv.sh test.cpp
