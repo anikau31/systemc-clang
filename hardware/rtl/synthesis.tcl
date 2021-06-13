@@ -4,6 +4,10 @@ set_property board_part $bp [current_project]
 # RTL Design
 add_files { ${rtl_files_space_sep} }
 
+# SystemC Design (generated)
+# add_files { ${sysc_modules_space_sep} }
+${add_sysc_command}
+
 # Block design wrapper files
 # add_files { ${bd_wrappers_space_sep} }
 ${add_bd_command}

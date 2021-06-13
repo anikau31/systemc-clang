@@ -1,8 +1,11 @@
-function(add_static_synthesis design rtl_files constraint_files synthesis_options bds ips external_dcps top_module)
+function(add_static_synthesis design rtl_files constraint_files synthesis_options bds ips external_dcps top_module sysc_modules)
   set(bd_dcps "")
   set(bd_wrappers ${bds})
   set(ip_dcps "")
   set(ip_wrappers ${ips})
+  set(ips_dep ${ips})
+
+  message(STATUS "SYSC MODULES1: ${sysc_modules}")
 
   # board design wrappers
   set(bd_wrappers_space_sep "")
@@ -23,20 +26,29 @@ function(add_static_synthesis design rtl_files constraint_files synthesis_option
   set(dcps ${dcps} ${external_dcps})
 
 
-  set(dcps_dep ${dcps})
+  set(dcps_dep ${bd_dcps} ${external_dcps})
+  # set(dcps_dep ${dcps})
   list(TRANSFORM rtl_files        PREPEND "${HW_SOURCE_DIR}/rtl/")
+  list(TRANSFORM sysc_modules     PREPEND "${SYNTH_ROOT_DIR}/rtl/")
+  list(TRANSFORM sysc_modules     APPEND  ".sv")
   list(TRANSFORM constraint_files PREPEND "${HW_SOURCE_DIR}/constr/")
   list(TRANSFORM dcps             PREPEND "${CMAKE_CURRENT_BINARY_DIR}/../")
   list(TRANSFORM dcps_dep         PREPEND "${CMAKE_CURRENT_BINARY_DIR}/../")
+  # list(TRANSFORM ips_dep          PREPEND "${SYNTH_ROOT_DIR}/ip/")
   STRING (REPLACE ";" " " rtl_files_space_sep "${rtl_files}")
+  STRING (REPLACE ";" " " sysc_modules_space_sep "${sysc_modules}")
   STRING (REPLACE ";" " " constraint_files_space_sep "${constraint_files}")
   STRING (REPLACE ";" " " dcp_files_space_sep "${dcps}")
 
   message(STATUS "Design (top module name): ${design}")
+  message(STATUS "SYSC MODULES: ${sysc_modules}")
 
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${design})
   set(working_dir ${CMAKE_CURRENT_BINARY_DIR}/${design}/)
   set(synthesis_tcl ${working_dir}/synthesis.tcl)
+  if (NOT "${sysc_modules}" STREQUAL "")
+    set(add_sysc_command "add_files { ${sysc_modules_space_sep} }")
+  endif()
   if (NOT "${bds}" STREQUAL "")
     set(add_bd_command "add_files { ${bd_wrappers_space_sep} }")
   endif()
@@ -58,7 +70,7 @@ function(add_static_synthesis design rtl_files constraint_files synthesis_option
   list(TRANSFORM bds              APPEND  ".bd")
   add_custom_command(OUTPUT ${design}/${design}_synth.dcp
     COMMAND vivado -mode batch -source  -source ${COMMON_DIR} -source ${synthesis_tcl}
-    DEPENDS ${dcps_dep} ${rtl_files} ${bds} ${constraint_files}
+    DEPENDS ${dcps_dep} ${rtl_files} ${bds} ${constraint_files} ${ips_dep}
     WORKING_DIRECTORY ${working_dir})
 
 
@@ -71,19 +83,20 @@ endfunction()
 # the reconf_partition should have the full path name
 function(add_reconf_module) # design reconf_partition reconf_module rtl_files constraint_files synthesis_options bds ips)
   set(oneValArgs DESIGN RECONF_PART RECONF_INST SYNTHESIS_OPTS)
-  set(multiValArgs RTL CONSTR BDS IPS DCPS)
+  set(multiValArgs RTL SYSC_MODULE CONSTR BDS IPS DCPS)
   cmake_parse_arguments(RM "" "${oneValArgs}" "${multiValArgs}" ${ARGN})
 
   set(RM_SYNTHESIS_OPTS "${RM_SYNTHESIS_OPTS} -mode out_of_context")
   message(STATUS "Reconfigurable module (name:modname:partition): ${RM_DESIGN}:${RM_RECONF_PART}:${RM_RECONF_INST}")
   message(STATUS "RTL files: ${RM_RTL}")
+  message(STATUS "SystemC modules: ${RM_SYSC_MODULE}")
   message(STATUS "Constraints: ${RM_CONSTR}")
   message(STATUS "Synthesis options: ${RM_SYNTHESIS_OPTS}")
   message(STATUS "Deps (not supported for now): ${RM_BDS} ${RM_IPS} ${RM_DCPS}")
 
   add_static_synthesis(RM_${RM_DESIGN} 
     "${RM_RTL}" 
-    "${RM_CONSTR}" "${RM_SYNTHESIS_OPTS}" "${RM_BDS}" "${RM_IPS}" "${RM_DCPS}" ${RM_RECONF_PART})
+    "${RM_CONSTR}" "${RM_SYNTHESIS_OPTS}" "${RM_BDS}" "${RM_IPS}" "${RM_DCPS}" ${RM_RECONF_PART} "${RM_SYSC_MODULE}")
   message(STATUS "")
 endfunction()
 
@@ -179,7 +192,7 @@ function(add_static_config) # design reconf_partition reconf_module rtl_files co
 
   add_static_synthesis(DS_${DS_DESIGN} 
     "${DS_RTL}" 
-    "${DS_CONSTR}" "${DS_SYNTHESIS_OPTS}" "${DS_BDS}" "${DS_IPS}" "${DS_DCPS}" ${DS_TOP_MOD})
+    "${DS_CONSTR}" "${DS_SYNTHESIS_OPTS}" "${DS_BDS}" "${DS_IPS}" "${DS_DCPS}" ${DS_TOP_MOD} "")
   message(STATUS ">> Adding implementation for the configuration...")
   add_static_implementation(
     DESIGN      ${DS_DESIGN} 
@@ -255,6 +268,33 @@ function(add_config_from_static)
   add_custom_target(${design}_impl ALL DEPENDS ${design}/${design}_impl.dcp)
   add_custom_target(${design}_bitstream ALL DEPENDS ${design}/${design}.bit)
   add_custom_target(${design}_util ALL DEPENDS ${design}/${design}_util.txt)
+
+endfunction()
+
+function(add_systemc_module)
+  # SystemC C++ source
+  set(oneValArgs DESIGN DESIGN_SOURCE)
+  # EXTRA_COMPILER_OPTIONS are the options passed to the systemc-clang binary
+  # EXTRA_HCODE_OPTIONS are the options passed to the hcode translation script
+  set(multiValArgs EXTRA_COMPILER_OPTIONS EXTRA_HCODE_OPTIONS) 
+  cmake_parse_arguments(SYSC "" "${oneValArgs}" "${multiValArgs}" ${ARGN})
+
+  message(STATUS "SystemC design: ${SYSC_DESIGN_SOURCE}")
+
+  set(SYSTEMC_CLANG_FLAGS "-x" "c++" "-w" "-c" "-D__STDC_CONSTANT_MACROS" "-D__STDC_LIMIT_MACROS -DRVD")
+  get_filename_component(DESIGN_SOURCE_FILENAME ${SYSC_DESIGN_SOURCE} NAME_WLE)
+  set(SYSC_DESIGN_TARGET "${SYSC_DESIGN}")
+  message(STATUS "Design source ${DESIGN_SOURCE_FILENAME}")
+  
+  add_custom_command(
+    OUTPUT ${SYNTH_ROOT_DIR}/rtl/${SYSC_DESIGN_TARGET}.sv
+    COMMAND "${PYTHON_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/plugins/hdl/systemc-clang.py"
+    ${SYSC_DESIGN_SOURCE}
+    "--" ${SYSTEMC_CLANG_FLAGS} ${EXTRA_COMPILER_OPTIONS} "---" "-o" "${SYNTH_ROOT_DIR}/rtl/${SYSC_DESIGN_TARGET}.sv"
+  )
+  add_custom_target(${SYSC_DESIGN}
+    ALL DEPENDS ${SYNTH_ROOT_DIR}/rtl/${SYSC_DESIGN_TARGET}.sv
+  )
 
 endfunction()
 
