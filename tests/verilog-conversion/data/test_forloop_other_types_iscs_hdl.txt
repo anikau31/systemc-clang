@@ -211,9 +211,8 @@
                 hVarref i2_local_4 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref i2_local_4 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -244,9 +243,8 @@
                 hVarref i3_local_5 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref i3_local_5 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -277,9 +275,8 @@
                 hVarref i3_local_6 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref i3_local_6 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -310,9 +307,8 @@
                 hVarref i3_local_7 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref i3_local_7 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -343,9 +339,8 @@
                 hVarref i4_local_9 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref i4_local_9 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -452,9 +447,8 @@
                 hVarref ibu2_local_4 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref ibu2_local_4 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -485,9 +479,8 @@
                 hVarref ibu3_local_5 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref ibu3_local_5 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -518,9 +511,8 @@
                 hVarref ibu3_local_6 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref ibu3_local_6 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -551,9 +543,8 @@
                 hVarref ibu3_local_7 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref ibu3_local_7 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -584,9 +575,8 @@
                 hVarref ibu4_local_9 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref ibu4_local_9 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -629,7 +619,7 @@
                 hVarref int128_x_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref int128_x_local_1 NOLIST
               ]
               hCStmt  NONAME [
@@ -669,7 +659,7 @@
                 hVarref long_x_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref long_x_local_1 NOLIST
               ]
               hCStmt  NONAME [
@@ -709,7 +699,7 @@
                 hVarref short_x_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref short_x_local_1 NOLIST
               ]
               hCStmt  NONAME [
@@ -757,9 +747,8 @@
                 hVarref i_local_1 NOLIST
                 hLiteral 8 NOLIST
               ]
-              hBinop ++ [
+              hPostfix ++ [
                 hVarref i_local_1 NOLIST
-                hLiteral 0 NOLIST
               ]
               hCStmt  NONAME [
                 hBinop = [
@@ -799,7 +788,7 @@
                 hVarref uint128_x_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref uint128_x_local_1 NOLIST
               ]
               hCStmt  NONAME [
@@ -839,7 +828,7 @@
                 hVarref ulong_x_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref ulong_x_local_1 NOLIST
               ]
               hCStmt  NONAME [
@@ -879,7 +868,7 @@
                 hVarref ushort_x_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref ushort_x_local_1 NOLIST
               ]
               hCStmt  NONAME [

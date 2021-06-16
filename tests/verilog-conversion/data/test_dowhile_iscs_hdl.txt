@@ -131,7 +131,7 @@
                 hVarref i_local_0 NOLIST
               ]
             ]
-            hUnop ++ [
+            hPostfix ++ [
               hVarref q NOLIST
             ]
             hDoStmt  NONAME [
@@ -140,7 +140,7 @@
                 hLiteral 2 NOLIST
               ]
               hCStmt  NONAME [
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref q NOLIST
                 ]
               ]
@@ -175,7 +175,7 @@
                 hLiteral 3 NOLIST
               ]
               hCStmt  NONAME [
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref i_local_1 NOLIST
                 ]
                 hIfStmt  NONAME [
@@ -270,10 +270,10 @@
                 hLiteral 2 NOLIST
               ]
               hCStmt  NONAME [
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref k_local_2 NOLIST
                 ]
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
                 ]
               ]
@@ -344,10 +344,10 @@
                 hLiteral 2 NOLIST
               ]
               hCStmt  NONAME [
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref k_local_2 NOLIST
                 ]
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
                 ]
               ]
@@ -406,7 +406,7 @@
                   hVarref j_local_3 NOLIST
                   hLiteral 0 NOLIST
                 ]
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref i_local_2 NOLIST
                 ]
                 hDoStmt  NONAME [
@@ -422,7 +422,7 @@
                         hLiteral 1 NOLIST
                       ]
                     ]
-                    hUnop ++ [
+                    hPostfix ++ [
                       hVarref j_local_3 NOLIST
                     ]
                   ]
@@ -483,7 +483,7 @@
                         hLiteral 1 NOLIST
                       ]
                     ]
-                    hUnop ++ [
+                    hPostfix ++ [
                       hVarref i_local_2 NOLIST
                     ]
                   ]
@@ -519,7 +519,7 @@
               hCStmt  NONAME [
                 hBinop = [
                   hVarref k_local_0 NOLIST
-                  hMethodCall Af [
+                  hMethodCall A__f [
                     hVarref k_local_0 NOLIST
                   ]
                 ]
@@ -528,7 +528,7 @@
           ]
         ]
       ]
-      hFunction Af [
+      hFunction A__f [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType int NOLIST
