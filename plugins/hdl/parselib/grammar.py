@@ -44,6 +44,7 @@ lark_grammar = Lark('''
              | forstmt
              | hcstmt
              | whilestmt
+             | dostmt
              | switchstmt
              | blkassign
              | hnoop
@@ -53,8 +54,10 @@ lark_grammar = Lark('''
         breakstmt: "hBreak" "NONAME" "NOLIST"
              
         ?htobool: "hNoop" "to_bool" "[" harrayref "]"
-        htouint: "hNoop" "to_uint" "[" syscread "]"
-        htoint: "hNoop" "to_int" "[" syscread "]"
+        htouint: "hNoop" "to_uint" "[" (syscread|hvarref) "]"
+        htoint: "hNoop" "to_int" "[" (syscread|hvarref) "]"
+        htolong: "hNoop" "to_long" "[" (syscread|hvarref) "]"
+        htoulong: "hNoop" "to_ulong" "[" (syscread|hvarref) "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
         
         // hmodinitblock: 
@@ -62,6 +65,7 @@ lark_grammar = Lark('''
         // second component is initialization list              
         // third component is port binding list
         hmodinitblock: "hModinitblock" ID "[" hcstmt portbindinglist* hsenslist*"]"
+                     | "hModinitblock" ID "NOLIST"
 
         // Port Bindings
         portbindinglist: "hPortbindings" ID "[" portbinding* "]"
@@ -86,6 +90,9 @@ lark_grammar = Lark('''
         
         // while(condition) stmts
         whilestmt: "hWhileStmt" "NONAME" "[" expression stmt "]"
+        
+        // do stmts while(condition)
+        dostmt: "hDoStmt" "NONAME" "[" expression stmt "]"
 
         // for(forinit; forcond; forpostcond) stmts
         forstmt: "hForStmt" "NONAME" "[" forinit forcond forpostcond forbody "]"
@@ -141,10 +148,14 @@ lark_grammar = Lark('''
                   | htobool
                   | htouint
                   | htoint
+                  | htolong
+                  | htoulong
                   | hcondop
                   | hlrotate
+                  | horreduce
                   
         hlrotate : "hNoop" "lrotate" "[" expression expression "]"
+        horreduce: "hNoop" "or_reduce" "[" expression "]"
         hcondop : "hCondop" "NONAME" "[" (hbinop | hunop) expression expression "]"
 
         syscread : hsigassignr "[" expression "]"
@@ -167,10 +178,23 @@ lark_grammar = Lark('''
 
         // Separate '=' out from so that it is not an expression but a standalone statement
         blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral) (htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
-                 | "hBinop" "=" "[" harrayref (htobool | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
+                 | "hBinop" "=" "[" harrayref  arrayrhs "]"
                  | nblkassign
                  | vassign
                  | hmodassign
+        ?arrayrhs: horreduce 
+                  | htobool 
+                  | htoint 
+                  | htouint 
+                  | htolong 
+                  | htoulong 
+                  | hvarref 
+                  | hliteral 
+                  | harrayref 
+                  | hnsbinop 
+                  | hunimp 
+                  | syscread 
+                  | hmethodcall
         nblkassign: "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool)  "]"
                   | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
         hconcat: "hBinop" "," "[" (expression|harrayref|hconcat) (expression|harrayref|hconcat) "]"

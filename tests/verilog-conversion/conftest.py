@@ -79,36 +79,36 @@ test_data = [
         ("-I", zfpshared2.stem, "-I", modules_examples / "moving-average"),
         None,
     ),
-    # (
-    #    "test_while_iscs",
-    #    load_file(testdata / "test_while_iscs.cpp"),
-    #    None,
-    #    None, # load_file(testdata / "test_while_iscs_hdl.txt.v"),
-    # ),
+    (
+       "test_while_iscs",
+       load_file(testdata / "test_while_iscs.cpp"),
+       None,
+       None, # load_file(testdata / "test_while_iscs_hdl.txt.v"),
+    ),
     # (
     #    "test_binary_iscs",
     #    load_file(testdata / "test_binary_iscs.cpp"),
     #    None,
     #    None, # load_file(testdata / "test_binary_iscs_hdl.txt.v"),
     # ),
-    # (
-    #    "test_break_iscs",
-    #    load_file(testdata / "test_break_iscs.cpp"),
-    #    None,
-    #    None, # load_file(testdata / "test_break_iscs_hdl.txt.v"),
-    # ),
-    # (
-    #    "test_for_iscs",
-    #    load_file(testdata / "test_for_iscs.cpp"),
-    #    None,
-    #    None, # load_file(testdata / "test_for_iscs_hdl.txt.v"),
-    # ),
-    # ( 
-    #    "test_child_module_iscs",
-    #    load_file(testdata / "test_child_module_iscs.cpp"),
-    #    None,
-    #    None,
-    # ),
+    (
+       "test_break_iscs",
+       load_file(testdata / "test_break_iscs.cpp"),
+       None,
+       None, # load_file(testdata / "test_break_iscs_hdl.txt.v"),
+    ),
+    (
+       "test_for_iscs",
+       load_file(testdata / "test_for_iscs.cpp"),
+       None,
+       None, # load_file(testdata / "test_for_iscs_hdl.txt.v"),
+    ),
+    ( 
+       "test_child_module_iscs",
+       load_file(testdata / "test_child_module_iscs.cpp"),
+       None,
+       None,
+    ),
     # ( 
     #     "test_dowhile_iscs",
     #     load_file(testdata / "test_dowhile_iscs.cpp"),
@@ -139,12 +139,12 @@ test_data = [
     #     None,
     #     None
     # ),
-    # ( 
-    #     "test_while_const_iscs",
-    #     load_file(testdata / "test_while_const_iscs.cpp"),
-    #     None,
-    #     None,
-    # ),
+    ( 
+        "test_while_const_iscs",
+        load_file(testdata / "test_while_const_iscs.cpp"),
+        None,
+        None,
+    ),
 
 ]
 
