@@ -35,14 +35,15 @@ set(hash_ips axis_dwidth_32_136 axis_dwidth_32_256 axis_dwidth_256_32 axis_inter
 add_reconf_module(DESIGN reconf_hash
   RECONF_PART "reconf_part_0"
   RECONF_INST "inst_rp"
-  RTL hash_unit_hdl.txt.sv hashwrapper.sv
+  RTL hashwrapper.sv
+  SYSC_MODULE sysc_hash
   SYNTHESIS_OPTS "-directive AlternateRoutability" 
   IPS ${hash_ips}
   )
 
 # ===== Reconfigurable Configurations
 
-add_static_config(DESIGN top_mcdma_static
+add_static_config(DESIGN top_hash
   RECONF_PART reconf_part_0
   RECONF_INST inst_rp
   RECONF_MOD  reconf_hash
@@ -57,7 +58,7 @@ add_config_from_static(DESIGN top_z3
   RECONF_PART   reconf_part_0
   RECONF_INST   inst_rp
   RECONF_MOD    reconf_z3
-  STATIC_DESIGN top_mcdma_static  
+  STATIC_DESIGN top_hash  
   # CONSTR        vu9p.xdc inst_rp.xdc
 )
 

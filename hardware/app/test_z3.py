@@ -51,8 +51,6 @@ def main():
     dma.sendchannel.wait()
     dma.recvchannel.wait()
     # dma.recvchannel.wait()
-    for i in range(1111):
-        pass
     out_data.invalidate()
     for i in range(out_data.view(np.uint64).shape[0]):
         assert out_data_golden.view(np.uint64)[i] == out_data.view(np.uint64)[i]

@@ -32,8 +32,8 @@ function(add_behavioral_sim test design bd_deps file_deps ips) # test is the tes
   )
   # TODO: have a better way to avoid re-running and overriding existing waveforms
   # as it can take long to simulate
-  add_custom_target(${test}_behav ALL DEPENDS ${test}_behav/export_sim/xsim/tb.sh)
-  add_custom_target(run_${test}_behav ALL
+  add_custom_target(${test}_behav DEPENDS ${test}_behav/export_sim/xsim/tb.sh)
+  add_custom_target(run_${test}_behav 
     DEPENDS ${test}_behav
     COMMAND bash tb.sh
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test}_behav/export_sim/xsim/
@@ -68,8 +68,8 @@ function(add_post_synth_sim test design bd_deps file_deps rmdcps)
     DEPENDS ${rmvfiles}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test}_post_synth
   )
-  add_custom_target(${test}_post_synth ALL DEPENDS ${test}_post_synth/export_sim/xsim/tb.sh)
-  add_custom_target(run_${test}_post_synth ALL
+  add_custom_target(${test}_post_synth DEPENDS ${test}_post_synth/export_sim/xsim/tb.sh)
+  add_custom_target(run_${test}_post_synth 
     DEPENDS ${test}_post_synth
     COMMAND bash tb.sh
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test}_post_synth/export_sim/xsim/

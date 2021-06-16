@@ -24,7 +24,7 @@ function(add_ip_dcp input)
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${input}
     VERBATIM
   )
-  add_custom_target(${input} ALL DEPENDS ${input}/.srcs/sources_1/ip/${input}/${input}.dcp ${input}/${input}.dcp)
+  add_custom_target(${input} DEPENDS ${input}/.srcs/sources_1/ip/${input}/${input}.dcp ${input}/${input}.dcp)
 
 endfunction()
 

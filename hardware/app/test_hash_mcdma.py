@@ -7,7 +7,7 @@ from utils import load_memory, pr_download, static_bitstream
 
 # logging.basicConfig(level = logging.DEBUG)
 
-partial_bitstream = 'DS_top_mcdma_static_inst_rp_partial.bit'
+partial_bitstream = 'DS_top_hash_inst_rp_partial.bit'
 def main():
     logging.debug('hash block')
     # Loading data

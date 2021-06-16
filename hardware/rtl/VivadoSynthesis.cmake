@@ -74,7 +74,7 @@ function(add_static_synthesis design rtl_files constraint_files synthesis_option
     WORKING_DIRECTORY ${working_dir})
 
 
-  add_custom_target(${design}_synth ALL DEPENDS ${design}/${design}_synth.dcp)
+  add_custom_target(${design}_synth DEPENDS ${design}/${design}_synth.dcp)
 
 
 endfunction()
@@ -167,9 +167,9 @@ function(add_static_implementation)
     COMMAND vivado -mode batch -source ${COMMON_DIR} -source ${utilization_tcl}
     DEPENDS ${design}/${design}_impl.dcp ${HW_SOURCE_DIR}/rtl/utilization.tcl 
     WORKING_DIRECTORY ${working_dir})
-  add_custom_target(${design}_impl ALL DEPENDS ${design}/${design}_impl.dcp)
-  add_custom_target(${design}_bitstream ALL DEPENDS ${design}/${design}.bit)
-  add_custom_target(${design}_util ALL DEPENDS ${design}/${design}_util.txt)
+  add_custom_target(${design}_impl DEPENDS ${design}/${design}_impl.dcp)
+  add_custom_target(${design}_bitstream DEPENDS ${design}/${design}.bit)
+  add_custom_target(${design}_util DEPENDS ${design}/${design}_util.txt)
 
 endfunction()
 
@@ -265,9 +265,9 @@ function(add_config_from_static)
     COMMAND vivado -mode batch -source ${COMMON_DIR} -source ${utilization_tcl}
     DEPENDS ${design}/${design}_impl.dcp ${HW_SOURCE_DIR}/rtl/utilization.tcl 
     WORKING_DIRECTORY ${working_dir})
-  add_custom_target(${design}_impl ALL DEPENDS ${design}/${design}_impl.dcp)
-  add_custom_target(${design}_bitstream ALL DEPENDS ${design}/${design}.bit)
-  add_custom_target(${design}_util ALL DEPENDS ${design}/${design}_util.txt)
+  add_custom_target(${design}_impl DEPENDS ${design}/${design}_impl.dcp)
+  add_custom_target(${design}_bitstream DEPENDS ${design}/${design}.bit)
+  add_custom_target(${design}_util DEPENDS ${design}/${design}_util.txt)
 
 endfunction()
 
@@ -293,7 +293,7 @@ function(add_systemc_module)
     "--" ${SYSTEMC_CLANG_FLAGS} ${EXTRA_COMPILER_OPTIONS} "---" "-o" "${SYNTH_ROOT_DIR}/rtl/${SYSC_DESIGN_TARGET}.sv"
   )
   add_custom_target(${SYSC_DESIGN}
-    ALL DEPENDS ${SYNTH_ROOT_DIR}/rtl/${SYSC_DESIGN_TARGET}.sv
+    DEPENDS ${SYNTH_ROOT_DIR}/rtl/${SYSC_DESIGN_TARGET}.sv
   )
 
 endfunction()

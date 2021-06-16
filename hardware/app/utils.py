@@ -3,7 +3,7 @@ import numpy as np
 from pynq import Overlay, allocate, Device
 from pynq.pl_server.device import _preload_binfile
 
-static_bitstream = 'DS_top_mcdma_static.bit'
+static_bitstream = 'DS_top_hash.bit'
 
 def load_memory(filename, bytes_per_line, base=16):
     byte_array = []

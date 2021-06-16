@@ -12,7 +12,7 @@ function(add_bd_dcp input)
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${input}
     VERBATIM
   )
-  add_custom_target(${input}.bd ALL DEPENDS ${input}.dcp)
+  add_custom_target(${input}.bd DEPENDS ${input}.dcp)
 endfunction()
 
 
