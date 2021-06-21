@@ -16,6 +16,8 @@ Welcome to systemc-clang's documentation!
 
   examples.rst
 
+  hardware.rst
+
   support.rst
 
 .. toctree::
@@ -26,6 +28,8 @@ Welcome to systemc-clang's documentation!
   developer/developer.rst
 
   plugins/hdl.rst
+
+  hardware/hardware.rst
 
 .. toctree::
   :maxdepth: 2

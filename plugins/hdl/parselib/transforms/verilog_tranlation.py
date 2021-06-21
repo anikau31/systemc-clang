@@ -311,8 +311,8 @@ class VerilogTranslationPass(TopDown):
     def stmt(self, tree):
         indentation = []
         sep = []
-        noindent = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt']
-        nosemico = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt']
+        noindent = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt', 'whilestmt', 'dostmt']
+        nosemico = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt', 'whilestmt', 'dostmt']
         for x in tree.children:
             if x.data in noindent:
                 indentation.append('')
@@ -356,7 +356,21 @@ class VerilogTranslationPass(TopDown):
         prefix = self.get_current_ind_prefix()
         res = "{}while({}) begin\n".format(prefix, tree.children[0])
         res += ''.join(tree.children[1:])
-        res += '{}end'.format(prefix)
+        res += '\n{}end'.format(prefix)
+        self.pop_current_scope_type()
+        return res
+
+    def dostmt(self, tree):
+        self.push_current_scope_type('loop')
+        self.inc_indent()
+        self.__push_up(tree)
+        self.dec_indent()
+        prefix = self.get_current_ind_prefix()
+
+        res = "{}do begin\n".format(prefix)
+        res += ''.join(tree.children[1:])
+        res += '\n{}end while({})'.format(prefix, tree.children[0])
+
         self.pop_current_scope_type()
         return res
 
@@ -505,7 +519,7 @@ class VerilogTranslationPass(TopDown):
         decls = list(map(lambda x: x[0] + ';', prevardecl.children))
         decls_init = list(map(lambda x: '{} = {};'.format(x[1], x[2]), filter(lambda x: len(x) == 3 and x[2] is not None, prevardecl.children)))
         # dprint(self.senselist)
-        res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.senselist[proc_name]), proc_name)
+        res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         res += ind + ('\n' + ind).join(decls) + '\n'
@@ -660,6 +674,10 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         val, rot = tree.children
         return '({} << {}) | ($unsigned({}) >> ($bits({}) - {}))'.format(val, rot, val, val, rot)
+    def horreduce(self, tree):
+        self.__push_up(tree)
+        val = tree.children[0]
+        return '(|{})'.format(val)
 
     def hconcat(self, tree):
         self.__push_up(tree)
@@ -707,6 +725,14 @@ class VerilogTranslationPass(TopDown):
         return '$unsigned({})'.format(tree.children[0])
 
     def htoint(self, tree):
+        self.__push_up(tree)
+        return '$signed({})'.format(tree.children[0])
+
+    def htoulong(self, tree):
+        self.__push_up(tree)
+        return '$unsigned({})'.format(tree.children[0])
+
+    def htolong(self, tree):
         self.__push_up(tree)
         return '$signed({})'.format(tree.children[0])
 
@@ -802,13 +828,14 @@ class VerilogTranslationPass(TopDown):
                         senslist.append(ch)
                     else:
                         raise ValueError(ch.pretty())
-                self.inc_indent()
-                self.inc_indent()
-                self.set_current_proc_name('#initblock#')
-                self.__push_up(initblock)
-                self.reset_current_proc_name()
-                self.dec_indent()
-                self.dec_indent()
+                if initblock:
+                    self.inc_indent()
+                    self.inc_indent()
+                    self.set_current_proc_name('#initblock#')
+                    self.__push_up(initblock)
+                    self.reset_current_proc_name()
+                    self.dec_indent()
+                    self.dec_indent()
                 if portbindings:
                     for bds in portbindings.children[1]:
                         mod_name = bds.children[0]

@@ -184,6 +184,22 @@ else()
   endif()
 endif()
 
+# Hardware flow relies on HDL plugin to generate SystemVerilog code
+if ("${ENABLE_HARDWARE_FLOW}" STREQUAL "")
+  set( HW_FLOW_ON OFF )
+else()
+  set( HW_FLOW_ON ${ENABLE_HARDWARE_FLOW} )
+  if (HW_FLOW_ON)
+    find_package(PythonInterp 3 REQUIRED)
+  endif()
+  if("${HDL}" STREQUAL "")
+    set( PLUGIN_HDL ON )
+      message(WARNING "
+			WARNING: HDL enabled. 
+						   HDL must be turned on in order to run hardware flow")
+  endif()
+endif()
+
 
 # Use ccache
 if (("${USE_CCACHE}" STREQUAL "ON") OR ("${USE_CCACHE}" STREQUAL "on"))
@@ -370,6 +386,10 @@ endif()
 if( TESTS_ON )
   add_subdirectory(tests)
   enable_testing()
+endif()
+
+if( HW_FLOW_ON )
+  add_subdirectory(hardware)
 endif()
 
 
