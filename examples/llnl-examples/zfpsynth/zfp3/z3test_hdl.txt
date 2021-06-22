@@ -8090,8 +8090,8 @@
             hVarAssign  NONAME [
               hVarref ui_local_3 NOLIST
               hBinop >> [
-                hBinop , [
-                  hBinop , [
+                hBinop concat [
+                  hBinop concat [
                     hVarref hid_local_2 NOLIST
                     hVarref fp_local_1##frac NOLIST
                   ]

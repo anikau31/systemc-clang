@@ -326,9 +326,16 @@ namespace systemc_hdl {
     hNodep h_binop =
       new hNode(expr->getOpcodeStr().str(),
                 hNode::hdlopsEnum::hBinop);  // node to hold binop expr
-    LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
-	       << expr->getOpcodeStr() << "\n");
 
+    string opcodestr = expr->getOpcodeStr().str();
+    string exprtypstr = expr->getType().getAsString();
+    LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
+	       << opcodestr << "\n");
+    if ((opcodestr == ",") && (lutil.isSCType(exprtypstr) || lutil.isSCBuiltinType(exprtypstr))){
+      LLVM_DEBUG(llvm::dbgs() << "found comma, with sc type, expr follows\n");
+      LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_); );
+      h_binop->set("concat");
+    }
     TraverseStmt(expr->getLHS());
     h_binop->child_list.push_back(h_ret);
 
@@ -591,8 +598,11 @@ namespace systemc_hdl {
 	  if (opcall->getNumArgs()==2) h_operop =  new hNode(operatorname, hNode::hdlopsEnum::hPostfix);
 	  else  h_operop =  new hNode(operatorname, hNode::hdlopsEnum::hPrefix);
 	}
-	else
+	else {
 	  h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
+	  if ((operatorname == ",") && (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype)))
+	    h_operop->set("concat"); // overloaded comma is concat for sc types
+	}
       }
       int nargs = (h_operop->getopc() == hNode::hdlopsEnum::hPostfix ||
 		   h_operop->getopc() == hNode::hdlopsEnum::hPrefix) ? 1:
