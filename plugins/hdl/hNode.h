@@ -227,7 +227,7 @@ namespace hnode {
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
 
     }
-     inline bool isSCBuiltinType(const string &tstring){
+    inline bool isSCBuiltinType(const string &tstring){
       // linear search sorry, but at least the length
       // isn't hard coded in ...
        int found = tstring.find_last_of(" "); // skip qualifiers if any
@@ -237,7 +237,13 @@ namespace hnode {
       }
       return false;
     }
-    
+
+    static inline bool isSCFunc(const string &tstring) {
+      return (tstring == "concat");
+      // add more as we get them
+    }
+
+     
     static inline bool isSCType(const string &tstring) {
       // linear search and the length is hard coded in ...
       // used in the method name logic

@@ -442,7 +442,7 @@ namespace systemc_hdl {
 	return true;
       }
     }
-    if (isa<FunctionDecl>(value)) {  // similar to method call
+    if (!lutil.isSCFunc(name) && isa<FunctionDecl>(value)) {  // similar to method call, skip builtin
       FunctionDecl *funval = (FunctionDecl *)value;
 
       string qualfuncname{value->getQualifiedNameAsString()};
