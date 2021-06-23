@@ -121,7 +121,7 @@
               hMethodCall A__cond [
                 hVarref i_local_1 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref i_local_1 NOLIST
               ]
               hCStmt  NONAME [
@@ -163,7 +163,7 @@
                 hVarref i_local_1 NOLIST
                 hMethodCall A__cond2 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref i_local_1 NOLIST
               ]
               hCStmt  NONAME [
@@ -261,7 +261,7 @@
                     hLiteral 1 NOLIST
                   ]
                 ]
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
                 ]
               ]
@@ -320,9 +320,8 @@
                     hLiteral 1 NOLIST
                   ]
                 ]
-                hBinop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
-                  hLiteral 0 NOLIST
                 ]
               ]
             ]
@@ -380,9 +379,8 @@
                     hLiteral 1 NOLIST
                   ]
                 ]
-                hBinop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
-                  hLiteral 0 NOLIST
                 ]
               ]
             ]
@@ -440,9 +438,8 @@
                     hLiteral 1 NOLIST
                   ]
                 ]
-                hBinop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
-                  hLiteral 0 NOLIST
                 ]
               ]
             ]
@@ -475,11 +472,11 @@
                 hVarref i_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref i_local_1 NOLIST
               ]
               hCStmt  NONAME [
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref k_local_0 NOLIST
                 ]
               ]
@@ -515,11 +512,11 @@
                 hVarref i_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref i_local_1 NOLIST
               ]
               hCStmt  NONAME [
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref k_local_0 NOLIST
                 ]
               ]
@@ -602,7 +599,7 @@
         ]
         hCStmt  NONAME [
           hReturnStmt  NONAME [
-            hUnop ++ [
+            hPostfix ++ [
               hVarref k NOLIST
             ]
           ]

@@ -210,14 +210,18 @@ namespace systemc_hdl {
     {
       // init block
       clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
-      hNodep hconstructor = new hNode(mod->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
       mod_i = mod;
+      hNodep hconstructor;
       for (int i = 0; i <= basemods.size(); i++) {
+	hconstructor = new hNode(mod_i->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
 	HDLBody xconstructor(mod_i->getConstructorDecl()->getBody(), hconstructor, diag_engine, getContext(), mod_vname_map);
 	LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
 	hconstructor->print(llvm::dbgs());
 	HDLConstructorHcode hcxxbody;
-	h_module->child_list.push_back(hcxxbody.ProcessCXXConstructorHcode(hconstructor));
+	hNodep modinithp = hcxxbody.ProcessCXXConstructorHcode(hconstructor);
+	if (modinithp->child_list.size() != 0) { // if there was an initblock
+	  h_module->child_list.push_back(modinithp);
+	}
 	//hconstructor->print(HCodeOut);
 	if (i == basemods.size()) break;
 	mod_i = basemods[i];
