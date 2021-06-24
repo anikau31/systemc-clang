@@ -36,9 +36,8 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor (method body\n");
     h_ret = NULL;
     add_info = false;
-    if (!mod_vname_map.hdecl_name_map.empty())
-      vname_map.hdecl_name_map.insert(mod_vname_map.hdecl_name_map.begin(),
-				      mod_vname_map.hdecl_name_map.end());
+    if (!mod_vname_map.empty())
+      vname_map.insertall(mod_vname_map);
     bool ret1 = TraverseStmt(emd->getBody());
     AddVnames(h_top);
     h_top->child_list.push_back(h_ret);
@@ -54,9 +53,8 @@ namespace systemc_hdl {
       // port bindings and sensitivity lists
       
       h_ret = NULL;
-      if (!mod_vname_map.hdecl_name_map.empty())
-	vname_map.hdecl_name_map.insert(mod_vname_map.hdecl_name_map.begin(),
-					mod_vname_map.hdecl_name_map.end());
+      if (!mod_vname_map.empty())
+	vname_map.insertall(mod_vname_map);
       bool ret1 = TraverseStmt(stmt);
       AddVnames(h_top);
 
@@ -448,8 +446,9 @@ namespace systemc_hdl {
       string qualfuncname{value->getQualifiedNameAsString()};
       lutil.make_ident(qualfuncname);
       if (add_info) qualfuncname += ":"+ name; // !!! add unqualified name for future hcode processing
-      methodecls[qualfuncname] =
-        (FunctionDecl *)value;  // add to list of "methods" to be generated
+      //methodecls[qualfuncname] =
+      //  (FunctionDecl *)value;  // add to list of "methods" to be generated
+      methodecls.insert(make_pair(qualfuncname, (FunctionDecl *)value));
       // create the call expression
       hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
       h_ret = hfuncall;
@@ -529,14 +528,14 @@ namespace systemc_hdl {
       opc = hNode::hdlopsEnum::hSigAssignR;
     else if ((methodname == "write") && (lutil.isSCType(qualmethodname)))
       opc = hNode::hdlopsEnum::hSigAssignL;
-    else if (lutil.isSCType(
-			    qualmethodname)) {  // operator from simulation library
+    else if (lutil.isSCType(qualmethodname)) {  // operator from simulation library
       opc = hNode::hdlopsEnum::hNoop;
     } else {
       opc = hNode::hdlopsEnum::hMethodCall;
       lutil.make_ident(qualmethodname);
       if (add_info) qualmethodname+= ":"+ methodname;  // include unqualified name for future hcode processing !!!
-      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
+      //methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
+      methodecls.insert(make_pair(qualmethodname, methdcl));
       methodname = qualmethodname;
     }
 
@@ -890,7 +889,8 @@ namespace systemc_hdl {
 
   void HDLBody::AddVnames(hNodep &hvns) {
     LLVM_DEBUG(llvm::dbgs() << "Vname Dump\n");
-    for (auto const &var : vname_map.hdecl_name_map) {
+    //for (auto const &var : vname_map.hdecl_name_map) {
+    for (auto const &var : vname_map) {
       LLVM_DEBUG(llvm::dbgs() << "(" << var.first << "," << var.second.oldn
 		 << ", " << var.second.newn << ")\n");
       if (add_info && (var.second.newn.find(gvar_prefix)==std::string::npos)) {

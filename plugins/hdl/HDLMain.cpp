@@ -7,7 +7,6 @@
 #include "Tree.h"
 #include "HDLMain.h"
 //#include "TemplateParametersMatcher.h"
-#include "HDLType.h"
 #include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
@@ -245,7 +244,7 @@ namespace systemc_hdl {
 
     if (allmethodecls.size() > 0) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
-      std::unordered_map<string, FunctionDecl *> modmethodecls;
+      std::unordered_multimap<string, FunctionDecl *> modmethodecls;
       modmethodecls =
         std::move(allmethodecls);  // procedures/functions found in this module
       LLVM_DEBUG(llvm::dbgs()

@@ -51,7 +51,7 @@ namespace systemc_hdl {
   private:
 
     hNodep h_top;
-    std::unordered_map<string, FunctionDecl *>
+    std::unordered_multimap<string, FunctionDecl *>
        allmethodecls;  //  all methods/functions called
 
     std::unordered_set<string> module_vars;
