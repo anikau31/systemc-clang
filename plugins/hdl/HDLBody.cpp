@@ -448,9 +448,11 @@ namespace systemc_hdl {
       if (add_info) qualfuncname += ":"+ name; // !!! add unqualified name for future hcode processing
       //methodecls[qualfuncname] =
       //  (FunctionDecl *)value;  // add to list of "methods" to be generated
-      methodecls.insert(make_pair(qualfuncname, (FunctionDecl *)value));
+      //methodecls.insert(make_pair(qualfuncname, (FunctionDecl *)value));
+
       // create the call expression
       hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
+      methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
       h_ret = hfuncall;
       return true;
     }
@@ -517,7 +519,7 @@ namespace systemc_hdl {
     }
 
     hNode::hdlopsEnum opc;
-
+    hNode * h_callp = NULL;
     LLVM_DEBUG(llvm::dbgs() << "found " << methodname << "\n");
 
     // if type of x in x.f(5) is primitive sc type (sc_in, sc_out, sc_inout,
@@ -535,11 +537,12 @@ namespace systemc_hdl {
       lutil.make_ident(qualmethodname);
       if (add_info) qualmethodname+= ":"+ methodname;  // include unqualified name for future hcode processing !!!
       //methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
-      methodecls.insert(make_pair(qualmethodname, methdcl));
+      h_callp = new hNode(qualmethodname, opc);
+      methodecls.add_entry(methdcl,qualmethodname, h_callp);
       methodname = qualmethodname;
     }
 
-    hNode *h_callp = new hNode(methodname, opc);  // list to hold call expr node
+    if (h_callp == NULL) h_callp = new hNode(methodname, opc);  // list to hold call expr node
 
     hNodep save_hret = h_ret;
     TraverseStmt(arg);  // traverse the x in x.f(5)

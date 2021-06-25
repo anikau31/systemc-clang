@@ -350,7 +350,9 @@ namespace hnode {
 	return hdecl_name_map[declp].newn;
       else return "";
     }
+
     bool empty() { return hdecl_name_map.empty(); }
+    size_t size() { return hdecl_name_map.size(); }
     
     typename std::map<T, names_t>::iterator begin() { return hdecl_name_map.begin();}
     typename std::map<T, names_t>::iterator end() { return hdecl_name_map.end();}

@@ -62,7 +62,8 @@ namespace systemc_hdl {
     //CXXMethodDecl *getEMD();
 
     
-    std::unordered_multimap<string, FunctionDecl *> methodecls;  //  methods called in this SC_METHOD or function
+    //std::unordered_multimap<string, FunctionDecl *> methodecls;  //  methods called in this SC_METHOD or function
+    hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
     clang::DiagnosticsEngine &diag_e;
   
   private:
