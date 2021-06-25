@@ -59,18 +59,13 @@ namespace systemc_hdl {
 
     hNodep NormalizeHcode(hNodep hinp);
     
-    //CXXMethodDecl *getEMD();
-
-    
-    //std::unordered_multimap<string, FunctionDecl *> methodecls;  //  methods called in this SC_METHOD or function
     hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
+
     clang::DiagnosticsEngine &diag_e;
   
   private:
   
     hNodep h_ret;   // value returned by each subexpression
-    //hdecl_name_map_t vname_map;
-    //name_serve lname;
 
     hdecl_name_map_t vname_map;
     bool add_info;

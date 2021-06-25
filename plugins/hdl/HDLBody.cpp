@@ -38,6 +38,7 @@ namespace systemc_hdl {
     add_info = false;
     if (!mod_vname_map.empty())
       vname_map.insertall(mod_vname_map);
+    methodecls.set_prefix("_func_");
     bool ret1 = TraverseStmt(emd->getBody());
     AddVnames(h_top);
     h_top->child_list.push_back(h_ret);
@@ -55,6 +56,7 @@ namespace systemc_hdl {
       h_ret = NULL;
       if (!mod_vname_map.empty())
 	vname_map.insertall(mod_vname_map);
+      methodecls.set_prefix("_func_");
       bool ret1 = TraverseStmt(stmt);
       AddVnames(h_top);
 

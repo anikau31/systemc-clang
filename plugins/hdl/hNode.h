@@ -351,6 +351,8 @@ namespace hnode {
       else return "";
     }
 
+    void set_prefix(string prefix) { ns.set_prefix(prefix); }
+    
     bool empty() { return hdecl_name_map.empty(); }
     size_t size() { return hdecl_name_map.size(); }
     
