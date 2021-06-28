@@ -454,7 +454,8 @@ namespace systemc_hdl {
 
       // create the call expression
       hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
-      methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
+      // don't add this method to methodecls if processing modinit
+      if (!add_info) methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
       h_ret = hfuncall;
       return true;
     }
@@ -540,7 +541,8 @@ namespace systemc_hdl {
       if (add_info) qualmethodname+= ":"+ methodname;  // include unqualified name for future hcode processing !!!
       //methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
       h_callp = new hNode(qualmethodname, opc);
-      methodecls.add_entry(methdcl,qualmethodname, h_callp);
+      // don't add this method to methodecls if processing modinit
+      if (!add_info) methodecls.add_entry(methdcl,qualmethodname, h_callp);
       methodname = qualmethodname;
     }
 
