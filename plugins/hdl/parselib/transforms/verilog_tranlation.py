@@ -306,7 +306,9 @@ class VerilogTranslationPass(TopDown):
         if self.get_current_scope_type() in ['switch']:
             return None
         else:
-            return 'break;'
+            ind = self.get_current_ind_prefix()
+            res = '{}break;'.format(ind)
+            return res
 
     def stmt(self, tree):
         indentation = []
@@ -518,7 +520,8 @@ class VerilogTranslationPass(TopDown):
         ind = self.get_current_ind_prefix()
         decls = list(map(lambda x: x[0] + ';', prevardecl.children))
         decls_init = list(map(lambda x: '{} = {};'.format(x[1], x[2]), filter(lambda x: len(x) == 3 and x[2] is not None, prevardecl.children)))
-        # dprint(self.senselist)
+        sense_list = self.get_sense_list()
+        assert proc_name in sense_list, "Process name {} is not in module {}".format(proc_name, self.current_module)
         res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
         self.inc_indent()
         ind = self.get_current_ind_prefix()
