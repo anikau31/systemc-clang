@@ -38,7 +38,7 @@ def vivado_tcl_template():
 
 @test_steps('hcode', 'translation', 'translation-match-check', 'synthesis')
 @pytest.mark.parametrize("name,content,extra_args,golden,golden_hcode", test_data, ids=[x[0] for x in test_data])
-def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, default_params, vivado_tcl_template, has_vivado):
+def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, default_params, clang_args_params, vivado_tcl_template, has_vivado):
     # move files to the target directory
     target_path = tmp_path / '{}.cpp'.format(name)
     hcode_target_path = tmp_path / '{}_hdl.txt'.format(name)
@@ -49,10 +49,10 @@ def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, 
     # step: hcode
     if extra_args is None:
         extra_args = []
-    target = sysc_clang.invoke_sysc([str(target_path), '--debug', '--'] + list(default_params) + list(map(str, extra_args)))
+    args = [str(target_path), '--debug', '--'] + list(default_params) + list(clang_args_params) + list(map(str, extra_args))
+    print(' '.join(args))
+    target = sysc_clang.invoke_sysc(args)
     assert hcode_target_path.exists(), 'hCode txt should be present'
-
-    assert golden_hcode is not None
 
     if golden_hcode is not None:
         # check for the code

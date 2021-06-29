@@ -1,6 +1,7 @@
 """Fixtures for testing"""
 import os
 import sys
+import re
 from pathlib import Path
 
 sys.path.append(str(Path(os.environ["SYSTEMC_CLANG"]) / "plugins" / "hdl"))
@@ -240,11 +241,18 @@ def default_params():
         "c++",
         "-w",
         "-c",
-        #"-std=c++17",
-        "_-D__STDC_CONSTANT_MACROS",
-        "-D__STDC_LIMIT_MACROS",
         "-DRVD",
     ]
+
+@pytest.fixture
+def clang_args_params():
+    """extract parameters in ClangArgs.h"""
+    # TODO: fix this hack
+    clang_args_h = Path(os.environ["SYSTEMC_CLANG_BUILD_DIR"]
+        + "/"
+        + "tests/ClangArgs.h").read_text()
+    match = re.findall(r'[\s]+"(?P<arg>.*)"', clang_args_h)
+    return match
 
 
 @pytest.fixture
