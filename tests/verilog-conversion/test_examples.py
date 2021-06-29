@@ -52,8 +52,6 @@ def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, 
     target = sysc_clang.invoke_sysc([str(target_path), '--debug', '--'] + list(default_params) + list(map(str, extra_args)))
     assert hcode_target_path.exists(), 'hCode txt should be present'
 
-    assert golden_hcode is not None
-
     if golden_hcode is not None:
         # check for the code
         data = Path(hcode_target_path).read_text()
