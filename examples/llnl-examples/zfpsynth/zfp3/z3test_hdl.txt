@@ -3425,13 +3425,13 @@
           ]
         ]
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref m_ready NOLIST
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_fwd_order_func_5 [
+      hSenslist ms_fwd_order [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -4155,7 +4155,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref m_ready NOLIST
           hNoop always NOLIST
@@ -4205,7 +4205,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_5 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -4929,7 +4929,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref m_ready NOLIST
           hNoop always NOLIST
@@ -4979,7 +4979,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_5 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -5387,7 +5387,7 @@
           hVarref m_ex NOLIST
         ]
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref s_fp##valid NOLIST
           hNoop always NOLIST
@@ -5417,7 +5417,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_5 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -5914,7 +5914,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_4 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref wr_en NOLIST
           hNoop always NOLIST
@@ -6160,7 +6160,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_7 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -6510,7 +6510,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref s_port##valid NOLIST
           hNoop always NOLIST
@@ -6546,7 +6546,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_5 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -6717,7 +6717,7 @@
           hVarref m_port2 NOLIST
         ]
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref s_port##data NOLIST
           hNoop always NOLIST
@@ -7221,7 +7221,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_4 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref wr_en NOLIST
           hNoop always NOLIST
@@ -7257,7 +7257,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_7 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -7749,7 +7749,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_4 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref wr_en NOLIST
           hNoop always NOLIST
@@ -7883,7 +7883,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_7 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -8232,7 +8232,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref s_ex##valid NOLIST
           hNoop always NOLIST
@@ -8266,7 +8266,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_5 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -8514,7 +8514,7 @@
           hVarref m_valid NOLIST
         ]
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
@@ -9032,7 +9032,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_4 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref wr_en NOLIST
           hNoop always NOLIST
@@ -9068,7 +9068,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_7 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -10479,7 +10479,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hBinop ARRAYSUBSCRIPT [
             hVarref s_block NOLIST
@@ -10613,7 +10613,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_5 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
@@ -11647,7 +11647,7 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist mc_proc_func_2 [
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref s_ex##valid NOLIST
           hNoop always NOLIST
@@ -11697,7 +11697,7 @@
           hNoop always NOLIST
         ]
       ]
-      hSenslist ms_proc_func_5 [
+      hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
           hNoop pos NOLIST
