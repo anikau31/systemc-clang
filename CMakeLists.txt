@@ -283,8 +283,10 @@ endif()
 # Check whether the compiler is AppleClang, which requires special headers for the tests
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
   set(IS_APPLECLANG "1")
+  set(APPLECLANG_EXTRA_INC \"-I${LLVM_INSTALL_DIR}/include/c++/v1/\",)
 else()
   set(IS_APPLECLANG "0")
+  set(APPLECLANG_EXTRA_INC "")
 endif()
 
 # Module to find LLVM/Clang and llvm-config.
