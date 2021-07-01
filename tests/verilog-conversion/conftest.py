@@ -70,7 +70,7 @@ test_data = [
     (
         "z3test",
         load_file(zfpsynth / "zfp3/z3test.cpp"),
-        ("-I", zfpshared2.stem, "-I", zfpsynth / "zfp3"),
+        ("-I{}".format(zfpsynth / "zfp3"), ),
         None,
         None,
     ),
@@ -79,7 +79,7 @@ test_data = [
     (
         "moving-average",
         load_file(modules_examples / "moving-average" / "moving-average.cpp"),
-        ("-I", zfpshared2.stem, "-I", modules_examples / "moving-average"),
+        ("-I{}".format(modules_examples / "moving-average"), ),
         None,
         None,
     ),
@@ -251,7 +251,7 @@ def clang_args_params():
     clang_args_h = Path(os.environ["SYSTEMC_CLANG_BUILD_DIR"]
         + "/"
         + "tests/ClangArgs.h").read_text()
-    match = re.findall(r'[\s]+"(?P<arg>.*)"', clang_args_h)
+    match = re.findall(r'^[\s]+"(?P<arg>.*)"', clang_args_h, re.MULTILINE)
     return match
 
 

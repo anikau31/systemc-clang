@@ -114,7 +114,7 @@ class SystemCClang:
         executes systemc-clang as if it is on the commandline
         """
         bin_path = self.systemc_clang_binary
-        args_to_sysc = args + ["-I", self.systemc_inc_dir]
+        args_to_sysc = args
         cmd = [bin_path, *args_to_sysc]
         result = subprocess.run(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE

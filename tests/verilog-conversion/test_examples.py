@@ -61,6 +61,7 @@ def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, 
     yield
 
     # step: translation
+    print("Generated _hdl.txt file at: {}".format(target))
     sysc_clang.invoke_translation(target, [])
     yield
 
