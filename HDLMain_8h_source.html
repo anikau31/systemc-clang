@@ -123,168 +123,169 @@ $(function() {
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#a930cc6788c47b22ba634d050ee1c1200">   53</a></span>&#160;    <a class="code" href="classhnode_1_1hNode.html">hNodep</a> <a class="code" href="classsystemc__hdl_1_1HDLMain.html#a930cc6788c47b22ba634d050ee1c1200">h_top</a>;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::unordered_map&lt;string, FunctionDecl *&gt;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#a79f2382f453bb0e8c414c7c92445fb0f">   55</a></span>&#160;       <a class="code" href="classsystemc__hdl_1_1HDLMain.html#a79f2382f453bb0e8c414c7c92445fb0f">allmethodecls</a>;  <span class="comment">//  all methods/functions called</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#acbcdad1f238915a8940bf506877d582b">   57</a></span>&#160;    std::unordered_set&lt;string&gt; <a class="code" href="classsystemc__hdl_1_1HDLMain.html#acbcdad1f238915a8940bf506877d582b">module_vars</a>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#a3f393848b0c5306a974657203672c20f">   59</a></span>&#160;    <a class="code" href="classHDLType.html">HDLType</a> <a class="code" href="classsystemc__hdl_1_1HDLMain.html#a3f393848b0c5306a974657203672c20f">HDLt</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#a438e4e1bbd3d3d4d29ccd70ea324528b">   61</a></span>&#160;    <a class="code" href="classhnode_1_1util.html">util</a> <a class="code" href="classsystemc__hdl_1_1HDLMain.html#a438e4e1bbd3d3d4d29ccd70ea324528b">mutil</a>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="comment">//hmodinst_name_map_t mod_name_map;</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">//name_serve mod_newn{&quot;_sc_module_&quot;};</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    </div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#a27f2cf9e193b03b3ae1c41224fe8f998">   66</a></span>&#160;    <a class="code" href="classhnode_1_1newname__map__t.html">hmodinst_name_map_t</a> mod_name_map{<span class="stringliteral">&quot;_sc_module_&quot;</span>};</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#aff1b131a2d1d484f966a3aa97bf69c61">   69</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLMain.html#aff1b131a2d1d484f966a3aa97bf69c61">hdl_file_out_</a>;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  };</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">//std::unordered_multimap&lt;string, FunctionDecl *&gt;</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="classhnode_1_1newname__map__t.html">hfunc_name_map_t</a></div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#af9e6dbb7933a99d7e4e6073f1f871ef2">   56</a></span>&#160;       <a class="code" href="classsystemc__hdl_1_1HDLMain.html#af9e6dbb7933a99d7e4e6073f1f871ef2">allmethodecls</a>;  <span class="comment">//  all methods/functions called</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#acbcdad1f238915a8940bf506877d582b">   58</a></span>&#160;    std::unordered_set&lt;string&gt; <a class="code" href="classsystemc__hdl_1_1HDLMain.html#acbcdad1f238915a8940bf506877d582b">module_vars</a>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#a3f393848b0c5306a974657203672c20f">   60</a></span>&#160;    <a class="code" href="classHDLType.html">HDLType</a> <a class="code" href="classsystemc__hdl_1_1HDLMain.html#a3f393848b0c5306a974657203672c20f">HDLt</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#a438e4e1bbd3d3d4d29ccd70ea324528b">   62</a></span>&#160;    <a class="code" href="classhnode_1_1util.html">util</a> <a class="code" href="classsystemc__hdl_1_1HDLMain.html#a438e4e1bbd3d3d4d29ccd70ea324528b">mutil</a>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">//hmodinst_name_map_t mod_name_map;</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">//name_serve mod_newn{&quot;_sc_module_&quot;};</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    </div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#a27f2cf9e193b03b3ae1c41224fe8f998">   67</a></span>&#160;    <a class="code" href="classhnode_1_1newname__map__t.html">hmodinst_name_map_t</a> mod_name_map{<span class="stringliteral">&quot;_sc_module_&quot;</span>};</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLMain.html#aff1b131a2d1d484f966a3aa97bf69c61">   70</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLMain.html#aff1b131a2d1d484f966a3aa97bf69c61">hdl_file_out_</a>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  };</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="comment">// static llvm::cl::opt&lt;std::string&gt; HDLtop(</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="comment">// &quot;top&quot;,</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="comment">// llvm::cl::desc(&quot;Specify top-level module declaration for entry point&quot;),</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="comment">// llvm::cl::cat(HDLcategory));</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="comment">//</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="comment">// static llvm::cl::opt&lt;std::string&gt; HDLtop(</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="comment">// &quot;top&quot;,</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="comment">// llvm::cl::desc(&quot;Specify top-level module declaration for entry point&quot;),</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="comment">// llvm::cl::cat(HDLcategory));</span></div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="comment">//</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html">   80</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classsystemc__hdl_1_1HDLAXN.html">HDLAXN</a> : <span class="keyword">public</span> ASTFrontendAction {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#a39a47fb32711262a05801e505f55b033">   82</a></span>&#160;  <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#a39a47fb32711262a05801e505f55b033">HDLAXN</a>(<span class="keyword">const</span> std::string &amp;top) : top_{top} {};</div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#acc2ac92fa83be7d971cbb53bc98a3d25">   83</a></span>&#160;  <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#acc2ac92fa83be7d971cbb53bc98a3d25">HDLAXN</a>(<span class="keyword">const</span> std::string &amp;top, <span class="keyword">const</span> std::string &amp;hdl_file_out)</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      : top_{top}, hdl_file_out_{hdl_file_out} {};</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#ad6701ec48b8ffde7286e8177ba524f93">   87</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#ad6701ec48b8ffde7286e8177ba524f93">top_</a>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#a4202443ecf31d91cc87427c853b60057">   88</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#a4202443ecf31d91cc87427c853b60057">hdl_file_out_</a>;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#aadb55866e64bddbdfcdc2acda10fafca">   91</a></span>&#160;    <span class="keyword">virtual</span> std::unique_ptr&lt;ASTConsumer&gt; <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#aadb55866e64bddbdfcdc2acda10fafca">CreateASTConsumer</a>(</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    clang::CompilerInstance &amp;Compiler, llvm::StringRef inFile) {</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      <span class="keywordflow">return</span> std::unique_ptr&lt;ASTConsumer&gt;(<span class="keyword">new</span> <a class="code" href="classsystemc__hdl_1_1HDLMain.html">HDLMain</a>(Compiler, top_, hdl_file_out_));</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  };</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html">   98</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html">HDLFrontendActionFactory</a> : <span class="keyword">public</span> clang::tooling::FrontendActionFactory {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a8398978f30073f7c118acfed502515a8">  100</a></span>&#160;  <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a8398978f30073f7c118acfed502515a8">HDLFrontendActionFactory</a>(<span class="keyword">const</span> std::string &amp;top)</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      : top_module_declaration_{top}, hdl_file_out_{<span class="stringliteral">&quot;default_hdl.txt&quot;</span>} {}</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a58202e7513d1d064a0030f40b672187f">  103</a></span>&#160;  <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a58202e7513d1d064a0030f40b672187f">HDLFrontendActionFactory</a>(<span class="keyword">const</span> std::string &amp;top,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                           <span class="keyword">const</span> std::string &amp;hdl_file_out)</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;      : top_module_declaration_{top}, hdl_file_out_{hdl_file_out} {}</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#addff461ab5073f761fbef01967b15dc6">  107</a></span>&#160;  std::unique_ptr&lt;clang::FrontendAction&gt; <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#addff461ab5073f761fbef01967b15dc6">create</a>()<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">return</span> std::unique_ptr&lt;FrontendAction&gt;(</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keyword">new</span> <a class="code" href="classsystemc__hdl_1_1HDLAXN.html">HDLAXN</a>{top_module_declaration_, hdl_file_out_});</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  }</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a1088dc7c22e5300b25c1fd2cb23325f2">  113</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a1088dc7c22e5300b25c1fd2cb23325f2">top_module_declaration_</a>;</div>
-<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a4ae4268beb7ff9d6ae105c0eba9e67e2">  114</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a4ae4268beb7ff9d6ae105c0eba9e67e2">hdl_file_out_</a>;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  };</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="comment">//std::unique_ptr&lt;clang::tooling::FrontendActionFactory&gt;</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="comment">//newFrontendActionFactory(const std::string &amp;top_module);</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="comment">//</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html">   81</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classsystemc__hdl_1_1HDLAXN.html">HDLAXN</a> : <span class="keyword">public</span> ASTFrontendAction {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#a39a47fb32711262a05801e505f55b033">   83</a></span>&#160;  <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#a39a47fb32711262a05801e505f55b033">HDLAXN</a>(<span class="keyword">const</span> std::string &amp;top) : top_{top} {};</div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#acc2ac92fa83be7d971cbb53bc98a3d25">   84</a></span>&#160;  <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#acc2ac92fa83be7d971cbb53bc98a3d25">HDLAXN</a>(<span class="keyword">const</span> std::string &amp;top, <span class="keyword">const</span> std::string &amp;hdl_file_out)</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      : top_{top}, hdl_file_out_{hdl_file_out} {};</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#ad6701ec48b8ffde7286e8177ba524f93">   88</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#ad6701ec48b8ffde7286e8177ba524f93">top_</a>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#a4202443ecf31d91cc87427c853b60057">   89</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#a4202443ecf31d91cc87427c853b60057">hdl_file_out_</a>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLAXN.html#aadb55866e64bddbdfcdc2acda10fafca">   92</a></span>&#160;    <span class="keyword">virtual</span> std::unique_ptr&lt;ASTConsumer&gt; <a class="code" href="classsystemc__hdl_1_1HDLAXN.html#aadb55866e64bddbdfcdc2acda10fafca">CreateASTConsumer</a>(</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    clang::CompilerInstance &amp;Compiler, llvm::StringRef inFile) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      <span class="keywordflow">return</span> std::unique_ptr&lt;ASTConsumer&gt;(<span class="keyword">new</span> <a class="code" href="classsystemc__hdl_1_1HDLMain.html">HDLMain</a>(Compiler, top_, hdl_file_out_));</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  };</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html">   99</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html">HDLFrontendActionFactory</a> : <span class="keyword">public</span> clang::tooling::FrontendActionFactory {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a8398978f30073f7c118acfed502515a8">  101</a></span>&#160;  <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a8398978f30073f7c118acfed502515a8">HDLFrontendActionFactory</a>(<span class="keyword">const</span> std::string &amp;top)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      : top_module_declaration_{top}, hdl_file_out_{<span class="stringliteral">&quot;default_hdl.txt&quot;</span>} {}</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a58202e7513d1d064a0030f40b672187f">  104</a></span>&#160;  <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a58202e7513d1d064a0030f40b672187f">HDLFrontendActionFactory</a>(<span class="keyword">const</span> std::string &amp;top,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                           <span class="keyword">const</span> std::string &amp;hdl_file_out)</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      : top_module_declaration_{top}, hdl_file_out_{hdl_file_out} {}</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#addff461ab5073f761fbef01967b15dc6">  108</a></span>&#160;  std::unique_ptr&lt;clang::FrontendAction&gt; <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#addff461ab5073f761fbef01967b15dc6">create</a>()<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">return</span> std::unique_ptr&lt;FrontendAction&gt;(</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keyword">new</span> <a class="code" href="classsystemc__hdl_1_1HDLAXN.html">HDLAXN</a>{top_module_declaration_, hdl_file_out_});</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  }</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a1088dc7c22e5300b25c1fd2cb23325f2">  114</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a1088dc7c22e5300b25c1fd2cb23325f2">top_module_declaration_</a>;</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a4ae4268beb7ff9d6ae105c0eba9e67e2">  115</a></span>&#160;    std::string <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a4ae4268beb7ff9d6ae105c0eba9e67e2">hdl_file_out_</a>;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  };</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="comment">//std::unique_ptr&lt;clang::tooling::FrontendActionFactory&gt;</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <span class="comment">//newFrontendActionFactory(const std::string &amp;top_module);</span></div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLPluginAction.html">  122</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classsystemc__hdl_1_1HDLPluginAction.html">HDLPluginAction</a> {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLPluginAction.html#aa7261191d6534cc7903802c45729ce96">  124</a></span>&#160;    <a class="code" href="classsystemc__hdl_1_1HDLPluginAction.html#aa7261191d6534cc7903802c45729ce96">HDLPluginAction</a>(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span> **argv) {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="comment">// Specify the top-level module.</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;      <span class="comment">//</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLPluginAction.html">  123</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classsystemc__hdl_1_1HDLPluginAction.html">HDLPluginAction</a> {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLPluginAction.html#aa7261191d6534cc7903802c45729ce96">  125</a></span>&#160;    <a class="code" href="classsystemc__hdl_1_1HDLPluginAction.html#aa7261191d6534cc7903802c45729ce96">HDLPluginAction</a>(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span> **argv) {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;      <span class="comment">// Specify the top-level module.</span></div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;      <span class="comment">//</span></div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;      <span class="comment">//</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    llvm::cl::OptionCategory HDLcategory(<span class="stringliteral">&quot;HDL options&quot;</span>);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    llvm::cl::opt&lt;std::string&gt; topModule(</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="stringliteral">&quot;top-module&quot;</span>,</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        llvm::cl::desc(</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="stringliteral">&quot;Specify top-level module declaration for synthesis entry point&quot;</span>),</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        llvm::cl::cat(HDLcategory));</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    llvm::cl::opt&lt;bool&gt; debug_mode(</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="stringliteral">&quot;debug&quot;</span>, llvm::cl::desc(<span class="stringliteral">&quot;Enable debug output from systemc-clang&quot;</span>),</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        llvm::cl::cat(HDLcategory));</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    llvm::cl::opt&lt;std::string&gt; debug_only(</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        <span class="stringliteral">&quot;debug-only&quot;</span>,</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        llvm::cl::desc(<span class="stringliteral">&quot;Enable debug only for the specified DEBUG_TYPE&quot;</span>),</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        llvm::cl::cat(HDLcategory));</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    llvm::cl::opt&lt;std::string&gt; hdl_file_out(</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="stringliteral">&quot;hdl-file-out&quot;</span>, llvm::cl::desc(<span class="stringliteral">&quot;HDL output file location&quot;</span>),</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        llvm::cl::cat(HDLcategory));</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;      CommonOptionsParser OptionsParser(argc, argv, HDLcategory);</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;      ClangTool Tool(OptionsParser.getCompilations(),</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;             OptionsParser.getSourcePathList());</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;      <span class="comment">//</span></div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;      <span class="keywordflow">if</span> (debug_mode || (debug_only != <span class="stringliteral">&quot;&quot;</span>) ) {</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;Debug mode enabled\n&quot;</span>;);</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    llvm::DebugFlag = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;      }</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;      <span class="keywordflow">if</span> (debug_only != <span class="stringliteral">&quot;&quot;</span>) {</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="preprocessor">#ifdef  __clang__</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    setCurrentDebugType(debug_only.c_str());</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    llvm::setCurrentDebugType(debug_only.c_str());</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;      }</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;      <span class="keywordflow">if</span> (hdl_file_out != <span class="stringliteral">&quot;&quot;</span>) {</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    LLVM_DEBUG(llvm::dbgs()</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;           &lt;&lt; <span class="stringliteral">&quot;HDL output file specified: &quot;</span> &lt;&lt; hdl_file_out &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;);</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      }</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;      std::unique_ptr&lt;FrontendActionFactory&gt; FrontendFactory;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;      <span class="comment">//    FrontendFactory = newFrontendActionFactory&lt;HDLAXN&gt;();</span></div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;      <span class="comment">//FrontendFactory = newFrontendActionFactory(h);</span></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    </div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;      FrontendFactory = std::unique_ptr&lt;tooling::FrontendActionFactory&gt;(</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;     <span class="keyword">new</span> <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html">HDLFrontendActionFactory</a>(topModule, hdl_file_out));</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;      Tool.run(FrontendFactory.get());</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    };</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;  };</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;}</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;      <span class="comment">//</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    llvm::cl::OptionCategory HDLcategory(<span class="stringliteral">&quot;HDL options&quot;</span>);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    llvm::cl::opt&lt;std::string&gt; topModule(</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="stringliteral">&quot;top-module&quot;</span>,</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        llvm::cl::desc(</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <span class="stringliteral">&quot;Specify top-level module declaration for synthesis entry point&quot;</span>),</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        llvm::cl::cat(HDLcategory));</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    llvm::cl::opt&lt;bool&gt; debug_mode(</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="stringliteral">&quot;debug&quot;</span>, llvm::cl::desc(<span class="stringliteral">&quot;Enable debug output from systemc-clang&quot;</span>),</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        llvm::cl::cat(HDLcategory));</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    llvm::cl::opt&lt;std::string&gt; debug_only(</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="stringliteral">&quot;debug-only&quot;</span>,</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        llvm::cl::desc(<span class="stringliteral">&quot;Enable debug only for the specified DEBUG_TYPE&quot;</span>),</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        llvm::cl::cat(HDLcategory));</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    llvm::cl::opt&lt;std::string&gt; hdl_file_out(</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="stringliteral">&quot;hdl-file-out&quot;</span>, llvm::cl::desc(<span class="stringliteral">&quot;HDL output file location&quot;</span>),</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        llvm::cl::cat(HDLcategory));</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;      CommonOptionsParser OptionsParser(argc, argv, HDLcategory);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;      ClangTool Tool(OptionsParser.getCompilations(),</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;             OptionsParser.getSourcePathList());</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;      <span class="comment">//</span></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;      <span class="keywordflow">if</span> (debug_mode || (debug_only != <span class="stringliteral">&quot;&quot;</span>) ) {</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;Debug mode enabled\n&quot;</span>;);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    llvm::DebugFlag = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;      }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;      <span class="keywordflow">if</span> (debug_only != <span class="stringliteral">&quot;&quot;</span>) {</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="preprocessor">#ifdef  __clang__</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    setCurrentDebugType(debug_only.c_str());</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    llvm::setCurrentDebugType(debug_only.c_str());</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;      }</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      <span class="keywordflow">if</span> (hdl_file_out != <span class="stringliteral">&quot;&quot;</span>) {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    LLVM_DEBUG(llvm::dbgs()</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;           &lt;&lt; <span class="stringliteral">&quot;HDL output file specified: &quot;</span> &lt;&lt; hdl_file_out &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;      }</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;      std::unique_ptr&lt;FrontendActionFactory&gt; FrontendFactory;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;      <span class="comment">//    FrontendFactory = newFrontendActionFactory&lt;HDLAXN&gt;();</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;      <span class="comment">//FrontendFactory = newFrontendActionFactory(h);</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;      FrontendFactory = std::unique_ptr&lt;tooling::FrontendActionFactory&gt;(</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;     <span class="keyword">new</span> <a class="code" href="classsystemc__hdl_1_1HDLFrontendActionFactory.html">HDLFrontendActionFactory</a>(topModule, hdl_file_out));</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;      Tool.run(FrontendFactory.get());</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    };</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  };</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;}</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aHDLBody_8h_html"><div class="ttname"><a href="HDLBody_8h.html">HDLBody.h</a></div></div>
 <div class="ttc" id="aHDLType_8h_html"><div class="ttname"><a href="HDLType_8h.html">HDLType.h</a></div></div>
 <div class="ttc" id="aSystemCClang_8h_html"><div class="ttname"><a href="SystemCClang_8h.html">SystemCClang.h</a></div></div>
 <div class="ttc" id="aclassHDLType_html"><div class="ttname"><a href="classHDLType.html">HDLType</a></div><div class="ttdef"><b>Definition:</b> HDLType.h:15</div></div>
 <div class="ttc" id="aclasshnode_1_1hNode_html"><div class="ttname"><a href="classhnode_1_1hNode.html">hnode::hNode</a></div><div class="ttdef"><b>Definition:</b> hNode.h:24</div></div>
 <div class="ttc" id="aclasshnode_1_1hNode_html_a72bcc22543c267571a24ec713633e39a"><div class="ttname"><a href="classhnode_1_1hNode.html#a72bcc22543c267571a24ec713633e39a">hnode::hNode::hdlopsEnum</a></div><div class="ttdeci">hdlopsEnum</div><div class="ttdef"><b>Definition:</b> hNode.h:88</div></div>
-<div class="ttc" id="aclasshnode_1_1newname__map__t_html"><div class="ttname"><a href="classhnode_1_1newname__map__t.html">hnode::newname_map_t</a></div><div class="ttdef"><b>Definition:</b> hNode.h:322</div></div>
+<div class="ttc" id="aclasshnode_1_1newname__map__t_html"><div class="ttname"><a href="classhnode_1_1newname__map__t.html">hnode::newname_map_t</a></div><div class="ttdef"><b>Definition:</b> hNode.h:332</div></div>
 <div class="ttc" id="aclasshnode_1_1util_html"><div class="ttname"><a href="classhnode_1_1util.html">hnode::util</a></div><div class="ttdef"><b>Definition:</b> hNode.h:200</div></div>
 <div class="ttc" id="aclasssystemc__clang_1_1ModuleInstance_html"><div class="ttname"><a href="classsystemc__clang_1_1ModuleInstance.html">systemc_clang::ModuleInstance</a></div><div class="ttdoc">Forward declarations.</div><div class="ttdef"><b>Definition:</b> ModuleInstance.h:28</div></div>
 <div class="ttc" id="aclasssystemc__clang_1_1ModuleInstance_html_aa971eba18c75ee5a38fcfc9739bbf9a5"><div class="ttname"><a href="classsystemc__clang_1_1ModuleInstance.html#aa971eba18c75ee5a38fcfc9739bbf9a5">systemc_clang::ModuleInstance::processMapType</a></div><div class="ttdeci">std::map&lt; std::string, ProcessDecl * &gt; processMapType</div><div class="ttdef"><b>Definition:</b> ModuleInstance.h:39</div></div>
 <div class="ttc" id="aclasssystemc__clang_1_1ModuleInstance_html_adad65a1c03e742c7c8eb6d0bd1a57271"><div class="ttname"><a href="classsystemc__clang_1_1ModuleInstance.html#adad65a1c03e742c7c8eb6d0bd1a57271">systemc_clang::ModuleInstance::signalMapType</a></div><div class="ttdeci">std::map&lt; std::string, SignalDecl * &gt; signalMapType</div><div class="ttdef"><b>Definition:</b> ModuleInstance.h:31</div></div>
 <div class="ttc" id="aclasssystemc__clang_1_1ModuleInstance_html_ae5e4d7d956225b28aac30182a5649f84"><div class="ttname"><a href="classsystemc__clang_1_1ModuleInstance.html#ae5e4d7d956225b28aac30182a5649f84">systemc_clang::ModuleInstance::portMapType</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; std::string, PortDecl * &gt; &gt; portMapType</div><div class="ttdef"><b>Definition:</b> ModuleInstance.h:55</div></div>
 <div class="ttc" id="aclasssystemc__clang_1_1SystemCConsumer_html"><div class="ttname"><a href="classsystemc__clang_1_1SystemCConsumer.html">systemc_clang::SystemCConsumer</a></div><div class="ttdoc">This is the main consumer class that beings the parsing of SystemC.</div><div class="ttdef"><b>Definition:</b> SystemCClang.h:47</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html">systemc_hdl::HDLAXN</a></div><div class="ttdef"><b>Definition:</b> HDLMain.h:80</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_a39a47fb32711262a05801e505f55b033"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#a39a47fb32711262a05801e505f55b033">systemc_hdl::HDLAXN::HDLAXN</a></div><div class="ttdeci">HDLAXN(const std::string &amp;top)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:82</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_a4202443ecf31d91cc87427c853b60057"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#a4202443ecf31d91cc87427c853b60057">systemc_hdl::HDLAXN::hdl_file_out_</a></div><div class="ttdeci">std::string hdl_file_out_</div><div class="ttdef"><b>Definition:</b> HDLMain.h:88</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_aadb55866e64bddbdfcdc2acda10fafca"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#aadb55866e64bddbdfcdc2acda10fafca">systemc_hdl::HDLAXN::CreateASTConsumer</a></div><div class="ttdeci">virtual std::unique_ptr&lt; ASTConsumer &gt; CreateASTConsumer(clang::CompilerInstance &amp;Compiler, llvm::StringRef inFile)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:91</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_acc2ac92fa83be7d971cbb53bc98a3d25"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#acc2ac92fa83be7d971cbb53bc98a3d25">systemc_hdl::HDLAXN::HDLAXN</a></div><div class="ttdeci">HDLAXN(const std::string &amp;top, const std::string &amp;hdl_file_out)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:83</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_ad6701ec48b8ffde7286e8177ba524f93"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#ad6701ec48b8ffde7286e8177ba524f93">systemc_hdl::HDLAXN::top_</a></div><div class="ttdeci">std::string top_</div><div class="ttdef"><b>Definition:</b> HDLMain.h:84</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html">systemc_hdl::HDLFrontendActionFactory</a></div><div class="ttdef"><b>Definition:</b> HDLMain.h:98</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_a1088dc7c22e5300b25c1fd2cb23325f2"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a1088dc7c22e5300b25c1fd2cb23325f2">systemc_hdl::HDLFrontendActionFactory::top_module_declaration_</a></div><div class="ttdeci">std::string top_module_declaration_</div><div class="ttdef"><b>Definition:</b> HDLMain.h:113</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_a4ae4268beb7ff9d6ae105c0eba9e67e2"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a4ae4268beb7ff9d6ae105c0eba9e67e2">systemc_hdl::HDLFrontendActionFactory::hdl_file_out_</a></div><div class="ttdeci">std::string hdl_file_out_</div><div class="ttdef"><b>Definition:</b> HDLMain.h:114</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_a58202e7513d1d064a0030f40b672187f"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a58202e7513d1d064a0030f40b672187f">systemc_hdl::HDLFrontendActionFactory::HDLFrontendActionFactory</a></div><div class="ttdeci">HDLFrontendActionFactory(const std::string &amp;top, const std::string &amp;hdl_file_out)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:103</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_a8398978f30073f7c118acfed502515a8"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a8398978f30073f7c118acfed502515a8">systemc_hdl::HDLFrontendActionFactory::HDLFrontendActionFactory</a></div><div class="ttdeci">HDLFrontendActionFactory(const std::string &amp;top)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:100</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_addff461ab5073f761fbef01967b15dc6"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#addff461ab5073f761fbef01967b15dc6">systemc_hdl::HDLFrontendActionFactory::create</a></div><div class="ttdeci">std::unique_ptr&lt; clang::FrontendAction &gt; create() override</div><div class="ttdef"><b>Definition:</b> HDLMain.h:107</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html">systemc_hdl::HDLAXN</a></div><div class="ttdef"><b>Definition:</b> HDLMain.h:81</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_a39a47fb32711262a05801e505f55b033"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#a39a47fb32711262a05801e505f55b033">systemc_hdl::HDLAXN::HDLAXN</a></div><div class="ttdeci">HDLAXN(const std::string &amp;top)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:83</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_a4202443ecf31d91cc87427c853b60057"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#a4202443ecf31d91cc87427c853b60057">systemc_hdl::HDLAXN::hdl_file_out_</a></div><div class="ttdeci">std::string hdl_file_out_</div><div class="ttdef"><b>Definition:</b> HDLMain.h:89</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_aadb55866e64bddbdfcdc2acda10fafca"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#aadb55866e64bddbdfcdc2acda10fafca">systemc_hdl::HDLAXN::CreateASTConsumer</a></div><div class="ttdeci">virtual std::unique_ptr&lt; ASTConsumer &gt; CreateASTConsumer(clang::CompilerInstance &amp;Compiler, llvm::StringRef inFile)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:92</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_acc2ac92fa83be7d971cbb53bc98a3d25"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#acc2ac92fa83be7d971cbb53bc98a3d25">systemc_hdl::HDLAXN::HDLAXN</a></div><div class="ttdeci">HDLAXN(const std::string &amp;top, const std::string &amp;hdl_file_out)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:84</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLAXN_html_ad6701ec48b8ffde7286e8177ba524f93"><div class="ttname"><a href="classsystemc__hdl_1_1HDLAXN.html#ad6701ec48b8ffde7286e8177ba524f93">systemc_hdl::HDLAXN::top_</a></div><div class="ttdeci">std::string top_</div><div class="ttdef"><b>Definition:</b> HDLMain.h:85</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html">systemc_hdl::HDLFrontendActionFactory</a></div><div class="ttdef"><b>Definition:</b> HDLMain.h:99</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_a1088dc7c22e5300b25c1fd2cb23325f2"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a1088dc7c22e5300b25c1fd2cb23325f2">systemc_hdl::HDLFrontendActionFactory::top_module_declaration_</a></div><div class="ttdeci">std::string top_module_declaration_</div><div class="ttdef"><b>Definition:</b> HDLMain.h:114</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_a4ae4268beb7ff9d6ae105c0eba9e67e2"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a4ae4268beb7ff9d6ae105c0eba9e67e2">systemc_hdl::HDLFrontendActionFactory::hdl_file_out_</a></div><div class="ttdeci">std::string hdl_file_out_</div><div class="ttdef"><b>Definition:</b> HDLMain.h:115</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_a58202e7513d1d064a0030f40b672187f"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a58202e7513d1d064a0030f40b672187f">systemc_hdl::HDLFrontendActionFactory::HDLFrontendActionFactory</a></div><div class="ttdeci">HDLFrontendActionFactory(const std::string &amp;top, const std::string &amp;hdl_file_out)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:104</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_a8398978f30073f7c118acfed502515a8"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#a8398978f30073f7c118acfed502515a8">systemc_hdl::HDLFrontendActionFactory::HDLFrontendActionFactory</a></div><div class="ttdeci">HDLFrontendActionFactory(const std::string &amp;top)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:101</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLFrontendActionFactory_html_addff461ab5073f761fbef01967b15dc6"><div class="ttname"><a href="classsystemc__hdl_1_1HDLFrontendActionFactory.html#addff461ab5073f761fbef01967b15dc6">systemc_hdl::HDLFrontendActionFactory::create</a></div><div class="ttdeci">std::unique_ptr&lt; clang::FrontendAction &gt; create() override</div><div class="ttdef"><b>Definition:</b> HDLMain.h:108</div></div>
 <div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html">systemc_hdl::HDLMain</a></div><div class="ttdef"><b>Definition:</b> HDLMain.h:24</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_a3f393848b0c5306a974657203672c20f"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#a3f393848b0c5306a974657203672c20f">systemc_hdl::HDLMain::HDLt</a></div><div class="ttdeci">HDLType HDLt</div><div class="ttdef"><b>Definition:</b> HDLMain.h:59</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_a438e4e1bbd3d3d4d29ccd70ea324528b"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#a438e4e1bbd3d3d4d29ccd70ea324528b">systemc_hdl::HDLMain::mutil</a></div><div class="ttdeci">util mutil</div><div class="ttdef"><b>Definition:</b> HDLMain.h:61</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_a3f393848b0c5306a974657203672c20f"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#a3f393848b0c5306a974657203672c20f">systemc_hdl::HDLMain::HDLt</a></div><div class="ttdeci">HDLType HDLt</div><div class="ttdef"><b>Definition:</b> HDLMain.h:60</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_a438e4e1bbd3d3d4d29ccd70ea324528b"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#a438e4e1bbd3d3d4d29ccd70ea324528b">systemc_hdl::HDLMain::mutil</a></div><div class="ttdeci">util mutil</div><div class="ttdef"><b>Definition:</b> HDLMain.h:62</div></div>
 <div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_a563a3dd0e92d4cea92109b59383d5971"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#a563a3dd0e92d4cea92109b59383d5971">systemc_hdl::HDLMain::HDLMain</a></div><div class="ttdeci">HDLMain(CompilerInstance &amp;ci, std::string topModule=&quot;!none&quot;, const std::string &amp;hdl_file_out=&quot;default_hdl.txt&quot;)</div><div class="ttdoc">Provide hdl_file_out as argument.</div><div class="ttdef"><b>Definition:</b> HDLMain.h:28</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_a79f2382f453bb0e8c414c7c92445fb0f"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#a79f2382f453bb0e8c414c7c92445fb0f">systemc_hdl::HDLMain::allmethodecls</a></div><div class="ttdeci">std::unordered_map&lt; string, FunctionDecl * &gt; allmethodecls</div><div class="ttdef"><b>Definition:</b> HDLMain.h:55</div></div>
 <div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_a930cc6788c47b22ba634d050ee1c1200"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#a930cc6788c47b22ba634d050ee1c1200">systemc_hdl::HDLMain::h_top</a></div><div class="ttdeci">hNodep h_top</div><div class="ttdef"><b>Definition:</b> HDLMain.h:53</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_acbcdad1f238915a8940bf506877d582b"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#acbcdad1f238915a8940bf506877d582b">systemc_hdl::HDLMain::module_vars</a></div><div class="ttdeci">std::unordered_set&lt; string &gt; module_vars</div><div class="ttdef"><b>Definition:</b> HDLMain.h:57</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_acbcdad1f238915a8940bf506877d582b"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#acbcdad1f238915a8940bf506877d582b">systemc_hdl::HDLMain::module_vars</a></div><div class="ttdeci">std::unordered_set&lt; string &gt; module_vars</div><div class="ttdef"><b>Definition:</b> HDLMain.h:58</div></div>
 <div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_ae29d8fa3a6194fe4ed655dd87dccdd27"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#ae29d8fa3a6194fe4ed655dd87dccdd27">systemc_hdl::HDLMain::HDLMain</a></div><div class="ttdeci">HDLMain(ASTUnit *from_ast, std::string topModule=&quot;!none&quot;, const std::string &amp;hdl_file_out=&quot;default_hdl.txt&quot;)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:31</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_aff1b131a2d1d484f966a3aa97bf69c61"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#aff1b131a2d1d484f966a3aa97bf69c61">systemc_hdl::HDLMain::hdl_file_out_</a></div><div class="ttdeci">std::string hdl_file_out_</div><div class="ttdoc">Command line options.</div><div class="ttdef"><b>Definition:</b> HDLMain.h:69</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLPluginAction_html"><div class="ttname"><a href="classsystemc__hdl_1_1HDLPluginAction.html">systemc_hdl::HDLPluginAction</a></div><div class="ttdef"><b>Definition:</b> HDLMain.h:122</div></div>
-<div class="ttc" id="aclasssystemc__hdl_1_1HDLPluginAction_html_aa7261191d6534cc7903802c45729ce96"><div class="ttname"><a href="classsystemc__hdl_1_1HDLPluginAction.html#aa7261191d6534cc7903802c45729ce96">systemc_hdl::HDLPluginAction::HDLPluginAction</a></div><div class="ttdeci">HDLPluginAction(int argc, const char **argv)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:124</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_af9e6dbb7933a99d7e4e6073f1f871ef2"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#af9e6dbb7933a99d7e4e6073f1f871ef2">systemc_hdl::HDLMain::allmethodecls</a></div><div class="ttdeci">hfunc_name_map_t allmethodecls</div><div class="ttdef"><b>Definition:</b> HDLMain.h:56</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLMain_html_aff1b131a2d1d484f966a3aa97bf69c61"><div class="ttname"><a href="classsystemc__hdl_1_1HDLMain.html#aff1b131a2d1d484f966a3aa97bf69c61">systemc_hdl::HDLMain::hdl_file_out_</a></div><div class="ttdeci">std::string hdl_file_out_</div><div class="ttdoc">Command line options.</div><div class="ttdef"><b>Definition:</b> HDLMain.h:70</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLPluginAction_html"><div class="ttname"><a href="classsystemc__hdl_1_1HDLPluginAction.html">systemc_hdl::HDLPluginAction</a></div><div class="ttdef"><b>Definition:</b> HDLMain.h:123</div></div>
+<div class="ttc" id="aclasssystemc__hdl_1_1HDLPluginAction_html_aa7261191d6534cc7903802c45729ce96"><div class="ttname"><a href="classsystemc__hdl_1_1HDLPluginAction.html#aa7261191d6534cc7903802c45729ce96">systemc_hdl::HDLPluginAction::HDLPluginAction</a></div><div class="ttdeci">HDLPluginAction(int argc, const char **argv)</div><div class="ttdef"><b>Definition:</b> HDLMain.h:125</div></div>
 <div class="ttc" id="ahNode_8h_html"><div class="ttname"><a href="hNode_8h.html">hNode.h</a></div></div>
 <div class="ttc" id="anamespaceclang_html"><div class="ttname"><a href="namespaceclang.html">clang</a></div><div class="ttdoc">Forward declarations.</div><div class="ttdef"><b>Definition:</b> FindMemberFieldMatcher.h:14</div></div>
 <div class="ttc" id="anamespacehnode_html"><div class="ttname"><a href="namespacehnode.html">hnode</a></div><div class="ttdef"><b>Definition:</b> hNode.h:18</div></div>
