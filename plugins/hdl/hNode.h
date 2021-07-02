@@ -338,12 +338,17 @@ namespace hnode {
     newname_map_t(string prefix = "_local_") { ns.set_prefix(prefix); }
     void add_entry(T declp, string old_name, hNodep hnp )
     {
-      
-      string newn = old_name+ns.newname();
+      string newn = find_entry_newn(declp);
       hnp->set(newn);
-      names_t names = {old_name, newn, hnp};
-      hdecl_name_map[declp] = names;
+      if ( newn== "") {
+	// this is a new declaration
+	newn = old_name+ns.newname();
+	hnp->set(newn);
+	names_t names = {old_name, newn, hnp};
+	hdecl_name_map[declp] = names;
+      }
     }
+    
     string find_entry_newn(T declp) {
       auto vname_it{hdecl_name_map.find(declp)};
       if (vname_it != hdecl_name_map.end()) 
