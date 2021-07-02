@@ -1,5 +1,12 @@
 # Test CMakeFile
 
+# Expand extra include directories for tests
+set(xtra_inc_dir_test $ENV{EXTRA_INCLUDE_DIR})
+set(EXTRA_INCLUDE_DIR_EXPAND "")
+# Prepending "-I" and appending ","
+foreach(d ${xtra_inc_dir_test})
+  string(CONCAT EXTRA_INCLUDE_DIR_EXPAND ${EXTRA_INCLUDE_DIR_EXPAND} "\n    \"-I${d}\",")
+endforeach()
 configure_file( ClangArgs.h.in ClangArgs.h)
 
 # updating submodules
