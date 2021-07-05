@@ -31,7 +31,7 @@ namespace systemc_hdl {
   class HDLBody: public RecursiveASTVisitor <HDLBody> {
   public:
     HDLBody(CXXMethodDecl * emd, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map);
-    HDLBody(Stmt * stmt, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map, bool add_info = true);
+    HDLBody( Stmt * stmt, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map, bool add_info = true);
     virtual ~HDLBody();
 
     bool TraverseCompoundStmt(CompoundStmt* compoundStmt);

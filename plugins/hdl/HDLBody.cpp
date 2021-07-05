@@ -45,7 +45,7 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor (method body)\n");
   }
 
-  HDLBody::HDLBody(Stmt *stmt, hNodep &h_top,
+  HDLBody::HDLBody( Stmt *stmt, hNodep &h_top,
 		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, bool add_info)
     : diag_e{diag_engine}, add_info{add_info}, ast_context_{ast_context} {
 

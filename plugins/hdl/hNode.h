@@ -32,6 +32,7 @@ namespace hnode {
   etype(hProcesses), \
   etype(hProcess), \
   etype(hMethod), \
+  etype(hThread),		 \
   etype(hCStmt), \
   etype(hPortsigvarlist), \
   etype(hPortin), \
