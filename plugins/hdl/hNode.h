@@ -227,7 +227,7 @@ namespace hnode {
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
 
     }
-     inline bool isSCBuiltinType(const string &tstring){
+    inline bool isSCBuiltinType(const string &tstring){
       // linear search sorry, but at least the length
       // isn't hard coded in ...
        int found = tstring.find_last_of(" "); // skip qualifiers if any
@@ -237,7 +237,13 @@ namespace hnode {
       }
       return false;
     }
-    
+
+    static inline bool isSCFunc(const string &tstring) {
+      return (tstring == "concat");
+      // add more as we get them
+    }
+
+     
     static inline bool isSCType(const string &tstring) {
       // linear search and the length is hard coded in ...
       // used in the method name logic
@@ -312,9 +318,13 @@ namespace hnode {
 
 
   //!
-  //! The newname_map_t class generates new names for identifiers
-  //! and inserts the old name, new name, and pointer to clang ast
-  //! node for the identifier into a map. 
+  //! The newname_map_t class manages identifier names. For adding an
+  //! entry, the identifier information is stored in a map with the
+  //! clang AST node pointer as key. A new name for identifier is  
+  //! generated, and {original name, new name, hNode pointer}
+  //! are stored as the value. Additionally, the hNode of the 
+  //! identifier is updated to the new name.
+  //! The find entry method returns the new name or empty string.
   //!
 
   
@@ -322,29 +332,49 @@ namespace hnode {
     class newname_map_t {
   private:
     name_serve ns;
-  public:
     std::map<T, names_t> hdecl_name_map;
+  public:
+    //std::map<T, names_t> hdecl_name_map;
     newname_map_t(string prefix = "_local_") { ns.set_prefix(prefix); }
     void add_entry(T declp, string old_name, hNodep hnp )
     {
-      
-      string newn = old_name+ns.newname();
+      string newn = find_entry_newn(declp);
       hnp->set(newn);
-      names_t names = {old_name, newn, hnp};
-      hdecl_name_map[declp] = names;
+      if ( newn== "") {
+	// this is a new declaration
+	newn = old_name+ns.newname();
+	hnp->set(newn);
+	names_t names = {old_name, newn, hnp};
+	hdecl_name_map[declp] = names;
+      }
     }
+    
     string find_entry_newn(T declp) {
       auto vname_it{hdecl_name_map.find(declp)};
       if (vname_it != hdecl_name_map.end()) 
 	return hdecl_name_map[declp].newn;
       else return "";
     }
+
+    void set_prefix(string prefix) { ns.set_prefix(prefix); }
+    
     bool empty() { return hdecl_name_map.empty(); }
+    size_t size() { return hdecl_name_map.size(); }
+    
+    typename std::map<T, names_t>::iterator begin() { return hdecl_name_map.begin();}
+    typename std::map<T, names_t>::iterator end() { return hdecl_name_map.end();}
+
+    void insertall(newname_map_t<T> &newmap) {
+      hdecl_name_map.insert(newmap.begin(),
+			    newmap.end());
+    }
     
   };
 
   typedef newname_map_t<NamedDecl *> hdecl_name_map_t;
   typedef newname_map_t<ModuleInstance *> hmodinst_name_map_t;
+  typedef newname_map_t<FunctionDecl *> hfunc_name_map_t;
+  
 } // end namespace hnode
 
 #endif

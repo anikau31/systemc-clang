@@ -166,6 +166,7 @@ lark_grammar = Lark('''
         hvarref : "hVarref" ID "NOLIST"
         hunimp:  "hUnimpl" ID "NOLIST"
         hbinop:  "hBinop" BINOP "[" expression expression "]"
+        
         // A temporary hack to handle --
         hunop:  "hUnop" UNOP_NON_SUB "[" expression "]"
              |  "hUnop" UNOP_SUB "[" expression "]"
@@ -197,7 +198,7 @@ lark_grammar = Lark('''
                   | hmethodcall
         nblkassign: "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool)  "]"
                   | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
-        hconcat: "hBinop" "," "[" (expression|harrayref|hconcat) (expression|harrayref|hconcat) "]"
+        hconcat: "hBinop" "concat" "[" (expression|harrayref|hconcat) (expression|harrayref|hconcat) "]"
                  
         // Temporary hack to handle -= / +=
         hmodassign : "hBinop" hmodassigntype "[" hvarref hliteral "]"
@@ -240,7 +241,7 @@ lark_grammar = Lark('''
         ID: /[a-zA-Z_][a-zA-Z_0-9#]*/
         NUM: /(\+|\-)?[0-9]+/
         TYPESTR: /[a-zA-Z_][a-zA-Z_0-9]*/
-        BINOP: NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE"
+        BINOP: NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE" | "concat"
         NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&" | ","
         ARITHOP: "+" | "-" | "*" | "/" | "^"
         UNOP_NON_SUB: "!" | "++" | "-"

@@ -6,7 +6,6 @@
         ]
       ]
     ]
-    hModinitblock b_mod NOLIST
   ]
   hModule A_sc_module_1 [
     hPortsigvarlist  NONAME [
@@ -595,28 +594,11 @@
       ]
     ]
     hModinitblock a_mod [
-      hCStmt  NONAME NOLIST
-      hSenslist var1 [
-        hSensvar NONAME [
-          hVarref dummy NOLIST
-          hNoop always NOLIST
-        ]
+      hCStmt  NONAME [
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
+        hCStmt  NONAME NOLIST
       ]
-      hSenslist var2 [
-        hSensvar NONAME [
-          hVarref dummy NOLIST
-          hNoop always NOLIST
-        ]
-      ]
-      hSenslist var3 [
-        hSensvar NONAME [
-          hVarref dummy NOLIST
-          hNoop always NOLIST
-        ]
-      ]
-    ]
-    hModinitblock a_mod [
-      hCStmt  NONAME NOLIST
       hSenslist var1 [
         hSensvar NONAME [
           hVarref dummy NOLIST

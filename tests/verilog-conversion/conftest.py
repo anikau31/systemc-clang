@@ -1,6 +1,7 @@
 """Fixtures for testing"""
 import os
 import sys
+import re
 from pathlib import Path
 
 sys.path.append(str(Path(os.environ["SYSTEMC_CLANG"]) / "plugins" / "hdl"))
@@ -51,13 +52,14 @@ def get_iscs_tests():
 
 
 # NOTE: The usage of this list is specified in the README.md
-# (name, design, extra_args, golden)
+# (name, design, extra_args, golden verilog, golden hcode)
 test_data = [
     (
         "add",
         load_file(testdata / "add.cpp"),
         None,
         load_file(testdata / "add_hdl.txt.v"),
+        load_file(testdata / "add_hdl.txt")
     ),
     # ('sreg',   load_file(), [], None),
     # ('member-variable-sc-buffer',   load_file(), [], None),
@@ -68,7 +70,8 @@ test_data = [
     (
         "z3test",
         load_file(zfpsynth / "zfp3/z3test.cpp"),
-        ("-I", zfpshared2.stem, "-I", zfpsynth / "zfp3"),
+        ("-I{}".format(zfpsynth / "zfp3"), ),
+        None,
         None,
     ),
     # ('z4test', load_file(zfpsynth / 'zfp4/z4test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp4', None]),
@@ -76,7 +79,8 @@ test_data = [
     (
         "moving-average",
         load_file(modules_examples / "moving-average" / "moving-average.cpp"),
-        ("-I", zfpshared2.stem, "-I", modules_examples / "moving-average"),
+        ("-I{}".format(modules_examples / "moving-average"), ),
+        None,
         None,
     ),
     (
@@ -84,6 +88,7 @@ test_data = [
        load_file(testdata / "test_while_iscs.cpp"),
        None,
        None, # load_file(testdata / "test_while_iscs_hdl.txt.v"),
+       None,
     ),
     # (
     #    "test_binary_iscs",
@@ -96,16 +101,19 @@ test_data = [
        load_file(testdata / "test_break_iscs.cpp"),
        None,
        None, # load_file(testdata / "test_break_iscs_hdl.txt.v"),
+       None,
     ),
     (
        "test_for_iscs",
        load_file(testdata / "test_for_iscs.cpp"),
        None,
        None, # load_file(testdata / "test_for_iscs_hdl.txt.v"),
+       None,
     ),
     ( 
        "test_child_module_iscs",
        load_file(testdata / "test_child_module_iscs.cpp"),
+       None,
        None,
        None,
     ),
@@ -142,6 +150,7 @@ test_data = [
     ( 
         "test_while_const_iscs",
         load_file(testdata / "test_while_const_iscs.cpp"),
+        None,
         None,
         None,
     ),
@@ -232,11 +241,18 @@ def default_params():
         "c++",
         "-w",
         "-c",
-        #"-std=c++17",
-        "_-D__STDC_CONSTANT_MACROS",
-        "-D__STDC_LIMIT_MACROS",
         "-DRVD",
     ]
+
+@pytest.fixture
+def clang_args_params():
+    """extract parameters in ClangArgs.h"""
+    # TODO: fix this hack
+    clang_args_h = Path(os.environ["SYSTEMC_CLANG_BUILD_DIR"]
+        + "/"
+        + "tests/ClangArgs.h").read_text()
+    match = re.findall(r'^[\s]+"(?P<arg>.*)"', clang_args_h, re.MULTILINE)
+    return match
 
 
 @pytest.fixture

@@ -118,10 +118,10 @@
             ]
             hForStmt  NONAME [
               hNoop  NONAME NOLIST
-              hMethodCall A__cond [
+              hMethodCall A__cond_local_0 [
                 hVarref i_local_1 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref i_local_1 NOLIST
               ]
               hCStmt  NONAME [
@@ -161,9 +161,9 @@
               ]
               hBinop < [
                 hVarref i_local_1 NOLIST
-                hMethodCall A__cond2 NOLIST
+                hMethodCall A__cond2_local_0 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref i_local_1 NOLIST
               ]
               hCStmt  NONAME [
@@ -194,13 +194,13 @@
             hForStmt  NONAME [
               hNoop  NONAME NOLIST
               hBinop > [
-                hMethodCall A__cond3 [
+                hMethodCall A__cond3_local_0 [
                   hVarref k_local_0 NOLIST
                 ]
                 hLiteral 10 NOLIST
               ]
               hBinop > [
-                hMethodCall A__cond3 [
+                hMethodCall A__cond3_local_0 [
                   hVarref k_local_0 NOLIST
                 ]
                 hLiteral 10 NOLIST
@@ -240,7 +240,7 @@
                   hLiteral 2 NOLIST
                   hVarref i_local_0 NOLIST
                 ]
-                hMethodCall A__cond4 [
+                hMethodCall A__cond4_local_0 [
                   hVarref k3 NOLIST
                 ]
               ]
@@ -249,7 +249,7 @@
                   hLiteral 2 NOLIST
                   hVarref i_local_0 NOLIST
                 ]
-                hMethodCall A__cond4 [
+                hMethodCall A__cond4_local_0 [
                   hVarref k3 NOLIST
                 ]
               ]
@@ -261,7 +261,7 @@
                     hLiteral 1 NOLIST
                   ]
                 ]
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
                 ]
               ]
@@ -299,7 +299,7 @@
                   hLiteral 2 NOLIST
                   hVarref i_local_0 NOLIST
                 ]
-                hMethodCall A__cond5 [
+                hMethodCall A__cond5_local_0 [
                   hVarref i_local_0 NOLIST
                 ]
               ]
@@ -308,7 +308,7 @@
                   hLiteral 2 NOLIST
                   hVarref i_local_0 NOLIST
                 ]
-                hMethodCall A__cond5 [
+                hMethodCall A__cond5_local_0 [
                   hVarref i_local_0 NOLIST
                 ]
               ]
@@ -320,9 +320,8 @@
                     hLiteral 1 NOLIST
                   ]
                 ]
-                hBinop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
-                  hLiteral 0 NOLIST
                 ]
               ]
             ]
@@ -359,7 +358,7 @@
                   hLiteral 2 NOLIST
                   hVarref i_local_0 NOLIST
                 ]
-                hMethodCall A__cond6 [
+                hMethodCall A__cond6_local_0 [
                   hVarref k1 NOLIST
                 ]
               ]
@@ -368,7 +367,7 @@
                   hLiteral 2 NOLIST
                   hVarref i_local_0 NOLIST
                 ]
-                hMethodCall A__cond6 [
+                hMethodCall A__cond6_local_0 [
                   hVarref k1 NOLIST
                 ]
               ]
@@ -380,9 +379,8 @@
                     hLiteral 1 NOLIST
                   ]
                 ]
-                hBinop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
-                  hLiteral 0 NOLIST
                 ]
               ]
             ]
@@ -419,7 +417,7 @@
                   hVarref i_local_0 NOLIST
                   hLiteral 2 NOLIST
                 ]
-                hMethodCall A__cond7 [
+                hMethodCall A__cond7_local_0 [
                   hVarref k2 NOLIST
                 ]
               ]
@@ -428,7 +426,7 @@
                   hVarref i_local_0 NOLIST
                   hLiteral 2 NOLIST
                 ]
-                hMethodCall A__cond7 [
+                hMethodCall A__cond7_local_0 [
                   hVarref k2 NOLIST
                 ]
               ]
@@ -440,9 +438,8 @@
                     hLiteral 1 NOLIST
                   ]
                 ]
-                hBinop ++ [
+                hPostfix ++ [
                   hVarref i_local_0 NOLIST
-                  hLiteral 0 NOLIST
                 ]
               ]
             ]
@@ -469,17 +466,17 @@
             hForStmt  NONAME [
               hVarAssign  NONAME [
                 hVarref i_local_1 NOLIST
-                hMethodCall A__init1 NOLIST
+                hMethodCall A__init1_local_0 NOLIST
               ]
               hBinop < [
                 hVarref i_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref i_local_1 NOLIST
               ]
               hCStmt  NONAME [
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref k_local_0 NOLIST
                 ]
               ]
@@ -507,7 +504,7 @@
             hForStmt  NONAME [
               hVarAssign  NONAME [
                 hVarref i_local_1 NOLIST
-                hMethodCall A__init2 [
+                hMethodCall A__init2_local_0 [
                   hLiteral 2 NOLIST
                 ]
               ]
@@ -515,11 +512,11 @@
                 hVarref i_local_1 NOLIST
                 hLiteral 10 NOLIST
               ]
-              hUnop ++ [
+              hPostfix ++ [
                 hVarref i_local_1 NOLIST
               ]
               hCStmt  NONAME [
-                hUnop ++ [
+                hPostfix ++ [
                   hVarref k_local_0 NOLIST
                 ]
               ]
@@ -527,88 +524,7 @@
           ]
         ]
       ]
-      hFunction A__cond7 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType sc_biguint [
-              hLiteral 32 NOLIST
-            ]
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamI j [
-            hTypeinfo  NONAME [
-              hType int NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hBinop + [
-              hVarref j NOLIST
-              hLiteral 2 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hFunction A__init1 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType int NOLIST
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hLiteral 3 NOLIST
-          ]
-        ]
-      ]
-      hFunction A__cond6 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType sc_bigint [
-              hLiteral 30 NOLIST
-            ]
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamI j [
-            hTypeinfo  NONAME [
-              hType int NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hBinop + [
-              hVarref j NOLIST
-              hLiteral 2 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hFunction A__cond3 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType int NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamI k [
-            hTypeinfo  NONAME [
-              hType int NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hUnop ++ [
-              hVarref k NOLIST
-            ]
-          ]
-        ]
-      ]
-      hFunction A__cond [
+      hFunction A__cond_local_0 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType _Bool NOLIST
@@ -630,7 +546,7 @@
           ]
         ]
       ]
-      hFunction A__cond2 [
+      hFunction A__cond2_local_0 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType unsigned_int NOLIST
@@ -642,14 +558,35 @@
           ]
         ]
       ]
-      hFunction A__init2 [
+      hFunction A__cond3_local_0 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType int NOLIST
           ]
         ]
         hFunctionParams  NONAME [
-          hFunctionParamI val [
+          hFunctionParamI k [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hPostfix ++ [
+              hVarref k NOLIST
+            ]
+          ]
+        ]
+      ]
+      hFunction A__cond4_local_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType int NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI j [
             hTypeinfo  NONAME [
               hType int NOLIST
             ]
@@ -658,13 +595,13 @@
         hCStmt  NONAME [
           hReturnStmt  NONAME [
             hBinop + [
-              hVarref val NOLIST
-              hLiteral 1 NOLIST
+              hVarref j NOLIST
+              hLiteral 2 NOLIST
             ]
           ]
         ]
       ]
-      hFunction A__cond5 [
+      hFunction A__cond5_local_0 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType sc_uint [
@@ -688,10 +625,12 @@
           ]
         ]
       ]
-      hFunction A__cond4 [
+      hFunction A__cond6_local_0 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
-            hType int NOLIST
+            hType sc_bigint [
+              hLiteral 30 NOLIST
+            ]
           ]
         ]
         hFunctionParams  NONAME [
@@ -710,6 +649,64 @@
           ]
         ]
       ]
+      hFunction A__cond7_local_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType sc_biguint [
+              hLiteral 32 NOLIST
+            ]
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI j [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hBinop + [
+              hVarref j NOLIST
+              hLiteral 2 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hFunction A__init1_local_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType int NOLIST
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hLiteral 3 NOLIST
+          ]
+        ]
+      ]
+      hFunction A__init2_local_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType int NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI val [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hBinop + [
+              hVarref val NOLIST
+              hLiteral 1 NOLIST
+            ]
+          ]
+        ]
+      ]
     ]
     hModinitblock a_mod [
       hCStmt  NONAME [
@@ -723,55 +720,55 @@
         hCStmt  NONAME NOLIST
         hCStmt  NONAME NOLIST
       ]
-      hSenslist func_call_cond [
+      hSenslist func_call_cond_local_2 [
         hSensvar NONAME [
           hVarref a NOLIST
           hNoop always NOLIST
         ]
       ]
-      hSenslist func_call_init [
+      hSenslist func_call_init_local_5 [
         hSensvar NONAME [
           hVarref a NOLIST
           hNoop always NOLIST
         ]
       ]
-      hSenslist func_call_cond2 [
+      hSenslist func_call_cond2_local_8 [
         hSensvar NONAME [
           hVarref a NOLIST
           hNoop always NOLIST
         ]
       ]
-      hSenslist func_call_cond3 [
+      hSenslist func_call_cond3_local_11 [
         hSensvar NONAME [
           hVarref a NOLIST
           hNoop always NOLIST
         ]
       ]
-      hSenslist func_call_cond4 [
+      hSenslist func_call_cond4_local_14 [
         hSensvar NONAME [
           hVarref a NOLIST
           hNoop always NOLIST
         ]
       ]
-      hSenslist func_call_cond5 [
+      hSenslist func_call_cond5_local_17 [
         hSensvar NONAME [
           hVarref a NOLIST
           hNoop always NOLIST
         ]
       ]
-      hSenslist func_call_cond6 [
+      hSenslist func_call_cond6_local_20 [
         hSensvar NONAME [
           hVarref a NOLIST
           hNoop always NOLIST
         ]
       ]
-      hSenslist func_call_cond7 [
+      hSenslist func_call_cond7_local_23 [
         hSensvar NONAME [
           hVarref a NOLIST
           hNoop always NOLIST
         ]
       ]
-      hSenslist func_call_init2 [
+      hSenslist func_call_init2_local_26 [
         hSensvar NONAME [
           hVarref a NOLIST
           hNoop always NOLIST
