@@ -48,6 +48,7 @@ set(TEST_DIR "tests")
  add_subdirectory(unit)
  add_subdirectory(matchers)
  add_subdirectory(parsing)
+ add_subdirectory(thread)
 
 # # Plugins
  add_subdirectory(hdl)

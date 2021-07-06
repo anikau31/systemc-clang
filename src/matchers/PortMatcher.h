@@ -550,9 +550,9 @@ class PortMatcher : public MatchFinder::MatchCallback {
     /* clang-format on */
 
     // Add matchers to finder.
-    finder.addMatcher(match_all_ports, this);
-    finder.addMatcher(match_non_sc_types_fdecl, this);
-    finder.addMatcher(match_non_sc_types_vdecl, this);
+    finder.addMatcher(traverse(TK_IgnoreUnlessSpelledInSource, match_all_ports) , this);
+    finder.addMatcher(traverse(TK_IgnoreUnlessSpelledInSource, match_non_sc_types_fdecl), this);
+    finder.addMatcher(traverse(TK_IgnoreUnlessSpelledInSource, match_non_sc_types_vdecl), this);
     //finder.addMatcher(match_submodules, this);
     // finder.addMatcher(match_sc_ports, this);
   }
