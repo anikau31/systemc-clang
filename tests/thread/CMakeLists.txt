@@ -1,18 +1,8 @@
 # Test CMakeFile
 
 set (TEST_LIST 
-  # Structural parsing
-  counter.cpp
-  xor-hierarchy.cpp
-  simple-parsing.cpp
-  model-from-file.cpp
-  clock-parsing.cpp
-  hotfix-40-findtemplatetypes.cpp
-  template-matching.cpp
-  hotfix-105-sensitivity-list.cpp
-  sreg.cpp
-  portarray-example.cpp
-  inherit.cpp
+  # Thread parsing 
+  simple-thread.cpp 
   )
 
 set(SCC_LIBS libsystemc-clang)
