@@ -158,24 +158,40 @@ int sc_main(int argc, char *argv[]) {
     CFG->dump(lang_opts, true);
 
     /// Get the root node.
-    const clang::CFGBlock &entry{ CFG->getEntry() };
+    const clang::CFGBlock &entry{CFG->getEntry()};
     entry.dump();
 
-    for (auto const &succ: entry.succs()) {
+    /// Access the successor
+    for (auto const &succ : entry.succs()) {
       succ->dump();
-
       /// Try to get the Elements in each CFGBlock
-      for (auto const &element: succ->refs()) {
+      for (auto const &element : succ->refs()) {
         element->dump();
-        if (auto stmt =  element->getAs<CFGStmt>() ) {
+        if (auto stmt = element->getAs<CFGStmt>()) {
           stmt->getStmt()->dump();
-
         }
-
       }
     }
-    
-    
+
+    // Go through all CFG blocks
+    llvm::dbgs() << "Iterate through all CFGBlocks.\n";
+    /// These iterators are not in clang 12.
+    // for (auto const &block: CFG->const_nodes()) {
+    for (auto begin_it = CFG->nodes_begin(); begin_it != CFG->nodes_end();
+         ++begin_it) {
+      auto block = *begin_it;
+      block->dump();
+
+      llvm::dbgs() << "Get each element.\n";
+      /// Try to get the Elements in each CFGBlock
+      for (auto const &element : block->refs()) {
+        element->dump();
+        if (auto stmt = element->getAs<CFGStmt>()) {
+          stmt->getStmt()->dump();
+        }
+      }
+    }
+
 
   }
 }
