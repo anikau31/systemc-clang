@@ -9,6 +9,23 @@ from conftest import test_data
 sysc_clang = __import__('systemc-clang')
 
 
+def check_text_same(data, golden, target_path):
+    """check if data is the same as golden, if not, raise an error and print relative information"""
+    golden_lines = golden.splitlines(keepends=True)
+    target_lines = data.splitlines(keepends=True)
+    seq_matcher = difflib.SequenceMatcher(lambda x: x in " \t\n\r", golden, data)
+    ops = list(seq_matcher.get_opcodes())
+    cond = len(ops) == 1 and ops[0][0] == 'equal'
+    if not cond:
+        differ = difflib.Differ(charjunk=lambda x: x in " \t\n\r")
+        diff_res = list(differ.compare(golden_lines, target_lines))
+        print("OPS to correct the results: ")
+        for tag, i1, i2, j1, j2 in ops:
+            print('{:7}   a[{}:{}] --> b[{}:{}] {!r:>8} --> {!r}'.format( 
+                tag, i1, i2, j1, j2, golden[i1:i2], data[j1:j2]))
+            assert False, '\nTranslated file: \n' + str(target_path) + '\nTranslated file and golden file mismatch, diff result:\n' + ''.join(diff_res)
+
+
 @pytest.fixture
 def vivado_tcl_template():
     return (
@@ -20,8 +37,8 @@ def vivado_tcl_template():
 
 
 @test_steps('hcode', 'translation', 'translation-match-check', 'synthesis')
-@pytest.mark.parametrize("name,content,extra_args,golden", test_data, ids=[x[0] for x in test_data])
-def test_translation(tmp_path, name, content, extra_args, golden, default_params, vivado_tcl_template, has_vivado):
+@pytest.mark.parametrize("name,content,extra_args,golden,golden_hcode", test_data, ids=[x[0] for x in test_data])
+def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, default_params, clang_args_params, vivado_tcl_template, has_vivado):
     # move files to the target directory
     target_path = tmp_path / '{}.cpp'.format(name)
     hcode_target_path = tmp_path / '{}_hdl.txt'.format(name)
@@ -32,11 +49,19 @@ def test_translation(tmp_path, name, content, extra_args, golden, default_params
     # step: hcode
     if extra_args is None:
         extra_args = []
-    target = sysc_clang.invoke_sysc([str(target_path), '--debug', '--'] + list(default_params) + list(map(str, extra_args)))
+    args = [str(target_path), '--debug', '--'] + list(default_params) + list(clang_args_params) + list(map(str, extra_args))
+    print(' '.join(args))
+    target = sysc_clang.invoke_sysc(args)
     assert hcode_target_path.exists(), 'hCode txt should be present'
+
+    if golden_hcode is not None:
+        # check for the code
+        data = Path(hcode_target_path).read_text()
+        check_text_same(data, golden_hcode, hcode_target_path)
     yield
 
     # step: translation
+    print("Generated _hdl.txt file at: {}".format(target))
     sysc_clang.invoke_translation(target, [])
     yield
 

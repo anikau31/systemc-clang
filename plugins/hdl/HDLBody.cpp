@@ -36,9 +36,9 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor (method body\n");
     h_ret = NULL;
     add_info = false;
-    if (!mod_vname_map.hdecl_name_map.empty())
-      vname_map.hdecl_name_map.insert(mod_vname_map.hdecl_name_map.begin(),
-				      mod_vname_map.hdecl_name_map.end());
+    if (!mod_vname_map.empty())
+      vname_map.insertall(mod_vname_map);
+    methodecls.set_prefix("_func_");
     bool ret1 = TraverseStmt(emd->getBody());
     AddVnames(h_top);
     h_top->child_list.push_back(h_ret);
@@ -54,9 +54,9 @@ namespace systemc_hdl {
       // port bindings and sensitivity lists
       
       h_ret = NULL;
-      if (!mod_vname_map.hdecl_name_map.empty())
-	vname_map.hdecl_name_map.insert(mod_vname_map.hdecl_name_map.begin(),
-					mod_vname_map.hdecl_name_map.end());
+      if (!mod_vname_map.empty())
+	vname_map.insertall(mod_vname_map);
+      methodecls.set_prefix("_func_");
       bool ret1 = TraverseStmt(stmt);
       AddVnames(h_top);
 
@@ -326,9 +326,16 @@ namespace systemc_hdl {
     hNodep h_binop =
       new hNode(expr->getOpcodeStr().str(),
                 hNode::hdlopsEnum::hBinop);  // node to hold binop expr
-    LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
-	       << expr->getOpcodeStr() << "\n");
 
+    string opcodestr = expr->getOpcodeStr().str();
+    string exprtypstr = expr->getType().getAsString();
+    LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
+	       << opcodestr << "\n");
+    if ((opcodestr == ",") && (lutil.isSCType(exprtypstr) || lutil.isSCBuiltinType(exprtypstr))){
+      LLVM_DEBUG(llvm::dbgs() << "found comma, with sc type, expr follows\n");
+      LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_); );
+      h_binop->set("concat");
+    }
     TraverseStmt(expr->getLHS());
     h_binop->child_list.push_back(h_ret);
 
@@ -435,16 +442,20 @@ namespace systemc_hdl {
 	return true;
       }
     }
-    if (isa<FunctionDecl>(value)) {  // similar to method call
+    if (!lutil.isSCFunc(name) && isa<FunctionDecl>(value)) {  // similar to method call, skip builtin
       FunctionDecl *funval = (FunctionDecl *)value;
 
       string qualfuncname{value->getQualifiedNameAsString()};
       lutil.make_ident(qualfuncname);
       if (add_info) qualfuncname += ":"+ name; // !!! add unqualified name for future hcode processing
-      methodecls[qualfuncname] =
-        (FunctionDecl *)value;  // add to list of "methods" to be generated
+      //methodecls[qualfuncname] =
+      //  (FunctionDecl *)value;  // add to list of "methods" to be generated
+      //methodecls.insert(make_pair(qualfuncname, (FunctionDecl *)value));
+
       // create the call expression
       hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
+      // don't add this method to methodecls if processing modinit
+      if (!add_info) methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
       h_ret = hfuncall;
       return true;
     }
@@ -511,7 +522,7 @@ namespace systemc_hdl {
     }
 
     hNode::hdlopsEnum opc;
-
+    hNode * h_callp = NULL;
     LLVM_DEBUG(llvm::dbgs() << "found " << methodname << "\n");
 
     // if type of x in x.f(5) is primitive sc type (sc_in, sc_out, sc_inout,
@@ -522,18 +533,20 @@ namespace systemc_hdl {
       opc = hNode::hdlopsEnum::hSigAssignR;
     else if ((methodname == "write") && (lutil.isSCType(qualmethodname)))
       opc = hNode::hdlopsEnum::hSigAssignL;
-    else if (lutil.isSCType(
-			    qualmethodname)) {  // operator from simulation library
+    else if (lutil.isSCType(qualmethodname)) {  // operator from simulation library
       opc = hNode::hdlopsEnum::hNoop;
     } else {
       opc = hNode::hdlopsEnum::hMethodCall;
       lutil.make_ident(qualmethodname);
       if (add_info) qualmethodname+= ":"+ methodname;  // include unqualified name for future hcode processing !!!
-      methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
+      //methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
+      h_callp = new hNode(qualmethodname, opc);
+      // don't add this method to methodecls if processing modinit
+      if (!add_info) methodecls.add_entry(methdcl,qualmethodname, h_callp);
       methodname = qualmethodname;
     }
 
-    hNode *h_callp = new hNode(methodname, opc);  // list to hold call expr node
+    if (h_callp == NULL) h_callp = new hNode(methodname, opc);  // list to hold call expr node
 
     hNodep save_hret = h_ret;
     TraverseStmt(arg);  // traverse the x in x.f(5)
@@ -591,8 +604,11 @@ namespace systemc_hdl {
 	  if (opcall->getNumArgs()==2) h_operop =  new hNode(operatorname, hNode::hdlopsEnum::hPostfix);
 	  else  h_operop =  new hNode(operatorname, hNode::hdlopsEnum::hPrefix);
 	}
-	else
+	else {
 	  h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
+	  if ((operatorname == ",") && (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype)))
+	    h_operop->set("concat"); // overloaded comma is concat for sc types
+	}
       }
       int nargs = (h_operop->getopc() == hNode::hdlopsEnum::hPostfix ||
 		   h_operop->getopc() == hNode::hdlopsEnum::hPrefix) ? 1:
@@ -880,7 +896,8 @@ namespace systemc_hdl {
 
   void HDLBody::AddVnames(hNodep &hvns) {
     LLVM_DEBUG(llvm::dbgs() << "Vname Dump\n");
-    for (auto const &var : vname_map.hdecl_name_map) {
+    //for (auto const &var : vname_map.hdecl_name_map) {
+    for (auto const &var : vname_map) {
       LLVM_DEBUG(llvm::dbgs() << "(" << var.first << "," << var.second.oldn
 		 << ", " << var.second.newn << ")\n");
       if (add_info && (var.second.newn.find(gvar_prefix)==std::string::npos)) {

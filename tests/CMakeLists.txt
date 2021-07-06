@@ -1,5 +1,12 @@
 # Test CMakeFile
 
+# Expand extra include directories for tests
+set(xtra_inc_dir_test $ENV{EXTRA_INCLUDE_DIR})
+set(EXTRA_INCLUDE_DIR_EXPAND "")
+# Prepending "-I" and appending ","
+foreach(d ${xtra_inc_dir_test})
+  string(CONCAT EXTRA_INCLUDE_DIR_EXPAND ${EXTRA_INCLUDE_DIR_EXPAND} "\n    \"-I${d}\",")
+endforeach()
 configure_file( ClangArgs.h.in ClangArgs.h)
 
 # updating submodules
@@ -58,6 +65,8 @@ if(V_TESTS_ON)
     COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k syntax_error)
   add_test(NAME verilog-generate-file
     COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k generate_file)
+  add_test(NAME verilog-translation-add-hcode-match
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[add-hcode )
   add_test(NAME verilog-translation-add
     COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[add- )
   add_test(NAME verilog-translation-z3test

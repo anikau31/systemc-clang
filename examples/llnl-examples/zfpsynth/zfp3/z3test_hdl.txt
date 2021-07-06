@@ -8090,8 +8090,8 @@
             hVarAssign  NONAME [
               hVarref ui_local_3 NOLIST
               hBinop >> [
-                hBinop , [
-                  hBinop , [
+                hBinop concat [
+                  hBinop concat [
                     hVarref hid_local_2 NOLIST
                     hVarref fp_local_1##frac NOLIST
                   ]
@@ -10854,11 +10854,11 @@
                   hCStmt  NONAME [
                     hBinop = [
                       hVarref ts_local_0##prec NOLIST
-                      hMethodCall sc_dt__sc_min [
+                      hMethodCall sc_dt__sc_min_func_0 [
                         hSigAssignR read [
                           hVarref maxprec NOLIST
                         ]
-                        hMethodCall sc_dt__sc_max [
+                        hMethodCall sc_dt__sc_max_func_1 [
                           hLiteral 0 NOLIST
                           hBinop + [
                             hBinop - [
@@ -11029,7 +11029,7 @@
                       ]
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
-                          hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits [
+                          hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_2 [
                             hVarref ts_local_0 NOLIST
                             hSigAssignR read [
                               hVarref s_bc NOLIST
@@ -11100,7 +11100,7 @@
                     ]
                     hBinop = [
                       hVarref fls_done_local_4 NOLIST
-                      hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits [
+                      hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_3 [
                         hVarref ts_local_0 NOLIST
                         hBinop && [
                           hVarref add_done_local_2 NOLIST
@@ -11220,12 +11220,12 @@
                         ]
                         hVarAssign  NONAME [
                           hVarref n_local_7 NOLIST
-                          hMethodCall sc_dt__sc_min [
+                          hMethodCall sc_dt__sc_min_func_4 [
                             hVarref pbits_local_5 NOLIST
                             hVarref abits_local_6 NOLIST
                           ]
                         ]
-                        hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits [
+                        hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_5 [
                           hVarref ts_local_0 NOLIST
                           hVarref n_local_7 NOLIST
                           hLiteral 0 [
@@ -11256,7 +11256,7 @@
                     ]
                     hBinop = [
                       hVarref fls_done_local_4 NOLIST
-                      hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits [
+                      hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_6 [
                         hVarref ts_local_0 NOLIST
                         hVarref pad_done_local_3 NOLIST
                       ]
@@ -11310,27 +11310,21 @@
           ]
         ]
       ]
-      hFunction sc_dt__sc_min [
+      hFunction sc_dt__sc_min_func_0 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
-            hType sc_uint [
-              hLiteral 12 NOLIST
-            ]
+            hType unsigned_short NOLIST
           ]
         ]
         hFunctionParams  NONAME [
           hFunctionParamI a [
             hTypeinfo  NONAME [
-              hType sc_uint [
-                hLiteral 12 NOLIST
-              ]
+              hType unsigned_short NOLIST
             ]
           ]
           hFunctionParamI b [
             hTypeinfo  NONAME [
-              hType sc_uint [
-                hLiteral 12 NOLIST
-              ]
+              hType unsigned_short NOLIST
             ]
           ]
         ]
@@ -11347,7 +11341,7 @@
           ]
         ]
       ]
-      hFunction sc_dt__sc_max [
+      hFunction sc_dt__sc_max_func_1 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType short NOLIST
@@ -11378,7 +11372,7 @@
           ]
         ]
       ]
-      hFunction zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits [
+      hFunction zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_5 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType _Bool NOLIST
@@ -11415,7 +11409,7 @@
         hCStmt  NONAME [
           hBinop = [
             hVarref n_local_0 NOLIST
-            hMethodCall sc_dt__sc_min [
+            hMethodCall sc_dt__sc_min_func_0 [
               hVarref bc NOLIST
               hBinop - [
                 hSigAssignR read [
@@ -11479,7 +11473,7 @@
           ]
         ]
       ]
-      hFunction zhw__encode_streamfp_t11_52_2_bits_t64__out_bits [
+      hFunction zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_6 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType _Bool NOLIST
@@ -11606,6 +11600,43 @@
                 hVarref bbits_local_0 NOLIST
                 hLiteral 0 NOLIST
               ]
+            ]
+          ]
+        ]
+      ]
+      hFunction sc_dt__sc_min_func_4 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType sc_uint [
+              hLiteral 12 NOLIST
+            ]
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI a [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 12 NOLIST
+              ]
+            ]
+          ]
+          hFunctionParamI b [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 12 NOLIST
+              ]
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hCondop  NONAME [
+              hBinop <= [
+                hVarref a NOLIST
+                hVarref b NOLIST
+              ]
+              hVarref a NOLIST
+              hVarref b NOLIST
             ]
           ]
         ]

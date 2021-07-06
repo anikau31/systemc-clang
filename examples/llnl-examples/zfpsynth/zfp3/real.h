@@ -8,10 +8,10 @@
 /* IEEE 754 quadruple-precision: expo: 15 bits, frac: 112 bits */
 
 typedef long double ldouble;
-// quad may give error (g++ 6.4.0) without -std=c++11, use quadp, f128?
-typedef __float128 quad;
 
 #if defined(USE_QUAD)
+// quad may give error (g++ 6.4.0) without -std=c++11, use quadp, f128?
+typedef __float128 quad;
 #include <quadmath.h>
 #undef isnan
 #undef isinf
