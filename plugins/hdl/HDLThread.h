@@ -33,6 +33,9 @@ namespace systemc_hdl {
 
     hdecl_name_map_t vname_map;
     bool add_info;
+    // pre-pass over BB to mark subexpressions
+    void findStatements(CFGBlock *B, std::vector<const Stmt *> &SS);
+    void markStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map);
     
     util lutil;
 
