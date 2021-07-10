@@ -28,8 +28,8 @@ namespace systemc_hdl {
       static std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
       clang::LangOptions LO = ast_context.getLangOpts();
       threadcfg->dump(LO, false);
+      int blkix = 0;
       for (CFG::const_iterator I = threadcfg->begin(), E = threadcfg->end(); I != E; ++I ) {
-	unsigned j = 1;
 	string blkid =  std::to_string((*I)->getBlockID());
 	LLVM_DEBUG(llvm::dbgs() << "Block ID " << blkid << " size " << (*I)->size() <<"\n");
 	if ((*I)->getTerminator().isValid()) {
@@ -39,39 +39,58 @@ namespace systemc_hdl {
 	
 	if ((*I)->size() > 0) {
 	  hNodep h_body =  new hNode("B"+blkid, hNode::hdlopsEnum::hMethod);
-	  
 	  // from http://clang-developers.42468.n3.nabble.com/Visiting-statements-of-a-CFG-one-time-td4069440.html#a4069447
+	  // had to add recursive traversal of AST node children
 	  std::vector<const Stmt *> SS;
 	  findStatements(*I, SS);
+	  SCBBlock *curscblock = new SCBBlock(*I, SS);
+	  bool seenwait = false;
+	  int stmtix = 0;
+	  curscblock->startstmtix = stmtix;
+	  curscblock->endstmtix = SS.size();
+	  curscblock->blkix = blkix;
+	  curscblock->dump();
 	  for (auto stmt: SS) {
 	    LLVM_DEBUG(llvm::dbgs() << "Stmt follows\n");
 	    LLVM_DEBUG(stmt->dump(llvm::dbgs(), ast_context_));
 	    HDLBody xmethod(const_cast<Stmt *>(stmt), h_body, diag_engine, ast_context_, mod_vname_map);
+	    if (is_wait_stmt(h_body)) {
+	      LLVM_DEBUG(llvm::dbgs() << "Detected wait stmt\n"); 
+	      (h_body->child_list.back())->set(hNode::hdlopsEnum::hNoop); // remove wait hcode
+	      if (stmtix < SS.size()-1) { // more statements follow wait
+		LLVM_DEBUG(llvm::dbgs() << "stmt following wait stmt\n");
+		h_top->child_list.push_back(h_body); // end this method
+		curscblock->endstmtix = stmtix; // update scblock end stmt ix
+		scblocks.push_back(curscblock);
+		h_body =  new hNode("B"+blkid+std::to_string(stmtix), hNode::hdlopsEnum::hMethod);
+		curscblock = new SCBBlock(*I, SS);
+		curscblock->startstmtix = stmtix;
+		curscblock->endstmtix = SS.size();
+		blkix++;
+		curscblock->blkix = blkix;
+	      }
+	    }
+	    stmtix++;
 	    methodecls.insertall(xmethod.methodecls);
 	  }
-	    
-	  // for (CFGBlock::const_iterator BI = (*I)->begin(), BEnd = (*I)->end() ;
-	  //      BI != BEnd; ++BI, ++j ) {
-	  //   LLVM_DEBUG(llvm::dbgs() << "Stmt kind " << BI->getKind() << "\n");
-	  //   // from StmtPrinterHelper in CFG.cpp
-	  //   if (Optional<CFGStmt> SE = BI->getAs<CFGStmt>()) {
-	  //     const Stmt *stmt= SE->getStmt();
-	  //     LLVM_DEBUG(llvm::dbgs() << "Stmt follows\n");
-	  //     LLVM_DEBUG(stmt->dump(llvm::dbgs(), ast_context_));
-	  //     HDLBody xmethod(const_cast<Stmt *>(stmt), h_body, diag_engine, ast_context_, mod_vname_map);
-	  //     methodecls.insertall(xmethod.methodecls);
-	  //   }
-	  //   else LLVM_DEBUG(llvm::dbgs() << "Block element not stmt\n");
-	  // }
+	  blkix+=1;
 	  h_top->child_list.push_back(h_body);
+	  scblocks.push_back(curscblock);
 	}
       }
+      LLVM_DEBUG(llvm::dbgs() << "SCBlocks:\n"); 
+      for (auto scbl: scblocks)
+	scbl->dump();
     }
 
   HDLThread::~HDLThread() {
     LLVM_DEBUG(llvm::dbgs() << "[[ Destructor HDLThread ]]\n");
   }
 
+  bool HDLThread::is_wait_stmt(hNodep hp) {
+    return ((hp->child_list.size() >=1) and ((hp->child_list.back())->getopc() == hNode::hdlopsEnum::hWait));
+  }
+  
   void HDLThread::markStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map) {
     Map[S] = true;
     for (const Stmt *K : S->children())
@@ -91,7 +110,7 @@ namespace systemc_hdl {
       }
     }
     
-    // Any expressions not in Map are statements.
+    // Any expressions not in Map are top level statements.
     for (auto I = B->begin(); I != B->end(); ++I) {
       CFGElement E = *I;
       if (auto SE = E.getAs<CFGStmt>()) {
@@ -101,5 +120,13 @@ namespace systemc_hdl {
 	}
       }
     }
+  }
+  
+  void SCBBlock::dump() {
+    LLVM_DEBUG(llvm::dbgs() << "SCBBlock " << blkix << " from CFG Block "
+	       << cfgb->getBlockID() << " startstmtix " << startstmtix <<
+	       " endstmtix " << endstmtix << "\n");
+    // for (auto stmt: stmts)
+    //   LLVM_DEBUG(stmt->dump(llvm::dbgs(), ast_context_));
   }
 }

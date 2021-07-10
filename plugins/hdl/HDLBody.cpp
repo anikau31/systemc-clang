@@ -533,6 +533,8 @@ namespace systemc_hdl {
       opc = hNode::hdlopsEnum::hSigAssignR;
     else if ((methodname == "write") && (lutil.isSCType(qualmethodname)))
       opc = hNode::hdlopsEnum::hSigAssignL;
+    else if (methodname == "wait")
+      opc = hNode::hdlopsEnum::hWait;
     else if (lutil.isSCType(qualmethodname)) {  // operator from simulation library
       opc = hNode::hdlopsEnum::hNoop;
     } else {

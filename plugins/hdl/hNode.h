@@ -78,6 +78,7 @@ namespace hnode {
   etype(hFunctionParams), \
   etype(hFunctionParamI), \
   etype(hFunctionParamIO), \
+  etype(hWait), \
   etype(hUnimpl), \
   etype(hLast)
 
@@ -240,7 +241,7 @@ namespace hnode {
     }
 
     static inline bool isSCFunc(const string &tstring) {
-      return (tstring == "concat");
+      return (tstring == "concat") || (tstring == "wait");
       // add more as we get them
     }
 
