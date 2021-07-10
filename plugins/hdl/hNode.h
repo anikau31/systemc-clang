@@ -190,6 +190,7 @@ namespace hnode {
       // default arguments don't work in lldb
     void dumphcode() {
       print(llvm::outs(), 2);
+      LLVM_DEBUG(print(llvm::dbgs(), 2));
     }
   
   };

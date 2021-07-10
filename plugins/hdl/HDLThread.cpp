@@ -18,17 +18,20 @@
 namespace systemc_hdl {
 
   HDLThread::HDLThread(CXXMethodDecl *emd, hNodep &h_top,
-                   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map )
+		       clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map )
     : diag_e{diag_engine}, ast_context_{ast_context} {
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLThread constructor (thread body)\n");
       h_ret = NULL;
 
       // get CFG
-
-      static std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
+      
+      std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
       clang::LangOptions LO = ast_context.getLangOpts();
       threadcfg->dump(LO, false);
       int blkix = 0;
+      int stateix = 0;
+      
+      // for each CFG bblock in the thread
       for (CFG::const_iterator I = threadcfg->begin(), E = threadcfg->end(); I != E; ++I ) {
 	string blkid =  std::to_string((*I)->getBlockID());
 	LLVM_DEBUG(llvm::dbgs() << "Block ID " << blkid << " size " << (*I)->size() <<"\n");
@@ -55,16 +58,20 @@ namespace systemc_hdl {
 	    LLVM_DEBUG(stmt->dump(llvm::dbgs(), ast_context_));
 	    HDLBody xmethod(const_cast<Stmt *>(stmt), h_body, diag_engine, ast_context_, mod_vname_map);
 	    if (is_wait_stmt(h_body)) {
-	      LLVM_DEBUG(llvm::dbgs() << "Detected wait stmt\n"); 
-	      (h_body->child_list.back())->set(hNode::hdlopsEnum::hNoop); // remove wait hcode
+	      LLVM_DEBUG(llvm::dbgs() << "Detected wait stmt\n");
+	      SCBBlock * wb = new SCBBlock(*I, SS, -1, blkix, blkix+1, stmtix, stmtix+1, stateix, h_body->child_list.back());
+	      stateix++;
+	      waitblocks.push_back(wb);
+	      h_body->child_list.pop_back(); // remove wait hcode
+	      curscblock->endstmtix-=1; // the wait statement is not part of the current sc block
 	      if (stmtix < SS.size()-1) { // more statements follow wait
 		LLVM_DEBUG(llvm::dbgs() << "stmt following wait stmt\n");
 		h_top->child_list.push_back(h_body); // end this method
 		curscblock->endstmtix = stmtix; // update scblock end stmt ix
-		scblocks.push_back(curscblock);
+		scbblocks.push_back(curscblock);
 		h_body =  new hNode("B"+blkid+std::to_string(stmtix), hNode::hdlopsEnum::hMethod);
 		curscblock = new SCBBlock(*I, SS);
-		curscblock->startstmtix = stmtix;
+		curscblock->startstmtix = stmtix+1;
 		curscblock->endstmtix = SS.size();
 		blkix++;
 		curscblock->blkix = blkix;
@@ -75,12 +82,15 @@ namespace systemc_hdl {
 	  }
 	  blkix+=1;
 	  h_top->child_list.push_back(h_body);
-	  scblocks.push_back(curscblock);
+	  scbblocks.push_back(curscblock);
 	}
       }
-      LLVM_DEBUG(llvm::dbgs() << "SCBlocks:\n"); 
-      for (auto scbl: scblocks)
+      LLVM_DEBUG(llvm::dbgs() << "SCBBlocks:\n"); 
+      for (auto scbl: scbblocks)
 	scbl->dump();
+      LLVM_DEBUG(llvm::dbgs() << "SCWait Blocks:\n"); 
+      for (auto bl: waitblocks)
+	bl->dump();
     }
 
   HDLThread::~HDLThread() {
@@ -125,7 +135,8 @@ namespace systemc_hdl {
   void SCBBlock::dump() {
     LLVM_DEBUG(llvm::dbgs() << "SCBBlock " << blkix << " from CFG Block "
 	       << cfgb->getBlockID() << " startstmtix " << startstmtix <<
-	       " endstmtix " << endstmtix << "\n");
+	       " endstmtix " << endstmtix << " statenum " << statenum << "\n");
+    if (hblockbody!=NULL) hblockbody->dumphcode();
     // for (auto stmt: stmts)
     //   LLVM_DEBUG(stmt->dump(llvm::dbgs(), ast_context_));
   }

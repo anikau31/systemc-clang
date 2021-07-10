@@ -19,7 +19,7 @@ using namespace llvm;
 
 namespace systemc_hdl {
   class SCBBlock;
-  
+
   class HDLThread {
   public:
     HDLThread(CXXMethodDecl * emd, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map);
@@ -35,8 +35,11 @@ namespace systemc_hdl {
 
     hdecl_name_map_t vname_map;
     bool add_info;
-    std::vector<SCBBlock *> scblocks;
-    
+
+    SCBBlock * resetblock;
+    std::vector<SCBBlock *> scbblocks;
+    std::vector<SCBBlock *> waitblocks;
+
     // pre-pass over BB to mark subexpressions
     void findStatements(CFGBlock *B, std::vector<const Stmt *> &SS);
     void markStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map);
@@ -45,6 +48,7 @@ namespace systemc_hdl {
     util lutil;
 
     const ASTContext& ast_context_;
+
   };
 
   class SCBBlock {
@@ -56,18 +60,25 @@ namespace systemc_hdl {
     int startstmtix, endstmtix;
     std::vector<int> pred, succ;
     int statenum;
-    int wait_reset; // -1=>reset, 0=>normal, >=1 means this entry is a wait statement
+    hNodep hblockbody;
     
     
-  SCBBlock(CFGBlock* cfgbin, std::vector<const Stmt *> &SS) : cfgb{cfgbin}, stmts{SS} {}
+  SCBBlock(CFGBlock* cfgbin, std::vector<const Stmt *> &SS) : cfgb{cfgbin}, stmts{SS}
+    {
+      blkix = statenum = -1; hblockbody = NULL;
+    }
+    SCBBlock(CFGBlock* cfgbin, std::vector<const Stmt *> &SS,
+	     int blki, int six, int eix, int p, int s, int stn, hNodep hb) :
+    cfgb{cfgbin},
+      stmts{SS},
+	blkix{blki},
+	  startstmtix{six}, endstmtix{eix}, statenum{stn}, hblockbody{hb}
+    {
+      pred.push_back(p);
+      succ.push_back(s);
+    }
+    
     void dump();
-    void set_reset() { wait_reset = -1;}
-    bool is_reset() { return (wait_reset == -1);}
-    void set_normal() { wait_reset = 0;}
-    bool is_normal() { return (wait_reset == 0);}
-    void set_wr(int clocks=1) { wait_reset = clocks; }
-    int get_wr() { return wait_reset;}
-      
   };
 
 }
