@@ -5,6 +5,8 @@
 #include <iostream>
 #include "ClangArgs.h"
 
+#include "SplitCFG.h"
+
 using namespace systemc_clang;
 
 // Source:
@@ -37,7 +39,9 @@ SC_MODULE( test ){
   void test_thread() {
     while(true) {
      x = x+1;
+     wait();
      out1.write(x);
+     wait(4);
     }
   }
 
@@ -182,10 +186,17 @@ int sc_main(int argc, char *argv[]) {
       auto block = *begin_it;
       block->dump();
 
+      /// Try to split the block.
+      SplitCFGBlock sp{};
+      sp.split_block(block);
+      
       llvm::dbgs() << "Get each element.\n";
       /// Try to get the Elements in each CFGBlock
+      int i{1};
       for (auto const &element : block->refs()) {
+        llvm::dbgs() << "element index: " << block->getBlockID() << ":" << i << "\n";
         element->dump();
+        ++i;
         if (auto stmt = element->getAs<CFGStmt>()) {
           stmt->getStmt()->dump();
         }
