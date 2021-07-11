@@ -30,6 +30,14 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
         auto name{direct_callee->getNameInfo().getAsString()};
         if (name == std::string("wait")) {
           llvm::dbgs() << "@@@@ FOUND WAIT @@@@\n";
+
+          /// Check that there is only 1 or 0 arguments
+          auto args{cxx_me->getNumArgs()};
+          if (args >= 2) {
+            llvm::errs() << "wait() must have either 0 or 1 argument.\n";
+            return false;
+          }
+          return true;
         }
       }
     }
@@ -40,20 +48,38 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
 
 void SplitCFGBlock::split_block(clang::CFGBlock* block) {
   llvm::dbgs() << "============== SPLIT BLOCK ==============\n";
-  std::size_t id{1};
+  assert(block != nullptr);
+  block_ = block;
+
+  unsigned int start{1};
+  unsigned int end{1};
+  unsigned int num_elements{block_->size()};
 
   for (auto const& element : block->refs()) {
-    llvm::dbgs() << "element index: " << block->getBlockID() << ":" << id
+    llvm::dbgs() << "element index: " << block->getBlockID() << ":" << start
                  << "\n";
     element->dump();
-    ++id;
 
     /// If the element is a wait() then split it.
     if (isWait(*element)) {
-      block_ = block;
+      split_blocks_.push_back(std::pair<unsigned int, unsigned int>(start, end - 1));
+      split_blocks_.push_back(std::pair<unsigned int, unsigned int>(end, end));
+      start = end + 1;
     }
+
+    // Increment end location.
+    ++end;
   }
+  split_blocks_.push_back(std::pair<unsigned int, unsigned int>(start, num_elements));
   llvm::dbgs() << "============== END SPLIT BLOCK ==============\n";
 }
 
-void SplitCFGBlock::dump() {}
+void SplitCFGBlock::dump() {
+  if (block_) {
+    block_->dump();
+    llvm::dbgs() << "Dump split blocks\n";
+    for (auto const& sblock : split_blocks_) {
+      llvm::dbgs() << "[ " << sblock.first << ", " << sblock.second << " ]\n";
+    }
+  }
+}
