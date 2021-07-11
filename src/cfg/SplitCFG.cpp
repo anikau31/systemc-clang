@@ -4,7 +4,7 @@
 
 using namespace systemc_clang;
 
-SplitCFGBlock::SplitCFGBlock() : block_{nullptr} {}
+SplitCFGBlock::SplitCFGBlock() : block_{nullptr}, has_wait_{false} {}
 
 SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   block_ = from.block_;
@@ -65,13 +65,17 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
       split_blocks_.push_back(std::pair<unsigned int, unsigned int>(start, end - 1));
       split_blocks_.push_back(std::pair<unsigned int, unsigned int>(end, end));
       start = end + 1;
+      has_wait_ = true;
     }
 
     // Increment end location.
     ++end;
   }
-  split_blocks_.push_back(std::pair<unsigned int, unsigned int>(start, num_elements));
+  if (has_wait_) {
+    split_blocks_.push_back(std::pair<unsigned int, unsigned int>(start, num_elements));
+  }
   llvm::dbgs() << "============== END SPLIT BLOCK ==============\n";
+
 }
 
 void SplitCFGBlock::dump() {

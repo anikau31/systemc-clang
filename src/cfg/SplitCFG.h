@@ -9,6 +9,7 @@ namespace systemc_clang {
   class SplitCFGBlock {
     private:
       clang::CFGBlock *block_;
+      bool has_wait_;
       std::vector<std::size_t> wait_ids;
       std::vector<std::pair<unsigned int, unsigned int> > split_blocks_;
 
