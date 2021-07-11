@@ -8,13 +8,14 @@ SplitCFGBlock::SplitCFGBlock() : block_{nullptr}, has_wait_{false} {}
 
 SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   block_ = from.block_;
+  has_wait_ = from.has_wait_;
+  split_elements_ = from.split_elements_;
 }
 
 clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
 
-std::size_t SplitCFGBlock::getElementsSize() const {
-  assert(block_ == nullptr);
-  return block_->size();
+std::size_t SplitCFGBlock::getSplitBlockSize() const {
+  return split_elements_.size();
 }
 
 bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
@@ -62,8 +63,10 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
 
     /// If the element is a wait() then split it.
     if (isWait(*element)) {
-      split_blocks_.push_back(std::pair<unsigned int, unsigned int>(start, end - 1));
-      split_blocks_.push_back(std::pair<unsigned int, unsigned int>(end, end));
+      split_elements_.push_back(
+          std::pair<unsigned int, unsigned int>(start, end - 1));
+      split_elements_.push_back(
+          std::pair<unsigned int, unsigned int>(end, end));
       start = end + 1;
       has_wait_ = true;
     }
@@ -72,18 +75,64 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
     ++end;
   }
   if (has_wait_) {
-    split_blocks_.push_back(std::pair<unsigned int, unsigned int>(start, num_elements));
+    split_elements_.push_back(
+        std::pair<unsigned int, unsigned int>(start, num_elements));
   }
   llvm::dbgs() << "============== END SPLIT BLOCK ==============\n";
-
 }
 
-void SplitCFGBlock::dump() {
+void SplitCFGBlock::dump() const {
   if (block_) {
     block_->dump();
     llvm::dbgs() << "Dump split blocks\n";
-    for (auto const& sblock : split_blocks_) {
-      llvm::dbgs() << "[ " << sblock.first << ", " << sblock.second << " ]\n";
+    for (auto const& element: split_elements_) {
+      llvm::dbgs() << "[ " << element.first << ", " << element.second << " ]\n";
     }
   }
 }
+
+/// ===========================================
+/// SplitCFG
+/// ===========================================
+SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
+
+void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
+  cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
+                                        clang::CFG::BuildOptions());
+
+  clang::LangOptions lang_opts;
+  cfg_->dump(lang_opts, true);
+
+  // Go through all CFG blocks
+  llvm::dbgs() << "Iterate through all CFGBlocks.\n";
+  /// These iterators are not in clang 12.
+  // for (auto const &block: CFG->const_nodes()) {
+  for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
+       ++begin_it) {
+    auto block{*begin_it};
+    block->dump();
+
+    /// Try to split the block.
+    SplitCFGBlock sp{};
+    sp.split_block(block);
+    sp.dump();
+
+    if (sp.getSplitBlockSize() != 0) {
+      /// The block has been split.
+      split_blocks_.insert(std::pair<unsigned int, SplitCFGBlock>(block->getBlockID(),sp));
+    }
+  }
+}
+
+void SplitCFG::dump() const {
+    llvm::dbgs() << "Dump all blocks that were split\n";
+    for (auto const &sblock : split_blocks_) {
+      llvm::dbgs() << "Block ID: " << sblock.first << "\n";
+      const SplitCFGBlock *block_with_wait{ &sblock.second };
+      llvm::dbgs() << "Print all info for split block\n";
+      block_with_wait->dump();
+
+    }
+}
+
+

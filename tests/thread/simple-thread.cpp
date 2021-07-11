@@ -3,6 +3,7 @@
 #include "SystemCClang.h"
 // This is automatically generated from cmake.
 #include <iostream>
+#include <utility>
 #include "ClangArgs.h"
 
 #include "SplitCFG.h"
@@ -159,16 +160,22 @@ int sc_main(int argc, char *argv[]) {
     //
 
     llvm::outs() << " ********************* CFG ***********************\n";
-    const auto CFG = clang::CFG::buildCFG(method, method->getBody(),
+    /*
+    const auto cfg = clang::CFG::buildCFG(method, method->getBody(),
                                           &from_ast->getASTContext(),
                                           clang::CFG::BuildOptions());
     LangOptions lang_opts;
-    CFG->dump(lang_opts, true);
+    cfg->dump(lang_opts, true);
 
     /// Get the root node.
-    const clang::CFGBlock &entry{CFG->getEntry()};
+    const clang::CFGBlock &entry{cfg->getEntry()};
     entry.dump();
+    */
 
+    SplitCFG scfg{from_ast->getASTContext()};
+    scfg.split_wait_blocks( method );
+    scfg.dump();
+    /*
     /// Access the successor
     for (auto const &succ : entry.succs()) {
       succ->dump();
@@ -195,5 +202,6 @@ int sc_main(int argc, char *argv[]) {
       sp.split_block(block);
       sp.dump();
     }
+    */
   }
 }
