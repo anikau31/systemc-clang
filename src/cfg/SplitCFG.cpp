@@ -25,8 +25,6 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
     stmt->dump();
     auto* expr{llvm::dyn_cast<clang::Expr>(stmt)};
     if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
-      llvm::dbgs() << "STMTEXPR\n";
-      cxx_me->dump();
       if (auto direct_callee = cxx_me->getDirectCallee()) {
         auto name{direct_callee->getNameInfo().getAsString()};
         if (name == std::string("wait")) {
@@ -63,11 +61,15 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
 
     /// If the element is a wait() then split it.
     if (isWait(*element)) {
-      split_elements_.push_back(
-          std::pair<unsigned int, unsigned int>(start, end - 1));
-      split_elements_.push_back(
-          std::pair<unsigned int, unsigned int>(end, end));
-      start = end + 1;
+      if (num_elements == 1) {
+        llvm::errs() << "Error: Only one statement and it is a wait().\n";
+      } else {
+        split_elements_.push_back(
+            std::pair<unsigned int, unsigned int>(start, end - 1));
+        split_elements_.push_back(
+            std::pair<unsigned int, unsigned int>(end, end));
+        start = end + 1;
+      }
       has_wait_ = true;
     }
 
@@ -85,7 +87,7 @@ void SplitCFGBlock::dump() const {
   if (block_) {
     block_->dump();
     llvm::dbgs() << "Dump split blocks\n";
-    for (auto const& element: split_elements_) {
+    for (auto const& element : split_elements_) {
       llvm::dbgs() << "[ " << element.first << ", " << element.second << " ]\n";
     }
   }
@@ -98,7 +100,7 @@ SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
 
 void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
   cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
-                                        clang::CFG::BuildOptions());
+                              clang::CFG::BuildOptions());
 
   clang::LangOptions lang_opts;
   cfg_->dump(lang_opts, true);
@@ -119,20 +121,18 @@ void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
 
     if (sp.getSplitBlockSize() != 0) {
       /// The block has been split.
-      split_blocks_.insert(std::pair<unsigned int, SplitCFGBlock>(block->getBlockID(),sp));
+      split_blocks_.insert(
+          std::pair<unsigned int, SplitCFGBlock>(block->getBlockID(), sp));
     }
   }
 }
 
 void SplitCFG::dump() const {
-    llvm::dbgs() << "Dump all blocks that were split\n";
-    for (auto const &sblock : split_blocks_) {
-      llvm::dbgs() << "Block ID: " << sblock.first << "\n";
-      const SplitCFGBlock *block_with_wait{ &sblock.second };
-      llvm::dbgs() << "Print all info for split block\n";
-      block_with_wait->dump();
-
-    }
+  llvm::dbgs() << "Dump all blocks that were split\n";
+  for (auto const& sblock : split_blocks_) {
+    llvm::dbgs() << "Block ID: " << sblock.first << "\n";
+    const SplitCFGBlock* block_with_wait{&sblock.second};
+    llvm::dbgs() << "Print all info for split block\n";
+    block_with_wait->dump();
+  }
 }
-
-

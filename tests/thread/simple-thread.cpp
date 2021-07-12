@@ -39,6 +39,7 @@ SC_MODULE( test ){
 
   void test_thread() {
     while(true) {
+    /*
      x = x+1;
      x = x+2;
      wait();
@@ -47,6 +48,9 @@ SC_MODULE( test ){
      wait(4);
      wait(4, SC_NS);
      x = x + 6;
+     */
+
+    wait(4);
     }
   }
 
