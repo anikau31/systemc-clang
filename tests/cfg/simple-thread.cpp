@@ -36,10 +36,33 @@ SC_MODULE( test ){
 
   // others
   int x;
+  int k;
+
+  void simple_wait() {
+    while (true) {
+      if (x == 1) {
+        k = 1;
+        wait();
+
+        if (x == 3) {
+          k = 2;
+          wait();
+        } else  {
+          k = 3;
+        }
+      } else {
+        if (x == 5) {
+          k = 4;
+          wait();
+        }
+      }
+      wait();
+      k = 5;
+    }
+  }
 
   void test_thread() {
     while(true) {
-    /*
      x = x+1;
      x = x+2;
      wait();
@@ -48,15 +71,12 @@ SC_MODULE( test ){
      wait(4);
      wait(4, SC_NS);
      x = x + 6;
-     */
-
-    wait(4);
     }
   }
 
   SC_CTOR( test ) {
    int x{2};
-    SC_THREAD(test_thread);
+    SC_THREAD(simple_wait);
       sensitive << clk.pos();
   }
 };
@@ -133,7 +153,7 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getSignals().size() == 0);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOtherVars().size() == 1);
+    REQUIRE(test_module_inst->getOtherVars().size() == 2);
 
     // Check process information
     //
@@ -155,6 +175,7 @@ int sc_main(int argc, char *argv[]) {
         int check{1};
         for (auto const &sense : sense_map) {
           if ((sense.first == "test_thread_handle__clkpos")) --check;
+          if ((sense.first == "simple_wait_handle__clkpos")) --check;
         }
         REQUIRE(check == 0);
       }
@@ -177,7 +198,8 @@ int sc_main(int argc, char *argv[]) {
     */
 
     SplitCFG scfg{from_ast->getASTContext()};
-    scfg.split_wait_blocks( method );
+    //scfg.split_wait_blocks( method );
+    scfg.build_sccfg( method );
     scfg.dump();
     /*
     /// Access the successor

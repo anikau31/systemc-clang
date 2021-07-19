@@ -1,6 +1,7 @@
 #include "SplitCFG.h"
 
 #include "llvm/Support/Debug.h"
+#include "llvm/ADT/PostOrderIterator.h"
 
 using namespace systemc_clang;
 
@@ -124,6 +125,29 @@ void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
       split_blocks_.insert(
           std::pair<unsigned int, SplitCFGBlock>(block->getBlockID(), sp));
     }
+  }
+}
+
+void SplitCFG::build_sccfg(const clang::CXXMethodDecl* method) {
+  cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
+                              clang::CFG::BuildOptions());
+
+  llvm::dbgs() << "Build SCCFG\n";
+
+  clang::LangOptions lang_opts;
+  cfg_->dump(lang_opts, true);
+
+  for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
+       ++begin_it) {
+    auto block{*begin_it};
+    llvm::dbgs() << "=> " << block->getBlockID() << "\n";
+  }
+
+  llvm::outs() << "Basic blocks in post-order:\n";
+  for (llvm::po_iterator<clang::CFGBlock*> I = llvm::po_begin(&cfg_->getEntry()),
+                                IE = llvm::po_end(&cfg_->getEntry());
+       I != IE; ++I) {
+    llvm::outs() << "  " << (*I)->getBlockID() << "\n";
   }
 }
 
