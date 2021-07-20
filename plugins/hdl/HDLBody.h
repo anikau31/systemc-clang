@@ -28,12 +28,18 @@ using namespace systemc_clang;
 using namespace hnode;
 
 namespace systemc_hdl {
+  typedef enum { rnomode, rmethod, rmodinit, rthread } HDLBodyMode;
+  
   class HDLBody: public RecursiveASTVisitor <HDLBody> {
   public:
     HDLBody(CXXMethodDecl * emd, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map);
     HDLBody( Stmt * stmt, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map, bool add_info = true);
+    HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map );
+
     virtual ~HDLBody();
 
+    void Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode);
+        
     bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
     bool TraverseStmt(Stmt *stmt);
     bool TraverseDeclStmt(DeclStmt * declstmt);
@@ -55,26 +61,37 @@ namespace systemc_hdl {
     bool ProcessSwitchCase(SwitchCase *cases);
     bool TraverseWhileStmt(WhileStmt *whiles);
     bool TraverseDoStmt(DoStmt *whiles);
+    string FindVname(NamedDecl *vard);
     void AddVnames(hNodep &hvns);
 
     hNodep NormalizeHcode(hNodep hinp);
-    
+
     hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
 
     clang::DiagnosticsEngine &diag_e;
-  
+    
+    hdecl_name_map_t vname_map;
+    
   private:
   
     hNodep h_ret;   // value returned by each subexpression
 
-    hdecl_name_map_t vname_map;
+    //    hdecl_name_map_t vname_map;
+    hdecl_name_map_t &mod_vname_map_;
+    
     bool add_info;
+
+    HDLBodyMode thismode;
     
     bool isLogicalOp(clang::OverloadedOperatorKind opc);
     
     inline bool isAssignOp(hNodep hp) {
       return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
 	(hp->h_name == "=");
+    }
+
+    inline string generate_vname(string nm) {
+      return vname_map.get_prefix()+ nm;
     }
     
     util lutil;

@@ -33,17 +33,35 @@ namespace systemc_hdl {
   
     hNodep h_ret;   // value returned by each subexpression
 
+    hNodep h_top_; // reference to calling hnode pointer
+    hNodep hthreadblocksp; // collect the methods here
+    hNodep hlocalvarsp; // collect the local vars here
+
     hdecl_name_map_t vname_map;
     bool add_info;
+    int blkix;
+    int stateix;
+    hdecl_name_map_t &mod_vname_map_;
+
+    HDLBody *xtbodyp;
+    
+    std::unordered_map<int, bool> Visited; // Blocks visisted to gen Method
 
     SCBBlock * resetblock;
     std::vector<SCBBlock *> scbblocks;
     std::vector<SCBBlock *> waitblocks;
 
     // pre-pass over BB to mark subexpressions
-    void findStatements(CFGBlock *B, std::vector<const Stmt *> &SS);
-    void markStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map);
+    void FindStatements(const CFGBlock &B, std::vector<const Stmt *> &SS);
+    void MarkStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map);
+    void CheckVardecls(hNodep &hp);
+    void AddThreadMethod(const CFGBlock &BI);
+    void ProcessBB(const CFGBlock &BI);
+   
     bool is_wait_stmt(hNodep hp);
+
+    bool is_vardecl(hNodep hp);
+
     
     util lutil;
 
@@ -54,7 +72,7 @@ namespace systemc_hdl {
   class SCBBlock {
 
   public:
-    CFGBlock* cfgb;
+    const CFGBlock& cfgb;
     std::vector<const Stmt *> stmts;
     int blkix;
     int startstmtix, endstmtix;
@@ -63,11 +81,11 @@ namespace systemc_hdl {
     hNodep hblockbody;
     
     
-  SCBBlock(CFGBlock* cfgbin, std::vector<const Stmt *> &SS) : cfgb{cfgbin}, stmts{SS}
+  SCBBlock(const CFGBlock& cfgbin, std::vector<const Stmt *> &SS) : cfgb{cfgbin}, stmts{SS}
     {
       blkix = statenum = -1; hblockbody = NULL;
     }
-    SCBBlock(CFGBlock* cfgbin, std::vector<const Stmt *> &SS,
+    SCBBlock(const CFGBlock& cfgbin, std::vector<const Stmt *> &SS,
 	     int blki, int six, int eix, int p, int s, int stn, hNodep hb) :
     cfgb{cfgbin},
       stmts{SS},

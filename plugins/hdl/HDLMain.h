@@ -47,6 +47,7 @@ namespace systemc_hdl {
 			      ModuleInstance* mod,
        hNodep &h_pb);
     
+    clang::DiagnosticsEngine &main_diag_engine{getContext().getDiagnostics()};
     
   private:
 
@@ -58,6 +59,8 @@ namespace systemc_hdl {
     std::unordered_set<string> module_vars;
 
     HDLType HDLt;
+
+    HDLBody *xbodyp;
 
     util mutil;
 

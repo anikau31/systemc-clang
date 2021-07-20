@@ -87,7 +87,7 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "\nRoot instance not found, exiting\n");
       return false;
     }
-
+    
     // generate module instance for top module and its submodules
 
     //string modname = modinstance->getName()+mod_newn.newname(); // include original name for readability
@@ -147,6 +147,8 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
     
     hdecl_name_map_t mod_vname_map("_scclang_global_");
+    xbodyp = new HDLBody(main_diag_engine, getContext(), mod_vname_map);
+    
     module_vars.clear();
     // Ports
     hNodep h_ports =
@@ -175,7 +177,7 @@ namespace systemc_hdl {
       }
       else LLVM_DEBUG(llvm::dbgs() << "Non-Array submodule " << smod->getInstanceName() << "\n");
       const std::vector<std::string> &instnames{smod->getInstanceInfo().getInstanceNames()};
-      //string newmodname = smod->getName()+mod_newn.newname();
+
       bool frsttime = true;
       for (auto instname: instnames) {
 	LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
@@ -188,8 +190,6 @@ namespace systemc_hdl {
 	  mod_name_map.add_entry(smod, smod->getName(), h_smod);
 	  h_smod->set(instname); // override name inserted by map service
 	  frsttime = false;
-	  //mod_name_map[smod] = {instname,
-	  //		      newmodname, h_smod};
 	}
 	h_smodtypinfo->child_list.push_back(
 					    new hNode(mod_name_map.find_entry_newn(smod), hNode::hdlopsEnum::hType));
@@ -209,12 +209,13 @@ namespace systemc_hdl {
 
     {
       // init block
-      clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+      //clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
       mod_i = mod;
       hNodep hconstructor;
       for (int i = 0; i <= basemods.size(); i++) {
 	hconstructor = new hNode(mod_i->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
-	HDLBody xconstructor(mod_i->getConstructorDecl()->getBody(), hconstructor, diag_engine, getContext(), mod_vname_map);
+	//HDLBody xconstructor(mod_i->getConstructorDecl()->getBody(), hconstructor, main_diag_engine, getContext(), mod_vname_map);
+	xbodyp->Run(mod_i->getConstructorDecl()->getBody(), hconstructor,rmodinit);
 	LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
 	hconstructor->print(llvm::dbgs());
 	HDLConstructorHcode hcxxbody;
@@ -229,19 +230,6 @@ namespace systemc_hdl {
 
       // diag_engine scope ends
     }
-
-    //  typedef std::pair<std::string, PortBinding *> portBindingPairType;
-    //  typedef std::map<std::string, PortBinding *> portBindingMapType;
-    //   portBindingMapType getPortBindings();
-    
-    // We are doing port bindings in the init block now
-    
-    // hNodep h_submodule_pb =
-    //   new hNode(mod->getInstanceName()+"_portbindings", hNode::hdlopsEnum::hPortbindings);
-    // SCportbindings2hcode(mod, h_submodule_pb);
-    // if (!h_submodule_pb->child_list.empty())
-    //   h_module->child_list.push_back(h_submodule_pb);
-
 
     if (allmethodecls.size() > 0) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
@@ -258,7 +246,7 @@ namespace systemc_hdl {
 		   << m.second.newn << "\n");
 	LLVM_DEBUG(m.first->dump(llvm::dbgs()));
 	LLVM_DEBUG(llvm::dbgs() << "---------\n");
-	clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 	if (m.first->hasBody()) {
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
 	  QualType qrettype = m.first->getDeclaredReturnType();
@@ -293,10 +281,13 @@ namespace systemc_hdl {
 	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
 				&array_sizes, paramtype, hparams);
 	    }
-	    //HDLBody xfunction(m.second->getBody(), hfunc, diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
-	    HDLBody xfunction(m.first->getBody(), hfunc, diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
+
+	    //HDLBody xfunction(m.first->getBody(), hfunc, main_diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
+	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
 	  } else {
-	    HDLBody xfunction(m.first->getBody(), hfunc, diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
+	    //HDLBody xfunction(m.first->getBody(), hfunc, main_diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
+	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
+
 	  }
 	  h_top->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
@@ -306,6 +297,8 @@ namespace systemc_hdl {
 
     h_module->print(HCodeOut);
     // now generate submodules
+    delete xbodyp; // release this hdlbody
+    
     for (const auto &smod : submodv) {
 
       string modname = mod_name_map.find_entry_newn(smod);
@@ -370,7 +363,7 @@ namespace systemc_hdl {
 
   void HDLMain::SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
 			     hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
-    clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+    //clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 
     for (ModuleInstance::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
 	 mit++) {
@@ -430,7 +423,8 @@ namespace systemc_hdl {
 	    LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
 	    LLVM_DEBUG(initializer->dump(llvm::dbgs(), getContext()));
 	    hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);
-	    HDLBody xmethod(initializer, h_init, diag_engine, getContext(), mod_vname_map);
+	    //HDLBody xmethod(initializer, h_init, main_diag_engine, getContext(), mod_vname_map);
+	    xbodyp->Run(initializer, h_init, rnomode);
 	    (h_info->child_list.back())->child_list.push_back(h_init);
 	  }
 	}
@@ -486,10 +480,10 @@ namespace systemc_hdl {
 
     /// Get the diagnostic engine.
     //
-    clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
+    //clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 
-    const unsigned cxx_record_id1 = diag_engine.getCustomDiagID(
-								clang::DiagnosticsEngine::Remark, "non-SC_METHOD '%0' skipped.");
+    const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(
+								clang::DiagnosticsEngine::Remark, "non-SC_METHOD/THREAD '%0' skipped.");
 
     for (auto const &pm_entry : pm) {
       ProcessDecl *pd{get<1>(pm_entry)};
@@ -499,9 +493,10 @@ namespace systemc_hdl {
 	LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName() << "\n");
 	CXXMethodDecl *emd = efc->getEntryMethod();
 	if (emd->hasBody()) {
-	  hNodep h_body = new hNode(hNode::hdlopsEnum::hMethod);
-	  HDLBody xmethod(emd, h_body, diag_engine, getContext(), mod_vname_map);
-	  allmethodecls.insertall(xmethod.methodecls);
+	  hNodep h_body = new hNode(efc->getName(), hNode::hdlopsEnum::hMethod);
+	  //HDLBody xmethod(emd, h_body, main_diag_engine, getContext(), mod_vname_map);
+	  xbodyp->Run(emd->getBody(), h_body, rmethod);
+	  allmethodecls.insertall(xbodyp->methodecls);
 	  h_process->child_list.push_back(h_body);
 	  h_top->child_list.push_back(h_process);
 	} else {
@@ -514,8 +509,8 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "thread " << efc->getName() << "\n");
 	  CXXMethodDecl *emd = efc->getEntryMethod();
 	  if (emd->hasBody()) {
-	    hNodep h_body = new hNode(hNode::hdlopsEnum::hThread);
-	    HDLThread xthread(emd, h_body, diag_engine, getContext(), mod_vname_map);
+	    hNodep h_body = new hNode(efc->getName(), hNode::hdlopsEnum::hThread);
+	    HDLThread xthread(emd, h_body, main_diag_engine, getContext(), mod_vname_map);
 	    allmethodecls.insertall(xthread.methodecls);
 	    h_thread->child_list.push_back(h_body);
 	    h_top->child_list.push_back(h_thread);
@@ -524,7 +519,7 @@ namespace systemc_hdl {
 	  }
 	}
 	else {
-	  clang::DiagnosticBuilder diag_builder{diag_engine.Report(
+	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(
 								 (efc->getEntryMethod())->getLocation(), cxx_record_id1)};
 	  diag_builder << efc->getName();
 
