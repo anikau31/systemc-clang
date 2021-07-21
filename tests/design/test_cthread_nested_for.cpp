@@ -20,17 +20,11 @@ public:
     SC_HAS_PROCESS(top);
     top(sc_module_name)
     {
-        SC_CTHREAD(for_stmt_no_wait1, clk.pos());
-        async_reset_signal_is(arstn, false);
-        
-        /*
-        SC_CTHREAD(for_stmt_no_wait2, clk.pos());
-        async_reset_signal_is(arstn, false);
-        
-        
+                
         SC_CTHREAD(for_stmt_no_wait3, clk.pos());
         async_reset_signal_is(arstn, false);
         
+        /*
         SC_CTHREAD(for_stmt_no_wait4, clk.pos());
         async_reset_signal_is(arstn, false);
 
@@ -64,139 +58,6 @@ public:
         */
     }
 
-    void for_stmt_no_wait1()
-    {
-        int k = 0;
-        wait();
-        
-        while (true) {
-            
-            for (int i = 0; i < 2; i++) {
-                k = 1;
-            }
-            
-            k = 2;
-            wait();
-        }
-    }
-    
-    void for_stmt_no_wait2()
-    {
-        wait();
-        
-        while (true) {
-            
-            int k = 0;
-            for (int i = 0; i < 4; i++) {
-                k--;
-            }
-            //assert_const(k == -4);
-            
-            wait();
-
-            for (int i = 0; i < 10; i++) {
-                if (in) {
-                    for (int j = 0; j < 4; j++) {
-                        k++;
-                    }
-                }
-            }
-        }
-    }
-    
-    /*
-    // No wait() for with break
-    void for_stmt_no_wait3()
-    {
-        wait();
-        
-        while (true) {
-            
-            int k = 11;
-            for (int i = 0; i < 4; i++) {
-                if (in.read() != k) {
-                    break;
-                }
-                k *= 2;
-            }
-            wait();
-        }
-    }
-    
-    // No wait() for with continue
-    void for_stmt_no_wait4()
-    {
-        int n = 1;
-        unsigned m = 0;
-        wait();
-        
-        while (true) {
-            
-            for (int i = 0; i < 4; i++) {
-                if (in.read()) {
-                    n += 1;
-                } else {
-                    continue;
-                }
-                m += n;
-            }
-            
-            wait();
-            
-            m = 0;
-        }
-    }
-   */ 
-// ----------------------------------------------------------------------------
-    
-    void for_stmt_wait0()
-    {
-        int k = 0;
-        wait();
-        
-        while (true) {
-            k = 1;                          // B6
-            wait();     // 1
-            
-            for (int i = 0; i < 2; i++) {   // B5
-                k = 2;                      // B4
-                wait();   // 2
-            }                               // B3
-            k = 3;                          // B2
-        }
-    }
-   /* 
-    void for_stmt_wait1()
-    {
-        int k = 0;
-        wait();
-        
-        while (true) {
-            for (int i = 0; i < 2; i++) {
-                k = 1;
-                wait();
-            }
-            k = 2;
-        }
-    }
-
-    void for_stmt_wait2()
-    {
-        int k = 0;
-        wait();
-        
-        while (true) {
-            for (int i = 0; i < 2; i++) {
-                k = 1;
-                wait();
-            }
-            k = 2;
-            wait();
-            
-            k = 3;
-        }
-    }
-    
     // Double loops with break
     void for_stmt_wait3()
     {
@@ -217,6 +78,7 @@ public:
         }
     }
     
+    /*
     // Double loops with continue
     void for_stmt_wait4()
     {
