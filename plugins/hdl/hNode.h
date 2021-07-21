@@ -373,7 +373,11 @@ namespace hnode {
     typename std::map<T, names_t>::iterator begin() { return hdecl_name_map.begin();}
     typename std::map<T, names_t>::iterator end() { return hdecl_name_map.end();}
 
-    void insertall(newname_map_t<T> &newmap) {
+    // note the pass by value on newmap:
+    // need a copy to preserve the inserted values
+    // or else a clear or destructor on calling param newmap
+    // releases the entries
+    void insertall(newname_map_t<T> newmap) {
       hdecl_name_map.insert(newmap.begin(),
 			    newmap.end());
     }

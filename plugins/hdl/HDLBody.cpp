@@ -80,6 +80,7 @@ namespace systemc_hdl {
     add_info = (thismode == rmodinit);
     thismode = runmode;
     methodecls.clear(); // clear out old state
+    methodecls.set_prefix("_func_");
     vname_map.clear();
     if (thismode == rthread) {
       vname_map.set_prefix("_"+h_top->getname()+tvar_prefix);
