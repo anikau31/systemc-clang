@@ -21,7 +21,7 @@ public:
     top(sc_module_name)
     {
                 
-        SC_CTHREAD(for_stmt_no_wait3, clk.pos());
+        SC_CTHREAD(for_stmt_wait3, clk.pos());
         async_reset_signal_is(arstn, false);
         
         /*
