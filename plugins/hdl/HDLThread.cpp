@@ -94,6 +94,11 @@ namespace systemc_hdl {
 	  MarkStatements(K, Map);
       }
     }
+    // mark subexpressions coming from terminator statement
+    if (const Stmt *S = B.getTerminatorStmt()) {
+      for (const Stmt *K : S->children())
+	MarkStatements(K, Map);
+    }
     
     // Any expressions not in Map are top level statements.
     for (auto I = B.begin(); I != B.end(); ++I) {
