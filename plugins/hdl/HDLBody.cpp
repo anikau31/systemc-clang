@@ -77,7 +77,7 @@ namespace systemc_hdl {
   {
     LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody Run Method\n");
     h_ret = NULL;
-    add_info = (thismode == rmodinit);
+    add_info = (runmode == rmodinit);
     thismode = runmode;
     methodecls.clear(); // clear out old state
     methodecls.set_prefix("_func_");
