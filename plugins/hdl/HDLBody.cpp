@@ -30,46 +30,9 @@ using namespace hnode;
 
 namespace systemc_hdl {
 
-  HDLBody::HDLBody(CXXMethodDecl *emd, hNodep &h_top,
-		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map )
-    : diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map} {
-    LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor (method body\n");
-    h_ret = NULL;
-    add_info = false;
-    thismode = rmethod;
-    vname_map.set_prefix("_"+h_top->getname()+vname_map.get_prefix());
-    if (!mod_vname_map.empty())
-      vname_map.insertall(mod_vname_map);
-    methodecls.set_prefix("_func_");
-    bool ret1 = TraverseStmt(emd->getBody());
-    AddVnames(h_top);
-    h_top->child_list.push_back(h_ret);
-    LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor (method body)\n");
-  }
-
-  HDLBody::HDLBody( Stmt *stmt, hNodep &h_top,
-		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, bool add_info)
-    : diag_e{diag_engine}, add_info{add_info}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map} {
-
-      // add_info determines whether additional information is added to hcode operands that
-      // is needed by downstream hcode processing of the cxxdeclconstructor to recover
-      // port bindings and sensitivity lists
-      
-      h_ret = NULL;
-      vname_map.set_prefix("_"+ h_top->getname()+vname_map.get_prefix());
-      if (!mod_vname_map.empty())
-	vname_map.insertall(mod_vname_map);
-      methodecls.set_prefix("_func_");
-      bool ret1 = TraverseStmt(stmt);
-      AddVnames(h_top);
-
-      h_top->child_list.push_back(h_ret);
-      LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor (stmt)\n");
-  }
-
   HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map) :
     diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map} {
-      LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor (non-run entry point)\n");
+      LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor\n");
     }
 
   void HDLBody::Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode) 
