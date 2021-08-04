@@ -1,4 +1,5 @@
 set( CFG_ANALYSIS 
+  SplitCFGBlock.cpp
   SplitCFG.cpp
   )
 

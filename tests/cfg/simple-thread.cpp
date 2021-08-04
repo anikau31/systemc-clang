@@ -61,8 +61,14 @@ SC_MODULE( test ){
     }
   }
 
+void func_call() {
+  int k{0};
+  k = k +1;
+}
+
   void test_thread() {
     while(true) {
+    func_call();
      x = x+1;
      x = x+2;
      wait();
@@ -76,7 +82,7 @@ SC_MODULE( test ){
 
   SC_CTOR( test ) {
    int x{2};
-    SC_THREAD(simple_wait);
+    SC_THREAD(test_thread);
       sensitive << clk.pos();
   }
 };
@@ -198,8 +204,8 @@ int sc_main(int argc, char *argv[]) {
     */
 
     SplitCFG scfg{from_ast->getASTContext()};
-    //scfg.split_wait_blocks( method );
-    scfg.build_sccfg( method );
+    scfg.split_wait_blocks( method );
+    //scfg.build_sccfg( method );
     scfg.dump();
     /*
     /// Access the successor

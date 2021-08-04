@@ -21,9 +21,11 @@ public:
     top(sc_module_name)
     {
                 
-        SC_CTHREAD(for_stmt_wait3, clk.pos());
+        SC_CTHREAD(nested_for_with_wait, clk.pos());
         async_reset_signal_is(arstn, false);
-        
+        // SC_CTHREAD(for_stmt_wait3, clk.pos());
+        // async_reset_signal_is(arstn, false);
+//
         /*
         SC_CTHREAD(for_stmt_no_wait4, clk.pos());
         async_reset_signal_is(arstn, false);
@@ -58,6 +60,32 @@ public:
         */
     }
 
+    void nested_for_with_wait()
+    {
+        int k = 0;
+        wait();
+        
+        while (true) {
+            for (int i = 0; i < 2; i++) {
+                k = 1;
+                wait();
+                  k = 2;
+                for (int j = 0; j < 3; j++) {
+                    k = 3;
+                    wait();     
+                    k = 4;
+                    wait();
+                    k = 5;
+                }
+                k = 6;
+                wait();
+            }
+            k = 7;
+            wait();             
+        }
+    }
+    
+
     // Double loops with break
     void for_stmt_wait3()
     {
@@ -71,7 +99,7 @@ public:
                     k = 2;
                     wait();     // 1
                 }
-                if (in) break;
+       //         if (in) break;
             }
             k = 3;
             wait();             // 2
