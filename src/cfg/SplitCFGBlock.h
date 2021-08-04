@@ -16,7 +16,7 @@ class SplitCFGBlock {
   clang::CFGBlock *block_;
   bool has_wait_;
 
-  /// Store the element indices that split the block.
+  /// Store the element indicies that split the block.
   std::vector<std::pair<unsigned int, unsigned int> > split_elements_;
 
  private:

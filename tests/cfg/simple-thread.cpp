@@ -9,21 +9,7 @@
 
 #include "SplitCFG.h"
 
-
 using namespace systemc_clang;
-
-// Source:
-// https://www.toptip.ca/2010/03/trim-leading-or-trailing-white-spaces.html
-std::string &trim(std::string &s) {
-  size_t p = s.find_first_not_of(" \t");
-  s.erase(0, p);
-
-  p = s.find_last_not_of(" \t");
-  if (string::npos != p) s.erase(p + 1);
-
-  return s;
-}
-
 TEST_CASE("Simple thread test", "[threads]") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "simple-thread-input.cpp")};
@@ -31,7 +17,6 @@ TEST_CASE("Simple thread test", "[threads]") {
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
           .release();
-
 
   /// Turn debug on
   //
@@ -123,8 +108,8 @@ TEST_CASE("Simple thread test", "[threads]") {
     */
 
     SplitCFG scfg{from_ast->getASTContext()};
-    scfg.split_wait_blocks( method );
-    //scfg.build_sccfg( method );
+    scfg.split_wait_blocks(method);
+    // scfg.build_sccfg( method );
     scfg.dump();
     /*
     /// Access the successor
