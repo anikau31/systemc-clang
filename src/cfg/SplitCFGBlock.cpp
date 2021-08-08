@@ -15,6 +15,8 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
 
 clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
 
+bool SplitCFGBlock::hasWait() const { return has_wait_; }
+
 std::size_t SplitCFGBlock::getSplitBlockSize() const {
   return split_elements_.size();
 }
@@ -22,7 +24,7 @@ std::size_t SplitCFGBlock::getSplitBlockSize() const {
 bool SplitCFGBlock::isFunctionCall(const clang::CFGElement& element) const {
   if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
     auto stmt{cfg_stmt->getStmt()};
-    stmt->dump();
+    //stmt->dump();
 
     auto* expr{llvm::dyn_cast<clang::Expr>(stmt)};
     if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
@@ -38,7 +40,7 @@ bool SplitCFGBlock::isFunctionCall(const clang::CFGElement& element) const {
                                          clang::CFG::BuildOptions())};
 
           clang::LangOptions lang_opts;
-          fcfg->dump(lang_opts, true);
+          //fcfg->dump(lang_opts, true);
         }
       }
     }
@@ -51,7 +53,7 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
   if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
     auto stmt{cfg_stmt->getStmt()};
 
-    stmt->dump();
+    //stmt->dump();
     auto* expr{llvm::dyn_cast<clang::Expr>(stmt)};
     if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
       if (auto direct_callee = cxx_me->getDirectCallee()) {
@@ -75,10 +77,10 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
 };
 
 void SplitCFGBlock::split_block(clang::CFGBlock* block) {
-  llvm::dbgs() << "============== SPLIT BLOCK ==============\n";
   assert(block != nullptr);
   block_ = block;
 
+  llvm::dbgs() << "Checking if block " << block->getBlockID() << " has a wait()\n";
   // We are going to have two vectors.
   // 1. A vector of vector pointers to CFGElements.
   // 2. A vector of pointers to CFGElements that are waits.
@@ -88,8 +90,7 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
 
   VectorCFGElementPtr vec_elements{};
   for (auto const& element : block->refs()) {
-    llvm::dbgs() << "element index: " << block->getBlockID() << "\n";
-    element->dump();
+    //element->dump();
 
     //////////////////////////////////////////
     /// Test code
@@ -130,12 +131,10 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
   if (vec_elements.size() != 0) {
     split_elements_.push_back(vec_elements);
   }
-  llvm::dbgs() << "============== END SPLIT BLOCK ==============\n";
 }
 
 void SplitCFGBlock::dump() const {
   if (block_) {
-    block_->dump();
     llvm::dbgs() << "Dump split blocks\n";
     unsigned int i{0};
     for (auto const& split : split_elements_) {

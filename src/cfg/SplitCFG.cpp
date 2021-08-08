@@ -24,55 +24,27 @@ void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
   for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
        ++begin_it) {
     auto block{*begin_it};
-    block->dump();
 
     /// Try to split the block.
     SplitCFGBlock sp{};
     sp.split_block(block);
-    sp.dump();
 
 
     //////////////////////////////////////////
     //
-    if (sp.getSplitBlockSize() != 0) {
+    if (sp.hasWait()) {
       /// The block has been split.
       split_blocks_.insert(
-          std::pair<unsigned int, SplitCFGBlock>(block->getBlockID(), sp));
+          std::pair<const clang::CFGBlock*, SplitCFGBlock>(block, sp));
     }
   }
-}
-
-void SplitCFG::build_sccfg(const clang::CXXMethodDecl* method) {
-  cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
-                              clang::CFG::BuildOptions());
-
-  llvm::dbgs() << "Build SCCFG\n";
-
-  clang::LangOptions lang_opts;
-  cfg_->dump(lang_opts, true);
-
-  for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
-       ++begin_it) {
-    auto block{*begin_it};
-    llvm::dbgs() << "=> " << block->getBlockID() << "\n";
-    block->dump();
-  }
-
-  /*
-  llvm::outs() << "Basic blocks in post-order:\n";
-  for (llvm::po_iterator<clang::CFGBlock*>
-           I = llvm::po_begin(&cfg_->getEntry()),
-           IE = llvm::po_end(&cfg_->getEntry());
-       I != IE; ++I) {
-    llvm::outs() << "  " << (*I)->getBlockID() << "\n";
-  }
-  */
 }
 
 void SplitCFG::dump() const {
   llvm::dbgs() << "Dump all blocks that were split\n";
   for (auto const& sblock : split_blocks_) {
-    llvm::dbgs() << "Block ID: " << sblock.first << "\n";
+    llvm::dbgs() << "Block ID: " << sblock.first->getBlockID() << "\n";
+    sblock.first->dump();
     const SplitCFGBlock* block_with_wait{&sblock.second};
     llvm::dbgs() << "Print all info for split block\n";
     block_with_wait->dump();

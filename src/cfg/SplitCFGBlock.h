@@ -18,7 +18,6 @@ class SplitCFGBlock {
   clang::CFGBlock *block_;
   bool has_wait_;
 
-
   std::vector<VectorCFGElementPtr> split_elements_;
 
   std::vector<unsigned int> wait_element_ids_;
@@ -33,6 +32,7 @@ class SplitCFGBlock {
 
   clang::CFGBlock *getCFGBlock() const;
   std::size_t getSplitBlockSize() const;
+  bool hasWait() const;
 
   void split_block(clang::CFGBlock *block);
 
