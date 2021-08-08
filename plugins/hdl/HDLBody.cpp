@@ -30,40 +30,36 @@ using namespace hnode;
 
 namespace systemc_hdl {
 
-  HDLBody::HDLBody(CXXMethodDecl *emd, hNodep &h_top,
-		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map )
-    : diag_e{diag_engine}, ast_context_{ast_context} {
-    LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor (method body\n");
+  HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map) :
+    diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map} {
+      LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor\n");
+    }
+
+  void HDLBody::Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode) 
+ 
+  {
+    LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody Run Method\n");
     h_ret = NULL;
-    add_info = false;
-    if (!mod_vname_map.empty())
-      vname_map.insertall(mod_vname_map);
+    add_info = (runmode == rmodinit);
+    thismode = runmode;
+    methodecls.clear(); // clear out old state
     methodecls.set_prefix("_func_");
-    bool ret1 = TraverseStmt(emd->getBody());
-    AddVnames(h_top);
-    h_top->child_list.push_back(h_ret);
-    LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor (method body)\n");
+    vname_map.clear();
+    if (thismode == rthread) {
+      vname_map.set_prefix("_"+h_top->getname()+tvar_prefix);
+    }
+    else {
+      vname_map.set_prefix("_"+h_top->getname()+vname_map.get_prefix());
+    }
+    // if (!mod_vname_map_.empty())
+    // 	vname_map.insertall(mod_vname_map_);
+     methodecls.set_prefix("_func_");
+     bool ret1 = TraverseStmt(stmt);
+     AddVnames(h_top);
+     h_top->child_list.push_back(h_ret);
+     LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody Run Method\n");
+
   }
-
-  HDLBody::HDLBody(Stmt *stmt, hNodep &h_top,
-		   clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, bool add_info)
-    : diag_e{diag_engine}, add_info{add_info}, ast_context_{ast_context} {
-
-      // add_info determines whether additional information is added to hcode operands that
-      // is needed by downstream hcode processing of the cxxdeclconstructor to recover
-      // port bindings and sensitivity lists
-      
-      h_ret = NULL;
-      if (!mod_vname_map.empty())
-	vname_map.insertall(mod_vname_map);
-      methodecls.set_prefix("_func_");
-      bool ret1 = TraverseStmt(stmt);
-      AddVnames(h_top);
-
-      h_top->child_list.push_back(h_ret);
-      LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody constructor (stmt)\n");
-  }
-
   HDLBody::~HDLBody() {
     LLVM_DEBUG(llvm::dbgs() << "[[ Destructor HDLBody ]]\n");
   }
@@ -279,6 +275,7 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl var name is " << vardecl->getName()
 	       << "\n");
 
+    // create head node for the vardecl
     hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
 
     QualType q = vardecl->getType();
@@ -290,7 +287,7 @@ namespace systemc_hdl {
     te->Enumerate(tp);
     HDLType HDLt;
     std::vector<llvm::APInt> array_sizes = sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
-    HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(), &array_sizes,
+    HDLt.SCtype2hcode(generate_vname(vardecl->getName().str()), te->getTemplateArgTreePtr(), &array_sizes,
 		      hNode::hdlopsEnum::hVardecl, h_varlist);
     hNodep h_vardecl = h_varlist->child_list.back();
 
@@ -310,7 +307,7 @@ namespace systemc_hdl {
 
     if (h_ret) {
       hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
-      varinitp->child_list.push_back(new hNode(vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref));
+      varinitp->child_list.push_back(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
       varinitp->child_list.push_back(h_ret);
       h_ret = varinitp;
     }
@@ -460,12 +457,7 @@ namespace systemc_hdl {
       return true;
     }
 
-    // string newname = "";
-    // auto vname_it{vname_map.find(expr->getDecl())};
-    // if (vname_it != vname_map.end()) {
-    //   newname = vname_map[expr->getDecl()].newn;
-    // }
-    string newname = vname_map.find_entry_newn(expr->getDecl());
+    string newname = FindVname(expr->getDecl());
     LLVM_DEBUG(llvm::dbgs() << "new name is " << newname << "\n");
     LLVM_DEBUG(expr->getDecl()->dump(llvm::dbgs()));
 
@@ -533,6 +525,8 @@ namespace systemc_hdl {
       opc = hNode::hdlopsEnum::hSigAssignR;
     else if ((methodname == "write") && (lutil.isSCType(qualmethodname)))
       opc = hNode::hdlopsEnum::hSigAssignL;
+    else if (methodname == "wait")
+      opc = hNode::hdlopsEnum::hWait;
     else if (lutil.isSCType(qualmethodname)) {  // operator from simulation library
       opc = hNode::hdlopsEnum::hNoop;
     } else {
@@ -663,7 +657,7 @@ namespace systemc_hdl {
       else {
 	LLVM_DEBUG(llvm::dbgs() << "Value returned from member expr base was not Varref\n");
 	h_ret->print(llvm::dbgs());
-	string newname = vname_map.find_entry_newn(memberexpr->getMemberDecl());
+	string newname = FindVname(memberexpr->getMemberDecl());
 	LLVM_DEBUG(llvm::dbgs() << "member with base expr new name is " << newname << "\n");
 	hNodep memexprnode = new hNode(newname.empty()? nameinfo : newname, hNode::hdlopsEnum::hVarref);
 	memexprnode->child_list.push_back(h_ret);
@@ -673,7 +667,7 @@ namespace systemc_hdl {
 
     }
 
-    string newname = vname_map.find_entry_newn(memberexpr->getMemberDecl());
+    string newname = FindVname(memberexpr->getMemberDecl());
     LLVM_DEBUG(llvm::dbgs() << "member expr new name is " << newname << "\n");
 
     h_ret = new hNode(newname.empty()? nameinfo : newname, hNode::hdlopsEnum::hVarref);
@@ -894,6 +888,13 @@ namespace systemc_hdl {
     return true;
   }
 
+  string HDLBody::FindVname(NamedDecl *vard) {
+    string newname = vname_map.find_entry_newn(vard);
+    if (newname == "")
+      newname = mod_vname_map_.find_entry_newn(vard);
+    return newname;
+  }
+  
   void HDLBody::AddVnames(hNodep &hvns) {
     LLVM_DEBUG(llvm::dbgs() << "Vname Dump\n");
     //for (auto const &var : vname_map.hdecl_name_map) {
