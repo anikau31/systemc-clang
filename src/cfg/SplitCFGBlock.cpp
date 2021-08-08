@@ -10,6 +10,7 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   block_ = from.block_;
   has_wait_ = from.has_wait_;
   split_elements_ = from.split_elements_;
+  wait_element_ids_ = from.wait_element_ids_;
 }
 
 clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
@@ -31,14 +32,13 @@ bool SplitCFGBlock::isFunctionCall(const clang::CFGElement& element) const {
         if (name != std::string("wait")) {
           llvm::dbgs() << "NOT A WAIT CALL\n";
           /// Generate the CFG
-          auto method{ cxx_me->getMethodDecl()};
-          auto fcfg {clang::CFG::buildCFG(method, method->getBody(), &method->getASTContext(),
-                              clang::CFG::BuildOptions())};
+          auto method{cxx_me->getMethodDecl()};
+          auto fcfg{clang::CFG::buildCFG(method, method->getBody(),
+                                         &method->getASTContext(),
+                                         clang::CFG::BuildOptions())};
 
           clang::LangOptions lang_opts;
           fcfg->dump(lang_opts, true);
-
-
         }
       }
     }
@@ -79,43 +79,56 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
   assert(block != nullptr);
   block_ = block;
 
-  unsigned int start{1};
-  unsigned int end{1};
+  // We are going to have two vectors.
+  // 1. A vector of vector pointers to CFGElements.
+  // 2. A vector of pointers to CFGElements that are waits.
+  //
+  //
   unsigned int num_elements{block_->size()};
 
+  VectorCFGElementPtr vec_elements{};
   for (auto const& element : block->refs()) {
-    llvm::dbgs() << "element index: " << block->getBlockID() << ":" << start
-                 << "\n";
+    llvm::dbgs() << "element index: " << block->getBlockID() << "\n";
     element->dump();
 
     //////////////////////////////////////////
     /// Test code
     //////////////////////////////////////////
-    if (isFunctionCall(*element)) {
-      llvm::dbgs() << "YEAOW generate CFG for function call\n";
+    // if (isFunctionCall(*element)) {
+    // llvm::dbgs() << "YEAOW generate CFG for function call\n";
+    //
+    // }
 
-    }
-
+    /// refs() returns an iterator, which actually stores an ElementRefImpl<>
+    /// interface. In order to get the correct pointer to CFGElement, we need to
+    /// explicitly call operator->(). Odd!
+    const clang::CFGElement* element_ptr{element.operator->()};
     /// If the element is a wait() then split it.
     if (isWait(*element)) {
+      /// There is only one statement and it's a wait().
       if (num_elements == 1) {
-        llvm::errs() << "Error: Only one statement and it is a wait().\n";
-      } else {
-        split_elements_.push_back(
-            std::pair<unsigned int, unsigned int>(start, end - 1));
-        split_elements_.push_back(
-            std::pair<unsigned int, unsigned int>(end, end));
-        start = end + 1;
+        llvm::dbgs() << "DBG: Only one statement and it is a wait().\n";
       }
-      has_wait_ = true;
-    }
 
-    // Increment end location.
-    ++end;
+      if (vec_elements.size() != 0) {
+        split_elements_.push_back(vec_elements);
+        vec_elements.clear();
+      }
+
+      /// Add the wait as a separate entry in the list.
+      vec_elements.push_back(element_ptr);
+      split_elements_.push_back(vec_elements);
+      vec_elements.clear();
+      wait_element_ids_.push_back(split_elements_.size() - 1);
+
+      has_wait_ = true;
+    } else {
+      vec_elements.push_back(element_ptr);
+    }
   }
-  if (has_wait_) {
-    split_elements_.push_back(
-        std::pair<unsigned int, unsigned int>(start, num_elements));
+
+  if (vec_elements.size() != 0) {
+    split_elements_.push_back(vec_elements);
   }
   llvm::dbgs() << "============== END SPLIT BLOCK ==============\n";
 }
@@ -124,10 +137,19 @@ void SplitCFGBlock::dump() const {
   if (block_) {
     block_->dump();
     llvm::dbgs() << "Dump split blocks\n";
-    for (auto const& element : split_elements_) {
-      llvm::dbgs() << "[ " << element.first << ", " << element.second << " ]\n";
+    unsigned int i{0};
+    for (auto const& split : split_elements_) {
+      llvm::dbgs() << "Split block " << i++ << "\n";
+      for (auto const& element : split) {
+        element->dump();
+      }
+    }
+
+    llvm::dbgs() << "\n";
+    /// Dump the wait ids
+    llvm::dbgs() << "Dump wait elements\n";
+    for (auto const& id: wait_element_ids_) {
+      llvm::dbgs() << "Wait element at id " << id << "\n";
     }
   }
 }
-
-

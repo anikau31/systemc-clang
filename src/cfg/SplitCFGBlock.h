@@ -13,11 +13,15 @@ namespace systemc_clang {
 
 class SplitCFGBlock {
  private:
+  using VectorCFGElementPtr = std::vector<const clang::CFGElement *>;
+
   clang::CFGBlock *block_;
   bool has_wait_;
 
-  /// Store the element indicies that split the block.
-  std::vector<std::pair<unsigned int, unsigned int> > split_elements_;
+
+  std::vector<VectorCFGElementPtr> split_elements_;
+
+  std::vector<unsigned int> wait_element_ids_;
 
  private:
   bool isWait(const clang::CFGElement &element) const;
