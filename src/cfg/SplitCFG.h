@@ -19,6 +19,7 @@ class SplitCFG {
  public:
   SplitCFG(clang::ASTContext &context);
   void split_wait_blocks(const clang::CXXMethodDecl *cxx_decl);
+  void dfs();
   void dump() const;
 };
 
