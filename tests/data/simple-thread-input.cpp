@@ -41,15 +41,18 @@ SC_MODULE(test) {
 
   void test_thread() {
     while (true) {
-      func_call();
-      x = x + 1;
-      x = x + 2;
-      wait();
-      out1.write(x);
-      x = x + 3;
+      //func_call();
+      x = 1;
+      if (x > 3) {
+        x = 2;
+        wait();
+      } else {
+        x = 3;
+      }
+      x = 4;
       wait(4);
       wait(4, SC_NS);
-      x = x + 6;
+      x = 5;
     }
   }
 
