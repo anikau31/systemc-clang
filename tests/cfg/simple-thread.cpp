@@ -110,7 +110,7 @@ TEST_CASE("Simple thread test", "[threads]") {
     SplitCFG scfg{from_ast->getASTContext()};
     scfg.split_wait_blocks(method);
     // scfg.build_sccfg( method );
-   scfg.dfs();
+    scfg.dfs();
     scfg.dump();
     /*
     /// Access the successor

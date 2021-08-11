@@ -24,7 +24,7 @@ std::size_t SplitCFGBlock::getSplitBlockSize() const {
 bool SplitCFGBlock::isFunctionCall(const clang::CFGElement& element) const {
   if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
     auto stmt{cfg_stmt->getStmt()};
-    //stmt->dump();
+    // stmt->dump();
 
     auto* expr{llvm::dyn_cast<clang::Expr>(stmt)};
     if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
@@ -40,7 +40,7 @@ bool SplitCFGBlock::isFunctionCall(const clang::CFGElement& element) const {
                                          clang::CFG::BuildOptions())};
 
           clang::LangOptions lang_opts;
-          //fcfg->dump(lang_opts, true);
+          // fcfg->dump(lang_opts, true);
         }
       }
     }
@@ -53,21 +53,22 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
   if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
     auto stmt{cfg_stmt->getStmt()};
 
-    //stmt->dump();
-    auto* expr{llvm::dyn_cast<clang::Expr>(stmt)};
-    if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
-      if (auto direct_callee = cxx_me->getDirectCallee()) {
-        auto name{direct_callee->getNameInfo().getAsString()};
-        if (name == std::string("wait")) {
-          llvm::dbgs() << "@@@@ FOUND WAIT @@@@\n";
+    // stmt->dump();
+    if (auto* expr = llvm::dyn_cast<clang::Expr>(stmt)) {
+      if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
+        if (auto direct_callee = cxx_me->getDirectCallee()) {
+          auto name{direct_callee->getNameInfo().getAsString()};
+          if (name == std::string("wait")) {
+            //llvm::dbgs() << "@@@@ FOUND WAIT @@@@\n";
 
-          /// Check that there is only 1 or 0 arguments
-          auto args{cxx_me->getNumArgs()};
-          if (args >= 2) {
-            llvm::errs() << "wait() must have either 0 or 1 argument.\n";
-            return false;
+            /// Check that there is only 1 or 0 arguments
+            auto args{cxx_me->getNumArgs()};
+            if (args >= 2) {
+              llvm::errs() << "wait() must have either 0 or 1 argument.\n";
+              return false;
+            }
+            return true;
           }
-          return true;
         }
       }
     }
@@ -80,7 +81,8 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
   assert(block != nullptr);
   block_ = block;
 
-  llvm::dbgs() << "Checking if block " << block->getBlockID() << " has a wait()\n";
+  llvm::dbgs() << "Checking if block " << block->getBlockID()
+               << " has a wait()\n";
   // We are going to have two vectors.
   // 1. A vector of vector pointers to CFGElements.
   // 2. A vector of pointers to CFGElements that are waits.
@@ -90,7 +92,7 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
 
   VectorCFGElementPtr vec_elements{};
   for (auto const& element : block->refs()) {
-    //element->dump();
+    // element->dump();
 
     //////////////////////////////////////////
     /// Test code
@@ -147,7 +149,7 @@ void SplitCFGBlock::dump() const {
     llvm::dbgs() << "\n";
     /// Dump the wait ids
     llvm::dbgs() << "Dump wait elements\n";
-    for (auto const& id: wait_element_ids_) {
+    for (auto const& id : wait_element_ids_) {
       llvm::dbgs() << "Wait element at id " << id << "\n";
     }
   }
