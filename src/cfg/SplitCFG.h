@@ -1,10 +1,10 @@
 #ifndef _SPLIT_CFG_H_
 #define _SPLIT_CFG_H_
 
+#include <unordered_map>
+
 #include "clang/Analysis/CFG.h"
 #include "SplitCFGBlock.h"
-#include <vector>
-#include <unordered_map>
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/SmallPtrSet.h"
 
@@ -24,10 +24,10 @@ class SplitCFG {
   void split_wait_blocks(const clang::CXXMethodDecl *cxx_decl);
   void dfs_pop_on_wait(
       const clang::CFGBlock *BB,
-      llvm::SmallVector<const clang::CFGBlock *> &waits_in_stack,
-      llvm::SmallPtrSet<const clang::CFGBlock *, 8> &visited_waits);
+      llvm::SmallVectorImpl<const clang::CFGBlock *>& waits_in_stack,
+      llvm::SmallPtrSetImpl<const clang::CFGBlock *>& visited_waits);
 
-  void dfs();
+  void generate_paths();
   void dump() const;
 };
 

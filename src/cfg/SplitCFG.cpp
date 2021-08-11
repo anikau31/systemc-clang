@@ -1,7 +1,6 @@
 #include "SplitCFG.h"
 
 #include "llvm/Support/Debug.h"
-#include "llvm/ADT/PostOrderIterator.h"
 
 using namespace systemc_clang;
 
@@ -11,10 +10,10 @@ using namespace systemc_clang;
 SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
 
 void SplitCFG::dfs_pop_on_wait(
-    const clang::CFGBlock* BB,
-    llvm::SmallVector<const clang::CFGBlock*>& waits_in_stack,
-    llvm::SmallPtrSet<const clang::CFGBlock*, 8>& visited_waits) {
-  if (BB->succ_empty()) {
+    const clang::CFGBlock* basic_block,
+    llvm::SmallVectorImpl<const clang::CFGBlock*>& waits_in_stack,
+    llvm::SmallPtrSetImpl<const clang::CFGBlock*>& visited_waits) {
+  if (basic_block->succ_empty()) {
     /// Empty CFG block
     return;
   }
@@ -26,40 +25,41 @@ void SplitCFG::dfs_pop_on_wait(
       visit_stack;
   llvm::SmallVector<const clang::CFGBlock*, 8> in_stack;
 
-  visited.insert(BB);
-  visit_stack.push_back(std::make_pair(BB, BB->succ_begin()));
+  visited.insert(basic_block);
+  visit_stack.push_back(std::make_pair(basic_block, basic_block->succ_begin()));
 
   do {
     std::pair<const clang::CFGBlock*, clang::CFGBlock::const_succ_iterator>&
         Top = visit_stack.back();
-    const clang::CFGBlock* ParentBB = Top.first;
+    const clang::CFGBlock* parent_bb = Top.first;
     clang::CFGBlock::const_succ_iterator& I = Top.second;
 
     /// If BB has a wait() then just return.
-    if (isWait(*ParentBB)) {
-      llvm::dbgs() << "BB# " << ParentBB->getBlockID() << " has a wait in it\n";
+    if (isWait(*parent_bb)) {
+      llvm::dbgs() << "BB# " << parent_bb->getBlockID()
+                   << " has a wait in it\n";
 
       /// The wait has not been processed yet so add it to the visited_wait
       /// sets. Then add it in the stack to process the waits.
-      if (visited_waits.insert(ParentBB).second == true) {
+      if (visited_waits.insert(parent_bb).second == true) {
         // Insert the successor of the block.
-        llvm::dbgs() << "Visited BB#" << ParentBB->getBlockID() << "\n";
-        while (I != ParentBB->succ_end()) {
-          BB = *I++;
-          if ((BB != nullptr)) {
-            llvm::dbgs() << "Insert successor of BB#" << ParentBB->getBlockID()
-                         << ": BB#" << BB->getBlockID() << "\n";
-            waits_in_stack.push_back(BB);
+        llvm::dbgs() << "Visited BB#" << parent_bb->getBlockID() << "\n";
+        while (I != parent_bb->succ_end()) {
+          basic_block = *I++;
+          if ((basic_block != nullptr)) {
+            llvm::dbgs() << "Insert successor of BB#" << parent_bb->getBlockID()
+                         << ": BB#" << basic_block->getBlockID() << "\n";
+            waits_in_stack.push_back(basic_block);
           }
         }
       }
     }
 
     bool FoundNew = false;
-    while (I != ParentBB->succ_end()) {
-      BB = *I++;
-      if ((BB != nullptr) && (!isWait(*ParentBB)) &&
-          (visited.insert(BB).second)) {
+    while (I != parent_bb->succ_end()) {
+      basic_block = *I++;
+      if ((basic_block != nullptr) && (!isWait(*parent_bb)) &&
+          (visited.insert(basic_block).second)) {
         FoundNew = true;
         break;
       }
@@ -67,11 +67,12 @@ void SplitCFG::dfs_pop_on_wait(
 
     if (FoundNew) {
       // Go down one level if there is a unvisited successor.
-      llvm::dbgs() << "Visited BB#" << ParentBB->getBlockID() << "\n";
-      visit_stack.push_back(std::make_pair(BB, BB->succ_begin()));
+      llvm::dbgs() << "Visited BB#" << parent_bb->getBlockID() << "\n";
+      visit_stack.push_back(
+          std::make_pair(basic_block, basic_block->succ_begin()));
     } else {
       // Go up one level.
-      //llvm::dbgs() << "pop: " << visit_stack.size() << "\n";
+      // llvm::dbgs() << "pop: " << visit_stack.size() << "\n";
       visit_stack.pop_back();
     }
   } while (!visit_stack.empty());
@@ -107,7 +108,7 @@ bool SplitCFG::isWait(const clang::CFGBlock& block) const {
   return false;
 };
 
-void SplitCFG::dfs() {
+void SplitCFG::generate_paths() {
   /// Set of visited wait blocks.
   llvm::SmallPtrSet<const clang::CFGBlock*, 8> visited_waits;
   llvm::SmallVector<const clang::CFGBlock*> waits_in_stack;

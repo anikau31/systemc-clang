@@ -95,50 +95,10 @@ TEST_CASE("Simple thread test", "[threads]") {
     //
 
     llvm::outs() << " ********************* CFG ***********************\n";
-    /*
-    const auto cfg = clang::CFG::buildCFG(method, method->getBody(),
-                                          &from_ast->getASTContext(),
-                                          clang::CFG::BuildOptions());
-    LangOptions lang_opts;
-    cfg->dump(lang_opts, true);
-
-    /// Get the root node.
-    const clang::CFGBlock &entry{cfg->getEntry()};
-    entry.dump();
-    */
-
     SplitCFG scfg{from_ast->getASTContext()};
     scfg.split_wait_blocks(method);
     // scfg.build_sccfg( method );
-    scfg.dfs();
+    scfg.generate_paths();
     scfg.dump();
-    /*
-    /// Access the successor
-    for (auto const &succ : entry.succs()) {
-      succ->dump();
-      /// Try to get the Elements in each CFGBlock
-      for (auto const &element : succ->refs()) {
-        element->dump();
-        if (auto stmt = element->getAs<CFGStmt>()) {
-          stmt->getStmt()->dump();
-        }
-      }
-    }
-
-    // Go through all CFG blocks
-    llvm::dbgs() << "Iterate through all CFGBlocks.\n";
-    /// These iterators are not in clang 12.
-    // for (auto const &block: CFG->const_nodes()) {
-    for (auto begin_it = CFG->nodes_begin(); begin_it != CFG->nodes_end();
-         ++begin_it) {
-      auto block = *begin_it;
-      block->dump();
-
-      /// Try to split the block.
-      SplitCFGBlock sp{};
-      sp.split_block(block);
-      sp.dump();
-    }
-    */
   }
 }
