@@ -7,14 +7,12 @@ using namespace systemc_clang;
 /// ===========================================
 /// SplitCFG
 /// ===========================================
-SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
-
 void SplitCFG::dfs_pop_on_wait(
     const clang::CFGBlock* basic_block,
     llvm::SmallVectorImpl<const clang::CFGBlock*>& waits_in_stack,
     llvm::SmallPtrSetImpl<const clang::CFGBlock*>& visited_waits) {
+  /// Empty CFG block
   if (basic_block->succ_empty()) {
-    /// Empty CFG block
     return;
   }
 
@@ -28,6 +26,7 @@ void SplitCFG::dfs_pop_on_wait(
   visited.insert(basic_block);
   visit_stack.push_back(std::make_pair(basic_block, basic_block->succ_begin()));
 
+  VectorCFGBlock curr_path;
   do {
     std::pair<const clang::CFGBlock*, clang::CFGBlock::const_succ_iterator>&
         Top = visit_stack.back();
@@ -35,15 +34,19 @@ void SplitCFG::dfs_pop_on_wait(
     clang::CFGBlock::const_succ_iterator& I = Top.second;
 
     /// If BB has a wait() then just return.
-    if (isWait(*parent_bb)) {
+    bool bb_has_wait{isWait(*parent_bb)};
+
+    if (bb_has_wait) {
       llvm::dbgs() << "BB# " << parent_bb->getBlockID()
                    << " has a wait in it\n";
+      llvm::dbgs() << "Visited BB#" << parent_bb->getBlockID() << "\n";
+      curr_path.push_back(parent_bb);
 
       /// The wait has not been processed yet so add it to the visited_wait
       /// sets. Then add it in the stack to process the waits.
       if (visited_waits.insert(parent_bb).second == true) {
         // Insert the successor of the block.
-        llvm::dbgs() << "Visited BB#" << parent_bb->getBlockID() << "\n";
+
         while (I != parent_bb->succ_end()) {
           basic_block = *I++;
           if ((basic_block != nullptr)) {
@@ -55,10 +58,12 @@ void SplitCFG::dfs_pop_on_wait(
       }
     }
 
+    /// A new BB has been found.  Add its successors to be visited in the
+    /// future.
     bool FoundNew = false;
     while (I != parent_bb->succ_end()) {
       basic_block = *I++;
-      if ((basic_block != nullptr) && (!isWait(*parent_bb)) &&
+      if ((basic_block != nullptr) && (!bb_has_wait) &&
           (visited.insert(basic_block).second)) {
         FoundNew = true;
         break;
@@ -70,12 +75,16 @@ void SplitCFG::dfs_pop_on_wait(
       llvm::dbgs() << "Visited BB#" << parent_bb->getBlockID() << "\n";
       visit_stack.push_back(
           std::make_pair(basic_block, basic_block->succ_begin()));
+      curr_path.push_back(parent_bb);
     } else {
       // Go up one level.
       // llvm::dbgs() << "pop: " << visit_stack.size() << "\n";
       visit_stack.pop_back();
     }
   } while (!visit_stack.empty());
+
+  /// Insert the path constructed.
+  paths_found_.push_back(curr_path);
 }
 
 bool SplitCFG::isWait(const clang::CFGBlock& block) const {
@@ -154,6 +163,21 @@ void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
 }
 
 void SplitCFG::dump() const {
+  /// Dump all the paths found.
+  llvm::dbgs() << "Dump all paths to wait() found in the CFG.\n";
+  unsigned int i{0};
+  for (auto const& block_vector : paths_found_) {
+    llvm::dbgs() << "Path S" << i++ << ": ";
+    for (auto const& block : block_vector) {
+      llvm::dbgs() << block->getBlockID() << " ";
+    }
+    if (i == 1) {
+      llvm::dbgs() << " (reset path)";
+    }
+    llvm::dbgs() << "\n";
+  }
+
+  /*
   llvm::dbgs() << "Dump all blocks that were split\n";
   for (auto const& sblock : split_blocks_) {
     llvm::dbgs() << "Block ID: " << sblock.first->getBlockID() << "\n";
@@ -162,4 +186,14 @@ void SplitCFG::dump() const {
     llvm::dbgs() << "Print all info for split block\n";
     block_with_wait->dump();
   }
+  */
+}
+
+SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
+
+SplitCFG::SplitCFG(clang::ASTContext& context,
+                   const clang::CXXMethodDecl* method)
+    : context_{context} {
+  cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
+                              clang::CFG::BuildOptions());
 }
