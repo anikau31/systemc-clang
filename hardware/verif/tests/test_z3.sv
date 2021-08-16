@@ -1,6 +1,6 @@
 `define zynq $root.tb.dut.sw.bd_i.zynq_ultra_ps_e_0.inst
 `define clk25mhz $root.tb.dut.sw.clk25mhz_0
-`define clk50mhz $root.tb.dut.sw.clk50mhz_0
+`define clk50mhz $root.tb.dut.inst_rp.clk50mhz_0
 `define clk100mhz $root.tb.dut.sw.clk100mhz_0
 `define clkps   $root.tb.dut.sw.bd_i.zynq_ultra_ps_e_0.pl_clk0
 
@@ -71,10 +71,12 @@ program automatic test_case(); // interface to the design
   bit[1:0] rsp;
   bit[127:0] data;
   integer i;
+  bit[63:0] z3exp_d2[0:16];
+  bit[63:0] z3act_d2[0:16];
   initial begin
-
-
     $display("Test case");
+    // Load golden output from systemc
+    $readmemh("../../../data/z3true.mem", z3exp_d2);
     `zynq.por_srstb_reset(1'b1); // must be called
     repeat (17) begin
       @(posedge `clkps);
@@ -90,7 +92,7 @@ program automatic test_case(); // interface to the design
     `zynq.fpga_soft_reset(4'h0);
 
     // `zynq.pre_load_mem(2'b00, 32'h0001_0000, 1024);
-    `zynq.pre_load_mem(2'b11, 32'h0, 32'h4_0000);
+    `zynq.pre_load_mem(2'b11, 32'h0, 32'h8_0000);
     `zynq.pre_load_mem_from_file("../../../data/test_zynq_blank.mem", 32'h0001_0000, 8192);
 
     repeat(128) begin
@@ -110,20 +112,20 @@ program automatic test_case(); // interface to the design
     `zynq.wait_reg_update(`MM2S_CCR, 32'b000, ~32'b100, 20, 500, data); // wait until the reset is done
     // enable s2mm first
     setup_s2mm_descriptor(
-      64'hA008_0000,
+      64'h0004_0000,
 
-      64'hA008_0000,
+      64'h0004_0000,
       64'h0001_0200,
-      {1'b1, 1'b1, 4'h0, 26'(1024)});
+      {1'b1, 1'b1, 4'h0, 26'(128)});
     `zynq.write_data(`S2MM_CHEN, 8'h4, 32'b011, rsp); // Channel 0 and 1 and 2
     // Program Current Descriptor
-    `zynq.write_data(`S2MM_CURDESC_LSB(1), 8'h4, 32'hA008_0000, rsp);
+    `zynq.write_data(`S2MM_CURDESC_LSB(1), 8'h4, 32'h0004_0000, rsp);
     `zynq.write_data(`S2MM_CURDESC_MSB(1), 8'h4, 32'h0000_0000, rsp);
 
     setup_mm2s_descriptor(
-      64'hA008_0040,
+      64'h0004_0040,
 
-      64'hA008_0040,
+      64'h0004_0040,
       64'h0001_0000,
       {1'b1, 1'b1, 4'h0, 26'(128)},
       {8'h4, 8'h0, 16'h6});
@@ -132,7 +134,7 @@ program automatic test_case(); // interface to the design
     // Enable required channels
     `zynq.write_data(`MM2S_CHEN, 8'h4, 32'b001, rsp); // Channel 0 and 1 and 2
     // Program Current Descriptor
-    `zynq.write_data(`MM2S_CURDESC_LSB(1), 8'h4, 32'hA008_0040, rsp);
+    `zynq.write_data(`MM2S_CURDESC_LSB(1), 8'h4, 32'h0004_0040, rsp);
     `zynq.write_data(`MM2S_CURDESC_MSB(1), 8'h4, 32'h0000_0000, rsp);
 
     // CHANNEL.Fetch bit of channel control registers
@@ -141,54 +143,36 @@ program automatic test_case(); // interface to the design
     `zynq.write_data(`MM2S_CCR, 8'h4, 32'b1,rsp);
     // Interrupt thershold
     // Program the TD register (this triggers the fetching of the BD
-    `zynq.write_data(`MM2S_TAILDESC_LSB(1), 8'h4, 32'hA008_0040, rsp);
+    `zynq.write_data(`MM2S_TAILDESC_LSB(1), 8'h4, 32'h0004_0040, rsp);
     `zynq.write_data(`MM2S_TAILDESC_MSB(1), 8'h4, 32'h0000_0000, rsp);
 
     `zynq.wait_reg_update(`MM2S_CSR, 32'b010, ~32'b010, 20, 16384, data);
 
-    /*
-    // MM2S
-    // transfer 64 bytes
-    `zynq.write_data(`MM2S_DMACR,  8'h4, 32'b1000000000001, rsp);
-    `zynq.write_data(`MM2S_SA_LO,  8'h4, 32'h0001_0000, rsp);
-    `zynq.write_data(`MM2S_SA_HI,  8'h4, 32'h00000000, rsp);
-    `zynq.write_data(`MM2S_LENGTH, 8'h4, 1024, rsp);
-
-    // wait for DMA done
-    i = 0;
-    do begin
-      data = 0;
-      `zynq.read_data(`MM2S_DMASR, 8'h4, data, rsp);
-      $display("SRRet: %b", data);
-      `zynq.read_data(`MM2S_DMACR, 8'h4, data, rsp);
-      $display("CRRet: %b", data);
-      i = i + 1;
-    end while(data[12] != 1'b1);
-
-    // S2MM
-    // transfer 64 bytes
-    `zynq.write_data(`S2MM_DMACR,  8'h4, 32'b1000000000001, rsp);
-    `zynq.write_data(`S2MM_DA_LO,  8'h4, 32'h0001_0200, rsp);
-    `zynq.write_data(`S2MM_DA_HI,  8'h4, 32'h00000000, rsp);
-    `zynq.write_data(`S2MM_LENGTH, 8'h4, 1024, rsp);
-    // wait for DMA done
-    `zynq.wait_reg_update(`S2MM_DMASR, 32'b1000000000000, ~32'b1000000000000, 100, 10000, data);
-    // i = 0;
-    // do begin
-    //   `zynq.read_data(`S2MM_DMASR, 8'h4, data, rsp);
-    //   $display("SRRet: %b", data);
-    //   `zynq.read_data(`S2MM_DMACR, 8'h4, data, rsp);
-    //   $display("CRRet: %b", data);
-    //   i = i + 1;
-    // end while(data[12] != 1'b1);
-
-    repeat (8192) begin
-      @(posedge `clkps);
-    end
-    */
-
     `zynq.peek_mem_to_file("../../../data/dump.txt", 32'h0001_0000, 1024);
+
+    repeat(100) @(posedge `clk50mhz);
+
+    for(int i = 0; i < 16; i++) begin
+      if(z3exp_d2[i] != z3act_d2[i]) begin
+        $fatal("Mismatched datum");
+      end
+    end
+    $display("Test passed");
+
     $finish;
+  end
+  initial begin
+    integer i = 0;
+    while(1) begin
+      @(posedge `clk50mhz);
+        if($root.tb.dut.inst_rp.dut.c_dut_enc_valid && $root.tb.dut.inst_rp.dut.c_dut_enc_ready) begin
+          z3act_d2[i] = $root.tb.dut.inst_rp.dut.c_dut_enc_data_tdata;
+          if($root.tb.dut.inst_rp.dut.c_dut_enc_data_tlast) begin
+            break;
+          end
+          i = i + 1;
+        end
+    end
   end
   task automatic setup_mm2s_descriptor(
     input logic[63:0] base_addr,
@@ -205,36 +189,22 @@ program automatic test_case(); // interface to the design
     input logic[31:0] app4 = 0
   );
   begin
-  bit[1:0] rsp;
-  // `zynq.write_mem(next_descriptor[31:0],  base_addr + 32'h00, 32'h04);
-  // `zynq.write_mem(next_descriptor[63:32], base_addr + 32'h04, 32'h04);
-  // `zynq.write_mem(buffer[31:0],           base_addr + 32'h08, 32'h04);
-  // `zynq.write_mem(buffer[63:32],          base_addr + 32'h0C, 32'h04);
+    bit[1:0] rsp;
+    `zynq.write_mem(next_descriptor[31:0],  base_addr + 32'h00, 32'h04);
+    `zynq.write_mem(next_descriptor[63:32], base_addr + 32'h04, 32'h04);
+    `zynq.write_mem(buffer[31:0],           base_addr + 32'h08, 32'h04);
+    `zynq.write_mem(buffer[63:32],          base_addr + 32'h0C, 32'h04);
 
-  // `zynq.write_mem(control,                base_addr + 32'h14, 32'h04);
-  // `zynq.write_mem(control_sideband,       base_addr + 32'h18, 32'h04);
-  // `zynq.write_mem(0,                      base_addr + 32'h1C, 32'h04);
+    `zynq.write_mem(control,                base_addr + 32'h14, 32'h04);
+    `zynq.write_mem(control_sideband,       base_addr + 32'h18, 32'h04);
+    `zynq.write_mem(0,                      base_addr + 32'h1C, 32'h04);
 
-  // `zynq.write_mem(app0,                   base_addr + 32'h20, 32'h04);
-  // `zynq.write_mem(app1,                   base_addr + 32'h24, 32'h04);
-  // `zynq.write_mem(app2,                   base_addr + 32'h28, 32'h04);
-  // `zynq.write_mem(app3,                   base_addr + 32'h2C, 32'h04);
-  // `zynq.write_mem(app4,                   base_addr + 32'h30, 32'h04);
-  `zynq.write_data(base_addr + 32'h00, 8'h04, next_descriptor[31:0],  rsp);
-  `zynq.write_data(base_addr + 32'h04, 8'h04, next_descriptor[63:32], rsp);
-  `zynq.write_data(base_addr + 32'h08, 8'h04, buffer[31:0],           rsp);
-  `zynq.write_data(base_addr + 32'h0C, 8'h04, buffer[63:32],          rsp);
-
-  `zynq.write_data(base_addr + 32'h14, 8'h04, control,                rsp);
-  `zynq.write_data(base_addr + 32'h18, 8'h04, control_sideband,       rsp);
-  `zynq.write_data(base_addr + 32'h1C, 8'h04, 0,                      rsp);
-
-  `zynq.write_data(base_addr + 32'h20, 8'h04, app0,                   rsp);
-  `zynq.write_data(base_addr + 32'h24, 8'h04, app1,                   rsp);
-  `zynq.write_data(base_addr + 32'h28, 8'h04, app2,                   rsp);
-  `zynq.write_data(base_addr + 32'h2C, 8'h04, app3,                   rsp);
-  `zynq.write_data(base_addr + 32'h30, 8'h04, app4,                   rsp);
-end
+    `zynq.write_mem(app0,                   base_addr + 32'h20, 32'h04);
+    `zynq.write_mem(app1,                   base_addr + 32'h24, 32'h04);
+    `zynq.write_mem(app2,                   base_addr + 32'h28, 32'h04);
+    `zynq.write_mem(app3,                   base_addr + 32'h2C, 32'h04);
+    `zynq.write_mem(app4,                   base_addr + 32'h30, 32'h04);
+  end
   endtask
   task automatic setup_s2mm_descriptor(
     input logic[63:0] base_addr,
@@ -249,39 +219,23 @@ end
     input logic[31:0] app3 = 0,
     input logic[31:0] app4 = 0
   );
-begin
-  bit[1:0] rsp;
-  // `zynq.write_mem(next_descriptor[31:0],  base_addr + 32'h00, 32'h04);
-  // `zynq.write_mem(next_descriptor[63:32], base_addr + 32'h04, 32'h04);
-  // `zynq.write_mem(buffer[31:0],           base_addr + 32'h08, 32'h04);
-  // `zynq.write_mem(buffer[63:32],          base_addr + 32'h0C, 32'h04);
+  begin
+    bit[1:0] rsp;
+    `zynq.write_mem(next_descriptor[31:0],  base_addr + 32'h00, 32'h04);
+    `zynq.write_mem(next_descriptor[63:32], base_addr + 32'h04, 32'h04);
+    `zynq.write_mem(buffer[31:0],           base_addr + 32'h08, 32'h04);
+    `zynq.write_mem(buffer[63:32],          base_addr + 32'h0C, 32'h04);
 
-  // `zynq.write_mem(control,                base_addr + 32'h14, 32'h04);
-  // `zynq.write_mem(0,                      base_addr + 32'h18, 32'h04);
-  // `zynq.write_mem(0,                      base_addr + 32'h1C, 32'h04);
+    `zynq.write_mem(control,                base_addr + 32'h14, 32'h04);
+    `zynq.write_mem(0,                      base_addr + 32'h18, 32'h04);
+    `zynq.write_mem(0,                      base_addr + 32'h1C, 32'h04);
 
-  // `zynq.write_mem(app0,                   base_addr + 32'h20, 32'h04);
-  // `zynq.write_mem(app1,                   base_addr + 32'h24, 32'h04);
-  // `zynq.write_mem(app2,                   base_addr + 32'h28, 32'h04);
-  // `zynq.write_mem(app3,                   base_addr + 32'h2C, 32'h04);
-  // `zynq.write_mem(app4,                   base_addr + 32'h30, 32'h04);
-
-  `zynq.write_data(base_addr + 32'h00, 8'h04, next_descriptor[31:0],  rsp);
-  `zynq.write_data(base_addr + 32'h04, 8'h04, next_descriptor[63:32], rsp);
-  `zynq.write_data(base_addr + 32'h08, 8'h04, buffer[31:0],           rsp);
-  `zynq.write_data(base_addr + 32'h0C, 8'h04, buffer[63:32],          rsp);
-
-  `zynq.write_data(base_addr + 32'h14, 8'h04, control,                rsp);
-  `zynq.write_data(base_addr + 32'h18, 8'h04, 0,                      rsp);
-  `zynq.write_data(base_addr + 32'h1C, 8'h04, 0,                      rsp);
-
-  `zynq.write_data(base_addr + 32'h20, 8'h04, app0,                   rsp);
-  `zynq.write_data(base_addr + 32'h24, 8'h04, app1,                   rsp);
-  `zynq.write_data(base_addr + 32'h28, 8'h04, app2,                   rsp);
-  `zynq.write_data(base_addr + 32'h2C, 8'h04, app3,                   rsp);
-  `zynq.write_data(base_addr + 32'h30, 8'h04, app4,                   rsp);
-
-end
+    `zynq.write_mem(app0,                   base_addr + 32'h20, 32'h04);
+    `zynq.write_mem(app1,                   base_addr + 32'h24, 32'h04);
+    `zynq.write_mem(app2,                   base_addr + 32'h28, 32'h04);
+    `zynq.write_mem(app3,                   base_addr + 32'h2C, 32'h04);
+    `zynq.write_mem(app4,                   base_addr + 32'h30, 32'h04);
+  end
   endtask
 endprogram
 
