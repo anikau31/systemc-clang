@@ -51,6 +51,11 @@ class FunctionTransformationPass(TopDown):
         for f in self.current_module_function_nodes:
             if f.children[0] == func_name:
                 return f
+        # try fuzzy search
+        for f in self.current_module_function_nodes:
+            dprint(f.children[0][:-1] == func_name[:-1])
+            if f.children[0][:-1] == func_name[:-1]:
+                return f
         raise ValueError(f'Function {func_name} not found')
 
     def __get_current_process_stub(self, id):
@@ -236,10 +241,11 @@ class FunctionTransformationPass(TopDown):
         func_name, ret_type, func_params, local_vars, func_body = self.__extract_func_def(func_node)
         extra_args = []
         func_args = tree.children[1:]
-        for idx, _ in func_params.io_params:
-            arg = self.__extract_id_from_func_arg(func_args[idx])
-            stub = self.current_scope_object.name_stub[arg]
-            extra_args.append(Tree('hvarref', children=[stub.children[0]]))
+        if func_params is not None:
+            for idx, _ in func_params.io_params:
+                arg = self.__extract_id_from_func_arg(func_args[idx])
+                stub = self.current_scope_object.name_stub[arg]
+                extra_args.append(Tree('hvarref', children=[stub.children[0]]))
         tree.children.extend(extra_args)
         for idx in range(orig_len):
             arg = tree.children[idx]
@@ -284,13 +290,14 @@ class FunctionTransformationPass(TopDown):
         func_name, ret_type, func_params, local_vars, func_body = self.__extract_func_def(tree)
         extra_params = []
         self.__func_param_stubs = dict()
-        for idx, par in func_params.io_params:
-            tpe = func_params.children[idx].children[1]
-            # dprint(func_params.children[idx].pretty())
-            stub = FuncParamNameStub(par, copy.deepcopy(tpe))
-            extra_params.append(stub)
-            self.__change_type_to_funcinput(func_params.children[idx])
-            self.__func_param_stubs[par] = stub
+        if func_params is not None:
+            for idx, par in func_params.io_params:
+                tpe = func_params.children[idx].children[1]
+                # dprint(func_params.children[idx].pretty())
+                stub = FuncParamNameStub(par, copy.deepcopy(tpe))
+                extra_params.append(stub)
+                self.__change_type_to_funcinput(func_params.children[idx])
+                self.__func_param_stubs[par] = stub
         if extra_params:
             # NOTE: this condition must be present as it implies that func_params is not None
             func_params.children.extend(extra_params)

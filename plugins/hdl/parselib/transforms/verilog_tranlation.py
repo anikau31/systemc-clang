@@ -245,6 +245,8 @@ class VerilogTranslationPass(TopDown):
                 res = '{{({}), ({})}}'.format(tree.children[1], tree.children[2])
             elif op == '>>':  # Note: shift right
                 res = '({}) {} ({})'.format(tree.children[1], '>>>', tree.children[2])
+            elif op == 'concat':
+                res = '{{ ({}) {} ({}) }}'.format(tree.children[1], ',', tree.children[2])
             else:
                 res = '({}) {} ({})'.format(tree.children[1], op, tree.children[2])
         return res
@@ -505,7 +507,7 @@ class VerilogTranslationPass(TopDown):
         return self.current_proc_name
 
     def hprocess(self, tree):
-        proc_name, prevardecl, *body = tree.children
+        proc_name, proc_name_2, prevardecl, *body = tree.children
         self.set_current_proc_name(proc_name)
         for n in prevardecl.children:
             var_name = n.children[0].children[0]  # get the variable name of local variables
@@ -514,8 +516,10 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         self.dec_indent()
 
-        proc_name, prevardecl, *body = tree.children
+        proc_name, proc_name_2, prevardecl, *body = tree.children
 
+        prevardecl.children = list(filter(lambda x: not is_tree_type(x, 'vardeclrn'), prevardecl.children))
+        dprint(prevardecl)
 
         ind = self.get_current_ind_prefix()
         decls = list(map(lambda x: x[0] + ';', prevardecl.children))
@@ -715,7 +719,7 @@ class VerilogTranslationPass(TopDown):
 
     def hfunctionparams(self, tree):
         self.__push_up(tree)
-        return ', '.join(map(lambda x: x[0], tree.children))
+        return tree
 
     def hfunctionrettype(self, tree):
         self.__push_up(tree)
@@ -750,7 +754,16 @@ class VerilogTranslationPass(TopDown):
         self.dec_indent()
         ind = self.get_current_ind_prefix()
 
-        function_name, return_type, params, localvar, body = tree.children
+        # function_name, return_type, params, localvar, body = tree.children
+        function_name, return_type = tree.children[:2]
+        params = ''
+        for ch in tree.children[2:]:
+            if is_tree_type(ch, 'hfunctionparams'):
+                params = ', '.join(map(lambda x: x[0], ch.children))
+            elif is_tree_type(ch, 'hfunctionlocalvars'):
+                localvar = ch
+            elif is_tree_type(ch, "hfunctionbody"):
+                body = ch
 
 
         self.inc_indent()
