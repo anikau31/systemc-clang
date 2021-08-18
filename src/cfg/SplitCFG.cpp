@@ -53,6 +53,7 @@ void SplitCFG::dfs_pop_on_wait(
             llvm::dbgs() << "Insert successor of BB#" << parent_bb->getBlockID()
                          << ": BB#" << basic_block->getBlockID() << "\n";
             waits_in_stack.push_back(basic_block);
+            break;
           }
         }
       }
