@@ -8,7 +8,7 @@ lark_grammar = Lark('''
         // hmodule:  "hModule" ID "[" modportsiglist? (portbindinglist|processlist)* "]"
         hmodule:  "hModule" ID "[" modportsiglist? (hmodinitblock|processlist)* "]"
 
-        modportsiglist: "hPortsigvarlist" "NONAME" "[" modportsigdecl+ "]" 
+        modportsiglist: "hPortsigvarlist" "NONAME" ("[" modportsigdecl+ "]" | "NOLIST")
 
         ?modportsigdecl: portdecltype 
                       | sigdecltype 
@@ -28,10 +28,14 @@ lark_grammar = Lark('''
         ?hvarinit: "hVarInit" "NONAME" expression
         ?hvarinitint: "hVarInit" NUM "NOLIST"
         // can be no process at all in the module
-        processlist:  "hProcesses" "NONAME" "[" (hprocess|hfunction)*"]"
+        processlist:  "hProcesses" "NONAME" "[" (hprocess|hfunction|hthread)*"]"
+        threadprocesslist:  "hProcesses" "NONAME" "[" hbasicblock+ "]"
         // could be nothing
         // temporarily ignore the hMethod node
-        hprocess:  "hProcess" ID  "[" "hMethod" (ID|"NONAME") "[" prevardecl  hcstmt "]" "]"
+        hprocess: "hProcess" ID  "[" "hMethod" (ID|"NONAME") "[" prevardecl  hcstmt "]" "]"
+        // hthread consists of a list of processes
+        hthread:  "hProcess" ID  "[" "hThread" (ID|"NONAME") "[" modportsiglist  threadprocesslist "]" "]"
+        hbasicblock: "hMethod" ID  ("[" stmts "]" | "NOLIST")
         prevardecl: vardecl*
         vardecl: vardeclinit | vardeclrn
 
@@ -51,6 +55,9 @@ lark_grammar = Lark('''
              | hnoop
              | hreturnstmt
              | breakstmt
+             | hwait
+        
+        hwait: "hWait" "wait" "NOLIST"
              
         breakstmt: "hBreak" "NONAME" "NOLIST"
              
@@ -184,6 +191,9 @@ lark_grammar = Lark('''
                  | nblkassign
                  | vassign
                  | hmodassign
+        // These assignments are only intended to be used as blocking assignments
+        // The semantics may not be straightforward in clocked block
+        hcompoundassign: "hBinop" COMPOUND_ASSIGN "[" hvarref hvarref "]"
         ?arrayrhs: horreduce 
                   | htobool 
                   | htoint 
@@ -215,7 +225,7 @@ lark_grammar = Lark('''
         hslice: "hBinop" "SLICE" "[" hvarref expression expression "]"
         hnsbinop:  "hBinop" NONSUBBINOP "[" expression expression "]"
         // Comma op is the C++ comma where the latter part of the comma expression is returned
-        hcomma: "hBinop" "," "[" (blkassign | hunop) (hunop | expression) "]"
+        hcomma: "hBinop" "," "[" (blkassign | hunop | hmethodcall) (hunop | expression | hmethodcall) "]"
 
         hmethodcall: "hMethodCall" hidorstr  "[" expression expression* "]" 
                    | "hMethodCall" hidorstr  "NOLIST"
@@ -246,7 +256,7 @@ lark_grammar = Lark('''
         ID: /[a-zA-Z_][a-zA-Z_0-9#]*/
         NUM: /(\+|\-)?[0-9]+/
         TYPESTR: /[a-zA-Z_][a-zA-Z_0-9]*/
-        BINOP: NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE" | "concat"
+        BINOP: COMPOUND_ASSIGN | NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE" | "concat"
         NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&"
         ARITHOP: "+" | "-" | "*" | "/" | "^"
         UNOP_NON_SUB: "!" | "++" | "-"
@@ -257,6 +267,8 @@ lark_grammar = Lark('''
         UNOP_BOR: "|"
         UNOP_NOT: "!"
         UNOP_BNOT: "~"
+        // alias_translation.py
+        COMPOUND_ASSIGN: "*=" | "+=" | "-=" | "/=" | "%=" | "|=" | "&=" | "^=" | "<<=" | ">>="
         %import common.WS
         %ignore WS
         %import common.ESCAPED_STRING -> STRING

@@ -407,7 +407,7 @@ class TypedefExpansion(TopDown):
                 type_name = var_type.children[0]
                 if not Primitive.get_primitive(type_name) and not type_name in self.types:
                     # module instantiate
-                    assert False, 'module instantiation cannot reside in process: {}, {}'.format(var_name, type_name)
+                    assert False, 'Type {} not found or module instantiation cannot reside in process: {}, {}'.format(type_name, var_name, type_name)
                 for var_type_name in itertools.chain.from_iterable(var_tokens):
                     if var_type_name in self.types:  # detect the first type that is in the typedef list
                         self.__set_expanded(var_name, var_type)

@@ -10,6 +10,16 @@ class AliasTranslation(TopDown):
     TODO: this pass does almost the same thing as the pass NodeMerging Pass, and
     TODO: the 2 classes should be merged together
     """
+    COMPOUND_ASSIGN = ["*=", "+=", "-=", "/=", "%=", "|=", "&=", "^=", "<<=", ">>="]
+
+    def _get_op_token_from_compound_assign(self, op):
+        assert op in AliasTranslation.COMPOUND_ASSIGN
+        new_op = op[:-1]
+        if new_op in ["+", "-", "*", "/", "^"]:
+            return Token('ARITHOP', new_op)
+        else:
+            return Token('NONSUBBINOP', new_op)
+
     def __init__(self):
         super().__init__()
 
@@ -31,6 +41,23 @@ class AliasTranslation(TopDown):
 
     def haddassign(self, tree):
         return '+'
+
+    def hbinop(self, tree):
+        """
+        Convert a compound assignment into assignment of binary operator
+        Nested compound assignment is not supported
+        """
+        op = tree.children[0]
+        if op in AliasTranslation.COMPOUND_ASSIGN:
+            lhs, rhs = tree.children[1:]
+            # Convert this node into a block assignment node with binary op
+            new_op = self._get_op_token_from_compound_assign(op)
+            # Create a new treenode
+            meta = tree.meta
+            binop_node = Tree('hbinop', [new_op] + tree.children, meta)
+            assign = Tree('blkassign', [lhs, binop_node], meta)
+            return assign
+        return tree
 
     def blkassign(self, tree):
         # we should detect blocking assignment in a different way

@@ -192,6 +192,17 @@ class sc_biguint(Primitive):
     def __new__(cls, width):
         return sc_uint(width)
 
+class sc_bigint(Primitive):
+    def __new__(cls, width):
+        return sc_int(width)
+
+class __int128(Primitive):
+    def __new__(cls, width):
+        return sc_int(128)
+
+class unsigned___int128(Primitive):
+    def __new__(cls, width):
+        return sc_uint(128)
 
 class void(Primitive):
     def to_str(self, var_name):
