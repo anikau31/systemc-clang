@@ -1,6 +1,7 @@
 #include "SplitCFG.h"
 
 #include "llvm/Support/Debug.h"
+#include "llvm/ADT/PostOrderIterator.h"
 
 using namespace systemc_clang;
 
@@ -151,7 +152,7 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
 
   unsigned int num_elements{block->size()};
 
-  llvm::dbgs() << "Checking if block " << block->getBlockID()
+  llvm::dbgs() << "\n\nChecking if block " << block->getBlockID()
                << " has a wait()\n";
   llvm::dbgs() << "Number of elements " << num_elements << "\n";
   // We are going to have two vectors.
@@ -169,7 +170,9 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
   } else {
     bool has_wait{false};
     for (auto const& element : block->refs()) {
-      // element->dump();
+      has_wait = false;
+      llvm::dbgs() << "Is this a wait?    ";
+      element->dump();
 
       /// refs() returns an iterator, which actually stores an ElementRefImpl<>
       /// interface. In order to get the correct pointer to CFGElement, we need
@@ -177,13 +180,15 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
       const clang::CFGElement* element_ptr{element.operator->()};
       /// If the element is a wait() then split it.
       if (isElementWait(*element)) {
+        llvm::dbgs() << " IT IS A WAIT\n";
         /// There is only one statement and it's a wait().
         if (num_elements == 1) {
           llvm::dbgs() << "DBG: Only one statement and it is a wait().\n";
         }
 
+        // Add all elements before the wait into the split elements.
         if (vec_elements.size() != 0) {
-          split_elements.push_back(std::make_pair(vec_elements, true));
+          split_elements.push_back(std::make_pair(vec_elements, false));
           vec_elements.clear();
         }
 
@@ -203,31 +208,121 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
     }
   }
 
+  //dumpSplitElements(split_elements);
   /// Go through all the split_elements and create blocks.
   llvm::dbgs() << "Number of entries in split_elements "
                << split_elements.size() << "\n";
   unsigned int id{0};
   SplitCFGBlock* prev_block{nullptr};
+
   for (auto const& elements : split_elements) {
-    SplitCFGBlock* new_split{new SplitCFGBlock{}};
+    llvm::dbgs() << "Element number " << id << " ";
+    /// check if the block has already been created.
+    SplitCFGBlock* new_split{nullptr};
+
+    bool already_exists{false};
+    if (id == 0 ) {
+      auto scit{sccfg_.find(block->getBlockID())};
+      // Must be true.
+      bool already_exists{scit != sccfg_.end()};
+      new_split = scit->second;
+      llvm::dbgs() << " already exists ";
+      new_split->id_ = block->getBlockID();
+    } else {
+      new_split = new SplitCFGBlock{};
+      new_split->id_ = block->getBlockID() * 10 + id;
+      sccfg_.insert(std::make_pair(block->getBlockID() * 10 + id, new_split));
+    }
+
     new_split->block_ = block;
     new_split->has_wait_ = elements.second;
     new_split->elements_ = elements.first;
-    new_split->id_ = block->getBlockID();
 
+
+
+    //new_split->id_ = block->getBlockID();
+
+    /*
+    /// If there is a wait then update successor.
     if (new_split->has_wait_) {
+      llvm::dbgs() << "has a WAIT\n";
+      /// If it is the first block then it is already_exists should be true
+      /// (invariant).
       if (id != 0) {
         prev_block->successors_.push_back(new_split);
         new_split->predecessors_.push_back(prev_block);
+        // new_split->id_ = block->getBlockID() * 10 + id;
+        // sccfg_.insert(std::make_pair(block->getBlockID() * 10 + id, new_split));
       }
-      new_split->id_ = block->getBlockID()*10+id;
-      sccfg_.insert(std::make_pair(block->getBlockID()*10+ id, new_split));
-
     } else {
-      sccfg_.insert(std::make_pair(block->getBlockID(), new_split));
+      /// No wait so it should be sequenial statements.
+      /// Only add if it does not exist already.
+      if (!already_exists) {
+        sccfg_.insert(std::make_pair(block->getBlockID(), new_split));
+        llvm::dbgs() << "No wait but insert " << block->getBlockID() << "\n";
+      }
     }
+    */
     prev_block = new_split;
     ++id;
+  }
+}
+
+void SplitCFG::dumpSCCFG() {
+  llvm::dbgs() << "sccfg( " << sccfg_.size() << ") ids: ";
+  for (auto const& entry : sccfg_) {
+    llvm::dbgs() << entry.first << "  ";
+  }
+  llvm::dbgs() << "\n";
+
+
+}
+
+void SplitCFG::dumpSplitElements(
+    const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> >&
+        split_elements) {
+  unsigned int id{0};
+  for (auto const& elements : split_elements) {
+    llvm::dbgs() << "Element number " << id << " has " << elements.first.size()
+                 << " items and has ";
+    if (elements.second) {
+      llvm::dbgs() << " a WAIT\n";
+    } else {
+      llvm::dbgs() << " NO WAIT\n";
+    }
+    for (auto const &element: elements.first) {
+      element->dump();
+    }
+
+    ++id;
+  }
+}
+void SplitCFG::updateSuccessors() {
+  /// Go through all blocks and set their successors.
+  for (auto const& entry : sccfg_) {
+    unsigned int id{entry.first};
+    SplitCFGBlock* block{entry.second};
+    clang::CFGBlock* cfg_block{block->getCFGBlock()};
+
+    /// Set the successors
+    for (auto const& cfg_succ : cfg_block->succs()) {
+      if ((cfg_succ) && (!block->has_wait_)) {
+        llvm::dbgs() << "Setting successor of " << block->getID() << " to "
+                     << cfg_succ->getBlockID() << "\n";
+        // block->successors_.push_back(sccfg_[cfg_succ->getBlockID()]);
+      }
+    }
+
+    /*
+    /// Set the predcessors
+    for (auto const& cfg_pred: cfg_block->preds()) {
+      if ((cfg_pred) && (!block->has_wait_)) {
+      llvm::dbgs() << "Setting predecessor to" << block->getID() << " of "
+                   << cfg_pred->getBlockID() << "\n";
+      block->predecessors_.push_back(sccfg_[cfg_pred->getBlockID()]);
+      }
+    }
+    */
   }
 }
 
@@ -276,6 +371,22 @@ void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
   }
 }
 
+void SplitCFG::createUnsplitBlocks() {
+  for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
+       ++begin_it) {
+    auto block{*begin_it};
+    SplitCFGBlock* new_block{new SplitCFGBlock{}};
+    new_block->id_ = block->getBlockID();
+    sccfg_.insert(std::make_pair(new_block->id_, new_block));
+  }
+
+  llvm::dbgs() << "sccfg( " << sccfg_.size() << ") ids: ";
+  for (auto const& entry : sccfg_) {
+    llvm::dbgs() << entry.first << "  ";
+  }
+  llvm::dbgs() << "\n";
+}
+
 void SplitCFG::construct_sccfg(const clang::CXXMethodDecl* method) {
   cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
                               clang::CFG::BuildOptions());
@@ -283,17 +394,39 @@ void SplitCFG::construct_sccfg(const clang::CXXMethodDecl* method) {
   clang::LangOptions lang_opts;
   cfg_->dump(lang_opts, true);
 
+  createUnsplitBlocks();
+
   for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
        ++begin_it) {
     auto block{*begin_it};
 
     splitBlock(block);
   }
+  llvm::dbgs() << "\nPrepare to update successors\n";
+  dumpSCCFG();
+  // updateSuccessors();
+
+  //
+  // llvm::dbgs() << "Postorder iterator\n";
+  // for (auto begin_it = llvm::po_begin(&cfg_->getEntry()),
+  // end_it = llvm::po_end(&cfg_->getEntry());
+  // begin_it != end_it; begin_it++) {
+  // llvm::dbgs() << "Derefernce iterator\n";
+  // auto block{*begin_it};
+  // if (block) {
+  // llvm::dbgs() << "block id " << block->getBlockID() << "\n";
+  // block->dump();
+  // }
+  // llvm::dbgs() << "Next block\n";
+  // }
+  // llvm::dbgs() << "Done postorder\n";
 }
 
 SplitCFG::~SplitCFG() {
   for (auto block : sccfg_) {
-    delete block.second;
+    if (block.second) {
+      delete block.second;
+    }
   }
 }
 

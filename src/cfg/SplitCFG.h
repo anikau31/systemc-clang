@@ -31,12 +31,17 @@ class SplitCFG {
   llvm::SmallVector<VectorCFGBlock> paths_found_;
 
   std::unordered_map<unsigned int, SplitCFGBlock*> sccfg_;
+  llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> > split_elements;
 
  private:
   /// \brief Checks if a CFGBlock has a wait() call in it.
   bool isWait(const clang::CFGBlock &block) const;
   bool isElementWait(const clang::CFGElement& element) const;
   void splitBlock(clang::CFGBlock* block);
+  void updateSuccessors();
+  void createUnsplitBlocks();
+  void dumpSplitElements(const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> > &split_elements );
+void dumpSCCFG();
 
  public:
   SplitCFG(clang::ASTContext &context);
