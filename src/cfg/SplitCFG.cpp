@@ -118,6 +118,119 @@ bool SplitCFG::isWait(const clang::CFGBlock& block) const {
   return false;
 };
 
+bool SplitCFG::isElementWait(const clang::CFGElement& element) const {
+  if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
+    auto stmt{cfg_stmt->getStmt()};
+
+    // stmt->dump();
+    if (auto* expr = llvm::dyn_cast<clang::Expr>(stmt)) {
+      if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
+        if (auto direct_callee = cxx_me->getDirectCallee()) {
+          auto name{direct_callee->getNameInfo().getAsString()};
+          if (name == std::string("wait")) {
+            // llvm::dbgs() << "@@@@ FOUND WAIT @@@@\n";
+
+            /// Check that there is only 1 or 0 arguments
+            auto args{cxx_me->getNumArgs()};
+            if (args >= 2) {
+              llvm::errs() << "wait() must have either 0 or 1 argument.\n";
+              return false;
+            }
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+};
+
+void SplitCFG::splitBlock(clang::CFGBlock* block) {
+  assert(block != nullptr);
+
+  unsigned int num_elements{block->size()};
+
+  llvm::dbgs() << "Checking if block " << block->getBlockID()
+               << " has a wait()\n";
+  llvm::dbgs() << "Number of elements " << num_elements << "\n";
+  // We are going to have two vectors.
+  // 1. A vector of vector pointers to CFGElements.
+  // 2. A vector of pointers to CFGElements that are waits.
+  //
+  //
+
+  VectorCFGElementPtr vec_elements{};
+  llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> > split_elements;
+
+  /// 0 elements so simply just add them and return.
+  if (num_elements == 0) {
+    split_elements.push_back(std::make_pair(vec_elements, false));
+  } else {
+    bool has_wait{false};
+    for (auto const& element : block->refs()) {
+      // element->dump();
+
+      /// refs() returns an iterator, which actually stores an ElementRefImpl<>
+      /// interface. In order to get the correct pointer to CFGElement, we need
+      /// to explicitly call operator->(). Odd!
+      const clang::CFGElement* element_ptr{element.operator->()};
+      /// If the element is a wait() then split it.
+      if (isElementWait(*element)) {
+        /// There is only one statement and it's a wait().
+        if (num_elements == 1) {
+          llvm::dbgs() << "DBG: Only one statement and it is a wait().\n";
+        }
+
+        if (vec_elements.size() != 0) {
+          split_elements.push_back(std::make_pair(vec_elements, true));
+          vec_elements.clear();
+        }
+
+        /// Add the wait as a separate entry in the list.
+        vec_elements.push_back(element_ptr);
+        split_elements.push_back(std::make_pair(vec_elements, true));
+        vec_elements.clear();
+
+        has_wait = true;
+      } else {
+        vec_elements.push_back(element_ptr);
+      }
+    }
+
+    if (vec_elements.size() != 0) {
+      split_elements.push_back(std::make_pair(vec_elements, has_wait));
+    }
+  }
+
+  /// Go through all the split_elements and create blocks.
+  llvm::dbgs() << "Number of entries in split_elements "
+               << split_elements.size() << "\n";
+  unsigned int id{0};
+  SplitCFGBlock* prev_block{nullptr};
+  for (auto const& elements : split_elements) {
+    SplitCFGBlock* new_split{new SplitCFGBlock{}};
+    new_split->block_ = block;
+    new_split->has_wait_ = elements.second;
+    new_split->elements_ = elements.first;
+    new_split->id_ = block->getBlockID();
+
+    if (new_split->has_wait_) {
+      if (id != 0) {
+        prev_block->successors_.push_back(new_split);
+        new_split->predecessors_.push_back(prev_block);
+      }
+      new_split->id_ = block->getBlockID()*10+id;
+      sccfg_.insert(std::make_pair(block->getBlockID()*10+ id, new_split));
+
+    } else {
+      sccfg_.insert(std::make_pair(block->getBlockID(), new_split));
+    }
+    prev_block = new_split;
+    ++id;
+  }
+}
+
 void SplitCFG::generate_paths() {
   /// Set of visited wait blocks.
   llvm::SmallPtrSet<const clang::CFGBlock*, 8> visited_waits;
@@ -163,8 +276,35 @@ void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
   }
 }
 
+void SplitCFG::construct_sccfg(const clang::CXXMethodDecl* method) {
+  cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
+                              clang::CFG::BuildOptions());
+
+  clang::LangOptions lang_opts;
+  cfg_->dump(lang_opts, true);
+
+  for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
+       ++begin_it) {
+    auto block{*begin_it};
+
+    splitBlock(block);
+  }
+}
+
+SplitCFG::~SplitCFG() {
+  for (auto block : sccfg_) {
+    delete block.second;
+  }
+}
+
 void SplitCFG::dump() const {
+  llvm::dbgs() << "Dump all nodes in SCCFG\n";
+  for (auto const& block : sccfg_) {
+    llvm::dbgs() << "Node id " << block.first << "\n";
+    block.second->dump();
+  }
   /// Dump all the paths found.
+  /*
   llvm::dbgs() << "Dump all paths to wait() found in the CFG.\n";
   unsigned int i{0};
   for (auto const& block_vector : paths_found_) {
@@ -177,6 +317,7 @@ void SplitCFG::dump() const {
     }
     llvm::dbgs() << "\n";
   }
+  */
 
   /*
   llvm::dbgs() << "Dump all blocks that were split\n";

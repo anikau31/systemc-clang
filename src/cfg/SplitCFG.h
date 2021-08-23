@@ -15,6 +15,7 @@ namespace systemc_clang {
 class SplitCFG {
  private:
   using VectorCFGBlock = llvm::SmallVector<const clang::CFGBlock *>;
+  using VectorCFGElementPtr = llvm::SmallVector<const clang::CFGElement *>;
 
  private:
   /// \brief The context necessary to access translation unit.
@@ -29,14 +30,20 @@ class SplitCFG {
   /// \brief Paths of BBs generated.
   llvm::SmallVector<VectorCFGBlock> paths_found_;
 
+  std::unordered_map<unsigned int, SplitCFGBlock*> sccfg_;
+
  private:
   /// \brief Checks if a CFGBlock has a wait() call in it.
   bool isWait(const clang::CFGBlock &block) const;
+  bool isElementWait(const clang::CFGElement& element) const;
+  void splitBlock(clang::CFGBlock* block);
 
  public:
   SplitCFG(clang::ASTContext &context);
   SplitCFG(clang::ASTContext &context, const clang::CXXMethodDecl *cxx_decl);
+  ~SplitCFG();
 
+  void construct_sccfg(const clang::CXXMethodDecl* method);
   void split_wait_blocks(const clang::CXXMethodDecl *cxx_decl);
   void dfs_pop_on_wait(
       const clang::CFGBlock *BB,

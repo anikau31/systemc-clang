@@ -1,5 +1,5 @@
 #include "systemc.h"
-#define wait(...) if (true) {wait(__VA_ARGS__);}
+//#define wait(...) if (true) {wait(__VA_ARGS__);}
 
 SC_MODULE(test) {
   // input ports

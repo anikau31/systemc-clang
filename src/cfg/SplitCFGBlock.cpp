@@ -11,6 +11,8 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   has_wait_ = from.has_wait_;
   split_elements_ = from.split_elements_;
   wait_element_ids_ = from.wait_element_ids_;
+  successors_ = from.successors_;
+  predecessors_ = from.predecessors_;
 }
 
 clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
@@ -135,22 +137,41 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
   }
 }
 
+void SplitCFGBlock::insertElements(VectorCFGElementPtr &elements) {
+  elements_ = elements;
+}
+
+unsigned int SplitCFGBlock::getID() const { return id_; }
+
 void SplitCFGBlock::dump() const {
   if (block_) {
-    llvm::dbgs() << "Dump split blocks\n";
+    llvm::dbgs() << "Dump split blocks id " << getID() <<" CFGBlock BB# " << block_->getBlockID() << "\n";
     unsigned int i{0};
-    for (auto const& split : split_elements_) {
-      llvm::dbgs() << "Split block " << i++ << "\n";
-      for (auto const& element : split) {
-        element->dump();
-      }
+    for (auto const& element: elements_) {
+      element->dump();
+    }
+    // for (auto const& split : split_elements_) {
+      // llvm::dbgs() << "Split block " << i++ << "\n";
+      // for (auto const& element : split) {
+        // element->dump();
+      // }
+    // }
+//
+    llvm::dbgs() << "\n";
+    llvm::dbgs() << "Successors: ";
+    for (auto const& succ: successors_) {
+      llvm::dbgs() << succ->getID() << "  "; 
     }
 
+    llvm::dbgs() << "\nPredecessors: ";
+    for (auto const& pre: predecessors_) {
+      llvm::dbgs() << pre->getID() << "  "; 
+    }
     llvm::dbgs() << "\n";
     /// Dump the wait ids
-    llvm::dbgs() << "Dump wait elements\n";
-    for (auto const& id : wait_element_ids_) {
-      llvm::dbgs() << "Wait element at id " << id << "\n";
-    }
+    // llvm::dbgs() << "Dump wait elements\n";
+    // for (auto const& id : wait_element_ids_) {
+      // llvm::dbgs() << "Wait element at id " << id << "\n";
+    // }
   }
 }
