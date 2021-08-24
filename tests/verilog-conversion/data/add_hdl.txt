@@ -31,7 +31,7 @@
     ]
     hProcesses  NONAME [
       hProcess topEntry [
-        hMethod  NONAME [
+        hMethod topEntry [
           hCStmt  NONAME [
             hSigAssignL write [
               hVarref out_port NOLIST

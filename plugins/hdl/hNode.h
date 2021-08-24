@@ -32,6 +32,7 @@ namespace hnode {
   etype(hProcesses), \
   etype(hProcess), \
   etype(hMethod), \
+  etype(hThread),		 \
   etype(hCStmt), \
   etype(hPortsigvarlist), \
   etype(hPortin), \
@@ -77,6 +78,7 @@ namespace hnode {
   etype(hFunctionParams), \
   etype(hFunctionParamI), \
   etype(hFunctionParamIO), \
+  etype(hWait), \
   etype(hUnimpl), \
   etype(hLast)
 
@@ -188,6 +190,7 @@ namespace hnode {
       // default arguments don't work in lldb
     void dumphcode() {
       print(llvm::outs(), 2);
+      LLVM_DEBUG(print(llvm::dbgs(), 2));
     }
   
   };
@@ -239,7 +242,7 @@ namespace hnode {
     }
 
     static inline bool isSCFunc(const string &tstring) {
-      return (tstring == "concat");
+      return (tstring == "concat") || (tstring == "wait");
       // add more as we get them
     }
 
@@ -302,7 +305,8 @@ namespace hnode {
 
   const static std::string gvar_prefix{"_scclang_global_"};
   const static std::string lvar_prefix{"_local_"};
-    
+  const static std::string tvar_prefix{"_thread_"};
+
   class name_serve {
   private:
     int cnt;
@@ -314,6 +318,7 @@ namespace hnode {
       return (prefix+to_string(cnt++));
     }
     void set_prefix(string prfx) { prefix = prfx; }
+    string get_prefix() { return prefix; }
   };
 
 
@@ -333,9 +338,10 @@ namespace hnode {
   private:
     name_serve ns;
     std::map<T, names_t> hdecl_name_map;
+
   public:
     //std::map<T, names_t> hdecl_name_map;
-    newname_map_t(string prefix = "_local_") { ns.set_prefix(prefix); }
+    newname_map_t(string prefix = lvar_prefix) { ns.set_prefix(prefix); }
     void add_entry(T declp, string old_name, hNodep hnp )
     {
       string newn = find_entry_newn(declp);
@@ -357,14 +363,21 @@ namespace hnode {
     }
 
     void set_prefix(string prefix) { ns.set_prefix(prefix); }
+
+    string get_prefix() { return ns.get_prefix(); }
     
     bool empty() { return hdecl_name_map.empty(); }
     size_t size() { return hdecl_name_map.size(); }
+    void clear() {hdecl_name_map.clear(); ns.set_prefix(lvar_prefix);}
     
     typename std::map<T, names_t>::iterator begin() { return hdecl_name_map.begin();}
     typename std::map<T, names_t>::iterator end() { return hdecl_name_map.end();}
 
-    void insertall(newname_map_t<T> &newmap) {
+    // note the pass by value on newmap:
+    // need a copy to preserve the inserted values
+    // or else a clear or destructor on calling param newmap
+    // releases the entries
+    void insertall(newname_map_t<T> newmap) {
       hdecl_name_map.insert(newmap.begin(),
 			    newmap.end());
     }

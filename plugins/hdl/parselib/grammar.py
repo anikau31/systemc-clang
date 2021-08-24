@@ -22,6 +22,7 @@ lark_grammar = Lark('''
         inportdecl:  "hPortin" ID 
         outportdecl: "hPortout" ID
         vardeclinit: "hVardecl" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
+        vardeclrn: "hVardeclrn" ID "[" htypeinfo hliteral "]"
         funcparami: "hFunctionParamI" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
         funcparamio: "hFunctionParamIO" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
         ?hvarinit: "hVarInit" "NONAME" expression
@@ -30,9 +31,9 @@ lark_grammar = Lark('''
         processlist:  "hProcesses" "NONAME" "[" (hprocess|hfunction)*"]"
         // could be nothing
         // temporarily ignore the hMethod node
-        hprocess:  "hProcess" ID  "[" "hMethod" "NONAME" "[" prevardecl  hcstmt "]" "]"
+        hprocess:  "hProcess" ID  "[" "hMethod" (ID|"NONAME") "[" prevardecl  hcstmt "]" "]"
         prevardecl: vardecl*
-        vardecl: vardeclinit
+        vardecl: vardeclinit | vardeclrn
 
         // can be just an empty statement
         hcstmt:  "hCStmt" "NONAME" "[" modportsiglist* stmts "]" // useful for raising variable decls
@@ -115,7 +116,7 @@ lark_grammar = Lark('''
         casevalue: expression
         
         // Function
-        hfunction : "hFunction" ID "[" hfunctionrettype hfunctionparams hfunctionlocalvars hfunctionbody "]"
+        hfunction : "hFunction" ID "[" hfunctionrettype hfunctionparams? hfunctionlocalvars hfunctionbody "]"
         hfunctionlocalvars: vardeclinit*
         hfunctionbody: hcstmt
         hfunctionrettype: "hFunctionRetType" "NONAME" "[" htypeinfo "]"
@@ -178,7 +179,7 @@ lark_grammar = Lark('''
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
         // Separate '=' out from so that it is not an expression but a standalone statement
-        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral) (htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
+        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral) (hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
                  | "hBinop" "=" "[" harrayref  arrayrhs "]"
                  | nblkassign
                  | vassign
@@ -201,7 +202,7 @@ lark_grammar = Lark('''
         hconcat: "hBinop" "concat" "[" (expression|harrayref|hconcat) (expression|harrayref|hconcat) "]"
                  
         // Temporary hack to handle -= / +=
-        hmodassign : "hBinop" hmodassigntype "[" hvarref hliteral "]"
+        hmodassign : "hBinop" hmodassigntype "[" hvarref (hliteral|hvarref) "]"
         ?hmodassigntype : haddassign | hsubassign
         haddassign : "+" "=" 
         hsubassign : "-" "="
@@ -213,8 +214,12 @@ lark_grammar = Lark('''
                  | hslice
         hslice: "hBinop" "SLICE" "[" hvarref expression expression "]"
         hnsbinop:  "hBinop" NONSUBBINOP "[" expression expression "]"
+        // Comma op is the C++ comma where the latter part of the comma expression is returned
+        hcomma: "hBinop" "," "[" (blkassign | hunop) (hunop | expression) "]"
 
         hmethodcall: "hMethodCall" hidorstr  "[" expression expression* "]" 
+                   | "hMethodCall" hidorstr  "NOLIST"
+                   
         ?hidorstr: ID | STRING
         hliteral:  idlit | numlit | numlitwidth
         idlit : "hLiteral" ID "NOLIST"
@@ -242,7 +247,7 @@ lark_grammar = Lark('''
         NUM: /(\+|\-)?[0-9]+/
         TYPESTR: /[a-zA-Z_][a-zA-Z_0-9]*/
         BINOP: NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE" | "concat"
-        NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&" | ","
+        NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&"
         ARITHOP: "+" | "-" | "*" | "/" | "^"
         UNOP_NON_SUB: "!" | "++" | "-"
         UNOP_SUB:  "-"

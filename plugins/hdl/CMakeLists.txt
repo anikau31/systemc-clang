@@ -6,4 +6,5 @@ add_library(libhdl
   HDLBody.cpp
   HDLType.cpp
   HDLHnode.cpp
+  HDLThread.cpp
   )

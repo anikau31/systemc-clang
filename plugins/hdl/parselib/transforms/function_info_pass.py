@@ -205,7 +205,13 @@ class FunctionInfoPass2(TopDown):
 
     def __search_current_function(self, func_name):
         for f in self.current_function_nodes:
+            dprint(f.children[0])
             if f.children[0] == func_name:
+                return f
+        # try fuzzy search
+        for f in self.current_function_nodes:
+            dprint(f.children[0][:-1] == func_name[:-1])
+            if f.children[0][:-1] == func_name[:-1]:
                 return f
         raise ValueError(f'Function {func_name} not found')
 
@@ -298,13 +304,14 @@ class FunctionInfoPass2(TopDown):
             f_name = invoc.children[0]
             func_node = self.__search_current_function(f_name)
             func_name, ret_type, func_params, local_vars, func_body = self.__extract_func_def(func_node)
-            for idx, param in func_params.io_params:
-                arg_node = invoc_params[idx]
-                tpe = func_params.children[idx].children[1]
-                name = self.__extract_name_from_method_args(arg_node, tpe)
-                if hasattr(arg_node, 'phantom_var'):
-                    tree.phantom_vars[name] = tpe
-                names_to_stub.add(name)
+            if func_params is not None:
+                for idx, param in func_params.io_params:
+                    arg_node = invoc_params[idx]
+                    tpe = func_params.children[idx].children[1]
+                    name = self.__extract_name_from_method_args(arg_node, tpe)
+                    if hasattr(arg_node, 'phantom_var'):
+                        tree.phantom_vars[name] = tpe
+                    names_to_stub.add(name)
         # dprint(tree.phantom_vars)
         # actually, we can finalized the name of the stub here
         for nm in names_to_stub:
