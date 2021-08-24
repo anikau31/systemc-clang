@@ -227,6 +227,7 @@ lark_grammar = Lark('''
         // Comma op is the C++ comma where the latter part of the comma expression is returned
         hcomma: "hBinop" "," "[" (blkassign | hunop | hmethodcall) (hunop | expression | hmethodcall) "]"
 
+
         hmethodcall: "hMethodCall" hidorstr  "[" expression expression* "]" 
                    | "hMethodCall" hidorstr  "NOLIST"
                    
