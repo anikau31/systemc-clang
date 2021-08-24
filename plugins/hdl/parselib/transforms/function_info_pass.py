@@ -205,7 +205,6 @@ class FunctionInfoPass2(TopDown):
 
     def __search_current_function(self, func_name):
         for f in self.current_function_nodes:
-            dprint(f.children[0])
             if f.children[0] == func_name:
                 return f
         # try fuzzy search
@@ -299,7 +298,6 @@ class FunctionInfoPass2(TopDown):
         tree.phantom_vars = dict()
         names_to_stub = set()
 
-        dprint(tree)
 
         for invoc in tree.function_invocations:
             invoc_params = invoc.children[1:]

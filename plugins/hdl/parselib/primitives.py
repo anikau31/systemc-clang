@@ -197,11 +197,11 @@ class sc_bigint(Primitive):
         return sc_int(width)
 
 class __int128(Primitive):
-    def __new__(cls, width):
+    def __new__(cls):
         return sc_int(128)
 
 class unsigned___int128(Primitive):
-    def __new__(cls, width):
+    def __new__(cls):
         return sc_uint(128)
 
 class void(Primitive):

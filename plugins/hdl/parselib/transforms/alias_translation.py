@@ -1,6 +1,7 @@
 from lark import Tree, Token
 from parselib.utils import dprint
 from parselib.transforms import TopDown
+import copy
 
 
 class AliasTranslation(TopDown):
@@ -55,7 +56,7 @@ class AliasTranslation(TopDown):
             # Create a new treenode
             meta = tree.meta
             binop_node = Tree('hbinop', [new_op] + tree.children, meta)
-            assign = Tree('blkassign', [lhs, binop_node], meta)
+            assign = Tree('blkassign', [copy.deepcopy(lhs), binop_node], meta)
             return assign
         return tree
 

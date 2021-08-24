@@ -51,6 +51,12 @@ class MethodCallChecker(TopDown):
                         self.path)
         return tree
 
+class UnimplChecker(TopDown):
+    def __init__(self):
+        pass
+
+    def hunimp(self, tree):
+        assert False, "hUnimpl node should not be present"
 
 @pytest.mark.parametrize("cpp_design_path, extra_args", [
     (testdata / 'test_binary_iscs.cpp', []),
@@ -71,3 +77,11 @@ def test_hmethod_call(tmp_path, cpp_design_path, extra_args, default_params, cla
     checker = MethodCallChecker(functions, path=hcode_target_path)
     checker.visit(t)
 
+@pytest.mark.parametrize("cpp_design_path, extra_args", [
+    (testdata / 'test_binary_iscs.cpp', []),
+    (zfpsynth / 'zfp3/z3test.cpp', ["-I{}".format(zfpsynth/"zfp3")]) 
+])
+def test_unimpl(tmp_path, cpp_design_path, extra_args, default_params, clang_args_params):
+    t, hcode_target_path = construct_hcode(cpp_design_path, tmp_path, default_params, clang_args_params, extra_args)
+    checker = UnimplChecker()
+    checker.visit(t)

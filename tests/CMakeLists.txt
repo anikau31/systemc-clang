@@ -64,6 +64,8 @@ if(V_TESTS_ON)
   # integrate into ctest
   add_test(NAME hcode-hmethod-call
     COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k hmethod_call)
+  add_test(NAME hcode-unimpl
+    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k unimpl)
   add_test(NAME verilog-syntax-error
     COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k syntax_error)
   add_test(NAME verilog-generate-file

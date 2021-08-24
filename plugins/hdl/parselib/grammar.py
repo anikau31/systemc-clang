@@ -209,7 +209,7 @@ lark_grammar = Lark('''
                   | hmethodcall
         nblkassign: "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool)  "]"
                   | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
-        hconcat: "hBinop" "concat" "[" (expression|harrayref|hconcat) (expression|harrayref|hconcat) "]"
+        hconcat: ("hBinop" "concat" "[" | "hMethodCall" "NONAME" "[" "hBinop" "concat" "NOLIST") (expression|harrayref|hconcat) (expression|harrayref|hconcat) "]"
                  
         // Temporary hack to handle -= / +=
         hmodassign : "hBinop" hmodassigntype "[" hvarref (hliteral|hvarref) "]"
@@ -226,7 +226,6 @@ lark_grammar = Lark('''
         hnsbinop:  "hBinop" NONSUBBINOP "[" expression expression "]"
         // Comma op is the C++ comma where the latter part of the comma expression is returned
         hcomma: "hBinop" "," "[" (blkassign | hunop | hmethodcall) (hunop | expression | hmethodcall) "]"
-
 
         hmethodcall: "hMethodCall" hidorstr  "[" expression expression* "]" 
                    | "hMethodCall" hidorstr  "NOLIST"

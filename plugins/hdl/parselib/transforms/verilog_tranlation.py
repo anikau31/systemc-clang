@@ -336,6 +336,7 @@ class VerilogTranslationPass(TopDown):
                         x = (x[0], x[1].children[0], x[2])
                     else:
                         assert False, 'Unrecognized construct: {}'.format(x[1])
+                dprint(x[0], x[1], x[2])
                 res = x[0] + x[1] + x[2]
                 return res
             except Exception as e:
@@ -519,7 +520,6 @@ class VerilogTranslationPass(TopDown):
         proc_name, proc_name_2, prevardecl, *body = tree.children
 
         prevardecl.children = list(filter(lambda x: not is_tree_type(x, 'vardeclrn'), prevardecl.children))
-        dprint(prevardecl)
 
         ind = self.get_current_ind_prefix()
         decls = list(map(lambda x: x[0] + ';', prevardecl.children))
