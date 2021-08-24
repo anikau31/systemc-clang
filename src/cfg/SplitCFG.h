@@ -40,7 +40,7 @@ class SplitCFG {
   void splitBlock(clang::CFGBlock* block);
   void addSuccessors(SplitCFGBlock* to, const clang::CFGBlock* from);
   void addPredecessors(SplitCFGBlock* to, const clang::CFGBlock* from);
-  void updateSuccessors();
+  //void updateSuccessors();
   void createUnsplitBlocks();
   void dumpSplitElements(const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> > &split_elements );
 void dumpSCCFG();

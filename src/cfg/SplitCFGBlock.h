@@ -86,8 +86,12 @@ class SplitCFGBlock {
     const llvm::SmallVector<SplitCFGBlock*> &succs_;
   };
 
+ public:
+    using iterator_range = llvm::iterator_range<SuccessorIterator>;
+
   SuccessorIterator succs_begin() { return SuccessorIterator{0, successors_}; }
   SuccessorIterator succs_end() { return SuccessorIterator{successors_.size(), successors_}; }
+  iterator_range succs() { return iterator_range{succs_begin(), succs_end()}; }
 
  private:
   bool isWait(const clang::CFGElement &element) const;

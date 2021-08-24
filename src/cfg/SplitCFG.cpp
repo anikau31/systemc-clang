@@ -336,6 +336,8 @@ void SplitCFG::dumpSplitElements(
     ++id;
   }
 }
+
+/*
 void SplitCFG::updateSuccessors() {
   /// Go through all blocks and set their successors.
   for (auto const& entry : sccfg_) {
@@ -348,11 +350,9 @@ void SplitCFG::updateSuccessors() {
       if ((cfg_succ) && (!block->has_wait_)) {
         llvm::dbgs() << "Setting successor of " << block->getID() << " to "
                      << cfg_succ->getBlockID() << "\n";
-        // block->successors_.push_back(sccfg_[cfg_succ->getBlockID()]);
       }
     }
 
-    /*
     /// Set the predcessors
     for (auto const& cfg_pred: cfg_block->preds()) {
       if ((cfg_pred) && (!block->has_wait_)) {
@@ -361,9 +361,9 @@ void SplitCFG::updateSuccessors() {
       block->predecessors_.push_back(sccfg_[cfg_pred->getBlockID()]);
       }
     }
-    */
   }
 }
+*/
 
 void SplitCFG::generate_paths() {
   /// Set of visited wait blocks.
@@ -443,22 +443,6 @@ void SplitCFG::construct_sccfg(const clang::CXXMethodDecl* method) {
   }
   llvm::dbgs() << "\nPrepare to update successors\n";
   dumpSCCFG();
-  // updateSuccessors();
-
-  //
-  // llvm::dbgs() << "Postorder iterator\n";
-  // for (auto begin_it = llvm::po_begin(&cfg_->getEntry()),
-  // end_it = llvm::po_end(&cfg_->getEntry());
-  // begin_it != end_it; begin_it++) {
-  // llvm::dbgs() << "Derefernce iterator\n";
-  // auto block{*begin_it};
-  // if (block) {
-  // llvm::dbgs() << "block id " << block->getBlockID() << "\n";
-  // block->dump();
-  // }
-  // llvm::dbgs() << "Next block\n";
-  // }
-  // llvm::dbgs() << "Done postorder\n";
 }
 
 SplitCFG::~SplitCFG() {
@@ -472,8 +456,14 @@ SplitCFG::~SplitCFG() {
 void SplitCFG::dump() const {
   llvm::dbgs() << "Dump all nodes in SCCFG\n";
   for (auto const& block : sccfg_) {
-    //llvm::dbgs() << "Node id " << block.first << "\n";
-    block.second->dump();
+    SplitCFGBlock *sblock{block.second};
+    sblock->dump();
+
+    /// TEST iterators
+    llvm::dbgs() << "Testing succs iterators\n";
+     for (auto const& succ: sblock->succs()) {
+       llvm::dbgs() << succ.getID() << "  ";
+     }
   }
   /// Dump all the paths found.
   /*
@@ -488,17 +478,6 @@ void SplitCFG::dump() const {
       llvm::dbgs() << " (reset path)";
     }
     llvm::dbgs() << "\n";
-  }
-  */
-
-  /*
-  llvm::dbgs() << "Dump all blocks that were split\n";
-  for (auto const& sblock : split_blocks_) {
-    llvm::dbgs() << "Block ID: " << sblock.first->getBlockID() << "\n";
-    sblock.first->dump();
-    const SplitCFGBlock* block_with_wait{&sblock.second};
-    llvm::dbgs() << "Print all info for split block\n";
-    block_with_wait->dump();
   }
   */
 }
