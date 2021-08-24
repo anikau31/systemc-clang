@@ -54,7 +54,7 @@ class MethodCallChecker(TopDown):
 
 @pytest.mark.parametrize("cpp_design_path, extra_args", [
     (testdata / 'test_binary_iscs.cpp', []),
-    (zfpsynth / 'zfp3/z3test.cpp', ["-I{}".format(zfpsynth/"zfp3")]) 
+    # (zfpsynth / 'zfp3/z3test.cpp', ["-I{}".format(zfpsynth/"zfp3")]) 
 ])
 def test_hmethod_call(tmp_path, cpp_design_path, extra_args, default_params, clang_args_params):
     """
