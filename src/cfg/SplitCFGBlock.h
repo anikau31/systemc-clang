@@ -87,11 +87,15 @@ class SplitCFGBlock {
   };
 
  public:
-    using iterator_range = llvm::iterator_range<SuccessorIterator>;
+  using succ_iterator = SuccessorIterator;
+  using const_succ_iterator = const SuccessorIterator;
+  using succ_iterator_range = llvm::iterator_range<succ_iterator>;
+  using const_succ_iterator_range = llvm::iterator_range<const_succ_iterator>;
 
   SuccessorIterator succs_begin() { return SuccessorIterator{0, successors_}; }
   SuccessorIterator succs_end() { return SuccessorIterator{successors_.size(), successors_}; }
-  iterator_range succs() { return iterator_range{succs_begin(), succs_end()}; }
+  succ_iterator_range succs() { return succ_iterator_range{succs_begin(), succs_end()}; }
+  const_succ_iterator_range const_succs() { return const_succ_iterator_range{succs_begin(), succs_end()}; }
 
  private:
   bool isWait(const clang::CFGElement &element) const;
