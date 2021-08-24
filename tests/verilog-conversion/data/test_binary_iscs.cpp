@@ -295,11 +295,11 @@ public:
         ////CHECK(z == -3);  // -2 in SV
         
         bz = (x + y - 1) / bx;
-        cout << bz << endl;
+        // cout << bz << endl;
         ////CHECK(bz == -2); // -1 in SV
         
         bz = (x - 1 + y) / bx;
-        cout << bz << endl;
+        // cout << bz << endl;
         ////CHECK(bz == -2); // -1 in SV
     }
     
@@ -321,32 +321,32 @@ public:
         //CHECK(z == 9);
         
         bz = (x - 1 + y) / bx;
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == 1);
         bz = (x / y + bx) / bux;
         //CHECK(bz == 0);
         bz = x * (bux + 1) + y / bx;
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == 9);
 
         z = (y >> 1) + (bx >> x);
-        cout << z << endl;
+        // cout << z << endl;
         //CHECK(z == 4);
         z = (y << ((x + 1) >> 1)) * bux;
-        cout << z << endl;
+        // cout << z << endl;
         //CHECK(z == 70);
         z = (x * y) << (bux.to_int() >> 1);
-        cout << z << endl;
+        // cout << z << endl;
         //CHECK(z == 40);
         
         bz = (x + y) - (++bux);
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == -2);
         bz = (y % 2) * (14 % bx + 1);
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == 3);
         bz = (y % bx) * (x + 10) / bux;
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == 1);
     }
     
@@ -368,22 +368,22 @@ public:
         //CHECK(z == 9);
         
         bz = (x - 1 + y) / bx;
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == 1);
         bz = (x / y + bx) / by;
         //CHECK(bz == 0);
         bz = x * (by + 1) + y / bx;
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == 9);
 
         bz = (x * y) << (by.to_int() >> 1);
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == 40);
         bz = (x + y) - (++by);
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == -2);
         bz = (y % bx) * (x + 10) / by;
-        cout << bz << endl;
+        // cout << bz << endl;
         //CHECK(bz == 1);
     }
     
@@ -406,13 +406,13 @@ public:
         //CHECK(z == 9);
 
         z = x | uu + bx & by;
-        cout << z << endl;
+        // cout << z << endl;
         //CHECK(z == 2);
         z = (x ^ (uu + 1)) + (y | bx | by);
-        cout << z << endl;
+        // cout << z << endl;
         //CHECK(z == 13);
         z = (x & 11) * (10 | (2*i));
-        cout << z << endl;
+        // cout << z << endl;
         //CHECK(z == 60);
         
         bool b;
@@ -483,7 +483,7 @@ public:
         z = x + y;
         //CHECK(z == 0);
         z = x * y;
-        cout << z << endl;
+        // cout << z << endl;
         //CHECK(z == -121);
         x = y * 2;
         //CHECK(x == 22);
@@ -532,7 +532,7 @@ public:
         //HTR cout << "Entered function: #" << iter << endl;
         iter++;
     	T7 A0 = B + C; //Addition with assignment
-    	cout << hex << "A0 : " << A0 << ". B : " << B << ". C : " << C << endl;
+    	// cout << hex << "A0 : " << A0 << ". B : " << B << ". C : " << C << endl;
     	// //sct_assert_const(A0==(B+C));
     	T7 A1 = B - C; //Subtraction with assignment
     	//HTR cout << "A1 : " << A1 << ". B : " << B << ". C : " << C << endl;
