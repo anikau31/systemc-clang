@@ -61,7 +61,7 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
         if (auto direct_callee = cxx_me->getDirectCallee()) {
           auto name{direct_callee->getNameInfo().getAsString()};
           if (name == std::string("wait")) {
-            //llvm::dbgs() << "@@@@ FOUND WAIT @@@@\n";
+            // llvm::dbgs() << "@@@@ FOUND WAIT @@@@\n";
 
             /// Check that there is only 1 or 0 arguments
             auto args{cxx_me->getNumArgs()};
@@ -137,7 +137,7 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
   }
 }
 
-void SplitCFGBlock::insertElements(VectorCFGElementPtr &elements) {
+void SplitCFGBlock::insertElements(VectorCFGElementPtr& elements) {
   elements_ = elements;
 }
 
@@ -145,33 +145,25 @@ unsigned int SplitCFGBlock::getID() const { return id_; }
 
 void SplitCFGBlock::dump() const {
   if (block_) {
-    llvm::dbgs() << "Dump split blocks id " << getID() <<" CFGBlock BB# " << block_->getBlockID() << "\n";
+    llvm::dbgs() << "\nSB" << getID() << "(B" << block_->getBlockID()
+                 << ")\n";
     unsigned int i{0};
-    for (auto const& element: elements_) {
+    for (auto const& element : elements_) {
+      llvm::dbgs() << "  ";
       element->dump();
     }
-    // for (auto const& split : split_elements_) {
-      // llvm::dbgs() << "Split block " << i++ << "\n";
-      // for (auto const& element : split) {
-        // element->dump();
-      // }
-    // }
-//
+
     llvm::dbgs() << "\n";
-    llvm::dbgs() << "Successors: ";
-    for (auto const& succ: successors_) {
-      llvm::dbgs() << succ->getID() << "  "; 
+
+    llvm::dbgs() << "Preds: ";
+    for (auto const& pre : predecessors_) {
+      llvm::dbgs() << "SB" << pre->getID() << " ";
     }
 
-    llvm::dbgs() << "\nPredecessors: ";
-    for (auto const& pre: predecessors_) {
-      llvm::dbgs() << pre->getID() << "  "; 
+    llvm::dbgs() << "\nSuccs: ";
+    for (auto const& succ : successors_) {
+      llvm::dbgs() << "SB" << succ->getID() << " ";
     }
     llvm::dbgs() << "\n";
-    /// Dump the wait ids
-    // llvm::dbgs() << "Dump wait elements\n";
-    // for (auto const& id : wait_element_ids_) {
-      // llvm::dbgs() << "Wait element at id " << id << "\n";
-    // }
   }
 }

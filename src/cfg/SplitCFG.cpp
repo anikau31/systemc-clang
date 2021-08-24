@@ -208,7 +208,7 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
     }
   }
 
-  //dumpSplitElements(split_elements);
+  // dumpSplitElements(split_elements);
   /// Go through all the split_elements and create blocks.
   llvm::dbgs() << "Number of entries in split_elements "
                << split_elements.size() << "\n";
@@ -221,16 +221,35 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
     SplitCFGBlock* new_split{nullptr};
 
     bool already_exists{false};
-    if (id == 0 ) {
+    // id = 0 is when it is the first sequence of elements.
+    if (id == 0) {
       auto scit{sccfg_.find(block->getBlockID())};
       // Must be true.
-      bool already_exists{scit != sccfg_.end()};
+      // bool already_exists{scit != sccfg_.end()};
       new_split = scit->second;
-      llvm::dbgs() << " already exists ";
       new_split->id_ = block->getBlockID();
+      // Successor: succ block from CFGBlock (overridden)
+      /// First one
+      if (split_elements.size() == 1) {
+        addSuccessors(new_split, block);
+      }
+      // Prececessor: prev block from CFGBlock
+      addPredecessors(new_split, block);
     } else {
       new_split = new SplitCFGBlock{};
       new_split->id_ = block->getBlockID() * 10 + id;
+
+      /// Succesors
+      //
+      /// Last one
+      llvm::dbgs() << "SB# " << new_split->id_ << " size " << split_elements.size() << "\n";
+      if (id == split_elements.size() - 1) {
+        llvm::dbgs() << " add successors of BB# " << block->getBlockID() << "\n";
+        addSuccessors(new_split, block);
+      }
+      prev_block->successors_.push_back(new_split);
+      /// Predecessors
+      new_split->predecessors_.push_back(prev_block);
       sccfg_.insert(std::make_pair(block->getBlockID() * 10 + id, new_split));
     }
 
@@ -238,9 +257,10 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
     new_split->has_wait_ = elements.second;
     new_split->elements_ = elements.first;
 
+    // Set the successor of new_split.
+    prev_block = new_split;
 
-
-    //new_split->id_ = block->getBlockID();
+    // new_split->id_ = block->getBlockID();
 
     /*
     /// If there is a wait then update successor.
@@ -252,7 +272,8 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
         prev_block->successors_.push_back(new_split);
         new_split->predecessors_.push_back(prev_block);
         // new_split->id_ = block->getBlockID() * 10 + id;
-        // sccfg_.insert(std::make_pair(block->getBlockID() * 10 + id, new_split));
+        // sccfg_.insert(std::make_pair(block->getBlockID() * 10 + id,
+    new_split));
       }
     } else {
       /// No wait so it should be sequenial statements.
@@ -268,14 +289,32 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
   }
 }
 
+void SplitCFG::addSuccessors(SplitCFGBlock* to, const clang::CFGBlock* from) {
+  for (auto const& succ : from->succs()) {
+    if (succ) {
+      auto fit{sccfg_.find(succ->getBlockID())};
+      SplitCFGBlock* next_succ{fit->second};
+      to->successors_.push_back(next_succ);
+    }
+  }
+}
+
+void SplitCFG::addPredecessors(SplitCFGBlock* to, const clang::CFGBlock* from) {
+  for (auto const& pre: from->preds()) {
+    if (pre) {
+      auto fit{sccfg_.find(pre->getBlockID())};
+      SplitCFGBlock* next_pre{fit->second};
+      to->predecessors_.push_back(next_pre);
+    }
+  }
+}
+
 void SplitCFG::dumpSCCFG() {
   llvm::dbgs() << "sccfg( " << sccfg_.size() << ") ids: ";
   for (auto const& entry : sccfg_) {
     llvm::dbgs() << entry.first << "  ";
   }
   llvm::dbgs() << "\n";
-
-
 }
 
 void SplitCFG::dumpSplitElements(
@@ -290,7 +329,7 @@ void SplitCFG::dumpSplitElements(
     } else {
       llvm::dbgs() << " NO WAIT\n";
     }
-    for (auto const &element: elements.first) {
+    for (auto const& element : elements.first) {
       element->dump();
     }
 
@@ -433,7 +472,7 @@ SplitCFG::~SplitCFG() {
 void SplitCFG::dump() const {
   llvm::dbgs() << "Dump all nodes in SCCFG\n";
   for (auto const& block : sccfg_) {
-    llvm::dbgs() << "Node id " << block.first << "\n";
+    //llvm::dbgs() << "Node id " << block.first << "\n";
     block.second->dump();
   }
   /// Dump all the paths found.

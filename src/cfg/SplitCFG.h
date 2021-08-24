@@ -38,6 +38,8 @@ class SplitCFG {
   bool isWait(const clang::CFGBlock &block) const;
   bool isElementWait(const clang::CFGElement& element) const;
   void splitBlock(clang::CFGBlock* block);
+  void addSuccessors(SplitCFGBlock* to, const clang::CFGBlock* from);
+  void addPredecessors(SplitCFGBlock* to, const clang::CFGBlock* from);
   void updateSuccessors();
   void createUnsplitBlocks();
   void dumpSplitElements(const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> > &split_elements );
