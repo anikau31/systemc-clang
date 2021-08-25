@@ -14,6 +14,7 @@ namespace systemc_clang {
 /// ===========================================
 class SplitCFG {
  private:
+  using VectorSplitCFGBlock = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorCFGBlock = llvm::SmallVector<const clang::CFGBlock *>;
   using VectorCFGElementPtr = llvm::SmallVector<const clang::CFGElement *>;
 
@@ -51,6 +52,7 @@ void dumpSCCFG();
   SplitCFG(clang::ASTContext &context, const clang::CXXMethodDecl *cxx_decl);
   ~SplitCFG();
 
+  const llvm::SmallVector<VectorSplitCFGBlock>& getPathsFound(); 
   void construct_sccfg(const clang::CXXMethodDecl* method);
   void split_wait_blocks(const clang::CXXMethodDecl *cxx_decl);
   void sb_dfs_pop_on_wait(

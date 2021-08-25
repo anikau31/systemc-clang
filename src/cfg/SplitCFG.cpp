@@ -19,8 +19,7 @@ void SplitCFG::sb_dfs_pop_on_wait(
 
   llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited;
   llvm::SmallVector<
-      std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>,
-      8>
+      std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>, 8>
       visit_stack;
   llvm::SmallVector<const SplitCFGBlock*, 8> in_stack;
 
@@ -29,8 +28,8 @@ void SplitCFG::sb_dfs_pop_on_wait(
 
   llvm::SmallVector<const SplitCFGBlock*> curr_path;
   do {
-    std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>&
-        Top = visit_stack.back();
+    std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>& Top =
+        visit_stack.back();
     const SplitCFGBlock* parent_bb = Top.first;
     SplitCFGBlock::const_succ_iterator& I = Top.second;
 
@@ -89,13 +88,10 @@ void SplitCFG::sb_dfs_pop_on_wait(
   sb_paths_found_.push_back(curr_path);
 }
 
-
-
 void SplitCFG::dfs_pop_on_wait(
     const clang::CFGBlock* basic_block,
     llvm::SmallVectorImpl<const clang::CFGBlock*>& waits_in_stack,
     llvm::SmallPtrSetImpl<const clang::CFGBlock*>& visited_waits) {
-
   /// Empty CFG block
   if (basic_block->succ_empty()) {
     return;
@@ -326,9 +322,11 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
       /// Succesors
       //
       /// Last one
-      llvm::dbgs() << "SB# " << new_split->id_ << " size " << split_elements.size() << "\n";
+      llvm::dbgs() << "SB# " << new_split->id_ << " size "
+                   << split_elements.size() << "\n";
       if (id == split_elements.size() - 1) {
-        llvm::dbgs() << " add successors of BB# " << block->getBlockID() << "\n";
+        llvm::dbgs() << " add successors of BB# " << block->getBlockID()
+                     << "\n";
         addSuccessors(new_split, block);
       }
       prev_block->successors_.push_back(new_split);
@@ -342,32 +340,6 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
     new_split->elements_ = elements.first;
 
     // Set the successor of new_split.
-    prev_block = new_split;
-
-    // new_split->id_ = block->getBlockID();
-
-    /*
-    /// If there is a wait then update successor.
-    if (new_split->has_wait_) {
-      llvm::dbgs() << "has a WAIT\n";
-      /// If it is the first block then it is already_exists should be true
-      /// (invariant).
-      if (id != 0) {
-        prev_block->successors_.push_back(new_split);
-        new_split->predecessors_.push_back(prev_block);
-        // new_split->id_ = block->getBlockID() * 10 + id;
-        // sccfg_.insert(std::make_pair(block->getBlockID() * 10 + id,
-    new_split));
-      }
-    } else {
-      /// No wait so it should be sequenial statements.
-      /// Only add if it does not exist already.
-      if (!already_exists) {
-        sccfg_.insert(std::make_pair(block->getBlockID(), new_split));
-        llvm::dbgs() << "No wait but insert " << block->getBlockID() << "\n";
-      }
-    }
-    */
     prev_block = new_split;
     ++id;
   }
@@ -384,7 +356,7 @@ void SplitCFG::addSuccessors(SplitCFGBlock* to, const clang::CFGBlock* from) {
 }
 
 void SplitCFG::addPredecessors(SplitCFGBlock* to, const clang::CFGBlock* from) {
-  for (auto const& pre: from->preds()) {
+  for (auto const& pre : from->preds()) {
     if (pre) {
       auto fit{sccfg_.find(pre->getBlockID())};
       SplitCFGBlock* next_pre{fit->second};
@@ -421,34 +393,6 @@ void SplitCFG::dumpSplitElements(
   }
 }
 
-/*
-void SplitCFG::updateSuccessors() {
-  /// Go through all blocks and set their successors.
-  for (auto const& entry : sccfg_) {
-    unsigned int id{entry.first};
-    SplitCFGBlock* block{entry.second};
-    clang::CFGBlock* cfg_block{block->getCFGBlock()};
-
-    /// Set the successors
-    for (auto const& cfg_succ : cfg_block->succs()) {
-      if ((cfg_succ) && (!block->has_wait_)) {
-        llvm::dbgs() << "Setting successor of " << block->getID() << " to "
-                     << cfg_succ->getBlockID() << "\n";
-      }
-    }
-
-    /// Set the predcessors
-    for (auto const& cfg_pred: cfg_block->preds()) {
-      if ((cfg_pred) && (!block->has_wait_)) {
-      llvm::dbgs() << "Setting predecessor to" << block->getID() << " of "
-                   << cfg_pred->getBlockID() << "\n";
-      block->predecessors_.push_back(sccfg_[cfg_pred->getBlockID()]);
-      }
-    }
-  }
-}
-*/
-
 void SplitCFG::sb_generate_paths() {
   /// Set of visited wait blocks.
   llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_waits;
@@ -456,7 +400,7 @@ void SplitCFG::sb_generate_paths() {
 
   /// G = cfg_
   const clang::CFGBlock* BB{&cfg_->getEntry()};
-  const SplitCFGBlock *entry{sccfg_[BB->getBlockID()]};
+  const SplitCFGBlock* entry{sccfg_[BB->getBlockID()]};
   waits_in_stack.push_back(entry);
   do {
     entry = waits_in_stack.pop_back_val();
@@ -477,7 +421,6 @@ void SplitCFG::sb_generate_paths() {
     }
     llvm::dbgs() << "\n";
   }
- 
 }
 
 void SplitCFG::generate_paths() {
@@ -571,9 +514,8 @@ SplitCFG::~SplitCFG() {
 void SplitCFG::dump() const {
   llvm::dbgs() << "Dump all nodes in SCCFG\n";
   for (auto const& block : sccfg_) {
-    SplitCFGBlock *sblock{block.second};
+    SplitCFGBlock* sblock{block.second};
     sblock->dump();
-
   }
   /// Dump all the paths found.
   /*
@@ -590,6 +532,9 @@ void SplitCFG::dump() const {
     llvm::dbgs() << "\n";
   }
   */
+}
+const llvm::SmallVector<SplitCFG::VectorSplitCFGBlock>& SplitCFG::getPathsFound() {
+  return sb_paths_found_;
 }
 
 SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
