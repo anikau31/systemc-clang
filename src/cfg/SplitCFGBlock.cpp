@@ -141,11 +141,11 @@ void SplitCFGBlock::insertElements(VectorCFGElementPtr& elements) {
   elements_ = elements;
 }
 
-unsigned int SplitCFGBlock::getID() const { return id_; }
+unsigned int SplitCFGBlock::getBlockID() const { return id_; }
 
 void SplitCFGBlock::dump() const {
   if (block_) {
-    llvm::dbgs() << "\nSB" << getID() << "(B" << block_->getBlockID()
+    llvm::dbgs() << "\nSB" << getBlockID() << "(B" << block_->getBlockID()
                  << ")\n";
     unsigned int i{0};
     for (auto const& element : elements_) {
@@ -157,12 +157,12 @@ void SplitCFGBlock::dump() const {
 
     llvm::dbgs() << "Preds: ";
     for (auto const& pre : predecessors_) {
-      llvm::dbgs() << "SB" << pre->getID() << " ";
+      llvm::dbgs() << "SB" << pre->getBlockID() << " ";
     }
 
     llvm::dbgs() << "\nSuccs: ";
     for (auto const& succ : successors_) {
-      llvm::dbgs() << "SB" << succ->getID() << " ";
+      llvm::dbgs() << "SB" << succ->getBlockID() << " ";
     }
     llvm::dbgs() << "\n";
   }

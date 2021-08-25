@@ -29,6 +29,7 @@ class SplitCFG {
 
   /// \brief Paths of BBs generated.
   llvm::SmallVector<VectorCFGBlock> paths_found_;
+  llvm::SmallVector<llvm::SmallVector<const SplitCFGBlock*>> sb_paths_found_;
 
   std::unordered_map<unsigned int, SplitCFGBlock*> sccfg_;
   llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> > split_elements;
@@ -52,11 +53,18 @@ void dumpSCCFG();
 
   void construct_sccfg(const clang::CXXMethodDecl* method);
   void split_wait_blocks(const clang::CXXMethodDecl *cxx_decl);
+  void sb_dfs_pop_on_wait(
+      const SplitCFGBlock *BB,
+      llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_in_stack,
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits);
+
+
   void dfs_pop_on_wait(
       const clang::CFGBlock *BB,
       llvm::SmallVectorImpl<const clang::CFGBlock *> &waits_in_stack,
       llvm::SmallPtrSetImpl<const clang::CFGBlock *> &visited_waits);
 
+  void sb_generate_paths();
   void generate_paths();
   void dump() const;
 };

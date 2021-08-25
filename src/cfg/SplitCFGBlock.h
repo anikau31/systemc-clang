@@ -56,8 +56,29 @@ class SplitCFGBlock {
     using value_type = SplitCFGBlock;
     using pointer = SplitCFGBlock *;    // or also value_type*
     using reference = SplitCFGBlock &;  // or also value_type&
+    using VectorSuccessors = llvm::SmallVector<SplitCFGBlock*>;
+    using const_iterator = VectorSuccessors::const_iterator;
 
-    SuccessorIterator(std::size_t idx, llvm::SmallVector<SplitCFGBlock*> &succ) : index_(idx), succs_{succ} {}
+    public:
+    VectorSuccessors::const_iterator begin() { return succs_.begin(); }
+    VectorSuccessors::const_iterator end() { return succs_.end(); }
+
+    SuccessorIterator(const llvm::SmallVector<SplitCFGBlock*> &succ) : succs_{succ} {}
+    private:
+      const VectorSuccessors& succs_;
+
+  };
+
+
+  /*
+  struct SuccessorIterator {
+    using iterator_category = std::forward_iterator_tag;
+    using difference_type = std::ptrdiff_t;
+    using value_type = SplitCFGBlock;
+    using pointer = SplitCFGBlock *;    // or also value_type*
+    using reference = SplitCFGBlock &;  // or also value_type&
+
+    SuccessorIterator(std::size_t idx, const llvm::SmallVector<SplitCFGBlock*> &succ) : index_(idx), succs_{succ} {}
     reference operator*() const { return *succs_[index_]; }
     pointer operator->() { return succs_[index_]; }
 
@@ -85,17 +106,19 @@ class SplitCFGBlock {
     std::size_t index_;
     const llvm::SmallVector<SplitCFGBlock*> &succs_;
   };
+  */
 
  public:
   using succ_iterator = SuccessorIterator;
-  using const_succ_iterator = const SuccessorIterator;
+  using const_succ_iterator = SuccessorIterator::const_iterator;
   using succ_iterator_range = llvm::iterator_range<succ_iterator>;
   using const_succ_iterator_range = llvm::iterator_range<const_succ_iterator>;
 
-  SuccessorIterator succs_begin() { return SuccessorIterator{0, successors_}; }
-  SuccessorIterator succs_end() { return SuccessorIterator{successors_.size(), successors_}; }
-  succ_iterator_range succs() { return succ_iterator_range{succs_begin(), succs_end()}; }
-  const_succ_iterator_range const_succs() { return const_succ_iterator_range{succs_begin(), succs_end()}; }
+  bool succ_empty() const { return (successors_.size() == 0) ; }
+  SuccessorIterator::const_iterator succ_begin() const { return SuccessorIterator{successors_}.begin(); }
+  SuccessorIterator::const_iterator succ_end() const { return SuccessorIterator{successors_}.end(); }
+  //succ_iterator_range succs() { return succ_iterator_range{succ_begin(), succ_end()}; }
+  const_succ_iterator_range const_succs() { return const_succ_iterator_range{succ_begin(), succ_end()}; }
 
  private:
   bool isWait(const clang::CFGElement &element) const;
@@ -108,7 +131,7 @@ class SplitCFGBlock {
   clang::CFGBlock *getCFGBlock() const;
   std::size_t getSplitBlockSize() const;
   bool hasWait() const;
-  unsigned int getID() const;
+  unsigned int getBlockID() const;
 
   void insertElements(VectorCFGElementPtr & elements);
   void split_block(clang::CFGBlock *block);
