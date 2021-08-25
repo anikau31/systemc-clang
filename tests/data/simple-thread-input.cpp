@@ -44,10 +44,13 @@ SC_MODULE(test) {
     while (true) {
       for (int i = 0; i < 4; i++) {
         k = 1;
+        ++k;
         wait();
         k = 2;
+        --k;
       }
       k =3;
+      k = k + 1;
       wait();
       k =4;
       /*

@@ -145,25 +145,27 @@ unsigned int SplitCFGBlock::getBlockID() const { return id_; }
 
 void SplitCFGBlock::dump() const {
   if (block_) {
-    llvm::dbgs() << "\nSB" << getBlockID() << "(B" << block_->getBlockID()
+    llvm::dbgs() << "\nSB" << getBlockID() << " (B" << block_->getBlockID()
                  << ")\n";
     unsigned int i{0};
     for (auto const& element : elements_) {
-      llvm::dbgs() << "  ";
+      llvm::dbgs() << "  " << i << ": ";
       element->dump();
+      ++i;
     }
 
     llvm::dbgs() << "\n";
 
-    llvm::dbgs() << "Preds: ";
+    llvm::dbgs() << llvm::buffer_ostream::Colors::GREEN << "  Preds (" << llvm::buffer_ostream::Colors::RESET << predecessors_.size() << llvm::buffer_ostream::Colors::GREEN << "): ";
     for (auto const& pre : predecessors_) {
       llvm::dbgs() << "SB" << pre->getBlockID() << " ";
     }
 
-    llvm::dbgs() << "\nSuccs: ";
+    llvm::dbgs() << llvm::buffer_ostream::Colors::MAGENTA << "\n  Succs (" << llvm::buffer_ostream::Colors::RESET << successors_.size() << llvm::buffer_ostream::Colors::MAGENTA << "): ";
     for (auto const& succ : successors_) {
       llvm::dbgs() << "SB" << succ->getBlockID() << " ";
     }
+    llvm::dbgs() << llvm::buffer_ostream::Colors::RESET;
     llvm::dbgs() << "\n";
   }
 }

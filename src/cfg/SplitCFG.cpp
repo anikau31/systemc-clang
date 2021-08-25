@@ -574,11 +574,6 @@ void SplitCFG::dump() const {
     SplitCFGBlock *sblock{block.second};
     sblock->dump();
 
-    /// TEST iterators
-    llvm::dbgs() << "Testing succs iterators\n";
-     for (auto const& succ: sblock->const_succs()) {
-       llvm::dbgs() << succ->getBlockID() << "  ";
-     }
   }
   /// Dump all the paths found.
   /*
