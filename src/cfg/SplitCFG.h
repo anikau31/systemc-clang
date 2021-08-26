@@ -15,7 +15,7 @@ namespace systemc_clang {
 class SplitCFG {
  private:
   using VectorSplitCFGBlock = llvm::SmallVector<const SplitCFGBlock *>;
-  using VectorCFGBlock = llvm::SmallVector<const clang::CFGBlock *>;
+  // using VectorCFGBlock = llvm::SmallVector<const clang::CFGBlock *>;
   using VectorCFGElementPtr = llvm::SmallVector<const clang::CFGElement *>;
 
  private:
@@ -29,7 +29,7 @@ class SplitCFG {
   std::unordered_map<const clang::CFGBlock *, SplitCFGBlock> split_blocks_;
 
   /// \brief Paths of BBs generated.
-  llvm::SmallVector<VectorCFGBlock> paths_found_;
+  // llvm::SmallVector<VectorCFGBlock> paths_found_;
   llvm::SmallVector<llvm::SmallVector<const SplitCFGBlock*>> sb_paths_found_;
 
   std::unordered_map<unsigned int, SplitCFGBlock*> sccfg_;
@@ -50,24 +50,24 @@ void dumpSCCFG();
  public:
   SplitCFG(clang::ASTContext &context);
   SplitCFG(clang::ASTContext &context, const clang::CXXMethodDecl *cxx_decl);
-  ~SplitCFG();
+  virtual ~SplitCFG();
 
   const llvm::SmallVector<VectorSplitCFGBlock>& getPathsFound(); 
   void construct_sccfg(const clang::CXXMethodDecl* method);
-  void split_wait_blocks(const clang::CXXMethodDecl *cxx_decl);
+  // void split_wait_blocks(const clang::CXXMethodDecl *cxx_decl);
   void sb_dfs_pop_on_wait(
       const SplitCFGBlock *BB,
       llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_in_stack,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits);
 
 
-  void dfs_pop_on_wait(
-      const clang::CFGBlock *BB,
-      llvm::SmallVectorImpl<const clang::CFGBlock *> &waits_in_stack,
-      llvm::SmallPtrSetImpl<const clang::CFGBlock *> &visited_waits);
+  // void dfs_pop_on_wait(
+      // const clang::CFGBlock *BB,
+      // llvm::SmallVectorImpl<const clang::CFGBlock *> &waits_in_stack,
+      // llvm::SmallPtrSetImpl<const clang::CFGBlock *> &visited_waits);
 
   void sb_generate_paths();
-  void generate_paths();
+  //void generate_paths();
   void dump() const;
 };
 

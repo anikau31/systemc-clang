@@ -88,6 +88,7 @@ void SplitCFG::sb_dfs_pop_on_wait(
   sb_paths_found_.push_back(curr_path);
 }
 
+/*
 void SplitCFG::dfs_pop_on_wait(
     const clang::CFGBlock* basic_block,
     llvm::SmallVectorImpl<const clang::CFGBlock*>& waits_in_stack,
@@ -168,6 +169,8 @@ void SplitCFG::dfs_pop_on_wait(
   /// Insert the path constructed.
   paths_found_.push_back(curr_path);
 }
+
+*/
 
 bool SplitCFG::isWait(const clang::CFGBlock& block) const {
   for (auto const& element : block.refs()) {
@@ -423,6 +426,7 @@ void SplitCFG::sb_generate_paths() {
   }
 }
 
+/*
 void SplitCFG::generate_paths() {
   /// Set of visited wait blocks.
   llvm::SmallPtrSet<const clang::CFGBlock*, 8> visited_waits;
@@ -438,7 +442,9 @@ void SplitCFG::generate_paths() {
     llvm::dbgs() << "\n";
   } while (!waits_in_stack.empty());
 }
+*/
 
+/*
 void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
   cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
                               clang::CFG::BuildOptions());
@@ -467,6 +473,7 @@ void SplitCFG::split_wait_blocks(const clang::CXXMethodDecl* method) {
     }
   }
 }
+*/
 
 void SplitCFG::createUnsplitBlocks() {
   for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
@@ -533,7 +540,8 @@ void SplitCFG::dump() const {
   }
   */
 }
-const llvm::SmallVector<SplitCFG::VectorSplitCFGBlock>& SplitCFG::getPathsFound() {
+const llvm::SmallVector<SplitCFG::VectorSplitCFGBlock>&
+SplitCFG::getPathsFound() {
   return sb_paths_found_;
 }
 
