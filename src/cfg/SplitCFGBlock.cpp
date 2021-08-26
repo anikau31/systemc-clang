@@ -146,7 +146,11 @@ unsigned int SplitCFGBlock::getBlockID() const { return id_; }
 void SplitCFGBlock::dump() const {
   if (block_) {
     llvm::dbgs() << "\nSB" << getBlockID() << " (B" << block_->getBlockID()
-                 << ")\n";
+                 << ") ";
+    if (hasWait()) {
+      llvm::dbgs() << llvm::buffer_ostream::Colors::RED << " (WAIT)";
+    }
+    llvm::dbgs() << llvm::buffer_ostream::Colors::RESET << "\n";
     unsigned int i{0};
     for (auto const& element : elements_) {
       llvm::dbgs() << "  " << i << ": ";

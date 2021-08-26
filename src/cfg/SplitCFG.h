@@ -15,7 +15,6 @@ namespace systemc_clang {
 class SplitCFG {
  private:
   using VectorSplitCFGBlock = llvm::SmallVector<const SplitCFGBlock *>;
-  // using VectorCFGBlock = llvm::SmallVector<const clang::CFGBlock *>;
   using VectorCFGElementPtr = llvm::SmallVector<const clang::CFGElement *>;
 
  private:
@@ -37,7 +36,7 @@ class SplitCFG {
 
  private:
   /// \brief Checks if a CFGBlock has a wait() call in it.
-  bool isWait(const clang::CFGBlock &block) const;
+  // bool isWait(const clang::CFGBlock &block) const;
   bool isElementWait(const clang::CFGElement& element) const;
   void splitBlock(clang::CFGBlock* block);
   void addSuccessors(SplitCFGBlock* to, const clang::CFGBlock* from);
@@ -61,13 +60,7 @@ void dumpSCCFG();
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits);
 
 
-  // void dfs_pop_on_wait(
-      // const clang::CFGBlock *BB,
-      // llvm::SmallVectorImpl<const clang::CFGBlock *> &waits_in_stack,
-      // llvm::SmallPtrSetImpl<const clang::CFGBlock *> &visited_waits);
-
   void sb_generate_paths();
-  //void generate_paths();
   void dump() const;
 };
 
