@@ -399,33 +399,35 @@ namespace systemc_hdl {
       else module_vars.insert(objname);
 
       // check for initializer
-      VarDecl *vard = pd->getAsVarDecl();
-      if (vard) {
-	LLVM_DEBUG(llvm::dbgs() << "var decl dump follows\n");
-	LLVM_DEBUG(vard->dump(llvm::dbgs()));
-	if (vard->hasInit()) {
-	  APValue *apval = vard->getEvaluatedValue();
-	  if (apval && apval->isInt()) {
-	    hNodep h_lit = new hNode((apval->getInt()).toString(10),
-				     hNode::hdlopsEnum::hLiteral);
-	    hNodep h_varinit = new hNode(hNode::hdlopsEnum::hVarInit);
-	    h_varinit->child_list.push_back(h_lit);
-	    (h_info->child_list.back())->child_list.push_back(h_varinit);
+      if (h_op == hNode::hdlopsEnum::hVardecl) {
+	VarDecl *vard = pd->getAsVarDecl();
+	if (vard) {
+	  LLVM_DEBUG(llvm::dbgs() << "var decl dump follows\n");
+	  LLVM_DEBUG(vard->dump(llvm::dbgs()));
+	  if (vard->hasInit()) {
+	    APValue *apval = vard->getEvaluatedValue();
+	    if (apval && apval->isInt()) {
+	      hNodep h_lit = new hNode((apval->getInt()).toString(10),
+				       hNode::hdlopsEnum::hLiteral);
+	      hNodep h_varinit = new hNode(hNode::hdlopsEnum::hVarInit);
+	      h_varinit->child_list.push_back(h_lit);
+	      (h_info->child_list.back())->child_list.push_back(h_varinit);
+	    }
 	  }
-	}
-      } else {
-	FieldDecl *fieldd = pd->getAsFieldDecl();
-	if (fieldd) {
-	  LLVM_DEBUG(llvm::dbgs() << "field decl dump follows\n");
-	  LLVM_DEBUG(fieldd->dump(llvm::dbgs()));
-	  Expr* initializer = fieldd->getInClassInitializer();
-	  if (initializer != NULL) {
-	    LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
-	    LLVM_DEBUG(initializer->dump(llvm::dbgs(), getContext()));
-	    hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);
-	    //HDLBody xmethod(initializer, h_init, main_diag_engine, getContext(), mod_vname_map);
-	    xbodyp->Run(initializer, h_init, rnomode);
-	    (h_info->child_list.back())->child_list.push_back(h_init);
+	} else {
+	  FieldDecl *fieldd = pd->getAsFieldDecl();
+	  if (fieldd) {
+	    LLVM_DEBUG(llvm::dbgs() << "field decl dump follows\n");
+	    LLVM_DEBUG(fieldd->dump(llvm::dbgs()));
+	    Expr* initializer = fieldd->getInClassInitializer();
+	    if (initializer != NULL) {
+	      LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
+	      LLVM_DEBUG(initializer->dump(llvm::dbgs(), getContext()));
+	      hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);
+	      //HDLBody xmethod(initializer, h_init, main_diag_engine, getContext(), mod_vname_map);
+	      xbodyp->Run(initializer, h_init, rnomode);
+	      (h_info->child_list.back())->child_list.push_back(h_init);
+	    }
 	  }
 	}
       }
