@@ -1,25 +1,27 @@
 <map id="src/model/PortBinding.h" name="src/model/PortBinding.h">
-<area shape="rect" id="node1" title=" " alt="" coords="261,5,421,32"/>
-<area shape="rect" id="node2" href="$NetlistMatcher_8h.html" title=" " alt="" coords="243,304,440,331"/>
-<area shape="rect" id="node4" href="$ModuleInstance_8h.html" title=" " alt="" coords="543,80,729,107"/>
-<area shape="rect" id="node17" href="$HDLMain_8cpp.html" title=" " alt="" coords="917,632,1083,659"/>
-<area shape="rect" id="node3" href="$SystemCClang_8cpp.html" title=" " alt="" coords="43,475,197,502"/>
-<area shape="rect" id="node5" href="$Matchers_8h.html" title=" " alt="" coords="553,229,719,256"/>
-<area shape="rect" id="node6" href="$Model_8h.html" title=" " alt="" coords="844,304,972,331"/>
-<area shape="rect" id="node22" href="$PortMatcher_8h.html" title=" " alt="" coords="415,155,598,181"/>
-<area shape="rect" id="node23" href="$ModuleInstance_8cpp.html" title=" " alt="" coords="673,155,871,181"/>
-<area shape="rect" id="node10" href="$SystemCClang_8h.html" title=" " alt="" coords="755,386,895,413"/>
-<area shape="rect" id="node7" href="$Model_8cpp.html" title=" " alt="" coords="919,386,1062,413"/>
-<area shape="rect" id="node8" href="$GlobalSuspensionAutomata_8h.html" title=" " alt="" coords="1318,379,1527,420"/>
-<area shape="rect" id="node9" href="$GlobalSuspensionAutomata_8cpp.html" title=" " alt="" coords="1469,468,1678,509"/>
-<area shape="rect" id="node11" href="$PluginAction_8h.html" title="This file contains the class for defining basic plugin actions." alt="" coords="845,475,971,502"/>
-<area shape="rect" id="node12" href="$SAPlugin_8h.html" title="Plugin consumer for generating suspension automata." alt="" coords="1285,475,1393,502"/>
-<area shape="rect" id="node13" href="$TimeAnalysis_8h.html" title="A short example of how to use the plugin architecture." alt="" coords="221,475,413,502"/>
-<area shape="rect" id="node14" href="$HDLBody_8cpp.html" title=" " alt="" coords="477,557,645,584"/>
-<area shape="rect" id="node15" href="$HDLBody_8h.html" title=" " alt="" coords="488,475,643,502"/>
-<area shape="rect" id="node16" href="$HDLMain_8h.html" title=" " alt="" coords="670,557,823,584"/>
-<area shape="rect" id="node18" href="$HDLHnode_8h.html" title=" " alt="" coords="1097,475,1260,502"/>
-<area shape="rect" id="node20" href="$HDLType_8cpp.html" title=" " alt="" coords="847,557,1014,584"/>
-<area shape="rect" id="node21" href="$HDLType_8h.html" title=" " alt="" coords="667,475,821,502"/>
-<area shape="rect" id="node19" href="$HDLHnode_8cpp.html" title=" " alt="" coords="1038,557,1215,584"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1354,5,1514,32"/>
+<area shape="rect" id="node2" href="$HDLMain_8cpp.html" title=" " alt="" coords="991,632,1157,659"/>
+<area shape="rect" id="node3" href="$NetlistMatcher_8h.html" title=" " alt="" coords="1335,304,1533,331"/>
+<area shape="rect" id="node5" href="$ModuleInstance_8h.html" title=" " alt="" coords="880,80,1065,107"/>
+<area shape="rect" id="node4" href="$SystemCClang_8cpp.html" title=" " alt="" coords="1537,475,1691,502"/>
+<area shape="rect" id="node6" href="$Matchers_8h.html" title=" " alt="" coords="960,229,1127,256"/>
+<area shape="rect" id="node20" href="$Model_8h.html" title=" " alt="" coords="858,304,986,331"/>
+<area shape="rect" id="node24" href="$PortMatcher_8h.html" title=" " alt="" coords="1011,155,1193,181"/>
+<area shape="rect" id="node25" href="$ModuleInstance_8cpp.html" title=" " alt="" coords="687,155,885,181"/>
+<area shape="rect" id="node7" href="$SystemCClang_8h.html" title=" " alt="" coords="908,386,1048,413"/>
+<area shape="rect" id="node8" href="$HDLBody_8cpp.html" title=" " alt="" coords="499,557,667,584"/>
+<area shape="rect" id="node9" href="$HDLBody_8h.html" title=" " alt="" coords="506,475,661,502"/>
+<area shape="rect" id="node10" href="$HDLMain_8h.html" title=" " alt="" coords="692,557,845,584"/>
+<area shape="rect" id="node11" href="$HDLThread_8h.html" title=" " alt="" coords="310,557,475,584"/>
+<area shape="rect" id="node13" href="$HDLHnode_8h.html" title=" " alt="" coords="1015,475,1178,502"/>
+<area shape="rect" id="node15" href="$HDLType_8cpp.html" title=" " alt="" coords="869,557,1036,584"/>
+<area shape="rect" id="node16" href="$HDLType_8h.html" title=" " alt="" coords="787,475,940,502"/>
+<area shape="rect" id="node17" href="$PluginAction_8h.html" title="This file contains the class for defining basic plugin actions." alt="" coords="1253,475,1380,502"/>
+<area shape="rect" id="node18" href="$SAPlugin_8h.html" title="Plugin consumer for generating suspension automata." alt="" coords="1404,475,1512,502"/>
+<area shape="rect" id="node19" href="$TimeAnalysis_8h.html" title="A short example of how to use the plugin architecture." alt="" coords="239,475,431,502"/>
+<area shape="rect" id="node12" href="$HDLThread_8cpp.html" title=" " alt="" coords="303,632,482,659"/>
+<area shape="rect" id="node14" href="$HDLHnode_8cpp.html" title=" " alt="" coords="1112,557,1289,584"/>
+<area shape="rect" id="node21" href="$GlobalSuspensionAutomata_8h.html" title=" " alt="" coords="675,379,884,420"/>
+<area shape="rect" id="node23" href="$Model_8cpp.html" title=" " alt="" coords="508,386,651,413"/>
+<area shape="rect" id="node22" href="$GlobalSuspensionAutomata_8cpp.html" title=" " alt="" coords="5,468,215,509"/>
 </map>
