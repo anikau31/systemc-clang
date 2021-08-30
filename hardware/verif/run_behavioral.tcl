@@ -1,9 +1,9 @@
 # sourced common
 
 # NOTE: the builtin script ignores xvlog_opts, we modify the script to add those options
-source ${PROJECT_SOURCE_DIR}/tcl/projutils/projutils.tcl
-source ${PROJECT_SOURCE_DIR}/tcl/projutils/common/utils.tcl
-source ${PROJECT_SOURCE_DIR}/tcl/projutils/export_simulation.tcl
+source ${PROJECT_SOURCE_DIR}/hardware/tcl/projutils/projutils.tcl
+source ${PROJECT_SOURCE_DIR}/hardware/tcl/projutils/common/utils.tcl
+source ${PROJECT_SOURCE_DIR}/hardware/tcl/projutils/export_simulation.tcl
 set test_name [lindex $argv 0]
 
 create_project -in_memory -part $part
@@ -13,16 +13,19 @@ source files.tcl
 
 foreach bd $::bd_deps {
   # source
-  source ${PROJECT_SOURCE_DIR}/bd/$bd\_${BOARD}.tcl
+  source ${PROJECT_SOURCE_DIR}/hardware/bd/$bd\_${BOARD}.tcl
   generate_target simulation [get_files $bd.bd]
   add_files -fileset sim_1 ${CMAKE_CURRENT_BINARY_DIR}/${test}_behav/.srcs/sources_1/bd/$bd/hdl/$bd\_wrapper.v
 }
 
 foreach f $::files {
-  add_files -fileset sim_1 ${PROJECT_SOURCE_DIR}/rtl/$f.sv
+  add_files -fileset sim_1 ${PROJECT_SOURCE_DIR}/hardware/rtl/$f.sv
 }
-add_files -fileset sim_1 ${PROJECT_SOURCE_DIR}/verif/tb/tb.sv
-add_files -fileset sim_1 ${PROJECT_SOURCE_DIR}/verif/tests/$test_name.sv
+foreach f $::sysc_files {
+  add_files -fileset sim_1 ${CMAKE_CURRENT_BINARY_DIR}/../rtl/$f.sv
+}
+add_files -fileset sim_1 ${PROJECT_SOURCE_DIR}/hardware/verif/tb/tb.sv
+add_files -fileset sim_1 ${PROJECT_SOURCE_DIR}/hardware/verif/tests/$test_name.sv
 
 # add ips
 ${add_ip_sim_command}

@@ -1,4 +1,4 @@
-function(add_behavioral_sim test design bd_deps file_deps ips) # test is the test name in tests/${test}.sv
+function(add_behavioral_sim test design bd_deps file_deps sysc ips) # test is the test name in tests/${test}.sv
   # design is the file list name  ${design}.f
   if(EXISTS ${HW_SOURCE_DIR}/verif/${design}.f)
   else()

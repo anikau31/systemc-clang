@@ -519,7 +519,6 @@ class VerilogTranslationPass(TopDown):
         proc_name, proc_name_2, prevardecl, *body = tree.children
 
         prevardecl.children = list(filter(lambda x: not is_tree_type(x, 'vardeclrn'), prevardecl.children))
-        dprint(prevardecl)
 
         ind = self.get_current_ind_prefix()
         decls = list(map(lambda x: x[0] + ';', prevardecl.children))

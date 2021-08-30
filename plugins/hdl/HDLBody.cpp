@@ -707,8 +707,9 @@ namespace systemc_hdl {
     TraverseStmt(callexpr->getCallee());
     // unlike methodcall, the function call name will hopefully resolve to a
     // declref. in traversedeclref, we create the hnode for the function call
-    if ((h_ret != save_hret) &&
-	(h_ret->getopc() == hNode::hdlopsEnum::hMethodCall)) {
+    if ((h_ret != save_hret)// &&
+	//(h_ret->getopc() == hNode::hdlopsEnum::hMethodCall)) {
+	) {
       hcall = h_ret;
     } else {
       hcall = new hNode(

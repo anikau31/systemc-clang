@@ -90,12 +90,13 @@ test_data = [
        None, # load_file(testdata / "test_while_iscs_hdl.txt.v"),
        None,
     ),
-    # (
-    #    "test_binary_iscs",
-    #    load_file(testdata / "test_binary_iscs.cpp"),
-    #    None,
-    #    None, # load_file(testdata / "test_binary_iscs_hdl.txt.v"),
-    # ),
+    (
+       "test_binary_iscs",
+       load_file(testdata / "test_binary_iscs.cpp"),
+       None,
+       None, # load_file(testdata / "test_binary_iscs_hdl.txt.v"),
+       None,
+    ),
     (
        "test_break_iscs",
        load_file(testdata / "test_break_iscs.cpp"),
@@ -268,3 +269,25 @@ def has_vivado():
         return True
     else:
         return False
+
+def construct_hcode(cpp_design_path, tmp_path, default_params, clang_args_params, extra_args):
+    from parselib.grammar import lark_grammar
+    sysc_clang = __import__('systemc-clang')
+    target_path = tmp_path / '{}'.format(cpp_design_path.name)
+    hcode_target_path = tmp_path / '{}_hdl.txt'.format(cpp_design_path.stem)
+    content = cpp_design_path.read_text()
+
+    with open(target_path, 'w') as f:
+        f.writelines(content)
+
+    # genearting hcode
+    args = [str(target_path), '--debug', '--'] + list(default_params) + list(clang_args_params) + extra_args or []
+    print(' '.join(args))
+    sysc_clang.invoke_sysc(args)
+    assert hcode_target_path.exists(), 'hCode txt should be present'
+
+    # translation
+    hcode_content = hcode_target_path.read_text()
+    t = lark_grammar.parse(hcode_content)
+    return t, hcode_target_path
+
