@@ -132,7 +132,7 @@ class SplitCFGBlock {
 
   clang::CFGBlock *getCFGBlock() const;
   std::size_t getNumOfElements() const;
-  const VectorCFGElementPtr &getElements() const; 
+  const VectorCFGElementPtrImpl &getElements() const; 
   bool hasWait() const;
   unsigned int getBlockID() const;
   unsigned int getNextState() const;

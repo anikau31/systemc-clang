@@ -18,7 +18,7 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
 
 clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
 
-const SplitCFGBlock::VectorCFGElementPtr& SplitCFGBlock::getElements() const { return elements_; }
+const SplitCFGBlock::VectorCFGElementPtrImpl & SplitCFGBlock::getElements() const { return elements_; }
 
 bool SplitCFGBlock::hasWait() const { return has_wait_; }
 

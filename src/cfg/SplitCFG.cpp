@@ -395,7 +395,16 @@ void SplitCFG::dump() const {
     SplitCFGBlock* sblock{block.second};
     sblock->dump();
 
-    
+    llvm::dbgs() << "Element access\n";
+    unsigned int i{0};
+
+    for (auto const& element : sblock->getElements()) {
+      llvm::dbgs() << "  " << i << ": ";
+      element->dump();
+      ++i;
+    }
+
+
   }
   /// Dump all the paths found.
   /*
