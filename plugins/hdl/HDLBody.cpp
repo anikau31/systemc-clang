@@ -439,24 +439,38 @@ namespace systemc_hdl {
 	return true;
       }
     }
-    if (!lutil.isSCFunc(name) && isa<FunctionDecl>(value)) {  // similar to method call, skip builtin
-      FunctionDecl *funval = (FunctionDecl *)value;
-
-      string qualfuncname{value->getQualifiedNameAsString()};
-      lutil.make_ident(qualfuncname);
-      if (add_info) qualfuncname += ":"+ name; // !!! add unqualified name for future hcode processing
-      //methodecls[qualfuncname] =
-      //  (FunctionDecl *)value;  // add to list of "methods" to be generated
-      //methodecls.insert(make_pair(qualfuncname, (FunctionDecl *)value));
-
-      // create the call expression
-      hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
-      // don't add this method to methodecls if processing modinit
-      if (!add_info) methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
-      h_ret = hfuncall;
-      return true;
+    if (isa<FunctionDecl>(value)) {
+      if (!lutil.isSCFunc(name)) {  // similar to method call, skip builtin
+	FunctionDecl *funval = (FunctionDecl *)value;
+	
+	string qualfuncname{value->getQualifiedNameAsString()};
+	lutil.make_ident(qualfuncname);
+	if (add_info) qualfuncname += ":"+ name; // !!! add unqualified name for future hcode processing
+	//methodecls[qualfuncname] =
+	//  (FunctionDecl *)value;  // add to list of "methods" to be generated
+	//methodecls.insert(make_pair(qualfuncname, (FunctionDecl *)value));
+	
+	// create the call expression
+	hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
+	// don't add this method to methodecls if processing modinit
+	if (!add_info) methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
+	h_ret = hfuncall;
+	return true;
+      }
+      else { // here it is an SCFunc
+	string typname = (expr->getType()).getAsString();
+	if (typname.find("sc_dt::sc_concat") !=std::string::npos) {
+	  // found concat function call
+	  hNodep hconcat = new hNode(name, hNode::hdlopsEnum::hBinop);
+	  h_ret = hconcat;
+	  return true;
+	}
+	h_ret = new hNode(name, hNode::hdlopsEnum::hNoop);
+	return true;
+	// may have other special functions to recognize later
+      }
     }
-
+    
     string newname = FindVname(expr->getDecl());
     LLVM_DEBUG(llvm::dbgs() << "new name is " << newname << "\n");
     LLVM_DEBUG(expr->getDecl()->dump(llvm::dbgs()));

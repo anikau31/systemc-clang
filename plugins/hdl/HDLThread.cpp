@@ -77,9 +77,11 @@ namespace systemc_hdl {
   }
 
   void HDLThread::MarkStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map) {
-    Map[S] = true;
-    for (const Stmt *K : S->children())
-      MarkStatements(K, Map);
+    if (S != NULL) {
+      Map[S] = true;
+      for (const Stmt *K : S->children())
+	MarkStatements(K, Map);
+    }
   }
   
   void HDLThread::FindStatements(const CFGBlock &B, std::vector<const Stmt *> &SS) {
@@ -90,7 +92,7 @@ namespace systemc_hdl {
       CFGElement E = *I;
       if (auto SE = E.getAs<CFGStmt>()) {
 	const Stmt *S = SE->getStmt();
-	for (const Stmt *K : S->children())
+	for (const Stmt *K : S->children()) 
 	  MarkStatements(K, Map);
       }
     }
