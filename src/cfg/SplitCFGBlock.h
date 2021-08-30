@@ -38,13 +38,12 @@ class SplitCFGBlock {
   unsigned int id_;
   unsigned int next_state_;
 
-  /// Split the elements into blocks separated by wait() statements
-  //llvm::SmallVector<VectorCFGElementPtr> split_elements_;
 
   /// This holds the ids in split_elements_ that correspond to the wait
   /// statements.  This will be a single vector with just the wait() element.
   llvm::SmallVector<unsigned int> wait_element_ids_;
 
+  /// CFG Elements
   VectorCFGElementPtr elements_;
   /// Predecessors and successors.
   llvm::SmallVector<SplitCFGBlock *> predecessors_;
@@ -70,45 +69,6 @@ class SplitCFGBlock {
       const VectorSuccessors& succs_;
 
   };
-
-
-  /*
-  struct SuccessorIterator {
-    using iterator_category = std::forward_iterator_tag;
-    using difference_type = std::ptrdiff_t;
-    using value_type = SplitCFGBlock;
-    using pointer = SplitCFGBlock *;    // or also value_type*
-    using reference = SplitCFGBlock &;  // or also value_type&
-
-    SuccessorIterator(std::size_t idx, const llvm::SmallVector<SplitCFGBlock*> &succ) : index_(idx), succs_{succ} {}
-    reference operator*() const { return *succs_[index_]; }
-    pointer operator->() { return succs_[index_]; }
-
-    // Prefix increment
-    SuccessorIterator &operator++() {
-      index_++;
-      return *this;
-    }
-
-    // Postfix increment
-    SuccessorIterator operator++(int) {
-      SuccessorIterator tmp = *this;
-      ++(*this);
-      return tmp;
-    }
-
-    friend bool operator==(const SuccessorIterator &a, const SuccessorIterator &b) {
-      return a.index_ == b.index_;
-    };
-    friend bool operator!=(const SuccessorIterator &a, const SuccessorIterator &b) {
-      return a.index_!= b.index_;
-    };
-
-   private:
-    std::size_t index_;
-    const llvm::SmallVector<SplitCFGBlock*> &succs_;
-  };
-  */
 
  public:
   using succ_iterator = SuccessorIterator;
@@ -138,7 +98,6 @@ class SplitCFGBlock {
   unsigned int getNextState() const;
 
   void insertElements(VectorCFGElementPtr & elements);
-  // void split_block(clang::CFGBlock *block);
 
   void dump() const;
 };

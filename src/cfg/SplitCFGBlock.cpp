@@ -9,7 +9,6 @@ SplitCFGBlock::SplitCFGBlock() : block_{nullptr}, has_wait_{false} {}
 SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   block_ = from.block_;
   has_wait_ = from.has_wait_;
-  // split_elements_ = from.split_elements_;
   wait_element_ids_ = from.wait_element_ids_;
   successors_ = from.successors_;
   predecessors_ = from.predecessors_;
@@ -81,66 +80,6 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
 
   return false;
 };
-
-/*
-void SplitCFGBlock::split_block(clang::CFGBlock* block) {
-  assert(block != nullptr);
-  block_ = block;
-
-  llvm::dbgs() << "Checking if block " << block->getBlockID()
-               << " has a wait()\n";
-  // We are going to have two vectors.
-  // 1. A vector of vector pointers to CFGElements.
-  // 2. A vector of pointers to CFGElements that are waits.
-  //
-  //
-  unsigned int num_elements{block_->size()};
-
-  VectorCFGElementPtr vec_elements{};
-  for (auto const& element : block->refs()) {
-    // element->dump();
-
-    //////////////////////////////////////////
-    /// Test code
-    //////////////////////////////////////////
-    // if (isFunctionCall(*element)) {
-    // llvm::dbgs() << "YEAOW generate CFG for function call\n";
-    //
-    // }
-
-    /// refs() returns an iterator, which actually stores an ElementRefImpl<>
-    /// interface. In order to get the correct pointer to CFGElement, we need to
-    /// explicitly call operator->(). Odd!
-    const clang::CFGElement* element_ptr{element.operator->()};
-    /// If the element is a wait() then split it.
-    if (isWait(*element)) {
-      /// There is only one statement and it's a wait().
-      if (num_elements == 1) {
-        llvm::dbgs() << "DBG: Only one statement and it is a wait().\n";
-      }
-
-      if (vec_elements.size() != 0) {
-        split_elements_.push_back(vec_elements);
-        vec_elements.clear();
-      }
-
-      /// Add the wait as a separate entry in the list.
-      vec_elements.push_back(element_ptr);
-      split_elements_.push_back(vec_elements);
-      vec_elements.clear();
-      wait_element_ids_.push_back(split_elements_.size() - 1);
-
-      has_wait_ = true;
-    } else {
-      vec_elements.push_back(element_ptr);
-    }
-  }
-
-  if (vec_elements.size() != 0) {
-    split_elements_.push_back(vec_elements);
-  }
-}
-*/
 
 void SplitCFGBlock::insertElements(VectorCFGElementPtr& elements) {
   elements_ = elements;
