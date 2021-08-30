@@ -28,6 +28,7 @@ namespace systemc_clang {
 class SplitCFGBlock {
  private:
   using VectorCFGElementPtr = llvm::SmallVector<const clang::CFGElement *>;
+  using VectorCFGElementPtrImpl = llvm::SmallVectorImpl<const clang::CFGElement *>;
   using VectorSplitCFGBlockPtr = llvm::SmallVector<const SplitCFGBlock*>;
 
   friend class SplitCFG;
@@ -35,9 +36,10 @@ class SplitCFGBlock {
   clang::CFGBlock *block_;
   bool has_wait_;
   unsigned int id_;
+  unsigned int next_state_;
 
   /// Split the elements into blocks separated by wait() statements
-  llvm::SmallVector<VectorCFGElementPtr> split_elements_;
+  //llvm::SmallVector<VectorCFGElementPtr> split_elements_;
 
   /// This holds the ids in split_elements_ that correspond to the wait
   /// statements.  This will be a single vector with just the wait() element.
@@ -129,12 +131,14 @@ class SplitCFGBlock {
   SplitCFGBlock(const SplitCFGBlock &from);
 
   clang::CFGBlock *getCFGBlock() const;
-  std::size_t getSplitBlockSize() const;
+  std::size_t getNumOfElements() const;
+  const VectorCFGElementPtr &getElements() const; 
   bool hasWait() const;
   unsigned int getBlockID() const;
+  unsigned int getNextState() const;
 
   void insertElements(VectorCFGElementPtr & elements);
-  void split_block(clang::CFGBlock *block);
+  // void split_block(clang::CFGBlock *block);
 
   void dump() const;
 };

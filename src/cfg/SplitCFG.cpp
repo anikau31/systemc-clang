@@ -52,7 +52,8 @@ void SplitCFG::sb_dfs_pop_on_wait(
           if ((basic_block != nullptr)) {
             llvm::dbgs() << "Insert successor of BB#" << parent_bb->getBlockID()
                          << ": BB#" << basic_block->getBlockID() << "\n";
-            waits_in_stack.push_back(basic_block);
+            // Mimic FIFO
+            waits_in_stack.insert(waits_in_stack.begin(), basic_block);
             break;
           }
         }
@@ -322,7 +323,8 @@ void SplitCFG::sb_generate_paths() {
   /// G = cfg_
   const clang::CFGBlock* BB{&cfg_->getEntry()};
   const SplitCFGBlock* entry{sccfg_[BB->getBlockID()]};
-  waits_in_stack.push_back(entry);
+  // Mimic FIFO
+  waits_in_stack.insert(waits_in_stack.begin(), entry);
   do {
     entry = waits_in_stack.pop_back_val();
     llvm::dbgs() << "Processing SB " << entry->getBlockID() << "\n";
@@ -392,6 +394,8 @@ void SplitCFG::dump() const {
   for (auto const& block : sccfg_) {
     SplitCFGBlock* sblock{block.second};
     sblock->dump();
+
+    
   }
   /// Dump all the paths found.
   /*

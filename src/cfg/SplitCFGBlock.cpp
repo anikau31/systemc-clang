@@ -9,18 +9,21 @@ SplitCFGBlock::SplitCFGBlock() : block_{nullptr}, has_wait_{false} {}
 SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   block_ = from.block_;
   has_wait_ = from.has_wait_;
-  split_elements_ = from.split_elements_;
+  // split_elements_ = from.split_elements_;
   wait_element_ids_ = from.wait_element_ids_;
   successors_ = from.successors_;
   predecessors_ = from.predecessors_;
+  next_state_ = from.next_state_;
 }
 
 clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
 
+const SplitCFGBlock::VectorCFGElementPtr& SplitCFGBlock::getElements() const { return elements_; }
+
 bool SplitCFGBlock::hasWait() const { return has_wait_; }
 
-std::size_t SplitCFGBlock::getSplitBlockSize() const {
-  return split_elements_.size();
+std::size_t SplitCFGBlock::getNumOfElements() const {
+  return elements_.size();
 }
 
 bool SplitCFGBlock::isFunctionCall(const clang::CFGElement& element) const {
@@ -79,6 +82,7 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
   return false;
 };
 
+/*
 void SplitCFGBlock::split_block(clang::CFGBlock* block) {
   assert(block != nullptr);
   block_ = block;
@@ -136,12 +140,15 @@ void SplitCFGBlock::split_block(clang::CFGBlock* block) {
     split_elements_.push_back(vec_elements);
   }
 }
+*/
 
 void SplitCFGBlock::insertElements(VectorCFGElementPtr& elements) {
   elements_ = elements;
 }
 
 unsigned int SplitCFGBlock::getBlockID() const { return id_; }
+
+unsigned int SplitCFGBlock::getNextState() const { return next_state_; }
 
 void SplitCFGBlock::dump() const {
   if (block_) {
