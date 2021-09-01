@@ -13,6 +13,7 @@ SC_MODULE(test) {
   int k;
 
   void simple_wait() {
+    wait();
     while (true) {
       if (x == 1) {
         k = 1;
@@ -73,7 +74,10 @@ SC_MODULE(test) {
   SC_CTOR(test) {
     int x{2};
     SC_THREAD(test_thread);
-    sensitive << clk.pos();
+     sensitive << clk.pos();
+    // SC_THREAD(simple_wait);
+    // sensitive << clk.pos();
+ 
   }
 };
 

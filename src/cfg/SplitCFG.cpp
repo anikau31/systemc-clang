@@ -54,6 +54,12 @@ void SplitCFG::sb_dfs_pop_on_wait(
                          << ": BB#" << basic_block->getBlockID() << "\n";
             // Mimic FIFO
             waits_in_stack.insert(waits_in_stack.begin(), basic_block);
+            auto wit = wait_next_state_.find(parent_bb);
+            if (wit == wait_next_state_.end()) {
+              wait_next_state_.insert(std::make_pair(
+                  parent_bb, std::make_pair(basic_block, next_state_count_)));
+              ++next_state_count_;
+            }
             break;
           }
         }
@@ -88,38 +94,6 @@ void SplitCFG::sb_dfs_pop_on_wait(
   /// Insert the path constructed.
   sb_paths_found_.push_back(curr_path);
 }
-
-/*
-bool SplitCFG::isWait(const clang::CFGBlock& block) const {
-  for (auto const& element : block.refs()) {
-    if (auto cfg_stmt = element->getAs<clang::CFGStmt>()) {
-      auto stmt{cfg_stmt->getStmt()};
-
-      // stmt->dump();
-      if (auto* expr = llvm::dyn_cast<clang::Expr>(stmt)) {
-        if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
-          if (auto direct_callee = cxx_me->getDirectCallee()) {
-            auto name{direct_callee->getNameInfo().getAsString()};
-            if (name == std::string("wait")) {
-              // llvm::dbgs() << "@@@@ FOUND WAIT @@@@\n";
-
-              /// Check that there is only 1 or 0 arguments
-              auto args{cxx_me->getNumArgs()};
-              if (args >= 2) {
-                llvm::errs() << "wait() must have either 0 or 1 argument.\n";
-                return false;
-              }
-              return true;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return false;
-};
-*/
 
 bool SplitCFG::isElementWait(const clang::CFGElement& element) const {
   if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
@@ -325,6 +299,10 @@ void SplitCFG::sb_generate_paths() {
   const SplitCFGBlock* entry{sccfg_[BB->getBlockID()]};
   // Mimic FIFO
   waits_in_stack.insert(waits_in_stack.begin(), entry);
+  // Entry=>Entry is the reset.
+  wait_next_state_.insert(
+      std::make_pair(entry, std::make_pair(entry, next_state_count_)));
+  ++next_state_count_;  // Reset has been assigned to 0
   do {
     entry = waits_in_stack.pop_back_val();
     llvm::dbgs() << "Processing SB " << entry->getBlockID() << "\n";
@@ -332,16 +310,33 @@ void SplitCFG::sb_generate_paths() {
     llvm::dbgs() << "\n";
   } while (!waits_in_stack.empty());
 
+  llvm::dbgs() << "Dump all wait next states\n";
+  for (auto const& wait : wait_next_state_) {
+    auto wait_block{wait.first};
+    auto next_block{wait.second.first};
+    auto next_state_id{wait.second.second};
+
+    llvm::dbgs() << "SB" << wait_block->getBlockID() << " (SB"
+                 << next_block->getBlockID() << ")"
+                 << " [" << next_state_id << "]\n";
+  }
+
   llvm::dbgs() << "Dump all SB paths to wait() found in the CFG.\n";
   unsigned int i{0};
   for (auto const& block_vector : sb_paths_found_) {
     llvm::dbgs() << "Path S" << i++ << ": ";
     for (auto const& block : block_vector) {
       llvm::dbgs() << block->getBlockID() << " ";
+      auto wit = wait_next_state_.find(block);
+      if (wit != wait_next_state_.end()) {
+        auto next_state{wit->second.second};
+        llvm::dbgs() << "[" << next_state << "] ";
+      }
     }
     if (i == 1) {
       llvm::dbgs() << " (reset path)";
     }
+
     llvm::dbgs() << "\n";
   }
 }
@@ -395,6 +390,7 @@ void SplitCFG::dump() const {
     SplitCFGBlock* sblock{block.second};
     sblock->dump();
 
+    /*
     llvm::dbgs() << "Element access\n";
     unsigned int i{0};
 
@@ -403,8 +399,7 @@ void SplitCFG::dump() const {
       element->dump();
       ++i;
     }
-
-
+    */
   }
   /// Dump all the paths found.
   /*
@@ -422,7 +417,44 @@ void SplitCFG::dump() const {
   }
   */
 }
-const llvm::SmallVector<SplitCFG::VectorSplitCFGBlock>&
+
+void SplitCFG::dumpToDot() {
+  llvm::dbgs() << "digraph SCCFG {\n";
+  for (auto const& block : sccfg_) {
+    SplitCFGBlock* sblock{block.second};
+    if (sblock->hasWait()) {
+      llvm::dbgs() << "SB" << sblock->getBlockID() << " [shape=box, color=red]"
+                   << "\n";
+    } else {
+      llvm::dbgs() << "SB" << sblock->getBlockID() << " [shape=box]"
+                   << "\n";
+    }
+  }
+  for (auto const& block : sccfg_) {
+    SplitCFGBlock* sblock{block.second};
+    for (auto const& succ : sblock->successors_) {
+      llvm::dbgs() << "SB" << sblock->getBlockID();
+      llvm::dbgs() << " -> SB" << succ->getBlockID() << "\n";
+    }
+  }
+  /*
+  for (auto const& succ : sblock->successors_) {
+    llvm::dbgs() << "SB" << sblock->getBlockID();
+    llvm::dbgs() << "[label=\"";
+    unsigned int i{0};
+    for (auto const& element : sblock->getElements()) {
+      llvm::dbgs() << "  " << i << ": ";
+      element->dump();
+      ++i;
+    }
+    llvm::dbgs()<< "\"]";
+    llvm::dbgs() << " -> SB" << succ->getBlockID() << "\n";
+  }
+  */
+  llvm::dbgs() << "}\n";
+}
+
+const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock>&
 SplitCFG::getPathsFound() {
   return sb_paths_found_;
 }
@@ -431,7 +463,7 @@ SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
 
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)
-    : context_{context} {
+    : context_{context}, next_state_count_{0} {
   cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
                               clang::CFG::BuildOptions());
 }
