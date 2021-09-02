@@ -2,6 +2,7 @@
 
 #include "llvm/Support/Debug.h"
 #include "llvm/ADT/PostOrderIterator.h"
+#include <regex>
 
 using namespace systemc_clang;
 
@@ -420,16 +421,53 @@ void SplitCFG::dump() const {
 
 void SplitCFG::dumpToDot() {
   llvm::dbgs() << "digraph SCCFG {\n";
+  llvm::dbgs() << " rankdir=TD\n";
+  llvm::dbgs() << " node [shape=record]\n";
+  /// Create names for each node and its pattern.
   for (auto const& block : sccfg_) {
     SplitCFGBlock* sblock{block.second};
+    /// Generate the string with CFGElements
+    
+    std::string element_str{};
+    llvm::raw_string_ostream element_os(element_str);
+    auto num_elements{sblock->getElements().size()};
+    auto i{0};
+
+      element_os << "|{";
+    for (auto const& element : sblock->getElements()) {
+      element_os << "| " << i << ":";
+      element->dumpToStream(element_os);
+      ++i;
+      // if (i < num_elements) {
+        // element_os << "|";
+      // }
+    }
+    element_os << "}";
+
+    std::regex re("\\-");
+    element_str = std::regex_replace(element_str, re, "\\-");
+    std::regex replus("\\+");
+    element_str = std::regex_replace(element_str, replus, "\\+");
+    std::regex relt("\\<");
+    element_str = std::regex_replace(element_str, relt, "\\<");
+    std::regex regt("\\>");
+    element_str = std::regex_replace(element_str, regt, "\\>");
+    std::regex reamp("\\&");
+    element_str = std::regex_replace(element_str, reamp, "\\&");
+    
+
     if (sblock->hasWait()) {
-      llvm::dbgs() << "SB" << sblock->getBlockID() << " [shape=box, color=red]"
+      llvm::dbgs() << "SB" << sblock->getBlockID()
+                   << " [ \n color=red, label=\"SB" << sblock->getBlockID() << "\n"
+                   << element_str << "\"\n]"
                    << "\n";
     } else {
-      llvm::dbgs() << "SB" << sblock->getBlockID() << " [shape=box]"
+      llvm::dbgs() << "SB" << sblock->getBlockID() << " [ \n label=\"SB" << sblock->getBlockID() << "\n"
+                   << element_str << "\"\n]"
                    << "\n";
     }
   }
+  /// Generate the connections
   for (auto const& block : sccfg_) {
     SplitCFGBlock* sblock{block.second};
     for (auto const& succ : sblock->successors_) {
