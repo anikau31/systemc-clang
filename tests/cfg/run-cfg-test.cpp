@@ -15,8 +15,18 @@ using namespace systemc_clang;
 extern std::string data_file;
 TEST_CASE("Simple thread test", "[threads]") {
 
-  std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, data_file)};
+
+  std::string code{};
+
+
+  if (data_file.empty()) {
+    code = systemc_clang::read_systemc_file(
+      systemc_clang::test_data_dir, "simple-thread-input.cpp");
+  } else {
+
+  code = systemc_clang::read_systemc_file(
+      systemc_clang::test_data_dir, data_file);
+  }
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
