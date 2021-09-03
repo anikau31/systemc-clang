@@ -80,21 +80,6 @@ TEST_CASE("Simple thread test", "[threads]") {
     const auto entry_func{proc_decl.second->getEntryFunction()};
     const auto method{entry_func->getEntryMethod()};
 
-    for (auto const &proc : process_map) {
-      auto entry_func{proc.second->getEntryFunction()};
-      if (entry_func) {
-        auto sense_map{entry_func->getSenseMap()};
-        REQUIRE(sense_map.size() == 1);
-
-        int check{1};
-        for (auto const &sense : sense_map) {
-          if ((sense.first == "test_thread_handle__clkpos")) --check;
-          if ((sense.first == "simple_wait_handle__clkpos")) --check;
-        }
-        REQUIRE(check == 0);
-      }
-    }
-
     /// Print the CFG for the entry function.
     //
 
