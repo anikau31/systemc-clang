@@ -13,7 +13,7 @@ namespace systemc_clang {
 /// SplitCFG
 /// ===========================================
 class SplitCFG {
- private:
+ public:
   using VectorSplitCFGBlock = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorSplitCFGBlockImpl = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorCFGElementPtrImpl = llvm::SmallVectorImpl<const clang::CFGElement *>;

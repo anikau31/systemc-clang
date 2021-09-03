@@ -19,6 +19,9 @@ clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
 
 const SplitCFGBlock::VectorCFGElementPtrImpl & SplitCFGBlock::getElements() const { return elements_; }
 
+const SplitCFGBlock::VectorSplitCFGBlockPtrImpl& SplitCFGBlock::getSuccessors() const { return successors_; }
+const SplitCFGBlock::VectorSplitCFGBlockPtrImpl& SplitCFGBlock::getPredecessors() const { return predecessors_; }
+
 bool SplitCFGBlock::hasWait() const { return has_wait_; }
 
 std::size_t SplitCFGBlock::getNumOfElements() const {

@@ -26,11 +26,13 @@ namespace systemc_clang {
 ///
 ///
 class SplitCFGBlock {
- private:
+ public:
   using VectorCFGElementPtr = llvm::SmallVector<const clang::CFGElement *>;
   using VectorCFGElementPtrImpl = llvm::SmallVectorImpl<const clang::CFGElement *>;
   using VectorSplitCFGBlockPtr = llvm::SmallVector<const SplitCFGBlock*>;
+  using VectorSplitCFGBlockPtrImpl = llvm::SmallVector<const SplitCFGBlock*>;
 
+ private:
   friend class SplitCFG;
 
   clang::CFGBlock *block_;
@@ -46,8 +48,8 @@ class SplitCFGBlock {
   /// CFG Elements
   VectorCFGElementPtr elements_;
   /// Predecessors and successors.
-  llvm::SmallVector<SplitCFGBlock *> predecessors_;
-  llvm::SmallVector<SplitCFGBlock *> successors_;
+  llvm::SmallVector<const SplitCFGBlock *> predecessors_;
+  llvm::SmallVector<const SplitCFGBlock *> successors_;
 
  public:
 
@@ -57,14 +59,14 @@ class SplitCFGBlock {
     using value_type = SplitCFGBlock;
     using pointer = SplitCFGBlock *;    // or also value_type*
     using reference = SplitCFGBlock &;  // or also value_type&
-    using VectorSuccessors = llvm::SmallVector<SplitCFGBlock*>;
+    using VectorSuccessors = llvm::SmallVector<const SplitCFGBlock*>;
     using const_iterator = VectorSuccessors::const_iterator;
 
     public:
     VectorSuccessors::const_iterator begin() { return succs_.begin(); }
     VectorSuccessors::const_iterator end() { return succs_.end(); }
 
-    SuccessorIterator(const llvm::SmallVector<SplitCFGBlock*> &succ) : succs_{succ} {}
+    SuccessorIterator(const llvm::SmallVector<const SplitCFGBlock*> &succ) : succs_{succ} {}
     private:
       const VectorSuccessors& succs_;
 
@@ -93,6 +95,9 @@ class SplitCFGBlock {
   clang::CFGBlock *getCFGBlock() const;
   std::size_t getNumOfElements() const;
   const VectorCFGElementPtrImpl &getElements() const; 
+  const VectorSplitCFGBlockPtrImpl &getSuccessors() const; 
+  const VectorSplitCFGBlockPtrImpl &getPredecessors() const; 
+
   bool hasWait() const;
   unsigned int getBlockID() const;
   unsigned int getNextState() const;
