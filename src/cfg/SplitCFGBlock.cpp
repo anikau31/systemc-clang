@@ -13,6 +13,8 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   successors_ = from.successors_;
   predecessors_ = from.predecessors_;
   next_state_ = from.next_state_;
+  id_ = from.id_;
+  next_state_ = from.next_state_;
 }
 
 clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
