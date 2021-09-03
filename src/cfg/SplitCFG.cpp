@@ -290,7 +290,7 @@ void SplitCFG::dumpSplitElements(
   }
 }
 
-void SplitCFG::sb_generate_paths() {
+void SplitCFG::generate_paths() {
   /// Set of visited wait blocks.
   llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_waits;
   llvm::SmallVector<const SplitCFGBlock*> waits_in_stack;

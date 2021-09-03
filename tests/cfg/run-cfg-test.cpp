@@ -89,7 +89,7 @@ TEST_CASE("Simple thread test", "[threads]") {
     // scfg.build_sccfg( method );
     //scfg.generate_paths();
     scfg.construct_sccfg(method);
-    scfg.sb_generate_paths();
+    scfg.generate_paths();
     scfg.dump();
     scfg.dumpToDot();
 

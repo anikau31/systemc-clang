@@ -66,7 +66,7 @@ class SplitCFG {
       llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_in_stack,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits);
 
-  void sb_generate_paths();
+  void generate_paths();
   void dump() const;
   void dumpToDot();
 };
