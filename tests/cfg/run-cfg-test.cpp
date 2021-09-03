@@ -1,4 +1,3 @@
-#include "catch.hpp"
 
 #include "SystemCClang.h"
 // This is automatically generated from cmake.
@@ -9,10 +8,15 @@
 
 #include "SplitCFG.h"
 
+#include "catch.hpp"
+
 using namespace systemc_clang;
+
+extern std::string data_file;
 TEST_CASE("Simple thread test", "[threads]") {
+
   std::string code{systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "simple-thread-input.cpp")};
+      systemc_clang::test_data_dir, data_file)};
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
@@ -104,5 +108,6 @@ TEST_CASE("Simple thread test", "[threads]") {
     scfg.dump();
     scfg.dumpToDot();
 
+    llvm::outs() << "data_file: " << data_file << "\n";
   }
 }
