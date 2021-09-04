@@ -5,10 +5,12 @@ var searchData=
   ['name_5fmapping_2',['name_mapping',['../classparselib_1_1primitives_1_1Primitive.html#ae8f4ff243e4df9f304540a76e7be5a0f',1,'parselib::primitives::Primitive']]],
   ['nested_5fmodules_5f_3',['nested_modules_',['../classsystemc__clang_1_1ModuleInstance.html#a714bc3fd388def5531747edd6ab4d825',1,'systemc_clang::ModuleInstance']]],
   ['newn_4',['newn',['../structhnode_1_1names__t.html#afc0e10eb6caf6805206423e99b2a8650',1,'hnode::names_t']]],
-  ['nodes_5fbft_5f_5',['nodes_bft_',['../classsystemc__clang_1_1Tree.html#a3ec4582fc73412f591f07e4a9dec78c7',1,'systemc_clang::Tree']]],
-  ['nodes_5fdft_5f_6',['nodes_dft_',['../classsystemc__clang_1_1Tree.html#a1ada4db9ba8e2ef9f06fc3c86910bf07',1,'systemc_clang::Tree::nodes_dft_()'],['../classsystemc__clang_1_1Tree_1_1const__dft__iterator.html#abb3cce3068aa5c4cc16e2f477dac9aba',1,'systemc_clang::Tree::const_dft_iterator::nodes_dft_()'],['../classsystemc__clang_1_1Tree_1_1dft__iterator.html#ad6ca778b8d2ab673f0aa7703f1ed0f39',1,'systemc_clang::Tree::dft_iterator::nodes_dft_()']]],
-  ['notify_5fcall_5f_7',['notify_call_',['../classsystemc__clang_1_1FindNotify.html#a04109af7209fdf7bbfe0bca46051855d',1,'systemc_clang::FindNotify']]],
-  ['notify_5fcall_5flist_5f_8',['notify_call_list_',['../classsystemc__clang_1_1FindNotify.html#a3a49ad8c12643d399b9e1c76a5d30979',1,'systemc_clang::FindNotify::notify_call_list_()'],['../classsystemc__clang_1_1NotifyCalls.html#abea71681d233e979c80c5f615172f606',1,'systemc_clang::NotifyCalls::notify_call_list_()']]],
-  ['ns_9',['ns',['../classhnode_1_1newname__map__t.html#a769e4c6b63efb3986cd805b4674bda62',1,'hnode::newname_map_t']]],
-  ['numstr_10',['numstr',['../classhnode_1_1util.html#aa328c7a165b1c61c2f40826d13a98391',1,'hnode::util']]]
+  ['next_5fstate_5f_5',['next_state_',['../classsystemc__clang_1_1SplitCFGBlock.html#abc0367134fc9022762180d095b69878e',1,'systemc_clang::SplitCFGBlock']]],
+  ['next_5fstate_5fcount_5f_6',['next_state_count_',['../classsystemc__clang_1_1SplitCFG.html#a00ed4b691aec8b1ac5ab9dc7cb12e153',1,'systemc_clang::SplitCFG']]],
+  ['nodes_5fbft_5f_7',['nodes_bft_',['../classsystemc__clang_1_1Tree.html#a3ec4582fc73412f591f07e4a9dec78c7',1,'systemc_clang::Tree']]],
+  ['nodes_5fdft_5f_8',['nodes_dft_',['../classsystemc__clang_1_1Tree.html#a1ada4db9ba8e2ef9f06fc3c86910bf07',1,'systemc_clang::Tree::nodes_dft_()'],['../classsystemc__clang_1_1Tree_1_1const__dft__iterator.html#abb3cce3068aa5c4cc16e2f477dac9aba',1,'systemc_clang::Tree::const_dft_iterator::nodes_dft_()'],['../classsystemc__clang_1_1Tree_1_1dft__iterator.html#ad6ca778b8d2ab673f0aa7703f1ed0f39',1,'systemc_clang::Tree::dft_iterator::nodes_dft_()']]],
+  ['notify_5fcall_5f_9',['notify_call_',['../classsystemc__clang_1_1FindNotify.html#a04109af7209fdf7bbfe0bca46051855d',1,'systemc_clang::FindNotify']]],
+  ['notify_5fcall_5flist_5f_10',['notify_call_list_',['../classsystemc__clang_1_1FindNotify.html#a3a49ad8c12643d399b9e1c76a5d30979',1,'systemc_clang::FindNotify::notify_call_list_()'],['../classsystemc__clang_1_1NotifyCalls.html#abea71681d233e979c80c5f615172f606',1,'systemc_clang::NotifyCalls::notify_call_list_()']]],
+  ['ns_11',['ns',['../classhnode_1_1newname__map__t.html#a769e4c6b63efb3986cd805b4674bda62',1,'hnode::newname_map_t']]],
+  ['numstr_12',['numstr',['../classhnode_1_1util.html#aa328c7a165b1c61c2f40826d13a98391',1,'hnode::util']]]
 ];

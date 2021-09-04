@@ -18,12 +18,15 @@ var searchData=
   ['signaldecl_15',['SignalDecl',['../classsystemc__clang_1_1SignalDecl.html',1,'systemc_clang']]],
   ['slicemerge_16',['SliceMerge',['../classparselib_1_1transforms_1_1slice__merge_1_1SliceMerge.html',1,'parselib::transforms::slice_merge']]],
   ['sortvardecl_17',['SortVarDecl',['../classparselib_1_1transforms_1_1sort__var__decl_1_1SortVarDecl.html',1,'parselib::transforms::sort_var_decl']]],
-  ['state_18',['State',['../classsystemc__clang_1_1State.html',1,'systemc_clang']]],
-  ['statement_19',['Statement',['../classparselib_1_1transforms_1_1node_1_1Statement.html',1,'parselib::transforms::node']]],
-  ['suscfg_20',['SusCFG',['../classsystemc__clang_1_1SusCFG.html',1,'systemc_clang']]],
-  ['suspensionautomata_21',['SuspensionAutomata',['../classsystemc__clang_1_1SuspensionAutomata.html',1,'systemc_clang']]],
-  ['systemcclang_22',['SystemCClang',['../classsystemc-clang_1_1SystemCClang.html',1,'systemc-clang.SystemCClang'],['../classsystemc__clang_1_1SystemCClang.html',1,'systemc_clang::SystemCClang']]],
-  ['systemcclangaxn_23',['SystemCClangAXN',['../classsystemc__clang_1_1SystemCClangAXN.html',1,'systemc_clang']]],
-  ['systemcclangfatalerror_24',['SystemCClangFatalError',['../classsystemc-clang_1_1SystemCClangFatalError.html',1,'systemc-clang']]],
-  ['systemcconsumer_25',['SystemCConsumer',['../classsystemc__clang_1_1SystemCConsumer.html',1,'systemc_clang']]]
+  ['splitcfg_18',['SplitCFG',['../classsystemc__clang_1_1SplitCFG.html',1,'systemc_clang']]],
+  ['splitcfgblock_19',['SplitCFGBlock',['../classsystemc__clang_1_1SplitCFGBlock.html',1,'systemc_clang']]],
+  ['state_20',['State',['../classsystemc__clang_1_1State.html',1,'systemc_clang']]],
+  ['statement_21',['Statement',['../classparselib_1_1transforms_1_1node_1_1Statement.html',1,'parselib::transforms::node']]],
+  ['successoriterator_22',['SuccessorIterator',['../structsystemc__clang_1_1SplitCFGBlock_1_1SuccessorIterator.html',1,'systemc_clang::SplitCFGBlock']]],
+  ['suscfg_23',['SusCFG',['../classsystemc__clang_1_1SusCFG.html',1,'systemc_clang']]],
+  ['suspensionautomata_24',['SuspensionAutomata',['../classsystemc__clang_1_1SuspensionAutomata.html',1,'systemc_clang']]],
+  ['systemcclang_25',['SystemCClang',['../classsystemc-clang_1_1SystemCClang.html',1,'systemc-clang.SystemCClang'],['../classsystemc__clang_1_1SystemCClang.html',1,'systemc_clang::SystemCClang']]],
+  ['systemcclangaxn_26',['SystemCClangAXN',['../classsystemc__clang_1_1SystemCClangAXN.html',1,'systemc_clang']]],
+  ['systemcclangfatalerror_27',['SystemCClangFatalError',['../classsystemc-clang_1_1SystemCClangFatalError.html',1,'systemc-clang']]],
+  ['systemcconsumer_28',['SystemCConsumer',['../classsystemc__clang_1_1SystemCConsumer.html',1,'systemc_clang']]]
 ];
