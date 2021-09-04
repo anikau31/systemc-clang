@@ -13,6 +13,7 @@ include_directories(${SCC_INCLUDE})
 
 add_subdirectory( model )
 add_subdirectory( matchers )
+add_subdirectory( cfg )
 add_subdirectory( utils )
 
 add_library(libsystemc-clang SystemCClang.cpp)
@@ -20,6 +21,7 @@ add_library(libsystemc-clang SystemCClang.cpp)
 target_link_libraries(libsystemc-clang 
   model
   matchers
+  cfg 
   utils
   )
 

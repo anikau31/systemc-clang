@@ -3,73 +3,16 @@
 #include "SystemCClang.h"
 // This is automatically generated from cmake.
 #include <iostream>
+#include <utility>
 #include "ClangArgs.h"
+#include "Testing.h"
+
+#include "SplitCFG.h"
 
 using namespace systemc_clang;
-
-// Source:
-// https://www.toptip.ca/2010/03/trim-leading-or-trailing-white-spaces.html
-std::string &trim(std::string &s) {
-  size_t p = s.find_first_not_of(" \t");
-  s.erase(0, p);
-
-  p = s.find_last_not_of(" \t");
-  if (string::npos != p) s.erase(p + 1);
-
-  return s;
-}
-
-TEST_CASE("Basic parsing checks", "[parsing]") {
-  std::string code = R"(
-#include "systemc.h"
-
-SC_MODULE( test ){
-
-  // input ports
-  sc_in_clk clk;
-  sc_in<int> in1;
-  // output ports
-  sc_out<int> out1;
-
-  // others
-  int x;
-
-  void test_thread() {
-    while(true) {
-     x = x+1;
-     out1.write(x);
-    }
-  }
-
-  SC_CTOR( test ) {
-   int x{2};
-    SC_THREAD(test_thread);
-      sensitive << clk.pos();
-  }
-};
-
-SC_MODULE(DUT) {
-
-  sc_signal<int> sig1;
-  sc_signal<double> double_sig;
-
-  test test_instance;
-
-
-  int others;
-  SC_CTOR(DUT) : test_instance("testing") {
-  test_instance.in1(sig1);
-  test_instance.out1(sig1);
-  }
-
-
-};
-
-int sc_main(int argc, char *argv[]) {
-    DUT d("d");
-   return 0;
-}
-     )";
+TEST_CASE("Simple thread test", "[threads]") {
+  std::string code{systemc_clang::read_systemc_file(
+      systemc_clang::test_data_dir, "simple-thread-input.cpp")};
 
   ASTUnit *from_ast =
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
@@ -120,7 +63,7 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module_inst->getSignals().size() == 0);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOtherVars().size() == 1);
+    REQUIRE(test_module_inst->getOtherVars().size() == 2);
 
     // Check process information
     //
@@ -142,6 +85,7 @@ int sc_main(int argc, char *argv[]) {
         int check{1};
         for (auto const &sense : sense_map) {
           if ((sense.first == "test_thread_handle__clkpos")) --check;
+          if ((sense.first == "simple_wait_handle__clkpos")) --check;
         }
         REQUIRE(check == 0);
       }
@@ -151,47 +95,14 @@ int sc_main(int argc, char *argv[]) {
     //
 
     llvm::outs() << " ********************* CFG ***********************\n";
-    const auto CFG = clang::CFG::buildCFG(method, method->getBody(),
-                                          &from_ast->getASTContext(),
-                                          clang::CFG::BuildOptions());
-    LangOptions lang_opts;
-    CFG->dump(lang_opts, true);
-
-    /// Get the root node.
-    const clang::CFGBlock &entry{CFG->getEntry()};
-    entry.dump();
-
-    /// Access the successor
-    for (auto const &succ : entry.succs()) {
-      succ->dump();
-      /// Try to get the Elements in each CFGBlock
-      for (auto const &element : succ->refs()) {
-        element->dump();
-        if (auto stmt = element->getAs<CFGStmt>()) {
-          stmt->getStmt()->dump();
-        }
-      }
-    }
-
-    // Go through all CFG blocks
-    llvm::dbgs() << "Iterate through all CFGBlocks.\n";
-    /// These iterators are not in clang 12.
-    // for (auto const &block: CFG->const_nodes()) {
-    for (auto begin_it = CFG->nodes_begin(); begin_it != CFG->nodes_end();
-         ++begin_it) {
-      auto block = *begin_it;
-      block->dump();
-
-      llvm::dbgs() << "Get each element.\n";
-      /// Try to get the Elements in each CFGBlock
-      for (auto const &element : block->refs()) {
-        element->dump();
-        if (auto stmt = element->getAs<CFGStmt>()) {
-          stmt->getStmt()->dump();
-        }
-      }
-    }
-
+    SplitCFG scfg{from_ast->getASTContext()};
+    //scfg.split_wait_blocks(method);
+    // scfg.build_sccfg( method );
+    //scfg.generate_paths();
+    scfg.construct_sccfg(method);
+    scfg.generate_paths();
+    scfg.dump();
+    scfg.dumpToDot();
 
   }
 }
