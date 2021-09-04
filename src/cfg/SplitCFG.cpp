@@ -427,19 +427,19 @@ void SplitCFG::dumpToDot() {
   for (auto const& block : sccfg_) {
     SplitCFGBlock* sblock{block.second};
     /// Generate the string with CFGElements
-    
+
     std::string element_str{};
     llvm::raw_string_ostream element_os(element_str);
     auto num_elements{sblock->getElements().size()};
     auto i{0};
 
-      element_os << "|{";
+    element_os << "|{";
     for (auto const& element : sblock->getElements()) {
       element_os << "| " << i << ":";
       element->dumpToStream(element_os);
       ++i;
       // if (i < num_elements) {
-        // element_os << "|";
+      // element_os << "|";
       // }
     }
     element_os << "}";
@@ -454,15 +454,16 @@ void SplitCFG::dumpToDot() {
     element_str = std::regex_replace(element_str, regt, "\\>");
     std::regex reamp("\\&");
     element_str = std::regex_replace(element_str, reamp, "\\&");
-    
 
     if (sblock->hasWait()) {
       llvm::dbgs() << "SB" << sblock->getBlockID()
-                   << " [ \n color=red, label=\"SB" << sblock->getBlockID() << "\n"
+                   << " [ \n color=red, label=\"SB" << sblock->getBlockID()
+                   << "\n"
                    << element_str << "\"\n]"
                    << "\n";
     } else {
-      llvm::dbgs() << "SB" << sblock->getBlockID() << " [ \n label=\"SB" << sblock->getBlockID() << "\n"
+      llvm::dbgs() << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
+                   << sblock->getBlockID() << "\n"
                    << element_str << "\"\n]"
                    << "\n";
     }
@@ -502,6 +503,7 @@ SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)
     : context_{context}, next_state_count_{0} {
-  cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
-                              clang::CFG::BuildOptions());
+  // cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
+  // clang::CFG::BuildOptions());
+  construct_sccfg(method);
 }
