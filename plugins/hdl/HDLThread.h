@@ -10,6 +10,8 @@
 #include "llvm/ADT/StringRef.h"
 #include "hNode.h"
 #include "HDLBody.h"
+#include "SplitCFG.h"
+
 // clang-format on
 
 using namespace clang;
@@ -65,7 +67,7 @@ namespace systemc_hdl {
     
     util lutil;
 
-    const ASTContext& ast_context_;
+    const clang::ASTContext& ast_context_;
 
   };
 

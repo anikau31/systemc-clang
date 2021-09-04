@@ -30,26 +30,44 @@ namespace systemc_hdl {
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hProcesses); // placeholder to collect methods
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
       
-      // get CFG
-      
-      std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
+      // build SC CFG
+      SplitCFG scfg{const_cast<ASTContext &>(ast_context_), emd};
+      //scfg.split_wait_blocks(emd);
+      // scfg.build_sccfg( method );
+      scfg.generate_paths();
+      //scfg.dump();
+
+      const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock> &paths_found{ scfg.getPathsFound()};
+      llvm::dbgs() << "Dump sc cfg from hdlthread\n";
+      unsigned int id{0};
+      for (auto const& pt: paths_found) {
+	llvm::dbgs() << "S" << id << ": ";
+	for (auto const& block : pt) {
+	  llvm::dbgs() << block->getBlockID() << "  ";
+	}
+	llvm::dbgs() << "\n";
+	++id;
+      }
+
+      //std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
       clang::LangOptions LO = ast_context.getLangOpts();
-      threadcfg->dump(LO, false);
-
+      //threadcfg->dump(LO, false);
       // HDLBody instance init
-      
-      const CFGBlock & B = threadcfg->getEntry();
-      AddThreadMethod(B);
-
+      for (auto const& pt: paths_found) {
+	for (auto const& block : pt) {
+	  //const CFGBlock & B = threadcfg->getEntry();
+	  //ProcessBB(block->getCFGBlock());
+	}
+      }
       h_top->child_list.push_back(hlocalvarsp);
       h_top->child_list.push_back(hthreadblocksp);
       
-      LLVM_DEBUG(llvm::dbgs() << "SCBBlocks:\n"); 
-      for (auto scbl: scbblocks)
-	scbl->dump();
-      LLVM_DEBUG(llvm::dbgs() << "SCWait Blocks:\n"); 
-      for (auto bl: waitblocks)
-	bl->dump();
+      // LLVM_DEBUG(llvm::dbgs() << "SCBBlocks:\n"); 
+      // for (auto scbl: scbblocks)
+      // 	scbl->dump();
+      // LLVM_DEBUG(llvm::dbgs() << "SCWait Blocks:\n"); 
+      // for (auto bl: waitblocks)
+      // 	bl->dump();
     }
 
   HDLThread::~HDLThread() {
