@@ -93,23 +93,35 @@ Public Types</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7317e453bc6db945c4fb91f37957d6ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a7317e453bc6db945c4fb91f37957d6ef">SplitCFG</a> (clang::ASTContext &amp;context)</td></tr>
+<tr class="memdesc:a7317e453bc6db945c4fb91f37957d6ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classsystemc__clang_1_1SplitCFG.html#a7317e453bc6db945c4fb91f37957d6ef">More...</a><br /></td></tr>
 <tr class="separator:a7317e453bc6db945c4fb91f37957d6ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adde4348e4a7b7eeb571686c94f70e392"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#adde4348e4a7b7eeb571686c94f70e392">SplitCFG</a> (clang::ASTContext &amp;context, const clang::CXXMethodDecl *cxx_decl)</td></tr>
+<tr class="memdesc:adde4348e4a7b7eeb571686c94f70e392"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overloaded constructor.  <a href="classsystemc__clang_1_1SplitCFG.html#adde4348e4a7b7eeb571686c94f70e392">More...</a><br /></td></tr>
 <tr class="separator:adde4348e4a7b7eeb571686c94f70e392"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add6c773bc0dd22c693e1a19052c343ad"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#add6c773bc0dd22c693e1a19052c343ad">~SplitCFG</a> ()</td></tr>
+<tr class="memdesc:add6c773bc0dd22c693e1a19052c343ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor that erases all SplitCFGBlocks created.  <a href="classsystemc__clang_1_1SplitCFG.html#add6c773bc0dd22c693e1a19052c343ad">More...</a><br /></td></tr>
 <tr class="separator:add6c773bc0dd22c693e1a19052c343ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57d9bc8a9a8ac03d47f83d2f2fba6007"><td class="memItemLeft" align="right" valign="top">const llvm::SmallVectorImpl&lt; <a class="el" href="classsystemc__clang_1_1SplitCFG.html#a3fdb47bb85b62430faa5a1ab0b5c6934">VectorSplitCFGBlock</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a57d9bc8a9a8ac03d47f83d2f2fba6007">getPathsFound</a> ()</td></tr>
+<tr class="memdesc:a57d9bc8a9a8ac03d47f83d2f2fba6007"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the paths that were found in the SCCFG.  <a href="classsystemc__clang_1_1SplitCFG.html#a57d9bc8a9a8ac03d47f83d2f2fba6007">More...</a><br /></td></tr>
 <tr class="separator:a57d9bc8a9a8ac03d47f83d2f2fba6007"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af440e512f27d592c3d23c54d1fabab0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#af440e512f27d592c3d23c54d1fabab0c">construct_sccfg</a> (const clang::CXXMethodDecl *method)</td></tr>
+<tr class="memdesc:af440e512f27d592c3d23c54d1fabab0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the SCCFG.  <a href="classsystemc__clang_1_1SplitCFG.html#af440e512f27d592c3d23c54d1fabab0c">More...</a><br /></td></tr>
 <tr class="separator:af440e512f27d592c3d23c54d1fabab0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae18e917d0d9976c80593c84b3ba0389f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#ae18e917d0d9976c80593c84b3ba0389f">sb_dfs_pop_on_wait</a> (const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *BB, llvm::SmallVectorImpl&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &amp;waits_in_stack, llvm::SmallPtrSetImpl&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &amp;visited_waits)</td></tr>
-<tr class="separator:ae18e917d0d9976c80593c84b3ba0389f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1611912f3bab51ce68daf1352300b3df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a1611912f3bab51ce68daf1352300b3df">dfs_pop_on_wait</a> (const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *basic_block, llvm::SmallVectorImpl&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &amp;waits_in_stack, llvm::SmallPtrSetImpl&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &amp;visited_waits)</td></tr>
+<tr class="memdesc:a1611912f3bab51ce68daf1352300b3df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modified DFS to create all paths within wait statements and from the root node.  <a href="classsystemc__clang_1_1SplitCFG.html#a1611912f3bab51ce68daf1352300b3df">More...</a><br /></td></tr>
+<tr class="separator:a1611912f3bab51ce68daf1352300b3df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4824504a131b8dbf592fbe5ff8576643"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a4824504a131b8dbf592fbe5ff8576643">generate_paths</a> ()</td></tr>
+<tr class="memdesc:a4824504a131b8dbf592fbe5ff8576643"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the paths between wait statements.  <a href="classsystemc__clang_1_1SplitCFG.html#a4824504a131b8dbf592fbe5ff8576643">More...</a><br /></td></tr>
 <tr class="separator:a4824504a131b8dbf592fbe5ff8576643"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c4701df1303dfa28a5cf27aefa8d6f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a2c4701df1303dfa28a5cf27aefa8d6f9">dump</a> () const</td></tr>
+<tr class="memdesc:a2c4701df1303dfa28a5cf27aefa8d6f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dump member functions.  <a href="classsystemc__clang_1_1SplitCFG.html#a2c4701df1303dfa28a5cf27aefa8d6f9">More...</a><br /></td></tr>
 <tr class="separator:a2c4701df1303dfa28a5cf27aefa8d6f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2310ba364943836ef62250eb80d87bb2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a2310ba364943836ef62250eb80d87bb2">dumpToDot</a> ()</td></tr>
-<tr class="separator:a2310ba364943836ef62250eb80d87bb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1477068f46a719e0a027d29bb010ea7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#af1477068f46a719e0a027d29bb010ea7">dumpToDot</a> () const</td></tr>
+<tr class="separator:af1477068f46a719e0a027d29bb010ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27555737f1df10e878af16a0195cf9c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a27555737f1df10e878af16a0195cf9c7">dumpWaitNextStates</a> () const</td></tr>
+<tr class="separator:a27555737f1df10e878af16a0195cf9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2592c5ecf262dd62248e2f7a2d6f2c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#aa2592c5ecf262dd62248e2f7a2d6f2c7">dumpPaths</a> () const</td></tr>
+<tr class="separator:aa2592c5ecf262dd62248e2f7a2d6f2c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -117,17 +129,25 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a4051803801ddb7825d517134c947ae3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a CFGBlock has a wait() call in it.  <a href="classsystemc__clang_1_1SplitCFG.html#a4051803801ddb7825d517134c947ae3a">More...</a><br /></td></tr>
 <tr class="separator:a4051803801ddb7825d517134c947ae3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16b0a78a1457b8f4c6047bc0a540c347"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a16b0a78a1457b8f4c6047bc0a540c347">splitBlock</a> (clang::CFGBlock *block)</td></tr>
+<tr class="memdesc:a16b0a78a1457b8f4c6047bc0a540c347"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split a CFGBlock into respective <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> if the CFGBlock has wait statements in it.  <a href="classsystemc__clang_1_1SplitCFG.html#a16b0a78a1457b8f4c6047bc0a540c347">More...</a><br /></td></tr>
 <tr class="separator:a16b0a78a1457b8f4c6047bc0a540c347"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a880c92ef09712082c55800a4c22ebc4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a880c92ef09712082c55800a4c22ebc4b">addSuccessors</a> (<a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *to, const clang::CFGBlock *from)</td></tr>
+<tr class="memdesc:a880c92ef09712082c55800a4c22ebc4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add successors to the <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a>.  <a href="classsystemc__clang_1_1SplitCFG.html#a880c92ef09712082c55800a4c22ebc4b">More...</a><br /></td></tr>
 <tr class="separator:a880c92ef09712082c55800a4c22ebc4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8123b365fda5baa0066186a614f0050"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#af8123b365fda5baa0066186a614f0050">addPredecessors</a> (<a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *to, const clang::CFGBlock *from)</td></tr>
+<tr class="memdesc:af8123b365fda5baa0066186a614f0050"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add predecessors to the <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a>.  <a href="classsystemc__clang_1_1SplitCFG.html#af8123b365fda5baa0066186a614f0050">More...</a><br /></td></tr>
 <tr class="separator:af8123b365fda5baa0066186a614f0050"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad29b07bb97198b7287659acc99a89962"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#ad29b07bb97198b7287659acc99a89962">createUnsplitBlocks</a> ()</td></tr>
+<tr class="memdesc:ad29b07bb97198b7287659acc99a89962"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates SplitCFGBlocks for all CFGBlocks that do not have a wiat. <a class="el" href="classsystemc__clang_1_1SplitCFG.html#a16b0a78a1457b8f4c6047bc0a540c347" title="Split a CFGBlock into respective SplitCFGBlock if the CFGBlock has wait statements in it.">splitBlock()</a> creates the SplitCFGBlocks used for splitting CFGBLocks that have wait statements.  <a href="classsystemc__clang_1_1SplitCFG.html#ad29b07bb97198b7287659acc99a89962">More...</a><br /></td></tr>
 <tr class="separator:ad29b07bb97198b7287659acc99a89962"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafce4af5d34b420216ba58b3e02f4cbe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#aafce4af5d34b420216ba58b3e02f4cbe">dumpSplitElements</a> (const llvm::SmallVector&lt; std::pair&lt; <a class="el" href="classsystemc__clang_1_1SplitCFG.html#acff5698f57c063ca9445091e2fd1a161">VectorCFGElementPtr</a>, bool &gt; &gt; &amp;<a class="el" href="classsystemc__clang_1_1SplitCFG.html#a9f3af899105c9469955729e82fb5338b">split_elements</a>)</td></tr>
-<tr class="separator:aafce4af5d34b420216ba58b3e02f4cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fbadf76b5262e978b3a9789c8665abe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a1fbadf76b5262e978b3a9789c8665abe">dumpSCCFG</a> ()</td></tr>
-<tr class="separator:a1fbadf76b5262e978b3a9789c8665abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2335cf50df43edf5e30c3b082882db0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#ac2335cf50df43edf5e30c3b082882db0">createWaitSplitCFGBlocks</a> (clang::CFGBlock *block, const llvm::SmallVectorImpl&lt; std::pair&lt; <a class="el" href="classsystemc__clang_1_1SplitCFG.html#acff5698f57c063ca9445091e2fd1a161">VectorCFGElementPtr</a>, bool &gt; &gt; &amp;<a class="el" href="classsystemc__clang_1_1SplitCFG.html#a9f3af899105c9469955729e82fb5338b">split_elements</a>)</td></tr>
+<tr class="memdesc:ac2335cf50df43edf5e30c3b082882db0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the SplitCFGBlocks for CFGBlock with a wait.  <a href="classsystemc__clang_1_1SplitCFG.html#ac2335cf50df43edf5e30c3b082882db0">More...</a><br /></td></tr>
+<tr class="separator:ac2335cf50df43edf5e30c3b082882db0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6059cc388e3f04a7d6c553bfb4a721a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#af6059cc388e3f04a7d6c553bfb4a721a">dumpSplitElements</a> (const llvm::SmallVector&lt; std::pair&lt; <a class="el" href="classsystemc__clang_1_1SplitCFG.html#acff5698f57c063ca9445091e2fd1a161">VectorCFGElementPtr</a>, bool &gt; &gt; &amp;<a class="el" href="classsystemc__clang_1_1SplitCFG.html#a9f3af899105c9469955729e82fb5338b">split_elements</a>) const</td></tr>
+<tr class="memdesc:af6059cc388e3f04a7d6c553bfb4a721a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dump all the CFGElements that were split.  <a href="classsystemc__clang_1_1SplitCFG.html#af6059cc388e3f04a7d6c553bfb4a721a">More...</a><br /></td></tr>
+<tr class="separator:af6059cc388e3f04a7d6c553bfb4a721a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6768fec29391732bfbe2acbf070baaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#ae6768fec29391732bfbe2acbf070baaa">dumpSCCFG</a> () const</td></tr>
+<tr class="separator:ae6768fec29391732bfbe2acbf070baaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -140,9 +160,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a8bbdfe75dba470500b7d606bf991f998"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; const clang::CFGBlock *, <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a8bbdfe75dba470500b7d606bf991f998">split_blocks_</a></td></tr>
 <tr class="memdesc:a8bbdfe75dba470500b7d606bf991f998"><td class="mdescLeft">&#160;</td><td class="mdescRight">The split blocks in the CFG.  <a href="classsystemc__clang_1_1SplitCFG.html#a8bbdfe75dba470500b7d606bf991f998">More...</a><br /></td></tr>
 <tr class="separator:a8bbdfe75dba470500b7d606bf991f998"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace649de40d860c56a4ba1c1e8031aea3"><td class="memItemLeft" align="right" valign="top">llvm::SmallVector&lt; llvm::SmallVector&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#ace649de40d860c56a4ba1c1e8031aea3">sb_paths_found_</a></td></tr>
-<tr class="memdesc:ace649de40d860c56a4ba1c1e8031aea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paths of BBs generated.  <a href="classsystemc__clang_1_1SplitCFG.html#ace649de40d860c56a4ba1c1e8031aea3">More...</a><br /></td></tr>
-<tr class="separator:ace649de40d860c56a4ba1c1e8031aea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a424ca0fad1db395d6997ee5f136aeb4c"><td class="memItemLeft" align="right" valign="top">llvm::SmallVector&lt; llvm::SmallVector&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a424ca0fad1db395d6997ee5f136aeb4c">paths_found_</a></td></tr>
+<tr class="memdesc:a424ca0fad1db395d6997ee5f136aeb4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paths of BBs generated.  <a href="classsystemc__clang_1_1SplitCFG.html#a424ca0fad1db395d6997ee5f136aeb4c">More...</a><br /></td></tr>
+<tr class="separator:a424ca0fad1db395d6997ee5f136aeb4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aacdd7446471314c5e68b284b693482c7"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; unsigned int, <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#aacdd7446471314c5e68b284b693482c7">sccfg_</a></td></tr>
 <tr class="separator:aacdd7446471314c5e68b284b693482c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f3af899105c9469955729e82fb5338b"><td class="memItemLeft" align="right" valign="top">llvm::SmallVector&lt; std::pair&lt; <a class="el" href="classsystemc__clang_1_1SplitCFG.html#ae6c07dc5e07cf33930f911b053a0db1c">VectorCFGElementPtrImpl</a>, bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a9f3af899105c9469955729e82fb5338b">split_elements</a></td></tr>
@@ -229,6 +249,8 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructor. </p>
+
 </div>
 </div>
 <a id="adde4348e4a7b7eeb571686c94f70e392" name="adde4348e4a7b7eeb571686c94f70e392"></a>
@@ -257,6 +279,8 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Overloaded constructor. </p>
+
 </div>
 </div>
 <a id="add6c773bc0dd22c693e1a19052c343ad" name="add6c773bc0dd22c693e1a19052c343ad"></a>
@@ -281,6 +305,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Destructor that erases all SplitCFGBlocks created. </p>
 
 </div>
 </div>
@@ -319,6 +345,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Add predecessors to the <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a>. </p>
+
 </div>
 </div>
 <a id="a880c92ef09712082c55800a4c22ebc4b" name="a880c92ef09712082c55800a4c22ebc4b"></a>
@@ -355,6 +383,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Add successors to the <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a>. </p>
+
 </div>
 </div>
 <a id="af440e512f27d592c3d23c54d1fabab0c" name="af440e512f27d592c3d23c54d1fabab0c"></a>
@@ -372,6 +402,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Construct the SCCFG. </p>
 
 </div>
 </div>
@@ -398,6 +430,102 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Creates SplitCFGBlocks for all CFGBlocks that do not have a wiat. <a class="el" href="classsystemc__clang_1_1SplitCFG.html#a16b0a78a1457b8f4c6047bc0a540c347" title="Split a CFGBlock into respective SplitCFGBlock if the CFGBlock has wait statements in it.">splitBlock()</a> creates the SplitCFGBlocks used for splitting CFGBLocks that have wait statements. </p>
+
+</div>
+</div>
+<a id="ac2335cf50df43edf5e30c3b082882db0" name="ac2335cf50df43edf5e30c3b082882db0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2335cf50df43edf5e30c3b082882db0">&#9670;&nbsp;</a></span>createWaitSplitCFGBlocks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SplitCFG::createWaitSplitCFGBlocks </td>
+          <td>(</td>
+          <td class="paramtype">clang::CFGBlock *&#160;</td>
+          <td class="paramname"><em>block</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const llvm::SmallVectorImpl&lt; std::pair&lt; <a class="el" href="classsystemc__clang_1_1SplitCFG.html#acff5698f57c063ca9445091e2fd1a161">VectorCFGElementPtr</a>, bool &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>split_elements</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates the SplitCFGBlocks for CFGBlock with a wait. </p>
+<p >Go through all the split_elements and create blocks.</p>
+<p >check if the block has already been created.</p>
+<p >First one</p>
+<p >Succesors</p>
+<p >Last one</p>
+<p >Predecessors</p>
+
+</div>
+</div>
+<a id="a1611912f3bab51ce68daf1352300b3df" name="a1611912f3bab51ce68daf1352300b3df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1611912f3bab51ce68daf1352300b3df">&#9670;&nbsp;</a></span>dfs_pop_on_wait()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SplitCFG::dfs_pop_on_wait </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *&#160;</td>
+          <td class="paramname"><em>basic_block</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">llvm::SmallVectorImpl&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>waits_in_stack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">llvm::SmallPtrSetImpl&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>visited_waits</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Modified DFS to create all paths within wait statements and from the root node. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">basic_block</td><td>The current basic block to process. </td></tr>
+    <tr><td class="paramname">waits_in_stack</td><td>The <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> that come after the wait statements. These need to be processed. </td></tr>
+    <tr><td class="paramname">visited_waits</td><td>These are the SplitCFGBlocks that have waits and those that have been visited.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>=========================================== </p><h1><a class="el" href="classsystemc__clang_1_1SplitCFG.html">SplitCFG</a> </h1>
+<p >Empty CFG block</p>
+<p >If BB has a wait() then just return.</p>
+<p >The wait has not been processed yet so add it to the visited_wait sets. Then add it in the stack to process the waits.</p>
+<p >A new BB has been found. Add its successors to be visited in the future.</p>
+<p >Insert the path constructed.</p>
+
 </div>
 </div>
 <a id="a2c4701df1303dfa28a5cf27aefa8d6f9" name="a2c4701df1303dfa28a5cf27aefa8d6f9"></a>
@@ -414,12 +542,30 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Dump all the paths found.</p>
+
+<p>Dump member functions. </p>
 
 </div>
 </div>
-<a id="a1fbadf76b5262e978b3a9789c8665abe" name="a1fbadf76b5262e978b3a9789c8665abe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fbadf76b5262e978b3a9789c8665abe">&#9670;&nbsp;</a></span>dumpSCCFG()</h2>
+<a id="aa2592c5ecf262dd62248e2f7a2d6f2c7" name="aa2592c5ecf262dd62248e2f7a2d6f2c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2592c5ecf262dd62248e2f7a2d6f2c7">&#9670;&nbsp;</a></span>dumpPaths()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SplitCFG::dumpPaths </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6768fec29391732bfbe2acbf070baaa" name="ae6768fec29391732bfbe2acbf070baaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6768fec29391732bfbe2acbf070baaa">&#9670;&nbsp;</a></span>dumpSCCFG()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -431,7 +577,7 @@ Private Attributes</h2></td></tr>
           <td class="memname">void SplitCFG::dumpSCCFG </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -443,8 +589,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aafce4af5d34b420216ba58b3e02f4cbe" name="aafce4af5d34b420216ba58b3e02f4cbe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aafce4af5d34b420216ba58b3e02f4cbe">&#9670;&nbsp;</a></span>dumpSplitElements()</h2>
+<a id="af6059cc388e3f04a7d6c553bfb4a721a" name="af6059cc388e3f04a7d6c553bfb4a721a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6059cc388e3f04a7d6c553bfb4a721a">&#9670;&nbsp;</a></span>dumpSplitElements()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -457,7 +603,7 @@ Private Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const llvm::SmallVector&lt; std::pair&lt; <a class="el" href="classsystemc__clang_1_1SplitCFG.html#acff5698f57c063ca9445091e2fd1a161">VectorCFGElementPtr</a>, bool &gt; &gt; &amp;&#160;</td>
           <td class="paramname"><em>split_elements</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -467,10 +613,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Dump all the CFGElements that were split. </p>
+
 </div>
 </div>
-<a id="a2310ba364943836ef62250eb80d87bb2" name="a2310ba364943836ef62250eb80d87bb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2310ba364943836ef62250eb80d87bb2">&#9670;&nbsp;</a></span>dumpToDot()</h2>
+<a id="af1477068f46a719e0a027d29bb010ea7" name="af1477068f46a719e0a027d29bb010ea7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1477068f46a719e0a027d29bb010ea7">&#9670;&nbsp;</a></span>dumpToDot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -479,13 +627,30 @@ Private Attributes</h2></td></tr>
           <td class="memname">void SplitCFG::dumpToDot </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p >Create names for each node and its pattern.</p>
 <p >Generate the string with CFGElements</p>
 <p >Generate the connections</p>
+
+</div>
+</div>
+<a id="a27555737f1df10e878af16a0195cf9c7" name="a27555737f1df10e878af16a0195cf9c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27555737f1df10e878af16a0195cf9c7">&#9670;&nbsp;</a></span>dumpWaitNextStates()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SplitCFG::dumpWaitNextStates </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -503,6 +668,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Generates the paths between wait statements. </p>
 <p >Set of visited wait blocks.</p>
 <p >G = cfg_</p>
 
@@ -522,6 +689,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the paths that were found in the SCCFG. </p>
 
 </div>
 </div>
@@ -554,46 +723,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae18e917d0d9976c80593c84b3ba0389f" name="ae18e917d0d9976c80593c84b3ba0389f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae18e917d0d9976c80593c84b3ba0389f">&#9670;&nbsp;</a></span>sb_dfs_pop_on_wait()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SplitCFG::sb_dfs_pop_on_wait </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *&#160;</td>
-          <td class="paramname"><em>basic_block</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">llvm::SmallVectorImpl&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &amp;&#160;</td>
-          <td class="paramname"><em>waits_in_stack</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">llvm::SmallPtrSetImpl&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &amp;&#160;</td>
-          <td class="paramname"><em>visited_waits</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >=========================================== </p><h1><a class="el" href="classsystemc__clang_1_1SplitCFG.html">SplitCFG</a> </h1>
-<p >Empty CFG block</p>
-<p >If BB has a wait() then just return.</p>
-<p >The wait has not been processed yet so add it to the visited_wait sets. Then add it in the stack to process the waits.</p>
-<p >A new BB has been found. Add its successors to be visited in the future.</p>
-<p >Insert the path constructed.</p>
-
-</div>
-</div>
 <a id="a16b0a78a1457b8f4c6047bc0a540c347" name="a16b0a78a1457b8f4c6047bc0a540c347"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a16b0a78a1457b8f4c6047bc0a540c347">&#9670;&nbsp;</a></span>splitBlock()</h2>
 
@@ -617,17 +746,13 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Split a CFGBlock into respective <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> if the CFGBlock has wait statements in it. </p>
 <p >0 elements so simply just add them and return.</p>
 <p >refs() returns an iterator, which actually stores an ElementRefImpl&lt;&gt; interface. In order to get the correct pointer to CFGElement, we need to explicitly call operator-&gt;(). Odd!</p>
 <p >If the element is a wait() then split it.</p>
 <p >There is only one statement and it's a wait().</p>
 <p >Add the wait as a separate entry in the list.</p>
-<p >Go through all the split_elements and create blocks.</p>
-<p >check if the block has already been created.</p>
-<p >First one</p>
-<p >Succesors</p>
-<p >Last one</p>
-<p >Predecessors</p>
 
 </div>
 </div>
@@ -702,8 +827,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ace649de40d860c56a4ba1c1e8031aea3" name="ace649de40d860c56a4ba1c1e8031aea3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace649de40d860c56a4ba1c1e8031aea3">&#9670;&nbsp;</a></span>sb_paths_found_</h2>
+<a id="a424ca0fad1db395d6997ee5f136aeb4c" name="a424ca0fad1db395d6997ee5f136aeb4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a424ca0fad1db395d6997ee5f136aeb4c">&#9670;&nbsp;</a></span>paths_found_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -712,7 +837,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">llvm::SmallVector&lt;llvm::SmallVector&lt;const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *&gt; &gt; systemc_clang::SplitCFG::sb_paths_found_</td>
+          <td class="memname">llvm::SmallVector&lt;llvm::SmallVector&lt;const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *&gt; &gt; systemc_clang::SplitCFG::paths_found_</td>
         </tr>
       </table>
   </td>
