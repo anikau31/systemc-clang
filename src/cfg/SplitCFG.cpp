@@ -9,7 +9,7 @@ using namespace systemc_clang;
 /// ===========================================
 /// SplitCFG
 /// ===========================================
-void SplitCFG::sb_dfs_pop_on_wait(
+void SplitCFG::dfs_pop_on_wait(
     const SplitCFGBlock* basic_block,
     llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_in_stack,
     llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits) {
@@ -262,7 +262,7 @@ void SplitCFG::addPredecessors(SplitCFGBlock* to, const clang::CFGBlock* from) {
   }
 }
 
-void SplitCFG::dumpSCCFG() {
+void SplitCFG::dumpSCCFG() const {
   llvm::dbgs() << "sccfg( " << sccfg_.size() << ") ids: ";
   for (auto const& entry : sccfg_) {
     llvm::dbgs() << entry.first << "  ";
@@ -272,7 +272,7 @@ void SplitCFG::dumpSCCFG() {
 
 void SplitCFG::dumpSplitElements(
     const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> >&
-        split_elements) {
+        split_elements) const {
   unsigned int id{0};
   for (auto const& elements : split_elements) {
     llvm::dbgs() << "Element number " << id << " has " << elements.first.size()
@@ -307,10 +307,15 @@ void SplitCFG::generate_paths() {
   do {
     entry = waits_in_stack.pop_back_val();
     llvm::dbgs() << "Processing SB " << entry->getBlockID() << "\n";
-    sb_dfs_pop_on_wait(entry, waits_in_stack, visited_waits);
+    dfs_pop_on_wait(entry, waits_in_stack, visited_waits);
     llvm::dbgs() << "\n";
   } while (!waits_in_stack.empty());
 
+  dumpWaitNextStates();
+  dumpPaths();
+}
+
+void SplitCFG::dumpWaitNextStates() const {
   llvm::dbgs() << "Dump all wait next states\n";
   for (auto const& wait : wait_next_state_) {
     auto wait_block{wait.first};
@@ -321,7 +326,9 @@ void SplitCFG::generate_paths() {
                  << next_block->getBlockID() << ")"
                  << " [" << next_state_id << "]\n";
   }
+}
 
+void SplitCFG::dumpPaths() const {
   llvm::dbgs() << "Dump all SB paths to wait() found in the CFG.\n";
   unsigned int i{0};
   for (auto const& block_vector : sb_paths_found_) {
@@ -402,24 +409,11 @@ void SplitCFG::dump() const {
     }
     */
   }
-  /// Dump all the paths found.
-  /*
-  llvm::dbgs() << "Dump all paths to wait() found in the CFG.\n";
-  unsigned int i{0};
-  for (auto const& block_vector : paths_found_) {
-    llvm::dbgs() << "Path S" << i++ << ": ";
-    for (auto const& block : block_vector) {
-      llvm::dbgs() << block->getBlockID() << " ";
-    }
-    if (i == 1) {
-      llvm::dbgs() << " (reset path)";
-    }
-    llvm::dbgs() << "\n";
-  }
-  */
+  dumpPaths();
+
 }
 
-void SplitCFG::dumpToDot() {
+void SplitCFG::dumpToDot() const {
   llvm::dbgs() << "digraph SCCFG {\n";
   llvm::dbgs() << " rankdir=TD\n";
   llvm::dbgs() << " node [shape=record]\n";
@@ -476,20 +470,6 @@ void SplitCFG::dumpToDot() {
       llvm::dbgs() << " -> SB" << succ->getBlockID() << "\n";
     }
   }
-  /*
-  for (auto const& succ : sblock->successors_) {
-    llvm::dbgs() << "SB" << sblock->getBlockID();
-    llvm::dbgs() << "[label=\"";
-    unsigned int i{0};
-    for (auto const& element : sblock->getElements()) {
-      llvm::dbgs() << "  " << i << ": ";
-      element->dump();
-      ++i;
-    }
-    llvm::dbgs()<< "\"]";
-    llvm::dbgs() << " -> SB" << succ->getBlockID() << "\n";
-  }
-  */
   llvm::dbgs() << "}\n";
 }
 
