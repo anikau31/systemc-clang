@@ -1,6 +1,7 @@
 #include "SplitCFG.h"
 
 #include "llvm/Support/Debug.h"
+#include "llvm/Support/FileSystem.h"
 #include "llvm/ADT/PostOrderIterator.h"
 #include <regex>
 
@@ -189,10 +190,9 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
 }
 
 void SplitCFG::createWaitSplitCFGBlocks(
-    clang::CFGBlock *block,
-    const llvm::SmallVectorImpl<std::pair<SplitCFG::VectorCFGElementPtr, bool> >&
-        split_elements) {
-
+    clang::CFGBlock* block,
+    const llvm::SmallVectorImpl<
+        std::pair<SplitCFG::VectorCFGElementPtr, bool> >& split_elements) {
   // dumpSplitElements(split_elements);
   /// Go through all the split_elements and create blocks.
   llvm::dbgs() << "Number of entries in split_elements "
@@ -248,8 +248,6 @@ void SplitCFG::createWaitSplitCFGBlocks(
     prev_block = new_split;
     ++id;
   }
-
-
 }
 
 void SplitCFG::addSuccessors(SplitCFGBlock* to, const clang::CFGBlock* from) {
@@ -424,9 +422,13 @@ void SplitCFG::dump() const {
 }
 
 void SplitCFG::dumpToDot() const {
-  llvm::dbgs() << "digraph SCCFG {\n";
-  llvm::dbgs() << " rankdir=TD\n";
-  llvm::dbgs() << " node [shape=record]\n";
+  std::error_code OutErrorInfo;
+  std::error_code ok;
+  llvm::raw_fd_ostream dotos(llvm::StringRef("sccfg.dot"), OutErrorInfo, llvm::sys::fs::OF_None);
+
+  dotos << "digraph SCCFG {\n";
+  dotos << " rankdir=TD\n";
+  dotos << " node [shape=record]\n";
   /// Create names for each node and its pattern.
   for (auto const& block : sccfg_) {
     SplitCFGBlock* sblock{block.second};
@@ -460,13 +462,13 @@ void SplitCFG::dumpToDot() const {
     element_str = std::regex_replace(element_str, reamp, "\\&");
 
     if (sblock->hasWait()) {
-      llvm::dbgs() << "SB" << sblock->getBlockID()
+      dotos << "SB" << sblock->getBlockID()
                    << " [ \n color=red, label=\"SB" << sblock->getBlockID()
                    << "\n"
-                   << element_str << "\"\n]"
+                   << sblock->getNextState() << "|" << element_str << "\"\n]"
                    << "\n";
     } else {
-      llvm::dbgs() << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
+      dotos << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
                    << sblock->getBlockID() << "\n"
                    << element_str << "\"\n]"
                    << "\n";
@@ -476,11 +478,11 @@ void SplitCFG::dumpToDot() const {
   for (auto const& block : sccfg_) {
     SplitCFGBlock* sblock{block.second};
     for (auto const& succ : sblock->successors_) {
-      llvm::dbgs() << "SB" << sblock->getBlockID();
-      llvm::dbgs() << " -> SB" << succ->getBlockID() << "\n";
+      dotos << "SB" << sblock->getBlockID();
+      dotos << " -> SB" << succ->getBlockID() << "\n";
     }
   }
-  llvm::dbgs() << "}\n";
+  dotos << "}\n";
 }
 
 const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock>&
