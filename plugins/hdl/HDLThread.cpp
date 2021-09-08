@@ -15,6 +15,9 @@
 //! using HDLBody class
 //! 
 
+
+using namespace systemc_clang;
+
 namespace systemc_hdl {
 
   HDLThread::HDLThread(CXXMethodDecl *emd, hNodep &h_top,
@@ -22,9 +25,6 @@ namespace systemc_hdl {
     : h_top_{h_top}, diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map} {
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLThread constructor (thread body)\n");
       h_ret = NULL;
-
-      blkix = 0;
-      stateix = 0;
 
       xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hProcesses); // placeholder to collect methods
@@ -49,25 +49,21 @@ namespace systemc_hdl {
 	++id;
       }
 
+      for (auto const& pt: paths_found) {
+	ProcessSplitGraphBlock(pt[0]);
+      }
       //std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
       clang::LangOptions LO = ast_context.getLangOpts();
       //threadcfg->dump(LO, false);
       // HDLBody instance init
       for (auto const& pt: paths_found) {
 	for (auto const& block : pt) {
-	  //const CFGBlock & B = threadcfg->getEntry();
-	  //ProcessBB(block->getCFGBlock());
+	  ProcessBB(*(block->getCFGBlock()));
 	}
       }
       h_top->child_list.push_back(hlocalvarsp);
       h_top->child_list.push_back(hthreadblocksp);
       
-      // LLVM_DEBUG(llvm::dbgs() << "SCBBlocks:\n"); 
-      // for (auto scbl: scbblocks)
-      // 	scbl->dump();
-      // LLVM_DEBUG(llvm::dbgs() << "SCWait Blocks:\n"); 
-      // for (auto bl: waitblocks)
-      // 	bl->dump();
     }
 
   HDLThread::~HDLThread() {
@@ -137,7 +133,7 @@ namespace systemc_hdl {
   void HDLThread::AddThreadMethod(const CFGBlock &BI) {
     std::vector<const CFGBlock *> succlist, nextsucclist;
     ProcessBB(BI);
-    Visited[BI.getBlockID()] = true;
+    //Visited[BI.getBlockID()] = true;
     for (const auto &succ : BI.succs() ) { // gather successors
       const CFGBlock *SuccBlk = succ.getReachableBlock();
       if (SuccBlk!=NULL) succlist.push_back(SuccBlk);
@@ -145,7 +141,7 @@ namespace systemc_hdl {
     bool changed;
     do {
       changed = false;
-      for (const CFGBlock *si: succlist) { // process BB of successors at this level
+      for (const CFGBlock *si: succlist) { //process BB of successors at this level
 	if (Visited.find(si->getBlockID()) == Visited.end()) {
 	  Visited[si->getBlockID()] = true;
 	  LLVM_DEBUG(llvm::dbgs() << "Visiting Block " << si->getBlockID() << "\n");
@@ -161,7 +157,9 @@ namespace systemc_hdl {
     }
     while (changed);
   }
-  
+
+  void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb) {
+  }
 
   void HDLThread::ProcessBB(const CFGBlock &BI) {
     string blkid =  std::to_string(BI.getBlockID());
@@ -171,13 +169,7 @@ namespace systemc_hdl {
       // had to add recursive traversal of AST node children
       std::vector<const Stmt *> SS;
       FindStatements(BI, SS);
-      SCBBlock *curscblock = new SCBBlock(BI, SS);
-      bool seenwait = false;
-      int stmtix = 0;
-      curscblock->startstmtix = stmtix;
-      curscblock->endstmtix = SS.size();
-      curscblock->blkix = blkix;
-      curscblock->dump();
+
       hNodep htmp = new hNode(h_top_->getname(), hNode::hdlopsEnum::hNoop); // put the statement here temporarily
       for (auto stmt: SS) {
 	LLVM_DEBUG(llvm::dbgs() << "Stmt follows\n");
@@ -191,22 +183,10 @@ namespace systemc_hdl {
 	
 	htmp->child_list.clear();
 	
-	stmtix++;
 	methodecls.insertall(xtbodyp->methodecls);
       }
-      blkix+=1;
       hthreadblocksp->child_list.push_back(h_body);
-      scbblocks.push_back(curscblock);
     }
   }
-  
-  
-  void SCBBlock::SCBBlock::dump() {
-    LLVM_DEBUG(llvm::dbgs() << "SCBBlock " << blkix << " from CFG Block "
-	       << cfgb.getBlockID() << " startstmtix " << startstmtix <<
-	       " endstmtix " << endstmtix << " statenum " << statenum << "\n");
-    if (hblockbody!=NULL) hblockbody->dumphcode();
-    // for (auto stmt: stmts)
-    //   LLVM_DEBUG(stmt->dump(llvm::dbgs(), ast_context_));
-  }
+
 }
