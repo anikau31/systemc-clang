@@ -1,6 +1,7 @@
 #include "SplitCFG.h"
 
 #include "llvm/Support/Debug.h"
+#include "llvm/Support/FileSystem.h"
 #include "llvm/ADT/PostOrderIterator.h"
 #include <regex>
 
@@ -9,7 +10,7 @@ using namespace systemc_clang;
 /// ===========================================
 /// SplitCFG
 /// ===========================================
-void SplitCFG::sb_dfs_pop_on_wait(
+void SplitCFG::dfs_pop_on_wait(
     const SplitCFGBlock* basic_block,
     llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_in_stack,
     llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits) {
@@ -27,7 +28,8 @@ void SplitCFG::sb_dfs_pop_on_wait(
   visited.insert(basic_block);
   visit_stack.push_back(std::make_pair(basic_block, basic_block->succ_begin()));
 
-  llvm::SmallVector<const SplitCFGBlock*> curr_path;
+  // llvm::SmallVector<const SplitCFGBlock*> curr_path;
+  VectorSplitCFGBlock curr_path;
   do {
     std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>& Top =
         visit_stack.back();
@@ -93,7 +95,7 @@ void SplitCFG::sb_dfs_pop_on_wait(
   } while (!visit_stack.empty());
 
   /// Insert the path constructed.
-  sb_paths_found_.push_back(curr_path);
+  paths_found_.push_back(curr_path);
 }
 
 bool SplitCFG::isElementWait(const clang::CFGElement& element) const {
@@ -135,7 +137,6 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
   // We are going to have two vectors.
   // 1. A vector of vector pointers to CFGElements.
   // 2. A vector of pointers to CFGElements that are waits.
-  //
   //
 
   VectorCFGElementPtr vec_elements{};
@@ -185,6 +186,13 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
     }
   }
 
+  createWaitSplitCFGBlocks(block, split_elements);
+}
+
+void SplitCFG::createWaitSplitCFGBlocks(
+    clang::CFGBlock* block,
+    const llvm::SmallVectorImpl<
+        std::pair<SplitCFG::VectorCFGElementPtr, bool> >& split_elements) {
   // dumpSplitElements(split_elements);
   /// Go through all the split_elements and create blocks.
   llvm::dbgs() << "Number of entries in split_elements "
@@ -262,7 +270,7 @@ void SplitCFG::addPredecessors(SplitCFGBlock* to, const clang::CFGBlock* from) {
   }
 }
 
-void SplitCFG::dumpSCCFG() {
+void SplitCFG::dumpSCCFG() const {
   llvm::dbgs() << "sccfg( " << sccfg_.size() << ") ids: ";
   for (auto const& entry : sccfg_) {
     llvm::dbgs() << entry.first << "  ";
@@ -272,7 +280,7 @@ void SplitCFG::dumpSCCFG() {
 
 void SplitCFG::dumpSplitElements(
     const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> >&
-        split_elements) {
+        split_elements) const {
   unsigned int id{0};
   for (auto const& elements : split_elements) {
     llvm::dbgs() << "Element number " << id << " has " << elements.first.size()
@@ -293,7 +301,8 @@ void SplitCFG::dumpSplitElements(
 void SplitCFG::generate_paths() {
   /// Set of visited wait blocks.
   llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_waits;
-  llvm::SmallVector<const SplitCFGBlock*> waits_in_stack;
+  // llvm::SmallVector<const SplitCFGBlock*> waits_in_stack;
+  VectorSplitCFGBlock waits_in_stack;
 
   /// G = cfg_
   const clang::CFGBlock* BB{&cfg_->getEntry()};
@@ -307,10 +316,15 @@ void SplitCFG::generate_paths() {
   do {
     entry = waits_in_stack.pop_back_val();
     llvm::dbgs() << "Processing SB " << entry->getBlockID() << "\n";
-    sb_dfs_pop_on_wait(entry, waits_in_stack, visited_waits);
+    dfs_pop_on_wait(entry, waits_in_stack, visited_waits);
     llvm::dbgs() << "\n";
   } while (!waits_in_stack.empty());
 
+  dumpWaitNextStates();
+  dumpPaths();
+}
+
+void SplitCFG::dumpWaitNextStates() const {
   llvm::dbgs() << "Dump all wait next states\n";
   for (auto const& wait : wait_next_state_) {
     auto wait_block{wait.first};
@@ -321,10 +335,12 @@ void SplitCFG::generate_paths() {
                  << next_block->getBlockID() << ")"
                  << " [" << next_state_id << "]\n";
   }
+}
 
+void SplitCFG::dumpPaths() const {
   llvm::dbgs() << "Dump all SB paths to wait() found in the CFG.\n";
   unsigned int i{0};
-  for (auto const& block_vector : sb_paths_found_) {
+  for (auto const& block_vector : paths_found_) {
     llvm::dbgs() << "Path S" << i++ << ": ";
     for (auto const& block : block_vector) {
       llvm::dbgs() << block->getBlockID() << " ";
@@ -402,27 +418,17 @@ void SplitCFG::dump() const {
     }
     */
   }
-  /// Dump all the paths found.
-  /*
-  llvm::dbgs() << "Dump all paths to wait() found in the CFG.\n";
-  unsigned int i{0};
-  for (auto const& block_vector : paths_found_) {
-    llvm::dbgs() << "Path S" << i++ << ": ";
-    for (auto const& block : block_vector) {
-      llvm::dbgs() << block->getBlockID() << " ";
-    }
-    if (i == 1) {
-      llvm::dbgs() << " (reset path)";
-    }
-    llvm::dbgs() << "\n";
-  }
-  */
+  dumpPaths();
 }
 
-void SplitCFG::dumpToDot() {
-  llvm::dbgs() << "digraph SCCFG {\n";
-  llvm::dbgs() << " rankdir=TD\n";
-  llvm::dbgs() << " node [shape=record]\n";
+void SplitCFG::dumpToDot() const {
+  std::error_code OutErrorInfo;
+  std::error_code ok;
+  llvm::raw_fd_ostream dotos(llvm::StringRef("sccfg.dot"), OutErrorInfo, llvm::sys::fs::OF_None);
+
+  dotos << "digraph SCCFG {\n";
+  dotos << " rankdir=TD\n";
+  dotos << " node [shape=record]\n";
   /// Create names for each node and its pattern.
   for (auto const& block : sccfg_) {
     SplitCFGBlock* sblock{block.second};
@@ -456,13 +462,13 @@ void SplitCFG::dumpToDot() {
     element_str = std::regex_replace(element_str, reamp, "\\&");
 
     if (sblock->hasWait()) {
-      llvm::dbgs() << "SB" << sblock->getBlockID()
+      dotos << "SB" << sblock->getBlockID()
                    << " [ \n color=red, label=\"SB" << sblock->getBlockID()
                    << "\n"
-                   << element_str << "\"\n]"
+                   << sblock->getNextState() << "|" << element_str << "\"\n]"
                    << "\n";
     } else {
-      llvm::dbgs() << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
+      dotos << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
                    << sblock->getBlockID() << "\n"
                    << element_str << "\"\n]"
                    << "\n";
@@ -472,30 +478,16 @@ void SplitCFG::dumpToDot() {
   for (auto const& block : sccfg_) {
     SplitCFGBlock* sblock{block.second};
     for (auto const& succ : sblock->successors_) {
-      llvm::dbgs() << "SB" << sblock->getBlockID();
-      llvm::dbgs() << " -> SB" << succ->getBlockID() << "\n";
+      dotos << "SB" << sblock->getBlockID();
+      dotos << " -> SB" << succ->getBlockID() << "\n";
     }
   }
-  /*
-  for (auto const& succ : sblock->successors_) {
-    llvm::dbgs() << "SB" << sblock->getBlockID();
-    llvm::dbgs() << "[label=\"";
-    unsigned int i{0};
-    for (auto const& element : sblock->getElements()) {
-      llvm::dbgs() << "  " << i << ": ";
-      element->dump();
-      ++i;
-    }
-    llvm::dbgs()<< "\"]";
-    llvm::dbgs() << " -> SB" << succ->getBlockID() << "\n";
-  }
-  */
-  llvm::dbgs() << "}\n";
+  dotos << "}\n";
 }
 
 const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock>&
 SplitCFG::getPathsFound() {
-  return sb_paths_found_;
+  return paths_found_;
 }
 
 SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
