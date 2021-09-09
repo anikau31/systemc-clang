@@ -102,6 +102,7 @@ class SplitCFG {
   /// \brief Generates the paths between wait statements. 
   void generate_paths();
 
+  llvm::APInt getWaitArgument(const clang::CFGElement& element) const;
   /// Dump member functions.
   void dump() const;
   void dumpToDot() const;

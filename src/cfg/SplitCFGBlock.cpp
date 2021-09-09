@@ -4,7 +4,12 @@
 
 using namespace systemc_clang;
 
-SplitCFGBlock::SplitCFGBlock() : block_{nullptr}, has_wait_{false} {}
+SplitCFGBlock::SplitCFGBlock()
+    : block_{nullptr},
+      has_wait_{false},
+      id_{0},
+      next_state_{0},
+      wait_arg_{32, 0, false} {}
 
 SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   block_ = from.block_;
@@ -15,20 +20,28 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   next_state_ = from.next_state_;
   id_ = from.id_;
   next_state_ = from.next_state_;
+  wait_arg_ = from.wait_arg_;
 }
 
 clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
 
-const SplitCFGBlock::VectorCFGElementPtrImpl & SplitCFGBlock::getElements() const { return elements_; }
+const SplitCFGBlock::VectorCFGElementPtrImpl& SplitCFGBlock::getElements()
+    const {
+  return elements_;
+}
 
-const SplitCFGBlock::VectorSplitCFGBlockPtrImpl& SplitCFGBlock::getSuccessors() const { return successors_; }
-const SplitCFGBlock::VectorSplitCFGBlockPtrImpl& SplitCFGBlock::getPredecessors() const { return predecessors_; }
+const SplitCFGBlock::VectorSplitCFGBlockPtrImpl& SplitCFGBlock::getSuccessors()
+    const {
+  return successors_;
+}
+const SplitCFGBlock::VectorSplitCFGBlockPtrImpl&
+SplitCFGBlock::getPredecessors() const {
+  return predecessors_;
+}
 
 bool SplitCFGBlock::hasWait() const { return has_wait_; }
 
-std::size_t SplitCFGBlock::getNumOfElements() const {
-  return elements_.size();
-}
+std::size_t SplitCFGBlock::getNumOfElements() const { return elements_.size(); }
 
 bool SplitCFGBlock::isFunctionCall(const clang::CFGElement& element) const {
   if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
@@ -58,6 +71,7 @@ bool SplitCFGBlock::isFunctionCall(const clang::CFGElement& element) const {
   return true;
 }
 
+/*
 bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
   if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
     auto stmt{cfg_stmt->getStmt()};
@@ -76,6 +90,12 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
               llvm::errs() << "wait() must have either 0 or 1 argument.\n";
               return false;
             }
+
+            llvm::dbgs() << "*************** FIRST ARG ****************\n";
+            auto first_arg{ cxx_me->getArg(0) };
+            first_arg->dump();
+
+            // Save the argument
             return true;
           }
         }
@@ -85,6 +105,7 @@ bool SplitCFGBlock::isWait(const clang::CFGElement& element) const {
 
   return false;
 };
+*/
 
 void SplitCFGBlock::insertElements(VectorCFGElementPtr& elements) {
   elements_ = elements;
@@ -94,14 +115,19 @@ unsigned int SplitCFGBlock::getBlockID() const { return id_; }
 
 unsigned int SplitCFGBlock::getNextState() const { return next_state_; }
 
+llvm::APInt SplitCFGBlock::getWaitArg() const { return wait_arg_; }
+
 void SplitCFGBlock::dump() const {
   if (block_) {
     llvm::dbgs() << "\nSB" << getBlockID() << " (B" << block_->getBlockID()
                  << ") ";
     if (hasWait()) {
       llvm::dbgs() << llvm::buffer_ostream::Colors::RED << " (WAIT)";
+      llvm::dbgs() << llvm::buffer_ostream::Colors::BLUE
+                   << " (Arg: " << wait_arg_ << ")\n";
     }
-    llvm::dbgs() << llvm::buffer_ostream::Colors::RESET << "\n";
+    llvm::dbgs() << "\n" << llvm::buffer_ostream::Colors::RESET;
+
     unsigned int i{0};
     for (auto const& element : elements_) {
       llvm::dbgs() << "  " << i << ": ";
@@ -111,12 +137,16 @@ void SplitCFGBlock::dump() const {
 
     llvm::dbgs() << "\n";
 
-    llvm::dbgs() << llvm::buffer_ostream::Colors::GREEN << "  Preds (" << llvm::buffer_ostream::Colors::RESET << predecessors_.size() << llvm::buffer_ostream::Colors::GREEN << "): ";
+    llvm::dbgs() << llvm::buffer_ostream::Colors::GREEN << "  Preds ("
+                 << llvm::buffer_ostream::Colors::RESET << predecessors_.size()
+                 << llvm::buffer_ostream::Colors::GREEN << "): ";
     for (auto const& pre : predecessors_) {
       llvm::dbgs() << "SB" << pre->getBlockID() << " ";
     }
 
-    llvm::dbgs() << llvm::buffer_ostream::Colors::MAGENTA << "\n  Succs (" << llvm::buffer_ostream::Colors::RESET << successors_.size() << llvm::buffer_ostream::Colors::MAGENTA << "): ";
+    llvm::dbgs() << llvm::buffer_ostream::Colors::MAGENTA << "\n  Succs ("
+                 << llvm::buffer_ostream::Colors::RESET << successors_.size()
+                 << llvm::buffer_ostream::Colors::MAGENTA << "): ";
     for (auto const& succ : successors_) {
       llvm::dbgs() << "SB" << succ->getBlockID() << " ";
     }
