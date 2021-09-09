@@ -71,7 +71,6 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classsystemc__clang_1_1SplitCFGBlock-members.html">List of all members</a>  </div>
@@ -135,17 +134,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9ab1b3f2cc94ffb3b5951dfb5e6d72d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24215fc4634952cb7061e344dbea2a02"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#a24215fc4634952cb7061e344dbea2a02">getNextState</a> () const</td></tr>
 <tr class="separator:a24215fc4634952cb7061e344dbea2a02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a329a43c8c5b67318bfe7cf718019aa42"><td class="memItemLeft" align="right" valign="top">llvm::APInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#a329a43c8c5b67318bfe7cf718019aa42">getWaitArg</a> () const</td></tr>
+<tr class="separator:a329a43c8c5b67318bfe7cf718019aa42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ad544806e8e43304c5931dea5e0d56c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#a5ad544806e8e43304c5931dea5e0d56c">insertElements</a> (<a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#a7fd216dfa2533b64510d6d75944bdeae">VectorCFGElementPtr</a> &amp;elements)</td></tr>
 <tr class="separator:a5ad544806e8e43304c5931dea5e0d56c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a743fab17ee296e023c4a942c33fa8447"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#a743fab17ee296e023c4a942c33fa8447">dump</a> () const</td></tr>
 <tr class="separator:a743fab17ee296e023c4a942c33fa8447"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:aa533ed1748fcf589cc48e3ff6f38098e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#aa533ed1748fcf589cc48e3ff6f38098e">isWait</a> (const clang::CFGElement &amp;element) const</td></tr>
-<tr class="separator:aa533ed1748fcf589cc48e3ff6f38098e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a247d922bb97245ec3382a39756d79562"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#a247d922bb97245ec3382a39756d79562">isFunctionCall</a> (const clang::CFGElement &amp;element) const</td></tr>
-<tr class="separator:a247d922bb97245ec3382a39756d79562"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -157,6 +151,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a7a1f5b70d0a62161ce0bcb427c1b64db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc0367134fc9022762180d095b69878e"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#abc0367134fc9022762180d095b69878e">next_state_</a></td></tr>
 <tr class="separator:abc0367134fc9022762180d095b69878e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9e50938672d2144940590ec5903cf7b"><td class="memItemLeft" align="right" valign="top">llvm::APInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#ae9e50938672d2144940590ec5903cf7b">wait_arg_</a></td></tr>
+<tr class="separator:ae9e50938672d2144940590ec5903cf7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35abbaa62ec33b993f7ebe20ae904892"><td class="memItemLeft" align="right" valign="top">llvm::SmallVector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#a35abbaa62ec33b993f7ebe20ae904892">wait_element_ids_</a></td></tr>
 <tr class="separator:a35abbaa62ec33b993f7ebe20ae904892"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add6967a62548cfa47b4f3ab2f1bea7ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#a7fd216dfa2533b64510d6d75944bdeae">VectorCFGElementPtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#add6967a62548cfa47b4f3ab2f1bea7ff">elements_</a></td></tr>
@@ -486,6 +482,23 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a329a43c8c5b67318bfe7cf718019aa42" name="a329a43c8c5b67318bfe7cf718019aa42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a329a43c8c5b67318bfe7cf718019aa42">&#9670;&nbsp;</a></span>getWaitArg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">llvm::APInt SplitCFGBlock::getWaitArg </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9c7ead6788fca6cf495f1af4da835505" name="a9c7ead6788fca6cf495f1af4da835505"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9c7ead6788fca6cf495f1af4da835505">&#9670;&nbsp;</a></span>hasWait()</h2>
 
@@ -518,60 +531,6 @@ Friends</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a247d922bb97245ec3382a39756d79562" name="a247d922bb97245ec3382a39756d79562"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a247d922bb97245ec3382a39756d79562">&#9670;&nbsp;</a></span>isFunctionCall()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SplitCFGBlock::isFunctionCall </td>
-          <td>(</td>
-          <td class="paramtype">const clang::CFGElement &amp;&#160;</td>
-          <td class="paramname"><em>element</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p >Generate the CFG</p>
-
-</div>
-</div>
-<a id="aa533ed1748fcf589cc48e3ff6f38098e" name="aa533ed1748fcf589cc48e3ff6f38098e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa533ed1748fcf589cc48e3ff6f38098e">&#9670;&nbsp;</a></span>isWait()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SplitCFGBlock::isWait </td>
-          <td>(</td>
-          <td class="paramtype">const clang::CFGElement &amp;&#160;</td>
-          <td class="paramname"><em>element</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p >Check that there is only 1 or 0 arguments</p>
 
 </div>
 </div>
@@ -821,6 +780,28 @@ Friends</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">llvm::SmallVector&lt;const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *&gt; systemc_clang::SplitCFGBlock::successors_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9e50938672d2144940590ec5903cf7b" name="ae9e50938672d2144940590ec5903cf7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9e50938672d2144940590ec5903cf7b">&#9670;&nbsp;</a></span>wait_arg_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">llvm::APInt systemc_clang::SplitCFGBlock::wait_arg_</td>
         </tr>
       </table>
   </td>

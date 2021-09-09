@@ -113,6 +113,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4824504a131b8dbf592fbe5ff8576643"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a4824504a131b8dbf592fbe5ff8576643">generate_paths</a> ()</td></tr>
 <tr class="memdesc:a4824504a131b8dbf592fbe5ff8576643"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the paths between wait statements.  <a href="classsystemc__clang_1_1SplitCFG.html#a4824504a131b8dbf592fbe5ff8576643">More...</a><br /></td></tr>
 <tr class="separator:a4824504a131b8dbf592fbe5ff8576643"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90f1b58c4c9f717887f7424795a12a66"><td class="memItemLeft" align="right" valign="top">llvm::APInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a90f1b58c4c9f717887f7424795a12a66">getWaitArgument</a> (const clang::CFGElement &amp;element) const</td></tr>
+<tr class="separator:a90f1b58c4c9f717887f7424795a12a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c4701df1303dfa28a5cf27aefa8d6f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a2c4701df1303dfa28a5cf27aefa8d6f9">dump</a> () const</td></tr>
 <tr class="memdesc:a2c4701df1303dfa28a5cf27aefa8d6f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dump member functions.  <a href="classsystemc__clang_1_1SplitCFG.html#a2c4701df1303dfa28a5cf27aefa8d6f9">More...</a><br /></td></tr>
 <tr class="separator:a2c4701df1303dfa28a5cf27aefa8d6f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -475,6 +477,7 @@ Private Attributes</h2></td></tr>
 <p >Succesors</p>
 <p >Last one</p>
 <p >Predecessors</p>
+<p >Get the first element of the SmallVector, which will be a wait()</p>
 
 </div>
 </div>
@@ -691,6 +694,24 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the paths that were found in the SCCFG. </p>
+
+</div>
+</div>
+<a id="a90f1b58c4c9f717887f7424795a12a66" name="a90f1b58c4c9f717887f7424795a12a66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90f1b58c4c9f717887f7424795a12a66">&#9670;&nbsp;</a></span>getWaitArgument()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">llvm::APInt SplitCFG::getWaitArgument </td>
+          <td>(</td>
+          <td class="paramtype">const clang::CFGElement &amp;&#160;</td>
+          <td class="paramname"><em>element</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
