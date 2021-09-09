@@ -39,6 +39,7 @@ class SplitCFGBlock {
   bool has_wait_;
   unsigned int id_;
   unsigned int next_state_;
+  llvm::APInt wait_arg_;
 
 
   /// This holds the ids in split_elements_ that correspond to the wait
@@ -85,8 +86,7 @@ class SplitCFGBlock {
   const_succ_iterator_range const_succs() { return const_succ_iterator_range{succ_begin(), succ_end()}; }
 
  private:
-  bool isWait(const clang::CFGElement &element) const;
-  bool isFunctionCall(const clang::CFGElement &element) const;
+  //bool isFunctionCall(const clang::CFGElement &element) const;
 
  public:
   SplitCFGBlock();
@@ -101,6 +101,7 @@ class SplitCFGBlock {
   bool hasWait() const;
   unsigned int getBlockID() const;
   unsigned int getNextState() const;
+  llvm::APInt getWaitArg() const;
 
   void insertElements(VectorCFGElementPtr & elements);
 

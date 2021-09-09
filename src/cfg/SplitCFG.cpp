@@ -98,6 +98,30 @@ void SplitCFG::dfs_pop_on_wait(
   paths_found_.push_back(curr_path);
 }
 
+llvm::APInt SplitCFG::getWaitArgument(const clang::CFGElement& element) const {
+  if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
+    auto stmt{cfg_stmt->getStmt()};
+
+    if (auto* expr = llvm::dyn_cast<clang::Expr>(stmt)) {
+      if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
+        auto args{cxx_me->getNumArgs()};
+        if (args == 1) {
+          if (auto first_arg{cxx_me->getArg(0)}) {
+            llvm::dbgs() << "*************** FIRST ARG ****************\n";
+            first_arg->dump();
+            const clang::IntegerLiteral* IntLiteral =
+                clang::dyn_cast<clang::IntegerLiteral>(first_arg);
+            llvm::dbgs() << " ARG VAL: " << IntLiteral->getValue() << "\n";
+            return IntLiteral->getValue();
+          }
+        }
+      }
+    }
+  }
+
+  return llvm::APInt{32, 0, false};
+};
+
 bool SplitCFG::isElementWait(const clang::CFGElement& element) const {
   if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
     auto stmt{cfg_stmt->getStmt()};
@@ -116,6 +140,7 @@ bool SplitCFG::isElementWait(const clang::CFGElement& element) const {
               llvm::errs() << "wait() must have either 0 or 1 argument.\n";
               return false;
             }
+
             return true;
           }
         }
@@ -213,6 +238,7 @@ void SplitCFG::createWaitSplitCFGBlocks(
       // bool already_exists{scit != sccfg_.end()};
       new_split = scit->second;
       new_split->id_ = block->getBlockID();
+
       // Successor: succ block from CFGBlock (overridden)
       /// First one
       if (split_elements.size() == 1) {
@@ -243,6 +269,13 @@ void SplitCFG::createWaitSplitCFGBlocks(
     new_split->block_ = block;
     new_split->has_wait_ = elements.second;
     new_split->elements_ = elements.first;
+
+    // If it's a wait() then get the argument.
+    if (new_split->has_wait_) {
+      /// Get the first element of the SmallVector, which will be a wait()
+      const clang::CFGElement* wait_el = (*new_split->elements_.begin());
+      new_split->wait_arg_ = getWaitArgument(*wait_el);
+    }
 
     // Set the successor of new_split.
     prev_block = new_split;
@@ -424,7 +457,8 @@ void SplitCFG::dump() const {
 void SplitCFG::dumpToDot() const {
   std::error_code OutErrorInfo;
   std::error_code ok;
-  llvm::raw_fd_ostream dotos(llvm::StringRef("sccfg.dot"), OutErrorInfo, llvm::sys::fs::OF_None);
+  llvm::raw_fd_ostream dotos(llvm::StringRef("sccfg.dot"), OutErrorInfo,
+                             llvm::sys::fs::OF_None);
 
   dotos << "digraph SCCFG {\n";
   dotos << " rankdir=TD\n";
@@ -462,16 +496,15 @@ void SplitCFG::dumpToDot() const {
     element_str = std::regex_replace(element_str, reamp, "\\&");
 
     if (sblock->hasWait()) {
-      dotos << "SB" << sblock->getBlockID()
-                   << " [ \n color=red, label=\"SB" << sblock->getBlockID()
-                   << "\n"
-                   << sblock->getNextState() << "|" << element_str << "\"\n]"
-                   << "\n";
+      dotos << "SB" << sblock->getBlockID() << " [ \n color=red, label=\"SB"
+            << sblock->getBlockID() << "\n"
+            << sblock->getNextState() << "|" << element_str << "\"\n]"
+            << "\n";
     } else {
       dotos << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
-                   << sblock->getBlockID() << "\n"
-                   << element_str << "\"\n]"
-                   << "\n";
+            << sblock->getBlockID() << "\n"
+            << element_str << "\"\n]"
+            << "\n";
     }
   }
   /// Generate the connections
