@@ -33,13 +33,16 @@ class SplitCFG {
   /// \brief Paths of BBs generated.
   llvm::SmallVector<llvm::SmallVector<const SplitCFGBlock *>> paths_found_;
 
+  /// \brief The block id to block for SCCFG.
   std::unordered_map<unsigned int, SplitCFGBlock *> sccfg_;
+
   llvm::SmallVector<std::pair<VectorCFGElementPtrImpl, bool>> split_elements;
 
   /// Predecessor SplitCFGBlock* => (Wait SplitCFGBlock*)
   std::unordered_map<const SplitCFGBlock *,
                      std::pair<const SplitCFGBlock *, unsigned int>>
       wait_next_state_;
+
   unsigned int next_state_count_;
 
  private:
