@@ -37,7 +37,7 @@ class SplitCFGBlock {
   friend class SplitCFG;
 
   /// A pointer to the original CFGBlock.
-  clang::CFGBlock *block_;
+  const clang::CFGBlock *block_;
   /// Whether this SplitCFGBlock is a wait block or not.  Only one element if it is a wait block. 
   bool has_wait_;
   /// The block id.
@@ -108,7 +108,7 @@ class SplitCFGBlock {
   SplitCFGBlock(const SplitCFGBlock &from);
 
   /// \brief Returns the pointer to the original CFGBlock from which the SplitCFGBlock was created. 
-  clang::CFGBlock *getCFGBlock() const;
+  const clang::CFGBlock *getCFGBlock() const;
 
   /// \brief Returns the number of CFGElements in this block. 
   std::size_t getNumOfElements() const;
