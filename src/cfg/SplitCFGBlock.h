@@ -86,8 +86,7 @@ class SplitCFGBlock {
   const_succ_iterator_range const_succs() { return const_succ_iterator_range{succ_begin(), succ_end()}; }
 
  private:
-  //bool isWait(const clang::CFGElement &element) const;
-  bool isFunctionCall(const clang::CFGElement &element) const;
+  //bool isFunctionCall(const clang::CFGElement &element) const;
 
  public:
   SplitCFGBlock();

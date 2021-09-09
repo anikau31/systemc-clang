@@ -109,7 +109,8 @@ llvm::APInt SplitCFG::getWaitArgument(const clang::CFGElement& element) const {
           if (auto first_arg{cxx_me->getArg(0)}) {
             llvm::dbgs() << "*************** FIRST ARG ****************\n";
             first_arg->dump();
-            const clang::IntegerLiteral *IntLiteral = clang::dyn_cast<clang::IntegerLiteral>(first_arg);
+            const clang::IntegerLiteral* IntLiteral =
+                clang::dyn_cast<clang::IntegerLiteral>(first_arg);
             llvm::dbgs() << " ARG VAL: " << IntLiteral->getValue() << "\n";
             return IntLiteral->getValue();
           }
@@ -139,15 +140,6 @@ bool SplitCFG::isElementWait(const clang::CFGElement& element) const {
               llvm::errs() << "wait() must have either 0 or 1 argument.\n";
               return false;
             }
-
-            /*
-            if (args == 1) {
-              if (auto first_arg{cxx_me->getArg(0)}) {
-                llvm::dbgs() << "*************** FIRST ARG ****************\n";
-                first_arg->dump();
-              }
-            }
-            */
 
             return true;
           }
