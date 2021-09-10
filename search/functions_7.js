@@ -57,7 +57,7 @@ var searchData=
   ['getcallermemberexpr_54',['getCallerMemberExpr',['../classsystemc__clang_1_1PortBinding.html#af965152cec89e6203a0b8c2aa4669cdf',1,'systemc_clang::PortBinding']]],
   ['getcallerportarraysubscripts_55',['getCallerPortArraySubscripts',['../classsystemc__clang_1_1PortBinding.html#ad83753efdd44051cfa710bfa00d57084',1,'systemc_clang::PortBinding']]],
   ['getcallerportname_56',['getCallerPortName',['../classsystemc__clang_1_1PortBinding.html#af2aa9c5d2455ab06f1661cd76ded189f',1,'systemc_clang::PortBinding']]],
-  ['getcfgblock_57',['getCFGBlock',['../classsystemc__clang_1_1SplitCFGBlock.html#a248e0d5c0fab092d30816d2e7a4273e7',1,'systemc_clang::SplitCFGBlock']]],
+  ['getcfgblock_57',['getCFGBlock',['../classsystemc__clang_1_1SplitCFGBlock.html#a6694778d50cad2c763c7d81522d6a359',1,'systemc_clang::SplitCFGBlock']]],
   ['getchildblocklist_58',['getChildBlockList',['../classsystemc__clang_1_1SusCFG.html#a6aa20b36799667e001b7633a8790e43a',1,'systemc_clang::SusCFG']]],
   ['getchildren_59',['getChildren',['../classsystemc__clang_1_1Tree.html#a970c6343c7021e22d7b7fb5fb3fc89a4',1,'systemc_clang::Tree']]],
   ['getclockports_60',['getClockPorts',['../classsc__ast__matchers_1_1PortMatcher.html#a0ad4061f0b89541c2291e657c0bc1fed',1,'sc_ast_matchers::PortMatcher']]],
