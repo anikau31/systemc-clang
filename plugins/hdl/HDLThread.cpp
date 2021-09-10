@@ -27,7 +27,7 @@ namespace systemc_hdl {
       h_ret = NULL;
 
       xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
-      hthreadblocksp = new hNode(hNode::hdlopsEnum::hProcesses); // placeholder to collect methods
+      hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
       
       // build SC CFG
@@ -35,7 +35,7 @@ namespace systemc_hdl {
       //scfg.split_wait_blocks(emd);
       // scfg.build_sccfg( method );
       scfg.generate_paths();
-      //scfg.dump();
+      scfg.dump();
 
       const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock> &paths_found{ scfg.getPathsFound()};
       llvm::dbgs() << "Dump sc cfg from hdlthread\n";
@@ -48,19 +48,23 @@ namespace systemc_hdl {
 	llvm::dbgs() << "\n";
 	++id;
       }
-
+      int state_num = 0;
       for (auto const& pt: paths_found) {
-	ProcessSplitGraphBlock(pt[0]);
+	hNodep h_switchcase = new hNode(std::to_string(state_num), hNode::hdlopsEnum::hSwitchCase);
+	ProcessSplitGraphBlock(pt[0], state_num, h_switchcase);
+	hthreadblocksp->child_list.push_back(h_switchcase);
+	state_num++;
       }
+      
       //std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
       clang::LangOptions LO = ast_context.getLangOpts();
       //threadcfg->dump(LO, false);
       // HDLBody instance init
-      for (auto const& pt: paths_found) {
-	for (auto const& block : pt) {
-	  ProcessBB(*(block->getCFGBlock()));
-	}
-      }
+      // for (auto const& pt: paths_found) {
+      // 	for (auto const& block : pt) {
+      // 	  ProcessBB(*(block->getCFGBlock()));
+      // 	}
+      // }
       h_top->child_list.push_back(hlocalvarsp);
       h_top->child_list.push_back(hthreadblocksp);
       
@@ -128,6 +132,36 @@ namespace systemc_hdl {
     }
   }
 
+    void HDLThread::FindStatements(const SplitCFGBlock *B, std::vector<const Stmt *> &SS) {
+    llvm::SmallDenseMap<const Stmt*, bool> Map;
+
+    // Mark subexpressions of each element in the block.
+    for (auto I : B->getElements()) {
+      CFGElement E = *I;
+      if (auto SE = E.getAs<CFGStmt>()) {
+	const Stmt *S = SE->getStmt();
+	for (const Stmt *K : S->children()) 
+	  MarkStatements(K, Map);
+      }
+    }
+    // // mark subexpressions coming from terminator statement
+    // if (const Stmt *S = B.getTerminatorStmt()) {
+    //   for (const Stmt *K : S->children())
+    // 	MarkStatements(K, Map);
+    // }
+    
+    // Any expressions not in Map are top level statements.
+    for (auto I : B->getElements()) {
+      CFGElement E = *I;
+      if (auto SE = E.getAs<CFGStmt>()) {
+	const Stmt *S = SE->getStmt();
+	if (Map.find(S) == Map.end()) {
+	  SS.push_back(S);
+	}
+      }
+    }
+  }
+  
   // BFS traversal so all local decls are seen before being referenced
   
   void HDLThread::AddThreadMethod(const CFGBlock &BI) {
@@ -158,7 +192,45 @@ namespace systemc_hdl {
     while (changed);
   }
 
-  void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb) {
+  void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase) {
+    bool iswait = false;
+    if (sgb != NULL) {
+      if (sgb->getNumOfElements() > 0) {
+	string blkid = "S" + std::to_string(state_num) + "_" + std::to_string(sgb->getBlockID());
+	LLVM_DEBUG(llvm::dbgs() << "Split Graph num ele, blockid are " << sgb->getNumOfElements() << " " << blkid << "\n");
+	// from http://clang-developers.42468.n3.nabble.com/Visiting-statements-of-a-CFG-one-time-td4069440.html#a4069447
+	// had to add recursive traversal of AST node children
+	std::vector<const Stmt *> SS;
+	FindStatements(sgb, SS);
+	hNodep htmp = new hNode(h_top_->getname(), hNode::hdlopsEnum::hNoop); 
+	//for (auto E : sgb->getElements()) {
+	//if (auto SE = E->getAs<CFGStmt>()) {
+	for (auto S : SS) {
+	  //const Stmt *S = SE->getStmt();
+	    if (sgb->hasWait()) iswait = true;
+	    LLVM_DEBUG(llvm::dbgs() << "Split Graph Stmt follows\n");
+	    LLVM_DEBUG(S->dump(llvm::dbgs(), ast_context_));
+	    //generate hcode for this statement, 
+	    //HDLBody xmethod(const_cast<Stmt *>(stmt), h_body, diag_e, ast_context_, mod_vname_map_, false);
+	    xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread);
+	    CheckVardecls(htmp);
+	    if (htmp->child_list.size() >0)
+	      h_switchcase->child_list.insert(h_switchcase->child_list.end(), htmp->child_list.begin(), htmp->child_list.end());
+	    
+	    htmp->child_list.clear();
+	    
+	    methodecls.insertall(xtbodyp->methodecls);
+	  }
+	  //hthreadblocksp->child_list.push_back(h_switchcase);
+	}
+	
+	//}
+      if (! iswait) {
+	for (auto spgsucc : sgb->getSuccessors()) {
+	  ProcessSplitGraphBlock(spgsucc, state_num, h_switchcase);
+	}
+      }
+    }
   }
 
   void HDLThread::ProcessBB(const CFGBlock &BI) {

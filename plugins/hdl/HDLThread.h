@@ -35,7 +35,7 @@ namespace systemc_hdl {
     hNodep h_ret;   // value returned by each subexpression
 
     hNodep h_top_; // reference to calling hnode pointer
-    hNodep hthreadblocksp; // collect the methods here
+    hNodep hthreadblocksp; // collect the case alternatives here
     hNodep hlocalvarsp; // collect the local vars here
 
     hdecl_name_map_t vname_map;
@@ -49,11 +49,12 @@ namespace systemc_hdl {
 
     // pre-pass over BB to mark subexpressions
     void FindStatements(const CFGBlock &B, std::vector<const Stmt *> &SS);
+    void FindStatements(const SplitCFGBlock *B, std::vector<const Stmt *> &SS);
     void MarkStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map);
     void CheckVardecls(hNodep &hp);
     void AddThreadMethod(const CFGBlock &BI);
     void ProcessBB(const CFGBlock &BI);
-    void ProcessSplitGraphBlock(const SplitCFGBlock *sgb);
+    void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase);
     
     bool is_wait_stmt(hNodep hp);
 
