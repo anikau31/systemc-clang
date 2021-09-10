@@ -334,12 +334,11 @@ void SplitCFG::dumpSplitElements(
 void SplitCFG::generate_paths() {
   /// Set of visited wait blocks.
   llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_waits;
-  // llvm::SmallVector<const SplitCFGBlock*> waits_in_stack;
   VectorSplitCFGBlock waits_in_stack;
 
   /// G = cfg_
-  const clang::CFGBlock* BB{&cfg_->getEntry()};
-  const SplitCFGBlock* entry{sccfg_[BB->getBlockID()]};
+  const clang::CFGBlock* block{&cfg_->getEntry()};
+  const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
   // Mimic FIFO
   waits_in_stack.insert(waits_in_stack.begin(), entry);
   // Entry=>Entry is the reset.
@@ -439,17 +438,6 @@ void SplitCFG::dump() const {
   for (auto const& block : sccfg_) {
     SplitCFGBlock* sblock{block.second};
     sblock->dump();
-
-    /*
-    llvm::dbgs() << "Element access\n";
-    unsigned int i{0};
-
-    for (auto const& element : sblock->getElements()) {
-      llvm::dbgs() << "  " << i << ": ";
-      element->dump();
-      ++i;
-    }
-    */
   }
   dumpPaths();
 }
@@ -528,7 +516,5 @@ SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)
     : context_{context}, next_state_count_{0} {
-  // cfg_ = clang::CFG::buildCFG(method, method->getBody(), &context_,
-  // clang::CFG::BuildOptions());
   construct_sccfg(method);
 }

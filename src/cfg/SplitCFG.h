@@ -81,6 +81,13 @@ class SplitCFG {
   SplitCFG(clang::ASTContext &context);
   /// \brief  Overloaded constructor.
   SplitCFG(clang::ASTContext &context, const clang::CXXMethodDecl *cxx_decl);
+
+  /// \brief Disallow a copy constructor for SCCFG. 
+  SplitCFG(const SplitCFG& from) = delete;
+
+  /// \brief Disallow assignment operator. 
+  SplitCFG& operator=(const SplitCFG &) = delete;
+
   /// \brief  Destructor that erases all SplitCFGBlocks created.
   virtual ~SplitCFG();
 
@@ -105,7 +112,10 @@ class SplitCFG {
   /// \brief Generates the paths between wait statements. 
   void generate_paths();
 
+  /// \brief Returns the argument to a wait statement. 
+  /// Note that the only one supported are no arguments or integer arguments.
   llvm::APInt getWaitArgument(const clang::CFGElement& element) const;
+
   /// Dump member functions.
   void dump() const;
   void dumpToDot() const;
