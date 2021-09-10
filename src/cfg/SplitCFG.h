@@ -33,13 +33,16 @@ class SplitCFG {
   /// \brief Paths of BBs generated.
   llvm::SmallVector<llvm::SmallVector<const SplitCFGBlock *>> paths_found_;
 
+  /// \brief The block id to block for SCCFG.
   std::unordered_map<unsigned int, SplitCFGBlock *> sccfg_;
+
   llvm::SmallVector<std::pair<VectorCFGElementPtrImpl, bool>> split_elements;
 
   /// Predecessor SplitCFGBlock* => (Wait SplitCFGBlock*)
   std::unordered_map<const SplitCFGBlock *,
                      std::pair<const SplitCFGBlock *, unsigned int>>
       wait_next_state_;
+
   unsigned int next_state_count_;
 
  private:
@@ -78,6 +81,13 @@ class SplitCFG {
   SplitCFG(clang::ASTContext &context);
   /// \brief  Overloaded constructor.
   SplitCFG(clang::ASTContext &context, const clang::CXXMethodDecl *cxx_decl);
+
+  /// \brief Disallow a copy constructor for SCCFG. 
+  SplitCFG(const SplitCFG& from) = delete;
+
+  /// \brief Disallow assignment operator. 
+  SplitCFG& operator=(const SplitCFG &) = delete;
+
   /// \brief  Destructor that erases all SplitCFGBlocks created.
   virtual ~SplitCFG();
 
@@ -101,6 +111,10 @@ class SplitCFG {
 
   /// \brief Generates the paths between wait statements. 
   void generate_paths();
+
+  /// \brief Returns the argument to a wait statement. 
+  /// Note that the only one supported are no arguments or integer arguments.
+  llvm::APInt getWaitArgument(const clang::CFGElement& element) const;
 
   /// Dump member functions.
   void dump() const;

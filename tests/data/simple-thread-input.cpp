@@ -46,7 +46,7 @@ SC_MODULE(test) {
       for (int i = 0; i < 4; i++) {
         k = 1;
         ++k;
-        wait();
+        wait(2);
         k = 2;
         --k;
       }
