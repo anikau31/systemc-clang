@@ -99,6 +99,7 @@ class SplitCFGBlock {
 
  private:
   // bool isFunctionCall(const clang::CFGElement &element) const;
+  void setNextState(unsigned int state);
 
  public:
   /// \brief Constructor.
