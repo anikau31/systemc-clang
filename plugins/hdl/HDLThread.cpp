@@ -214,7 +214,10 @@ namespace systemc_hdl {
 	    //HDLBody xmethod(const_cast<Stmt *>(stmt), h_body, diag_e, ast_context_, mod_vname_map_, false);
 	    xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread);
 	    CheckVardecls(htmp);
-	    if (htmp->child_list.size() >0)
+	     if (is_wait_stmt(htmp)) {
+	       htmp->child_list.back()->set(std::to_string(sgb->getNextState()));
+	     }
+	    if (htmp->child_list.size() >0) 
 	      h_switchcase->child_list.insert(h_switchcase->child_list.end(), htmp->child_list.begin(), htmp->child_list.end());
 	    
 	    htmp->child_list.clear();
@@ -225,7 +228,8 @@ namespace systemc_hdl {
 	}
 	
 	//}
-      if (! iswait) {
+ 
+      if (!iswait)  {
 	for (auto spgsucc : sgb->getSuccessors()) {
 	  ProcessSplitGraphBlock(spgsucc, state_num, h_switchcase);
 	}
