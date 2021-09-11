@@ -19,9 +19,10 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   predecessors_ = from.predecessors_;
   next_state_ = from.next_state_;
   id_ = from.id_;
-  next_state_ = from.next_state_;
   wait_arg_ = from.wait_arg_;
 }
+
+void SplitCFGBlock::setNextState(unsigned int state) { next_state_ = state; }
 
 const clang::CFGBlock* SplitCFGBlock::getCFGBlock() const { return block_; }
 
@@ -90,7 +91,9 @@ void SplitCFGBlock::dump() const {
     if (hasWait()) {
       llvm::dbgs() << llvm::buffer_ostream::Colors::RED << " (WAIT)";
       llvm::dbgs() << llvm::buffer_ostream::Colors::BLUE
-                   << " (Arg: " << wait_arg_ << ")\n";
+                   << " (Arg: " << wait_arg_ << ")"
+                   << llvm::buffer_ostream::Colors::GREEN  
+                   << " (NextState: " << getNextState() << ")\n";
     }
     llvm::dbgs() << "\n" << llvm::buffer_ostream::Colors::RESET;
 
