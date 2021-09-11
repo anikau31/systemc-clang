@@ -59,6 +59,9 @@ class SplitCFG {
   /// \brief Add predecessors to the SplitCFGBlock.
   void addPredecessors(SplitCFGBlock *to, const clang::CFGBlock *from);
 
+
+  void addNextStatesToBlocks();
+
   /// \brief Creates SplitCFGBlocks for all CFGBlocks that do not have a wiat.
   /// splitBlock() creates the SplitCFGBlocks used for splitting CFGBLocks that
   /// have wait statements.

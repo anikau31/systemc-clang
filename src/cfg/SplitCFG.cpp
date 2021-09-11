@@ -352,8 +352,20 @@ void SplitCFG::generate_paths() {
     llvm::dbgs() << "\n";
   } while (!waits_in_stack.empty());
 
+  addNextStatesToBlocks();
   dumpWaitNextStates();
   dumpPaths();
+}
+
+void SplitCFG::addNextStatesToBlocks() {
+  for (auto const& wait : wait_next_state_) {
+    SplitCFGBlock* wait_block{const_cast<SplitCFGBlock*>(wait.first)};
+    auto next_block{wait.second.first};
+    auto next_state_id{wait.second.second};
+
+    wait_block->setNextState( next_state_id );
+  }
+
 }
 
 void SplitCFG::dumpWaitNextStates() const {
