@@ -13,6 +13,7 @@ from .function_param_marker import FunctionParamMarker
 from .reorder_mod_init_block import ReorderModInitBlock
 from .function_info_pass import FunctionInfoPass, FunctionInfoPass2
 from .function_transformation_pass import FunctionTransformationPass
+from .comma_transformation import CommaTransformation
 
 
 class VerilogTranslator:
@@ -28,6 +29,7 @@ class VerilogTranslator:
         prev = AliasTranslation().visit(prev)
         prev = LiteralExpansion().visit(prev)
         prev = SliceMerge().visit(prev)
+        prev = CommaTransformation().visit(prev)
         f = TypeDefFilter()
         prev = f.visit(prev)
         prev = NodeMergePass().visit(prev)

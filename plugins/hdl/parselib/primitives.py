@@ -204,6 +204,14 @@ class unsigned___int128(Primitive):
     def __new__(cls):
         return sc_uint(128)
 
+class long(Primitive):
+    def __new__(cls):
+        return sc_int(64)
+
+class unsigned_long(Primitive):
+    def __new__(cls):
+        return sc_uint(64)
+
 class void(Primitive):
     def to_str(self, var_name):
         if var_name:

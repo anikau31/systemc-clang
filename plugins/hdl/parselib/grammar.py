@@ -180,9 +180,11 @@ lark_grammar = Lark('''
              |  "hUnop" UNOP_SUB "[" expression "]"
              |  "hBinop" UNOP_BNOT "[" expression "]"
              |  "hBinop" UNOP_NOT "[" expression "]"
-             |  "hPostfix" (UNOP_INC | UNOP_DEC) "[" expression "]"
-             |  "hPrefix" (UNOP_INC | UNOP_DEC) "[" expression "]"
-             |  hunopdec
+             | hpostfix
+             | hprefix
+             | hunopdec
+        hpostfix: "hPostfix" (UNOP_INC | UNOP_DEC) "[" expression "]"
+        hprefix: "hPrefix" (UNOP_INC | UNOP_DEC) "[" expression "]"
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
         // Separate '=' out from so that it is not an expression but a standalone statement
