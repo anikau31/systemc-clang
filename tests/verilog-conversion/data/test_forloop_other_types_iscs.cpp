@@ -54,7 +54,7 @@ public:
         int a[8];
         for (sc_uint<4> i = 0; i < 8; i++) {
             a[i] = i;
-            cout << "a[" << i << "] is " << a[i] << endl;
+            // cout << "a[" << i << "] is " << a[i] << endl;
 //            #10 $display("The value of a[%d] is: %d",i,a_1[i]) ;
 
         }
