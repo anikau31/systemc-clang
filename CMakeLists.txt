@@ -360,6 +360,7 @@ include_directories(
   "src/"
   "src/matchers"
   "src/model"
+  "src/cfg"
   "src/utils"
   "src/SCuitable"
   )
@@ -380,11 +381,7 @@ if(PLUGIN_HDL)
   add_subdirectory(plugins)
   set( SRC_LIB libsystemc-clang libhdl )
 endif()
-#
-# SET(SCC_INCLUDES "src" "src/matchers" "src/model")
-#
-# include_directories(${SCC_INCLUDES})
-#
+
 if( TESTS_ON )
   add_subdirectory(tests)
   enable_testing()
