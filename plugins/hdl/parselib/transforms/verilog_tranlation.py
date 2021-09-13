@@ -76,6 +76,10 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         return '{}({})'.format(tree.children[0], ','.join(map(str, tree.children[1:])))
 
+    def hwait(self, tree):
+        warnings.warn('hwait encountered, not implemented')
+        return "// hwait"
+
     def blkassign(self, tree):
         # dprint("--------------START----------------")
         current_proc = self.get_current_proc_name()
@@ -251,16 +255,33 @@ class VerilogTranslationPass(TopDown):
                 res = '({}) {} ({})'.format(tree.children[1], op, tree.children[2])
         return res
 
+    def hpostfix(self, tree):
+        self.__push_up(tree)
+        return "{}{}".format(tree.children[1], tree.children[0])
+
+    def hprefix(self, tree):
+        self.__push_up(tree)
+        return "{}{}".format(tree.children[0], tree.children[1])
+
     def hunop(self, tree):
         self.__push_up(tree)
-        # The ++ and -- only shows in loop
-        if tree.children[0] == '++':
-            res = '{} = {} + 1'.format(tree.children[1], tree.children[1])
-        elif tree.children[0] == '--':
-            res = '{} = {} - 1'.format(tree.children[1], tree.children[1])
-        else:
+        if len(tree.children) == 1:
+            return tree.children[0]
+        elif len(tree.children) == 2:
             res = '{}({})'.format(tree.children[0], tree.children[1])
-        return res
+            return res
+        else:
+            assert False
+        # The ++ and -- only shows in loop
+        # The original method is deprecated, we can hand over the self-increment to the synthesizer
+        # since we assue that we generate system verilog
+        # if tree.children[0] == '++':
+        #     res = '{} = {} + 1'.format(tree.children[1], tree.children[1])
+        # elif tree.children[0] == '--':
+        #     res = '{} = {} - 1'.format(tree.children[1], tree.children[1])
+        # else:
+        #     res = '{}({})'.format(tree.children[0], tree.children[1])
+        # return res
 
     def hcstmt(self, tree):
         self.__push_up(tree)
@@ -336,6 +357,7 @@ class VerilogTranslationPass(TopDown):
                         x = (x[0], x[1].children[0], x[2])
                     else:
                         assert False, 'Unrecognized construct: {}'.format(x[1])
+                dprint(x)
                 res = x[0] + x[1] + x[2]
                 return res
             except Exception as e:
@@ -815,6 +837,10 @@ class VerilogTranslationPass(TopDown):
         if id in self.module_var_type:
             raise ValueError('Duplicate signal declaration: {}'.format(id))
         self.module_var_type[id] = tpe
+
+    def hthread(self, tree):
+        warnings.warn("hthread encountered, not implemented")
+        return "// hthread"
 
     def hmodule(self, tree):
         # dprint("Processing Module: ", tree.children[0])
