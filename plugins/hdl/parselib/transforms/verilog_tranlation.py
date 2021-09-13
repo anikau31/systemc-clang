@@ -357,8 +357,7 @@ class VerilogTranslationPass(TopDown):
                         x = (x[0], x[1].children[0], x[2])
                     else:
                         assert False, 'Unrecognized construct: {}'.format(x[1])
-                dprint(x)
-                res = x[0] + x[1] + x[2]
+                res = str(x[0]) + str(x[1]) + str(x[2])
                 return res
             except Exception as e:
                 print(x[0])

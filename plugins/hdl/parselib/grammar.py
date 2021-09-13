@@ -34,7 +34,7 @@ lark_grammar = Lark('''
         // temporarily ignore the hMethod node
         hprocess: "hProcess" ID  "[" "hMethod" (ID|"NONAME") "[" prevardecl  hcstmt "]" "]"
         // hthread consists of a list of processes
-        hthread:  "hProcess" ID  "[" "hThread" (ID|"NONAME") "[" modportsiglist  threadprocesslist "]" "]"
+        hthread:  "hProcess" ID  "[" "hThread" (ID|"NONAME") "[" modportsiglist  switchstmt "]" "]"
         hbasicblock: "hMethod" ID  ("[" stmts "]" | "NOLIST")
         prevardecl: vardecl*
         vardecl: vardeclinit | vardeclrn
@@ -57,7 +57,7 @@ lark_grammar = Lark('''
              | breakstmt
              | hwait
         
-        hwait: "hWait" "wait" "NOLIST"
+        hwait: "hWait" "wait" "NOLIST" | "hWait" NUM ("[" hliteral "]" | "NOLIST")
              
         breakstmt: "hBreak" "NONAME" "NOLIST"
              
@@ -117,9 +117,9 @@ lark_grammar = Lark('''
         // Note: we don't make this a noraml statement as in the context of switch, 
         // we don't use general statements
         switchbody: "hCStmt" "NONAME" "[" casestmt+ "]"
-        casestmt: "hSwitchCase" "NONAME" "[" casevalue stmt "]" hnoop
+        casestmt: "hSwitchCase" "NONAME" "[" casevalue stmt+ "]" hnoop
                 | "hSwitchCase" "NONAME" "[" casevalue hnoop "]"
-                | "hSwitchCase" "NONAME" "[" casevalue stmt "]" 
+                | "hSwitchCase" "NONAME" "[" casevalue stmt+ "]" 
         casevalue: expression
         
         // Function
