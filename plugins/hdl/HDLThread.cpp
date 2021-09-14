@@ -36,20 +36,23 @@ namespace systemc_hdl {
       // scfg.build_sccfg( method );
       scfg.generate_paths();
       scfg.dump();
+      LLVM_DEBUG(scfg.dumpToDot());
+	
 
       const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock> &paths_found{ scfg.getPathsFound()};
-      llvm::dbgs() << "Dump sc cfg from hdlthread\n";
+      LLVM_DEBUG(llvm::dbgs() << "Dump sc cfg from hdlthread\n");
       unsigned int id{0};
       for (auto const& pt: paths_found) {
-	llvm::dbgs() << "S" << id << ": ";
+	LLVM_DEBUG(llvm::dbgs() << "S" << id << ": ");
 	for (auto const& block : pt) {
-	  llvm::dbgs() << block->getBlockID() << "  ";
+	  LLVM_DEBUG(llvm::dbgs() << block->getBlockID() << "  ");
 	}
-	llvm::dbgs() << "\n";
+	LLVM_DEBUG(llvm::dbgs() << "\n");
 	++id;
       }
       int state_num = 0;
       for (auto const& pt: paths_found) {
+
 	hNodep h_switchcase = new hNode(std::to_string(state_num), hNode::hdlopsEnum::hSwitchCase);
 	ProcessSplitGraphBlock(pt[0], state_num, h_switchcase);
 	hthreadblocksp->child_list.push_back(h_switchcase);
@@ -145,10 +148,18 @@ namespace systemc_hdl {
       }
     }
     // // mark subexpressions coming from terminator statement
-    if (const Stmt *S = (B->getCFGBlock())->getTerminatorStmt()) {
-       for (const Stmt *K : S->children())
+    if ((B->getCFGBlock())->getTerminator().isValid()) {
+      const Stmt *S = (B->getCFGBlock())->getTerminatorStmt();
+      for (const Stmt *K : S->children()) {
      	MarkStatements(K, Map);
-     }
+      }
+      //if (auto S1 = dyn_cast<WhileStmt>(S) 
+      // if (Map.find(S) == Map.end()) {
+      // 	  SS.push_back(S);
+      // }
+      LLVM_DEBUG(llvm::dbgs() << "Stmt contains terminator\n");
+      //LLVM_DEBUG(S->dump(llvm::dbgs(), ast_context_));
+    }
     
     // Any expressions not in Map are top level statements.
     for (auto I : B->getElements()) {
@@ -162,42 +173,92 @@ namespace systemc_hdl {
     }
   }
   
-  // BFS traversal so all local decls are seen before being referenced
-  
-  void HDLThread::AddThreadMethod(const CFGBlock &BI) {
-    std::vector<const CFGBlock *> succlist, nextsucclist;
-    ProcessBB(BI);
-    //Visited[BI.getBlockID()] = true;
-    for (const auto &succ : BI.succs() ) { // gather successors
-      const CFGBlock *SuccBlk = succ.getReachableBlock();
-      if (SuccBlk!=NULL) succlist.push_back(SuccBlk);
+  void HDLThread::ProcessTerminator(const Stmt * S, string &block_id, const SplitCFGBlock::VectorSplitCFGBlockPtrImpl& succlist, hNodep h_switchcase) {
+    LLVM_DEBUG(llvm::dbgs() << "ProcessTerminator block_id is " << block_id << " num successors is " << succlist.size() << "\n");
+    llvm::SmallVector<int> succstate;
+    for (auto succ : succlist) {
+      succstate.push_back(succ->getNextState());
     }
-    bool changed;
-    do {
-      changed = false;
-      for (const CFGBlock *si: succlist) { //process BB of successors at this level
-	if (Visited.find(si->getBlockID()) == Visited.end()) {
-	  Visited[si->getBlockID()] = true;
-	  LLVM_DEBUG(llvm::dbgs() << "Visiting Block " << si->getBlockID() << "\n");
-	  ProcessBB(*si);
-	  changed = true;
-	  for (auto sii: si->succs()) {
-	    const CFGBlock *SuccBlk = sii.getReachableBlock();
-	    if (SuccBlk!=NULL) nextsucclist.push_back(SuccBlk); // gather successors at next level
-	  }
-	}
+    hNodep htmp = new hNode(hNode::hdlopsEnum::hIfStmt);
+
+    const Expr *E;
+    if (const WhileStmt *S1 = dyn_cast<WhileStmt> (S)) {
+      LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << block_id << " is a while stmt\n");
+      E = S1->getCond();
       }
-      succlist = nextsucclist;
+    else if (const ForStmt *S1 = dyn_cast<ForStmt> (S)) {
+      LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << block_id << " is a for stmt\n");
+      E = S1->getCond();
     }
-    while (changed);
+    else if (const IfStmt *S1 = dyn_cast<IfStmt> (S)) {
+      LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << block_id << " is an if stmt\n");
+      E = S1->getCond();
+    }
+    else {
+      LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << block_id << " is not handled\n");
+      return;
+    }
+
+    // hdlbody on cond
+    xtbodyp->Run((Stmt *)E, htmp, rthread);
+    // generate successors; assuming at most 2
+    for (auto succ : succstate) {
+      hNodep hnxtstate = new hNode(hNode::hdlopsEnum::hVarAssign);
+      hnxtstate->child_list.push_back(new hNode("NextState", hNode::hdlopsEnum::hVarref));
+      hnxtstate->child_list.push_back(new hNode(std::to_string(succ), hNode::hdlopsEnum::hLiteral));
+      htmp->child_list.push_back(hnxtstate);
+    }
+    h_switchcase->child_list.push_back(htmp);
   }
 
+  
   void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase) {
     bool iswait = false;
+    string blkid = "S" + std::to_string(state_num) + "_" + std::to_string(sgb->getBlockID());
+
+    if (Visited.find(blkid) == Visited.end()) {
+	  Visited[blkid] = true;
+    }
+    else return; // already visited this block
+    
     if (sgb != NULL) {
+      LLVM_DEBUG(llvm::dbgs() << "Split Graph num ele, blockid are " << sgb->getNumOfElements() << " " << blkid << "\n");
+
+      if ((sgb->getCFGBlock())->getTerminator().isValid()) {
+	hNodep hcondstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
+	auto spgsucc = sgb->getSuccessors();
+	const Stmt * S = sgb->getCFGBlock()->getTerminatorStmt();
+
+	if (const WhileStmt *S1 = dyn_cast<WhileStmt> (S)) {
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " <<blkid << " is a while stmt\n");
+	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
+	}
+	else if (const ForStmt *S1 = dyn_cast<ForStmt> (S)) {
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is a for stmt\n");
+	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
+	}
+	else if (const IfStmt *S1 = dyn_cast<IfStmt> (S)) {
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is an if stmt\n");
+	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
+	}
+	else {
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is not handled\n");
+	}
+
+	// for each successor need to make a compound statement
+
+	for (auto succ: spgsucc) {
+	  hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
+	  ProcessSplitGraphBlock(succ, state_num, hcstmt);
+	  hcondstmt->child_list.push_back(hcstmt);
+	  
+	}
+	h_switchcase->child_list.push_back(hcondstmt);
+	return;
+      }
+
       if (sgb->getNumOfElements() > 0) {
-	string blkid = "S" + std::to_string(state_num) + "_" + std::to_string(sgb->getBlockID());
-	LLVM_DEBUG(llvm::dbgs() << "Split Graph num ele, blockid are " << sgb->getNumOfElements() << " " << blkid << "\n");
+	
 	// from http://clang-developers.42468.n3.nabble.com/Visiting-statements-of-a-CFG-one-time-td4069440.html#a4069447
 	// had to add recursive traversal of AST node children
 	std::vector<const Stmt *> SS;
@@ -227,14 +288,53 @@ namespace systemc_hdl {
 	  //hthreadblocksp->child_list.push_back(h_switchcase);
 	}
 	
-	//}
- 
-      if (!iswait)  {
+    
+      // if ((sgb->getCFGBlock())->getTerminator().isValid()) {
+      // 	ProcessTerminator(sgb->getCFGBlock()->getTerminatorStmt(), blkid, sgb->getSuccessors(), h_switchcase);
+      // }
+	
+      if (iswait)  {
+	// hNodep hnxtstate = new hNode(hNode::hdlopsEnum::hVarAssign);
+	// hnxtstate->child_list.push_back(new hNode("NextState", hNode::hdlopsEnum::hVarref));
+	// hnxtstate->child_list.push_back(new hNode(std::to_string(sgb->getNextState()), hNode::hdlopsEnum::hLiteral));
+	// h_switchcase->child_list.push_back(hnxtstate);
+      }
+      else {
 	for (auto spgsucc : sgb->getSuccessors()) {
 	  ProcessSplitGraphBlock(spgsucc, state_num, h_switchcase);
 	}
       }
     }
+  }
+
+    // BFS traversal so all local decls are seen before being referenced
+  
+  void HDLThread::AddThreadMethod(const CFGBlock &BI) {
+    std::vector<const CFGBlock *> succlist, nextsucclist;
+    ProcessBB(BI);
+    //Visited[BI.getBlockID()] = true;
+    for (const auto &succ : BI.succs() ) { // gather successors
+      const CFGBlock *SuccBlk = succ.getReachableBlock();
+      if (SuccBlk!=NULL) succlist.push_back(SuccBlk);
+    }
+    bool changed;
+    do {
+      changed = false;
+      for (const CFGBlock *si: succlist) { //process BB of successors at this level
+	if (Visited.find(std::to_string(si->getBlockID())) == Visited.end()) {
+	  Visited[std::to_string(si->getBlockID())] = true;
+	  LLVM_DEBUG(llvm::dbgs() << "Visiting Block " << si->getBlockID() << "\n");
+	  ProcessBB(*si);
+	  changed = true;
+	  for (auto sii: si->succs()) {
+	    const CFGBlock *SuccBlk = sii.getReachableBlock();
+	    if (SuccBlk!=NULL) nextsucclist.push_back(SuccBlk); // gather successors at next level
+	  }
+	}
+      }
+      succlist = nextsucclist;
+    }
+    while (changed);
   }
 
   void HDLThread::ProcessBB(const CFGBlock &BI) {

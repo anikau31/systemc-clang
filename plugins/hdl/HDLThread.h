@@ -44,7 +44,7 @@ namespace systemc_hdl {
 
     HDLBody *xtbodyp;
     
-    std::unordered_map<int, bool> Visited; // Blocks visisted to gen Method
+    std::unordered_map<std::string, bool> Visited; // Blocks visited 
 
 
     // pre-pass over BB to mark subexpressions
@@ -54,6 +54,7 @@ namespace systemc_hdl {
     void CheckVardecls(hNodep &hp);
     void AddThreadMethod(const CFGBlock &BI);
     void ProcessBB(const CFGBlock &BI);
+    void ProcessTerminator(const Stmt * S, string &block_id, const SplitCFGBlock::VectorSplitCFGBlockPtrImpl& succlist, hNodep h_switchcase);
     void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase);
     
     bool is_wait_stmt(hNodep hp);
