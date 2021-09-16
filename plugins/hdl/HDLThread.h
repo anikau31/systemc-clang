@@ -38,34 +38,34 @@ namespace systemc_hdl {
     hNodep hthreadblocksp; // collect the case alternatives here
     hNodep hlocalvarsp; // collect the local vars here
 
-    hdecl_name_map_t vname_map;
+    hdecl_name_map_t thread_vname_map;
     bool add_info;
-    hdecl_name_map_t &mod_vname_map_;
+    hdecl_name_map_t &mod_vname_map_; // reference to module level names
 
     HDLBody *xtbodyp;
-    
-    std::unordered_map<std::string, bool> Visited; // Blocks visited 
 
+    
+    std::unordered_map<std::string, bool> SGVisited; // Split Graph Blocks visited 
+    std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited 
 
     // pre-pass over BB to mark subexpressions
     void FindStatements(const CFGBlock &B, std::vector<const Stmt *> &SS);
     void FindStatements(const SplitCFGBlock *B, std::vector<const Stmt *> &SS);
     void MarkStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map);
-    void CheckVardecls(hNodep &hp);
-    void AddThreadMethod(const CFGBlock &BI);
-    void ProcessBB(const CFGBlock &BI);
-    void ProcessTerminator(const Stmt * S, string &block_id, const SplitCFGBlock::VectorSplitCFGBlockPtrImpl& succlist, hNodep h_switchcase);
+    void CheckVardecls(hNodep &hp, unsigned int cfgblockid);
+    void ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp);
     void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase);
-    
-    bool is_wait_stmt(hNodep hp);
 
-    bool is_vardecl(hNodep hp);
+    bool IsWaitStmt(hNodep hp);
 
-    
     util lutil;
 
     const clang::ASTContext& ast_context_;
 
+    // these functions are no longer used
+    void ProcessBB(const CFGBlock &BI);
+    void AddThreadMethod(const CFGBlock &BI);
+	
   };
 
 }

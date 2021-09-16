@@ -26,7 +26,9 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLThread constructor (thread body)\n");
       h_ret = NULL;
 
-      xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
+      thread_vname_map.insertall(mod_vname_map_);
+      //xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
+      xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map);
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
       
@@ -77,26 +79,51 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "[[ Destructor HDLThread ]]\n");
   }
 
-  bool HDLThread::is_wait_stmt(hNodep hp) {
+  bool HDLThread::IsWaitStmt(hNodep hp) {
     return ((hp->child_list.size() >=1) and ((hp->child_list.back())->getopc() == hNode::hdlopsEnum::hWait));
   }
 
-  void HDLThread::CheckVardecls(hNodep &hp) {
+  void HDLThread::CheckVardecls(hNodep &hp, unsigned int cfgblockid) {
     int varcnt = 0;
     for (auto oneop : hp->child_list) {
       if ((oneop->getopc() == hNode::hdlopsEnum::hVardecl) || (oneop->getopc() == hNode::hdlopsEnum::hSigdecl)) {
-	LLVM_DEBUG(llvm::dbgs() << "Detected vardecl\n");
-	hlocalvarsp->child_list.push_back(oneop);
+	LLVM_DEBUG(llvm::dbgs() << "Detected vardecl for CFG Block ID " << cfgblockid << "\n");
+	if (CFGVisited[cfgblockid]==1) hlocalvarsp->child_list.push_back(oneop);
 	varcnt += 1;
       }
       else break; // all vardecls are first in the list of ops
     }
     if (varcnt >=1) {
       hp->child_list.erase(hp->child_list.begin(), hp->child_list.begin()+varcnt);
-      mod_vname_map_.insertall(xtbodyp->vname_map);
+      if (CFGVisited[cfgblockid]==1) thread_vname_map.insertall(xtbodyp->vname_map);
     }
   }
 
+  void HDLThread::ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp) {
+    //!
+    //! called when a CFG declstmt is instantiated more than once
+    //! can skip the decl, but need to process initializer
+    //!
+    
+    // adapted from ProcessVarDecl in HDLBody.cpp
+    for (auto *DI : declstmt->decls()) {
+      if (DI) {
+	auto *vardecl = dyn_cast<VarDecl>(DI);
+	if (!vardecl) continue;
+	if ( Expr *declinit = vardecl->getInit()) {
+	   Stmt * cdeclinit = declinit;
+	  //  need to generated initializer code
+	  //xtbodyp->Run(const_cast<Stmt *>((const Stmt *)declinit), hinitcode, rthread);
+	  hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
+	  varinitp->child_list.push_back(new hNode(thread_vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref));
+	  xtbodyp->Run(cdeclinit, varinitp, rthread);
+	  htmp->child_list.push_back(varinitp);
+	  
+	}
+      }
+    }
+  }
+	  
   void HDLThread::MarkStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map) {
     if (S != NULL) {
       Map[S] = true;
@@ -104,7 +131,8 @@ namespace systemc_hdl {
 	MarkStatements(K, Map);
     }
   }
-  
+
+  // this version is no longer being used
   void HDLThread::FindStatements(const CFGBlock &B, std::vector<const Stmt *> &SS) {
     llvm::SmallDenseMap<const Stmt*, bool> Map;
 
@@ -173,55 +201,18 @@ namespace systemc_hdl {
     }
   }
   
-  void HDLThread::ProcessTerminator(const Stmt * S, string &block_id, const SplitCFGBlock::VectorSplitCFGBlockPtrImpl& succlist, hNodep h_switchcase) {
-    LLVM_DEBUG(llvm::dbgs() << "ProcessTerminator block_id is " << block_id << " num successors is " << succlist.size() << "\n");
-    llvm::SmallVector<int> succstate;
-    for (auto succ : succlist) {
-      succstate.push_back(succ->getNextState());
-    }
-    hNodep htmp = new hNode(hNode::hdlopsEnum::hIfStmt);
-
-    const Expr *E;
-    if (const WhileStmt *S1 = dyn_cast<WhileStmt> (S)) {
-      LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << block_id << " is a while stmt\n");
-      E = S1->getCond();
-      }
-    else if (const ForStmt *S1 = dyn_cast<ForStmt> (S)) {
-      LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << block_id << " is a for stmt\n");
-      E = S1->getCond();
-    }
-    else if (const IfStmt *S1 = dyn_cast<IfStmt> (S)) {
-      LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << block_id << " is an if stmt\n");
-      E = S1->getCond();
-    }
-    else {
-      LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << block_id << " is not handled\n");
-      return;
-    }
-
-    // hdlbody on cond
-    xtbodyp->Run((Stmt *)E, htmp, rthread);
-    // generate successors; assuming at most 2
-    for (auto succ : succstate) {
-      hNodep hnxtstate = new hNode(hNode::hdlopsEnum::hVarAssign);
-      hnxtstate->child_list.push_back(new hNode("NextState", hNode::hdlopsEnum::hVarref));
-      hnxtstate->child_list.push_back(new hNode(std::to_string(succ), hNode::hdlopsEnum::hLiteral));
-      htmp->child_list.push_back(hnxtstate);
-    }
-    h_switchcase->child_list.push_back(htmp);
-  }
-
-  
   void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase) {
     bool iswait = false;
-    string blkid = "S" + std::to_string(state_num) + "_" + std::to_string(sgb->getBlockID());
 
-    if (Visited.find(blkid) == Visited.end()) {
-	  Visited[blkid] = true;
-    }
-    else return; // already visited this block
-    
     if (sgb != NULL) {
+      string blkid = "S" + std::to_string(state_num) + "_" + std::to_string(sgb->getBlockID());
+
+      if (SGVisited.find(blkid) == SGVisited.end()) {
+	SGVisited[blkid] = true;
+	CFGVisited[(sgb->getCFGBlock())->getBlockID()]+= 1;
+      }
+      else return; // already visited this block
+      
       LLVM_DEBUG(llvm::dbgs() << "Split Graph num ele, blockid are " << sgb->getNumOfElements() << " " << blkid << "\n");
 
       if ((sgb->getCFGBlock())->getTerminator().isValid()) {
@@ -268,38 +259,39 @@ namespace systemc_hdl {
 	//if (auto SE = E->getAs<CFGStmt>()) {
 	for (auto S : SS) {
 	  //const Stmt *S = SE->getStmt();
-	    if (sgb->hasWait()) iswait = true;
-	    LLVM_DEBUG(llvm::dbgs() << "Split Graph Stmt follows\n");
-	    LLVM_DEBUG(S->dump(llvm::dbgs(), ast_context_));
-	    //generate hcode for this statement, 
-	    //HDLBody xmethod(const_cast<Stmt *>(stmt), h_body, diag_e, ast_context_, mod_vname_map_, false);
-	    xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread);
-	    CheckVardecls(htmp);
-	     if (is_wait_stmt(htmp)) {
-	       htmp->child_list.back()->set(std::to_string(sgb->getNextState()));
-	     }
-	    if (htmp->child_list.size() >0) 
-	      h_switchcase->child_list.insert(h_switchcase->child_list.end(), htmp->child_list.begin(), htmp->child_list.end());
-	    
-	    htmp->child_list.clear();
-	    
-	    methodecls.insertall(xtbodyp->methodecls);
+	  if (sgb->hasWait()) iswait = true;
+	  LLVM_DEBUG(llvm::dbgs() << "Split Graph Stmt follows\n");
+	  LLVM_DEBUG(S->dump(llvm::dbgs(), ast_context_));
+	  
+	  htmp->child_list.clear();
+
+	  // Check if this CFG block has already been generated
+	  // if so, skip the var decls. they were done on the
+	  // first instantiation
+	  // However, still need to generate code for their initializers
+	  const DeclStmt *declstmt = dyn_cast<DeclStmt>(S);
+	  if ((declstmt!=NULL) &&  (CFGVisited[(sgb->getCFGBlock()->getBlockID()) > 1]))
+	    ProcessDeclStmt(declstmt, htmp);
+	  else xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread); // no initializer, so normal
+
+	  LLVM_DEBUG(llvm::dbgs() << "after Run, htmp follows\n");
+	  htmp->dumphcode();
+	  CheckVardecls(htmp, (sgb->getCFGBlock())->getBlockID());
+	  if (IsWaitStmt(htmp)) {
+	    htmp->child_list.back()->set(std::to_string(sgb->getNextState()));
 	  }
-	  //hthreadblocksp->child_list.push_back(h_switchcase);
+	  if (htmp->child_list.size() >0) 
+	    h_switchcase->child_list.insert(h_switchcase->child_list.end(), htmp->child_list.begin(), htmp->child_list.end());
+	    
+	  //htmp->child_list.clear();
+	    
+	  methodecls.insertall(xtbodyp->methodecls);
 	}
-	
-    
-      // if ((sgb->getCFGBlock())->getTerminator().isValid()) {
-      // 	ProcessTerminator(sgb->getCFGBlock()->getTerminatorStmt(), blkid, sgb->getSuccessors(), h_switchcase);
-      // }
-	
-      if (iswait)  {
-	// hNodep hnxtstate = new hNode(hNode::hdlopsEnum::hVarAssign);
-	// hnxtstate->child_list.push_back(new hNode("NextState", hNode::hdlopsEnum::hVarref));
-	// hnxtstate->child_list.push_back(new hNode(std::to_string(sgb->getNextState()), hNode::hdlopsEnum::hLiteral));
-	// h_switchcase->child_list.push_back(hnxtstate);
+	//hthreadblocksp->child_list.push_back(h_switchcase);
       }
-      else {
+	
+	
+      if (!iswait)  {
 	for (auto spgsucc : sgb->getSuccessors()) {
 	  ProcessSplitGraphBlock(spgsucc, state_num, h_switchcase);
 	}
@@ -307,12 +299,13 @@ namespace systemc_hdl {
     }
   }
 
+  // Code below this line is obsolete
     // BFS traversal so all local decls are seen before being referenced
   
   void HDLThread::AddThreadMethod(const CFGBlock &BI) {
     std::vector<const CFGBlock *> succlist, nextsucclist;
     ProcessBB(BI);
-    //Visited[BI.getBlockID()] = true;
+    //CFGVisited[BI.getBlockID()]+=1;
     for (const auto &succ : BI.succs() ) { // gather successors
       const CFGBlock *SuccBlk = succ.getReachableBlock();
       if (SuccBlk!=NULL) succlist.push_back(SuccBlk);
@@ -321,8 +314,8 @@ namespace systemc_hdl {
     do {
       changed = false;
       for (const CFGBlock *si: succlist) { //process BB of successors at this level
-	if (Visited.find(std::to_string(si->getBlockID())) == Visited.end()) {
-	  Visited[std::to_string(si->getBlockID())] = true;
+	if (CFGVisited.find(si->getBlockID()) == CFGVisited.end()) {
+	  CFGVisited[si->getBlockID()]+= 1;
 	  LLVM_DEBUG(llvm::dbgs() << "Visiting Block " << si->getBlockID() << "\n");
 	  ProcessBB(*si);
 	  changed = true;
@@ -353,7 +346,7 @@ namespace systemc_hdl {
 	//generate hcode for this statement, 
 	//HDLBody xmethod(const_cast<Stmt *>(stmt), h_body, diag_e, ast_context_, mod_vname_map_, false);
 	xtbodyp->Run(const_cast<Stmt *>(stmt), htmp, rthread);
-	CheckVardecls(htmp);
+	CheckVardecls(htmp, BI.getBlockID());
 	if (htmp->child_list.size() >0)
 	  h_body->child_list.insert(h_body->child_list.end(), htmp->child_list.begin(), htmp->child_list.end());
 	
