@@ -511,10 +511,11 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "thread " << efc->getName() << "\n");
 	  CXXMethodDecl *emd = efc->getEntryMethod();
 	  if (emd->hasBody()) {
-	    hNodep h_body = new hNode(efc->getName(), hNode::hdlopsEnum::hThread);
-	    HDLThread xthread(emd, h_body, main_diag_engine, getContext(), mod_vname_map);
+	    //hNodep h_body = new hNode(efc->getName(), hNode::hdlopsEnum::hThread);
+	    //HDLThread xthread(emd, h_body, main_diag_engine, getContext(), mod_vname_map);
+	    HDLThread xthread(emd, h_thread, main_diag_engine, getContext(), mod_vname_map);
 	    allmethodecls.insertall(xthread.methodecls);
-	    h_thread->child_list.push_back(h_body);
+	    //h_thread->child_list.push_back(h_body);
 	    h_top->child_list.push_back(h_thread);
 	  } else {
 	  LLVM_DEBUG(llvm::dbgs() << "Entry Thread is null\n");

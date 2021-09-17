@@ -133,7 +133,7 @@ namespace hnode {
       }
     }
 
-    void set( hdlopsEnum h, string s = "") {
+    void set(hdlopsEnum h, string s = "") {
       h_op = h;
       h_name = s;
     }

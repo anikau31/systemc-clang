@@ -44,7 +44,10 @@ namespace systemc_hdl {
     
     HDLBody *xtbodyp;
 
-    const string thisstate_string = "_scclang_state_";
+    string thisstate_string = "_scclang_state_";
+    string nextstate_string = "_scclang_next_state_";
+    
+    llvm::SmallDenseMap<int, int> waitctr; // (state number, wait counts)
     
     std::unordered_map<std::string, bool> SGVisited; // Split Graph Blocks visited 
     std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited 
@@ -56,8 +59,10 @@ namespace systemc_hdl {
     void CheckVardecls(hNodep &hp, unsigned int cfgblockid);
     void ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp);
     void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase);
-
+    void GenerateStateUpdate(hNodep hstatemethod);
+    void GenerateStateVar(string sname);
     bool IsWaitStmt(hNodep hp);
+    void ProcessHWait(hNodep &hw, int nxtstate); // rewrite the hWait into next state update
 
     util lutil;
 
