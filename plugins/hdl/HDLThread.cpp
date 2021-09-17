@@ -23,18 +23,20 @@ namespace systemc_hdl {
   HDLThread::HDLThread(CXXMethodDecl *emd, hNodep &h_top,
 		       clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map )
     : h_top_{h_top}, diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map} {
-      LLVM_DEBUG(llvm::dbgs() << "Entering HDLThread constructor (thread body)\n");
-      h_ret = NULL;
 
+      LLVM_DEBUG(llvm::dbgs() << "Entering HDLThread constructor (thread body)\n");
+      
+      h_ret = NULL;
+      needwaitswitchcase = false;
       thread_vname_map.insertall(mod_vname_map_);
       //xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
       xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map);
       hNodep hthreadall = new hNode(h_top->getname(), hNode::hdlopsEnum::hMethod);
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
-      hthreadblocksp->child_list.push_back(new hNode(thisstate_string, hNode::hdlopsEnum::hVarref));
+      hthreadblocksp->append(new hNode(thisstate_string, hNode::hdlopsEnum::hVarref));
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
       hNodep hthreadblockcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-      hthreadblocksp->child_list.push_back(hthreadblockcstmt);
+      hthreadblocksp->append(hthreadblockcstmt);
       // build SC CFG
 
       SplitCFG scfg{const_cast<ASTContext &>(ast_context_), emd};
@@ -45,20 +47,26 @@ namespace systemc_hdl {
       GenerateStateUpdate(hstatemethod);
       GenerateStateVar(thisstate_string);
       GenerateStateVar(nextstate_string);
-      for (auto const &[wstatenum, wctr] : waitctr) {
-	GenerateStateVar(std::to_string(wstatenum));
-      }
+      GenerateStateVar(nextwaitstate_string);
+      GenerateStateVar(waitctr_string);
       
       const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock> &paths_found{ scfg.getPathsFound()};
-      
+      numstates = paths_found.size();
       int state_num = 0;
       for (auto const& pt: paths_found) {
 
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
-	h_switchcase->child_list.push_back(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
+	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
 	ProcessSplitGraphBlock(pt[0], state_num, h_switchcase);
-	hthreadblockcstmt->child_list.push_back(h_switchcase);
+	hthreadblockcstmt->append(h_switchcase);
 	state_num++;
+      }
+
+      if (needwaitswitchcase) {
+	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
+	h_switchcase->append(new hNode(std::to_string(numstates), hNode::hdlopsEnum::hLiteral));
+	GenerateWaitCntUpdate(h_switchcase);
+	hthreadblockcstmt->append(h_switchcase);
       }
 
       //std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
@@ -70,11 +78,11 @@ namespace systemc_hdl {
       // 	  ProcessBB(*(block->getCFGBlock()));
       // 	}
       // }
-      h_top->child_list.push_back(hlocalvarsp);
-      hthreadall->child_list.push_back(hthreadblocksp);
-      h_top->child_list.push_back(hstatemethod);
-      h_top->child_list.push_back(hthreadall);
-      //h_top->child_list.push_back(hthreadblocksp);
+      h_top->append(hlocalvarsp);
+      hthreadall->append(hthreadblocksp);
+      h_top->append(hstatemethod);
+      h_top->append(hthreadall);
+      //h_top->append(hthreadblocksp);
       
     }
 
@@ -91,7 +99,7 @@ namespace systemc_hdl {
     for (auto oneop : hp->child_list) {
       if ((oneop->getopc() == hNode::hdlopsEnum::hVardecl) || (oneop->getopc() == hNode::hdlopsEnum::hSigdecl)) {
 	LLVM_DEBUG(llvm::dbgs() << "Detected vardecl for CFG Block ID " << cfgblockid << "\n");
-	if (CFGVisited[cfgblockid]==1) hlocalvarsp->child_list.push_back(oneop);
+	if (CFGVisited[cfgblockid]==1) hlocalvarsp->append(oneop);
 	varcnt += 1;
       }
       else break; // all vardecls are first in the list of ops
@@ -118,9 +126,9 @@ namespace systemc_hdl {
 	  //  need to generated initializer code
 	  //xtbodyp->Run(const_cast<Stmt *>((const Stmt *)declinit), hinitcode, rthread);
 	  hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
-	  varinitp->child_list.push_back(new hNode(thread_vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref));
+	  varinitp->append(new hNode(thread_vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref));
 	  xtbodyp->Run(cdeclinit, varinitp, rthread);
-	  htmp->child_list.push_back(varinitp);
+	  htmp->append(varinitp);
 	  
 	}
       }
@@ -244,10 +252,10 @@ namespace systemc_hdl {
 	for (auto succ: spgsucc) {
 	  hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
 	  ProcessSplitGraphBlock(succ, state_num, hcstmt);
-	  hcondstmt->child_list.push_back(hcstmt);
+	  hcondstmt->append(hcstmt);
 	  
 	}
-	h_switchcase->child_list.push_back(hcondstmt);
+	h_switchcase->append(hcondstmt);
 	return;
       }
 
@@ -281,7 +289,7 @@ namespace systemc_hdl {
 	  htmp->dumphcode();
 	  CheckVardecls(htmp, (sgb->getCFGBlock())->getBlockID());
 	  if (IsWaitStmt(htmp)) {
-	    ProcessHWait(htmp->child_list.back(), sgb->getNextState());
+	    ProcessHWait(htmp, sgb->getNextState());
 	    //htmp->child_list.back()->set(std::to_string(sgb->getNextState()));
 	  }
 	  if (htmp->child_list.size() >0) 
@@ -291,7 +299,7 @@ namespace systemc_hdl {
 	    
 	  methodecls.insertall(xtbodyp->methodecls);
 	}
-	//hthreadblocksp->child_list.push_back(h_switchcase);
+	//hthreadblocksp->append(h_switchcase);
       }
 	
 	
@@ -303,26 +311,67 @@ namespace systemc_hdl {
     }
   }
 
-  void HDLThread::ProcessHWait(hNodep &hw, int nxtstate) {
+  void HDLThread::ProcessHWait(hNodep htmp, int nxtstate) {
+    hNodep hw = htmp->child_list.back(); // the wait instruction
     if (hw->child_list.size() == 0) {
       hw->set(hNode::hdlopsEnum::hBinop, "=");
-      hw->child_list.push_back(new hNode(nextstate_string, hNode::hdlopsEnum::hVarref));
-      hw->child_list.push_back(new hNode(std::to_string(nxtstate), hNode::hdlopsEnum::hLiteral));
+      hw->append(new hNode(nextstate_string, hNode::hdlopsEnum::hVarref));
+      hw->append(new hNode(std::to_string(nxtstate), hNode::hdlopsEnum::hLiteral));
     }
+    else {
+      needwaitswitchcase = true;
+      // generate waitcounter = wait arg; nextwaitstate = nxtstate; nextstate = waitstate (which is numstates)
+      hNodep hnewinstr = hw->child_list.back();
+      string waitarg = hnewinstr->getname();
+      // wait counter = wait arg
+      hw->set( hNode::hdlopsEnum::hBinop, "=");
+      hnewinstr->set(hNode::hdlopsEnum::hVarref, waitctr_string);
+      hw->append(new hNode(waitarg, hNode::hdlopsEnum::hLiteral));
+      // nextwaitstate = nextstate
+      hw = new hNode("=", hNode::hdlopsEnum::hBinop);
+      hw->append(new hNode(nextwaitstate_string, hNode::hdlopsEnum::hVarref));
+      hw->append(new hNode(nextstate_string, hNode::hdlopsEnum::hVarref));
+      htmp->append(hw);
+      // nextstate = waitstate
+      hw = new hNode("=", hNode::hdlopsEnum::hBinop);
+      hw->append(new hNode(nextstate_string, hNode::hdlopsEnum::hVarref));
+      hw->append(new hNode(std::to_string(numstates), hNode::hdlopsEnum::hLiteral));
+      htmp->append(hw);
+    }
+  }
+
+  void HDLThread::GenerateWaitCntUpdate(hNodep h_switchcase) {
+    // wait ctr -=1
+    hNodep hw = new hNode("--", hNode::hdlopsEnum::hPostfix);
+    hw->append(new hNode(waitctr_string, hNode::hdlopsEnum::hVarref));
+    h_switchcase->append(hw);
+    // if (wait ctr == 0) nextstate = nextwaitstate
+    hw =  new hNode(hNode::hdlopsEnum::hIfStmt);
+    hNodep htmp = new hNode("==", hNode::hdlopsEnum::hBinop);
+    htmp->append(new hNode(waitctr_string, hNode::hdlopsEnum::hVarref));
+    htmp->append(new hNode("0", hNode::hdlopsEnum::hLiteral));
+    hw->append(htmp);
+    // then clause
+    htmp = new hNode("=", hNode::hdlopsEnum::hBinop);
+    htmp->append(new hNode(nextstate_string, hNode::hdlopsEnum::hVarref));
+    htmp->append(new hNode(nextwaitstate_string, hNode::hdlopsEnum::hVarref));
+    hw->append(htmp);
+    h_switchcase->append(hw);
+    
   }
   
   void HDLThread::GenerateStateUpdate(hNodep hstatemethod){
     hNodep hifblock = new hNode(hNode::hdlopsEnum::hIfStmt);
-    hifblock->child_list.push_back(new hNode("reset", hNode::hdlopsEnum::hVarref));
+    hifblock->append(new hNode("reset", hNode::hdlopsEnum::hVarref));
     hNodep hthenpart = new hNode("=", hNode::hdlopsEnum::hBinop);
-    hthenpart->child_list.push_back(new hNode(thisstate_string, hNode::hdlopsEnum::hVarref));
-    hthenpart->child_list.push_back(new hNode("0", hNode::hdlopsEnum::hLiteral));
-    hifblock->child_list.push_back(hthenpart);
+    hthenpart->append(new hNode(thisstate_string, hNode::hdlopsEnum::hVarref));
+    hthenpart->append(new hNode("0", hNode::hdlopsEnum::hLiteral));
+    hifblock->append(hthenpart);
     hNodep helsepart = new hNode("=", hNode::hdlopsEnum::hBinop);
-    helsepart->child_list.push_back(new hNode(thisstate_string, hNode::hdlopsEnum::hVarref));
-    helsepart->child_list.push_back(new hNode(nextstate_string, hNode::hdlopsEnum::hVarref));
-    hifblock->child_list.push_back(helsepart);
-    hstatemethod->child_list.push_back(hifblock);
+    helsepart->append(new hNode(thisstate_string, hNode::hdlopsEnum::hVarref));
+    helsepart->append(new hNode(nextstate_string, hNode::hdlopsEnum::hVarref));
+    hifblock->append(helsepart);
+    hstatemethod->append(hifblock);
   }
 
   void HDLThread::GenerateStateVar(string sname) {
@@ -330,13 +379,13 @@ namespace systemc_hdl {
     
     hNodep hsigp = new hNode(sname, hNode::hdlopsEnum::hVardecl); 
     hNodep htypeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-    htypeinfo->child_list.push_back(new hNode("int", hNode::hdlopsEnum::hType));
-    hsigp->child_list.push_back(htypeinfo);
-    hlocalvarsp->child_list.push_back(hsigp);
+    htypeinfo->append(new hNode("int", hNode::hdlopsEnum::hType));
+    hsigp->append(htypeinfo);
+    hlocalvarsp->append(hsigp);
   }
     
   // Code below this line is obsolete
-    // BFS traversal so all local decls are seen before being referenced
+  // BFS traversal so all local decls are seen before being referenced
   
   void HDLThread::AddThreadMethod(const CFGBlock &BI) {
     std::vector<const CFGBlock *> succlist, nextsucclist;
@@ -390,7 +439,7 @@ namespace systemc_hdl {
 	
 	methodecls.insertall(xtbodyp->methodecls);
       }
-      hthreadblocksp->child_list.push_back(h_body);
+      hthreadblocksp->append(h_body);
     }
   }
 

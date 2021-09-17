@@ -141,6 +141,10 @@ namespace hnode {
     void set(string s = "") {
       h_name = s;
     }
+
+    void append(hNodep hnew) {
+      child_list.push_back(hnew);
+    }
     
     string printopc(hdlopsEnum opc) {
       return hdlop_pn[static_cast<int>(opc)];
