@@ -79,6 +79,9 @@ namespace systemc_hdl {
     
     bool add_info; // variation in some hcode generated for modinit body
 
+
+    const string nextstate_string = "_scclang_nextstate_";
+    
     HDLBodyMode thismode;
     
     bool isLogicalOp(clang::OverloadedOperatorKind opc);

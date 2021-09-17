@@ -30,8 +30,11 @@ namespace systemc_hdl {
       //xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
       xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map);
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
+      hthreadblocksp->child_list.push_back(new hNode(thisstate_string, hNode::hdlopsEnum::hVarref));
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
-      
+
+      hNodep hthreadblockcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
+      hthreadblocksp->child_list.push_back(hthreadblockcstmt);
       // build SC CFG
       SplitCFG scfg{const_cast<ASTContext &>(ast_context_), emd};
       //scfg.split_wait_blocks(emd);
@@ -55,9 +58,10 @@ namespace systemc_hdl {
       int state_num = 0;
       for (auto const& pt: paths_found) {
 
-	hNodep h_switchcase = new hNode(std::to_string(state_num), hNode::hdlopsEnum::hSwitchCase);
+	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
+	h_switchcase->child_list.push_back(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
 	ProcessSplitGraphBlock(pt[0], state_num, h_switchcase);
-	hthreadblocksp->child_list.push_back(h_switchcase);
+	hthreadblockcstmt->child_list.push_back(h_switchcase);
 	state_num++;
       }
       

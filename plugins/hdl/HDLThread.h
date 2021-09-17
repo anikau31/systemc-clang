@@ -41,9 +41,10 @@ namespace systemc_hdl {
     hdecl_name_map_t thread_vname_map;
     bool add_info;
     hdecl_name_map_t &mod_vname_map_; // reference to module level names
-
+    
     HDLBody *xtbodyp;
 
+    const string thisstate_string = "_scclang_state_";
     
     std::unordered_map<std::string, bool> SGVisited; // Split Graph Blocks visited 
     std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited 
