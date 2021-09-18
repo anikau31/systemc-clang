@@ -29,13 +29,15 @@ lark_grammar = Lark('''
         ?hvarinitint: "hVarInit" NUM "NOLIST"
         // can be no process at all in the module
         processlist:  "hProcesses" "NONAME" "[" (hprocess|hfunction|hthread)*"]"
-        threadprocesslist:  "hProcesses" "NONAME" "[" hbasicblock+ "]"
         // could be nothing
         // temporarily ignore the hMethod node
         hprocess: "hProcess" ID  "[" "hMethod" (ID|"NONAME") "[" prevardecl  hcstmt "]" "]"
-        // hthread consists of a list of processes
-        hthread:  "hProcess" ID  "[" "hThread" (ID|"NONAME") "[" modportsiglist  switchstmt "]" "]"
-        hbasicblock: "hMethod" ID  ("[" stmts "]" | "NOLIST")
+        
+        // hthread consists of a synchronous block that sets state and a switch block that produces next state
+        hthread:  "hProcess" ID  "[" modportsiglist hthreadsync hthreadswitch "]"
+        hthreadsync: "hMethod" ID  "[" ifstmt "]"
+        hthreadswitch: "hMethod" ID  "[" switchstmt "]"
+        
         prevardecl: vardecl*
         vardecl: vardeclinit | vardeclrn
 
