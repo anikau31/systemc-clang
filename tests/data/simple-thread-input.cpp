@@ -83,7 +83,7 @@ SC_MODULE(test) {
 
 SC_MODULE(DUT) {
   sc_signal<int> sig1;
-  sc_signal<double> double_sig;
+  sc_signal<sc_int<64>> double_sig;
 
   test test_instance;
 
