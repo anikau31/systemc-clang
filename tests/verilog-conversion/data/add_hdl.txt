@@ -49,9 +49,6 @@
       ]
     ]
     hModinitblock t1 [
-      hCStmt  NONAME [
-        hCStmt  NONAME NOLIST
-      ]
       hSenslist topEntry [
         hSensvar NONAME [
           hVarref clk NOLIST

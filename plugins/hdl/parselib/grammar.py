@@ -74,7 +74,7 @@ lark_grammar = Lark('''
         // first component is the id of the module (in parent?)
         // second component is initialization list              
         // third component is port binding list
-        hmodinitblock: "hModinitblock" ID "[" hcstmt portbindinglist* hsenslist*"]"
+        hmodinitblock: "hModinitblock" ID "[" hcstmt* portbindinglist* hsenslist*"]"
                      | "hModinitblock" ID "NOLIST"
 
         // Port Bindings
@@ -143,7 +143,7 @@ lark_grammar = Lark('''
         !npa : "neg" | "pos" | "always"
 
         // if and if-else, not handling if-elseif case
-        ifstmt: "hIfStmt" "NONAME" "[" expression  stmt stmt?"]"
+        ifstmt: "hIfStmt" "NONAME" "[" expression  stmt? stmt?"]"
 
          
         ?expression: hbinop

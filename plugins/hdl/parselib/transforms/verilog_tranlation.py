@@ -424,7 +424,8 @@ class VerilogTranslationPass(TopDown):
         self.dec_indent()
         ind = self.get_current_ind_prefix()
         res = ind + 'if ({}) begin\n'.format(tree.children[0])
-        res += tree.children[1] + '\n'
+        if len(tree.children) > 1:
+            res += tree.children[1] + '\n'
         res += ind + 'end'
         # print('If Body: ', tree.children[1])
         if len(tree.children) == 3:
