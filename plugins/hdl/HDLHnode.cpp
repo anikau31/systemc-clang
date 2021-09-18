@@ -38,6 +38,8 @@ namespace systemc_hdl {
   }
 
   void HDLConstructorHcode::CleanupInitHcode(hNodep &hp) {
+    for (hNodep hpi :hp->child_list)
+      CleanupInitHcode(hpi); 
     hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [] (hNodep x) {
 	  return (((x->h_op==hNode::hdlopsEnum::hBinop) &&
 		   (x->h_name==pbstring) || (x->h_name==sensop)) ||
@@ -48,11 +50,13 @@ namespace systemc_hdl {
 		  ((x->h_op==hNode::hdlopsEnum::hCStmt) &&
 		   (x->child_list.empty())) ||
 		  (x->h_op==hNode::hdlopsEnum::hVarAssign) ||
+		  ((x->h_op == hNode::hdlopsEnum::hVarref) && (x->h_name == "sensitive")) ||
 		  ((x->h_op==hNode::hdlopsEnum::hMethodCall) && (x->h_name.find(strsccore) !=std::string::npos)) ||
 		  ((x->h_op == hNode::hdlopsEnum::hNoop) &&
 		   (x->h_name==arrsub)));}), hp->child_list.end());
-    for (hNodep hpi :hp->child_list)
-      CleanupInitHcode(hpi);   
+    // for (hNodep hpi :hp->child_list)
+    //   CleanupInitHcode(hpi); 
+    
   }
     
   //!
