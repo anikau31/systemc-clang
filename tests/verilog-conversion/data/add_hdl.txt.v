@@ -4,9 +4,6 @@ module topadd2_sc_module_0 (
   input logic signed[31:0] in_port_2,
   output logic signed[31:0] out_port
 );
-  initial begin
-
-  end
   always @(posedge clk) begin: topEntry
     
     

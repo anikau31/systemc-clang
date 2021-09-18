@@ -143,7 +143,6 @@ class PortExpansion(TopDown):
         else:
             return None, None
 
-
     def modportsiglist(self, tree):
         self.__push_up(tree)
         new_children = []

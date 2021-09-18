@@ -43,6 +43,9 @@ class AliasTranslation(TopDown):
     def haddassign(self, tree):
         return '+'
 
+    def hcompoundasisgn(self, tree):
+        assert False
+
     def hbinop(self, tree):
         """
         Convert a compound assignment into assignment of binary operator
@@ -55,7 +58,7 @@ class AliasTranslation(TopDown):
             new_op = self._get_op_token_from_compound_assign(op)
             # Create a new treenode
             meta = tree.meta
-            binop_node = Tree('hbinop', [new_op] + tree.children, meta)
+            binop_node = Tree('hbinop', [new_op] + tree.children[1:], meta)
             assign = Tree('blkassign', [copy.deepcopy(lhs), binop_node], meta)
             return assign
         return tree

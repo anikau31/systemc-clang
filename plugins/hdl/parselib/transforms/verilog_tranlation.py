@@ -76,6 +76,10 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         return '{}({})'.format(tree.children[0], ','.join(map(str, tree.children[1:])))
 
+    def hwait(self, tree):
+        warnings.warn('hwait encountered, not implemented')
+        return "// hwait"
+
     def blkassign(self, tree):
         # dprint("--------------START----------------")
         current_proc = self.get_current_proc_name()
@@ -251,16 +255,33 @@ class VerilogTranslationPass(TopDown):
                 res = '({}) {} ({})'.format(tree.children[1], op, tree.children[2])
         return res
 
+    def hpostfix(self, tree):
+        self.__push_up(tree)
+        return "{}{}".format(tree.children[1], tree.children[0])
+
+    def hprefix(self, tree):
+        self.__push_up(tree)
+        return "{}{}".format(tree.children[0], tree.children[1])
+
     def hunop(self, tree):
         self.__push_up(tree)
-        # The ++ and -- only shows in loop
-        if tree.children[0] == '++':
-            res = '{} = {} + 1'.format(tree.children[1], tree.children[1])
-        elif tree.children[0] == '--':
-            res = '{} = {} - 1'.format(tree.children[1], tree.children[1])
-        else:
+        if len(tree.children) == 1:
+            return tree.children[0]
+        elif len(tree.children) == 2:
             res = '{}({})'.format(tree.children[0], tree.children[1])
-        return res
+            return res
+        else:
+            assert False
+        # The ++ and -- only shows in loop
+        # The original method is deprecated, we can hand over the self-increment to the synthesizer
+        # since we assue that we generate system verilog
+        # if tree.children[0] == '++':
+        #     res = '{} = {} + 1'.format(tree.children[1], tree.children[1])
+        # elif tree.children[0] == '--':
+        #     res = '{} = {} - 1'.format(tree.children[1], tree.children[1])
+        # else:
+        #     res = '{}({})'.format(tree.children[0], tree.children[1])
+        # return res
 
     def hcstmt(self, tree):
         self.__push_up(tree)
@@ -289,7 +310,7 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         self.dec_indent()
         ind = self.get_current_ind_prefix()
-        res = '{}{}: begin\n{}{}end'.format(ind, tree.children[0], tree.children[1], ind)
+        res = '{}{}: begin\n{}\n{}end'.format(ind, tree.children[0], '\n'.join(tree.children[1:]), ind)
         return res
 
     def switchcond(self, tree):
@@ -336,7 +357,7 @@ class VerilogTranslationPass(TopDown):
                         x = (x[0], x[1].children[0], x[2])
                     else:
                         assert False, 'Unrecognized construct: {}'.format(x[1])
-                res = x[0] + x[1] + x[2]
+                res = str(x[0]) + str(x[1]) + str(x[2])
                 return res
             except Exception as e:
                 print(x[0])
@@ -403,7 +424,8 @@ class VerilogTranslationPass(TopDown):
         self.dec_indent()
         ind = self.get_current_ind_prefix()
         res = ind + 'if ({}) begin\n'.format(tree.children[0])
-        res += tree.children[1] + '\n'
+        if len(tree.children) > 1:
+            res += tree.children[1] + '\n'
         res += ind + 'end'
         # print('If Body: ', tree.children[1])
         if len(tree.children) == 3:
@@ -816,6 +838,42 @@ class VerilogTranslationPass(TopDown):
             raise ValueError('Duplicate signal declaration: {}'.format(id))
         self.module_var_type[id] = tpe
 
+    def hthread(self, tree):
+        # hthread concists of 4 parts as children
+        # 1. thread name
+        # 2. signals declaration across hmethods
+        # 3. synchronous hmethod for setting state to next_state and reset
+        # 4. combinational hmethod for driving next_state
+        # We need 2 to be at the module level and thus its processing will be handled in hmodule
+        self.__push_up(tree)
+        return tree
+
+    def __generate_hthread_block(self, tree):
+        # currently we assume that the hthread block is simply and there is no sensitivity list and
+        # var decls, this might change in the future when we add support for resets
+        proc_name, *body = tree.children
+        self.set_current_proc_name(proc_name)
+
+        ind = self.get_current_ind_prefix()
+        res = ind + 'always @(*) begin: {}\n'.format(proc_name)
+        self.inc_indent()
+        self.__push_up(tree)
+        proc_name, *body = tree.children
+        ind = self.get_current_ind_prefix()
+        res += '\n'.join(body) + '\n'
+        self.dec_indent()
+        ind = self.get_current_ind_prefix()
+        res += ind + 'end'
+        self.__reset_local_variables()
+        self.reset_current_proc_name()
+        return res
+
+    def hthreadsync(self, tree):
+        return self.__generate_hthread_block(tree)
+
+    def hthreadswitch(self, tree):
+        return self.__generate_hthread_block(tree)
+
     def hmodule(self, tree):
         # dprint("Processing Module: ", tree.children[0])
         # print("Retrieving Portbindings")
@@ -919,13 +977,7 @@ class VerilogTranslationPass(TopDown):
         if vars:
             self.inc_indent()
             ind = self.get_current_ind_prefix()
-            for decl, name, init in vars:
-                # print(name, init)
-                if init:
-                    decl = decl + ' = ' + str(init) + ';'
-                else:
-                    decl += ';'
-                res += ind + decl + '\n'
+            res = self.__generate_vars_decl(ind, res, vars)
             self.dec_indent()
         # generate initialization block
         if initialization_block:
@@ -942,11 +994,31 @@ class VerilogTranslationPass(TopDown):
         # Generate processes
         if processlist:
             for proc in processlist.children:
-                res += proc + '\n'
+                if is_tree_type(proc, 'hthread'):
+                    thread_name, thread_sig, thread_sync, thread_comb = proc.children
+                    self.inc_indent()
+                    ind = self.get_current_ind_prefix()
+                    res += '{}// Thread: {}\n'.format(ind, thread_name)
+                    res = self.__generate_vars_decl(ind, res, thread_sig.children)
+                    self.dec_indent()
+                    res += thread_sync + "\n"
+                    res += thread_comb + "\n"
+                else:
+                    res += proc + '\n'
 
         if functionlist:
             # for f in functionlist:
             #     res += f + '\n'
             assert False, "functionlist should be empty, there may be a bug in the code"
         res += "endmodule"
+        return res
+
+    def __generate_vars_decl(self, ind, res, vars):
+        for decl, name, init in vars:
+            # print(name, init)
+            if init:
+                decl = decl + ' = ' + str(init) + ';'
+            else:
+                decl += ';'
+            res += ind + decl + '\n'
         return res
