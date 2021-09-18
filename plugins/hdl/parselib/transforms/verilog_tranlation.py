@@ -310,7 +310,7 @@ class VerilogTranslationPass(TopDown):
         self.__push_up(tree)
         self.dec_indent()
         ind = self.get_current_ind_prefix()
-        res = '{}{}: begin\n{}\n{}end'.format(ind, tree.children[0], tree.children[1], ind)
+        res = '{}{}: begin\n{}\n{}end'.format(ind, tree.children[0], '\n'.join(tree.children[1:]), ind)
         return res
 
     def switchcond(self, tree):
