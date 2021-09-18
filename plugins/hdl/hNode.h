@@ -133,13 +133,17 @@ namespace hnode {
       }
     }
 
-    void set( hdlopsEnum h, string s = "") {
+    void set(hdlopsEnum h, string s = "") {
       h_op = h;
       h_name = s;
     }
 
     void set(string s = "") {
       h_name = s;
+    }
+
+    void append(hNodep hnew) {
+      child_list.push_back(hnew);
     }
     
     string printopc(hdlopsEnum opc) {
