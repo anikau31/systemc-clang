@@ -136,6 +136,10 @@ class ModuleInstance {
 
   const std::vector<ModuleInstance *> &getNestedModuleInstances() const;
 
+  const std::pair<std::string, const clang::Expr*> getResetSignal() const;
+  const std::pair<std::string, const clang::Expr*> getResetEdge() const;
+  bool isResetAsync() const;
+
   void dumpPorts(llvm::raw_ostream &);
   std::string dumpPortBinding();
   void dumpInterfaces(llvm::raw_ostream &, int);

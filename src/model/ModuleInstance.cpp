@@ -18,7 +18,7 @@ ModuleInstance::ModuleInstance(const std::string &name,
                                const clang::CXXRecordDecl *decl)
     : module_name_{name},
       instance_name_{"NONE"},
-      class_decl_{const_cast<clang::CXXRecordDecl*>(decl)},
+      class_decl_{const_cast<clang::CXXRecordDecl *>(decl)},
       instance_decl_{nullptr} {}
 
 ModuleInstance::ModuleInstance(
@@ -141,7 +141,7 @@ ModuleInstance::~ModuleInstance() {
   // DO NOT delete the information collected through incomplete types.
   //
 
-  for (auto base: base_instances_) {
+  for (auto base : base_instances_) {
     delete base;
   }
 
@@ -217,11 +217,13 @@ void ModuleInstance::setModuleName(const std::string &name) {
   module_name_ = name;
 }
 
-void ModuleInstance::addResetSignal(std::pair<std::string, const clang::Expr*> reset_signal) {
+void ModuleInstance::addResetSignal(
+    std::pair<std::string, const clang::Expr *> reset_signal) {
   reset_signal_ = reset_signal;
 }
 
-void ModuleInstance::addResetEdge(std::pair<std::string, const clang::Expr*> reset_edge) {
+void ModuleInstance::addResetEdge(
+    std::pair<std::string, const clang::Expr *> reset_edge) {
   reset_edge_ = reset_edge;
 }
 
@@ -379,7 +381,7 @@ const std::vector<std::string> &ModuleInstance::getInstanceList() {
 }
 
 const std::vector<EntryFunctionContainer *>
-&ModuleInstance::getEntryFunctionContainer() {
+    &ModuleInstance::getEntryFunctionContainer() {
   return vef_;
 }
 
@@ -398,11 +400,17 @@ const ModuleInstance::processMapType &ModuleInstance::getProcessMap() {
   return process_map_;
 }
 
-const std::vector<ModuleInstance*> &ModuleInstance::getBaseInstances() { return base_instances_; }
+const std::vector<ModuleInstance *> &ModuleInstance::getBaseInstances() {
+  return base_instances_;
+}
 
-const ModuleInstance::portMapType &ModuleInstance::getOPorts() { return out_ports_; }
+const ModuleInstance::portMapType &ModuleInstance::getOPorts() {
+  return out_ports_;
+}
 
-const ModuleInstance::portMapType &ModuleInstance::getIPorts() { return in_ports_; }
+const ModuleInstance::portMapType &ModuleInstance::getIPorts() {
+  return in_ports_;
+}
 
 const ModuleInstance::portMapType &ModuleInstance::getIOPorts() {
   return inout_ports_;
@@ -455,6 +463,17 @@ Decl *ModuleInstance::getInstanceDecl() {
   return instance_info_.getInstanceDecl();
 }
 
+const std::pair<std::string, const clang::Expr *> ModuleInstance::getResetEdge()
+    const {
+  return reset_edge_;
+}
+
+const std::pair<std::string, const clang::Expr *>
+ModuleInstance::getResetSignal() const {
+  return reset_signal_;
+}
+
+bool ModuleInstance::isResetAsync() const { return reset_type_async_; }
 void ModuleInstance::dumpInstances(raw_ostream &os, int tabn) {
   if (instance_list_.empty()) {
     os << " none \n";
@@ -508,7 +527,6 @@ std::string ModuleInstance::dumpPortBinding() {
       if (is_dref_expr) {
         str += "caller_array_subscripts: " +
                is_dref_expr->getNameInfo().getName().getAsString() + "\n";
-
       }
     }
 
@@ -551,7 +569,7 @@ std::string ModuleInstance::dumpPortBinding() {
     str += "\n\n";
     binding->dump();
   }
-  llvm::outs() << str;  
+  llvm::outs() << str;
   return str;
 }
 
@@ -698,9 +716,8 @@ void ModuleInstance::dumpSignals(raw_ostream &os, int tabn) {
 
 void ModuleInstance::dump_base_instances(llvm::raw_ostream &os) {
   os << "Dump base instances: " << base_instances_.size() << "\n";
-  for (const auto base: base_instances_) {
+  for (const auto base : base_instances_) {
     base->dump(os);
-    
   }
 }
 
@@ -722,7 +739,7 @@ void ModuleInstance::dump(llvm::raw_ostream &os) {
   os << "\nReset signals\n";
   os << "reset_signal " << reset_signal_.first << "\n";
   os << "reset_edge   " << reset_edge_.first << "\n";
-  os << "reset_type_async " << reset_type_async_<< "\n";
+  os << "reset_type_async " << reset_type_async_ << "\n";
 
   dump_json();
 
@@ -740,7 +757,7 @@ std::string ModuleInstance::dump_json() {
     str += "array_sizes: ";
     // Write out all the sizes.
     for (auto const &size : instance_info_.getArraySizes()) {
-      str += size.toString(10, true) + "  "; //getLimitedValue() + "  ";
+      str += size.toString(10, true) + "  ";  // getLimitedValue() + "  ";
     }
   }
 
