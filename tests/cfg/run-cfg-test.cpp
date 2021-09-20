@@ -71,7 +71,7 @@ TEST_CASE("Simple thread test", "[threads]") {
     auto test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
-    REQUIRE(test_module_inst->getIPorts().size() == 2);
+    REQUIRE(test_module_inst->getIPorts().size() == 3);
     REQUIRE(test_module_inst->getOPorts().size() == 1);
     REQUIRE(test_module_inst->getIOPorts().size() == 0);
     REQUIRE(test_module_inst->getSignals().size() == 0);

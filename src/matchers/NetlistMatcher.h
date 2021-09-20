@@ -34,7 +34,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
     auto instances{model_->getInstances()};
     auto found_inst_it = std::find_if(
         instances.begin(), instances.end(), [decl](const auto &instance) {
-          clang::Decl *i{instance->getInstanceDecl()};
+          const clang::Decl *i{instance->getInstanceDecl()};
           return (instance->getInstanceDecl() == decl);
         });
 

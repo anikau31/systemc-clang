@@ -5,6 +5,7 @@ SC_MODULE(test) {
   // input ports
   sc_in_clk clk;
   sc_in<int> in1;
+  sc_in<bool> reset;
   // output ports
   sc_out<int> out1;
 
@@ -75,6 +76,9 @@ SC_MODULE(test) {
     int x{2};
     SC_THREAD(test_thread);
      sensitive << clk.pos();
+    // async_reset_signal_is(reset, false); // active low reset async
+     reset_signal_is(reset, false); // active low reset sync 
+    //
     // SC_THREAD(simple_wait);
     // sensitive << clk.pos();
  
@@ -83,7 +87,7 @@ SC_MODULE(test) {
 
 SC_MODULE(DUT) {
   sc_signal<int> sig1;
-  sc_signal<double> double_sig;
+  sc_signal<sc_int<64>> double_sig;
 
   test test_instance;
 

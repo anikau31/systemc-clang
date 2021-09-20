@@ -6,26 +6,24 @@
 
 namespace systemc_clang {
 
-using namespace clang;
-
 class FindConstructor : public RecursiveASTVisitor<FindConstructor> {
  public:
-  FindConstructor(CXXRecordDecl *, llvm::raw_ostream &);
+  FindConstructor(const clang::CXXRecordDecl *, llvm::raw_ostream &);
   virtual ~FindConstructor();
-  virtual bool VisitCXXMethodDecl(CXXMethodDecl *);
-  virtual bool VisitCXXConstructorDecl(CXXConstructorDecl *ctor_decl);
+  virtual bool VisitCXXMethodDecl(clang::CXXMethodDecl *);
+  virtual bool VisitCXXConstructorDecl(clang::CXXConstructorDecl *ctor_decl);
   bool shouldVisitTemplateInstantiations() const;
 
-  CXXRecordDecl *getAsCXXRecordDecl() const;
-  CXXConstructorDecl *getConstructorDecl() const;
-  Stmt *getConstructorStmt() const;
+  const clang::CXXRecordDecl *getAsCXXRecordDecl() const;
+  clang::CXXConstructorDecl *getConstructorDecl() const;
+  clang::Stmt *getConstructorStmt() const;
   void dump() const;
 
  private:
   llvm::raw_ostream &os_;
-  CXXRecordDecl *declaration_;
-  CXXConstructorDecl *constructor_decl_;
-  Stmt *constructor_stmt_;
+  const clang::CXXRecordDecl *declaration_;
+  clang::CXXConstructorDecl *constructor_decl_;
+  clang::Stmt *constructor_stmt_;
   unsigned int pass_;
 
   // Private constructor
