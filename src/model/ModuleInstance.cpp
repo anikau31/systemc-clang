@@ -60,6 +60,10 @@ ModuleInstance::ModuleInstance(const ModuleInstance &from) {
 
   // Nested submodules
   nested_modules_ = from.nested_modules_;
+
+  reset_type_async_ = from.reset_type_async_;
+  reset_edge_ = from.reset_edge_;
+  reset_signal_ = from.reset_signal_;
 }
 
 ModuleInstance &ModuleInstance::operator=(const ModuleInstance &from) {
@@ -101,6 +105,10 @@ ModuleInstance &ModuleInstance::operator=(const ModuleInstance &from) {
 
   // Nested submodules
   nested_modules_ = from.nested_modules_;
+
+  reset_type_async_ = from.reset_type_async_;
+  reset_edge_ = from.reset_edge_;
+  reset_signal_ = from.reset_signal_;
 
   return *this;
 }
@@ -207,6 +215,21 @@ const std::vector<std::string> &ModuleInstance::getTemplateParameters() const {
 
 void ModuleInstance::setModuleName(const std::string &name) {
   module_name_ = name;
+}
+
+void ModuleInstance::addResetSignal(std::pair<std::string, const clang::Expr*> reset_signal) {
+  reset_signal_ = reset_signal;
+}
+
+void ModuleInstance::addResetEdge(std::pair<std::string, const clang::Expr*> reset_edge) {
+  reset_edge_ = reset_edge;
+}
+
+void ModuleInstance::addResetType(bool reset_type) {
+  reset_type_async_ = false;
+  if (reset_type) {
+    reset_type_async_ = true;
+  }
 }
 
 void ModuleInstance::addBaseInstance(ModuleInstance *base) {
@@ -695,6 +718,11 @@ void ModuleInstance::dump(llvm::raw_ostream &os) {
   dumpPortBinding();  //(os, 4);
   os << "# Signal binding:\n";
   dumpSignalBinding(os, 4);
+
+  os << "\nReset signals\n";
+  os << "reset_signal " << reset_signal_.first << "\n";
+  os << "reset_edge   " << reset_edge_.first << "\n";
+  os << "reset_type_async " << reset_type_async_<< "\n";
 
   dump_json();
 

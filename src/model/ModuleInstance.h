@@ -86,6 +86,10 @@ class ModuleInstance {
 
   void addNestedModule(ModuleInstance *submodule);
 
+  void addResetSignal(std::pair<std::string, const clang::Expr*> reset_signal);
+  void addResetEdge(std::pair<std::string, const clang::Expr*> reset_edge);
+  void addResetType(bool reset_type);
+
   void setInstanceInfo(const sc_ast_matchers::ModuleInstanceType &info);
   void setInstanceName(const std::string &);
   void setInstanceDecl(Decl *);
@@ -187,6 +191,12 @@ class ModuleInstance {
   /// Class template parameters.
   std::vector<std::string> template_parameters_;
   std::vector<std::string> template_args_;
+
+  std::pair<std::string, const clang::Expr*> reset_signal_;
+  std::pair<std::string, const clang::Expr*> reset_edge_;
+  bool reset_type_async_;
+
+
 };
 }  // namespace systemc_clang
 #endif
