@@ -2,7 +2,7 @@
 
 using namespace systemc_clang;
 
-FindEntryFunctions::FindEntryFunctions(CXXRecordDecl *d, llvm::raw_ostream &os)
+FindEntryFunctions::FindEntryFunctions(const clang::CXXRecordDecl *d, llvm::raw_ostream &os)
     : os_{os},
       _d{d},
       is_entry_function_{false},
@@ -17,7 +17,7 @@ FindEntryFunctions::FindEntryFunctions(CXXRecordDecl *d, llvm::raw_ostream &os)
   /// Set the constructor_stmt_ pointer.
   //  os_ << "\n>>>> PASS 1\n";
 
-  TraverseDecl(_d);
+  TraverseDecl(const_cast<clang::CXXRecordDecl*>(_d));
   //  os_ << "\n EntryFunctions found: " << entry_function_list_.size() << "\n";
   pass_ = 2;
 
@@ -29,7 +29,7 @@ FindEntryFunctions::FindEntryFunctions(CXXRecordDecl *d, llvm::raw_ostream &os)
 
   /// Pass 3:
   /// Find the CXXMethodDecl* to the entry function
-  TraverseDecl(_d);
+  TraverseDecl(const_cast<clang::CXXRecordDecl*>(_d));
   pass_ = 4;
 }
 

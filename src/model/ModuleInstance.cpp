@@ -119,7 +119,6 @@ void ModuleInstance::clearOnlyGlobal() {
   class_decl_ = nullptr;
   constructor_stmt_ = nullptr;
   constructor_decl_ = nullptr;
-  instance_decl_;
 
   // Ports are globally allocated.
   in_ports_.clear();
@@ -329,11 +328,11 @@ void ModuleInstance::addConstructor(Stmt *constructor) {
   constructor_stmt_ = constructor;
 }
 
-clang::Stmt *ModuleInstance::getConstructorStmt() const {
+const clang::Stmt *ModuleInstance::getConstructorStmt() const {
   return constructor_stmt_;
 }
 
-clang::CXXConstructorDecl *ModuleInstance::getConstructorDecl() const {
+const clang::CXXConstructorDecl *ModuleInstance::getConstructorDecl() const {
   return constructor_decl_;
 }
 
@@ -454,12 +453,12 @@ bool ModuleInstance::isModuleClassDeclNull() {
   return (class_decl_ == nullptr);
 }
 
-clang::CXXRecordDecl *ModuleInstance::getModuleClassDecl() {
+const clang::CXXRecordDecl *ModuleInstance::getModuleClassDecl() {
   assert(!(class_decl_ == nullptr));
   return class_decl_;
 }
 
-Decl *ModuleInstance::getInstanceDecl() {
+const clang::Decl *ModuleInstance::getInstanceDecl() {
   return instance_info_.getInstanceDecl();
 }
 
