@@ -239,6 +239,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af851f06fc902cd0a3a90b78e2804a16e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58b6305e7ca18d172ddbb9887b06d572"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ModuleInstance.html#a58b6305e7ca18d172ddbb9887b06d572">getNestedModuleInstances</a> () const</td></tr>
 <tr class="separator:a58b6305e7ca18d172ddbb9887b06d572"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1eb95b467ce49380e2ab55f7a043270c"><td class="memItemLeft" align="right" valign="top">const std::pair&lt; std::string, const clang::Expr * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ModuleInstance.html#a1eb95b467ce49380e2ab55f7a043270c">getResetSignal</a> () const</td></tr>
+<tr class="separator:a1eb95b467ce49380e2ab55f7a043270c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa85a383b21d264d0ddcbad4a81d06794"><td class="memItemLeft" align="right" valign="top">const std::pair&lt; std::string, const clang::Expr * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ModuleInstance.html#aa85a383b21d264d0ddcbad4a81d06794">getResetEdge</a> () const</td></tr>
+<tr class="separator:aa85a383b21d264d0ddcbad4a81d06794"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6acd50f2f2f252816b7eca1d9a4ad6fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ModuleInstance.html#a6acd50f2f2f252816b7eca1d9a4ad6fa">isResetAsync</a> () const</td></tr>
+<tr class="separator:a6acd50f2f2f252816b7eca1d9a4ad6fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a411c5c5bee6e107e0836f142b0093b4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ModuleInstance.html#a411c5c5bee6e107e0836f142b0093b4e">dumpPorts</a> (llvm::raw_ostream &amp;)</td></tr>
 <tr class="separator:a411c5c5bee6e107e0836f142b0093b4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6558528163979f1bcf23620ba4bb7b44"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1ModuleInstance.html#a6558528163979f1bcf23620ba4bb7b44">dumpPortBinding</a> ()</td></tr>
@@ -1597,6 +1603,40 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa85a383b21d264d0ddcbad4a81d06794" name="aa85a383b21d264d0ddcbad4a81d06794"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa85a383b21d264d0ddcbad4a81d06794">&#9670;&nbsp;</a></span>getResetEdge()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::pair&lt; std::string, const clang::Expr * &gt; ModuleInstance::getResetEdge </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1eb95b467ce49380e2ab55f7a043270c" name="a1eb95b467ce49380e2ab55f7a043270c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1eb95b467ce49380e2ab55f7a043270c">&#9670;&nbsp;</a></span>getResetSignal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::pair&lt; std::string, const clang::Expr * &gt; ModuleInstance::getResetSignal </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af851f06fc902cd0a3a90b78e2804a16e" name="af851f06fc902cd0a3a90b78e2804a16e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af851f06fc902cd0a3a90b78e2804a16e">&#9670;&nbsp;</a></span>getSignals()</h2>
 
@@ -1676,6 +1716,23 @@ Private Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6acd50f2f2f252816b7eca1d9a4ad6fa" name="a6acd50f2f2f252816b7eca1d9a4ad6fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6acd50f2f2f252816b7eca1d9a4ad6fa">&#9670;&nbsp;</a></span>isResetAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ModuleInstance::isResetAsync </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
