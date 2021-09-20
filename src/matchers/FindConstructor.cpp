@@ -2,14 +2,14 @@
 
 using namespace systemc_clang;
 
-FindConstructor::FindConstructor(CXXRecordDecl *declaration,
+FindConstructor::FindConstructor(const clang::CXXRecordDecl *declaration,
                                  llvm::raw_ostream &os)
     : os_{os},
       declaration_{declaration},
       constructor_stmt_{nullptr},
       constructor_decl_{nullptr},
       pass_{1} {
-  TraverseDecl(declaration_);
+  TraverseDecl(const_cast<clang::CXXRecordDecl*>(declaration_));
   pass_ = 2;
   TraverseStmt(constructor_stmt_);
 }
@@ -21,20 +21,21 @@ FindConstructor::~FindConstructor() {
 
 bool FindConstructor::shouldVisitTemplateInstantiations() const { return true; }
 
-bool FindConstructor::VisitCXXConstructorDecl(CXXConstructorDecl *ctor_decl) {
+bool FindConstructor::VisitCXXConstructorDecl(clang::CXXConstructorDecl *ctor_decl) {
   constructor_decl_ = ctor_decl;
 
   return true;
 }
 
-bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
+bool FindConstructor::VisitCXXMethodDecl(clang::CXXMethodDecl *method_declaration) {
   switch (pass_) {
     case 1: {
-      //constructor_decl_ = dyn_cast<CXXConstructorDecl>(method_declaration);
-      //llvm::outs() << "setting the constructor_decl_ to " << constructor_decl_
-       //            << "\n ";
+      // constructor_decl_ = dyn_cast<CXXConstructorDecl>(method_declaration);
+      // llvm::outs() << "setting the constructor_decl_ to " <<
+      // constructor_decl_
+      //            << "\n ";
       if (constructor_decl_) {
-        const FunctionDecl *fd{nullptr};
+        const clang::FunctionDecl *fd{nullptr};
         constructor_decl_->getBody(fd);
         if (constructor_decl_->hasBody()) {
           constructor_stmt_ = constructor_decl_->getBody();
@@ -53,12 +54,15 @@ bool FindConstructor::VisitCXXMethodDecl(CXXMethodDecl *method_declaration) {
   return true;
 }
 
-CXXConstructorDecl *FindConstructor::getConstructorDecl() const {
+clang::CXXConstructorDecl *FindConstructor::getConstructorDecl() const {
   return constructor_decl_;
 }
-CXXRecordDecl *FindConstructor::getAsCXXRecordDecl() const {
+
+const clang::CXXRecordDecl *FindConstructor::getAsCXXRecordDecl() const {
   return declaration_;
 }
-Stmt *FindConstructor::getConstructorStmt() const { return constructor_stmt_; }
+
+clang::Stmt *FindConstructor::getConstructorStmt() const { return constructor_stmt_; }
+
 
 void FindConstructor::dump() const { constructor_stmt_->dump(); }

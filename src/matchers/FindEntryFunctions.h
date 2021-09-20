@@ -19,7 +19,7 @@ public:
   typedef std::pair<string, vector<string>> entryFunctionLHSPairType;
   typedef std::map<string, vector<string>> entryFunctionLHSMapType;
 
-  FindEntryFunctions(CXXRecordDecl *d, llvm::raw_ostream &os);
+  FindEntryFunctions(const clang::CXXRecordDecl *d, llvm::raw_ostream &os);
   virtual ~FindEntryFunctions();
 
   /// Virtual methods from RecursiveASTVisitor
@@ -39,7 +39,7 @@ public:
 
 private:
   llvm::raw_ostream &os_;
-  CXXRecordDecl *_d;
+  const CXXRecordDecl *_d;
   bool is_entry_function_;
   PROCESS_TYPE proc_type_;
   string entry_name_;

@@ -101,10 +101,10 @@ class ModuleInstance {
   std::string getName() const;
   std::string getInstanceName() const;
 
-  clang::CXXRecordDecl *getModuleClassDecl();
+  const clang::CXXRecordDecl *getModuleClassDecl();
   clang::FieldDecl *getInstanceFieldDecl();
   clang::VarDecl *getInstanceVarDecl();
-  clang::Decl *getInstanceDecl();
+  const clang::Decl *getInstanceDecl();
   bool isInstanceFieldDecl() const;
 
   ModuleInstanceType getInstanceInfo();
@@ -123,8 +123,8 @@ class ModuleInstance {
 
   const processMapType &getProcessMap();
 
-  clang::Stmt *getConstructorStmt() const;
-  clang::CXXConstructorDecl *getConstructorDecl() const;
+  const clang::Stmt *getConstructorStmt() const;
+  const clang::CXXConstructorDecl *getConstructorDecl() const;
 
   const interfaceMapType &getIInterfaces();
   const interfaceMapType &getOInterfaces();
