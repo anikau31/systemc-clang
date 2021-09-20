@@ -21,6 +21,7 @@
 #include "FindWait.h"
 
 #include "clang/ASTMatchers/ASTMatchers.h"
+#include "matchers/ResetMatcher.h"
 
 using namespace systemc_clang;
 
@@ -103,10 +104,21 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     //
     //
     LLVM_DEBUG(llvm::dbgs() << "4. Set the constructor.\n";);
-    vector<EntryFunctionContainer *> _entryFunctionContainerVector;
+    std::vector<EntryFunctionContainer *> _entryFunctionContainerVector;
     FindConstructor constructor{add_module_decl->getModuleClassDecl(),
                                 llvm::dbgs()};
     add_module_decl->addConstructor(&constructor);
+
+    /// Reset matcher.
+    LLVM_DEBUG(llvm::dbgs() << "********** 5. RESET Matcher ***********\n";);
+    ResetMatcher reset_matcher{};
+    MatchFinder resetMatchRegistry{};
+    reset_matcher.registerMatchers(resetMatchRegistry);
+    resetMatchRegistry.match(*constructor.getConstructorDecl(), context);
+    reset_matcher.dump();
+    add_module_decl->addResetSignal(reset_matcher.getResetSignal());
+    add_module_decl->addResetEdge(reset_matcher.getResetEdge());
+    add_module_decl->addResetType(reset_matcher.getResetType());
 
     /// 4. Find ports
     /// This is done for the declaration.

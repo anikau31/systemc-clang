@@ -40,7 +40,7 @@ class Model {
       entryFunctionGPUMacroMapType;
 
   Model();
-  ~Model();
+  virtual ~Model();
 
   void addInstance(ModuleInstance *);
   void addSimulationTime(FindSimTime::simulationTimeMapType);
