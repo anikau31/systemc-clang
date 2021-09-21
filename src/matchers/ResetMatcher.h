@@ -15,31 +15,49 @@ using namespace clang;
 
 class ResetMatcher : public MatchFinder::MatchCallback {
  private:
-   std::pair<std::string, const clang::Expr*> reset_signal_;
-   std::pair<std::string, const clang::Expr*> edge_;
-   bool reset_async_;
-
- public: 
-   std::pair<std::string, const clang::Expr*> getResetSignal() const { return reset_signal_; }
-   std::pair<std::string, const clang::Expr*> getResetEdge() const { return edge_; }
-   bool getResetType() const { return reset_async_; }
+  std::pair<std::string, const clang::Expr*> reset_signal_;
+  std::pair<std::string, const clang::Expr*> edge_;
+  bool reset_async_;
 
  public:
-  void registerMatchers(MatchFinder& finder) {
-    reset_async_ = false;
+  std::pair<std::string, const clang::Expr*> getResetSignal() const {
+    return reset_signal_;
+  }
+  std::pair<std::string, const clang::Expr*> getResetEdge() const {
+    return edge_;
+  }
+  bool getResetType() const { return reset_async_; }
+
+ public:
+  void registerMatchers(MatchFinder& finder, clang::MemberExpr* process_expr) {
+    /// Get type of process_expr.
+    std::string member_name{process_expr->getMemberDecl()->getNameAsString()};
 
     // clang-format off
-    auto reset_matcher = cxxConstructorDecl(
+    auto reset_matcher = stmt(
         anyOf(
-        hasDescendant(
-          cxxMemberCallExpr(callee(cxxMethodDecl(hasName("async_reset_signal_is")))).bind("cxx_me_async")
-          ) // hasDescendant
+          allOf(
+            hasDescendant(
+              memberExpr(hasDeclaration(cxxMethodDecl(hasName(member_name)))).bind("cxx_me_proc")
+            )
+            ,
+            hasDescendant(
+              cxxMemberCallExpr(callee(cxxMethodDecl(hasName("async_reset_signal_is")))).bind("cxx_me_async")
+              ) // hasDescendant
+            ) //allOf
         ,
-        hasDescendant(
-          cxxMemberCallExpr(callee(cxxMethodDecl(hasName("reset_signal_is")))).bind("cxx_me_sync")
-          ) // hasDescendant
-        )
-        ).bind("reset_expr");
+
+          allOf(
+            hasDescendant(
+              memberExpr(hasDeclaration(cxxMethodDecl(hasName(member_name)))).bind("cxx_me_proc")
+            )
+            ,
+            hasDescendant(
+              cxxMemberCallExpr(callee(cxxMethodDecl(hasName("reset_signal_is")))).bind("cxx_me_sync")
+              ) // hasDescendant
+          ) //allOf
+        ) //anyOf
+      ).bind("reset_expr");
     // clang-format on
 
     finder.addMatcher(reset_matcher, this);
@@ -49,14 +67,24 @@ class ResetMatcher : public MatchFinder::MatchCallback {
     llvm::dbgs() << "RESET MATCHER FOUND\n";
     // auto ctor_decl{
     // result.Nodes.getNodeAs<clang::CXXConstructorDecl>("reset_expr")};
-    auto cxx_me_async{result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("cxx_me_async")};
-    auto cxx_me_sync{result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("cxx_me_sync")};
+    auto cxx_me_proc{result.Nodes.getNodeAs<clang::MemberExpr>("cxx_me_proc")};
+    auto cxx_me_async{
+        result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("cxx_me_async")};
+    auto cxx_me_sync{
+        result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("cxx_me_sync")};
     const clang::CXXMemberCallExpr* cxx_me{nullptr};
 
+    // if (cxx_me_proc) {
+      // llvm::dbgs() << " PROC MATCH\n";
+      // cxx_me_proc->dump();
+    // }
+//
     cxx_me = cxx_me_sync;
 
+    reset_async_ = false;
     if (cxx_me_async) {
       reset_async_ = true;
+      llvm::dbgs() << "SETTING RESET TO TRUE\n";
       cxx_me = cxx_me_async;
     }
 

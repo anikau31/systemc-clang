@@ -21,7 +21,7 @@
 #include "FindWait.h"
 
 #include "clang/ASTMatchers/ASTMatchers.h"
-#include "matchers/ResetMatcher.h"
+//#include "matchers/ResetMatcher.h"
 
 using namespace systemc_clang;
 
@@ -109,17 +109,6 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
                                 llvm::dbgs()};
     add_module_decl->addConstructor(&constructor);
 
-    /// Reset matcher.
-    LLVM_DEBUG(llvm::dbgs() << "********** 5. RESET Matcher ***********\n";);
-    ResetMatcher reset_matcher{};
-    MatchFinder resetMatchRegistry{};
-    reset_matcher.registerMatchers(resetMatchRegistry);
-    resetMatchRegistry.match(*constructor.getConstructorDecl(), context);
-    reset_matcher.dump();
-    add_module_decl->addResetSignal(reset_matcher.getResetSignal());
-    add_module_decl->addResetEdge(reset_matcher.getResetEdge());
-    add_module_decl->addResetType(reset_matcher.getResetType());
-
     /// 4. Find ports
     /// This is done for the declaration.
     //
@@ -127,9 +116,11 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     // 5. Find  entry functions within one sc_module.
     LLVM_DEBUG(llvm::dbgs() << "5. Set the entry functions\n";);
     FindEntryFunctions findEntries{add_module_decl->getModuleClassDecl(),
-                                   llvm::dbgs()};
+                                   llvm::dbgs(), context};
+
     FindEntryFunctions::entryFunctionVectorType *entryFunctions{
         findEntries.getEntryFunctions()};
+
     LLVM_DEBUG(llvm::dbgs() << "6. Set the process\n";);
     add_module_decl->addProcess(entryFunctions);
 
@@ -213,7 +204,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     instance_map = instance_matcher_.getInstanceMap();
 
     /// DEBUG: output all the classes that have been identified. =======
-    for (const auto &inst: instance_map) {
+    for (const auto &inst : instance_map) {
       llvm::dbgs()
           << "@@@@@@@@@@@@@ INSTANCE MAP with base instances @@@@@@@@@@@\n";
 
@@ -224,9 +215,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     }
     /// END DEBUG ===========================================
 
-    /// Go through each identified instance, and identify any ports and module information.
-    /// 
-    for (const auto &inst: instance_map) {
+    /// Go through each identified instance, and identify any ports and module
+    /// information.
+    ///
+    for (const auto &inst : instance_map) {
       ModuleInstanceType instance{inst.second};
 
       clang::CXXRecordDecl *decl{
@@ -239,10 +231,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       auto add_module{new ModuleInstance(name, decl)};
       add_module->setInstanceInfo(instance);
 
-      /// TODO: Why do we need this when we can just access the instances and then get the decl?
+      /// TODO: Why do we need this when we can just access the instances and
+      /// then get the decl?
       modules_.insert(std::pair<clang::CXXRecordDecl *, ModuleInstance *>(
           decl, add_module));
-
 
       llvm::dbgs() << "[Running module declaration matchers]\n";
       runModuleDeclarationMatchers(context, decl, add_module);
@@ -263,7 +255,8 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         llvm::dbgs() << "Base class: " << base_decl->getNameAsString() << "\n";
 
         runModuleDeclarationMatchers(
-            context, const_cast<clang::CXXRecordDecl *>(base_decl), base_module_instance);
+            context, const_cast<clang::CXXRecordDecl *>(base_decl),
+            base_module_instance);
         runPortMatcher(context, base_decl, base_module_instance);
         add_module->addBaseInstance(base_module_instance);
       }
