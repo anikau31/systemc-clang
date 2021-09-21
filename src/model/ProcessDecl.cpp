@@ -46,7 +46,7 @@ void ProcessDecl::dump() {
                           << process_type_;);
 
   LLVM_DEBUG(llvm::dbgs() << "\nEntry function:\n";);
-  LLVM_DEBUG(entry_function_ptr_->dump(llvm::outs(), 1));
+  LLVM_DEBUG(entry_function_ptr_->dump(llvm::outs()));
 }
 
 std::string ProcessDecl::asString() const {

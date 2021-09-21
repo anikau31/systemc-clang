@@ -19,7 +19,7 @@ public:
   typedef std::pair<string, vector<string>> entryFunctionLHSPairType;
   typedef std::map<string, vector<string>> entryFunctionLHSMapType;
 
-  FindEntryFunctions(const clang::CXXRecordDecl *d, llvm::raw_ostream &os);
+  FindEntryFunctions(const clang::CXXRecordDecl *d, llvm::raw_ostream &os, clang::ASTContext &ctx);
   virtual ~FindEntryFunctions();
 
   /// Virtual methods from RecursiveASTVisitor
@@ -38,6 +38,7 @@ public:
   void dump();
 
 private:
+  clang::ASTContext &context_;
   llvm::raw_ostream &os_;
   const CXXRecordDecl *_d;
   bool is_entry_function_;
@@ -49,9 +50,11 @@ private:
   Stmt *constructor_stmt_;
   EntryFunctionContainer *ef;
   int pass_;
+  clang::CXXConstructorDecl* ctor_decl_;
   entryFunctionVectorType entry_function_list_;
   entryFunctionLHSMapType entry_function_map_;
   vector<CXXMethodDecl *> other_function_list_;
+  clang::MemberExpr* process_me_;
 
   // Disallow constructor with no argument
   FindEntryFunctions(llvm::raw_ostream &os);

@@ -86,11 +86,7 @@ class ModuleInstance {
 
   void addNestedModule(ModuleInstance *submodule);
 
-  void addResetSignal(std::pair<std::string, const clang::Expr*> reset_signal);
-  void addResetEdge(std::pair<std::string, const clang::Expr*> reset_edge);
-  void addResetType(bool reset_type);
-
-  void setInstanceInfo(const sc_ast_matchers::ModuleInstanceType &info);
+    void setInstanceInfo(const sc_ast_matchers::ModuleInstanceType &info);
   void setInstanceName(const std::string &);
   void setInstanceDecl(Decl *);
   void setModuleName(const std::string &);
@@ -136,11 +132,7 @@ class ModuleInstance {
 
   const std::vector<ModuleInstance *> &getNestedModuleInstances() const;
 
-  const std::pair<std::string, const clang::Expr*> getResetSignal() const;
-  const std::pair<std::string, const clang::Expr*> getResetEdge() const;
-  bool isResetAsync() const;
-
-  void dumpPorts(llvm::raw_ostream &);
+    void dumpPorts(llvm::raw_ostream &);
   std::string dumpPortBinding();
   void dumpInterfaces(llvm::raw_ostream &, int);
   void dumpProcesses(llvm::raw_ostream &, int);
@@ -195,10 +187,6 @@ class ModuleInstance {
   /// Class template parameters.
   std::vector<std::string> template_parameters_;
   std::vector<std::string> template_args_;
-
-  std::pair<std::string, const clang::Expr*> reset_signal_;
-  std::pair<std::string, const clang::Expr*> reset_edge_;
-  bool reset_type_async_;
 
 
 };
