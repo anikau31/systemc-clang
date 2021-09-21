@@ -61,10 +61,7 @@ ModuleInstance::ModuleInstance(const ModuleInstance &from) {
   // Nested submodules
   nested_modules_ = from.nested_modules_;
 
-  reset_type_async_ = from.reset_type_async_;
-  reset_edge_ = from.reset_edge_;
-  reset_signal_ = from.reset_signal_;
-}
+  }
 
 ModuleInstance &ModuleInstance::operator=(const ModuleInstance &from) {
   module_name_ = from.module_name_;
@@ -105,10 +102,6 @@ ModuleInstance &ModuleInstance::operator=(const ModuleInstance &from) {
 
   // Nested submodules
   nested_modules_ = from.nested_modules_;
-
-  reset_type_async_ = from.reset_type_async_;
-  reset_edge_ = from.reset_edge_;
-  reset_signal_ = from.reset_signal_;
 
   return *this;
 }
@@ -215,24 +208,6 @@ const std::vector<std::string> &ModuleInstance::getTemplateParameters() const {
 void ModuleInstance::setModuleName(const std::string &name) {
   module_name_ = name;
 }
-
-void ModuleInstance::addResetSignal(
-    std::pair<std::string, const clang::Expr *> reset_signal) {
-  reset_signal_ = reset_signal;
-}
-
-void ModuleInstance::addResetEdge(
-    std::pair<std::string, const clang::Expr *> reset_edge) {
-  reset_edge_ = reset_edge;
-}
-
-void ModuleInstance::addResetType(bool reset_type) {
-  reset_type_async_ = false;
-  if (reset_type) {
-    reset_type_async_ = true;
-  }
-}
-
 void ModuleInstance::addBaseInstance(ModuleInstance *base) {
   base_instances_.push_back(base);
 }
@@ -461,18 +436,6 @@ const clang::CXXRecordDecl *ModuleInstance::getModuleClassDecl() {
 const clang::Decl *ModuleInstance::getInstanceDecl() {
   return instance_info_.getInstanceDecl();
 }
-
-const std::pair<std::string, const clang::Expr *> ModuleInstance::getResetEdge()
-    const {
-  return reset_edge_;
-}
-
-const std::pair<std::string, const clang::Expr *>
-ModuleInstance::getResetSignal() const {
-  return reset_signal_;
-}
-
-bool ModuleInstance::isResetAsync() const { return reset_type_async_; }
 void ModuleInstance::dumpInstances(raw_ostream &os, int tabn) {
   if (instance_list_.empty()) {
     os << " none \n";
@@ -591,6 +554,7 @@ void ModuleInstance::dumpProcesses(raw_ostream &os, int tabn) {
   for (auto pit : process_map_) {
     ProcessDecl *pd{pit.second};
     str += pit.first + ": " + pd->asString() + "\n";
+    pd ->dump();
   }
   str += "\n";
 
@@ -734,11 +698,10 @@ void ModuleInstance::dump(llvm::raw_ostream &os) {
   dumpPortBinding();  //(os, 4);
   os << "# Signal binding:\n";
   dumpSignalBinding(os, 4);
-
-  os << "\nReset signals\n";
-  os << "reset_signal " << reset_signal_.first << "\n";
-  os << "reset_edge   " << reset_edge_.first << "\n";
-  os << "reset_type_async " << reset_type_async_ << "\n";
+//
+  // for (auto entry_function: vef_) {
+    // entry_function->dump();
+  // }
 
   dump_json();
 

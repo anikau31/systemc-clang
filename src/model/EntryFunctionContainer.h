@@ -104,7 +104,18 @@ class EntryFunctionContainer {
   void setEntryMethod(clang::CXXMethodDecl *);
   void dumpSusCFG(llvm::raw_ostream &);
   void dumpSauto(llvm::raw_ostream &);
-  void dump(llvm::raw_ostream &, int);
+  void dump(llvm::raw_ostream &);
+
+
+  // Reset signal handling
+  void addResetSignal(std::pair<std::string, const clang::Expr*> reset_signal);
+  void addResetEdge(std::pair<std::string, const clang::Expr*> reset_edge);
+  void addResetType(bool reset_type);
+
+  const std::pair<std::string, const clang::Expr*> getResetSignal() const;
+  const std::pair<std::string, const clang::Expr*> getResetEdge() const;
+  bool isResetAsync() const;
+
 
   // private:
   std::string entry_name_;
@@ -120,6 +131,13 @@ class EntryFunctionContainer {
 
   std::vector<Transition *> _susAuto;
   std::vector<SusCFG *> _susCFG;
+
+  /// Reset information.
+  std::pair<std::string, const clang::Expr*> reset_signal_;
+  std::pair<std::string, const clang::Expr*> reset_edge_;
+  bool reset_type_async_;
+
+
 };
 }  // namespace systemc_clang
 #endif

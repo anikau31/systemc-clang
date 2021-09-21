@@ -20,9 +20,42 @@ EntryFunctionContainer::EntryFunctionContainer(
   entry_name_ = from.entry_name_;
   process_type_ = from.process_type_;
   entry_method_decl_ = from.entry_method_decl_;
+
+  reset_type_async_ = from.reset_type_async_;
+  reset_edge_ = from.reset_edge_;
+  reset_signal_ = from.reset_signal_;
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+void EntryFunctionContainer::addResetSignal(
+    std::pair<std::string, const clang::Expr *> reset_signal) {
+  reset_signal_ = reset_signal;
+}
+
+void EntryFunctionContainer::addResetEdge(
+    std::pair<std::string, const clang::Expr *> reset_edge) {
+  reset_edge_ = reset_edge;
+}
+
+void EntryFunctionContainer::addResetType(bool reset_type) {
+    reset_type_async_ = reset_type;
+}
+
+
+const std::pair<std::string, const clang::Expr *> EntryFunctionContainer::getResetEdge()
+    const {
+  return reset_edge_;
+}
+
+const std::pair<std::string, const clang::Expr *>
+EntryFunctionContainer::getResetSignal() const {
+  return reset_signal_;
+}
+
+bool EntryFunctionContainer::isResetAsync() const { return reset_type_async_; }
+
 string EntryFunctionContainer::getName() { return entry_name_; }
 
 EntryFunctionContainer::SenseMapType EntryFunctionContainer::getSenseMap() {
@@ -151,11 +184,8 @@ void EntryFunctionContainer::dumpSauto(raw_ostream &os) {
 #endif
 }
 
-void EntryFunctionContainer::dump(raw_ostream &os, int tabn) {
+void EntryFunctionContainer::dump(llvm::raw_ostream &os = llvm::dbgs()) {
   os << "\n";
-  for (int i = 0; i < tabn; i++) {
-    os << " ";
-  }
 
   os << "EntryFunctionContainer '" << getName() << "' processType '";
   switch (getProcessType()) {
@@ -181,7 +211,7 @@ void EntryFunctionContainer::dump(raw_ostream &os, int tabn) {
   // }
 //
   os << " CXXMethodDecl '" << getEntryMethod() << "\n";
-  int newTabn = ++tabn;
+  int newTabn = 0;
 
   os << " Wait Calls \n";
   for (waitContainerListType::iterator it = _waitCalls.begin(),
@@ -196,7 +226,11 @@ void EntryFunctionContainer::dump(raw_ostream &os, int tabn) {
     (*it)->dump(os, newTabn);
   }
 
-  //
+  os << "\nReset signals\n";
+  os << "reset_signal " << reset_signal_.first << "\n";
+  os << "reset_edge   " << reset_edge_.first << "\n";
+  os << "reset_type_async " << reset_type_async_ << "\n";
+
   // os << "\n Suspension CFG";
   // os << "\n ###############";
   // dumpSusCFG(os);

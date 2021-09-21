@@ -77,9 +77,14 @@ TEST_CASE("Simple thread test", "[threads]") {
     const auto method{entry_func->getEntryMethod()};
 
     for (auto const &proc : process_map) {
+      llvm::dbgs() << "process name  " << proc.first << "\n";
       auto entry_func{proc.second->getEntryFunction()};
       if (entry_func) {
         auto sense_map{entry_func->getSenseMap()};
+        for (auto sense : sense_map ) {
+          llvm::dbgs() << "sensitivity " << sense.first << "\n"; 
+        }
+
         REQUIRE(sense_map.size() == 1);
 
         int check{1};

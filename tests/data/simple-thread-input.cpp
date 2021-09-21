@@ -74,10 +74,16 @@ SC_MODULE(test) {
 
   SC_CTOR(test) {
     int x{2};
-    SC_THREAD(test_thread);
+    SC_THREAD(test_thread); //{
      sensitive << clk.pos();
-    // async_reset_signal_is(reset, false); // active low reset async
-     reset_signal_is(reset, false); // active low reset sync 
+     async_reset_signal_is(reset, false); // active low reset async
+     //reset_signal_is(reset, false); // active low reset async
+    //}
+
+    //SC_THREAD(simple_wait); {
+    // sensitive << clk.pos();
+     //reset_signal_is(reset, true); // active low reset async
+    //}
     //
     // SC_THREAD(simple_wait);
     // sensitive << clk.pos();
