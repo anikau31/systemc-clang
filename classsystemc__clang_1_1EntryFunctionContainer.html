@@ -149,8 +149,20 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aaa5b08b85c3dc3995a690541eaf6be37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4389314a6569c01e43d58cadf4128b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#ac4389314a6569c01e43d58cadf4128b3">dumpSauto</a> (llvm::raw_ostream &amp;)</td></tr>
 <tr class="separator:ac4389314a6569c01e43d58cadf4128b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc6b2f950fd88de355563d9437ad5621"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#afc6b2f950fd88de355563d9437ad5621">dump</a> (llvm::raw_ostream &amp;, int)</td></tr>
-<tr class="separator:afc6b2f950fd88de355563d9437ad5621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af27adee4d91c6e2244fef7ffb9a5e6b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#af27adee4d91c6e2244fef7ffb9a5e6b5">dump</a> (llvm::raw_ostream &amp;)</td></tr>
+<tr class="separator:af27adee4d91c6e2244fef7ffb9a5e6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae04ef080f63a2e8e8b2042363ab13775"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#ae04ef080f63a2e8e8b2042363ab13775">addResetSignal</a> (std::pair&lt; std::string, const clang::Expr * &gt; reset_signal)</td></tr>
+<tr class="separator:ae04ef080f63a2e8e8b2042363ab13775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada75569811391b31d92f3874c1ed018e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#ada75569811391b31d92f3874c1ed018e">addResetEdge</a> (std::pair&lt; std::string, const clang::Expr * &gt; reset_edge)</td></tr>
+<tr class="separator:ada75569811391b31d92f3874c1ed018e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed65b8e72747fc690c70cd721437adb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#aed65b8e72747fc690c70cd721437adb0">addResetType</a> (bool reset_type)</td></tr>
+<tr class="separator:aed65b8e72747fc690c70cd721437adb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fda18f63ad9fc844cd7ef75639fd315"><td class="memItemLeft" align="right" valign="top">const std::pair&lt; std::string, const clang::Expr * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#a2fda18f63ad9fc844cd7ef75639fd315">getResetSignal</a> () const</td></tr>
+<tr class="separator:a2fda18f63ad9fc844cd7ef75639fd315"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a714a2d96be7908757edd8c5f191217b8"><td class="memItemLeft" align="right" valign="top">const std::pair&lt; std::string, const clang::Expr * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#a714a2d96be7908757edd8c5f191217b8">getResetEdge</a> () const</td></tr>
+<tr class="separator:a714a2d96be7908757edd8c5f191217b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cd1f83eb9d3e05dadf5d228e284f90f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#a3cd1f83eb9d3e05dadf5d228e284f90f">isResetAsync</a> () const</td></tr>
+<tr class="separator:a3cd1f83eb9d3e05dadf5d228e284f90f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -170,6 +182,13 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a5b0c72653fe7a6b6ba9ab0ef9e4928de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29c9490333ae4bc776d1554aee25299e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classsystemc__clang_1_1SusCFG.html">SusCFG</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#a29c9490333ae4bc776d1554aee25299e">_susCFG</a></td></tr>
 <tr class="separator:a29c9490333ae4bc776d1554aee25299e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d7ec56052046d7529aea90b59f803a4"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, const clang::Expr * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#a6d7ec56052046d7529aea90b59f803a4">reset_signal_</a></td></tr>
+<tr class="memdesc:a6d7ec56052046d7529aea90b59f803a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset information.  <a href="classsystemc__clang_1_1EntryFunctionContainer.html#a6d7ec56052046d7529aea90b59f803a4">More...</a><br /></td></tr>
+<tr class="separator:a6d7ec56052046d7529aea90b59f803a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc9ea7f46400dabd4cdadaeba29b8f1d"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, const clang::Expr * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#adc9ea7f46400dabd4cdadaeba29b8f1d">reset_edge_</a></td></tr>
+<tr class="separator:adc9ea7f46400dabd4cdadaeba29b8f1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e653b9187b36ba4f3e38aef84da5ada"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1EntryFunctionContainer.html#a1e653b9187b36ba4f3e38aef84da5ada">reset_type_async_</a></td></tr>
+<tr class="separator:a1e653b9187b36ba4f3e38aef84da5ada"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a1683472a1fedaef624ae20555ea7a75c" name="a1683472a1fedaef624ae20555ea7a75c"></a>
@@ -422,6 +441,60 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ada75569811391b31d92f3874c1ed018e" name="ada75569811391b31d92f3874c1ed018e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada75569811391b31d92f3874c1ed018e">&#9670;&nbsp;</a></span>addResetEdge()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EntryFunctionContainer::addResetEdge </td>
+          <td>(</td>
+          <td class="paramtype">std::pair&lt; std::string, const clang::Expr * &gt;&#160;</td>
+          <td class="paramname"><em>reset_edge</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae04ef080f63a2e8e8b2042363ab13775" name="ae04ef080f63a2e8e8b2042363ab13775"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae04ef080f63a2e8e8b2042363ab13775">&#9670;&nbsp;</a></span>addResetSignal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EntryFunctionContainer::addResetSignal </td>
+          <td>(</td>
+          <td class="paramtype">std::pair&lt; std::string, const clang::Expr * &gt;&#160;</td>
+          <td class="paramname"><em>reset_signal</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aed65b8e72747fc690c70cd721437adb0" name="aed65b8e72747fc690c70cd721437adb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed65b8e72747fc690c70cd721437adb0">&#9670;&nbsp;</a></span>addResetType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EntryFunctionContainer::addResetType </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>reset_type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a967beb0f9aeb78f0d8587917a9668344" name="a967beb0f9aeb78f0d8587917a9668344"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a967beb0f9aeb78f0d8587917a9668344">&#9670;&nbsp;</a></span>addSensitivityInfo()</h2>
 
@@ -476,8 +549,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="afc6b2f950fd88de355563d9437ad5621" name="afc6b2f950fd88de355563d9437ad5621"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc6b2f950fd88de355563d9437ad5621">&#9670;&nbsp;</a></span>dump()</h2>
+<a id="af27adee4d91c6e2244fef7ffb9a5e6b5" name="af27adee4d91c6e2244fef7ffb9a5e6b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af27adee4d91c6e2244fef7ffb9a5e6b5">&#9670;&nbsp;</a></span>dump()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -486,18 +559,8 @@ Public Attributes</h2></td></tr>
           <td class="memname">void EntryFunctionContainer::dump </td>
           <td>(</td>
           <td class="paramtype">llvm::raw_ostream &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>os</em> = <code>llvm::dbgs()</code></td><td>)</td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -642,6 +705,40 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a714a2d96be7908757edd8c5f191217b8" name="a714a2d96be7908757edd8c5f191217b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a714a2d96be7908757edd8c5f191217b8">&#9670;&nbsp;</a></span>getResetEdge()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::pair&lt; std::string, const clang::Expr * &gt; EntryFunctionContainer::getResetEdge </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2fda18f63ad9fc844cd7ef75639fd315" name="a2fda18f63ad9fc844cd7ef75639fd315"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fda18f63ad9fc844cd7ef75639fd315">&#9670;&nbsp;</a></span>getResetSignal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::pair&lt; std::string, const clang::Expr * &gt; EntryFunctionContainer::getResetSignal </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a343064ab06a578f0f0d855aad1d409e4" name="a343064ab06a578f0f0d855aad1d409e4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a343064ab06a578f0f0d855aad1d409e4">&#9670;&nbsp;</a></span>getSenseMap()</h2>
 
@@ -704,6 +801,23 @@ Public Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3cd1f83eb9d3e05dadf5d228e284f90f" name="a3cd1f83eb9d3e05dadf5d228e284f90f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cd1f83eb9d3e05dadf5d228e284f90f">&#9670;&nbsp;</a></span>isResetAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool EntryFunctionContainer::isResetAsync </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -857,6 +971,50 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacesystemc__clang.html#aee628e0c13dbaaeb824bd830dc47a138">PROCESS_TYPE</a> systemc_clang::EntryFunctionContainer::process_type_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc9ea7f46400dabd4cdadaeba29b8f1d" name="adc9ea7f46400dabd4cdadaeba29b8f1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc9ea7f46400dabd4cdadaeba29b8f1d">&#9670;&nbsp;</a></span>reset_edge_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;std::string, const clang::Expr*&gt; systemc_clang::EntryFunctionContainer::reset_edge_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6d7ec56052046d7529aea90b59f803a4" name="a6d7ec56052046d7529aea90b59f803a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d7ec56052046d7529aea90b59f803a4">&#9670;&nbsp;</a></span>reset_signal_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;std::string, const clang::Expr*&gt; systemc_clang::EntryFunctionContainer::reset_signal_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reset information. </p>
+
+</div>
+</div>
+<a id="a1e653b9187b36ba4f3e38aef84da5ada" name="a1e653b9187b36ba4f3e38aef84da5ada"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e653b9187b36ba4f3e38aef84da5ada">&#9670;&nbsp;</a></span>reset_type_async_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_clang::EntryFunctionContainer::reset_type_async_</td>
         </tr>
       </table>
 </div><div class="memdoc">

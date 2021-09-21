@@ -43,7 +43,7 @@ var searchData=
   ['isparentblock_40',['isParentBlock',['../classsystemc__clang_1_1SusCFG.html#aa3949a664ee91427a318509c0bd718ec',1,'systemc_clang::SusCFG']]],
   ['isparentwaitblock_41',['isParentWaitBlock',['../classsystemc__clang_1_1SusCFG.html#afad9f5ac04f02ecd8ea1415e9b3a2918',1,'systemc_clang::SusCFG']]],
   ['isposint_42',['isposint',['../classhnode_1_1util.html#aec9118a21d646bbc50205199825839fd',1,'hnode::util']]],
-  ['isresetasync_43',['isResetAsync',['../classsystemc__clang_1_1ModuleInstance.html#a6acd50f2f2f252816b7eca1d9a4ad6fa',1,'systemc_clang::ModuleInstance']]],
+  ['isresetasync_43',['isResetAsync',['../classsystemc__clang_1_1EntryFunctionContainer.html#a3cd1f83eb9d3e05dadf5d228e284f90f',1,'systemc_clang::EntryFunctionContainer']]],
   ['isscbuiltintype_44',['isSCBuiltinType',['../classhnode_1_1util.html#a9963a7be4acd67aeb84f11a44ad9cd40',1,'hnode::util']]],
   ['isscfunc_45',['isSCFunc',['../classhnode_1_1util.html#a544c879e110dde0e95f7feca2eb44300',1,'hnode::util']]],
   ['isscmainfound_46',['isSCMainFound',['../classsystemc__clang_1_1FindSCMain.html#a1861400b10d1338b0c4cfaebe2881cf6',1,'systemc_clang::FindSCMain']]],

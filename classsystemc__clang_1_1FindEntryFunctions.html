@@ -110,8 +110,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a42b19d96839a9be7a52482df80c8ab1c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a42b19d96839a9be7a52482df80c8ab1c">FindEntryFunctions</a> (const clang::CXXRecordDecl *d, llvm::raw_ostream &amp;os)</td></tr>
-<tr class="separator:a42b19d96839a9be7a52482df80c8ab1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d36aef3156f327cdc56890114905b57"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a8d36aef3156f327cdc56890114905b57">FindEntryFunctions</a> (const clang::CXXRecordDecl *d, llvm::raw_ostream &amp;os, clang::ASTContext &amp;ctx)</td></tr>
+<tr class="separator:a8d36aef3156f327cdc56890114905b57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae10448c8cd8936262c471757b100a870"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#ae10448c8cd8936262c471757b100a870">~FindEntryFunctions</a> ()</td></tr>
 <tr class="separator:ae10448c8cd8936262c471757b100a870"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fadc394a413c49341bb994c4cc87891"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a2fadc394a413c49341bb994c4cc87891">VisitStringLiteral</a> (StringLiteral *l)</td></tr>
@@ -143,6 +143,8 @@ Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:a78cb675830ac2a792c65ab4291b12aa8"><td class="memItemLeft" align="right" valign="top">clang::ASTContext &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a78cb675830ac2a792c65ab4291b12aa8">context_</a></td></tr>
+<tr class="separator:a78cb675830ac2a792c65ab4291b12aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a693c60bf6a806b7323ce13ed1070230f"><td class="memItemLeft" align="right" valign="top">llvm::raw_ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a693c60bf6a806b7323ce13ed1070230f">os_</a></td></tr>
 <tr class="separator:a693c60bf6a806b7323ce13ed1070230f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fd682ccbdb1781a4296ad41dadb7a65"><td class="memItemLeft" align="right" valign="top">const CXXRecordDecl *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a9fd682ccbdb1781a4296ad41dadb7a65">_d</a></td></tr>
@@ -165,12 +167,16 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a30a5efb59a564acfe4ce1cebf167d8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adefc3c1a7fc8504ac7aea94b62c16db3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#adefc3c1a7fc8504ac7aea94b62c16db3">pass_</a></td></tr>
 <tr class="separator:adefc3c1a7fc8504ac7aea94b62c16db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af07587717c680a9e61df581032e05dd2"><td class="memItemLeft" align="right" valign="top">clang::CXXConstructorDecl *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#af07587717c680a9e61df581032e05dd2">ctor_decl_</a></td></tr>
+<tr class="separator:af07587717c680a9e61df581032e05dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44ce48e91ea56e28e46e6cf3dca4438b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a7414ce6160d09ea8539f4513bc204338">entryFunctionVectorType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a44ce48e91ea56e28e46e6cf3dca4438b">entry_function_list_</a></td></tr>
 <tr class="separator:a44ce48e91ea56e28e46e6cf3dca4438b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b32df3d56ee25cae46075545975c31b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#aff6d7588de582ac4424d09bfd22f3993">entryFunctionLHSMapType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a5b32df3d56ee25cae46075545975c31b">entry_function_map_</a></td></tr>
 <tr class="separator:a5b32df3d56ee25cae46075545975c31b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37ec517421a5e437e5cad9ec6697db55"><td class="memItemLeft" align="right" valign="top">vector&lt; CXXMethodDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a37ec517421a5e437e5cad9ec6697db55">other_function_list_</a></td></tr>
 <tr class="separator:a37ec517421a5e437e5cad9ec6697db55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31a70993893595f2c1ccb0aca4ce9c0d"><td class="memItemLeft" align="right" valign="top">clang::MemberExpr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindEntryFunctions.html#a31a70993893595f2c1ccb0aca4ce9c0d">process_me_</a></td></tr>
+<tr class="separator:a31a70993893595f2c1ccb0aca4ce9c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aff6d7588de582ac4424d09bfd22f3993" name="aff6d7588de582ac4424d09bfd22f3993"></a>
@@ -218,8 +224,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a42b19d96839a9be7a52482df80c8ab1c" name="a42b19d96839a9be7a52482df80c8ab1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42b19d96839a9be7a52482df80c8ab1c">&#9670;&nbsp;</a></span>FindEntryFunctions() <span class="overload">[1/2]</span></h2>
+<a id="a8d36aef3156f327cdc56890114905b57" name="a8d36aef3156f327cdc56890114905b57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d36aef3156f327cdc56890114905b57">&#9670;&nbsp;</a></span>FindEntryFunctions() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -234,7 +240,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">llvm::raw_ostream &amp;&#160;</td>
-          <td class="paramname"><em>os</em>&#160;</td>
+          <td class="paramname"><em>os</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">clang::ASTContext &amp;&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -244,6 +256,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Pass_ 1: Find the constructor definition, and the Stmt* that has the code for it. Set the constructor_stmt_ pointer.</p>
+<p >Reset logic.</p>
 <p >Pass 2: Get the entry function name from constructor</p>
 <p >Pass 3: Find the CXXMethodDecl* to the entry function</p>
 
@@ -548,6 +561,50 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a78cb675830ac2a792c65ab4291b12aa8" name="a78cb675830ac2a792c65ab4291b12aa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78cb675830ac2a792c65ab4291b12aa8">&#9670;&nbsp;</a></span>context_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">clang::ASTContext&amp; systemc_clang::FindEntryFunctions::context_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af07587717c680a9e61df581032e05dd2" name="af07587717c680a9e61df581032e05dd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af07587717c680a9e61df581032e05dd2">&#9670;&nbsp;</a></span>ctor_decl_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">clang::CXXConstructorDecl* systemc_clang::FindEntryFunctions::ctor_decl_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a30a5efb59a564acfe4ce1cebf167d8bc" name="a30a5efb59a564acfe4ce1cebf167d8bc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a30a5efb59a564acfe4ce1cebf167d8bc">&#9670;&nbsp;</a></span>ef</h2>
 
@@ -801,6 +858,28 @@ Private Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacesystemc__clang.html#aee628e0c13dbaaeb824bd830dc47a138">PROCESS_TYPE</a> systemc_clang::FindEntryFunctions::proc_type_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a31a70993893595f2c1ccb0aca4ce9c0d" name="a31a70993893595f2c1ccb0aca4ce9c0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31a70993893595f2c1ccb0aca4ce9c0d">&#9670;&nbsp;</a></span>process_me_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">clang::MemberExpr* systemc_clang::FindEntryFunctions::process_me_</td>
         </tr>
       </table>
   </td>
