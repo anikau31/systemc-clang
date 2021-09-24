@@ -23,7 +23,7 @@ namespace systemc_hdl {
 
   class HDLThread {
   public:
-    HDLThread(CXXMethodDecl * emd, hNodep &h_top, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map);
+    HDLThread(CXXMethodDecl * emd, hNodep &h_top, hNodep &h_portsigvarlist, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map);
     virtual ~HDLThread();
     
     hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
@@ -44,10 +44,12 @@ namespace systemc_hdl {
     
     HDLBody *xtbodyp;
 
-    string thisstate_string = "_scclang_state_";
-    string nextstate_string = "_scclang_next_state_";
-    string waitctr_string = "_scclang_wait_counter_";
-    string nextwaitstate_string = "_scclang_next_wait_state_"; // holds the state# to set when ctr=0
+    string state_string;
+    string nextstate_string;
+    string waitctr_string;
+    string nextwaitctr_string;
+    string waitstate_string;
+    string nextwaitstate_string; // holds the state# to set when ctr=0
     int numstates;
     bool needwaitswitchcase;
     
@@ -64,6 +66,7 @@ namespace systemc_hdl {
     void GenerateStateUpdate(hNodep hstatemethod);
     void GenerateStateVar(string sname);
     void GenerateWaitCntUpdate(hNodep h_switchcase);
+    hNodep GenerateBinop(string opname, string lhs, string rhs, bool rhs_is_literal=true);
     bool IsWaitStmt(hNodep hp);
     void ProcessHWait(hNodep htmp, int nxtstate); // rewrite the hWait into next state update
 

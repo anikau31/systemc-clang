@@ -145,6 +145,10 @@ namespace hnode {
     void append(hNodep hnew) {
       child_list.push_back(hnew);
     }
+
+    int size() {
+      return child_list.size();
+    }
     
     string printopc(hdlopsEnum opc) {
       return hdlop_pn[static_cast<int>(opc)];

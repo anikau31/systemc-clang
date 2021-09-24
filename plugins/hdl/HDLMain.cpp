@@ -201,7 +201,8 @@ namespace systemc_hdl {
     h_top = new hNode(hNode::hdlopsEnum::hProcesses);
     mod_i = mod;
     for (int i = 0; i <= basemods.size(); i++) {
-      SCproc2hcode(mod_i->getProcessMap(), h_top, mod_vname_map);
+      // send portsigvarlist to proc code gen so thread vars get promoted to module level
+      SCproc2hcode(mod_i->getProcessMap(), h_top, h_ports, mod_vname_map);
       if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
       if (i == basemods.size()) break;
       mod_i = basemods[i];
@@ -475,7 +476,8 @@ namespace systemc_hdl {
     }
   }
 
-  void HDLMain::SCproc2hcode(ModuleInstance::processMapType pm, hNodep &h_top, hdecl_name_map_t &mod_vname_map) {
+  void HDLMain::SCproc2hcode(ModuleInstance::processMapType pm, hNodep &h_top, hNodep &h_port,
+			     hdecl_name_map_t &mod_vname_map) {
     // typedef std::map<std::string, ProcessDecl *> processMapType;
     // processMapType getProcessMap();
     // ProcessDecl::getEntryFunction() returns EntryFunctionContainer*
@@ -511,9 +513,9 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "thread " << efc->getName() << "\n");
 	  CXXMethodDecl *emd = efc->getEntryMethod();
 	  if (emd->hasBody()) {
-	    //hNodep h_body = new hNode(efc->getName(), hNode::hdlopsEnum::hThread);
-	    //HDLThread xthread(emd, h_body, main_diag_engine, getContext(), mod_vname_map);
-	    HDLThread xthread(emd, h_thread, main_diag_engine, getContext(), mod_vname_map);
+	    
+	    // params includes portsigvarlist so thread local vars get promoted to module level
+	    HDLThread xthread(emd, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map);
 	    allmethodecls.insertall(xthread.methodecls);
 	    //h_thread->child_list.push_back(h_body);
 	    h_top->child_list.push_back(h_thread);
