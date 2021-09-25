@@ -48,8 +48,7 @@ namespace systemc_hdl {
     string nextstate_string;
     string waitctr_string;
     string nextwaitctr_string;
-    string waitstate_string;
-    string nextwaitstate_string; // holds the state# to set when ctr=0
+    string waitnextstate_string; // holds the state# to set when ctr=0
     int numstates;
     bool needwaitswitchcase;
     

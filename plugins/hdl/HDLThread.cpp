@@ -51,15 +51,13 @@ namespace systemc_hdl {
       nextstate_string = "_scclang_next_state_"+ threadname;
       waitctr_string = "_scclang_wait_counter_"+ threadname;
       nextwaitctr_string = "_scclang_nextwait_counter_"+ threadname;
-      waitstate_string = "_scclang_wait_state_"+ threadname;
-      nextwaitstate_string = "_scclang_next_wait_state_"+ threadname; // holds the state# to set when ctr=0
+      waitnextstate_string = "_scclang_wait_next_state_"+ threadname;
       GenerateStateUpdate(hstatemethod);
       GenerateStateVar(state_string);
       GenerateStateVar(nextstate_string);
       GenerateStateVar(waitctr_string);
       GenerateStateVar(nextwaitctr_string);
-      GenerateStateVar(waitstate_string);
-      GenerateStateVar(nextwaitstate_string);
+      GenerateStateVar(waitnextstate_string);
       
       const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock> &paths_found{ scfg.getPathsFound()};
       numstates = paths_found.size();
@@ -340,11 +338,11 @@ namespace systemc_hdl {
       string waitarg = hnewinstr->getname();
       // wait counter = wait arg
       hw->set( hNode::hdlopsEnum::hBinop, "=");
-      hnewinstr->set(hNode::hdlopsEnum::hVarref, waitctr_string);
+      hnewinstr->set(hNode::hdlopsEnum::hVarref, nextwaitctr_string);
       hw->append(new hNode(waitarg, hNode::hdlopsEnum::hLiteral));
 
       // nextwaitstate = nextstate
-      htmp->append(GenerateBinop("=", nextwaitstate_string, nextstate_string, false));
+      htmp->append(GenerateBinop("=", waitnextstate_string, nextstate_string, false));
 
       // nextstate = waitstate
       htmp->append(GenerateBinop("=", nextstate_string, std::to_string(numstates)));
@@ -360,7 +358,7 @@ namespace systemc_hdl {
     hw =  new hNode(hNode::hdlopsEnum::hIfStmt);
     hw->append(GenerateBinop("==", waitctr_string, "0"));
     // then clause
-    hw->append(GenerateBinop("=", nextstate_string, nextwaitstate_string, false));
+    hw->append(GenerateBinop("=", nextstate_string, waitnextstate_string, false));
     h_switchcase->append(hw);
     
   }
@@ -372,16 +370,15 @@ namespace systemc_hdl {
     // then part: reset state transition variables
     hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
     hcstmt->append(GenerateBinop("=", state_string, "0"));
-    hcstmt->append(GenerateBinop("=", waitstate_string, "0"));
+    hcstmt->append(GenerateBinop("=", waitnextstate_string, "0"));
     hcstmt->append(GenerateBinop("=", waitctr_string, "0"));
     hifblock->append(hcstmt);
 
     // else part: set state transition variables
     hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
     hcstmt->append(GenerateBinop("=", state_string, nextstate_string, false));
-    hcstmt->append(GenerateBinop("=", waitstate_string, nextwaitstate_string, false));
+    //hcstmt->append(GenerateBinop("=", waitnextstate_string, nextwaitnextstate_string, false));
     hcstmt->append(GenerateBinop("=", waitctr_string, nextwaitctr_string, false));
-    hifblock->append(hcstmt);
     hifblock->append(hcstmt);
     hstatemethod->append(hifblock);
   }
