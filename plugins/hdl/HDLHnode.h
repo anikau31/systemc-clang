@@ -61,6 +61,7 @@ namespace systemc_hdl {
   static inline bool isSimEvent(string &s) {
     return (s=="value_changed_event");
   }
+  
   class HDLConstructorHcode {
   public:
     HDLConstructorHcode() {};
@@ -82,10 +83,13 @@ namespace systemc_hdl {
     hNodep HnodeDeepCopy(hNodep hp);
     void RemoveSCMethod(hNodep &hp);
     void CleanupInitHcode(hNodep &hp);
+    void GetSensLists(std::vector<hNodep> &hsens) {
+      hsens = hnewsens;
+    }
+    
   private:
     hNodep hnewpb;  // port binding list
     std::vector<hNodep> hnewsens; // sensitivity lists
-
   };
 }
 #endif

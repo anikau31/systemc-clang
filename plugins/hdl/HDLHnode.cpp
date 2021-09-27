@@ -434,6 +434,7 @@ namespace systemc_hdl {
       }
     }
     else {
+      // check for thread sensitivity declarations
       int threadsensitem = isThreadSensitem(hp);
       if (threadsensitem >0 ) {
       // e.g.   hMethodCall sc_core__sc_module__async_reset_signal_is:async_reset_signal_is [
@@ -441,7 +442,12 @@ namespace systemc_hdl {
       //            hLiteral 0 NOLIST
       //        ]
       LLVM_DEBUG(llvm::dbgs() << "HDLHNode: found thread sens item " << "\n");
-      hp->set(hNode::hdlopsEnum::hSensvar, threadsensitem == reset_async? "ASYNC": "SYNC");
+      hNodep hpsens = HnodeDeepCopy(hp); // need to keep the subtrees when the original tree gets released
+      
+      hpsens->set(hNode::hdlopsEnum::hSensvar, threadsensitem == reset_async? "ASYNC": "SYNC");
+      if (hnewsens.size()==0) // this shouldn't be the case, but whatever
+	hnewsens.push_back(new hNode( "METHOD ???", hNode::hdlopsEnum::hSenslist));
+      hnewsens.back()->append(hpsens);
       }
     }
   }
