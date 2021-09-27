@@ -7,6 +7,10 @@
 
 // clang-format on
 
+/// Different matchers may use different DEBUG_TYPE
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "HDL"
+
 //!
 //! Re-write hcode generated from CXXConstructorDecl for an SC_MODULE:
 //! Pass variable initialization statements through
@@ -399,6 +403,7 @@ namespace systemc_hdl {
     else if (isInitSensitem(hp)) {
       UnrollSensitem(hp, for_info);
     }
+      
     else if ((hp->h_op == hNode::hdlopsEnum::hForStmt) && (hp->child_list.size() > 3)) {
       PushRange(hp, for_info); // fill in name, lo, hi, step
       for (int forloopix = for_info.back().lo; forloopix < for_info.back().hi; forloopix+=for_info.back().step) {
@@ -428,7 +433,17 @@ namespace systemc_hdl {
 	hnewsens.push_back(new hNode( "METHOD ???", hNode::hdlopsEnum::hSenslist));
       }
     }
-
+    else {
+      int threadsensitem = isThreadSensitem(hp);
+      if (threadsensitem >0 ) {
+      // e.g.   hMethodCall sc_core__sc_module__async_reset_signal_is:async_reset_signal_is [
+      //            hVarref reset NOLIST
+      //            hLiteral 0 NOLIST
+      //        ]
+      LLVM_DEBUG(llvm::dbgs() << "HDLHNode: found thread sens item " << "\n");
+      hp->set(hNode::hdlopsEnum::hSensvar, threadsensitem == reset_async? "ASYNC": "SYNC");
+      }
+    }
   }
   
   

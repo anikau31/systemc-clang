@@ -515,7 +515,8 @@ namespace systemc_hdl {
 	  if (emd->hasBody()) {
 	    
 	    // params includes portsigvarlist so thread local vars get promoted to module level
-	    HDLThread xthread(emd, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map);
+	    // have to pass efc to get the reset info
+	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map);
 	    allmethodecls.insertall(xthread.methodecls);
 	    //h_thread->child_list.push_back(h_body);
 	    h_top->child_list.push_back(h_thread);

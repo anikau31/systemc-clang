@@ -23,17 +23,30 @@ namespace systemc_hdl {
   static const string localstr{"_local_"};
   static const string strsccore("sc_core__sc");
 
+  static const int reset_async = 1;
+  static const int reset_sync = 2;
+  
   static inline bool isInitPB(hNodep hp) {
-    return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
+    return (hp->getopc() == hNode::hdlopsEnum::hBinop) &&
       (hp->h_name == pbstring);
   }
   static inline bool isInitSensitem(hNodep hp) {
-    return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
+    return (hp->getopc() == hNode::hdlopsEnum::hBinop) &&
       (hp->h_name == sensop);
   }
 
+  static inline int isThreadSensitem(hNodep hp) {
+    if (hp->getopc() == hNode::hdlopsEnum::hMethodCall)
+      if (hp->getname().find( "sc_core__sc_module__async_reset_signal_is")!=std::string::npos)
+	return reset_async;
+      else if (hp->getname().find( "sc_core__sc_module__sync_reset_signal_is")!=std::string::npos)
+	return reset_sync;
+      else return 0;
+    else return 0;
+  }
+  
   static inline bool isMethodCall(hNodep hp) {
-    return ((hp->h_op == hNode::hdlopsEnum::hVarAssign) &&
+    return ((hp->getopc() == hNode::hdlopsEnum::hVarAssign) &&
 	    (hp->child_list.size() == 2) &&
 	    (hp->child_list[1]->h_op == hNode::hdlopsEnum::hMethodCall));
   }

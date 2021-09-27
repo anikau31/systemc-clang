@@ -23,7 +23,7 @@ namespace systemc_hdl {
 
   class HDLThread {
   public:
-    HDLThread(CXXMethodDecl * emd, hNodep &h_top, hNodep &h_portsigvarlist, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map);
+    HDLThread(EntryFunctionContainer *efc, hNodep &h_top, hNodep &h_portsigvarlist, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map);
     virtual ~HDLThread();
     
     hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
@@ -33,7 +33,7 @@ namespace systemc_hdl {
   private:
   
     hNodep h_ret;   // value returned by each subexpression
-
+    EntryFunctionContainer *efc_;
     hNodep h_top_; // reference to calling hnode pointer
     hNodep hthreadblocksp; // collect the case alternatives here
     hNodep hlocalvarsp; // collect the local vars here
@@ -49,6 +49,7 @@ namespace systemc_hdl {
     string waitctr_string;
     string nextwaitctr_string;
     string waitnextstate_string; // holds the state# to set when ctr=0
+    string savewaitnextstate_string; // signal to hold the waitnextstate
     int numstates;
     bool needwaitswitchcase;
     
