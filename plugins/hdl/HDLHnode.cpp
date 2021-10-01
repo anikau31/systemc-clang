@@ -473,11 +473,7 @@ namespace systemc_hdl {
       xconstructor->child_list.push_back(hnewpb);
     }
     if (!hnewsens.empty()) {
-      for (hNodep onesens: hnewsens) {
-	if (!onesens->child_list.empty()) {
-	  xconstructor->child_list.push_back(onesens);
-	}
-      }
+      xconstructor->child_list.insert( xconstructor->child_list.end(), hnewsens.begin(), hnewsens.end());
     }
     CleanupInitHcode(xconstructor);
     return xconstructor;

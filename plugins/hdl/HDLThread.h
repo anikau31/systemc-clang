@@ -23,7 +23,7 @@ namespace systemc_hdl {
 
   class HDLThread {
   public:
-    HDLThread(EntryFunctionContainer *efc, hNodep &h_top, hNodep &h_portsigvarlist, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map);
+    HDLThread(EntryFunctionContainer *efc, hNodep &h_top, hNodep &h_portsigvarlist, clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,  hdecl_name_map_t &mod_vname_map, hNodep h_resetvarinfo);
     virtual ~HDLThread();
     
     hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
@@ -41,6 +41,8 @@ namespace systemc_hdl {
     hdecl_name_map_t thread_vname_map;
     bool add_info;
     hdecl_name_map_t &mod_vname_map_; // reference to module level names
+
+    hNodep h_resetvarinfo_;
     
     HDLBody *xtbodyp;
 

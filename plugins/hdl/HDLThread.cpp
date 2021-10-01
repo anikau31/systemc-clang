@@ -21,8 +21,8 @@ using namespace systemc_clang;
 namespace systemc_hdl {
 
   HDLThread::HDLThread(EntryFunctionContainer *efc, hNodep &h_top, hNodep &h_portsigvarlist,
-		       clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map )
-    : efc_(efc), h_top_{h_top}, diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map} {
+		       clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, hNodep h_resetvarinfo )
+    : efc_(efc), h_top_{h_top}, diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map}, h_resetvarinfo_{h_resetvarinfo} {
 
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLThread constructor (thread body)\n");
       
@@ -371,8 +371,17 @@ namespace systemc_hdl {
   
   void HDLThread::GenerateStateUpdate(hNodep hstatemethod){
     hNodep hifblock = new hNode(hNode::hdlopsEnum::hIfStmt);
-    //hifblock->append(new hNode("reset", hNode::hdlopsEnum::hVarref));
-    hifblock->append(GenerateBinop("==", efc_->getResetSignal().first, efc_->getResetEdge().first, false));
+    // expecting
+    // hSensvar ASYNC [
+    //   hVarref arst NOLIST
+    //   hLiteral 0 NOLIST
+    // ]
+	    
+    if ((h_resetvarinfo_ != NULL) && (h_resetvarinfo_->child_list.size() == 2)) {
+      hifblock->append(GenerateBinop("==", h_resetvarinfo_->child_list[0]->getname(),
+				     h_resetvarinfo_->child_list[1]->getname()));
+    }
+    else hifblock->append(GenerateBinop("==", efc_->getResetSignal().first, efc_->getResetEdge().first, false));
 
     // then part: reset state transition variables
     hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
@@ -392,80 +401,80 @@ namespace systemc_hdl {
     hstatemethod->append(hifblock);
   }
 
-      void HDLThread::GenerateStateVar(string sname) {
-      // add var decls for a state variable
+  void HDLThread::GenerateStateVar(string sname) {
+    // add var decls for a state variable
     
-      hNodep hsigp = new hNode(sname, hNode::hdlopsEnum::hVardecl); 
-      hNodep htypeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-      htypeinfo->append(new hNode("int", hNode::hdlopsEnum::hType));
-      hsigp->append(htypeinfo);
-      hlocalvarsp->append(hsigp);
-    }
+    hNodep hsigp = new hNode(sname, hNode::hdlopsEnum::hVardecl); 
+    hNodep htypeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
+    htypeinfo->append(new hNode("int", hNode::hdlopsEnum::hType));
+    hsigp->append(htypeinfo);
+    hlocalvarsp->append(hsigp);
+  }
 
-    hNodep HDLThread::GenerateBinop( string opname, string lhs, string rhs, bool rhs_is_literal) {
-      hNodep newbinop = new hNode(opname, hNode::hdlopsEnum::hBinop);
-      newbinop->append(new hNode(lhs, hNode::hdlopsEnum::hVarref));
-      newbinop->append(new hNode(rhs, rhs_is_literal ? hNode::hdlopsEnum::hLiteral :hNode::hdlopsEnum::hVarref));
-      return newbinop;
+  hNodep HDLThread::GenerateBinop( string opname, string lhs, string rhs, bool rhs_is_literal) {
+    hNodep newbinop = new hNode(opname, hNode::hdlopsEnum::hBinop);
+    newbinop->append(new hNode(lhs, hNode::hdlopsEnum::hVarref));
+    newbinop->append(new hNode(rhs, rhs_is_literal ? hNode::hdlopsEnum::hLiteral :hNode::hdlopsEnum::hVarref));
+    return newbinop;
+  }
+  
+  // Code below this line is obsolete
+  // BFS traversal so all local decls are seen before being referenced
+  
+  void HDLThread::AddThreadMethod(const CFGBlock &BI) {
+    std::vector<const CFGBlock *> succlist, nextsucclist;
+    ProcessBB(BI);
+    //CFGVisited[BI.getBlockID()]+=1;
+    for (const auto &succ : BI.succs() ) { // gather successors
+      const CFGBlock *SuccBlk = succ.getReachableBlock();
+      if (SuccBlk!=NULL) succlist.push_back(SuccBlk);
     }
-  
-    // Code below this line is obsolete
-    // BFS traversal so all local decls are seen before being referenced
-  
-    void HDLThread::AddThreadMethod(const CFGBlock &BI) {
-      std::vector<const CFGBlock *> succlist, nextsucclist;
-      ProcessBB(BI);
-      //CFGVisited[BI.getBlockID()]+=1;
-      for (const auto &succ : BI.succs() ) { // gather successors
-	const CFGBlock *SuccBlk = succ.getReachableBlock();
-	if (SuccBlk!=NULL) succlist.push_back(SuccBlk);
-      }
-      bool changed;
-      do {
-	changed = false;
-	for (const CFGBlock *si: succlist) { //process BB of successors at this level
-	  if (CFGVisited.find(si->getBlockID()) == CFGVisited.end()) {
-	    CFGVisited[si->getBlockID()]+= 1;
-	    LLVM_DEBUG(llvm::dbgs() << "Visiting Block " << si->getBlockID() << "\n");
-	    ProcessBB(*si);
-	    changed = true;
-	    for (auto sii: si->succs()) {
-	      const CFGBlock *SuccBlk = sii.getReachableBlock();
-	      if (SuccBlk!=NULL) nextsucclist.push_back(SuccBlk); // gather successors at next level
-	    }
+    bool changed;
+    do {
+      changed = false;
+      for (const CFGBlock *si: succlist) { //process BB of successors at this level
+	if (CFGVisited.find(si->getBlockID()) == CFGVisited.end()) {
+	  CFGVisited[si->getBlockID()]+= 1;
+	  LLVM_DEBUG(llvm::dbgs() << "Visiting Block " << si->getBlockID() << "\n");
+	  ProcessBB(*si);
+	  changed = true;
+	  for (auto sii: si->succs()) {
+	    const CFGBlock *SuccBlk = sii.getReachableBlock();
+	    if (SuccBlk!=NULL) nextsucclist.push_back(SuccBlk); // gather successors at next level
 	  }
 	}
-	succlist = nextsucclist;
       }
-      while (changed);
+      succlist = nextsucclist;
     }
-
-    void HDLThread::ProcessBB(const CFGBlock &BI) {
-      string blkid =  std::to_string(BI.getBlockID());
-      if (BI.size() > 0) {
-	hNodep h_body =  new hNode("B"+blkid, hNode::hdlopsEnum::hMethod);
-	// from http://clang-developers.42468.n3.nabble.com/Visiting-statements-of-a-CFG-one-time-td4069440.html#a4069447
-	// had to add recursive traversal of AST node children
-	std::vector<const Stmt *> SS;
-	FindStatements(BI, SS);
-
-	hNodep htmp = new hNode(h_top_->getname(), hNode::hdlopsEnum::hNoop); // put the statement here temporarily
-	for (auto stmt: SS) {
-	  LLVM_DEBUG(llvm::dbgs() << "Stmt follows\n");
-	  LLVM_DEBUG(stmt->dump(llvm::dbgs(), ast_context_));
-	  //generate hcode for this statement, 
-	  //HDLBody xmethod(const_cast<Stmt *>(stmt), h_body, diag_e, ast_context_, mod_vname_map_, false);
-	  xtbodyp->Run(const_cast<Stmt *>(stmt), htmp, rthread);
-	  CheckVardecls(htmp, BI.getBlockID());
-	  if (htmp->child_list.size() >0)
-	    h_body->child_list.insert(h_body->child_list.end(), htmp->child_list.begin(), htmp->child_list.end());
-	
-	  htmp->child_list.clear();
-	
-	  methodecls.insertall(xtbodyp->methodecls);
-	}
-	hthreadblocksp->append(h_body);
-      }
-    }
-
+    while (changed);
   }
+
+  void HDLThread::ProcessBB(const CFGBlock &BI) {
+    string blkid =  std::to_string(BI.getBlockID());
+    if (BI.size() > 0) {
+      hNodep h_body =  new hNode("B"+blkid, hNode::hdlopsEnum::hMethod);
+      // from http://clang-developers.42468.n3.nabble.com/Visiting-statements-of-a-CFG-one-time-td4069440.html#a4069447
+      // had to add recursive traversal of AST node children
+      std::vector<const Stmt *> SS;
+      FindStatements(BI, SS);
+
+      hNodep htmp = new hNode(h_top_->getname(), hNode::hdlopsEnum::hNoop); // put the statement here temporarily
+      for (auto stmt: SS) {
+	LLVM_DEBUG(llvm::dbgs() << "Stmt follows\n");
+	LLVM_DEBUG(stmt->dump(llvm::dbgs(), ast_context_));
+	//generate hcode for this statement, 
+	//HDLBody xmethod(const_cast<Stmt *>(stmt), h_body, diag_e, ast_context_, mod_vname_map_, false);
+	xtbodyp->Run(const_cast<Stmt *>(stmt), htmp, rthread);
+	CheckVardecls(htmp, BI.getBlockID());
+	if (htmp->child_list.size() >0)
+	  h_body->child_list.insert(h_body->child_list.end(), htmp->child_list.begin(), htmp->child_list.end());
+	
+	htmp->child_list.clear();
+	
+	methodecls.insertall(xtbodyp->methodecls);
+      }
+      hthreadblocksp->append(h_body);
+    }
+  }
+
+}

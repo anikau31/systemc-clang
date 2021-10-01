@@ -1717,12 +1717,12 @@
       ]
       hProcess ms_proc [
         hMethod ms_proc [
-          hVardecl last_ms_proc_local_0 [
+          hVardecl last_ms_proc_local_2 [
             hTypeinfo  NONAME [
               hType _Bool NOLIST
             ]
           ]
-          hVardecl fp_ms_proc_local_1 [
+          hVardecl fp_ms_proc_local_3 [
             hTypeinfo  NONAME [
               hType fp_t [
                 hLiteral 11 NOLIST
@@ -1730,7 +1730,7 @@
               ]
             ]
           ]
-          hVardecl expo_ms_proc_local_2 [
+          hVardecl expo_ms_proc_local_4 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 11 NOLIST
@@ -1768,7 +1768,7 @@
               ]
               hCStmt  NONAME [
                 hVarAssign  NONAME [
-                  hVarref last_ms_proc_local_0 NOLIST
+                  hVarref last_ms_proc_local_2 NOLIST
                   hBinop == [
                     hSigAssignR read [
                       hVarref count NOLIST
@@ -1777,7 +1777,7 @@
                   ]
                 ]
                 hVarAssign  NONAME [
-                  hVarref fp_ms_proc_local_1 NOLIST
+                  hVarref fp_ms_proc_local_3 NOLIST
                   hSigAssignR read [
                     hVarref s_fp##data NOLIST
                   ]
@@ -1785,25 +1785,25 @@
                 hIfStmt  NONAME [
                   hBinop && [
                     hBinop == [
-                      hVarref fp_ms_proc_local_1##expo NOLIST
+                      hVarref fp_ms_proc_local_3##expo NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hBinop == [
-                      hVarref fp_ms_proc_local_1##frac NOLIST
+                      hVarref fp_ms_proc_local_3##frac NOLIST
                       hLiteral 0 NOLIST
                     ]
                   ]
                   hCStmt  NONAME [
                     hBinop = [
-                      hVarref expo_ms_proc_local_2 NOLIST
-                      hVarref fp_ms_proc_local_1##expo NOLIST
+                      hVarref expo_ms_proc_local_4 NOLIST
+                      hVarref fp_ms_proc_local_3##expo NOLIST
                     ]
                   ]
                   hCStmt  NONAME [
                     hBinop = [
-                      hVarref expo_ms_proc_local_2 NOLIST
+                      hVarref expo_ms_proc_local_4 NOLIST
                       hBinop + [
-                        hVarref fp_ms_proc_local_1##expo NOLIST
+                        hVarref fp_ms_proc_local_3##expo NOLIST
                         hLiteral 1 [
                           hTypeinfo  NONAME [
                             hType sc_uint [
@@ -1819,7 +1819,7 @@
                   hVarref c_sync NOLIST
                   hCStmt  NONAME [
                     hIfStmt  NONAME [
-                      hVarref last_ms_proc_local_0 NOLIST
+                      hVarref last_ms_proc_local_2 NOLIST
                       hCStmt  NONAME [
                         hBinop = [
                           hVarref count NOLIST
@@ -1857,7 +1857,7 @@
                       ]
                       hBinop = [
                         hVarref emax NOLIST
-                        hVarref expo_ms_proc_local_2 NOLIST
+                        hVarref expo_ms_proc_local_4 NOLIST
                       ]
                       hBinop = [
                         hVarref emax NOLIST
@@ -1877,14 +1877,14 @@
                         hVarref s_fp##valid NOLIST
                       ]
                       hBinop > [
-                        hVarref expo_ms_proc_local_2 NOLIST
+                        hVarref expo_ms_proc_local_4 NOLIST
                         hVarref emax NOLIST
                       ]
                     ]
                     hCStmt  NONAME [
                       hBinop = [
                         hVarref emax NOLIST
-                        hVarref expo_ms_proc_local_2 NOLIST
+                        hVarref expo_ms_proc_local_4 NOLIST
                       ]
                     ]
                   ]
@@ -1903,7 +1903,7 @@
                   hIfStmt  NONAME [
                     hBinop && [
                       hVarref c_sync NOLIST
-                      hVarref last_ms_proc_local_0 NOLIST
+                      hVarref last_ms_proc_local_2 NOLIST
                     ]
                     hBinop = [
                       hVarref emax_v NOLIST
@@ -2263,28 +2263,28 @@
       ]
       hProcess ms_proc [
         hMethod ms_proc [
-          hVardecl wr_inc_ms_proc_local_0 [
+          hVardecl wr_inc_ms_proc_local_3 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 5 NOLIST
               ]
             ]
           ]
-          hVardecl rd_inc_ms_proc_local_1 [
+          hVardecl rd_inc_ms_proc_local_4 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 5 NOLIST
               ]
             ]
           ]
-          hVardecl i_ms_proc_local_2 [
+          hVardecl i_ms_proc_local_5 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
           hCStmt  NONAME [
             hBinop = [
-              hVarref wr_inc_ms_proc_local_0 NOLIST
+              hVarref wr_inc_ms_proc_local_3 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -2296,7 +2296,7 @@
               ]
             ]
             hBinop = [
-              hVarref rd_inc_ms_proc_local_1 NOLIST
+              hVarref rd_inc_ms_proc_local_4 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -2324,20 +2324,20 @@
                 ]
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 0 NOLIST
                   ]
                   hBinop < [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 32 NOLIST
                   ]
                   hPostfix ++ [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                   ]
                   hBinop = [
                     hBinop ARRAYSUBSCRIPT [
                       hVarref data NOLIST
-                      hVarref i_ms_proc_local_2 NOLIST
+                      hVarref i_ms_proc_local_5 NOLIST
                     ]
                     hLiteral 0 NOLIST
                   ]
@@ -2405,7 +2405,7 @@
                     ]
                     hBinop = [
                       hVarref wr_idx NOLIST
-                      hVarref wr_inc_ms_proc_local_0 NOLIST
+                      hVarref wr_inc_ms_proc_local_3 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -2414,7 +2414,7 @@
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref wr_inc_ms_proc_local_0 NOLIST
+                            hVarref wr_inc_ms_proc_local_3 NOLIST
                             hVarref rd_idx NOLIST
                           ]
                           hBinop = [
@@ -2435,7 +2435,7 @@
                   hCStmt  NONAME [
                     hBinop = [
                       hVarref rd_idx NOLIST
-                      hVarref rd_inc_ms_proc_local_1 NOLIST
+                      hVarref rd_inc_ms_proc_local_4 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -2448,7 +2448,7 @@
                         ]
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref rd_inc_ms_proc_local_1 NOLIST
+                            hVarref rd_inc_ms_proc_local_4 NOLIST
                             hVarref wr_idx NOLIST
                           ]
                           hBinop = [
@@ -2889,28 +2889,28 @@
       ]
       hProcess ms_proc [
         hMethod ms_proc [
-          hVardecl wr_inc_ms_proc_local_0 [
+          hVardecl wr_inc_ms_proc_local_3 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 1 NOLIST
               ]
             ]
           ]
-          hVardecl rd_inc_ms_proc_local_1 [
+          hVardecl rd_inc_ms_proc_local_4 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 1 NOLIST
               ]
             ]
           ]
-          hVardecl i_ms_proc_local_2 [
+          hVardecl i_ms_proc_local_5 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
           hCStmt  NONAME [
             hBinop = [
-              hVarref wr_inc_ms_proc_local_0 NOLIST
+              hVarref wr_inc_ms_proc_local_3 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -2922,7 +2922,7 @@
               ]
             ]
             hBinop = [
-              hVarref rd_inc_ms_proc_local_1 NOLIST
+              hVarref rd_inc_ms_proc_local_4 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -2941,20 +2941,20 @@
               hCStmt  NONAME [
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 0 NOLIST
                   ]
                   hBinop < [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 2 NOLIST
                   ]
                   hPostfix ++ [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                   ]
                   hBinop = [
                     hBinop ARRAYSUBSCRIPT [
                       hVarref data NOLIST
-                      hVarref i_ms_proc_local_2 NOLIST
+                      hVarref i_ms_proc_local_5 NOLIST
                     ]
                     hLiteral 0 NOLIST
                   ]
@@ -3005,7 +3005,7 @@
                     ]
                     hBinop = [
                       hVarref wr_idx NOLIST
-                      hVarref wr_inc_ms_proc_local_0 NOLIST
+                      hVarref wr_inc_ms_proc_local_3 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -3014,7 +3014,7 @@
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref wr_inc_ms_proc_local_0 NOLIST
+                            hVarref wr_inc_ms_proc_local_3 NOLIST
                             hVarref rd_idx NOLIST
                           ]
                           hBinop = [
@@ -3035,7 +3035,7 @@
                   hCStmt  NONAME [
                     hBinop = [
                       hVarref rd_idx NOLIST
-                      hVarref rd_inc_ms_proc_local_1 NOLIST
+                      hVarref rd_inc_ms_proc_local_4 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -3048,7 +3048,7 @@
                         ]
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref rd_inc_ms_proc_local_1 NOLIST
+                            hVarref rd_inc_ms_proc_local_4 NOLIST
                             hVarref wr_idx NOLIST
                           ]
                           hBinop = [
@@ -3559,28 +3559,28 @@
       ]
       hProcess ms_proc [
         hMethod ms_proc [
-          hVardecl wr_inc_ms_proc_local_0 [
+          hVardecl wr_inc_ms_proc_local_3 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 1 NOLIST
               ]
             ]
           ]
-          hVardecl rd_inc_ms_proc_local_1 [
+          hVardecl rd_inc_ms_proc_local_4 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 1 NOLIST
               ]
             ]
           ]
-          hVardecl i_ms_proc_local_2 [
+          hVardecl i_ms_proc_local_5 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
           hCStmt  NONAME [
             hBinop = [
-              hVarref wr_inc_ms_proc_local_0 NOLIST
+              hVarref wr_inc_ms_proc_local_3 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -3592,7 +3592,7 @@
               ]
             ]
             hBinop = [
-              hVarref rd_inc_ms_proc_local_1 NOLIST
+              hVarref rd_inc_ms_proc_local_4 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -3620,20 +3620,20 @@
                 ]
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 0 NOLIST
                   ]
                   hBinop < [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 2 NOLIST
                   ]
                   hPostfix ++ [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                   ]
                   hBinop = [
                     hBinop ARRAYSUBSCRIPT [
                       hVarref data NOLIST
-                      hVarref i_ms_proc_local_2 NOLIST
+                      hVarref i_ms_proc_local_5 NOLIST
                     ]
                     hLiteral 0 NOLIST
                   ]
@@ -3701,7 +3701,7 @@
                     ]
                     hBinop = [
                       hVarref wr_idx NOLIST
-                      hVarref wr_inc_ms_proc_local_0 NOLIST
+                      hVarref wr_inc_ms_proc_local_3 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -3710,7 +3710,7 @@
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref wr_inc_ms_proc_local_0 NOLIST
+                            hVarref wr_inc_ms_proc_local_3 NOLIST
                             hVarref rd_idx NOLIST
                           ]
                           hBinop = [
@@ -3731,7 +3731,7 @@
                   hCStmt  NONAME [
                     hBinop = [
                       hVarref rd_idx NOLIST
-                      hVarref rd_inc_ms_proc_local_1 NOLIST
+                      hVarref rd_inc_ms_proc_local_4 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -3744,7 +3744,7 @@
                         ]
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref rd_inc_ms_proc_local_1 NOLIST
+                            hVarref rd_inc_ms_proc_local_4 NOLIST
                             hVarref wr_idx NOLIST
                           ]
                           hBinop = [
@@ -4083,28 +4083,28 @@
       ]
       hProcess ms_proc [
         hMethod ms_proc [
-          hVardecl wr_inc_ms_proc_local_0 [
+          hVardecl wr_inc_ms_proc_local_3 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 4 NOLIST
               ]
             ]
           ]
-          hVardecl rd_inc_ms_proc_local_1 [
+          hVardecl rd_inc_ms_proc_local_4 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 4 NOLIST
               ]
             ]
           ]
-          hVardecl i_ms_proc_local_2 [
+          hVardecl i_ms_proc_local_5 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
           hCStmt  NONAME [
             hBinop = [
-              hVarref wr_inc_ms_proc_local_0 NOLIST
+              hVarref wr_inc_ms_proc_local_3 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -4116,7 +4116,7 @@
               ]
             ]
             hBinop = [
-              hVarref rd_inc_ms_proc_local_1 NOLIST
+              hVarref rd_inc_ms_proc_local_4 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -4144,20 +4144,20 @@
                 ]
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 0 NOLIST
                   ]
                   hBinop < [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 16 NOLIST
                   ]
                   hPostfix ++ [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                   ]
                   hBinop = [
                     hBinop ARRAYSUBSCRIPT [
                       hVarref data NOLIST
-                      hVarref i_ms_proc_local_2 NOLIST
+                      hVarref i_ms_proc_local_5 NOLIST
                     ]
                     hLiteral 0 NOLIST
                   ]
@@ -4225,7 +4225,7 @@
                     ]
                     hBinop = [
                       hVarref wr_idx NOLIST
-                      hVarref wr_inc_ms_proc_local_0 NOLIST
+                      hVarref wr_inc_ms_proc_local_3 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -4234,7 +4234,7 @@
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref wr_inc_ms_proc_local_0 NOLIST
+                            hVarref wr_inc_ms_proc_local_3 NOLIST
                             hVarref rd_idx NOLIST
                           ]
                           hBinop = [
@@ -4255,7 +4255,7 @@
                   hCStmt  NONAME [
                     hBinop = [
                       hVarref rd_idx NOLIST
-                      hVarref rd_inc_ms_proc_local_1 NOLIST
+                      hVarref rd_inc_ms_proc_local_4 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -4268,7 +4268,7 @@
                         ]
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref rd_inc_ms_proc_local_1 NOLIST
+                            hVarref rd_inc_ms_proc_local_4 NOLIST
                             hVarref wr_idx NOLIST
                           ]
                           hBinop = [
@@ -4526,14 +4526,14 @@
     hProcesses  NONAME [
       hProcess mc_proc [
         hMethod mc_proc [
-          hVardecl emax_mc_proc_local_0 [
+          hVardecl emax_mc_proc_local_2 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 11 NOLIST
               ]
             ]
           ]
-          hVardecl fp_mc_proc_local_1 [
+          hVardecl fp_mc_proc_local_3 [
             hTypeinfo  NONAME [
               hType fp_t [
                 hLiteral 11 NOLIST
@@ -4541,21 +4541,21 @@
               ]
             ]
           ]
-          hVardecl hid_mc_proc_local_2 [
+          hVardecl hid_mc_proc_local_4 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 3 NOLIST
               ]
             ]
           ]
-          hVardecl ui_mc_proc_local_3 [
+          hVardecl ui_mc_proc_local_5 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 64 NOLIST
               ]
             ]
           ]
-          hVardecl si_mc_proc_local_4 [
+          hVardecl si_mc_proc_local_6 [
             hTypeinfo  NONAME [
               hType sc_int [
                 hLiteral 64 NOLIST
@@ -4599,18 +4599,18 @@
               hVarref c_sync NOLIST
             ]
             hVarAssign  NONAME [
-              hVarref emax_mc_proc_local_0 NOLIST
+              hVarref emax_mc_proc_local_2 NOLIST
               hSigAssignR read [
                 hVarref s_ex##data NOLIST
               ]
             ]
             hIfStmt  NONAME [
               hBinop != [
-                hVarref emax_mc_proc_local_0 NOLIST
+                hVarref emax_mc_proc_local_2 NOLIST
                 hLiteral 0 NOLIST
               ]
               hBinop -= [
-                hVarref emax_mc_proc_local_0 NOLIST
+                hVarref emax_mc_proc_local_2 NOLIST
                 hLiteral 1 [
                   hTypeinfo  NONAME [
                     hType sc_uint [
@@ -4621,25 +4621,25 @@
               ]
             ]
             hVarAssign  NONAME [
-              hVarref fp_mc_proc_local_1 NOLIST
+              hVarref fp_mc_proc_local_3 NOLIST
               hSigAssignR read [
                 hVarref s_fp##data NOLIST
               ]
             ]
             hVarAssign  NONAME [
-              hVarref hid_mc_proc_local_2 NOLIST
+              hVarref hid_mc_proc_local_4 NOLIST
               hBinop != [
-                hVarref fp_mc_proc_local_1##expo NOLIST
+                hVarref fp_mc_proc_local_3##expo NOLIST
                 hLiteral 0 NOLIST
               ]
             ]
             hVarAssign  NONAME [
-              hVarref ui_mc_proc_local_3 NOLIST
+              hVarref ui_mc_proc_local_5 NOLIST
               hBinop >> [
                 hBinop concat [
                   hBinop concat [
-                    hVarref hid_mc_proc_local_2 NOLIST
-                    hVarref fp_mc_proc_local_1##frac NOLIST
+                    hVarref hid_mc_proc_local_4 NOLIST
+                    hVarref fp_mc_proc_local_3##frac NOLIST
                   ]
                   hLiteral 0 [
                     hTypeinfo  NONAME [
@@ -4650,27 +4650,27 @@
                   ]
                 ]
                 hBinop - [
-                  hVarref emax_mc_proc_local_0 NOLIST
-                  hVarref fp_mc_proc_local_1##expo NOLIST
+                  hVarref emax_mc_proc_local_2 NOLIST
+                  hVarref fp_mc_proc_local_3##expo NOLIST
                 ]
               ]
             ]
             hIfStmt  NONAME [
-              hVarref fp_mc_proc_local_1##sign NOLIST
+              hVarref fp_mc_proc_local_3##sign NOLIST
               hBinop = [
-                hVarref si_mc_proc_local_4 NOLIST
+                hVarref si_mc_proc_local_6 NOLIST
                 hUnop - [
-                  hVarref ui_mc_proc_local_3 NOLIST
+                  hVarref ui_mc_proc_local_5 NOLIST
                 ]
               ]
               hBinop = [
-                hVarref si_mc_proc_local_4 NOLIST
-                hVarref ui_mc_proc_local_3 NOLIST
+                hVarref si_mc_proc_local_6 NOLIST
+                hVarref ui_mc_proc_local_5 NOLIST
               ]
             ]
             hSigAssignL write [
               hVarref c_int NOLIST
-              hVarref si_mc_proc_local_4 NOLIST
+              hVarref si_mc_proc_local_6 NOLIST
             ]
           ]
         ]
@@ -6903,7 +6903,7 @@
       ]
       hProcess ms_proc [
         hMethod ms_proc [
-          hVardecl i_ms_proc_local_0 [
+          hVardecl i_ms_proc_local_2 [
             hTypeinfo  NONAME [
               hType int NOLIST
             ]
@@ -6917,21 +6917,21 @@
               hCStmt  NONAME [
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
-                    hVarref i_ms_proc_local_0 NOLIST
+                    hVarref i_ms_proc_local_2 NOLIST
                     hLiteral 0 NOLIST
                   ]
                   hBinop < [
-                    hVarref i_ms_proc_local_0 NOLIST
+                    hVarref i_ms_proc_local_2 NOLIST
                     hLiteral 6 NOLIST
                   ]
                   hPostfix ++ [
-                    hVarref i_ms_proc_local_0 NOLIST
+                    hVarref i_ms_proc_local_2 NOLIST
                   ]
                   hCStmt  NONAME [
                     hSigAssignL write [
                       hBinop ARRAYSUBSCRIPT [
                         hVarref x NOLIST
-                        hVarref i_ms_proc_local_0 NOLIST
+                        hVarref i_ms_proc_local_2 NOLIST
                       ]
                       hLiteral 0 [
                         hTypeinfo  NONAME [
@@ -6944,7 +6944,7 @@
                     hSigAssignL write [
                       hBinop ARRAYSUBSCRIPT [
                         hVarref y NOLIST
-                        hVarref i_ms_proc_local_0 NOLIST
+                        hVarref i_ms_proc_local_2 NOLIST
                       ]
                       hLiteral 0 [
                         hTypeinfo  NONAME [
@@ -6957,7 +6957,7 @@
                     hSigAssignL write [
                       hBinop ARRAYSUBSCRIPT [
                         hVarref z NOLIST
-                        hVarref i_ms_proc_local_0 NOLIST
+                        hVarref i_ms_proc_local_2 NOLIST
                       ]
                       hLiteral 0 [
                         hTypeinfo  NONAME [
@@ -6970,7 +6970,7 @@
                     hSigAssignL write [
                       hBinop ARRAYSUBSCRIPT [
                         hVarref w NOLIST
-                        hVarref i_ms_proc_local_0 NOLIST
+                        hVarref i_ms_proc_local_2 NOLIST
                       ]
                       hLiteral 0 [
                         hTypeinfo  NONAME [
@@ -7673,7 +7673,7 @@
       ]
       hProcess ms_proc [
         hMethod ms_proc [
-          hVardecl i_ms_proc_local_0 [
+          hVardecl i_ms_proc_local_2 [
             hTypeinfo  NONAME [
               hType int NOLIST
             ]
@@ -7687,21 +7687,21 @@
               hCStmt  NONAME [
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
-                    hVarref i_ms_proc_local_0 NOLIST
+                    hVarref i_ms_proc_local_2 NOLIST
                     hLiteral 0 NOLIST
                   ]
                   hBinop < [
-                    hVarref i_ms_proc_local_0 NOLIST
+                    hVarref i_ms_proc_local_2 NOLIST
                     hLiteral 6 NOLIST
                   ]
                   hPostfix ++ [
-                    hVarref i_ms_proc_local_0 NOLIST
+                    hVarref i_ms_proc_local_2 NOLIST
                   ]
                   hCStmt  NONAME [
                     hSigAssignL write [
                       hBinop ARRAYSUBSCRIPT [
                         hVarref x NOLIST
-                        hVarref i_ms_proc_local_0 NOLIST
+                        hVarref i_ms_proc_local_2 NOLIST
                       ]
                       hLiteral 0 [
                         hTypeinfo  NONAME [
@@ -7714,7 +7714,7 @@
                     hSigAssignL write [
                       hBinop ARRAYSUBSCRIPT [
                         hVarref y NOLIST
-                        hVarref i_ms_proc_local_0 NOLIST
+                        hVarref i_ms_proc_local_2 NOLIST
                       ]
                       hLiteral 0 [
                         hTypeinfo  NONAME [
@@ -7727,7 +7727,7 @@
                     hSigAssignL write [
                       hBinop ARRAYSUBSCRIPT [
                         hVarref z NOLIST
-                        hVarref i_ms_proc_local_0 NOLIST
+                        hVarref i_ms_proc_local_2 NOLIST
                       ]
                       hLiteral 0 [
                         hTypeinfo  NONAME [
@@ -7740,7 +7740,7 @@
                     hSigAssignL write [
                       hBinop ARRAYSUBSCRIPT [
                         hVarref w NOLIST
-                        hVarref i_ms_proc_local_0 NOLIST
+                        hVarref i_ms_proc_local_2 NOLIST
                       ]
                       hLiteral 0 [
                         hTypeinfo  NONAME [
@@ -8327,26 +8327,26 @@
     hProcesses  NONAME [
       hProcess mc_proc [
         hMethod mc_proc [
-          hVardecl bbufi_mc_proc_local_0 [
+          hVardecl bbufi_mc_proc_local_2 [
             hTypeinfo  NONAME [
               hType sc_bv [
                 hLiteral 1024 NOLIST
               ]
             ]
           ]
-          hVardecl bbufo_mc_proc_local_1 [
+          hVardecl bbufo_mc_proc_local_3 [
             hTypeinfo  NONAME [
               hType sc_bv [
                 hLiteral 1024 NOLIST
               ]
             ]
           ]
-          hVardecl i_mc_proc_local_2 [
+          hVardecl i_mc_proc_local_4 [
             hTypeinfo  NONAME [
               hType int NOLIST
             ]
           ]
-          hVardecl i_mc_proc_local_3 [
+          hVardecl i_mc_proc_local_5 [
             hTypeinfo  NONAME [
               hType int NOLIST
             ]
@@ -8354,23 +8354,23 @@
           hCStmt  NONAME [
             hForStmt  NONAME [
               hVarAssign  NONAME [
-                hVarref i_mc_proc_local_2 NOLIST
+                hVarref i_mc_proc_local_4 NOLIST
                 hLiteral 0 NOLIST
               ]
               hBinop < [
-                hVarref i_mc_proc_local_2 NOLIST
+                hVarref i_mc_proc_local_4 NOLIST
                 hLiteral 16 NOLIST
               ]
               hPostfix ++ [
-                hVarref i_mc_proc_local_2 NOLIST
+                hVarref i_mc_proc_local_4 NOLIST
               ]
               hBinop = [
                 hBinop SLICE [
-                  hVarref bbufi_mc_proc_local_0 NOLIST
+                  hVarref bbufi_mc_proc_local_2 NOLIST
                   hBinop - [
                     hBinop * [
                       hBinop + [
-                        hVarref i_mc_proc_local_2 NOLIST
+                        hVarref i_mc_proc_local_4 NOLIST
                         hLiteral 1 NOLIST
                       ]
                       hLiteral 64 NOLIST
@@ -8378,47 +8378,47 @@
                     hLiteral 1 NOLIST
                   ]
                   hBinop * [
-                    hVarref i_mc_proc_local_2 NOLIST
+                    hVarref i_mc_proc_local_4 NOLIST
                     hLiteral 64 NOLIST
                   ]
                 ]
                 hBinop ARRAYSUBSCRIPT [
                   hVarref s_block NOLIST
-                  hVarref i_mc_proc_local_2 NOLIST
+                  hVarref i_mc_proc_local_4 NOLIST
                 ]
               ]
             ]
             hBinop = [
               hVarref c_bi NOLIST
-              hVarref bbufi_mc_proc_local_0 NOLIST
+              hVarref bbufi_mc_proc_local_2 NOLIST
             ]
             hBinop = [
-              hVarref bbufo_mc_proc_local_1 NOLIST
+              hVarref bbufo_mc_proc_local_3 NOLIST
               hVarref c_bo NOLIST
             ]
             hForStmt  NONAME [
               hVarAssign  NONAME [
-                hVarref i_mc_proc_local_3 NOLIST
+                hVarref i_mc_proc_local_5 NOLIST
                 hLiteral 0 NOLIST
               ]
               hBinop < [
-                hVarref i_mc_proc_local_3 NOLIST
+                hVarref i_mc_proc_local_5 NOLIST
                 hLiteral 16 NOLIST
               ]
               hPostfix ++ [
-                hVarref i_mc_proc_local_3 NOLIST
+                hVarref i_mc_proc_local_5 NOLIST
               ]
               hSigAssignL write [
                 hBinop ARRAYSUBSCRIPT [
                   hVarref m_block NOLIST
-                  hVarref i_mc_proc_local_3 NOLIST
+                  hVarref i_mc_proc_local_5 NOLIST
                 ]
                 hBinop SLICE [
-                  hVarref bbufo_mc_proc_local_1 NOLIST
+                  hVarref bbufo_mc_proc_local_3 NOLIST
                   hBinop - [
                     hBinop * [
                       hBinop + [
-                        hVarref i_mc_proc_local_3 NOLIST
+                        hVarref i_mc_proc_local_5 NOLIST
                         hLiteral 1 NOLIST
                       ]
                       hLiteral 64 NOLIST
@@ -8426,7 +8426,7 @@
                     hLiteral 1 NOLIST
                   ]
                   hBinop * [
-                    hVarref i_mc_proc_local_3 NOLIST
+                    hVarref i_mc_proc_local_5 NOLIST
                     hLiteral 64 NOLIST
                   ]
                 ]
@@ -8774,28 +8774,28 @@
       ]
       hProcess ms_proc [
         hMethod ms_proc [
-          hVardecl wr_inc_ms_proc_local_0 [
+          hVardecl wr_inc_ms_proc_local_3 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 1 NOLIST
               ]
             ]
           ]
-          hVardecl rd_inc_ms_proc_local_1 [
+          hVardecl rd_inc_ms_proc_local_4 [
             hTypeinfo  NONAME [
               hType sc_uint [
                 hLiteral 1 NOLIST
               ]
             ]
           ]
-          hVardecl i_ms_proc_local_2 [
+          hVardecl i_ms_proc_local_5 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
           hCStmt  NONAME [
             hBinop = [
-              hVarref wr_inc_ms_proc_local_0 NOLIST
+              hVarref wr_inc_ms_proc_local_3 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -8807,7 +8807,7 @@
               ]
             ]
             hBinop = [
-              hVarref rd_inc_ms_proc_local_1 NOLIST
+              hVarref rd_inc_ms_proc_local_4 NOLIST
               hBinop % [
                 hBinop + [
                   hSigAssignR read [
@@ -8835,20 +8835,20 @@
                 ]
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 0 NOLIST
                   ]
                   hBinop < [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                     hLiteral 2 NOLIST
                   ]
                   hPostfix ++ [
-                    hVarref i_ms_proc_local_2 NOLIST
+                    hVarref i_ms_proc_local_5 NOLIST
                   ]
                   hBinop = [
                     hBinop ARRAYSUBSCRIPT [
                       hVarref data NOLIST
-                      hVarref i_ms_proc_local_2 NOLIST
+                      hVarref i_ms_proc_local_5 NOLIST
                     ]
                     hLiteral 0 NOLIST
                   ]
@@ -8916,7 +8916,7 @@
                     ]
                     hBinop = [
                       hVarref wr_idx NOLIST
-                      hVarref wr_inc_ms_proc_local_0 NOLIST
+                      hVarref wr_inc_ms_proc_local_3 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -8925,7 +8925,7 @@
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref wr_inc_ms_proc_local_0 NOLIST
+                            hVarref wr_inc_ms_proc_local_3 NOLIST
                             hVarref rd_idx NOLIST
                           ]
                           hBinop = [
@@ -8946,7 +8946,7 @@
                   hCStmt  NONAME [
                     hBinop = [
                       hVarref rd_idx NOLIST
-                      hVarref rd_inc_ms_proc_local_1 NOLIST
+                      hVarref rd_inc_ms_proc_local_4 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hUnop ! [
@@ -8959,7 +8959,7 @@
                         ]
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref rd_inc_ms_proc_local_1 NOLIST
+                            hVarref rd_inc_ms_proc_local_4 NOLIST
                             hVarref wr_idx NOLIST
                           ]
                           hBinop = [
@@ -9206,31 +9206,31 @@
     hProcesses  NONAME [
       hProcess mc_proc [
         hMethod mc_proc [
-          hVardecl last_mc_proc_local_0 [
+          hVardecl last_mc_proc_local_3 [
             hTypeinfo  NONAME [
               hType _Bool NOLIST
             ]
           ]
-          hVardecl tmp_mc_proc_local_1 [
+          hVardecl tmp_mc_proc_local_4 [
             hTypeinfo  NONAME [
               hType sc_bv [
                 hLiteral 16 NOLIST
               ]
             ]
           ]
-          hVardecl j_mc_proc_local_2 [
+          hVardecl j_mc_proc_local_5 [
             hTypeinfo  NONAME [
               hType int NOLIST
             ]
           ]
-          hVardecl i_mc_proc_local_3 [
+          hVardecl i_mc_proc_local_6 [
             hTypeinfo  NONAME [
               hType int NOLIST
             ]
           ]
           hCStmt  NONAME [
             hVarAssign  NONAME [
-              hVarref last_mc_proc_local_0 NOLIST
+              hVarref last_mc_proc_local_3 NOLIST
               hBinop || [
                 hBinop == [
                   hSigAssignR read [
@@ -9258,44 +9258,44 @@
             ]
             hForStmt  NONAME [
               hVarAssign  NONAME [
-                hVarref j_mc_proc_local_2 NOLIST
+                hVarref j_mc_proc_local_5 NOLIST
                 hLiteral 0 NOLIST
               ]
               hBinop < [
-                hVarref j_mc_proc_local_2 NOLIST
+                hVarref j_mc_proc_local_5 NOLIST
                 hLiteral 64 NOLIST
               ]
               hPostfix ++ [
-                hVarref j_mc_proc_local_2 NOLIST
+                hVarref j_mc_proc_local_5 NOLIST
               ]
               hCStmt  NONAME [
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
-                    hVarref i_mc_proc_local_3 NOLIST
+                    hVarref i_mc_proc_local_6 NOLIST
                     hLiteral 0 NOLIST
                   ]
                   hBinop < [
-                    hVarref i_mc_proc_local_3 NOLIST
+                    hVarref i_mc_proc_local_6 NOLIST
                     hLiteral 16 NOLIST
                   ]
                   hPostfix ++ [
-                    hVarref i_mc_proc_local_3 NOLIST
+                    hVarref i_mc_proc_local_6 NOLIST
                   ]
                   hCStmt  NONAME [
                     hBinop = [
                       hBinop ARRAYSUBSCRIPT [
-                        hVarref tmp_mc_proc_local_1 NOLIST
-                        hVarref i_mc_proc_local_3 NOLIST
+                        hVarref tmp_mc_proc_local_4 NOLIST
+                        hVarref i_mc_proc_local_6 NOLIST
                       ]
                       hNoop to_bool [
                         hBinop ARRAYSUBSCRIPT [
                           hSigAssignR read [
                             hBinop ARRAYSUBSCRIPT [
                               hVarref s_block NOLIST
-                              hVarref i_mc_proc_local_3 NOLIST
+                              hVarref i_mc_proc_local_6 NOLIST
                             ]
                           ]
-                          hVarref j_mc_proc_local_2 NOLIST
+                          hVarref j_mc_proc_local_5 NOLIST
                         ]
                       ]
                     ]
@@ -9309,10 +9309,10 @@
                         hLiteral 64 NOLIST
                         hLiteral 1 NOLIST
                       ]
-                      hVarref j_mc_proc_local_2 NOLIST
+                      hVarref j_mc_proc_local_5 NOLIST
                     ]
                   ]
-                  hVarref tmp_mc_proc_local_1 NOLIST
+                  hVarref tmp_mc_proc_local_4 NOLIST
                 ]
               ]
             ]
@@ -9320,7 +9320,7 @@
               hVarref s_ready NOLIST
               hBinop || [
                 hBinop && [
-                  hVarref last_mc_proc_local_0 NOLIST
+                  hVarref last_mc_proc_local_3 NOLIST
                   hSigAssignR read [
                     hVarref m_ready NOLIST
                   ]
@@ -9337,83 +9337,83 @@
       ]
       hProcess ms_proc [
         hMethod ms_proc [
-          hVardecl last_ms_proc_local_4 [
+          hVardecl last_ms_proc_local_7 [
             hTypeinfo  NONAME [
               hType _Bool NOLIST
             ]
           ]
-          hVardecl b_ms_proc_local_5 [
+          hVardecl b_ms_proc_local_8 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
-          hVardecl frst_ms_proc_local_6 [
+          hVardecl frst_ms_proc_local_9 [
             hTypeinfo  NONAME [
               hType _Bool NOLIST
             ]
           ]
-          hVardecl i_ms_proc_local_7 [
+          hVardecl i_ms_proc_local_10 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
-          hVardecl tmp_ms_proc_local_8 [
+          hVardecl tmp_ms_proc_local_11 [
             hTypeinfo  NONAME [
               hType sc_bv [
                 hLiteral 33 NOLIST
               ]
             ]
           ]
-          hVardecl n_ms_proc_local_9 [
+          hVardecl n_ms_proc_local_12 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
-          hVardecl shiftamt_ms_proc_local_10 [
+          hVardecl shiftamt_ms_proc_local_13 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
-          hVardecl n1_shiftamt_ms_proc_local_11 [
+          hVardecl n1_shiftamt_ms_proc_local_14 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
-          hVardecl first_after_bc_ms_proc_local_12 [
+          hVardecl first_after_bc_ms_proc_local_15 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
-          hVardecl last_n_ms_proc_local_13 [
+          hVardecl last_n_ms_proc_local_16 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
-          hVardecl found_ms_proc_local_14 [
+          hVardecl found_ms_proc_local_17 [
             hTypeinfo  NONAME [
               hType _Bool NOLIST
             ]
           ]
-          hVardecl shiftmask_ms_proc_local_15 [
+          hVardecl shiftmask_ms_proc_local_18 [
             hTypeinfo  NONAME [
               hType sc_bv [
                 hLiteral 33 NOLIST
               ]
             ]
           ]
-          hVardecl delta_ms_proc_local_16 [
+          hVardecl delta_ms_proc_local_19 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
           ]
-          hVardecl shiftmask_2_ms_proc_local_17 [
+          hVardecl shiftmask_2_ms_proc_local_20 [
             hTypeinfo  NONAME [
               hType sc_bv [
                 hLiteral 33 NOLIST
               ]
             ]
           ]
-          hVardecl j_ms_proc_local_18 [
+          hVardecl j_ms_proc_local_21 [
             hTypeinfo  NONAME [
               hType unsigned_int NOLIST
             ]
@@ -9519,7 +9519,7 @@
                   ]
                   hCStmt  NONAME [
                     hVarAssign  NONAME [
-                      hVarref last_ms_proc_local_4 NOLIST
+                      hVarref last_ms_proc_local_7 NOLIST
                       hBinop || [
                         hBinop == [
                           hSigAssignR read [
@@ -9546,24 +9546,24 @@
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref b_ms_proc_local_5 NOLIST
+                      hVarref b_ms_proc_local_8 NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hVarAssign  NONAME [
-                      hVarref frst_ms_proc_local_6 NOLIST
+                      hVarref frst_ms_proc_local_9 NOLIST
                       hLiteral 1 NOLIST
                     ]
                     hForStmt  NONAME [
                       hVarAssign  NONAME [
-                        hVarref i_ms_proc_local_7 NOLIST
+                        hVarref i_ms_proc_local_10 NOLIST
                         hLiteral 16 NOLIST
                       ]
                       hBinop > [
-                        hVarref i_ms_proc_local_7 NOLIST
+                        hVarref i_ms_proc_local_10 NOLIST
                         hLiteral 0 NOLIST
                       ]
                       hPostfix -- [
-                        hVarref i_ms_proc_local_7 NOLIST
+                        hVarref i_ms_proc_local_10 NOLIST
                       ]
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
@@ -9577,21 +9577,21 @@
                               ]
                             ]
                             hBinop - [
-                              hVarref i_ms_proc_local_7 NOLIST
+                              hVarref i_ms_proc_local_10 NOLIST
                               hLiteral 1 NOLIST
                             ]
                           ]
                           hCStmt  NONAME [
                             hIfStmt  NONAME [
-                              hVarref frst_ms_proc_local_6 NOLIST
+                              hVarref frst_ms_proc_local_9 NOLIST
                               hCStmt  NONAME [
                                 hBinop = [
-                                  hVarref frst_ms_proc_local_6 NOLIST
+                                  hVarref frst_ms_proc_local_9 NOLIST
                                   hLiteral 0 NOLIST
                                 ]
                                 hBinop = [
-                                  hVarref b_ms_proc_local_5 NOLIST
-                                  hVarref i_ms_proc_local_7 NOLIST
+                                  hVarref b_ms_proc_local_8 NOLIST
+                                  hVarref i_ms_proc_local_10 NOLIST
                                 ]
                               ]
                             ]
@@ -9607,7 +9607,7 @@
                     ]
                     hSigAssignL write [
                       hVarref bc1 NOLIST
-                      hVarref b_ms_proc_local_5 NOLIST
+                      hVarref b_ms_proc_local_8 NOLIST
                     ]
                     hSigAssignL write [
                       hVarref bp1 NOLIST
@@ -9622,7 +9622,7 @@
                     ]
                     hSigAssignL write [
                       hVarref last1 NOLIST
-                      hVarref last_ms_proc_local_4 NOLIST
+                      hVarref last_ms_proc_local_7 NOLIST
                     ]
                     hSigAssignL write [
                       hVarref valid1 NOLIST
@@ -9643,18 +9643,18 @@
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hBinop > [
-                            hVarref b_ms_proc_local_5 NOLIST
+                            hVarref b_ms_proc_local_8 NOLIST
                             hSigAssignR read [
                               hVarref n0 NOLIST
                             ]
                           ]
                           hSigAssignL write [
                             hVarref n0 NOLIST
-                            hVarref b_ms_proc_local_5 NOLIST
+                            hVarref b_ms_proc_local_8 NOLIST
                           ]
                         ]
                         hIfStmt  NONAME [
-                          hVarref last_ms_proc_local_4 NOLIST
+                          hVarref last_ms_proc_local_7 NOLIST
                           hCStmt  NONAME [
                             hBinop = [
                               hVarref k0 NOLIST
@@ -9690,7 +9690,7 @@
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref tmp_ms_proc_local_8 NOLIST
+                      hVarref tmp_ms_proc_local_11 NOLIST
                       hLiteral 0 [
                         hTypeinfo  NONAME [
                           hType sc_bv [
@@ -9700,68 +9700,68 @@
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref shiftamt_ms_proc_local_10 NOLIST
+                      hVarref shiftamt_ms_proc_local_13 NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hVarAssign  NONAME [
-                      hVarref n1_shiftamt_ms_proc_local_11 NOLIST
+                      hVarref n1_shiftamt_ms_proc_local_14 NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hVarAssign  NONAME [
-                      hVarref first_after_bc_ms_proc_local_12 NOLIST
+                      hVarref first_after_bc_ms_proc_local_15 NOLIST
                       hSigAssignR read [
                         hVarref n1 NOLIST
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref last_n_ms_proc_local_13 NOLIST
+                      hVarref last_n_ms_proc_local_16 NOLIST
                       hSigAssignR read [
                         hVarref n1 NOLIST
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref found_ms_proc_local_14 NOLIST
+                      hVarref found_ms_proc_local_17 NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hBinop = [
-                      hVarref shiftamt_ms_proc_local_10 NOLIST
+                      hVarref shiftamt_ms_proc_local_13 NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hForStmt  NONAME [
                       hBinop = [
-                        hVarref n_ms_proc_local_9 NOLIST
+                        hVarref n_ms_proc_local_12 NOLIST
                         hLiteral 0 NOLIST
                       ]
                       hBinop < [
-                        hVarref n_ms_proc_local_9 NOLIST
+                        hVarref n_ms_proc_local_12 NOLIST
                         hLiteral 16 NOLIST
                       ]
                       hPostfix ++ [
-                        hVarref n_ms_proc_local_9 NOLIST
+                        hVarref n_ms_proc_local_12 NOLIST
                       ]
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref n_ms_proc_local_9 NOLIST
+                            hVarref n_ms_proc_local_12 NOLIST
                             hSigAssignR read [
                               hVarref n1 NOLIST
                             ]
                           ]
                           hCStmt  NONAME [
                             hBinop = [
-                              hVarref n1_shiftamt_ms_proc_local_11 NOLIST
-                              hVarref shiftamt_ms_proc_local_10 NOLIST
+                              hVarref n1_shiftamt_ms_proc_local_14 NOLIST
+                              hVarref shiftamt_ms_proc_local_13 NOLIST
                             ]
                           ]
                         ]
                         hIfStmt  NONAME [
                           hBinop == [
-                            hVarref n_ms_proc_local_9 NOLIST
+                            hVarref n_ms_proc_local_12 NOLIST
                             hLiteral 0 NOLIST
                           ]
                           hCStmt  NONAME [
                             hBinop += [
-                              hVarref shiftamt_ms_proc_local_10 NOLIST
+                              hVarref shiftamt_ms_proc_local_13 NOLIST
                               hLiteral 2 NOLIST
                             ]
                             hIfStmt  NONAME [
@@ -9774,14 +9774,14 @@
                               hCStmt  NONAME [
                                 hBinop = [
                                   hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_8 NOLIST
+                                    hVarref tmp_ms_proc_local_11 NOLIST
                                     hLiteral 0 NOLIST
                                   ]
                                   hLiteral 1 NOLIST
                                 ]
                                 hBinop = [
                                   hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_8 NOLIST
+                                    hVarref tmp_ms_proc_local_11 NOLIST
                                     hLiteral 1 NOLIST
                                   ]
                                   hLiteral 1 NOLIST
@@ -9790,14 +9790,14 @@
                               hCStmt  NONAME [
                                 hBinop = [
                                   hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_8 NOLIST
+                                    hVarref tmp_ms_proc_local_11 NOLIST
                                     hLiteral 0 NOLIST
                                   ]
                                   hLiteral 1 NOLIST
                                 ]
                                 hBinop = [
                                   hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_8 NOLIST
+                                    hVarref tmp_ms_proc_local_11 NOLIST
                                     hLiteral 1 NOLIST
                                   ]
                                   hLiteral 0 NOLIST
@@ -9813,7 +9813,7 @@
                                     hSigAssignR read [
                                       hVarref bp1 NOLIST
                                     ]
-                                    hVarref n_ms_proc_local_9 NOLIST
+                                    hVarref n_ms_proc_local_12 NOLIST
                                   ]
                                 ]
                                 hNoop to_bool [
@@ -9822,7 +9822,7 @@
                                       hVarref bp1 NOLIST
                                     ]
                                     hBinop - [
-                                      hVarref n_ms_proc_local_9 NOLIST
+                                      hVarref n_ms_proc_local_12 NOLIST
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
@@ -9831,25 +9831,25 @@
                               hCStmt  NONAME [
                                 hBinop = [
                                   hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_8 NOLIST
-                                    hVarref shiftamt_ms_proc_local_10 NOLIST
+                                    hVarref tmp_ms_proc_local_11 NOLIST
+                                    hVarref shiftamt_ms_proc_local_13 NOLIST
                                   ]
                                   hLiteral 1 NOLIST
                                 ]
                                 hBinop = [
                                   hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_8 NOLIST
+                                    hVarref tmp_ms_proc_local_11 NOLIST
                                     hBinop + [
-                                      hVarref shiftamt_ms_proc_local_10 NOLIST
+                                      hVarref shiftamt_ms_proc_local_13 NOLIST
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
                                   hLiteral 1 NOLIST
                                 ]
                                 hBinop = [
-                                  hVarref shiftamt_ms_proc_local_10 NOLIST
+                                  hVarref shiftamt_ms_proc_local_13 NOLIST
                                   hBinop + [
-                                    hVarref shiftamt_ms_proc_local_10 NOLIST
+                                    hVarref shiftamt_ms_proc_local_13 NOLIST
                                     hLiteral 2 NOLIST
                                   ]
                                 ]
@@ -9861,7 +9861,7 @@
                                       hSigAssignR read [
                                         hVarref bp1 NOLIST
                                       ]
-                                      hVarref n_ms_proc_local_9 NOLIST
+                                      hVarref n_ms_proc_local_12 NOLIST
                                     ]
                                   ]
                                   hUnop ! [
@@ -9871,7 +9871,7 @@
                                           hVarref bp1 NOLIST
                                         ]
                                         hBinop - [
-                                          hVarref n_ms_proc_local_9 NOLIST
+                                          hVarref n_ms_proc_local_12 NOLIST
                                           hLiteral 1 NOLIST
                                         ]
                                       ]
@@ -9881,7 +9881,7 @@
                                 hCStmt  NONAME [
                                   hIfStmt  NONAME [
                                     hBinop != [
-                                      hVarref n_ms_proc_local_9 NOLIST
+                                      hVarref n_ms_proc_local_12 NOLIST
                                       hBinop - [
                                         hLiteral 16 NOLIST
                                         hLiteral 1 NOLIST
@@ -9890,15 +9890,15 @@
                                     hCStmt  NONAME [
                                       hBinop = [
                                         hBinop ARRAYSUBSCRIPT [
-                                          hVarref tmp_ms_proc_local_8 NOLIST
-                                          hVarref shiftamt_ms_proc_local_10 NOLIST
+                                          hVarref tmp_ms_proc_local_11 NOLIST
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
                                         ]
                                         hLiteral 1 NOLIST
                                       ]
                                       hBinop = [
-                                        hVarref shiftamt_ms_proc_local_10 NOLIST
+                                        hVarref shiftamt_ms_proc_local_13 NOLIST
                                         hBinop + [
-                                          hVarref shiftamt_ms_proc_local_10 NOLIST
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
                                           hLiteral 1 NOLIST
                                         ]
                                       ]
@@ -9913,7 +9913,7 @@
                                           hSigAssignR read [
                                             hVarref bp1 NOLIST
                                           ]
-                                          hVarref n_ms_proc_local_9 NOLIST
+                                          hVarref n_ms_proc_local_12 NOLIST
                                         ]
                                       ]
                                     ]
@@ -9924,7 +9924,7 @@
                                             hVarref bp1 NOLIST
                                           ]
                                           hBinop - [
-                                            hVarref n_ms_proc_local_9 NOLIST
+                                            hVarref n_ms_proc_local_12 NOLIST
                                             hLiteral 1 NOLIST
                                           ]
                                         ]
@@ -9934,15 +9934,15 @@
                                   hCStmt  NONAME [
                                     hBinop = [
                                       hBinop ARRAYSUBSCRIPT [
-                                        hVarref tmp_ms_proc_local_8 NOLIST
-                                        hVarref shiftamt_ms_proc_local_10 NOLIST
+                                        hVarref tmp_ms_proc_local_11 NOLIST
+                                        hVarref shiftamt_ms_proc_local_13 NOLIST
                                       ]
                                       hLiteral 0 NOLIST
                                     ]
                                     hBinop = [
-                                      hVarref shiftamt_ms_proc_local_10 NOLIST
+                                      hVarref shiftamt_ms_proc_local_13 NOLIST
                                       hBinop + [
-                                        hVarref shiftamt_ms_proc_local_10 NOLIST
+                                        hVarref shiftamt_ms_proc_local_13 NOLIST
                                         hLiteral 1 NOLIST
                                       ]
                                     ]
@@ -9955,7 +9955,7 @@
                                             hSigAssignR read [
                                               hVarref bp1 NOLIST
                                             ]
-                                            hVarref n_ms_proc_local_9 NOLIST
+                                            hVarref n_ms_proc_local_12 NOLIST
                                           ]
                                         ]
                                       ]
@@ -9965,7 +9965,7 @@
                                             hVarref bp1 NOLIST
                                           ]
                                           hBinop - [
-                                            hVarref n_ms_proc_local_9 NOLIST
+                                            hVarref n_ms_proc_local_12 NOLIST
                                             hLiteral 1 NOLIST
                                           ]
                                         ]
@@ -9974,25 +9974,25 @@
                                     hCStmt  NONAME [
                                       hBinop = [
                                         hBinop ARRAYSUBSCRIPT [
-                                          hVarref tmp_ms_proc_local_8 NOLIST
-                                          hVarref shiftamt_ms_proc_local_10 NOLIST
+                                          hVarref tmp_ms_proc_local_11 NOLIST
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
                                         ]
                                         hLiteral 1 NOLIST
                                       ]
                                       hBinop = [
                                         hBinop ARRAYSUBSCRIPT [
-                                          hVarref tmp_ms_proc_local_8 NOLIST
+                                          hVarref tmp_ms_proc_local_11 NOLIST
                                           hBinop + [
-                                            hVarref shiftamt_ms_proc_local_10 NOLIST
+                                            hVarref shiftamt_ms_proc_local_13 NOLIST
                                             hLiteral 1 NOLIST
                                           ]
                                         ]
                                         hLiteral 0 NOLIST
                                       ]
                                       hBinop = [
-                                        hVarref shiftamt_ms_proc_local_10 NOLIST
+                                        hVarref shiftamt_ms_proc_local_13 NOLIST
                                         hBinop + [
-                                          hVarref shiftamt_ms_proc_local_10 NOLIST
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
                                           hLiteral 2 NOLIST
                                         ]
                                       ]
@@ -10008,19 +10008,19 @@
                             hBinop && [
                               hBinop && [
                                 hUnop ! [
-                                  hVarref found_ms_proc_local_14 NOLIST
+                                  hVarref found_ms_proc_local_17 NOLIST
                                 ]
                                 hNoop to_bool [
                                   hBinop ARRAYSUBSCRIPT [
                                     hSigAssignR read [
                                       hVarref bp1 NOLIST
                                     ]
-                                    hVarref n_ms_proc_local_9 NOLIST
+                                    hVarref n_ms_proc_local_12 NOLIST
                                   ]
                                 ]
                               ]
                               hBinop >= [
-                                hVarref n_ms_proc_local_9 NOLIST
+                                hVarref n_ms_proc_local_12 NOLIST
                                 hBinop - [
                                   hSigAssignR read [
                                     hVarref bc1 NOLIST
@@ -10038,7 +10038,7 @@
                           ]
                           hCStmt  NONAME [
                             hBinop = [
-                              hVarref found_ms_proc_local_14 NOLIST
+                              hVarref found_ms_proc_local_17 NOLIST
                               hLiteral 1 NOLIST
                             ]
                             hIfStmt  NONAME [
@@ -10048,7 +10048,7 @@
                                     hSigAssignR read [
                                       hVarref bp1 NOLIST
                                     ]
-                                    hVarref n_ms_proc_local_9 NOLIST
+                                    hVarref n_ms_proc_local_12 NOLIST
                                   ]
                                 ]
                                 hUnop ! [
@@ -10058,7 +10058,7 @@
                                         hVarref bp1 NOLIST
                                       ]
                                       hBinop - [
-                                        hVarref n_ms_proc_local_9 NOLIST
+                                        hVarref n_ms_proc_local_12 NOLIST
                                         hLiteral 1 NOLIST
                                       ]
                                     ]
@@ -10068,20 +10068,20 @@
                               hCStmt  NONAME [
                                 hIfStmt  NONAME [
                                   hBinop != [
-                                    hVarref n_ms_proc_local_9 NOLIST
+                                    hVarref n_ms_proc_local_12 NOLIST
                                     hBinop - [
                                       hLiteral 16 NOLIST
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
                                   hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_12 NOLIST
-                                    hVarref shiftamt_ms_proc_local_10 NOLIST
+                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                    hVarref shiftamt_ms_proc_local_13 NOLIST
                                   ]
                                   hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_12 NOLIST
+                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
                                     hBinop - [
-                                      hVarref shiftamt_ms_proc_local_10 NOLIST
+                                      hVarref shiftamt_ms_proc_local_13 NOLIST
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
@@ -10090,20 +10090,20 @@
                               hCStmt  NONAME [
                                 hIfStmt  NONAME [
                                   hBinop != [
-                                    hVarref n_ms_proc_local_9 NOLIST
+                                    hVarref n_ms_proc_local_12 NOLIST
                                     hBinop - [
                                       hLiteral 16 NOLIST
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
                                   hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_12 NOLIST
-                                    hVarref shiftamt_ms_proc_local_10 NOLIST
+                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                    hVarref shiftamt_ms_proc_local_13 NOLIST
                                   ]
                                   hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_12 NOLIST
+                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
                                     hBinop - [
-                                      hVarref shiftamt_ms_proc_local_10 NOLIST
+                                      hVarref shiftamt_ms_proc_local_13 NOLIST
                                       hLiteral 1 NOLIST
                                     ]
                                   ]
@@ -10111,9 +10111,9 @@
                               ]
                             ]
                             hBinop = [
-                              hVarref last_n_ms_proc_local_13 NOLIST
+                              hVarref last_n_ms_proc_local_16 NOLIST
                               hBinop + [
-                                hVarref n_ms_proc_local_9 NOLIST
+                                hVarref n_ms_proc_local_12 NOLIST
                                 hLiteral 1 NOLIST
                               ]
                             ]
@@ -10122,25 +10122,25 @@
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref shiftmask_ms_proc_local_15 NOLIST
+                      hVarref shiftmask_ms_proc_local_18 NOLIST
                       hUnop - [
                         hLiteral 1 NOLIST
                       ]
                     ]
                     hIfStmt  NONAME [
                       hBinop < [
-                        hVarref first_after_bc_ms_proc_local_12 NOLIST
+                        hVarref first_after_bc_ms_proc_local_15 NOLIST
                         hLiteral 33 NOLIST
                       ]
                       hCStmt  NONAME [
                         hBinop = [
-                          hVarref tmp_ms_proc_local_8 NOLIST
+                          hVarref tmp_ms_proc_local_11 NOLIST
                           hBinop & [
-                            hVarref tmp_ms_proc_local_8 NOLIST
+                            hVarref tmp_ms_proc_local_11 NOLIST
                             hBinop ~ [
                               hBinop << [
-                                hVarref shiftmask_ms_proc_local_15 NOLIST
-                                hVarref first_after_bc_ms_proc_local_12 NOLIST
+                                hVarref shiftmask_ms_proc_local_18 NOLIST
+                                hVarref first_after_bc_ms_proc_local_15 NOLIST
                               ]
                             ]
                           ]
@@ -10148,18 +10148,18 @@
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref delta_ms_proc_local_16 NOLIST
+                      hVarref delta_ms_proc_local_19 NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hIfStmt  NONAME [
                       hBinop != [
-                        hVarref last_n_ms_proc_local_13 NOLIST
+                        hVarref last_n_ms_proc_local_16 NOLIST
                         hLiteral 16 NOLIST
                       ]
                       hBinop = [
                         hBinop ARRAYSUBSCRIPT [
-                          hVarref tmp_ms_proc_local_8 NOLIST
-                          hVarref first_after_bc_ms_proc_local_12 NOLIST
+                          hVarref tmp_ms_proc_local_11 NOLIST
+                          hVarref first_after_bc_ms_proc_local_15 NOLIST
                         ]
                         hLiteral 0 NOLIST
                       ]
@@ -10175,7 +10175,7 @@
                       ]
                       hCStmt  NONAME [
                         hBinop = [
-                          hVarref tmp_ms_proc_local_8 NOLIST
+                          hVarref tmp_ms_proc_local_11 NOLIST
                           hLiteral 0 NOLIST
                         ]
                       ]
@@ -10242,13 +10242,13 @@
                               ]
                               hCStmt  NONAME [
                                 hBinop = [
-                                  hVarref tmp_ms_proc_local_8 NOLIST
+                                  hVarref tmp_ms_proc_local_11 NOLIST
                                   hBinop << [
                                     hBinop | [
                                       hBinop << [
                                         hBinop >> [
-                                          hVarref tmp_ms_proc_local_8 NOLIST
-                                          hVarref n1_shiftamt_ms_proc_local_11 NOLIST
+                                          hVarref tmp_ms_proc_local_11 NOLIST
+                                          hVarref n1_shiftamt_ms_proc_local_14 NOLIST
                                         ]
                                         hLiteral 1 NOLIST
                                       ]
@@ -10260,17 +10260,17 @@
                                   ]
                                 ]
                                 hBinop = [
-                                  hVarref delta_ms_proc_local_16 NOLIST
+                                  hVarref delta_ms_proc_local_19 NOLIST
                                   hLiteral 1 NOLIST
                                 ]
                               ]
                               hCStmt  NONAME [
                                 hBinop = [
-                                  hVarref tmp_ms_proc_local_8 NOLIST
+                                  hVarref tmp_ms_proc_local_11 NOLIST
                                   hBinop << [
                                     hBinop >> [
-                                      hVarref tmp_ms_proc_local_8 NOLIST
-                                      hVarref n1_shiftamt_ms_proc_local_11 NOLIST
+                                      hVarref tmp_ms_proc_local_11 NOLIST
+                                      hVarref n1_shiftamt_ms_proc_local_14 NOLIST
                                     ]
                                     hSigAssignR read [
                                       hVarref n1 NOLIST
@@ -10284,18 +10284,18 @@
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref shiftmask_2_ms_proc_local_17 NOLIST
+                      hVarref shiftmask_2_ms_proc_local_20 NOLIST
                       hUnop - [
                         hLiteral 1 NOLIST
                       ]
                     ]
                     hBinop = [
-                      hVarref tmp_ms_proc_local_8 NOLIST
+                      hVarref tmp_ms_proc_local_11 NOLIST
                       hBinop | [
                         hBinop & [
-                          hVarref tmp_ms_proc_local_8 NOLIST
+                          hVarref tmp_ms_proc_local_11 NOLIST
                           hBinop << [
-                            hVarref shiftmask_2_ms_proc_local_17 NOLIST
+                            hVarref shiftmask_2_ms_proc_local_20 NOLIST
                             hSigAssignR read [
                               hVarref n1 NOLIST
                             ]
@@ -10307,7 +10307,7 @@
                           ]
                           hBinop ~ [
                             hBinop << [
-                              hVarref shiftmask_2_ms_proc_local_17 NOLIST
+                              hVarref shiftmask_2_ms_proc_local_20 NOLIST
                               hSigAssignR read [
                                 hVarref n1 NOLIST
                               ]
@@ -10317,7 +10317,7 @@
                       ]
                     ]
                     hVarAssign  NONAME [
-                      hVarref j_ms_proc_local_18 NOLIST
+                      hVarref j_ms_proc_local_21 NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hIfStmt  NONAME [
@@ -10331,7 +10331,7 @@
                       ]
                       hCStmt  NONAME [
                         hBinop = [
-                          hVarref j_ms_proc_local_18 NOLIST
+                          hVarref j_ms_proc_local_21 NOLIST
                           hSigAssignR read [
                             hVarref n1 NOLIST
                           ]
@@ -10345,9 +10345,9 @@
                           ]
                           hCStmt  NONAME [
                             hBinop = [
-                              hVarref j_ms_proc_local_18 NOLIST
+                              hVarref j_ms_proc_local_21 NOLIST
                               hBinop + [
-                                hVarref j_ms_proc_local_18 NOLIST
+                                hVarref j_ms_proc_local_21 NOLIST
                                 hLiteral 1 NOLIST
                               ]
                             ]
@@ -10356,14 +10356,14 @@
                       ]
                       hCStmt  NONAME [
                         hBinop = [
-                          hVarref j_ms_proc_local_18 NOLIST
+                          hVarref j_ms_proc_local_21 NOLIST
                           hBinop + [
                             hBinop - [
                               hBinop + [
-                                hVarref first_after_bc_ms_proc_local_12 NOLIST
-                                hVarref delta_ms_proc_local_16 NOLIST
+                                hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                hVarref delta_ms_proc_local_19 NOLIST
                               ]
-                              hVarref n1_shiftamt_ms_proc_local_11 NOLIST
+                              hVarref n1_shiftamt_ms_proc_local_14 NOLIST
                             ]
                             hSigAssignR read [
                               hVarref n1 NOLIST
@@ -10372,14 +10372,14 @@
                         ]
                         hIfStmt  NONAME [
                           hBinop != [
-                            hVarref last_n_ms_proc_local_13 NOLIST
+                            hVarref last_n_ms_proc_local_16 NOLIST
                             hLiteral 16 NOLIST
                           ]
                           hCStmt  NONAME [
                             hBinop = [
-                              hVarref j_ms_proc_local_18 NOLIST
+                              hVarref j_ms_proc_local_21 NOLIST
                               hBinop + [
-                                hVarref j_ms_proc_local_18 NOLIST
+                                hVarref j_ms_proc_local_21 NOLIST
                                 hLiteral 1 NOLIST
                               ]
                             ]
@@ -10389,11 +10389,11 @@
                     ]
                     hSigAssignL write [
                       hVarref m_bc NOLIST
-                      hVarref j_ms_proc_local_18 NOLIST
+                      hVarref j_ms_proc_local_21 NOLIST
                     ]
                     hSigAssignL write [
                       hVarref m_bp NOLIST
-                      hVarref tmp_ms_proc_local_8 NOLIST
+                      hVarref tmp_ms_proc_local_11 NOLIST
                     ]
                     hSigAssignL write [
                       hVarref m_last NOLIST
@@ -10729,50 +10729,50 @@
     hProcesses  NONAME [
       hProcess mc_proc [
         hMethod mc_proc [
-          hVardecl pbits_mc_proc_local_5 [
-            hTypeinfo  NONAME [
-              hType sc_uint [
-                hLiteral 12 NOLIST
-              ]
-            ]
-          ]
-          hVardecl abits_mc_proc_local_6 [
-            hTypeinfo  NONAME [
-              hType sc_uint [
-                hLiteral 12 NOLIST
-              ]
-            ]
-          ]
-          hVardecl n_mc_proc_local_7 [
-            hTypeinfo  NONAME [
-              hType sc_uint [
-                hLiteral 12 NOLIST
-              ]
-            ]
-          ]
-          hVardecl ts_mc_proc_local_0 [
+          hVardecl ts_mc_proc_local_2 [
             hTypeinfo  NONAME [
               hType state_t NOLIST
             ]
           ]
-          hVardecl dis_done_mc_proc_local_1 [
+          hVardecl dis_done_mc_proc_local_3 [
             hTypeinfo  NONAME [
               hType _Bool NOLIST
             ]
           ]
-          hVardecl add_done_mc_proc_local_2 [
+          hVardecl add_done_mc_proc_local_4 [
             hTypeinfo  NONAME [
               hType _Bool NOLIST
             ]
           ]
-          hVardecl pad_done_mc_proc_local_3 [
+          hVardecl pad_done_mc_proc_local_5 [
             hTypeinfo  NONAME [
               hType _Bool NOLIST
             ]
           ]
-          hVardecl fls_done_mc_proc_local_4 [
+          hVardecl fls_done_mc_proc_local_6 [
             hTypeinfo  NONAME [
               hType _Bool NOLIST
+            ]
+          ]
+          hVardecl pbits_mc_proc_local_7 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 12 NOLIST
+              ]
+            ]
+          ]
+          hVardecl abits_mc_proc_local_8 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 12 NOLIST
+              ]
+            ]
+          ]
+          hVardecl n_mc_proc_local_9 [
+            hTypeinfo  NONAME [
+              hType sc_uint [
+                hLiteral 12 NOLIST
+              ]
             ]
           ]
           hCStmt  NONAME [
@@ -10793,17 +10793,17 @@
               hLiteral 0 NOLIST
             ]
             hBinop = [
-              hVarref ts_mc_proc_local_0 NOLIST
+              hVarref ts_mc_proc_local_2 NOLIST
               hVarref cs NOLIST
             ]
             hSwitchStmt  NONAME [
-              hVarref ts_mc_proc_local_0##s NOLIST
+              hVarref ts_mc_proc_local_2##s NOLIST
               hCStmt  NONAME [
                 hSwitchCase  NONAME [
                   hLiteral 0 NOLIST
                   hCStmt  NONAME [
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##prec NOLIST
+                      hVarref ts_mc_proc_local_2##prec NOLIST
                       hMethodCall sc_dt__sc_min_func_0 [
                         hSigAssignR read [
                           hVarref maxprec NOLIST
@@ -10831,23 +10831,23 @@
                       ]
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##bits NOLIST
+                      hVarref ts_mc_proc_local_2##bits NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##planes NOLIST
+                      hVarref ts_mc_proc_local_2##planes NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##buf NOLIST
+                      hVarref ts_mc_proc_local_2##buf NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##posr NOLIST
+                      hVarref ts_mc_proc_local_2##posr NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##posw NOLIST
+                      hVarref ts_mc_proc_local_2##posw NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hIfStmt  NONAME [
@@ -10864,19 +10864,19 @@
                               hLiteral 0 NOLIST
                             ]
                             hBinop != [
-                              hVarref ts_mc_proc_local_0##prec NOLIST
+                              hVarref ts_mc_proc_local_2##prec NOLIST
                               hLiteral 0 NOLIST
                             ]
                           ]
                           hCStmt  NONAME [
                             hBinop = [
-                              hVarref ts_mc_proc_local_0##s NOLIST
+                              hVarref ts_mc_proc_local_2##s NOLIST
                               hLiteral 2 NOLIST
                             ]
                           ]
                           hCStmt  NONAME [
                             hBinop = [
-                              hVarref ts_mc_proc_local_0##s NOLIST
+                              hVarref ts_mc_proc_local_2##s NOLIST
                               hLiteral 1 NOLIST
                             ]
                           ]
@@ -10891,17 +10891,17 @@
                   hCStmt  NONAME [
                     hBinop = [
                       hBinop ARRAYSUBSCRIPT [
-                        hVarref ts_mc_proc_local_0##buf NOLIST
+                        hVarref ts_mc_proc_local_2##buf NOLIST
                         hLiteral 0 NOLIST
                       ]
                       hLiteral 0 NOLIST
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##bits NOLIST
+                      hVarref ts_mc_proc_local_2##bits NOLIST
                       hLiteral 1 NOLIST
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##posw NOLIST
+                      hVarref ts_mc_proc_local_2##posw NOLIST
                       hLiteral 1 NOLIST
                     ]
                     hSigAssignL write [
@@ -10909,7 +10909,7 @@
                       hLiteral 1 NOLIST
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##s NOLIST
+                      hVarref ts_mc_proc_local_2##s NOLIST
                       hLiteral 4 NOLIST
                     ]
                     hBreak  NONAME NOLIST
@@ -10920,14 +10920,14 @@
                   hCStmt  NONAME [
                     hBinop = [
                       hBinop ARRAYSUBSCRIPT [
-                        hVarref ts_mc_proc_local_0##buf NOLIST
+                        hVarref ts_mc_proc_local_2##buf NOLIST
                         hLiteral 0 NOLIST
                       ]
                       hLiteral 1 NOLIST
                     ]
                     hBinop = [
                       hBinop SLICE [
-                        hVarref ts_mc_proc_local_0##buf NOLIST
+                        hVarref ts_mc_proc_local_2##buf NOLIST
                         hLiteral 11 NOLIST
                         hLiteral 1 NOLIST
                       ]
@@ -10936,14 +10936,14 @@
                       ]
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##bits NOLIST
+                      hVarref ts_mc_proc_local_2##bits NOLIST
                       hBinop + [
                         hLiteral 11 NOLIST
                         hLiteral 1 NOLIST
                       ]
                     ]
                     hBinop = [
-                      hVarref ts_mc_proc_local_0##posw NOLIST
+                      hVarref ts_mc_proc_local_2##posw NOLIST
                       hBinop + [
                         hLiteral 11 NOLIST
                         hLiteral 1 NOLIST
@@ -10955,15 +10955,15 @@
                     ]
                     hIfStmt  NONAME [
                       hBinop < [
-                        hVarref ts_mc_proc_local_0##planes NOLIST
-                        hVarref ts_mc_proc_local_0##prec NOLIST
+                        hVarref ts_mc_proc_local_2##planes NOLIST
+                        hVarref ts_mc_proc_local_2##prec NOLIST
                       ]
                       hBinop = [
-                        hVarref ts_mc_proc_local_0##s NOLIST
+                        hVarref ts_mc_proc_local_2##s NOLIST
                         hLiteral 3 NOLIST
                       ]
                       hBinop = [
-                        hVarref ts_mc_proc_local_0##s NOLIST
+                        hVarref ts_mc_proc_local_2##s NOLIST
                         hLiteral 4 NOLIST
                       ]
                     ]
@@ -10980,7 +10980,7 @@
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_2 [
-                            hVarref ts_mc_proc_local_0 NOLIST
+                            hVarref ts_mc_proc_local_2 NOLIST
                             hSigAssignR read [
                               hVarref s_bc NOLIST
                             ]
@@ -10998,13 +10998,13 @@
                                 hVarref s_last NOLIST
                               ]
                               hBinop = [
-                                hVarref ts_mc_proc_local_0##planes NOLIST
+                                hVarref ts_mc_proc_local_2##planes NOLIST
                                 hLiteral 64 NOLIST
                               ]
                               hBinop = [
-                                hVarref ts_mc_proc_local_0##planes NOLIST
+                                hVarref ts_mc_proc_local_2##planes NOLIST
                                 hBinop + [
-                                  hVarref ts_mc_proc_local_0##planes NOLIST
+                                  hVarref ts_mc_proc_local_2##planes NOLIST
                                   hLiteral 1 NOLIST
                                 ]
                               ]
@@ -11018,21 +11018,21 @@
                       ]
                     ]
                     hBinop = [
-                      hVarref dis_done_mc_proc_local_1 NOLIST
+                      hVarref dis_done_mc_proc_local_3 NOLIST
                       hBinop == [
-                        hVarref ts_mc_proc_local_0##planes NOLIST
+                        hVarref ts_mc_proc_local_2##planes NOLIST
                         hLiteral 64 NOLIST
                       ]
                     ]
                     hBinop = [
-                      hVarref add_done_mc_proc_local_2 NOLIST
+                      hVarref add_done_mc_proc_local_4 NOLIST
                       hBinop || [
                         hBinop >= [
-                          hVarref ts_mc_proc_local_0##planes NOLIST
-                          hVarref ts_mc_proc_local_0##prec NOLIST
+                          hVarref ts_mc_proc_local_2##planes NOLIST
+                          hVarref ts_mc_proc_local_2##prec NOLIST
                         ]
                         hBinop >= [
-                          hVarref ts_mc_proc_local_0##bits NOLIST
+                          hVarref ts_mc_proc_local_2##bits NOLIST
                           hSigAssignR read [
                             hVarref maxbits NOLIST
                           ]
@@ -11040,41 +11040,41 @@
                       ]
                     ]
                     hBinop = [
-                      hVarref pad_done_mc_proc_local_3 NOLIST
+                      hVarref pad_done_mc_proc_local_5 NOLIST
                       hBinop >= [
-                        hVarref ts_mc_proc_local_0##bits NOLIST
+                        hVarref ts_mc_proc_local_2##bits NOLIST
                         hSigAssignR read [
                           hVarref minbits NOLIST
                         ]
                       ]
                     ]
                     hBinop = [
-                      hVarref fls_done_mc_proc_local_4 NOLIST
+                      hVarref fls_done_mc_proc_local_6 NOLIST
                       hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_3 [
-                        hVarref ts_mc_proc_local_0 NOLIST
+                        hVarref ts_mc_proc_local_2 NOLIST
                         hBinop && [
-                          hVarref add_done_mc_proc_local_2 NOLIST
-                          hVarref pad_done_mc_proc_local_3 NOLIST
+                          hVarref add_done_mc_proc_local_4 NOLIST
+                          hVarref pad_done_mc_proc_local_5 NOLIST
                         ]
                       ]
                     ]
                     hIfStmt  NONAME [
-                      hVarref add_done_mc_proc_local_2 NOLIST
+                      hVarref add_done_mc_proc_local_4 NOLIST
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hBinop && [
                             hBinop && [
-                              hVarref dis_done_mc_proc_local_1 NOLIST
-                              hVarref pad_done_mc_proc_local_3 NOLIST
+                              hVarref dis_done_mc_proc_local_3 NOLIST
+                              hVarref pad_done_mc_proc_local_5 NOLIST
                             ]
-                            hVarref fls_done_mc_proc_local_4 NOLIST
+                            hVarref fls_done_mc_proc_local_6 NOLIST
                           ]
                           hBinop = [
-                            hVarref ts_mc_proc_local_0##s NOLIST
+                            hVarref ts_mc_proc_local_2##s NOLIST
                             hLiteral 0 NOLIST
                           ]
                           hBinop = [
-                            hVarref ts_mc_proc_local_0##s NOLIST
+                            hVarref ts_mc_proc_local_2##s NOLIST
                             hLiteral 4 NOLIST
                           ]
                         ]
@@ -11093,13 +11093,13 @@
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
                           hBinop < [
-                            hVarref ts_mc_proc_local_0##planes NOLIST
+                            hVarref ts_mc_proc_local_2##planes NOLIST
                             hLiteral 64 NOLIST
                           ]
                           hCStmt  NONAME [
                             hIfStmt  NONAME [
                               hBinop < [
-                                hVarref ts_mc_proc_local_0##planes NOLIST
+                                hVarref ts_mc_proc_local_2##planes NOLIST
                                 hBinop - [
                                   hLiteral 64 NOLIST
                                   hLiteral 2 NOLIST
@@ -11119,13 +11119,13 @@
                                 hVarref s_last NOLIST
                               ]
                               hBinop = [
-                                hVarref ts_mc_proc_local_0##planes NOLIST
+                                hVarref ts_mc_proc_local_2##planes NOLIST
                                 hLiteral 64 NOLIST
                               ]
                               hBinop = [
-                                hVarref ts_mc_proc_local_0##planes NOLIST
+                                hVarref ts_mc_proc_local_2##planes NOLIST
                                 hBinop + [
-                                  hVarref ts_mc_proc_local_0##planes NOLIST
+                                  hVarref ts_mc_proc_local_2##planes NOLIST
                                   hLiteral 1 NOLIST
                                 ]
                               ]
@@ -11140,27 +11140,27 @@
                     ]
                     hIfStmt  NONAME [
                       hBinop < [
-                        hVarref ts_mc_proc_local_0##bits NOLIST
+                        hVarref ts_mc_proc_local_2##bits NOLIST
                         hSigAssignR read [
                           hVarref minbits NOLIST
                         ]
                       ]
                       hCStmt  NONAME [
                         hVarAssign  NONAME [
-                          hVarref pbits_mc_proc_local_5 NOLIST
+                          hVarref pbits_mc_proc_local_7 NOLIST
                           hBinop - [
                             hSigAssignR read [
                               hVarref minbits NOLIST
                             ]
-                            hVarref ts_mc_proc_local_0##bits NOLIST
+                            hVarref ts_mc_proc_local_2##bits NOLIST
                           ]
                         ]
                         hVarAssign  NONAME [
-                          hVarref abits_mc_proc_local_6 NOLIST
+                          hVarref abits_mc_proc_local_8 NOLIST
                           hBinop - [
                             hLiteral 64 NOLIST
                             hBinop & [
-                              hVarref ts_mc_proc_local_0##bits NOLIST
+                              hVarref ts_mc_proc_local_2##bits NOLIST
                               hBinop - [
                                 hLiteral 64 NOLIST
                                 hLiteral 1 NOLIST
@@ -11169,15 +11169,15 @@
                           ]
                         ]
                         hVarAssign  NONAME [
-                          hVarref n_mc_proc_local_7 NOLIST
+                          hVarref n_mc_proc_local_9 NOLIST
                           hMethodCall sc_dt__sc_min_func_4 [
-                            hVarref pbits_mc_proc_local_5 NOLIST
-                            hVarref abits_mc_proc_local_6 NOLIST
+                            hVarref pbits_mc_proc_local_7 NOLIST
+                            hVarref abits_mc_proc_local_8 NOLIST
                           ]
                         ]
                         hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_2 [
-                          hVarref ts_mc_proc_local_0 NOLIST
-                          hVarref n_mc_proc_local_7 NOLIST
+                          hVarref ts_mc_proc_local_2 NOLIST
+                          hVarref n_mc_proc_local_9 NOLIST
                           hLiteral 0 [
                             hTypeinfo  NONAME [
                               hType sc_bv [
@@ -11189,38 +11189,38 @@
                       ]
                     ]
                     hBinop = [
-                      hVarref dis_done_mc_proc_local_1 NOLIST
+                      hVarref dis_done_mc_proc_local_3 NOLIST
                       hBinop == [
-                        hVarref ts_mc_proc_local_0##planes NOLIST
+                        hVarref ts_mc_proc_local_2##planes NOLIST
                         hLiteral 64 NOLIST
                       ]
                     ]
                     hBinop = [
-                      hVarref pad_done_mc_proc_local_3 NOLIST
+                      hVarref pad_done_mc_proc_local_5 NOLIST
                       hBinop >= [
-                        hVarref ts_mc_proc_local_0##bits NOLIST
+                        hVarref ts_mc_proc_local_2##bits NOLIST
                         hSigAssignR read [
                           hVarref minbits NOLIST
                         ]
                       ]
                     ]
                     hBinop = [
-                      hVarref fls_done_mc_proc_local_4 NOLIST
+                      hVarref fls_done_mc_proc_local_6 NOLIST
                       hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_3 [
-                        hVarref ts_mc_proc_local_0 NOLIST
-                        hVarref pad_done_mc_proc_local_3 NOLIST
+                        hVarref ts_mc_proc_local_2 NOLIST
+                        hVarref pad_done_mc_proc_local_5 NOLIST
                       ]
                     ]
                     hIfStmt  NONAME [
                       hBinop && [
                         hBinop && [
-                          hVarref dis_done_mc_proc_local_1 NOLIST
-                          hVarref pad_done_mc_proc_local_3 NOLIST
+                          hVarref dis_done_mc_proc_local_3 NOLIST
+                          hVarref pad_done_mc_proc_local_5 NOLIST
                         ]
-                        hVarref fls_done_mc_proc_local_4 NOLIST
+                        hVarref fls_done_mc_proc_local_6 NOLIST
                       ]
                       hBinop = [
-                        hVarref ts_mc_proc_local_0##s NOLIST
+                        hVarref ts_mc_proc_local_2##s NOLIST
                         hLiteral 0 NOLIST
                       ]
                     ]
@@ -11231,7 +11231,7 @@
             ]
             hBinop = [
               hVarref ns NOLIST
-              hVarref ts_mc_proc_local_0 NOLIST
+              hVarref ts_mc_proc_local_2 NOLIST
             ]
           ]
         ]
@@ -11651,6 +11651,25 @@
       ]
     ]
   ]
+  hTypedef fp_t [
+    hTypeTemplateParam E NOLIST
+    hTypeTemplateParam F NOLIST
+    hTypeField frac [
+      hType sc_uint [
+        hType F NOLIST
+      ]
+    ]
+    hTypeField expo [
+      hType sc_uint [
+        hType E NOLIST
+      ]
+    ]
+    hTypeField sign [
+      hType sc_uint [
+        hLiteral 1 NOLIST
+      ]
+    ]
+  ]
   hTypedef bits_t [
     hTypeTemplateParam D NOLIST
     hTypeField tdata [
@@ -11696,25 +11715,6 @@
     hTypeField posw [
       hType sc_uint [
         hLiteral 8 NOLIST
-      ]
-    ]
-  ]
-  hTypedef fp_t [
-    hTypeTemplateParam E NOLIST
-    hTypeTemplateParam F NOLIST
-    hTypeField frac [
-      hType sc_uint [
-        hType F NOLIST
-      ]
-    ]
-    hTypeField expo [
-      hType sc_uint [
-        hType E NOLIST
-      ]
-    ]
-    hTypeField sign [
-      hType sc_uint [
-        hLiteral 1 NOLIST
       ]
     ]
   ]

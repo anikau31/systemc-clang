@@ -33,30 +33,30 @@ namespace systemc_hdl {
     : SystemCConsumer(from_ast, topModule), hdl_file_out_{hdl_file_out} {}
 
     bool postFire();
+    
+  private:
    void SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
                        llvm::raw_fd_ostream &SCout);
    void SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
                      hNodep &h_info,  hdecl_name_map_t &mod_vname_map);
    void SCsig2hcode(ModuleInstance::signalMapType pmap, hNode::hdlopsEnum h_op,
                     hNodep &h_info, hdecl_name_map_t &mod_vname_map);
-   void SCproc2hcode(ModuleInstance::processMapType pm, hNodep & h_top, hNodep &h_port,hdecl_name_map_t &mod_vname_map);
+   void SCproc2hcode(ModuleInstance::processMapType pm, hNodep & h_top, hNodep &h_port,hdecl_name_map_t &mod_vname_map, resetvar_map_t &threadresetmap);
     //void SCportbindings2hcode(ModuleInstance * mod, hNodep &h_pb);
     //following is obsolete and no longer called 
     void SCportbindings2hcode(
 			      //systemc_clang::ModuleInstance::portBindingMapType portbindingmap,
 			      ModuleInstance* mod,
        hNodep &h_pb);
+    void MakeResetMap( resetvar_map_t &threadresetmap, hNodep h_allsenslists);
     
     clang::DiagnosticsEngine &main_diag_engine{getContext().getDiagnostics()};
     
-  private:
-
-    hNodep h_top;
-    //std::unordered_multimap<string, FunctionDecl *>
-    hfunc_name_map_t
-       allmethodecls;  //  all methods/functions called
+    hfunc_name_map_t allmethodecls;  //  all methods/functions called
 
     std::unordered_set<string> module_vars;
+
+    resetvar_map_t threadresetmap;  // for each module; must be cleared before next module 
 
     HDLType HDLt;
 

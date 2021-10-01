@@ -29,7 +29,7 @@ namespace systemc_hdl {
   std::unique_ptr<clang::tooling::FrontendActionFactory>
   newFrontendActionFactory(const std::string &top_module) {
     return std::unique_ptr<tooling::FrontendActionFactory>(
-	   new HDLFrontendActionFactory(top_module));
+							   new HDLFrontendActionFactory(top_module));
   }
 
 
@@ -55,17 +55,17 @@ namespace systemc_hdl {
     FileID fileID = getSourceManager().getMainFileID();
     const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
     if (hdl_file_out_ == "") {
-    if (!fileentry) {
-      outputfn = "HCodeout";
-      LLVM_DEBUG(llvm::dbgs()
-		 << "Null file entry for tranlation unit for this astcontext\n");
-    } else {
-      outputfn = fileentry->getName().str();
-      regex r("\\.cpp");
-      outputfn = regex_replace(outputfn, r, "_hdl");
+      if (!fileentry) {
+	outputfn = "HCodeout";
+	LLVM_DEBUG(llvm::dbgs()
+		   << "Null file entry for tranlation unit for this astcontext\n");
+      } else {
+	outputfn = fileentry->getName().str();
+	regex r("\\.cpp");
+	outputfn = regex_replace(outputfn, r, "_hdl");
 
-      LLVM_DEBUG(llvm::dbgs() << "File name is " << outputfn << "\n");
-    }
+	LLVM_DEBUG(llvm::dbgs() << "File name is " << outputfn << "\n");
+      }
     } else {
       outputfn = hdl_file_out_;
     }
@@ -150,11 +150,14 @@ namespace systemc_hdl {
     xbodyp = new HDLBody(main_diag_engine, getContext(), mod_vname_map);
     
     module_vars.clear();
+    threadresetmap.clear();
+    
     // Ports
     hNodep h_ports =
       new hNode(hNode::hdlopsEnum::hPortsigvarlist);  // list of ports, signals
     h_module->child_list.push_back(h_ports);
 
+    // generate port, sig, var for module inheritance chain
     ModuleInstance *mod_i = mod;
     for (int i = 0; i <= basemods.size(); i++) {
       SCport2hcode(mod_i->getIPorts(), hNode::hdlopsEnum::hPortin, h_ports, mod_vname_map);
@@ -171,6 +174,9 @@ namespace systemc_hdl {
       if (i == basemods.size()) break;
       mod_i = basemods[i];
     }
+
+    // add the submodule declarations
+    
     for (const auto &smod : submodv) {
       if (smod->getInstanceInfo().isArrayType()) {
 	LLVM_DEBUG(llvm::dbgs() << "Array submodule " << smod->getInstanceName() << "\n");
@@ -197,41 +203,57 @@ namespace systemc_hdl {
       }
     }
 
-    // Processes
-    h_top = new hNode(hNode::hdlopsEnum::hProcesses);
+    // init block
     mod_i = mod;
+    hNodep h_modinitblockhead = new hNode( hNode::hdlopsEnum::hNoop); // hold list of module constructors
+    hNodep h_constructor;
+    hNodep h_allsenslists = new hNode( hNode::hdlopsEnum::hNoop);
     for (int i = 0; i <= basemods.size(); i++) {
-      // send portsigvarlist to proc code gen so thread vars get promoted to module level
-      SCproc2hcode(mod_i->getProcessMap(), h_top, h_ports, mod_vname_map);
-      if (!h_top->child_list.empty()) h_module->child_list.push_back(h_top);
+      h_constructor = new hNode(mod_i->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
+    
+      xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
+      LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
+      h_constructor->print(llvm::dbgs());
+      HDLConstructorHcode hcxxbody;
+      hNodep modinithp = hcxxbody.ProcessCXXConstructorHcode(h_constructor);
+      if (modinithp->child_list.size() != 0) { // if there was an initblock
+	h_modinitblockhead->child_list.push_back(modinithp);
+	// need to add these nodes to h_senshead
+	std::vector<hNodep> slvec;
+	hcxxbody.GetSensLists(slvec);
+	h_allsenslists->child_list.insert(h_allsenslists->child_list.end(), slvec.begin(), slvec.end());
+      }
+      
+      //h_constructor->print(HCodeOut);
       if (i == basemods.size()) break;
       mod_i = basemods[i];
     }
 
-    {
-      // init block
-      //clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
-      mod_i = mod;
-      hNodep hconstructor;
-      for (int i = 0; i <= basemods.size(); i++) {
-	hconstructor = new hNode(mod_i->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
-	//HDLBody xconstructor(mod_i->getConstructorDecl()->getBody(), hconstructor, main_diag_engine, getContext(), mod_vname_map);
-	xbodyp->Run(mod_i->getConstructorDecl()->getBody(), hconstructor,rmodinit);
-	LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
-	hconstructor->print(llvm::dbgs());
-	HDLConstructorHcode hcxxbody;
-	hNodep modinithp = hcxxbody.ProcessCXXConstructorHcode(hconstructor);
-	if (modinithp->child_list.size() != 0) { // if there was an initblock
-	  h_module->child_list.push_back(modinithp);
-	}
-	//hconstructor->print(HCodeOut);
-	if (i == basemods.size()) break;
-	mod_i = basemods[i];
-      }
+    LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists follow\n");
+    LLVM_DEBUG(h_allsenslists->print(llvm::dbgs()));
+    LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists end\n");
 
-      // diag_engine scope ends
+    // build map of thread name to reset var name for this module
+    MakeResetMap(threadresetmap, h_allsenslists);
+    
+    // Processes
+    hNodep h_processes = new hNode(hNode::hdlopsEnum::hProcesses);
+    mod_i = mod;
+    for (int i = 0; i <= basemods.size(); i++) {
+      // send portsigvarlist (h_ports) to proc code gen so thread vars get promoted to module level
+      SCproc2hcode(mod_i->getProcessMap(), h_processes, h_ports, mod_vname_map, threadresetmap);
+      if (i == basemods.size()) break;
+      mod_i = basemods[i];
     }
+    // add all the processes (including those in the inheritance chain) to the module
+    if (!h_processes->child_list.empty()) h_module->child_list.push_back(h_processes);
 
+    // now add init block
+    if (h_modinitblockhead->size()>0)
+      h_module->child_list.insert(h_module->child_list.end(), h_modinitblockhead->child_list.begin(), h_modinitblockhead->child_list.end());
+
+    // Functions
+    
     if (allmethodecls.size() > 0) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
       //std::unordered_multimap<string, FunctionDecl *> modmethodecls;
@@ -290,7 +312,7 @@ namespace systemc_hdl {
 	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
 
 	  }
-	  h_top->child_list.push_back(hfunc);
+	  h_processes->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
 	}
       }
@@ -308,57 +330,6 @@ namespace systemc_hdl {
       hNodep h_submod = new hNode(modname, hNode::hdlopsEnum::hModule);
       SCmodule2hcode(smod, h_submod, HCodeOut);
       // }
-    }
-  }
-
-  // this is obsolete. It has been supeseded by HDLHnode.cpp
-  // due to possibility of for-loops enclosing port bindings
-  void HDLMain::SCportbindings2hcode(ModuleInstance* mod,
-				     //systemc_clang::ModuleInstance::portBindingMapType portbindingmap,
-				     hNodep &h_pbs) {
-    systemc_clang::ModuleInstance::portBindingMapType portbindingmap{mod->getPortBindings()};
-    for (auto const &pb : portbindingmap) {
-      PortBinding *binding{get<1>(pb)};
-      string port_name{binding->getCallerPortName()};
-      LLVM_DEBUG(llvm::dbgs() << "SC port binding found Caller port name  " << port_name
-		 << " caller instance name " << binding->getCallerInstanceName()
-		 << " <==> callee port name " << binding->getCalleePortName() <<
-		 " callee instance name "
-		 << binding->getCalleeInstanceName() << "\n");
-      if (binding->getCallerArraySubscripts().size() >0)
-	{
-	  LLVM_DEBUG(llvm::dbgs() << "Caller Subscript vector length is " <<
-		     binding->getCallerArraySubscripts().size() << "\n");
-	  for (auto subscriptex: binding->getCallerArraySubscripts()) {
-	    LLVM_DEBUG(subscriptex->dump(llvm::dbgs(), getContext()));
-	  }
-	}
-      if (binding->getCalleeArraySubscripts().size()>0) {
-	LLVM_DEBUG(llvm::dbgs() << "Callee Subscript vector length is " <<
-		   binding->getCalleeArraySubscripts().size() << "\n");
-	for (auto subscriptex: binding->getCalleeArraySubscripts()) {
-	  LLVM_DEBUG(subscriptex->dump(llvm::dbgs(), getContext()));
-	}
-      }
-
-      hNodep hpb = new hNode(binding->getCallerInstanceName(), hNode::hdlopsEnum::hPortbinding);
-      // caller module name
-      hNodep hpb_caller = new hNode(port_name, hNode::hdlopsEnum::hVarref);
-      if (binding->getCallerPortArraySubscripts().size() >0) {
-	hpb_caller->child_list.push_back(new hNode("INDEX", hNode::hdlopsEnum::hLiteral)); //placeholder
-      }
-      hpb->child_list.push_back(hpb_caller);
-      string mapped_name =  binding->getCalleeInstanceName();
-
-      // hpb->child_list.push_back(new hNode(binding->getBoundToName(),
-      // hNode::hdlopsEnum::hVarref));
-      hNodep hpb_callee = new hNode(mapped_name, hNode::hdlopsEnum::hVarref);
-      if (binding->getCalleeArraySubscripts().size() >0) {
-	hpb_callee->child_list.push_back(new hNode("INDEX", hNode::hdlopsEnum::hLiteral)); //placeholder
-      }
-      hpb->child_list.push_back(hpb_callee);
-
-      h_pbs->child_list.push_back(hpb);
     }
   }
 
@@ -477,7 +448,7 @@ namespace systemc_hdl {
   }
 
   void HDLMain::SCproc2hcode(ModuleInstance::processMapType pm, hNodep &h_top, hNodep &h_port,
-			     hdecl_name_map_t &mod_vname_map) {
+			     hdecl_name_map_t &mod_vname_map, resetvar_map_t &threadresetmap) {
     // typedef std::map<std::string, ProcessDecl *> processMapType;
     // processMapType getProcessMap();
     // ProcessDecl::getEntryFunction() returns EntryFunctionContainer*
@@ -487,7 +458,7 @@ namespace systemc_hdl {
     //clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 
     const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(
-								clang::DiagnosticsEngine::Remark, "non-SC_METHOD/THREAD '%0' skipped.");
+								     clang::DiagnosticsEngine::Remark, "non-SC_METHOD/THREAD '%0' skipped.");
 
     for (auto const &pm_entry : pm) {
       ProcessDecl *pd{get<1>(pm_entry)};
@@ -513,26 +484,115 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "thread " << efc->getName() << "\n");
 	  CXXMethodDecl *emd = efc->getEntryMethod();
 	  if (emd->hasBody()) {
-	    
+
+	    auto got = threadresetmap.find(efc->getName());
+	    // should be an error if there isn't a reset var for this thread
+	    auto h_resetvarinfo = (got == threadresetmap.end() ? NULL : got->second);
+
 	    // params includes portsigvarlist so thread local vars get promoted to module level
 	    // have to pass efc to get the reset info
-	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map);
+
+	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map, h_resetvarinfo );
 	    allmethodecls.insertall(xthread.methodecls);
 	    //h_thread->child_list.push_back(h_body);
 	    h_top->child_list.push_back(h_thread);
 	  } else {
-	  LLVM_DEBUG(llvm::dbgs() << "Entry Thread is null\n");
+	    LLVM_DEBUG(llvm::dbgs() << "Entry Thread is null\n");
 	  }
 	}
 	else {
-	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(
-								 (efc->getEntryMethod())->getLocation(), cxx_record_id1)};
+	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(							(efc->getEntryMethod())->getLocation(), cxx_record_id1)};
 	  diag_builder << efc->getName();
 
 	  LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName()
-		   << " not SC_METHOD, THREAD, or CTHREAD, skipping\n");
+		     << " not SC_METHOD, THREAD, or CTHREAD, skipping\n");
 	}
       }
     }
   }
+
+  void HDLMain::MakeResetMap( resetvar_map_t &threadresetmap, hNodep h_allsenslists)
+  {
+    // top node is a noop, then child list has the sensitivity lists:
+    //hNoop  NONAME [
+    //hSenslist mc_proc [
+    //hSensvar NONAME [
+    //hVarref s_fp##valid NOLIST
+    //hNoop always NOLIST
+    // ]
+    // hSensvar NONAME [
+    //   hVarref s_fp##data NOLIST
+    //   hNoop always NOLIST
+    // ]
+    // or
+    //hSenslist break_in_for_wait0 [
+    //   hSensvar ASYNC [
+    //     hVarref arst NOLIST
+    //     hLiteral 0 NOLIST
+    //   ]
+    // ]
+    
+    if (h_allsenslists != NULL) {	  
+      for (hNodep h_onesenslist : h_allsenslists->child_list) {
+	string threadname = h_onesenslist->getname();
+	for ( hNodep h_sensvar : h_onesenslist->child_list) {
+	  if (h_sensvar->getname() == "NONAME") continue; // non-reset var has null hSensvar name
+	  threadresetmap[threadname] = h_sensvar;  // only one reset per thread
+	  break;
+	}
+      }
+    }
+  }
+  
+  // this is obsolete. It has been supeseded by HDLHnode.cpp
+  // due to possibility of for-loops enclosing port bindings
+  void HDLMain::SCportbindings2hcode(ModuleInstance* mod,
+				     //systemc_clang::ModuleInstance::portBindingMapType portbindingmap,
+				     hNodep &h_pbs) {
+    systemc_clang::ModuleInstance::portBindingMapType portbindingmap{mod->getPortBindings()};
+    for (auto const &pb : portbindingmap) {
+      PortBinding *binding{get<1>(pb)};
+      string port_name{binding->getCallerPortName()};
+      LLVM_DEBUG(llvm::dbgs() << "SC port binding found Caller port name  " << port_name
+		 << " caller instance name " << binding->getCallerInstanceName()
+		 << " <==> callee port name " << binding->getCalleePortName() <<
+		 " callee instance name "
+		 << binding->getCalleeInstanceName() << "\n");
+      if (binding->getCallerArraySubscripts().size() >0)
+	{
+	  LLVM_DEBUG(llvm::dbgs() << "Caller Subscript vector length is " <<
+		     binding->getCallerArraySubscripts().size() << "\n");
+	  for (auto subscriptex: binding->getCallerArraySubscripts()) {
+	    LLVM_DEBUG(subscriptex->dump(llvm::dbgs(), getContext()));
+	  }
+	}
+      if (binding->getCalleeArraySubscripts().size()>0) {
+	LLVM_DEBUG(llvm::dbgs() << "Callee Subscript vector length is " <<
+		   binding->getCalleeArraySubscripts().size() << "\n");
+	for (auto subscriptex: binding->getCalleeArraySubscripts()) {
+	  LLVM_DEBUG(subscriptex->dump(llvm::dbgs(), getContext()));
+	}
+      }
+
+      hNodep hpb = new hNode(binding->getCallerInstanceName(), hNode::hdlopsEnum::hPortbinding);
+      // caller module name
+      hNodep hpb_caller = new hNode(port_name, hNode::hdlopsEnum::hVarref);
+      if (binding->getCallerPortArraySubscripts().size() >0) {
+	hpb_caller->child_list.push_back(new hNode("INDEX", hNode::hdlopsEnum::hLiteral)); //placeholder
+      }
+      hpb->child_list.push_back(hpb_caller);
+      string mapped_name =  binding->getCalleeInstanceName();
+
+      // hpb->child_list.push_back(new hNode(binding->getBoundToName(),
+      // hNode::hdlopsEnum::hVarref));
+      hNodep hpb_callee = new hNode(mapped_name, hNode::hdlopsEnum::hVarref);
+      if (binding->getCalleeArraySubscripts().size() >0) {
+	hpb_callee->child_list.push_back(new hNode("INDEX", hNode::hdlopsEnum::hLiteral)); //placeholder
+      }
+      hpb->child_list.push_back(hpb_callee);
+
+      h_pbs->child_list.push_back(hpb);
+    }
+  }
+  
 }  
