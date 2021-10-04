@@ -21,12 +21,13 @@ var searchData=
   ['stack_5fcurrent_5fnode_5f_18',['stack_current_node_',['../classsystemc__clang_1_1FindTemplateTypes.html#a3e3a6f5f7cfb2ad47fb77a4253794d1b',1,'systemc_clang::FindTemplateTypes']]],
   ['state_5fstring_19',['state_string',['../classsystemc__hdl_1_1HDLThread.html#a52b80c7aab89c6e0c8b9ef813ef1c46f',1,'systemc_hdl::HDLThread']]],
   ['step_20',['step',['../structsystemc__hdl_1_1HDLConstructorHcode_1_1for__info__t.html#a2bb0bae84cb81c8fb5ae2e6584ce6884',1,'systemc_hdl::HDLConstructorHcode::for_info_t']]],
-  ['submodules_5f_21',['submodules_',['../classsc__ast__matchers_1_1PortMatcher.html#a3bf521271c460c87b76f2e4dcce26463',1,'sc_ast_matchers::PortMatcher']]],
-  ['successors_5f_22',['successors_',['../classsystemc__clang_1_1SplitCFGBlock.html#ac96deb5f74e80b56f48905bb8f9208c7',1,'systemc_clang::SplitCFGBlock']]],
-  ['succs_5f_23',['succs_',['../structsystemc__clang_1_1SplitCFGBlock_1_1SuccessorIterator.html#ad6649db3e44d213822d7576796453fc6',1,'systemc_clang::SplitCFGBlock::SuccessorIterator']]],
-  ['suffix_24',['suffix',['../classparselib_1_1primitives_1_1TypeContext.html#a79b971bea16103a8b36c771a46f06775',1,'parselib::primitives::TypeContext']]],
-  ['suscfgstatemap_25',['susCFGStateMap',['../classsystemc__clang_1_1SuspensionAutomata.html#a6867fb869f7dc5ff46912696f2a7c64a',1,'systemc_clang::SuspensionAutomata']]],
-  ['suscfgsuccidmap_26',['susCFGSuccIDMap',['../classsystemc__clang_1_1SuspensionAutomata.html#ad9ba3ec9309524453b635103a7719615',1,'systemc_clang::SuspensionAutomata']]],
-  ['systemc_5fmodel_5f_27',['systemc_model_',['../classsystemc__clang_1_1SystemCConsumer.html#a9b479529e66790c1ff22460dfcff871f',1,'systemc_clang::SystemCConsumer']]],
-  ['sz_28',['sz',['../classparselib_1_1primitives_1_1array.html#af0808720fab5cd3080c00ae0da5d64c7',1,'parselib::primitives::array']]]
+  ['structure_21',['structure',['../classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#a6c6b7be784c7af030e25fb25f5fd8f60',1,'parselib::transforms::literal_expansion::LiteralExpansion']]],
+  ['submodules_5f_22',['submodules_',['../classsc__ast__matchers_1_1PortMatcher.html#a3bf521271c460c87b76f2e4dcce26463',1,'sc_ast_matchers::PortMatcher']]],
+  ['successors_5f_23',['successors_',['../classsystemc__clang_1_1SplitCFGBlock.html#ac96deb5f74e80b56f48905bb8f9208c7',1,'systemc_clang::SplitCFGBlock']]],
+  ['succs_5f_24',['succs_',['../structsystemc__clang_1_1SplitCFGBlock_1_1SuccessorIterator.html#ad6649db3e44d213822d7576796453fc6',1,'systemc_clang::SplitCFGBlock::SuccessorIterator']]],
+  ['suffix_25',['suffix',['../classparselib_1_1primitives_1_1TypeContext.html#a79b971bea16103a8b36c771a46f06775',1,'parselib::primitives::TypeContext']]],
+  ['suscfgstatemap_26',['susCFGStateMap',['../classsystemc__clang_1_1SuspensionAutomata.html#a6867fb869f7dc5ff46912696f2a7c64a',1,'systemc_clang::SuspensionAutomata']]],
+  ['suscfgsuccidmap_27',['susCFGSuccIDMap',['../classsystemc__clang_1_1SuspensionAutomata.html#ad9ba3ec9309524453b635103a7719615',1,'systemc_clang::SuspensionAutomata']]],
+  ['systemc_5fmodel_5f_28',['systemc_model_',['../classsystemc__clang_1_1SystemCConsumer.html#a9b479529e66790c1ff22460dfcff871f',1,'systemc_clang::SystemCConsumer']]],
+  ['sz_29',['sz',['../classparselib_1_1primitives_1_1array.html#af0808720fab5cd3080c00ae0da5d64c7',1,'parselib::primitives::array']]]
 ];

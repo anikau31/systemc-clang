@@ -303,6 +303,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a850cf1bffa018941c8fb933d5442ffbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e8660b3ec8a7fc8bc1e3fd63ef81578"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a7e8660b3ec8a7fc8bc1e3fd63ef81578">current_proc_name</a></td></tr>
 <tr class="separator:a7e8660b3ec8a7fc8bc1e3fd63ef81578"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5046e370fe49bdfaefdef8c0d7ad2af5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a5046e370fe49bdfaefdef8c0d7ad2af5">thread_name</a></td></tr>
+<tr class="separator:a5046e370fe49bdfaefdef8c0d7ad2af5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a354d2a73b686cb8939e2c6109214c187"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a354d2a73b686cb8939e2c6109214c187">current_module</a></td></tr>
 <tr class="separator:a354d2a73b686cb8939e2c6109214c187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a631a23fbc6998274af5f3ab977a1ff05"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a631a23fbc6998274af5f3ab977a1ff05">senselist</a></td></tr>
@@ -326,8 +328,8 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a3b2193437df2e002e259ae4ddeb2e123"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c49e6e983f5e051456b763addb2e776"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a6c49e6e983f5e051456b763addb2e776">__gen_funcparam</a> (self, tree)</td></tr>
 <tr class="separator:a6c49e6e983f5e051456b763addb2e776"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeacfca750804b7e4178891496a6e67c4"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#aeacfca750804b7e4178891496a6e67c4">__generate_hthread_block</a> (self, tree)</td></tr>
-<tr class="separator:aeacfca750804b7e4178891496a6e67c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3817020fdd32f00dace701f4f95d5643"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a3817020fdd32f00dace701f4f95d5643">__generate_hthread_block</a> (self, tree, is_sync)</td></tr>
+<tr class="separator:a3817020fdd32f00dace701f4f95d5643"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a5bb31114751ec8dcb90a60a92c153f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a6a5bb31114751ec8dcb90a60a92c153f">__generate_vars_decl</a> (self, ind, res, vars)</td></tr>
 <tr class="separator:a6a5bb31114751ec8dcb90a60a92c153f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -506,8 +508,8 @@ This pass does not perform any tree transformation that alters the semantics, bu
 
 </div>
 </div>
-<a id="aeacfca750804b7e4178891496a6e67c4" name="aeacfca750804b7e4178891496a6e67c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeacfca750804b7e4178891496a6e67c4">&#9670;&nbsp;</a></span>__generate_hthread_block()</h2>
+<a id="a3817020fdd32f00dace701f4f95d5643" name="a3817020fdd32f00dace701f4f95d5643"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3817020fdd32f00dace701f4f95d5643">&#9670;&nbsp;</a></span>__generate_hthread_block()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -525,7 +527,13 @@ This pass does not perform any tree transformation that alters the semantics, bu
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>tree</em>&#160;</td>
+          <td class="paramname"><em>tree</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_sync</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3293,6 +3301,20 @@ the reason is that we need to collect binding information per arry-like port
       <table class="memname">
         <tr>
           <td class="memname">parselib.transforms.verilog_tranlation.VerilogTranslationPass.senselist</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5046e370fe49bdfaefdef8c0d7ad2af5" name="a5046e370fe49bdfaefdef8c0d7ad2af5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5046e370fe49bdfaefdef8c0d7ad2af5">&#9670;&nbsp;</a></span>thread_name</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">parselib.transforms.verilog_tranlation.VerilogTranslationPass.thread_name</td>
         </tr>
       </table>
 </div><div class="memdoc">
