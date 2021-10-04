@@ -25,10 +25,13 @@ class PortDecl {
   void setModuleName(const std::string &);
   void setBinding(clang::VarDecl *vd);
   void setArrayType();
+  void setPointertype();
   void addArraySize(llvm::APInt size);
 
   /// Get parameters
   bool getArrayType() const;
+  bool isPointerType() const;
+
   std::vector<llvm::APInt> getArraySizes() const;
   std::string getName() const;
   clang::FieldDecl *getAsFieldDecl() const;
@@ -50,6 +53,7 @@ class PortDecl {
   /// Is it an array type.
   bool is_array_; 
   std::vector<llvm::APInt> array_sizes_;
+
 };
 }  // namespace systemc_clang
 #endif

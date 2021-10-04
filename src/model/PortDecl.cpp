@@ -54,6 +54,12 @@ void PortDecl::setArrayType() { is_array_ = true; }
 
 bool PortDecl::getArrayType() const { return is_array_; }
 
+bool PortDecl::isPointerType() const { 
+  const clang::FieldDecl* fd{getAsFieldDecl()};
+  assert( fd != nullptr );
+  return fd->getType().getTypePtr()->isPointerType();
+}
+
 void PortDecl::setModuleName(const std::string &name) { port_name_ = name; }
 
 std::vector<llvm::APInt> PortDecl::getArraySizes() const { return array_sizes_; }
