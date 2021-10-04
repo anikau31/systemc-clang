@@ -383,8 +383,6 @@ class PortMatcher : public MatchFinder::MatchCallback {
 
       PortDecl *new_pd{new PortDecl(name, decl, parseTemplateType(fd))};
 
-
-
       std::vector<llvm::APInt> sizes{ getConstantArraySizes(fd) };
 
       if (sizes.size() > 0 ) {
@@ -393,30 +391,6 @@ class PortMatcher : public MatchFinder::MatchCallback {
           new_pd->addArraySize(array_size);
         }
       }
-
-
-     /*
-      clang::QualType field_type{fd->getType()};
-      // Need to extract all the array index arguments.
-      /// Cast it to see if it's array type.
-      auto array_type{dyn_cast<ConstantArrayType>(field_type)};
-
-      if (array_type) {
-        new_pd->setArrayType();
-
-
-
-        while (array_type != nullptr) {
-          llvm::APInt array_size{};
-          array_size = array_type->getSize();
-          LLVM_DEBUG(llvm::dbgs() << "Size of array: " << array_size << "\n";);
-          array_type =
-              dyn_cast<ConstantArrayType>(array_type->getElementType());
-
-          new_pd->addArraySize(array_size);
-        }
-      }
-      */
 
       auto port_entry{std::make_tuple(name, new_pd)};
       port.push_back(port_entry);
