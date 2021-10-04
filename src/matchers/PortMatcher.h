@@ -181,6 +181,8 @@ class PortMatcher : public MatchFinder::MatchCallback {
     hasType(
       cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)
       )
+    ,
+    hasType(pointerType(pointee(hasDeclaration(cxxRecordDecl(isDerivedFrom(hasName(name))).bind("desugar_"+name)))))
     );
   }
 

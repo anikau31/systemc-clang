@@ -37,6 +37,8 @@ SC_MODULE( test ){
   //signals
   sc_signal<int> internal_signal;
 
+  sc_in<int> *p_in;
+  sc_signal<int> *p_sig;
   sc_out<int> *p;
 
 
@@ -170,10 +172,10 @@ int sc_main(int argc, char *argv[]) {
     auto test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
-    REQUIRE(test_module_inst->getIPorts().size() == 4);
+    REQUIRE(test_module_inst->getIPorts().size() == 5);
     REQUIRE(test_module_inst->getOPorts().size() == 5);
     REQUIRE(test_module_inst->getIOPorts().size() == 1);
-    REQUIRE(test_module_inst->getSignals().size() == 4);
+    REQUIRE(test_module_inst->getSignals().size() == 5);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
     REQUIRE(test_module_inst->getOtherVars().size() == 3);
@@ -266,6 +268,12 @@ int sc_main(int argc, char *argv[]) {
         REQUIRE(sizes[1].getLimitedValue() == 3);
         REQUIRE(sizes[2].getLimitedValue() == 4);
       }
+
+      if ((name == "p_in")) {
+        REQUIRE(trim(dft_str) == "sc_in int");
+      }
+
+
     }
 
     for (auto const &port : test_module_inst->getOPorts()) {
@@ -318,6 +326,10 @@ int sc_main(int argc, char *argv[]) {
       }
 
       /// Check array parameters
+      if (name == "p_sig") {
+        REQUIRE(trim(dft_str) == "sc_signal int");
+      }
+
       if (name == "data") {
         REQUIRE(sg->getArrayType() == true);
         REQUIRE(sg->getArraySizes().front() == 4);
