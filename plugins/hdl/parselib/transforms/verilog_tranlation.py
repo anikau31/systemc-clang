@@ -98,7 +98,8 @@ class VerilogTranslationPass(TopDown):
                      isinstance(tpe, sc_out) or
                      isinstance(tpe, array) and isinstance(tpe.get_element_type(), sc_signal) for tpe in tpes]
         # is_nb checks whether one of the type needs to be non-blocking assignment
-        all_nb = all(is_nb)
+        # and special case for thread
+        all_nb = all(is_nb) or current_proc in ['#thread_sync#']
         all_b = all(not p for p in is_nb)
         if not all_nb and not all_b:
             raise ValueError('The assignment must not mix blocking assignment and non-blocking assignment. On line: {}.'.format(tree.line))
@@ -113,7 +114,7 @@ class VerilogTranslationPass(TopDown):
         # non-blocking assignments in a function so that its value can get properly assigned
         # An example of such is the m_bits_data_valid signal in encode_stream
         # In SystemC, when a signal is used in RHS, it will be added to the sensitivity list
-        if current_proc in sense_list or current_proc in ['#function#']:
+        if current_proc in sense_list or current_proc in ['#function#', '#thread_sync#']:
             # sense_list = sense_list[current_proc]
             # tpe is only recorded if the declaration crosses process boundary
             # if tpe is not None:
@@ -131,6 +132,7 @@ class VerilogTranslationPass(TopDown):
         op = '=' if self.in_for_init or blocking or is_local_var else '<='
         l = tree.children[0]
         r = tree.children[1]
+
 
         if type(l) == Tree and l.data == 'harrayref':
             # __A[__r:__s] = __X
@@ -652,6 +654,7 @@ class VerilogTranslationPass(TopDown):
             bindings = []
         else:
             bindings = self.bindings[mod_name]
+        dprint(bindings)
         ind = self.get_current_ind_prefix()
         res = ind + '{} {}('.format(mod_type_name, mod_name) + '\n'
         self.inc_indent()
@@ -695,6 +698,7 @@ class VerilogTranslationPass(TopDown):
         self.dec_indent()
         ind = self.get_current_ind_prefix()
         res += ind + ');'
+        # add an always block for port binding when we encounter sub module case
         tree.children = [res]
         return tree
 
@@ -845,17 +849,29 @@ class VerilogTranslationPass(TopDown):
         # 3. synchronous hmethod for setting state to next_state and reset
         # 4. combinational hmethod for driving next_state
         # We need 2 to be at the module level and thus its processing will be handled in hmodule
+        self.thread_name = tree.children[0]
         self.__push_up(tree)
+        del self.thread_name
         return tree
 
-    def __generate_hthread_block(self, tree):
+    def __generate_hthread_block(self, tree, is_sync):
         # currently we assume that the hthread block is simply and there is no sensitivity list and
         # var decls, this might change in the future when we add support for resets
         proc_name, *body = tree.children
-        self.set_current_proc_name(proc_name)
+        if is_sync:
+            self.set_current_proc_name('#thread_sync#')
+        else:
+            self.set_current_proc_name(proc_name)
 
         ind = self.get_current_ind_prefix()
-        res = ind + 'always @(*) begin: {}\n'.format(proc_name)
+
+        thread_name = self.thread_name
+        sense_list = self.get_sense_list()
+        assert thread_name in sense_list, "Process name {} is not in module {}".format(proc_name, self.current_module)
+        if is_sync:
+            res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[thread_name]), proc_name)
+        else:
+            res = ind + 'always @(*) begin: {}\n'.format(proc_name)
         self.inc_indent()
         self.__push_up(tree)
         proc_name, *body = tree.children
@@ -869,10 +885,10 @@ class VerilogTranslationPass(TopDown):
         return res
 
     def hthreadsync(self, tree):
-        return self.__generate_hthread_block(tree)
+        return self.__generate_hthread_block(tree, is_sync=True)
 
     def hthreadswitch(self, tree):
-        return self.__generate_hthread_block(tree)
+        return self.__generate_hthread_block(tree, is_sync=False)
 
     def hmodule(self, tree):
         # dprint("Processing Module: ", tree.children[0])
@@ -995,11 +1011,12 @@ class VerilogTranslationPass(TopDown):
         if processlist:
             for proc in processlist.children:
                 if is_tree_type(proc, 'hthread'):
-                    thread_name, thread_sig, thread_sync, thread_comb = proc.children
+                    # thread_name, thread_sig, thread_sync, thread_comb = proc.children
+                    thread_name, thread_sync, thread_comb = proc.children
                     self.inc_indent()
                     ind = self.get_current_ind_prefix()
                     res += '{}// Thread: {}\n'.format(ind, thread_name)
-                    res = self.__generate_vars_decl(ind, res, thread_sig.children)
+                    # res = self.__generate_vars_decl(ind, res, thread_sig.children)
                     self.dec_indent()
                     res += thread_sync + "\n"
                     res += thread_comb + "\n"

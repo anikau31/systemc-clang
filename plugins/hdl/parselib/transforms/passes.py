@@ -14,6 +14,7 @@ from .reorder_mod_init_block import ReorderModInitBlock
 from .function_info_pass import FunctionInfoPass, FunctionInfoPass2
 from .function_transformation_pass import FunctionTransformationPass
 from .comma_transformation import CommaTransformation
+from .structure_collector import StructureCollector
 
 
 class VerilogTranslator:
@@ -27,7 +28,9 @@ class VerilogTranslator:
         prev = NodeMovement().visit(prev)
         prev = SortVarDecl().visit(prev)
         prev = AliasTranslation().visit(prev)
-        prev = LiteralExpansion().visit(prev)
+        sc = StructureCollector()
+        sc.visit(prev)
+        prev = LiteralExpansion(structure=sc.hier).visit(prev)
         prev = SliceMerge().visit(prev)
         prev = CommaTransformation().visit(prev)
         f = TypeDefFilter()

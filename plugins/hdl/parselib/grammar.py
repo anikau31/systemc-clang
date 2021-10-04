@@ -34,7 +34,7 @@ lark_grammar = Lark('''
         hprocess: "hProcess" ID  "[" "hMethod" (ID|"NONAME") "[" prevardecl  hcstmt "]" "]"
         
         // hthread consists of a synchronous block that sets state and a switch block that produces next state
-        hthread:  "hProcess" ID  "[" modportsiglist hthreadsync hthreadswitch "]"
+        hthread:  "hProcess" ID  "[" modportsiglist? hthreadsync hthreadswitch "]"
         hthreadsync: "hMethod" ID  "[" ifstmt "]"
         hthreadswitch: "hMethod" ID  "[" switchstmt "]"
         
@@ -137,6 +137,8 @@ lark_grammar = Lark('''
         hsenslist : "hSenslist" ID "[" hsensvar* "]"
                   | "hSenslist" ID "NOLIST"
         hsensvar :  "hSensvar" "NONAME" "[" (expression|hvalchange) "hNoop" npa "NOLIST" "]"
+                 |  hasync
+        hasync   :  "hSensvar" "ASYNC" "[" expression hliteral "]"
 
         hvalchange: "hNoop" "value_changed_event" "[" expression "]"
         hsensedge : "hNoop" npa "NOLIST"
