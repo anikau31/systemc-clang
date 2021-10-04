@@ -251,11 +251,21 @@ class PortMatcher : public MatchFinder::MatchCallback {
               )
             ),
             hasType(hasUnqualifiedDesugaredType(
+                  anyOf(
                 recordType(
                   hasDeclaration(
                     cxxRecordDecl(hasName(name)).bind("desugar_"+name)
                   )
                 )
+                ,
+                pointerType(pointee(
+                  hasDeclaration(
+                    cxxRecordDecl(hasName(name)).bind("desugar_"+name)
+                  )
+                    ) // pointee
+                  )
+                )
+
               )
             )
           );
@@ -663,6 +673,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
           LLVM_DEBUG(llvm::dbgs()
                      << " Found field other_fields: " << field_name << "\n");
 
+        p_field->dump();
           insert_port(other_fields_, p_field);
 
         } else {

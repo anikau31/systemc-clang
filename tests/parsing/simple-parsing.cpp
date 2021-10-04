@@ -37,6 +37,8 @@ SC_MODULE( test ){
   //signals
   sc_signal<int> internal_signal;
 
+  sc_out<int> *p;
+
 
   // others
   int x;
