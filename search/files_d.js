@@ -10,10 +10,11 @@ var searchData=
   ['splitcfg_2eh_7',['SplitCFG.h',['../SplitCFG_8h.html',1,'']]],
   ['splitcfgblock_2ecpp_8',['SplitCFGBlock.cpp',['../SplitCFGBlock_8cpp.html',1,'']]],
   ['splitcfgblock_2eh_9',['SplitCFGBlock.h',['../SplitCFGBlock_8h.html',1,'']]],
-  ['suspensionautomata_2ecpp_10',['SuspensionAutomata.cpp',['../SuspensionAutomata_8cpp.html',1,'']]],
-  ['suspensionautomata_2eh_11',['SuspensionAutomata.h',['../SuspensionAutomata_8h.html',1,'']]],
-  ['systemc_2dclang_2eh_12',['systemc-clang.h',['../systemc-clang_8h.html',1,'']]],
-  ['systemc_2dclang_2epy_13',['systemc-clang.py',['../systemc-clang_8py.html',1,'']]],
-  ['systemcclang_2ecpp_14',['SystemCClang.cpp',['../SystemCClang_8cpp.html',1,'']]],
-  ['systemcclang_2eh_15',['SystemCClang.h',['../SystemCClang_8h.html',1,'']]]
+  ['structure_5fcollector_2epy_10',['structure_collector.py',['../structure__collector_8py.html',1,'']]],
+  ['suspensionautomata_2ecpp_11',['SuspensionAutomata.cpp',['../SuspensionAutomata_8cpp.html',1,'']]],
+  ['suspensionautomata_2eh_12',['SuspensionAutomata.h',['../SuspensionAutomata_8h.html',1,'']]],
+  ['systemc_2dclang_2eh_13',['systemc-clang.h',['../systemc-clang_8h.html',1,'']]],
+  ['systemc_2dclang_2epy_14',['systemc-clang.py',['../systemc-clang_8py.html',1,'']]],
+  ['systemcclang_2ecpp_15',['SystemCClang.cpp',['../SystemCClang_8cpp.html',1,'']]],
+  ['systemcclang_2eh_16',['SystemCClang.h',['../SystemCClang_8h.html',1,'']]]
 ];

@@ -9,5 +9,6 @@ var searchData=
   ['llvm_5finstall_5fpath_6',['llvm_install_path',['../classsystemc-clang_1_1SystemCClang.html#a9914cf6d88f76bbfc700303fe482072a',1,'systemc-clang::SystemCClang']]],
   ['lo_7',['lo',['../structsystemc__hdl_1_1HDLConstructorHcode_1_1for__info__t.html#afc98f5ad00b50486c08d5a19d57a744e',1,'systemc_hdl::HDLConstructorHcode::for_info_t']]],
   ['local_5fvariables_8',['local_variables',['../classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a0e6c5ded3d6e57ee4c52fb73608a2531',1,'parselib::transforms::verilog_tranlation::VerilogTranslationPass']]],
-  ['lutil_9',['lutil',['../classsystemc__hdl_1_1HDLBody.html#a31853db61435860151cb1d805d47251a',1,'systemc_hdl::HDLBody::lutil()'],['../classsystemc__hdl_1_1HDLThread.html#aab8ce1199c68fc50147fcfd747f64c69',1,'systemc_hdl::HDLThread::lutil()']]]
+  ['long_9',['long',['../classparselib_1_1primitives_1_1long.html',1,'parselib::primitives']]],
+  ['lutil_10',['lutil',['../classsystemc__hdl_1_1HDLBody.html#a31853db61435860151cb1d805d47251a',1,'systemc_hdl::HDLBody::lutil()'],['../classsystemc__hdl_1_1HDLThread.html#aab8ce1199c68fc50147fcfd747f64c69',1,'systemc_hdl::HDLThread::lutil()']]]
 ];

@@ -20,7 +20,7 @@ var searchData=
   ['caller_5fport_5fname_5f_17',['caller_port_name_',['../classsystemc__clang_1_1PortBinding.html#aae42a0a5eb8919133e7f0fe46806e18b',1,'systemc_clang::PortBinding']]],
   ['calls_5f_18',['calls_',['../classsc__ast__matchers_1_1CallerCalleeMatcher.html#ab7914e2a434a605a8cc204bdf4a6653e',1,'sc_ast_matchers::CallerCalleeMatcher']]],
   ['cfg_5f_19',['cfg_',['../classsystemc__clang_1_1SplitCFG.html#afffefabf4f6af83e2c1ec3e89f9bab19',1,'systemc_clang::SplitCFG']]],
-  ['cfgb_20',['cfgb',['../classsystemc__hdl_1_1SCBBlock.html#af8d103b385885c237d3d1b3190896790',1,'systemc_hdl::SCBBlock']]],
+  ['cfgvisited_20',['CFGVisited',['../classsystemc__hdl_1_1HDLThread.html#aa417ac0de8c24d181d272812deb0645d',1,'systemc_hdl::HDLThread']]],
   ['child_5flist_21',['child_list',['../classhnode_1_1hNode.html#a6e91af95846022a423674145de0ed949',1,'hnode::hNode']]],
   ['class_5fdecl_5f_22',['class_decl_',['../classsystemc__clang_1_1ModuleInstance.html#a52193bb56d74ae42b832932a71be909d',1,'systemc_clang::ModuleInstance']]],
   ['clock_5fports_5f_23',['clock_ports_',['../classsc__ast__matchers_1_1PortMatcher.html#a6c9455bf67e1f10d2f466b787fe86eed',1,'sc_ast_matchers::PortMatcher']]],

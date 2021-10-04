@@ -2,8 +2,8 @@ var searchData=
 [
   ['edge_5f_0',['edge_',['../classsc__ast__matchers_1_1ResetMatcher.html#a5d6b20ce4c3b8c2dfc8a7f4b492ca684',1,'sc_ast_matchers::ResetMatcher']]],
   ['ef_1',['ef',['../classsystemc__clang_1_1FindEntryFunctions.html#a30a5efb59a564acfe4ce1cebf167d8bc',1,'systemc_clang::FindEntryFunctions']]],
-  ['elements_5f_2',['elements_',['../classsystemc__clang_1_1SplitCFGBlock.html#add6967a62548cfa47b4f3ab2f1bea7ff',1,'systemc_clang::SplitCFGBlock']]],
-  ['endstmtix_3',['endstmtix',['../classsystemc__hdl_1_1SCBBlock.html#ac9e2941d296c00c30fb51d67094478fe',1,'systemc_hdl::SCBBlock']]],
+  ['efc_5f_2',['efc_',['../classsystemc__hdl_1_1HDLThread.html#af29e58374310775665475946b4f5d29b',1,'systemc_hdl::HDLThread']]],
+  ['elements_5f_3',['elements_',['../classsystemc__clang_1_1SplitCFGBlock.html#add6967a62548cfa47b4f3ab2f1bea7ff',1,'systemc_clang::SplitCFGBlock']]],
   ['entry_5fcxx_5frecord_5fdecl_5f_4',['entry_cxx_record_decl_',['../classsystemc__clang_1_1FindEntryFunctions.html#a0847c1c40aabb1c90939d929a63187a7',1,'systemc_clang::FindEntryFunctions']]],
   ['entry_5ffunction_5fgpu_5fmacro_5fmap_5f_5',['entry_function_gpu_macro_map_',['../classsystemc__clang_1_1Model.html#a5900aec67e9e1839581eefdec2542d7e',1,'systemc_clang::Model']]],
   ['entry_5ffunction_5flist_5f_6',['entry_function_list_',['../classsystemc__clang_1_1FindEntryFunctions.html#a44ce48e91ea56e28e46e6cf3dca4438b',1,'systemc_clang::FindEntryFunctions']]],

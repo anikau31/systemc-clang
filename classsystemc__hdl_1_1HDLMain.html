@@ -69,7 +69,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classsystemc__hdl_1_1HDLMain-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">systemc_hdl::HDLMain Class Reference</div></div>
@@ -93,20 +93,20 @@ Collaboration diagram for systemc_hdl::HDLMain:</div>
 <div class="dyncontent">
 <div class="center"><img src="classsystemc__hdl_1_1HDLMain__coll__graph.png" border="0" usemap="#asystemc__hdl_1_1HDLMain_coll__map" alt="Collaboration graph"/></div>
 <map name="asystemc__hdl_1_1HDLMain_coll__map" id="asystemc__hdl_1_1HDLMain_coll__map">
-<area shape="rect" title=" " alt="" coords="1411,312,1567,339"/>
-<area shape="rect" href="classsystemc__clang_1_1SystemCConsumer.html" title="This is the main consumer class that beings the parsing of SystemC." alt="" coords="1092,100,1319,127"/>
+<area shape="rect" title=" " alt="" coords="1411,204,1567,231"/>
+<area shape="rect" href="classsystemc__clang_1_1SystemCConsumer.html" title="This is the main consumer class that beings the parsing of SystemC." alt="" coords="1092,77,1319,104"/>
 <area shape="rect" title=" " alt="" coords="790,5,897,32"/>
 <area shape="rect" title=" " alt="" coords="753,57,933,98"/>
 <area shape="rect" href="classsystemc__clang_1_1Model.html" title=" " alt="" coords="768,123,919,149"/>
 <area shape="rect" href="classsystemc__clang_1_1ModuleInstance.html" title="Forward declarations." alt="" coords="389,123,596,149"/>
 <area shape="rect" href="structsc__ast__matchers_1_1ModuleInstanceType.html" title=" " alt="" coords="5,123,253,149"/>
-<area shape="rect" href="classhnode_1_1hNode.html" title=" " alt="" coords="793,173,894,200"/>
-<area shape="rect" href="classsystemc__hdl_1_1HDLBody.html" title=" " alt="" coords="1127,273,1284,300"/>
-<area shape="rect" href="classhnode_1_1newname__map__t.html" title=" " alt="" coords="768,311,919,353"/>
-<area shape="rect" href="classhnode_1_1name__serve.html" title=" " alt="" coords="425,319,560,345"/>
-<area shape="rect" href="classHDLType.html" title=" " alt="" coords="1167,480,1244,507"/>
-<area shape="rect" href="classhnode_1_1util.html" title=" " alt="" coords="803,419,883,445"/>
-<area shape="rect" title=" " alt="" coords="753,225,933,266"/>
+<area shape="rect" href="classhnode_1_1newname__map__t.html" title=" " alt="" coords="768,390,919,431"/>
+<area shape="rect" href="classsystemc__hdl_1_1HDLBody.html" title=" " alt="" coords="1127,267,1284,293"/>
+<area shape="rect" href="classhnode_1_1name__serve.html" title=" " alt="" coords="425,397,560,424"/>
+<area shape="rect" href="classHDLType.html" title=" " alt="" coords="1167,204,1244,231"/>
+<area shape="rect" href="classhnode_1_1util.html" title=" " alt="" coords="803,177,883,204"/>
+<area shape="rect" title=" " alt="" coords="753,243,933,285"/>
+<area shape="rect" href="classhnode_1_1hNode.html" title=" " alt="" coords="793,309,894,336"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -119,16 +119,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae29d8fa3a6194fe4ed655dd87dccdd27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ffb914cdea1fd4e797001a34ba8e2e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a9ffb914cdea1fd4e797001a34ba8e2e4">postFire</a> ()</td></tr>
 <tr class="separator:a9ffb914cdea1fd4e797001a34ba8e2e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a317c893ed14e48218f7f9ebc3df31d19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a317c893ed14e48218f7f9ebc3df31d19">SCmodule2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *mod, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_module, llvm::raw_fd_ostream &amp;SCout)</td></tr>
-<tr class="separator:a317c893ed14e48218f7f9ebc3df31d19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16643c12fb23fdc9580913f5cca5f8f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a16643c12fb23fdc9580913f5cca5f8f7">SCport2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html#ae5e4d7d956225b28aac30182a5649f84">ModuleInstance::portMapType</a> pmap, <a class="el" href="classhnode_1_1hNode.html#a72bcc22543c267571a24ec713633e39a">hNode::hdlopsEnum</a> h_op, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_info, <a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;mod_vname_map)</td></tr>
-<tr class="separator:a16643c12fb23fdc9580913f5cca5f8f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a798b9e0074e26d9f90e45da49a30cbef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a798b9e0074e26d9f90e45da49a30cbef">SCsig2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html#adad65a1c03e742c7c8eb6d0bd1a57271">ModuleInstance::signalMapType</a> pmap, <a class="el" href="classhnode_1_1hNode.html#a72bcc22543c267571a24ec713633e39a">hNode::hdlopsEnum</a> h_op, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_info, <a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;mod_vname_map)</td></tr>
-<tr class="separator:a798b9e0074e26d9f90e45da49a30cbef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbdb03a544254e545b09c3eab8d739b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#afbdb03a544254e545b09c3eab8d739b5">SCproc2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html#aa971eba18c75ee5a38fcfc9739bbf9a5">ModuleInstance::processMapType</a> pm, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;<a class="el" href="classsystemc__hdl_1_1HDLMain.html#a930cc6788c47b22ba634d050ee1c1200">h_top</a>, <a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;mod_vname_map)</td></tr>
-<tr class="separator:afbdb03a544254e545b09c3eab8d739b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a229d7c785e8ad4e02d5a198df4d8d6de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a229d7c785e8ad4e02d5a198df4d8d6de">SCportbindings2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *mod, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_pb)</td></tr>
-<tr class="separator:a229d7c785e8ad4e02d5a198df4d8d6de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classsystemc__clang_1_1SystemCConsumer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsystemc__clang_1_1SystemCConsumer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classsystemc__clang_1_1SystemCConsumer.html">systemc_clang::SystemCConsumer</a></td></tr>
 <tr class="memitem:a7329006e29dd8aaade834857342ca945 inherit pub_methods_classsystemc__clang_1_1SystemCConsumer"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#a7329006e29dd8aaade834857342ca945">SystemCConsumer</a> (clang::CompilerInstance &amp;, std::string top=&quot;!none&quot;)</td></tr>
 <tr class="separator:a7329006e29dd8aaade834857342ca945 inherit pub_methods_classsystemc__clang_1_1SystemCConsumer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,22 +145,31 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a905aa1175d3b875a286ce3104f397ab3 inherit pub_methods_classsystemc__clang_1_1SystemCConsumer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#a905aa1175d3b875a286ce3104f397ab3">HandleTranslationUnit</a> (clang::ASTContext &amp;context)</td></tr>
 <tr class="separator:a905aa1175d3b875a286ce3104f397ab3 inherit pub_methods_classsystemc__clang_1_1SystemCConsumer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a2049fa731861cfbb2b11099060655bc7"><td class="memItemLeft" align="right" valign="top">clang::DiagnosticsEngine &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a2049fa731861cfbb2b11099060655bc7">main_diag_engine</a> {<a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#ad83b670a41e54b55954ec9fa305dce99">getContext</a>().getDiagnostics()}</td></tr>
-<tr class="separator:a2049fa731861cfbb2b11099060655bc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_attribs_classsystemc__clang_1_1SystemCConsumer"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classsystemc__clang_1_1SystemCConsumer')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classsystemc__clang_1_1SystemCConsumer.html">systemc_clang::SystemCConsumer</a></td></tr>
-<tr class="memitem:a4f19cdcdc826eced7e9bdcd8890b4b85 inherit pub_attribs_classsystemc__clang_1_1SystemCConsumer"><td class="memItemLeft" align="right" valign="top">llvm::raw_ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#a4f19cdcdc826eced7e9bdcd8890b4b85">os_</a></td></tr>
-<tr class="separator:a4f19cdcdc826eced7e9bdcd8890b4b85 inherit pub_attribs_classsystemc__clang_1_1SystemCConsumer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a317c893ed14e48218f7f9ebc3df31d19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a317c893ed14e48218f7f9ebc3df31d19">SCmodule2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *mod, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_module, llvm::raw_fd_ostream &amp;SCout)</td></tr>
+<tr class="separator:a317c893ed14e48218f7f9ebc3df31d19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16643c12fb23fdc9580913f5cca5f8f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a16643c12fb23fdc9580913f5cca5f8f7">SCport2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html#ae5e4d7d956225b28aac30182a5649f84">ModuleInstance::portMapType</a> pmap, <a class="el" href="classhnode_1_1hNode.html#a72bcc22543c267571a24ec713633e39a">hNode::hdlopsEnum</a> h_op, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_info, <a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;mod_vname_map)</td></tr>
+<tr class="separator:a16643c12fb23fdc9580913f5cca5f8f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a798b9e0074e26d9f90e45da49a30cbef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a798b9e0074e26d9f90e45da49a30cbef">SCsig2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html#adad65a1c03e742c7c8eb6d0bd1a57271">ModuleInstance::signalMapType</a> pmap, <a class="el" href="classhnode_1_1hNode.html#a72bcc22543c267571a24ec713633e39a">hNode::hdlopsEnum</a> h_op, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_info, <a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;mod_vname_map)</td></tr>
+<tr class="separator:a798b9e0074e26d9f90e45da49a30cbef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa932f12d435c727504c41ef0158e3e80"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#aa932f12d435c727504c41ef0158e3e80">SCproc2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html#aa971eba18c75ee5a38fcfc9739bbf9a5">ModuleInstance::processMapType</a> pm, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_top, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_port, <a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;mod_vname_map, <a class="el" href="namespacehnode.html#a75602926168cb57d34e616f688a3edc1">resetvar_map_t</a> &amp;<a class="el" href="classsystemc__hdl_1_1HDLMain.html#ab3a3c16ef6e852cac81805235543cffe">threadresetmap</a>)</td></tr>
+<tr class="separator:aa932f12d435c727504c41ef0158e3e80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a229d7c785e8ad4e02d5a198df4d8d6de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a229d7c785e8ad4e02d5a198df4d8d6de">SCportbindings2hcode</a> (<a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> *mod, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_pb)</td></tr>
+<tr class="separator:a229d7c785e8ad4e02d5a198df4d8d6de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38196ba7ed1fdece2021534e1940246c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a38196ba7ed1fdece2021534e1940246c">MakeResetMap</a> (<a class="el" href="namespacehnode.html#a75602926168cb57d34e616f688a3edc1">resetvar_map_t</a> &amp;<a class="el" href="classsystemc__hdl_1_1HDLMain.html#ab3a3c16ef6e852cac81805235543cffe">threadresetmap</a>, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> h_allsenslists)</td></tr>
+<tr class="separator:a38196ba7ed1fdece2021534e1940246c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a930cc6788c47b22ba634d050ee1c1200"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a930cc6788c47b22ba634d050ee1c1200">h_top</a></td></tr>
-<tr class="separator:a930cc6788c47b22ba634d050ee1c1200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2049fa731861cfbb2b11099060655bc7"><td class="memItemLeft" align="right" valign="top">clang::DiagnosticsEngine &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a2049fa731861cfbb2b11099060655bc7">main_diag_engine</a> {<a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#ad83b670a41e54b55954ec9fa305dce99">getContext</a>().getDiagnostics()}</td></tr>
+<tr class="separator:a2049fa731861cfbb2b11099060655bc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9e6dbb7933a99d7e4e6073f1f871ef2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehnode.html#a7a683d2e9c6b4ac48f26f3837a33175c">hfunc_name_map_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#af9e6dbb7933a99d7e4e6073f1f871ef2">allmethodecls</a></td></tr>
 <tr class="separator:af9e6dbb7933a99d7e4e6073f1f871ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbcdad1f238915a8940bf506877d582b"><td class="memItemLeft" align="right" valign="top">std::unordered_set&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#acbcdad1f238915a8940bf506877d582b">module_vars</a></td></tr>
 <tr class="separator:acbcdad1f238915a8940bf506877d582b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3a3c16ef6e852cac81805235543cffe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehnode.html#a75602926168cb57d34e616f688a3edc1">resetvar_map_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#ab3a3c16ef6e852cac81805235543cffe">threadresetmap</a></td></tr>
+<tr class="separator:ab3a3c16ef6e852cac81805235543cffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f393848b0c5306a974657203672c20f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classHDLType.html">HDLType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a3f393848b0c5306a974657203672c20f">HDLt</a></td></tr>
 <tr class="separator:a3f393848b0c5306a974657203672c20f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d328291d31ea58ee8cb324fb28e5372"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__hdl_1_1HDLBody.html">HDLBody</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#a9d328291d31ea58ee8cb324fb28e5372">xbodyp</a></td></tr>
@@ -182,6 +181,12 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:aff1b131a2d1d484f966a3aa97bf69c61"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLMain.html#aff1b131a2d1d484f966a3aa97bf69c61">hdl_file_out_</a></td></tr>
 <tr class="memdesc:aff1b131a2d1d484f966a3aa97bf69c61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command line options.  <a href="classsystemc__hdl_1_1HDLMain.html#aff1b131a2d1d484f966a3aa97bf69c61">More...</a><br /></td></tr>
 <tr class="separator:aff1b131a2d1d484f966a3aa97bf69c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_attribs_classsystemc__clang_1_1SystemCConsumer"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classsystemc__clang_1_1SystemCConsumer')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classsystemc__clang_1_1SystemCConsumer.html">systemc_clang::SystemCConsumer</a></td></tr>
+<tr class="memitem:a4f19cdcdc826eced7e9bdcd8890b4b85 inherit pub_attribs_classsystemc__clang_1_1SystemCConsumer"><td class="memItemLeft" align="right" valign="top">llvm::raw_ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#a4f19cdcdc826eced7e9bdcd8890b4b85">os_</a></td></tr>
+<tr class="separator:a4f19cdcdc826eced7e9bdcd8890b4b85 inherit pub_attribs_classsystemc__clang_1_1SystemCConsumer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a563a3dd0e92d4cea92109b59383d5971" name="a563a3dd0e92d4cea92109b59383d5971"></a>
@@ -271,6 +276,42 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a38196ba7ed1fdece2021534e1940246c" name="a38196ba7ed1fdece2021534e1940246c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38196ba7ed1fdece2021534e1940246c">&#9670;&nbsp;</a></span>MakeResetMap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void systemc_hdl::HDLMain::MakeResetMap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacehnode.html#a75602926168cb57d34e616f688a3edc1">resetvar_map_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>threadresetmap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a>&#160;</td>
+          <td class="paramname"><em>h_allsenslists</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9ffb914cdea1fd4e797001a34ba8e2e4" name="a9ffb914cdea1fd4e797001a34ba8e2e4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9ffb914cdea1fd4e797001a34ba8e2e4">&#9670;&nbsp;</a></span>postFire()</h2>
 
@@ -306,6 +347,9 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void systemc_hdl::HDLMain::SCmodule2hcode </td>
@@ -331,6 +375,11 @@ Private Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -340,6 +389,9 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void systemc_hdl::HDLMain::SCport2hcode </td>
@@ -371,6 +423,11 @@ Private Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -380,6 +437,9 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void systemc_hdl::HDLMain::SCportbindings2hcode </td>
@@ -399,15 +459,23 @@ Private Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="afbdb03a544254e545b09c3eab8d739b5" name="afbdb03a544254e545b09c3eab8d739b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afbdb03a544254e545b09c3eab8d739b5">&#9670;&nbsp;</a></span>SCproc2hcode()</h2>
+<a id="aa932f12d435c727504c41ef0158e3e80" name="aa932f12d435c727504c41ef0158e3e80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa932f12d435c727504c41ef0158e3e80">&#9670;&nbsp;</a></span>SCproc2hcode()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void systemc_hdl::HDLMain::SCproc2hcode </td>
@@ -424,8 +492,20 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;&#160;</td>
+          <td class="paramname"><em>h_port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>mod_vname_map</em>&#160;</td>
+          <td class="paramname"><em>mod_vname_map</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacehnode.html#a75602926168cb57d34e616f688a3edc1">resetvar_map_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>threadresetmap</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -433,6 +513,11 @@ Private Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p >Get the diagnostic engine.</p>
 
@@ -443,6 +528,9 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void systemc_hdl::HDLMain::SCsig2hcode </td>
@@ -474,6 +562,11 @@ Private Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -490,28 +583,6 @@ Private Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacehnode.html#a7a683d2e9c6b4ac48f26f3837a33175c">hfunc_name_map_t</a> systemc_hdl::HDLMain::allmethodecls</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a930cc6788c47b22ba634d050ee1c1200" name="a930cc6788c47b22ba634d050ee1c1200"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a930cc6788c47b22ba634d050ee1c1200">&#9670;&nbsp;</a></span>h_top</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> systemc_hdl::HDLMain::h_top</td>
         </tr>
       </table>
   </td>
@@ -574,11 +645,19 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">clang::DiagnosticsEngine&amp; systemc_hdl::HDLMain::main_diag_engine {<a class="el" href="classsystemc__clang_1_1SystemCConsumer.html#ad83b670a41e54b55954ec9fa305dce99">getContext</a>().getDiagnostics()}</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -638,6 +717,28 @@ Private Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classhnode_1_1util.html">util</a> systemc_hdl::HDLMain::mutil</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab3a3c16ef6e852cac81805235543cffe" name="ab3a3c16ef6e852cac81805235543cffe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3a3c16ef6e852cac81805235543cffe">&#9670;&nbsp;</a></span>threadresetmap</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacehnode.html#a75602926168cb57d34e616f688a3edc1">resetvar_map_t</a> systemc_hdl::HDLMain::threadresetmap</td>
         </tr>
       </table>
   </td>

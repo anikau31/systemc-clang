@@ -69,6 +69,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classparselib_1_1transforms_1_1comma__transformation_1_1CommaTransformation-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">parselib.transforms.comma_transformation.CommaTransformation Class Reference</div></div>
 </div><!--header-->
@@ -98,11 +99,20 @@ Collaboration diagram for parselib.transforms.comma_transformation.CommaTransfor
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a818930bb25c7d557d263ed12a4924882"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1comma__transformation_1_1CommaTransformation.html#a818930bb25c7d557d263ed12a4924882">__init__</a> (self)</td></tr>
 <tr class="separator:a818930bb25c7d557d263ed12a4924882"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af41d5edcc3a0560d7e446813c8991bbe"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1comma__transformation_1_1CommaTransformation.html#af41d5edcc3a0560d7e446813c8991bbe">hbinop</a> (self, tree)</td></tr>
-<tr class="separator:af41d5edcc3a0560d7e446813c8991bbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aced8d6468fc348770afe8e71a09f3ade"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1comma__transformation_1_1CommaTransformation.html#aced8d6468fc348770afe8e71a09f3ade">hcomma</a> (self, tree)</td></tr>
+<tr class="separator:aced8d6468fc348770afe8e71a09f3ade"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d969268beda136dafe131c706a6efb0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1comma__transformation_1_1CommaTransformation.html#a1d969268beda136dafe131c706a6efb0">stmts</a> (self, tree)</td></tr>
+<tr class="separator:a1d969268beda136dafe131c706a6efb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classparselib_1_1transforms_1_1top__down_1_1TopDown"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classparselib_1_1transforms_1_1top__down_1_1TopDown')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classparselib_1_1transforms_1_1top__down_1_1TopDown.html">parselib.transforms.top_down.TopDown</a></td></tr>
 <tr class="memitem:a2738f9bf2467d410d3990343dcaf88ff inherit pub_methods_classparselib_1_1transforms_1_1top__down_1_1TopDown"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1top__down_1_1TopDown.html#a2738f9bf2467d410d3990343dcaf88ff">__default__</a> (self, t)</td></tr>
 <tr class="separator:a2738f9bf2467d410d3990343dcaf88ff inherit pub_methods_classparselib_1_1transforms_1_1top__down_1_1TopDown"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a73ba37b8f548e24a6db95926bb59ec17"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1comma__transformation_1_1CommaTransformation.html#a73ba37b8f548e24a6db95926bb59ec17">broken_down_ops</a></td></tr>
+<tr class="separator:a73ba37b8f548e24a6db95926bb59ec17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d0b2afef41af77bf1cdf0e9ac390d6c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1comma__transformation_1_1CommaTransformation.html#a2d0b2afef41af77bf1cdf0e9ac390d6c">has_comma</a></td></tr>
+<tr class="separator:a2d0b2afef41af77bf1cdf0e9ac390d6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><pre class="fragment">The comma transformation is aimed to handle the case such as
@@ -113,6 +123,8 @@ the code into sequence of code such as:
     i++
     k = j++
 Note: k = j++ will be handled by another pass that gets j and j++ correctly
+To handle this, we break a hBinop , [ lhs rhs ] node into two.
+lhs will be appended to the parent and rhs remains
 </pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a818930bb25c7d557d263ed12a4924882" name="a818930bb25c7d557d263ed12a4924882"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a818930bb25c7d557d263ed12a4924882">&#9670;&nbsp;</a></span>__init__()</h2>
@@ -135,14 +147,14 @@ Note: k = j++ will be handled by another pass that gets j and j++ correctly
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af41d5edcc3a0560d7e446813c8991bbe" name="af41d5edcc3a0560d7e446813c8991bbe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af41d5edcc3a0560d7e446813c8991bbe">&#9670;&nbsp;</a></span>hbinop()</h2>
+<a id="aced8d6468fc348770afe8e71a09f3ade" name="aced8d6468fc348770afe8e71a09f3ade"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aced8d6468fc348770afe8e71a09f3ade">&#9670;&nbsp;</a></span>hcomma()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">def parselib.transforms.comma_transformation.CommaTransformation.hbinop </td>
+          <td class="memname">def parselib.transforms.comma_transformation.CommaTransformation.hcomma </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
@@ -157,6 +169,63 @@ Note: k = j++ will be handled by another pass that gets j and j++ correctly
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1d969268beda136dafe131c706a6efb0" name="a1d969268beda136dafe131c706a6efb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d969268beda136dafe131c706a6efb0">&#9670;&nbsp;</a></span>stmts()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def parselib.transforms.comma_transformation.CommaTransformation.stmts </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>tree</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a73ba37b8f548e24a6db95926bb59ec17" name="a73ba37b8f548e24a6db95926bb59ec17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73ba37b8f548e24a6db95926bb59ec17">&#9670;&nbsp;</a></span>broken_down_ops</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">parselib.transforms.comma_transformation.CommaTransformation.broken_down_ops</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2d0b2afef41af77bf1cdf0e9ac390d6c" name="a2d0b2afef41af77bf1cdf0e9ac390d6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d0b2afef41af77bf1cdf0e9ac390d6c">&#9670;&nbsp;</a></span>has_comma</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">parselib.transforms.comma_transformation.CommaTransformation.has_comma</td>
         </tr>
       </table>
 </div><div class="memdoc">

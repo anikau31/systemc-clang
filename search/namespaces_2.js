@@ -19,12 +19,13 @@ var searchData=
   ['reorder_5fmod_5finit_5fblock_16',['reorder_mod_init_block',['../namespaceparselib_1_1transforms_1_1reorder__mod__init__block.html',1,'parselib::transforms']]],
   ['slice_5fmerge_17',['slice_merge',['../namespaceparselib_1_1transforms_1_1slice__merge.html',1,'parselib::transforms']]],
   ['sort_5fvar_5fdecl_18',['sort_var_decl',['../namespaceparselib_1_1transforms_1_1sort__var__decl.html',1,'parselib::transforms']]],
-  ['top_5fdown_19',['top_down',['../namespaceparselib_1_1transforms_1_1top__down.html',1,'parselib::transforms']]],
-  ['transforms_20',['transforms',['../namespaceparselib_1_1transforms.html',1,'parselib']]],
-  ['type_5fcollector_21',['type_collector',['../namespaceparselib_1_1transforms_1_1type__collector.html',1,'parselib::transforms']]],
-  ['type_5fnode_22',['type_node',['../namespaceparselib_1_1transforms_1_1type__node.html',1,'parselib::transforms']]],
-  ['typedef_5fexpansion_23',['typedef_expansion',['../namespaceparselib_1_1transforms_1_1typedef__expansion.html',1,'parselib::transforms']]],
-  ['typedef_5ffilter_24',['typedef_filter',['../namespaceparselib_1_1transforms_1_1typedef__filter.html',1,'parselib::transforms']]],
-  ['utils_25',['utils',['../namespaceparselib_1_1utils.html',1,'parselib']]],
-  ['verilog_5ftranlation_26',['verilog_tranlation',['../namespaceparselib_1_1transforms_1_1verilog__tranlation.html',1,'parselib::transforms']]]
+  ['structure_5fcollector_19',['structure_collector',['../namespaceparselib_1_1transforms_1_1structure__collector.html',1,'parselib::transforms']]],
+  ['top_5fdown_20',['top_down',['../namespaceparselib_1_1transforms_1_1top__down.html',1,'parselib::transforms']]],
+  ['transforms_21',['transforms',['../namespaceparselib_1_1transforms.html',1,'parselib']]],
+  ['type_5fcollector_22',['type_collector',['../namespaceparselib_1_1transforms_1_1type__collector.html',1,'parselib::transforms']]],
+  ['type_5fnode_23',['type_node',['../namespaceparselib_1_1transforms_1_1type__node.html',1,'parselib::transforms']]],
+  ['typedef_5fexpansion_24',['typedef_expansion',['../namespaceparselib_1_1transforms_1_1typedef__expansion.html',1,'parselib::transforms']]],
+  ['typedef_5ffilter_25',['typedef_filter',['../namespaceparselib_1_1transforms_1_1typedef__filter.html',1,'parselib::transforms']]],
+  ['utils_26',['utils',['../namespaceparselib_1_1utils.html',1,'parselib']]],
+  ['verilog_5ftranlation_27',['verilog_tranlation',['../namespaceparselib_1_1transforms_1_1verilog__tranlation.html',1,'parselib::transforms']]]
 ];
