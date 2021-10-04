@@ -171,7 +171,7 @@ int sc_main(int argc, char *argv[]) {
 
     // Check if the proper number of ports are found.
     REQUIRE(test_module_inst->getIPorts().size() == 4);
-    REQUIRE(test_module_inst->getOPorts().size() == 4);
+    REQUIRE(test_module_inst->getOPorts().size() == 5);
     REQUIRE(test_module_inst->getIOPorts().size() == 1);
     REQUIRE(test_module_inst->getSignals().size() == 4);
     REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
