@@ -37,6 +37,7 @@ SC_MODULE( test ){
   //signals
   sc_signal<int> internal_signal;
 
+
   // others
   int x;
 
@@ -77,6 +78,9 @@ SC_MODULE( simple_module ){
   sc_in<int> two;
   sc_out<int> out_one;
   int yx;
+
+  // pointer
+  char* str;
 
   void entry_function_1() {
     int x_var;
@@ -343,7 +347,7 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(simple_module_inst->getOPorts().size() == 1);
     REQUIRE(simple_module_inst->getIOPorts().size() == 0);
     REQUIRE(simple_module_inst->getSignals().size() == 0);
-    REQUIRE(simple_module_inst->getOtherVars().size() == 1);
+    REQUIRE(simple_module_inst->getOtherVars().size() == 2);
     REQUIRE(simple_module_inst->getInputStreamPorts().size() == 0);
     REQUIRE(simple_module_inst->getOutputStreamPorts().size() == 0);
 
@@ -380,6 +384,7 @@ int sc_main(int argc, char *argv[]) {
       }
     }
 
+    int check_count{2};
     for (auto const &ovar : simple_module_inst->getOtherVars()) {
       auto name{get<0>(ovar)};
       PortDecl *pd{get<1>(ovar)};
@@ -390,6 +395,14 @@ int sc_main(int argc, char *argv[]) {
 
       if ((name == "xy")) {
         REQUIRE(trim(dft_str) == "int");
+        --check_count;
+      }
+
+      if (name == "str") {
+        if (pd->isPointerType()) {
+          REQUIRE(trim(dft_str) == "char");
+          --check_count;
+        }
       }
     }
 
@@ -407,7 +420,7 @@ int sc_main(int argc, char *argv[]) {
     // Instance: d
     auto port_bindings{dut->getPortBindings()};
 
-    int check_count{3};
+    check_count = 3;
     for (auto const &binding : port_bindings) {
       PortBinding *pb{binding.second};
       std::string port_name{pb->getCallerPortName()};
