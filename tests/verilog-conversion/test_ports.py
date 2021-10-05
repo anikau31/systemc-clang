@@ -11,6 +11,7 @@ class PortLocationChecker(TopDown):
     """
     def __init__(self):
         super().__init__()
+        self.is_in_vardecl = False
 
     def hvardecl(self, tree):
         self.is_in_vardecl = True
@@ -21,7 +22,8 @@ class PortLocationChecker(TopDown):
 
     def htype(self, tree):
         self.__push_up(tree)
-        assert tree.children[0] not in ['sc_in', 'sc_out'], 'Input/Output port should only be present in hPortin/hPortout node and not hVardecl node'
+        if self.is_in_vardecl:
+            assert tree.children[0] not in ['sc_in', 'sc_out'], 'Input/Output port should only be present in hPortin/hPortout node and not hVardecl node'
 
 @pytest.mark.parametrize("cpp_design_path, extra_args", [
     (testdata / 'test_port_location.cpp', []),
