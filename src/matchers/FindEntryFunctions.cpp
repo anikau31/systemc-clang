@@ -94,8 +94,8 @@ bool FindEntryFunctions::VisitStringLiteral(StringLiteral *s) {
       assert(constructor_stmt_ != nullptr);
 
       if (ctor_decl_ && constructor_stmt_ && process_me_) {
-        ctor_decl_->dump();
-        constructor_stmt_->dump();
+        //ctor_decl_->dump();
+        //constructor_stmt_->dump();
         ResetMatcher reset_matcher{};
         MatchFinder resetMatchRegistry{};
         reset_matcher.registerMatchers(resetMatchRegistry, process_me_);
