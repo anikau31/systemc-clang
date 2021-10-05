@@ -29,13 +29,15 @@ lark_grammar = Lark('''
         ?hvarinitint: "hVarInit" NUM "NOLIST"
         // can be no process at all in the module
         processlist:  "hProcesses" "NONAME" "[" (hprocess|hfunction|hthread)*"]"
-        threadprocesslist:  "hProcesses" "NONAME" "[" hbasicblock+ "]"
         // could be nothing
         // temporarily ignore the hMethod node
         hprocess: "hProcess" ID  "[" "hMethod" (ID|"NONAME") "[" prevardecl  hcstmt "]" "]"
-        // hthread consists of a list of processes
-        hthread:  "hProcess" ID  "[" "hThread" (ID|"NONAME") "[" modportsiglist  threadprocesslist "]" "]"
-        hbasicblock: "hMethod" ID  ("[" stmts "]" | "NOLIST")
+        
+        // hthread consists of a synchronous block that sets state and a switch block that produces next state
+        hthread:  "hProcess" ID  "[" modportsiglist? hthreadsync hthreadswitch "]"
+        hthreadsync: "hMethod" ID  "[" ifstmt "]"
+        hthreadswitch: "hMethod" ID  "[" switchstmt "]"
+        
         prevardecl: vardecl*
         vardecl: vardeclinit | vardeclrn
 
@@ -57,7 +59,7 @@ lark_grammar = Lark('''
              | breakstmt
              | hwait
         
-        hwait: "hWait" "wait" "NOLIST"
+        hwait: "hWait" "wait" "NOLIST" | "hWait" NUM ("[" hliteral "]" | "NOLIST")
              
         breakstmt: "hBreak" "NONAME" "NOLIST"
              
@@ -72,7 +74,7 @@ lark_grammar = Lark('''
         // first component is the id of the module (in parent?)
         // second component is initialization list              
         // third component is port binding list
-        hmodinitblock: "hModinitblock" ID "[" hcstmt portbindinglist* hsenslist*"]"
+        hmodinitblock: "hModinitblock" ID "[" hcstmt* portbindinglist* hsenslist*"]"
                      | "hModinitblock" ID "NOLIST"
 
         // Port Bindings
@@ -117,9 +119,9 @@ lark_grammar = Lark('''
         // Note: we don't make this a noraml statement as in the context of switch, 
         // we don't use general statements
         switchbody: "hCStmt" "NONAME" "[" casestmt+ "]"
-        casestmt: "hSwitchCase" "NONAME" "[" casevalue stmt "]" hnoop
+        casestmt: "hSwitchCase" "NONAME" "[" casevalue stmt+ "]" hnoop
                 | "hSwitchCase" "NONAME" "[" casevalue hnoop "]"
-                | "hSwitchCase" "NONAME" "[" casevalue stmt "]" 
+                | "hSwitchCase" "NONAME" "[" casevalue stmt+ "]" 
         casevalue: expression
         
         // Function
@@ -135,13 +137,15 @@ lark_grammar = Lark('''
         hsenslist : "hSenslist" ID "[" hsensvar* "]"
                   | "hSenslist" ID "NOLIST"
         hsensvar :  "hSensvar" "NONAME" "[" (expression|hvalchange) "hNoop" npa "NOLIST" "]"
+                 |  hasync
+        hasync   :  "hSensvar" "ASYNC" "[" expression hliteral "]"
 
         hvalchange: "hNoop" "value_changed_event" "[" expression "]"
         hsensedge : "hNoop" npa "NOLIST"
         !npa : "neg" | "pos" | "always"
 
         // if and if-else, not handling if-elseif case
-        ifstmt: "hIfStmt" "NONAME" "[" expression  stmt stmt?"]"
+        ifstmt: "hIfStmt" "NONAME" "[" expression  stmt? stmt?"]"
 
          
         ?expression: hbinop
@@ -180,9 +184,11 @@ lark_grammar = Lark('''
              |  "hUnop" UNOP_SUB "[" expression "]"
              |  "hBinop" UNOP_BNOT "[" expression "]"
              |  "hBinop" UNOP_NOT "[" expression "]"
-             |  "hPostfix" (UNOP_INC | UNOP_DEC) "[" expression "]"
-             |  "hPrefix" (UNOP_INC | UNOP_DEC) "[" expression "]"
-             |  hunopdec
+             | hpostfix
+             | hprefix
+             | hunopdec
+        hpostfix: "hPostfix" (UNOP_INC | UNOP_DEC) "[" expression "]"
+        hprefix: "hPrefix" (UNOP_INC | UNOP_DEC) "[" expression "]"
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
         // Separate '=' out from so that it is not an expression but a standalone statement

@@ -7,6 +7,10 @@
 
 // clang-format on
 
+/// Different matchers may use different DEBUG_TYPE
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "HDL"
+
 //!
 //! Re-write hcode generated from CXXConstructorDecl for an SC_MODULE:
 //! Pass variable initialization statements through
@@ -38,6 +42,8 @@ namespace systemc_hdl {
   }
 
   void HDLConstructorHcode::CleanupInitHcode(hNodep &hp) {
+    for (hNodep hpi :hp->child_list)
+      CleanupInitHcode(hpi); 
     hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [] (hNodep x) {
 	  return (((x->h_op==hNode::hdlopsEnum::hBinop) &&
 		   (x->h_name==pbstring) || (x->h_name==sensop)) ||
@@ -48,11 +54,13 @@ namespace systemc_hdl {
 		  ((x->h_op==hNode::hdlopsEnum::hCStmt) &&
 		   (x->child_list.empty())) ||
 		  (x->h_op==hNode::hdlopsEnum::hVarAssign) ||
+		  ((x->h_op == hNode::hdlopsEnum::hVarref) && (x->h_name == "sensitive")) ||
 		  ((x->h_op==hNode::hdlopsEnum::hMethodCall) && (x->h_name.find(strsccore) !=std::string::npos)) ||
 		  ((x->h_op == hNode::hdlopsEnum::hNoop) &&
 		   (x->h_name==arrsub)));}), hp->child_list.end());
-    for (hNodep hpi :hp->child_list)
-      CleanupInitHcode(hpi);   
+    // for (hNodep hpi :hp->child_list)
+    //   CleanupInitHcode(hpi); 
+    
   }
     
   //!
@@ -395,6 +403,7 @@ namespace systemc_hdl {
     else if (isInitSensitem(hp)) {
       UnrollSensitem(hp, for_info);
     }
+      
     else if ((hp->h_op == hNode::hdlopsEnum::hForStmt) && (hp->child_list.size() > 3)) {
       PushRange(hp, for_info); // fill in name, lo, hi, step
       for (int forloopix = for_info.back().lo; forloopix < for_info.back().hi; forloopix+=for_info.back().step) {
@@ -424,7 +433,23 @@ namespace systemc_hdl {
 	hnewsens.push_back(new hNode( "METHOD ???", hNode::hdlopsEnum::hSenslist));
       }
     }
-
+    else {
+      // check for thread sensitivity declarations
+      int threadsensitem = isThreadSensitem(hp);
+      if (threadsensitem >0 ) {
+      // e.g.   hMethodCall sc_core__sc_module__async_reset_signal_is:async_reset_signal_is [
+      //            hVarref reset NOLIST
+      //            hLiteral 0 NOLIST
+      //        ]
+      LLVM_DEBUG(llvm::dbgs() << "HDLHNode: found thread sens item " << "\n");
+      hNodep hpsens = HnodeDeepCopy(hp); // need to keep the subtrees when the original tree gets released
+      
+      hpsens->set(hNode::hdlopsEnum::hSensvar, threadsensitem == reset_async? "ASYNC": "SYNC");
+      if (hnewsens.size()==0) // this shouldn't be the case, but whatever
+	hnewsens.push_back(new hNode( "METHOD ???", hNode::hdlopsEnum::hSenslist));
+      hnewsens.back()->append(hpsens);
+      }
+    }
   }
   
   
@@ -448,11 +473,7 @@ namespace systemc_hdl {
       xconstructor->child_list.push_back(hnewpb);
     }
     if (!hnewsens.empty()) {
-      for (hNodep onesens: hnewsens) {
-	if (!onesens->child_list.empty()) {
-	  xconstructor->child_list.push_back(onesens);
-	}
-      }
+      xconstructor->child_list.insert( xconstructor->child_list.end(), hnewsens.begin(), hnewsens.end());
     }
     CleanupInitHcode(xconstructor);
     return xconstructor;

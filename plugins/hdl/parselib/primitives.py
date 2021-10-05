@@ -1,5 +1,6 @@
 """Primitive types from System C and C++"""
 import copy
+import warnings
 
 
 class TypeContext(object):
@@ -192,6 +193,11 @@ class sc_biguint(Primitive):
     def __new__(cls, width):
         return sc_uint(width)
 
+class double(Primitive):
+    def __new__(cls):
+        warnings.warn('double detected, currently treated as integer')
+        return sc_int(64)
+
 class sc_bigint(Primitive):
     def __new__(cls, width):
         return sc_int(width)
@@ -203,6 +209,14 @@ class __int128(Primitive):
 class unsigned___int128(Primitive):
     def __new__(cls):
         return sc_uint(128)
+
+class long(Primitive):
+    def __new__(cls):
+        return sc_int(64)
+
+class unsigned_long(Primitive):
+    def __new__(cls):
+        return sc_uint(64)
 
 class void(Primitive):
     def to_str(self, var_name):

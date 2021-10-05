@@ -133,13 +133,21 @@ namespace hnode {
       }
     }
 
-    void set( hdlopsEnum h, string s = "") {
+    void set(hdlopsEnum h, string s = "") {
       h_op = h;
       h_name = s;
     }
 
     void set(string s = "") {
       h_name = s;
+    }
+
+    void append(hNodep hnew) {
+      child_list.push_back(hnew);
+    }
+
+    int size() {
+      return child_list.size();
     }
     
     string printopc(hdlopsEnum opc) {
@@ -387,6 +395,9 @@ namespace hnode {
   typedef newname_map_t<NamedDecl *> hdecl_name_map_t;
   typedef newname_map_t<ModuleInstance *> hmodinst_name_map_t;
   typedef newname_map_t<FunctionDecl *> hfunc_name_map_t;
+
+  // thread name, reset var name, false|true, ASYNC|SYNC
+  typedef std::unordered_map<string, hNodep> resetvar_map_t; 
   
 } // end namespace hnode
 
