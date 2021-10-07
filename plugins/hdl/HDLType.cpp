@@ -28,7 +28,7 @@ void HDLType::SCtype2hcode(string prefix, Tree<TemplateType> *template_argtp,
                            hNode::hdlopsEnum h_op, hNodep &h_info) {
 
   LLVM_DEBUG(llvm::dbgs() << "HDLtype dump of templatetree args follows\n");
-  template_argtp->dump();
+  LLVM_DEBUG(template_argtp->dump(llvm::dbgs()) ; );
 
   if (!(template_argtp && (template_argtp->getRoot()))) {
     LLVM_DEBUG(llvm::dbgs() << "HDLtype no root prefix is " << prefix << " "

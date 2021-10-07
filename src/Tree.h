@@ -47,10 +47,13 @@ class TreeNode {
 
   TreeNode *getParent() const { return parent_; }
 
-  void dump() { llvm::outs() << "[" << toString() << "] "; }
+  //void dump() { llvm::outs() << "[" << toString() << "] "; }
+  void dump(llvm::raw_ostream &outstream = llvm::outs()) { outstream << "[" << toString() << "] "; }
 
-  virtual void visit() {
-    llvm::outs() << "(" << parent_->toString() << ")"
+  //virtual void visit() {
+  virtual void visit(llvm::raw_ostream &outstream = llvm::outs()) {
+    //llvm::outs() << "(" << parent_->toString() << ")"
+    outstream << "(" << parent_->toString() << ")"
                  << " " << toString() << " ";
   }
 };
@@ -100,15 +103,18 @@ class Tree {
     root_ = nullptr;
   }
 
-  void dump() {
+  void dump(llvm::raw_ostream &outstream = llvm::outs()) {
     for (auto const &entry : adj_list_) {
       auto node{entry.first};
       auto edges{entry.second};
-      llvm::outs() << node->toString() << " => size: " << edges.size() << "\n";
+      //llvm::outs() << node->toString() << " => size: " << edges.size() << "\n";
+      outstream << node->toString() << " => size: " << edges.size() << "\n";
       for (auto const &edge_node : edges) {
-        llvm::outs() << "   " << edge_node->toString();
+        //llvm::outs() << "   " << edge_node->toString();
+	outstream << "   " << edge_node->toString();
       }
-      llvm::outs() << "\n";
+      //llvm::outs() << "\n";
+      outstream << "\n";
     }
   }
 
