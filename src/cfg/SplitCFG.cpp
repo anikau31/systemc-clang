@@ -1,3 +1,16 @@
+// ===-- src/SystemCClang.h - systec-clang class definition -------*- C++ -*-===//
+//
+// This file is distributed under the University of Illinois License.
+// See LICENSE.mkd for details.
+//
+// ===----------------------------------------------------------------------===//
+// /
+// / \file
+// / A CFG representation with splitting basic blocks that have wait() statements
+// /
+// ===----------------------------------------------------------------------===//
+
+
 #include "SplitCFG.h"
 
 #include "llvm/Support/Debug.h"
