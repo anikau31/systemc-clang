@@ -337,6 +337,8 @@ namespace systemc_hdl {
 			     hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
     //clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 
+    const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(
+								     clang::DiagnosticsEngine::Remark, "Pointer type not synthesized, '%0' skipped.");
     for (ModuleInstance::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
 	 mit++) {
       string objname = get<0>(*mit);
@@ -345,6 +347,17 @@ namespace systemc_hdl {
 		 << h_op << "\n");
 
       PortDecl *pd = get<1>(*mit);
+      if (pd->isPointerType()) {
+        NamedDecl * decl = pd->getAsVarDecl();
+	if (decl == NULL) decl = pd->getAsFieldDecl();
+	if (decl !=NULL) {
+	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(							decl->getLocation(), cxx_record_id1)};
+	  diag_builder << decl->getName();
+	  return;
+	}
+	return;
+      }
+	  
       Tree<TemplateType> *template_argtp =
         (pd->getTemplateType())->getTemplateArgTreePtr();
 
@@ -408,6 +421,9 @@ namespace systemc_hdl {
 
   void HDLMain::SCsig2hcode(ModuleInstance::signalMapType pmap,
 			    hNode::hdlopsEnum h_op, hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
+
+    const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(
+								     clang::DiagnosticsEngine::Remark, "Pointer type not synthesized, '%0' skipped.");
     for (ModuleInstance::signalMapType::iterator mit = pmap.begin();
 	 mit != pmap.end(); mit++) {
       string objname = get<0>(*mit);
@@ -418,6 +434,17 @@ namespace systemc_hdl {
 
       SignalDecl *pd = get<1>(*mit);
 
+      if (pd->isPointerType()) {
+        NamedDecl * decl = pd->getAsVarDecl();
+	if (decl == NULL) decl = pd->getAsFieldDecl();
+	if (decl !=NULL) {
+	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(							decl->getLocation(), cxx_record_id1)};
+	  diag_builder << decl->getName();
+	  return;
+	}
+	return;
+      }
+      
       Tree<TemplateType> *template_argtp =
         (pd->getTemplateTypes())->getTemplateArgTreePtr();
 
