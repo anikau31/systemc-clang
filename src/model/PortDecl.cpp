@@ -21,23 +21,20 @@ PortDecl::PortDecl()
     : port_name_{"NONE"},
       template_type_{nullptr},
       field_decl_{nullptr},
-      is_array_{false} {
-      }
+      is_array_{false} {}
 
 PortDecl::PortDecl(const std::string &name, FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
       field_decl_{nullptr},
-      is_array_{false} {
-      }
+      is_array_{false} {}
 
 PortDecl::PortDecl(const std::string &name, const clang::Decl *fd,
                    FindTemplateTypes *tt)
     : port_name_{name},
       template_type_{tt},
-      field_decl_{const_cast<clang::Decl*>(fd)},
-      is_array_{false} {
-      }
+      field_decl_{const_cast<clang::Decl *>(fd)},
+      is_array_{false} {}
 
 PortDecl::PortDecl(const PortDecl &from) {
   port_name_ = from.port_name_;
@@ -54,15 +51,26 @@ void PortDecl::setArrayType() { is_array_ = true; }
 
 bool PortDecl::getArrayType() const { return is_array_; }
 
-bool PortDecl::isPointerType() const { 
-  const clang::FieldDecl* fd{getAsFieldDecl()};
-  assert( fd != nullptr );
-  return fd->getType().getTypePtr()->isPointerType();
+bool PortDecl::isPointerType() const {
+  if (const clang::FieldDecl *fd = getAsFieldDecl()) {
+    if (auto ptr_type = fd->getType().getTypePtr()) {
+      return ptr_type->isPointerType();
+    }
+  }
+
+  if (const clang::VarDecl *vd = getAsVarDecl()) {
+    if (auto ptr_type = vd->getType().getTypePtr()) {
+      return ptr_type->isPointerType();
+    }
+  }
+  return false;
 }
 
 void PortDecl::setModuleName(const std::string &name) { port_name_ = name; }
 
-std::vector<llvm::APInt> PortDecl::getArraySizes() const { return array_sizes_; }
+std::vector<llvm::APInt> PortDecl::getArraySizes() const {
+  return array_sizes_;
+}
 
 std::string PortDecl::getName() const { return port_name_; }
 
@@ -83,20 +91,26 @@ std::string PortDecl::asString() const {
     class_name = fd->getParent()->getName().str();
   }
 
-  str += "signal_port_name: " + class_name + "::" +  getName() + "\n";
+  str += "signal_port_name: " + class_name + "::" + getName() + "\n";
   str += "signal_port_arguments: " + template_type_->asString() + "\n";
   str += "is_array_type: " + std::string{getArrayType()} + "\n";
+  if (isPointerType()) {
+    str += "is_pointer_type: true \n";
+  } else {
+    str += "is_pointer_type: false\n";
+  }
+
 
   if (getArrayType()) {
     str += "array_sizes: ";
-    for (const auto sz: getArraySizes()) {
+    for (const auto sz : getArraySizes()) {
       std::size_t i{0};
-      str += sz.toString(10, true) + " "; // sz.getLimitedValue() + " ";
+      str += sz.toString(10, true) + " ";  // sz.getLimitedValue() + " ";
     }
   }
   str += "\n";
 
-  if (getAsFieldDecl()) { 
+  if (getAsFieldDecl()) {
     str += "decl_type: FieldDecl";
   } else {
     if (getAsVarDecl()) {
@@ -107,4 +121,3 @@ std::string PortDecl::asString() const {
   str += "\n";
   return str;
 }
-
