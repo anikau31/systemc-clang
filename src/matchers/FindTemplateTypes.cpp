@@ -152,7 +152,7 @@ bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
 
   // auto type_name{bi_type->getNameAsCString(Policy)};
   auto type_name{bi_type->getName(Policy)};
-  llvm::outs() << "type is : " << type_name << "\n";
+  //llvm::outs() << "type is : " << type_name << "\n";
 
   TemplateType tt{type_name.str(), bi_type};
   current_type_node_ = template_args_.addNode(tt);
