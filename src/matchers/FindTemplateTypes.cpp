@@ -148,6 +148,7 @@ bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
 
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
+  //LangOpts.Bool = 1;
   clang::PrintingPolicy Policy(LangOpts);
 
   // auto type_name{bi_type->getNameAsCString(Policy)};
