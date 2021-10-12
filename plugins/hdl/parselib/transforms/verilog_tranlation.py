@@ -655,6 +655,9 @@ class VerilogTranslationPass(TopDown):
         else:
             bindings = self.bindings[mod_name]
         dprint(bindings)
+        bindings_normal = filter(lambda x: '.' not in x[0].children[0], bindings)
+        bindings_hier = filter(lambda x: '.' in x[0].children[0], bindings)
+        bindings = bindings_normal
         ind = self.get_current_ind_prefix()
         res = ind + '{} {}('.format(mod_type_name, mod_name) + '\n'
         self.inc_indent()
@@ -698,6 +701,15 @@ class VerilogTranslationPass(TopDown):
         self.dec_indent()
         ind = self.get_current_ind_prefix()
         res += ind + ');'
+        res += '\n'
+        res += ind + "always @(*) begin\n"
+        self.inc_indent()
+        ind = self.get_current_ind_prefix()
+        for bl, br in bindings_hier:
+            res += ind + '{} = {};\n'.format(bl.children[0], br.children[0])
+        self.dec_indent()
+        ind = self.get_current_ind_prefix()
+        res += ind + "end\n"
         # add an always block for port binding when we encounter sub module case
         tree.children = [res]
         return tree
