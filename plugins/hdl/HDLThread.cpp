@@ -370,6 +370,7 @@ namespace systemc_hdl {
   }
   
   void HDLThread::GenerateStateUpdate(hNodep hstatemethod){
+    const string comb_assign = "@=";
     hNodep hifblock = new hNode(hNode::hdlopsEnum::hIfStmt);
     // expecting
     // hSensvar ASYNC [
@@ -385,17 +386,17 @@ namespace systemc_hdl {
 
     // then part: reset state transition variables
     hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-    hcstmt->append(GenerateBinop("=", state_string, "0"));
-    hcstmt->append(GenerateBinop("=", waitnextstate_string, "0"));
-    hcstmt->append(GenerateBinop("=", waitctr_string, "0"));
+    hcstmt->append(GenerateBinop(comb_assign, state_string, "0"));
+    hcstmt->append(GenerateBinop(comb_assign, waitnextstate_string, "0"));
+    hcstmt->append(GenerateBinop(comb_assign, waitctr_string, "0"));
     hifblock->append(hcstmt);
 
     // else part: set state transition variables
     hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-    hcstmt->append(GenerateBinop("=", state_string, nextstate_string, false));
-    //hcstmt->append(GenerateBinop("=", waitnextstate_string, nextwaitnextstate_string, false));
-    hcstmt->append(GenerateBinop("=", waitctr_string, nextwaitctr_string, false));
-    hcstmt->append(GenerateBinop("=", waitnextstate_string, savewaitnextstate_string, false));
+    hcstmt->append(GenerateBinop(comb_assign, state_string, nextstate_string, false));
+    //hcstmt->append(GenerateBinop(comb_assign, waitnextstate_string, nextwaitnextstate_string, false));
+    hcstmt->append(GenerateBinop(comb_assign, waitctr_string, nextwaitctr_string, false));
+    hcstmt->append(GenerateBinop(comb_assign, waitnextstate_string, savewaitnextstate_string, false));
 
     hifblock->append(hcstmt);
     hstatemethod->append(hifblock);
