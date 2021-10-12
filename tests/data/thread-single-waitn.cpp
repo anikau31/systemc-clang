@@ -12,9 +12,9 @@ SC_MODULE(test) {
 
   void single_wait() {
 
-    while (true) {
+    while (1) {
         k = 1;
-        wait();
+        wait(4);
         k = 2;
     }
   }
