@@ -348,7 +348,7 @@ namespace systemc_hdl {
       hw->append(new hNode(waitarg, hNode::hdlopsEnum::hLiteral));
 
       // nextwaitstate = nextstate
-      htmp->append(GenerateBinop("=", savewaitnextstate_string, nextstate_string, false));
+      htmp->append(GenerateBinop("=", savewaitnextstate_string, std::to_string(nxtstate), false));
 
       // nextstate = waitstate
       htmp->append(GenerateBinop("=", nextstate_string, std::to_string(numstates)));
