@@ -348,7 +348,7 @@ namespace systemc_hdl {
       hw->append(new hNode(waitarg, hNode::hdlopsEnum::hLiteral));
 
       // nextwaitstate = nextstate
-      htmp->append(GenerateBinop("=", savewaitnextstate_string, std::to_string(nxtstate), false));
+      htmp->append(GenerateBinop("=", savewaitnextstate_string, std::to_string(nxtstate), true));
 
       // nextstate = waitstate
       htmp->append(GenerateBinop("=", nextstate_string, std::to_string(numstates)));
@@ -358,7 +358,7 @@ namespace systemc_hdl {
   void HDLThread::GenerateWaitCntUpdate(hNodep h_switchcase) {
     // wait ctr -=1
     hNodep hw = new hNode("--", hNode::hdlopsEnum::hPostfix);
-    hw->append(new hNode(waitctr_string, hNode::hdlopsEnum::hVarref));
+    hw->append(new hNode(nextwaitctr_string, hNode::hdlopsEnum::hVarref));
     h_switchcase->append(hw);
     // if (wait ctr == 0) nextstate = nextwaitstate
     hw =  new hNode(hNode::hdlopsEnum::hIfStmt);
