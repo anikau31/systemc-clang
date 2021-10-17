@@ -159,6 +159,7 @@ int sc_main(int argc, char *argv[]) {
     REQUIRE(test_module != nullptr);
     REQUIRE(simple_module != nullptr);
 
+
     INFO("Checking member ports for test instance.");
     // These checks should be performed on the declarations.
 
