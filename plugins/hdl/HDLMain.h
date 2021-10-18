@@ -37,6 +37,7 @@ namespace systemc_hdl {
   private:
    void SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
                        llvm::raw_fd_ostream &SCout);
+   void GenerateInstanceNames(ModuleInstance *smod, std::vector<std::string> &instnames);
    void SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
                      hNodep &h_info,  hdecl_name_map_t &mod_vname_map);
    void SCsig2hcode(ModuleInstance::signalMapType pmap, hNode::hdlopsEnum h_op,

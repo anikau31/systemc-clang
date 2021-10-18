@@ -178,12 +178,19 @@ namespace systemc_hdl {
     // add the submodule declarations
     
     for (const auto &smod : submodv) {
+      std::vector<std::string> instnames;
       if (smod->getInstanceInfo().isArrayType()) {
-	LLVM_DEBUG(llvm::dbgs() << "Array submodule " << smod->getInstanceName() << "\n");
+	LLVM_DEBUG(llvm::dbgs() << "Array submodule " << smod->getInstanceInfo().getVarName() << "\n");
       }
-      else LLVM_DEBUG(llvm::dbgs() << "Non-Array submodule " << smod->getInstanceName() << "\n");
-      const std::vector<std::string> &instnames{smod->getInstanceInfo().getInstanceNames()};
+      else {
+	LLVM_DEBUG(llvm::dbgs() << "Non-Array submodule " << smod->getInstanceInfo().getVarName() << "\n");
+      }
 
+      // we generate instance names based on the array indices so that the names match
+      // names used in the portbindings for each instance, which are generated in
+      // for loops (see HDLHNode.cpp code to unroll portbindings).
+      
+      GenerateInstanceNames(smod, instnames);
       bool frsttime = true;
       for (auto instname: instnames) {
 	LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
@@ -209,7 +216,8 @@ namespace systemc_hdl {
     hNodep h_constructor;
     hNodep h_allsenslists = new hNode( hNode::hdlopsEnum::hNoop);
     for (int i = 0; i <= basemods.size(); i++) {
-      h_constructor = new hNode(mod_i->getInstanceName(), hNode::hdlopsEnum::hModinitblock);
+      h_constructor = new hNode(mod_i->getInstanceInfo().getVarName()+ (mod_i->getInstanceInfo().isArrayType()? "_0" :""),
+				hNode::hdlopsEnum::hModinitblock);
     
       xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
       LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
@@ -333,6 +341,53 @@ namespace systemc_hdl {
     }
   }
 
+  void HDLMain::GenerateInstanceNames(ModuleInstance *smod, std::vector<std::string> &instnames) {
+    string basevarname = smod->getInstanceInfo().getVarName();
+    std::vector<llvm::APInt> arraysizes  = smod->getInstanceInfo().getArraySizes(); 
+    //instnames = smod->getInstanceInfo().getInstanceNames();
+    int ndim = smod->getInstanceInfo().getArrayDimension();
+
+    if (ndim==0) {
+      instnames.push_back(basevarname);
+      return;
+    }
+    
+    // convert the annoying APInt datatype
+    int array_dim[ndim];
+    for (int i = 0; i<ndim; i++) {
+      array_dim[i] = arraysizes[i].getSExtValue();
+    }
+
+    // in order of likelihood
+    // only handle up to 3D (front end restriction)
+    if (ndim==1) {
+      for (int i = 0; i < array_dim[0]; i++) {
+	string varname = basevarname;
+	varname.append("_" + to_string(i));
+	instnames.push_back(varname);
+      }
+      return;
+    }
+
+    if (ndim == 2) {
+      for (int i = 0; i < array_dim[0]; i++)
+	for (int j = 0; j < array_dim[1]; j++) {
+	string varname = basevarname;
+	varname.append("_" + to_string(i)+"_" + to_string(j));
+	instnames.push_back(varname);
+	}
+      return;
+    }
+    
+    for (int i = 0; i <= array_dim[0]; i++) 
+      for (int j = 0; j < array_dim[1]; j++) 
+	for (int k = 0; k < array_dim[2]; k++) {
+	  string varname = basevarname;
+	  varname.append("_" + to_string(1)+"_" + to_string(j-1)+"_" + to_string(k-1));
+	  instnames.push_back(varname);
+	}
+  }
+  
   void HDLMain::SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
 			     hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
     //clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};

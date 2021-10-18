@@ -41,6 +41,7 @@ struct ModuleInstanceType {
   clang::Decl *getInstanceTypeDecl() const { return type_decl; }
   clang::Decl *getInstanceDecl() const { return instance_decl; }
   clang::ValueDecl *getParentDecl() const { return parent_decl; }
+  std::string getVarName() const {return var_name;}
 
   /// Array handling
   void setArrayType() { is_array_ = true; }
