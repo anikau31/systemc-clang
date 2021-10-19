@@ -43,9 +43,9 @@ namespace systemc_hdl {
       //xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
       xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map);
       hNodep hthreadall = new hNode(h_top->getname(), hNode::hdlopsEnum::hMethod);
-      hthreadall->append(GenerateBinop("@=", nextstate_string, state_string, false));
-      hthreadall->append(GenerateBinop("@=", nextwaitctr_string, waitctr_string, false));
-      hthreadall->append(GenerateBinop("@=", savewaitnextstate_string, waitnextstate_string, false));
+      hthreadall->append(GenerateBinop("=", nextstate_string, state_string, false));
+      hthreadall->append(GenerateBinop("=", nextwaitctr_string, waitctr_string, false));
+      hthreadall->append(GenerateBinop("=", savewaitnextstate_string, waitnextstate_string, false));
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
       hthreadblocksp->append(new hNode(state_string, hNode::hdlopsEnum::hVarref));
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
