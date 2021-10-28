@@ -1,0 +1,288 @@
+  hModule DUT_sc_module_0 [
+    hPortsigvarlist  NONAME [
+      hSigdecl double_sig [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_int [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl sig1 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType int NOLIST
+          ]
+        ]
+      ]
+      hVardecl others [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hModdecl testing [
+        hTypeinfo  NONAME [
+          hType test_sc_module_1 NOLIST
+        ]
+      ]
+    ]
+    hModinitblock d [
+      hPortbindings d [
+        hPortbinding test_instance [
+          hVarref in1 NOLIST
+          hVarref sig1 NOLIST
+        ]
+        hPortbinding test_instance [
+          hVarref out1 NOLIST
+          hVarref sig1 NOLIST
+        ]
+      ]
+    ]
+  ]
+  hModule test_sc_module_1 [
+    hPortsigvarlist  NONAME [
+      hPortin clk [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin in1 [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType int NOLIST
+          ]
+        ]
+      ]
+      hPortin reset [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout out1 [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType int NOLIST
+          ]
+        ]
+      ]
+      hVardecl k [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _scclang_state_simple_for_wait [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _scclang_next_state_simple_for_wait [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _scclang_wait_counter_simple_for_wait [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _scclang_nextwait_counter_simple_for_wait [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _scclang_wait_next_state_simple_for_wait [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _scclang_save_wait_next_state_simple_for_wait [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl i_simple_for_wait_thread_0 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+    ]
+    hProcesses  NONAME [
+      hProcess simple_for_wait [
+        hMethod simple_for_wait_state_update [
+          hIfStmt  NONAME [
+            hBinop == [
+              hVarref reset NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hCStmt  NONAME [
+              hBinop = [
+                hVarref _scclang_state_simple_for_wait NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop = [
+                hVarref _scclang_wait_next_state_simple_for_wait NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop = [
+                hVarref _scclang_wait_counter_simple_for_wait NOLIST
+                hLiteral 0 NOLIST
+              ]
+            ]
+            hCStmt  NONAME [
+              hBinop = [
+                hVarref _scclang_state_simple_for_wait NOLIST
+                hVarref _scclang_next_state_simple_for_wait NOLIST
+              ]
+              hBinop = [
+                hVarref _scclang_wait_counter_simple_for_wait NOLIST
+                hVarref _scclang_nextwait_counter_simple_for_wait NOLIST
+              ]
+              hBinop = [
+                hVarref _scclang_wait_next_state_simple_for_wait NOLIST
+                hVarref _scclang_save_wait_next_state_simple_for_wait NOLIST
+              ]
+            ]
+          ]
+        ]
+        hMethod simple_for_wait [
+          hSwitchStmt  NONAME [
+            hVarref _scclang_state_simple_for_wait NOLIST
+            hCStmt  NONAME [
+              hSwitchCase  NONAME [
+                hLiteral 0 NOLIST
+                hIfStmt  NONAME [
+                  hLiteral 1 NOLIST
+                  hCStmt  NONAME [
+                    hBinop = [
+                      hVarref k NOLIST
+                      hLiteral 1 NOLIST
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref i_simple_for_wait_thread_0 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hIfStmt  NONAME [
+                      hBinop < [
+                        hVarref i_simple_for_wait_thread_0 NOLIST
+                        hLiteral 10 NOLIST
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref k NOLIST
+                          hLiteral 2 NOLIST
+                        ]
+                        hBinop = [
+                          hVarref _scclang_nextwait_counter_simple_for_wait NOLIST
+                          hLiteral 4 NOLIST
+                        ]
+                        hBinop = [
+                          hVarref _scclang_save_wait_next_state_simple_for_wait NOLIST
+                          hVarref _scclang_next_state_simple_for_wait NOLIST
+                        ]
+                        hBinop = [
+                          hVarref _scclang_next_state_simple_for_wait NOLIST
+                          hLiteral 2 NOLIST
+                        ]
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref k NOLIST
+                          hLiteral 4 NOLIST
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+              hSwitchCase  NONAME [
+                hLiteral 1 NOLIST
+                hBinop = [
+                  hVarref k NOLIST
+                  hLiteral 3 NOLIST
+                ]
+                hPostfix ++ [
+                  hVarref i_simple_for_wait_thread_0 NOLIST
+                ]
+                hIfStmt  NONAME [
+                  hBinop < [
+                    hVarref i_simple_for_wait_thread_0 NOLIST
+                    hLiteral 10 NOLIST
+                  ]
+                  hCStmt  NONAME [
+                    hBinop = [
+                      hVarref k NOLIST
+                      hLiteral 2 NOLIST
+                    ]
+                    hBinop = [
+                      hVarref _scclang_nextwait_counter_simple_for_wait NOLIST
+                      hLiteral 4 NOLIST
+                    ]
+                    hBinop = [
+                      hVarref _scclang_save_wait_next_state_simple_for_wait NOLIST
+                      hVarref _scclang_next_state_simple_for_wait NOLIST
+                    ]
+                    hBinop = [
+                      hVarref _scclang_next_state_simple_for_wait NOLIST
+                      hLiteral 2 NOLIST
+                    ]
+                  ]
+                  hCStmt  NONAME [
+                    hBinop = [
+                      hVarref k NOLIST
+                      hLiteral 4 NOLIST
+                    ]
+                    hIfStmt  NONAME [
+                      hLiteral 1 NOLIST
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref k NOLIST
+                          hLiteral 1 NOLIST
+                        ]
+                        hVarAssign  NONAME [
+                          hVarref i_simple_for_wait_thread_0 NOLIST
+                          hLiteral 0 NOLIST
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+              hSwitchCase  NONAME [
+                hLiteral 2 NOLIST
+                hPostfix -- [
+                  hVarref _scclang_wait_counter_simple_for_wait NOLIST
+                ]
+                hIfStmt  NONAME [
+                  hBinop == [
+                    hVarref _scclang_wait_counter_simple_for_wait NOLIST
+                    hLiteral 0 NOLIST
+                  ]
+                  hBinop = [
+                    hVarref _scclang_next_state_simple_for_wait NOLIST
+                    hVarref _scclang_wait_next_state_simple_for_wait NOLIST
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+    hModinitblock testing [
+      hSenslist simple_for_wait [
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
+        ]
+        hSensvar ASYNC [
+          hVarref reset NOLIST
+          hLiteral 0 NOLIST
+        ]
+      ]
+    ]
+  ]
