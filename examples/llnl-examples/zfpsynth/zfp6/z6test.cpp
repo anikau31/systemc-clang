@@ -48,7 +48,7 @@
 #include "real.h"
 
 #ifndef DIMS
-#define DIMS 1
+#define DIMS 3
 #endif
 
 #define BLOCK_LEN zhw::fpblk_sz(DIMS) /* values per block */
@@ -108,8 +108,8 @@ SC_MODULE(mymodule)
   SC_CTOR(mymodule) : u_dut("u_dut")
   {
 
-    minbits = 256; /* minimum number of bits per 4^d block */
-    maxbits = 256; /* maximum number of bits per 4^d block */
+    minbits = 4096; /* minimum number of bits per 4^d block */
+    maxbits = 4096; /* maximum number of bits per 4^d block */
     maxprec = fpn_t::bits; /* maximum precision (# bit planes coded) */
     minexp = 1-fpn_t::ebias-fpn_t::fbits;
 

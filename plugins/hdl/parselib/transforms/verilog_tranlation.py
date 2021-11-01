@@ -253,6 +253,8 @@ class VerilogTranslationPass(TopDown):
                 res = '({}) {} ({})'.format(tree.children[1], '>>>', tree.children[2])
             elif op == 'concat':
                 res = '{{ ({}) {} ({}) }}'.format(tree.children[1], ',', tree.children[2])
+            elif op == '@=':  # non-blocking assignment in thread context
+                res = '{} <= ({})'.format(tree.children[1], tree.children[2])
             else:
                 res = '({}) {} ({})'.format(tree.children[1], op, tree.children[2])
         return res
@@ -609,7 +611,6 @@ class VerilogTranslationPass(TopDown):
     def funcparamio(self, tree):
         return self.__gen_funcparam(tree)
 
-
     def vardeclinit(self, tree):
         self.__push_up(tree)
         init_val = None
@@ -654,9 +655,13 @@ class VerilogTranslationPass(TopDown):
             bindings = []
         else:
             bindings = self.bindings[mod_name]
-        dprint(bindings)
-        bindings_normal = filter(lambda x: '.' not in x[0].children[0], bindings)
-        bindings_hier = filter(lambda x: '.' in x[0].children[0], bindings)
+        def extract_binding_name(x):
+            if is_tree_type(x[0], 'hbindingarrayref'):
+                return x[0].children[0].children[0]
+            else:
+                return x[0].children[0]
+        bindings_normal = filter(lambda x: '.' not in extract_binding_name(x), bindings)
+        bindings_hier = filter(lambda x: '.' in extract_binding_name(x), bindings)
         bindings = bindings_normal
         ind = self.get_current_ind_prefix()
         res = ind + '{} {}('.format(mod_type_name, mod_name) + '\n'

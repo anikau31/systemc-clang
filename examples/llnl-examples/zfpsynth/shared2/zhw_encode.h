@@ -1068,7 +1068,7 @@ SC_MODULE(encode_ints)
 							if(n != fpblk_sz(DIM) - 1)
 								first_after_bc = shiftamt;
 							else
-								first_after_bc = shiftamt - 1;
+								first_after_bc = shiftamt;
 						} else { // 10
 							if(n != fpblk_sz(DIM) - 1)
 								first_after_bc = shiftamt;

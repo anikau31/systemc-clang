@@ -8,6 +8,10 @@ add_systemc_module(
   DESIGN_SOURCE ${PROJECT_SOURCE_DIR}/examples/llnl-examples/zfpsynth/zfp3/z3test.cpp
 )
 add_systemc_module(
+  DESIGN sysc_z5test
+  DESIGN_SOURCE ${PROJECT_SOURCE_DIR}/examples/llnl-examples/zfpsynth/zfp5/z5test.cpp
+)
+add_systemc_module(
   DESIGN sysc_hash
   DESIGN_SOURCE ${PROJECT_SOURCE_DIR}/examples/llnl-examples/modules/hash-unit/hash-unit.cpp
 )
@@ -30,6 +34,18 @@ add_reconf_module(DESIGN reconf_z3
   # BDS "" 
   IPS axis_dwidth_32_64 axis_dwidth_64_32
   )
+add_reconf_module(DESIGN reconf_z5
+  RECONF_PART "reconf_part_0" 
+  RECONF_INST "inst_rp" 
+  RTL z3wrapper.sv
+  SYSC_MODULE sysc_z5test
+  # CONSTR "" 
+  SYNTHESIS_OPTS "-directive AlternateRoutability" 
+  # BDS "" 
+  IPS axis_dwidth_32_64 axis_dwidth_64_32
+  )
+
+
 
 set(hash_ips axis_dwidth_32_136 axis_dwidth_32_256 axis_dwidth_256_32 axis_interconnect_1_2)
 add_reconf_module(DESIGN reconf_hash
@@ -61,5 +77,10 @@ add_config_from_static(DESIGN top_z3
   STATIC_DESIGN top_hash  
   # CONSTR        vu9p.xdc inst_rp.xdc
 )
-
-
+add_config_from_static(DESIGN top_z5
+  RECONF_PART   reconf_part_0
+  RECONF_INST   inst_rp
+  RECONF_MOD    reconf_z5
+  STATIC_DESIGN top_hash  
+  # CONSTR        vu9p.xdc inst_rp.xdc
+)

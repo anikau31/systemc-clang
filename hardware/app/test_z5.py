@@ -8,20 +8,18 @@ from argparse import ArgumentParser as AP
 
 # logging.basicConfig(level = logging.DEBUG)
 
-partial_bitstream = 'DS_top_z3_inst_rp_partial.bit'
+partial_bitstream = 'DS_top_z5_inst_rp_partial.bit'
 
 def main():
     parser = AP()
-    parser.add_argument('--test-case', default=None)
+    parser.add_argument('--test-case', default=1, type=int)
 
     parser.add_argument('--verbose', action='store_true', default=False)
     args = parser.parse_args()
-    in_file = 'data/z3.mem'
-    out_file = 'data/z3_encoded.mem'
+
     tc = args.test_case
-    if tc is not None:
-        in_file = 'data/z3data/tc.{}.dim.2/m_port.out'.format(tc)
-        out_file = 'data/z3data/tc.{}.dim.2/s_port.out'.format(tc)
+    in_file = 'data/z3data/tc.{}.dim.1/m_port.out'.format(tc)
+    out_file = 'data/z3data/tc.{}.dim.1/s_port.out'.format(tc)
 
     inp_data = load_memory(in_file, bytes_per_line=4 if tc is None else 8) 
     out_data_golden = load_memory(out_file, bytes_per_line=8)
