@@ -30,6 +30,23 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
     llvm::outs() << "=> ERROR: instance PORT_ARRAY not found\n";
   }
 
+  SECTION("Test nested module instances", "[nested modules]") {
+    std::string name{};
+    /// Check the name for nestedmoduleinstances.
+    auto nested_instances{pa->getNestedModuleInstances()};
+    for (ModuleInstance *mod_inst : nested_instances) {
+      llvm::dbgs() << "==> instance name " << mod_inst->getInstanceName()
+                   << "\n";
+
+      const clang::Decl *instance_decl{mod_inst->getInstanceDecl()};
+      if (auto fd = llvm::dyn_cast<clang::FieldDecl>(instance_decl)) {
+        llvm::dbgs() << "FD NAME: " << fd->getName() << "\n";
+        name = fd->getName();
+      }
+    }
+    REQUIRE(name == "submodules_3d");
+  }
+
   SECTION("Testing port_array_instance", "[port arrays]") {
     // Actually found the module.
     REQUIRE(pa != nullptr);
@@ -149,6 +166,5 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
       }
     }
     */
-
   }
 }
