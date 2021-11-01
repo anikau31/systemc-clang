@@ -583,7 +583,7 @@ namespace systemc_hdl {
 	  }
 	}
 	else {
-	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(							(efc->getEntryMethod())->getLocation(), cxx_record_id1)};
+	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report((efc->getEntryMethod())->getLocation(), cxx_record_id1)};
 	  diag_builder << efc->getName();
 
 	  LLVM_DEBUG(llvm::dbgs() << "process " << efc->getName()
