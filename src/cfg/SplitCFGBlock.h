@@ -139,6 +139,7 @@ class SplitCFGBlock {
   void insertElements(VectorCFGElementPtr &elements);
 
   void dump() const;
+  void dumpColored() const;
 };
 
 };  // namespace systemc_clang
