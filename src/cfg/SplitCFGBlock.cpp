@@ -89,6 +89,43 @@ void SplitCFGBlock::dump() const {
     llvm::dbgs() << "\nSB" << getBlockID() << " (B" << block_->getBlockID()
                  << ") ";
     if (hasWait()) {
+      llvm::dbgs() << " (WAIT)";
+      llvm::dbgs()  << " (Arg: " << wait_arg_ << ")"
+                   << " (NextState: " << getNextState() << ")\n";
+    }
+    llvm::dbgs() << "\n" ;
+
+    unsigned int i{0};
+    for (auto const& element : elements_) {
+      llvm::dbgs() << "  " << i << ": ";
+      element->dump();
+      ++i;
+    }
+
+    llvm::dbgs() << "\n";
+
+    llvm::dbgs() << "  Preds ("
+                 << predecessors_.size()
+                 <<  "): ";
+    for (auto const& pre : predecessors_) {
+      llvm::dbgs() << "SB" << pre->getBlockID() << " ";
+    }
+
+    llvm::dbgs() <<  "\n  Succs ("
+                 <<  successors_.size()
+                 <<  "): ";
+    for (auto const& succ : successors_) {
+      llvm::dbgs() << "SB" << succ->getBlockID() << " ";
+    }
+    llvm::dbgs() << "\n";
+  }
+}
+
+void SplitCFGBlock::dumpColored() const {
+  if (block_) {
+    llvm::dbgs() << "\nSB" << getBlockID() << " (B" << block_->getBlockID()
+                 << ") ";
+    if (hasWait()) {
       llvm::dbgs() << llvm::buffer_ostream::Colors::RED << " (WAIT)";
       llvm::dbgs() << llvm::buffer_ostream::Colors::BLUE
                    << " (Arg: " << wait_arg_ << ")"
