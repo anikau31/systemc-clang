@@ -61,6 +61,7 @@ namespace systemc_hdl {
       int state_num = 0;
       for (auto const& pt: paths_found) {
 
+	SGVisited.clear();
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
 	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
 	ProcessSplitGraphBlock(pt[0], state_num, h_switchcase);
