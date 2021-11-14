@@ -691,7 +691,7 @@ namespace systemc_hdl {
   }
 
   bool HDLBody::TraverseCallExpr(CallExpr *callexpr) {
-    hNodep hcall = new hNode(hNode::hdlopsEnum::hMethodCall);
+    hNodep hcall;// = new hNode(hNode::hdlopsEnum::hMethodCall);
     hNodep save_hret = h_ret;
 
     if (isa<FunctionDecl>(callexpr->getCalleeDecl()) &&
