@@ -1,4 +1,5 @@
-// ===-- src/SystemCClang.h - systec-clang class definition -------*- C++ -*-===//
+// ===-- src/SystemCClang.h - systec-clang class definition -------*- C++
+// -*-===//
 //
 // This file is distributed under the University of Illinois License.
 // See LICENSE.mkd for details.
@@ -6,10 +7,10 @@
 // ===----------------------------------------------------------------------===//
 // /
 // / \file
-// / A CFG representation with splitting basic blocks that have wait() statements
+// / A CFG representation with splitting basic blocks that have wait()
+// statements
 // /
 // ===----------------------------------------------------------------------===//
-
 
 #include "SplitCFG.h"
 
@@ -32,6 +33,7 @@ void SplitCFG::dfs_pop_on_wait(
     return;
   }
 
+  bool walking_up_from_wait{false};
   llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited;
   llvm::SmallVector<
       std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>, 8>
@@ -53,6 +55,7 @@ void SplitCFG::dfs_pop_on_wait(
     bool bb_has_wait{(parent_bb->hasWait())};
 
     if (bb_has_wait) {
+      walking_up_from_wait = bb_has_wait;
       llvm::dbgs() << "BB# " << parent_bb->getBlockID()
                    << " has a wait in it\n";
       llvm::dbgs() << "Visited BB#" << parent_bb->getBlockID() << "\n";
@@ -82,8 +85,8 @@ void SplitCFG::dfs_pop_on_wait(
       }
     }
 
-    /// A new BB has been found.  Add its successors to be visited in the
-    /// future.
+    // A new block is found only if the block is not visited, and it is not a
+    // wait(). If yes, then mark it as visited.
     bool FoundNew = false;
     while (I != parent_bb->succ_end()) {
       basic_block = *I++;
@@ -95,11 +98,18 @@ void SplitCFG::dfs_pop_on_wait(
     }
 
     if (FoundNew) {
-      // Go down one level if there is a unvisited successor.
+      // If a new successor has been found, then go down one level if there is a
+      // unvisited successor.
       llvm::dbgs() << "Visited BB#" << parent_bb->getBlockID() << "\n";
       visit_stack.push_back(
           std::make_pair(basic_block, basic_block->succ_begin()));
       curr_path.push_back(parent_bb);
+      if (walking_up_from_wait) {
+        visited.clear();
+        // Reinsert the successor block
+        visited.insert(basic_block);
+        walking_up_from_wait = false;
+      }
     } else {
       // Go up one level.
       // llvm::dbgs() << "pop: " << visit_stack.size() << "\n";
@@ -376,9 +386,8 @@ void SplitCFG::addNextStatesToBlocks() {
     auto next_block{wait.second.first};
     auto next_state_id{wait.second.second};
 
-    wait_block->setNextState( next_state_id );
+    wait_block->setNextState(next_state_id);
   }
-
 }
 
 void SplitCFG::dumpWaitNextStates() const {
