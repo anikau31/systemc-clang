@@ -751,7 +751,7 @@ $(function() {
 <div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>  }</div>
 <div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span> </div>
 <div class="line"><a id="l00693" name="l00693"></a><span class="lineno"><a class="line" href="classsystemc__hdl_1_1HDLBody.html#ab511f4ac8481cf7c2484a66a6126d513">  693</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classsystemc__hdl_1_1HDLBody.html#ab511f4ac8481cf7c2484a66a6126d513">HDLBody::TraverseCallExpr</a>(CallExpr *callexpr) {</div>
-<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>    <a class="code hl_class" href="classhnode_1_1hNode.html">hNodep</a> hcall = <span class="keyword">new</span> <a class="code hl_class" href="classhnode_1_1hNode.html">hNode</a>(hNode::hdlopsEnum::hMethodCall);</div>
+<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>    <a class="code hl_class" href="classhnode_1_1hNode.html">hNodep</a> hcall;<span class="comment">// = new hNode(hNode::hdlopsEnum::hMethodCall);</span></div>
 <div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>    <a class="code hl_class" href="classhnode_1_1hNode.html">hNodep</a> save_hret = <a class="code hl_variable" href="classsystemc__hdl_1_1HDLBody.html#a63909266f79a4ac9c8ed9264a6b675a7">h_ret</a>;</div>
 <div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span> </div>
 <div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>    <span class="keywordflow">if</span> (isa&lt;FunctionDecl&gt;(callexpr-&gt;getCalleeDecl()) &amp;&amp;</div>
