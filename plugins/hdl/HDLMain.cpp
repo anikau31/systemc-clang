@@ -261,8 +261,11 @@ namespace systemc_hdl {
       h_module->child_list.insert(h_module->child_list.end(), h_modinitblockhead->child_list.begin(), h_modinitblockhead->child_list.end());
 
     // Functions
+    // Initially these are functions that were referenced in the module's sc_methods/threads
+    // Function calls within functions get added to all methodecls.
+    // Still need to account for recursion (which shouldn't occur in a synthesizable systemc program)
     
-    if (allmethodecls.size() > 0) {
+    while (allmethodecls.size() > 0) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
       //std::unordered_multimap<string, FunctionDecl *> modmethodecls;
       hfunc_name_map_t modmethodecls;
@@ -320,6 +323,8 @@ namespace systemc_hdl {
 	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
 
 	  }
+	  // If this function invoked other functions, add them to the list to be generated
+	  allmethodecls.insertall(xbodyp->methodecls);
 	  h_processes->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
 	}
