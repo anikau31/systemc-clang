@@ -243,7 +243,9 @@ namespace systemc_hdl {
 
     // build map of thread name to reset var name for this module
     MakeResetMap(threadresetmap, h_allsenslists);
-    
+
+    LLVM_DEBUG(llvm::dbgs() << "Module vname map size is " << mod_vname_map.size() << " \n");
+
     // Processes
     hNodep h_processes = new hNode(hNode::hdlopsEnum::hProcesses);
     mod_i = mod;
@@ -397,8 +399,7 @@ namespace systemc_hdl {
 			     hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
     //clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 
-    const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(
-								     clang::DiagnosticsEngine::Remark, "Pointer type not synthesized, '%0' skipped.");
+    const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark, "Pointer type not synthesized, '%0' skipped.");
     for (ModuleInstance::portMapType::iterator mit = pmap.begin(); mit != pmap.end();
 	 mit++) {
       string objname = get<0>(*mit);
@@ -411,7 +412,7 @@ namespace systemc_hdl {
         NamedDecl * decl = pd->getAsVarDecl();
 	if (decl == NULL) decl = pd->getAsFieldDecl();
 	if (decl !=NULL) {
-	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(							decl->getLocation(), cxx_record_id1)};
+	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(decl->getLocation(), cxx_record_id1)};
 	  diag_builder << decl->getName();
 	  return;
 	}
@@ -430,18 +431,21 @@ namespace systemc_hdl {
       // create a new name and add it to the module level vname map
       // this map will be passed to all calls to HDLBody to merge into
       // its vname_map
-      
+
+      NamedDecl * portdecl = pd->getAsVarDecl();
+      if (!portdecl)
+	portdecl = pd->getAsFieldDecl();
       if (module_vars.count(objname)) {
 	LLVM_DEBUG(llvm::dbgs() << "duplicate object " << objname << "\n");
-	NamedDecl * portdecl = pd->getAsVarDecl();
-	if (!portdecl)
-	  portdecl = pd->getAsFieldDecl();
 	if (portdecl)
 	  mod_vname_map.add_entry(portdecl, objname, h_info->child_list.back());
 	//string newn = mod_newn.newname();
 	//objname+="_var"+newn;
       }
-      else module_vars.insert(objname);
+      else {
+	module_vars.insert(objname);
+	if (portdecl) mod_vname_map.add_entry(portdecl, objname, h_info->child_list.back());
+      }
 
       // check for initializer
       if (h_op == hNode::hdlopsEnum::hVardecl) {
@@ -482,8 +486,7 @@ namespace systemc_hdl {
   void HDLMain::SCsig2hcode(ModuleInstance::signalMapType pmap,
 			    hNode::hdlopsEnum h_op, hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
 
-    const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(
-								     clang::DiagnosticsEngine::Remark, "Pointer type not synthesized, '%0' skipped.");
+    const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark, "Pointer type not synthesized, '%0' skipped.");
     for (ModuleInstance::signalMapType::iterator mit = pmap.begin();
 	 mit != pmap.end(); mit++) {
       string objname = get<0>(*mit);
@@ -498,7 +501,7 @@ namespace systemc_hdl {
         NamedDecl * decl = pd->getAsVarDecl();
 	if (decl == NULL) decl = pd->getAsFieldDecl();
 	if (decl !=NULL) {
-	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(							decl->getLocation(), cxx_record_id1)};
+	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(decl->getLocation(), cxx_record_id1)};
 	  diag_builder << decl->getName();
 	  return;
 	}
@@ -519,18 +522,21 @@ namespace systemc_hdl {
       // create a new name and add it to the module level vname map
       // this map will be passed to all calls to HDLBody to merge into
       // its vname_map
-      
+
+      NamedDecl * portdecl = pd->getAsVarDecl();
+      if (!portdecl)
+	portdecl = pd->getAsFieldDecl();
       if (module_vars.count(objname)) {
 	LLVM_DEBUG(llvm::dbgs() << "duplicate object " << objname << "\n");
-	NamedDecl * portdecl = pd->getAsVarDecl();
-	if (!portdecl)
-	  portdecl = pd->getAsFieldDecl();
 	if (portdecl)
 	  mod_vname_map.add_entry(portdecl, objname, h_info->child_list.back());
 	//string newn = mod_newn.newname();
 	//objname+="_var"+newn;
       }
-      else module_vars.insert(objname);
+      else {
+	module_vars.insert(objname);
+	if (portdecl) mod_vname_map.add_entry(portdecl, objname, h_info->child_list.back());
+      }
     }
   }
 
