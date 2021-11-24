@@ -55,8 +55,19 @@ namespace systemc_hdl {
     int numstates;
     bool needwaitswitchcase;
 
-    inline string NameNext(string &s) {return "_next_"+s;} // convention for variable name holding next value of var s
+    const string nextstring{"_next_"};
+    const string shadowstring{"_shadow_"};
     
+    inline string NameNext(string &s) {return nextstring+s;} // convention for variable name holding next value of var s
+    
+    inline hNodep makeshadow(hNodep h_origvar) {
+      hNodep h_s = new hNode(shadowstring + h_origvar->getname(), h_origvar->getopc());
+      // use the same child_list pointer for type
+      h_s->child_list = h_origvar->child_list;
+      return h_s;
+    }
+
+    // inline string
     std::unordered_map<std::string, bool> SGVisited; // Split Graph Blocks visited 
     std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited 
 

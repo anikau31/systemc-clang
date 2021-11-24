@@ -302,6 +302,7 @@ namespace hnode {
     string oldn;
     string newn;
     hNodep h_vardeclp;
+    bool referenced;
   } names_t;
 
 
@@ -352,24 +353,39 @@ namespace hnode {
     newname_map_t(string prefix = lvar_prefix) { ns.set_prefix(prefix); }
     void add_entry(T declp, string old_name, hNodep hnp )
     {
-      string newn = find_entry_newn(declp);
+      string newn = find_entry_newn(declp, false);
       hnp->set(newn);
       if ( newn== "") {
 	// this is a new declaration
 	newn = old_name+ns.newname();
 	hnp->set(newn);
-	names_t names = {old_name, newn, hnp};
+	names_t names = {old_name, newn, hnp, false};
 	hdecl_name_map[declp] = names;
       }
     }
     
-    string find_entry_newn(T declp) {
+    string find_entry_newn(T declp, bool set_ref = true) {
       auto vname_it{hdecl_name_map.find(declp)};
-      if (vname_it != hdecl_name_map.end()) 
+      if (vname_it != hdecl_name_map.end()) {
+	if (set_ref) hdecl_name_map[declp].referenced = true;
 	return hdecl_name_map[declp].newn;
+      }
       else return "";
     }
 
+    bool is_referenced(T declp) {
+      string newn = find_entry_newn(declp, false);
+      if ( newn== "") // doesn't exist
+	return false;
+      return hdecl_name_map[declp].referenced;
+    }
+
+    void reset_referenced() {
+      for (auto &mapentry:hdecl_name_map) {
+	mapentry.second.referenced = false;
+      }
+    }
+    
     void set_prefix(string prefix) { ns.set_prefix(prefix); }
 
     string get_prefix() { return ns.get_prefix(); }

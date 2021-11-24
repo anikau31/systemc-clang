@@ -40,6 +40,8 @@ namespace systemc_hdl {
       savewaitnextstate_string = NameNext(waitnextstate_string);
       
       thread_vname_map.insertall(mod_vname_map_);
+      thread_vname_map.reset_referenced();
+      
       //xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
       xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map);
       hNodep hthreadmainmethod = new hNode(h_top->getname(), hNode::hdlopsEnum::hMethod);
@@ -47,6 +49,7 @@ namespace systemc_hdl {
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
       hthreadblocksp->append(new hNode(state_string, hNode::hdlopsEnum::hVarref));
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
+      
       hNodep hthreadblockcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
       hthreadblocksp->append(hthreadblockcstmt);
       // build SC CFG
@@ -76,8 +79,25 @@ namespace systemc_hdl {
 	hthreadblockcstmt->append(h_switchcase);
       }
 
+      // for all variables (and signals) referenced in thread,
+      // we need shadow variables to hold the variables' value across clock cycles.
+      // shadow variables may shadow local or global variables
+      hNodep h_shadowvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // collect shadow variables 
+
+      for (auto const &var: thread_vname_map) {
+	if (var.second.referenced) {
+	  hNodep shadowvar = makeshadow(var.second.h_vardeclp);
+	  h_shadowvarsp->append(shadowvar);
+	}
+      }
+      if (h_shadowvarsp->size()>0) {
+	hlocalvarsp->child_list.insert(std::end(hlocalvarsp->child_list),
+				       std::begin(h_shadowvarsp->child_list),
+				       std::end(h_shadowvarsp->child_list));
+      }
+      
       //std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
-      clang::LangOptions LO = ast_context.getLangOpts();
+      //clang::LangOptions LO = ast_context.getLangOpts();
       //threadcfg->dump(LO, false);
       // HDLBody instance init
       // for (auto const& pt: paths_found) {
@@ -90,10 +110,9 @@ namespace systemc_hdl {
       hthreadmainmethod->append(GenerateBinop("=", nextstate_string, state_string, false));
       hthreadmainmethod->append(GenerateBinop("=", nextwaitctr_string, waitctr_string, false));
       hthreadmainmethod->append(GenerateBinop("=", savewaitnextstate_string, waitnextstate_string, false));
-      // need the local vars here too
  
       hthreadmainmethod->append(hthreadblocksp);
-
+      
       // generate the local variables;
       GenerateStateVar(state_string);
       GenerateStateVar(NameNext(state_string));
@@ -315,7 +334,7 @@ namespace systemc_hdl {
 	  const DeclStmt *declstmt = dyn_cast<DeclStmt>(S);
 	  if ((declstmt!=NULL) &&  (CFGVisited[(sgb->getCFGBlock()->getBlockID()) > 1]))
 	    ProcessDeclStmt(declstmt, htmp);
-	  else xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread); // no initializer, so normal
+	  else xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread); // not declstmt
 
 	  LLVM_DEBUG(llvm::dbgs() << "after Run, htmp follows\n");
 	  htmp->dumphcode();
