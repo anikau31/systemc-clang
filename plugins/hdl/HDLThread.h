@@ -56,12 +56,12 @@ namespace systemc_hdl {
     bool needwaitswitchcase;
 
     const string nextstring{"_next_"};
-    const string shadowstring{"_shadow_"};
+    const string shadowstring{"_main_"};
     
     inline string NameNext(string &s) {return nextstring+s;} // convention for variable name holding next value of var s
     
     inline hNodep makeshadow(hNodep h_origvar) {
-      hNodep h_s = new hNode(shadowstring + h_origvar->getname(), h_origvar->getopc());
+      hNodep h_s = new hNode(shadowstring+h_origvar->getname(), h_origvar->getopc());
       // use the same child_list pointer for type
       h_s->child_list = h_origvar->child_list;
       return h_s;
@@ -78,7 +78,6 @@ namespace systemc_hdl {
     void CheckVardecls(hNodep &hp, unsigned int cfgblockid);
     void ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp);
     void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase);
-    void GenerateStateUpdate(hNodep hstatemethod);
     void GenerateStateUpdate(hNodep hstatemethod, hNodep hlocalvarsp);
     void GenerateStateVar(string sname);
     void GenerateWaitCntUpdate(hNodep h_switchcase);
