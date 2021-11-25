@@ -316,6 +316,11 @@ namespace hnode {
   const static std::string lvar_prefix{"_local_"};
   const static std::string tvar_prefix{"_thread_"};
 
+  inline bool is_sigvar(hNodep hnp) {
+    return (hnp->h_op ==  hNode::hdlopsEnum::hVardecl) ||
+      (hnp->h_op ==  hNode::hdlopsEnum::hSigdecl);
+  }
+  
   class name_serve {
   private:
     int cnt;
@@ -364,10 +369,11 @@ namespace hnode {
       }
     }
     
-    string find_entry_newn(T declp, bool set_ref = true) {
+    string find_entry_newn(T declp, bool set_ref = false) {
       auto vname_it{hdecl_name_map.find(declp)};
       if (vname_it != hdecl_name_map.end()) {
-	if (set_ref) hdecl_name_map[declp].referenced = true;
+	// only set referenced bit for Signals and Variables
+	if (set_ref && is_sigvar(hdecl_name_map[declp].h_vardeclp)) hdecl_name_map[declp].referenced = true;
 	return hdecl_name_map[declp].newn;
       }
       else return "";
@@ -385,7 +391,7 @@ namespace hnode {
 	mapentry.second.referenced = false;
       }
     }
-    
+
     void set_prefix(string prefix) { ns.set_prefix(prefix); }
 
     string get_prefix() { return ns.get_prefix(); }
