@@ -86,11 +86,10 @@ namespace systemc_hdl {
 
       for (auto const &var: thread_vname_map) {
 	if (var.second.referenced) {
-	  //hNodep shadowvar = makeshadow(var.second.h_vardeclp);
 	  // create a copy, same child_list
 	  hNodep hs = new hNode(var.second.h_vardeclp->getname(), var.second.h_vardeclp->getopc());
 	  hs->child_list = var.second.h_vardeclp->child_list;
-	  h_shadowvarsp->append(hs);//shadowvar);
+	  h_shadowvarsp->append(hs);
 	  if (var.second.newn.find(hnode::gvar_prefix) != string::npos) // global object
 	    string gname = mod_vname_map.find_entry_newn(var.first, true); // set referenced bit in global name map
 	}
