@@ -545,7 +545,7 @@ SplitCFG::getPathsFound() {
   return paths_found_;
 }
 
-SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context} {}
+SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context}, next_state_count_{0} {}
 
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)
