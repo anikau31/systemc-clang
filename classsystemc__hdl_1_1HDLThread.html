@@ -124,8 +124,6 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:afb96da810e131453ef19510ae5ec2694"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3d9b44012067d404c6c7aeb349a6fca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLThread.html#ac3d9b44012067d404c6c7aeb349a6fca">ProcessSplitGraphBlock</a> (const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *sgb, int state_num, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> h_switchcase)</td></tr>
 <tr class="separator:ac3d9b44012067d404c6c7aeb349a6fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a872d1974929c126886b478d31a41394e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLThread.html#a872d1974929c126886b478d31a41394e">GenerateStateUpdate</a> (<a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> hstatemethod)</td></tr>
-<tr class="separator:a872d1974929c126886b478d31a41394e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dd1c8e8b693dafea34f01d26504c39b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLThread.html#a1dd1c8e8b693dafea34f01d26504c39b">GenerateStateUpdate</a> (<a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> hstatemethod, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> <a class="el" href="classsystemc__hdl_1_1HDLThread.html#acaa8ae2311a3711bfbc0267af37f8d2d">hlocalvarsp</a>)</td></tr>
 <tr class="separator:a1dd1c8e8b693dafea34f01d26504c39b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12eaac12875b4585948320e10621d1f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLThread.html#a12eaac12875b4585948320e10621d1f7">GenerateStateVar</a> (string sname)</td></tr>
@@ -181,6 +179,10 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a3594305d96a526ef01ec166bc43d9e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3897a690e32c79981c8e025a94ce8bf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLThread.html#ae3897a690e32c79981c8e025a94ce8bf">needwaitswitchcase</a></td></tr>
 <tr class="separator:ae3897a690e32c79981c8e025a94ce8bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5267d8e8fe126f30b0a4a0fefe2074ac"><td class="memItemLeft" align="right" valign="top">const string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLThread.html#a5267d8e8fe126f30b0a4a0fefe2074ac">nextstring</a> {&quot;_next_&quot;}</td></tr>
+<tr class="separator:a5267d8e8fe126f30b0a4a0fefe2074ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a805427ad6d48d1739c250b00fb26577f"><td class="memItemLeft" align="right" valign="top">const string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLThread.html#a805427ad6d48d1739c250b00fb26577f">shadowstring</a> {&quot;_main_&quot;}</td></tr>
+<tr class="separator:a805427ad6d48d1739c250b00fb26577f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4df4b683b946c5b9e8aa2e3dbccf6a84"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLThread.html#a4df4b683b946c5b9e8aa2e3dbccf6a84">SGVisited</a></td></tr>
 <tr class="separator:a4df4b683b946c5b9e8aa2e3dbccf6a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa417ac0de8c24d181d272812deb0645d"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; unsigned int, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLThread.html#aa417ac0de8c24d181d272812deb0645d">CFGVisited</a></td></tr>
@@ -277,7 +279,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00121">121</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00157">157</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -306,7 +308,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00471">471</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00488">488</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -344,7 +346,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00129">129</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00165">165</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -382,7 +384,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00179">179</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00216">216</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -420,7 +422,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00209">209</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00246">246</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -470,40 +472,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00461">461</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a872d1974929c126886b478d31a41394e" name="a872d1974929c126886b478d31a41394e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a872d1974929c126886b478d31a41394e">&#9670;&nbsp;</a></span>GenerateStateUpdate() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void systemc_hdl::HDLThread::GenerateStateUpdate </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a>&#160;</td>
-          <td class="paramname"><em>hstatemethod</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00385">385</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00478">478</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
 <a id="a1dd1c8e8b693dafea34f01d26504c39b" name="a1dd1c8e8b693dafea34f01d26504c39b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1dd1c8e8b693dafea34f01d26504c39b">&#9670;&nbsp;</a></span>GenerateStateUpdate() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dd1c8e8b693dafea34f01d26504c39b">&#9670;&nbsp;</a></span>GenerateStateUpdate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -536,7 +510,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00418">418</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00422">422</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -564,7 +538,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00451">451</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00468">468</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -592,7 +566,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00371">371</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00408">408</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -620,7 +594,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00125">125</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00161">161</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -658,7 +632,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00170">170</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00207">207</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -686,7 +660,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00058">58</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00061">61</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
 
 </div>
 </div>
@@ -714,7 +688,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00499">499</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00516">516</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -753,7 +727,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >called when a CFG declstmt is instantiated more than once can skip the decl, but need to process initializer</p>
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00145">145</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00181">181</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -791,7 +765,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00346">346</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00383">383</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -835,7 +809,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00247">247</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8cpp_source.html#l00284">284</a> of file <a class="el" href="HDLThread_8cpp_source.html">HDLThread.cpp</a>.</p>
 
 </div>
 </div>
@@ -884,7 +858,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00080">80</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00083">83</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
 
 </div>
 </div>
@@ -908,7 +882,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00061">61</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00065">65</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
 
 </div>
 </div>
@@ -1092,7 +1066,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00078">78</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00081">81</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
 
 </div>
 </div>
@@ -1181,6 +1155,30 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00050">50</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
+
+</div>
+</div>
+<a id="a5267d8e8fe126f30b0a4a0fefe2074ac" name="a5267d8e8fe126f30b0a4a0fefe2074ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5267d8e8fe126f30b0a4a0fefe2074ac">&#9670;&nbsp;</a></span>nextstring</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const string systemc_hdl::HDLThread::nextstring {&quot;_next_&quot;}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00058">58</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
 
 </div>
 </div>
@@ -1276,7 +1274,31 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00060">60</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00064">64</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
+
+</div>
+</div>
+<a id="a805427ad6d48d1739c250b00fb26577f" name="a805427ad6d48d1739c250b00fb26577f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a805427ad6d48d1739c250b00fb26577f">&#9670;&nbsp;</a></span>shadowstring</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const string systemc_hdl::HDLThread::shadowstring {&quot;_main_&quot;}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLThread_8h_source.html#l00059">59</a> of file <a class="el" href="HDLThread_8h_source.html">HDLThread.h</a>.</p>
 
 </div>
 </div>

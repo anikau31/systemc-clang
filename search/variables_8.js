@@ -35,5 +35,6 @@ var searchData=
   ['is_5farray_5f_32',['is_array_',['../structsc__ast__matchers_1_1ModuleInstanceType.html#afdb810b7b04e23673a3c2e64b4cb3001',1,'sc_ast_matchers::ModuleInstanceType::is_array_()'],['../classsystemc__clang_1_1PortDecl.html#aaa40e3567d2a19a6f7310c455e4fc54d',1,'systemc_clang::PortDecl::is_array_()']]],
   ['is_5fentry_5ffunction_5f_33',['is_entry_function_',['../classsystemc__clang_1_1FindEntryFunctions.html#ab67becfe5748fc2b42e23a2a739bc77a',1,'systemc_clang::FindEntryFunctions']]],
   ['is_5ffield_5fdecl_34',['is_field_decl',['../structsc__ast__matchers_1_1ModuleInstanceType.html#ace8d813116395be7de22d9d492283a69',1,'sc_ast_matchers::ModuleInstanceType']]],
-  ['istreamports_5f_35',['istreamports_',['../classsystemc__clang_1_1ModuleInstance.html#a8c5265bd212698e526e5a8194d75d7d0',1,'systemc_clang::ModuleInstance']]]
+  ['is_5fport_5fbinding_35',['is_port_binding',['../classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#aaf3383774c18184d2c30bced2a7703dc',1,'parselib::transforms::literal_expansion::LiteralExpansion']]],
+  ['istreamports_5f_36',['istreamports_',['../classsystemc__clang_1_1ModuleInstance.html#a8c5265bd212698e526e5a8194d75d7d0',1,'systemc_clang::ModuleInstance']]]
 ];
