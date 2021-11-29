@@ -450,7 +450,8 @@ namespace systemc_hdl {
       }
       else {
 	module_vars.insert(objname);
-	if (portdecl) mod_vname_map.add_entry(portdecl, objname, h_info->child_list.back());
+	// don't make new names for ports, will break logic in the modinit hcode processing
+	if ((h_op == hNode::hdlopsEnum::hVardecl) && (portdecl)) mod_vname_map.add_entry(portdecl, objname, h_info->child_list.back());
       }
 
       // check for initializer
