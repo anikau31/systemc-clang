@@ -12,14 +12,28 @@ class LiteralExpansion(TopDown):
     def __init__(self, structure):
         super().__init__()
         self.structure = structure
+        self.is_port_binding = False
+        self.port_binding_module = None
+
+    def portbinding(self, tree):
+        self.is_port_binding = True
+        self.port_binding_module = str(self.structure[self.current_module][tree.children[0]])
+        self.__push_up(tree)
+        self.is_port_binding = False
+        self.port_binding_module = None
+        return tree
+
 
     def hvarref(self, tree):
         if '##' in tree.children[0]:
             orig_token = tree.children[0]
             new_val = ''
             parts = orig_token.split('##')
-            if self.current_module in self.structure:
-                m = self.structure[self.current_module]
+            start = self.current_module
+            if self.is_port_binding:  # if we are in port binding, we shall take the ids directly
+                start = self.port_binding_module
+            if start in self.structure:
+                m = self.structure[start]
                 end_point = False
             else:
                 m = {}

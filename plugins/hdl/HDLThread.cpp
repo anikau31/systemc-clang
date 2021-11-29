@@ -40,6 +40,8 @@ namespace systemc_hdl {
       savewaitnextstate_string = NameNext(waitnextstate_string);
       
       thread_vname_map.insertall(mod_vname_map_);
+      thread_vname_map.reset_referenced();
+      
       //xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
       xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map);
       hNodep hthreadmainmethod = new hNode(h_top->getname(), hNode::hdlopsEnum::hMethod);
@@ -47,6 +49,7 @@ namespace systemc_hdl {
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
       hthreadblocksp->append(new hNode(state_string, hNode::hdlopsEnum::hVarref));
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
+      
       hNodep hthreadblockcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
       hthreadblocksp->append(hthreadblockcstmt);
       // build SC CFG
@@ -76,8 +79,24 @@ namespace systemc_hdl {
 	hthreadblockcstmt->append(h_switchcase);
       }
 
+      // for all variables (and signals) referenced in thread,
+      // we need two copies to hold the variables' value across clock cycles.
+      // these variables may be local or global
+      hNodep h_shadowvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // collect referenced variables 
+
+      for (auto const &var: thread_vname_map) {
+	if (var.second.referenced) {
+	  // create a copy, same child_list
+	  hNodep hs = new hNode(var.second.h_vardeclp->getname(), var.second.h_vardeclp->getopc());
+	  hs->child_list = var.second.h_vardeclp->child_list;
+	  h_shadowvarsp->append(hs);
+	  if (var.second.newn.find(hnode::gvar_prefix) != string::npos) // global object
+	    string gname = mod_vname_map.find_entry_newn(var.first, true); // set referenced bit in global name map
+	}
+      }
+      
       //std::unique_ptr< CFG > threadcfg = clang::CFG::buildCFG(emd, emd->getBody(), &(emd->getASTContext()), clang::CFG::BuildOptions());
-      clang::LangOptions LO = ast_context.getLangOpts();
+      //clang::LangOptions LO = ast_context.getLangOpts();
       //threadcfg->dump(LO, false);
       // HDLBody instance init
       // for (auto const& pt: paths_found) {
@@ -90,10 +109,11 @@ namespace systemc_hdl {
       hthreadmainmethod->append(GenerateBinop("=", nextstate_string, state_string, false));
       hthreadmainmethod->append(GenerateBinop("=", nextwaitctr_string, waitctr_string, false));
       hthreadmainmethod->append(GenerateBinop("=", savewaitnextstate_string, waitnextstate_string, false));
-      // need the local vars here too
- 
+      for (hNodep onelocalvar : h_shadowvarsp->child_list) {
+	 hthreadmainmethod->append(GenerateBinop("=", onelocalvar->getname(), shadowstring+onelocalvar->getname())); 
+    }
       hthreadmainmethod->append(hthreadblocksp);
-
+      
       // generate the local variables;
       GenerateStateVar(state_string);
       GenerateStateVar(NameNext(state_string));
@@ -103,12 +123,28 @@ namespace systemc_hdl {
       GenerateStateVar(NameNext(waitnextstate_string));
       // generate the state update method
       hNodep hstatemethod = new hNode(threadname+"_state_update", hNode::hdlopsEnum::hMethod);
-      //GenerateStateUpdate(hstatemethod);
-      GenerateStateUpdate(hstatemethod, hlocalvarsp);
+      GenerateStateUpdate(hstatemethod, h_shadowvarsp);
       h_top->append(hstatemethod);
       
       h_top->append(hthreadmainmethod);
 
+      // remove globals from shadowvars
+      h_shadowvarsp->child_list.erase(
+	 std::remove_if( h_shadowvarsp->child_list.begin(),
+			 h_shadowvarsp->child_list.end(), [] (hNodep x) {
+			   return (x->getname().find(hnode::gvar_prefix) != string::npos);}),
+	 h_shadowvarsp->child_list.end() );
+								 
+      // fix up names of local var shadows promoted
+      for (hNodep hchild: h_shadowvarsp->child_list) {
+	hchild->set(shadowstring+hchild->getname());
+      }
+      
+      if (h_shadowvarsp->size()>0) {
+	hlocalvarsp->child_list.insert(std::end(hlocalvarsp->child_list),
+				       std::begin(h_shadowvarsp->child_list),
+				       std::end(h_shadowvarsp->child_list));
+      }
       // add thread local variables to module level list
 
       if (hlocalvarsp->size()!=0) h_portsigvarlist->child_list.insert(std::end(h_portsigvarlist->child_list),
@@ -158,7 +194,8 @@ namespace systemc_hdl {
 	  //  need to generated initializer code
 	  //xtbodyp->Run(const_cast<Stmt *>((const Stmt *)declinit), hinitcode, rthread);
 	  hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
-	  varinitp->append(new hNode(thread_vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref));
+	  varinitp->append(new hNode(thread_vname_map.find_entry_newn(vardecl, true),
+				     hNode::hdlopsEnum::hVarref)); // set referenced bit
 	  xtbodyp->Run(cdeclinit, varinitp, rthread);
 	  htmp->append(varinitp);
 	  
@@ -315,7 +352,7 @@ namespace systemc_hdl {
 	  const DeclStmt *declstmt = dyn_cast<DeclStmt>(S);
 	  if ((declstmt!=NULL) &&  (CFGVisited[(sgb->getCFGBlock()->getBlockID()) > 1]))
 	    ProcessDeclStmt(declstmt, htmp);
-	  else xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread); // no initializer, so normal
+	  else xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread); // not declstmt
 
 	  LLVM_DEBUG(llvm::dbgs() << "after Run, htmp follows\n");
 	  htmp->dumphcode();
@@ -382,7 +419,7 @@ namespace systemc_hdl {
     
   }
   
-  void HDLThread::GenerateStateUpdate(hNodep hstatemethod){
+  void HDLThread::GenerateStateUpdate(hNodep hstatemethod, hNodep hshadowvarsp){
     const string comb_assign = "@=";
     hNodep hifblock = new hNode(hNode::hdlopsEnum::hIfStmt);
     // expecting
@@ -402,6 +439,14 @@ namespace systemc_hdl {
     hcstmt->append(GenerateBinop(comb_assign, state_string, "0"));
     hcstmt->append(GenerateBinop(comb_assign, waitnextstate_string, "0"));
     hcstmt->append(GenerateBinop(comb_assign, waitctr_string, "0"));
+
+    // now do the referenced variables
+    for (hNodep onelocalvar : hshadowvarsp->child_list) {
+      //hcstmt->append(GenerateBinop(comb_assign, onelocalvar->getname(), "0"));  // assume all coercible to int; need prior check
+      hcstmt->append(GenerateBinop(comb_assign, shadowstring+onelocalvar->getname(), "0"));  // assume all coercible to int; need prior check
+      
+    }
+    
     hifblock->append(hcstmt);
 
     // else part: set state transition variables
@@ -411,43 +456,15 @@ namespace systemc_hdl {
     hcstmt->append(GenerateBinop(comb_assign, waitctr_string, nextwaitctr_string, false));
     hcstmt->append(GenerateBinop(comb_assign, waitnextstate_string, savewaitnextstate_string, false));
 
-    hifblock->append(hcstmt);
-    hstatemethod->append(hifblock);
-  }
-
-  void HDLThread::GenerateStateUpdate(hNodep hstatemethod, hNodep hlocalvarsp) {
-
-    const string comb_assign = "@=";
-    hNodep hifblock = new hNode(hNode::hdlopsEnum::hIfStmt);
-    // expecting
-    // hSensvar ASYNC [
-    //   hVarref arst NOLIST
-    //   hLiteral 0 NOLIST
-    // ]
-	    
-    if ((h_resetvarinfo_ != NULL) && (h_resetvarinfo_->child_list.size() == 2)) {
-      hifblock->append(GenerateBinop("==", h_resetvarinfo_->child_list[0]->getname(),
-				     h_resetvarinfo_->child_list[1]->getname()));
-    }
-    else hifblock->append(GenerateBinop("==", efc_->getResetSignal().first, efc_->getResetEdge().first, false));
-
-    // then part: reset state transition variables
-    hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-    for (hNodep onelocalvar : hlocalvarsp->child_list) {
-      hcstmt->append(GenerateBinop(comb_assign, onelocalvar->getname(), "0"));  // assume all coercible to int; need prior check
-
-    }
-    hifblock->append(hcstmt);
-    // else part: set state transition variables
-    hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-    for (hNodep onelocalvar : hlocalvarsp->child_list) {
+    // now do the referenced variables
+    for (hNodep onelocalvar : hshadowvarsp->child_list) {
       string s =  onelocalvar->getname();
-      hcstmt->append(GenerateBinop(comb_assign,s, NameNext(s), false));  
+      hcstmt->append(GenerateBinop(comb_assign,shadowstring+s, s, false));  
     }
     hifblock->append(hcstmt);
     hstatemethod->append(hifblock);
   }
-  
+
   void HDLThread::GenerateStateVar(string sname) {
     // add var decls for a state variable
     

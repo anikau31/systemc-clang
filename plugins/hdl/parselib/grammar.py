@@ -36,7 +36,7 @@ lark_grammar = Lark('''
         // hthread consists of a synchronous block that sets state and a switch block that produces next state
         hthread:  "hProcess" ID  "[" modportsiglist? hthreadsync hthreadswitch "]"
         hthreadsync: "hMethod" ID  "[" ifstmt "]"
-        hthreadswitch: "hMethod" ID  "[" switchstmt "]"
+        hthreadswitch: "hMethod" ID  "["  stmts "]"
         
         prevardecl: vardecl*
         vardecl: vardeclinit | vardeclrn
@@ -263,7 +263,7 @@ lark_grammar = Lark('''
         NUM: /(\+|\-)?[0-9]+/
         TYPESTR: /[a-zA-Z_][a-zA-Z_0-9]*/
         BINOP: COMPOUND_ASSIGN | NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE" | "concat"
-        NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&"
+        NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&" | "@="
         ARITHOP: "+" | "-" | "*" | "/" | "^"
         UNOP_NON_SUB: "!" | "++" | "-"
         UNOP_SUB:  "-"

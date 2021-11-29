@@ -35,6 +35,7 @@ class C : public sc_module
 {
 public:
     A a{"a"};
+    A aa{"aa"};
     sc_signal<bool> s{"s"};
     
     
@@ -47,6 +48,7 @@ public:
     
     void proc() {
         a.in1 = s;
+        aa.in1 = s;
     }
 };
 
@@ -60,7 +62,8 @@ public:
 
     SC_CTOR(B_top) {
         c_mod.a.in2(s1);
-        this->opt(c_mod.a.out);
+        c_mod.aa.in2(s1);
+        this->opt(c_mod.a.out & c_mod.aa.out);
     }
 };
 

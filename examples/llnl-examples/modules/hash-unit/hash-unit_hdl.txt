@@ -1,0 +1,795 @@
+  hModule mymodule_sc_module_0 [
+    hPortsigvarlist  NONAME [
+      hSigdecl clk [
+        hTypeinfo  NONAME [
+          hType sc_clock NOLIST
+        ]
+      ]
+      hSigdecl reset [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hVardecl hdata [
+        hTypeinfo  NONAME [
+          hType sc_rvd [
+            hType sc_biguint [
+              hLiteral 136 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hVardecl htaptoshash [
+        hTypeinfo  NONAME [
+          hType sc_rvd [
+            hType sc_biguint [
+              hLiteral 256 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hVardecl htapfromshash [
+        hTypeinfo  NONAME [
+          hType sc_rvd [
+            hType sc_biguint [
+              hLiteral 256 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hModdecl u_dut [
+        hTypeinfo  NONAME [
+          hType short_hash_sc_module_1 NOLIST
+        ]
+      ]
+    ]
+    hModinitblock mymod [
+      hPortbindings mymod [
+        hPortbinding u_dut [
+          hVarref clk NOLIST
+          hVarref clk NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref reset NOLIST
+          hVarref reset NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref s_dat NOLIST
+          hVarref hdata NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref s_tap NOLIST
+          hVarref htaptoshash NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref m_tap NOLIST
+          hVarref htapfromshash NOLIST
+        ]
+      ]
+    ]
+  ]
+  hModule short_hash_sc_module_1 [
+    hPortsigvarlist  NONAME [
+      hPortin clk [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin reset [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin s_dat [
+        hTypeinfo  NONAME [
+          hType sc_rvd_in [
+            hType sc_biguint [
+              hLiteral 136 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortin s_tap [
+        hTypeinfo  NONAME [
+          hType sc_rvd_in [
+            hType sc_biguint [
+              hLiteral 256 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortout m_tap [
+        hTypeinfo  NONAME [
+          hType sc_rvd_out [
+            hType sc_biguint [
+              hLiteral 256 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl a [
+        hTypeinfo  NONAME [
+          hType array##12 [
+            hType sc_signal [
+              hType sc_biguint [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl b [
+        hTypeinfo  NONAME [
+          hType array##12 [
+            hType sc_signal [
+              hType sc_biguint [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl c [
+        hTypeinfo  NONAME [
+          hType array##12 [
+            hType sc_signal [
+              hType sc_biguint [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl d [
+        hTypeinfo  NONAME [
+          hType array##12 [
+            hType sc_signal [
+              hType sc_biguint [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl v [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_bv [
+              hLiteral 12 NOLIST
+            ]
+          ]
+        ]
+      ]
+    ]
+    hProcesses  NONAME [
+      hProcess mc_mix [
+        hMethod mc_mix [
+          hCStmt  NONAME [
+            hSigAssignL write [
+              hVarref s_dat##ready NOLIST
+              hBinop && [
+                hSigAssignR read [
+                  hVarref m_tap##ready NOLIST
+                ]
+                hSigAssignR read [
+                  hVarref s_tap##valid NOLIST
+                ]
+              ]
+            ]
+            hSigAssignL write [
+              hVarref s_tap##ready NOLIST
+              hBinop && [
+                hSigAssignR read [
+                  hVarref m_tap##ready NOLIST
+                ]
+                hSigAssignR read [
+                  hVarref s_dat##valid NOLIST
+                ]
+              ]
+            ]
+            hSigAssignL write [
+              hVarref m_tap##data NOLIST
+              hBinop concat [
+                hBinop concat [
+                  hBinop concat [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref d NOLIST
+                      hLiteral 11 NOLIST
+                    ]
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref c NOLIST
+                      hLiteral 11 NOLIST
+                    ]
+                  ]
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref b NOLIST
+                    hLiteral 11 NOLIST
+                  ]
+                ]
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref a NOLIST
+                  hLiteral 11 NOLIST
+                ]
+              ]
+            ]
+            hSigAssignL write [
+              hVarref m_tap##valid NOLIST
+              hNoop to_bool [
+                hBinop ARRAYSUBSCRIPT [
+                  hSigAssignR read [
+                    hVarref v NOLIST
+                  ]
+                  hLiteral 11 NOLIST
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      hProcess ms_mix [
+        hMethod ms_mix [
+          hVardecl len_ms_mix_local_2 [
+            hTypeinfo  NONAME [
+              hType sc_biguint [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+          hVardecl data_ms_mix_local_3 [
+            hTypeinfo  NONAME [
+              hType array##2 [
+                hType sc_biguint [
+                  hLiteral 64 NOLIST
+                ]
+              ]
+            ]
+          ]
+          hVardecl tapi_ms_mix_local_4 [
+            hTypeinfo  NONAME [
+              hType array##4 [
+                hType sc_biguint [
+                  hLiteral 64 NOLIST
+                ]
+              ]
+            ]
+          ]
+          hVardecl i_ms_mix_local_5 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hIfStmt  NONAME [
+              hBinop == [
+                hSigAssignR read [
+                  hVarref reset NOLIST
+                ]
+                hLiteral 0 NOLIST
+              ]
+              hCStmt  NONAME [
+                hForStmt  NONAME [
+                  hVarAssign  NONAME [
+                    hVarref i_ms_mix_local_5 NOLIST
+                    hLiteral 0 NOLIST
+                  ]
+                  hBinop < [
+                    hVarref i_ms_mix_local_5 NOLIST
+                    hLiteral 12 NOLIST
+                  ]
+                  hPostfix ++ [
+                    hVarref i_ms_mix_local_5 NOLIST
+                  ]
+                  hCStmt  NONAME [
+                    hSigAssignL write [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref a NOLIST
+                        hVarref i_ms_mix_local_5 NOLIST
+                      ]
+                      hLiteral 0 [
+                        hTypeinfo  NONAME [
+                          hType sc_biguint [
+                            hLiteral 64 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref b NOLIST
+                        hVarref i_ms_mix_local_5 NOLIST
+                      ]
+                      hLiteral 0 [
+                        hTypeinfo  NONAME [
+                          hType sc_biguint [
+                            hLiteral 64 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref c NOLIST
+                        hVarref i_ms_mix_local_5 NOLIST
+                      ]
+                      hLiteral 0 [
+                        hTypeinfo  NONAME [
+                          hType sc_biguint [
+                            hLiteral 64 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref d NOLIST
+                        hVarref i_ms_mix_local_5 NOLIST
+                      ]
+                      hLiteral 0 [
+                        hTypeinfo  NONAME [
+                          hType sc_biguint [
+                            hLiteral 64 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+                hSigAssignL write [
+                  hVarref v NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_bv [
+                        hLiteral 12 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+              hIfStmt  NONAME [
+                hSigAssignR read [
+                  hVarref m_tap##ready NOLIST
+                ]
+                hCStmt  NONAME [
+                  hBinop = [
+                    hBinop concat [
+                      hBinop concat [
+                        hBinop SLICE [
+                          hVarref len_ms_mix_local_2 NOLIST
+                          hBinop - [
+                            hLiteral 8 NOLIST
+                            hLiteral 1 NOLIST
+                          ]
+                          hLiteral 0 NOLIST
+                        ]
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref data_ms_mix_local_3 NOLIST
+                          hLiteral 1 NOLIST
+                        ]
+                      ]
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref data_ms_mix_local_3 NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                    ]
+                    hSigAssignR read [
+                      hVarref s_dat##data NOLIST
+                    ]
+                  ]
+                  hBinop = [
+                    hBinop concat [
+                      hBinop concat [
+                        hBinop concat [
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref tapi_ms_mix_local_4 NOLIST
+                            hLiteral 3 NOLIST
+                          ]
+                          hBinop ARRAYSUBSCRIPT [
+                            hVarref tapi_ms_mix_local_4 NOLIST
+                            hLiteral 2 NOLIST
+                          ]
+                        ]
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref tapi_ms_mix_local_4 NOLIST
+                          hLiteral 1 NOLIST
+                        ]
+                      ]
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref tapi_ms_mix_local_4 NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                    ]
+                    hSigAssignR read [
+                      hVarref s_tap##data NOLIST
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref a NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hBinop ^ [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref tapi_ms_mix_local_4 NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                      hVarref len_ms_mix_local_2 NOLIST
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref b NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hBinop ^ [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref tapi_ms_mix_local_4 NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                      hBinop ~ [
+                        hVarref len_ms_mix_local_2 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref c NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hBinop + [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref tapi_ms_mix_local_4 NOLIST
+                        hLiteral 2 NOLIST
+                      ]
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref data_ms_mix_local_3 NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                    ]
+                  ]
+                  hSigAssignL write [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref d NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hBinop + [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref tapi_ms_mix_local_4 NOLIST
+                        hLiteral 3 NOLIST
+                      ]
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref data_ms_mix_local_3 NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref d NOLIST
+                    hVarref c NOLIST
+                    hVarref b NOLIST
+                    hVarref a NOLIST
+                    hLiteral 15 NOLIST
+                    hLiteral 1 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref a NOLIST
+                    hVarref d NOLIST
+                    hVarref c NOLIST
+                    hVarref b NOLIST
+                    hLiteral 52 NOLIST
+                    hLiteral 2 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref b NOLIST
+                    hVarref a NOLIST
+                    hVarref d NOLIST
+                    hVarref c NOLIST
+                    hLiteral 26 NOLIST
+                    hLiteral 3 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref c NOLIST
+                    hVarref b NOLIST
+                    hVarref a NOLIST
+                    hVarref d NOLIST
+                    hLiteral 51 NOLIST
+                    hLiteral 4 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref d NOLIST
+                    hVarref c NOLIST
+                    hVarref b NOLIST
+                    hVarref a NOLIST
+                    hLiteral 28 NOLIST
+                    hLiteral 5 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref a NOLIST
+                    hVarref d NOLIST
+                    hVarref c NOLIST
+                    hVarref b NOLIST
+                    hLiteral 9 NOLIST
+                    hLiteral 6 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref b NOLIST
+                    hVarref a NOLIST
+                    hVarref d NOLIST
+                    hVarref c NOLIST
+                    hLiteral 47 NOLIST
+                    hLiteral 7 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref c NOLIST
+                    hVarref b NOLIST
+                    hVarref a NOLIST
+                    hVarref d NOLIST
+                    hLiteral 54 NOLIST
+                    hLiteral 8 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref d NOLIST
+                    hVarref c NOLIST
+                    hVarref b NOLIST
+                    hVarref a NOLIST
+                    hLiteral 32 NOLIST
+                    hLiteral 9 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref a NOLIST
+                    hVarref d NOLIST
+                    hVarref c NOLIST
+                    hVarref b NOLIST
+                    hLiteral 25 NOLIST
+                    hLiteral 10 NOLIST
+                  ]
+                  hMethodCall short_hash__emix_func_0 [
+                    hVarref b NOLIST
+                    hVarref a NOLIST
+                    hVarref d NOLIST
+                    hVarref c NOLIST
+                    hLiteral 63 NOLIST
+                    hLiteral 11 NOLIST
+                  ]
+                  hSigAssignL write [
+                    hVarref v NOLIST
+                    hBinop | [
+                      hBinop << [
+                        hSigAssignR read [
+                          hVarref v NOLIST
+                        ]
+                        hLiteral 1 NOLIST
+                      ]
+                      hBinop && [
+                        hSigAssignR read [
+                          hVarref s_dat##valid NOLIST
+                        ]
+                        hSigAssignR read [
+                          hVarref s_tap##valid NOLIST
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      hFunction short_hash__emix_func_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType void NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamIO y [
+            hTypeinfo  NONAME [
+              hType array##12 [
+                hType sc_signal [
+                  hType sc_biguint [
+                    hLiteral 64 NOLIST
+                  ]
+                ]
+              ]
+            ]
+          ]
+          hFunctionParamIO x [
+            hTypeinfo  NONAME [
+              hType array##12 [
+                hType sc_signal [
+                  hType sc_biguint [
+                    hLiteral 64 NOLIST
+                  ]
+                ]
+              ]
+            ]
+          ]
+          hFunctionParamIO u [
+            hTypeinfo  NONAME [
+              hType array##12 [
+                hType sc_signal [
+                  hType sc_biguint [
+                    hLiteral 64 NOLIST
+                  ]
+                ]
+              ]
+            ]
+          ]
+          hFunctionParamIO t [
+            hTypeinfo  NONAME [
+              hType array##12 [
+                hType sc_signal [
+                  hType sc_biguint [
+                    hLiteral 64 NOLIST
+                  ]
+                ]
+              ]
+            ]
+          ]
+          hFunctionParamI ro [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hFunctionParamI ns [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+        ]
+        hVardecl xt_short_hash__emix_func_0_local_6 [
+          hTypeinfo  NONAME [
+            hType sc_biguint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+        hVardecl xr_short_hash__emix_func_0_local_7 [
+          hTypeinfo  NONAME [
+            hType sc_biguint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref xt_short_hash__emix_func_0_local_6 NOLIST
+            hSigAssignR read [
+              hBinop ARRAYSUBSCRIPT [
+                hVarref x NOLIST
+                hBinop - [
+                  hVarref ns NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+          ]
+          hVarAssign  NONAME [
+            hVarref xr_short_hash__emix_func_0_local_7 NOLIST
+            hNoop lrotate [
+              hVarref xt_short_hash__emix_func_0_local_6 NOLIST
+              hVarref ro NOLIST
+            ]
+          ]
+          hSigAssignL write [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref t NOLIST
+              hVarref ns NOLIST
+            ]
+            hSigAssignR read [
+              hBinop ARRAYSUBSCRIPT [
+                hVarref t NOLIST
+                hBinop - [
+                  hVarref ns NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+          ]
+          hSigAssignL write [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref u NOLIST
+              hVarref ns NOLIST
+            ]
+            hSigAssignR read [
+              hBinop ARRAYSUBSCRIPT [
+                hVarref u NOLIST
+                hBinop - [
+                  hVarref ns NOLIST
+                  hLiteral 1 NOLIST
+                ]
+              ]
+            ]
+          ]
+          hSigAssignL write [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref x NOLIST
+              hVarref ns NOLIST
+            ]
+            hVarref xr_short_hash__emix_func_0_local_7 NOLIST
+          ]
+          hSigAssignL write [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref y NOLIST
+              hVarref ns NOLIST
+            ]
+            hBinop + [
+              hBinop ^ [
+                hSigAssignR read [
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref y NOLIST
+                    hBinop - [
+                      hVarref ns NOLIST
+                      hLiteral 1 NOLIST
+                    ]
+                  ]
+                ]
+                hVarref xt_short_hash__emix_func_0_local_6 NOLIST
+              ]
+              hVarref xr_short_hash__emix_func_0_local_7 NOLIST
+            ]
+          ]
+        ]
+      ]
+    ]
+    hModinitblock u_dut [
+      hSenslist mc_mix [
+        hSensvar NONAME [
+          hVarref s_dat##valid NOLIST
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hVarref s_tap##valid NOLIST
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hVarref m_tap##ready NOLIST
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref a NOLIST
+            hLiteral 11 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref b NOLIST
+            hLiteral 11 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref c NOLIST
+            hLiteral 11 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref d NOLIST
+            hLiteral 11 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hVarref v NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist ms_mix [
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hNoop pos NOLIST
+        ]
+      ]
+    ]
+  ]

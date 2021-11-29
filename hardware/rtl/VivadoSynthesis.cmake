@@ -70,7 +70,7 @@ function(add_static_synthesis design rtl_files constraint_files synthesis_option
   list(TRANSFORM bds              APPEND  ".bd")
   add_custom_command(OUTPUT ${design}/${design}_synth.dcp
     COMMAND vivado -mode batch -source  -source ${COMMON_DIR} -source ${synthesis_tcl}
-    DEPENDS ${dcps_dep} ${rtl_files} ${bds} ${constraint_files} ${ips_dep}
+    DEPENDS ${dcps_dep} ${rtl_files} ${bds} ${constraint_files} ${ips_dep} ${sysc_modules}
     WORKING_DIRECTORY ${working_dir})
 
 
@@ -121,7 +121,13 @@ function(add_static_implementation)
   # Also, we need to create black boxes for those reconf partition so that we can implement later
   set(reconf_command_list "")
   set(blackboxing_command_list "")
-  foreach(part inst mod IN ZIP_LISTS DS_RECONF_PART DS_RECONF_INST DS_RECONF_MOD)
+  list(LENGTH DS_RECONF_PART len1)
+  math(EXPR DS_RECONF_INDICES "${len1} - 1")
+  foreach(idx RANGE ${DS_RECONF_INDICES})
+    list(GET DS_RECONF_PART ${idx} part)
+    list(GET DS_RECONF_INST ${idx} inst)
+    list(GET DS_RECONF_MOD ${idx} mod)
+
     message(STATUS "RPartition ${part}:${inst} instantiated with ${mod}")
     list(APPEND reconf_command_list "set_property HD.RECONFIGURABLE true [get_cells ${inst}]")
 
@@ -183,7 +189,12 @@ function(add_static_config) # design reconf_partition reconf_module rtl_files co
   message(STATUS "RTL files: ${DS_RTL}")
   message(STATUS "Constraints: ${DS_CONSTR}")
   message(STATUS "Synthesis options: ${DS_SYNTHESIS_OPTS}")
-  foreach(part inst mod IN ZIP_LISTS DS_RECONF_PART DS_RECONF_INST DS_RECONF_MOD)
+  list(LENGTH DS_RECONF_PART len1)
+  math(EXPR DS_RECONF_INDICES "${len1} - 1")
+  foreach(idx RANGE ${DS_RECONF_INDICES})
+    list(GET DS_RECONF_PART ${idx} part)
+    list(GET DS_RECONF_INST ${idx} inst)
+    list(GET DS_RECONF_MOD ${idx} mod)
     message(STATUS "RPartition ${part}:${inst} instantiated with ${mod}")
     # message(STATUS "  DCPs: RM_${mod}/RM_${mod}_synth.dcp")
     list(APPEND DS_DCPS rtl/RM_${mod}/RM_${mod}_synth.dcp)
@@ -227,7 +238,13 @@ function(add_config_from_static)
   set(reconf_command_list "")
   set(reconf_mod_list "")
   # set(blackboxing_command_list "")
-  foreach(part inst mod IN ZIP_LISTS DS_RECONF_PART DS_RECONF_INST DS_RECONF_MOD)
+  list(LENGTH DS_RECONF_PART len1)
+  math(EXPR DS_RECONF_INDICES "${len1} - 1")
+  foreach(idx RANGE ${DS_RECONF_INDICES})
+    list(GET DS_RECONF_PART ${idx} part)
+    list(GET DS_RECONF_INST ${idx} inst)
+    list(GET DS_RECONF_MOD ${idx} mod)
+
     message(STATUS "RPartition ${part}:${inst} instantiated with ${mod}")
     # list(APPEND reconf_command_list "set_property HD.RECONFIGURABLE true [get_cells ${inst}]")
     # list(APPEND reconf_command_list "set_property HD.RECONFIGURABLE true [get_cells ${inst}]")
