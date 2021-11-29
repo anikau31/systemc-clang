@@ -55,8 +55,12 @@ namespace systemc_hdl {
     int numstates;
     bool needwaitswitchcase;
 
-    inline string NameNext(string &s) {return "_next_"+s;} // convention for variable name holding next value of var s
+    const string nextstring{"_next_"};
+    const string shadowstring{"_main_"};
     
+    inline string NameNext(string &s) {return nextstring+s;} // convention for variable name holding next value of var s
+    
+    // inline string
     std::unordered_map<std::string, bool> SGVisited; // Split Graph Blocks visited 
     std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited 
 
@@ -67,7 +71,6 @@ namespace systemc_hdl {
     void CheckVardecls(hNodep &hp, unsigned int cfgblockid);
     void ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp);
     void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase);
-    void GenerateStateUpdate(hNodep hstatemethod);
     void GenerateStateUpdate(hNodep hstatemethod, hNodep hlocalvarsp);
     void GenerateStateVar(string sname);
     void GenerateWaitCntUpdate(hNodep h_switchcase);

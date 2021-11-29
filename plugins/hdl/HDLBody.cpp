@@ -905,9 +905,9 @@ namespace systemc_hdl {
   }
 
   string HDLBody::FindVname(NamedDecl *vard) {
-    string newname = vname_map.find_entry_newn(vard);
+    string newname = vname_map.find_entry_newn(vard, thismode==rthread); // set referenced bit if in thread
     if (newname == "")
-      newname = mod_vname_map_.find_entry_newn(vard);
+      newname = mod_vname_map_.find_entry_newn(vard, thismode==rthread); // set referenced bit if in thread
     return newname;
   }
   

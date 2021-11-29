@@ -52,8 +52,8 @@ class FunctionTransformationPass(TopDown):
             if f.children[0] == func_name:
                 return f
         # try fuzzy search
-        for f in self.current_module_function_nodes:
-            dprint(f.children[0][:-1] == func_name[:-1])
+        for f in reversed(self.current_module_function_nodes):
+            # dprint(f.children[0][:-1] == func_name[:-1])
             if f.children[0][:-1] == func_name[:-1]:
                 return f
         raise ValueError(f'Function {func_name} not found')
@@ -237,8 +237,10 @@ class FunctionTransformationPass(TopDown):
         # dprint(tree.pretty())
         func_name = tree.children[0]
         self.add_func_name_stub_to_current_scope(func_name)
+        orig_func_name = func_name
         func_node = self.__search_current_function(func_name)
         func_name, ret_type, func_params, local_vars, func_body = self.__extract_func_def(func_node)
+        dprint(func_name)
         extra_args = []
         func_args = tree.children[1:]
         if func_params is not None:
@@ -247,6 +249,9 @@ class FunctionTransformationPass(TopDown):
                 stub = self.current_scope_object.name_stub[arg]
                 extra_args.append(Tree('hvarref', children=[stub.children[0]]))
         tree.children.extend(extra_args)
+        # fuzzy
+        if orig_func_name != func_name:
+            tree.children[0] = func_name
         for idx in range(orig_len):
             arg = tree.children[idx]
             if idx == 0:
