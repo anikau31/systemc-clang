@@ -19,6 +19,7 @@ SC_MODULE(test) {
       for (int i = 0; i < 2; i++) {
         k = 2;
         break;
+        k++;
       }
       k = 3;
       wait();
@@ -33,12 +34,14 @@ SC_MODULE(test) {
       for (int i = 0; i < 2; i++) {
         k = 2;
         if (i == 1) {
+          k = 3;
           break;
+        k++;
         }
       }
-      k = 3;
-      wait();
       k = 4;
+      wait();
+      k = 5;
     }
   }
 
@@ -158,14 +161,17 @@ SC_MODULE(test) {
 
   SC_CTOR(test) {
     int x{2};
+    /*
     SC_THREAD(break0);
     sensitive << clk.pos();
 
     SC_THREAD(break1);
     sensitive << clk.pos();
+    */
 
     SC_THREAD(break2);
     sensitive << clk.pos();
+    /*
 
     SC_THREAD(break3);
     sensitive << clk.pos();
@@ -181,6 +187,7 @@ SC_MODULE(test) {
 
     SC_THREAD(break_with_if_wait1);
     sensitive << clk.pos();
+    */
   }
 };
 

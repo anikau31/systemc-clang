@@ -80,13 +80,13 @@ TEST_CASE("Simple thread test", "[threads]") {
       /// Print the CFG for the entry function.
       //
 
-      llvm::outs() << " ********************* CFG " << proc.first << " ***********************\n";
+      llvm::dbgs() << " ********************* CFG " << proc.first << " ***********************\n";
       SplitCFG scfg{from_ast->getASTContext()};
       scfg.construct_sccfg(method);
       scfg.generate_paths();
       scfg.dump();
       scfg.dumpToDot();
-      llvm::outs() << " ===================================================\n";
+      llvm::dbgs() << " ===================================================\n";
 
     }
 
