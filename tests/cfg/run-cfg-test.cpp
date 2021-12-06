@@ -1,4 +1,3 @@
-
 #include "SystemCClang.h"
 // This is automatically generated from cmake.
 #include <iostream>
@@ -14,18 +13,14 @@ using namespace systemc_clang;
 
 extern std::string data_file;
 TEST_CASE("Simple thread test", "[threads]") {
-
-
   std::string code{};
 
-
   if (data_file.empty()) {
-    code = systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, "simple-thread-input.cpp");
+    code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
+                                            "simple-thread-input.cpp");
   } else {
-
-  code = systemc_clang::read_systemc_file(
-      systemc_clang::test_data_dir, data_file);
+    code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
+                                            data_file);
   }
 
   ASTUnit *from_ast =
@@ -70,40 +65,30 @@ TEST_CASE("Simple thread test", "[threads]") {
     //
     auto test_module_inst{test_module};
 
-    // Check if the proper number of ports are found.
-    /*
-    REQUIRE(test_module_inst->getIPorts().size() == 3);
-    REQUIRE(test_module_inst->getOPorts().size() == 1);
-    REQUIRE(test_module_inst->getIOPorts().size() == 0);
-    REQUIRE(test_module_inst->getSignals().size() == 0);
-    REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOtherVars().size() == 2);
-    */
-
     // Check process information
     //
 
     // processMapType
     auto process_map{test_module_inst->getProcessMap()};
-    REQUIRE(process_map.size() == 1);
+    REQUIRE(process_map.size() != 0);
 
-    const auto proc_decl{*process_map.begin()};
-    const auto entry_func{proc_decl.second->getEntryFunction()};
-    const auto method{entry_func->getEntryMethod()};
+    for (auto const &proc : process_map) {
+      const auto proc_decl{proc};
+      const auto entry_func{proc_decl.second->getEntryFunction()};
+      const auto method{entry_func->getEntryMethod()};
 
-    /// Print the CFG for the entry function.
-    //
+      /// Print the CFG for the entry function.
+      //
 
-    llvm::outs() << " ********************* CFG ***********************\n";
-    SplitCFG scfg{from_ast->getASTContext()};
-    //scfg.split_wait_blocks(method);
-    // scfg.build_sccfg( method );
-    //scfg.generate_paths();
-    scfg.construct_sccfg(method);
-    scfg.generate_paths();
-    scfg.dump();
-    scfg.dumpToDot();
+      llvm::dbgs() << " ********************* CFG " << proc.first << " ***********************\n";
+      SplitCFG scfg{from_ast->getASTContext()};
+      scfg.construct_sccfg(method);
+      scfg.generate_paths();
+      scfg.dump();
+      scfg.dumpToDot();
+      llvm::dbgs() << " ===================================================\n";
+
+    }
 
     llvm::outs() << "data_file: " << data_file << "\n";
   }

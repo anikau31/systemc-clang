@@ -101,8 +101,14 @@ void SplitCFGBlock::dump() const {
       element->dump();
       ++i;
     }
+    /// Print the terminator.
+    clang::LangOptions lang_opts;
+    if (block_->getTerminator().isValid()) {
+      llvm::dbgs() << "  T: ";
+      block_->printTerminator(llvm::dbgs(), lang_opts);
+    }
 
-    llvm::dbgs() << "\n";
+    llvm::dbgs() << "\n\n";
 
     llvm::dbgs() << "  Preds ("
                  << predecessors_.size()
