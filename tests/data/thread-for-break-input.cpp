@@ -161,17 +161,15 @@ SC_MODULE(test) {
 
   SC_CTOR(test) {
     int x{2};
-    /*
     SC_THREAD(break0);
     sensitive << clk.pos();
+    /*
 
     SC_THREAD(break1);
     sensitive << clk.pos();
-    */
 
     SC_THREAD(break2);
     sensitive << clk.pos();
-    /*
 
     SC_THREAD(break3);
     sensitive << clk.pos();
