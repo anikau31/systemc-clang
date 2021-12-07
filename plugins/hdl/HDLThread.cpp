@@ -32,11 +32,11 @@ namespace systemc_hdl {
       needwaitswitchcase = false;
 
       string threadname = h_top->getname();
-      state_string ="state_"+ threadname;
+      state_string ="state_"+ threadname+statestringsymbol;
       nextstate_string =NameNext(state_string);
-      waitctr_string = "wait_counter_"+ threadname;
+      waitctr_string = "wait_counter_"+ threadname+statestringsymbol;
       nextwaitctr_string = NameNext(waitctr_string);
-      waitnextstate_string = "wait_next_state_"+ threadname;
+      waitnextstate_string = "wait_next_state_"+ threadname+statestringsymbol;
       savewaitnextstate_string = NameNext(waitnextstate_string);
       
       thread_vname_map.insertall(mod_vname_map_);
@@ -295,7 +295,7 @@ namespace systemc_hdl {
       
       LLVM_DEBUG(llvm::dbgs() << "Split Graph num ele, blockid are " << sgb->getNumOfElements() << " " << blkid << "\n");
 
-      if ((sgb->getCFGBlock())->getTerminator().isValid()) {
+      if (((sgb->getCFGBlock())->getTerminator().isValid()) && !isBreak(sgb->getCFGBlock()->getTerminatorStmt())){
 	hNodep hcondstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
 	auto spgsucc = sgb->getSuccessors();
 	const Stmt * S = sgb->getCFGBlock()->getTerminatorStmt();
