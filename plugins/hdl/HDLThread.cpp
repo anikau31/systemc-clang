@@ -355,7 +355,8 @@ namespace systemc_hdl {
 	  else xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread); // not declstmt
 
 	  LLVM_DEBUG(llvm::dbgs() << "after Run, htmp follows\n");
-	  htmp->dumphcode();
+	  //htmp->dumphcode();
+	  htmp->print(llvm::dbgs());
 	  CheckVardecls(htmp, (sgb->getCFGBlock())->getBlockID());
 	  if (IsWaitStmt(htmp)) {
 	    ProcessHWait(htmp, sgb->getNextState());
