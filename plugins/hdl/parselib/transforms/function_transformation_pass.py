@@ -238,9 +238,10 @@ class FunctionTransformationPass(TopDown):
         func_name = tree.children[0]
         self.add_func_name_stub_to_current_scope(func_name)
         orig_func_name = func_name
+        # dprint('Before: ', func_name)
         func_node = self.__search_current_function(func_name)
         func_name, ret_type, func_params, local_vars, func_body = self.__extract_func_def(func_node)
-        dprint(func_name)
+        # dprint('After: ', func_name)
         extra_args = []
         func_args = tree.children[1:]
         if func_params is not None:

@@ -185,7 +185,8 @@ class VerilogTranslationPass(TopDown):
         assert len(tree.children) == 1
         if is_tree_type(tree.children[0], 'func_param_name_stub'):
             return tree.children[0].children[0]
-        return tree.children[0]
+        stripped = tree.children[0].replace("#", "")
+        return stripped
 
     def syscread(self, tree):
         """syscread: hsigassignr, token"""
@@ -1047,9 +1048,14 @@ class VerilogTranslationPass(TopDown):
         res += "endmodule"
         return res
 
+    def __is_generated_signal(self, name):
+        return name.endswith('#')
+
     def __generate_vars_decl(self, ind, res, vars):
         for decl, name, init in vars:
-            # print(name, init)
+            if self.__is_generated_signal(name):
+                # decl = '(* mark_debug = "true" *) ' + decl.replace('#', "")
+                decl = decl.replace('#', "")
             if init:
                 decl = decl + ' = ' + str(init) + ';'
             else:
