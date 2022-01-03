@@ -5,6 +5,7 @@
 #include "clang/Basic/OperatorKinds.h"
 #include "clang/Basic/Diagnostic.h"
 #include "APIntUtils.h"
+#include <unordered_map>
 // clang-format on
 
 /// Different matchers may use different DEBUG_TYPE

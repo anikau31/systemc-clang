@@ -248,8 +248,8 @@ if ("${LLVM_INSTALL_DIR}" STREQUAL "")
     PATHS ${search_paths}
     NO_DEFAULT_PATH)
 
-  #message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
-  #message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
+  message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+  message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
   message(STATUS "Found CLang ${CLANG_PACKAGE_VERSION}")
   message(STATUS "Using ClangConfig.cmake in: ${CLANG_DIR}")
 

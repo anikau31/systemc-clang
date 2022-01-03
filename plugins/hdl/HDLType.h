@@ -4,6 +4,7 @@
 #include "SystemCClang.h"
 #include "Tree.h"
 #include <tuple>
+#include <unordered_map>
 
 #include "hNode.h"
 

@@ -1,6 +1,7 @@
 // clang-format off
 #include <regex>
 #include <tuple>
+#include <unordered_map>
 #include "SystemCClang.h"
 #include "PortBinding.h"
 #include "ArrayTypeUtils.h"
