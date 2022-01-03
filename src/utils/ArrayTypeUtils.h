@@ -1,5 +1,5 @@
-#ifndef ARRAY_TYPE_UTILS_H_
-#define ARRAY_TYPE_UTILS_H_
+#ifndef _ARRAY_TYPE_UTILS_H_
+#define _ARRAY_TYPE_UTILS_H_
 
 #include <vector>
 #include "clang/AST/Type.h"

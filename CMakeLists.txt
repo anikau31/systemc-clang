@@ -356,6 +356,8 @@ set( TARGET "systemc-clang" )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -iquote ${PROJECT_SOURCE_DIR}/src")
 include_directories(
   "${LLVM_INSTALL_DIR}/include"
+  "${LLVM_INSTALL_DIR}/../clang/include"
+  "${LLVM_INSTALL_DIR}/tools/clang/include"
   "${CATCH_INCLUDE_DIR}"
   "src/"
   "src/matchers"

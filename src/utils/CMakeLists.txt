@@ -1,4 +1,5 @@
 set( SCC_UTILS
+  #APIntUtils.cpp
   ArrayTypeUtils.cpp
   CXXRecordDeclUtils.cpp
   )

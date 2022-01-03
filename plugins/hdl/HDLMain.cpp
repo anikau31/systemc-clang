@@ -14,6 +14,7 @@
 #include "HDLHnode.h"
 #include "HDLThread.h"
 
+#include "APIntUtils.h"
 // clang-format on
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
@@ -463,7 +464,7 @@ namespace systemc_hdl {
 	  if (vard->hasInit()) {
 	    APValue *apval = vard->getEvaluatedValue();
 	    if (apval && apval->isInt()) {
-	      hNodep h_lit = new hNode((apval->getInt()).toString(10),
+	      hNodep h_lit = new hNode((systemc_clang::utils::apint::toString(apval->getInt())),
 				       hNode::hdlopsEnum::hLiteral);
 	      hNodep h_varinit = new hNode(hNode::hdlopsEnum::hVarInit);
 	      h_varinit->child_list.push_back(h_lit);
@@ -587,11 +588,11 @@ namespace systemc_hdl {
 
 	    auto got = threadresetmap.find(efc->getName());
 	    // should be an error if there isn't a reset var for this thread
-	    clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(
-		 (efc->getEntryMethod())->getLocation(),
-		 main_diag_engine.getCustomDiagID(
-		   clang::DiagnosticsEngine::Remark, "Reset not found in SC_[C]THREAD."))};
-	    diag_builder << "\n";
+           clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(
+                (efc->getEntryMethod())->getLocation(),
+                main_diag_engine.getCustomDiagID(
+                  clang::DiagnosticsEngine::Remark, "Reset not found in SC_[C]THREAD."))};
+           diag_builder << "\n";
 	    auto h_resetvarinfo = (got == threadresetmap.end() ? NULL : got->second);
 
 	    // params includes portsigvarlist so thread local vars get promoted to module level

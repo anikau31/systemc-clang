@@ -1,5 +1,7 @@
 #include "FindArgument.h"
 
+#include "APIntUtils.h"
+
 using namespace systemc_clang;
 
 FindArgument::FindArgument(Expr *e) : expression_(e) {
@@ -19,7 +21,8 @@ bool FindArgument::VisitDeclRefExpr(DeclRefExpr *declaration_ref) {
 }
 
 bool FindArgument::VisitIntegerLiteral(IntegerLiteral *integer_literal) {
-  argument_name_ = integer_literal->getValue().toString(10, false);
+  //argument_name_ = integer_literal->getValue().toString(10, false);
+  argument_name_ =  systemc_clang::utils::apint::toString(integer_literal->getValue());
   return true;
 }
 

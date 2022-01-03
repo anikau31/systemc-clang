@@ -3,6 +3,7 @@
 #include <tuple>
 
 #include "ModuleInstance.h"
+#include "APIntUtils.h"
 
 using namespace systemc_clang;
 
@@ -483,7 +484,7 @@ std::string ModuleInstance::dumpPortBinding() {
 
       str += "caller_array_subscripts: ";
       if (is_int_lit) {
-        str += "  " + is_int_lit->getValue().toString(32, true);
+        str += "  " +  systemc_clang::utils::apint::toString(is_int_lit->getValue());
       }
 
       if (is_dref_expr) {
@@ -500,7 +501,7 @@ std::string ModuleInstance::dumpPortBinding() {
 
       str += "caller_port_array_subscripts: ";
       if (is_int_lit) {
-        str += "  " + is_int_lit->getValue().toString(32, true);
+        str += "  " + systemc_clang::utils::apint::toString(is_int_lit->getValue());
       }
 
       if (is_dref_expr) {
@@ -517,7 +518,7 @@ std::string ModuleInstance::dumpPortBinding() {
 
       str += "callee_port_array_subscripts: ";
       if (is_int_lit) {
-        str += "  " + is_int_lit->getValue().toString(32, true);
+        str += "  " + systemc_clang::utils::apint::toString(is_int_lit->getValue());
       }
 
       if (is_dref_expr) {
@@ -719,7 +720,7 @@ std::string ModuleInstance::dump_json() {
     str += "array_sizes: ";
     // Write out all the sizes.
     for (auto const &size : instance_info_.getArraySizes()) {
-      str += size.toString(10, true) + "  ";  // getLimitedValue() + "  ";
+      str += systemc_clang::utils::apint::toString(size);
     }
   }
 

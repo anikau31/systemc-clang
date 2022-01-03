@@ -16,7 +16,7 @@ A SystemC Parser using the Clang Front-end
 Requirements
 ------------
 
-*  `llvm/clang <https://releases.llvm.org/download.html>`_ (version 12.0.0)
+*  `llvm/clang <https://releases.llvm.org/download.html>`_ (version 13.0.0)
 *  `SystemC <http://systemc.org>`_ version 2.3.3. 
 *  c++14 is required. We are using some features that necessitate c++17. Down-porting it is also possible, but not supported.
 
@@ -43,7 +43,7 @@ Documentation
 
 Tests
 -------
-To enable compilation of tests, run cmake with the ``-DENABLE_TESTS=on`` flag and also the ``-DSYSTEMC_DIR=<path>`` flag to pass the location for SystemC.  Without specifying the `SYSTEMC_DIR` path, it will not be possible to run the unit tests.
+To enable compilation of tests, run cmake with the ``-DENABLE_TESTS=on`` flag and also the ``-DSYSTEMC_DIR=<path>`` flag to pass the location for SystemC.  Without specifying the ``SYSTEMC_DIR`` path, it will not be possible to run the unit tests.
 
 For information about running verilog conversion tests, see `this file <tests/verilog-conversion/README.md>`_.
 

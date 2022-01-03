@@ -151,9 +151,12 @@ namespace systemc_hdl {
         "hdl-file-out", llvm::cl::desc("HDL output file location"),
         llvm::cl::cat(HDLcategory));
 
-      CommonOptionsParser OptionsParser(argc, argv, HDLcategory);
-      ClangTool Tool(OptionsParser.getCompilations(),
-		     OptionsParser.getSourcePathList());
+      //CommonOptionsParser OptionsParser(argc, argv, HDLcategory);
+
+    llvm::Expected<clang::tooling::CommonOptionsParser> options_parser{
+        clang::tooling::CommonOptionsParser::create(argc, argv, HDLcategory)};
+      ClangTool Tool(options_parser->getCompilations(),
+		     options_parser->getSourcePathList());
 
       /// Setup the debug mode.
       //

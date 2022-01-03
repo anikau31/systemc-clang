@@ -4,6 +4,7 @@
 #include "HDLType.h"
 #include "clang/Basic/OperatorKinds.h"
 #include "clang/Basic/Diagnostic.h"
+#include "APIntUtils.h"
 // clang-format on
 
 /// Different matchers may use different DEBUG_TYPE
@@ -127,7 +128,7 @@ namespace systemc_hdl {
 	  dyn_cast<ConstantExpr>(((CaseStmt *)stmt)->getLHS())) {
 	llvm::APSInt val = expr->getResultAsAPSInt();
 	hcasep->child_list.push_back(
-				     new hNode(val.toString(10), hNode::hdlopsEnum::hLiteral));
+				     new hNode(systemc_clang::utils::apint::toString(val), hNode::hdlopsEnum::hLiteral));
       }
 
       TraverseStmt(((CaseStmt *)stmt)->getSubStmt());
@@ -187,7 +188,7 @@ namespace systemc_hdl {
 		     << "CXXConstructExpr followed by integer literal found\n");
 	  LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
 	  IntegerLiteral *lit = (IntegerLiteral *)exp->getArg(0);
-	  string s = lit->getValue().toString(10, true);
+	  string s = systemc_clang::utils::apint::toString(lit->getValue());
 	  // need to add type to back of h_ret
 	  FindTemplateTypes *te = new FindTemplateTypes();
 	  te->Enumerate((exp->getType()).getTypePtr());
@@ -396,7 +397,7 @@ namespace systemc_hdl {
   }
   bool HDLBody::TraverseIntegerLiteral(IntegerLiteral *lit) {
     LLVM_DEBUG(llvm::dbgs() << "In integerliteral\n");
-    string s = lit->getValue().toString(10, true);
+    string s = systemc_clang::utils::apint::toString(lit->getValue());
     h_ret = new hNode(s, hNode::hdlopsEnum::hLiteral);
 
     return true;
@@ -420,7 +421,7 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs()
 		 << "got enum constant value " << cd->getInitVal() << "\n");
       h_ret =
-        new hNode(cd->getInitVal().toString(10), hNode::hdlopsEnum::hLiteral);
+        new hNode(systemc_clang::utils::apint::toString(cd->getInitVal()), hNode::hdlopsEnum::hLiteral);
       return true;
     }
 
@@ -435,7 +436,7 @@ namespace systemc_hdl {
       Expr *einit = vard->getInit();
       clang::Expr::EvalResult result;
       if (einit->EvaluateAsInt(result, vard->getASTContext())) {
-	h_ret = new hNode(result.Val.getInt().toString(10),
+        h_ret = new hNode(systemc_clang::utils::apint::toString(result.Val.getInt()),
 			  hNode::hdlopsEnum::hLiteral);
 	return true;
       }
@@ -700,7 +701,7 @@ namespace systemc_hdl {
       if (callexpr->EvaluateAsRValue(
 				     res, callexpr->getCalleeDecl()->getASTContext())) {
 	h_ret =
-          new hNode(res.Val.getInt().toString(10), hNode::hdlopsEnum::hLiteral);
+          new hNode(systemc_clang::utils::apint::toString(res.Val.getInt()), hNode::hdlopsEnum::hLiteral);
 	return true;
       }
     }
@@ -802,7 +803,7 @@ namespace systemc_hdl {
 	  dyn_cast<ConstantExpr>(((CaseStmt *)sc)->getLHS())) {
 	llvm::APSInt val = expr->getResultAsAPSInt();
 	hcasep->child_list.push_back(
-				     new hNode(val.toString(10), hNode::hdlopsEnum::hLiteral));
+				     new hNode(systemc_clang::utils::apint::toString(val), hNode::hdlopsEnum::hLiteral));
       }
       TraverseStmt((CaseStmt *)sc->getSubStmt());
     }
