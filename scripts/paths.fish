@@ -6,7 +6,8 @@
 ##===================================================================
 # Path for where the binaries are for clang
 # SET this.
-set -x LLVM_INSTALL_DIR /home/$USER/bin/clang-11.0.0/
+set -x LLVM_INSTALL_DIR /home/$USER/bin/clang-13.0.0/
+#set -x LLVM_INSTALL_DIR /home/$USER/del/llvm-project/build/
 
 # Path where SystemC is installed
 # SET this.

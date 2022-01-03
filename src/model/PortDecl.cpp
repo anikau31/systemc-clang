@@ -4,6 +4,8 @@
 #include "PortDecl.h"
 #include "llvm/Support/Debug.h"
 
+#include "APIntUtils.h"
+
 using namespace systemc_clang;
 
 PortDecl::~PortDecl() {
@@ -105,7 +107,10 @@ std::string PortDecl::asString() const {
     str += "array_sizes: ";
     for (const auto sz : getArraySizes()) {
       std::size_t i{0};
-      str += sz.toString(10, true) + " ";  // sz.getLimitedValue() + " ";
+      //std::string s = systemc_clang::utils::apint::toString(sz);
+
+      str += systemc_clang::utils::apint::toString(sz);
+
     }
   }
   str += "\n";

@@ -45,9 +45,7 @@ SC_MODULE(ports_arrays) {
     }
   }
 
-  SC_CTOR(ports_arrays)
-      :  //        submodule{"submodule_single"}
-         //
+  SC_CTOR(ports_arrays) :
          // //         1d
                 // submodules{{"first_submod"}, {"second_submod"}}
 

@@ -26,9 +26,9 @@ using namespace llvm;
 
 static llvm::cl::OptionCategory category("systemc-clang options");
 // static llvm::cl::opt<std::string> topModule(
-    // "top-module",
-    // llvm::cl::desc("Specify top-level module declaration for entry point"),
-    // llvm::cl::cat(category));
+// "top-module",
+// llvm::cl::desc("Specify top-level module declaration for entry point"),
+// llvm::cl::cat(category));
 //
 static llvm::cl::opt<bool> debug_mode(
     "debug", llvm::cl::desc("Enable debug output from systemc-clang"),
@@ -57,9 +57,10 @@ class PluginAction {
  public:
   PluginAction(int argc, const char **argv) {
     /// Specify the top-level module.
-    CommonOptionsParser OptionsParser(argc, argv, category);
-    ClangTool Tool(OptionsParser.getCompilations(),
-                   OptionsParser.getSourcePathList());
+    llvm::Expected<clang::tooling::CommonOptionsParser> options_parser{
+        clang::tooling::CommonOptionsParser::create(argc, argv, category)};
+    ClangTool Tool(options_parser->getCompilations(),
+                   options_parser->getSourcePathList());
 
     /// Setup the debug mode.
     //

@@ -4,6 +4,7 @@
 using namespace systemc_clang;
 
 #include "ArrayTypeUtils.h"
+#include "APIntUtils.h"
 namespace systemc_clang {
 
 using namespace sc_ast_matchers::utils::array_type;
@@ -99,6 +100,7 @@ class PortBinding {
   /// The returned string is compared with what is expected.
   const std::string toString() const {
     std::string return_str{getCallerInstanceTypeName()};
+
     if (getCallerInstanceName() != "") {
       return_str = return_str + " " + getCallerInstanceName();
     }
@@ -111,7 +113,8 @@ class PortBinding {
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
       if (is_int_lit) {
-        return_str += " " + is_int_lit->getValue().toString(32, true);
+        //return_str += " " + is_int_lit->getValue().toString(to_str, 32, true);
+        return_str += " " + systemc_clang::utils::apint::toString(is_int_lit->getValue());
       }
 
       if (is_dref_expr) {
@@ -129,7 +132,8 @@ class PortBinding {
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
       if (is_int_lit) {
-        return_str += " " + is_int_lit->getValue().toString(32, true);
+        //return_str += " " + is_int_lit->getValue().toString(to_str, 32, true);
+        return_str += " " + systemc_clang::utils::apint::toString(is_int_lit->getValue());
       }
 
       if (is_dref_expr) {
@@ -146,7 +150,8 @@ class PortBinding {
       auto is_dref_expr{clang::dyn_cast<clang::DeclRefExpr>(sub)};
 
       if (is_int_lit) {
-        return_str += " " + is_int_lit->getValue().toString(32, true);
+        //return_str += " " + is_int_lit->getValue().toString(to_str,32, true);
+        return_str += " " + systemc_clang::utils::apint::toString(is_int_lit->getValue());
       }
 
       if (is_dref_expr) {
