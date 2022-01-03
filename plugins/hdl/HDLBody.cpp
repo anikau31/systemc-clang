@@ -155,7 +155,7 @@ namespace systemc_hdl {
 	//clang::DiagnosticBuilder diag_builder{
 	//diag_e.Report(stmt->getBeginLoc(), cxx_record_id)};
       LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
-      h_ret = new hNode(hNode::hdlopsEnum::hBreak);
+      h_ret = new hNode(thismode == rthread ? hNode::hdlopsEnum::hNoop : hNode::hdlopsEnum::hBreak);
     } else if (isa<ContinueStmt>(stmt)) {
       LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
       h_ret = new hNode(hNode::hdlopsEnum::hContinue);
