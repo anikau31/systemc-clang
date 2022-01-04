@@ -75,62 +75,63 @@ $(function() {
 <div class="textblock"><code>#include &quot;<a class="el" href="SystemCClang_8h_source.html">SystemCClang.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Tree_8h_source.html">Tree.h</a>&quot;</code><br />
 <code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &quot;<a class="el" href="hNode_8h_source.html">hNode.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for HDLType.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="HDLType_8h__incl.png" border="0" usemap="#aplugins_2hdl_2HDLType_8h" alt=""/></div>
 <map name="aplugins_2hdl_2HDLType_8h" id="aplugins_2hdl_2HDLType_8h">
-<area shape="rect" title=" " alt="" coords="3883,5,4036,32"/>
-<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="1208,80,1327,107"/>
-<area shape="rect" href="Tree_8h.html" title=" " alt="" coords="3736,617,3794,644"/>
-<area shape="rect" title=" " alt="" coords="4022,80,4073,107"/>
-<area shape="rect" href="hNode_8h.html" title=" " alt="" coords="3946,617,4016,644"/>
-<area shape="rect" title=" " alt="" coords="899,162,1082,189"/>
-<area shape="rect" title=" " alt="" coords="598,692,817,719"/>
-<area shape="rect" title=" " alt="" coords="3497,767,3692,793"/>
-<area shape="rect" title=" " alt="" coords="1156,162,1379,189"/>
-<area shape="rect" title=" " alt="" coords="1403,155,1602,196"/>
-<area shape="rect" title=" " alt="" coords="1625,155,1825,196"/>
-<area shape="rect" title=" " alt="" coords="1849,162,2004,189"/>
-<area shape="rect" href="Model_8h.html" title=" " alt="" coords="516,162,622,189"/>
-<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="1326,244,1412,271"/>
-<area shape="rect" href="FindSCMain_8h.html" title=" " alt="" coords="939,617,1100,644"/>
-<area shape="rect" href="EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="1878,543,2044,569"/>
-<area shape="rect" title=" " alt="" coords="831,767,878,793"/>
-<area shape="rect" title=" " alt="" coords="2854,767,2908,793"/>
-<area shape="rect" title=" " alt="" coords="1286,767,1436,793"/>
-<area shape="rect" title=" " alt="" coords="3245,692,3304,719"/>
-<area shape="rect" href="EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="1702,692,1822,719"/>
-<area shape="rect" href="FindGlobalEvents_8h.html" title=" " alt="" coords="2590,617,2724,644"/>
-<area shape="rect" href="FindNetlist_8h.html" title=" " alt="" coords="502,617,596,644"/>
-<area shape="rect" href="FindSimTime_8h.html" title=" " alt="" coords="1281,617,1390,644"/>
-<area shape="rect" href="ModuleInstance_8h.html" title=" " alt="" coords="1207,393,1331,420"/>
-<area shape="rect" href="FindGPUMacro_8h.html" title=" " alt="" coords="295,617,478,644"/>
-<area shape="rect" href="FindNotify_8h.html" title=" " alt="" coords="722,617,813,644"/>
-<area shape="rect" href="SensitivityMatcher_8h.html" title=" " alt="" coords="2850,617,2989,644"/>
-<area shape="rect" href="FindWait_8h.html" title=" " alt="" coords="1124,617,1206,644"/>
-<area shape="rect" href="WaitContainer_8h.html" title=" " alt="" coords="1999,692,2112,719"/>
-<area shape="rect" href="NotifyContainer_8h.html" title=" " alt="" coords="2188,692,2310,719"/>
-<area shape="rect" href="SuspensionAutomata_8h.html" title=" " alt="" coords="1883,617,2039,644"/>
-<area shape="rect" href="Utility_8h.html" title="A set of utility functions in the Utility class." alt="" coords="2386,692,2451,719"/>
-<area shape="rect" title=" " alt="" coords="1818,767,2002,793"/>
-<area shape="rect" title=" " alt="" coords="3379,692,3610,719"/>
-<area shape="rect" title=" " alt="" coords="2214,767,2383,793"/>
-<area shape="rect" href="systemc-clang_8h.html" title=" " alt="" coords="2775,692,2891,719"/>
-<area shape="rect" title=" " alt="" coords="2526,692,2649,719"/>
-<area shape="rect" href="FindConstructor_8h.html" title=" " alt="" coords="1207,468,1331,495"/>
-<area shape="rect" href="FindEntryFunctions_8h.html" title=" " alt="" coords="1508,468,1651,495"/>
-<area shape="rect" href="FindTLMInterfaces_8h.html" title=" " alt="" coords="540,543,683,569"/>
-<area shape="rect" href="InterfaceDecl_8h.html" title=" " alt="" coords="2794,543,2904,569"/>
-<area shape="rect" href="InstanceMatcher_8h.html" title=" " alt="" coords="3368,617,3498,644"/>
-<area shape="rect" href="CXXRecordDeclUtils_8h.html" title=" " alt="" coords="3068,692,3222,719"/>
-<area shape="rect" href="PortMatcher_8h.html" title=" " alt="" coords="2515,319,2618,345"/>
-<area shape="rect" href="FindEvents_8h.html" title=" " alt="" coords="1668,617,1766,644"/>
-<area shape="rect" href="FindTemplateParameters_8h.html" title=" " alt="" coords="1414,617,1593,644"/>
-<area shape="rect" title=" " alt="" coords="3736,692,3794,719"/>
-<area shape="rect" title=" " alt="" coords="3870,692,3924,719"/>
-<area shape="rect" title=" " alt="" coords="4000,692,4074,719"/>
+<area shape="rect" title=" " alt="" coords="4383,5,4536,32"/>
+<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="881,80,1000,107"/>
+<area shape="rect" href="Tree_8h.html" title=" " alt="" coords="4170,617,4229,644"/>
+<area shape="rect" title=" " alt="" coords="4434,80,4485,107"/>
+<area shape="rect" title=" " alt="" coords="4584,692,4695,719"/>
+<area shape="rect" href="hNode_8h.html" title=" " alt="" coords="4487,617,4557,644"/>
+<area shape="rect" title=" " alt="" coords="1297,162,1480,189"/>
+<area shape="rect" title=" " alt="" coords="1033,692,1251,719"/>
+<area shape="rect" title=" " alt="" coords="3882,767,4077,793"/>
+<area shape="rect" title=" " alt="" coords="5,162,228,189"/>
+<area shape="rect" title=" " alt="" coords="252,155,451,196"/>
+<area shape="rect" title=" " alt="" coords="474,155,674,196"/>
+<area shape="rect" title=" " alt="" coords="698,162,853,189"/>
+<area shape="rect" href="Model_8h.html" title=" " alt="" coords="1166,162,1273,189"/>
+<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="1908,244,1995,271"/>
+<area shape="rect" href="FindSCMain_8h.html" title=" " alt="" coords="936,617,1097,644"/>
+<area shape="rect" href="EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="2633,543,2800,569"/>
+<area shape="rect" title=" " alt="" coords="1316,767,1363,793"/>
+<area shape="rect" title=" " alt="" coords="3335,767,3389,793"/>
+<area shape="rect" title=" " alt="" coords="1844,767,1995,793"/>
+<area shape="rect" title=" " alt="" coords="3730,692,3789,719"/>
+<area shape="rect" href="EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="2334,692,2454,719"/>
+<area shape="rect" href="FindGlobalEvents_8h.html" title=" " alt="" coords="1939,617,2073,644"/>
+<area shape="rect" href="FindNetlist_8h.html" title=" " alt="" coords="1173,617,1268,644"/>
+<area shape="rect" href="FindSimTime_8h.html" title=" " alt="" coords="1805,617,1914,644"/>
+<area shape="rect" href="ModuleInstance_8h.html" title=" " alt="" coords="1587,393,1711,420"/>
+<area shape="rect" href="FindGPUMacro_8h.html" title=" " alt="" coords="729,617,912,644"/>
+<area shape="rect" href="FindNotify_8h.html" title=" " alt="" coords="1533,617,1623,644"/>
+<area shape="rect" href="SensitivityMatcher_8h.html" title=" " alt="" coords="3254,617,3393,644"/>
+<area shape="rect" href="FindWait_8h.html" title=" " alt="" coords="1698,617,1781,644"/>
+<area shape="rect" href="WaitContainer_8h.html" title=" " alt="" coords="2827,692,2940,719"/>
+<area shape="rect" href="NotifyContainer_8h.html" title=" " alt="" coords="2681,692,2803,719"/>
+<area shape="rect" href="SuspensionAutomata_8h.html" title=" " alt="" coords="2805,617,2961,644"/>
+<area shape="rect" href="Utility_8h.html" title="A set of utility functions in the Utility class." alt="" coords="3067,692,3132,719"/>
+<area shape="rect" title=" " alt="" coords="2501,767,2685,793"/>
+<area shape="rect" title=" " alt="" coords="3813,692,4044,719"/>
+<area shape="rect" title=" " alt="" coords="2847,767,3016,793"/>
+<area shape="rect" href="systemc-clang_8h.html" title=" " alt="" coords="3208,692,3324,719"/>
+<area shape="rect" title=" " alt="" coords="1833,692,1955,719"/>
+<area shape="rect" href="FindConstructor_8h.html" title=" " alt="" coords="1637,468,1761,495"/>
+<area shape="rect" href="FindEntryFunctions_8h.html" title=" " alt="" coords="2192,468,2335,495"/>
+<area shape="rect" href="FindTLMInterfaces_8h.html" title=" " alt="" coords="1267,543,1409,569"/>
+<area shape="rect" href="InstanceMatcher_8h.html" title=" " alt="" coords="3797,617,3927,644"/>
+<area shape="rect" href="CXXRecordDeclUtils_8h.html" title=" " alt="" coords="3451,692,3604,719"/>
+<area shape="rect" href="PortMatcher_8h.html" title=" " alt="" coords="3519,319,3621,345"/>
+<area shape="rect" href="FindEvents_8h.html" title=" " alt="" coords="2352,617,2449,644"/>
+<area shape="rect" href="FindTemplateParameters_8h.html" title=" " alt="" coords="2098,617,2277,644"/>
+<area shape="rect" title=" " alt="" coords="4171,692,4228,719"/>
+<area shape="rect" title=" " alt="" coords="4304,692,4359,719"/>
+<area shape="rect" title=" " alt="" coords="4485,692,4559,719"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
