@@ -57,6 +57,7 @@ namespace systemc_hdl {
 
     const string nextstring{"_next_"};
     const string shadowstring{"_main_"};
+    const string statestringsymbol{"#"};
     
     inline string NameNext(string &s) {return nextstring+s;} // convention for variable name holding next value of var s
     
@@ -64,6 +65,10 @@ namespace systemc_hdl {
     std::unordered_map<std::string, bool> SGVisited; // Split Graph Blocks visited 
     std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited 
 
+    inline bool isBreak(const Stmt* S) {
+      return dyn_cast<BreakStmt> (S) != NULL;
+    }
+    
     // pre-pass over BB to mark subexpressions
     void FindStatements(const CFGBlock &B, std::vector<const Stmt *> &SS);
     void FindStatements(const SplitCFGBlock *B, std::vector<const Stmt *> &SS);

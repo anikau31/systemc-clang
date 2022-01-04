@@ -6,6 +6,7 @@
 
 #include <stack>
 #include <algorithm>
+#include <unordered_map>
 
 using namespace systemc_clang;
 
