@@ -18,6 +18,8 @@ Welcome to systemc-clang's documentation!
 
   hardware.rst
 
+  projects.rst 
+
   support.rst
 
 .. toctree::
