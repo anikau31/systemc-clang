@@ -6,7 +6,7 @@ We provide instructions for installation using OSX.
 You can install LLVM and Clang via source or via binaries. 
 
 * systemc-clang requires llvm-config and by default does not come with the llvm package preinstalled on MacOS. 
-* Download the clang pre built binaries from `here <http://llvm.org/releases/download.html>`_ for LLVM 11.0.0 or higher.
+* Download the clang pre built binaries from `here <http://llvm.org/releases/download.html>`_ for LLVM 13.0.0 or higher.
 * Untar the package into a suitable location, and modify the ``path.sh`` bash script in the systemc-clang folder to point to llvm-config, which will be found in the bin directory of the uncompressed binary. 
 
 Building systemc-clang 

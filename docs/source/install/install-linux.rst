@@ -10,7 +10,7 @@ Building LLVM/Clang from source
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Follow the instructions to `install clang <http://clang.llvm.org/get_started.html>`_. 
 Notice that you should also install LLVM as it is needed for compilation of the stand-along program. A suggestion is to install LLVM/clang in a location that is accessible by the user.
-Note that the clang-llvm version systemc-clang supports is version 7.0.0 and higher.  
+Note that the clang-llvm version systemc-clang supports is version 13.0.0 and higher.  
 
 Building systemc-clang 
 ^^^^^^^^^^^^^^^^^^^^^^

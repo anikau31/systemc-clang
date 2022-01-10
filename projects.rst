@@ -1,5 +1,8 @@
+.. highlight:: console
+
+====================
 Project Ideas
-##############
+====================
 
 We list some interesting projects that could help improve ``systemc-clang``.  If you are willing to contribute then please contact us. 
 
