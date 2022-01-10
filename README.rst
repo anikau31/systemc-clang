@@ -60,7 +60,7 @@ We build all the dependencies necessary for ``systemc-clang`` in a `Docker image
 Project Ideas
 --------------
 
-If you're interested in contributing to ``systemc-clang``, then we keep a list of interesting projects that one could approach.  Please consult `projects <https://systemc-clang.readthedocs.io/en/latest/install/projects.html>`_.
+If you're interested in contributing to ``systemc-clang``, then we keep a list of interesting projects that one could approach.  Please consult `projects <https://systemc-clang.readthedocs.io/en/latest/projects.html>`_.
 
 Developers
 ----------
