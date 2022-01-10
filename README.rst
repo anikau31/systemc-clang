@@ -57,6 +57,11 @@ Development Docker image
 
 We build all the dependencies necessary for ``systemc-clang`` in a `Docker image <https://hub.docker.com/r/rseac/systemc-clang/tags?page=1&ordering=last_updated>`_ that you may use. 
 
+Project Ideas
+--------------
+
+If you're interested in contributing to ``systemc-clang``, then we keep a list of interesting projects that one could approach.  Please consult `projects <https://systemc-clang.readthedocs.io/en/latest/install/projects.html>`_.
+
 Developers
 ----------
 
