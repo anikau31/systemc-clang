@@ -12,15 +12,16 @@ SC_MODULE(test) {
 
   void simple_for_wait() {
 
-    while (true) {
-        k = 1;
-        for (int i{0}; i<10; i++) {
-          k = 2;
+    while (true) {                    // 7
+        k = 1;                        // 6
+        for (int i{0}; i<10; i++) {   // 5
+          k = 2;                      // 4
           //wait(4);
-          wait();
-          k = 3;
+          wait();                     // 41
+          k = 3;                      //42
         }
-        k = 4;
+        k = 4;                        // 2
+                     // 3 ; ++1
     //    wait();
      //   k = 5;
 
