@@ -298,7 +298,7 @@ function(add_systemc_module)
 
   message(STATUS "SystemC design: ${SYSC_DESIGN_SOURCE}")
 
-  set(SYSTEMC_CLANG_FLAGS "-x" "c++" "-w" "-c" "-D__STDC_CONSTANT_MACROS" "-D__STDC_LIMIT_MACROS -DRVD" "-I/opt/clang-12.0.0/lib/clang/12.0.0/include/" "-I/usr/include" "-I/opt/systemc-2.3.3/include")
+  set(SYSTEMC_CLANG_FLAGS "-x" "c++" "-w" "-c" "-D__STDC_CONSTANT_MACROS" "-D__STDC_LIMIT_MACROS -DRVD" "-I/opt/clang-13.0.0/lib/clang/13.0.0/include/" "-I/usr/include" "-I/opt/systemc-2.3.3/include")
   get_filename_component(DESIGN_SOURCE_FILENAME ${SYSC_DESIGN_SOURCE} NAME_WLE)
   set(SYSC_DESIGN_TARGET "${SYSC_DESIGN}")
   message(STATUS "Design source ${DESIGN_SOURCE_FILENAME}")

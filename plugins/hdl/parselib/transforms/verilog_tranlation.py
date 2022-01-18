@@ -185,7 +185,8 @@ class VerilogTranslationPass(TopDown):
         assert len(tree.children) == 1
         if is_tree_type(tree.children[0], 'func_param_name_stub'):
             return tree.children[0].children[0]
-        return tree.children[0]
+        stripped = tree.children[0].replace("#", "")
+        return stripped
 
     def syscread(self, tree):
         """syscread: hsigassignr, token"""
@@ -532,6 +533,9 @@ class VerilogTranslationPass(TopDown):
     def get_current_proc_name(self):
         return self.current_proc_name
 
+    def __is_synchronous_sensitivity_list(self, sense_list):
+        return any('posedge' in x or 'negedge' in x for x in sense_list)
+
     def hprocess(self, tree):
         proc_name, proc_name_2, prevardecl, *body = tree.children
         self.set_current_proc_name(proc_name)
@@ -551,7 +555,12 @@ class VerilogTranslationPass(TopDown):
         decls_init = list(map(lambda x: '{} = {};'.format(x[1], x[2]), filter(lambda x: len(x) == 3 and x[2] is not None, prevardecl.children)))
         sense_list = self.get_sense_list()
         assert proc_name in sense_list, "Process name {} is not in module {}".format(proc_name, self.current_module)
-        res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
+        # res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
+        if self.__is_synchronous_sensitivity_list(sense_list[proc_name]):
+            res = ind + 'always_ff @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
+        else:
+            res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
+            # res = ind + 'always_comb begin: {}\n'.format(proc_name)
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         res += ind + ('\n' + ind).join(decls) + '\n'
@@ -708,6 +717,7 @@ class VerilogTranslationPass(TopDown):
         res += ind + ');'
         res += '\n'
         res += ind + "always @(*) begin\n"
+        # res += ind + "always_comb begin\n"
         self.inc_indent()
         ind = self.get_current_ind_prefix()
         for bl, br in bindings_hier:
@@ -1047,9 +1057,14 @@ class VerilogTranslationPass(TopDown):
         res += "endmodule"
         return res
 
+    def __is_generated_signal(self, name):
+        return name.endswith('#')
+
     def __generate_vars_decl(self, ind, res, vars):
         for decl, name, init in vars:
-            # print(name, init)
+            if self.__is_generated_signal(name):
+                # decl = '(* mark_debug = "true" *) ' + decl.replace('#', "")
+                decl = decl.replace('#', "")
             if init:
                 decl = decl + ' = ' + str(init) + ';'
             else:

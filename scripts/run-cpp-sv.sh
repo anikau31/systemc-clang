@@ -25,4 +25,4 @@ if [ -z "$SYSTEMC_CLANG" ]; then
     exit;
 fi
 
-python3 $SYSTEMC_CLANG/plugins/hdl/systemc-clang.py $1 -- -x c++ -w -c -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DRVD -I$LLVM_INSTALL_DIR/lib/clang/12.0.0/include/ -I/usr/include -I$SYSTEMC/include
+python3 $SYSTEMC_CLANG/plugins/hdl/systemc-clang.py $1 -- -x c++ -w -c -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DRVD -I$LLVM_INSTALL_DIR/lib/clang/13.0.0/include/ -I/usr/include -I$SYSTEMC/include
