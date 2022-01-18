@@ -21,6 +21,100 @@
 
 using namespace systemc_clang;
 
+////////////////////////////////////////////////////////
+/// REWORK the Cthread Path generation
+////////////////////////////////////////////////////////
+///
+void SplitCFG::dfs_visit_wait(const clang::CFGBlock* BB) {
+  if (BB->succ_empty()) {
+    /// Empty CFG block
+    return;
+  }
+
+  llvm::SmallPtrSet<const clang::CFGBlock*, 8> visited_blocks;
+  llvm::SmallVector<
+      std::pair<const clang::CFGBlock*, clang::CFGBlock::const_succ_iterator>,
+      8>
+      to_visit_stack;
+
+  visited_blocks.insert(BB);
+  to_visit_stack.push_back(std::make_pair(BB, BB->succ_begin()));
+
+  do {
+    std::pair<const clang::CFGBlock*, clang::CFGBlock::const_succ_iterator>&
+        Top = to_visit_stack.back();
+    const clang::CFGBlock* ParentBB = Top.first;
+    clang::CFGBlock::const_succ_iterator& I = Top.second;
+
+    llvm::dbgs() << "BB# " << ParentBB->getBlockID() << "\n";
+    bool FoundNew = false;
+
+    // If there is a successor that has not been visited, then remember that
+    // block.
+    while (I != ParentBB->succ_end()) {
+      BB = *I++;
+      if ((BB != nullptr) && (visited_blocks.insert(BB).second)) {
+        FoundNew = true;
+        break;
+      }
+    }
+    //llvm::dbgs() << "End adding successors\n";
+
+    if (FoundNew) {
+      // Go down one level if there is a unvisited successor.
+      to_visit_stack.push_back(std::make_pair(BB, BB->succ_begin()));
+    } else {
+      // Go up one level.
+      llvm::dbgs() << "pop: " << to_visit_stack.size() << "\n";
+      to_visit_stack.pop_back();
+    }
+  } while (!to_visit_stack.empty());
+}
+
+void SplitCFG::dfs_rework() {
+  /// G = cfg_
+  const clang::CFGBlock* BB{&cfg_->getEntry()};
+  // dfs_pop_on_wait(BB);
+  //
+  for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
+       ++begin_it) {
+    auto block = *begin_it;
+    llvm::dbgs() << "Block " << block->getBlockID() << " isLoop " << isLoop(block) << 
+      " starting DFS\n";
+    block->dump();
+
+    dfs_visit_wait(block);
+  }
+}
+
+bool SplitCFG::isConditional(clang::CFGBlock* block) {
+  /// Loop block has a terminator.
+  /// The terminator is a clang::Stmt
+  //
+  if (block == nullptr) {
+    return false;
+  }
+
+  auto stmt{block->getTerminatorStmt()};
+  return stmt &&
+         (llvm::isa<clang::IfStmt>(stmt));
+}
+
+bool SplitCFG::isLoop(clang::CFGBlock* block) {
+  /// Loop block has a terminator.
+  /// The terminator is a clang::Stmt
+  //
+  if (block == nullptr) {
+    return false;
+  }
+
+  auto stmt{block->getTerminatorStmt()};
+  return stmt &&
+         (llvm::isa<clang::WhileStmt>(stmt) ||
+          llvm::isa<clang::ForStmt>(stmt) || llvm::isa<clang::DoStmt>(stmt));
+}
+////////////////////////////////////////////////////////
+
 /// ===========================================
 /// SplitCFG
 /// ===========================================
@@ -545,7 +639,8 @@ SplitCFG::getPathsFound() {
   return paths_found_;
 }
 
-SplitCFG::SplitCFG(clang::ASTContext& context) : context_{context}, next_state_count_{0} {}
+SplitCFG::SplitCFG(clang::ASTContext& context)
+    : context_{context}, next_state_count_{0} {}
 
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)

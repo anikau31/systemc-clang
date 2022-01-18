@@ -124,6 +124,16 @@ class SplitCFG {
   void dumpToDot() const;
   void dumpWaitNextStates() const;
   void dumpPaths() const;
+
+
+  /// Rework
+  //
+  //
+
+  void dfs_visit_wait(const clang::CFGBlock* BB);
+  void dfs_rework();
+  bool isLoop(clang::CFGBlock *block);
+  bool isConditional(clang::CFGBlock* block);
 };
 
 };  // namespace systemc_clang
