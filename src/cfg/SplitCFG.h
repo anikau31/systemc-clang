@@ -59,7 +59,6 @@ class SplitCFG {
   /// \brief Add predecessors to the SplitCFGBlock.
   void addPredecessors(SplitCFGBlock *to, const clang::CFGBlock *from);
 
-
   void addNextStatesToBlocks();
 
   /// \brief Creates SplitCFGBlocks for all CFGBlocks that do not have a wiat.
@@ -68,9 +67,10 @@ class SplitCFG {
   void createUnsplitBlocks();
 
   /// \brief Creates the SplitCFGBlocks for CFGBlock with a wait.
-  void  createWaitSplitCFGBlocks(
-     clang::CFGBlock *block,
-      const llvm::SmallVectorImpl<std::pair<VectorCFGElementPtr, bool> >& split_elements);
+  void createWaitSplitCFGBlocks(
+      clang::CFGBlock *block,
+      const llvm::SmallVectorImpl<std::pair<VectorCFGElementPtr, bool>>
+          &split_elements);
 
   /// \brief Dump all the CFGElements that were split.
   void dumpSplitElements(
@@ -85,11 +85,11 @@ class SplitCFG {
   /// \brief  Overloaded constructor.
   SplitCFG(clang::ASTContext &context, const clang::CXXMethodDecl *cxx_decl);
 
-  /// \brief Disallow a copy constructor for SCCFG. 
-  SplitCFG(const SplitCFG& from) = delete;
+  /// \brief Disallow a copy constructor for SCCFG.
+  SplitCFG(const SplitCFG &from) = delete;
 
-  /// \brief Disallow assignment operator. 
-  SplitCFG& operator=(const SplitCFG &) = delete;
+  /// \brief Disallow assignment operator.
+  SplitCFG &operator=(const SplitCFG &) = delete;
 
   /// \brief  Destructor that erases all SplitCFGBlocks created.
   virtual ~SplitCFG();
@@ -112,12 +112,12 @@ class SplitCFG {
       llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_in_stack,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits);
 
-  /// \brief Generates the paths between wait statements. 
+  /// \brief Generates the paths between wait statements.
   void generate_paths();
 
-  /// \brief Returns the argument to a wait statement. 
+  /// \brief Returns the argument to a wait statement.
   /// Note that the only one supported are no arguments or integer arguments.
-  llvm::APInt getWaitArgument(const clang::CFGElement& element) const;
+  llvm::APInt getWaitArgument(const clang::CFGElement &element) const;
 
   /// Dump member functions.
   void dump() const;
@@ -125,15 +125,17 @@ class SplitCFG {
   void dumpWaitNextStates() const;
   void dumpPaths() const;
 
-
   /// Rework
   //
   //
 
-  void dfs_visit_wait(const clang::CFGBlock* BB);
+  void dfs_visit_wait(const clang::CFGBlock *BB);
   void dfs_rework();
   bool isLoop(clang::CFGBlock *block);
-  bool isConditional(clang::CFGBlock* block);
+  bool isConditional(clang::CFGBlock *block);
+  clang::CFGBlock *getUnvisitedSuccessor(
+      const clang::CFGBlock *curr_block, clang::CFGBlock::const_succ_iterator &I,
+      llvm::SmallPtrSetImpl<const clang::CFGBlock *> &visited);
 };
 
 };  // namespace systemc_clang

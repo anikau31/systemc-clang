@@ -47,18 +47,11 @@ void SplitCFG::dfs_visit_wait(const clang::CFGBlock* BB) {
     clang::CFGBlock::const_succ_iterator& I = Top.second;
 
     llvm::dbgs() << "BB# " << ParentBB->getBlockID() << "\n";
-    bool FoundNew = false;
 
     // If there is a successor that has not been visited, then remember that
     // block.
-    while (I != ParentBB->succ_end()) {
-      BB = *I++;
-      if ((BB != nullptr) && (visited_blocks.insert(BB).second)) {
-        FoundNew = true;
-        break;
-      }
-    }
-    //llvm::dbgs() << "End adding successors\n";
+    BB = getUnvisitedSuccessor(ParentBB, I, visited_blocks);
+    bool FoundNew{(BB != nullptr)};
 
     if (FoundNew) {
       // Go down one level if there is a unvisited successor.
@@ -71,6 +64,19 @@ void SplitCFG::dfs_visit_wait(const clang::CFGBlock* BB) {
   } while (!to_visit_stack.empty());
 }
 
+clang::CFGBlock* SplitCFG::getUnvisitedSuccessor(
+    const clang::CFGBlock* curr_block, clang::CFGBlock::const_succ_iterator& I,
+    llvm::SmallPtrSetImpl<const clang::CFGBlock*>& visited_blocks) {
+  clang::CFGBlock* block{nullptr};
+  while (I != curr_block->succ_end()) {
+    block = *I++;
+    if ((block != nullptr) && (visited_blocks.insert(block).second)) {
+      break;
+    }
+  }
+  return block;
+}
+
 void SplitCFG::dfs_rework() {
   /// G = cfg_
   const clang::CFGBlock* BB{&cfg_->getEntry()};
@@ -79,8 +85,8 @@ void SplitCFG::dfs_rework() {
   for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
        ++begin_it) {
     auto block = *begin_it;
-    llvm::dbgs() << "Block " << block->getBlockID() << " isLoop " << isLoop(block) << 
-      " starting DFS\n";
+    llvm::dbgs() << "Block " << block->getBlockID() << " isLoop "
+                 << isLoop(block) << " starting DFS\n";
     block->dump();
 
     dfs_visit_wait(block);
@@ -96,8 +102,7 @@ bool SplitCFG::isConditional(clang::CFGBlock* block) {
   }
 
   auto stmt{block->getTerminatorStmt()};
-  return stmt &&
-         (llvm::isa<clang::IfStmt>(stmt));
+  return stmt && (llvm::isa<clang::IfStmt>(stmt));
 }
 
 bool SplitCFG::isLoop(clang::CFGBlock* block) {
