@@ -654,7 +654,7 @@ void SplitCFG::dumpToDot() const {
     if (sblock->hasWait()) {
       dotos << "SB" << sblock->getBlockID() << " [ \n color=red, label=\"SB"
             << sblock->getBlockID() << "\n"
-            << sblock->getNextState() << "|" << element_str << "\"\n]"
+            << " [" << sblock->getNextState() << "] |" << element_str << "\"\n]"
             << "\n";
     } else {
       dotos << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
