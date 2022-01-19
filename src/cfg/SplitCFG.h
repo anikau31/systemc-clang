@@ -129,13 +129,15 @@ class SplitCFG {
   //
   //
 
-  void dfs_visit_wait(const clang::CFGBlock *BB);
+  void dfs_visit_wait(const SplitCFGBlock *BB);
   void dfs_rework();
-  bool isLoop(clang::CFGBlock *block);
-  bool isConditional(clang::CFGBlock *block);
-  clang::CFGBlock *getUnvisitedSuccessor(
-      const clang::CFGBlock *curr_block, clang::CFGBlock::const_succ_iterator &I,
-      llvm::SmallPtrSetImpl<const clang::CFGBlock *> &visited);
+  bool isLoop(SplitCFGBlock *block);
+  bool isConditional(SplitCFGBlock *block);
+  bool getUnvisitedSuccessor(
+      const SplitCFGBlock *curr_block, SplitCFGBlock::const_succ_iterator &I,
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited, const SplitCFGBlock *&block);
+void addSuccessorToVisitOrPop(const SplitCFGBlock* BB,  llvm::SmallVector<
+      std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>, 8> & to_visit , bool found );
 };
 
 };  // namespace systemc_clang
