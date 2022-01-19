@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 
+#include "clang/AST/ASTContext.h"
 #include "clang/Analysis/CFG.h"
 #include "SplitCFGBlock.h"
 #include "llvm/ADT/SmallVector.h"
@@ -131,7 +132,7 @@ class SplitCFG {
 
   void dfs_visit_wait(const SplitCFGBlock *BB);
   void dfs_rework();
-  bool isLoop(SplitCFGBlock *block);
+  bool isLoop(const SplitCFGBlock *block) const;
   bool isConditional(SplitCFGBlock *block);
   bool getUnvisitedSuccessor(
       const SplitCFGBlock *curr_block, SplitCFGBlock::const_succ_iterator &I,

@@ -140,7 +140,7 @@ bool SplitCFG::isConditional(SplitCFGBlock* block) {
   return stmt && (llvm::isa<clang::IfStmt>(stmt));
 }
 
-bool SplitCFG::isLoop(SplitCFGBlock* block) {
+bool SplitCFG::isLoop(const SplitCFGBlock* block) const {
   /// Loop block has a terminator.
   /// The terminator is a clang::Stmt
   //
@@ -621,7 +621,7 @@ void SplitCFG::dumpToDot() const {
   dotos << " node [shape=record]\n";
   /// Create names for each node and its pattern.
   for (auto const& block : sccfg_) {
-    SplitCFGBlock* sblock{block.second};
+    const SplitCFGBlock* sblock{block.second};
     /// Generate the string with CFGElements
 
     std::string element_str{};
@@ -657,6 +657,13 @@ void SplitCFG::dumpToDot() const {
             << " [" << sblock->getNextState() << "] |" << element_str << "\"\n]"
             << "\n";
     } else {
+      if (isLoop(sblock)) {
+        element_str += " | LOOP ";
+        //sblock->getCFGBlock()->getTerminatorStmt()->dumpPretty(context);
+        //auto stmt{sblock->getCFGBlock()->getTerminatorStmt()};
+        //stmt->printPretty(dotos, nullptr, clang::PrintingPolicy(context_.getLangOpts()));
+      }
+
       dotos << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
             << sblock->getBlockID() << "\n"
             << element_str << "\"\n]"
