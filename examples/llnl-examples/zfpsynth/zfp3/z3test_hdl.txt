@@ -11679,6 +11679,25 @@
       ]
     ]
   ]
+  hTypedef fp_t [
+    hTypeTemplateParam E NOLIST
+    hTypeTemplateParam F NOLIST
+    hTypeField frac [
+      hType sc_uint [
+        hType F NOLIST
+      ]
+    ]
+    hTypeField expo [
+      hType sc_uint [
+        hType E NOLIST
+      ]
+    ]
+    hTypeField sign [
+      hType sc_uint [
+        hLiteral 1 NOLIST
+      ]
+    ]
+  ]
   hTypedef bits_t [
     hTypeTemplateParam D NOLIST
     hTypeField tdata [
@@ -11724,25 +11743,6 @@
     hTypeField posw [
       hType sc_uint [
         hLiteral 8 NOLIST
-      ]
-    ]
-  ]
-  hTypedef fp_t [
-    hTypeTemplateParam E NOLIST
-    hTypeTemplateParam F NOLIST
-    hTypeField frac [
-      hType sc_uint [
-        hType F NOLIST
-      ]
-    ]
-    hTypeField expo [
-      hType sc_uint [
-        hType E NOLIST
-      ]
-    ]
-    hTypeField sign [
-      hType sc_uint [
-        hLiteral 1 NOLIST
       ]
     ]
   ]
