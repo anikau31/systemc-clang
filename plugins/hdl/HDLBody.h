@@ -91,6 +91,11 @@ namespace systemc_hdl {
 	(hp->h_name == "=");
     }
 
+    inline bool isArrayRef(hNodep hp) {
+      return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
+	(hp->h_name == "ARRAYSUBSCRIPT");
+    }
+
     inline string generate_vname(string nm) {
       return vname_map.get_prefix()+ nm;
     }
