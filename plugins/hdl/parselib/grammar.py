@@ -226,7 +226,10 @@ lark_grammar = Lark('''
         // Normal expressions that can not be expanded
         nonrefexp: hbinop
         
-        harrayref: "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread) expression  "]"
+        harrayelemref : "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread | harrayelemref) expression  "]"
+                      // | "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread | harrayelemref) expression  "]"
+        // "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread) expression  "]"
+        harrayref: harrayelemref
                  | hslice
         hslice: "hBinop" "SLICE" "[" hvarref expression expression "]"
         hnsbinop:  "hBinop" NONSUBBINOP "[" expression expression "]"
