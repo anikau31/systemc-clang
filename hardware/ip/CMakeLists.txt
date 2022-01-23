@@ -17,7 +17,7 @@ function(add_ip_dcp input)
     COMMAND ${CMAKE_COMMAND} -E remove_directory -rf ${CMAKE_CURRENT_BINARY_DIR}/${input}/.srcs
     COMMAND ${CMAKE_COMMAND} -E remove_directory -rf ${CMAKE_CURRENT_BINARY_DIR}/${input}/.Xil
     COMMAND vivado -mode batch -nojournal -nolog -source ${COMMON_DIR} -source ${IP_DIR}/${input}.tcl -source ${gen_sim_tcl}
-    COMMAND ${CMAKE_COMMAND} -E copy .srcs/sources_1/ip/${input}/${input}.dcp ${input}.dcp
+    # COMMAND ${CMAKE_COMMAND} -E copy .srcs/sources_1/ip/${input}/${input}.dcp ${input}.dcp
     DEPENDS ${IP_DIR}/${input}.tcl
     COMMENT "Generating board design dcp for ${input}"
     SOURCES ${IP_DIR}/${input}.tcl

@@ -62,45 +62,33 @@ include(CTest)
 # for pytest tests
 if(V_TESTS_ON)
   # integrate into ctest
-  add_test(NAME hcode-hmethod-call
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k hmethod_call)
-  add_test(NAME hcode-port-location
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k port_location)
-  add_test(NAME hcode-unimpl
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k unimpl)
-  add_test(NAME verilog-syntax-error
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k syntax_error)
-  add_test(NAME verilog-generate-file
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k generate_file)
-  add_test(NAME verilog-translation-add-hcode-match
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[add-hcode )
-  add_test(NAME verilog-translation-add
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[add- )
-  add_test(NAME verilog-translation-z3test
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[z3test- )
-  add_test(NAME verilog-translation-moving-average
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[moving-average- )
-  add_test(NAME verilog-translation-while-iscs
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_while_iscs- )
-  # add_test(NAME verilog-translation-binary-iscs
-  #   COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_binary_iscs- )
-  add_test(NAME verilog-translation-break-iscs
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_break_iscs- )
-  add_test(NAME verilog-translation-for-iscs
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_for_iscs- )
-  add_test(NAME verilog-translation-child-module-iscs
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_child_module_iscs- )
-  # add_test(NAME verilog-translation-dowhile-iscs
-  #   COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_dowhile_iscs- )
-  # add_test(NAME verilog-translation-for-fcall-fail-iscs
-  #   COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_for_fcall_fail_iscs- )
-  # add_test(NAME verilog-translation-forloop-other-types-iscs
-  #   COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_forloop_other_types_iscs- )
-  # add_test(NAME verilog-translation-virtual1-iscs
-  #   COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_virtual1_iscs- )
-  # add_test(NAME verilog-translation-vname-iscs
-  #   COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_vname_iscs- )
-  add_test(NAME verilog-translation-while-const-iscs
-    COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[test_while_const_iscs- )
+  set(V_TEST_LIST hmethod_call port_location unimpl syntax_error generate_file)
+  set(V_TRANSLATION_TEST_LIST 
+    add z3test moving-average 
+    test_while_iscs 
+    # test_binary_iscs 
+    test_break_iscs 
+    test_for_iscs
+    test_child_module_iscs
+    # test_dowhile_iscs
+    # test_for_fcall_fail_iscs
+    test_forloop_other_types_iscs
+    # test_virtual1_iscs
+    # test_vname_iscs
+    test_while_const_iscs
+    test_thread_simple_wait
+    test_thread_multiple_processes
+    )
+
+  foreach(V_TEST_NAME IN LISTS V_TEST_LIST)
+    add_test(NAME ${V_TEST_NAME}
+      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k ${V_TEST_NAME})
+  endforeach()
+  foreach(V_TEST_NAME IN LISTS V_TRANSLATION_TEST_LIST)
+    add_test(NAME verilog_${V_TEST_NAME}
+      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[${V_TEST_NAME}-)
+  endforeach()
+
+
 endif()
 

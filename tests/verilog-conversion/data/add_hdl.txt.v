@@ -4,7 +4,7 @@ module topadd2_sc_module_0 (
   input logic signed[31:0] in_port_2,
   output logic signed[31:0] out_port
 );
-  always @(posedge clk) begin: topEntry
+  always_ff @(posedge clk) begin: topEntry
     
     
     out_port <= (in_port_1) + (in_port_2);

@@ -19,6 +19,7 @@ import driver as drv
 # Handy paths
 examples = Path(os.environ["SYSTEMC_CLANG"]) / "examples"
 testdata = Path(os.environ["SYSTEMC_CLANG"]) / "tests" / "verilog-conversion" / "data"
+sysctestdata = Path(os.environ["SYSTEMC_CLANG"]) / "tests" / "data"  # The tests used in the systemc-clang
 zfpsynth = examples / "llnl-examples" / "zfpsynth"
 zfpshared = zfpsynth / "shared"
 zfpshared2 = zfpsynth / "shared2"
@@ -130,12 +131,13 @@ test_data = [
     #     None,
     #     None,
     # ),
-    # ( 
-    #     "test_forloop_other_types_iscs",
-    #     load_file(testdata / "test_forloop_other_types_iscs.cpp"),
-    #     None,
-    #     None
-    # ),
+    ( 
+        "test_forloop_other_types_iscs",
+        load_file(testdata / "test_forloop_other_types_iscs.cpp"),
+        None,
+        None,
+        None
+    ),
     # ( 
     #     "test_virtual1_iscs",
     #     load_file(testdata / "test_virtual1_iscs.cpp"),
@@ -155,6 +157,20 @@ test_data = [
         None,
         None,
     ),
+    ( 
+        "test_thread_simple_wait",
+        load_file(sysctestdata / 'thread-single-wait.cpp'),
+        None,
+        None,
+        None,
+    ),
+    ( 
+        "test_thread_multiple_processes",
+        load_file(sysctestdata / 'thread-multiple-processes.cpp'),
+        None,
+        None,
+        None,
+    )
 
 ]
 

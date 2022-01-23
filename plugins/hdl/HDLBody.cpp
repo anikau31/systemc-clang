@@ -484,7 +484,12 @@ namespace systemc_hdl {
   }
 
   bool HDLBody::TraverseArraySubscriptExpr(ArraySubscriptExpr *expr) {
-    LLVM_DEBUG(llvm::dbgs() << "In TraverseArraySubscriptExpr, tree follows\n");
+    LLVM_DEBUG(llvm::dbgs() << "In TraverseArraySubscriptExpr, base, idx, tree follow\n");
+    LLVM_DEBUG(llvm::dbgs() << "base:\n");
+    LLVM_DEBUG(expr->getBase()->dump(llvm::dbgs(), ast_context_));
+    LLVM_DEBUG(llvm::dbgs() << "idx:\n");
+    LLVM_DEBUG(expr->getIdx()->dump(llvm::dbgs(), ast_context_));
+    LLVM_DEBUG(llvm::dbgs() << "tree:\n");
     LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_));
     hNodep h_arrexpr = new hNode("ARRAYSUBSCRIPT", hNode::hdlopsEnum::hBinop);
     TraverseStmt(expr->getLHS());
@@ -676,10 +681,20 @@ namespace systemc_hdl {
 	h_ret->print(llvm::dbgs());
 	string newname = FindVname(memberexpr->getMemberDecl());
 	LLVM_DEBUG(llvm::dbgs() << "member with base expr new name is " << newname << "\n");
-	hNodep memexprnode = new hNode(newname.empty()? nameinfo : newname, hNode::hdlopsEnum::hVarref);
-	memexprnode->child_list.push_back(h_ret);
-	h_ret = memexprnode;
-	return true;
+	if ((newname == "") && (thismode != rmodinit)) {
+	  LLVM_DEBUG(llvm::dbgs() << "vname lookup of memberdecl is null, assuming field reference\n");
+	  hNodep hfieldref = new hNode(hNode::hdlopsEnum::hFieldaccess);
+	  hfieldref->append(h_ret);
+	  hfieldref->append(new hNode(nameinfo, hNode::hdlopsEnum::hField));
+	  h_ret = hfieldref;
+	  return true;
+	}
+	else {
+	  hNodep memexprnode = new hNode(newname==""? nameinfo: newname, hNode::hdlopsEnum::hVarref);
+	  memexprnode->child_list.push_back(h_ret);
+	  h_ret = memexprnode;
+	  return true;
+	}
       }
 
     }
