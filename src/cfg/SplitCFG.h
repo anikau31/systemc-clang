@@ -130,15 +130,23 @@ class SplitCFG {
   //
   //
 
-  void dfs_visit_wait(const SplitCFGBlock *BB);
+  void dfs_visit_wait(
+      const SplitCFGBlock *BB,
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_blocks);
   void dfs_rework();
   bool isLoop(const SplitCFGBlock *block) const;
   bool isConditional(SplitCFGBlock *block);
   bool getUnvisitedSuccessor(
       const SplitCFGBlock *curr_block, SplitCFGBlock::const_succ_iterator &I,
-      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited, const SplitCFGBlock *&block);
-void addSuccessorToVisitOrPop(const SplitCFGBlock* BB,  llvm::SmallVector<
-      std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>, 8> & to_visit , bool found );
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited,
+      const SplitCFGBlock *&block);
+  bool isLoopWithTwoSuccessors(const SplitCFGBlock *block) const;
+  void addSuccessorToVisitOrPop(
+      bool parent_has_wait, const SplitCFGBlock *BB,
+      llvm::SmallVector<
+          std::pair<const SplitCFGBlock *, SplitCFGBlock::const_succ_iterator>,
+          8> &to_visit,
+      bool found);
 };
 
 };  // namespace systemc_clang

@@ -18,6 +18,7 @@
 #include "llvm/Support/FileSystem.h"
 #include "llvm/ADT/PostOrderIterator.h"
 #include <regex>
+#include <iostream>
 
 using namespace systemc_clang;
 
@@ -25,59 +26,110 @@ using namespace systemc_clang;
 /// REWORK the Cthread Path generation
 ////////////////////////////////////////////////////////
 ///
-void SplitCFG::dfs_visit_wait(const SplitCFGBlock* BB) {
+void SplitCFG::dfs_visit_wait(
+    const SplitCFGBlock* BB,
+    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_blocks) {
   if (BB->succ_empty()) {
     /// Empty CFG block
     return;
   }
 
   // Blocks that have been visited.
-  llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
+  // llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
+
   // successors to visit
   llvm::SmallVector<
       std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>, 8>
-      to_visit; 
+      to_visit;
 
   visited_blocks.insert(BB);
   to_visit.push_back(std::make_pair(BB, BB->succ_begin()));
 
   do {
     std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>& Top =
-        to_visit.back() ; 
+        to_visit.back();
     const SplitCFGBlock* ParentBB = Top.first;
     SplitCFGBlock::const_succ_iterator& I = Top.second;
 
-    llvm::dbgs() << "BB# " << ParentBB->getBlockID() << "\n";
+    bool bb_has_wait{(ParentBB->hasWait())};
 
+    llvm::dbgs() << "BB# " << ParentBB->getBlockID();
+    if (bb_has_wait) {
+      llvm::dbgs() << " has WAIT " ;
+    }
+    llvm::dbgs() << " nested visitors : " << isLoopWithTwoSuccessors(ParentBB) << " \n";
+
+
+    // Current block is a loop and has two successors.  So, we should start with
+    // a new call to dfs, and provide a new visited_blocks.
+    //
     // If there is a successor that has not been visited, then remember that
     // block.
     bool FoundNew = getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB);
-    addSuccessorToVisitOrPop(BB, to_visit, FoundNew );
+
+    if (isLoopWithTwoSuccessors(ParentBB)) {
+      llvm::dbgs() << "\nRecursive call";
+      llvm::SmallPtrSet<const SplitCFGBlock*, 8> loop_visited_blocks;
+      // ParentBB has been visited so don't revisit it
+      loop_visited_blocks.insert(ParentBB);
+      visited_blocks.insert(BB);
+      dfs_visit_wait(BB, loop_visited_blocks);
+      llvm::dbgs() << "End Recursive call";
+    } else {
+      // Recursive call in the if-then will traverse the subgraph. 
+      // Only insert successor if recursive call does not visit subgraph.
+    }
+      addSuccessorToVisitOrPop(bb_has_wait, BB, to_visit, FoundNew);
+    //std::cin.get();
+
+
   } while (!to_visit.empty());
 }
 
-void SplitCFG::addSuccessorToVisitOrPop(const SplitCFGBlock* BB,  llvm::SmallVector<
-      std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>, 8> & to_visit, bool found ) {
-    if (found) {
-      // Go down one level if there is a unvisited successor.
-      to_visit.push_back(std::make_pair(BB, BB->succ_begin()));
-    } else {
-      // Go up one level.
-      llvm::dbgs() << "pop: " << to_visit.size() << "\n";
-      to_visit.pop_back();
-    }
+bool SplitCFG::isLoopWithTwoSuccessors(const SplitCFGBlock* block) const {
+  // The number of successor has to be exactly 2 in order to create a new
+  // visited_blocks.
+  //
+  // Note that CFGBlock often times has a NULL successor.  We have to ignore that.
+  auto cfg_block{ block->getCFGBlock()};
+  bool last_succ_is_null{false};
+  if (cfg_block->succ_size() == 2 ) {
+    // Check that the last one is not NULL
 
-    /*
-    if (FoundNew) {
-      // Go down one level if there is a unvisited successor.
-      to_visit.push_back(std::make_pair(BB, BB->succ_begin()));
-    } else {
-      // Go up one level.
-      llvm::dbgs() << "pop: " << to_visit.size() << "\n";
-      to_visit.pop_back();
+    if (*cfg_block->succ_rbegin() == nullptr) {
+      last_succ_is_null = true;
     }
-    */
+  }
 
+  return (block && isLoop(block) && (last_succ_is_null == false ));
+}
+
+void SplitCFG::addSuccessorToVisitOrPop(
+    bool parent_has_wait,
+    const SplitCFGBlock* BB,
+    llvm::SmallVector<
+        std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>, 8>&
+        to_visit,
+    bool found) {
+  if ((found) && (parent_has_wait == false)) {
+    // Go down one level if there is a unvisited successor.
+    to_visit.push_back(std::make_pair(BB, BB->succ_begin()));
+  } else {
+    // Go up one level.
+    llvm::dbgs() << "pop: " << to_visit.size() << "\n";
+    to_visit.pop_back();
+  }
+
+  /*
+  if (FoundNew) {
+    // Go down one level if there is a unvisited successor.
+    to_visit.push_back(std::make_pair(BB, BB->succ_begin()));
+  } else {
+    // Go up one level.
+    llvm::dbgs() << "pop: " << to_visit.size() << "\n";
+    to_visit.pop_back();
+  }
+  */
 }
 
 bool SplitCFG::getUnvisitedSuccessor(
@@ -113,7 +165,9 @@ void SplitCFG::dfs_rework() {
   //
   const clang::CFGBlock* block{&cfg_->getEntry()};
   const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
-  dfs_visit_wait(entry);
+  // Top-level waits visited.
+  llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
+  dfs_visit_wait(entry, visited_blocks);
 
   /*
 for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
@@ -658,10 +712,20 @@ void SplitCFG::dumpToDot() const {
             << "\n";
     } else {
       if (isLoop(sblock)) {
-        element_str += " | LOOP ";
-        //sblock->getCFGBlock()->getTerminatorStmt()->dumpPretty(context);
-        //auto stmt{sblock->getCFGBlock()->getTerminatorStmt()};
-        //stmt->printPretty(dotos, nullptr, clang::PrintingPolicy(context_.getLangOpts()));
+        auto terminator{sblock->getCFGBlock()->getTerminatorStmt()};
+        if (llvm::isa<clang::WhileStmt>(terminator)) {
+          element_str += " | WHILE ";
+        }
+        if (llvm::isa<clang::ForStmt>(terminator)) {
+          element_str += " | FOR ";
+        }
+        if (llvm::isa<clang::DoStmt>(terminator)) {
+          element_str += " | DOWHILE ";
+        }
+        // sblock->getCFGBlock()->getTerminatorStmt()->dumpPretty(context);
+        // auto stmt{sblock->getCFGBlock()->getTerminatorStmt()};
+        // stmt->printPretty(dotos, nullptr,
+        // clang::PrintingPolicy(context_.getLangOpts()));
       }
 
       dotos << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
