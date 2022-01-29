@@ -135,7 +135,7 @@ class SplitCFG {
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_blocks);
   void dfs_rework();
   bool isLoop(const SplitCFGBlock *block) const;
-  bool isConditional(SplitCFGBlock *block);
+  bool isConditional(const SplitCFGBlock *block) const;
   bool getUnvisitedSuccessor(
       const SplitCFGBlock *curr_block, SplitCFGBlock::const_succ_iterator &I,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited,

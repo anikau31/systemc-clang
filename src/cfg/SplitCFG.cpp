@@ -182,7 +182,7 @@ for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
 */
 }
 
-bool SplitCFG::isConditional(SplitCFGBlock* block) {
+bool SplitCFG::isConditional(const SplitCFGBlock* block) const {
   /// Loop block has a terminator.
   /// The terminator is a clang::Stmt
   //
@@ -710,7 +710,7 @@ void SplitCFG::dumpToDot() const {
     if (sblock->hasWait()) {
       dotos << "SB" << sblock->getBlockID() << " [ \n color=red, label=\"SB"
             << sblock->getBlockID() << "\n"
-            << " [" << sblock->getNextState() << "] |" << element_str << "\"\n]"
+            << " [" << sblock->getNextState() << "] | WAIT " << element_str << "\"\n]"
             << "\n";
     } else {
       if (isLoop(sblock)) {
@@ -728,6 +728,13 @@ void SplitCFG::dumpToDot() const {
         // auto stmt{sblock->getCFGBlock()->getTerminatorStmt()};
         // stmt->printPretty(dotos, nullptr,
         // clang::PrintingPolicy(context_.getLangOpts()));
+      }
+
+      if (isConditional(sblock)) {
+        auto terminator{sblock->getCFGBlock()->getTerminatorStmt()};
+        if (llvm::isa<clang::IfStmt>(terminator)) {
+            element_str += " | IF ";
+        }
       }
 
       dotos << "SB" << sblock->getBlockID() << " [ \n label=\"SB"
