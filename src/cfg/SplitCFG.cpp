@@ -28,7 +28,9 @@ using namespace systemc_clang;
 ///
 void SplitCFG::dfs_visit_wait(
     const SplitCFGBlock* BB,
-    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_blocks) {
+    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_blocks,
+    llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_to_visit,
+    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits) {
   if (BB->succ_empty()) {
     /// Empty CFG block
     return;
@@ -55,10 +57,17 @@ void SplitCFG::dfs_visit_wait(
 
     llvm::dbgs() << "BB# " << ParentBB->getBlockID();
     if (bb_has_wait) {
-      llvm::dbgs() << " has WAIT " ;
+      llvm::dbgs() << " has WAIT ";
+      // A wait to be visited is added.
+      if (getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB)) {
+        // TODO: only insert if wait has not been visited.
+        if (visited_waits.insert(ParentBB).second == true) {
+          waits_to_visit.insert(waits_to_visit.begin(), BB);
+        }
+      }
     }
-    llvm::dbgs() << " nested visitors : " << isLoopWithTwoSuccessors(ParentBB) << " \n";
-
+    llvm::dbgs() << " nested visitors : " << isLoopWithTwoSuccessors(ParentBB)
+                 << " \n";
 
     // Current block is a loop and has two successors.  So, we should start with
     // a new call to dfs, and provide a new visited_blocks.
@@ -73,15 +82,14 @@ void SplitCFG::dfs_visit_wait(
       // ParentBB has been visited so don't revisit it
       loop_visited_blocks.insert(ParentBB);
       visited_blocks.insert(BB);
-      dfs_visit_wait(BB, loop_visited_blocks);
+      dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits);
       llvm::dbgs() << "End Recursive call";
     } else {
-      // Recursive call in the if-then will traverse the subgraph. 
+      // Recursive call in the if-then will traverse the subgraph.
       // Only insert successor if recursive call does not visit subgraph.
     }
-      addSuccessorToVisitOrPop(bb_has_wait, BB, to_visit, FoundNew);
-    //std::cin.get();
-
+    addSuccessorToVisitOrPop(bb_has_wait, BB, to_visit, FoundNew);
+    // std::cin.get();
 
   } while (!to_visit.empty());
 }
@@ -90,10 +98,11 @@ bool SplitCFG::isLoopWithTwoSuccessors(const SplitCFGBlock* block) const {
   // The number of successor has to be exactly 2 in order to create a new
   // visited_blocks.
   //
-  // Note that CFGBlock often times has a NULL successor.  We have to ignore that.
-  auto cfg_block{ block->getCFGBlock()};
+  // Note that CFGBlock often times has a NULL successor.  We have to ignore
+  // that.
+  auto cfg_block{block->getCFGBlock()};
   bool last_succ_is_null{false};
-  if (cfg_block->succ_size() == 2 ) {
+  if (cfg_block->succ_size() == 2) {
     // Check that the last one is not NULL
 
     if (*cfg_block->succ_rbegin() == nullptr) {
@@ -101,12 +110,11 @@ bool SplitCFG::isLoopWithTwoSuccessors(const SplitCFGBlock* block) const {
     }
   }
 
-  return (block && isLoop(block) && (last_succ_is_null == false ));
+  return (block && isLoop(block) && (last_succ_is_null == false));
 }
 
 void SplitCFG::addSuccessorToVisitOrPop(
-    bool parent_has_wait,
-    const SplitCFGBlock* BB,
+    bool parent_has_wait, const SplitCFGBlock* BB,
     llvm::SmallVector<
         std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>, 8>&
         to_visit,
@@ -158,30 +166,6 @@ bool SplitCFG::getUnvisitedSuccessor(
   */
 }
 
-void SplitCFG::dfs_rework() {
-  /// G = cfg_
-  // const SplitCFGBlock* BB{&cfg_->getEntry()};
-  //  dfs_pop_on_wait(BB);
-  //
-  const clang::CFGBlock* block{&cfg_->getEntry()};
-  const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
-  // Top-level waits visited.
-  llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
-  dfs_visit_wait(entry, visited_blocks);
-
-  /*
-for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
-     ++begin_it) {
-  auto block = *begin_it;
-  llvm::dbgs() << "Block " << block->getBlockID() << " isLoop "
-               << isLoop(block) << " starting DFS\n";
-  block->dump();
-
-  dfs_visit_wait(block);
-}
-*/
-}
-
 bool SplitCFG::isConditional(const SplitCFGBlock* block) const {
   /// Loop block has a terminator.
   /// The terminator is a clang::Stmt
@@ -207,6 +191,35 @@ bool SplitCFG::isLoop(const SplitCFGBlock* block) const {
          (llvm::isa<clang::WhileStmt>(stmt) ||
           llvm::isa<clang::ForStmt>(stmt) || llvm::isa<clang::DoStmt>(stmt));
 }
+
+void SplitCFG::dfs_rework() {
+  /// G = cfg_
+  // const SplitCFGBlock* BB{&cfg_->getEntry()};
+  //  dfs_pop_on_wait(BB);
+  //
+  VectorSplitCFGBlock waits_to_visit{};
+  llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_waits;
+
+  const clang::CFGBlock* block{&cfg_->getEntry()};
+  const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
+  llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
+
+  // Special: Insert root node to start visiting.
+  llvm::dbgs() << "DFS call for SB " << entry->getBlockID() << "\n";
+  std::cin.get();
+  dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits);
+
+  while (!waits_to_visit.empty()) {
+    llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
+    entry = waits_to_visit.pop_back_val();
+
+    llvm::dbgs() << "DFS call for SB " << entry->getBlockID() << "\n";
+    std::cin.get();
+    dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits);
+    llvm::dbgs() << "\n";
+  }
+}
+
 ////////////////////////////////////////////////////////
 
 /// ===========================================
@@ -710,7 +723,8 @@ void SplitCFG::dumpToDot() const {
     if (sblock->hasWait()) {
       dotos << "SB" << sblock->getBlockID() << " [ \n color=red, label=\"SB"
             << sblock->getBlockID() << "\n"
-            << " [" << sblock->getNextState() << "] | WAIT " << element_str << "\"\n]"
+            << " [" << sblock->getNextState() << "] | WAIT " << element_str
+            << "\"\n]"
             << "\n";
     } else {
       if (isLoop(sblock)) {
@@ -733,7 +747,7 @@ void SplitCFG::dumpToDot() const {
       if (isConditional(sblock)) {
         auto terminator{sblock->getCFGBlock()->getTerminatorStmt()};
         if (llvm::isa<clang::IfStmt>(terminator)) {
-            element_str += " | IF ";
+          element_str += " | IF ";
         }
       }
 

@@ -132,7 +132,9 @@ class SplitCFG {
 
   void dfs_visit_wait(
       const SplitCFGBlock *BB,
-      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_blocks);
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_blocks,
+      llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_to_visit,
+      llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits );
   void dfs_rework();
   bool isLoop(const SplitCFGBlock *block) const;
   bool isConditional(const SplitCFGBlock *block) const;
