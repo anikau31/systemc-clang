@@ -685,6 +685,8 @@ void SplitCFG::dumpToDot() const {
 
     element_os << "|{";
     for (auto const& element : sblock->getElements()) {
+      llvm::dbgs() << "DUMP ELEMENT: " << element << "\n";
+
       element_os << "| " << i << ":";
       element->dumpToStream(element_os);
       ++i;
