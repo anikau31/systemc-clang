@@ -63,8 +63,15 @@ void HDLType::SCtype2hcode(string prefix, Tree<TemplateType> *template_argtp,
     h_typeinfo->child_list.push_back(h_typ);
   }
 
+  
   auto const vectreeptr{template_argtp->getChildren(template_argtp->getRoot())};
   // template arguments seem to be stored in reverse order
+  if ((vectreeptr.size() == 0) && ((template_argtp->getRoot())->getDataPtr())->getTypePtr()->isStructureType())
+    {
+      LLVM_DEBUG(((template_argtp->getRoot())->getDataPtr())->getTypePtr()->dump() ; );
+      generatetype(template_argtp->getRoot(), template_argtp, h_typ, false);  // skip initial hType, already generated
+      return;
+    }
   for (int i = vectreeptr.size() - 1; i >= 0; i--) {
     // for (auto const &node : vectreeptr) {
     // generatetype(node, template_argtp, h_typ);
@@ -76,7 +83,7 @@ void HDLType::SCtype2hcode(string prefix, Tree<TemplateType> *template_argtp,
 void HDLType::generatetype(
     systemc_clang::TreeNode<systemc_clang::TemplateType> *const &node,
     systemc_clang::Tree<systemc_clang::TemplateType> *const &treehead,
-    hNodep &h_info) {
+    hNodep &h_info, bool generate_initial_htype) {
 
   string tmps = (node->getDataPtr())->getTypeName();
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
@@ -85,11 +92,14 @@ void HDLType::generatetype(
   // follows\n"); (node->getDataPtr())->getTypePtr()->dump(llvm::dbgs());
 
   LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << "\n");
-
-  hNodep nodetyp =
+  hNodep nodetyp;
+  if (generate_initial_htype) {
+    nodetyp =
       new hNode(tmps, tutil.isposint(tmps) ? hNode::hdlopsEnum::hLiteral
-                                           : hNode::hdlopsEnum::hType);
-  h_info->child_list.push_back(nodetyp);
+		: hNode::hdlopsEnum::hType);
+    h_info->child_list.push_back(nodetyp);
+  }
+  else nodetyp = h_info; // the type node was already generated
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
     return;
   if (!(tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps) ||

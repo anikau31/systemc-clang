@@ -24,7 +24,7 @@ public:
   void generatetype(
       systemc_clang::TreeNode<systemc_clang::TemplateType> *const &node,
       systemc_clang::Tree<systemc_clang::TemplateType> *const &treehead,
-      hNodep &h_info);
+      hNodep &h_info, bool generate_initial_htype = true);
   hNodep addtype(string typname, QualType qtyp, ASTContext &astcontext);
   void addfieldtype(const FieldDecl *fld, hNodep &h_typdef);
   std::unordered_map<string, QualType> usertypes;
