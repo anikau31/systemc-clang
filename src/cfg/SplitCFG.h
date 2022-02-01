@@ -149,6 +149,11 @@ class SplitCFG {
           std::pair<const SplitCFGBlock *, SplitCFGBlock::const_succ_iterator>,
           8> &to_visit,
       bool found);
+
+void updateVisitedBlocks(
+    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& to,
+    const llvm::SmallPtrSetImpl<const SplitCFGBlock*>& from );
+
 };
 
 };  // namespace systemc_clang

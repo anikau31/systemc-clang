@@ -55,7 +55,7 @@ void SplitCFG::dfs_visit_wait(
 
     bool bb_has_wait{(ParentBB->hasWait())};
 
-    llvm::dbgs() << "BB# " << ParentBB->getBlockID();
+    llvm::dbgs() << "Visit BB# " << ParentBB->getBlockID() << " ";
     if (bb_has_wait) {
       llvm::dbgs() << " has WAIT ";
       // A wait to be visited is added.
@@ -66,32 +66,43 @@ void SplitCFG::dfs_visit_wait(
         }
       }
     }
-    llvm::dbgs() << " nested visitors : " << isLoopWithTwoSuccessors(ParentBB)
-                 << " \n";
 
     // Current block is a loop and has two successors.  So, we should start with
     // a new call to dfs, and provide a new visited_blocks.
     //
     // If there is a successor that has not been visited, then remember that
     // block.
-    bool FoundNew = getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB);
+    bool found_succ {getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB)};
 
     if (isLoopWithTwoSuccessors(ParentBB)) {
-      llvm::dbgs() << "\nRecursive call";
       llvm::SmallPtrSet<const SplitCFGBlock*, 8> loop_visited_blocks;
       // ParentBB has been visited so don't revisit it
       loop_visited_blocks.insert(ParentBB);
       visited_blocks.insert(BB);
+      llvm::dbgs() << "\nRecurse DFS\n";
       dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits);
-      llvm::dbgs() << "End Recursive call";
+      updateVisitedBlocks(visited_blocks, loop_visited_blocks);
+      llvm::dbgs() << "\nEND Recurse DFS\n";
     } else {
       // Recursive call in the if-then will traverse the subgraph.
       // Only insert successor if recursive call does not visit subgraph.
     }
-    addSuccessorToVisitOrPop(bb_has_wait, BB, to_visit, FoundNew);
+    addSuccessorToVisitOrPop(bb_has_wait, BB, to_visit, found_succ );
     // std::cin.get();
+    //llvm::dbgs() << "\n";
 
   } while (!to_visit.empty());
+}
+
+void SplitCFG::updateVisitedBlocks(
+    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& to,
+    const llvm::SmallPtrSetImpl<const SplitCFGBlock*>& from
+    ) {
+
+  for (const auto sblock : from ) {
+    to.insert(sblock);
+  }
+
 }
 
 bool SplitCFG::isLoopWithTwoSuccessors(const SplitCFGBlock* block) const {
@@ -124,7 +135,7 @@ void SplitCFG::addSuccessorToVisitOrPop(
     to_visit.push_back(std::make_pair(BB, BB->succ_begin()));
   } else {
     // Go up one level.
-    llvm::dbgs() << "pop: " << to_visit.size() << "\n";
+    llvm::dbgs() << "\npop: " << to_visit.size() << "\n";
     to_visit.pop_back();
   }
 
