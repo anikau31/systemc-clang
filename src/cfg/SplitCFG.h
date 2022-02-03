@@ -8,6 +8,7 @@
 #include "SplitCFGBlock.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/SmallPtrSet.h"
+#include "llvm/Support/Debug.h"
 
 namespace systemc_clang {
 /// ===========================================
@@ -130,11 +131,18 @@ class SplitCFG {
   //
   //
 
+  template <typename T>
+  void dumpSmallVector(llvm::SmallVectorImpl<T> &vlist) {
+    for (const auto v : vlist) {
+      llvm::dbgs() << v.first->getBlockID() << " ";
+    }
+  }
+
   void dfs_visit_wait(
       const SplitCFGBlock *BB,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_blocks,
-      llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_to_visit,
-      llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits );
+      llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_to_visit,
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits);
   void dfs_rework();
   bool isLoop(const SplitCFGBlock *block) const;
   bool isConditional(const SplitCFGBlock *block) const;
@@ -150,10 +158,12 @@ class SplitCFG {
           8> &to_visit,
       bool found);
 
-void updateVisitedBlocks(
-    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& to,
-    const llvm::SmallPtrSetImpl<const SplitCFGBlock*>& from );
+  void updateVisitedBlocks(
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,
+      const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &from);
+  void dumpVisitedBlocks(llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited);
 
+  bool popping_;
 };
 
 };  // namespace systemc_clang
