@@ -90,21 +90,20 @@ void SplitCFG::dfs_visit_wait(
         llvm::SmallPtrSet<const SplitCFGBlock*, 32> loop_visited_blocks;
         // ParentBB has been visited so don't revisit it
         loop_visited_blocks.insert(ParentBB);
-        dumpVisitedBlocks(visited_blocks);
+        //dumpVisitedBlocks(visited_blocks);
         visited_blocks.insert(BB);
-        llvm::dbgs() << "\n==============================================";
-        llvm::dbgs() << "\nRecurse DFS starting at BB " << BB->getBlockID()
-                     << " visited_block size " << visited_blocks.size() << "\n";
+        //llvm::dbgs() << "\n==============================================";
+        //llvm::dbgs() << "\nRecurse DFS starting at BB " << BB->getBlockID()
+        //             << " visited_block size " << visited_blocks.size() << "\n";
         dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits);
 
         /// This only updates the visited blocks for the subgraph within the
         /// loop. We do not want to update the global visited_blocks yet.
         updateVisitedBlocks(loop_visited_blocks, loop_visited_blocks);
-        // visited_blocks.erase(ParentBB);
-        dumpVisitedBlocks(visited_blocks);
-        llvm::dbgs() << "\nEND Recurse DFS"
-                     << " visited_block size " << visited_blocks.size() << "\n";
-        llvm::dbgs() << "\n==============================================";
+        //dumpVisitedBlocks(visited_blocks);
+        //llvm::dbgs() << "\nEND Recurse DFS"
+        //             << " visited_block size " << visited_blocks.size() << "\n";
+        //llvm::dbgs() << "\n==============================================";
 
         /// There are two parts to updating the visited blocks.
         /// 1. You do not update the visited blocks when iterating over a
@@ -117,9 +116,9 @@ void SplitCFG::dfs_visit_wait(
         //
 
         found_succ = getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB);
-        llvm::dbgs() << "unvisited BB " << BB->getBlockID() << " is succ "
-                     << found_succ << "\n";
-
+        // llvm::dbgs() << "unvisited BB " << BB->getBlockID() << " is succ "
+                     // << found_succ << "\n";
+//
         /// Update the visited blocks when there is no more successor to visit
         /// in the subgraph.  This means, the loop will be exiting.
         if (!found_succ) {
@@ -138,6 +137,7 @@ void SplitCFG::dfs_visit_wait(
     //    llvm::dbgs() << " End loop \n";
   } while (!to_visit.empty());
 }
+
 
 void SplitCFG::dumpVisitedBlocks(
     llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited) {
