@@ -14,8 +14,28 @@ namespace systemc_clang {
 /// ===========================================
 /// SplitCFG
 /// ===========================================
+
+  class SplitCFGPathInfo {
+    public:
+      SplitCFGPathInfo() {
+      };
+
+      virtual ~SplitCFGPathInfo() {
+      }
+
+    private:
+      const clang::CFGBlock* cfg_block_;
+
+
+
+
+  };
+
 class SplitCFG {
  public:
+   using SplitCFGPath = llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>;
+
+   // TODO: deprecated
   using VectorSplitCFGBlock = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorSplitCFGBlockImpl = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorCFGElementPtrImpl =
