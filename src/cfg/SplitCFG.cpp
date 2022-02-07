@@ -31,12 +31,12 @@ void SplitCFG::dfs_visit_wait(
     llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_blocks,
     llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_to_visit,
     llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits,
-    llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo> >& curr_path ) {
+    llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>&
+        curr_path) {
   /// Empty CFG block
   if (BB->succ_empty()) {
     return;
   }
-
 
   popping_ = false;
   // successors to visit
@@ -98,7 +98,8 @@ void SplitCFG::dfs_visit_wait(
         // llvm::dbgs() << "\nRecurse DFS starting at BB " << BB->getBlockID()
         //              << " visited_block size " << visited_blocks.size() <<
         //              "\n";
-        dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits, curr_path);
+        dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits,
+                       curr_path);
 
         /// This only updates the visited blocks for the subgraph within the
         /// loop. We do not want to update the global visited_blocks yet.
@@ -140,7 +141,6 @@ void SplitCFG::dfs_visit_wait(
     // dumpSmallVector(to_visit);
     //    llvm::dbgs() << " End loop \n";
   } while (!to_visit.empty());
-
 }
 
 void SplitCFG::dumpVisitedBlocks(
@@ -261,22 +261,25 @@ void SplitCFG::dfs_rework() {
   const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
   llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
 
-  /// Record the current path. 
-  llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> curr_path;
+  /// Record the current path.
+  llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
+      curr_path;
   // Special: Insert root node to start visiting.
   llvm::dbgs() << "@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
-  std::cin.get();
-  dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits, curr_path);
+  //std::cin.get();
+  dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits,
+                 curr_path);
   paths_.push_back(curr_path);
 
   while (!waits_to_visit.empty()) {
-  curr_path.clear();
+    curr_path.clear();
     llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
     entry = waits_to_visit.pop_back_val();
 
     llvm::dbgs() << "\n@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
-    std::cin.get();
-    dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits, curr_path);
+    //std::cin.get();
+    dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits,
+                   curr_path);
     paths_.push_back(curr_path);
     llvm::dbgs() << "\n";
   }
@@ -451,7 +454,7 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
   //
 
   VectorCFGElementPtr vec_elements{};
-  llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> > split_elements;
+  llvm::SmallVector<std::pair<VectorCFGElementPtr, bool>> split_elements;
 
   /// 0 elements so simply just add them and return.
   if (num_elements == 0) {
@@ -502,8 +505,8 @@ void SplitCFG::splitBlock(clang::CFGBlock* block) {
 
 void SplitCFG::createWaitSplitCFGBlocks(
     clang::CFGBlock* block,
-    const llvm::SmallVectorImpl<
-        std::pair<SplitCFG::VectorCFGElementPtr, bool> >& split_elements) {
+    const llvm::SmallVectorImpl<std::pair<SplitCFG::VectorCFGElementPtr, bool>>&
+        split_elements) {
   // dumpSplitElements(split_elements);
   /// Go through all the split_elements and create blocks.
   llvm::dbgs() << "Number of entries in split_elements "
@@ -598,7 +601,7 @@ void SplitCFG::dumpSCCFG() const {
 }
 
 void SplitCFG::dumpSplitElements(
-    const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool> >&
+    const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool>>&
         split_elements) const {
   unsigned int id{0};
   for (auto const& elements : split_elements) {
@@ -618,28 +621,31 @@ void SplitCFG::dumpSplitElements(
 }
 
 void SplitCFG::generate_paths() {
-  /// Set of visited wait blocks.
-  llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_waits;
-  VectorSplitCFGBlock waits_in_stack;
+  dfs_rework();
+  /*
+    /// Set of visited wait blocks.
+    llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_waits;
+    VectorSplitCFGBlock waits_in_stack;
 
-  /// G = cfg_
-  const clang::CFGBlock* block{&cfg_->getEntry()};
-  const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
-  // Mimic FIFO
-  waits_in_stack.insert(waits_in_stack.begin(), entry);
-  // Entry=>Entry is the reset.
-  wait_next_state_.insert(
-      std::make_pair(entry, std::make_pair(entry, next_state_count_)));
-  ++next_state_count_;  // Reset has been assigned to 0
-  do {
-    entry = waits_in_stack.pop_back_val();
-    llvm::dbgs() << "Processing SB " << entry->getBlockID() << "\n";
-    dfs_pop_on_wait(entry, waits_in_stack, visited_waits);
-    llvm::dbgs() << "\n";
-  } while (!waits_in_stack.empty());
+    /// G = cfg_
+    const clang::CFGBlock* block{&cfg_->getEntry()};
+    const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
+    // Mimic FIFO
+    waits_in_stack.insert(waits_in_stack.begin(), entry);
+    // Entry=>Entry is the reset.
+    wait_next_state_.insert(
+        std::make_pair(entry, std::make_pair(entry, next_state_count_)));
+    ++next_state_count_;  // Reset has been assigned to 0
+    do {
+      entry = waits_in_stack.pop_back_val();
+      llvm::dbgs() << "Processing SB " << entry->getBlockID() << "\n";
+      dfs_pop_on_wait(entry, waits_in_stack, visited_waits);
+      llvm::dbgs() << "\n";
+    } while (!waits_in_stack.empty());
 
-  addNextStatesToBlocks();
-  dumpWaitNextStates();
+    addNextStatesToBlocks();
+    dumpWaitNextStates();
+  */
   dumpPaths();
 }
 
@@ -673,7 +679,7 @@ void SplitCFG::dumpPaths() const {
   for (auto const& block_vector : paths_) {
     llvm::dbgs() << "Path S" << i++ << ": ";
     for (auto const& block : block_vector) {
-      auto sblock{ block.first };
+      auto sblock{block.first};
       llvm::dbgs() << sblock->getBlockID() << " ";
     }
     if (i == 1) {
@@ -757,7 +763,6 @@ void SplitCFG::dumpToDot() const {
 
     element_os << "|{";
     for (auto const& element : sblock->getElements()) {
-
       element_os << "| " << i << ":";
       element->dumpToStream(element_os);
       ++i;
@@ -826,9 +831,10 @@ void SplitCFG::dumpToDot() const {
   dotos << "}\n";
 }
 
-const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock>&
+const llvm::SmallVectorImpl<
+    llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>>&
 SplitCFG::getPathsFound() {
-  return paths_found_;
+  return paths_;
 }
 
 SplitCFG::SplitCFG(clang::ASTContext& context)

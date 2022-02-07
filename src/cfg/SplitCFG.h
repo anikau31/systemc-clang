@@ -118,7 +118,9 @@ class SplitCFG {
   virtual ~SplitCFG();
 
   /// \brief Returns the paths that were found in the SCCFG.
-  const llvm::SmallVectorImpl<VectorSplitCFGBlock> &getPathsFound();
+  //const llvm::SmallVectorImpl<VectorSplitCFGBlock> &
+
+  const llvm::SmallVectorImpl<llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo> > > & getPathsFound() ;
 
   /// \brief Construct the SCCFG.
   void construct_sccfg(const clang::CXXMethodDecl *method);
