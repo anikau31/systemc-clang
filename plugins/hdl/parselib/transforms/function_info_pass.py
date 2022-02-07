@@ -209,7 +209,7 @@ class FunctionInfoPass2(TopDown):
                 return f
         # try fuzzy search
         for f in self.current_function_nodes:
-            dprint(f.children[0][:-1] == func_name[:-1])
+            # dprint(f.children[0][:-1] == func_name[:-1])
             if f.children[0][:-1] == func_name[:-1]:
                 return f
         raise ValueError(f'Function {func_name} not found')

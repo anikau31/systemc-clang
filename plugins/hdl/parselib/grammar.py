@@ -69,6 +69,8 @@ lark_grammar = Lark('''
         htolong: "hNoop" "to_long" "[" (syscread|hvarref) "]"
         htoulong: "hNoop" "to_ulong" "[" (syscread|hvarref) "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
+        htoi64: "hNoop" "to_int64" "[" hvarref "]"
+        htou64: "hNoop" "to_uint64" "[" hvarref "]"
         
         // hmodinitblock: 
         // first component is the id of the module (in parent?)
@@ -118,10 +120,11 @@ lark_grammar = Lark('''
         switchcond: expression
         // Note: we don't make this a noraml statement as in the context of switch, 
         // we don't use general statements
-        switchbody: "hCStmt" "NONAME" "[" casestmt+ "]"
+        switchbody: "hCStmt" "NONAME" "[" (casestmt breakstmt?)+ "]"
         casestmt: "hSwitchCase" "NONAME" "[" casevalue stmt+ "]" hnoop
                 | "hSwitchCase" "NONAME" "[" casevalue hnoop "]"
                 | "hSwitchCase" "NONAME" "[" casevalue stmt+ "]" 
+                | "hSwitchDefault" "NONAME" "[" stmt+ "]"
         casevalue: expression
         
         // Function
@@ -159,16 +162,22 @@ lark_grammar = Lark('''
                   |  "[" expression "]"
                   | htobool
                   | htouint
+                  | htoi64
+                  | htou64
                   | htoint
                   | htolong
                   | htoulong
                   | hcondop
                   | hlrotate
                   | horreduce
+                  | hfieldaccess
+                  
+        hfieldaccess: "hFieldaccess" "NONAME" "[" harrayref hfieldname "]"
+        hfieldname:   "hField" ID "NOLIST"
                   
         hlrotate : "hNoop" "lrotate" "[" expression expression "]"
         horreduce: "hNoop" "or_reduce" "[" expression "]"
-        hcondop : "hCondop" "NONAME" "[" (hbinop | hunop) expression expression "]"
+        hcondop : "hCondop" "NONAME" "[" (hbinop | hunop | syscread | hvarref) (expression | hprefix) (expression | hpostfix) "]"
 
         syscread : hsigassignr "[" expression "]"
         syscwrite : hsigassignl "["  expression  expression "]"
@@ -180,10 +189,10 @@ lark_grammar = Lark('''
         hbinop:  "hBinop" BINOP "[" expression expression "]"
         
         // A temporary hack to handle --
-        hunop:  "hUnop" UNOP_NON_SUB "[" expression "]"
-             |  "hUnop" UNOP_SUB "[" expression "]"
-             |  "hBinop" UNOP_BNOT "[" expression "]"
-             |  "hBinop" UNOP_NOT "[" expression "]"
+        hunop:  "hUnop" UNOP_NON_SUB "[" (expression|hslice) "]"
+             |  "hUnop" UNOP_SUB "[" (expression|hslice) "]"
+             |  "hBinop" UNOP_BNOT "[" (expression|hslice) "]"
+             |  "hBinop" UNOP_NOT "[" (expression|hslice) "]"
              | hpostfix
              | hprefix
              | hunopdec
@@ -192,7 +201,7 @@ lark_grammar = Lark('''
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
         // Separate '=' out from so that it is not an expression but a standalone statement
-        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral) (hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall) "]"
+        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
                  | "hBinop" "=" "[" harrayref  arrayrhs "]"
                  | nblkassign
                  | vassign
@@ -226,13 +235,12 @@ lark_grammar = Lark('''
         // Normal expressions that can not be expanded
         nonrefexp: hbinop
         
-        harrayelemref : "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread | harrayelemref) expression  "]"
-                      // | "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread | harrayelemref) expression  "]"
-        // "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread) expression  "]"
-        harrayref: harrayelemref
+        harrayref: "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread | harrayref) expression  "]"
                  | hslice
         hslice: "hBinop" "SLICE" "[" hvarref expression expression "]"
-        hnsbinop:  "hBinop" NONSUBBINOP "[" expression expression "]"
+              | "hNoop" "range" "[" (hvarref | harrayref) expression expression "]"
+              | "hNoop" "bit" "[" (hvarref | harrayref) expression "]"
+        hnsbinop:  "hBinop" NONSUBBINOP "[" (expression|hslice) (expression|hslice) "]"
         // Comma op is the C++ comma where the latter part of the comma expression is returned
         hcomma: "hBinop" "," "[" (blkassign | hunop | hmethodcall) (hunop | expression | hmethodcall) "]"
 
@@ -268,7 +276,7 @@ lark_grammar = Lark('''
         BINOP: COMPOUND_ASSIGN | NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE" | "concat"
         NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&" | "@="
         ARITHOP: "+" | "-" | "*" | "/" | "^"
-        UNOP_NON_SUB: "!" | "++" | "-"
+        UNOP_NON_SUB: "!" | "++" | "-" | "+"
         UNOP_SUB:  "-"
         UNOP_DEC:  "--"
         UNOP_INC:  "++"

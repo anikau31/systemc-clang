@@ -205,21 +205,30 @@ class VerilogTranslationPass(TopDown):
 
     def harrayref(self, tree):
         # Check whether
+        l_const = None
+        r_const = None
         if isinstance(tree.children[0], Tree) and tree.children[0].data == 'hslice':
-            hslice = tree.children[0]
-            l, r = hslice.children[1:]
-            l_const = self.__check_const(l)
-            r_const = self.__check_const(r)
+            if len(tree.children[0].children) == 3:
+                hslice = tree.children[0]
+                l, r = hslice.children[1:]
+                l_const = self.__check_const(l)
+                r_const = self.__check_const(r)
 
         self.__push_up(tree)
         if isinstance(tree.children[0], Tree) and tree.children[0].data == 'hslice':
             hslice = tree.children[0]
             var = hslice.children[0]
-            l, r = hslice.children[1:]
+            m = None
+            if len(hslice.children) == 3:
+                l, r = hslice.children[1:]
+            elif len(hslice.children) == 2:
+                m = hslice.children[1]
             # l_const = isinstance(l, int)
             # r_const = isinstance(r, int)
             if l_const and r_const:
                 idx = '{}:{}'.format(l, r)
+            elif m:
+                idx = '{}'.format(m)
             else:
                 # for slicing that is not constant
                 tree.children = [var, l, r, "(({}) >> ({})) & ~(~($bits({})'('b0)) << (({}) - ({}) + 1))".format(var, r, var, l, r)]
@@ -332,7 +341,7 @@ class VerilogTranslationPass(TopDown):
 
     def breakstmt(self, tree):
         if self.get_current_scope_type() in ['switch']:
-            return None
+            return ""
         else:
             ind = self.get_current_ind_prefix()
             res = '{}break;'.format(ind)
@@ -598,7 +607,7 @@ class VerilogTranslationPass(TopDown):
         if len(tree.children) == 1:
             return 'return {}'.format(tree.children[0])
         elif len(tree.children) == 0:
-            # return 'return'
+            return 'return'
             return ''
         else:
             assert len(tree.children) in [0, 1], 'return statement can only have 0 or 1 return value'
