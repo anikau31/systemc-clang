@@ -36,6 +36,9 @@ void SplitCFG::dfs_visit_wait(
     return;
   }
 
+  /// Record the current path. 
+  llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> curr_path;
+
   popping_ = false;
   // successors to visit
   llvm::SmallVector<
@@ -57,6 +60,7 @@ void SplitCFG::dfs_visit_wait(
     /// If we are traversing down then we are not popping back up.
     if (!popping_) {
       llvm::dbgs() << "Visit Parent BB# " << ParentBB->getBlockID() << " ";
+      curr_path.push_back(std::make_pair(ParentBB, SplitCFGPathInfo{ParentBB}));
     } else {
     }
 
@@ -137,6 +141,8 @@ void SplitCFG::dfs_visit_wait(
     // dumpSmallVector(to_visit);
     //    llvm::dbgs() << " End loop \n";
   } while (!to_visit.empty());
+
+  paths_.push_back(curr_path);
 }
 
 void SplitCFG::dumpVisitedBlocks(
@@ -660,15 +666,12 @@ void SplitCFG::dumpWaitNextStates() const {
 void SplitCFG::dumpPaths() const {
   llvm::dbgs() << "Dump all SB paths to wait() found in the CFG.\n";
   unsigned int i{0};
-  for (auto const& block_vector : paths_found_) {
+
+  for (auto const& block_vector : paths_) {
     llvm::dbgs() << "Path S" << i++ << ": ";
     for (auto const& block : block_vector) {
-      llvm::dbgs() << block->getBlockID() << " ";
-      auto wit = wait_next_state_.find(block);
-      if (wit != wait_next_state_.end()) {
-        auto next_state{wit->second.second};
-        llvm::dbgs() << "[" << next_state << "] ";
-      }
+      auto sblock{ block.first };
+      llvm::dbgs() << sblock->getBlockID() << " ";
     }
     if (i == 1) {
       llvm::dbgs() << " (reset path)";
@@ -751,7 +754,6 @@ void SplitCFG::dumpToDot() const {
 
     element_os << "|{";
     for (auto const& element : sblock->getElements()) {
-      llvm::dbgs() << "DUMP ELEMENT: " << element << "\n";
 
       element_os << "| " << i << ":";
       element->dumpToStream(element_os);

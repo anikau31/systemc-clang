@@ -11,31 +11,29 @@
 #include "llvm/Support/Debug.h"
 
 namespace systemc_clang {
+
+/// ===========================================
+/// SplitCFGPathInfo
+/// ===========================================
+class SplitCFGPathInfo {
+ public:
+  SplitCFGPathInfo(const SplitCFGBlock *block) : cfg_block_{block->getCFGBlock()} {};
+
+  virtual ~SplitCFGPathInfo() {}
+
+ private:
+  const clang::CFGBlock *cfg_block_;
+};
+
 /// ===========================================
 /// SplitCFG
 /// ===========================================
-
-  class SplitCFGPathInfo {
-    public:
-      SplitCFGPathInfo() {
-      };
-
-      virtual ~SplitCFGPathInfo() {
-      }
-
-    private:
-      const clang::CFGBlock* cfg_block_;
-
-
-
-
-  };
-
 class SplitCFG {
  public:
-   using SplitCFGPath = llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>;
+  using SplitCFGPath =
+      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>;
 
-   // TODO: deprecated
+  // TODO: deprecated
   using VectorSplitCFGBlock = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorSplitCFGBlockImpl = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorCFGElementPtrImpl =
@@ -53,7 +51,10 @@ class SplitCFG {
   std::unordered_map<const clang::CFGBlock *, SplitCFGBlock> split_blocks_;
 
   /// \brief Paths of BBs generated.
+  llvm::SmallVector<SplitCFGPath>  paths_;
+  /// FIXME: Deprecated
   llvm::SmallVector<llvm::SmallVector<const SplitCFGBlock *>> paths_found_;
+
 
   /// \brief The block id to block for SCCFG.
   std::unordered_map<unsigned int, SplitCFGBlock *> sccfg_;
