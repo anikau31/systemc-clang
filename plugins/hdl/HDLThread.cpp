@@ -59,7 +59,7 @@ namespace systemc_hdl {
       LLVM_DEBUG(scfg.dump());
       LLVM_DEBUG(scfg.dumpToDot());
       
-      const llvm::SmallVectorImpl<SplitCFG::VectorSplitCFGBlock> &paths_found{ scfg.getPathsFound()};
+      const llvm::SmallVectorImpl<llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>> &paths_found{ scfg.getPathsFound()};
       numstates = paths_found.size();
       int state_num = 0;
       for (auto const& pt: paths_found) {
@@ -67,7 +67,7 @@ namespace systemc_hdl {
 	SGVisited.clear();
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
 	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
-	ProcessSplitGraphBlock(pt[0], state_num, h_switchcase);
+	ProcessSplitGraphBlock(pt[0].first, state_num, h_switchcase);
 	hthreadblockcstmt->append(h_switchcase);
 	state_num++;
       }

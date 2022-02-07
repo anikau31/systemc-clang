@@ -14,26 +14,15 @@ SC_MODULE(test) {
 
   void break0() {
     k = 0;
-    wait();
     while (true) {
       k = 1;
       for (int i = 0; i < 2; i++) {
         k = 2;
-        if (i == 1) {
-          k = 3;
-          wait();
-        } else {
-          k = 4;
-          break;
-          k= 44;
-        }
-        k++;
-        wait();
-        k = 5;
+        break;
       }
-      k = 6;
+      k = 3;
       wait();
-      k = 7;
+      k = 4;
     }
   }
 
@@ -44,14 +33,12 @@ SC_MODULE(test) {
       for (int i = 0; i < 2; i++) {
         k = 2;
         if (i == 1) {
-          k = 3;
           break;
-        k++;
         }
       }
-      k = 4;
+      k = 3;
       wait();
-      k = 5;
+      k = 4;
     }
   }
 
@@ -174,12 +161,11 @@ SC_MODULE(test) {
     /*
     SC_THREAD(break0);
     sensitive << clk.pos();
-    */
 
     SC_THREAD(break1);
     sensitive << clk.pos();
 
-    /*
+
     SC_THREAD(break2);
     sensitive << clk.pos();
 
@@ -194,10 +180,10 @@ SC_MODULE(test) {
 
     SC_THREAD(break_with_if_wait0);
     sensitive << clk.pos();
+    */
 
     SC_THREAD(break_with_if_wait1);
     sensitive << clk.pos();
-    */
   }
 };
 

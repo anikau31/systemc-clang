@@ -3,17 +3,38 @@
 
 #include <unordered_map>
 
+#include "clang/AST/ASTContext.h"
 #include "clang/Analysis/CFG.h"
 #include "SplitCFGBlock.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/SmallPtrSet.h"
+#include "llvm/Support/Debug.h"
 
 namespace systemc_clang {
+
+/// ===========================================
+/// SplitCFGPathInfo
+/// ===========================================
+class SplitCFGPathInfo {
+ public:
+  SplitCFGPathInfo(const SplitCFGBlock *block)
+      : cfg_block_{block->getCFGBlock()} {};
+
+  virtual ~SplitCFGPathInfo() {}
+
+ private:
+  const clang::CFGBlock *cfg_block_;
+};
+
 /// ===========================================
 /// SplitCFG
 /// ===========================================
 class SplitCFG {
  public:
+  using SplitCFGPath =
+      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>;
+
+  // TODO: deprecated
   using VectorSplitCFGBlock = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorSplitCFGBlockImpl = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorCFGElementPtrImpl =
@@ -31,6 +52,8 @@ class SplitCFG {
   std::unordered_map<const clang::CFGBlock *, SplitCFGBlock> split_blocks_;
 
   /// \brief Paths of BBs generated.
+  llvm::SmallVector<SplitCFGPath> paths_;
+  /// FIXME: Deprecated
   llvm::SmallVector<llvm::SmallVector<const SplitCFGBlock *>> paths_found_;
 
   /// \brief The block id to block for SCCFG.
@@ -59,7 +82,6 @@ class SplitCFG {
   /// \brief Add predecessors to the SplitCFGBlock.
   void addPredecessors(SplitCFGBlock *to, const clang::CFGBlock *from);
 
-
   void addNextStatesToBlocks();
 
   /// \brief Creates SplitCFGBlocks for all CFGBlocks that do not have a wiat.
@@ -68,9 +90,10 @@ class SplitCFG {
   void createUnsplitBlocks();
 
   /// \brief Creates the SplitCFGBlocks for CFGBlock with a wait.
-  void  createWaitSplitCFGBlocks(
-     clang::CFGBlock *block,
-      const llvm::SmallVectorImpl<std::pair<VectorCFGElementPtr, bool> >& split_elements);
+  void createWaitSplitCFGBlocks(
+      clang::CFGBlock *block,
+      const llvm::SmallVectorImpl<std::pair<VectorCFGElementPtr, bool>>
+          &split_elements);
 
   /// \brief Dump all the CFGElements that were split.
   void dumpSplitElements(
@@ -85,17 +108,19 @@ class SplitCFG {
   /// \brief  Overloaded constructor.
   SplitCFG(clang::ASTContext &context, const clang::CXXMethodDecl *cxx_decl);
 
-  /// \brief Disallow a copy constructor for SCCFG. 
-  SplitCFG(const SplitCFG& from) = delete;
+  /// \brief Disallow a copy constructor for SCCFG.
+  SplitCFG(const SplitCFG &from) = delete;
 
-  /// \brief Disallow assignment operator. 
-  SplitCFG& operator=(const SplitCFG &) = delete;
+  /// \brief Disallow assignment operator.
+  SplitCFG &operator=(const SplitCFG &) = delete;
 
   /// \brief  Destructor that erases all SplitCFGBlocks created.
   virtual ~SplitCFG();
 
   /// \brief Returns the paths that were found in the SCCFG.
-  const llvm::SmallVectorImpl<VectorSplitCFGBlock> &getPathsFound();
+  //const llvm::SmallVectorImpl<VectorSplitCFGBlock> &
+
+  const llvm::SmallVectorImpl<llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo> > > & getPathsFound() ;
 
   /// \brief Construct the SCCFG.
   void construct_sccfg(const clang::CXXMethodDecl *method);
@@ -110,20 +135,60 @@ class SplitCFG {
   void dfs_pop_on_wait(
       const SplitCFGBlock *basic_block,
       llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_in_stack,
-      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits);
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits );
 
-  /// \brief Generates the paths between wait statements. 
+  /// \brief Generates the paths between wait statements.
   void generate_paths();
 
-  /// \brief Returns the argument to a wait statement. 
+  /// \brief Returns the argument to a wait statement.
   /// Note that the only one supported are no arguments or integer arguments.
-  llvm::APInt getWaitArgument(const clang::CFGElement& element) const;
+  llvm::APInt getWaitArgument(const clang::CFGElement &element) const;
 
   /// Dump member functions.
   void dump() const;
   void dumpToDot() const;
   void dumpWaitNextStates() const;
   void dumpPaths() const;
+
+  /// Rework
+  //
+  //
+
+  template <typename T>
+  void dumpSmallVector(llvm::SmallVectorImpl<T> &vlist) {
+    for (const auto v : vlist) {
+      llvm::dbgs() << v.first->getBlockID() << " ";
+    }
+  }
+
+  void dfs_visit_wait(
+      const SplitCFGBlock *BB,
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_blocks,
+      llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_to_visit,
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits,
+      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
+          &curr_path);
+  void dfs_rework();
+  bool isLoop(const SplitCFGBlock *block) const;
+  bool isConditional(const SplitCFGBlock *block) const;
+  bool getUnvisitedSuccessor(
+      const SplitCFGBlock *curr_block, SplitCFGBlock::const_succ_iterator &I,
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited,
+      const SplitCFGBlock *&block);
+  bool isLoopWithTwoSuccessors(const SplitCFGBlock *block) const;
+  void addSuccessorToVisitOrPop(
+      bool parent_has_wait, const SplitCFGBlock *BB,
+      llvm::SmallVector<
+          std::pair<const SplitCFGBlock *, SplitCFGBlock::const_succ_iterator>,
+          8> &to_visit,
+      bool found);
+
+  void updateVisitedBlocks(
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,
+      const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &from);
+  void dumpVisitedBlocks(llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited);
+
+  bool popping_;
 };
 
 };  // namespace systemc_clang
