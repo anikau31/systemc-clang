@@ -30,14 +30,13 @@ void SplitCFG::dfs_visit_wait(
     const SplitCFGBlock* BB,
     llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_blocks,
     llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_to_visit,
-    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits) {
+    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits,
+    llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo> >& curr_path ) {
   /// Empty CFG block
   if (BB->succ_empty()) {
     return;
   }
 
-  /// Record the current path. 
-  llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> curr_path;
 
   popping_ = false;
   // successors to visit
@@ -99,7 +98,7 @@ void SplitCFG::dfs_visit_wait(
         // llvm::dbgs() << "\nRecurse DFS starting at BB " << BB->getBlockID()
         //              << " visited_block size " << visited_blocks.size() <<
         //              "\n";
-        dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits);
+        dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits, curr_path);
 
         /// This only updates the visited blocks for the subgraph within the
         /// loop. We do not want to update the global visited_blocks yet.
@@ -142,7 +141,6 @@ void SplitCFG::dfs_visit_wait(
     //    llvm::dbgs() << " End loop \n";
   } while (!to_visit.empty());
 
-  paths_.push_back(curr_path);
 }
 
 void SplitCFG::dumpVisitedBlocks(
@@ -263,18 +261,23 @@ void SplitCFG::dfs_rework() {
   const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
   llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
 
+  /// Record the current path. 
+  llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> curr_path;
   // Special: Insert root node to start visiting.
   llvm::dbgs() << "@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
   std::cin.get();
-  dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits);
+  dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits, curr_path);
+  paths_.push_back(curr_path);
 
   while (!waits_to_visit.empty()) {
+  curr_path.clear();
     llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
     entry = waits_to_visit.pop_back_val();
 
     llvm::dbgs() << "\n@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
     std::cin.get();
-    dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits);
+    dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits, curr_path);
+    paths_.push_back(curr_path);
     llvm::dbgs() << "\n";
   }
 }

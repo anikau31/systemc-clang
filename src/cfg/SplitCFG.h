@@ -17,7 +17,8 @@ namespace systemc_clang {
 /// ===========================================
 class SplitCFGPathInfo {
  public:
-  SplitCFGPathInfo(const SplitCFGBlock *block) : cfg_block_{block->getCFGBlock()} {};
+  SplitCFGPathInfo(const SplitCFGBlock *block)
+      : cfg_block_{block->getCFGBlock()} {};
 
   virtual ~SplitCFGPathInfo() {}
 
@@ -51,10 +52,9 @@ class SplitCFG {
   std::unordered_map<const clang::CFGBlock *, SplitCFGBlock> split_blocks_;
 
   /// \brief Paths of BBs generated.
-  llvm::SmallVector<SplitCFGPath>  paths_;
+  llvm::SmallVector<SplitCFGPath> paths_;
   /// FIXME: Deprecated
   llvm::SmallVector<llvm::SmallVector<const SplitCFGBlock *>> paths_found_;
-
 
   /// \brief The block id to block for SCCFG.
   std::unordered_map<unsigned int, SplitCFGBlock *> sccfg_;
@@ -133,7 +133,7 @@ class SplitCFG {
   void dfs_pop_on_wait(
       const SplitCFGBlock *basic_block,
       llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_in_stack,
-      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits);
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits );
 
   /// \brief Generates the paths between wait statements.
   void generate_paths();
@@ -163,7 +163,9 @@ class SplitCFG {
       const SplitCFGBlock *BB,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_blocks,
       llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_to_visit,
-      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits);
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits,
+      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
+          &curr_path);
   void dfs_rework();
   bool isLoop(const SplitCFGBlock *block) const;
   bool isConditional(const SplitCFGBlock *block) const;
