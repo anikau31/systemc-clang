@@ -4,6 +4,7 @@ set (TEST_LIST
   # Thread parsing 
   simple-thread.cpp 
   run-cfg-test.cpp
+  run-cfg-rework-test.cpp
   )
 
 set(SCC_LIBS libsystemc-clang)

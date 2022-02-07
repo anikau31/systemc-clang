@@ -83,7 +83,8 @@ TEST_CASE("Simple thread test", "[threads]") {
       llvm::dbgs() << " ********************* CFG " << proc.first << " ***********************\n";
       SplitCFG scfg{from_ast->getASTContext()};
       scfg.construct_sccfg(method);
-      scfg.generate_paths();
+      scfg.dfs_rework();
+      //scfg.generate_paths();
       scfg.dump();
       scfg.dumpToDot();
       llvm::dbgs() << " ===================================================\n";
