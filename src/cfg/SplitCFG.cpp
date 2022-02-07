@@ -71,6 +71,12 @@ void SplitCFG::dfs_visit_wait(
       // A wait to be visited is added.
       if (visited_waits.insert(ParentBB).second) {
         waits_to_visit.insert(waits_to_visit.begin(), BB);
+          ++next_state_count_;
+        auto wit{wait_next_state_.find(ParentBB)};
+        if (wit == wait_next_state_.end()) {
+          wait_next_state_.insert(
+              std::make_pair(ParentBB, std::make_pair(BB, next_state_count_)));
+        }
       }
     }
 
@@ -266,10 +272,15 @@ void SplitCFG::dfs_rework() {
       curr_path;
   // Special: Insert root node to start visiting.
   llvm::dbgs() << "@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
-  //std::cin.get();
+  // std::cin.get();
   dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits,
                  curr_path);
   paths_.push_back(curr_path);
+
+  // Add the next state.
+  //wait_next_state_.insert(
+  //    std::make_pair(entry, std::make_pair(entry, next_state_count_)));
+  //++next_state_count_;  // Reset has been assigned to 0
 
   while (!waits_to_visit.empty()) {
     curr_path.clear();
@@ -277,12 +288,16 @@ void SplitCFG::dfs_rework() {
     entry = waits_to_visit.pop_back_val();
 
     llvm::dbgs() << "\n@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
-    //std::cin.get();
+    // std::cin.get();
     dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits,
                    curr_path);
     paths_.push_back(curr_path);
     llvm::dbgs() << "\n";
   }
+
+  addNextStatesToBlocks();
+  dumpWaitNextStates();
+  dumpPaths();
 }
 
 ////////////////////////////////////////////////////////
@@ -646,7 +661,6 @@ void SplitCFG::generate_paths() {
     addNextStatesToBlocks();
     dumpWaitNextStates();
   */
-  dumpPaths();
 }
 
 void SplitCFG::addNextStatesToBlocks() {
@@ -668,7 +682,7 @@ void SplitCFG::dumpWaitNextStates() const {
 
     llvm::dbgs() << "SB" << wait_block->getBlockID() << " (SB"
                  << next_block->getBlockID() << ")"
-                 << " [" << next_state_id << "]\n";
+                 << " [S" << next_state_id << "]\n";
   }
 }
 
@@ -681,6 +695,12 @@ void SplitCFG::dumpPaths() const {
     for (auto const& block : block_vector) {
       auto sblock{block.first};
       llvm::dbgs() << sblock->getBlockID() << " ";
+      // Print the wait state
+      auto wit = wait_next_state_.find(sblock);
+      if (wit != wait_next_state_.end()) {
+        auto next_state{wit->second.second};
+        llvm::dbgs() << "[S" << next_state << "] ";
+      }
     }
     if (i == 1) {
       llvm::dbgs() << " (reset path)";
@@ -739,6 +759,7 @@ void SplitCFG::dump() const {
     SplitCFGBlock* sblock{block.second};
     sblock->dump();
   }
+  dumpWaitNextStates();
   dumpPaths();
 }
 
