@@ -12,10 +12,11 @@ var searchData=
   ['updatemoduledecl_9',['updateModuleDecl',['../classsystemc__clang_1_1Model.html#a87d8110d8a47853c2420fae77e44f525',1,'systemc_clang::Model']]],
   ['updatesuspensiontime_10',['updateSuspensionTime',['../classsystemc__clang_1_1Edge.html#a8b75a2cf256c99730cf755325cf9ec73',1,'systemc_clang::Edge']]],
   ['updatetransitiontime_11',['updateTransitionTime',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#afb504ec049dce4f340d6ee44de5d096f',1,'systemc_clang::GlobalSuspensionAutomata']]],
-  ['usertypes_12',['usertypes',['../classHDLType.html#a18f4ba5ed554687ef615dbf573740797',1,'HDLType']]],
-  ['util_13',['util',['../classhnode_1_1util.html',1,'hnode::util'],['../classhnode_1_1util.html#a2f939b759f2612426d6e6832256c4228',1,'hnode::util::util()']]],
-  ['utility_14',['Utility',['../classsystemc__clang_1_1Utility.html',1,'systemc_clang::Utility'],['../classsystemc__clang_1_1Utility.html#a28bedc1e035e19b9d24726c57d224eb9',1,'systemc_clang::Utility::Utility()']]],
-  ['utility_2ecpp_15',['Utility.cpp',['../Utility_8cpp.html',1,'']]],
-  ['utility_2eh_16',['Utility.h',['../Utility_8h.html',1,'']]],
-  ['utils_2epy_17',['utils.py',['../utils_8py.html',1,'']]]
+  ['updatevisitedblocks_12',['updateVisitedBlocks',['../classsystemc__clang_1_1SplitCFG.html#a450737d7dafd56979d8ecc49551551ed',1,'systemc_clang::SplitCFG']]],
+  ['usertypes_13',['usertypes',['../classHDLType.html#a18f4ba5ed554687ef615dbf573740797',1,'HDLType']]],
+  ['util_14',['util',['../classhnode_1_1util.html',1,'hnode::util'],['../classhnode_1_1util.html#a2f939b759f2612426d6e6832256c4228',1,'hnode::util::util()']]],
+  ['utility_15',['Utility',['../classsystemc__clang_1_1Utility.html',1,'systemc_clang::Utility'],['../classsystemc__clang_1_1Utility.html#a28bedc1e035e19b9d24726c57d224eb9',1,'systemc_clang::Utility::Utility()']]],
+  ['utility_2ecpp_16',['Utility.cpp',['../Utility_8cpp.html',1,'']]],
+  ['utility_2eh_17',['Utility.h',['../Utility_8h.html',1,'']]],
+  ['utils_2epy_18',['utils.py',['../utils_8py.html',1,'']]]
 ];

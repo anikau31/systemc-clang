@@ -57,10 +57,9 @@ var searchData=
   ['modulelist_54',['modulelist',['../classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#afeb49a21849727e08f236d3e11f7725d',1,'parselib::transforms::verilog_tranlation::VerilogTranslationPass']]],
   ['modulemaptype_55',['ModuleMapType',['../classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#ac9eb5a346eddccc3bf5e4def371c4a00',1,'sc_ast_matchers::ModuleDeclarationMatcher']]],
   ['modulemaptype_56',['moduleMapType',['../classsystemc__clang_1_1Model.html#a11e8e55332ce1b1d432d0836010514b9',1,'systemc_clang::Model::moduleMapType()'],['../classsystemc__clang_1_1FindSCModules.html#a51959cc8d238baef2944433676df1258',1,'systemc_clang::FindSCModules::moduleMapType()']]],
-  ['modulepairtype_57',['modulePairType',['../classsystemc__clang_1_1Model.html#a2d1a106632c336f2eac7f02aeb64f436',1,'systemc_clang::Model']]],
+  ['modulepairtype_57',['modulePairType',['../classsystemc__clang_1_1FindSCModules.html#a608144941116ff2bbae70590dc298cad',1,'systemc_clang::FindSCModules::modulePairType()'],['../classsystemc__clang_1_1Model.html#a2d1a106632c336f2eac7f02aeb64f436',1,'systemc_clang::Model::modulePairType()']]],
   ['modulepairtype_58',['ModulePairType',['../classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#adee6b44640fd0cdc83a9ea270c8c2a77',1,'sc_ast_matchers::ModuleDeclarationMatcher']]],
-  ['modulepairtype_59',['modulePairType',['../classsystemc__clang_1_1FindSCModules.html#a608144941116ff2bbae70590dc298cad',1,'systemc_clang::FindSCModules']]],
-  ['moduleprocesspairtype_60',['moduleProcessPairType',['../classsystemc__clang_1_1ModuleInstance.html#ae42d7c7159e4d1dff2496fc46799d540',1,'systemc_clang::ModuleInstance']]],
-  ['modules_5f_61',['modules_',['../classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#acdc5aec85f8992d45e5d515e27686cd8',1,'sc_ast_matchers::ModuleDeclarationMatcher']]],
-  ['mutil_62',['mutil',['../classsystemc__hdl_1_1HDLMain.html#a438e4e1bbd3d3d4d29ccd70ea324528b',1,'systemc_hdl::HDLMain']]]
+  ['moduleprocesspairtype_59',['moduleProcessPairType',['../classsystemc__clang_1_1ModuleInstance.html#ae42d7c7159e4d1dff2496fc46799d540',1,'systemc_clang::ModuleInstance']]],
+  ['modules_5f_60',['modules_',['../classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#acdc5aec85f8992d45e5d515e27686cd8',1,'sc_ast_matchers::ModuleDeclarationMatcher']]],
+  ['mutil_61',['mutil',['../classsystemc__hdl_1_1HDLMain.html#a438e4e1bbd3d3d4d29ccd70ea324528b',1,'systemc_hdl::HDLMain']]]
 ];

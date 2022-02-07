@@ -8,6 +8,7 @@ var searchData=
   ['updatemoduledecl_5',['updateModuleDecl',['../classsystemc__clang_1_1Model.html#a87d8110d8a47853c2420fae77e44f525',1,'systemc_clang::Model']]],
   ['updatesuspensiontime_6',['updateSuspensionTime',['../classsystemc__clang_1_1Edge.html#a8b75a2cf256c99730cf755325cf9ec73',1,'systemc_clang::Edge']]],
   ['updatetransitiontime_7',['updateTransitionTime',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#afb504ec049dce4f340d6ee44de5d096f',1,'systemc_clang::GlobalSuspensionAutomata']]],
-  ['util_8',['util',['../classhnode_1_1util.html#a2f939b759f2612426d6e6832256c4228',1,'hnode::util']]],
-  ['utility_9',['Utility',['../classsystemc__clang_1_1Utility.html#a28bedc1e035e19b9d24726c57d224eb9',1,'systemc_clang::Utility']]]
+  ['updatevisitedblocks_8',['updateVisitedBlocks',['../classsystemc__clang_1_1SplitCFG.html#a450737d7dafd56979d8ecc49551551ed',1,'systemc_clang::SplitCFG']]],
+  ['util_9',['util',['../classhnode_1_1util.html#a2f939b759f2612426d6e6832256c4228',1,'hnode::util']]],
+  ['utility_10',['Utility',['../classsystemc__clang_1_1Utility.html#a28bedc1e035e19b9d24726c57d224eb9',1,'systemc_clang::Utility']]]
 ];
