@@ -45,7 +45,6 @@ namespace systemc_hdl {
       //xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
       xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map);
       hNodep hthreadmainmethod = new hNode(h_top->getname(), hNode::hdlopsEnum::hMethod);
-      
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
       hthreadblocksp->append(new hNode(state_string, hNode::hdlopsEnum::hVarref));
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
@@ -111,9 +110,13 @@ namespace systemc_hdl {
       hthreadmainmethod->append(GenerateBinop("=", savewaitnextstate_string, waitnextstate_string, false));
       for (hNodep onelocalvar : h_shadowvarsp->child_list) {
 	 hthreadmainmethod->append(GenerateBinop("=", onelocalvar->getname(), shadowstring+onelocalvar->getname())); 
-    }
-      hthreadmainmethod->append(hthreadblocksp);
-      
+      }
+      hthreadmainmethod->append(new hNode(threadname+"_func", hNode::hdlopsEnum::hMethodCall));
+      //hthreadmainmethod->append(hthreadblocksp);
+      hNodep hfunctop = new hNode(threadname+"_func", hNode::hdlopsEnum::hFunction);
+      hfunctop->append(hthreadblocksp);
+      //h_top->append(hthreadblocksp);
+      h_top->append(hfunctop);
       // generate the local variables;
       GenerateStateVar(state_string);
       GenerateStateVar(NameNext(state_string));
@@ -404,6 +407,7 @@ namespace systemc_hdl {
       // nextstate = waitstate
       htmp->append(GenerateBinop("=", nextstate_string, std::to_string(numstates)));
     }
+    htmp->append(new hNode(hNode::hdlopsEnum::hReturnStmt));
   }
 
   void HDLThread::GenerateWaitCntUpdate(hNodep h_switchcase) {

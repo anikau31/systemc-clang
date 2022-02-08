@@ -77,6 +77,7 @@ namespace hnode {
   etype(hReturnStmt),  	\
   etype(hLiteral), \
   etype(hFunction), \
+  etype(hThreadFunction), \
   etype(hFunctionRetType), \
   etype(hFunctionParams), \
   etype(hFunctionParamI), \
