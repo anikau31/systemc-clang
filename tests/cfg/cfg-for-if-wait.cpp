@@ -33,7 +33,7 @@ TEST_CASE("Simple thread test", "[threads]") {
 
   if (data_file.empty()) {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
-                                            "simple-thread-input.cpp");
+                                            "cfg-for-if-wait-input.cpp");
   } else {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
                                             data_file);

@@ -53,8 +53,6 @@ class SplitCFG {
 
   /// \brief Paths of BBs generated.
   llvm::SmallVector<SplitCFGPath> paths_;
-  /// FIXME: Deprecated
-  llvm::SmallVector<llvm::SmallVector<const SplitCFGBlock *>> paths_found_;
 
   /// \brief The block id to block for SCCFG.
   std::unordered_map<unsigned int, SplitCFGBlock *> sccfg_;
@@ -125,17 +123,7 @@ class SplitCFG {
   /// \brief Construct the SCCFG.
   void construct_sccfg(const clang::CXXMethodDecl *method);
 
-  /// \brief Modified DFS to create all paths within wait statements and from
-  /// the root node.
-  /// \param basic_block The current basic block to process.
-  /// \param waits_in_stack The SplitCFGBlock that come after the wait
-  /// statements. These need to be processed.
-  /// \param visited_waits These are the SplitCFGBlocks that have waits and
-  /// those that have been visited.
-  void dfs_pop_on_wait(
-      const SplitCFGBlock *basic_block,
-      llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_in_stack,
-      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits );
+
 
   /// \brief Generates the paths between wait statements.
   void generate_paths();
@@ -161,6 +149,14 @@ class SplitCFG {
     }
   }
 
+  /// \brief Modified DFS to create all paths within wait statements and from
+  /// the root node.
+  /// \param basic_block The current basic block to process.
+  /// \param waits_in_stack The SplitCFGBlock that come after the wait
+  /// statements. These need to be processed.
+  /// \param visited_waits These are the SplitCFGBlocks that have waits and
+  /// those that have been visited.
+ 
   void dfs_visit_wait(
       const SplitCFGBlock *BB,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_blocks,

@@ -71,7 +71,7 @@ void SplitCFG::dfs_visit_wait(
       // A wait to be visited is added.
       if (visited_waits.insert(ParentBB).second) {
         waits_to_visit.insert(waits_to_visit.begin(), BB);
-          ++next_state_count_;
+        ++next_state_count_;
         auto wit{wait_next_state_.find(ParentBB)};
         if (wit == wait_next_state_.end()) {
           wait_next_state_.insert(
@@ -106,6 +106,7 @@ void SplitCFG::dfs_visit_wait(
         //              "\n";
         dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits,
                        curr_path);
+        llvm::dbgs() << "\n";
 
         /// This only updates the visited blocks for the subgraph within the
         /// loop. We do not want to update the global visited_blocks yet.
@@ -257,9 +258,6 @@ bool SplitCFG::isLoop(const SplitCFGBlock* block) const {
 
 void SplitCFG::dfs_rework() {
   /// G = cfg_
-  // const SplitCFGBlock* BB{&cfg_->getEntry()};
-  //  dfs_pop_on_wait(BB);
-  //
   VectorSplitCFGBlock waits_to_visit{};
   llvm::SmallPtrSet<const SplitCFGBlock*, 32> visited_waits;
 
@@ -278,7 +276,7 @@ void SplitCFG::dfs_rework() {
   paths_.push_back(curr_path);
 
   // Add the next state.
-  //wait_next_state_.insert(
+  // wait_next_state_.insert(
   //    std::make_pair(entry, std::make_pair(entry, next_state_count_)));
   //++next_state_count_;  // Reset has been assigned to 0
 
@@ -292,7 +290,6 @@ void SplitCFG::dfs_rework() {
     dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits,
                    curr_path);
     paths_.push_back(curr_path);
-    llvm::dbgs() << "\n";
   }
 
   addNextStatesToBlocks();
@@ -305,103 +302,6 @@ void SplitCFG::dfs_rework() {
 /// ===========================================
 /// SplitCFG
 /// ===========================================
-void SplitCFG::dfs_pop_on_wait(
-    const SplitCFGBlock* basic_block,
-    llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_in_stack,
-    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits) {
-  /// Empty CFG block
-  if (basic_block->succ_empty()) {
-    return;
-  }
-
-  bool walking_up_from_wait{false};
-  llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited;
-  llvm::SmallVector<
-      std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>, 8>
-      visit_stack;
-  llvm::SmallVector<const SplitCFGBlock*, 8> in_stack;
-
-  visited.insert(basic_block);
-  visit_stack.push_back(std::make_pair(basic_block, basic_block->succ_begin()));
-
-  // llvm::SmallVector<const SplitCFGBlock*> curr_path;
-  VectorSplitCFGBlock curr_path;
-  do {
-    std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>& Top =
-        visit_stack.back();
-    const SplitCFGBlock* parent_bb = Top.first;
-    SplitCFGBlock::const_succ_iterator& I = Top.second;
-
-    /// If BB has a wait() then just return.
-    bool bb_has_wait{(parent_bb->hasWait())};
-
-    if (bb_has_wait) {
-      walking_up_from_wait = bb_has_wait;
-      llvm::dbgs() << "BB# " << parent_bb->getBlockID()
-                   << " has a wait in it\n";
-      llvm::dbgs() << "Visited BB#" << parent_bb->getBlockID() << "\n";
-      curr_path.push_back(parent_bb);
-
-      /// The wait has not been processed yet so add it to the visited_wait
-      /// sets. Then add it in the stack to process the waits.
-      if (visited_waits.insert(parent_bb).second == true) {
-        // Insert the successor of the block.
-
-        while (I != parent_bb->succ_end()) {
-          basic_block = *I++;
-          if ((basic_block != nullptr)) {
-            llvm::dbgs() << "Insert successor of BB#" << parent_bb->getBlockID()
-                         << ": BB#" << basic_block->getBlockID() << "\n";
-            // Mimic FIFO
-            waits_in_stack.insert(waits_in_stack.begin(), basic_block);
-            auto wit = wait_next_state_.find(parent_bb);
-            if (wit == wait_next_state_.end()) {
-              wait_next_state_.insert(std::make_pair(
-                  parent_bb, std::make_pair(basic_block, next_state_count_)));
-              ++next_state_count_;
-            }
-            break;
-          }
-        }
-      }
-    }
-
-    // A new block is found only if the block is not visited, and it is not a
-    // wait(). If yes, then mark it as visited.
-    bool FoundNew = false;
-    while (I != parent_bb->succ_end()) {
-      basic_block = *I++;
-      if ((basic_block != nullptr) && (!bb_has_wait) &&
-          (visited.insert(basic_block).second)) {
-        FoundNew = true;
-        break;
-      }
-    }
-
-    if (FoundNew) {
-      // If a new successor has been found, then go down one level if there is
-      // a unvisited successor.
-      llvm::dbgs() << "Visited BB#" << parent_bb->getBlockID() << "\n";
-      visit_stack.push_back(
-          std::make_pair(basic_block, basic_block->succ_begin()));
-      curr_path.push_back(parent_bb);
-      if (walking_up_from_wait) {
-        visited.clear();
-        // Reinsert the successor block
-        visited.insert(basic_block);
-        walking_up_from_wait = false;
-      }
-    } else {
-      // Go up one level.
-      // llvm::dbgs() << "pop: " << visit_stack.size() << "\n";
-      visit_stack.pop_back();
-    }
-  } while (!visit_stack.empty());
-
-  /// Insert the path constructed.
-  paths_found_.push_back(curr_path);
-}
-
 llvm::APInt SplitCFG::getWaitArgument(const clang::CFGElement& element) const {
   if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
     auto stmt{cfg_stmt->getStmt()};
@@ -635,33 +535,7 @@ void SplitCFG::dumpSplitElements(
   }
 }
 
-void SplitCFG::generate_paths() {
-  dfs_rework();
-  /*
-    /// Set of visited wait blocks.
-    llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_waits;
-    VectorSplitCFGBlock waits_in_stack;
-
-    /// G = cfg_
-    const clang::CFGBlock* block{&cfg_->getEntry()};
-    const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
-    // Mimic FIFO
-    waits_in_stack.insert(waits_in_stack.begin(), entry);
-    // Entry=>Entry is the reset.
-    wait_next_state_.insert(
-        std::make_pair(entry, std::make_pair(entry, next_state_count_)));
-    ++next_state_count_;  // Reset has been assigned to 0
-    do {
-      entry = waits_in_stack.pop_back_val();
-      llvm::dbgs() << "Processing SB " << entry->getBlockID() << "\n";
-      dfs_pop_on_wait(entry, waits_in_stack, visited_waits);
-      llvm::dbgs() << "\n";
-    } while (!waits_in_stack.empty());
-
-    addNextStatesToBlocks();
-    dumpWaitNextStates();
-  */
-}
+void SplitCFG::generate_paths() { dfs_rework(); }
 
 void SplitCFG::addNextStatesToBlocks() {
   for (auto const& wait : wait_next_state_) {

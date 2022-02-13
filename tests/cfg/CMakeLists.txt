@@ -3,6 +3,9 @@
 set (TEST_LIST 
   # Thread parsing 
   simple-thread.cpp 
+  cfg-for-if-wait.cpp
+
+  # template test
   run-cfg-test.cpp
   run-cfg-rework-test.cpp
   )
