@@ -107,6 +107,7 @@ TEST_CASE("Simple thread test", "[threads]") {
       llvm::dbgs() << " ===================================================\n";
 
       /// Check if all paths are correct.
+      /// These have been worked out by hand.
       unsigned int i{0};
       for (const auto &p : scfg.getPathsFound()) {
         /// There should be 4 paths
