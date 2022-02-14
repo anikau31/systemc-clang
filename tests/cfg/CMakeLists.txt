@@ -4,6 +4,10 @@ set (TEST_LIST
   # Thread parsing 
   simple-thread.cpp 
   cfg-for-if-wait.cpp
+  thread-for-break0.cpp
+  thread-for-break1.cpp
+  cfg-for-stmt-wait.cpp
+  cfg-for-break-wait.cpp
 
   # template test
   run-cfg-test.cpp
