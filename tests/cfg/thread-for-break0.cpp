@@ -33,7 +33,7 @@ TEST_CASE("Simple thread test", "[threads]") {
 
   if (data_file.empty()) {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
-                                            "simple-thread-input.cpp");
+                                            "thread-for-break0-input.cpp");
   } else {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
                                             data_file);
@@ -100,32 +100,34 @@ TEST_CASE("Simple thread test", "[threads]") {
                    << " ***********************\n";
       SplitCFG scfg{from_ast->getASTContext()};
       scfg.construct_sccfg(method);
-      // scfg.dfs_rework();
       scfg.generate_paths();
-      scfg.dump();
-      // scfg.dumpToDot();
       llvm::dbgs() << " ===================================================\n";
 
-      /*
       /// Check if all paths are correct.
+      /// These have been worked out by hand.
       unsigned int i{0};
       for (const auto &p : scfg.getPathsFound()) {
         /// There should be 4 paths
         std::string pstr{pathToString(p)};
         if (i == 0) {
-          REQUIRE(pstr == "11 10 9 8 81");
+          REQUIRE(pstr == "13 12 121");
         }
         if (i == 1) {
-          REQUIRE(pstr == "82 7 6 5 4 2 1 9 8 81");
+          REQUIRE(pstr == "11 10 9 8 7 71 6 2 21 2 21");
         }
-        if ((i == 2) || (i == 3)) {
-          REQUIRE(pstr == "3 7 6 5 4 2 1 9 8 81");
+        if (i == 2) {
+          REQUIRE(pstr == "4 41");
+        }
+        if (i == 3) {
+          REQUIRE(pstr == "22 1 11 10 9 8 7 71 6 2 21 2 21");
+        }
+        if (i == 4) {
+          REQUIRE(pstr == "42 3 9 8 7 71 6 2 21 2 21");
         }
         ++i;
       }
       /// 4 Paths
-      REQUIRE(i == 4);
-      */
+      REQUIRE(i == 5);
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";

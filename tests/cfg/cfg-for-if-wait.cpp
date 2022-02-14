@@ -33,7 +33,7 @@ TEST_CASE("Simple thread test", "[threads]") {
 
   if (data_file.empty()) {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
-                                            "simple-thread-input.cpp");
+                                            "cfg-for-if-wait-input.cpp");
   } else {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
                                             data_file);
@@ -106,8 +106,8 @@ TEST_CASE("Simple thread test", "[threads]") {
       // scfg.dumpToDot();
       llvm::dbgs() << " ===================================================\n";
 
-      /*
       /// Check if all paths are correct.
+      /// These have been worked out by hand.
       unsigned int i{0};
       for (const auto &p : scfg.getPathsFound()) {
         /// There should be 4 paths
@@ -125,7 +125,6 @@ TEST_CASE("Simple thread test", "[threads]") {
       }
       /// 4 Paths
       REQUIRE(i == 4);
-      */
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";
