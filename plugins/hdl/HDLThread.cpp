@@ -113,10 +113,19 @@ namespace systemc_hdl {
       }
       hthreadmainmethod->append(new hNode(threadname+"_func", hNode::hdlopsEnum::hMethodCall));
       //hthreadmainmethod->append(hthreadblocksp);
+
+      // generate hnode tree for a function:
+      // <function> <ret type none> <cstmt containing switch stmt>
+      
       hNodep hfunctop = new hNode(threadname+"_func", hNode::hdlopsEnum::hFunction);
-      hfunctop->append(hthreadblocksp);
+      hfunctop->append(new hNode(hNode::hdlopsEnum::hFunctionRetType)); // placeholder: no return value
+      hNodep hcstmttmp = new hNode(hNode::hdlopsEnum::hCStmt);
+      hcstmttmp->append(hthreadblocksp);
+      hfunctop->append(hcstmttmp);
+      //hfunctop->append(hthreadblocksp);
       //h_top->append(hthreadblocksp);
       h_top->append(hfunctop);
+      
       // generate the local variables;
       GenerateStateVar(state_string);
       GenerateStateVar(NameNext(state_string));
