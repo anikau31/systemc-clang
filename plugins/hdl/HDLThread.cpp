@@ -177,7 +177,7 @@ namespace systemc_hdl {
   void HDLThread::CheckVardecls(hNodep &hp, unsigned int cfgblockid) {
     int varcnt = 0;
     for (auto oneop : hp->child_list) {
-      if ((oneop->getopc() == hNode::hdlopsEnum::hVardecl) || (oneop->getopc() == hNode::hdlopsEnum::hSigdecl)) {
+      if ((oneop != NULL) && ((oneop->getopc() == hNode::hdlopsEnum::hVardecl) || (oneop->getopc() == hNode::hdlopsEnum::hSigdecl))) {
 	LLVM_DEBUG(llvm::dbgs() << "Detected vardecl for CFG Block ID " << cfgblockid << "\n");
 	if (CFGVisited[cfgblockid]==1) hlocalvarsp->append(oneop);
 	varcnt += 1;

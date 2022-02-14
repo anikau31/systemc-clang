@@ -59,7 +59,7 @@ namespace systemc_hdl {
      methodecls.set_prefix("_func_");
      bool ret1 = TraverseStmt(stmt);
      AddVnames(h_top);
-     h_top->child_list.push_back(h_ret);
+     if (h_ret != NULL) h_top->child_list.push_back(h_ret);
      LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody Run Method\n");
 
   }
@@ -129,7 +129,7 @@ namespace systemc_hdl {
 	  dyn_cast<ConstantExpr>(((CaseStmt *)stmt)->getLHS())) {
 	llvm::APSInt val = expr->getResultAsAPSInt();
 	hcasep->child_list.push_back(
-				     new hNode(systemc_clang::utils::apint::toString(val), hNode::hdlopsEnum::hLiteral));
+	  new hNode(systemc_clang::utils::apint::toString(val), hNode::hdlopsEnum::hLiteral));
       }
 
       TraverseStmt(((CaseStmt *)stmt)->getSubStmt());
