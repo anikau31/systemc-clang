@@ -621,7 +621,10 @@ namespace systemc_hdl {
 	  else  h_operop =  new hNode(operatorname, hNode::hdlopsEnum::hPrefix);
 	}
 	else {
-	  h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
+	  if (opcall->getNumArgs() == 1)
+	    h_operop = new hNode(operatorname, hNode::hdlopsEnum::hUnop);
+	  else
+	    h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
 	  if ((operatorname == ",") && (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype)))
 	    h_operop->set("concat"); // overloaded comma is concat for sc types
 	}
