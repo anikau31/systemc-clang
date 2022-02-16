@@ -7,8 +7,8 @@ name: Doxygen Action
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    #  pull_request:
+    #    branches: [ master ]
 
 
   
