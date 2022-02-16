@@ -62,7 +62,8 @@ namespace systemc_hdl {
     string FindVname(NamedDecl *vard);
     void AddVnames(hNodep &hvns);
 
-    hNodep NormalizeHcode(hNodep hinp);
+    hNodep NormalizeAssignmentChain(hNodep hinp);
+    void NormalizeSwitchStmt(hNodep hswitchbody);
 
     hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
 

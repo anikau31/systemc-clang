@@ -237,8 +237,8 @@ namespace systemc_hdl {
       if (h_ret) {
 	if ((isAssignOp(h_ret) ) && (h_ret->child_list.size() == 2) &&
 	    (isAssignOp(h_ret->child_list[1]))){
-	  hNodep htmp = NormalizeHcode(h_ret); // break up assignment chain
-	  //h_ret = NormalizeHcode(h_ret); // break up assignment chain
+	  hNodep htmp = NormalizeAssignmentChain(h_ret); // break up assignment chain
+	  //h_ret = NormalizeAssignmentChain(h_ret); // break up assignment chain
 	  h_cstmt->child_list.insert(h_cstmt->child_list.end(),
 				     htmp->child_list.begin(), htmp->child_list.end());
 	}
@@ -854,8 +854,18 @@ namespace systemc_hdl {
       h_switchstmt->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
 
     old_ret = h_ret;
+    
+ 
     TraverseStmt(switchs->getBody());
-    if (h_ret != old_ret) h_switchstmt->child_list.push_back(h_ret);
+
+    if (h_ret != old_ret) {
+      NormalizeSwitchStmt(h_ret);
+    // here need extra code to append non switchcase hcode into previous
+    // switchcase group, which happens if the switchcase isn't wrapped in
+    // a compound statement {}.
+    
+      h_switchstmt->child_list.push_back(h_ret);
+    }
 
     // for (SwitchCase *sc = switchs->getSwitchCaseList(); sc != NULL;
     //      sc = sc->getNextSwitchCase()) {
@@ -950,7 +960,7 @@ namespace systemc_hdl {
     }
   }
 
-  hNodep HDLBody::NormalizeHcode(hNodep hinp) {
+  hNodep HDLBody::NormalizeAssignmentChain(hNodep hinp) {
     // break up chain of assignments a = b = c = d = 0;
     // at entry there is a chain of at least two: a = b = 0;
     
@@ -967,6 +977,25 @@ namespace systemc_hdl {
     std::reverse(hassignchain->child_list.begin(), hassignchain->child_list.end());
     return hassignchain;
   }
+
+  void HDLBody::NormalizeSwitchStmt(hNodep hswitchstmt) {
+    if (hswitchstmt->child_list.size() == 0) return;
+    hNodep hprev = hswitchstmt->child_list[0]; // should be a switchcase node
+    for (int i= 1; i< hswitchstmt->child_list.size(); i++) {
+      if ((hswitchstmt->child_list[i]->getopc() != hNode::hdlopsEnum::hSwitchCase) &&
+	  (hswitchstmt->child_list[i]->getopc() != hNode::hdlopsEnum::hSwitchDefault)){
+	hNodep htmp = new hNode((hswitchstmt->child_list[i])->getname(), (hswitchstmt->child_list[i])->getopc());
+	htmp->child_list = (hswitchstmt->child_list[i])->child_list;
+	hprev->append(htmp);
+	hswitchstmt->child_list[i]->set(hNode::hdlopsEnum::hLast);	
+      }
+      else hprev = hswitchstmt->child_list[i];
+    }
+    hswitchstmt->child_list.erase(std::remove_if(hswitchstmt->child_list.begin(), hswitchstmt->child_list.end(),
+						 [] (hNodep hp){return hp->getopc() == hNode::hdlopsEnum::hLast;}),
+				  hswitchstmt->child_list.end());
+  }
+
 					  
   // CXXMethodDecl *HDLBody::getEMD() {
   //   return _emd;
