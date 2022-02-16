@@ -34,7 +34,8 @@ lark_grammar = Lark('''
         hprocess: "hProcess" ID  "[" "hMethod" (ID|"NONAME") "[" prevardecl  hcstmt "]" "]"
         
         // hthread consists of a synchronous block that sets state and a switch block that produces next state
-        hthread:  "hProcess" ID  "[" modportsiglist? hthreadsync hthreadswitch "]"
+        // hfunction 
+        hthread:  "hProcess" ID  "[" modportsiglist? hfunction* hthreadsync hthreadswitch "]"
         hthreadsync: "hMethod" ID  "[" ifstmt "]"
         hthreadswitch: "hMethod" ID  "["  stmts "]"
         
@@ -132,8 +133,8 @@ lark_grammar = Lark('''
         hfunctionlocalvars: vardeclinit*
         hfunctionbody: hcstmt
         hfunctionrettype: "hFunctionRetType" "NONAME" "[" htypeinfo "]"
+                        | "hFunctionRetType" "NONAME" "NOLIST" // only appears in generated statements
         hfunctionparams : "hFunctionParams" "NONAME" "[" (funcparami|funcparamio)* "]"
-                        | "hFunctionParams" "NONAME" "NOLIST"
         hreturnstmt: "hReturnStmt" "NONAME" "[" expression "]"
                    | "hReturnStmt" "NONAME" "NOLIST"  // return;
 
@@ -191,7 +192,7 @@ lark_grammar = Lark('''
         // A temporary hack to handle --
         hunop:  "hUnop" UNOP_NON_SUB "[" (expression|hslice) "]"
              |  "hUnop" UNOP_SUB "[" (expression|hslice) "]"
-             |  "hBinop" UNOP_BNOT "[" (expression|hslice) "]"
+             |  "hUnop" UNOP_BNOT "[" (expression|hslice) "]"
              |  "hBinop" UNOP_NOT "[" (expression|hslice) "]"
              | hpostfix
              | hprefix

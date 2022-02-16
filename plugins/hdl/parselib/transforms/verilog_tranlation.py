@@ -784,8 +784,11 @@ class VerilogTranslationPass(TopDown):
 
     def hfunctionrettype(self, tree):
         self.__push_up(tree)
-        tpe = tree.children[0]
-        res = tpe.to_str(var_name='')
+        if len(tree.children) != 0:
+            tpe = tree.children[0]
+            res = tpe.to_str(var_name='')
+        else:
+            res = "void"
         return res
 
     def htouint(self, tree):
@@ -1048,13 +1051,21 @@ class VerilogTranslationPass(TopDown):
             for proc in processlist.children:
                 if is_tree_type(proc, 'hthread'):
                     # thread_name, thread_sig, thread_sync, thread_comb = proc.children
-                    thread_name, thread_sync, thread_comb = proc.children
+                    thread_func = None
+                    if len(proc.children) == 3:
+                        thread_name,  thread_sync, thread_comb = proc.children
+                    elif len(proc.children) == 4:
+                        thread_name, thread_func, thread_sync, thread_comb = proc.children
+                    else:
+                        assert False, "thread should have 3 or 4 children node"
                     self.inc_indent()
                     ind = self.get_current_ind_prefix()
                     res += '{}// Thread: {}\n'.format(ind, thread_name)
                     # res = self.__generate_vars_decl(ind, res, thread_sig.children)
                     self.dec_indent()
                     res += thread_sync + "\n"
+                    if thread_func:
+                        res += thread_func + "\n"
                     res += thread_comb + "\n"
                 else:
                     res += proc + '\n'
