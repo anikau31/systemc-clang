@@ -481,6 +481,11 @@ void SplitCFG::createWaitSplitCFGBlocks(
       new_split->wait_arg_ = getWaitArgument(*wait_el);
     }
 
+    /// Propogate in the SplitCFGBlock whether the block has a terminator that has a break statement.
+    //
+    if (isLoop(new_split)) {
+      new_split->identifyBreaks(context_);
+    }
     // Set the successor of new_split.
     prev_block = new_split;
     ++id;

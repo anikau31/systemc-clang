@@ -18,7 +18,60 @@
 #include "clang/Analysis/CFG.h"
 #include <vector>
 
+#include "clang/ASTMatchers/ASTMatchers.h"
+#include "clang/ASTMatchers/ASTMatchFinder.h"
+#include "llvm/Support/Debug.h"
+
+/// Different matchers may use different DEBUG_TYPE
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "SplitCFGMatcher"
+
+using namespace clang::ast_matchers;
+
 namespace systemc_clang {
+
+class BreakMatcher : public MatchFinder::MatchCallback {
+ private:
+  bool break_found_;
+  bool wait_found_;
+
+ public:
+  bool hasBreak() const { return break_found_; }
+  bool hasWait() const { return wait_found_; }
+
+  void registerMatchers(MatchFinder &finder) {
+    // clang-format off
+    //auto bstmt = stmt(hasDescendant(breakStmt().bind("break_stmt")));
+    auto bstmt = findAll(breakStmt().bind("break_stmt"));
+    auto wait_stmt = findAll(cxxMemberCallExpr(callee(cxxMethodDecl(hasName("wait")))).bind("wait_stmt"));
+    // clang-format on
+
+    finder.addMatcher(bstmt, this);
+    finder.addMatcher(wait_stmt, this);
+  }
+
+  virtual void run(const MatchFinder::MatchResult &result) {
+    auto bk_stmt = const_cast<clang::Stmt *>(
+        result.Nodes.getNodeAs<clang::Stmt>("break_stmt"));
+    auto wait_stmt = const_cast<clang::CXXMemberCallExpr *>(
+        result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("wait_stmt"));
+
+    if (bk_stmt) {
+      LLVM_DEBUG(llvm::dbgs() << "## BreakStmt \n");
+      break_found_ = true;
+    }
+    if (wait_stmt) {
+      LLVM_DEBUG(llvm::dbgs() << "## Wait\n");
+      wait_found_ = true;
+    }
+  }
+
+  void dump() {
+    if (break_found_) {
+      LLVM_DEBUG(llvm::dbgs() << "## BREAK FOUND\n");
+    }
+  }
+};
 
 ///
 /// This class  represents information that is stored to split a single CFGBlock
@@ -38,13 +91,21 @@ class SplitCFGBlock {
 
   /// A pointer to the original CFGBlock.
   const clang::CFGBlock *block_;
-  /// Whether this SplitCFGBlock is a wait block or not.  Only one element if it is a wait block. 
+  /// Whether this SplitCFGBlock is a wait block or not.  Only one element if it
+  /// is a wait block.
   bool has_wait_;
+
+  /// The terminator has break.
+  bool terminator_has_break_;
+
+  /// The terminator has break.
+  bool terminator_has_wait_;
+
   /// The block id.
   unsigned int id_;
   /// The next state that the wait would transform to.
   unsigned int next_state_;
-  /// The wait argument. 
+  /// The wait argument.
   llvm::APInt wait_arg_;
 
   /// This holds the ids in split_elements_ that correspond to the wait
@@ -108,13 +169,14 @@ class SplitCFGBlock {
   /// \brief Copy constructor.
   SplitCFGBlock(const SplitCFGBlock &from);
 
-  /// \brief Returns the pointer to the original CFGBlock from which the SplitCFGBlock was created. 
+  /// \brief Returns the pointer to the original CFGBlock from which the
+  /// SplitCFGBlock was created.
   const clang::CFGBlock *getCFGBlock() const;
 
-  /// \brief Returns the number of CFGElements in this block. 
+  /// \brief Returns the number of CFGElements in this block.
   std::size_t getNumOfElements() const;
 
-  /// \brief Returns the elements in this block. 
+  /// \brief Returns the elements in this block.
   const VectorCFGElementPtrImpl &getElements() const;
 
   /// \brief Returns the successors for the block.
@@ -126,17 +188,25 @@ class SplitCFGBlock {
   /// \brief Returns whether the SplitCFGBlock is a wait block or not.
   bool hasWait() const;
 
+  bool hasTerminatorBreak() const;
+
+  bool hasTerminatorWait() const;
+
   /// \brief Returns the block ID for the SplitCFGBlock.
   unsigned int getBlockID() const;
 
-  /// \brief Returns the next state. Only pertinent for blocks that have waits in them. 
+  /// \brief Returns the next state. Only pertinent for blocks that have waits
+  /// in them.
   unsigned int getNextState() const;
 
   /// \brief Returns the integer value of the argument supplied to the wait().
   llvm::APInt getWaitArg() const;
 
-  /// \brief The elements are added to this SplitCFGBlock. 
+  /// \brief The elements are added to this SplitCFGBlock.
   void insertElements(VectorCFGElementPtr &elements);
+
+  /// \brief Identify if the terminator of a CFGBlock has a break in it.
+  void identifyBreaks(clang::ASTContext &context);
 
   void dump() const;
   void dumpColored() const;
