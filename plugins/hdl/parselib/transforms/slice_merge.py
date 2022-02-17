@@ -78,12 +78,15 @@ class SliceMerge(TopDown):
 
     def hslice(self, tree):
         self.__push_up(tree)
-        var_name, l, r = tree.children
-        lOk, lWidth, lID = self.__check_part_select_left(l)
-        rOk, rWidth, rID = self.__check_part_select_right(r)
-        if lOk and rOk and lWidth == rWidth and lID == rID:
-            mult = Tree(data='hbinop', children=['*', lID, lWidth])
-            index_part = Tree(data='hbinop', children=['+:', mult, lWidth])
-            return var_name, index_part
-        else:
+        if len(tree.children) == 3:
+            var_name, l, r = tree.children
+            lOk, lWidth, lID = self.__check_part_select_left(l)
+            rOk, rWidth, rID = self.__check_part_select_right(r)
+            if lOk and rOk and lWidth == rWidth and lID == rID:
+                mult = Tree(data='hbinop', children=['*', lID, lWidth])
+                index_part = Tree(data='hbinop', children=['+:', mult, lWidth])
+                return var_name, index_part
+            else:
+                return tree
+        elif len(tree.children) == 2:
             return tree

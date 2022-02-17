@@ -14,6 +14,7 @@ class LiteralExpansion(TopDown):
         self.structure = structure
         self.is_port_binding = False
         self.port_binding_module = None
+        self.field_access = None
 
     def portbinding(self, tree):
         self.is_port_binding = True
@@ -22,6 +23,28 @@ class LiteralExpansion(TopDown):
         self.is_port_binding = False
         self.port_binding_module = None
         return tree
+
+    def hfieldaccess(self, tree):
+        """
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref pa_scclang_global_15 NOLIST
+                    hVarref sig_scclang_global_1 NOLIST
+                  ]
+                  hVarref sig_scclang_global_1 NOLIST
+                ]
+                hField x NOLIST
+              ]
+        """
+        # Field access is dedicated to struct, so no need to worry about the module
+        field_name = tree.children[1].children[0]
+        if self.field_access is not None:
+            self.field_access.append(field_name)
+        else:
+            self.field_access = [field_name]
+        self.__push_up(tree)
+        return tree.children[0]
 
 
     def hvarref(self, tree):
@@ -55,6 +78,9 @@ class LiteralExpansion(TopDown):
             # new_val = tree.children[0].value.replace('##', '_')
             new_token = Token('ID', new_val)
             tree.children[0] = new_token
+        if self.field_access is not None:
+            tree.children[0] += '_' + '_'.join(self.field_access)
+            self.field_access = None
         return tree
 
     def idlit(self, tree):

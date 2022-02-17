@@ -23,6 +23,7 @@ class FunctionInfoPass(TopDown):
         self.function_nodes = dict()  # record the function nodes per modules
         self.__current_process = None
         self.__current_function = None
+        self.__current_thread = None
 
     @property
     def current_module_function_nodes(self):
@@ -54,6 +55,8 @@ class FunctionInfoPass(TopDown):
             return self.__current_function.function_invocations
         elif self.__current_process:
             return self.__current_process.function_invocations
+        elif self.__current_thread:
+            return self.__current_thread.function_invocations
         else:
             raise ValueError('Current scope is not set')
 
@@ -65,6 +68,14 @@ class FunctionInfoPass(TopDown):
         self.__current_process = tree
         tree.function_invocations = []
         self.current_process_function_invocations = tree.function_invocations
+        self.__push_up(tree)
+        self.__current_process = None
+        return tree
+
+    def hthreadswitch(self, tree):
+        # NOTE: this is only used for generated functions
+        self.__current_thread = tree
+        tree.function_invocations = []
         self.__push_up(tree)
         self.__current_process = None
         return tree
@@ -209,7 +220,7 @@ class FunctionInfoPass2(TopDown):
                 return f
         # try fuzzy search
         for f in self.current_function_nodes:
-            dprint(f.children[0][:-1] == func_name[:-1])
+            # dprint(f.children[0][:-1] == func_name[:-1])
             if f.children[0][:-1] == func_name[:-1]:
                 return f
         raise ValueError(f'Function {func_name} not found')
