@@ -28,7 +28,7 @@ using namespace systemc_clang;
 ///
 void SplitCFG::dfs_visit_wait(
     const SplitCFGBlock* BB,
-    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_blocks,
+    llvm::SmallPtrSet<const SplitCFGBlock*, 32>& visited_blocks,
     llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_to_visit,
     llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits,
     llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>&
@@ -85,37 +85,38 @@ void SplitCFG::dfs_visit_wait(
     //
     // If there is a successor that has not been visited, then remember that
     // block.
+    dumpVisitedBlocks(visited_blocks);
     bool found_succ{getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB)};
-    // llvm::dbgs() << "Found successor BB " << BB->getBlockID()
-    //             << " for parentBB " << ParentBB->getBlockID() << "\n";
+    llvm::dbgs() << "Found successor BB " << BB->getBlockID()
+                << " for parentBB " << ParentBB->getBlockID() << "\n";
 
     // FIXME: Should this have found_succ &&?
-    if (isLoopWithTwoSuccessors(ParentBB)) {
+    if (isLoopWithTwoSuccessors(ParentBB) && found_succ) {
       do {
         // llvm::dbgs() << "\n==============================================";
         llvm::dbgs() << "\n#### BB " << ParentBB->getBlockID()
                      << " is a loop with 2 succ\n";
-        llvm::SmallPtrSet<const SplitCFGBlock*, 32> loop_visited_blocks;
+        llvm::SmallPtrSet<const SplitCFGBlock*, 32> loop_visited_blocks{visited_blocks};
         // ParentBB has been visited so don't revisit it
         loop_visited_blocks.insert(ParentBB);
-        // dumpVisitedBlocks(visited_blocks);
+        dumpVisitedBlocks(loop_visited_blocks);
         visited_blocks.insert(BB);
-        // llvm::dbgs() << "\n==============================================";
-        // llvm::dbgs() << "\nRecurse DFS starting at BB " << BB->getBlockID()
-        //              << " visited_block size " << visited_blocks.size() <<
-        //              "\n";
+        llvm::dbgs() << "\n==============================================";
+        llvm::dbgs() << "\nRecurse DFS starting at BB " << BB->getBlockID()
+                     << " visited_block size " << visited_blocks.size() <<
+                     "\n";
         dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits,
                        curr_path);
         llvm::dbgs() << "\n";
 
         /// This only updates the visited blocks for the subgraph within the
         /// loop. We do not want to update the global visited_blocks yet.
-        updateVisitedBlocks(loop_visited_blocks, loop_visited_blocks);
+        //updateVisitedBlocks(loop_visited_blocks, loop_visited_blocks);
         // dumpVisitedBlocks(visited_blocks);
-        // llvm::dbgs() << "\nEND Recurse DFS"
-        //              << " visited_block size " << visited_blocks.size() <<
-        //              "\n";
-        // llvm::dbgs() << "\n==============================================";
+        llvm::dbgs() << "\nEND Recurse DFS"
+                     << " visited_block size " << visited_blocks.size() <<
+                     "\n";
+        llvm::dbgs() << "\n==============================================";
 
         /// There are two parts to updating the visited blocks.
         /// 1. You do not update the visited blocks when iterating over a
@@ -143,7 +144,7 @@ void SplitCFG::dfs_visit_wait(
       // Only insert successor if recursive call does not visit subgraph.
     }
     addSuccessorToVisitOrPop(bb_has_wait, BB, to_visit, found_succ);
-    // std::cin.get();
+    //std::cin.get();
     // llvm::dbgs() << "to_visit ";
     // dumpSmallVector(to_visit);
     //    llvm::dbgs() << " End loop \n";
@@ -263,7 +264,7 @@ void SplitCFG::dfs_rework() {
 
   const clang::CFGBlock* block{&cfg_->getEntry()};
   const SplitCFGBlock* entry{sccfg_[block->getBlockID()]};
-  llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
+  llvm::SmallPtrSet<const SplitCFGBlock*, 32> visited_blocks;
 
   /// Record the current path.
   llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
@@ -282,7 +283,7 @@ void SplitCFG::dfs_rework() {
 
   while (!waits_to_visit.empty()) {
     curr_path.clear();
-    llvm::SmallPtrSet<const SplitCFGBlock*, 8> visited_blocks;
+    visited_blocks.clear();//llvm::SmallPtrSet<const SplitCFGBlock*, 32> visited_blocks;
     entry = waits_to_visit.pop_back_val();
 
     llvm::dbgs() << "\n@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
