@@ -96,7 +96,7 @@ void SplitCFG::dfs_visit_wait(
         // llvm::dbgs() << "\n==============================================";
         llvm::dbgs() << "\n#### BB " << ParentBB->getBlockID()
                      << " is a loop with 2 succ\n";
-        llvm::SmallPtrSet<const SplitCFGBlock*, 32> loop_visited_blocks;
+        llvm::SmallPtrSet<const SplitCFGBlock*, 32> loop_visited_blocks{visited_blocks};
         // ParentBB has been visited so don't revisit it
         loop_visited_blocks.insert(ParentBB);
         dumpVisitedBlocks(loop_visited_blocks);
