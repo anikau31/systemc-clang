@@ -26,7 +26,7 @@ SC_MODULE(test) {
               k = 6;
             }
           }
-          break;
+        //  break;
         }
         else k = 5;
           k++;

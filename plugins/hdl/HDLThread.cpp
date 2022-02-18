@@ -318,6 +318,15 @@ namespace systemc_hdl {
 	}
 	else if (const ForStmt *S1 = dyn_cast<ForStmt> (S)) {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is a for stmt\n");
+	  if (!sgb->hasTerminatorWait()) {
+	    LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " doesn't have a wait()\n");
+	    LLVM_DEBUG(S1->dump(llvm::dbgs(), ast_context_));
+	    xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
+	    hNodep hforsucc = new hNode(hNode::hdlopsEnum::hCStmt);
+	    ProcessSplitGraphBlock(spgsucc[1], state_num, hforsucc);
+	    h_switchcase->append(hforsucc);
+	    return;
+	  }
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
 	}
 	else if (const IfStmt *S1 = dyn_cast<IfStmt> (S)) {
