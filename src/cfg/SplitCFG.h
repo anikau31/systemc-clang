@@ -159,7 +159,7 @@ class SplitCFG {
  
   void dfs_visit_wait(
       const SplitCFGBlock *BB,
-      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_blocks,
+      llvm::SmallPtrSet<const SplitCFGBlock *, 32> &visited_blocks,
       llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_to_visit,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits,
       llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
