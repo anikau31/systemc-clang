@@ -19,6 +19,8 @@ Welcome to systemc-clang's documentation!
   hardware.rst
 
   projects.rst 
+  
+  docker.rst 
 
   support.rst
 
