@@ -291,9 +291,10 @@ class FunctionInfoPass2(TopDown):
         return phantom_var
 
     def __extract_name_from_method_args(self, arg_node, arg_tpe):
+        dprint(arg_node)
         if is_tree_type(arg_node, 'hvarref'):
             return arg_node.children[0]
-        elif is_tree_types(arg_node, ['hliteral', 'hbinop', 'hmethodcall', 'syscread']):
+        elif is_tree_types(arg_node, ['hliteral', 'hbinop', 'hmethodcall', 'syscread', 'hunop']):
             warn('Complex expression or constant used for in/out argument, '
                  'this will cause phantom argument to be created and the output result will be discarded. '
                  'Consider using non-reference or const-reference instead')

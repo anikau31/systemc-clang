@@ -178,7 +178,7 @@ lark_grammar = Lark('''
                   
         hlrotate : "hNoop" "lrotate" "[" expression expression "]"
         horreduce: "hNoop" "or_reduce" "[" expression "]"
-        hcondop : "hCondop" "NONAME" "[" (hbinop | hunop | syscread | hvarref) (expression | hprefix) (expression | hpostfix) "]"
+        hcondop : "hCondop" "NONAME" "[" (hslice | hliteral | hbinop | hunop | syscread | hvarref) (hslice | expression | hprefix) (hslice | expression | hpostfix) "]"
 
         syscread : hsigassignr "[" expression "]"
         syscwrite : hsigassignl "["  expression  expression "]"
@@ -202,7 +202,7 @@ lark_grammar = Lark('''
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
         // Separate '=' out from so that it is not an expression but a standalone statement
-        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
+        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (hconcat | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
                  | "hBinop" "=" "[" harrayref  arrayrhs "]"
                  | nblkassign
                  | vassign
@@ -232,7 +232,7 @@ lark_grammar = Lark('''
         ?hmodassigntype : haddassign | hsubassign
         haddassign : "+" "=" 
         hsubassign : "-" "="
-        vassign: "hVarAssign" "NONAME" "[" hvarref (hnsbinop | syscread | hliteral | hvarref | expression)"]"
+        vassign: "hVarAssign" "NONAME" "[" hvarref (hnsbinop | syscread | hliteral | hvarref | expression | harrayref)"]"
         // Normal expressions that can not be expanded
         nonrefexp: hbinop
         
