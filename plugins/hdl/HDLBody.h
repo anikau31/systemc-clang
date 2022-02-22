@@ -32,7 +32,7 @@ namespace systemc_hdl {
   
   class HDLBody: public RecursiveASTVisitor <HDLBody> {
   public:
-    HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map );
+    HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, hfunc_name_map_t &allmethodecls );
 
     virtual ~HDLBody();
 
@@ -61,12 +61,13 @@ namespace systemc_hdl {
     bool TraverseDoStmt(DoStmt *whiles);
     string FindVname(NamedDecl *vard);
     void AddVnames(hNodep &hvns);
+    string FindFname(FunctionDecl *funcd);
 
     hNodep NormalizeAssignmentChain(hNodep hinp);
     void NormalizeSwitchStmt(hNodep hswitchbody);
 
     hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
-
+    
     clang::DiagnosticsEngine &diag_e;
     
     hdecl_name_map_t vname_map;
@@ -84,6 +85,7 @@ namespace systemc_hdl {
     const string nextstate_string = "_scclang_nextstate_";
     
     HDLBodyMode thismode;
+    hfunc_name_map_t &allmethodecls_;
     
     bool isLogicalOp(clang::OverloadedOperatorKind opc);
     

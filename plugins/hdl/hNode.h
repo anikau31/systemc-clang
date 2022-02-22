@@ -374,13 +374,11 @@ namespace hnode {
     }
     
     string find_entry_newn(T declp, bool set_ref = false) {
-      auto vname_it{hdecl_name_map.find(declp)};
-      if (vname_it != hdecl_name_map.end()) {
-	// only set referenced bit for Signals and Variables
-	if (set_ref && is_sigvar(hdecl_name_map[declp].h_vardeclp)) hdecl_name_map[declp].referenced = true;
-	return hdecl_name_map[declp].newn;
-      }
-      else return "";
+      if (hdecl_name_map.find(declp) == hdecl_name_map.end())
+	return "";
+      // only set referenced bit for Signals and Variables
+      if (set_ref && is_sigvar(hdecl_name_map[declp].h_vardeclp)) hdecl_name_map[declp].referenced = true;
+      return hdecl_name_map[declp].newn;
     }
 
     bool is_referenced(T declp) {
@@ -399,10 +397,16 @@ namespace hnode {
     void set_prefix(string prefix) { ns.set_prefix(prefix); }
 
     string get_prefix() { return ns.get_prefix(); }
-    
+
     bool empty() { return hdecl_name_map.empty(); }
     size_t size() { return hdecl_name_map.size(); }
     void clear() {hdecl_name_map.clear(); ns.set_prefix(lvar_prefix);}
+
+    void print(llvm::raw_ostream & modelout=llvm::outs(), unsigned int indnt=2) {
+      for( auto entry:hdecl_name_map) {
+	modelout << entry.first << " " <<entry.second.newn << "\n";
+      }
+    }
     
     typename std::map<T, names_t>::iterator begin() { return hdecl_name_map.begin();}
     typename std::map<T, names_t>::iterator end() { return hdecl_name_map.end();}
@@ -421,7 +425,7 @@ namespace hnode {
   typedef newname_map_t<NamedDecl *> hdecl_name_map_t;
   typedef newname_map_t<ModuleInstance *> hmodinst_name_map_t;
   typedef newname_map_t<FunctionDecl *> hfunc_name_map_t;
-
+  
   // thread name, reset var name, false|true, ASYNC|SYNC
   typedef std::unordered_map<string, hNodep> resetvar_map_t; 
   

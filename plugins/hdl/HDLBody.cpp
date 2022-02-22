@@ -32,8 +32,8 @@ using namespace hnode;
 
 namespace systemc_hdl {
 
-  HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map) :
-    diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map} {
+  HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, hfunc_name_map_t &allmethodecls) :
+    diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map}, allmethodecls_{allmethodecls} {
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor\n");
     }
 
@@ -54,9 +54,11 @@ namespace systemc_hdl {
     else {
       vname_map.set_prefix("_"+h_top->getname()+vname_map.get_prefix());
     }
+
+    LLVM_DEBUG(llvm::dbgs() << "allmethodecls_ size is " << allmethodecls_.size() << "\n");
+    
     // if (!mod_vname_map_.empty())
     // 	vname_map.insertall(mod_vname_map_);
-     methodecls.set_prefix("_func_");
      bool ret1 = TraverseStmt(stmt);
      AddVnames(h_top);
      if (h_ret != NULL) h_top->child_list.push_back(h_ret);
@@ -456,7 +458,15 @@ namespace systemc_hdl {
 	// create the call expression
 	hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
 	// don't add this method to methodecls if processing modinit
-	if (!add_info) methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
+	if (!add_info) {
+	  string tmpname = FindFname((FunctionDecl *)value);
+	  if (tmpname == "") { // isn't in local or global symbol table
+	    LLVM_DEBUG(llvm::dbgs() << "adding method " << qualfuncname << " with pointer " << value << " \n");
+	    methodecls.print(llvm::dbgs());
+	    methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
+	  }
+	  else hfuncall->set(tmpname);
+	}
 	h_ret = hfuncall;
 	return true;
       }
@@ -525,7 +535,7 @@ namespace systemc_hdl {
       //      method decls
 
       LLVM_DEBUG(llvm::dbgs() << "here is method printname " << methodname
-		 << " and qual name " << qualmethodname << " \n");
+		 << " and qual name " << qualmethodname << "and declp " << methdcl << " \n");
       if (methodname.compare(0, 8, "operator") ==
 	  0) {  // 0 means compare =, 8 is len("operator")
 	// the conversion we know about, can be skipped
@@ -558,7 +568,15 @@ namespace systemc_hdl {
       //methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
       h_callp = new hNode(qualmethodname, opc);
       // don't add this method to methodecls if processing modinit
-      if (!add_info) methodecls.add_entry(methdcl,qualmethodname, h_callp);
+      if (!add_info) {
+	string tmpname = FindFname((FunctionDecl *)methdcl);
+	if (tmpname == "") { // isn't in local or global symbol table
+	  LLVM_DEBUG(llvm::dbgs() << "adding method " << qualmethodname << " with pointer " << methdcl << " \n");
+	  methodecls.print(llvm::dbgs());
+	  methodecls.add_entry((FunctionDecl *)methdcl, qualmethodname,  h_callp);
+	}
+	else h_callp->set(tmpname);
+      }
       methodname = qualmethodname;
     }
 
@@ -934,10 +952,21 @@ namespace systemc_hdl {
     return true;
   }
 
+  
+  // these two functions are so clumsy. The data structure should handle
+  // multi-level symbol tables.
+  
   string HDLBody::FindVname(NamedDecl *vard) {
     string newname = vname_map.find_entry_newn(vard, thismode==rthread); // set referenced bit if in thread
     if (newname == "")
       newname = mod_vname_map_.find_entry_newn(vard, thismode==rthread); // set referenced bit if in thread
+    return newname;
+  }
+
+  string HDLBody::FindFname(FunctionDecl *funcd) {
+    string newname = methodecls.find_entry_newn(funcd, thismode==rthread); // set referenced bit if in thread
+    if (newname == "")
+      newname = allmethodecls_.find_entry_newn(funcd, thismode==rthread); // set referenced bit if in thread
     return newname;
   }
   

@@ -54,7 +54,7 @@ namespace systemc_hdl {
     clang::DiagnosticsEngine &main_diag_engine{getContext().getDiagnostics()};
     
     hfunc_name_map_t allmethodecls;  //  all methods/functions called
-
+    
     std::unordered_set<string> module_vars;
 
     resetvar_map_t threadresetmap;  // for each module; must be cleared before next module 
