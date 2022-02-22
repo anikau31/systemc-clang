@@ -55,7 +55,7 @@ If you encounter problems, please create issues with a minimally working example
 Development Docker image
 ------------------------
 
-We build all the dependencies necessary for ``systemc-clang`` in a `Docker image <https://hub.docker.com/r/rseac/systemc-clang/tags?page=1&ordering=last_updated>`_ that you may use. 
+We build all the dependencies necessary for ``systemc-clang`` in a `Docker image <https://hub.docker.com/r/rseac/systemc-clang/tags?page=1&ordering=last_updated>`_ that you may use.  Follow these `Docker systemc-clang instructions <docs/source/docker.rst>`_ to use the Docker image for building ``systemc-clang``, and running benchmarks.  
 
 Project Ideas
 --------------
