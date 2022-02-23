@@ -18,6 +18,7 @@ class FunctionTransformationPass(TopDown):
         self.__current_functions = []
         self.__current_function = None
         self.__current_process = None
+        self.__current_thread = None
         self.__func_param_stubs = None
         self.__in_module_scope = False
         self.__current_module_scope_vars = None
@@ -104,6 +105,14 @@ class FunctionTransformationPass(TopDown):
         self.__current_module_scope_vars = None
         self.__current_module_sense_list = None
         self.__current_module = None
+        return tree
+
+    def hthreadswitch(self, tree):
+        # Note for generated thread function, we will not need a stub
+        self.__current_thread = tree
+        tree.func_name_stubs = []
+        self.__push_up(tree)
+        self.__current_process = None
         return tree
 
     def hprocess(self, tree):
@@ -207,6 +216,8 @@ class FunctionTransformationPass(TopDown):
             return self.__current_process
         elif self.__current_function:
             return self.__current_function
+        elif self.__current_thread:
+            return self.__current_thread
         else:
             return None
 

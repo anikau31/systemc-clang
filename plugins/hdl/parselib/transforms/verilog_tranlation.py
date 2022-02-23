@@ -205,21 +205,30 @@ class VerilogTranslationPass(TopDown):
 
     def harrayref(self, tree):
         # Check whether
+        l_const = None
+        r_const = None
         if isinstance(tree.children[0], Tree) and tree.children[0].data == 'hslice':
-            hslice = tree.children[0]
-            l, r = hslice.children[1:]
-            l_const = self.__check_const(l)
-            r_const = self.__check_const(r)
+            if len(tree.children[0].children) == 3:
+                hslice = tree.children[0]
+                l, r = hslice.children[1:]
+                l_const = self.__check_const(l)
+                r_const = self.__check_const(r)
 
         self.__push_up(tree)
         if isinstance(tree.children[0], Tree) and tree.children[0].data == 'hslice':
             hslice = tree.children[0]
             var = hslice.children[0]
-            l, r = hslice.children[1:]
+            m = None
+            if len(hslice.children) == 3:
+                l, r = hslice.children[1:]
+            elif len(hslice.children) == 2:
+                m = hslice.children[1]
             # l_const = isinstance(l, int)
             # r_const = isinstance(r, int)
             if l_const and r_const:
                 idx = '{}:{}'.format(l, r)
+            elif m:
+                idx = '{}'.format(m)
             else:
                 # for slicing that is not constant
                 tree.children = [var, l, r, "(({}) >> ({})) & ~(~($bits({})'('b0)) << (({}) - ({}) + 1))".format(var, r, var, l, r)]
@@ -332,7 +341,7 @@ class VerilogTranslationPass(TopDown):
 
     def breakstmt(self, tree):
         if self.get_current_scope_type() in ['switch']:
-            return None
+            return ""
         else:
             ind = self.get_current_ind_prefix()
             res = '{}break;'.format(ind)
@@ -598,7 +607,7 @@ class VerilogTranslationPass(TopDown):
         if len(tree.children) == 1:
             return 'return {}'.format(tree.children[0])
         elif len(tree.children) == 0:
-            # return 'return'
+            return 'return'
             return ''
         else:
             assert len(tree.children) in [0, 1], 'return statement can only have 0 or 1 return value'
@@ -775,8 +784,11 @@ class VerilogTranslationPass(TopDown):
 
     def hfunctionrettype(self, tree):
         self.__push_up(tree)
-        tpe = tree.children[0]
-        res = tpe.to_str(var_name='')
+        if len(tree.children) != 0:
+            tpe = tree.children[0]
+            res = tpe.to_str(var_name='')
+        else:
+            res = "void"
         return res
 
     def htouint(self, tree):
@@ -1039,13 +1051,21 @@ class VerilogTranslationPass(TopDown):
             for proc in processlist.children:
                 if is_tree_type(proc, 'hthread'):
                     # thread_name, thread_sig, thread_sync, thread_comb = proc.children
-                    thread_name, thread_sync, thread_comb = proc.children
+                    thread_func = None
+                    if len(proc.children) == 3:
+                        thread_name,  thread_sync, thread_comb = proc.children
+                    elif len(proc.children) == 4:
+                        thread_name, thread_func, thread_sync, thread_comb = proc.children
+                    else:
+                        assert False, "thread should have 3 or 4 children node"
                     self.inc_indent()
                     ind = self.get_current_ind_prefix()
                     res += '{}// Thread: {}\n'.format(ind, thread_name)
                     # res = self.__generate_vars_decl(ind, res, thread_sig.children)
                     self.dec_indent()
                     res += thread_sync + "\n"
+                    if thread_func:
+                        res += thread_func + "\n"
                     res += thread_comb + "\n"
                 else:
                     res += proc + '\n'

@@ -32,8 +32,8 @@ using namespace hnode;
 
 namespace systemc_hdl {
 
-  HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map) :
-    diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map} {
+  HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, hfunc_name_map_t &allmethodecls) :
+    diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map}, allmethodecls_{allmethodecls} {
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor\n");
     }
 
@@ -54,12 +54,14 @@ namespace systemc_hdl {
     else {
       vname_map.set_prefix("_"+h_top->getname()+vname_map.get_prefix());
     }
+
+    LLVM_DEBUG(llvm::dbgs() << "allmethodecls_ size is " << allmethodecls_.size() << "\n");
+    
     // if (!mod_vname_map_.empty())
     // 	vname_map.insertall(mod_vname_map_);
-     methodecls.set_prefix("_func_");
      bool ret1 = TraverseStmt(stmt);
      AddVnames(h_top);
-     h_top->child_list.push_back(h_ret);
+     if (h_ret != NULL) h_top->child_list.push_back(h_ret);
      LLVM_DEBUG(llvm::dbgs() << "Exiting HDLBody Run Method\n");
 
   }
@@ -129,7 +131,7 @@ namespace systemc_hdl {
 	  dyn_cast<ConstantExpr>(((CaseStmt *)stmt)->getLHS())) {
 	llvm::APSInt val = expr->getResultAsAPSInt();
 	hcasep->child_list.push_back(
-				     new hNode(systemc_clang::utils::apint::toString(val), hNode::hdlopsEnum::hLiteral));
+	  new hNode(systemc_clang::utils::apint::toString(val), hNode::hdlopsEnum::hLiteral));
       }
 
       TraverseStmt(((CaseStmt *)stmt)->getSubStmt());
@@ -156,7 +158,7 @@ namespace systemc_hdl {
 	//clang::DiagnosticBuilder diag_builder{
 	//diag_e.Report(stmt->getBeginLoc(), cxx_record_id)};
       LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
-      h_ret = new hNode(thismode == rthread ? hNode::hdlopsEnum::hNoop : hNode::hdlopsEnum::hBreak);
+      h_ret = new hNode(thismode == rthread ? hNode::hdlopsEnum::hReturnStmt : hNode::hdlopsEnum::hBreak);
     } else if (isa<ContinueStmt>(stmt)) {
       LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
       h_ret = new hNode(hNode::hdlopsEnum::hContinue);
@@ -237,8 +239,8 @@ namespace systemc_hdl {
       if (h_ret) {
 	if ((isAssignOp(h_ret) ) && (h_ret->child_list.size() == 2) &&
 	    (isAssignOp(h_ret->child_list[1]))){
-	  hNodep htmp = NormalizeHcode(h_ret); // break up assignment chain
-	  //h_ret = NormalizeHcode(h_ret); // break up assignment chain
+	  hNodep htmp = NormalizeAssignmentChain(h_ret); // break up assignment chain
+	  //h_ret = NormalizeAssignmentChain(h_ret); // break up assignment chain
 	  h_cstmt->child_list.insert(h_cstmt->child_list.end(),
 				     htmp->child_list.begin(), htmp->child_list.end());
 	}
@@ -456,7 +458,15 @@ namespace systemc_hdl {
 	// create the call expression
 	hNodep hfuncall = new hNode(qualfuncname, hNode::hdlopsEnum::hMethodCall);
 	// don't add this method to methodecls if processing modinit
-	if (!add_info) methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
+	if (!add_info) {
+	  string tmpname = FindFname((FunctionDecl *)value);
+	  if (tmpname == "") { // isn't in local or global symbol table
+	    LLVM_DEBUG(llvm::dbgs() << "adding method " << qualfuncname << " with pointer " << value << " \n");
+	    methodecls.print(llvm::dbgs());
+	    methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
+	  }
+	  else hfuncall->set(tmpname);
+	}
 	h_ret = hfuncall;
 	return true;
       }
@@ -525,7 +535,7 @@ namespace systemc_hdl {
       //      method decls
 
       LLVM_DEBUG(llvm::dbgs() << "here is method printname " << methodname
-		 << " and qual name " << qualmethodname << " \n");
+		 << " and qual name " << qualmethodname << "and declp " << methdcl << " \n");
       if (methodname.compare(0, 8, "operator") ==
 	  0) {  // 0 means compare =, 8 is len("operator")
 	// the conversion we know about, can be skipped
@@ -558,7 +568,15 @@ namespace systemc_hdl {
       //methodecls[qualmethodname] = methdcl;  // put it in the set of method decls
       h_callp = new hNode(qualmethodname, opc);
       // don't add this method to methodecls if processing modinit
-      if (!add_info) methodecls.add_entry(methdcl,qualmethodname, h_callp);
+      if (!add_info) {
+	string tmpname = FindFname((FunctionDecl *)methdcl);
+	if (tmpname == "") { // isn't in local or global symbol table
+	  LLVM_DEBUG(llvm::dbgs() << "adding method " << qualmethodname << " with pointer " << methdcl << " \n");
+	  methodecls.print(llvm::dbgs());
+	  methodecls.add_entry((FunctionDecl *)methdcl, qualmethodname,  h_callp);
+	}
+	else h_callp->set(tmpname);
+      }
       methodname = qualmethodname;
     }
 
@@ -621,7 +639,10 @@ namespace systemc_hdl {
 	  else  h_operop =  new hNode(operatorname, hNode::hdlopsEnum::hPrefix);
 	}
 	else {
-	  h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
+	  if (opcall->getNumArgs() == 1)
+	    h_operop = new hNode(operatorname, hNode::hdlopsEnum::hUnop);
+	  else
+	    h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
 	  if ((operatorname == ",") && (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype)))
 	    h_operop->set("concat"); // overloaded comma is concat for sc types
 	}
@@ -851,8 +872,18 @@ namespace systemc_hdl {
       h_switchstmt->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
 
     old_ret = h_ret;
+    
+ 
     TraverseStmt(switchs->getBody());
-    if (h_ret != old_ret) h_switchstmt->child_list.push_back(h_ret);
+
+    if (h_ret != old_ret) {
+      NormalizeSwitchStmt(h_ret);
+    // here need extra code to append non switchcase hcode into previous
+    // switchcase group, which happens if the switchcase isn't wrapped in
+    // a compound statement {}.
+    
+      h_switchstmt->child_list.push_back(h_ret);
+    }
 
     // for (SwitchCase *sc = switchs->getSwitchCaseList(); sc != NULL;
     //      sc = sc->getNextSwitchCase()) {
@@ -921,10 +952,21 @@ namespace systemc_hdl {
     return true;
   }
 
+  
+  // these two functions are so clumsy. The data structure should handle
+  // multi-level symbol tables.
+  
   string HDLBody::FindVname(NamedDecl *vard) {
     string newname = vname_map.find_entry_newn(vard, thismode==rthread); // set referenced bit if in thread
     if (newname == "")
       newname = mod_vname_map_.find_entry_newn(vard, thismode==rthread); // set referenced bit if in thread
+    return newname;
+  }
+
+  string HDLBody::FindFname(FunctionDecl *funcd) {
+    string newname = methodecls.find_entry_newn(funcd, thismode==rthread); // set referenced bit if in thread
+    if (newname == "")
+      newname = allmethodecls_.find_entry_newn(funcd, thismode==rthread); // set referenced bit if in thread
     return newname;
   }
   
@@ -947,7 +989,7 @@ namespace systemc_hdl {
     }
   }
 
-  hNodep HDLBody::NormalizeHcode(hNodep hinp) {
+  hNodep HDLBody::NormalizeAssignmentChain(hNodep hinp) {
     // break up chain of assignments a = b = c = d = 0;
     // at entry there is a chain of at least two: a = b = 0;
     
@@ -964,6 +1006,25 @@ namespace systemc_hdl {
     std::reverse(hassignchain->child_list.begin(), hassignchain->child_list.end());
     return hassignchain;
   }
+
+  void HDLBody::NormalizeSwitchStmt(hNodep hswitchstmt) {
+    if (hswitchstmt->child_list.size() == 0) return;
+    hNodep hprev = hswitchstmt->child_list[0]; // should be a switchcase node
+    for (int i= 1; i< hswitchstmt->child_list.size(); i++) {
+      if ((hswitchstmt->child_list[i]->getopc() != hNode::hdlopsEnum::hSwitchCase) &&
+	  (hswitchstmt->child_list[i]->getopc() != hNode::hdlopsEnum::hSwitchDefault)){
+	hNodep htmp = new hNode((hswitchstmt->child_list[i])->getname(), (hswitchstmt->child_list[i])->getopc());
+	htmp->child_list = (hswitchstmt->child_list[i])->child_list;
+	hprev->append(htmp);
+	hswitchstmt->child_list[i]->set(hNode::hdlopsEnum::hLast);	
+      }
+      else hprev = hswitchstmt->child_list[i];
+    }
+    hswitchstmt->child_list.erase(std::remove_if(hswitchstmt->child_list.begin(), hswitchstmt->child_list.end(),
+						 [] (hNodep hp){return hp->getopc() == hNode::hdlopsEnum::hLast;}),
+				  hswitchstmt->child_list.end());
+  }
+
 					  
   // CXXMethodDecl *HDLBody::getEMD() {
   //   return _emd;

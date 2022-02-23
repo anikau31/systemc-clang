@@ -163,7 +163,6 @@ class TypedefExpansion(TopDown):
         new_children = []
         # print('Mod Port Sig List')
         for node in tree.children:
-            # print(node)
             if node.data == 'portdecltype':
                 var_name = node.children[0].children[0]
                 var_type = node.children[1].children[0]
@@ -174,8 +173,8 @@ class TypedefExpansion(TopDown):
             elif node.data == 'sigdecltype':
                 var_name = node.children[0].children[0]
                 var_type = node.children[1].children[0]
-                # print(var_name)
-                # print(var_type)
+                # dprint(var_name)
+                # dprint(var_type)
                 var_tokens = map(lambda x:
                                  filter(lambda y: isinstance(y, str), x.children),
                                  var_type.iter_subtrees_topdown())
@@ -193,6 +192,7 @@ class TypedefExpansion(TopDown):
                                  filter(lambda y: isinstance(y, str), x.children),
                                  var_type.iter_subtrees_topdown())
                 type_name = var_type.children[0]
+                # dprint(node)
                 if not Primitive.get_primitive(type_name) and not type_name in self.types:
                     # module instantiate
                     new_children.append(Tree('moduleinst', node.children, node.meta))
@@ -202,7 +202,7 @@ class TypedefExpansion(TopDown):
                 if type_name == 'array':
                     # array of module instantiations
                     sub_type_name = var_type.children[1].children[0]
-                    if not Primitive.get_primitive(sub_type_name) and not type_name in self.types:
+                    if not Primitive.get_primitive(sub_type_name) and not sub_type_name in self.types:
                         # inst_name, module_name, array_size
                         inst_arr_name = node.children[0]
                         n_inst = var_type.children[2][0]
@@ -211,10 +211,13 @@ class TypedefExpansion(TopDown):
                             inst_name = inst_arr_name + '#' + str(i)
                             new_children.append(Tree('moduleinst', [inst_name, inst_type], node.meta))
                         continue
+                array_of_typedef = False
                 for var_type_name in itertools.chain.from_iterable(var_tokens):
                     if var_type_name in self.types:  # detect the first type that is in the typedef list
                         self.__set_expanded(var_name, var_type)
                         break
+                    elif var_type_name == "array":
+                        continue
                 res = self.__expand_vardecltype(node)
                 new_children.extend(res)
             # original type

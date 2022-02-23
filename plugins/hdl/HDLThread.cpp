@@ -21,8 +21,12 @@ using namespace systemc_clang;
 namespace systemc_hdl {
 
   HDLThread::HDLThread(EntryFunctionContainer *efc, hNodep &h_top, hNodep &h_portsigvarlist,
-		       clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, hNodep h_resetvarinfo )
-    : efc_(efc), h_top_{h_top}, diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map}, h_resetvarinfo_{h_resetvarinfo} {
+		       clang::DiagnosticsEngine &diag_engine,
+		       const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map,
+		       hfunc_name_map_t &allmethodecls, hNodep h_resetvarinfo )
+    : efc_(efc), h_top_{h_top}, diag_e{diag_engine}, ast_context_{ast_context},
+      mod_vname_map_{mod_vname_map}, allmethodecls_{allmethodecls},
+      h_resetvarinfo_{h_resetvarinfo} {
 
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLThread constructor (thread body)\n");
       
@@ -43,9 +47,8 @@ namespace systemc_hdl {
       thread_vname_map.reset_referenced();
       
       //xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
-      xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map);
+      xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map, allmethodecls_);
       hNodep hthreadmainmethod = new hNode(h_top->getname(), hNode::hdlopsEnum::hMethod);
-      
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
       hthreadblocksp->append(new hNode(state_string, hNode::hdlopsEnum::hVarref));
       hlocalvarsp = new hNode(hNode::hdlopsEnum::hPortsigvarlist); // placeholder to collect local vars
@@ -111,8 +114,21 @@ namespace systemc_hdl {
       hthreadmainmethod->append(GenerateBinop("=", savewaitnextstate_string, waitnextstate_string, false));
       for (hNodep onelocalvar : h_shadowvarsp->child_list) {
 	 hthreadmainmethod->append(GenerateBinop("=", onelocalvar->getname(), shadowstring+onelocalvar->getname())); 
-    }
-      hthreadmainmethod->append(hthreadblocksp);
+      }
+      hthreadmainmethod->append(new hNode(threadname+"_func", hNode::hdlopsEnum::hMethodCall));
+      //hthreadmainmethod->append(hthreadblocksp);
+
+      // generate hnode tree for a function:
+      // <function> <ret type none> <cstmt containing switch stmt>
+      
+      hNodep hfunctop = new hNode(threadname+"_func", hNode::hdlopsEnum::hFunction);
+      hfunctop->append(new hNode(hNode::hdlopsEnum::hFunctionRetType)); // placeholder: no return value
+      hNodep hcstmttmp = new hNode(hNode::hdlopsEnum::hCStmt);
+      hcstmttmp->append(hthreadblocksp);
+      hfunctop->append(hcstmttmp);
+      //hfunctop->append(hthreadblocksp);
+      //h_top->append(hthreadblocksp);
+      h_top->append(hfunctop);
       
       // generate the local variables;
       GenerateStateVar(state_string);
@@ -165,7 +181,7 @@ namespace systemc_hdl {
   void HDLThread::CheckVardecls(hNodep &hp, unsigned int cfgblockid) {
     int varcnt = 0;
     for (auto oneop : hp->child_list) {
-      if ((oneop->getopc() == hNode::hdlopsEnum::hVardecl) || (oneop->getopc() == hNode::hdlopsEnum::hSigdecl)) {
+      if ((oneop != NULL) && ((oneop->getopc() == hNode::hdlopsEnum::hVardecl) || (oneop->getopc() == hNode::hdlopsEnum::hSigdecl))) {
 	LLVM_DEBUG(llvm::dbgs() << "Detected vardecl for CFG Block ID " << cfgblockid << "\n");
 	if (CFGVisited[cfgblockid]==1) hlocalvarsp->append(oneop);
 	varcnt += 1;
@@ -306,6 +322,15 @@ namespace systemc_hdl {
 	}
 	else if (const ForStmt *S1 = dyn_cast<ForStmt> (S)) {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is a for stmt\n");
+	  if (!sgb->hasTerminatorWait()) {
+	    LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " doesn't have a wait()\n");
+	    LLVM_DEBUG(S1->dump(llvm::dbgs(), ast_context_));
+	    xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
+	    hNodep hforsucc = new hNode(hNode::hdlopsEnum::hCStmt);
+	    ProcessSplitGraphBlock(spgsucc[1], state_num, hforsucc);
+	    h_switchcase->append(hforsucc);
+	    return;
+	  }
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
 	}
 	else if (const IfStmt *S1 = dyn_cast<IfStmt> (S)) {
@@ -404,6 +429,7 @@ namespace systemc_hdl {
       // nextstate = waitstate
       htmp->append(GenerateBinop("=", nextstate_string, std::to_string(numstates)));
     }
+    htmp->append(new hNode(hNode::hdlopsEnum::hReturnStmt));
   }
 
   void HDLThread::GenerateWaitCntUpdate(hNodep h_switchcase) {

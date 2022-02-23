@@ -149,7 +149,7 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
     
     hdecl_name_map_t mod_vname_map("_scclang_global_");
-    xbodyp = new HDLBody(main_diag_engine, getContext(), mod_vname_map);
+    xbodyp = new HDLBody(main_diag_engine, getContext(), mod_vname_map, allmethodecls);
     
     module_vars.clear();
     threadresetmap.clear();
@@ -571,6 +571,7 @@ namespace systemc_hdl {
 	CXXMethodDecl *emd = efc->getEntryMethod();
 	if (emd->hasBody()) {
 	  hNodep h_body = new hNode(efc->getName(), hNode::hdlopsEnum::hMethod);
+	  LLVM_DEBUG(llvm::dbgs() << "HDLMain allmethodecls_ size is " << allmethodecls.size() << "\n");
 	  //HDLBody xmethod(emd, h_body, main_diag_engine, getContext(), mod_vname_map);
 	  xbodyp->Run(emd->getBody(), h_body, rmethod);
 	  allmethodecls.insertall(xbodyp->methodecls);
@@ -599,7 +600,7 @@ namespace systemc_hdl {
 	    // params includes portsigvarlist so thread local vars get promoted to module level
 	    // have to pass efc to get the reset info
 
-	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map, h_resetvarinfo );
+	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map, allmethodecls, h_resetvarinfo );
 	    allmethodecls.insertall(xthread.methodecls);
 	    //h_thread->child_list.push_back(h_body);
 	    h_top->child_list.push_back(h_thread);
