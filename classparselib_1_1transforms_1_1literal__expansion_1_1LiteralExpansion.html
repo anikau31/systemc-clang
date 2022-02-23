@@ -101,6 +101,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab82e5b556267666d7eb3ca65d63fb4a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18e4966aabaa9e23883857371da3e545"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#a18e4966aabaa9e23883857371da3e545">portbinding</a> (self, tree)</td></tr>
 <tr class="separator:a18e4966aabaa9e23883857371da3e545"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80d9c6d90078cc3469a6b16a278038eb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#a80d9c6d90078cc3469a6b16a278038eb">hfieldaccess</a> (self, tree)</td></tr>
+<tr class="separator:a80d9c6d90078cc3469a6b16a278038eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76a35beec6a6ccbf968e1799546e62be"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#a76a35beec6a6ccbf968e1799546e62be">hvarref</a> (self, tree)</td></tr>
 <tr class="separator:a76a35beec6a6ccbf968e1799546e62be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f460e5f6e1762e4ed357d176882d03e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#a1f460e5f6e1762e4ed357d176882d03e">idlit</a> (self, tree)</td></tr>
@@ -135,6 +137,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aaf3383774c18184d2c30bced2a7703dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace54d197952148186f3e9f4973847700"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#ace54d197952148186f3e9f4973847700">port_binding_module</a></td></tr>
 <tr class="separator:ace54d197952148186f3e9f4973847700"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33dd738649eb3d0cd091d0b290274468"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#a33dd738649eb3d0cd091d0b290274468">field_access</a></td></tr>
+<tr class="separator:a33dd738649eb3d0cd091d0b290274468"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01cd6172078c35ada518f31a564d75fe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#a01cd6172078c35ada518f31a564d75fe">current_module</a></td></tr>
 <tr class="separator:a01cd6172078c35ada518f31a564d75fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -201,7 +205,47 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00091">91</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00117">117</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+
+</div>
+</div>
+<a id="a80d9c6d90078cc3469a6b16a278038eb" name="a80d9c6d90078cc3469a6b16a278038eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80d9c6d90078cc3469a6b16a278038eb">&#9670;&nbsp;</a></span>hfieldaccess()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def parselib.transforms.literal_expansion.LiteralExpansion.hfieldaccess </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>tree</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">      hFieldaccess  NONAME [
+        hBinop ARRAYSUBSCRIPT [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref pa_scclang_global_15 NOLIST
+            hVarref sig_scclang_global_1 NOLIST
+          ]
+          hVarref sig_scclang_global_1 NOLIST
+        ]
+        hField x NOLIST
+      ]
+</pre> 
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00027">27</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -231,7 +275,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00103">103</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00129">129</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -261,7 +305,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00083">83</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00109">109</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -291,7 +335,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00076">76</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00102">102</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -321,7 +365,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00073">73</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00099">99</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -351,7 +395,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00027">27</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00050">50</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -381,7 +425,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00060">60</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00086">86</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -411,7 +455,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00100">100</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00126">126</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -441,7 +485,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00064">64</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00090">90</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -471,7 +515,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00068">68</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00094">94</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -501,7 +545,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00018">18</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00019">19</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>
@@ -518,7 +562,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00104">104</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00130">130</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
+
+</div>
+</div>
+<a id="a33dd738649eb3d0cd091d0b290274468" name="a33dd738649eb3d0cd091d0b290274468"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33dd738649eb3d0cd091d0b290274468">&#9670;&nbsp;</a></span>field_access</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">parselib.transforms.literal_expansion.LiteralExpansion.field_access</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="literal__expansion_8py_source.html#l00017">17</a> of file <a class="el" href="literal__expansion_8py_source.html">literal_expansion.py</a>.</p>
 
 </div>
 </div>

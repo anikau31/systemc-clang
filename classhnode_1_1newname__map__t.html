@@ -108,6 +108,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5ab10a8703c2a79cbe2cfe9d22542f4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa78bee80c95dad9e48b3b21b6db63aed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1newname__map__t.html#aa78bee80c95dad9e48b3b21b6db63aed">clear</a> ()</td></tr>
 <tr class="separator:aa78bee80c95dad9e48b3b21b6db63aed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbf04ee5674001add48ca37fe0ab6d44"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1newname__map__t.html#adbf04ee5674001add48ca37fe0ab6d44">print</a> (llvm::raw_ostream &amp;modelout=llvm::outs(), unsigned int indnt=2)</td></tr>
+<tr class="separator:adbf04ee5674001add48ca37fe0ab6d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3c2c84c430cb2ac8c4d1f1a734456fd"><td class="memItemLeft" align="right" valign="top">std::map&lt; T, <a class="el" href="structhnode_1_1names__t.html">names_t</a> &gt;::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1newname__map__t.html#ad3c2c84c430cb2ac8c4d1f1a734456fd">begin</a> ()</td></tr>
 <tr class="separator:ad3c2c84c430cb2ac8c4d1f1a734456fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3b1b1b1337c885f4ddd98a73d512a40"><td class="memItemLeft" align="right" valign="top">std::map&lt; T, <a class="el" href="structhnode_1_1names__t.html">names_t</a> &gt;::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1newname__map__t.html#ab3b1b1b1337c885f4ddd98a73d512a40">end</a> ()</td></tr>
@@ -127,7 +129,7 @@ Private Attributes</h2></td></tr>
 class hnode::newname_map_t&lt; T &gt;</div><p >The <a class="el" href="classhnode_1_1newname__map__t.html">newname_map_t</a> class manages identifier names. For adding an entry, the identifier information is stored in a map with the clang AST node pointer as key. A new name for identifier is <br  />
  generated, and {original name, new name, <a class="el" href="classhnode_1_1hNode.html">hNode</a> pointer} are stored as the value. Additionally, the <a class="el" href="classhnode_1_1hNode.html">hNode</a> of the identifier is updated to the new name. The find entry method returns the new name or empty string. </p>
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00354">354</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00355">355</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abd2541c3d6364bba8d6228aff5723e09" name="abd2541c3d6364bba8d6228aff5723e09"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abd2541c3d6364bba8d6228aff5723e09">&#9670;&nbsp;</a></span>newname_map_t()</h2>
@@ -155,7 +157,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00361">361</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00362">362</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -202,7 +204,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00362">362</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00363">363</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -231,7 +233,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00406">406</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00411">411</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -260,7 +262,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00404">404</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00403">403</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -289,7 +291,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00402">402</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00401">401</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -318,7 +320,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00407">407</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00412">412</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -358,7 +360,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00375">375</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00376">376</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -387,7 +389,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00400">400</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00399">399</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -417,7 +419,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00413">413</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00418">418</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -447,7 +449,47 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00385">385</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00384">384</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+
+</div>
+</div>
+<a id="adbf04ee5674001add48ca37fe0ab6d44" name="adbf04ee5674001add48ca37fe0ab6d44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbf04ee5674001add48ca37fe0ab6d44">&#9670;&nbsp;</a></span>print()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classhnode_1_1newname__map__t.html">hnode::newname_map_t</a>&lt; T &gt;::print </td>
+          <td>(</td>
+          <td class="paramtype">llvm::raw_ostream &amp;&#160;</td>
+          <td class="paramname"><em>modelout</em> = <code>llvm::outs()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>indnt</em> = <code>2</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00405">405</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -476,7 +518,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00392">392</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00391">391</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -506,7 +548,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00398">398</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00397">397</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -535,7 +577,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00403">403</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00402">402</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -562,7 +604,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00357">357</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00358">358</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -588,7 +630,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00356">356</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00357">357</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>

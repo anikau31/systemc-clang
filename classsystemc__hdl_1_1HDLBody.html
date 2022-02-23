@@ -92,7 +92,7 @@ Collaboration diagram for systemc_hdl::HDLBody:</div>
 <div class="dyncontent">
 <div class="center"><img src="classsystemc__hdl_1_1HDLBody__coll__graph.png" border="0" usemap="#asystemc__hdl_1_1HDLBody_coll__map" alt="Collaboration graph"/></div>
 <map name="asystemc__hdl_1_1HDLBody_coll__map" id="asystemc__hdl_1_1HDLBody_coll__map">
-<area shape="rect" title=" " alt="" coords="544,107,701,134"/>
+<area shape="rect" title=" " alt="" coords="544,114,701,141"/>
 <area shape="rect" title=" " alt="" coords="205,5,385,47"/>
 <area shape="rect" href="classhnode_1_1newname__map__t.html" title=" " alt="" coords="220,71,371,112"/>
 <area shape="rect" href="classhnode_1_1name__serve.html" title=" " alt="" coords="5,78,140,105"/>
@@ -103,8 +103,8 @@ Collaboration diagram for systemc_hdl::HDLBody:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5b1c650d7196dd3d5b1f7db4cb221e57"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a5b1c650d7196dd3d5b1f7db4cb221e57">HDLBody</a> (clang::DiagnosticsEngine &amp;diag_engine, const ASTContext &amp;ast_context, <a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;mod_vname_map)</td></tr>
-<tr class="separator:a5b1c650d7196dd3d5b1f7db4cb221e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e4639c83cd36d9f6c5b94cd3b5516bf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a2e4639c83cd36d9f6c5b94cd3b5516bf">HDLBody</a> (clang::DiagnosticsEngine &amp;diag_engine, const ASTContext &amp;ast_context, <a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;mod_vname_map, <a class="el" href="namespacehnode.html#a7a683d2e9c6b4ac48f26f3837a33175c">hfunc_name_map_t</a> &amp;allmethodecls)</td></tr>
+<tr class="separator:a2e4639c83cd36d9f6c5b94cd3b5516bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5ca9f42bdfcd0663d41aba6c57800c9"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ad5ca9f42bdfcd0663d41aba6c57800c9">~HDLBody</a> ()</td></tr>
 <tr class="separator:ad5ca9f42bdfcd0663d41aba6c57800c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9f9ae7da6bc05e734776f123a931689"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ab9f9ae7da6bc05e734776f123a931689">Run</a> (Stmt *stmt, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_top, <a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5f">HDLBodyMode</a> runmode)</td></tr>
@@ -155,8 +155,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae5a81b5fcaa4ada7d3935ccd88c90cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b7efd524dc48ad45e362c6abe3b6c50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a6b7efd524dc48ad45e362c6abe3b6c50">AddVnames</a> (<a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;hvns)</td></tr>
 <tr class="separator:a6b7efd524dc48ad45e362c6abe3b6c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab94ba57fe3e7aed9d56f89604a94a4ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ab94ba57fe3e7aed9d56f89604a94a4ac">NormalizeHcode</a> (<a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> hinp)</td></tr>
-<tr class="separator:ab94ba57fe3e7aed9d56f89604a94a4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a330a33e98fb4fc7bf8e0d666ac79d4eb"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a330a33e98fb4fc7bf8e0d666ac79d4eb">FindFname</a> (FunctionDecl *funcd)</td></tr>
+<tr class="separator:a330a33e98fb4fc7bf8e0d666ac79d4eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3586afbcf8a44a7f9fc9171ff44e5bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#aa3586afbcf8a44a7f9fc9171ff44e5bc">NormalizeAssignmentChain</a> (<a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> hinp)</td></tr>
+<tr class="separator:aa3586afbcf8a44a7f9fc9171ff44e5bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48ac550550396fcf06def4b9a1713791"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a48ac550550396fcf06def4b9a1713791">NormalizeSwitchStmt</a> (<a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> hswitchbody)</td></tr>
+<tr class="separator:a48ac550550396fcf06def4b9a1713791"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -190,6 +194,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a68b111006651da58b4fad35aa30e13a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a31c1732af3f4975d36b457bab8be77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5f">HDLBodyMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a1a31c1732af3f4975d36b457bab8be77">thismode</a></td></tr>
 <tr class="separator:a1a31c1732af3f4975d36b457bab8be77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83ac0d98d500b58d2f5bd6378f1f7cb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehnode.html#a7a683d2e9c6b4ac48f26f3837a33175c">hfunc_name_map_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a83ac0d98d500b58d2f5bd6378f1f7cb7">allmethodecls_</a></td></tr>
+<tr class="separator:a83ac0d98d500b58d2f5bd6378f1f7cb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31853db61435860151cb1d805d47251a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classhnode_1_1util.html">util</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a31853db61435860151cb1d805d47251a">lutil</a></td></tr>
 <tr class="separator:a31853db61435860151cb1d805d47251a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09991f11eb7e41766147a1ac9ee1f4ba"><td class="memItemLeft" align="right" valign="top">const ASTContext &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a09991f11eb7e41766147a1ac9ee1f4ba">ast_context_</a></td></tr>
@@ -199,8 +205,8 @@ Private Attributes</h2></td></tr>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00033">33</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5b1c650d7196dd3d5b1f7db4cb221e57" name="a5b1c650d7196dd3d5b1f7db4cb221e57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b1c650d7196dd3d5b1f7db4cb221e57">&#9670;&nbsp;</a></span>HDLBody()</h2>
+<a id="a2e4639c83cd36d9f6c5b94cd3b5516bf" name="a2e4639c83cd36d9f6c5b94cd3b5516bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e4639c83cd36d9f6c5b94cd3b5516bf">&#9670;&nbsp;</a></span>HDLBody()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -221,7 +227,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacehnode.html#a13b8790df9ef35638a389976f0b632fd">hdecl_name_map_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>mod_vname_map</em>&#160;</td>
+          <td class="paramname"><em>mod_vname_map</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacehnode.html#a7a683d2e9c6b4ac48f26f3837a33175c">hfunc_name_map_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>allmethodecls</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -258,7 +270,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00066">66</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00068">68</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -279,7 +291,27 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00931">931</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00973">973</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a330a33e98fb4fc7bf8e0d666ac79d4eb" name="a330a33e98fb4fc7bf8e0d666ac79d4eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a330a33e98fb4fc7bf8e0d666ac79d4eb">&#9670;&nbsp;</a></span>FindFname()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string systemc_hdl::HDLBody::FindFname </td>
+          <td>(</td>
+          <td class="paramtype">FunctionDecl *&#160;</td>
+          <td class="paramname"><em>funcd</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00966">966</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -299,7 +331,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00924">924</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00959">959</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -327,7 +359,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00099">99</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00102">102</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -355,7 +387,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00094">94</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00097">97</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -383,7 +415,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00089">89</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00092">92</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -411,18 +443,18 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00581">581</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00599">599</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ab94ba57fe3e7aed9d56f89604a94a4ac" name="ab94ba57fe3e7aed9d56f89604a94a4ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab94ba57fe3e7aed9d56f89604a94a4ac">&#9670;&nbsp;</a></span>NormalizeHcode()</h2>
+<a id="aa3586afbcf8a44a7f9fc9171ff44e5bc" name="aa3586afbcf8a44a7f9fc9171ff44e5bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3586afbcf8a44a7f9fc9171ff44e5bc">&#9670;&nbsp;</a></span>NormalizeAssignmentChain()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> systemc_hdl::HDLBody::NormalizeHcode </td>
+          <td class="memname"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> systemc_hdl::HDLBody::NormalizeAssignmentChain </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a>&#160;</td>
           <td class="paramname"><em>hinp</em></td><td>)</td>
@@ -431,7 +463,27 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00950">950</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00992">992</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a48ac550550396fcf06def4b9a1713791" name="a48ac550550396fcf06def4b9a1713791"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48ac550550396fcf06def4b9a1713791">&#9670;&nbsp;</a></span>NormalizeSwitchStmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void systemc_hdl::HDLBody::NormalizeSwitchStmt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a>&#160;</td>
+          <td class="paramname"><em>hswitchbody</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01010">1010</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -451,7 +503,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00807">807</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00828">828</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -471,7 +523,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00277">277</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00279">279</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -527,7 +579,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00486">486</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00496">496</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -547,7 +599,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00320">320</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00322">322</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -567,7 +619,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00710">710</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00731">731</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -587,7 +639,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00231">231</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00233">233</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -607,7 +659,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00382">382</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00384">384</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -627,7 +679,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00407">407</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00409">409</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -647,7 +699,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00503">503</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00513">513</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -667,7 +719,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00596">596</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00614">614</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -687,7 +739,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00415">415</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00417">417</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -708,7 +760,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Process local variable and signal declarations, promoting to module level with unique names </p>
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00260">260</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00262">262</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -728,7 +780,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00906">906</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00937">937</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -748,7 +800,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00778">778</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00799">799</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -768,7 +820,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00751">751</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00772">772</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -788,7 +840,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00399">399</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00401">401</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -808,7 +860,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00656">656</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00677">677</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -828,7 +880,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00073">73</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00075">75</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -848,7 +900,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00835">835</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00856">856</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -868,7 +920,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00354">354</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00356">356</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -888,7 +940,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00879">879</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00910">910</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -913,7 +965,31 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00080">80</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00082">82</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+
+</div>
+</div>
+<a id="a83ac0d98d500b58d2f5bd6378f1f7cb7" name="a83ac0d98d500b58d2f5bd6378f1f7cb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83ac0d98d500b58d2f5bd6378f1f7cb7">&#9670;&nbsp;</a></span>allmethodecls_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacehnode.html#a7a683d2e9c6b4ac48f26f3837a33175c">hfunc_name_map_t</a>&amp; systemc_hdl::HDLBody::allmethodecls_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00088">88</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -937,7 +1013,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00105">105</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00108">108</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -953,7 +1029,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00069">69</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00071">71</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -977,7 +1053,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00075">75</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00077">77</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1001,7 +1077,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00103">103</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00106">106</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1017,7 +1093,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00067">67</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00069">69</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1041,7 +1117,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00078">78</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00080">80</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1065,7 +1141,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00083">83</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00085">85</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1089,7 +1165,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00085">85</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00087">87</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1105,7 +1181,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00071">71</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00073">73</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
