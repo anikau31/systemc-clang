@@ -8,6 +8,7 @@ SplitCFGBlock::SplitCFGBlock()
     : block_{nullptr},
       has_wait_{false},
       is_conditional_{false},
+      is_loop_with_two_succ_{false},
       terminator_has_break_{false},
       terminator_has_wait_{false},
       id_{0},
@@ -18,6 +19,7 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   block_ = from.block_;
   has_wait_ = from.has_wait_;
   is_conditional_ = from.is_conditional_;
+  is_loop_with_two_succ_ = from.is_loop_with_two_succ_;
   wait_element_ids_ = from.wait_element_ids_;
   successors_ = from.successors_;
   predecessors_ = from.predecessors_;
@@ -27,6 +29,8 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   terminator_has_break_ = from.terminator_has_break_;
   terminator_has_wait_ = from.terminator_has_wait_;
 }
+
+bool SplitCFGBlock::isLoopWithTwoSuccessors() const { return is_loop_with_two_succ_; }
 
 bool SplitCFGBlock::isConditional() const { return is_conditional_; }
 

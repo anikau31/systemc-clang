@@ -97,6 +97,8 @@ class SplitCFGBlock {
 
   bool is_conditional_;
 
+  bool is_loop_with_two_succ_;
+
   /// The terminator has break.
   bool terminator_has_break_;
 
@@ -190,11 +192,18 @@ class SplitCFGBlock {
 
   /// \brief Returns whether the SplitCFGBlock is a wait block or not.
   bool hasWait() const;
-  
+
+  /// \brief Return whether the SplitCFGBlock is an IF CFGBlock.
   bool isConditional() const;
 
+  /// \brief Return whether the SplitCFGBlock is a loop CFGBlock with two
+  /// succesors.
+  bool isLoopWithTwoSuccessors() const;
+
+  /// \brief Return whether the terminator for this block has a break statement in it.
   bool hasTerminatorBreak() const;
 
+  /// \brief Return whether the terminator for this block has a wait statement in it.
   bool hasTerminatorWait() const;
 
   /// \brief Returns the block ID for the SplitCFGBlock.
