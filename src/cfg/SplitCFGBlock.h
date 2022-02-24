@@ -95,6 +95,8 @@ class SplitCFGBlock {
   /// is a wait block.
   bool has_wait_;
 
+  bool is_conditional_;
+
   /// The terminator has break.
   bool terminator_has_break_;
 
@@ -163,6 +165,7 @@ class SplitCFGBlock {
   void setNextState(unsigned int state);
 
  public:
+  friend class SplitCFG;
   /// \brief Constructor.
   SplitCFGBlock();
 
@@ -187,6 +190,8 @@ class SplitCFGBlock {
 
   /// \brief Returns whether the SplitCFGBlock is a wait block or not.
   bool hasWait() const;
+  
+  bool isConditional() const;
 
   bool hasTerminatorBreak() const;
 

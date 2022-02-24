@@ -55,10 +55,11 @@ void SplitCFG::dfs_visit_wait(
 
     /// If the block contains a wait.  It is a wait block.
     bool bb_has_wait{(ParentBB->hasWait())};
+    bool cond_block{isConditional(ParentBB)};
 
     /// If we are traversing down then we are not popping back up.
     if (!popping_) {
-      llvm::dbgs() << "Visit Parent BB# " << ParentBB->getBlockID() << " ";
+      llvm::dbgs() << "Visit Parent BB# " << ParentBB->getBlockID() << " isCondition: " << cond_block << " ";
       curr_path.push_back(std::make_pair(ParentBB, SplitCFGPathInfo{ParentBB}));
     } else {
     }
@@ -239,8 +240,9 @@ bool SplitCFG::isConditional(const SplitCFGBlock* block) const {
     return false;
   }
 
-  auto stmt{block->getCFGBlock()->getTerminatorStmt()};
-  return stmt && (llvm::isa<clang::IfStmt>(stmt));
+  //auto stmt{block->getCFGBlock()->getTerminatorStmt()};
+  //return stmt && (llvm::isa<clang::IfStmt>(stmt));
+  return block->isConditional();
 }
 
 bool SplitCFG::isLoop(const SplitCFGBlock* block) const {
@@ -596,6 +598,11 @@ void SplitCFG::createUnsplitBlocks() {
     auto block{*begin_it};
     SplitCFGBlock* new_block{new SplitCFGBlock{}};
     new_block->id_ = block->getBlockID();
+  
+    /// Set if the block is an IF conditional
+    auto stmt{block->getTerminatorStmt()};
+    new_block->is_conditional_ = stmt && llvm::isa<clang::IfStmt>(stmt);
+
     sccfg_.insert(std::make_pair(new_block->id_, new_block));
   }
 
