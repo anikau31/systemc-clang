@@ -82,9 +82,6 @@ void SplitCFG::dfs_visit_wait(
       }
     }
 
-    // Current block is a loop and has two successors.  So, we should start with
-    // a new call to dfs, and provide a new visited_blocks.
-    //
     // If there is a successor that has not been visited, then remember that
     // block.
     dumpVisitedBlocks(visited_blocks);
@@ -92,8 +89,39 @@ void SplitCFG::dfs_visit_wait(
     llvm::dbgs() << "Found successor BB " << BB->getBlockID()
                  << " for parentBB " << ParentBB->getBlockID() << "\n";
 
-    // FIXME: Should this have found_succ &&?
-    if (isLoopWithTwoSuccessors(ParentBB) && found_succ) {
+    /// For an IF block, we want to record its true and false paths.
+    /// Mutual exclusion should be guaranteed since a conditional block can't
+    /// be a block with a single wait.
+    if (cond_block && !bb_has_wait) {
+      /// Check if the found succesor is the TRUE or FALSE for the
+      /// conditional. The first successor is the true, and the second is the
+      /// false.
+      if (const auto true_block_succ = *ParentBB->succ_begin()) {
+        auto path_info = std::find_if(
+            curr_path.begin(), curr_path.end(),
+            [ParentBB](
+                const std::pair<const SplitCFGBlock*, SplitCFGPathInfo>& x) {
+              return x.first->getBlockID() == ParentBB->getBlockID();
+            });
+
+        if (true_block_succ == BB) {
+          true_path_ = true;
+          llvm::dbgs() << "Going down the TRUE path for BB"
+                       << path_info->first->getBlockID() << " \n";
+
+        } else {
+          llvm::dbgs() << "Going down the FALSE path for BB"
+                       << path_info->first->getBlockID() << " \n";
+
+          if (true_path_) {
+            /// Save off the paths.
+          }
+        }
+      }
+    }
+
+    // Use the recursive call for loops with 2 successors, and IF blocks.
+    if ((isLoopWithTwoSuccessors(ParentBB) || isConditional(ParentBB) ) && found_succ) {
       do {
         // llvm::dbgs() << "\n==============================================";
         llvm::dbgs() << "\n#### BB " << ParentBB->getBlockID()
@@ -150,6 +178,15 @@ void SplitCFG::dfs_visit_wait(
     //  dumpSmallVector(to_visit);
     //     llvm::dbgs() << " End loop \n";
   } while (!to_visit.empty());
+}
+
+bool SplitCFG::isTruePath(const SplitCFGBlock* parent_block,
+                          const SplitCFGBlock* block) const {
+  if (!parent_block || !block) {
+    return false;
+  }
+
+  return (*parent_block->succ_begin() == block);
 }
 
 void SplitCFG::dumpVisitedBlocks(
@@ -616,8 +653,8 @@ void SplitCFG::createUnsplitBlocks() {
 
     /// Set if the block is a loop with two successors
     bool is_loop{stmt && (llvm::isa<clang::WhileStmt>(stmt) ||
-                  llvm::isa<clang::ForStmt>(stmt) ||
-                  llvm::isa<clang::DoStmt>(stmt))};
+                          llvm::isa<clang::ForStmt>(stmt) ||
+                          llvm::isa<clang::DoStmt>(stmt))};
 
     new_block->is_loop_with_two_succ_ =
         (stmt && is_loop && (last_succ_is_null == false));
@@ -765,10 +802,16 @@ SplitCFG::getPathsFound() {
 }
 
 SplitCFG::SplitCFG(clang::ASTContext& context)
-    : context_{context}, next_state_count_{0} {}
+    : context_{context},
+      next_state_count_{0},
+      popping_{false},
+      true_path_{false} {}
 
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)
-    : context_{context}, next_state_count_{0} {
+    : context_{context},
+      next_state_count_{0},
+      popping_{false},
+      true_path_{false} {
   construct_sccfg(method);
 }

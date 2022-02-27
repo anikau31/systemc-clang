@@ -17,13 +17,28 @@ namespace systemc_clang {
 /// ===========================================
 class SplitCFGPathInfo {
  public:
+  friend class SplitCFG;
   SplitCFGPathInfo(const SplitCFGBlock *block)
       : cfg_block_{block->getCFGBlock()} {};
 
   virtual ~SplitCFGPathInfo() {}
 
+  void dump() {
+    llvm::dbgs() << "TRUE path: ";
+    for (const auto block : true_path_) {
+      llvm::dbgs() << block->getBlockID() << " ";
+    }
+    llvm::dbgs() << "\n";
+    llvm::dbgs() << "FALSE path: ";
+    for (const auto block : false_path_) {
+      llvm::dbgs() << block->getBlockID() << " ";
+    }
+  }
+
  private:
   const clang::CFGBlock *cfg_block_;
+  llvm::SmallVector<const SplitCFGBlock *> true_path_;
+  llvm::SmallVector<const SplitCFGBlock *> false_path_;
 };
 
 /// ===========================================
@@ -116,14 +131,14 @@ class SplitCFG {
   virtual ~SplitCFG();
 
   /// \brief Returns the paths that were found in the SCCFG.
-  //const llvm::SmallVectorImpl<VectorSplitCFGBlock> &
+  // const llvm::SmallVectorImpl<VectorSplitCFGBlock> &
 
-  const llvm::SmallVectorImpl<llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo> > > & getPathsFound() ;
+  const llvm::SmallVectorImpl<
+      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>>
+      &getPathsFound();
 
   /// \brief Construct the SCCFG.
   void construct_sccfg(const clang::CXXMethodDecl *method);
-
-
 
   /// \brief Generates the paths between wait statements.
   void generate_paths();
@@ -156,7 +171,7 @@ class SplitCFG {
   /// statements. These need to be processed.
   /// \param visited_waits These are the SplitCFGBlocks that have waits and
   /// those that have been visited.
- 
+
   void dfs_visit_wait(
       const SplitCFGBlock *BB,
       llvm::SmallPtrSet<const SplitCFGBlock *, 32> &visited_blocks,
@@ -179,12 +194,15 @@ class SplitCFG {
           8> &to_visit,
       bool found);
 
+  bool isTruePath(const SplitCFGBlock* parent_block,
+                          const SplitCFGBlock* block) const;
   void updateVisitedBlocks(
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,
       const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &from);
   void dumpVisitedBlocks(llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited);
 
   bool popping_;
+  bool true_path_;
 };
 
 };  // namespace systemc_clang

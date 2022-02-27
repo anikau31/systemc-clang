@@ -110,10 +110,10 @@ TEST_CASE("Simple thread test", "[threads]") {
         /// There should be 4 paths
         std::string pstr{pathToString(p)};
         if (i == 0) {
-          REQUIRE(pstr == "17 16 15 14 13 12 11 10 9 8 4 3 7 6 4 3 5 2 21");
+          REQUIRE(pstr == "17 16 15 14 13 12 11 10 9 8 4 3 7 6 4 3 5 4 3 2 21");
         }
         if (i == 1) {
-          REQUIRE(pstr == "22 1 15 14 13 12 11 10 9 8 4 3 7 6 4 3 5 2 21");
+          REQUIRE(pstr == "22 1 15 14 13 12 11 10 9 8 4 3 7 6 4 3 5 4 3 2 21");
         }
         ++i;
       }
