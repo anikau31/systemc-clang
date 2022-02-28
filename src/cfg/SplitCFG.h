@@ -194,8 +194,14 @@ class SplitCFG {
           8> &to_visit,
       bool found);
 
-  bool isTruePath(const SplitCFGBlock* parent_block,
-                          const SplitCFGBlock* block) const;
+  bool isTruePath(const SplitCFGBlock *parent_block,
+                  const SplitCFGBlock *block) const;
+
+  /// \brief Compute the set difference between two SmallPtrSets.
+  void setDifference(const llvm::SmallPtrSetImpl<const SplitCFGBlock *>& larger,
+                     const llvm::SmallPtrSetImpl<const SplitCFGBlock *>& smaller,
+                     llvm::SmallPtrSetImpl<const SplitCFGBlock *>& to );
+
   void updateVisitedBlocks(
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,
       const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &from);

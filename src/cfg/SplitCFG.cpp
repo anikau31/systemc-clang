@@ -121,16 +121,20 @@ void SplitCFG::dfs_visit_wait(
     }
 
     // Use the recursive call for loops with 2 successors, and IF blocks.
-    if ((isLoopWithTwoSuccessors(ParentBB) || isConditional(ParentBB) ) && found_succ) {
+    if ((isLoopWithTwoSuccessors(ParentBB) || isConditional(ParentBB)) &&
+        found_succ) {
       do {
         // llvm::dbgs() << "\n==============================================";
         llvm::dbgs() << "\n#### BB " << ParentBB->getBlockID()
                      << " is a loop with 2 succ\n";
         llvm::SmallPtrSet<const SplitCFGBlock*, 32> loop_visited_blocks{
             visited_blocks};
+        llvm::SmallPtrSet<const SplitCFGBlock*, 32> capture_visited_blocks{
+            visited_blocks};
+        llvm::SmallPtrSet<const SplitCFGBlock*, 32> new_visited;
+
         // ParentBB has been visited so don't revisit it
         loop_visited_blocks.insert(ParentBB);
-        dumpVisitedBlocks(loop_visited_blocks);
         visited_blocks.insert(BB);
         llvm::dbgs() << "\n==============================================";
         llvm::dbgs() << "\nRecurse DFS starting at BB " << BB->getBlockID()
@@ -142,7 +146,20 @@ void SplitCFG::dfs_visit_wait(
         /// This only updates the visited blocks for the subgraph within the
         /// loop. We do not want to update the global visited_blocks yet.
         // updateVisitedBlocks(loop_visited_blocks, loop_visited_blocks);
-        //  dumpVisitedBlocks(visited_blocks);
+        llvm::dbgs() << "@@@@@ Captured VB: ";
+        dumpVisitedBlocks(capture_visited_blocks);
+        dumpVisitedBlocks(loop_visited_blocks);
+
+        /// Find the new visited blocks.
+        new_visited.insert(BB);
+        setDifference(loop_visited_blocks, capture_visited_blocks, new_visited);
+        // for (const auto& element : loop_visited_blocks) {
+          // if (!capture_visited_blocks.contains(element)) {
+            // new_visited.insert(element);
+          // }
+        // }
+        dumpVisitedBlocks(new_visited);
+
         llvm::dbgs() << "\nEND Recurse DFS"
                      << " visited_block size " << visited_blocks.size() << "\n";
         llvm::dbgs() << "\n==============================================";
@@ -178,6 +195,17 @@ void SplitCFG::dfs_visit_wait(
     //  dumpSmallVector(to_visit);
     //     llvm::dbgs() << " End loop \n";
   } while (!to_visit.empty());
+}
+
+void SplitCFG::setDifference(
+    const llvm::SmallPtrSetImpl<const SplitCFGBlock*>& larger,
+    const llvm::SmallPtrSetImpl<const SplitCFGBlock*>& smaller,
+    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& to ) {
+  for (const auto& element : larger) {
+    if (!smaller.contains(element)) {
+      to.insert(element);
+    }
+  }
 }
 
 bool SplitCFG::isTruePath(const SplitCFGBlock* parent_block,
