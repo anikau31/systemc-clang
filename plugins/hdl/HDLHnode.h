@@ -72,6 +72,10 @@ namespace systemc_hdl {
     } for_info_t;
 
     hNodep ProcessCXXConstructorHcode(hNodep xconstructor);
+    void GetSensLists(std::vector<hNodep> &hsens) {
+      hsens = hnewsens;
+    }
+  private:
     void HDLLoop(hNodep &hp, std::vector<for_info_t> &for_info);
 
     void PushRange(hNodep &hp, std::vector<for_info_t> &for_info);
@@ -83,10 +87,8 @@ namespace systemc_hdl {
     hNodep HnodeDeepCopy(hNodep hp);
     void RemoveSCMethod(hNodep &hp);
     void CleanupInitHcode(hNodep &hp);
-    void GetSensLists(std::vector<hNodep> &hsens) {
-      hsens = hnewsens;
-    }
-    
+
+    string ExtractModuleName(hNodep hp);
   private:
     hNodep hnewpb;  // port binding list
     std::vector<hNodep> hnewsens; // sensitivity lists
