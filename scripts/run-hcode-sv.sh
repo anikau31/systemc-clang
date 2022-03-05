@@ -25,4 +25,4 @@ if [ -z "$SYSTEMC_CLANG" ]; then
     exit;
 fi
 
-python3 $SYSTEMC_CLANG/plugins/hdl/hcode2verilog.py $1
+python3 $SYSTEMC_CLANG/plugins/hdl/hcode2verilog.py $@

@@ -227,7 +227,7 @@ class VerilogTranslationPass(TopDown):
             # r_const = isinstance(r, int)
             if l_const and r_const:
                 idx = '{}:{}'.format(l, r)
-            elif m:
+            elif m is not None:
                 idx = '{}'.format(m)
             else:
                 # for slicing that is not constant
@@ -662,6 +662,7 @@ class VerilogTranslationPass(TopDown):
         return '{}[{}]'.format(tree.children[0], tree.children[1])
 
     def moduleinst(self, tree):
+        dprint(tree)
         mod_name, mod_type = tree.children
         # expand if it is an element of module array
         mod_name = '_'.join(mod_name.split('#'))
