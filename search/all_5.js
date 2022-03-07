@@ -50,5 +50,6 @@ var searchData=
   ['expand_5fbinding_5fref_47',['expand_binding_ref',['../classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a7d986773b4ba45a35d884a4dbdd9540a',1,'parselib::transforms::verilog_tranlation::VerilogTranslationPass']]],
   ['expanded_48',['expanded',['../classparselib_1_1transforms_1_1function__param__marker_1_1FunctionParamMarker.html#aaee2d4151de1926dd4924fec071b9651',1,'parselib.transforms.function_param_marker.FunctionParamMarker.expanded()'],['../classparselib_1_1transforms_1_1port__expansion_1_1PortExpansion.html#a4e8cbcefdb6572ad544fc0e68e90ef77',1,'parselib.transforms.port_expansion.PortExpansion.expanded()'],['../classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html#a7b7dd721e7f60557aa15063f8c05f8c8',1,'parselib.transforms.typedef_expansion.TypedefExpansion.expanded()']]],
   ['expression_49',['Expression',['../classparselib_1_1transforms_1_1node_1_1Expression.html',1,'parselib::transforms::node']]],
-  ['expression_5f_50',['expression_',['../classsystemc__clang_1_1FindArgument.html#a1e675602a667da1286753f796bd494af',1,'systemc_clang::FindArgument']]]
+  ['expression_5f_50',['expression_',['../classsystemc__clang_1_1FindArgument.html#a1e675602a667da1286753f796bd494af',1,'systemc_clang::FindArgument']]],
+  ['extractmodulename_51',['ExtractModuleName',['../classsystemc__hdl_1_1HDLConstructorHcode.html#aa0c86f2e809bb11da564e4d4fa1eac62',1,'systemc_hdl::HDLConstructorHcode']]]
 ];
