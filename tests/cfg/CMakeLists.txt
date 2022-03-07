@@ -2,17 +2,17 @@
 
 set (TEST_LIST 
   # Thread parsing 
-  simple-thread.cpp 
-  cfg-for-if-wait.cpp
-  thread-for-break0.cpp
-  thread-for-break1.cpp
   thread-for-break-nested2.cpp
-  cfg-for-stmt-wait.cpp
-  cfg-for-break-wait.cpp
+  # simple-thread.cpp
+  # cfg-for-if-wait.cpp
+  # thread-for-break0.cpp
+  # thread-for-break1.cpp
+  # cfg-for-stmt-wait.cpp
+  # cfg-for-break-wait.cpp
 
   # template test
-  run-cfg-test.cpp
-  run-cfg-rework-test.cpp
+  # run-cfg-test.cpp
+  # run-cfg-rework-test.cpp
   )
 
 set(SCC_LIBS libsystemc-clang)

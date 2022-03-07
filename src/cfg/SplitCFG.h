@@ -17,11 +17,25 @@ namespace systemc_clang {
 /// ===========================================
 class SplitCFGPathInfo {
  public:
+  using SplitCFGBlockPtrVector = llvm::SmallVector<const SplitCFGBlock *>;
   friend class SplitCFG;
+
+ public:
   SplitCFGPathInfo(const SplitCFGBlock *block)
       : cfg_block_{block->getCFGBlock()} {};
 
   virtual ~SplitCFGPathInfo() {}
+
+  bool isTruePathValid() const {
+    return (true_path_.size() > 0);
+  }
+
+  bool isFalsePathValid() const {
+    return ((false_path_.size() > 0));
+  }
+
+  const SplitCFGBlockPtrVector& getTruePath() const { return true_path_ ; }
+  const SplitCFGBlockPtrVector& getFalsePath() const { return true_path_ ; }
 
   void dump() {
     llvm::dbgs() << "TRUE path: ";
@@ -37,8 +51,8 @@ class SplitCFGPathInfo {
 
  private:
   const clang::CFGBlock *cfg_block_;
-  llvm::SmallVector<const SplitCFGBlock *> true_path_;
-  llvm::SmallVector<const SplitCFGBlock *> false_path_;
+  SplitCFGBlockPtrVector true_path_;
+  SplitCFGBlockPtrVector false_path_;
 };
 
 /// ===========================================
@@ -74,10 +88,13 @@ class SplitCFG {
 
   llvm::SmallVector<std::pair<VectorCFGElementPtrImpl, bool>> split_elements;
 
-  /// Predecessor SplitCFGBlock* => (Wait SplitCFGBlock*)
+  /// \brief Predecessor SplitCFGBlock* => (Wait SplitCFGBlock*)
   std::unordered_map<const SplitCFGBlock *,
                      std::pair<const SplitCFGBlock *, unsigned int>>
       wait_next_state_;
+
+  /// \brief Map a SplitCFGBlock* to its path information.
+  std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo> path_info_;
 
   unsigned int next_state_count_;
 
@@ -172,7 +189,7 @@ class SplitCFG {
   /// \param visited_waits These are the SplitCFGBlocks that have waits and
   /// those that have been visited.
 
-  void dfs_visit_wait(
+const llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>   dfs_visit_wait(
       const SplitCFGBlock *BB,
       llvm::SmallPtrSet<const SplitCFGBlock *, 32> &visited_blocks,
       llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_to_visit,
@@ -198,9 +215,10 @@ class SplitCFG {
                   const SplitCFGBlock *block) const;
 
   /// \brief Compute the set difference between two SmallPtrSets.
-  void setDifference(const llvm::SmallPtrSetImpl<const SplitCFGBlock *>& larger,
-                     const llvm::SmallPtrSetImpl<const SplitCFGBlock *>& smaller,
-                     llvm::SmallPtrSetImpl<const SplitCFGBlock *>& to );
+  void setDifference(
+      const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &larger,
+      const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &smaller,
+      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to);
 
   void updateVisitedBlocks(
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,
@@ -208,7 +226,8 @@ class SplitCFG {
   void dumpVisitedBlocks(llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited);
 
   bool popping_;
-  bool true_path_;
+  // bool true_path_;
+  // bool false_path_;
 };
 
 };  // namespace systemc_clang
