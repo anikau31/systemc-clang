@@ -20,7 +20,7 @@ var searchData=
   ['instance_5flist_5f_17',['instance_list_',['../classsystemc__clang_1_1ModuleInstance.html#abbbf86afd09113e92c647eb1897dc084',1,'systemc_clang::ModuleInstance']]],
   ['instance_5fliteral_5f_18',['instance_literal_',['../classsc__ast__matchers_1_1InstanceArgumentMatcher.html#a34ca285e3063551112d52b67fc262b4c',1,'sc_ast_matchers::InstanceArgumentMatcher']]],
   ['instance_5fmap_5f_19',['instance_map_',['../classsc__ast__matchers_1_1InstanceMatcher.html#ac2b21c735d12ccf05460992aa415a0dc',1,'sc_ast_matchers::InstanceMatcher']]],
-  ['instance_5fmatcher_5f_20',['instance_matcher_',['../classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a177826a10a2e53d440b2fa0f6e47233e',1,'sc_ast_matchers::ModuleDeclarationMatcher::instance_matcher_()'],['../classsc__ast__matchers_1_1NetlistMatcher.html#ad4f23514978e9a5c52c87763c112b8f4',1,'sc_ast_matchers::NetlistMatcher::instance_matcher_()']]],
+  ['instance_5fmatcher_5f_20',['instance_matcher_',['../classsc__ast__matchers_1_1NetlistMatcher.html#ad4f23514978e9a5c52c87763c112b8f4',1,'sc_ast_matchers::NetlistMatcher::instance_matcher_()'],['../classsc__ast__matchers_1_1ModuleDeclarationMatcher.html#a177826a10a2e53d440b2fa0f6e47233e',1,'sc_ast_matchers::ModuleDeclarationMatcher::instance_matcher_()']]],
   ['instance_5fmodule_5fmap_5f_21',['instance_module_map_',['../classsystemc__clang_1_1Model.html#a23cffb90397641c7a1405a8145b94e3b',1,'systemc_clang::Model']]],
   ['instance_5fname_22',['instance_name',['../structsc__ast__matchers_1_1ModuleInstanceType.html#ac2e3331654217483b96515b50fd7172d',1,'sc_ast_matchers::ModuleInstanceType']]],
   ['instance_5fname_5f_23',['instance_name_',['../classsystemc__clang_1_1ModuleInstance.html#a0bebd9c3b1272b8cf32b04421953ba63',1,'systemc_clang::ModuleInstance']]],
@@ -33,8 +33,10 @@ var searchData=
   ['iointerfaces_5f_30',['iointerfaces_',['../classsystemc__clang_1_1ModuleInstance.html#a8c6e8f2294684f47209fbd93da6f3000',1,'systemc_clang::ModuleInstance']]],
   ['is_5farray_31',['is_array',['../structsc__ast__matchers_1_1ModuleInstanceType.html#ad9056089538277c3b0fb3b04ed7a00c9',1,'sc_ast_matchers::ModuleInstanceType']]],
   ['is_5farray_5f_32',['is_array_',['../structsc__ast__matchers_1_1ModuleInstanceType.html#afdb810b7b04e23673a3c2e64b4cb3001',1,'sc_ast_matchers::ModuleInstanceType::is_array_()'],['../classsystemc__clang_1_1PortDecl.html#aaa40e3567d2a19a6f7310c455e4fc54d',1,'systemc_clang::PortDecl::is_array_()']]],
-  ['is_5fentry_5ffunction_5f_33',['is_entry_function_',['../classsystemc__clang_1_1FindEntryFunctions.html#ab67becfe5748fc2b42e23a2a739bc77a',1,'systemc_clang::FindEntryFunctions']]],
-  ['is_5ffield_5fdecl_34',['is_field_decl',['../structsc__ast__matchers_1_1ModuleInstanceType.html#ace8d813116395be7de22d9d492283a69',1,'sc_ast_matchers::ModuleInstanceType']]],
-  ['is_5fport_5fbinding_35',['is_port_binding',['../classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#aaf3383774c18184d2c30bced2a7703dc',1,'parselib::transforms::literal_expansion::LiteralExpansion']]],
-  ['istreamports_5f_36',['istreamports_',['../classsystemc__clang_1_1ModuleInstance.html#a8c5265bd212698e526e5a8194d75d7d0',1,'systemc_clang::ModuleInstance']]]
+  ['is_5fconditional_5f_33',['is_conditional_',['../classsystemc__clang_1_1SplitCFGBlock.html#ab5213c2a56b3dfda38fab7c6ba7fc770',1,'systemc_clang::SplitCFGBlock']]],
+  ['is_5fentry_5ffunction_5f_34',['is_entry_function_',['../classsystemc__clang_1_1FindEntryFunctions.html#ab67becfe5748fc2b42e23a2a739bc77a',1,'systemc_clang::FindEntryFunctions']]],
+  ['is_5ffield_5fdecl_35',['is_field_decl',['../structsc__ast__matchers_1_1ModuleInstanceType.html#ace8d813116395be7de22d9d492283a69',1,'sc_ast_matchers::ModuleInstanceType']]],
+  ['is_5floop_5fwith_5ftwo_5fsucc_5f_36',['is_loop_with_two_succ_',['../classsystemc__clang_1_1SplitCFGBlock.html#a786da84150c6656defb973fe5703ee44',1,'systemc_clang::SplitCFGBlock']]],
+  ['is_5fport_5fbinding_37',['is_port_binding',['../classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#aaf3383774c18184d2c30bced2a7703dc',1,'parselib::transforms::literal_expansion::LiteralExpansion']]],
+  ['istreamports_5f_38',['istreamports_',['../classsystemc__clang_1_1ModuleInstance.html#a8c5265bd212698e526e5a8194d75d7d0',1,'systemc_clang::ModuleInstance']]]
 ];
