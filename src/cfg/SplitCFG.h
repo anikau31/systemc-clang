@@ -22,34 +22,54 @@ class SplitCFGPathInfo {
 
  public:
   SplitCFGPathInfo(const SplitCFGBlock *block)
-      : cfg_block_{block->getCFGBlock()} {};
+      : split_block_{block}, cfg_block_{block->getCFGBlock()} {};
 
   virtual ~SplitCFGPathInfo() {}
 
-  bool isTruePathValid() const {
-    return (true_path_.size() > 0);
+  bool isTruePathValid() const { return (true_path_.size() > 0); }
+
+  bool isFalsePathValid() const { return ((false_path_.size() > 0)); }
+  const SplitCFGBlockPtrVector &getTruePath() const { return true_path_; }
+  const SplitCFGBlockPtrVector &getFalsePath() const { return true_path_; }
+
+  std::string toStringFalsePath() const {
+    std::string str{};
+    for (const auto & block : false_path_) {
+      str += std::to_string(block->getBlockID());
+      str += " ";
+    }
+    str.pop_back();
+
+    return str;
   }
 
-  bool isFalsePathValid() const {
-    return ((false_path_.size() > 0));
-  }
+ 
+  std::string toStringTruePath() const {
+    std::string str{};
+    for (const auto & block : true_path_) {
+      str += std::to_string(block->getBlockID());
+      str += " ";
+    }
+    str.pop_back();
 
-  const SplitCFGBlockPtrVector& getTruePath() const { return true_path_ ; }
-  const SplitCFGBlockPtrVector& getFalsePath() const { return true_path_ ; }
+    return str;
+  }
 
   void dump() {
-    llvm::dbgs() << "TRUE path: ";
+    llvm::dbgs() << " BB# " << split_block_->getBlockID() << "\n";
+    llvm::dbgs() << "  TRUE  path: ";
     for (const auto block : true_path_) {
       llvm::dbgs() << block->getBlockID() << " ";
     }
     llvm::dbgs() << "\n";
-    llvm::dbgs() << "FALSE path: ";
+    llvm::dbgs() << "  FALSE path: ";
     for (const auto block : false_path_) {
       llvm::dbgs() << block->getBlockID() << " ";
     }
   }
 
  private:
+  const SplitCFGBlock *split_block_;
   const clang::CFGBlock *cfg_block_;
   SplitCFGBlockPtrVector true_path_;
   SplitCFGBlockPtrVector false_path_;
@@ -160,6 +180,9 @@ class SplitCFG {
   /// \brief Generates the paths between wait statements.
   void generate_paths();
 
+  
+  const std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>& getPathInfo() const;
+  void preparePathInfo();
   /// \brief Returns the argument to a wait statement.
   /// Note that the only one supported are no arguments or integer arguments.
   llvm::APInt getWaitArgument(const clang::CFGElement &element) const;
@@ -169,6 +192,7 @@ class SplitCFG {
   void dumpToDot() const;
   void dumpWaitNextStates() const;
   void dumpPaths() const;
+  void dumpPathInfo() const;
 
   /// Rework
   //
@@ -189,7 +213,8 @@ class SplitCFG {
   /// \param visited_waits These are the SplitCFGBlocks that have waits and
   /// those that have been visited.
 
-const llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>   dfs_visit_wait(
+  const llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
+  dfs_visit_wait(
       const SplitCFGBlock *BB,
       llvm::SmallPtrSet<const SplitCFGBlock *, 32> &visited_blocks,
       llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_to_visit,
@@ -219,6 +244,15 @@ const llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>   dfs
       const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &larger,
       const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &smaller,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to);
+  void setTruePathInfo(
+      const SplitCFGBlock *sblock,
+      const llvm::SmallVector<
+          std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
+
+  void setFalsePathInfo(
+      const SplitCFGBlock *sblock,
+      const llvm::SmallVector<
+          std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
 
   void updateVisitedBlocks(
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,
@@ -226,8 +260,6 @@ const llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>   dfs
   void dumpVisitedBlocks(llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited);
 
   bool popping_;
-  // bool true_path_;
-  // bool false_path_;
 };
 
 };  // namespace systemc_clang

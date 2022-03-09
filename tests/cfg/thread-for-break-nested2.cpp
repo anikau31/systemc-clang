@@ -32,8 +32,8 @@ TEST_CASE("Simple thread test", "[threads]") {
   std::string code{};
 
   if (data_file.empty()) {
-    code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
-                                            "thread-for-break-nested2-input.cpp");
+    code = systemc_clang::read_systemc_file(
+        systemc_clang::test_data_dir, "thread-for-break-nested2-input.cpp");
   } else {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
                                             data_file);
@@ -119,6 +119,43 @@ TEST_CASE("Simple thread test", "[threads]") {
       }
       /// 4 Paths
       REQUIRE(i == 2);
+
+      /// Check if the TRUE/FALSE paths are correct.
+      auto path_info{scfg.getPathInfo()};
+      int check{4};
+      for (const auto &block : path_info) {
+        auto sblock{block.first};
+        auto info{block.second};
+        auto id{ sblock->getBlockID()};
+        std::string tstr{info.toStringTruePath()};
+        std::string fstr{info.toStringFalsePath()};
+
+        if (id == 9) {
+          REQUIRE(tstr == "8 4 3");
+          REQUIRE(fstr == "7 6");
+          --check;
+        }
+
+        if (id == 10) {
+          REQUIRE(tstr == "9" );
+          REQUIRE(fstr == "4 3" );
+          --check;
+        }
+
+        if (id == 12) {
+          REQUIRE(tstr == "11 10" );
+          REQUIRE(fstr == "5 4 3" );
+          --check;
+        }
+
+        if (id == 13) {
+          REQUIRE(tstr == "12" );
+          REQUIRE(fstr == "2 21" );
+          --check;
+        }
+      }
+
+      REQUIRE(check == 0);
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";
