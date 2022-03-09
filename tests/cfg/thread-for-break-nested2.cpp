@@ -101,6 +101,7 @@ TEST_CASE("Simple thread test", "[threads]") {
       SplitCFG scfg{from_ast->getASTContext()};
       scfg.construct_sccfg(method);
       scfg.generate_paths();
+      scfg.dumpToDot();
       llvm::dbgs() << " ===================================================\n";
 
       /// Check if all paths are correct.

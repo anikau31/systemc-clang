@@ -33,7 +33,7 @@ TEST_CASE("Simple thread test", "[threads]") {
 
   if (data_file.empty()) {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
-                                            "cfg-for-if-wait-input.cpp");
+                                            "thread-for-break-wait-input.cpp");
   } else {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
                                             data_file);
@@ -100,10 +100,8 @@ TEST_CASE("Simple thread test", "[threads]") {
                    << " ***********************\n";
       SplitCFG scfg{from_ast->getASTContext()};
       scfg.construct_sccfg(method);
-      // scfg.dfs_rework();
       scfg.generate_paths();
-      scfg.dump();
-      // scfg.dumpToDot();
+      scfg.dumpToDot();
       llvm::dbgs() << " ===================================================\n";
 
       /// Check if all paths are correct.
@@ -113,18 +111,50 @@ TEST_CASE("Simple thread test", "[threads]") {
         /// There should be 4 paths
         std::string pstr{pathToString(p)};
         if (i == 0) {
-          REQUIRE(pstr == "11 10 9 8 81");
+          REQUIRE(pstr == "10 9 8 7 71");
         }
         if (i == 1) {
-          REQUIRE(pstr == "82 7 6 5 4 2 1 9 8 81");
+          REQUIRE(pstr == "72 6 5 51 2 1 8 7 71");
         }
-        if ((i == 2) || (i == 3)) {
-          REQUIRE(pstr == "3 7 6 5 4 2 1 9 8 81");
+        if (i == 2) {
+          REQUIRE(pstr == "52 4 41 3 6 5 51 2 1 8 7 71");
+        }
+        if (i == 3) {
+          REQUIRE(pstr == "42 2 1 8 7 71");
         }
         ++i;
       }
       /// 4 Paths
       REQUIRE(i == 4);
+
+
+      /// Check if the TRUE/FALSE paths are correct.
+      auto path_info{scfg.getPathInfo()};
+      int check{2};
+      for (const auto &block : path_info) {
+        auto sblock{block.first};
+        auto info{block.second};
+        auto id{ sblock->getBlockID()};
+        std::string tstr{info.toStringTruePath()};
+        std::string fstr{info.toStringFalsePath()};
+
+        if (id == 5) {
+          REQUIRE(tstr == "51");
+          REQUIRE(fstr == "");
+          --check;
+        }
+
+        if (id == 6) {
+          REQUIRE(tstr == "5" );
+          REQUIRE(fstr == "2 1 8 7 71" );
+          --check;
+        }
+      }
+
+      REQUIRE(check == 0);
+
+
+
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";

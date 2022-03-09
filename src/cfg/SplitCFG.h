@@ -38,7 +38,9 @@ class SplitCFGPathInfo {
       str += std::to_string(block->getBlockID());
       str += " ";
     }
-    str.pop_back();
+    if (str.size() > 0) {
+      str.pop_back();
+    }
 
     return str;
   }
@@ -50,7 +52,9 @@ class SplitCFGPathInfo {
       str += std::to_string(block->getBlockID());
       str += " ";
     }
-    str.pop_back();
+    if (str.size() > 0) {
+      str.pop_back();
+    }
 
     return str;
   }

@@ -118,16 +118,6 @@ SplitCFG::dfs_visit_wait(
         auto block_path{path_info_.find(ParentBB)};
         if (block_path != path_info_.end()) {
           if (const auto true_block_succ = *ParentBB->succ_begin()) {
-            /*
-            std::pair<const SplitCFGBlock*, SplitCFGPathInfo>* path_info =
-                std::find_if(path_info_.begin(), path_info_.end(),
-                             [ParentBB](const std::pair<const SplitCFGBlock*,
-                                                        SplitCFGPathInfo>& x) {
-                               return x.first->getBlockID() ==
-                                      ParentBB->getBlockID();
-                             });
-                             */
-
             if (true_block_succ == BB) {
               true_path_ = true;
               llvm::dbgs() << "Going down the TRUE path for BB"
