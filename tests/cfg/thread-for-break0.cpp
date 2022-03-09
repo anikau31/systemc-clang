@@ -101,6 +101,7 @@ TEST_CASE("Simple thread test", "[threads]") {
       SplitCFG scfg{from_ast->getASTContext()};
       scfg.construct_sccfg(method);
       scfg.generate_paths();
+      scfg.dumpToDot();
       llvm::dbgs() << " ===================================================\n";
 
       /// Check if all paths are correct.
@@ -128,6 +129,33 @@ TEST_CASE("Simple thread test", "[threads]") {
       }
       /// 4 Paths
       REQUIRE(i == 5);
+
+      /// Check if the TRUE/FALSE paths are correct.
+      auto path_info{scfg.getPathInfo()};
+      int check{2};
+      for (const auto &block : path_info) {
+        auto sblock{block.first};
+        auto info{block.second};
+        auto id{ sblock->getBlockID()};
+        std::string tstr{info.toStringTruePath()};
+        std::string fstr{info.toStringFalsePath()};
+
+        if (id == 9) {
+          REQUIRE(tstr == "8");
+          REQUIRE(fstr == "2 21");
+          --check;
+        }
+
+        if (id == 8) {
+          REQUIRE(tstr == "7 71" );
+          REQUIRE(fstr == "6 2 21" );
+          --check;
+        }
+      }
+
+      REQUIRE(check == 0);
+
+
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";

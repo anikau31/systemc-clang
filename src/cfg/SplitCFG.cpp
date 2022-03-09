@@ -26,16 +26,22 @@ using namespace systemc_clang;
 /// REWORK the Cthread Path generation
 ////////////////////////////////////////////////////////
 ///
-void SplitCFG::dfs_visit_wait(
+const llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
+SplitCFG::dfs_visit_wait(
     const SplitCFGBlock* BB,
     llvm::SmallPtrSet<const SplitCFGBlock*, 32>& visited_blocks,
     llvm::SmallVectorImpl<const SplitCFGBlock*>& waits_to_visit,
     llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited_waits,
     llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>&
         curr_path) {
+  bool true_path_{false};
+  bool false_path_{false};
+
+  llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
+      local_path;
   /// Empty CFG block
   if (BB->succ_empty()) {
-    return;
+    return local_path;
   }
 
   popping_ = false;
@@ -47,6 +53,7 @@ void SplitCFG::dfs_visit_wait(
   visited_blocks.insert(BB);
   to_visit.push_back(std::make_pair(BB, BB->succ_begin()));
 
+  // Loop
   do {
     std::pair<const SplitCFGBlock*, SplitCFGBlock::const_succ_iterator>& Top =
         to_visit.back();
@@ -55,12 +62,16 @@ void SplitCFG::dfs_visit_wait(
 
     /// If the block contains a wait.  It is a wait block.
     bool bb_has_wait{(ParentBB->hasWait())};
+    bool cond_block{isConditional(ParentBB)};
 
     /// If we are traversing down then we are not popping back up.
     if (!popping_) {
-      llvm::dbgs() << "Visit Parent BB# " << ParentBB->getBlockID() << " ";
+      llvm::dbgs() << "Visit Parent BB# " << ParentBB->getBlockID() << "\n";
       curr_path.push_back(std::make_pair(ParentBB, SplitCFGPathInfo{ParentBB}));
+      local_path.push_back(
+          std::make_pair(ParentBB, SplitCFGPathInfo{ParentBB}));
     } else {
+      // llvm::dbgs() << "POPPING\n";
     }
 
     /// Handle the case when the block has a wait in it.  There should only be a
@@ -80,42 +91,115 @@ void SplitCFG::dfs_visit_wait(
       }
     }
 
-    // Current block is a loop and has two successors.  So, we should start with
-    // a new call to dfs, and provide a new visited_blocks.
-    //
     // If there is a successor that has not been visited, then remember that
     // block.
-    dumpVisitedBlocks(visited_blocks);
-    bool found_succ{getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB)};
-    llvm::dbgs() << "Found successor BB " << BB->getBlockID()
-                << " for parentBB " << ParentBB->getBlockID() << "\n";
+    llvm::SmallPtrSet<const SplitCFGBlock*, 32> save_visited_blocks{
+        visited_blocks};
 
-    // FIXME: Should this have found_succ &&?
-    if (isLoopWithTwoSuccessors(ParentBB) && found_succ) {
+    // dumpVisitedBlocks(visited_blocks);
+
+    bool found_succ{getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB)};
+    if (found_succ) {
+      llvm::dbgs() << "Found successor BB " << BB->getBlockID()
+                   << " for parentBB " << ParentBB->getBlockID() << "\n";
+    }
+
+    // Use the recursive call for loops with 2 successors, and IF blocks.
+    if ((isLoopWithTwoSuccessors(ParentBB) || isConditional(ParentBB)) &&
+        found_succ) {
       do {
         // llvm::dbgs() << "\n==============================================";
-        llvm::dbgs() << "\n#### BB " << ParentBB->getBlockID()
-                     << " is a loop with 2 succ\n";
-        llvm::SmallPtrSet<const SplitCFGBlock*, 32> loop_visited_blocks{visited_blocks};
+        llvm::dbgs() << "\n#### ParentBB " << ParentBB->getBlockID()
+                     << " is a loop with 2 succ or conditional.  Succ BB# "
+                     << BB->getBlockID() << "\n";
+        /// Check if the found succesor is the TRUE or FALSE for the
+        /// conditional. The first successor is the true, and the second is the
+        /// false.
+        auto block_path{path_info_.find(ParentBB)};
+        if (block_path != path_info_.end()) {
+          if (const auto true_block_succ = *ParentBB->succ_begin()) {
+            if (true_block_succ == BB) {
+              true_path_ = true;
+              llvm::dbgs() << "Going down the TRUE path for BB"
+                           << block_path->first->getBlockID() << " \n";
+
+            } else {
+              false_path_ = true;
+              llvm::dbgs() << "Going down the FALSE path for BB"
+                           << block_path->first->getBlockID() << " \n";
+            }
+          }
+        }
+
+        llvm::SmallPtrSet<const SplitCFGBlock*, 32> loop_visited_blocks{
+            save_visited_blocks};
+        llvm::SmallPtrSet<const SplitCFGBlock*, 32> capture_visited_blocks{
+            save_visited_blocks};
+        // llvm::SmallPtrSet<const SplitCFGBlock*, 32> new_visited;
+
+        // TODO: Do we need this?
+        // visited_blocks.insert(BB);
+
         // ParentBB has been visited so don't revisit it
         loop_visited_blocks.insert(ParentBB);
-        dumpVisitedBlocks(loop_visited_blocks);
-        visited_blocks.insert(BB);
+
         llvm::dbgs() << "\n==============================================";
         llvm::dbgs() << "\nRecurse DFS starting at BB " << BB->getBlockID()
-                     << " visited_block size " << visited_blocks.size() <<
-                     "\n";
-        dfs_visit_wait(BB, loop_visited_blocks, waits_to_visit, visited_waits,
-                       curr_path);
+                     << " parent BB# " << ParentBB->getBlockID() << " T "
+                     << true_path_ << " F " << false_path_ << "\n";
+        llvm::dbgs() << "captured     ";
+        dumpVisitedBlocks(capture_visited_blocks);
+        llvm::dbgs() << "loop visited ";
+        dumpVisitedBlocks(loop_visited_blocks);
+        llvm::dbgs() << "visited      ";
+        dumpVisitedBlocks(visited_blocks);
+        llvm::dbgs() << "local_path   ";
+        dumpSmallVector(local_path);
+        llvm::dbgs() << "\n";
+
+        llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
+            sub_path_to_special_node;
+        sub_path_to_special_node = dfs_visit_wait(
+            BB, loop_visited_blocks, waits_to_visit, visited_waits, curr_path);
         llvm::dbgs() << "\n";
 
         /// This only updates the visited blocks for the subgraph within the
         /// loop. We do not want to update the global visited_blocks yet.
-        //updateVisitedBlocks(loop_visited_blocks, loop_visited_blocks);
-        // dumpVisitedBlocks(visited_blocks);
-        llvm::dbgs() << "\nEND Recurse DFS"
-                     << " visited_block size " << visited_blocks.size() <<
-                     "\n";
+        // updateVisitedBlocks(loop_visited_blocks, loop_visited_blocks);
+        llvm::dbgs() << "@@@@@ AFTER DFS for BB# " << BB->getBlockID()
+                     << " for parent BB# " << ParentBB->getBlockID() << " T "
+                     << true_path_ << " F " << false_path_ << "\n";
+        llvm::dbgs() << "captured     ";
+        dumpVisitedBlocks(capture_visited_blocks);
+        llvm::dbgs() << "loop visited ";
+        dumpVisitedBlocks(loop_visited_blocks);
+        llvm::dbgs() << "visited      ";
+        dumpVisitedBlocks(visited_blocks);
+        llvm::dbgs() << "sub_path     ";
+        dumpSmallVector(sub_path_to_special_node);
+
+        llvm::dbgs() << "\nEND Recurse DFS at BB " << BB->getBlockID()
+                     << " parent BB# " << ParentBB->getBlockID() << " T "
+                     << true_path_ << " F " << false_path_ << "\n";
+
+        /// Haven't looked at new successor yet.
+        /// Find the new visited blocks.
+        // new_visited.insert(BB);
+
+        // setDifference(loop_visited_blocks, capture_visited_blocks,
+        // new_visited);
+        if (true_path_) {
+          llvm::dbgs() << "TRUE PATH DIFF BB# " << ParentBB->getBlockID();
+          true_path_ = false;
+          setTruePathInfo(ParentBB, sub_path_to_special_node);
+        }
+        if (false_path_) {
+          llvm::dbgs() << "FALSE PATH DIFF BB# " << ParentBB->getBlockID();
+          false_path_ = false;
+          setFalsePathInfo(ParentBB, sub_path_to_special_node);
+        }
+        // dumpVisitedBlocks(new_visited);
+
         llvm::dbgs() << "\n==============================================";
 
         /// There are two parts to updating the visited blocks.
@@ -129,9 +213,11 @@ void SplitCFG::dfs_visit_wait(
         //
 
         found_succ = getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB);
-        // llvm::dbgs() << "unvisited BB " << BB->getBlockID() << " is succ "
-        // << found_succ << "\n";
-        //
+
+        if (!found_succ) {
+          llvm::dbgs() << "\nNO SUCCESOR for BB " << ParentBB->getBlockID()
+                       << "\n";
+        }
         /// Update the visited blocks when there is no more successor to visit
         /// in the subgraph.  This means, the loop will be exiting.
         if (!found_succ) {
@@ -144,16 +230,63 @@ void SplitCFG::dfs_visit_wait(
       // Only insert successor if recursive call does not visit subgraph.
     }
     addSuccessorToVisitOrPop(bb_has_wait, BB, to_visit, found_succ);
-    //std::cin.get();
-    // llvm::dbgs() << "to_visit ";
-    // dumpSmallVector(to_visit);
-    //    llvm::dbgs() << " End loop \n";
+    // std::cin.get();
+    //  llvm::dbgs() << "to_visit ";
+    //  dumpSmallVector(to_visit);
+    //     llvm::dbgs() << " End loop \n";
   } while (!to_visit.empty());
+  return local_path;
+}
+
+void SplitCFG::setTruePathInfo(
+    const SplitCFGBlock* sblock,
+    const llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>&
+        newly_visited) {
+  // <SplitCFGBlock*, SplitCFGPathInfo>
+  auto block_path{path_info_.find(sblock)};
+  if (block_path != path_info_.end() && !block_path->second.isTruePathValid()) {
+    for (const auto block : newly_visited) {
+      block_path->second.true_path_.push_back(block.first);
+    }
+  }
+}
+
+void SplitCFG::setFalsePathInfo(
+    const SplitCFGBlock* sblock,
+    const llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>&
+        newly_visited) {
+  auto block_path{path_info_.find(sblock)};
+  if (block_path != path_info_.end() &&
+      !block_path->second.isFalsePathValid()) {
+    for (const auto block : newly_visited) {
+      block_path->second.false_path_.push_back(block.first);
+    }
+  }
+}
+
+void SplitCFG::setDifference(
+    const llvm::SmallPtrSetImpl<const SplitCFGBlock*>& larger,
+    const llvm::SmallPtrSetImpl<const SplitCFGBlock*>& smaller,
+    llvm::SmallPtrSetImpl<const SplitCFGBlock*>& to) {
+  for (const auto& element : larger) {
+    if (!smaller.contains(element)) {
+      to.insert(element);
+    }
+  }
+}
+
+bool SplitCFG::isTruePath(const SplitCFGBlock* parent_block,
+                          const SplitCFGBlock* block) const {
+  if (!parent_block || !block) {
+    return false;
+  }
+
+  return (*parent_block->succ_begin() == block);
 }
 
 void SplitCFG::dumpVisitedBlocks(
     llvm::SmallPtrSetImpl<const SplitCFGBlock*>& visited) {
-  llvm::dbgs() << "\nVisited blocks ";
+  llvm::dbgs() << " blocks ";
   for (const auto sblock : visited) {
     llvm::dbgs() << sblock->getBlockID() << "  ";
   }
@@ -174,6 +307,7 @@ bool SplitCFG::isLoopWithTwoSuccessors(const SplitCFGBlock* block) const {
   //
   // Note that CFGBlock often times has a NULL successor.  We have to ignore
   // that.
+  /*
   auto cfg_block{block->getCFGBlock()};
   bool last_succ_is_null{false};
   if (cfg_block->succ_size() == 2) {
@@ -185,6 +319,8 @@ bool SplitCFG::isLoopWithTwoSuccessors(const SplitCFGBlock* block) const {
   }
 
   return (block && isLoop(block) && (last_succ_is_null == false));
+  */
+  return block->isLoopWithTwoSuccessors();
 }
 
 void SplitCFG::addSuccessorToVisitOrPop(
@@ -239,8 +375,7 @@ bool SplitCFG::isConditional(const SplitCFGBlock* block) const {
     return false;
   }
 
-  auto stmt{block->getCFGBlock()->getTerminatorStmt()};
-  return stmt && (llvm::isa<clang::IfStmt>(stmt));
+  return block->isConditional();
 }
 
 bool SplitCFG::isLoop(const SplitCFGBlock* block) const {
@@ -283,7 +418,8 @@ void SplitCFG::dfs_rework() {
 
   while (!waits_to_visit.empty()) {
     curr_path.clear();
-    visited_blocks.clear();//llvm::SmallPtrSet<const SplitCFGBlock*, 32> visited_blocks;
+    visited_blocks.clear();  // llvm::SmallPtrSet<const SplitCFGBlock*, 32>
+                             // visited_blocks;
     entry = waits_to_visit.pop_back_val();
 
     llvm::dbgs() << "\n@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
@@ -296,6 +432,7 @@ void SplitCFG::dfs_rework() {
   addNextStatesToBlocks();
   dumpWaitNextStates();
   dumpPaths();
+  dumpPathInfo();
 }
 
 ////////////////////////////////////////////////////////
@@ -482,7 +619,8 @@ void SplitCFG::createWaitSplitCFGBlocks(
       new_split->wait_arg_ = getWaitArgument(*wait_el);
     }
 
-    /// Propogate in the SplitCFGBlock whether the block has a terminator that has a break statement.
+    /// Propogate in the SplitCFGBlock whether the block has a terminator that
+    /// has a break statement.
     //
     if (isLoop(new_split)) {
       new_split->identifyBreaks(context_);
@@ -590,12 +728,45 @@ void SplitCFG::dumpPaths() const {
   }
 }
 
+void SplitCFG::dumpPathInfo() const {
+  llvm::dbgs() << "Dump all path info\n";
+
+  for (const auto& path_pair : path_info_) {
+    auto sblock{path_pair.first};
+    auto sinfo{path_pair.second};
+    llvm::dbgs() << "BB #" << sblock->getBlockID() << "\n";
+    sinfo.dump();
+    llvm::dbgs() << "\n";
+  }
+}
+
 void SplitCFG::createUnsplitBlocks() {
   for (auto begin_it = cfg_->nodes_begin(); begin_it != cfg_->nodes_end();
        ++begin_it) {
     auto block{*begin_it};
     SplitCFGBlock* new_block{new SplitCFGBlock{}};
     new_block->id_ = block->getBlockID();
+
+    /// Set if the block is an IF conditional
+    auto stmt{block->getTerminatorStmt()};
+    new_block->is_conditional_ = stmt && llvm::isa<clang::IfStmt>(stmt);
+
+    bool last_succ_is_null{false};
+    if (block->succ_size() == 2) {
+      // Check that the last one is not NULL
+      if (*block->succ_rbegin() == nullptr) {
+        last_succ_is_null = true;
+      }
+    }
+
+    /// Set if the block is a loop with two successors
+    bool is_loop{stmt && (llvm::isa<clang::WhileStmt>(stmt) ||
+                          llvm::isa<clang::ForStmt>(stmt) ||
+                          llvm::isa<clang::DoStmt>(stmt))};
+
+    new_block->is_loop_with_two_succ_ =
+        (stmt && is_loop && (last_succ_is_null == false));
+
     sccfg_.insert(std::make_pair(new_block->id_, new_block));
   }
 
@@ -621,8 +792,18 @@ void SplitCFG::construct_sccfg(const clang::CXXMethodDecl* method) {
 
     splitBlock(block);
   }
+  preparePathInfo();
   llvm::dbgs() << "\nPrepare to update successors\n";
   dumpSCCFG();
+}
+
+void SplitCFG::preparePathInfo() {
+  for (auto& block : sccfg_) {
+    if (isLoopWithTwoSuccessors(block.second) || isConditional(block.second)) {
+      path_info_.insert(
+          std::make_pair(block.second, SplitCFGPathInfo(block.second)));
+    }
+  }
 }
 
 SplitCFG::~SplitCFG() {
@@ -640,6 +821,7 @@ void SplitCFG::dump() const {
     sblock->dump();
   }
   dumpWaitNextStates();
+  dumpPathInfo();
   dumpPaths();
 }
 
@@ -732,6 +914,10 @@ void SplitCFG::dumpToDot() const {
   dotos << "}\n";
 }
 
+const std::unordered_map<const SplitCFGBlock*, SplitCFGPathInfo>&
+SplitCFG::getPathInfo() const {
+  return path_info_;
+}
 const llvm::SmallVectorImpl<
     llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>>&
 SplitCFG::getPathsFound() {
@@ -739,10 +925,14 @@ SplitCFG::getPathsFound() {
 }
 
 SplitCFG::SplitCFG(clang::ASTContext& context)
-    : context_{context}, next_state_count_{0} {}
+    : context_{context}, next_state_count_{0}, popping_{false} {}
+// true_path_{false},
+// false_path_{false} {}
 
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)
-    : context_{context}, next_state_count_{0} {
+    : context_{context}, next_state_count_{0}, popping_{false} {
+  //     true_path_{false},
+  //      false_path_{false} {
   construct_sccfg(method);
 }
