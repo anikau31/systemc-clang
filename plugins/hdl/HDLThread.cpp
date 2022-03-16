@@ -59,10 +59,12 @@ namespace systemc_hdl {
 
       SplitCFG scfg{const_cast<ASTContext &>(ast_context_), emd};
       scfg.generate_paths();
+      LLVM_DEBUG(llvm::dbgs() << "Dumping scfg paths.\n");
       LLVM_DEBUG(scfg.dump());
       LLVM_DEBUG(scfg.dumpToDot());
       
       const llvm::SmallVectorImpl<llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>> &paths_found{ scfg.getPathsFound()};
+
       numstates = paths_found.size();
       int state_num = 0;
       for (auto const& pt: paths_found) {
@@ -70,8 +72,13 @@ namespace systemc_hdl {
 	SGVisited.clear();
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
 	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
-	ProcessSplitGraphBlock(pt[0].first, state_num, h_switchcase);
-	hthreadblockcstmt->append(h_switchcase);
+	for (auto const &onepath:pt) { // vector of pair <const SplitCFGBlock *, SplitCFGPathInfo>
+	  // where SplitCFGPathInfo contains true and false paths
+	  ProcessSplitGraphBlock(onepath.first, state_num, h_switchcase, scfg);
+	  hthreadblockcstmt->append(h_switchcase);
+	  if (onepath.second.isTruePathValid()) break; // subsequent nodes in path already processed
+	}
+		    
 	state_num++;
       }
 
@@ -296,18 +303,18 @@ namespace systemc_hdl {
       }
     }
   }
-  
-  void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase) {
-    bool iswait = false;
 
+  
+  void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase, SplitCFG &scfg) {
+    bool iswait = false;
     if (sgb != NULL) {
       string blkid = "S" + std::to_string(state_num) + "_" + std::to_string(sgb->getBlockID());
 
       if (SGVisited.find(blkid) == SGVisited.end()) {
-	SGVisited[blkid] = true;
-	CFGVisited[(sgb->getCFGBlock())->getBlockID()]+= 1;
+      	SGVisited[blkid] = true;
+      	CFGVisited[(sgb->getCFGBlock())->getBlockID()]+= 1;
       }
-      else return; // already visited this block
+      //else return; // already visited this block
       
       LLVM_DEBUG(llvm::dbgs() << "Split Graph num ele, blockid are " << sgb->getNumOfElements() << " " << blkid << "\n");
 
@@ -327,7 +334,7 @@ namespace systemc_hdl {
 	    LLVM_DEBUG(S1->dump(llvm::dbgs(), ast_context_));
 	    xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
 	    hNodep hforsucc = new hNode(hNode::hdlopsEnum::hCStmt);
-	    ProcessSplitGraphBlock(spgsucc[1], state_num, hforsucc);
+	    ProcessSplitGraphBlock(spgsucc[1], state_num, hforsucc, scfg);
 	    h_switchcase->append(hforsucc);
 	    return;
 	  }
@@ -342,16 +349,45 @@ namespace systemc_hdl {
 	}
 
 	// for each successor need to make a compound statement
+	// 
 
-	for (auto succ: spgsucc) {
+
+	const std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>& blk_pathinfo_map{scfg.getPathInfo()};
+
+	// can't use [] operator because it is non-const; element gets inserted if it doesn't exist
+
+	if (blk_pathinfo_map.find(sgb) == blk_pathinfo_map.end()) // no pathinfo for block
+	  {
+	    return;
+	    for (auto succ: spgsucc) {
+	      LLVM_DEBUG(llvm::dbgs() << "terminator successor path, block id is " << succ->getBlockID() << "\n");
+	      hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
+	      ProcessSplitGraphBlock(succ, state_num, hcstmt, scfg);
+	      hcondstmt->append(hcstmt);
+	      h_switchcase->append(hcondstmt);
+	      return;
+	    }
+	  }
+
+	const SplitCFGPathInfo  &blk_path_info{blk_pathinfo_map.at(sgb)};
+	if (blk_path_info.isTruePathValid()) {
+	for (auto succ: blk_path_info.getTruePath()) {
+	  LLVM_DEBUG(llvm::dbgs() << "true successor path, block id is " << succ->getBlockID() << "\n");
 	  hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-	  ProcessSplitGraphBlock(succ, state_num, hcstmt);
+	  ProcessSplitGraphBlock(succ, state_num, hcstmt, scfg);
 	  hcondstmt->append(hcstmt);
-	  
+	}
+	for (auto succ: blk_path_info.getFalsePath()) {
+	  LLVM_DEBUG(llvm::dbgs() << "false successor path, block id is " << succ->getBlockID() << "\n");
+	  hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
+	  ProcessSplitGraphBlock(succ, state_num, hcstmt, scfg);
+	  hcondstmt->append(hcstmt);
 	}
 	h_switchcase->append(hcondstmt);
 	return;
-      }
+	}
+      } // end if this was a terminator block
+      
 
       if (sgb->getNumOfElements() > 0) {
 	
@@ -398,11 +434,12 @@ namespace systemc_hdl {
       }
 	
 	
-      if (!iswait)  {
-	for (auto spgsucc : sgb->getSuccessors()) {
-	  ProcessSplitGraphBlock(spgsucc, state_num, h_switchcase);
-	}
-      }
+      // if (!iswait)  {
+      // 	for (auto succ : sgb->getSuccessors()) {
+      // 	  LLVM_DEBUG(llvm::dbgs() << "element successor path, block id is " << succ->getBlockID() << "\n");
+      // 	  ProcessSplitGraphBlock(succ, state_num, h_switchcase, scfg);
+      // 	}
+      // }
     }
   }
 
