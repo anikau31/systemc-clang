@@ -26,15 +26,22 @@ class SplitCFGPathInfo {
 
   virtual ~SplitCFGPathInfo() {}
 
+  /// \brief Return if there is a valid TRUE path.
   bool isTruePathValid() const { return (true_path_.size() > 0); }
 
+  /// \brief Return if there is a valid FALSE path.
   bool isFalsePathValid() const { return ((false_path_.size() > 0)); }
+
+  /// \brief Return the list of blocks visited on the TRUE path.
   const SplitCFGBlockPtrVector &getTruePath() const { return true_path_; }
+
+  /// \brief Return the list of blocks visited on the FALSE path.
   const SplitCFGBlockPtrVector &getFalsePath() const { return true_path_; }
 
+  /// \brief Converts the TRUE path into a string for testing.
   std::string toStringFalsePath() const {
     std::string str{};
-    for (const auto & block : false_path_) {
+    for (const auto &block : false_path_) {
       str += std::to_string(block->getBlockID());
       str += " ";
     }
@@ -45,10 +52,10 @@ class SplitCFGPathInfo {
     return str;
   }
 
- 
+  /// \brief Converts the FALSE path into a string for testing.
   std::string toStringTruePath() const {
     std::string str{};
-    for (const auto & block : true_path_) {
+    for (const auto &block : true_path_) {
       str += std::to_string(block->getBlockID());
       str += " ";
     }
@@ -59,6 +66,7 @@ class SplitCFGPathInfo {
     return str;
   }
 
+  /// \brief Dump the paths.
   void dump() {
     llvm::dbgs() << " BB# " << split_block_->getBlockID() << "\n";
     llvm::dbgs() << "  TRUE  path: ";
@@ -117,7 +125,9 @@ class SplitCFG {
                      std::pair<const SplitCFGBlock *, unsigned int>>
       wait_next_state_;
 
-  /// \brief Map a SplitCFGBlock* to its path information.
+  /// \brief Map a SplitCFGBlock* to its path information.  Stores the path
+  /// information for the blocks that are important.  The important blocks are
+  /// (1) conditionals, and (2) loop blocks with two outgoing edges.
   std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo> path_info_;
 
   unsigned int next_state_count_;
@@ -184,8 +194,8 @@ class SplitCFG {
   /// \brief Generates the paths between wait statements.
   void generate_paths();
 
-  
-  const std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>& getPathInfo() const;
+  const std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>
+      &getPathInfo() const;
   void preparePathInfo();
   /// \brief Returns the argument to a wait statement.
   /// Note that the only one supported are no arguments or integer arguments.

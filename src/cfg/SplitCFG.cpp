@@ -12,13 +12,13 @@
 // /
 // ===----------------------------------------------------------------------===//
 
+#include <regex>
+#include <iostream>
 #include "SplitCFG.h"
 
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/ADT/PostOrderIterator.h"
-#include <regex>
-#include <iostream>
 
 using namespace systemc_clang;
 
@@ -36,6 +36,7 @@ SplitCFG::dfs_visit_wait(
         curr_path) {
   bool true_path_{false};
   bool false_path_{false};
+  bool stop_local_path{false};
 
   llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
       local_path;
@@ -68,10 +69,18 @@ SplitCFG::dfs_visit_wait(
     if (!popping_) {
       llvm::dbgs() << "Visit Parent BB# " << ParentBB->getBlockID() << "\n";
       curr_path.push_back(std::make_pair(ParentBB, SplitCFGPathInfo{ParentBB}));
+      if (!stop_local_path) {
       local_path.push_back(
           std::make_pair(ParentBB, SplitCFGPathInfo{ParentBB}));
+      }
     } else {
       // llvm::dbgs() << "POPPING\n";
+    }
+
+    /// Join point for a conditional
+    if (ParentBB->getCFGBlock()->pred_size() > 2) {
+      llvm::dbgs() << " JOIN point";
+      stop_local_path = true;
     }
 
     /// Handle the case when the block has a wait in it.  There should only be a
@@ -90,6 +99,9 @@ SplitCFG::dfs_visit_wait(
         }
       }
     }
+
+
+
 
     // If there is a successor that has not been visited, then remember that
     // block.
