@@ -132,20 +132,20 @@ TEST_CASE("Simple thread test", "[threads]") {
         std::string fstr{info.toStringFalsePath()};
 
         if (id == 9) {
-          REQUIRE(tstr == "8 4 3");
+          REQUIRE(tstr == "8 4");
           REQUIRE(fstr == "7 6");
           --check;
         }
 
         if (id == 10) {
           REQUIRE(tstr == "9" );
-          REQUIRE(fstr == "4 3" );
+          REQUIRE(fstr == "4" );
           --check;
         }
 
         if (id == 12) {
           REQUIRE(tstr == "11 10" );
-          REQUIRE(fstr == "5 4 3" );
+          REQUIRE(fstr == "5 4" );
           --check;
         }
 
