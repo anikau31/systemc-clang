@@ -430,6 +430,7 @@ void SplitCFG::dfs_rework() {
 
   while (!waits_to_visit.empty()) {
     curr_path.clear();
+    dumpSmallVector(curr_path);
     visited_blocks.clear();  // llvm::SmallPtrSet<const SplitCFGBlock*, 32>
                              // visited_blocks;
     entry = waits_to_visit.pop_back_val();
