@@ -38,6 +38,8 @@ class SplitCFGPathInfo {
   /// \brief Return the list of blocks visited on the FALSE path.
   const SplitCFGBlockPtrVector &getFalsePath() const { return true_path_; }
 
+  int getpathix() { return false_startix;}
+
   /// \brief Converts the TRUE path into a string for testing.
   std::string toStringFalsePath() const {
     std::string str{};
@@ -68,13 +70,14 @@ class SplitCFGPathInfo {
 
   /// \brief Dump the paths.
   void dump() {
-    llvm::dbgs() << " BB# " << split_block_->getBlockID() << "\n";
-    llvm::dbgs() << "  TRUE  path: ";
+    llvm::dbgs() << " BB# " << split_block_->getBlockID()
+      << " F:" << false_startix << "\n";
+    llvm::dbgs() << "  TRUE ";
     for (const auto block : true_path_) {
       llvm::dbgs() << block->getBlockID() << " ";
     }
     llvm::dbgs() << "\n";
-    llvm::dbgs() << "  FALSE path: ";
+    llvm::dbgs() << "  FALSE ";
     for (const auto block : false_path_) {
       llvm::dbgs() << block->getBlockID() << " ";
     }
@@ -84,6 +87,7 @@ class SplitCFGPathInfo {
   const SplitCFGBlock *split_block_;
   const clang::CFGBlock *cfg_block_;
   SplitCFGBlockPtrVector true_path_;
+  int false_startix;
   SplitCFGBlockPtrVector false_path_;
 };
 
@@ -206,6 +210,7 @@ class SplitCFG {
   void dumpToDot() const;
   void dumpWaitNextStates() const;
   void dumpPaths() const;
+  void dumpCurrPath(llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &curr_path) const;
   void dumpPathInfo() const;
 
   /// Rework
@@ -261,12 +266,12 @@ class SplitCFG {
   void setTruePathInfo(
       const SplitCFGBlock *sblock,
       const llvm::SmallVector<
-          std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
+      std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited, int ix = -1);
 
   void setFalsePathInfo(
       const SplitCFGBlock *sblock,
       const llvm::SmallVector<
-          std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
+      std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
 
   void updateVisitedBlocks(
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,
