@@ -204,7 +204,7 @@ SplitCFG::dfs_visit_wait(
         // setDifference(loop_visited_blocks, capture_visited_blocks,
         // new_visited);
         if (true_path_) {
-          llvm::dbgs() << "TRUE PATH DIFF BB# " << ParentBB->getBlockID() << "ettrucurr_path size is " << curr_path.size() << " ";
+          llvm::dbgs() << "TRUE PATH DIFF BB# " << ParentBB->getBlockID() << " curr_path size is " << curr_path.size() << " ";
           true_path_ = false;
           setTruePathInfo(ParentBB, sub_path_to_special_node, curr_path.size());
         }
@@ -428,7 +428,9 @@ void SplitCFG::dfs_rework() {
   dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits,
                  curr_path);
   paths_.push_back(curr_path);
-
+  llvm::dbgs() << "curr path 1 below\n";
+  dumpCurrPath(curr_path);
+  setFalseix(curr_path);
  
   // Add the next state.
   // wait_next_state_.insert(
@@ -447,12 +449,16 @@ void SplitCFG::dfs_rework() {
     dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits,
                    curr_path);
     paths_.push_back(curr_path);
+    llvm::dbgs() << "curr path 2 below\n";
+  dumpCurrPath(curr_path);
+    setFalseix(curr_path);
      
   }
 
   addNextStatesToBlocks();
   dumpWaitNextStates();
   dumpPaths();
+  dumpFalseIx();
   dumpPathInfo();
 }
 
@@ -737,6 +743,8 @@ void SplitCFG::dumpCurrPath(llvm::SmallVector<std::pair<const SplitCFGBlock *, S
         auto next_state{wit->second.second};
         llvm::dbgs() << "[S" << next_state << "] ";
       }
+      llvm::dbgs() << "falseix for this block: " << block.second.false_startix << "\n";;
+
     }
     llvm::dbgs() << "\n";
 }
@@ -840,6 +848,16 @@ void SplitCFG::preparePathInfo() {
       path_info_.insert(
           std::make_pair(block.second, SplitCFGPathInfo(block.second)));
     }
+  }
+}
+
+void SplitCFG::setFalseix(llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>> &curr_path) {
+  int paths_ix = paths_falseix.size();
+  paths_falseix.push_back(llvm::SmallVector<int>());
+  for (auto onenode: curr_path) {
+    llvm::dbgs() << "pathinfo seen in setfalseix follows\n";
+    onenode.second.dump();
+    paths_falseix[paths_ix].push_back(onenode.second.getpathix());
   }
 }
 

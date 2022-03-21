@@ -22,7 +22,7 @@ class SplitCFGPathInfo {
 
  public:
   SplitCFGPathInfo(const SplitCFGBlock *block)
-      : split_block_{block}, cfg_block_{block->getCFGBlock()} {};
+    : split_block_{block}, cfg_block_{block->getCFGBlock()} {false_startix = -1;};
 
   virtual ~SplitCFGPathInfo() {}
 
@@ -119,6 +119,9 @@ class SplitCFG {
   /// \brief Paths of BBs generated.
   llvm::SmallVector<SplitCFGPath> paths_;
 
+  /// \brief Paths vectors: for conditional blocks, record false path index
+  llvm::SmallVector<llvm::SmallVector<int>> paths_falseix;
+
   /// \brief The block id to block for SCCFG.
   std::unordered_map<unsigned int, SplitCFGBlock *> sccfg_;
 
@@ -163,6 +166,9 @@ class SplitCFG {
       const llvm::SmallVectorImpl<std::pair<VectorCFGElementPtr, bool>>
           &split_elements);
 
+  /// \brief Copy false_ix from SplitGraphPathInfo of curr_path into paths_false_ix
+  void setFalseix(llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>> &curr_path);
+  
   /// \brief Dump all the CFGElements that were split.
   void dumpSplitElements(
       const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool>>
@@ -211,6 +217,17 @@ class SplitCFG {
   void dumpWaitNextStates() const;
   void dumpPaths() const;
   void dumpCurrPath(llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &curr_path) const;
+  
+  void inline dumpFalseIx() {
+    for (int i = 0; i < paths_falseix.size(); i++) {
+      llvm::dbgs() << "S" << i <<" falseix: ";
+      for (int flsix: paths_falseix[i]) {
+	llvm::dbgs() << flsix << " ";
+      }
+      llvm::dbgs() << "\n";
+    }
+  }
+  
   void dumpPathInfo() const;
 
   /// Rework
