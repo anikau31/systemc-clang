@@ -33,7 +33,7 @@ TEST_CASE("Simple thread test", "[threads]") {
 
   if (data_file.empty()) {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
-                                            "cfg-for-stmt-wait-input.cpp");
+                                            "thread-for-stmt-wait-input.cpp");
   } else {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
                                             data_file);
@@ -101,6 +101,7 @@ TEST_CASE("Simple thread test", "[threads]") {
       SplitCFG scfg{from_ast->getASTContext()};
       scfg.construct_sccfg(method);
       scfg.generate_paths();
+      scfg.dumpToDot();
       llvm::dbgs() << " ===================================================\n";
 
       /// Check if all paths are correct.
@@ -125,6 +126,30 @@ TEST_CASE("Simple thread test", "[threads]") {
       }
       /// 4 Paths
       REQUIRE(i == 4);
+
+
+      /// Check if the TRUE/FALSE paths are correct.
+      auto path_info{scfg.getPathInfo()};
+      int check{1};
+      for (const auto &block : path_info) {
+        auto sblock{block.first};
+        auto info{block.second};
+        auto id{ sblock->getBlockID()};
+        std::string tstr{info.toStringTruePath()};
+        std::string fstr{info.toStringFalsePath()};
+
+        if (id == 5) {
+          REQUIRE(tstr == "4 41");
+          REQUIRE(fstr == "2 1 7 6 61");
+          --check;
+        }
+      }
+
+      REQUIRE(check == 0);
+
+
+
+
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";

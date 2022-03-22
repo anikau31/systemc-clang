@@ -146,6 +146,21 @@ namespace systemc_hdl {
     }
     return h_ret;
   }
+
+  string HDLConstructorHcode::ExtractModuleName(hNodep hp) {
+    string tmpstr;
+    if (hp == NULL) return "";
+    if (hp->getopc() == hNode::hdlopsEnum::hVarref) {
+      tmpstr = hp->getname();
+      hp->set(tmpstr.substr(tmpstr.find(fielddelim)+fielddelim.size()));
+      return tmpstr.substr(0, tmpstr.find(fielddelim));
+    }
+    for (auto hp1: hp->child_list) {
+      tmpstr = ExtractModuleName(hp1);
+      if (tmpstr!="") return tmpstr;
+    }
+    return "";
+  }
   
   // Generate a port binding
     // need to dismantle modname##field:
@@ -204,14 +219,30 @@ namespace systemc_hdl {
 
     // Case 0
     if (for_info.empty()) { // simple case, not in a for loop
-      string submodport = hp_orig->child_list[0]->h_name;
-      string thismodsig = hp_orig->child_list[1]->h_name;
+      string submodport;
+      string thismodsig;
+      hNodep hpb;
+      if (hp_orig->child_list[0]->getopc() == hNode::hdlopsEnum::hVarref) {
+	submodport = hp_orig->child_list[0]->h_name;
       // part before delimiter is submodule name, after delimiter is port name
-      hNodep hpb = new hNode(submodport.substr(0, submodport.find(fielddelim)),
-			     hNode::hdlopsEnum::hPortbinding);
-      hpb->child_list.push_back(new hNode(submodport.substr(submodport.find(fielddelim)+fielddelim.size()),
-					  hNode::hdlopsEnum::hVarref));
-      hpb->child_list.push_back(new hNode(thismodsig, hNode::hdlopsEnum::hVarref));
+
+	hpb = new hNode(submodport.substr(0, submodport.find(fielddelim)),
+			hNode::hdlopsEnum::hPortbinding);
+	hpb->child_list.push_back(new hNode(submodport.substr(submodport.find(fielddelim)+fielddelim.size()),
+					    hNode::hdlopsEnum::hVarref));
+      }
+      else {
+	submodport = ExtractModuleName(hp_orig->child_list[0]);
+	hpb = new hNode(submodport, hNode::hdlopsEnum::hPortbinding);
+	hpb->append(hp_orig->child_list[0]); // need to remove module name 
+      }
+      if (hp_orig->child_list[1]->getopc() == hNode::hdlopsEnum::hVarref) {
+	thismodsig = hp_orig->child_list[1]->h_name;
+	hpb->child_list.push_back(new hNode(thismodsig, hNode::hdlopsEnum::hVarref));
+      }
+      else {
+	hpb->append(hp_orig->child_list[1]); // need to remove module name
+      }
       hnewpb->child_list.push_back(hpb);
       return;
     }
