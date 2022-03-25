@@ -22,7 +22,29 @@ class SplitCFGPathInfo {
 
  public:
   SplitCFGPathInfo(const SplitCFGBlock *block)
-    : split_block_{block}, cfg_block_{block->getCFGBlock()} {false_startix = -1;};
+      : split_block_{block}, cfg_block_{block->getCFGBlock()} {
+    false_startix = -1;
+  };
+
+  /// \brief Copy constructor for SplitCFGPathInfo.
+  SplitCFGPathInfo(const SplitCFGPathInfo &from) {
+    split_block_ = from.split_block_;
+    cfg_block_ = from.cfg_block_;
+    false_startix = from.false_startix;
+    true_path_ = from.true_path_;
+    false_path_ = from.false_path_;
+    path_idx_ = from.path_idx_;
+  }
+
+  SplitCFGPathInfo &operator=(const SplitCFGPathInfo &from) {
+    split_block_ = from.split_block_;
+    cfg_block_ = from.cfg_block_;
+    false_startix = from.false_startix;
+    true_path_ = from.true_path_;
+    false_path_ = from.false_path_;
+    path_idx_ = from.path_idx_;
+    return *this;
+  }
 
   virtual ~SplitCFGPathInfo() {}
 
@@ -38,7 +60,7 @@ class SplitCFGPathInfo {
   /// \brief Return the list of blocks visited on the FALSE path.
   const SplitCFGBlockPtrVector &getFalsePath() const { return true_path_; }
 
-  int getpathix() { return false_startix;}
+  int getpathix() { return false_startix; }
 
   /// \brief Converts the TRUE path into a string for testing.
   std::string toStringFalsePath() const {
@@ -71,7 +93,7 @@ class SplitCFGPathInfo {
   /// \brief Dump the paths.
   void dump() {
     llvm::dbgs() << " BB# " << split_block_->getBlockID()
-      << " F:" << false_startix << "\n";
+                 << " F:" << false_startix << "\n";
     llvm::dbgs() << "  TRUE ";
     for (const auto block : true_path_) {
       llvm::dbgs() << block->getBlockID() << " ";
@@ -88,6 +110,7 @@ class SplitCFGPathInfo {
   const clang::CFGBlock *cfg_block_;
   SplitCFGBlockPtrVector true_path_;
   int false_startix;
+  int path_idx_;
   SplitCFGBlockPtrVector false_path_;
 };
 
@@ -166,9 +189,12 @@ class SplitCFG {
       const llvm::SmallVectorImpl<std::pair<VectorCFGElementPtr, bool>>
           &split_elements);
 
-  /// \brief Copy false_ix from SplitGraphPathInfo of curr_path into paths_false_ix
-  void setFalseix(llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>> &curr_path);
-  
+  /// \brief Copy false_ix from SplitGraphPathInfo of curr_path into
+  /// paths_false_ix
+  void setFalseix(
+      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
+          &curr_path);
+
   /// \brief Dump all the CFGElements that were split.
   void dumpSplitElements(
       const llvm::SmallVector<std::pair<VectorCFGElementPtr, bool>>
@@ -216,18 +242,20 @@ class SplitCFG {
   void dumpToDot() const;
   void dumpWaitNextStates() const;
   void dumpPaths() const;
-  void dumpCurrPath(llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &curr_path) const;
-  
+  void dumpCurrPath(
+      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
+          &curr_path) const;
+
   void inline dumpFalseIx() {
     for (int i = 0; i < paths_falseix.size(); i++) {
-      llvm::dbgs() << "S" << i <<" falseix: ";
-      for (int flsix: paths_falseix[i]) {
-	llvm::dbgs() << flsix << " ";
+      llvm::dbgs() << "S" << i << " falseix: ";
+      for (int flsix : paths_falseix[i]) {
+        llvm::dbgs() << flsix << " ";
       }
       llvm::dbgs() << "\n";
     }
   }
-  
+
   void dumpPathInfo() const;
 
   /// Rework
@@ -283,12 +311,13 @@ class SplitCFG {
   void setTruePathInfo(
       const SplitCFGBlock *sblock,
       const llvm::SmallVector<
-      std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited, int ix = -1);
+          std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited,
+      int ix = -1);
 
   void setFalsePathInfo(
       const SplitCFGBlock *sblock,
       const llvm::SmallVector<
-      std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
+          std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
 
   void updateVisitedBlocks(
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,

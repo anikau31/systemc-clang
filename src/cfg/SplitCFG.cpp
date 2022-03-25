@@ -45,7 +45,8 @@ SplitCFG::dfs_visit_wait(
     return local_path;
   }
 
-  llvm::dbgs() << "Maya enter dfs_vist_wait curr_path size is " << curr_path.size() << "\n";
+  llvm::dbgs() << "Maya enter dfs_vist_wait curr_path size is "
+               << curr_path.size() << "\n";
   dumpCurrPath(curr_path);
   popping_ = false;
   // successors to visit
@@ -68,12 +69,24 @@ SplitCFG::dfs_visit_wait(
     bool cond_block{isConditional(ParentBB)};
 
     /// If we are traversing down then we are not popping back up.
+    // SplitCFGPathInfo* pinfo{nullptr};
+    int id{-1};
     if (!popping_) {
       llvm::dbgs() << "Visit Parent BB# " << ParentBB->getBlockID() << "\n";
-      curr_path.push_back(std::make_pair(ParentBB, SplitCFGPathInfo{ParentBB}));
+      SplitCFGPathInfo info{ParentBB};
+      info.path_idx_ = curr_path.size();
+      curr_path.push_back(std::make_pair(ParentBB, info));
+      id = curr_path.size() - 1;
+
+      // for (auto p : curr_path) {
+      // llvm::dbgs() << "(" << p.second.path_idx_ << ", "
+      // << p.first->getBlockID() << "," << p.second.getpathix() << ", " << ")
+      // ";
+      // }
+
       if (!stop_local_path) {
-      local_path.push_back(
-          std::make_pair(ParentBB, SplitCFGPathInfo{ParentBB}));
+        local_path.push_back(
+            std::make_pair(ParentBB, SplitCFGPathInfo{ParentBB}));
       }
     } else {
       // llvm::dbgs() << "POPPING\n";
@@ -102,9 +115,6 @@ SplitCFG::dfs_visit_wait(
       }
     }
 
-
-
-
     // If there is a successor that has not been visited, then remember that
     // block.
     llvm::SmallPtrSet<const SplitCFGBlock*, 32> save_visited_blocks{
@@ -126,7 +136,7 @@ SplitCFG::dfs_visit_wait(
         llvm::dbgs() << "\n#### ParentBB " << ParentBB->getBlockID()
                      << " is a loop with 2 succ or conditional.  Succ BB# "
                      << BB->getBlockID() << "\n";
-		
+
         /// Check if the found succesor is the TRUE or FALSE for the
         /// conditional. The first successor is the true, and the second is the
         /// false.
@@ -192,7 +202,7 @@ SplitCFG::dfs_visit_wait(
         dumpVisitedBlocks(visited_blocks);
         llvm::dbgs() << "sub_path     ";
         dumpSmallVector(sub_path_to_special_node);
-	
+
         llvm::dbgs() << "\nEND Recurse DFS at BB " << BB->getBlockID()
                      << " parent BB# " << ParentBB->getBlockID() << " T "
                      << true_path_ << " F " << false_path_ << "\n";
@@ -204,9 +214,20 @@ SplitCFG::dfs_visit_wait(
         // setDifference(loop_visited_blocks, capture_visited_blocks,
         // new_visited);
         if (true_path_) {
-          llvm::dbgs() << "TRUE PATH DIFF BB# " << ParentBB->getBlockID() << " curr_path size is " << curr_path.size() << " ";
+          llvm::dbgs() << "TRUE PATH DIFF BB# " << ParentBB->getBlockID()
+                       << " curr_path size is " << curr_path.size() << " ";
           true_path_ = false;
           setTruePathInfo(ParentBB, sub_path_to_special_node, curr_path.size());
+          dumpSmallVector(curr_path);
+          auto& info{curr_path[id]};
+          info.second.false_startix = curr_path.size();
+          //
+          // llvm::dbgs() <<
+          // "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"; for (auto p :
+          // curr_path) { llvm::dbgs() << "(" << p.second.path_idx_ << ", "
+          // << p.first->getBlockID() << "," << p.second.getpathix()
+          // << ", " << ") ";
+          // }
         }
         if (false_path_) {
           llvm::dbgs() << "FALSE PATH DIFF BB# " << ParentBB->getBlockID();
@@ -257,11 +278,12 @@ SplitCFG::dfs_visit_wait(
 void SplitCFG::setTruePathInfo(
     const SplitCFGBlock* sblock,
     const llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>&
-    newly_visited, int ix) {
+        newly_visited,
+    int ix) {
   // <SplitCFGBlock*, SplitCFGPathInfo>
   auto block_path{path_info_.find(sblock)};
   if (block_path != path_info_.end() && !block_path->second.isTruePathValid()) {
-    block_path->second.false_startix = ix; // index is start of false path
+    block_path->second.false_startix = ix;  // index is start of false path
     for (const auto block : newly_visited) {
       block_path->second.true_path_.push_back(block.first);
     }
@@ -422,16 +444,19 @@ void SplitCFG::dfs_rework() {
   llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
       curr_path;
   // Special: Insert root node to start visiting.
+  llvm::dbgs()
+      << "##############################################################\n";
   llvm::dbgs() << "@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
   // std::cin.get();
- 
+
   dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits,
                  curr_path);
   paths_.push_back(curr_path);
   llvm::dbgs() << "curr path 1 below\n";
   dumpCurrPath(curr_path);
+  dumpPaths();
   setFalseix(curr_path);
- 
+
   // Add the next state.
   // wait_next_state_.insert(
   //    std::make_pair(entry, std::make_pair(entry, next_state_count_)));
@@ -442,17 +467,18 @@ void SplitCFG::dfs_rework() {
     visited_blocks.clear();  // llvm::SmallPtrSet<const SplitCFGBlock*, 32>
                              // visited_blocks;
     entry = waits_to_visit.pop_back_val();
+    llvm::dbgs()
+        << "##############################################################\n";
 
     llvm::dbgs() << "\n@@@@@ DFS call for SB " << entry->getBlockID() << "\n";
     // std::cin.get();
- 
+
     dfs_visit_wait(entry, visited_blocks, waits_to_visit, visited_waits,
                    curr_path);
     paths_.push_back(curr_path);
     llvm::dbgs() << "curr path 2 below\n";
-  dumpCurrPath(curr_path);
+    dumpCurrPath(curr_path);
     setFalseix(curr_path);
-     
   }
 
   addNextStatesToBlocks();
@@ -731,22 +757,25 @@ void SplitCFG::dumpWaitNextStates() const {
   }
 }
 
-void SplitCFG::dumpCurrPath(llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &curr_path) const {
+void SplitCFG::dumpCurrPath(
+    llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>&
+        curr_path) const {
   llvm::dbgs() << "Dump curr SB path to wait() found in the CFG.\n";
 
-    for (auto const& block : curr_path) {
-      auto sblock{block.first};
-      llvm::dbgs() << sblock->getBlockID() << " ";
-      // Print the wait state
-      auto wit = wait_next_state_.find(sblock);
-      if (wit != wait_next_state_.end()) {
-        auto next_state{wit->second.second};
-        llvm::dbgs() << "[S" << next_state << "] ";
-      }
-      llvm::dbgs() << "falseix for this block: " << block.second.false_startix << "\n";;
-
+  for (auto const& block : curr_path) {
+    auto sblock{block.first};
+    llvm::dbgs() << sblock->getBlockID() << " ";
+    // Print the wait state
+    auto wit = wait_next_state_.find(sblock);
+    if (wit != wait_next_state_.end()) {
+      auto next_state{wit->second.second};
+      llvm::dbgs() << "[S" << next_state << "] ";
     }
-    llvm::dbgs() << "\n";
+    llvm::dbgs() << "falseix for this block: " << block.second.false_startix
+                 << "\n";
+    ;
+  }
+  llvm::dbgs() << "\n";
 }
 
 void SplitCFG::dumpPaths() const {
@@ -757,7 +786,9 @@ void SplitCFG::dumpPaths() const {
     llvm::dbgs() << "Path S" << i++ << ": ";
     for (auto const& block : block_vector) {
       auto sblock{block.first};
-      llvm::dbgs() << sblock->getBlockID() << " ";
+      auto path_info{block.second};
+      llvm::dbgs() << "(" << path_info.path_idx_ << "," << sblock->getBlockID()
+                   << "," << path_info.getpathix() << ") ";
       // Print the wait state
       auto wit = wait_next_state_.find(sblock);
       if (wit != wait_next_state_.end()) {
@@ -851,10 +882,12 @@ void SplitCFG::preparePathInfo() {
   }
 }
 
-void SplitCFG::setFalseix(llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>> &curr_path) {
+void SplitCFG::setFalseix(
+    llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>&
+        curr_path) {
   int paths_ix = paths_falseix.size();
   paths_falseix.push_back(llvm::SmallVector<int>());
-  for (auto onenode: curr_path) {
+  for (auto onenode : curr_path) {
     llvm::dbgs() << "pathinfo seen in setfalseix follows\n";
     onenode.second.dump();
     paths_falseix[paths_ix].push_back(onenode.second.getpathix());
