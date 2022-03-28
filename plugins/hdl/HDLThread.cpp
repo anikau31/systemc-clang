@@ -388,10 +388,16 @@ namespace systemc_hdl {
 	}
 
 	if (flseix_vec[thisix].first != -1) {// has false branch; do true branch
+	  hNodep if1 = new hNode(hNode::hdlopsEnum::hCStmt);
 	  ProcessSplitGraphGroup(pt, thisix+1, flseix_vec[thisix].first - (thisix+1),
-				 flseix_vec, state_num, h_switchcase);
+				 flseix_vec, state_num,if1);
+	  hcondstmt->append(if1);
+	  if1 = new hNode(hNode::hdlopsEnum::hCStmt);
 	  ProcessSplitGraphGroup(pt, flseix_vec[thisix].first, flseix_vec[thisix].second,
-				 flseix_vec, state_num, h_switchcase);
+				 flseix_vec, state_num, if1);
+	  hcondstmt->append(if1);
+	  h_switchcase->append(hcondstmt);
+
 	}
 	return;
       } // end if this was a terminator block
