@@ -62,24 +62,30 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "Dumping scfg paths.\n");
       LLVM_DEBUG(scfg.dump());
       LLVM_DEBUG(scfg.dumpToDot());
+      LLVM_DEBUG(llvm::dbgs() << "Dumping falseix paths.\n");
+      LLVM_DEBUG(scfg.dumpFalseIx());
       
       const llvm::SmallVectorImpl<llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>> &paths_found{ scfg.getPathsFound()};
 
       numstates = paths_found.size();
-      int state_num = 0;
-      for (auto const& pt: paths_found) {
+      int state_num;
+
+      // for each state, vector of index in path vector of the false branch start, -1 if NA
+      
+      const llvm::SmallVector<SplitCFG::FalseIXVec> &paths_falseix = scfg.get_paths_falseix();
+
+      for (state_num = 0; state_num < paths_found.size(); state_num++) {
+	//for (auto const& pt: paths_found, auto const &flseix_vec: paths_falseix) { // vector of one state's path
 
 	SGVisited.clear();
+	pathnodevisited.clear();
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
 	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
-	for (auto const &onepath:pt) { // vector of pair <const SplitCFGBlock *, SplitCFGPathInfo>
-	  // where SplitCFGPathInfo contains true and false paths
-	  ProcessSplitGraphBlock(onepath.first, state_num, h_switchcase, scfg);
-	  hthreadblockcstmt->append(h_switchcase);
-	  if (onepath.second.isTruePathValid()) break; // subsequent nodes in path already processed
-	}
-		    
-	state_num++;
+	ProcessSplitGraphGroup(paths_found[state_num], 0,
+			       paths_found[state_num].size(), paths_falseix[state_num],
+			       state_num, h_switchcase);
+	hthreadblockcstmt->append(h_switchcase);
+
       }
 
       if (needwaitswitchcase) {
@@ -304,8 +310,38 @@ namespace systemc_hdl {
     }
   }
 
+  void HDLThread::ProcessSplitGraphGroup(const SplitCFG::SplitCFGPath pt,
+    //  SplitCFGPath is llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
+					 int startix, int num_ele,
+					 const SplitCFG::FalseIXVec flseix_vec,
+    //  FalseIXVec is llvm::SmallVector<std::pair<int, int>, <index in path, length>
+					 int state_num, hNodep h_switchcase)
+  {
+
+    int pvix = startix;
+    while ( pvix<startix+num_ele) {
+      if (pathnodevisited.find(pvix) == pathnodevisited.end()) { //haven't visited
+	pathnodevisited.insert(pvix);
+	ProcessSplitGraphBlock(pt, pvix, flseix_vec, state_num, h_switchcase); 
+	pvix++;
+      }
+      else pvix++;
+    }
+  }
+
+  void HDLThread::ProcessSplitGraphBlock(const SplitCFG::SplitCFGPath &pt,
+    //  SplitCFGPath is llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
+					 int thisix,
+					 const SplitCFG::FalseIXVec &flseix_vec,
+    //  FalseIXVec is llvm::SmallVector<std::pair<int, int>, <index in path, length>
+					 int state_num, hNodep h_switchcase)
+
+
   
-  void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase, SplitCFG &scfg) {
+  //void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase, const FalseIXVec flseix_vec) {//,SplitCFG &scfg) {
+    // where FalseIXVec is  llvm::SmallVector<std::pair<int, int>
+  {
+    const SplitCFGBlock *sgb{pt[thisix].first};
     bool iswait = false;
     if (sgb != NULL) {
       string blkid = "S" + std::to_string(state_num) + "_" + std::to_string(sgb->getBlockID());
@@ -333,9 +369,12 @@ namespace systemc_hdl {
 	    LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " doesn't have a wait()\n");
 	    LLVM_DEBUG(S1->dump(llvm::dbgs(), ast_context_));
 	    xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
-	    hNodep hforsucc = new hNode(hNode::hdlopsEnum::hCStmt);
-	    ProcessSplitGraphBlock(spgsucc[1], state_num, hforsucc, scfg);
-	    h_switchcase->append(hforsucc);
+	    
+	    // need to mark all the true branch nodes in path vector as visited.
+	    
+	    // hNodep hforsucc = new hNode(hNode::hdlopsEnum::hCStmt);
+	    // ProcessSplitGraphBlock(spgsucc[1], state_num, hforsucc, scfg);
+	    // h_switchcase->append(hforsucc);
 	    return;
 	  }
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
@@ -348,44 +387,13 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is not handled\n");
 	}
 
-	// for each successor need to make a compound statement
-	// 
-
-
-	const std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>& blk_pathinfo_map{scfg.getPathInfo()};
-
-	// can't use [] operator because it is non-const; element gets inserted if it doesn't exist
-
-	if (blk_pathinfo_map.find(sgb) == blk_pathinfo_map.end()) // no pathinfo for block
-	  {
-	    return;
-	    for (auto succ: spgsucc) {
-	      LLVM_DEBUG(llvm::dbgs() << "terminator successor path, block id is " << succ->getBlockID() << "\n");
-	      hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-	      ProcessSplitGraphBlock(succ, state_num, hcstmt, scfg);
-	      hcondstmt->append(hcstmt);
-	      h_switchcase->append(hcondstmt);
-	      return;
-	    }
-	  }
-
-	const SplitCFGPathInfo  &blk_path_info{blk_pathinfo_map.at(sgb)};
-	if (blk_path_info.isTruePathValid()) {
-	for (auto succ: blk_path_info.getTruePath()) {
-	  LLVM_DEBUG(llvm::dbgs() << "true successor path, block id is " << succ->getBlockID() << "\n");
-	  hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-	  ProcessSplitGraphBlock(succ, state_num, hcstmt, scfg);
-	  hcondstmt->append(hcstmt);
+	if (flseix_vec[thisix].first != -1) {// has false branch; do true branch
+	  ProcessSplitGraphGroup(pt, thisix+1, flseix_vec[thisix].first - (thisix+1),
+				 flseix_vec, state_num, h_switchcase);
+	  ProcessSplitGraphGroup(pt, flseix_vec[thisix].first, flseix_vec[thisix].second,
+				 flseix_vec, state_num, h_switchcase);
 	}
-	for (auto succ: blk_path_info.getFalsePath()) {
-	  LLVM_DEBUG(llvm::dbgs() << "false successor path, block id is " << succ->getBlockID() << "\n");
-	  hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-	  ProcessSplitGraphBlock(succ, state_num, hcstmt, scfg);
-	  hcondstmt->append(hcstmt);
-	}
-	h_switchcase->append(hcondstmt);
 	return;
-	}
       } // end if this was a terminator block
       
 

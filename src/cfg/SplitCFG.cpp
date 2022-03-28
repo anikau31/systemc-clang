@@ -788,7 +788,8 @@ void SplitCFG::dumpPaths() const {
       auto sblock{block.first};
       auto path_info{block.second};
       llvm::dbgs() << "(" << path_info.path_idx_ << "," << sblock->getBlockID()
-                   << "," << path_info.getpathix() << ") ";
+                   << "," << path_info.getpathix() << " |" << path_info.getFalsePath().size()
+		   << "|" << ") ";
       // Print the wait state
       auto wit = wait_next_state_.find(sblock);
       if (wit != wait_next_state_.end()) {
@@ -886,11 +887,14 @@ void SplitCFG::setFalseix(
     llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>&
         curr_path) {
   int paths_ix = paths_falseix.size();
-  paths_falseix.push_back(llvm::SmallVector<int>());
+  paths_falseix.push_back(llvm::SmallVector<std::pair<int, int>>());
   for (auto onenode : curr_path) {
+    //const SplitCFGPathInfo &
+      //int tmp = path_info_[onenode.first].false_path_.size();
     llvm::dbgs() << "pathinfo seen in setfalseix follows\n";
     onenode.second.dump();
-    paths_falseix[paths_ix].push_back(onenode.second.getpathix());
+    llvm::dbgs() << "\n";
+    paths_falseix[paths_ix].push_back(std::pair(onenode.second.getpathix(), onenode.second.false_path_.size()));
   }
 }
 

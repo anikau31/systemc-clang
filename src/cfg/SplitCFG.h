@@ -58,7 +58,7 @@ class SplitCFGPathInfo {
   const SplitCFGBlockPtrVector &getTruePath() const { return true_path_; }
 
   /// \brief Return the list of blocks visited on the FALSE path.
-  const SplitCFGBlockPtrVector &getFalsePath() const { return true_path_; }
+  const SplitCFGBlockPtrVector &getFalsePath() const { return false_path_; }
 
   int getpathix() { return false_startix; }
 
@@ -121,6 +121,8 @@ class SplitCFG {
  public:
   using SplitCFGPath =
       llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>;
+  using FalseIx = std::pair<int, int>;
+  using FalseIXVec = llvm::SmallVector<FalseIx>;
 
   // TODO: deprecated
   using VectorSplitCFGBlock = llvm::SmallVector<const SplitCFGBlock *>;
@@ -142,8 +144,9 @@ class SplitCFG {
   /// \brief Paths of BBs generated.
   llvm::SmallVector<SplitCFGPath> paths_;
 
-  /// \brief Paths vectors: for conditional blocks, record false path index
-  llvm::SmallVector<llvm::SmallVector<int>> paths_falseix;
+  /// \brief Paths vectors: for conditional blocks, record false path index, length
+  //llvm::SmallVector<llvm::SmallVector<int>> paths_falseix;
+  llvm::SmallVector<llvm::SmallVector<std::pair<int, int>>> paths_falseix;
 
   /// \brief The block id to block for SCCFG.
   std::unordered_map<unsigned int, SplitCFGBlock *> sccfg_;
@@ -224,6 +227,10 @@ class SplitCFG {
       llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>>
       &getPathsFound();
 
+  const llvm::SmallVector<FalseIXVec> &get_paths_falseix() {
+    return paths_falseix;
+  }
+  
   /// \brief Construct the SCCFG.
   void construct_sccfg(const clang::CXXMethodDecl *method);
 
@@ -231,7 +238,8 @@ class SplitCFG {
   void generate_paths();
 
   const std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>
-      &getPathInfo() const;
+    &getPathInfo() const;
+  
   void preparePathInfo();
   /// \brief Returns the argument to a wait statement.
   /// Note that the only one supported are no arguments or integer arguments.
@@ -248,9 +256,9 @@ class SplitCFG {
 
   void inline dumpFalseIx() {
     for (int i = 0; i < paths_falseix.size(); i++) {
-      llvm::dbgs() << "S" << i << " falseix: ";
-      for (int flsix : paths_falseix[i]) {
-        llvm::dbgs() << flsix << " ";
+      llvm::dbgs() << "S" << i << " falseix path index, length pair: ";
+      for (std::pair<int,int> flsix_pair : paths_falseix[i]) {
+        llvm::dbgs() << "(" << flsix_pair.first << ", " << flsix_pair.second << ") ";
       }
       llvm::dbgs() << "\n";
     }

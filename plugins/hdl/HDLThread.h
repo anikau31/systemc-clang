@@ -11,6 +11,7 @@
 #include "hNode.h"
 #include "HDLBody.h"
 #include "SplitCFG.h"
+#include <unordered_set>
 
 // clang-format on
 
@@ -65,7 +66,8 @@ namespace systemc_hdl {
     
     // inline string
     std::unordered_map<std::string, bool> SGVisited; // Split Graph Blocks visited 
-    std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited 
+    std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited
+    std::unordered_set<int> pathnodevisited; // index of visited node in path
 
     inline bool isBreak(const Stmt* S) {
       return dyn_cast<BreakStmt> (S) != NULL;
@@ -77,7 +79,21 @@ namespace systemc_hdl {
     void MarkStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map);
     void CheckVardecls(hNodep &hp, unsigned int cfgblockid);
     void ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp);
-    void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase, SplitCFG &scfg);
+
+    void ProcessSplitGraphGroup(const SplitCFG::SplitCFGPath pt,
+    //  SplitCFGPath is llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
+					 int startix, int num_ele,
+					 const SplitCFG::FalseIXVec flseix_vec,
+    //  FalseIXVec is llvm::SmallVector<std::pair<int, int>, <index in path, length>
+				int state_num, hNodep h_switchcase);
+
+    //void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase, SplitCFG &scfg);
+    void ProcessSplitGraphBlock(const SplitCFG::SplitCFGPath &pt,
+    //  SplitCFGPath is llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
+					 int thisix,
+					 const SplitCFG::FalseIXVec &flseix_vec,
+    //  FalseIXVec is llvm::SmallVector<std::pair<int, int>, <index in path, length>
+				int state_num, hNodep h_switchcase);
     void GenerateStateUpdate(hNodep hstatemethod, hNodep hlocalvarsp);
     void GenerateStateVar(string sname);
     void GenerateWaitCntUpdate(hNodep h_switchcase);
