@@ -3,14 +3,27 @@
 
 #include <unordered_map>
 
-#include "clang/AST/ASTContext.h"
-#include "clang/Analysis/CFG.h"
 #include "SplitCFGBlock.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/SmallPtrSet.h"
-#include "llvm/Support/Debug.h"
 
 namespace systemc_clang {
+
+class SupplementaryInfo {
+ public:
+  SupplementaryInfo(const SplitCFGBlock *block);
+  SupplementaryInfo(const SupplementaryInfo &from);
+  SupplementaryInfo &operator=(const SupplementaryInfo &from);
+  virtual ~SupplementaryInfo();
+  int getPathId() const;
+  int getFalseId() const;
+  const SplitCFGBlock* getSplitCFGBlock() const;
+
+ public:
+  const SplitCFGBlock *split_block_;
+  int false_idx_;
+  int path_idx_;
+};
 
 /// ===========================================
 /// SplitCFGPathInfo
@@ -21,32 +34,14 @@ class SplitCFGPathInfo {
   friend class SplitCFG;
 
  public:
-  SplitCFGPathInfo(const SplitCFGBlock *block)
-      : split_block_{block}, cfg_block_{block->getCFGBlock()} {
-    false_startix = -1;
-  };
+  SplitCFGPathInfo(const SplitCFGBlock *block);
 
   /// \brief Copy constructor for SplitCFGPathInfo.
-  SplitCFGPathInfo(const SplitCFGPathInfo &from) {
-    split_block_ = from.split_block_;
-    cfg_block_ = from.cfg_block_;
-    false_startix = from.false_startix;
-    true_path_ = from.true_path_;
-    false_path_ = from.false_path_;
-    path_idx_ = from.path_idx_;
-  }
+  SplitCFGPathInfo(const SplitCFGPathInfo &from);
 
-  SplitCFGPathInfo &operator=(const SplitCFGPathInfo &from) {
-    split_block_ = from.split_block_;
-    cfg_block_ = from.cfg_block_;
-    false_startix = from.false_startix;
-    true_path_ = from.true_path_;
-    false_path_ = from.false_path_;
-    path_idx_ = from.path_idx_;
-    return *this;
-  }
+  SplitCFGPathInfo &operator=(const SplitCFGPathInfo &from);
 
-  virtual ~SplitCFGPathInfo() {}
+  virtual ~SplitCFGPathInfo();
 
   /// \brief Return if there is a valid TRUE path.
   bool isTruePathValid() const { return (true_path_.size() > 0); }
@@ -63,47 +58,13 @@ class SplitCFGPathInfo {
   int getpathix() { return false_startix; }
 
   /// \brief Converts the TRUE path into a string for testing.
-  std::string toStringFalsePath() const {
-    std::string str{};
-    for (const auto &block : false_path_) {
-      str += std::to_string(block->getBlockID());
-      str += " ";
-    }
-    if (str.size() > 0) {
-      str.pop_back();
-    }
-
-    return str;
-  }
+  std::string toStringFalsePath() const;
 
   /// \brief Converts the FALSE path into a string for testing.
-  std::string toStringTruePath() const {
-    std::string str{};
-    for (const auto &block : true_path_) {
-      str += std::to_string(block->getBlockID());
-      str += " ";
-    }
-    if (str.size() > 0) {
-      str.pop_back();
-    }
-
-    return str;
-  }
+  std::string toStringTruePath() const;
 
   /// \brief Dump the paths.
-  void dump() {
-    llvm::dbgs() << " BB# " << split_block_->getBlockID()
-                 << " F:" << false_startix << "\n";
-    llvm::dbgs() << "  TRUE ";
-    for (const auto block : true_path_) {
-      llvm::dbgs() << block->getBlockID() << " ";
-    }
-    llvm::dbgs() << "\n";
-    llvm::dbgs() << "  FALSE ";
-    for (const auto block : false_path_) {
-      llvm::dbgs() << block->getBlockID() << " ";
-    }
-  }
+  void dump() const;
 
  private:
   const SplitCFGBlock *split_block_;
@@ -119,8 +80,8 @@ class SplitCFGPathInfo {
 /// ===========================================
 class SplitCFG {
  public:
-  using SplitCFGPath =
-      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>;
+  using SplitCFGPathPair = std::pair<const SplitCFGBlock *, SupplementaryInfo>;
+  using SplitCFGPath = llvm::SmallVector<SplitCFGPathPair>;
   using FalseIx = std::pair<int, int>;
   using FalseIXVec = llvm::SmallVector<FalseIx>;
 
@@ -144,8 +105,9 @@ class SplitCFG {
   /// \brief Paths of BBs generated.
   llvm::SmallVector<SplitCFGPath> paths_;
 
-  /// \brief Paths vectors: for conditional blocks, record false path index, length
-  //llvm::SmallVector<llvm::SmallVector<int>> paths_falseix;
+  /// \brief Paths vectors: for conditional blocks, record false path index,
+  /// length
+  // llvm::SmallVector<llvm::SmallVector<int>> paths_falseix;
   llvm::SmallVector<llvm::SmallVector<std::pair<int, int>>> paths_falseix;
 
   /// \brief The block id to block for SCCFG.
@@ -195,8 +157,8 @@ class SplitCFG {
   /// \brief Copy false_ix from SplitGraphPathInfo of curr_path into
   /// paths_false_ix
   void setFalseix(
-      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
-          &curr_path);
+      // llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
+      SplitCFGPath &curr_path);
 
   /// \brief Dump all the CFGElements that were split.
   void dumpSplitElements(
@@ -223,14 +185,13 @@ class SplitCFG {
   /// \brief Returns the paths that were found in the SCCFG.
   // const llvm::SmallVectorImpl<VectorSplitCFGBlock> &
 
-  const llvm::SmallVectorImpl<
-      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>>
+  const llvm::SmallVectorImpl<llvm::SmallVector<SplitCFGPathPair>>
       &getPathsFound();
 
   const llvm::SmallVector<FalseIXVec> &get_paths_falseix() {
     return paths_falseix;
   }
-  
+
   /// \brief Construct the SCCFG.
   void construct_sccfg(const clang::CXXMethodDecl *method);
 
@@ -238,8 +199,8 @@ class SplitCFG {
   void generate_paths();
 
   const std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>
-    &getPathInfo() const;
-  
+      &getPathInfo() const;
+
   void preparePathInfo();
   /// \brief Returns the argument to a wait statement.
   /// Note that the only one supported are no arguments or integer arguments.
@@ -251,14 +212,15 @@ class SplitCFG {
   void dumpWaitNextStates() const;
   void dumpPaths() const;
   void dumpCurrPath(
-      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
-          &curr_path) const;
+      // llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
+      SplitCFGPath &curr_path) const;
 
   void inline dumpFalseIx() {
     for (int i = 0; i < paths_falseix.size(); i++) {
       llvm::dbgs() << "S" << i << " falseix path index, length pair: ";
-      for (std::pair<int,int> flsix_pair : paths_falseix[i]) {
-        llvm::dbgs() << "(" << flsix_pair.first << ", " << flsix_pair.second << ") ";
+      for (std::pair<int, int> flsix_pair : paths_falseix[i]) {
+        llvm::dbgs() << "(" << flsix_pair.first << ", " << flsix_pair.second
+                     << ") ";
       }
       llvm::dbgs() << "\n";
     }
@@ -285,14 +247,13 @@ class SplitCFG {
   /// \param visited_waits These are the SplitCFGBlocks that have waits and
   /// those that have been visited.
 
-  const llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
-  dfs_visit_wait(
-      const SplitCFGBlock *BB,
-      llvm::SmallPtrSet<const SplitCFGBlock *, 32> &visited_blocks,
-      llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_to_visit,
-      llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits,
-      llvm::SmallVector<std::pair<const SplitCFGBlock *, SplitCFGPathInfo>>
-          &curr_path);
+  const SplitCFGPath  // llvm::SmallVector<std::pair<const SplitCFGBlock *,
+                      // SplitCFGPathInfo>>
+  dfs_visit_wait(const SplitCFGBlock *BB,
+                 llvm::SmallPtrSet<const SplitCFGBlock *, 32> &visited_blocks,
+                 llvm::SmallVectorImpl<const SplitCFGBlock *> &waits_to_visit,
+                 llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits,
+                 llvm::SmallVector<SplitCFGPathPair> &curr_path);
   void dfs_rework();
   bool isLoop(const SplitCFGBlock *block) const;
   bool isConditional(const SplitCFGBlock *block) const;
@@ -316,16 +277,15 @@ class SplitCFG {
       const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &larger,
       const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &smaller,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to);
-  void setTruePathInfo(
-      const SplitCFGBlock *sblock,
-      const llvm::SmallVector<
-          std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited,
-      int ix = -1);
+  void setTruePathInfo(const SplitCFGBlock *sblock,
+                       // const llvm::SmallVector< std::pair<const SplitCFGBlock
+                       // *, SplitCFGPathInfo>> &newly_visited,
+                       const SplitCFGPath &newly_visited, int ix = -1);
 
-  void setFalsePathInfo(
-      const SplitCFGBlock *sblock,
-      const llvm::SmallVector<
-          std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
+  void setFalsePathInfo(const SplitCFGBlock *sblock,
+                        const SplitCFGPath &newly_visited);
+  // const llvm::SmallVector<
+  // std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
 
   void updateVisitedBlocks(
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,

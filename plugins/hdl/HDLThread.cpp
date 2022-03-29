@@ -65,7 +65,7 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "Dumping falseix paths.\n");
       LLVM_DEBUG(scfg.dumpFalseIx());
       
-      const llvm::SmallVectorImpl<llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>> &paths_found{ scfg.getPathsFound()};
+      const llvm::SmallVectorImpl<llvm::SmallVector<SplitCFG::SplitCFGPathPair>> &paths_found{ scfg.getPathsFound()};
 
       numstates = paths_found.size();
       int state_num;
@@ -81,10 +81,11 @@ namespace systemc_hdl {
 	pathnodevisited.clear();
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
 	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
-	ProcessSplitGraphGroup(paths_found[state_num], 0,
-			       paths_found[state_num].size(), paths_falseix[state_num],
-			       state_num, h_switchcase);
-	hthreadblockcstmt->append(h_switchcase);
+  // FIXME: MAYA
+	// ProcessSplitGraphGroup(paths_found[state_num], 0,
+						 // paths_found[state_num].size(), paths_falseix[state_num],
+						 // state_num, h_switchcase);
+	 hthreadblockcstmt->append(h_switchcase);
 
       }
 
