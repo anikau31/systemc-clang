@@ -175,8 +175,6 @@ public:
  const llvm::SmallVectorImpl<llvm::SmallVector<SplitCFGPathPair>>
      &getPathsFound();
 
- }
-
  /// \brief Construct the SCCFG.
  void construct_sccfg(const clang::CXXMethodDecl *method);
 
