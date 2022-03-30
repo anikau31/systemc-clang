@@ -34,7 +34,8 @@ namespace systemc_hdl {
     clang::DiagnosticsEngine &diag_e;
 
   private:
-  
+
+    SplitCFG scfg;
     hNodep h_ret;   // value returned by each subexpression
     EntryFunctionContainer *efc_;
     hNodep h_top_; // reference to calling hnode pointer
@@ -80,19 +81,15 @@ namespace systemc_hdl {
     void CheckVardecls(hNodep &hp, unsigned int cfgblockid);
     void ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp);
 
+    int GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix);
+    
     void ProcessSplitGraphGroup(const SplitCFG::SplitCFGPath pt,
-    //  SplitCFGPath is llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
 					 int startix, int num_ele,
-					 const SplitCFG::FalseIXVec flseix_vec,
-    //  FalseIXVec is llvm::SmallVector<std::pair<int, int>, <index in path, length>
 				int state_num, hNodep h_switchcase);
 
     //void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase, SplitCFG &scfg);
     void ProcessSplitGraphBlock(const SplitCFG::SplitCFGPath &pt,
-    //  SplitCFGPath is llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
-					 int thisix,
-					 const SplitCFG::FalseIXVec &flseix_vec,
-    //  FalseIXVec is llvm::SmallVector<std::pair<int, int>, <index in path, length>
+				int thisix,
 				int state_num, hNodep h_switchcase);
     void GenerateStateUpdate(hNodep hstatemethod, hNodep hlocalvarsp);
     void GenerateStateVar(string sname);
