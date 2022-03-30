@@ -26,7 +26,7 @@ namespace systemc_hdl {
 		       hfunc_name_map_t &allmethodecls, hNodep h_resetvarinfo )
     : efc_(efc), h_top_{h_top}, diag_e{diag_engine}, ast_context_{ast_context},
       mod_vname_map_{mod_vname_map}, allmethodecls_{allmethodecls},
-      h_resetvarinfo_{h_resetvarinfo} {
+      h_resetvarinfo_{h_resetvarinfo}, scfg{const_cast<ASTContext &>(ast_context), efc->getEntryMethod()} {
 
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLThread constructor (thread body)\n");
       
@@ -57,35 +57,26 @@ namespace systemc_hdl {
       hthreadblocksp->append(hthreadblockcstmt);
       // build SC CFG
 
-      SplitCFG scfg{const_cast<ASTContext &>(ast_context_), emd};
+      //SplitCFG scfg{const_cast<ASTContext &>(ast_context_), emd};
       scfg.generate_paths();
       LLVM_DEBUG(llvm::dbgs() << "Dumping scfg paths.\n");
       LLVM_DEBUG(scfg.dump());
       LLVM_DEBUG(scfg.dumpToDot());
-      LLVM_DEBUG(llvm::dbgs() << "Dumping falseix paths.\n");
-      LLVM_DEBUG(scfg.dumpFalseIx());
       
       const llvm::SmallVectorImpl<llvm::SmallVector<SplitCFG::SplitCFGPathPair>> &paths_found{ scfg.getPathsFound()};
 
       numstates = paths_found.size();
       int state_num;
 
-      // for each state, vector of index in path vector of the false branch start, -1 if NA
-      
-      const llvm::SmallVector<SplitCFG::FalseIXVec> &paths_falseix = scfg.get_paths_falseix();
-
       for (state_num = 0; state_num < paths_found.size(); state_num++) {
-	//for (auto const& pt: paths_found, auto const &flseix_vec: paths_falseix) { // vector of one state's path
-
 	SGVisited.clear();
 	pathnodevisited.clear();
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
 	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
-  // FIXME: MAYA
-	// ProcessSplitGraphGroup(paths_found[state_num], 0,
-						 // paths_found[state_num].size(), paths_falseix[state_num],
-						 // state_num, h_switchcase);
-	 hthreadblockcstmt->append(h_switchcase);
+	ProcessSplitGraphGroup(paths_found[state_num], 0,
+			       paths_found[state_num].size(), 
+			       state_num, h_switchcase);
+	hthreadblockcstmt->append(h_switchcase);
 
       }
 
@@ -311,11 +302,27 @@ namespace systemc_hdl {
     }
   }
 
+  int HDLThread::GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix) {
+    auto path_info_{scfg.getPathInfo()};
+    auto sblock{pt[cond_node_ix].first};
+    auto supp_info{pt[cond_node_ix].second};
+    auto found_it{path_info_.find(supp_info.split_block_)};
+    int flen = 0;
+    LLVM_DEBUG(llvm::dbgs() << "Getting false path length of ");
+    LLVM_DEBUG(llvm::dbgs() << "(" << supp_info.path_idx_ << "," << sblock->getBlockID()
+	       << "," << supp_info.false_idx_);
+    if (found_it != path_info_.end()) {
+      flen = found_it->second.getFalsePath().size();
+    }
+    LLVM_DEBUG(llvm::dbgs() << " |" << flen << "|");
+    LLVM_DEBUG(llvm::dbgs() << ")\n");
+    return flen;
+  }
+    
+
   void HDLThread::ProcessSplitGraphGroup(const SplitCFG::SplitCFGPath pt,
     //  SplitCFGPath is llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
 					 int startix, int num_ele,
-					 const SplitCFG::FalseIXVec flseix_vec,
-    //  FalseIXVec is llvm::SmallVector<std::pair<int, int>, <index in path, length>
 					 int state_num, hNodep h_switchcase)
   {
 
@@ -323,24 +330,19 @@ namespace systemc_hdl {
     while ( pvix<startix+num_ele) {
       if (pathnodevisited.find(pvix) == pathnodevisited.end()) { //haven't visited
 	pathnodevisited.insert(pvix);
-	ProcessSplitGraphBlock(pt, pvix, flseix_vec, state_num, h_switchcase); 
+	ProcessSplitGraphBlock(pt, pvix, state_num, h_switchcase); 
 	pvix++;
       }
       else pvix++;
     }
   }
 
+  //  SplitCFGPath = llvm::SmallVector<SplitCFGPathPair>;
+  //  SplitCFGPathPair = std::pair<const SplitCFGBlock *, SupplementaryInfo>;
   void HDLThread::ProcessSplitGraphBlock(const SplitCFG::SplitCFGPath &pt,
-    //  SplitCFGPath is llvm::SmallVector<std::pair<const SplitCFGBlock*, SplitCFGPathInfo>>
+
 					 int thisix,
-					 const SplitCFG::FalseIXVec &flseix_vec,
-    //  FalseIXVec is llvm::SmallVector<std::pair<int, int>, <index in path, length>
 					 int state_num, hNodep h_switchcase)
-
-
-  
-  //void HDLThread::ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase, const FalseIXVec flseix_vec) {//,SplitCFG &scfg) {
-    // where FalseIXVec is  llvm::SmallVector<std::pair<int, int>
   {
     const SplitCFGBlock *sgb{pt[thisix].first};
     bool iswait = false;
@@ -388,18 +390,23 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is not handled\n");
 	}
 
-	if (flseix_vec[thisix].first != -1) {// has false branch; do true branch
-	  hNodep if1 = new hNode(hNode::hdlopsEnum::hCStmt);
-	  ProcessSplitGraphGroup(pt, thisix+1, flseix_vec[thisix].first - (thisix+1),
-				 flseix_vec, state_num,if1);
-	  hcondstmt->append(if1);
+	// revert true branch to go back in if false branch when false branch info is fixed to be correct
+	// process true branch
+	hNodep if1 = new hNode(hNode::hdlopsEnum::hCStmt);
+	int flseix = pt[thisix].second.getFalseId();
+	ProcessSplitGraphGroup(pt, thisix+1, flseix - (thisix+1), state_num, if1);
+	//ProcessSplitGraphGroup(pt, thisix+1, flseix_vec[thisix].first - (thisix+1),
+	//state_num,if1);
+	hcondstmt->append(if1);
+		  
+	if (flseix != 0) {// has false branch
 	  if1 = new hNode(hNode::hdlopsEnum::hCStmt);
-	  ProcessSplitGraphGroup(pt, flseix_vec[thisix].first, flseix_vec[thisix].second,
-				 flseix_vec, state_num, if1);
+	  
+	  ProcessSplitGraphGroup(pt, flseix, GetFalseLength(pt, thisix),
+				 state_num, if1);
 	  hcondstmt->append(if1);
-	  h_switchcase->append(hcondstmt);
-
 	}
+	h_switchcase->append(hcondstmt);
 	return;
       } // end if this was a terminator block
       
