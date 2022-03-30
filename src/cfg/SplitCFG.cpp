@@ -177,10 +177,10 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
    }
 
    /// Join point for a conditional
-   if (ParentBB->getCFGBlock()->pred_size() > 2) {
-     llvm::dbgs() << " JOIN point";
-     stop_local_path = true;
-   }
+   // if (ParentBB->getCFGBlock()->pred_size() > 2) {
+   //   llvm::dbgs() << " JOIN point";
+   //   stop_local_path = true;
+   // }
 
    /// Handle the case when the block has a wait in it.  There should only be a
    /// single statement, which is the wait.
