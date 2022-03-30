@@ -359,7 +359,6 @@ namespace systemc_hdl {
 
       if (((sgb->getCFGBlock())->getTerminator().isValid()) && !isBreak(sgb->getCFGBlock()->getTerminatorStmt())){
 	hNodep hcondstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
-	auto spgsucc = sgb->getSuccessors();
 	const Stmt * S = sgb->getCFGBlock()->getTerminatorStmt();
 
 	if (const WhileStmt *S1 = dyn_cast<WhileStmt> (S)) {
@@ -372,12 +371,12 @@ namespace systemc_hdl {
 	    LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " doesn't have a wait()\n");
 	    LLVM_DEBUG(S1->dump(llvm::dbgs(), ast_context_));
 	    xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
-	    
-	    // need to mark all the true branch nodes in path vector as visited.
-	    
-	    // hNodep hforsucc = new hNode(hNode::hdlopsEnum::hCStmt);
-	    // ProcessSplitGraphBlock(spgsucc[1], state_num, hforsucc, scfg);
-	    // h_switchcase->append(hforsucc);
+	    for (int i = thisix+1; i < pt[thisix].second.getFalseId(); i++) {
+	      // need to mark all the true branch nodes in path vector as visited.
+	      if (pathnodevisited.find(i) == pathnodevisited.end()) { //haven't visited
+		pathnodevisited.insert(i);
+	      }
+	    }
 	    return;
 	  }
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
