@@ -2,43 +2,45 @@
 #define _FIND_WAIT_H_
 
 #include "WaitContainer.h"
-#include "clang/AST/DeclCXX.h"
+//#include "clang/AST/DeclCXX.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
 #include <map>
 
+namespace clang {
+  class CXXMethodDecl;
+  class CallExpr;
+};
+
 namespace systemc_clang {
 
-using namespace clang;
-using namespace std;
 
 class FindWait : public RecursiveASTVisitor<FindWait> {
-public:
+ public:
   typedef vector<WaitContainer *> waitListType;
 
+  typedef std::pair<clang::CXXMethodDecl *, vector<std::string>>
+      processWaitEventPairType;
+  typedef std::map<clang::CXXMethodDecl *, vector<std::string>>
+      processWaitEventMapType;
+  bool VisitUnresolvedMemberExpr(clang::UnresolvedMemberExpr *e);
+  FindWait(clang::CXXMethodDecl *, llvm::raw_ostream &);
 
-  typedef pair<CXXMethodDecl *, vector<string>> processWaitEventPairType;
-  typedef map<CXXMethodDecl *, vector<string>> processWaitEventMapType;
-    bool VisitUnresolvedMemberExpr(UnresolvedMemberExpr *e);
-  FindWait(CXXMethodDecl *, llvm::raw_ostream &);
   virtual ~FindWait();
   bool shouldVisitTemplateInstantiations() const;
 
-  virtual bool VisitCallExpr(CallExpr *expr);
+  virtual bool VisitCallExpr(clang::CallExpr *expr);
 
-  CXXMethodDecl *getEntryMethod() const;
+  clang::CXXMethodDecl *getEntryMethod() const;
   waitListType getWaitCalls();
   void dump();
 
-private:
-  CXXMethodDecl *entry_method_decl_;
+ private:
+  clang::CXXMethodDecl *entry_method_decl_;
   llvm::raw_ostream &os_;
-  CallExpr *wait_call_;
-//    UnresolvedMemberExpr *wait_unresolved_;
-  //    Expr *first_arg_;
+  clang::CallExpr *wait_call_;
   bool found_wait_;
   waitListType wait_calls_list_;
-
 };
-} // namespace systemc_clang
+}  // namespace systemc_clang
 #endif

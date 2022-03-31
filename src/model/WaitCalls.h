@@ -15,38 +15,33 @@
 #define _WAIT_CALLS_H_
 
 #include "FindWait.h"
-#include "Utility.h"
-#include "clang/AST/DeclCXX.h"
-#include <map>
 #include <string>
 
 namespace systemc_clang {
-using namespace clang;
-using namespace std;
 
 class WaitCalls {
-public:
+ public:
   // Constructors.
   WaitCalls();
-  WaitCalls(const string &, FindWait::waitListType);
+  WaitCalls(const std::string &, FindWait::waitListType);
 
   // Copy constructor.
   WaitCalls(const WaitCalls &);
 
   // Destructor.
-  ~WaitCalls();
+  virtual ~WaitCalls();
 
   /// Get parameters
-  string getName();
+  std::string getName();
   FindWait::waitListType getWaitList();
 
   unsigned int getTotalWaits();
   // Print
-  void dump(raw_ostream &, int);
+  void dump(llvm::raw_ostream &, int);
 
-private:
-  string _name;
+ private:
+  std::string _name;
   FindWait::waitListType _waitList;
 };
-} // namespace systemc_clang
+}  // namespace systemc_clang
 #endif

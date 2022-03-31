@@ -2,7 +2,6 @@
 #define _PROCESS_DECL_H_
 
 #include <string>
-#include "systemc-clang.h"
 
 /// clang forward declarations.
 namespace clang {

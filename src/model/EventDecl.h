@@ -4,6 +4,7 @@
 #include "llvm/Support/raw_ostream.h"
 #include <string>
 
+/// Forward declaration
 namespace clang {
   class FieldDecl;
 };

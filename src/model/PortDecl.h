@@ -19,7 +19,7 @@ class PortDecl {
   PortDecl(const std::string &, const clang::Decl *, FindTemplateTypes *);
 
   PortDecl(const PortDecl &);
-  ~PortDecl();
+  virtual ~PortDecl();
 
   /// Set parameters
   void setModuleName(const std::string &);

@@ -1,5 +1,7 @@
 #include "ProcessDecl.h"
 #include "EntryFunctionContainer.h"
+#include "systemc-clang.h"
+
 #include "clang/AST/DeclCXX.h"
 
 using namespace systemc_clang;
@@ -58,13 +60,14 @@ std::string ProcessDecl::asString() const {
 
   if (entry_function_ptr_ != nullptr) {
     auto sense_map{entry_function_ptr_->getSenseMap()};
-    str += "number_of_sensitivity_signals: " + std::to_string(sense_map.size()) + "\n";
+    str +=
+        "number_of_sensitivity_signals: " + std::to_string(sense_map.size()) +
+        "\n";
 
     for (auto const &sense : sense_map) {
-      str += "sensitivity_list[" + sense.first + "]" + std::to_string(sense.second.size()) + "\n";
+      str += "sensitivity_list[" + sense.first + "]" +
+             std::to_string(sense.second.size()) + "\n";
     }
   }
   return str;
 }
-
-
