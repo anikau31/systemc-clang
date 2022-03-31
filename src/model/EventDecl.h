@@ -1,8 +1,12 @@
 #ifndef _EVENT_DECL_H_
 #define _EVENT_DECL_H_
 
-#include "clang/AST/DeclCXX.h"
+#include "llvm/Support/raw_ostream.h"
 #include <string>
+
+namespace clang {
+  class FieldDecl;
+};
 
 namespace systemc_clang {
 

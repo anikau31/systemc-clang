@@ -5,8 +5,6 @@
 #include "FindTemplateTypes.h"
 
 namespace systemc_clang {
-using namespace clang;
-using namespace std;
 
 class InterfaceDecl {
  public:
@@ -15,7 +13,8 @@ class InterfaceDecl {
 
   InterfaceDecl(const InterfaceDecl &);
 
-  ~InterfaceDecl();
+  virtual ~InterfaceDecl();
+
   // Set parameters
   void setModuleName(const std::string &);
 
