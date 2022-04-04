@@ -568,6 +568,7 @@ void SplitCFG::dfs_rework() {
  dumpWaitNextStates();
  dumpPaths();
  dumpPathInfo();
+
 }
 
 ////////////////////////////////////////////////////////
