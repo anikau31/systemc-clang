@@ -16,11 +16,9 @@
 #define _SPLIT_CFG_BLOCK_H_
 
 #include "clang/Analysis/CFG.h"
-#include <vector>
 
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
-#include "llvm/Support/Debug.h"
 
 /// Different matchers may use different DEBUG_TYPE
 #undef DEBUG_TYPE
