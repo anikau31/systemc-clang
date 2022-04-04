@@ -24,10 +24,11 @@ var searchData=
   ['statement_21',['Statement',['../classparselib_1_1transforms_1_1node_1_1Statement.html',1,'parselib::transforms::node']]],
   ['structurecollector_22',['StructureCollector',['../classparselib_1_1transforms_1_1structure__collector_1_1StructureCollector.html',1,'parselib::transforms::structure_collector']]],
   ['successoriterator_23',['SuccessorIterator',['../structsystemc__clang_1_1SplitCFGBlock_1_1SuccessorIterator.html',1,'systemc_clang::SplitCFGBlock']]],
-  ['suscfg_24',['SusCFG',['../classsystemc__clang_1_1SusCFG.html',1,'systemc_clang']]],
-  ['suspensionautomata_25',['SuspensionAutomata',['../classsystemc__clang_1_1SuspensionAutomata.html',1,'systemc_clang']]],
-  ['systemcclang_26',['SystemCClang',['../classsystemc-clang_1_1SystemCClang.html',1,'systemc-clang.SystemCClang'],['../classsystemc__clang_1_1SystemCClang.html',1,'systemc_clang::SystemCClang']]],
-  ['systemcclangaxn_27',['SystemCClangAXN',['../classsystemc__clang_1_1SystemCClangAXN.html',1,'systemc_clang']]],
-  ['systemcclangfatalerror_28',['SystemCClangFatalError',['../classsystemc-clang_1_1SystemCClangFatalError.html',1,'systemc-clang']]],
-  ['systemcconsumer_29',['SystemCConsumer',['../classsystemc__clang_1_1SystemCConsumer.html',1,'systemc_clang']]]
+  ['supplementaryinfo_24',['SupplementaryInfo',['../classsystemc__clang_1_1SupplementaryInfo.html',1,'systemc_clang']]],
+  ['suscfg_25',['SusCFG',['../classsystemc__clang_1_1SusCFG.html',1,'systemc_clang']]],
+  ['suspensionautomata_26',['SuspensionAutomata',['../classsystemc__clang_1_1SuspensionAutomata.html',1,'systemc_clang']]],
+  ['systemcclang_27',['SystemCClang',['../classsystemc-clang_1_1SystemCClang.html',1,'systemc-clang.SystemCClang'],['../classsystemc__clang_1_1SystemCClang.html',1,'systemc_clang::SystemCClang']]],
+  ['systemcclangaxn_28',['SystemCClangAXN',['../classsystemc__clang_1_1SystemCClangAXN.html',1,'systemc_clang']]],
+  ['systemcclangfatalerror_29',['SystemCClangFatalError',['../classsystemc-clang_1_1SystemCClangFatalError.html',1,'systemc-clang']]],
+  ['systemcconsumer_30',['SystemCConsumer',['../classsystemc__clang_1_1SystemCConsumer.html',1,'systemc_clang']]]
 ];

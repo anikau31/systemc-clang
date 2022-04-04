@@ -1,10 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,209,53,235"/>
-<area shape="rect" id="node2" href="$classparselib_1_1transforms_1_1name__stub_1_1FuncNameStub.html" title=" " alt="" coords="111,5,278,47"/>
-<area shape="rect" id="node3" href="$classparselib_1_1transforms_1_1name__stub_1_1FuncParamNameStub.html" title=" " alt="" coords="101,71,288,112"/>
-<area shape="rect" id="node4" href="$classparselib_1_1transforms_1_1name__stub_1_1ProcessVarNameStub.html" title=" " alt="" coords="101,136,288,177"/>
-<area shape="rect" id="node5" href="$classparselib_1_1transforms_1_1node_1_1Always.html" title=" " alt="" coords="111,201,278,243"/>
-<area shape="rect" id="node6" href="$classparselib_1_1transforms_1_1node_1_1ArrayDeref.html" title=" " alt="" coords="111,267,278,308"/>
-<area shape="rect" id="node7" href="$classparselib_1_1transforms_1_1node_1_1Expression.html" title=" " alt="" coords="111,332,278,373"/>
-<area shape="rect" id="node8" href="$classparselib_1_1transforms_1_1node_1_1Statement.html" title=" " alt="" coords="111,397,278,439"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,13,97,39"/>
+<area shape="rect" id="node2" href="$classparselib_1_1transforms_1_1type__collector_1_1TypeCollector.html" title=" " alt="" coords="145,5,305,47"/>
 </map>

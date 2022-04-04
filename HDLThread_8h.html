@@ -81,61 +81,62 @@ $(function() {
 <code>#include &quot;<a class="el" href="hNode_8h_source.html">hNode.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="SplitCFG_8h_source.html">SplitCFG.h</a>&quot;</code><br />
+<code>#include &lt;unordered_set&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for HDLThread.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="HDLThread_8h__incl.png" border="0" usemap="#aplugins_2hdl_2HDLThread_8h" alt=""/></div>
 <map name="aplugins_2hdl_2HDLThread_8h" id="aplugins_2hdl_2HDLThread_8h">
-<area shape="rect" title=" " alt="" coords="3247,5,3413,32"/>
-<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="1044,155,1163,181"/>
-<area shape="rect" title=" " alt="" coords="2551,767,2735,793"/>
-<area shape="rect" title=" " alt="" coords="3181,468,3327,495"/>
-<area shape="rect" title=" " alt="" coords="3291,319,3438,345"/>
-<area shape="rect" title=" " alt="" coords="3078,155,3222,181"/>
-<area shape="rect" href="hNode_8h.html" title=" " alt="" coords="3247,155,3317,181"/>
-<area shape="rect" href="HDLBody_8h.html" title=" " alt="" coords="2615,80,2703,107"/>
-<area shape="rect" href="SplitCFG_8h.html" title=" " alt="" coords="3455,155,3541,181"/>
-<area shape="rect" title=" " alt="" coords="681,237,864,263"/>
-<area shape="rect" title=" " alt="" coords="843,767,1062,793"/>
-<area shape="rect" title=" " alt="" coords="889,237,1083,263"/>
-<area shape="rect" title=" " alt="" coords="1108,237,1331,263"/>
-<area shape="rect" title=" " alt="" coords="5,229,204,271"/>
-<area shape="rect" title=" " alt="" coords="278,229,478,271"/>
-<area shape="rect" title=" " alt="" coords="502,237,657,263"/>
-<area shape="rect" href="Model_8h.html" title=" " alt="" coords="1706,237,1813,263"/>
-<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="1336,319,1423,345"/>
-<area shape="rect" href="FindSCMain_8h.html" title=" " alt="" coords="2444,692,2605,719"/>
-<area shape="rect" href="EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="1219,617,1385,644"/>
-<area shape="rect" title=" " alt="" coords="1208,767,1255,793"/>
-<area shape="rect" title=" " alt="" coords="1599,692,1653,719"/>
-<area shape="rect" title=" " alt="" coords="1964,767,2115,793"/>
-<area shape="rect" href="EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="2253,617,2373,644"/>
-<area shape="rect" href="FindGlobalEvents_8h.html" title=" " alt="" coords="1435,543,1569,569"/>
-<area shape="rect" title=" " alt="" coords="1663,617,1722,644"/>
-<area shape="rect" href="FindNetlist_8h.html" title=" " alt="" coords="1780,692,1875,719"/>
-<area shape="rect" href="FindSimTime_8h.html" title=" " alt="" coords="1899,692,2009,719"/>
-<area shape="rect" href="ModuleInstance_8h.html" title=" " alt="" coords="793,468,917,495"/>
-<area shape="rect" href="FindGPUMacro_8h.html" title=" " alt="" coords="2033,692,2216,719"/>
-<area shape="rect" href="FindNotify_8h.html" title=" " alt="" coords="1269,692,1359,719"/>
-<area shape="rect" href="FindConstructor_8h.html" title=" " alt="" coords="692,543,816,569"/>
-<area shape="rect" href="FindEntryFunctions_8h.html" title=" " alt="" coords="1044,543,1187,569"/>
-<area shape="rect" href="FindTLMInterfaces_8h.html" title=" " alt="" coords="595,617,737,644"/>
-<area shape="rect" href="InstanceMatcher_8h.html" title=" " alt="" coords="1797,393,1927,420"/>
-<area shape="rect" href="CXXRecordDeclUtils_8h.html" title=" " alt="" coords="2104,393,2257,420"/>
-<area shape="rect" href="PortMatcher_8h.html" title=" " alt="" coords="1163,393,1265,420"/>
-<area shape="rect" href="FindEvents_8h.html" title=" " alt="" coords="1313,543,1411,569"/>
-<area shape="rect" title=" " alt="" coords="2888,237,2943,263"/>
-<area shape="rect" title=" " alt="" coords="2967,237,3042,263"/>
-<area shape="rect" title=" " alt="" coords="3067,237,3177,263"/>
-<area shape="rect" title=" " alt="" coords="2465,155,2569,181"/>
-<area shape="rect" title=" " alt="" coords="2593,155,2656,181"/>
-<area shape="rect" title=" " alt="" coords="2782,155,2907,181"/>
-<area shape="rect" title=" " alt="" coords="2931,155,3054,181"/>
-<area shape="rect" title=" " alt="" coords="1405,155,1570,181"/>
-<area shape="rect" title=" " alt="" coords="3868,237,4035,263"/>
-<area shape="rect" href="SplitCFGBlock_8h.html" title=" " alt="" coords="3201,237,3320,263"/>
-<area shape="rect" title=" " alt="" coords="3447,237,3608,263"/>
-<area shape="rect" title=" " alt="" coords="3633,237,3793,263"/>
+<area shape="rect" title=" " alt="" coords="3481,5,3647,32"/>
+<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="1061,155,1179,181"/>
+<area shape="rect" title=" " alt="" coords="3115,767,3299,793"/>
+<area shape="rect" title=" " alt="" coords="2180,468,2327,495"/>
+<area shape="rect" title=" " alt="" coords="3975,237,4121,263"/>
+<area shape="rect" title=" " alt="" coords="3492,155,3636,181"/>
+<area shape="rect" href="hNode_8h.html" title=" " alt="" coords="3397,155,3467,181"/>
+<area shape="rect" href="HDLBody_8h.html" title=" " alt="" coords="3103,80,3191,107"/>
+<area shape="rect" title=" " alt="" coords="3660,155,3764,181"/>
+<area shape="rect" href="SplitCFG_8h.html" title=" " alt="" coords="3957,80,4043,107"/>
+<area shape="rect" title=" " alt="" coords="185,237,367,263"/>
+<area shape="rect" title=" " alt="" coords="1444,767,1663,793"/>
+<area shape="rect" title=" " alt="" coords="443,237,637,263"/>
+<area shape="rect" title=" " alt="" coords="662,237,885,263"/>
+<area shape="rect" title=" " alt="" coords="909,229,1107,271"/>
+<area shape="rect" title=" " alt="" coords="1131,229,1331,271"/>
+<area shape="rect" title=" " alt="" coords="5,237,160,263"/>
+<area shape="rect" href="Model_8h.html" title=" " alt="" coords="2412,237,2519,263"/>
+<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="1743,319,1830,345"/>
+<area shape="rect" href="FindSCMain_8h.html" title=" " alt="" coords="3007,692,3169,719"/>
+<area shape="rect" href="EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="2047,617,2214,644"/>
+<area shape="rect" title=" " alt="" coords="1885,767,1931,793"/>
+<area shape="rect" title=" " alt="" coords="2346,692,2401,719"/>
+<area shape="rect" title=" " alt="" coords="2557,767,2707,793"/>
+<area shape="rect" href="EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="2897,617,3017,644"/>
+<area shape="rect" href="FindGlobalEvents_8h.html" title=" " alt="" coords="2033,543,2167,569"/>
+<area shape="rect" title=" " alt="" coords="1240,617,1299,644"/>
+<area shape="rect" href="FindNetlist_8h.html" title=" " alt="" coords="2477,692,2571,719"/>
+<area shape="rect" href="FindSimTime_8h.html" title=" " alt="" coords="1945,692,2055,719"/>
+<area shape="rect" href="ModuleInstance_8h.html" title=" " alt="" coords="1778,468,1902,495"/>
+<area shape="rect" href="FindGPUMacro_8h.html" title=" " alt="" coords="2647,692,2830,719"/>
+<area shape="rect" href="FindNotify_8h.html" title=" " alt="" coords="2129,692,2220,719"/>
+<area shape="rect" href="FindConstructor_8h.html" title=" " alt="" coords="1545,543,1669,569"/>
+<area shape="rect" href="FindEntryFunctions_8h.html" title=" " alt="" coords="1693,543,1835,569"/>
+<area shape="rect" href="FindTLMInterfaces_8h.html" title=" " alt="" coords="1322,617,1465,644"/>
+<area shape="rect" href="InstanceMatcher_8h.html" title=" " alt="" coords="1722,393,1851,420"/>
+<area shape="rect" href="CXXRecordDeclUtils_8h.html" title=" " alt="" coords="2503,393,2657,420"/>
+<area shape="rect" href="PortMatcher_8h.html" title=" " alt="" coords="1595,393,1698,420"/>
+<area shape="rect" href="FindEvents_8h.html" title=" " alt="" coords="1911,543,2009,569"/>
+<area shape="rect" href="FindTemplateParameters_8h.html" title=" " alt="" coords="936,543,1115,569"/>
+<area shape="rect" title=" " alt="" coords="3367,237,3422,263"/>
+<area shape="rect" title=" " alt="" coords="3497,237,3572,263"/>
+<area shape="rect" title=" " alt="" coords="3839,237,3950,263"/>
+<area shape="rect" title=" " alt="" coords="2621,155,2683,181"/>
+<area shape="rect" title=" " alt="" coords="2708,155,2833,181"/>
+<area shape="rect" title=" " alt="" coords="2857,155,2980,181"/>
+<area shape="rect" title=" " alt="" coords="3004,155,3169,181"/>
+<area shape="rect" href="SplitCFGBlock_8h.html" title=" " alt="" coords="3941,155,4059,181"/>
+<area shape="rect" title=" " alt="" coords="4083,155,4245,181"/>
+<area shape="rect" title=" " alt="" coords="4269,155,4429,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
