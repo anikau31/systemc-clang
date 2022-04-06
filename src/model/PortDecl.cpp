@@ -77,11 +77,11 @@ std::vector<llvm::APInt> PortDecl::getArraySizes() const {
 std::string PortDecl::getName() const { return port_name_; }
 
 clang::FieldDecl *PortDecl::getAsFieldDecl() const {
-  return dyn_cast<clang::FieldDecl>(field_decl_);
+  return clang::dyn_cast<clang::FieldDecl>(field_decl_);
 }
 
 clang::VarDecl *PortDecl::getAsVarDecl() const {
-  return dyn_cast<clang::VarDecl>(field_decl_);
+  return clang::dyn_cast<clang::VarDecl>(field_decl_);
 }
 
 FindTemplateTypes *PortDecl::getTemplateType() { return template_type_; }
@@ -102,15 +102,13 @@ std::string PortDecl::asString() const {
     str += "is_pointer_type: false\n";
   }
 
-
   if (getArrayType()) {
     str += "array_sizes: ";
     for (const auto sz : getArraySizes()) {
       std::size_t i{0};
-      //std::string s = systemc_clang::utils::apint::toString(sz);
+      // std::string s = systemc_clang::utils::apint::toString(sz);
 
       str += systemc_clang::utils::apint::toString(sz);
-
     }
   }
   str += "\n";

@@ -4,6 +4,7 @@
 
 #include "llvm/Support/Debug.h"
 using namespace systemc_clang;
+using namespace clang;
 
 FindTemplateParameters::FindTemplateParameters(CXXRecordDecl *declaration)
     : declaration_{declaration},
