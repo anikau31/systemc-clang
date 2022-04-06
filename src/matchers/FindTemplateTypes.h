@@ -6,7 +6,6 @@
 #include <stack>
 
 #include "clang/AST/RecursiveASTVisitor.h"
-#include "llvm/Support/raw_ostream.h"
 
 #include "Tree.h"
 

@@ -3,6 +3,12 @@
 
 #include <string>
 
+namespace clang {
+class Decl;
+class VarDecl;
+class FieldDecl;
+};  // namespace clang
+
 namespace systemc_clang {
 
 /// Forward declarations
@@ -51,9 +57,8 @@ class PortDecl {
   clang::Decl *field_decl_;
 
   /// Is it an array type.
-  bool is_array_; 
+  bool is_array_;
   std::vector<llvm::APInt> array_sizes_;
-
 };
 }  // namespace systemc_clang
 #endif
