@@ -1,8 +1,11 @@
 #include "FindArgument.h"
 
+#include "clang/AST/DeclCXX.h"
+#include "llvm/Support/raw_ostream.h"
 #include "APIntUtils.h"
 
 using namespace systemc_clang;
+using namespace clang;
 
 FindArgument::FindArgument(Expr *e) : expression_(e) {
   TraverseStmt(expression_);
@@ -21,8 +24,8 @@ bool FindArgument::VisitDeclRefExpr(DeclRefExpr *declaration_ref) {
 }
 
 bool FindArgument::VisitIntegerLiteral(IntegerLiteral *integer_literal) {
-  //argument_name_ = integer_literal->getValue().toString(10, false);
-  argument_name_ =  systemc_clang::utils::apint::toString(integer_literal->getValue());
+  argument_name_ =
+      systemc_clang::utils::apint::toString(integer_literal->getValue());
   return true;
 }
 
@@ -35,4 +38,4 @@ bool FindArgument::VisitCXXBoolLiteralExpr(CXXBoolLiteralExpr *boolean_expr) {
   return true;
 }
 
-string FindArgument::getArgumentName() { return argument_name_; }
+std::string FindArgument::getArgumentName() { return argument_name_; }

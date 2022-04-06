@@ -1,4 +1,5 @@
 #include "EntryFunctionContainer.h"
+#include "NotifyContainer.h"
 
 using namespace systemc_clang;
 

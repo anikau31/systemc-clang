@@ -2,11 +2,12 @@
 #define _INTERFACE_DECL_H_
 
 #include <string>
-#include "FindTemplateTypes.h"
+#include "llvm/Support/Debug.h"
 
 namespace systemc_clang {
-using namespace clang;
-using namespace std;
+
+  /// Forward declarations
+  class FindTemplateTypes;
 
 class InterfaceDecl {
  public:
@@ -15,7 +16,8 @@ class InterfaceDecl {
 
   InterfaceDecl(const InterfaceDecl &);
 
-  ~InterfaceDecl();
+  virtual ~InterfaceDecl();
+
   // Set parameters
   void setModuleName(const std::string &);
 
@@ -27,8 +29,8 @@ class InterfaceDecl {
   void dump(llvm::raw_ostream &, int tabn = 0);
 
  private:
-  std::string _name;
-  FindTemplateTypes *_templateType;
+  std::string name_;
+  FindTemplateTypes *template_type_;
 };
 }  // namespace systemc_clang
 #endif

@@ -1,6 +1,8 @@
 #include "FindTemplateTypes.h"
 
 #include "FindMemberFieldMatcher.h"
+#include "llvm/Support/raw_ostream.h"
+
 using namespace systemc_clang;
 using namespace sc_ast_matchers;
 

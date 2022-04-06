@@ -20,13 +20,30 @@
 #include "FindNotify.h"
 #include "SensitivityMatcher.h"
 #include "FindWait.h"
-#include "NotifyContainer.h"
+//#include "NotifyContainer.h"
 #include "SuspensionAutomata.h"
 #include "Utility.h"
-#include "WaitContainer.h"
-#include "clang/AST/DeclCXX.h"
+//#include "WaitContainer.h"
+//#include "clang/AST/DeclCXX.h"
+
+namespace clang {
+  class ValueDecl;
+  class MemberExpr;
+  class DeclRefExpr;
+  class ArraySubscriptExpr;
+  class Stmt;
+  class CXXMethodDecl;
+  class Expr;
+};
+
 
 namespace systemc_clang {
+
+  /// Forward declarations
+  //
+  //
+  class WaitContainer;
+  class NotifyContainer;
 
 enum class ASTSTATE {
   EMPTY,

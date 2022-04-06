@@ -2,12 +2,11 @@
 #include "clang/AST/DeclTemplate.h"
 #include "clang/AST/PrettyPrinter.h"
 #include "clang/AST/Type.h"
-#include "clang/Basic/SourceManager.h"
+//#include "clang/Basic/SourceManager.h"
 
 using namespace systemc_clang;
-using namespace std;
 
-FindWait::FindWait(CXXMethodDecl *d, llvm::raw_ostream &os)
+FindWait::FindWait(clang::CXXMethodDecl *d, llvm::raw_ostream &os)
     : entry_method_decl_{d}, os_{os}, wait_call_{nullptr}, found_wait_{false} {
   TraverseDecl(d);
 
@@ -32,7 +31,7 @@ bool FindWait::shouldVisitTemplateInstantiations() const { return true; }
 bool FindWait::VisitUnresolvedMemberExpr(UnresolvedMemberExpr *e) {
   // This is for the templated wait calls.
   // e should not be null if it gets here.
-  if (e->getMemberNameInfo().getAsString() == string("wait")) {
+  if (e->getMemberNameInfo().getAsString() == std::string("wait")) {
     wait_calls_list_.push_back(
         new WaitContainer(entry_method_decl_, wait_call_));
     found_wait_ = true;
@@ -51,7 +50,7 @@ bool FindWait::VisitCallExpr(CallExpr *e) {
   // Check if the non-templated wait has a "wait" in it.
   auto direct_callee{e->getDirectCallee()};
   if ((direct_callee != nullptr)) {
-    if ((direct_callee->getNameInfo().getAsString() == string("wait"))) {
+    if ((direct_callee->getNameInfo().getAsString() == std::string("wait"))) {
       // Insert the information to parse the wait arguments.
       wait_calls_list_.push_back(
           new WaitContainer(entry_method_decl_, wait_call_));
@@ -64,7 +63,7 @@ bool FindWait::VisitCallExpr(CallExpr *e) {
 
 FindWait::waitListType FindWait::getWaitCalls() { return wait_calls_list_; }
 
-CXXMethodDecl *FindWait::getEntryMethod() const { return entry_method_decl_; }
+clang::CXXMethodDecl *FindWait::getEntryMethod() const { return entry_method_decl_; }
 
 void FindWait::dump() {
   /*
