@@ -4,33 +4,33 @@
 using namespace systemc_clang;
 
 InterfaceDecl::~InterfaceDecl() {
-  if (_templateType != nullptr) {
-    delete _templateType;
+  if (template_type_ != nullptr) {
+    delete template_type_;
   }
 }
 
-InterfaceDecl::InterfaceDecl() : _name{"NONE"}, _templateType{nullptr} {}
+InterfaceDecl::InterfaceDecl() : name_{"NONE"}, template_type_{nullptr} {}
 
 InterfaceDecl::InterfaceDecl(const std::string &name, FindTemplateTypes *tt)
-    : _name{name}, _templateType{tt} {}
+    : name_{name}, template_type_{tt} {}
 
 InterfaceDecl::InterfaceDecl(const InterfaceDecl &from) {
-  _name = from._name;
+  name_ = from.name_;
   // This is necessary to allow FindInterfaces to go out of scope.
-  _templateType = new FindTemplateTypes(*from._templateType);
+  template_type_ = new FindTemplateTypes(*from.template_type_);
 }
 
-void InterfaceDecl::setModuleName(const std::string &name) { _name = name; }
+void InterfaceDecl::setModuleName(const std::string &name) { name_ = name; }
 
-std::string InterfaceDecl::getName() { return _name; }
+std::string InterfaceDecl::getName() { return name_; }
 
-FindTemplateTypes *InterfaceDecl::getTemplateType() { return _templateType; }
+FindTemplateTypes *InterfaceDecl::getTemplateType() { return template_type_; }
 
 void InterfaceDecl::dump(llvm::raw_ostream &os, int tabn) {
   for (int i = 0; i < tabn; i++) {
     os << " ";
   }
-  os << "InterfaceDecl " << this << " '" << _name << "' FindTemplateTypes "
-     << _templateType;
-  _templateType->printTemplateArguments(os);
+  os << "InterfaceDecl " << this << " '" << name_ << "' FindTemplateTypes "
+     << template_type_;
+  template_type_->printTemplateArguments(os);
 }
