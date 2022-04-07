@@ -1,6 +1,7 @@
 #ifndef _PROCESS_DECL_H_
 #define _PROCESS_DECL_H_
 
+#include <sstream>
 #include <string>
 
 /// clang forward declarations.
@@ -12,6 +13,13 @@ namespace systemc_clang {
 
 /// Forward declarations.
 class EntryFunctionContainer;
+
+template <typename T>
+std::string to_string(T* pointer) {
+  std::ostringstream address;
+  address << pointer;
+  return address.str();
+}
 
 class ProcessDecl {
  public:

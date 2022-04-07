@@ -9,6 +9,7 @@
 
 namespace systemc_clang {
 
+
 class SupplementaryInfo {
 public:
  SupplementaryInfo(const SplitCFGBlock *block);

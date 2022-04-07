@@ -7,7 +7,9 @@
 #include "ClangArgs.h"
 #include "Testing.h"
 
+#include "clang/Analysis/CFG.h"
 #include "SplitCFG.h"
+#include "SplitCFGBlock.h"
 
 using namespace systemc_clang;
 TEST_CASE("Simple thread test", "[threads]") {

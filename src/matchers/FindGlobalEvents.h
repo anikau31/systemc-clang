@@ -1,8 +1,7 @@
 #ifndef _FIND_GLOBAL_EVENTS_H_
 #define _FIND_GLOBAL_EVENTS_H_
-#include "systemc-clang.h"
+//#include "systemc-clang.h"
 
-#include "clang/AST/Decl.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "llvm/Support/raw_ostream.h"
 
@@ -10,10 +9,16 @@
 #include <string>
 #include <vector>
 
+/// Clang forward declarations
+namespace clang {
+class VarDecl;
+class TranslationUnitDecl;
+};
+
 namespace systemc_clang {
- 
+
 class FindGlobalEvents : public clang::RecursiveASTVisitor<FindGlobalEvents> {
-public:
+ public:
   typedef std::map<std::string, clang::VarDecl *> globalEventMapType;
   typedef std::pair<std::string, clang::VarDecl *> kvType;
 
@@ -28,10 +33,9 @@ public:
   void dump();
   std::string asString() const;
 
-
-private:
+ private:
   llvm::raw_ostream &_os;
   globalEventMapType _globalEvents;
 };
-} // namespace systemc_clang
+}  // namespace systemc_clang
 #endif
