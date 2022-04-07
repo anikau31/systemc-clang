@@ -3,13 +3,12 @@
 
 #include <unordered_map>
 
+#include "SplitCFGBlock.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/SmallPtrSet.h"
 
 namespace systemc_clang {
 
-  /// Forward declaration
-  class SplitCFGBlock;
 
 class SupplementaryInfo {
 public:

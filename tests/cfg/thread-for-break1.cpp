@@ -6,6 +6,7 @@
 #include "Testing.h"
 
 #include "SplitCFG.h"
+#include "SplitCFGBlock.h"
 
 #include "catch.hpp"
 
