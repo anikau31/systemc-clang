@@ -9,6 +9,6 @@ var searchData=
   ['porttype_6',['PortType',['../classsystemc__clang_1_1FindPorts.html#a1989d200f0df2b414b1b5a57259533e3',1,'systemc_clang::FindPorts::PortType()'],['../classsystemc__clang_1_1ModuleInstance.html#a2c28ab5fe658b9833300e3d979912f42',1,'systemc_clang::ModuleInstance::PortType()']]],
   ['processmaptype_7',['processMapType',['../classsystemc__clang_1_1ModuleInstance.html#aa971eba18c75ee5a38fcfc9739bbf9a5',1,'systemc_clang::ModuleInstance']]],
   ['processpairtype_8',['processPairType',['../classsystemc__clang_1_1ModuleInstance.html#a4674bdaba29e097bef92dccd45888fdd',1,'systemc_clang::ModuleInstance']]],
-  ['processwaiteventmaptype_9',['processWaitEventMapType',['../classsystemc__clang_1_1FindWait.html#a28514012ba754642f54158332a72a156',1,'systemc_clang::FindWait']]],
-  ['processwaiteventpairtype_10',['processWaitEventPairType',['../classsystemc__clang_1_1FindWait.html#a743222c57a9b5094771dadcddedbf992',1,'systemc_clang::FindWait']]]
+  ['processwaiteventmaptype_9',['processWaitEventMapType',['../classsystemc__clang_1_1FindWait.html#aace39df59ecd7e78771ebc29d6a606c5',1,'systemc_clang::FindWait']]],
+  ['processwaiteventpairtype_10',['processWaitEventPairType',['../classsystemc__clang_1_1FindWait.html#a0d237f561a7789c14d5d1774a6d8e000',1,'systemc_clang::FindWait']]]
 ];

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['savewaitnextstate_5fstring_0',['savewaitnextstate_string',['../classsystemc__hdl_1_1HDLThread.html#a3ee862c43316f58b4bc1a94d4e3fb33c',1,'systemc_hdl::HDLThread']]],
-  ['sc_5fmain_5ffunction_5fdeclaration_5f_1',['sc_main_function_declaration_',['../classsystemc__clang_1_1FindSCMain.html#af2712f3a9c2c6def8dd47c2b82b73d19',1,'systemc_clang::FindSCMain']]],
+  ['sc_5fmain_5ffunction_5fdeclaration_5f_1',['sc_main_function_declaration_',['../classsystemc__clang_1_1FindSCMain.html#ae26c1c6ba8ddd84f56866a31aeadee7f',1,'systemc_clang::FindSCMain']]],
   ['sc_5fports_5f_2',['sc_ports_',['../classsc__ast__matchers_1_1PortMatcher.html#aee2cffb6787abffd58c2fb924e41c0bb',1,'sc_ast_matchers::PortMatcher']]],
   ['scbtlen_3',['scbtlen',['../classhnode_1_1util.html#a452e348d557d610adb1462cb0039b7b7',1,'hnode::util']]],
   ['scbuiltintype_4',['scbuiltintype',['../classhnode_1_1util.html#a942d5e2825dbec1bca7b9e3174420d66',1,'hnode::util']]],

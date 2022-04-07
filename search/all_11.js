@@ -13,7 +13,7 @@ var searchData=
   ['sc_5fclock_10',['sc_clock',['../classparselib_1_1primitives_1_1sc__clock.html',1,'parselib::primitives']]],
   ['sc_5fin_11',['sc_in',['../classparselib_1_1primitives_1_1sc__in.html',1,'parselib::primitives']]],
   ['sc_5fint_12',['sc_int',['../classparselib_1_1primitives_1_1sc__int.html',1,'parselib::primitives']]],
-  ['sc_5fmain_5ffunction_5fdeclaration_5f_13',['sc_main_function_declaration_',['../classsystemc__clang_1_1FindSCMain.html#af2712f3a9c2c6def8dd47c2b82b73d19',1,'systemc_clang::FindSCMain']]],
+  ['sc_5fmain_5ffunction_5fdeclaration_5f_13',['sc_main_function_declaration_',['../classsystemc__clang_1_1FindSCMain.html#ae26c1c6ba8ddd84f56866a31aeadee7f',1,'systemc_clang::FindSCMain']]],
   ['sc_5fout_14',['sc_out',['../classparselib_1_1primitives_1_1sc__out.html',1,'parselib::primitives']]],
   ['sc_5fports_5f_15',['sc_ports_',['../classsc__ast__matchers_1_1PortMatcher.html#aee2cffb6787abffd58c2fb924e41c0bb',1,'sc_ast_matchers::PortMatcher']]],
   ['sc_5frvd_5fin_16',['sc_rvd_in',['../classparselib_1_1primitives_1_1sc__rvd__in.html',1,'parselib::primitives']]],

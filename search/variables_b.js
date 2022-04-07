@@ -1,7 +1,7 @@
 var searchData=
 [
   ['name_0',['name',['../classparselib_1_1transforms_1_1node_1_1TypeDefType.html#a6433c8c7a670f83fdd248a01a9e46942',1,'parselib.transforms.node.TypeDefType.name()'],['../classparselib_1_1transforms_1_1type__node_1_1TypeNode.html#a1e3e7c439ede68d2de0bfcd4ecf64b76',1,'parselib.transforms.type_node.TypeNode.name()'],['../structsystemc__hdl_1_1HDLConstructorHcode_1_1for__info__t.html#a74fd072f16e39644d8fad44b23b26201',1,'systemc_hdl::HDLConstructorHcode::for_info_t::name()']]],
-  ['name_5f_1',['name_',['../classsystemc__clang_1_1EventDecl.html#a66e51ad163fd2172a9632b98be35c62b',1,'systemc_clang::EventDecl::name_()'],['../classsystemc__clang_1_1NotifyCalls.html#a260ab066f951af1203db230eef98ffdb',1,'systemc_clang::NotifyCalls::name_()']]],
+  ['name_5f_1',['name_',['../classsystemc__clang_1_1EventDecl.html#a66e51ad163fd2172a9632b98be35c62b',1,'systemc_clang::EventDecl::name_()'],['../classsystemc__clang_1_1InterfaceDecl.html#a4021bf768bd39f6fe1992fd928e87b9a',1,'systemc_clang::InterfaceDecl::name_()'],['../classsystemc__clang_1_1NotifyCalls.html#a260ab066f951af1203db230eef98ffdb',1,'systemc_clang::NotifyCalls::name_()']]],
   ['name_5fmapping_2',['name_mapping',['../classparselib_1_1primitives_1_1Primitive.html#ae8f4ff243e4df9f304540a76e7be5a0f',1,'parselib::primitives::Primitive']]],
   ['needwaitswitchcase_3',['needwaitswitchcase',['../classsystemc__hdl_1_1HDLThread.html#ae3897a690e32c79981c8e025a94ce8bf',1,'systemc_hdl::HDLThread']]],
   ['nested_5fmodules_5f_4',['nested_modules_',['../classsystemc__clang_1_1ModuleInstance.html#a714bc3fd388def5531747edd6ab4d825',1,'systemc_clang::ModuleInstance']]],

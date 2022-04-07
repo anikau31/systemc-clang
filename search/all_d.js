@@ -1,7 +1,7 @@
 var searchData=
 [
   ['name_0',['name',['../classparselib_1_1transforms_1_1type__node_1_1TypeNode.html#a1e3e7c439ede68d2de0bfcd4ecf64b76',1,'parselib.transforms.type_node.TypeNode.name()'],['../classparselib_1_1transforms_1_1node_1_1TypeDefType.html#a6433c8c7a670f83fdd248a01a9e46942',1,'parselib.transforms.node.TypeDefType.name()'],['../structsystemc__hdl_1_1HDLConstructorHcode_1_1for__info__t.html#a74fd072f16e39644d8fad44b23b26201',1,'systemc_hdl::HDLConstructorHcode::for_info_t::name()']]],
-  ['name_5f_1',['name_',['../classsystemc__clang_1_1NotifyCalls.html#a260ab066f951af1203db230eef98ffdb',1,'systemc_clang::NotifyCalls::name_()'],['../classsystemc__clang_1_1EventDecl.html#a66e51ad163fd2172a9632b98be35c62b',1,'systemc_clang::EventDecl::name_()']]],
+  ['name_5f_1',['name_',['../classsystemc__clang_1_1NotifyCalls.html#a260ab066f951af1203db230eef98ffdb',1,'systemc_clang::NotifyCalls::name_()'],['../classsystemc__clang_1_1InterfaceDecl.html#a4021bf768bd39f6fe1992fd928e87b9a',1,'systemc_clang::InterfaceDecl::name_()'],['../classsystemc__clang_1_1EventDecl.html#a66e51ad163fd2172a9632b98be35c62b',1,'systemc_clang::EventDecl::name_()']]],
   ['name_5ffilter_2',['name_filter',['../classparselib_1_1primitives_1_1Primitive.html#ae03c1c6609d4622b3753708cae8fd47f',1,'parselib::primitives::Primitive']]],
   ['name_5fmapping_3',['name_mapping',['../classparselib_1_1primitives_1_1Primitive.html#ae8f4ff243e4df9f304540a76e7be5a0f',1,'parselib::primitives::Primitive']]],
   ['name_5fserve_4',['name_serve',['../classhnode_1_1name__serve.html',1,'hnode::name_serve'],['../classhnode_1_1name__serve.html#adf819c5097aec959677226492e14ecdb',1,'hnode::name_serve::name_serve()']]],
@@ -19,7 +19,7 @@ var searchData=
   ['newname_5fmap_5ft_16',['newname_map_t',['../classhnode_1_1newname__map__t.html',1,'hnode::newname_map_t&lt; T &gt;'],['../classhnode_1_1newname__map__t.html#abd2541c3d6364bba8d6228aff5723e09',1,'hnode::newname_map_t::newname_map_t()']]],
   ['next_5fstate_5f_17',['next_state_',['../classsystemc__clang_1_1SplitCFGBlock.html#abc0367134fc9022762180d095b69878e',1,'systemc_clang::SplitCFGBlock']]],
   ['next_5fstate_5fcount_5f_18',['next_state_count_',['../classsystemc__clang_1_1SplitCFG.html#a00ed4b691aec8b1ac5ab9dc7cb12e153',1,'systemc_clang::SplitCFG']]],
-  ['nextstate_5fstring_19',['nextstate_string',['../classsystemc__hdl_1_1HDLBody.html#a68b111006651da58b4fad35aa30e13a2',1,'systemc_hdl::HDLBody::nextstate_string()'],['../classsystemc__hdl_1_1HDLThread.html#a211ce89a75076a27bd1b8c1d5d1fee81',1,'systemc_hdl::HDLThread::nextstate_string()']]],
+  ['nextstate_5fstring_19',['nextstate_string',['../classsystemc__hdl_1_1HDLThread.html#a211ce89a75076a27bd1b8c1d5d1fee81',1,'systemc_hdl::HDLThread::nextstate_string()'],['../classsystemc__hdl_1_1HDLBody.html#a68b111006651da58b4fad35aa30e13a2',1,'systemc_hdl::HDLBody::nextstate_string()']]],
   ['nextstring_20',['nextstring',['../classsystemc__hdl_1_1HDLThread.html#a5267d8e8fe126f30b0a4a0fefe2074ac',1,'systemc_hdl::HDLThread']]],
   ['nextwaitctr_5fstring_21',['nextwaitctr_string',['../classsystemc__hdl_1_1HDLThread.html#a0922af665015123ba6446d11f23416a3',1,'systemc_hdl::HDLThread']]],
   ['node_22',['Node',['../classsystemc__clang_1_1Node.html#ad7a34779cad45d997bfd6d3d8043c75f',1,'systemc_clang::Node::Node()'],['../classsystemc__clang_1_1Node.html#aff71d952af8363f046a67a8b12194e46',1,'systemc_clang::Node::Node(int)'],['../classparselib_1_1transforms_1_1node_1_1Node.html',1,'parselib.transforms.node.Node'],['../classsystemc__clang_1_1Node.html',1,'systemc_clang::Node']]],
