@@ -12,11 +12,11 @@
 // /
 // ===----------------------------------------------------------------------===//
 
-#include <regex>
-//#include <iostream>
+
+#include "SplitCFGBlock.h"
 #include "SplitCFG.h"
 
-//#include "llvm/Support/Debug.h"
+#include <regex>
 
 using namespace systemc_clang;
 
