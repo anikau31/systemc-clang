@@ -1,6 +1,5 @@
 #include "ProcessDecl.h"
 #include "EntryFunctionContainer.h"
-#include "systemc-clang.h"
 
 #include "clang/AST/DeclCXX.h"
 
