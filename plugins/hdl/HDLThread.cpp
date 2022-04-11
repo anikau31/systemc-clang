@@ -1,5 +1,6 @@
 // clang-format off
 #include "HDLThread.h"
+#include "SplitCFGBlock.h"
 //clang-format on
 
 /// Different matchers may use different DEBUG_TYPE

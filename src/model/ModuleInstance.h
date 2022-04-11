@@ -15,9 +15,18 @@
 #include "PortDecl.h"
 #include "ProcessDecl.h"
 #include "SignalDecl.h"
-#include "clang/AST/DeclCXX.h"
 
 #include "ModuleInstanceType.h"
+
+namespace clang {
+
+  class CXXRecordDecl;
+  class CXXConstructorDecl;
+  class Stmt;
+  class FieldDecl;
+  class Decl;
+};
+
 
 namespace systemc_clang {
 using namespace sc_ast_matchers;

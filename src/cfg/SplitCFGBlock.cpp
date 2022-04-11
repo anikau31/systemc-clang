@@ -30,7 +30,9 @@ SplitCFGBlock::SplitCFGBlock(const SplitCFGBlock& from) {
   terminator_has_wait_ = from.terminator_has_wait_;
 }
 
-bool SplitCFGBlock::isLoopWithTwoSuccessors() const { return is_loop_with_two_succ_; }
+bool SplitCFGBlock::isLoopWithTwoSuccessors() const {
+  return is_loop_with_two_succ_;
+}
 
 bool SplitCFGBlock::isConditional() const { return is_conditional_; }
 
@@ -60,36 +62,6 @@ bool SplitCFGBlock::hasWait() const { return has_wait_; }
 
 std::size_t SplitCFGBlock::getNumOfElements() const { return elements_.size(); }
 
-/*
-bool SplitCFGBlock::isFunctionCall(const clang::CFGElement& element) const {
-  if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
-    auto stmt{cfg_stmt->getStmt()};
-    // stmt->dump();
-
-    auto* expr{llvm::dyn_cast<clang::Expr>(stmt)};
-    if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
-      if (auto direct_callee = cxx_me->getDirectCallee()) {
-        auto name{direct_callee->getNameInfo().getAsString()};
-        llvm::dbgs() << "Function call: " << name << "\n";
-        if (name != std::string("wait")) {
-          llvm::dbgs() << "NOT A WAIT CALL\n";
-          /// Generate the CFG
-          auto method{cxx_me->getMethodDecl()};
-          auto fcfg{clang::CFG::buildCFG(method, method->getBody(),
-                                         &method->getASTContext(),
-                                         clang::CFG::BuildOptions())};
-
-  //        clang::LangOptions lang_opts;
-          // fcfg->dump(lang_opts, true);
-        }
-      }
-    }
-  }
-
-  return true;
-}
-*/
-
 void SplitCFGBlock::insertElements(VectorCFGElementPtr& elements) {
   elements_ = elements;
 }
@@ -102,17 +74,15 @@ llvm::APInt SplitCFGBlock::getWaitArg() const { return wait_arg_; }
 
 void SplitCFGBlock::identifyBreaks(clang::ASTContext& context) {
   if (block_ && block_->getTerminator().isValid()) {
-      /// See if we can iterate through all the terminator code.
-      auto stmt{ block_->getTerminator().getStmt() };
-      MatchFinder bm_reg{};
-      BreakMatcher bm{};
-      bm.registerMatchers(bm_reg);
-      bm_reg.match(*stmt, context);
-      terminator_has_wait_ = bm.hasWait();
-      terminator_has_break_ = bm.hasBreak();
+    /// See if we can iterate through all the terminator code.
+    auto stmt{block_->getTerminator().getStmt()};
+    MatchFinder bm_reg{};
+    BreakMatcher bm{};
+    bm.registerMatchers(bm_reg);
+    bm_reg.match(*stmt, context);
+    terminator_has_wait_ = bm.hasWait();
+    terminator_has_break_ = bm.hasBreak();
   }
-
-
 }
 
 void SplitCFGBlock::dump() const {
@@ -121,10 +91,10 @@ void SplitCFGBlock::dump() const {
                  << ") ";
     if (hasWait()) {
       llvm::dbgs() << " (WAIT)";
-      llvm::dbgs()  << " (Arg: " << wait_arg_ << ")"
+      llvm::dbgs() << " (Arg: " << wait_arg_ << ")"
                    << " (NextState: " << getNextState() << ")\n";
     }
-    llvm::dbgs() << "\n" ;
+    llvm::dbgs() << "\n";
 
     unsigned int i{0};
     for (auto const& element : elements_) {
@@ -141,16 +111,12 @@ void SplitCFGBlock::dump() const {
 
     llvm::dbgs() << "\n\n";
 
-    llvm::dbgs() << "  Preds ("
-                 << predecessors_.size()
-                 <<  "): ";
+    llvm::dbgs() << "  Preds (" << predecessors_.size() << "): ";
     for (auto const& pre : predecessors_) {
       llvm::dbgs() << "SB" << pre->getBlockID() << " ";
     }
 
-    llvm::dbgs() <<  "\n  Succs ("
-                 <<  successors_.size()
-                 <<  "): ";
+    llvm::dbgs() << "\n  Succs (" << successors_.size() << "): ";
     for (auto const& succ : successors_) {
       llvm::dbgs() << "SB" << succ->getBlockID() << " ";
     }
@@ -166,7 +132,7 @@ void SplitCFGBlock::dumpColored() const {
       llvm::dbgs() << llvm::buffer_ostream::Colors::RED << " (WAIT)";
       llvm::dbgs() << llvm::buffer_ostream::Colors::BLUE
                    << " (Arg: " << wait_arg_ << ")"
-                   << llvm::buffer_ostream::Colors::GREEN  
+                   << llvm::buffer_ostream::Colors::GREEN
                    << " (NextState: " << getNextState() << ")\n";
     }
     llvm::dbgs() << "\n" << llvm::buffer_ostream::Colors::RESET;

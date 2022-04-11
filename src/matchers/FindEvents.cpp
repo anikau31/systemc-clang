@@ -1,10 +1,12 @@
 #include "FindEvents.h"
 #include "FindTemplateTypes.h"
 
-using namespace systemc_clang;
-using namespace std;
+#include "clang/AST/DeclCXX.h"
 
-FindEvents::FindEvents(CXXRecordDecl *d, llvm::raw_ostream &os) : os_(os) {
+using namespace systemc_clang;
+//using namespace std;
+
+FindEvents::FindEvents(clang::CXXRecordDecl *d, llvm::raw_ostream &os) : os_(os) {
   TraverseDecl(d);
 }
 
@@ -19,11 +21,11 @@ FindEvents::~FindEvents() {
   // free.
 }
 
-bool FindEvents::VisitFieldDecl(FieldDecl *fd) {
+bool FindEvents::VisitFieldDecl(clang::FieldDecl *fd) {
   // FindTemplateTypes te(os_);
-  QualType q = fd->getType();
+  clang::QualType q = fd->getType();
   if (q.getAsString() == "class sc_core::sc_event") {
-    if (IdentifierInfo *info = fd->getIdentifier()) {
+    if (clang::IdentifierInfo *info = fd->getIdentifier()) {
       // os_ << "\n+ Name: " << info->getNameStart();
       // os_ << "\n+ Type: " << q.getAsString();
       _inClassEvents.insert(kvType(info->getNameStart(), fd));
@@ -37,8 +39,8 @@ FindEvents::classEventMapType FindEvents::getInClassEvents() {
   return _inClassEvents;
 }
 
-vector<string> FindEvents::getEventNames() {
-  vector<string> keys;
+std::vector<std::string> FindEvents::getEventNames() {
+  std::vector<std::string> keys;
   for (classEventMapType::iterator vit = begin(_inClassEvents);
        vit != end(_inClassEvents); ++vit) {
     keys.push_back(vit->first);

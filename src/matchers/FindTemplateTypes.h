@@ -6,17 +6,18 @@
 #include <stack>
 
 #include "clang/AST/RecursiveASTVisitor.h"
-#include "llvm/Support/raw_ostream.h"
 
 #include "Tree.h"
 
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "Templates"
 
-namespace clang { class Type; }
+namespace clang {
+class Type;
+}
 
 namespace systemc_clang {
-using namespace clang;
+// using namespace clang;
 
 // Forward declarations
 //
@@ -36,7 +37,6 @@ class TemplateType {
   std::string getTypeName() const;
   std::string toString() const;
 
-
   const clang::Type *getTypePtr() const;
   void dump();
 
@@ -46,7 +46,7 @@ class TemplateType {
 };
 
 // This class is going to find the arguments from templates
-class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
+class FindTemplateTypes : public clang::RecursiveASTVisitor<FindTemplateTypes> {
  public:
   /// Typedefs
   typedef TemplateType TemplateTypePtr;
@@ -64,28 +64,29 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   // This allows for template instantiations to be visited using RAV.
   bool shouldVisitTemplateInstantiations() const;
 
-  bool VisitEnumType(EnumType *e);
-  bool VisitIntegerLiteral(IntegerLiteral *l);
+  bool VisitEnumType(clang::EnumType *e);
+  bool VisitIntegerLiteral(clang::IntegerLiteral *l);
   bool VisitTemplateSpecializationType(
-      TemplateSpecializationType *special_type);
-  bool VisitTypedefType(TypedefType *typedef_type);
-  bool VisitCXXRecordDecl(CXXRecordDecl *cxx_type);
-  bool VisitRecordType(RecordType *rt);
-  bool VisitBuiltinType(BuiltinType *bi_type);
+      clang::TemplateSpecializationType *special_type);
+  bool VisitTypedefType(clang::TypedefType *typedef_type);
+  bool VisitCXXRecordDecl(clang::CXXRecordDecl *cxx_type);
+  bool VisitRecordType(clang::RecordType *rt);
+  bool VisitBuiltinType(clang::BuiltinType *bi_type);
 
-  bool VisitDeclRefExpr(DeclRefExpr *dre);
+  bool VisitDeclRefExpr(clang::DeclRefExpr *dre);
 
-  ~FindTemplateTypes();
+  virtual ~FindTemplateTypes();
   void Enumerate(const clang::Type *type);
-  //type_vector_t getTemplateArgumentsType();
-  //std::vector<std::string> getTemplateArguments();
-  Tree<TemplateType> *getTemplateArgTreePtr() ;
-  //size_t size();
+  // type_vector_t getTemplateArgumentsType();
+  // std::vector<std::string> getTemplateArguments();
+  Tree<TemplateType> *getTemplateArgTreePtr();
+  // size_t size();
 
   void printTemplateArguments(llvm::raw_ostream &os);
 
   /// Returns the TemplateType data as a std::string.
-  std::string asString() ;
+  std::string asString();
+
  private:
   // (std::string, Type*)
   // Classes such as sc_port and sc_in can have nested types within it.
@@ -93,7 +94,7 @@ class FindTemplateTypes : public RecursiveASTVisitor<FindTemplateTypes> {
   // The general way to handle this would be to have a vector starting from the
   // outside type to the inside type.
 
-  //type_vector_t template_types_;
+  // type_vector_t template_types_;
 
   Tree<TemplateType> template_args_;
   Tree<TemplateType>::TreeNodePtr current_type_node_;

@@ -1,6 +1,8 @@
 #include "EventDecl.h"
 #include "FindTemplateTypes.h"
 
+#include "clang/AST/DeclCXX.h"
+
 using namespace systemc_clang;
 
 EventDecl::~EventDecl() {

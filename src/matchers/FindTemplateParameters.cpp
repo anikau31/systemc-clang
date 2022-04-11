@@ -1,9 +1,9 @@
 #include "FindTemplateParameters.h"
 #include "FindTemplateTypes.h"
-//#include "clang/AST/Type.h"
 
 #include "llvm/Support/Debug.h"
 using namespace systemc_clang;
+using namespace clang;
 
 FindTemplateParameters::FindTemplateParameters(CXXRecordDecl *declaration)
     : declaration_{declaration},

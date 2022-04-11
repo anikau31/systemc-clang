@@ -1,4 +1,6 @@
 #include "FindGlobalEvents.h"
+#include "clang/AST/Decl.h"
+
 using namespace systemc_clang;
 
 FindGlobalEvents::FindGlobalEvents(clang::TranslationUnitDecl *declaration,

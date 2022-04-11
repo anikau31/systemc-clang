@@ -9,7 +9,7 @@ FindConstructor::FindConstructor(const clang::CXXRecordDecl *declaration,
       constructor_stmt_{nullptr},
       constructor_decl_{nullptr},
       pass_{1} {
-  TraverseDecl(const_cast<clang::CXXRecordDecl*>(declaration_));
+  TraverseDecl(const_cast<clang::CXXRecordDecl *>(declaration_));
   pass_ = 2;
   TraverseStmt(constructor_stmt_);
 }
@@ -21,13 +21,15 @@ FindConstructor::~FindConstructor() {
 
 bool FindConstructor::shouldVisitTemplateInstantiations() const { return true; }
 
-bool FindConstructor::VisitCXXConstructorDecl(clang::CXXConstructorDecl *ctor_decl) {
+bool FindConstructor::VisitCXXConstructorDecl(
+    clang::CXXConstructorDecl *ctor_decl) {
   constructor_decl_ = ctor_decl;
 
   return true;
 }
 
-bool FindConstructor::VisitCXXMethodDecl(clang::CXXMethodDecl *method_declaration) {
+bool FindConstructor::VisitCXXMethodDecl(
+    clang::CXXMethodDecl *method_declaration) {
   switch (pass_) {
     case 1: {
       // constructor_decl_ = dyn_cast<CXXConstructorDecl>(method_declaration);
@@ -62,7 +64,8 @@ const clang::CXXRecordDecl *FindConstructor::getAsCXXRecordDecl() const {
   return declaration_;
 }
 
-clang::Stmt *FindConstructor::getConstructorStmt() const { return constructor_stmt_; }
-
+clang::Stmt *FindConstructor::getConstructorStmt() const {
+  return constructor_stmt_;
+}
 
 void FindConstructor::dump() const { constructor_stmt_->dump(); }

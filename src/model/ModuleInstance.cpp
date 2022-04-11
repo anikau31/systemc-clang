@@ -3,6 +3,8 @@
 #include <tuple>
 
 #include "ModuleInstance.h"
+
+#include "SignalDecl.h"
 #include "APIntUtils.h"
 
 using namespace systemc_clang;

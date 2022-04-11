@@ -6,7 +6,7 @@
 
 namespace systemc_clang {
 
-class FindConstructor : public RecursiveASTVisitor<FindConstructor> {
+class FindConstructor : public clang::RecursiveASTVisitor<FindConstructor> {
  public:
   FindConstructor(const clang::CXXRecordDecl *, llvm::raw_ostream &);
   virtual ~FindConstructor();
