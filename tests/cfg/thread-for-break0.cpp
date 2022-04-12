@@ -8,7 +8,7 @@
 #include "SplitCFG.h"
 #include "SplitCFGBlock.h"
 
-#include "catch.hpp"
+#include <doctest.h>
 
 using namespace systemc_clang;
 
@@ -29,7 +29,7 @@ std::string pathToString(const llvm::SmallVectorImpl<std::pair<S, T> > &v) {
 }
 
 extern std::string data_file;
-TEST_CASE("Simple thread test", "[threads]") {
+TEST_CASE("Simple thread test") {
   std::string code{};
 
   if (data_file.empty()) {
@@ -62,15 +62,15 @@ TEST_CASE("Simple thread test", "[threads]") {
   ModuleInstance *test_module{model->getInstance("testing")};
   ModuleInstance *dut{model->getInstance("d")};
 
-  SECTION("Found sc_module instances", "[instances]") {
+  SUBCASE("Found sc_module instances" ) {
     // There should be 2 modules identified.
-    INFO("Checking number of sc_module instances found: " << instances.size());
+    //INFO("Checking number of sc_module instances found: " << instances.size());
 
-    REQUIRE(instances.size() >= 2);
+    CHECK(instances.size() >= 2);
 
-    REQUIRE(test_module != nullptr);
+    CHECK(test_module != nullptr);
 
-    INFO("Checking member ports for test instance.");
+    //INFO("Checking member ports for test instance.");
     // These checks should be performed on the declarations.
 
     // The module instances have all the information.
@@ -87,7 +87,7 @@ TEST_CASE("Simple thread test", "[threads]") {
 
     // processMapType
     auto process_map{test_module_inst->getProcessMap()};
-    REQUIRE(process_map.size() != 0);
+    CHECK(process_map.size() != 0);
 
     for (auto const &proc : process_map) {
       const auto proc_decl{proc};
@@ -112,24 +112,24 @@ TEST_CASE("Simple thread test", "[threads]") {
         /// There should be 4 paths
         std::string pstr{pathToString(p)};
         if (i == 0) {
-          REQUIRE(pstr == "13 12 121");
+          CHECK(pstr == "13 12 121");
         }
         if (i == 1) {
-          REQUIRE(pstr == "11 10 9 8 7 71 6 2 21 2 21");
+          CHECK(pstr == "11 10 9 8 7 71 6 2 21 2 21");
         }
         if (i == 2) {
-          REQUIRE(pstr == "4 41");
+          CHECK(pstr == "4 41");
         }
         if (i == 3) {
-          REQUIRE(pstr == "22 1 11 10 9 8 7 71 6 2 21 2 21");
+          CHECK(pstr == "22 1 11 10 9 8 7 71 6 2 21 2 21");
         }
         if (i == 4) {
-          REQUIRE(pstr == "42 3 9 8 7 71 6 2 21 2 21");
+          CHECK(pstr == "42 3 9 8 7 71 6 2 21 2 21");
         }
         ++i;
       }
       /// 4 Paths
-      REQUIRE(i == 5);
+      CHECK(i == 5);
 
       /// Check if the TRUE/FALSE paths are correct.
       auto path_info{scfg.getPathInfo()};
@@ -142,19 +142,19 @@ TEST_CASE("Simple thread test", "[threads]") {
         std::string fstr{info.toStringFalsePath()};
 
         if (id == 9) {
-          REQUIRE(tstr == "8");
-          REQUIRE(fstr == "2 21");
+          CHECK(tstr == "8");
+          CHECK(fstr == "2 21");
           --check;
         }
 
         if (id == 8) {
-          REQUIRE(tstr == "7 71" );
-          REQUIRE(fstr == "6 2 21" );
+          CHECK(tstr == "7 71" );
+          CHECK(fstr == "6 2 21" );
           --check;
         }
       }
 
-      REQUIRE(check == 0);
+      CHECK(check == 0);
 
 
     }

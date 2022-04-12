@@ -7,7 +7,7 @@
 
 #include "SplitCFG.h"
 
-#include "catch.hpp"
+#include <doctest.h>
 
 using namespace systemc_clang;
 
@@ -28,7 +28,7 @@ std::string pathToString(const llvm::SmallVectorImpl<std::pair<S, T> > &v) {
 }
 
 extern std::string data_file;
-TEST_CASE("Simple thread test", "[threads]") {
+TEST_CASE("Simple thread test") {
   std::string code{};
 
   if (data_file.empty()) {
@@ -61,13 +61,13 @@ TEST_CASE("Simple thread test", "[threads]") {
   ModuleInstance *test_module{model->getInstance("testing")};
   ModuleInstance *dut{model->getInstance("d")};
 
-  SECTION("Found sc_module instances", "[instances]") {
+  SUBCASE("Found sc_module instances" ) {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: " << instances.size());
 
-    REQUIRE(instances.size() >= 2);
+    CHECK(instances.size() >= 2);
 
-    REQUIRE(test_module != nullptr);
+    CHECK(test_module != nullptr);
 
     INFO("Checking member ports for test instance.");
     // These checks should be performed on the declarations.
@@ -86,7 +86,7 @@ TEST_CASE("Simple thread test", "[threads]") {
 
     // processMapType
     auto process_map{test_module_inst->getProcessMap()};
-    REQUIRE(process_map.size() != 0);
+    CHECK(process_map.size() != 0);
 
     for (auto const &proc : process_map) {
       const auto proc_decl{proc};
@@ -113,18 +113,18 @@ TEST_CASE("Simple thread test", "[threads]") {
         /// There should be 4 paths
         std::string pstr{pathToString(p)};
         if (i == 0) {
-          REQUIRE(pstr == "11 10 9 8 81");
+          CHECK(pstr == "11 10 9 8 81");
         }
         if (i == 1) {
-          REQUIRE(pstr == "82 7 6 5 4 2 1 9 8 81");
+          CHECK(pstr == "82 7 6 5 4 2 1 9 8 81");
         }
         if ((i == 2) || (i == 3)) {
-          REQUIRE(pstr == "3 7 6 5 4 2 1 9 8 81");
+          CHECK(pstr == "3 7 6 5 4 2 1 9 8 81");
         }
         ++i;
       }
       /// 4 Paths
-      REQUIRE(i == 4);
+      CHECK(i == 4);
       */
     }
 

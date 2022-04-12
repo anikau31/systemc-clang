@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <doctest.h>
 
 #include "SystemCClang.h"
 
@@ -9,7 +9,7 @@
 
 using namespace systemc_clang;
 
-TEST_CASE("sreg example", "[llnl-examples]") {
+TEST_CASE("sreg example") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "/llnl-examples/find-emax-driver.cpp")};
   INFO(systemc_clang::test_data_dir);
@@ -36,8 +36,8 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   // Begin the tests.
   //
   //
-  SECTION("Show how to access nested sub-modules", "[instances]") {
-    REQUIRE(mymod != nullptr);
+  SUBCASE("Show how to access nested sub-modules") {
+    CHECK(mymod != nullptr);
 
     // Get the nested modules.
     auto nested_mdecls{mymod->getNestedModuleInstances()};
@@ -45,13 +45,13 @@ TEST_CASE("sreg example", "[llnl-examples]") {
                  << nested_mdecls.size() << "\n";
 
     // Only u_dut should be nested in mymodule.
-    REQUIRE(nested_mdecls.size() == 1);
+    CHECK(nested_mdecls.size() == 1);
 
     for (auto const &mdecl : nested_mdecls) {
       // There is only one, but showing how to access all of them, if there were
       // more than one.
       //
-      REQUIRE(mdecl->getInstanceName() == "u_dut");
+      CHECK(mdecl->getInstanceName() == "u_dut");
 
       // Check for port bindings
       auto port_bindings{mdecl->getPortBindings()};
@@ -65,8 +65,8 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   }
 
   auto ureg{model->getInstance("u_reg_ex")};
-  SECTION("Print out the netlist for instance u_reg_ex", "[u_reg_ex sensitivity]") {
-    REQUIRE(ureg != nullptr);
+  SUBCASE("Print out the netlist for instance u_reg_ex") {
+    CHECK(ureg != nullptr);
 
     llvm::outs() << "============= XXXXXXXXXXX ======================\n";
     llvm::outs() << "Print out the sensitivity for u_reg_ex\n";

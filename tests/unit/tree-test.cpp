@@ -1,4 +1,5 @@
-#include "catch.hpp"
+//#include "catch.hpp"
+#include <doctest.h>
 
 // This is automatically generated from cmake.
 #include <iostream>
@@ -21,7 +22,7 @@ std::string &trim(std::string &s) {
 }
 
 
-TEST_CASE("Tree representation of template types", "[Tree]") {
+TEST_CASE("Tree representation of template types") {
   struct Node {
     std::string data_;
 
@@ -63,9 +64,9 @@ TEST_CASE("Tree representation of template types", "[Tree]") {
 
   std::cout << "DFS\n";
   auto dft_str {t.dft(zero)};
-  REQUIRE(trim(dft_str) == "0 1 6 2 3 6 5");
+  CHECK(trim(dft_str) == "0 1 6 2 3 6 5");
 
   std::cout << "\nBFS\n";
   auto bft_str{t.bft(zero)};
-  REQUIRE(trim(bft_str) == "0 2 1 5 3 6");
+  CHECK(trim(bft_str) == "0 2 1 5 3 6");
 }

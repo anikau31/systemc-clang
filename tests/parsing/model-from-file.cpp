@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <doctest.h>
 #include "SystemCClang.h"
 
 // This is automatically generated from cmake.
@@ -7,7 +7,7 @@
 
 using namespace systemc_clang;
 
-TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
+TEST_CASE("Read SystemC model from file for testing") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "basic-module-method-input.cpp")};
 
@@ -19,7 +19,7 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
 
-  SECTION("No ports bound for test declaration", "[ports]") {
+  SUBCASE("No ports bound for test declaration") {
     // The module instances have all the information.
 
     auto test_module{model->getInstance("d")};
@@ -30,19 +30,19 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
     INFO(
         "FAIL_TEST: A module must have a port bound for it to be "
         "recognized.");
-    REQUIRE(test_module != nullptr);
+    CHECK(test_module != nullptr);
     auto module_ptr{test_module};
 
-    REQUIRE(module_ptr->getInstanceName() == "d");
+    CHECK(module_ptr->getInstanceName() == "d");
 
     /*
-    REQUIRE(module_ptr->getIPorts().size() == 2);
-    REQUIRE(module_ptr->getOPorts().size() == 1);
-    REQUIRE(module_ptr->getIOPorts().size() == 0);
-    REQUIRE(module_ptr->getSignals().size() == 1);
-    REQUIRE(module_ptr->getOtherVars().size() == 0);
-    REQUIRE(module_ptr->getInputStreamPorts().size() == 0);
-    REQUIRE(module_ptr->getOutputStreamPorts().size() == 0);
+    CHECK(module_ptr->getIPorts().size() == 2);
+    CHECK(module_ptr->getOPorts().size() == 1);
+    CHECK(module_ptr->getIOPorts().size() == 0);
+    CHECK(module_ptr->getSignals().size() == 1);
+    CHECK(module_ptr->getOtherVars().size() == 0);
+    CHECK(module_ptr->getInputStreamPorts().size() == 0);
+    CHECK(module_ptr->getOutputStreamPorts().size() == 0);
     */
 
     // instance: d
@@ -58,38 +58,38 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
       llvm::outs() << "check string: " << as_string << "\n";
        if (caller_name == "test_instance") {
         if (port_name == "clk") {
-          REQUIRE(as_string == "test test_instance testing_pb clk clock");
+          CHECK(as_string == "test test_instance testing_pb clk clock");
           --check_count;
         }
         if (port_name == "in") {
-          REQUIRE(as_string == "test test_instance testing_pb in sig1");
+          CHECK(as_string == "test test_instance testing_pb in sig1");
           --check_count;
         }
         if (port_name == "out") {
-          REQUIRE(as_string == "test test_instance testing_pb out sig1");
+          CHECK(as_string == "test test_instance testing_pb out sig1");
           --check_count;
         }
       }
 
     }
-    REQUIRE(check_count == 0);
+    CHECK(check_count == 0);
 
 
     // Instance: testing_pb
     test_module = model->getInstance("testing_pb");
 
-    REQUIRE(test_module->getInstanceName() == "testing_pb");
+    CHECK(test_module->getInstanceName() == "testing_pb");
     module_ptr = test_module;
 
-    REQUIRE(module_ptr->getIPorts().size() == 2);
-    REQUIRE(module_ptr->getOPorts().size() == 1);
-    REQUIRE(module_ptr->getIOPorts().size() == 0);
-    REQUIRE(module_ptr->getSignals().size() == 1);
-    REQUIRE(module_ptr->getOtherVars().size() == 0);
-    REQUIRE(module_ptr->getInputStreamPorts().size() == 0);
-    REQUIRE(module_ptr->getOutputStreamPorts().size() == 0);
-    REQUIRE(module_ptr->getPortBindings().size() == 0);
-    REQUIRE(module_ptr->getNestedModuleInstances().size() == 0); 
+    CHECK(module_ptr->getIPorts().size() == 2);
+    CHECK(module_ptr->getOPorts().size() == 1);
+    CHECK(module_ptr->getIOPorts().size() == 0);
+    CHECK(module_ptr->getSignals().size() == 1);
+    CHECK(module_ptr->getOtherVars().size() == 0);
+    CHECK(module_ptr->getInputStreamPorts().size() == 0);
+    CHECK(module_ptr->getOutputStreamPorts().size() == 0);
+    CHECK(module_ptr->getPortBindings().size() == 0);
+    CHECK(module_ptr->getNestedModuleInstances().size() == 0); 
 
   }
 }

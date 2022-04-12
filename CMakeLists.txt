@@ -47,12 +47,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 # This is the library to use for unit tests
 #
 # Prepare "Catch" library for other executables
-set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
+set(TESTING_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
 # Disable throwing exceptions in catch2
 #add_definitions (-DCATCH_CONFIG_DISABLE_EXCEPTIONS)
 
-add_library(Catch INTERFACE)
-target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
+#add_library(Catch INTERFACE)
+#target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
 # Include ctest and catch2
 include(CTest)
@@ -358,7 +358,8 @@ include_directories(
   "${LLVM_INSTALL_DIR}/include"
   "${LLVM_INSTALL_DIR}/../clang/include"
   "${LLVM_INSTALL_DIR}/tools/clang/include"
-  "${CATCH_INCLUDE_DIR}"
+  "${TESTING_INCLUDE_DIR}"
+  "${TESTING_INCLUDE_DIR}/doctest"
   "src/"
   "src/matchers"
   "src/model"

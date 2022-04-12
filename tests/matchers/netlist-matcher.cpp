@@ -1,6 +1,6 @@
 /* clang-format off */
 // This must be the order of includes.
-#include "catch.hpp"
+#include <doctest.h>
 #include "SystemCClang.h"
 #include "Matchers.h"
 /* clang-format on */
@@ -15,7 +15,7 @@ using namespace sc_ast_matchers;
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "Tests"
 
-TEST_CASE("Testing top-level module: test", "[top-module]") {
+TEST_CASE("Testing top-level module: test" ) {
   /// Enable debug
   llvm::DebugFlag = true;
   // llvm::setCurrentDebugType("NetlistMatcher");
@@ -36,28 +36,28 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
 
   // There are five module instances found:
   // test, dut, sub_module_member submod_1d, submod_2d, submod_3d
-  REQUIRE(instances.size() == 6);
+  CHECK(instances.size() == 6);
 
   /// testing instance
   auto found_module_testing{model->getInstance("testing")};
-  REQUIRE(found_module_testing != nullptr);
+  CHECK(found_module_testing != nullptr);
 
   auto found_module_submodule{model->getInstance("SUBMODULE")};
-  REQUIRE(found_module_submodule != nullptr);
+  CHECK(found_module_submodule != nullptr);
 
   auto dut_module{model->getInstance("dut")};
-  REQUIRE(dut_module != nullptr);
+  CHECK(dut_module != nullptr);
 
   /// Instance testing.
-  SECTION("Test port bindings for instance testing", "[testing]") {
+  SUBCASE("Test port bindings for instance testing" ) {
     auto found_decl{found_module_testing};
-    REQUIRE(found_decl->getIPorts().size() == 4);
-    REQUIRE(found_decl->getOPorts().size() == 2);
+    CHECK(found_decl->getIPorts().size() == 4);
+    CHECK(found_decl->getOPorts().size() == 2);
     // This is 4 because sc_buffer is also inheriting from the signal interface.
-    REQUIRE(found_decl->getSignals().size() == 0);
+    CHECK(found_decl->getSignals().size() == 0);
     // 1 non-array, and 2 array others
-    REQUIRE(found_decl->getOtherVars().size() == 0);
-    REQUIRE(found_decl->getNestedModuleInstances().size() == 4);
+    CHECK(found_decl->getOtherVars().size() == 0);
+    CHECK(found_decl->getNestedModuleInstances().size() == 4);
 
     /// TODO: Check for submodules, and port bindings.
     auto port_bindings{found_decl->getPortBindings()};
@@ -90,31 +90,31 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
 
       if (caller_name == "sub_module_member") {
         if (port_name == "input") {
-          REQUIRE(as_string == "submodule sub_module_member SUBMODULE input inS");
+          CHECK(as_string == "submodule sub_module_member SUBMODULE input inS");
           llvm::outs() << "@@@@@ 1st\n";
           --check_count;
         }
         if (port_name == "output") {
-          REQUIRE(as_string == "submodule sub_module_member SUBMODULE output outS");
+          CHECK(as_string == "submodule sub_module_member SUBMODULE output outS");
           --check_count;
         }
       }
 
       if (caller_name == "submod_1d") {
         if (port_name == "output") {
-          REQUIRE(as_string == "submodule submod_1d 1d_submod_0 0 output outS");
+          CHECK(as_string == "submodule submod_1d 1d_submod_0 0 output outS");
           --check_count;
         }
       }
 
       if (caller_name == "submodules_2d") {
         if (port_name == "input") {
-          REQUIRE(as_string == "submodule submodules_2d submod_0_0 1 2 input inS");
+          CHECK(as_string == "submodule submodules_2d submod_0_0 1 2 input inS");
           --check_count;
         }
 
         if (port_name == "output") {
-          REQUIRE(as_string ==
+          CHECK(as_string ==
                   "submodule submodules_2d submod_0_0 0 1 output submodules_2d 1 2 "
                   "output");
           --check_count;
@@ -122,7 +122,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
 
         if (caller_name == "submodules_3d") {
           if (port_name == "input") {
-            REQUIRE(as_string ==
+            CHECK(as_string ==
                     "submodule submdules_3d submod_0_0_0 1 3 1 input inS");
             --check_count;
           }
@@ -130,16 +130,16 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
         //    }
       }
     }
-    REQUIRE(check_count == 0);
+    CHECK(check_count == 0);
   }
   /// Instance: dut.
-  SECTION("Test port bindings for instance testing", "[dut]") {
+  SUBCASE("Test port bindings for instance testing") {
     auto found_decl{dut_module};
-    REQUIRE(found_decl->getIPorts().size() == 0);
-    REQUIRE(found_decl->getOPorts().size() == 0);
-    REQUIRE(found_decl->getSignals().size() == 2);
-    REQUIRE(found_decl->getOtherVars().size() == 0);
-    REQUIRE(found_decl->getNestedModuleInstances().size() == 1);
+    CHECK(found_decl->getIPorts().size() == 0);
+    CHECK(found_decl->getOPorts().size() == 0);
+    CHECK(found_decl->getSignals().size() == 2);
+    CHECK(found_decl->getOtherVars().size() == 0);
+    CHECK(found_decl->getNestedModuleInstances().size() == 1);
 
     std::vector<std::string> caller_names{"test_instance"};
 
@@ -163,30 +163,30 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
       llvm::outs() << "check string: " << as_string << "\n";
       if (caller_name == "test_instance") {
         if (port_name == "clk") {
-          REQUIRE(as_string == "test test_instance testing clk clk");
+          CHECK(as_string == "test test_instance testing clk clk");
           --check_count;
         }
         if (port_name == "inS") {
-          REQUIRE(as_string == "test test_instance testing inS sig1");
+          CHECK(as_string == "test test_instance testing inS sig1");
           --check_count;
         }
         if (port_name == "outS") {
-          REQUIRE(as_string == "test test_instance testing outS sig1");
+          CHECK(as_string == "test test_instance testing outS sig1");
           --check_count;
         }
       }
     }
-    REQUIRE(check_count == 0);
+    CHECK(check_count == 0);
 
-    SECTION("Testing submodule", "[submodule]") {
+    SUBCASE("Testing submodule" ) {
       auto found_decl{found_module_submodule};
-      REQUIRE(found_decl->getIPorts().size() == 1);
-      REQUIRE(found_decl->getOPorts().size() == 1);
-      REQUIRE(found_decl->getSignals().size() == 0);
-      REQUIRE(found_decl->getOtherVars().size() == 0);
+      CHECK(found_decl->getIPorts().size() == 1);
+      CHECK(found_decl->getOPorts().size() == 1);
+      CHECK(found_decl->getSignals().size() == 0);
+      CHECK(found_decl->getOtherVars().size() == 0);
 
       auto port_bindings{found_decl->getPortBindings()};
-      REQUIRE(port_bindings.size() == 0 );
+      CHECK(port_bindings.size() == 0 );
     }
   }
 }

@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <doctest.h>
 
 #include "SystemCClang.h"
 
@@ -9,7 +9,7 @@
 
 using namespace systemc_clang;
 
-TEST_CASE("sreg example", "[llnl-examples]") {
+TEST_CASE("sreg example") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "/llnl-examples/sreg-driver.cpp")};
   INFO(systemc_clang::test_data_dir);
@@ -36,12 +36,12 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   // Begin the tests.
   //
   //
-  SECTION("sreg instance and port tests", "[instances]") {
+  SUBCASE("sreg instance and port tests") {
 
-    REQUIRE(test_module != nullptr);
-    REQUIRE(sreg_bypass != nullptr);
-    REQUIRE(sreg_fwd != nullptr);
-    REQUIRE(sreg_fwd_rev != nullptr);
+    CHECK(test_module != nullptr);
+    CHECK(sreg_bypass != nullptr);
+    CHECK(sreg_fwd != nullptr);
+    CHECK(sreg_fwd_rev != nullptr);
 
     //
     //
@@ -49,13 +49,13 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     INFO("Checking sreg_bypass ports.");
     auto sreg_bypass_decl{sreg_bypass};
 
-    REQUIRE(sreg_bypass_decl->getIPorts().size() == 2);
-    REQUIRE(sreg_bypass_decl->getOPorts().size() == 0);
-    REQUIRE(sreg_bypass_decl->getIOPorts().size() == 0);
-    REQUIRE(sreg_bypass_decl->getSignals().size() == 0);
-    REQUIRE(sreg_bypass_decl->getOtherVars().size() == 0);
-    REQUIRE(sreg_bypass_decl->getInputStreamPorts().size() == 1);
-    REQUIRE(sreg_bypass_decl->getOutputStreamPorts().size() == 1);
+    CHECK(sreg_bypass_decl->getIPorts().size() == 2);
+    CHECK(sreg_bypass_decl->getOPorts().size() == 0);
+    CHECK(sreg_bypass_decl->getIOPorts().size() == 0);
+    CHECK(sreg_bypass_decl->getSignals().size() == 0);
+    CHECK(sreg_bypass_decl->getOtherVars().size() == 0);
+    CHECK(sreg_bypass_decl->getInputStreamPorts().size() == 1);
+    CHECK(sreg_bypass_decl->getOutputStreamPorts().size() == 1);
 
     //
     //
@@ -63,13 +63,13 @@ TEST_CASE("sreg example", "[llnl-examples]") {
     INFO("Checking sreg_fwd ports.");
     auto sreg_fwd_decl{sreg_fwd};
 
-    REQUIRE(sreg_fwd_decl->getIPorts().size() == 2);
-    REQUIRE(sreg_fwd_decl->getOPorts().size() == 0);
-    REQUIRE(sreg_fwd_decl->getIOPorts().size() == 0);
-    REQUIRE(sreg_fwd_decl->getSignals().size() == 1);
-    REQUIRE(sreg_fwd_decl->getOtherVars().size() == 0);
-    REQUIRE(sreg_fwd_decl->getInputStreamPorts().size() == 1);
-    REQUIRE(sreg_fwd_decl->getOutputStreamPorts().size() == 1);
+    CHECK(sreg_fwd_decl->getIPorts().size() == 2);
+    CHECK(sreg_fwd_decl->getOPorts().size() == 0);
+    CHECK(sreg_fwd_decl->getIOPorts().size() == 0);
+    CHECK(sreg_fwd_decl->getSignals().size() == 1);
+    CHECK(sreg_fwd_decl->getOtherVars().size() == 0);
+    CHECK(sreg_fwd_decl->getInputStreamPorts().size() == 1);
+    CHECK(sreg_fwd_decl->getOutputStreamPorts().size() == 1);
 
     //
     //
@@ -78,13 +78,13 @@ TEST_CASE("sreg example", "[llnl-examples]") {
 
     auto sreg_fwd_rev_decl{sreg_fwd_rev};
 
-    REQUIRE(sreg_fwd_rev_decl->getIPorts().size() == 2);
-    REQUIRE(sreg_fwd_rev_decl->getOPorts().size() == 0);
-    REQUIRE(sreg_fwd_rev_decl->getIOPorts().size() == 0);
-    REQUIRE(sreg_fwd_rev_decl->getSignals().size() == 7);
+    CHECK(sreg_fwd_rev_decl->getIPorts().size() == 2);
+    CHECK(sreg_fwd_rev_decl->getOPorts().size() == 0);
+    CHECK(sreg_fwd_rev_decl->getIOPorts().size() == 0);
+    CHECK(sreg_fwd_rev_decl->getSignals().size() == 7);
     // captures the static constexpr
-    REQUIRE(sreg_fwd_rev_decl->getOtherVars().size() == 2);
-    REQUIRE(sreg_fwd_rev_decl->getInputStreamPorts().size() == 1);
-    REQUIRE(sreg_fwd_rev_decl->getOutputStreamPorts().size() == 1);
+    CHECK(sreg_fwd_rev_decl->getOtherVars().size() == 2);
+    CHECK(sreg_fwd_rev_decl->getInputStreamPorts().size() == 1);
+    CHECK(sreg_fwd_rev_decl->getOutputStreamPorts().size() == 1);
   }
 }

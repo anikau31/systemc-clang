@@ -1,5 +1,6 @@
 #include "SystemCClang.h"
-#include "catch.hpp"
+//#include "catch.hpp"
+#include <doctest.h>
 #include "clang/Tooling/Tooling.h"
 
 #include "Matchers.h"
@@ -27,7 +28,7 @@ bool find_name(std::vector<T> &names, const T &find_name) {
 #define DEBUG_TYPE "Tests"
 
 // This test works
-TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
+TEST_CASE("Read SystemC model from file for testing") {
   /// Enable debug
   llvm::DebugFlag = false;
 
@@ -48,12 +49,12 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
   inst_matcher.dump();
   LLVM_DEBUG(llvm::dbgs() << "================ END =============== \n";);
 
-  SECTION("Test instance matcher", "[instance-matcher]") {
+  SUBCASE("Test instance matcher") {
     // There should be five instances here.
     // DUT2, n1, n2, n3, n4, d
     auto instances{inst_matcher.getInstanceMap()};
 
-    REQUIRE(instances.size() == 6);
+    CHECK(instances.size() == 6);
 
     std::vector<std::string> var_names{"dut", "d", "n1", "n2", "n3", "n4"};
     std::vector<std::string> var_type_names{"struct exor2", "struct DUT",
@@ -79,22 +80,22 @@ TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
 
         if (inst.var_name == "dut") {
           // Find all the instances of exor2
-          REQUIRE(found_instances.size() == 1);
+          CHECK(found_instances.size() == 1);
         } else {
           // Find all the instances of nand2
-          REQUIRE(found_instances.size() == 4);
+          CHECK(found_instances.size() == 4);
         }
 
         // Check the parent of the FieldDecl to see whom it is instantiated in.
         if ((inst.var_name == "n1") || (inst.var_name == "n2") ||
             (inst.var_name == "n3") || (inst.var_name == "n4")) {
-          REQUIRE(inst.parent_name == "dut");
+          CHECK(inst.parent_name == "dut");
         }
       }
     }
     // All the variable name should be found
-    REQUIRE(var_names.size() == 0);
-    REQUIRE(var_type_names.size() == 0);
-    REQUIRE(instance_names.size() == 0);
+    CHECK(var_names.size() == 0);
+    CHECK(var_type_names.size() == 0);
+    CHECK(instance_names.size() == 0);
   }
 }
