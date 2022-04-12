@@ -1,5 +1,5 @@
 #include "SystemCClang.h"
-#include "catch.hpp"
+#include <doctest.h>
 #include "clang/Tooling/Tooling.h"
 
 #include "SensitivityMatcher.h"
@@ -37,7 +37,7 @@ std::string generateSensitivityName(
 }
 
 // This test works
-TEST_CASE("Read SystemC model from file for testing", "[parsing]") {
+TEST_CASE("Read SystemC model from file for testing") {
 
   /// Enable debug
   llvm::DebugFlag = false;
@@ -133,7 +133,7 @@ int sc_main(int argc, char *argv[]) {
   // This provides the module declarations.
   auto instances{model->getInstances()};
 
-  REQUIRE(instances.size() == 1);
+  CHECK(instances.size() == 1);
   // Want to find an instance named "testing".
 
   ModuleInstance *test_module{model->getInstance("testing")};
@@ -141,9 +141,9 @@ int sc_main(int argc, char *argv[]) {
   auto first_proc{processes.begin()};
   ProcessDecl *proc{first_proc->second};
 
-  REQUIRE(test_module != nullptr);
-  REQUIRE(processes.size() == 2);
-  REQUIRE(first_proc != processes.end());
+  CHECK(test_module != nullptr);
+  CHECK(processes.size() == 2);
+  CHECK(first_proc != processes.end());
 
   LLVM_DEBUG(llvm::dbgs() << "PROCESS: " << first_proc->first << "\n";);
 
@@ -184,5 +184,5 @@ int sc_main(int argc, char *argv[]) {
   }
 
   // Make sure that all of the ports were found.
-  REQUIRE(arg_names.size() == 0);
+  CHECK(arg_names.size() == 0);
 }

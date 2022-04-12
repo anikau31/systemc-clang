@@ -1,5 +1,5 @@
 /* clang-format off */
-#include "catch.hpp"
+#include <doctest.h>
 
 #include "SystemCClang.h"
 #include "Matchers.h"
@@ -13,7 +13,7 @@
 using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
-TEST_CASE("Only parse a single top-level module", "[parsing]") {
+TEST_CASE("Only parse a single top-level module") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "templated-module-input.cpp")};
 
@@ -36,23 +36,23 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   //
 
   // The model has 3 module declarations.
-  REQUIRE(instances.size() == 4);
+  CHECK(instances.size() == 4);
   ModuleInstance *found_module{model->getInstance("non-templated-module-instance")};
-  SECTION("Testing top-level module: non_template", "[top-module]") {
+  SUBCASE("Testing top-level module: non_template") {
     // There should be only one module.
     INFO("Top-level module specified as non_template.");
 
     // Actually found the module.
-    REQUIRE(found_module != nullptr);
+    CHECK(found_module != nullptr);
 
     auto found_decl{found_module};
-    REQUIRE(found_decl->getIPorts().size() == 3);
-    REQUIRE(found_decl->getOPorts().size() == 0);
-    REQUIRE(found_decl->getOtherVars().size() == 3);
+    CHECK(found_decl->getIPorts().size() == 3);
+    CHECK(found_decl->getOPorts().size() == 0);
+    CHECK(found_decl->getOtherVars().size() == 3);
   }
 }
 
-TEST_CASE("Testing top-level module: test", "[top-module]") {
+TEST_CASE("Testing top-level module: test") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "templated-module-input.cpp")};
 
@@ -74,22 +74,22 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
   auto found_module_testing_float{model->getInstance("testing_float_double")};
   auto dut{model->getInstance("d")};
 
-  REQUIRE(instances.size() == 4);
-  SECTION("Testing top-level module: test", "[top module]") {
+  CHECK(instances.size() == 4);
+  SUBCASE("Testing top-level module: test") {
     // There should be two modules because there are two instances.
     INFO("Top-level module specified as test.");
 
     // Actually found the module.
-    REQUIRE(found_module_testing != nullptr);
-    REQUIRE(found_module_testing_float != nullptr);
+    CHECK(found_module_testing != nullptr);
+    CHECK(found_module_testing_float != nullptr);
 
     auto found_decl{found_module_testing};
-    REQUIRE(found_decl->getIPorts().size() == 5);
-    REQUIRE(found_decl->getOPorts().size() == 2);
+    CHECK(found_decl->getIPorts().size() == 5);
+    CHECK(found_decl->getOPorts().size() == 2);
     // This is 4 because sc_buffer is also inheriting from the signal interface.
-    REQUIRE(found_decl->getSignals().size() == 4);
+    CHECK(found_decl->getSignals().size() == 4);
     // 1 non-array, and 2 array others
-    REQUIRE(found_decl->getOtherVars().size() == 2);
+    CHECK(found_decl->getOtherVars().size() == 2);
 
     // TODO: Check the template parameters.
     //
@@ -99,7 +99,7 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     //
     
     // Instance: testing
-    REQUIRE(found_module_testing->getPortBindings().size() == 0);
+    CHECK(found_module_testing->getPortBindings().size() == 0);
     // Instance: d
     auto port_bindings{dut->getPortBindings()};
 
@@ -112,20 +112,20 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
       llvm::outs() << "check string: " << as_string << "\n";
       if (caller_name == "test_instance") {
         if (port_name == "clk") {
-          REQUIRE(as_string == "test test_instance testing clk clk");
+          CHECK(as_string == "test test_instance testing clk clk");
           --check_count;
         }
         if (port_name == "inS") {
-          REQUIRE(as_string == "test test_instance testing inS sig1");
+          CHECK(as_string == "test test_instance testing inS sig1");
           --check_count;
         }
         if (port_name == "outS") {
-          REQUIRE(as_string == "test test_instance testing outS sig1");
+          CHECK(as_string == "test test_instance testing outS sig1");
           --check_count;
         }
       }
     }
-    REQUIRE(check_count == 0);
+    CHECK(check_count == 0);
 
   /*
     auto port_bindings{found_decl->getPortBindings()};
@@ -140,33 +140,33 @@ TEST_CASE("Testing top-level module: test", "[top-module]") {
     for (auto const &pname : test_ports) {
       auto found_it{port_bindings.find(pname)};
       // Actually found the name
-      REQUIRE(found_it != port_bindings.end());
+      CHECK(found_it != port_bindings.end());
       // Check now if the names
       std::string port_name{found_it->first};
       PortBinding *binding{found_it->second};
       std::string as_string{binding->toString()};
 
       if (port_name == "clk") {
-        REQUIRE(as_string == "test test_instance testing clk");
+        CHECK(as_string == "test test_instance testing clk");
       }
       if (port_name == "inS") {
-        REQUIRE(as_string == "test test_instance testing sig1");
+        CHECK(as_string == "test test_instance testing sig1");
       }
       if (port_name == "outS") {
-        REQUIRE(as_string == "test test_instance testing sig1");
+        CHECK(as_string == "test test_instance testing sig1");
       }
     }
     */
 
 
     auto found_decl2{found_module_testing_float};
-    REQUIRE(found_decl2->getIPorts().size() == 5);
+    CHECK(found_decl2->getIPorts().size() == 5);
     // Array is the second port being recognized.
-    REQUIRE(found_decl2->getOPorts().size() == 2);
+    CHECK(found_decl2->getOPorts().size() == 2);
     // 1 regular signal, 2 array signals, 1 sc_buffer, which is a signal too.
-    REQUIRE(found_decl2->getSignals().size() == 4);
+    CHECK(found_decl2->getSignals().size() == 4);
     // 1 non-array, and 2 array others
-    REQUIRE(found_decl2->getOtherVars().size() == 2);
+    CHECK(found_decl2->getOtherVars().size() == 2);
 
   }
     // TODO: Check the template parameters.

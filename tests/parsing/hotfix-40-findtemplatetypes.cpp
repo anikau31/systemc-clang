@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <doctest.h>
 
 #include "FindMemberFieldMatcher.h"
 #include "SystemCClang.h"
@@ -21,7 +21,7 @@ std::string &trim(std::string &s) {
   return s;
 }
 
-TEST_CASE("Basic parsing checks", "[parsing]") {
+TEST_CASE("Basic parsing checks"){
   std::string code = R"(
 #include "sreg.h"
 #include "systemc.h"
@@ -218,15 +218,15 @@ int sc_main(int argc, char *argv[]) {
   // VarDecl uses the name supplied to constructor
   ModuleInstance *test_module{model->getInstance("testing")};
 
-  SECTION("Found sc_module instances", "[instances]") {
+  SUBCASE("Found sc_module instances") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: "
          << instances.size());
 
     // There are two modules: ram, test.
-    REQUIRE(instances.size() == 2);
-    REQUIRE(ram_module != nullptr);
-    REQUIRE(test_module != nullptr);
+    CHECK(instances.size() == 2);
+    CHECK(ram_module != nullptr);
+    CHECK(test_module != nullptr);
 
     INFO("Checking clock port parsing.");
     // These checks should be performed on the declarations.
@@ -236,15 +236,15 @@ int sc_main(int argc, char *argv[]) {
     //
     ModuleInstance *ram_module_inst{ram_module};
 
-    REQUIRE(ram_module_inst->getIPorts().size() == 0);
-    REQUIRE(ram_module_inst->getOPorts().size() == 0);
-    REQUIRE(ram_module_inst->getIOPorts().size() == 0);
-    REQUIRE(ram_module_inst->getOtherVars().size() == 0);
-    REQUIRE(ram_module_inst->getInputStreamPorts().size() == 0);
-    REQUIRE(ram_module_inst->getOutputStreamPorts().size() == 0);
+    CHECK(ram_module_inst->getIPorts().size() == 0);
+    CHECK(ram_module_inst->getOPorts().size() == 0);
+    CHECK(ram_module_inst->getIOPorts().size() == 0);
+    CHECK(ram_module_inst->getOtherVars().size() == 0);
+    CHECK(ram_module_inst->getInputStreamPorts().size() == 0);
+    CHECK(ram_module_inst->getOutputStreamPorts().size() == 0);
 
     auto ram_signals{ram_module_inst->getSignals()};
-    REQUIRE(ram_signals.size() == 2);
+    CHECK(ram_signals.size() == 2);
     for (auto const &sig : ram_signals) {
       auto name{get<0>(sig)};
       SignalDecl *sg{get<1>(sig)};
@@ -287,7 +287,7 @@ int sc_main(int argc, char *argv[]) {
 
           for (auto const &fld : fields) {
             if (type_data->getTypeName() == "fp_t") {
-              REQUIRE((fld->getName() == "frac" || fld->getName() == "expo" ||
+              CHECK((fld->getName() == "frac" || fld->getName() == "expo" ||
                        fld->getName() == "sign"));
             }
           }
@@ -321,11 +321,11 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
       llvm::outs() << "\nCheck: " << dft_str << "\n";
       if (name == "buggy_signal") {
-        REQUIRE(trim(dft_str) == "sc_signal fp_t 11 3");
+        CHECK(trim(dft_str) == "sc_signal fp_t 11 3");
       }
 
       if (name == "c_bplane") {
-        REQUIRE(trim(dft_str) == "sc_signal sc_bv 16");
+        CHECK(trim(dft_str) == "sc_signal sc_bv 16");
 
       }
     }
@@ -340,7 +340,7 @@ int sc_main(int argc, char *argv[]) {
     //
     // There is only one input port seen as sc_in<bool> clk;
     auto input_ports{test_module_inst->getIPorts()};
-    REQUIRE(input_ports.size() == 3);
+    CHECK(input_ports.size() == 3);
 
     // Try to access each of the ports
     // // Iterate over all ports and their arguments.
@@ -385,7 +385,7 @@ int sc_main(int argc, char *argv[]) {
           for (auto const &fld : fields) {
             fld->dump();
             if (type_data->getTypeName() == "MyType") {
-              REQUIRE((fld->getName() == "info" || fld->getName() == "flag"));
+              CHECK((fld->getName() == "info" || fld->getName() == "flag"));
             }
             // Try to get the template type of these fields.
             const Type *field_type{fld->getType().getTypePtr()};
@@ -427,33 +427,33 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
 
       if (name == "uint") {
-        REQUIRE(trim(dft_str) == "sc_uint 32");
+        CHECK(trim(dft_str) == "sc_uint 32");
       }
 
       if ((name == "bool_clk") || (name == "clk")) {
-        REQUIRE(trim(dft_str) == "sc_in _Bool");
+        CHECK(trim(dft_str) == "sc_in _Bool");
       }
 
       if (name == "s_port") {
-        REQUIRE(trim(dft_str) == "sc_stream_in int");
+        CHECK(trim(dft_str) == "sc_stream_in int");
       }
 
       if (name == "m_port") {
-        REQUIRE(trim(dft_str) == "sc_stream_in double");
+        CHECK(trim(dft_str) == "sc_stream_in double");
       }
 
       if (name == "in_mytype") {
-        REQUIRE(trim(dft_str) == "sc_in MyType");
+        CHECK(trim(dft_str) == "sc_in MyType");
       }
 
       if (name == "out_mytype") {
-        REQUIRE(trim(dft_str) == "sc_out MyType");
+        CHECK(trim(dft_str) == "sc_out MyType");
       }
     }
 
     // There are two: uint_inst and spepcialized_template
     auto others{test_module_inst->getOtherVars()};
-    REQUIRE(others.size() == 1);
+    CHECK(others.size() == 1);
     for (const auto &var : others) {
       auto name = get<0>(var);
       PortDecl *pd = get<1>(var);
@@ -465,20 +465,20 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
 
       if (name == "uint_inst") {
-        REQUIRE(trim(dft_str) == "sc_uint 32");
+        CHECK(trim(dft_str) == "sc_uint 32");
       }
 
       if (name == "specialized_template") {
-        REQUIRE(trim(dft_str) == "ram fp_t 11 3");
+        CHECK(trim(dft_str) == "ram fp_t 11 3");
       }
       llvm::outs() << "End others\n";
     }
 
     llvm::outs() << "Check the other ports \n";
-    REQUIRE(test_module_inst->getOPorts().size() == 1);
-    REQUIRE(test_module_inst->getIOPorts().size() == 0);
-    REQUIRE(test_module_inst->getSignals().size() == 1);
-    REQUIRE(test_module_inst->getInputStreamPorts().size() == 1);
-    REQUIRE(test_module_inst->getOutputStreamPorts().size() == 1);
+    CHECK(test_module_inst->getOPorts().size() == 1);
+    CHECK(test_module_inst->getIOPorts().size() == 0);
+    CHECK(test_module_inst->getSignals().size() == 1);
+    CHECK(test_module_inst->getInputStreamPorts().size() == 1);
+    CHECK(test_module_inst->getOutputStreamPorts().size() == 1);
   }
 }

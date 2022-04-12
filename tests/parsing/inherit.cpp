@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <doctest.h>
 
 #include "SystemCClang.h"
 // This is automatically generated from cmake.
@@ -20,7 +20,7 @@ std::string &trim(std::string &s) {
   return s;
 }
 
-TEST_CASE("Basic inheritance check", "[inheritance]") {
+TEST_CASE("Basic inheritance check") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "inherit-input.cpp")};
 
@@ -47,28 +47,28 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
   ModuleInstance *test_module{model->getInstance("testing")};
   ModuleInstance *dut{model->getInstance("d")};
 
-  SECTION("Found sc_module instances", "[instances]") {
+  SUBCASE("Found sc_module instances") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: " << instances.size());
 
-    REQUIRE(instances.size() == 3);
+    CHECK(instances.size() == 3);
 
     /// Ensure that all the modules are found.
     auto all_modules{((nested_module != nullptr) && (test_module != nullptr) &&
                       (dut != nullptr))};
-    REQUIRE(all_modules);
+    CHECK(all_modules);
 
-    REQUIRE(test_module != nullptr);
+    CHECK(test_module != nullptr);
 
     INFO("Checking member ports for NestedModule instance.");
-    REQUIRE(nested_module->getIPorts().size() == 1);
-    REQUIRE(nested_module->getOPorts().size() == 0);
-    REQUIRE(nested_module->getIOPorts().size() == 0);
-    REQUIRE(nested_module->getSignals().size() == 0);
-    REQUIRE(nested_module->getInputStreamPorts().size() == 0);
-    REQUIRE(nested_module->getOutputStreamPorts().size() == 0);
-    REQUIRE(nested_module->getOtherVars().size() == 0);
-    REQUIRE(nested_module->getNestedModuleInstances().size() == 0);
+    CHECK(nested_module->getIPorts().size() == 1);
+    CHECK(nested_module->getOPorts().size() == 0);
+    CHECK(nested_module->getIOPorts().size() == 0);
+    CHECK(nested_module->getSignals().size() == 0);
+    CHECK(nested_module->getInputStreamPorts().size() == 0);
+    CHECK(nested_module->getOutputStreamPorts().size() == 0);
+    CHECK(nested_module->getOtherVars().size() == 0);
+    CHECK(nested_module->getNestedModuleInstances().size() == 0);
 
     INFO("Checking member ports for test instance.");
     // These checks should be performed on the declarations.
@@ -83,20 +83,20 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
     auto test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
-    REQUIRE(test_module_inst->getIPorts().size() == 1);
-    REQUIRE(test_module_inst->getOPorts().size() == 1);
-    REQUIRE(test_module_inst->getIOPorts().size() == 0);
-    REQUIRE(test_module_inst->getSignals().size() == 1);
-    REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOtherVars().size() == 0);
+    CHECK(test_module_inst->getIPorts().size() == 1);
+    CHECK(test_module_inst->getOPorts().size() == 1);
+    CHECK(test_module_inst->getIOPorts().size() == 0);
+    CHECK(test_module_inst->getSignals().size() == 1);
+    CHECK(test_module_inst->getInputStreamPorts().size() == 0);
+    CHECK(test_module_inst->getOutputStreamPorts().size() == 0);
+    CHECK(test_module_inst->getOtherVars().size() == 0);
 
     /// This one comes from the base class.
-    REQUIRE(test_module_inst->getNestedModuleInstances().size() == 1);
+    CHECK(test_module_inst->getNestedModuleInstances().size() == 1);
 
     /// Check how many base classes it really has.
     /// B and A
-    REQUIRE(test_module_inst->getBaseInstances().size() == 3);
+    CHECK(test_module_inst->getBaseInstances().size() == 3);
 
     int check{3};
     for (const auto &base : test_module_inst->getBaseInstances()) {
@@ -110,14 +110,14 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
         auto base_mi{base};
 
         auto base_decl{base_mi->getModuleClassDecl()};
-        REQUIRE(base_decl->getNameAsString() == "C");
+        CHECK(base_decl->getNameAsString() == "C");
         /// Check the ports in this.
-        REQUIRE(base_mi->getIPorts().size() == 2);
+        CHECK(base_mi->getIPorts().size() == 2);
         auto ports{base_mi->getOPorts().size() == 0 &&
                    base_mi->getIOPorts().size() == 0 &&
                    base_mi->getSignals().size() == 0 &&
                    base_mi->getOtherVars().size() == 0};
-        REQUIRE(ports == true);
+        CHECK(ports == true);
       }
 
       if (base->getName() == "B") {
@@ -128,14 +128,14 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
         auto base_mi{base};
 
         auto base_decl{base_mi->getModuleClassDecl()};
-        REQUIRE(base_decl->getNameAsString() == "B");
+        CHECK(base_decl->getNameAsString() == "B");
         /// Check the ports in this.
-        REQUIRE(base_mi->getIPorts().size() == 1);
+        CHECK(base_mi->getIPorts().size() == 1);
         auto ports{base_mi->getOPorts().size() == 1 &&
                    base_mi->getIOPorts().size() == 0 &&
                    base_mi->getSignals().size() == 0 &&
                    base_mi->getOtherVars().size() == 0};
-        REQUIRE(ports == true);
+        CHECK(ports == true);
       }
 
       if (base->getName() == "A") {
@@ -146,18 +146,18 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
         auto base_mi{base};
 
         auto base_decl{base_mi->getModuleClassDecl()};
-        REQUIRE(base_decl->getNameAsString() == "A");
+        CHECK(base_decl->getNameAsString() == "A");
         /// Check the ports in this.
-        REQUIRE(base_mi->getIPorts().size() == 2);
+        CHECK(base_mi->getIPorts().size() == 2);
         auto zero_ports{base_mi->getOPorts().size() == 0 &&
                         base_mi->getIOPorts().size() == 0 &&
                         base_mi->getSignals().size() == 0 &&
                         base_mi->getOtherVars().size() == 0};
-        REQUIRE(zero_ports == true);
+        CHECK(zero_ports == true);
 
         /// Check the base process sensitivity map
         auto base_process_map{base_mi->getProcessMap()};
-        REQUIRE(base_process_map.size() == 1);
+        CHECK(base_process_map.size() == 1);
 
         for (auto const &proc : base_process_map) {
           auto entry_func{proc.second->getEntryFunction()};
@@ -167,7 +167,7 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
               llvm::dbgs() << "=> " << sense.first << "\n";
             }
 
-            REQUIRE(sense_map.size() == 1);
+            CHECK(sense_map.size() == 1);
 
             int check{1};
             for (auto const &sense : sense_map) {
@@ -177,24 +177,24 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
                 --check;
               }
             }
-            REQUIRE(check == 0);
+            CHECK(check == 0);
           }
         }
       }
     }
-    REQUIRE(check == 0);
+    CHECK(check == 0);
     // Check process information
     //
 
     // processMapType
     auto process_map{test_module_inst->getProcessMap()};
-    REQUIRE(process_map.size() == 1);
+    CHECK(process_map.size() == 1);
 
     for (auto const &proc : process_map) {
       auto entry_func{proc.second->getEntryFunction()};
       if (entry_func) {
         auto sense_map{entry_func->getSenseMap()};
-        REQUIRE(sense_map.size() == 1);
+        CHECK(sense_map.size() == 1);
 
         int check{1};
         for (auto const &sense : sense_map) {
@@ -204,7 +204,7 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
             --check;
           }
         }
-        REQUIRE(check == 0);
+        CHECK(check == 0);
       }
     }
     //
@@ -251,10 +251,10 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
       std::string dft_str{template_args->dft()};
 
       if (name == "clk") {
-        REQUIRE(trim(dft_str) == "sc_in _Bool");
+        CHECK(trim(dft_str) == "sc_in _Bool");
       }
       if ((name == "in1") || (name == "in2")) {
-        REQUIRE(trim(dft_str) == "sc_in int");
+        CHECK(trim(dft_str) == "sc_in int");
       }
     }
 
@@ -267,7 +267,7 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
       std::string dft_str{template_args->dft()};
 
       if ((name == "out1") || (name == "out2")) {
-        REQUIRE(trim(dft_str) == "sc_out int");
+        CHECK(trim(dft_str) == "sc_out int");
       }
     }
 
@@ -280,7 +280,7 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
       // Get the tree as a string and check if it is correct.
       std::string dft_str{template_args->dft()};
       if (name == "internal_signal") {
-        REQUIRE(trim(dft_str) == "sc_signal int");
+        CHECK(trim(dft_str) == "sc_signal int");
       }
     }
 
@@ -291,7 +291,7 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
     /// Port bindings
     //
     // Instance: testing
-    REQUIRE(test_module->getPortBindings().size() == 0);
+    CHECK(test_module->getPortBindings().size() == 0);
 
     // Instance: d
     auto port_bindings{dut->getPortBindings()};
@@ -305,15 +305,15 @@ TEST_CASE("Basic inheritance check", "[inheritance]") {
       llvm::outs() << "check string: " << as_string << "\n";
       if (caller_name == "test_instance") {
         if (port_name == "in1") {
-          REQUIRE(as_string == "test test_instance testing in1 sig1");
+          CHECK(as_string == "test test_instance testing in1 sig1");
           --check_count;
         }
         if (port_name == "out1") {
-          REQUIRE(as_string == "test test_instance testing out1 sig1");
+          CHECK(as_string == "test test_instance testing out1 sig1");
           --check_count;
         }
       }
     }
-    REQUIRE(check_count == 0);
+    CHECK(check_count == 0);
   }
 }

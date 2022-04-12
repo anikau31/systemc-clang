@@ -51,7 +51,7 @@ set(TEST_DIR "tests")
  add_subdirectory(cfg)
 
 # # Plugins
- add_subdirectory(hdl)
+add_subdirectory(hdl)
 
 
 include(CTest)

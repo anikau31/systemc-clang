@@ -1,5 +1,5 @@
 #include "SystemCClang.h"
-#include "catch.hpp"
+#include <doctest.h>
 
 // This is automatically generated from cmake.
 #include "ClangArgs.h"
@@ -18,7 +18,7 @@ std::string &trim(std::string &s) {
   return s;
 }
 
-TEST_CASE("Basic parsing checks", "[parsing]") {
+TEST_CASE("Basic parsing checks" ) {
   std::string code = R"(
 #include <systemc.h>
 SC_MODULE(counter) {
@@ -77,15 +77,15 @@ int sc_main() {
   // Want to find an instance named "counter_instance".
   ModuleInstance *test_module{model->getInstance("counter_instance")};
 
-  SECTION("Found sc_module instances", "[instances]") {
+  SUBCASE("Found sc_module instances" ) {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: "
          << instances.size());
 
     // DUT and 
-    REQUIRE(instances.size() == 2);
+    CHECK(instances.size() == 2);
 
-    REQUIRE(test_module != nullptr);
+    CHECK(test_module != nullptr);
 
     INFO("Checking clock port parsing.");
     // These checks should be performed on the declarations.
@@ -96,10 +96,10 @@ int sc_main() {
     //
     // There is only one input port seen as sc_in<bool> clk;
     auto input_ports{test_module_inst->getIPorts()};
-    REQUIRE(input_ports.size() == 1);
+    CHECK(input_ports.size() == 1);
 
     auto output_ports{test_module_inst->getOPorts()};
-    REQUIRE(output_ports.size() == 1);
+    CHECK(output_ports.size() == 1);
     /*
     // Try to access each of the ports
     // // Iterate over all ports and their arguments.
@@ -113,19 +113,19 @@ int sc_main() {
       std::string dft_str{template_args->dft()};
 
       if ((name == "bool_clk") || (name == "clk"))
-        REQUIRE(trim(dft_str) == "sc_in _Bool");
+        CHECK(trim(dft_str) == "sc_in _Bool");
 
          }
 
-    REQUIRE(test_module_inst->getOPorts().size() == 0);
-    REQUIRE(test_module_inst->getIOPorts().size() == 0);
-    REQUIRE(test_module_inst->getSignals().size() == 0);
-    REQUIRE(test_module_inst->getOtherVars().size() == 0);
-    REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
+    CHECK(test_module_inst->getOPorts().size() == 0);
+    CHECK(test_module_inst->getIOPorts().size() == 0);
+    CHECK(test_module_inst->getSignals().size() == 0);
+    CHECK(test_module_inst->getOtherVars().size() == 0);
+    CHECK(test_module_inst->getInputStreamPorts().size() == 0);
+    CHECK(test_module_inst->getOutputStreamPorts().size() == 0);
 
     auto port_bindings{test_module_inst->getPortBindings()};
-    REQUIRE(port_bindings.size() == 0);
+    CHECK(port_bindings.size() == 0);
     */
   }
 }
