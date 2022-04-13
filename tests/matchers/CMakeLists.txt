@@ -2,10 +2,10 @@
 
 set (TEST_LIST 
   instance-matcher.cpp
-  # netlist-matcher.cpp
-  #netlist-templated-matcher.cpp
-  #find-members.cpp
-  #sensitivity-matcher.cpp
+  netlist-matcher.cpp
+  netlist-templated-matcher.cpp
+  find-members.cpp
+  sensitivity-matcher.cpp
   #template-parameters-matcher.cpp
   )
 

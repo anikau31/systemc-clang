@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <doctest.h>
 
 #include "SystemCClang.h"
 
@@ -9,7 +9,7 @@
 
 using namespace systemc_clang;
 
-TEST_CASE("sreg example", "[llnl-examples]") {
+TEST_CASE("sreg example") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "nested-stream-ports-input.cpp")};
   INFO(systemc_clang::test_data_dir);
@@ -33,18 +33,18 @@ TEST_CASE("sreg example", "[llnl-examples]") {
   // Begin the tests.
   //
   //
-  SECTION("Show how to access nested sub-modules", "[instances]") {
-    REQUIRE(mymod != nullptr);
+  SUBCASE("Show how to access nested sub-modules") {
+    CHECK(mymod != nullptr);
 
     // Get the nested modules.
     auto nested_mdecls{mymod->getNestedModuleInstances()};
     llvm::outs() << "######################## NESTED SUBMODULE "
                  << nested_mdecls.size() << "\n";
     // Only u_dut should be nested in mymodule.
-    REQUIRE(nested_mdecls.size() == 1);
+    CHECK(nested_mdecls.size() == 1);
 
     for (auto const &mdecl : nested_mdecls) {
-      REQUIRE(mdecl->getInstanceName() == "SUBMODULE");
+      CHECK(mdecl->getInstanceName() == "SUBMODULE");
     }
     //
   }

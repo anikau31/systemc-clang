@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <doctest.h>
 
 #include "SystemCClang.h"
 // This is automatically generated from cmake.
@@ -19,7 +19,7 @@ std::string &trim(std::string &s) {
   return s;
 }
 
-TEST_CASE("Basic parsing checks", "[parsing]") {
+TEST_CASE("Basic parsing checks") {
   std::string code = R"(
 #include "systemc.h"
 
@@ -150,14 +150,14 @@ int sc_main(int argc, char *argv[]) {
   ModuleInstance *simple_module{model->getInstance("simple_module_instance")};
   ModuleInstance *dut{model->getInstance("d")};
 
-  SECTION("Found sc_module instances", "[instances]") {
+  SUBCASE("Found sc_module instances"){
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: " << instances.size());
 
-    REQUIRE(instances.size() == 3);
+    CHECK(instances.size() == 3);
 
-    REQUIRE(test_module != nullptr);
-    REQUIRE(simple_module != nullptr);
+    CHECK(test_module != nullptr);
+    CHECK(simple_module != nullptr);
 
 
     INFO("Checking member ports for test instance.");
@@ -173,26 +173,26 @@ int sc_main(int argc, char *argv[]) {
     auto test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
-    REQUIRE(test_module_inst->getIPorts().size() == 5);
-    REQUIRE(test_module_inst->getOPorts().size() == 5);
-    REQUIRE(test_module_inst->getIOPorts().size() == 1);
-    REQUIRE(test_module_inst->getSignals().size() == 5);
-    REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOtherVars().size() == 3);
+    CHECK(test_module_inst->getIPorts().size() == 5);
+    CHECK(test_module_inst->getOPorts().size() == 5);
+    CHECK(test_module_inst->getIOPorts().size() == 1);
+    CHECK(test_module_inst->getSignals().size() == 5);
+    CHECK(test_module_inst->getInputStreamPorts().size() == 0);
+    CHECK(test_module_inst->getOutputStreamPorts().size() == 0);
+    CHECK(test_module_inst->getOtherVars().size() == 3);
 
     // Check process information
     //
 
     // processMapType
     auto process_map{test_module_inst->getProcessMap()};
-    REQUIRE(process_map.size() == 1);
+    CHECK(process_map.size() == 1);
 
     for (auto const &proc : process_map) {
       auto entry_func{proc.second->getEntryFunction()};
       if (entry_func) {
         auto sense_map{entry_func->getSenseMap()};
-        REQUIRE(sense_map.size() == 3);
+        CHECK(sense_map.size() == 3);
 
         int check{3};
         for (auto const &sense : sense_map) {
@@ -205,7 +205,7 @@ int sc_main(int argc, char *argv[]) {
             --check;
           }
         }
-        REQUIRE(check == 0);
+        CHECK(check == 0);
       }
     }
 
@@ -255,23 +255,23 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
 
       if (name == "clk") {
-        REQUIRE(trim(dft_str) == "sc_in _Bool");
+        CHECK(trim(dft_str) == "sc_in _Bool");
       }
       if ((name == "in1") || (name == "in2")) {
-        REQUIRE(trim(dft_str) == "sc_in int");
+        CHECK(trim(dft_str) == "sc_in int");
       }
 
       if (name == "three_dim") {
-        REQUIRE(pd->getArrayType() == true);
-        REQUIRE(pd->getArraySizes().size() == 3);
+        CHECK(pd->getArrayType() == true);
+        CHECK(pd->getArraySizes().size() == 3);
         std::vector<llvm::APInt> sizes{pd->getArraySizes()};
-        REQUIRE(sizes[0].getLimitedValue() == 2);
-        REQUIRE(sizes[1].getLimitedValue() == 3);
-        REQUIRE(sizes[2].getLimitedValue() == 4);
+        CHECK(sizes[0].getLimitedValue() == 2);
+        CHECK(sizes[1].getLimitedValue() == 3);
+        CHECK(sizes[2].getLimitedValue() == 4);
       }
 
       if ((name == "p_in")) {
-        REQUIRE(trim(dft_str) == "sc_in int");
+        CHECK(trim(dft_str) == "sc_in int");
       }
 
 
@@ -286,20 +286,20 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
 
       if ((name == "out1") || (name == "out2")) {
-        REQUIRE(trim(dft_str) == "sc_out int");
+        CHECK(trim(dft_str) == "sc_out int");
       }
 
       if (name == "out_array_port") {
-        REQUIRE(pd->getArrayType() == true);
-        REQUIRE(pd->getArraySizes().front() == 5);
+        CHECK(pd->getArrayType() == true);
+        CHECK(pd->getArraySizes().front() == 5);
       }
 
       if (name == "two_dim") {
-        REQUIRE(pd->getArrayType() == true);
-        REQUIRE(pd->getArraySizes().size() == 2);
+        CHECK(pd->getArrayType() == true);
+        CHECK(pd->getArraySizes().size() == 2);
         std::vector<llvm::APInt> sizes{pd->getArraySizes()};
-        REQUIRE(sizes[0].getLimitedValue() == 2);
-        REQUIRE(sizes[1].getLimitedValue() == 3);
+        CHECK(sizes[0].getLimitedValue() == 2);
+        CHECK(sizes[1].getLimitedValue() == 3);
       }
     }
 
@@ -311,7 +311,7 @@ int sc_main(int argc, char *argv[]) {
 
       std::string dft_str{template_args->dft()};
 
-      if ((name == "in_out")) REQUIRE(trim(dft_str) == "sc_inout double");
+      if ((name == "in_out")) CHECK(trim(dft_str) == "sc_inout double");
     }
 
     for (auto const &sig : test_module_inst->getSignals()) {
@@ -323,34 +323,34 @@ int sc_main(int argc, char *argv[]) {
       // Get the tree as a string and check if it is correct.
       std::string dft_str{template_args->dft()};
       if (name == "internal_signal") {
-        REQUIRE(trim(dft_str) == "sc_signal int");
+        CHECK(trim(dft_str) == "sc_signal int");
       }
 
       /// Check array parameters
       if (name == "p_sig") {
-        REQUIRE(trim(dft_str) == "sc_signal int");
+        CHECK(trim(dft_str) == "sc_signal int");
       }
 
       if (name == "data") {
-        REQUIRE(sg->getArrayType() == true);
-        REQUIRE(sg->getArraySizes().front() == 4);
+        CHECK(sg->getArrayType() == true);
+        CHECK(sg->getArraySizes().front() == 4);
       }
 
       if (name == "two_dim_sig") {
-        REQUIRE(sg->getArrayType() == true);
-        REQUIRE(sg->getArraySizes().size() == 2);
+        CHECK(sg->getArrayType() == true);
+        CHECK(sg->getArraySizes().size() == 2);
         std::vector<llvm::APInt> sizes{sg->getArraySizes()};
-        REQUIRE(sizes[0].getLimitedValue() == 2);
-        REQUIRE(sizes[1].getLimitedValue() == 3);
+        CHECK(sizes[0].getLimitedValue() == 2);
+        CHECK(sizes[1].getLimitedValue() == 3);
       }
 
       if (name == "three_dim_sig") {
-        REQUIRE(sg->getArrayType() == true);
-        REQUIRE(sg->getArraySizes().size() == 3);
+        CHECK(sg->getArrayType() == true);
+        CHECK(sg->getArraySizes().size() == 3);
         std::vector<llvm::APInt> sizes{sg->getArraySizes()};
-        REQUIRE(sizes[0].getLimitedValue() == 2);
-        REQUIRE(sizes[1].getLimitedValue() == 3);
-        REQUIRE(sizes[2].getLimitedValue() == 4);
+        CHECK(sizes[0].getLimitedValue() == 2);
+        CHECK(sizes[1].getLimitedValue() == 3);
+        CHECK(sizes[2].getLimitedValue() == 4);
       }
     }
 
@@ -358,13 +358,13 @@ int sc_main(int argc, char *argv[]) {
     auto simple_module_inst{simple_module};
 
     // Check if the proper number of ports are found.
-    REQUIRE(simple_module_inst->getIPorts().size() == 3);
-    REQUIRE(simple_module_inst->getOPorts().size() == 1);
-    REQUIRE(simple_module_inst->getIOPorts().size() == 0);
-    REQUIRE(simple_module_inst->getSignals().size() == 0);
-    REQUIRE(simple_module_inst->getOtherVars().size() == 2);
-    REQUIRE(simple_module_inst->getInputStreamPorts().size() == 0);
-    REQUIRE(simple_module_inst->getOutputStreamPorts().size() == 0);
+    CHECK(simple_module_inst->getIPorts().size() == 3);
+    CHECK(simple_module_inst->getOPorts().size() == 1);
+    CHECK(simple_module_inst->getIOPorts().size() == 0);
+    CHECK(simple_module_inst->getSignals().size() == 0);
+    CHECK(simple_module_inst->getOtherVars().size() == 2);
+    CHECK(simple_module_inst->getInputStreamPorts().size() == 0);
+    CHECK(simple_module_inst->getOutputStreamPorts().size() == 0);
 
     //
     // Check port types
@@ -379,10 +379,10 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
 
       if (name == "clk") {
-        REQUIRE(trim(dft_str) == "sc_in _Bool");
+        CHECK(trim(dft_str) == "sc_in _Bool");
       }
       if ((name == "one") || (name == "two")) {
-        REQUIRE(trim(dft_str) == "sc_in int");
+        CHECK(trim(dft_str) == "sc_in int");
       }
     }
 
@@ -395,7 +395,7 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
 
       if ((name == "out_one")) {
-        REQUIRE(trim(dft_str) == "sc_out int");
+        CHECK(trim(dft_str) == "sc_out int");
       }
     }
 
@@ -409,13 +409,13 @@ int sc_main(int argc, char *argv[]) {
       std::string dft_str{template_args->dft()};
 
       if ((name == "xy")) {
-        REQUIRE(trim(dft_str) == "int");
+        CHECK(trim(dft_str) == "int");
         --check_count;
       }
 
       if (name == "str") {
         if (pd->isPointerType()) {
-          REQUIRE(trim(dft_str) == "char");
+          CHECK(trim(dft_str) == "char");
           --check_count;
         }
       }
@@ -430,7 +430,7 @@ int sc_main(int argc, char *argv[]) {
     /// Port bindings
     //
     // Instance: testing
-    REQUIRE(test_module->getPortBindings().size() == 0);
+    CHECK(test_module->getPortBindings().size() == 0);
 
     // Instance: d
     auto port_bindings{dut->getPortBindings()};
@@ -444,19 +444,19 @@ int sc_main(int argc, char *argv[]) {
       llvm::outs() << "check string: " << as_string << "\n";
       if (caller_name == "test_instance") {
         if (port_name == "in1") {
-          REQUIRE(as_string == "test test_instance testing in1 sig1");
+          CHECK(as_string == "test test_instance testing in1 sig1");
           --check_count;
         }
         if (port_name == "in_out") {
-          REQUIRE(as_string == "test test_instance testing in_out double_sig");
+          CHECK(as_string == "test test_instance testing in_out double_sig");
           --check_count;
         }
         if (port_name == "out1") {
-          REQUIRE(as_string == "test test_instance testing out1 sig1");
+          CHECK(as_string == "test test_instance testing out1 sig1");
           --check_count;
         }
       }
     }
-    REQUIRE(check_count == 0);
+    CHECK(check_count == 0);
   }
 }

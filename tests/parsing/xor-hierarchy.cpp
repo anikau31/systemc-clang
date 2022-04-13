@@ -1,5 +1,5 @@
 #include "SystemCClang.h"
-#include "catch.hpp"
+#include <doctest.h>
 
 #include "Matchers.h"
 
@@ -10,7 +10,7 @@
 using namespace systemc_clang;
 using namespace sc_ast_matchers;
 
-TEST_CASE("Only parse a single top-level module", "[parsing]") {
+TEST_CASE("Only parse a single top-level module"){
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "xor-hierarchy-input.cpp")};
   llvm::DebugFlag = true;
@@ -27,23 +27,23 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
   sc.HandleTranslationUnit(from_ast->getASTContext());
   auto model{sc.getSystemCModel()};
   auto found_module_decl{model->getInstance("dut_exor2")};
-  SECTION("Testing top-level module: exor2", "[exor2]") {
+  SUBCASE("Testing top-level module: exor2") {
     // There should be only one module.
     INFO("Top-level module specified as exor2.");
       // Actually found the module.
-    REQUIRE(found_module_decl != nullptr);  // != module_decl.end());
+    CHECK(found_module_decl != nullptr);  // != module_decl.end());
 
     auto found_decl{found_module_decl};
-    REQUIRE(found_decl->getIPorts().size() == 2);
-    REQUIRE(found_decl->getOPorts().size() == 1);
-    REQUIRE(found_decl->getSignals().size() == 3);
-    REQUIRE(found_decl->getOtherVars().size() == 0);
+    CHECK(found_decl->getIPorts().size() == 2);
+    CHECK(found_decl->getOPorts().size() == 1);
+    CHECK(found_decl->getSignals().size() == 3);
+    CHECK(found_decl->getOtherVars().size() == 0);
     // Other sc_module instances are recognized as others.
-    REQUIRE(found_decl->getNestedModuleInstances().size() == 4);
+    CHECK(found_decl->getNestedModuleInstances().size() == 4);
 
     // Check how many nested modules it has.
     auto nested_decls{found_module_decl->getNestedModuleInstances()};
-    REQUIRE(nested_decls.size() == 4);
+    CHECK(nested_decls.size() == 4);
 
     // Print out the nested declaration's.
     llvm::outs() << "############# Nested Decl test bug ##############\n";
@@ -105,20 +105,20 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
 
       if (caller_name == "dut") {
         if (port_name == "A") {
-          REQUIRE(as_string == "exor2 dut dut_exor2 A ASig");
+          CHECK(as_string == "exor2 dut dut_exor2 A ASig");
           --check_count;
         }
         if (port_name == "B") {
-          REQUIRE(as_string == "exor2 dut dut_exor2 B BSig");
+          CHECK(as_string == "exor2 dut dut_exor2 B BSig");
           --check_count;
         }
         if (port_name == "F") {
-          REQUIRE(as_string == "exor2 dut dut_exor2 F FSig");
+          CHECK(as_string == "exor2 dut dut_exor2 F FSig");
           --check_count;
         }
       }
     }
-    REQUIRE(check_count == 0);
+    CHECK(check_count == 0);
 
     //
     // Instance: dut_exor2
@@ -139,15 +139,15 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
       // n1
       if (caller_name == "n1") {
         if (port_name == "A") {
-          REQUIRE(as_string == "nand2 n1 N1 A A");
+          CHECK(as_string == "nand2 n1 N1 A A");
           --check_count;
         }
         if (port_name == "B") {
-          REQUIRE(as_string == "nand2 n1 N1 B B");
+          CHECK(as_string == "nand2 n1 N1 B B");
           --check_count;
         }
         if (port_name == "F") {
-          REQUIRE(as_string == "nand2 n1 N1 F S1");
+          CHECK(as_string == "nand2 n1 N1 F S1");
           --check_count;
         }
       }
@@ -155,15 +155,15 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
       // n2
       if (caller_name == "n2") {
         if (port_name == "A") {
-          REQUIRE(as_string == "nand2 n2 N2 A A");
+          CHECK(as_string == "nand2 n2 N2 A A");
           --check_count;
         }
         if (port_name == "B") {
-          REQUIRE(as_string == "nand2 n2 N2 B S1");
+          CHECK(as_string == "nand2 n2 N2 B S1");
           --check_count;
         }
         if (port_name == "F") {
-          REQUIRE(as_string == "nand2 n2 N2 F S2");
+          CHECK(as_string == "nand2 n2 N2 F S2");
           --check_count;
         }
       }
@@ -171,34 +171,34 @@ TEST_CASE("Only parse a single top-level module", "[parsing]") {
       // n3
       if (caller_name == "n3") {
         if (port_name == "A") {
-          REQUIRE(as_string == "nand2 n3 N3 A S1");
+          CHECK(as_string == "nand2 n3 N3 A S1");
           --check_count;
         }
         if (port_name == "B") {
-          REQUIRE(as_string == "nand2 n3 N3 B B");
+          CHECK(as_string == "nand2 n3 N3 B B");
           --check_count;
         }
         if (port_name == "F") {
-          REQUIRE(as_string == "nand2 n3 N3 F S3");
+          CHECK(as_string == "nand2 n3 N3 F S3");
           --check_count;
         }
       }
 
       if (caller_name == "n4") {
         if (port_name == "A") {
-          REQUIRE(as_string == "nand2 n4 N4 A S2");
+          CHECK(as_string == "nand2 n4 N4 A S2");
           --check_count;
         }
         if (port_name == "B") {
-          REQUIRE(as_string == "nand2 n4 N4 B S3");
+          CHECK(as_string == "nand2 n4 N4 B S3");
           --check_count;
         }
         if (port_name == "F") {
-          REQUIRE(as_string == "nand2 n4 N4 F F");
+          CHECK(as_string == "nand2 n4 N4 F F");
           --check_count;
         }
       }
     }
-    REQUIRE(check_count == 0);
+    CHECK(check_count == 0);
   }
 }

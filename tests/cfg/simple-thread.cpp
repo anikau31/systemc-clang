@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <doctest.h>
 
 #include "SystemCClang.h"
 // This is automatically generated from cmake.
@@ -12,7 +12,7 @@
 #include "SplitCFGBlock.h"
 
 using namespace systemc_clang;
-TEST_CASE("Simple thread test", "[threads]") {
+TEST_CASE("Simple thread test") {
   std::string code{systemc_clang::read_systemc_file(
       systemc_clang::test_data_dir, "simple-thread-input.cpp")};
 
@@ -38,13 +38,13 @@ TEST_CASE("Simple thread test", "[threads]") {
   ModuleInstance *test_module{model->getInstance("testing")};
   ModuleInstance *dut{model->getInstance("d")};
 
-  SECTION("Found sc_module instances", "[instances]") {
+  SUBCASE("Found sc_module instances") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: " << instances.size());
 
-    REQUIRE(instances.size() == 2);
+    CHECK(instances.size() == 2);
 
-    REQUIRE(test_module != nullptr);
+    CHECK(test_module != nullptr);
 
     INFO("Checking member ports for test instance.");
     // These checks should be performed on the declarations.
@@ -59,20 +59,20 @@ TEST_CASE("Simple thread test", "[threads]") {
     auto test_module_inst{test_module};
 
     // Check if the proper number of ports are found.
-    REQUIRE(test_module_inst->getIPorts().size() == 3);
-    REQUIRE(test_module_inst->getOPorts().size() == 1);
-    REQUIRE(test_module_inst->getIOPorts().size() == 0);
-    REQUIRE(test_module_inst->getSignals().size() == 0);
-    REQUIRE(test_module_inst->getInputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOutputStreamPorts().size() == 0);
-    REQUIRE(test_module_inst->getOtherVars().size() == 2);
+    CHECK(test_module_inst->getIPorts().size() == 3);
+    CHECK(test_module_inst->getOPorts().size() == 1);
+    CHECK(test_module_inst->getIOPorts().size() == 0);
+    CHECK(test_module_inst->getSignals().size() == 0);
+    CHECK(test_module_inst->getInputStreamPorts().size() == 0);
+    CHECK(test_module_inst->getOutputStreamPorts().size() == 0);
+    CHECK(test_module_inst->getOtherVars().size() == 2);
 
     // Check process information
     //
 
     // processMapType
     auto process_map{test_module_inst->getProcessMap()};
-    REQUIRE(process_map.size() == 1);
+    CHECK(process_map.size() == 1);
 
     const auto proc_decl{*process_map.begin()};
     const auto entry_func{proc_decl.second->getEntryFunction()};
@@ -92,14 +92,14 @@ TEST_CASE("Simple thread test", "[threads]") {
           llvm::dbgs() << "sensitivity " << sense.first << "\n"; 
         }
 
-        REQUIRE(sense_map.size() == 1);
+        CHECK(sense_map.size() == 1);
 
         int check{1};
         for (auto const &sense : sense_map) {
           if ((sense.first == "test_thread_handle__clkpos")) --check;
           if ((sense.first == "simple_wait_handle__clkpos")) --check;
         }
-        REQUIRE(check == 0);
+        CHECK(check == 0);
       }
     }
 
