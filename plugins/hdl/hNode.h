@@ -56,6 +56,7 @@ namespace hnode {
   etype(hField), \
   etype(hFieldaccess), \
   etype(hVarInit), \
+  etype(hVarInitList), \
   etype(hSigAssignL), \
   etype(hSigAssignR), \
   etype(hVarAssign), \

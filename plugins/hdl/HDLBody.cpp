@@ -183,7 +183,16 @@ namespace systemc_hdl {
 	  TraverseStmt(objargs[i]);
 	}
       }
-    } else {
+    }
+    else if (isa<InitListExpr>(stmt)) {
+      hNodep h_initlist = new hNode(hNode::hdlopsEnum::hVarInitList);
+      for (auto tmpexpr: ((InitListExpr *) stmt)->inits()) {
+	TraverseStmt(tmpexpr);
+	h_initlist->append(h_ret);
+      }
+      h_ret = h_initlist;
+    }
+    else {
       if (isa<CXXConstructExpr>(stmt)) {
 	CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
 	if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
