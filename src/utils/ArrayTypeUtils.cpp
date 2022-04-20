@@ -1,5 +1,7 @@
 #include "ArrayTypeUtils.h"
 
+#include "clang/AST/DeclCXX.h"
+#include "clang/AST/ExprCXX.h"
 #include "llvm/Support/Debug.h"
 
 namespace sc_ast_matchers {

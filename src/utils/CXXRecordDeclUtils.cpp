@@ -1,6 +1,8 @@
 #include "CXXRecordDeclUtils.h"
 #include "ArrayTypeUtils.h"
 
+#include "clang/AST/DeclCXX.h"
+#include "clang/AST/ExprCXX.h"
 #include "llvm/Support/Debug.h"
 #include <queue>
 

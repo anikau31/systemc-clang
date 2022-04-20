@@ -3,11 +3,18 @@
 
 #include <vector>
 #include "clang/AST/Type.h"
-#include "clang/AST/DeclCXX.h"
-#include "clang/AST/ExprCXX.h"
 
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "ArrayTypeUtils"
+
+/// Forward declarations.
+namespace clang {
+  class ValueDecl;
+  class Expr;
+  class MemberExpr;
+  class CXXCtorInitializer;
+};
+
 
 namespace sc_ast_matchers {
 namespace utils {
