@@ -5,17 +5,21 @@
 #define DEBUG_TYPE "CXXConstructDeclUtils"
 
 #include <string>
-#include "clang/AST/Type.h"
-#include "clang/AST/DeclCXX.h"
-#include "clang/AST/ExprCXX.h"
+#include <vector>
+//#include "clang/AST/Type.h"
 
-#include "llvm/Support/Debug.h"
+namespace clang {
+class CXXRecordDecl;
+class CXXCtorInitializer;
+class FieldDecl;
+};  // namespace clang
 
 namespace sc_ast_matchers {
 namespace utils {
 namespace cxx_construct_decl_utils {
 
-typedef std::tuple<clang::FieldDecl *, std::string, const clang::CXXCtorInitializer *>
+typedef std::tuple<clang::FieldDecl *, std::string,
+                   const clang::CXXCtorInitializer *>
     ModuleInitializerTupleType;
 
 std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
