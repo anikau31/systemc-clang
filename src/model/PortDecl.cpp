@@ -95,7 +95,12 @@ std::string PortDecl::asString() const {
 
   str += "signal_port_name: " + class_name + "::" + getName() + "\n";
   str += "signal_port_arguments: " + template_type_->asString() + "\n";
-  str += "is_array_type: " + std::string{getArrayType()} + "\n";
+  if (getArrayType()) {
+    str += "is_array_type: true\n";
+  }
+  else {
+    str += "is_array_type: false\n";
+  }
   if (isPointerType()) {
     str += "is_pointer_type: true \n";
   } else {
