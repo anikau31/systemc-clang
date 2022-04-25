@@ -49,6 +49,7 @@ set(TEST_DIR "tests")
  add_subdirectory(matchers)
  add_subdirectory(parsing)
  add_subdirectory(cfg)
+ add_subdirectory(designs)
 
 # # Plugins
 add_subdirectory(hdl)
