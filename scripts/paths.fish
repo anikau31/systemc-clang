@@ -13,6 +13,9 @@ set -x LLVM_INSTALL_DIR /home/$USER/bin/clang-13.0.0/
 # SET this.
 set -x SYSTEMC /home/$USER/code/systemc-2.3.3/systemc
 
+# Path for systemc-clang source
+set -x SYSTEMC_CLANG /home/$USER/code/github/systemc-clang/
+
 # Path for the systemc-clang build directory
 # SET this.
 set -x SYSTEMC_CLANG_BUILD_DIR /home/$USER/code/github/systemc-clang-build/
