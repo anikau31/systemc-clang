@@ -2,6 +2,7 @@
 
 set (TEST_LIST 
   # Structural parsing
+  test-virtual2.cpp
   counter.cpp
   xor-hierarchy.cpp
   simple-parsing.cpp
