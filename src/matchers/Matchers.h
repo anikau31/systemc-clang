@@ -127,7 +127,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     SensitivityMatcher sens_matcher{};
     MatchFinder matchRegistry{};
     sens_matcher.registerMatchers(matchRegistry);
-    matchRegistry.match(*constructor.getConstructorDecl(), context);
+    if (constructor.getConstructorDecl()) {
+      matchRegistry.match(*constructor.getConstructorDecl(), context);
+    }
 
     for (size_t i{0}; i < entryFunctions->size(); i++) {
       EntryFunctionContainer *ef{(*entryFunctions)[i]};
@@ -161,6 +163,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       clang::ValueDecl *vd{
           dyn_cast<clang::ValueDecl>(inst.second.getInstanceDecl())};
 
+      llvm::dbgs() << ">>>> Getting bases for " << decl->getNameAsString() << "\n";
       auto base_decls{getAllBaseClasses(decl)};
       for (const auto &base_decl : base_decls) {
         llvm::dbgs() << "=============================== BASES "
@@ -188,7 +191,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     // 1. For every module found, check if there is an instance.
     // 2. If there is an instance, then add it into the list.
 
-    llvm::outs() << "###### DUMP Instance Matches \n";
+    llvm::dbgs() << "###### DUMP Instance Matches \n";
     instance_matcher_.dump();
 
     auto instance_map{instance_matcher_.getInstanceMap()};
@@ -250,8 +253,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         auto name{base_decl->getNameAsString()};
         ModuleInstance *base_module_instance{
             new ModuleInstance{name, base_decl}};
-        llvm::dbgs() << "=============================== BASES for " << name
+        llvm::dbgs() << "=============================== BASES for " << name << " size  " << base_decls.size() 
                      << " =======================\n";
+        base_decl->dump();
         llvm::dbgs() << "Base class: " << base_decl->getNameAsString() << "\n";
 
         runModuleDeclarationMatchers(
@@ -259,6 +263,7 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
             base_module_instance);
         runPortMatcher(context, base_decl, base_module_instance);
         add_module->addBaseInstance(base_module_instance);
+      llvm::dbgs() << "End base logic loop\n";
       }
     }
   }
