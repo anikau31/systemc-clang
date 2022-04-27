@@ -37,8 +37,8 @@ struct A : public B<T>
         this->async_reset_signal_is(this->rst, false);
     }
     
-    virtual void d() = 0;
-    virtual void f(int i) = 0;
+    virtual void d() { int x{2}; x++; };
+    virtual void f(int i) =0;
     
     void virt_call() {
         d();
