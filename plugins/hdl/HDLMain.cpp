@@ -340,6 +340,26 @@ namespace systemc_hdl {
 	  allmethodecls.insertall(xbodyp->methodecls);
 	  h_processes->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
+	} // end non-null body
+	else {
+	  CXXMethodDecl *mthd = dyn_cast<CXXMethodDecl>(m.first);
+	  if (mthd->isVirtual()) {
+	    const CXXRecordDecl *cdecl{mod->getModuleClassDecl()};
+	    for (const auto &method : cdecl->methods()) {
+	      if (method->isVirtual()) {
+		llvm::dbgs() << "Method name is " << method->getParent()->getNameAsString() << "::" << method->getNameAsString()
+                       << "\n";
+		QualType qtype{method->getThisType()};
+		
+		for (const auto &ometh : method->overridden_methods()) {
+		  llvm::dbgs() << " -> overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n";
+		}
+
+		qtype.getTypePtr()->dump();
+		llvm::dbgs() << "\n";
+	      }
+	    }
+	  } // end virtual function
 	}
       }
     }
