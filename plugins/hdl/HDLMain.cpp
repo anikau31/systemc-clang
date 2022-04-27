@@ -353,6 +353,11 @@ namespace systemc_hdl {
 		
 		for (const auto &ometh : method->overridden_methods()) {
 		  llvm::dbgs() << " -> overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n";
+		  if (ometh->hasBody()) {
+		    llvm::dbgs() << " Body of overridden method " << ometh->hasBody() << "\n";
+		    LLVM_DEBUG(ometh->getBody()->dump());
+		  }
+		  else llvm::dbgs() << "Empty method body\n";
 		}
 
 		qtype.getTypePtr()->dump();
