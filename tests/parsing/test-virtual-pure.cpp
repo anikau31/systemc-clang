@@ -58,15 +58,31 @@ TEST_CASE("Virtual function with inheritance") {
       for (const auto &method : cdecl->methods()) {
         if (method->isVirtual()) {
           llvm::dbgs() << "Method name is " << method->getParent()->getNameAsString() << "::" << method->getNameAsString()
-                       << "\n";
+                       << " has body " << method->hasBody() << "\n";
           QualType qtype{method->getThisType()};
 
           for (const auto &ometh : method->overridden_methods()) {
             llvm::dbgs() << " -> overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n";
+            if (ometh->hasBody()) {
+              llvm::dbgs() << " Body of overridden method " << ometh->hasBody() << "\n";
+              ometh->getBody()->dump();
+//
+//
+              // const FunctionDecl *fd {ometh->getDefinition()};
+              // if (fd) { fd->dump(); }
+//
+            }
           }
 
+          llvm::dbgs() << "\n" << "Body of derived method\n";
+          if (method->hasBody() && method->isDefined() ) {
+            //FunctionDecl * fd{method->getDefined()};
+            Stmt *body{method->getBody()};
+            body->dump();
+
+
+          }
          qtype.getTypePtr()->dump();
-         llvm::dbgs() << "\n";
         }
       }
     }
