@@ -69,6 +69,8 @@ lark_grammar = Lark('''
         hwait: "hWait" "wait" "NOLIST" | "hWait" NUM ("[" hliteral "]" | "NOLIST")
              
         breakstmt: "hBreak" "NONAME" "NOLIST"
+        
+        ?htotype: htouint | htoint | htolong | htoulong | hnoop | htoi64 | htou64
              
         ?htobool: "hNoop" "to_bool" "[" harrayref "]"
         htouint: "hNoop" "to_uint" "[" (syscread|hvarref) "]"
@@ -208,7 +210,7 @@ lark_grammar = Lark('''
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
 
         // Separate '=' out from so that it is not an expression but a standalone statement
-        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (hconcat | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
+        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (htotype | hconcat | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
                  | "hBinop" "=" "[" harrayref  arrayrhs "]"
                  | nblkassign
                  | vassign
@@ -232,6 +234,7 @@ lark_grammar = Lark('''
                   | hunop
                   | hliteral
                   | hcondop
+                  | htoint
                   
         nblkassign: "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool)  "]"
                   | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"

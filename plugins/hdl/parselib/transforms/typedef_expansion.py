@@ -194,7 +194,7 @@ class TypedefExpansion(TopDown):
                 type_name = var_type.children[0]
                 # dprint(node)
                 if not Primitive.get_primitive(type_name) and not type_name in self.types:
-                    dprint(tree)
+                    # dprint(tree)
                     # module instantiate
                     new_children.append(Tree('moduleinst', node.children, node.meta))
                     # dprint(new_children[-1])

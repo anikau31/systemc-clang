@@ -662,7 +662,7 @@ class VerilogTranslationPass(TopDown):
         return '{}[{}]'.format(tree.children[0], tree.children[1])
 
     def moduleinst(self, tree):
-        dprint(tree)
+        # dprint(tree)
         mod_name, mod_type = tree.children
         # expand if it is an element of module array
         mod_name = '_'.join(mod_name.split('#'))
@@ -675,12 +675,14 @@ class VerilogTranslationPass(TopDown):
         else:
             bindings = self.bindings[mod_name]
         def extract_binding_name(x):
+            # FIXME: when the port connection is 2D, the original approach may not work
             if is_tree_type(x[0], 'hbindingarrayref'):
                 return x[0].children[0].children[0]
             else:
                 return x[0].children[0]
-        bindings_normal = filter(lambda x: '.' not in extract_binding_name(x), bindings)
-        bindings_hier = filter(lambda x: '.' in extract_binding_name(x), bindings)
+        orig_bindings = bindings
+        bindings_normal = list(filter(lambda x: '.' not in extract_binding_name(x), orig_bindings))
+        bindings_hier = list(filter(lambda x: '.' in extract_binding_name(x), orig_bindings))
         bindings = bindings_normal
         ind = self.get_current_ind_prefix()
         res = ind + '{} {}('.format(mod_type_name, mod_name) + '\n'
@@ -813,6 +815,7 @@ class VerilogTranslationPass(TopDown):
         return tree
 
     def hfunction(self, tree):
+
         self.set_current_proc_name('#function#')
         self.inc_indent()
         self.__push_up(tree)
