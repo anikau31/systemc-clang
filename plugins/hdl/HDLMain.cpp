@@ -136,6 +136,36 @@ namespace systemc_hdl {
     mod->dump_base_instances(llvm::dbgs());
     LLVM_DEBUG( llvm::dbgs() << "end base instances \n");
 
+    const CXXRecordDecl *cdecl{mod->getModuleClassDecl()};
+    LLVM_DEBUG( llvm::dbgs() << "Methods in this module\n");
+    for (const auto &method : cdecl->methods()) {
+      if (isValidMethod(method)) {
+      if (method->isVirtual()) {
+	LLVM_DEBUG( llvm::dbgs() <<  "Virtual ");
+      }
+      LLVM_DEBUG(llvm::dbgs() << "Method name is " << method->getParent()->getNameAsString() << "::" << method->getNameAsString()
+		 << "\n");
+      QualType qtype{method->getThisType()};
+      qtype.getTypePtr()->dump();
+      LLVM_DEBUG(llvm::dbgs() << "\n");
+      if (method->getBody() != NULL) {
+	LLVM_DEBUG(llvm::dbgs() << "Body of method\n");
+	LLVM_DEBUG(method->getBody()->dump());
+	}
+	else LLVM_DEBUG(llvm::dbgs() << "Empty method body\n");
+      
+      for (const auto &ometh : method->overridden_methods()) {
+	llvm::dbgs() << " overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n";
+	if (ometh->hasBody()) {
+	  llvm::dbgs() << " Body of overridden method\n";
+	  LLVM_DEBUG(ometh->getBody()->dump());
+	}
+	else llvm::dbgs() << "Empty overridden method body\n";
+      }
+    }
+    }
+    LLVM_DEBUG( llvm::dbgs() << "End Methods in this module\n\n");
+      
     // look at constructor
 
     // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
@@ -268,6 +298,7 @@ namespace systemc_hdl {
 	h_ports->append(hvp);
       }
     }
+  
     
     // now add init block
     if (h_modinitblockhead->size()>0)
@@ -341,31 +372,6 @@ namespace systemc_hdl {
 	  h_processes->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
 	} // end non-null body
-	else {
-	  CXXMethodDecl *mthd = dyn_cast<CXXMethodDecl>(m.first);
-	  if (mthd->isVirtual()) {
-	    const CXXRecordDecl *cdecl{mod->getModuleClassDecl()};
-	    for (const auto &method : cdecl->methods()) {
-	      if (method->isVirtual()) {
-		llvm::dbgs() << "Method name is " << method->getParent()->getNameAsString() << "::" << method->getNameAsString()
-                       << "\n";
-		QualType qtype{method->getThisType()};
-		
-		for (const auto &ometh : method->overridden_methods()) {
-		  llvm::dbgs() << " -> overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n";
-		  if (ometh->hasBody()) {
-		    llvm::dbgs() << " Body of overridden method " << ometh->hasBody() << "\n";
-		    LLVM_DEBUG(ometh->getBody()->dump());
-		  }
-		  else llvm::dbgs() << "Empty method body\n";
-		}
-
-		qtype.getTypePtr()->dump();
-		llvm::dbgs() << "\n";
-	      }
-	    }
-	  } // end virtual function
-	}
       }
     }
 
@@ -429,6 +435,14 @@ namespace systemc_hdl {
 	  varname.append("_" + to_string(1)+"_" + to_string(j-1)+"_" + to_string(k-1));
 	  instnames.push_back(varname);
 	}
+  }
+
+  bool HDLMain::isValidMethod(CXXMethodDecl *method) {
+    if ((method->getNameAsString() != (method->getParent()->getNameAsString() ))  && // constructor
+	(method->getNameAsString() != "~"+ (method->getParent()->getNameAsString() )) && // destructor
+	  (method->getBody() !=NULL)) // get rid of methods with empty body
+      return true;
+    else return false;
   }
   
   void HDLMain::SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
