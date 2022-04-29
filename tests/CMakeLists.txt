@@ -83,11 +83,11 @@ if(V_TESTS_ON)
 
   foreach(V_TEST_NAME IN LISTS V_TEST_LIST)
     add_test(NAME ${V_TEST_NAME}
-      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k ${V_TEST_NAME})
+      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest --doctest-glob="*.py" -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k ${V_TEST_NAME})
   endforeach()
   foreach(V_TEST_NAME IN LISTS V_TRANSLATION_TEST_LIST)
     add_test(NAME verilog_${V_TEST_NAME}
-      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[${V_TEST_NAME}-)
+      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest --doctest-glob="*.py" -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[${V_TEST_NAME}-)
   endforeach()
 
 
