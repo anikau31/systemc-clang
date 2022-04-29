@@ -32,7 +32,11 @@ namespace systemc_hdl {
   
   class HDLBody: public RecursiveASTVisitor <HDLBody> {
   public:
-    HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, hfunc_name_map_t &allmethodecls );
+    HDLBody(clang::DiagnosticsEngine &diag_engine,
+	    const ASTContext &ast_context,
+	    hdecl_name_map_t &mod_vname_map,
+	    hfunc_name_map_t &allmethodecls,
+	    overridden_method_map_t &overridden_method_map);
 
     virtual ~HDLBody();
 
@@ -71,6 +75,8 @@ namespace systemc_hdl {
     clang::DiagnosticsEngine &diag_e;
     
     hdecl_name_map_t vname_map;
+    
+    overridden_method_map_t &overridden_method_map_;
     
   private:
   

@@ -426,9 +426,12 @@ namespace hnode {
   typedef newname_map_t<NamedDecl *> hdecl_name_map_t;
   typedef newname_map_t<ModuleInstance *> hmodinst_name_map_t;
   typedef newname_map_t<FunctionDecl *> hfunc_name_map_t;
+
+  typedef std::unordered_map<const CXXMethodDecl *, const CXXMethodDecl *> overridden_method_map_t;
   
   // thread name, reset var name, false|true, ASYNC|SYNC
   typedef std::unordered_map<string, hNodep> resetvar_map_t; 
+
   
 } // end namespace hnode
 
