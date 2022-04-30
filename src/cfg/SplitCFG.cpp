@@ -601,12 +601,15 @@ llvm::APInt SplitCFG::getWaitArgument(const clang::CFGElement& element) const {
 };
 
 bool SplitCFG::isElementWait(const clang::CFGElement& element) const {
+  llvm::dbgs() << "**********@@@@@@@@@@@@@@@@@ " << element.getKind() << "\n";
+  element.dump();
  if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
    auto stmt{cfg_stmt->getStmt()};
 
-   // stmt->dump();
+   //stmt->dump();
    if (auto* expr = llvm::dyn_cast<clang::Expr>(stmt)) {
-     if (auto cxx_me = llvm::dyn_cast<clang::CXXMemberCallExpr>(expr)) {
+     /// Use cast to CallExpr instead of CXXMemberCallExpr.
+     if (auto cxx_me = llvm::dyn_cast<clang::CallExpr>(expr)) {
        if (auto direct_callee = cxx_me->getDirectCallee()) {
          auto name{direct_callee->getNameInfo().getAsString()};
          if (name == std::string("wait")) {
