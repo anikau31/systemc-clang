@@ -164,8 +164,6 @@ namespace systemc_hdl {
 	for (const auto &ometh : method->overridden_methods()) {
 	  llvm::dbgs() << " overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n";
 	  if (ometh->hasBody()) {
-	    LLVM_DEBUG(llvm::dbgs() << " Body of overridden method\n");
-	    LLVM_DEBUG(ometh->getBody()->dump());
 	    overridden_method_map[ometh] = method; 
 	  }
 	  else LLVM_DEBUG(llvm::dbgs() << "Empty overridden method body\n");
