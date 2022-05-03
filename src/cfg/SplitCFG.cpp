@@ -13,7 +13,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-#include "SplitCFGBlock.h"
+//#include "SplitCFGBlock.h"
 #include "SplitCFG.h"
 
 #include <regex>
@@ -601,8 +601,6 @@ llvm::APInt SplitCFG::getWaitArgument(const clang::CFGElement& element) const {
 };
 
 bool SplitCFG::isElementWait(const clang::CFGElement& element) const {
-  llvm::dbgs() << "**********@@@@@@@@@@@@@@@@@ " << element.getKind() << "\n";
-  element.dump();
  if (auto cfg_stmt = element.getAs<clang::CFGStmt>()) {
    auto stmt{cfg_stmt->getStmt()};
 
@@ -613,8 +611,6 @@ bool SplitCFG::isElementWait(const clang::CFGElement& element) const {
        if (auto direct_callee = cxx_me->getDirectCallee()) {
          auto name{direct_callee->getNameInfo().getAsString()};
          if (name == std::string("wait")) {
-           // llvm::dbgs() << "@@@@ FOUND WAIT @@@@\n";
-
            /// Check that there is only 1 or 0 arguments
            auto args{cxx_me->getNumArgs()};
            if (args >= 2) {

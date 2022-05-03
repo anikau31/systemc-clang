@@ -5,9 +5,9 @@
 #include "clang/Basic/SourceManager.h"
 
 using namespace systemc_clang;
-using namespace std;
+using namespace clang;
 
-FindNotify::FindNotify(CXXMethodDecl *d, llvm::raw_ostream &os)
+FindNotify::FindNotify(clang::CXXMethodDecl *d, llvm::raw_ostream &os)
     : entry_method_decl_(d), os_(os), notify_call_{nullptr} {
   TraverseDecl(d);
 }
@@ -16,7 +16,7 @@ FindNotify::~FindNotify() { notify_call_list_.clear(); }
 
 bool FindNotify::shouldVisitTemplateInstantiations() const { return true; }
 
-bool FindNotify::VisitCallExpr(CallExpr *e) {
+bool FindNotify::VisitCallExpr(clang::CallExpr *e) {
   //  e->dumpAll();
   LangOptions LangOpts;
 
@@ -25,7 +25,7 @@ bool FindNotify::VisitCallExpr(CallExpr *e) {
 
   auto direct_callee{e->getDirectCallee()};
   if (direct_callee != nullptr) {
-    if (direct_callee->getNameInfo().getAsString() == string("notify") &&
+    if (direct_callee->getNameInfo().getAsString() == std::string("notify") &&
         e->getNumArgs() <= 2) {  // need a better checking.....
       notify_call_list_.push_back(e);
       // To get the 'x' from x.f(5) I must use getImplicitObjectArgument.
@@ -57,25 +57,9 @@ bool FindNotify::VisitCallExpr(CallExpr *e) {
   return true;
 }
 
-/*
-  string FindNotify::getArgumentName(Expr* arg) {
-  if (arg  == NULL) {
-  return string("NULL");
-  }
-
-  LangOptions LangOpts;
-  LangOpts.CPlusPlus = true;
-  PrintingPolicy Policy(LangOpts);
-
-  string TypeS;
-  llvm::raw_string_ostream s(TypeS);
-
-  arg->printPretty(s, 0, Policy);
-  return s.str();
-  }
-*/
-
-CXXMethodDecl *FindNotify::getEntryMethod() const { return entry_method_decl_; }
+clang::CXXMethodDecl *FindNotify::getEntryMethod() const {
+  return entry_method_decl_;
+}
 
 FindNotify::NotifyCallListType FindNotify::getNotifyCallList() const {
   return notify_call_list_;
