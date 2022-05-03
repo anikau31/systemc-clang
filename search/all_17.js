@@ -35,7 +35,7 @@ var searchData=
   ['_7esplitcfg_32',['~SplitCFG',['../classsystemc__clang_1_1SplitCFG.html#add6c773bc0dd22c693e1a19052c343ad',1,'systemc_clang::SplitCFG']]],
   ['_7esplitcfgpathinfo_33',['~SplitCFGPathInfo',['../classsystemc__clang_1_1SplitCFGPathInfo.html#a032017e40b503314763dbca23f9a9c42',1,'systemc_clang::SplitCFGPathInfo']]],
   ['_7estate_34',['~State',['../classsystemc__clang_1_1State.html#afab438d92b90dc18d194dbd9c9c8bab3',1,'systemc_clang::State']]],
-  ['_7esupplementaryinfo_35',['~SupplementaryInfo',['../classsystemc__clang_1_1SupplementaryInfo.html#a73b3fa90c4c981032180e9442a82e8d6',1,'systemc_clang::SupplementaryInfo']]],
+  ['_7esupplementaryinfo_35',['~SupplementaryInfo',['../structsystemc__clang_1_1SupplementaryInfo.html#a73b3fa90c4c981032180e9442a82e8d6',1,'systemc_clang::SupplementaryInfo']]],
   ['_7esuscfg_36',['~SusCFG',['../classsystemc__clang_1_1SusCFG.html#aa21efcdff506ed63216d6ce20ba6cad1',1,'systemc_clang::SusCFG']]],
   ['_7esuspensionautomata_37',['~SuspensionAutomata',['../classsystemc__clang_1_1SuspensionAutomata.html#a231b4279479f55cefc546a25ac65a9b4',1,'systemc_clang::SuspensionAutomata']]],
   ['_7esystemcconsumer_38',['~SystemCConsumer',['../classsystemc__clang_1_1SystemCConsumer.html#a87c3945a47ef25c30a372898789251cf',1,'systemc_clang::SystemCConsumer']]],

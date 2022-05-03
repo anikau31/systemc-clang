@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['false_5fidx_5f_0',['false_idx_',['../classsystemc__clang_1_1SupplementaryInfo.html#a0bc102c0f387699d4aa855448018c411',1,'systemc_clang::SupplementaryInfo']]],
+  ['false_5fidx_5f_0',['false_idx_',['../structsystemc__clang_1_1SupplementaryInfo.html#a0bc102c0f387699d4aa855448018c411',1,'systemc_clang::SupplementaryInfo']]],
   ['false_5fpath_5f_1',['false_path_',['../classsystemc__clang_1_1SplitCFGPathInfo.html#a23a2d07bddd11534dbd89c869790cf35',1,'systemc_clang::SplitCFGPathInfo']]],
   ['false_5fstartix_2',['false_startix',['../classsystemc__clang_1_1SplitCFGPathInfo.html#a275a88c5eb0495df48a8ae234833f772',1,'systemc_clang::SplitCFGPathInfo']]],
   ['field_5faccess_3',['field_access',['../classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#a33dd738649eb3d0cd091d0b290274468',1,'parselib::transforms::literal_expansion::LiteralExpansion']]],

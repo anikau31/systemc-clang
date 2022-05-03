@@ -98,60 +98,60 @@ Collaboration diagram for systemc_clang::FindNotify:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aebd5c90665011a52c5037b4953a6796f"><td class="memItemLeft" align="right" valign="top">typedef vector&lt; CallExpr * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#aebd5c90665011a52c5037b4953a6796f">NotifyCallListType</a></td></tr>
-<tr class="separator:aebd5c90665011a52c5037b4953a6796f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a418b4ae6a30abef0df15567d87db73"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a1a418b4ae6a30abef0df15567d87db73">NotifyCallListType</a> = std::vector&lt; clang::CallExpr * &gt;</td></tr>
+<tr class="separator:a1a418b4ae6a30abef0df15567d87db73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5eec0820bdab62f92175aa3076af7d4e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a5eec0820bdab62f92175aa3076af7d4e">FindNotify</a> (CXXMethodDecl *, raw_ostream &amp;)</td></tr>
-<tr class="separator:a5eec0820bdab62f92175aa3076af7d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57582db92b5afcc67fda9eafd2cea7a6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a57582db92b5afcc67fda9eafd2cea7a6">FindNotify</a> (clang::CXXMethodDecl *, llvm::raw_ostream &amp;)</td></tr>
+<tr class="separator:a57582db92b5afcc67fda9eafd2cea7a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d3b29feabf5829ef751d27eb4767c41"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a8d3b29feabf5829ef751d27eb4767c41">~FindNotify</a> ()</td></tr>
 <tr class="separator:a8d3b29feabf5829ef751d27eb4767c41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab308c807a7d7e7c43b8461a509d39eac"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#ab308c807a7d7e7c43b8461a509d39eac">VisitCallExpr</a> (CallExpr *expr)</td></tr>
-<tr class="separator:ab308c807a7d7e7c43b8461a509d39eac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81e369bbf6bd9637c6ca7952d97b9408"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a81e369bbf6bd9637c6ca7952d97b9408">VisitCallExpr</a> (clang::CallExpr *expr)</td></tr>
+<tr class="separator:a81e369bbf6bd9637c6ca7952d97b9408"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39cfc189de65ee37ae8c4784a4c32200"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a39cfc189de65ee37ae8c4784a4c32200">shouldVisitTemplateInstantiations</a> () const</td></tr>
 <tr class="separator:a39cfc189de65ee37ae8c4784a4c32200"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea9758772262f7d6600895170e250d0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__clang_1_1FindNotify.html#aebd5c90665011a52c5037b4953a6796f">NotifyCallListType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#aea9758772262f7d6600895170e250d0d">getNotifyCallList</a> () const</td></tr>
+<tr class="memitem:aea9758772262f7d6600895170e250d0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a1a418b4ae6a30abef0df15567d87db73">NotifyCallListType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#aea9758772262f7d6600895170e250d0d">getNotifyCallList</a> () const</td></tr>
 <tr class="separator:aea9758772262f7d6600895170e250d0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ef8908d0c89c509f6bd3a5361c49fee"><td class="memItemLeft" align="right" valign="top">CXXMethodDecl *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a4ef8908d0c89c509f6bd3a5361c49fee">getEntryMethod</a> () const</td></tr>
-<tr class="separator:a4ef8908d0c89c509f6bd3a5361c49fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90a52c785b20f668e81735395fe215ad"><td class="memItemLeft" align="right" valign="top">clang::CXXMethodDecl *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a90a52c785b20f668e81735395fe215ad">getEntryMethod</a> () const</td></tr>
+<tr class="separator:a90a52c785b20f668e81735395fe215ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a409fbbf9662c351ada6fd7e038ffaa49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a409fbbf9662c351ada6fd7e038ffaa49">dump</a> () const</td></tr>
 <tr class="separator:a409fbbf9662c351ada6fd7e038ffaa49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:aaedeeee511f9afc8c1467ce1eaa103e7"><td class="memItemLeft" align="right" valign="top">CXXMethodDecl *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#aaedeeee511f9afc8c1467ce1eaa103e7">entry_method_decl_</a></td></tr>
-<tr class="separator:aaedeeee511f9afc8c1467ce1eaa103e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c97920d36bcaac8ec42aae11c5427e3"><td class="memItemLeft" align="right" valign="top">clang::CXXMethodDecl *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a1c97920d36bcaac8ec42aae11c5427e3">entry_method_decl_</a></td></tr>
+<tr class="separator:a1c97920d36bcaac8ec42aae11c5427e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81fd676da5acac49163fe4a656de435d"><td class="memItemLeft" align="right" valign="top">llvm::raw_ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a81fd676da5acac49163fe4a656de435d">os_</a></td></tr>
 <tr class="separator:a81fd676da5acac49163fe4a656de435d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04109af7209fdf7bbfe0bca46051855d"><td class="memItemLeft" align="right" valign="top">CallExpr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a04109af7209fdf7bbfe0bca46051855d">notify_call_</a></td></tr>
-<tr class="separator:a04109af7209fdf7bbfe0bca46051855d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a49ad8c12643d399b9e1c76a5d30979"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__clang_1_1FindNotify.html#aebd5c90665011a52c5037b4953a6796f">NotifyCallListType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a3a49ad8c12643d399b9e1c76a5d30979">notify_call_list_</a></td></tr>
+<tr class="memitem:a95e9c0fdda39d6f0ced21e3f8d2eb844"><td class="memItemLeft" align="right" valign="top">clang::CallExpr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a95e9c0fdda39d6f0ced21e3f8d2eb844">notify_call_</a></td></tr>
+<tr class="separator:a95e9c0fdda39d6f0ced21e3f8d2eb844"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a49ad8c12643d399b9e1c76a5d30979"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a1a418b4ae6a30abef0df15567d87db73">NotifyCallListType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a3a49ad8c12643d399b9e1c76a5d30979">notify_call_list_</a></td></tr>
 <tr class="separator:a3a49ad8c12643d399b9e1c76a5d30979"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00013">13</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00018">18</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="aebd5c90665011a52c5037b4953a6796f" name="aebd5c90665011a52c5037b4953a6796f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aebd5c90665011a52c5037b4953a6796f">&#9670;&nbsp;</a></span>NotifyCallListType</h2>
+<a id="a1a418b4ae6a30abef0df15567d87db73" name="a1a418b4ae6a30abef0df15567d87db73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a418b4ae6a30abef0df15567d87db73">&#9670;&nbsp;</a></span>NotifyCallListType</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef vector&lt;CallExpr *&gt; <a class="el" href="classsystemc__clang_1_1FindNotify.html#aebd5c90665011a52c5037b4953a6796f">systemc_clang::FindNotify::NotifyCallListType</a></td>
+          <td class="memname">using <a class="el" href="classsystemc__clang_1_1FindNotify.html#a1a418b4ae6a30abef0df15567d87db73">systemc_clang::FindNotify::NotifyCallListType</a> =  std::vector&lt;clang::CallExpr *&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00015">15</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00020">20</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5eec0820bdab62f92175aa3076af7d4e" name="a5eec0820bdab62f92175aa3076af7d4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eec0820bdab62f92175aa3076af7d4e">&#9670;&nbsp;</a></span>FindNotify()</h2>
+<a id="a57582db92b5afcc67fda9eafd2cea7a6" name="a57582db92b5afcc67fda9eafd2cea7a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57582db92b5afcc67fda9eafd2cea7a6">&#9670;&nbsp;</a></span>FindNotify()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,14 +159,14 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">FindNotify::FindNotify </td>
           <td>(</td>
-          <td class="paramtype">CXXMethodDecl *&#160;</td>
-          <td class="paramname">, </td>
+          <td class="paramtype">clang::CXXMethodDecl *&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">raw_ostream &amp;&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramtype">llvm::raw_ostream &amp;&#160;</td>
+          <td class="paramname"><em>os</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -223,18 +223,18 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindNotify_8cpp_source.html#l00084">84</a> of file <a class="el" href="FindNotify_8cpp_source.html">FindNotify.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindNotify_8cpp_source.html#l00068">68</a> of file <a class="el" href="FindNotify_8cpp_source.html">FindNotify.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a4ef8908d0c89c509f6bd3a5361c49fee" name="a4ef8908d0c89c509f6bd3a5361c49fee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ef8908d0c89c509f6bd3a5361c49fee">&#9670;&nbsp;</a></span>getEntryMethod()</h2>
+<a id="a90a52c785b20f668e81735395fe215ad" name="a90a52c785b20f668e81735395fe215ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90a52c785b20f668e81735395fe215ad">&#9670;&nbsp;</a></span>getEntryMethod()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CXXMethodDecl * FindNotify::getEntryMethod </td>
+          <td class="memname">clang::CXXMethodDecl * FindNotify::getEntryMethod </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -242,7 +242,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindNotify_8cpp_source.html#l00078">78</a> of file <a class="el" href="FindNotify_8cpp_source.html">FindNotify.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindNotify_8cpp_source.html#l00060">60</a> of file <a class="el" href="FindNotify_8cpp_source.html">FindNotify.cpp</a>.</p>
 
 </div>
 </div>
@@ -253,7 +253,7 @@ Private Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classsystemc__clang_1_1FindNotify.html#aebd5c90665011a52c5037b4953a6796f">FindNotify::NotifyCallListType</a> FindNotify::getNotifyCallList </td>
+          <td class="memname"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a1a418b4ae6a30abef0df15567d87db73">FindNotify::NotifyCallListType</a> FindNotify::getNotifyCallList </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -261,7 +261,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindNotify_8cpp_source.html#l00080">80</a> of file <a class="el" href="FindNotify_8cpp_source.html">FindNotify.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindNotify_8cpp_source.html#l00064">64</a> of file <a class="el" href="FindNotify_8cpp_source.html">FindNotify.cpp</a>.</p>
 
 </div>
 </div>
@@ -284,8 +284,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab308c807a7d7e7c43b8461a509d39eac" name="ab308c807a7d7e7c43b8461a509d39eac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab308c807a7d7e7c43b8461a509d39eac">&#9670;&nbsp;</a></span>VisitCallExpr()</h2>
+<a id="a81e369bbf6bd9637c6ca7952d97b9408" name="a81e369bbf6bd9637c6ca7952d97b9408"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81e369bbf6bd9637c6ca7952d97b9408">&#9670;&nbsp;</a></span>VisitCallExpr()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -296,7 +296,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool FindNotify::VisitCallExpr </td>
           <td>(</td>
-          <td class="paramtype">CallExpr *&#160;</td>
+          <td class="paramtype">clang::CallExpr *&#160;</td>
           <td class="paramname"><em>expr</em></td><td>)</td>
           <td></td>
         </tr>
@@ -313,8 +313,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="aaedeeee511f9afc8c1467ce1eaa103e7" name="aaedeeee511f9afc8c1467ce1eaa103e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaedeeee511f9afc8c1467ce1eaa103e7">&#9670;&nbsp;</a></span>entry_method_decl_</h2>
+<a id="a1c97920d36bcaac8ec42aae11c5427e3" name="a1c97920d36bcaac8ec42aae11c5427e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c97920d36bcaac8ec42aae11c5427e3">&#9670;&nbsp;</a></span>entry_method_decl_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -323,7 +323,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CXXMethodDecl* systemc_clang::FindNotify::entry_method_decl_</td>
+          <td class="memname">clang::CXXMethodDecl* systemc_clang::FindNotify::entry_method_decl_</td>
         </tr>
       </table>
   </td>
@@ -333,12 +333,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00027">27</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00034">34</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
 
 </div>
 </div>
-<a id="a04109af7209fdf7bbfe0bca46051855d" name="a04109af7209fdf7bbfe0bca46051855d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04109af7209fdf7bbfe0bca46051855d">&#9670;&nbsp;</a></span>notify_call_</h2>
+<a id="a95e9c0fdda39d6f0ced21e3f8d2eb844" name="a95e9c0fdda39d6f0ced21e3f8d2eb844"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95e9c0fdda39d6f0ced21e3f8d2eb844">&#9670;&nbsp;</a></span>notify_call_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -347,7 +347,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CallExpr* systemc_clang::FindNotify::notify_call_</td>
+          <td class="memname">clang::CallExpr* systemc_clang::FindNotify::notify_call_</td>
         </tr>
       </table>
   </td>
@@ -357,7 +357,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00029">29</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00036">36</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
 
 </div>
 </div>
@@ -371,7 +371,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classsystemc__clang_1_1FindNotify.html#aebd5c90665011a52c5037b4953a6796f">NotifyCallListType</a> systemc_clang::FindNotify::notify_call_list_</td>
+          <td class="memname"><a class="el" href="classsystemc__clang_1_1FindNotify.html#a1a418b4ae6a30abef0df15567d87db73">NotifyCallListType</a> systemc_clang::FindNotify::notify_call_list_</td>
         </tr>
       </table>
   </td>
@@ -381,7 +381,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00030">30</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00037">37</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
 
 </div>
 </div>
@@ -405,7 +405,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00028">28</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindNotify_8h_source.html#l00035">35</a> of file <a class="el" href="FindNotify_8h_source.html">FindNotify.h</a>.</p>
 
 </div>
 </div>

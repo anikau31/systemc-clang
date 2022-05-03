@@ -11,7 +11,7 @@ var searchData=
   ['findinstancebyvariabletype_8',['findInstanceByVariableType',['../classsc__ast__matchers_1_1InstanceMatcher.html#acbbca6eaf9fbbc3585f3e18932f13cf7',1,'sc_ast_matchers::InstanceMatcher']]],
   ['findmoduledeclinstance_9',['findModuleDeclInstance',['../classsc__ast__matchers_1_1NetlistMatcher.html#a50576a670ac07f4bfe7c5df633a8904e',1,'sc_ast_matchers::NetlistMatcher']]],
   ['findnetlist_10',['FindNetlist',['../classsystemc__clang_1_1FindNetlist.html#abae20b453424f6a47b95cea9deb1735b',1,'systemc_clang::FindNetlist::FindNetlist(FunctionDecl *)'],['../classsystemc__clang_1_1FindNetlist.html#aabb4ed26b0338482913d6f0a632afb7f',1,'systemc_clang::FindNetlist::FindNetlist(const FindNetlist &amp;)']]],
-  ['findnotify_11',['FindNotify',['../classsystemc__clang_1_1FindNotify.html#a5eec0820bdab62f92175aa3076af7d4e',1,'systemc_clang::FindNotify']]],
+  ['findnotify_11',['FindNotify',['../classsystemc__clang_1_1FindNotify.html#a57582db92b5afcc67fda9eafd2cea7a6',1,'systemc_clang::FindNotify']]],
   ['findscmain_12',['FindSCMain',['../classsystemc__clang_1_1FindSCMain.html#ace7c9f1882b90312b433268cde728c61',1,'systemc_clang::FindSCMain']]],
   ['findsimtime_13',['FindSimTime',['../classsystemc__clang_1_1FindSimTime.html#adac82fcd7f772ca45341fabdf3186eb9',1,'systemc_clang::FindSimTime']]],
   ['findstatements_14',['FindStatements',['../classsystemc__hdl_1_1HDLThread.html#a84e173919d12b2d3424d25abc6b53da5',1,'systemc_hdl::HDLThread::FindStatements(const SplitCFGBlock *B, std::vector&lt; const Stmt * &gt; &amp;SS)'],['../classsystemc__hdl_1_1HDLThread.html#aeecbe994e5ae96ce622d09183c34c263',1,'systemc_hdl::HDLThread::FindStatements(const CFGBlock &amp;B, std::vector&lt; const Stmt * &gt; &amp;SS)']]],

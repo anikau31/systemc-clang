@@ -26,7 +26,7 @@ var searchData=
   ['pass_5f_23',['pass_',['../classsystemc__clang_1_1FindConstructor.html#a05c3661a0c992c55af89336c3c00eb61',1,'systemc_clang::FindConstructor::pass_()'],['../classsystemc__clang_1_1FindEntryFunctions.html#adefc3c1a7fc8504ac7aea94b62c16db3',1,'systemc_clang::FindEntryFunctions::pass_()']]],
   ['passes_24',['passes',['../namespaceparselib_1_1transforms_1_1passes.html',1,'parselib::transforms']]],
   ['passes_2epy_25',['passes.py',['../passes_8py.html',1,'']]],
-  ['path_5fidx_5f_26',['path_idx_',['../classsystemc__clang_1_1SupplementaryInfo.html#a43dbad254d32317c2d01cbf520dcc79a',1,'systemc_clang::SupplementaryInfo::path_idx_()'],['../classsystemc__clang_1_1SplitCFGPathInfo.html#a4ca1bb929c1eb90aab3bba54aae32abd',1,'systemc_clang::SplitCFGPathInfo::path_idx_()']]],
+  ['path_5fidx_5f_26',['path_idx_',['../structsystemc__clang_1_1SupplementaryInfo.html#a43dbad254d32317c2d01cbf520dcc79a',1,'systemc_clang::SupplementaryInfo::path_idx_()'],['../classsystemc__clang_1_1SplitCFGPathInfo.html#a4ca1bb929c1eb90aab3bba54aae32abd',1,'systemc_clang::SplitCFGPathInfo::path_idx_()']]],
   ['path_5finfo_5f_27',['path_info_',['../classsystemc__clang_1_1SplitCFG.html#aacb9a8b57663904c6113bd4acd6409b0',1,'systemc_clang::SplitCFG']]],
   ['pathnodevisited_28',['pathnodevisited',['../classsystemc__hdl_1_1HDLThread.html#abaa5074e36e3b377ee87c85e8efd238e',1,'systemc_hdl::HDLThread']]],
   ['paths_5f_29',['paths_',['../classsystemc__clang_1_1SplitCFG.html#a9410d51bd64e5a798ef233f3813cd466',1,'systemc_clang::SplitCFG']]],

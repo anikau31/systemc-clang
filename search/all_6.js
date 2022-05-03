@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['false_5fidx_5f_0',['false_idx_',['../classsystemc__clang_1_1SupplementaryInfo.html#a0bc102c0f387699d4aa855448018c411',1,'systemc_clang::SupplementaryInfo']]],
+  ['false_5fidx_5f_0',['false_idx_',['../structsystemc__clang_1_1SupplementaryInfo.html#a0bc102c0f387699d4aa855448018c411',1,'systemc_clang::SupplementaryInfo']]],
   ['false_5fpath_5f_1',['false_path_',['../classsystemc__clang_1_1SplitCFGPathInfo.html#a23a2d07bddd11534dbd89c869790cf35',1,'systemc_clang::SplitCFGPathInfo']]],
   ['false_5fstartix_2',['false_startix',['../classsystemc__clang_1_1SplitCFGPathInfo.html#a275a88c5eb0495df48a8ae234833f772',1,'systemc_clang::SplitCFGPathInfo']]],
   ['field_5faccess_3',['field_access',['../classparselib_1_1transforms_1_1literal__expansion_1_1LiteralExpansion.html#a33dd738649eb3d0cd091d0b290274468',1,'parselib::transforms::literal_expansion::LiteralExpansion']]],
@@ -34,7 +34,7 @@ var searchData=
   ['findnetlist_31',['FindNetlist',['../classsystemc__clang_1_1FindNetlist.html#aabb4ed26b0338482913d6f0a632afb7f',1,'systemc_clang::FindNetlist::FindNetlist(const FindNetlist &amp;)'],['../classsystemc__clang_1_1FindNetlist.html#abae20b453424f6a47b95cea9deb1735b',1,'systemc_clang::FindNetlist::FindNetlist(FunctionDecl *)'],['../classsystemc__clang_1_1FindNetlist.html',1,'systemc_clang::FindNetlist']]],
   ['findnetlist_2ecpp_32',['FindNetlist.cpp',['../FindNetlist_8cpp.html',1,'']]],
   ['findnetlist_2eh_33',['FindNetlist.h',['../FindNetlist_8h.html',1,'']]],
-  ['findnotify_34',['FindNotify',['../classsystemc__clang_1_1FindNotify.html#a5eec0820bdab62f92175aa3076af7d4e',1,'systemc_clang::FindNotify::FindNotify()'],['../classsystemc__clang_1_1FindNotify.html',1,'systemc_clang::FindNotify']]],
+  ['findnotify_34',['FindNotify',['../classsystemc__clang_1_1FindNotify.html#a57582db92b5afcc67fda9eafd2cea7a6',1,'systemc_clang::FindNotify::FindNotify()'],['../classsystemc__clang_1_1FindNotify.html',1,'systemc_clang::FindNotify']]],
   ['findnotify_2ecpp_35',['FindNotify.cpp',['../FindNotify_8cpp.html',1,'']]],
   ['findnotify_2eh_36',['FindNotify.h',['../FindNotify_8h.html',1,'']]],
   ['findscmain_37',['FindSCMain',['../classsystemc__clang_1_1FindSCMain.html#ace7c9f1882b90312b433268cde728c61',1,'systemc_clang::FindSCMain::FindSCMain()'],['../classsystemc__clang_1_1FindSCMain.html',1,'systemc_clang::FindSCMain']]],

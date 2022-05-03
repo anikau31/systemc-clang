@@ -18,7 +18,7 @@ var searchData=
   ['signals_5f_15',['signals_',['../classsystemc__clang_1_1ModuleInstance.html#ac1a7f1df5c43344d90f00fbb62671fc5',1,'systemc_clang::ModuleInstance']]],
   ['simulation_5ftime_5f_16',['simulation_time_',['../classsystemc__clang_1_1FindSimTime.html#ab11f4f33eae3f1b17de80a2b8f506c84',1,'systemc_clang::FindSimTime::simulation_time_()'],['../classsystemc__clang_1_1Model.html#aba295d5c65270b693dcac7320e6815a5',1,'systemc_clang::Model::simulation_time_()']]],
   ['sm_5f_17',['sm_',['../classsystemc__clang_1_1SystemCConsumer.html#a22da7bc944c40b4a978f3a62c1b64df6',1,'systemc_clang::SystemCConsumer']]],
-  ['split_5fblock_5f_18',['split_block_',['../classsystemc__clang_1_1SplitCFGPathInfo.html#adbbf63b5ebafeeae12619db93b7b6c9f',1,'systemc_clang::SplitCFGPathInfo::split_block_()'],['../classsystemc__clang_1_1SupplementaryInfo.html#aec268784a98bdc5417a97e5758d4273f',1,'systemc_clang::SupplementaryInfo::split_block_()']]],
+  ['split_5fblock_5f_18',['split_block_',['../classsystemc__clang_1_1SplitCFGPathInfo.html#adbbf63b5ebafeeae12619db93b7b6c9f',1,'systemc_clang::SplitCFGPathInfo::split_block_()'],['../structsystemc__clang_1_1SupplementaryInfo.html#aec268784a98bdc5417a97e5758d4273f',1,'systemc_clang::SupplementaryInfo::split_block_()']]],
   ['split_5fblocks_5f_19',['split_blocks_',['../classsystemc__clang_1_1SplitCFG.html#a8bbdfe75dba470500b7d606bf991f998',1,'systemc_clang::SplitCFG']]],
   ['split_5felements_20',['split_elements',['../classsystemc__clang_1_1SplitCFG.html#a9f3af899105c9469955729e82fb5338b',1,'systemc_clang::SplitCFG']]],
   ['stack_5fcurrent_5fnode_5f_21',['stack_current_node_',['../classsystemc__clang_1_1FindTemplateTypes.html#a3e3a6f5f7cfb2ad47fb77a4253794d1b',1,'systemc_clang::FindTemplateTypes']]],

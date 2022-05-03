@@ -24,7 +24,7 @@ var searchData=
   ['statement_21',['Statement',['../classparselib_1_1transforms_1_1node_1_1Statement.html',1,'parselib::transforms::node']]],
   ['structurecollector_22',['StructureCollector',['../classparselib_1_1transforms_1_1structure__collector_1_1StructureCollector.html',1,'parselib::transforms::structure_collector']]],
   ['successoriterator_23',['SuccessorIterator',['../structsystemc__clang_1_1SplitCFGBlock_1_1SuccessorIterator.html',1,'systemc_clang::SplitCFGBlock']]],
-  ['supplementaryinfo_24',['SupplementaryInfo',['../classsystemc__clang_1_1SupplementaryInfo.html',1,'systemc_clang']]],
+  ['supplementaryinfo_24',['SupplementaryInfo',['../structsystemc__clang_1_1SupplementaryInfo.html',1,'systemc_clang']]],
   ['suscfg_25',['SusCFG',['../classsystemc__clang_1_1SusCFG.html',1,'systemc_clang']]],
   ['suspensionautomata_26',['SuspensionAutomata',['../classsystemc__clang_1_1SuspensionAutomata.html',1,'systemc_clang']]],
   ['systemcclang_27',['SystemCClang',['../classsystemc-clang_1_1SystemCClang.html',1,'systemc-clang.SystemCClang'],['../classsystemc__clang_1_1SystemCClang.html',1,'systemc_clang::SystemCClang']]],
