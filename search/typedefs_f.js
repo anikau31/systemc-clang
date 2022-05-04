@@ -1,14 +1,13 @@
 var searchData=
 [
-  ['value_5ftype_0',['value_type',['../structsystemc__clang_1_1SplitCFGBlock_1_1SuccessorIterator.html#a1ddbf1a8111917a1da32a1d4200ef4de',1,'systemc_clang::SplitCFGBlock::SuccessorIterator']]],
-  ['vectorcfgelementptr_1',['VectorCFGElementPtr',['../classsystemc__clang_1_1SplitCFG.html#acff5698f57c063ca9445091e2fd1a161',1,'systemc_clang::SplitCFG::VectorCFGElementPtr()'],['../classsystemc__clang_1_1SplitCFGBlock.html#a7fd216dfa2533b64510d6d75944bdeae',1,'systemc_clang::SplitCFGBlock::VectorCFGElementPtr()']]],
-  ['vectorcfgelementptrimpl_2',['VectorCFGElementPtrImpl',['../classsystemc__clang_1_1SplitCFG.html#ae6c07dc5e07cf33930f911b053a0db1c',1,'systemc_clang::SplitCFG::VectorCFGElementPtrImpl()'],['../classsystemc__clang_1_1SplitCFGBlock.html#a079c0ddb843103095badfed156022a6c',1,'systemc_clang::SplitCFGBlock::VectorCFGElementPtrImpl()']]],
-  ['vectorsplitcfgblock_3',['VectorSplitCFGBlock',['../classsystemc__clang_1_1SplitCFG.html#a3fdb47bb85b62430faa5a1ab0b5c6934',1,'systemc_clang::SplitCFG']]],
-  ['vectorsplitcfgblockimpl_4',['VectorSplitCFGBlockImpl',['../classsystemc__clang_1_1SplitCFG.html#a0a4f90d347990860af015827abd9de61',1,'systemc_clang::SplitCFG']]],
-  ['vectorsplitcfgblockptr_5',['VectorSplitCFGBlockPtr',['../classsystemc__clang_1_1SplitCFGBlock.html#acf7732a4d6afdabf59227d3d5def4f34',1,'systemc_clang::SplitCFGBlock']]],
-  ['vectorsplitcfgblockptrimpl_6',['VectorSplitCFGBlockPtrImpl',['../classsystemc__clang_1_1SplitCFGBlock.html#a94eb2dc0458606a8660d39f258beef36',1,'systemc_clang::SplitCFGBlock']]],
-  ['vectorsuccessors_7',['VectorSuccessors',['../structsystemc__clang_1_1SplitCFGBlock_1_1SuccessorIterator.html#a541b9739173fdb89b2e1d3f43bc0ce33',1,'systemc_clang::SplitCFGBlock::SuccessorIterator']]],
-  ['vectortreeptr_8',['VectorTreePtr',['../classsystemc__clang_1_1Tree.html#aeee87e5e2a3776887321ca75ce1d935f',1,'systemc_clang::Tree']]],
-  ['visittransitionmaptype_9',['visitTransitionMapType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#ad4740b081a0880d4735ec9e8c93354c7',1,'systemc_clang::GlobalSuspensionAutomata']]],
-  ['visittransitionpairtype_10',['visitTransitionPairType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#aa98d9120219f6deb9d1c9f8bc2b03dc8',1,'systemc_clang::GlobalSuspensionAutomata']]]
+  ['templatetypeptr_0',['TemplateTypePtr',['../classsystemc__clang_1_1FindTemplateTypes.html#a36fe33fbaeabb402ed67ab84bfb284c0',1,'systemc_clang::FindTemplateTypes']]],
+  ['timeadvancevectortype_1',['timeAdvanceVectorType',['../classsystemc__clang_1_1Edge.html#a4aa1a27ab14ccfe1b547fd9546926858',1,'systemc_clang::Edge']]],
+  ['timepairtype_2',['timePairType',['../classsystemc__clang_1_1Edge.html#ac7df506142cb6616af813b07f4d61689',1,'systemc_clang::Edge::timePairType()'],['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#ad5b1dd2561dc533cb37ffa28c36c42e4',1,'systemc_clang::GlobalSuspensionAutomata::timePairType()']]],
+  ['transitiontimemaptype_3',['transitionTimeMapType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a63401a9884f8e9615b695b1dc9555b26',1,'systemc_clang::GlobalSuspensionAutomata']]],
+  ['transitiontimepairtype_4',['transitionTimePairType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#afc94bfa7f93a5a0fb01483dea38046c6',1,'systemc_clang::GlobalSuspensionAutomata']]],
+  ['transitionvectortype_5',['transitionVectorType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a86977643d2ad2505b98f5fa2f412a1ed',1,'systemc_clang::GlobalSuspensionAutomata::transitionVectorType()'],['../classsystemc__clang_1_1SuspensionAutomata.html#a37823cbaa98336114b95ee6f8258979f',1,'systemc_clang::SuspensionAutomata::transitionVectorType()']]],
+  ['treedftptr_6',['TreeDFTPtr',['../classsystemc__clang_1_1Tree_1_1const__dft__iterator.html#a29f6301c538df3c938c11369ff7019bc',1,'systemc_clang::Tree::const_dft_iterator::TreeDFTPtr()'],['../classsystemc__clang_1_1Tree_1_1dft__iterator.html#abd9bfb0afa194a14ea0a6030b0ac3531',1,'systemc_clang::Tree::dft_iterator::TreeDFTPtr()']]],
+  ['treenodeptr_7',['TreeNodePtr',['../classsystemc__clang_1_1Tree.html#ae2699cb6a66a0af9debdc1a17d7403f3',1,'systemc_clang::Tree']]],
+  ['twonodepairtype_8',['twoNodePairType',['../classsystemc__clang_1_1Graph.html#a9c540d3b0c52a6759ad3c6e10752255d',1,'systemc_clang::Graph']]],
+  ['type_5fvector_5ft_9',['type_vector_t',['../classsystemc__clang_1_1FindTemplateTypes.html#a7aca95e84873d0dd891c2dc53c492cfd',1,'systemc_clang::FindTemplateTypes']]]
 ];

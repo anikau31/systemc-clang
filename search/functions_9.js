@@ -60,7 +60,8 @@ var searchData=
   ['istimedwait_57',['isTimedWait',['../classsystemc__clang_1_1SuspensionAutomata.html#a131b474cba796a5d5e13fb7574c236da',1,'systemc_clang::SuspensionAutomata']]],
   ['istruepath_58',['isTruePath',['../classsystemc__clang_1_1SplitCFG.html#a63606435093652063e3d8da0bacb6f0f',1,'systemc_clang::SplitCFG']]],
   ['istruepathvalid_59',['isTruePathValid',['../classsystemc__clang_1_1SplitCFGPathInfo.html#abe2a39f9c28ff9e675eaf6e4a45281a2',1,'systemc_clang::SplitCFGPathInfo']]],
-  ['iswaitblock_60',['isWaitBlock',['../classsystemc__clang_1_1SusCFG.html#a196e62967d4a2820873c7833b037d836',1,'systemc_clang::SusCFG']]],
-  ['iswaitcall_61',['isWaitCall',['../classsystemc__clang_1_1SuspensionAutomata.html#af045e731c974b5b321f0c808d2fa5773',1,'systemc_clang::SuspensionAutomata']]],
-  ['iswaitstmt_62',['IsWaitStmt',['../classsystemc__hdl_1_1HDLThread.html#ad28af83a8bd64cbd5e79bf1db4f417e2',1,'systemc_hdl::HDLThread']]]
+  ['isvalidmethod_60',['isValidMethod',['../classsystemc__hdl_1_1HDLMain.html#ad26d40f0cbf7d74468a39b2788a9b382',1,'systemc_hdl::HDLMain']]],
+  ['iswaitblock_61',['isWaitBlock',['../classsystemc__clang_1_1SusCFG.html#a196e62967d4a2820873c7833b037d836',1,'systemc_clang::SusCFG']]],
+  ['iswaitcall_62',['isWaitCall',['../classsystemc__clang_1_1SuspensionAutomata.html#af045e731c974b5b321f0c808d2fa5773',1,'systemc_clang::SuspensionAutomata']]],
+  ['iswaitstmt_63',['IsWaitStmt',['../classsystemc__hdl_1_1HDLThread.html#ad28af83a8bd64cbd5e79bf1db4f417e2',1,'systemc_hdl::HDLThread']]]
 ];
