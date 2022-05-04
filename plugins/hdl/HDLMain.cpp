@@ -343,7 +343,7 @@ namespace systemc_hdl {
 	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 	if (m.first->hasBody()) {
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
-	  QualType qrettype = m.first->getDeclaredReturnType();
+	  QualType qrettype = m.first->getReturnType(); // m.first->getDeclaredReturnType();
 	  const clang::Type *rettype = qrettype.getTypePtr();
 	  FindTemplateTypes *te = new FindTemplateTypes();
 	  te->Enumerate(rettype);
