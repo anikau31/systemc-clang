@@ -26,7 +26,7 @@ namespace systemc_hdl {
   public:
     HDLThread(EntryFunctionContainer *efc, hNodep &h_top, hNodep &h_portsigvarlist,
 	      clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,
-	      hdecl_name_map_t &mod_vname_map, hfunc_name_map_t &allmethods, hNodep h_resetvarinfo);
+	      hdecl_name_map_t &mod_vname_map, hfunc_name_map_t &allmethods, overridden_method_map_t &overridden_method_map,  hNodep h_resetvarinfo);
     virtual ~HDLThread();
     
     hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
@@ -50,6 +50,7 @@ namespace systemc_hdl {
     
     HDLBody *xtbodyp;
     hfunc_name_map_t allmethodecls_;
+    overridden_method_map_t &overridden_method_map_;
     string state_string;
     string nextstate_string;
     string waitctr_string;

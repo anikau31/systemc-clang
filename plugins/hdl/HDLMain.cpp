@@ -132,10 +132,55 @@ namespace systemc_hdl {
 			       llvm::raw_fd_ostream &HCodeOut) {
     const std::vector<ModuleInstance *> &submodv = mod->getNestedModuleInstances();
     const std::vector<ModuleInstance *> &basemods = mod->getBaseInstances();
+
+    //!
+    //! map of overridden method decl and overriding method decl
+    //! warning: only supporting single inheritance
+    //!
+    overridden_method_map_t overridden_method_map;
+    
     LLVM_DEBUG( llvm::dbgs() << "dumping base instances \n");
     mod->dump_base_instances(llvm::dbgs());
     LLVM_DEBUG( llvm::dbgs() << "end base instances \n");
 
+    const CXXRecordDecl *cdecl{mod->getModuleClassDecl()};
+    LLVM_DEBUG( llvm::dbgs() << "Methods in this module\n");
+    for (const auto &method : cdecl->methods()) {
+      if (isValidMethod(method)) {
+	if (method->isVirtual()) {
+	  LLVM_DEBUG( llvm::dbgs() <<  "Virtual ");
+	}
+	LLVM_DEBUG(llvm::dbgs() << "Method name is " << method->getParent()->getNameAsString() << "::" << method->getNameAsString()
+		   << "\n");
+	QualType qtype{method->getThisType()};
+	qtype.getTypePtr()->dump();
+	LLVM_DEBUG(llvm::dbgs() << "\n");
+	if (method->getBody() != NULL) {
+	  LLVM_DEBUG(llvm::dbgs() << "Body of method\n");
+	  LLVM_DEBUG(method->getBody()->dump());
+	}
+	else LLVM_DEBUG(llvm::dbgs() << "Empty method body\n");
+      
+	for (const auto &ometh : method->overridden_methods()) {
+	  llvm::dbgs() << " overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n";
+	  if (ometh->hasBody()) {
+	    overridden_method_map[ometh] = method; 
+	  }
+	  else LLVM_DEBUG(llvm::dbgs() << "Empty overridden method body\n");
+	}
+      }
+    }
+
+    LLVM_DEBUG(llvm::dbgs() <<"Overridden method map\n");
+    for (auto ov: overridden_method_map) {
+      LLVM_DEBUG(llvm::dbgs() << "Overridden method\n");
+      LLVM_DEBUG(ov.first->dump(llvm::dbgs()));
+      LLVM_DEBUG(llvm::dbgs() << "Overriding method\n");
+      LLVM_DEBUG(ov.second->dump(llvm::dbgs()));
+    }
+    LLVM_DEBUG(llvm::dbgs() <<"end Overridden method map\n");
+    LLVM_DEBUG( llvm::dbgs() << "End Methods in this module\n\n");
+      
     // look at constructor
 
     // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
@@ -149,7 +194,7 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
     
     hdecl_name_map_t mod_vname_map("_scclang_global_");
-    xbodyp = new HDLBody(main_diag_engine, getContext(), mod_vname_map, allmethodecls);
+    xbodyp = new HDLBody(main_diag_engine, getContext(), mod_vname_map, allmethodecls, overridden_method_map);
     
     module_vars.clear();
     threadresetmap.clear();
@@ -253,7 +298,7 @@ namespace systemc_hdl {
     mod_i = mod;
     for (int i = 0; i <= basemods.size(); i++) {
       // send portsigvarlist (h_ports) to proc code gen so thread vars get promoted to module level
-      SCproc2hcode(mod_i->getProcessMap(), h_processes, h_ports, mod_vname_map, threadresetmap);
+      SCproc2hcode(mod_i->getProcessMap(), h_processes, h_ports, mod_vname_map, overridden_method_map, threadresetmap);
       if (i == basemods.size()) break;
       mod_i = basemods[i];
     }
@@ -268,6 +313,7 @@ namespace systemc_hdl {
 	h_ports->append(hvp);
       }
     }
+  
     
     // now add init block
     if (h_modinitblockhead->size()>0)
@@ -340,7 +386,7 @@ namespace systemc_hdl {
 	  allmethodecls.insertall(xbodyp->methodecls);
 	  h_processes->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
-	}
+	} // end non-null body
       }
     }
 
@@ -404,6 +450,14 @@ namespace systemc_hdl {
 	  varname.append("_" + to_string(1)+"_" + to_string(j-1)+"_" + to_string(k-1));
 	  instnames.push_back(varname);
 	}
+  }
+
+  bool HDLMain::isValidMethod(CXXMethodDecl *method) {
+    if ((method->getNameAsString() != (method->getParent()->getNameAsString() ))  && // constructor
+	(method->getNameAsString() != "~"+ (method->getParent()->getNameAsString() )) && // destructor
+	  (method->getBody() !=NULL)) // get rid of methods with empty body
+      return true;
+    else return false;
   }
   
   void HDLMain::SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
@@ -550,7 +604,7 @@ namespace systemc_hdl {
   }
 
   void HDLMain::SCproc2hcode(ModuleInstance::processMapType pm, hNodep &h_top, hNodep &h_port,
-			     hdecl_name_map_t &mod_vname_map, resetvar_map_t &threadresetmap) {
+			     hdecl_name_map_t &mod_vname_map, overridden_method_map_t &overridden_method_map, resetvar_map_t &threadresetmap) {
     // typedef std::map<std::string, ProcessDecl *> processMapType;
     // processMapType getProcessMap();
     // ProcessDecl::getEntryFunction() returns EntryFunctionContainer*
@@ -600,7 +654,7 @@ namespace systemc_hdl {
 	    // params includes portsigvarlist so thread local vars get promoted to module level
 	    // have to pass efc to get the reset info
 
-	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map, allmethodecls, h_resetvarinfo );
+	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map, allmethodecls, overridden_method_map, h_resetvarinfo );
 	    allmethodecls.insertall(xthread.methodecls);
 	    //h_thread->child_list.push_back(h_body);
 	    h_top->child_list.push_back(h_thread);

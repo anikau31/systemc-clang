@@ -38,11 +38,15 @@ namespace systemc_hdl {
    void SCmodule2hcode(ModuleInstance *mod, hNodep &h_module,
                        llvm::raw_fd_ostream &SCout);
    void GenerateInstanceNames(ModuleInstance *smod, std::vector<std::string> &instnames);
+   bool isValidMethod(CXXMethodDecl *method);
    void SCport2hcode(ModuleInstance::portMapType pmap, hNode::hdlopsEnum h_op,
                      hNodep &h_info,  hdecl_name_map_t &mod_vname_map);
    void SCsig2hcode(ModuleInstance::signalMapType pmap, hNode::hdlopsEnum h_op,
                     hNodep &h_info, hdecl_name_map_t &mod_vname_map);
-   void SCproc2hcode(ModuleInstance::processMapType pm, hNodep & h_top, hNodep &h_port,hdecl_name_map_t &mod_vname_map, resetvar_map_t &threadresetmap);
+   void SCproc2hcode(ModuleInstance::processMapType pm, hNodep & h_top,
+		     hNodep &h_port,hdecl_name_map_t &mod_vname_map,
+		     overridden_method_map_t &overridden_method_map, resetvar_map_t &threadresetmap);
+   
     //void SCportbindings2hcode(ModuleInstance * mod, hNodep &h_pb);
     //following is obsolete and no longer called 
     void SCportbindings2hcode(

@@ -32,8 +32,13 @@ using namespace hnode;
 
 namespace systemc_hdl {
 
-  HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map, hfunc_name_map_t &allmethodecls) :
-    diag_e{diag_engine}, ast_context_{ast_context}, mod_vname_map_{mod_vname_map}, allmethodecls_{allmethodecls} {
+  HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine,
+		   const ASTContext &ast_context,
+		   hdecl_name_map_t &mod_vname_map,
+		   hfunc_name_map_t &allmethodecls,
+		   overridden_method_map_t &overridden_method_map) :
+    diag_e{diag_engine}, ast_context_{ast_context},
+    mod_vname_map_{mod_vname_map}, allmethodecls_{allmethodecls}, overridden_method_map_{overridden_method_map} {
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor\n");
     }
 
@@ -472,7 +477,7 @@ namespace systemc_hdl {
 	  if (tmpname == "") { // isn't in local or global symbol table
 	    LLVM_DEBUG(llvm::dbgs() << "adding method " << qualfuncname << " with pointer " << value << " \n");
 	    methodecls.print(llvm::dbgs());
-	    methodecls.add_entry((FunctionDecl *)value, qualfuncname,  hfuncall);
+	    methodecls.add_entry((CXXMethodDecl *)funval, qualfuncname,  hfuncall);
 	  }
 	  else hfuncall->set(tmpname);
 	}
@@ -533,7 +538,9 @@ namespace systemc_hdl {
 
     string methodname = "NoMethod", qualmethodname = "NoQualMethod";
     CXXMethodDecl *methdcl = callexpr->getMethodDecl();
-
+    if ((overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
+      methdcl = const_cast<CXXMethodDecl *>(overridden_method_map_[methdcl]);
+    }
     // LLVM_DEBUG(llvm::dbgs() << "methoddecl follows\n");
     // LLVM_DEBUG(methdcl->dump(llvm::dbgs());
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {
@@ -582,7 +589,7 @@ namespace systemc_hdl {
 	if (tmpname == "") { // isn't in local or global symbol table
 	  LLVM_DEBUG(llvm::dbgs() << "adding method " << qualmethodname << " with pointer " << methdcl << " \n");
 	  methodecls.print(llvm::dbgs());
-	  methodecls.add_entry((FunctionDecl *)methdcl, qualmethodname,  h_callp);
+	  methodecls.add_entry(methdcl, qualmethodname,  h_callp);
 	}
 	else h_callp->set(tmpname);
       }

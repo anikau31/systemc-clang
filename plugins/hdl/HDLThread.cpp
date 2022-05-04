@@ -24,9 +24,9 @@ namespace systemc_hdl {
   HDLThread::HDLThread(EntryFunctionContainer *efc, hNodep &h_top, hNodep &h_portsigvarlist,
 		       clang::DiagnosticsEngine &diag_engine,
 		       const ASTContext &ast_context, hdecl_name_map_t &mod_vname_map,
-		       hfunc_name_map_t &allmethodecls, hNodep h_resetvarinfo )
+		       hfunc_name_map_t &allmethodecls, overridden_method_map_t &overridden_method_map, hNodep h_resetvarinfo )
     : efc_(efc), h_top_{h_top}, diag_e{diag_engine}, ast_context_{ast_context},
-      mod_vname_map_{mod_vname_map}, allmethodecls_{allmethodecls},
+      mod_vname_map_{mod_vname_map}, allmethodecls_{allmethodecls}, overridden_method_map_{overridden_method_map}, 
       h_resetvarinfo_{h_resetvarinfo}, scfg{const_cast<ASTContext &>(ast_context), efc->getEntryMethod()} {
 
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLThread constructor (thread body)\n");
@@ -48,7 +48,7 @@ namespace systemc_hdl {
       thread_vname_map.reset_referenced();
       
       //xtbodyp = new HDLBody(diag_e, ast_context_, mod_vname_map_);
-      xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map, allmethodecls_);
+      xtbodyp = new HDLBody(diag_e, ast_context_, thread_vname_map, allmethodecls_, overridden_method_map);
       hNodep hthreadmainmethod = new hNode(h_top->getname(), hNode::hdlopsEnum::hMethod);
       hthreadblocksp = new hNode(hNode::hdlopsEnum::hSwitchStmt); // body is switch, each path is case alternative
       hthreadblocksp->append(new hNode(state_string, hNode::hdlopsEnum::hVarref));
