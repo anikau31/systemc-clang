@@ -263,6 +263,7 @@ namespace systemc_hdl {
     hNodep h_constructor;
     hNodep h_allsenslists = new hNode( hNode::hdlopsEnum::hNoop);
     for (int i = 0; i <= basemods.size(); i++) {
+      if (mod_i->getConstructorDecl() ==NULL) continue; // null constructor
       h_constructor = new hNode(mod_i->getInstanceInfo().getVarName()+ (mod_i->getInstanceInfo().isArrayType()? "_0" :""),
 				hNode::hdlopsEnum::hModinitblock);
     
