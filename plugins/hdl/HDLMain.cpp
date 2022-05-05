@@ -317,8 +317,18 @@ namespace systemc_hdl {
   
     
     // now add init block
-    if (h_modinitblockhead->size()>0)
-      h_module->child_list.insert(h_module->child_list.end(), h_modinitblockhead->child_list.begin(), h_modinitblockhead->child_list.end());
+    if (h_modinitblockhead->size()>0) {
+      h_module->append(h_modinitblockhead->child_list[0]);
+      //h_module->child_list.insert(h_module->child_list.end(), h_modinitblockhead->child_list.begin(), h_modinitblockhead->child_list.end());
+      hNodep hfirstblock = h_modinitblockhead->child_list[0];
+      for (int i = 1; i< h_modinitblockhead->size(); i++) { // in case of multiple modinit blocks due to inheritance
+	// join all their child_lists under the first mod_int
+	hfirstblock->child_list.insert(hfirstblock->child_list.end(),
+				       h_modinitblockhead->child_list[i]->child_list.begin(),
+				       h_modinitblockhead->child_list[i]->child_list.end());
+	
+      }
+    }
 
     // Functions
     // Initially these are functions that were referenced in the module's sc_methods/threads
