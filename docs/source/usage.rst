@@ -4,7 +4,7 @@
 Using systemc-clang
 ====================
 
-After successfully compiling `systemc-clang`, it is possible to run the tool, but it requires several additional arguments.
+After successfully compiling ``systemc-clang``, it is possible to run the tool, but it requires several additional arguments.
 Assuming that the current path is in the directory that contains the ``systemc-clang`` binary, the tool can be run as follows.
 ::
   $ ./systemc-clang test.cpp -- __STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS  \
@@ -18,9 +18,9 @@ Useful scripts to execute ``systemc-clang``
 
 The distribution provides the following useful scripts to execute ``systemc-clang``.
 
-* ``run.sh``: executes ``systemc-clang``.
-* ``run-gdb.sh``: executes gdb with ``systemc-clang``.
-* ``run-cpp-sv.sh``: executes ``systemc-clang`` and generates SystemVerilog file.
+*  ``run.sh``: executes ``systemc-clang``.
+*  ``run-gdb.sh``: executes gdb with ``systemc-clang``.
+*  ``run-cpp-sv.sh``: executes ``systemc-clang`` and generates SystemVerilog file.
 
 Both of these scripts require setting some environment variables. 
 Most of these are defined in the following scripts to make it easier for users.
@@ -29,11 +29,11 @@ Most of these are defined in the following scripts to make it easier for users.
 
 Specifically, these scripts require the user to set the following variables. 
 These can be changed in the file itself. 
-
-* ``LLVM_INSTALL_DIR``: This points to the directory where clang is installed. 
-* ``SYSTEMC``: This points to the directory where SystemC is installed.
-* ``SYSTEMC_CLANG``: This is the cloned source repository.
-* ``SYSTEMC_CLANG_BUILD_DIR``: This points to where ``systemc-clang`` was built.
+ 
+*  ``LLVM_INSTALL_DIR``: This points to the directory where clang is installed. 
+*  ``SYSTEMC``: This points to the directory where SystemC is installed.
+*  ``SYSTEMC_CLANG``: This is the cloned source repository.
+*  ``SYSTEMC_CLANG_BUILD_DIR``: This points to where ``systemc-clang`` was built.
 
 Once the appropriate environment variables are set, the scripts used to run ``systemc-clang`` can be executed successfully.
 ::
