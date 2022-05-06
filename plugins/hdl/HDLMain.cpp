@@ -263,6 +263,7 @@ namespace systemc_hdl {
     hNodep h_constructor;
     hNodep h_allsenslists = new hNode( hNode::hdlopsEnum::hNoop);
     for (int i = 0; i <= basemods.size(); i++) {
+      if (mod_i->getConstructorDecl() ==NULL) continue; // null constructor
       h_constructor = new hNode(mod_i->getInstanceInfo().getVarName()+ (mod_i->getInstanceInfo().isArrayType()? "_0" :""),
 				hNode::hdlopsEnum::hModinitblock);
     
@@ -316,8 +317,18 @@ namespace systemc_hdl {
   
     
     // now add init block
-    if (h_modinitblockhead->size()>0)
-      h_module->child_list.insert(h_module->child_list.end(), h_modinitblockhead->child_list.begin(), h_modinitblockhead->child_list.end());
+    if (h_modinitblockhead->size()>0) {
+      h_module->append(h_modinitblockhead->child_list[0]);
+      //h_module->child_list.insert(h_module->child_list.end(), h_modinitblockhead->child_list.begin(), h_modinitblockhead->child_list.end());
+      hNodep hfirstblock = h_modinitblockhead->child_list[0];
+      for (int i = 1; i< h_modinitblockhead->size(); i++) { // in case of multiple modinit blocks due to inheritance
+	// join all their child_lists under the first mod_int
+	hfirstblock->child_list.insert(hfirstblock->child_list.end(),
+				       h_modinitblockhead->child_list[i]->child_list.begin(),
+				       h_modinitblockhead->child_list[i]->child_list.end());
+	
+      }
+    }
 
     // Functions
     // Initially these are functions that were referenced in the module's sc_methods/threads
@@ -342,7 +353,7 @@ namespace systemc_hdl {
 	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 	if (m.first->hasBody()) {
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
-	  QualType qrettype = m.first->getDeclaredReturnType();
+	  QualType qrettype = m.first->getReturnType(); // m.first->getDeclaredReturnType();
 	  const clang::Type *rettype = qrettype.getTypePtr();
 	  FindTemplateTypes *te = new FindTemplateTypes();
 	  te->Enumerate(rettype);
