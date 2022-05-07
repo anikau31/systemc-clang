@@ -363,6 +363,7 @@ namespace systemc_hdl {
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	  if (m.first->getNumParams() > 0) {
 	    hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
+	    hNodep hparam_assign_list = new hNode(hNode::hdlopsEnum::hCStmt);
 	    hfunc->child_list.push_back(hparams);
 	    for (int i = 0; i < m.first->getNumParams(); i++) {
 	      VarDecl *vardecl = m.first->getParamDecl(i);
@@ -381,15 +382,30 @@ namespace systemc_hdl {
 	      if (mutil.is_sc_macro(m.second.oldn)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      else if (vardecl->getType()->isReferenceType())
 		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
-	      else paramtype = hNode::hdlopsEnum::hFunctionParamI;
+	      else { // handle actual parameter
+		
+		paramtype = hNode::hdlopsEnum::hFunctionParamI;
+		// create an entry in mod_vname_map for this parameter's local variable
+		string objname = vardecl->getName().str()+"_actual";
+
+		HDLt.SCtype2hcode(objname, te->getTemplateArgTreePtr(),
+				&array_sizes, hNode::hdlopsEnum::hVardecl, h_ports);
+		mod_vname_map.add_entry(vardecl, objname, h_ports->child_list.back());
+		hNodep hparam_assign = new hNode("=", hNode::hdlopsEnum::hBinop);
+		hNodep hv = new hNode(mod_vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref);
+		hparam_assign->append(hv);
+		hv = new hNode(vardecl->getName().str(), hNode::hdlopsEnum::hVarref);
+		hparam_assign->append(hv);
+		hparam_assign_list->append(hparam_assign);
+	      }
+	      
 	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
 				&array_sizes, paramtype, hparams);
 	    }
-
-	    //HDLBody xfunction(m.first->getBody(), hfunc, main_diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
-	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
+	    if (hparam_assign_list->child_list.size()>0) // there were some actual parameters
+	      hfunc->append(hparam_assign_list); // suppress output of unqualified name  
+	    xbodyp->Run(m.first->getBody(), hparam_assign_list->child_list.size()>0 ? hparam_assign_list : hfunc, rnomode); // suppress output of unqualified name
 	  } else {
-	    //HDLBody xfunction(m.first->getBody(), hfunc, main_diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
 	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
 
 	  }
