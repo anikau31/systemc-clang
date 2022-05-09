@@ -5,6 +5,7 @@ import sys
 import traceback
 import logging
 import argparse
+import pathlib
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -18,11 +19,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('input', type=str, help='Input file name (normally the _hdl.txt file)')
     parser.add_argument('--output', type=str, help='The outpuf filename')
+    parser.add_argument('-f', '--force', action="store_true",
+                        help='Whether the script overwrites resultant file')
     args = parser.parse_args()
     filename = args.input
-    outputname = filename + ".v"
+    outputname = filename + ".sv"
     if args.output is not None:
         outputname = args.output
+    if not args.force and pathlib.Path(outputname).exists():
+        raise FileExistsError("File {} exists".format(outputname))
     with open(filename, 'r') as f:
         file_content = f.read()
     try:

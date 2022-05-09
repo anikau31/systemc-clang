@@ -285,7 +285,9 @@ class FunctionTransformationPass(TopDown):
         tree.children[1].children[0].children[0] = 'sc_in'
 
     def __get_func_param_stub(self, id):
-        return self.__func_param_stubs[id]
+        if id in self.__func_param_stubs:
+            return self.__func_param_stubs[id]
+        return id
 
     def hvarref(self, tree):
         if hasattr(tree, 'func_repl_id'):
