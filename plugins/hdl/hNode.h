@@ -420,7 +420,7 @@ namespace hnode {
       hdecl_name_map.insert(newmap.begin(),
 			    newmap.end());
     }
-    
+ 
   };
 
   typedef newname_map_t<NamedDecl *> hdecl_name_map_t;

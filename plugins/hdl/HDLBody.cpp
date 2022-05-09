@@ -535,7 +535,9 @@ namespace systemc_hdl {
     QualType argtyp = arg->getType();
     LLVM_DEBUG(llvm::dbgs() << "type of x in x.f(5) is " << argtyp.getAsString()
 	       << "\n");
-
+    QualType objtyp = callexpr->getObjectType();
+    LLVM_DEBUG(llvm::dbgs() << "... and object type is " << objtyp.getAsString()
+	       << "\n");
     string methodname = "NoMethod", qualmethodname = "NoQualMethod";
     CXXMethodDecl *methdcl = callexpr->getMethodDecl();
     if ((overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {

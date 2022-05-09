@@ -333,8 +333,8 @@ namespace systemc_hdl {
     // Functions
     // Initially these are functions that were referenced in the module's sc_methods/threads
     // Function calls within functions get added to all methodecls.
-    // Still need to account for recursion (which shouldn't occur in a synthesizable systemc program)
-    
+
+    std::set<Decl *> generated_functions;
     while (allmethodecls.size() > 0) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
       //std::unordered_multimap<string, FunctionDecl *> modmethodecls;
@@ -352,6 +352,8 @@ namespace systemc_hdl {
 	LLVM_DEBUG(llvm::dbgs() << "---------\n");
 	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 	if (m.first->hasBody()) {
+	  if (generated_functions.count(m.first) > 0) continue; // already generated this one
+	  generated_functions.insert(m.first);
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
 	  QualType qrettype = m.first->getReturnType(); // m.first->getDeclaredReturnType();
 	  const clang::Type *rettype = qrettype.getTypePtr();
