@@ -404,12 +404,23 @@ namespace systemc_hdl {
 	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
 				&array_sizes, paramtype, hparams);
 	    }
-	    if (hparam_assign_list->child_list.size()>0) // there were some actual parameters
-	      hfunc->append(hparam_assign_list); // suppress output of unqualified name  
-	    xbodyp->Run(m.first->getBody(), hparam_assign_list->child_list.size()>0 ? hparam_assign_list : hfunc, rnomode); // suppress output of unqualified name
-	  } else {
-	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
+	    if (hparam_assign_list->child_list.size()>0) { // there were some actual parameters
+	      hNodep htmpf = new hNode( hNode::hdlopsEnum::hCStmt);
+	      xbodyp->Run(m.first->getBody(), htmpf, rnomode); // suppress output of unqualified name
+	      int varendix = 0;
+	      for (int i=0; i<htmpf->child_list.size(); i++) {
+		if (htmpf->child_list[i]->getopc() !=  hNode::hdlopsEnum::hVardecl) {
+		  varendix = i;
+		  break;
+		}
+	      }
+	      htmpf->child_list.insert(htmpf->child_list.begin() + varendix, hparam_assign_list->child_list.begin(), hparam_assign_list->child_list.end());
+	      hfunc->append(htmpf); 
 
+	    }
+	    else {
+	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
+	    }
 	  }
 	  // If this function invoked other functions, add them to the list to be generated
 	  allmethodecls.insertall(xbodyp->methodecls);
