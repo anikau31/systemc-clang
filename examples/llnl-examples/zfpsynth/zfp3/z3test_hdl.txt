@@ -11365,14 +11365,14 @@
             ]
           ]
         ]
-        hCStmt  NONAME [
-          hVardecl n__local_10 [
-            hTypeinfo  NONAME [
-              hType sc_uint [
-                hLiteral 12 NOLIST
-              ]
+        hVardecl n__local_10 [
+          hTypeinfo  NONAME [
+            hType sc_uint [
+              hLiteral 12 NOLIST
             ]
           ]
+        ]
+        hCStmt  NONAME [
           hBinop = [
             hVarref bc_actual_scclang_global_6 NOLIST
             hVarref bc NOLIST
@@ -11381,71 +11381,69 @@
             hVarref bp_actual_scclang_global_7 NOLIST
             hVarref bp NOLIST
           ]
-          hCStmt  NONAME [
-            hBinop = [
+          hBinop = [
+            hVarref n__local_10 NOLIST
+            hMethodCall sc_dt__sc_min_func_5 [
+              hVarref bc_actual_scclang_global_6 NOLIST
+              hBinop - [
+                hSigAssignR read [
+                  hVarref maxbits NOLIST
+                ]
+                hVarref ts##bits NOLIST
+              ]
+            ]
+          ]
+          hIfStmt  NONAME [
+            hBinop >= [
+              hBinop - [
+                hLiteral 128 NOLIST
+                hVarref ts##posw NOLIST
+              ]
               hVarref n__local_10 NOLIST
-              hMethodCall sc_dt__sc_min_func_5 [
-                hVarref bc_actual_scclang_global_6 NOLIST
-                hBinop - [
-                  hSigAssignR read [
-                    hVarref maxbits NOLIST
-                  ]
-                  hVarref ts##bits NOLIST
-                ]
-              ]
             ]
-            hIfStmt  NONAME [
-              hBinop >= [
-                hBinop - [
-                  hLiteral 128 NOLIST
-                  hVarref ts##posw NOLIST
-                ]
-                hVarref n__local_10 NOLIST
-              ]
-              hCStmt  NONAME [
-                hBinop = [
-                  hBinop SLICE [
-                    hVarref ts##buf NOLIST
-                    hBinop - [
-                      hBinop + [
-                        hVarref ts##posw NOLIST
-                        hVarref n__local_10 NOLIST
-                      ]
-                      hLiteral 1 NOLIST
-                    ]
-                    hVarref ts##posw NOLIST
-                  ]
-                  hBinop SLICE [
-                    hVarref bp_actual_scclang_global_7 NOLIST
-                    hBinop - [
+            hCStmt  NONAME [
+              hBinop = [
+                hBinop SLICE [
+                  hVarref ts##buf NOLIST
+                  hBinop - [
+                    hBinop + [
+                      hVarref ts##posw NOLIST
                       hVarref n__local_10 NOLIST
-                      hLiteral 1 NOLIST
                     ]
-                    hLiteral 0 NOLIST
+                    hLiteral 1 NOLIST
                   ]
-                ]
-                hBinop = [
-                  hVarref ts##bits NOLIST
-                  hBinop + [
-                    hVarref ts##bits NOLIST
-                    hVarref n__local_10 NOLIST
-                  ]
-                ]
-                hBinop = [
                   hVarref ts##posw NOLIST
-                  hBinop + [
-                    hVarref ts##posw NOLIST
-                    hVarref n__local_10 NOLIST
-                  ]
                 ]
-                hReturnStmt  NONAME [
-                  hLiteral 1 NOLIST
+                hBinop SLICE [
+                  hVarref bp_actual_scclang_global_7 NOLIST
+                  hBinop - [
+                    hVarref n__local_10 NOLIST
+                    hLiteral 1 NOLIST
+                  ]
+                  hLiteral 0 NOLIST
                 ]
               ]
+              hBinop = [
+                hVarref ts##bits NOLIST
+                hBinop + [
+                  hVarref ts##bits NOLIST
+                  hVarref n__local_10 NOLIST
+                ]
+              ]
+              hBinop = [
+                hVarref ts##posw NOLIST
+                hBinop + [
+                  hVarref ts##posw NOLIST
+                  hVarref n__local_10 NOLIST
+                ]
+              ]
+              hReturnStmt  NONAME [
+                hLiteral 1 NOLIST
+              ]
             ]
-            hReturnStmt  NONAME [
-              hLiteral 0 NOLIST
-            ]
+          ]
+          hReturnStmt  NONAME [
+            hLiteral 0 NOLIST
           ]
         ]
       ]
@@ -11467,120 +11465,118 @@
             ]
           ]
         ]
+        hVardecl bbits__local_11 [
+          hTypeinfo  NONAME [
+            hType sc_uint [
+              hLiteral 8 NOLIST
+            ]
+          ]
+        ]
+        hVardecl flit__local_12 [
+          hTypeinfo  NONAME [
+            hType bits_t [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
         hCStmt  NONAME [
-          hVardecl bbits__local_11 [
-            hTypeinfo  NONAME [
-              hType sc_uint [
-                hLiteral 8 NOLIST
-              ]
-            ]
-          ]
-          hVardecl flit__local_12 [
-            hTypeinfo  NONAME [
-              hType bits_t [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
           hBinop = [
             hVarref done_actual_scclang_global_8 NOLIST
             hVarref done NOLIST
           ]
-          hCStmt  NONAME [
-            hBinop = [
-              hVarref bbits__local_11 NOLIST
-              hBinop - [
-                hVarref ts##posw NOLIST
-                hVarref ts##posr NOLIST
+          hBinop = [
+            hVarref bbits__local_11 NOLIST
+            hBinop - [
+              hVarref ts##posw NOLIST
+              hVarref ts##posr NOLIST
+            ]
+          ]
+          hIfStmt  NONAME [
+            hBinop && [
+              hBinop >= [
+                hVarref bbits__local_11 NOLIST
+                hLiteral 64 NOLIST
+              ]
+              hSigAssignR read [
+                hVarref m_bits##ready NOLIST
               ]
             ]
-            hIfStmt  NONAME [
-              hBinop && [
-                hBinop >= [
-                  hVarref bbits__local_11 NOLIST
-                  hLiteral 64 NOLIST
-                ]
-                hSigAssignR read [
-                  hVarref m_bits##ready NOLIST
-                ]
-              ]
-              hCStmt  NONAME [
-                hBinop = [
-                  hVarref flit__local_12##tdata NOLIST
-                  hBinop SLICE [
-                    hVarref ts##buf NOLIST
-                    hBinop - [
-                      hBinop + [
-                        hVarref ts##posr NOLIST
-                        hLiteral 64 NOLIST
-                      ]
-                      hLiteral 1 NOLIST
-                    ]
-                    hVarref ts##posr NOLIST
-                  ]
-                ]
-                hBinop = [
-                  hVarref flit__local_12##tlast NOLIST
-                  hBinop && [
-                    hVarref done_actual_scclang_global_8 NOLIST
-                    hBinop == [
-                      hVarref bbits__local_11 NOLIST
-                      hLiteral 64 NOLIST
-                    ]
-                  ]
-                ]
-                hSigAssignL write [
-                  hVarref m_bits##data NOLIST
-                  hVarref flit__local_12 NOLIST
-                ]
-                hSigAssignL write [
-                  hVarref m_bits##valid NOLIST
-                  hLiteral 1 NOLIST
-                ]
-                hBinop = [
-                  hBinop SLICE [
-                    hVarref ts##buf NOLIST
-                    hBinop - [
-                      hVarref ts##posw NOLIST
-                      hLiteral 64 NOLIST
-                    ]
-                    hLiteral 0 NOLIST
-                  ]
-                  hBinop SLICE [
-                    hVarref ts##buf NOLIST
-                    hBinop - [
-                      hVarref ts##posw NOLIST
-                      hLiteral 1 NOLIST
-                    ]
+            hCStmt  NONAME [
+              hBinop = [
+                hVarref flit__local_12##tdata NOLIST
+                hBinop SLICE [
+                  hVarref ts##buf NOLIST
+                  hBinop - [
                     hBinop + [
                       hVarref ts##posr NOLIST
                       hLiteral 64 NOLIST
                     ]
+                    hLiteral 1 NOLIST
                   ]
-                ]
-                hBinop = [
                   hVarref ts##posr NOLIST
-                  hLiteral 0 NOLIST
                 ]
-                hBinop = [
-                  hVarref ts##posw NOLIST
-                  hBinop - [
+              ]
+              hBinop = [
+                hVarref flit__local_12##tlast NOLIST
+                hBinop && [
+                  hVarref done_actual_scclang_global_8 NOLIST
+                  hBinop == [
                     hVarref bbits__local_11 NOLIST
                     hLiteral 64 NOLIST
                   ]
                 ]
-                hReturnStmt  NONAME [
-                  hVarref flit__local_12##tlast NOLIST
-                ]
               ]
-            ]
-            hReturnStmt  NONAME [
-              hBinop && [
-                hVarref done_actual_scclang_global_8 NOLIST
-                hBinop == [
-                  hVarref bbits__local_11 NOLIST
+              hSigAssignL write [
+                hVarref m_bits##data NOLIST
+                hVarref flit__local_12 NOLIST
+              ]
+              hSigAssignL write [
+                hVarref m_bits##valid NOLIST
+                hLiteral 1 NOLIST
+              ]
+              hBinop = [
+                hBinop SLICE [
+                  hVarref ts##buf NOLIST
+                  hBinop - [
+                    hVarref ts##posw NOLIST
+                    hLiteral 64 NOLIST
+                  ]
                   hLiteral 0 NOLIST
                 ]
+                hBinop SLICE [
+                  hVarref ts##buf NOLIST
+                  hBinop - [
+                    hVarref ts##posw NOLIST
+                    hLiteral 1 NOLIST
+                  ]
+                  hBinop + [
+                    hVarref ts##posr NOLIST
+                    hLiteral 64 NOLIST
+                  ]
+                ]
+              ]
+              hBinop = [
+                hVarref ts##posr NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop = [
+                hVarref ts##posw NOLIST
+                hBinop - [
+                  hVarref bbits__local_11 NOLIST
+                  hLiteral 64 NOLIST
+                ]
+              ]
+              hReturnStmt  NONAME [
+                hVarref flit__local_12##tlast NOLIST
+              ]
+            ]
+          ]
+          hReturnStmt  NONAME [
+            hBinop && [
+              hVarref done_actual_scclang_global_8 NOLIST
+              hBinop == [
+                hVarref bbits__local_11 NOLIST
+                hLiteral 0 NOLIST
               ]
             ]
           ]
