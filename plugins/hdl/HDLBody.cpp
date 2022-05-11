@@ -539,10 +539,12 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "... and object type is " << objtyp.getAsString()
 	       << "\n");
     string methodname = "NoMethod", qualmethodname = "NoQualMethod";
+    CXXRecordDecl *recdecl = callexpr->getRecordDecl();
+    LLVM_DEBUG(llvm::dbgs() << "here is method record decl name " << recdecl->getNameAsString() << "\n");
     CXXMethodDecl *methdcl = callexpr->getMethodDecl();
-    if ((overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
-      methdcl = const_cast<CXXMethodDecl *>(overridden_method_map_[methdcl]);
-    }
+    //if ((overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
+    //  methdcl = const_cast<CXXMethodDecl *>(overridden_method_map_[methdcl]);
+    //}
     // LLVM_DEBUG(llvm::dbgs() << "methoddecl follows\n");
     // LLVM_DEBUG(methdcl->dump(llvm::dbgs());
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {

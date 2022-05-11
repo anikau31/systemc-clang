@@ -410,15 +410,6 @@ namespace systemc_hdl {
 	      xbodyp->Run(m.first->getBody(), htmpf, rnomode); // suppress output of unqualified name
 	      hNodep hfunccstmt = htmpf->child_list.back();  // htmpf is list of vardecls followed by function body in a cstmt
 	      hfunccstmt->child_list.insert(hfunccstmt->child_list.begin(), hparam_assign_list->child_list.begin(), hparam_assign_list->child_list.end());
-	      // int varendix = 0;
-	      // for (int i=0; i<htmpf->child_list.size(); i++) {
-	      // 	if (htmpf->child_list[i]->getopc() !=  hNode::hdlopsEnum::hVardecl) {
-	      // 	  varendix = i;
-	      // 	  break;
-	      // 	}
-	      // }
-
-	      // htmpf->child_list.insert(htmpf->child_list.begin() + varendix, hparam_assign_list->child_list.begin(), hparam_assign_list->child_list.end());
 	      
 	      hfunc->child_list.insert(hfunc->child_list.end(), htmpf->child_list.begin(), htmpf->child_list.end());
 
