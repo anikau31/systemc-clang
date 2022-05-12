@@ -761,7 +761,11 @@ SC_MODULE(decode_ints)
 				stream_window = s_bp.data_r();	//get flit from stream reader.
 				// decode first n bits of bit plane #k
 				// n < bits ? m=n : m=bits;//		m = MIN(n, bits);
-        m = n < bits ? n : bits;
+        if(n < bits) {
+          m = n;
+        } else {
+          m = bits;
+        }
 				bits -= m;
 
 				//copy first m bits into results plane (unless m is 0, then do nothing)
@@ -1401,7 +1405,7 @@ SC_MODULE(inv_cast)
 																);
 
 		if(zero_output)
-			fp = 0;
+			fp =  (typename FP::ui_t)0;
 		else
 		{
 			// Compute x = 2^emax * (y / 2^(p - 2))
