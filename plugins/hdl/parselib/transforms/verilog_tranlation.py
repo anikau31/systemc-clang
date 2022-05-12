@@ -80,6 +80,10 @@ class VerilogTranslationPass(TopDown):
         warnings.warn('hwait encountered, not implemented')
         return "// hwait"
 
+    def hvarinitlist(self, tree):
+        self.__push_up(tree)
+        return '{' + ','.join(tree.children) + '}'
+
     def blkassign(self, tree):
         # dprint("--------------START----------------")
         current_proc = self.get_current_proc_name()
@@ -203,10 +207,18 @@ class VerilogTranslationPass(TopDown):
             return self.__check_const(tree.children[1]) and self.__check_const(tree.children[2])
         return False
 
+    def _clean_harrayref(self, harrayref_node):
+        assert harrayref_node.data == 'harrayref'
+        if is_tree_type(harrayref_node.children[0], 'hsigassignr'):
+            # dprint(harrayref_node)
+            harrayref_node.children = harrayref_node.children[1:]
+            # dprint(harrayref_node)
+
     def harrayref(self, tree):
         # Check whether
         l_const = None
         r_const = None
+        self._clean_harrayref(tree)
         if isinstance(tree.children[0], Tree) and tree.children[0].data == 'hslice':
             if len(tree.children[0].children) == 3:
                 hslice = tree.children[0]

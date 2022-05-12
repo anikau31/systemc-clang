@@ -189,7 +189,7 @@ lark_grammar = Lark('''
         horreduce: "hNoop" "or_reduce" "[" expression "]"
         hcondop : "hCondop" "NONAME" "[" (hslice | hliteral | hbinop | hunop | syscread | hvarref | hmethodcall) (hslice | expression | hprefix) (hslice | expression | hpostfix) "]"
 
-        syscread : hsigassignr "[" expression "]"
+        syscread : hsigassignr "[" (expression | harrayref) "]"
         syscwrite : hsigassignl "["  expression  (expression | hfieldaccess) "]"
         ?hsigassignr :  "hSigAssignR" "read" 
         ?hsigassignl :  "hSigAssignL" "write" 
@@ -255,7 +255,6 @@ lark_grammar = Lark('''
         nonrefexp: hbinop
         
         harrayref: "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread | harrayref) expression  "]"
-                 | hsigassignr "[" harrayref "]"
                  | hslice
         hslice: "hBinop" "SLICE" "[" hvarref expression expression "]"
               | "hNoop" "range" "[" (hvarref | harrayref | syscread ) expression expression "]"

@@ -1037,7 +1037,7 @@ template<typename FP, typename B> struct decode_stream<FP, B, 2>: sc_module
 			if(c_m_bfifo.ready_r())
 			{
 				//chop the latest bitstream word into "sliding window (bw_w)" sized pieces and store in an array, "w"
-				for(size_t i=0; i < B::dbits/bw_w(2); i++)
+				for(size_t i=0; i < B::dbits/bw_w(2); i++) 
 					w[i] = plane_reg<2>((sc_uint<bw_w(2)>)(word.tdata>>(bw_w(2)*i)));
 			}
 			//else... have to just drain the register file by writing 0 in place of emptied registers.
