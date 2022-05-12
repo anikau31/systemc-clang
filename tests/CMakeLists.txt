@@ -65,7 +65,7 @@ if(V_TESTS_ON)
   # integrate into ctest
   set(V_TEST_LIST hmethod_call port_location unimpl syntax_error generate_file)
   set(V_TRANSLATION_TEST_LIST 
-    add z3test moving-average 
+    add z3test z7test moving-average 
     test_while_iscs 
     # test_binary_iscs 
     test_break_iscs 
