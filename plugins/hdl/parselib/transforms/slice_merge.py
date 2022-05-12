@@ -56,7 +56,8 @@ class SliceMerge(TopDown):
         """
         lst = self.__to_seq(tr)
         is_mult = lst[0] == '*'
-        if not is_mult:
+        if not is_mult or len(lst) > 3:
+            # is of the form a * b or too complex
             return False, None, None
         p1, p2 = lst[1:]
 

@@ -712,7 +712,13 @@ SC_MODULE(decode_ints)
 		}
 
 		//maintain k_min based on maxprec (difficult to synchronize maxprec read on bootstrap)
-		intprec > s_maxprec.read() ? kmin.write(intprec - s_maxprec.read()) : kmin.write(0);//lowest bitplane to decode (computed per block)
+		// intprec > s_maxprec.read() ? kmin.write(intprec - s_maxprec.read()) : kmin.write(0);//lowest bitplane to decode (computed per block)
+    //lowest bitplane to decode (computed per block)
+    if(intprec > s_maxprec.read()) {
+      kmin.write(intprec - s_maxprec.read());
+    } else {
+      kmin.write(0);
+    }
 	}
 
 	//On clock.
@@ -754,7 +760,8 @@ SC_MODULE(decode_ints)
 
 				stream_window = s_bp.data_r();	//get flit from stream reader.
 				// decode first n bits of bit plane #k
-				n < bits ? m=n : m=bits;//		m = MIN(n, bits);
+				// n < bits ? m=n : m=bits;//		m = MIN(n, bits);
+        m = n < bits ? n : bits;
 				bits -= m;
 
 				//copy first m bits into results plane (unless m is 0, then do nothing)
@@ -916,8 +923,10 @@ template<typename FP> struct block_header
 
 	//setter pattern
 public:
-	block_header& set_exp(expo_t _exp) { exp = _exp; return *this; }//"fluent" API to set exponent.
-	block_header& set_zb(bool _zb) { zb = _zb; return *this; } 		//"fluent" API to set zero block.
+	// block_header& set_exp(expo_t _exp) { exp = _exp; return *this; }//"fluent" API to set exponent.
+	// block_header& set_zb(bool _zb) { zb = _zb; return *this; } 		//"fluent" API to set zero block.
+  void set_exp(expo_t _exp) { exp = _exp;  }//"fluent" API to set exponent.
+	void set_zb(bool _zb) { zb = _zb;  } 		//"fluent" API to set zero block.
 
 	bool is_zero(){return zb;}
 };

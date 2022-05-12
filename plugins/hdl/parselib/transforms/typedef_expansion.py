@@ -245,7 +245,12 @@ class TypedefExpansion(TopDown):
             if self.__expanded_type(var_name):
                 return var_name
         elif tree.data == 'harrayref':
-            var_name = tree.children[0].children[0]
+            # TODO: support for multi-dimension array
+            # Special cases for handling hSigAssignR as array reference
+            if tree.children[0].data == 'hsigassignr':
+                var_name = tree.children[1].children[0]
+            else:
+                var_name = tree.children[0].children[0]
             if self.__expanded_type(var_name):
                 return var_name
         elif tree.data == 'hvarref':
