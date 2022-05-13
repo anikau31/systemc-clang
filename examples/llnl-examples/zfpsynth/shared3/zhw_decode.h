@@ -712,7 +712,13 @@ SC_MODULE(decode_ints)
 		}
 
 		//maintain k_min based on maxprec (difficult to synchronize maxprec read on bootstrap)
-		intprec > s_maxprec.read() ? kmin.write(intprec - s_maxprec.read()) : kmin.write(0);//lowest bitplane to decode (computed per block)
+		// intprec > s_maxprec.read() ? kmin.write(intprec - s_maxprec.read()) : kmin.write(0);//lowest bitplane to decode (computed per block)
+    //lowest bitplane to decode (computed per block)
+    if(intprec > s_maxprec.read()) {
+      kmin.write(intprec - s_maxprec.read());
+    } else {
+      kmin.write(0);
+    }
 	}
 
 	//On clock.
@@ -754,7 +760,12 @@ SC_MODULE(decode_ints)
 
 				stream_window = s_bp.data_r();	//get flit from stream reader.
 				// decode first n bits of bit plane #k
-				n < bits ? m=n : m=bits;//		m = MIN(n, bits);
+				// n < bits ? m=n : m=bits;//		m = MIN(n, bits);
+        if(n < bits) {
+          m = n;
+        } else {
+          m = bits;
+        }
 				bits -= m;
 
 				//copy first m bits into results plane (unless m is 0, then do nothing)
@@ -916,8 +927,10 @@ template<typename FP> struct block_header
 
 	//setter pattern
 public:
-	block_header& set_exp(expo_t _exp) { exp = _exp; return *this; }//"fluent" API to set exponent.
-	block_header& set_zb(bool _zb) { zb = _zb; return *this; } 		//"fluent" API to set zero block.
+	// block_header& set_exp(expo_t _exp) { exp = _exp; return *this; }//"fluent" API to set exponent.
+	// block_header& set_zb(bool _zb) { zb = _zb; return *this; } 		//"fluent" API to set zero block.
+  void set_exp(expo_t _exp) { exp = _exp;  }//"fluent" API to set exponent.
+	void set_zb(bool _zb) { zb = _zb;  } 		//"fluent" API to set zero block.
 
 	bool is_zero(){return zb;}
 };
@@ -1028,7 +1041,7 @@ template<typename FP, typename B> struct decode_stream<FP, B, 2>: sc_module
 			if(c_m_bfifo.ready_r())
 			{
 				//chop the latest bitstream word into "sliding window (bw_w)" sized pieces and store in an array, "w"
-				for(size_t i=0; i < B::dbits/bw_w(2); i++)
+				for(size_t i=0; i < B::dbits/bw_w(2); i++) 
 					w[i] = plane_reg<2>((sc_uint<bw_w(2)>)(word.tdata>>(bw_w(2)*i)));
 			}
 			//else... have to just drain the register file by writing 0 in place of emptied registers.
@@ -1392,7 +1405,7 @@ SC_MODULE(inv_cast)
 																);
 
 		if(zero_output)
-			fp = 0;
+			fp =  (typename FP::ui_t)0;
 		else
 		{
 			// Compute x = 2^emax * (y / 2^(p - 2))

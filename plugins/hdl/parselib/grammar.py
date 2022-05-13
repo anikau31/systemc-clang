@@ -44,7 +44,7 @@ lark_grammar = Lark('''
         vardecl: vardeclinit | vardeclrn
 
         // can be just an empty statement
-        hcstmt:  "hCStmt" "NONAME" "[" modportsiglist* stmts "]" // useful for raising variable decls
+        hcstmt:  "hCStmt" "NONAME" "[" stmts "]" // useful for raising variable decls
               |  "hCStmt" "NONAME" "NOLIST"
         stmts: stmt+
         stmt : expression_in_stmt
@@ -59,8 +59,10 @@ lark_grammar = Lark('''
              | hnoop
              | hreturnstmt
              | breakstmt
+             | continuestmt
              | hwait
              
+        continuestmt: "hContinue" "NONAME" "NOLIST"
         // hvarinitlist can be empty
         hvarinitlist: "hVarInitList" "NONAME" "[" (hvarinitlist | expression)+ "]"
                     | "hVarInitList" "NONAME" "NOLIST"
@@ -163,7 +165,6 @@ lark_grammar = Lark('''
         ?expression: hbinop
                   | hunop
                   | hliteral
-                  | vardeclinit
                   | hvarref
                   | hunimp
                   | syscread
@@ -181,15 +182,15 @@ lark_grammar = Lark('''
                   | horreduce
                   | hfieldaccess
                   
-        hfieldaccess: "hFieldaccess" "NONAME" "[" harrayref hfieldname "]"
+        hfieldaccess: "hFieldaccess" "NONAME" "[" (harrayref|syscread) hfieldname "]"
         hfieldname:   "hField" ID "NOLIST"
                   
         hlrotate : "hNoop" "lrotate" "[" expression expression "]"
         horreduce: "hNoop" "or_reduce" "[" expression "]"
         hcondop : "hCondop" "NONAME" "[" (hslice | hliteral | hbinop | hunop | syscread | hvarref | hmethodcall) (hslice | expression | hprefix) (hslice | expression | hpostfix) "]"
 
-        syscread : hsigassignr "[" expression "]"
-        syscwrite : hsigassignl "["  expression  expression "]"
+        syscread : hsigassignr "[" (expression | harrayref) "]"
+        syscwrite : hsigassignl "["  expression  (expression | hfieldaccess) "]"
         ?hsigassignr :  "hSigAssignR" "read" 
         ?hsigassignl :  "hSigAssignL" "write" 
         // function call
@@ -205,9 +206,13 @@ lark_grammar = Lark('''
              | hpostfix
              | hprefix
              | hunopdec
+             | hreduceop
         hpostfix: "hPostfix" (UNOP_INC | UNOP_DEC) "[" expression "]"
         hprefix: "hPrefix" (UNOP_INC | UNOP_DEC) "[" expression "]"
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
+        
+        hreduceop: "hNoop" REDUCE_OP "[" expression "]"
+        REDUCE_OP: "and_reduce" | "or_reduce" | "xor_reduce" | "nand_reduce" | "nor_reduce" | "xnor_reduce"
 
         // Separate '=' out from so that it is not an expression but a standalone statement
         blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (htotype | hconcat | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
@@ -236,7 +241,7 @@ lark_grammar = Lark('''
                   | hcondop
                   | htoint
                   
-        nblkassign: "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool)  "]"
+        nblkassign: "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool | hmethodcall | hfieldaccess)  "]"
                   | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
         hconcat: ("hBinop" "concat" "[" | "hMethodCall" "NONAME" "[" "hBinop" "concat" "NOLIST") (expression|harrayref|hconcat) (expression|harrayref|hconcat) "]"
                  

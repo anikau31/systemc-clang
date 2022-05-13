@@ -245,7 +245,12 @@ class TypedefExpansion(TopDown):
             if self.__expanded_type(var_name):
                 return var_name
         elif tree.data == 'harrayref':
-            var_name = tree.children[0].children[0]
+            # TODO: support for multi-dimension array
+            # Special cases for handling hSigAssignR as array reference
+            if tree.children[0].data == 'hsigassignr':
+                var_name = tree.children[1].children[0]
+            else:
+                var_name = tree.children[0].children[0]
             if self.__expanded_type(var_name):
                 return var_name
         elif tree.data == 'hvarref':
@@ -254,10 +259,20 @@ class TypedefExpansion(TopDown):
                 return var_name
         elif tree.data == 'syscread':
             # this is only used in statement vardeclinit
-            assert tree.children[1].data in ['hliteral', 'hvarref'], f'Actual: {tree.children[1].data} ({tree})'
-            var_name = tree.children[1].children[0]
+            # syscread can also be performed on hararyref
+            assert tree.children[1].data in ['hliteral', 'hvarref', 'harrayref'], f'Actual: {tree.children[1].data} ({tree})'
+            if tree.children[1].data in ['harrayref']:
+                var_name = self.__get_expandable_var_from_tree(tree.children[1])
+            else:
+                var_name = tree.children[1].children[0]
             if self.__expanded_type(var_name):
                 return var_name
+        elif tree.data == 'hvarinitlist':
+            # RHS is a list of variable
+            new_children = []
+            for element in tree.children:
+                new_children.append(self.__get_expandable_var_from_tree(element))
+            return new_children
         return None
 
     def __append_to_expandable_var_to_tree(self, tree, field_name):
@@ -272,10 +287,16 @@ class TypedefExpansion(TopDown):
             if self.__expanded_type(var_name):
                 tree.children[0].children[0] = var_name + '_' + field_name
         elif tree.data == 'syscread':
-            assert tree.children[1].data in ['hliteral', 'hvarref']
-            var_name = tree.children[1].children[0]
+            assert tree.children[1].data in ['hliteral', 'hvarref', 'harrayref']
+            if tree.children[1].data in ['harrayref']:
+                var_name = self.__get_expandable_var_from_tree(tree.children[1])
+            else:
+                var_name = tree.children[1].children[0]
             if self.__expanded_type(var_name):
                 tree.children[1].children[0] = var_name + '_' + field_name
+        elif tree.data == 'hvarinitlist':
+            for t in tree.children:
+                self.__append_to_expandable_var_to_tree(t, field_name)
 
 
     def __expand_blkassign(self, tree):
@@ -293,7 +314,16 @@ class TypedefExpansion(TopDown):
             lhs_expanded_type = self.__expanded_type(lhs_var)
             assert lhs_expanded_type is not None, '{} should have expanded type'.format(lhs_var)
             lhs_type = self.__get_expandable_type_from_htype(lhs_expanded_type)
-            if rhs.data != 'hliteral':
+            dprint(rhs_var)
+            if isinstance(rhs_var,list):
+                rhs_type = self.__get_expandable_type_from_htype(self.__expanded_type(rhs_var[0]))
+                if lhs_type.children[0] != rhs_type.children[0]:
+                    raise RuntimeError('Type does not match between LHS and RHS')
+                for remaining_rhs_var in rhs_var:
+                    rhs_var_type = self.__get_expandable_type_from_htype(self.__expanded_type(remaining_rhs_var))
+                    if rhs_type.children[0] != rhs_var_type.children[0]:
+                        raise RuntimeError('Type does not match among RHS elements')
+            elif rhs.data != 'hliteral':
                 rhs_type = self.__get_expandable_type_from_htype(self.__expanded_type(rhs_var))
                 # dprint(rhs_type)
                 if lhs_type.children[0] != rhs_type.children[0]:
