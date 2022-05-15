@@ -13,6 +13,15 @@
 
 using namespace clang::ast_matchers;
 using namespace systemc_clang;
+
+
+namespace sc_ast_matchers {
+AST_MATCHER(Type, isDependentNameType) {
+   return (Node.isDependentType());
+  }
+};
+
+
 using namespace sc_ast_matchers;
 
 class TemplateParametersMatcher : public MatchFinder::MatchCallback {
@@ -50,10 +59,12 @@ public:
                 fieldDecl(
                   anyOf(
                     hasType(hasUnqualifiedDesugaredType(recordType().bind("record_type")))
+                    ,  hasType(hasUnqualifiedDesugaredType(isDependentNameType()))
+                    , hasType(hasUnqualifiedDesugaredType(typedefType().bind("typedef_type")))
                     , hasType(hasUnqualifiedDesugaredType(templateSpecializationType().bind("specialization_type")))
                     , hasType(hasUnqualifiedDesugaredType(templateTypeParmType().bind("parm_type")))
-		    , hasType(hasUnqualifiedDesugaredType(builtinType().bind( "builtin_type")))
-			) // anyOf
+                    , hasType(hasUnqualifiedDesugaredType(builtinType().bind( "builtin_type")))
+                    ) // anyOf
                   ).bind("fd"))
               )
             )
@@ -81,7 +92,9 @@ public:
     if (fd) {
       LLVM_DEBUG(llvm::dbgs() << "Found a FieldDecl\n");
       fd->dump(llvm::errs());
+      fd->getType().getTypePtr()->dump();
       found_fields.push_back(fd);
+ 
     }
 
     if (template_special && fd) {
