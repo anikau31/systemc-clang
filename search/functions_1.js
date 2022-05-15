@@ -17,7 +17,7 @@ var searchData=
   ['addfieldtype_14',['addfieldtype',['../classHDLType.html#a7311aa244ba45252456b87a56000e102',1,'HDLType']]],
   ['addfinalstate_15',['addFinalState',['../classsystemc__clang_1_1Transition.html#a225b6436893a66ac660d72e2726d81cb',1,'systemc_clang::Transition']]],
   ['addglobalevents_16',['addGlobalEvents',['../classsystemc__clang_1_1Model.html#a616e60f9b7a63145f646c6a96fe11e87',1,'systemc_clang::Model']]],
-  ['addgpufit_17',['addGPUFit',['../classsystemc__clang_1_1SusCFG.html#ab698e8ed976903a367660b92bd15540d',1,'systemc_clang::SusCFG::addGPUFit()'],['../classsystemc__clang_1_1GPUMacro.html#ae2fa35f05616f3ac77f11eccd2acbc14',1,'systemc_clang::GPUMacro::addGPUFit()']]],
+  ['addgpufit_17',['addGPUFit',['../classsystemc__clang_1_1GPUMacro.html#ae2fa35f05616f3ac77f11eccd2acbc14',1,'systemc_clang::GPUMacro::addGPUFit()'],['../classsystemc__clang_1_1SusCFG.html#ab698e8ed976903a367660b92bd15540d',1,'systemc_clang::SusCFG::addGPUFit()']]],
   ['addinitialstate_18',['addInitialState',['../classsystemc__clang_1_1Transition.html#a7ca29100e3326ea10b3b06fb617aecde',1,'systemc_clang::Transition']]],
   ['addinputinterfaces_19',['addInputInterfaces',['../classsystemc__clang_1_1ModuleInstance.html#a1153f5da8c7c02fc848f60af76827c36',1,'systemc_clang::ModuleInstance']]],
   ['addinputoutputinterfaces_20',['addInputOutputInterfaces',['../classsystemc__clang_1_1ModuleInstance.html#a60f0b441ce471f92c2c6eb5fad634670',1,'systemc_clang::ModuleInstance']]],
@@ -26,7 +26,7 @@ var searchData=
   ['addinstances_23',['addInstances',['../classsystemc__clang_1_1ModuleInstance.html#a1bd3bec837291b5a27ae37fec86c956c',1,'systemc_clang::ModuleInstance']]],
   ['addnestedmodule_24',['addNestedModule',['../classsystemc__clang_1_1ModuleInstance.html#a17a42d855d884812c66b3041c7ef6487',1,'systemc_clang::ModuleInstance']]],
   ['addnextstatestoblocks_25',['addNextStatesToBlocks',['../classsystemc__clang_1_1SplitCFG.html#af2497ee75041dc8d3a53d3c7352ea2ab',1,'systemc_clang::SplitCFG']]],
-  ['addnode_26',['addNode',['../classsystemc__clang_1_1Graph.html#ae60f539c9249bb68663a23920579d99e',1,'systemc_clang::Graph::addNode()'],['../classsystemc__clang_1_1Graph.html#a2dc46182b1e2e167148c44a57e1db489',1,'systemc_clang::Graph::addNode(int)'],['../classsystemc__clang_1_1Tree.html#a85d319130ef0379d333898f0de3ba743',1,'systemc_clang::Tree::addNode()']]],
+  ['addnode_26',['addNode',['../classsystemc__clang_1_1Graph.html#ae60f539c9249bb68663a23920579d99e',1,'systemc_clang::Graph::addNode()'],['../classsystemc__clang_1_1Tree.html#a85d319130ef0379d333898f0de3ba743',1,'systemc_clang::Tree::addNode()'],['../classsystemc__clang_1_1Graph.html#a2dc46182b1e2e167148c44a57e1db489',1,'systemc_clang::Graph::addNode()']]],
   ['addnotifys_27',['addNotifys',['../classsystemc__clang_1_1EntryFunctionContainer.html#a78ecb16fc0215807a09edc69736feae7',1,'systemc_clang::EntryFunctionContainer']]],
   ['addoutputinterfaces_28',['addOutputInterfaces',['../classsystemc__clang_1_1ModuleInstance.html#a6afc511b5fe04a0a472a629fc7a7c1f9',1,'systemc_clang::ModuleInstance']]],
   ['addparentblock_29',['addParentBlock',['../classsystemc__clang_1_1SusCFG.html#a5efdf503741c4b287448f388515a4e8d',1,'systemc_clang::SusCFG::addParentBlock(CFGBlock *)'],['../classsystemc__clang_1_1SusCFG.html#a3953990c2bfa5f8df6a979098306e3b4',1,'systemc_clang::SusCFG::addParentBlock(SusCFG *)']]],
@@ -43,7 +43,7 @@ var searchData=
   ['addscmain_40',['addSCMain',['../classsystemc__clang_1_1Model.html#a7c60331399e34281366679b7bfb484c6',1,'systemc_clang::Model']]],
   ['addsensitivityinfo_41',['addSensitivityInfo',['../classsystemc__clang_1_1EntryFunctionContainer.html#a967beb0f9aeb78f0d8587917a9668344',1,'systemc_clang::EntryFunctionContainer']]],
   ['addsignalbinding_42',['addSignalBinding',['../classsystemc__clang_1_1ModuleInstance.html#abe547c4e1d92eefaa78bbcfda50198b4',1,'systemc_clang::ModuleInstance']]],
-  ['addsimtime_43',['addSimTime',['../classsystemc__clang_1_1State.html#afae55d45430056860b2e6b3ef244f9c2',1,'systemc_clang::State::addSimTime()'],['../classsystemc__clang_1_1SuspensionAutomata.html#a7bc2360723555a37bbb51c2d0724ce81',1,'systemc_clang::SuspensionAutomata::addSimTime()']]],
+  ['addsimtime_43',['addSimTime',['../classsystemc__clang_1_1SuspensionAutomata.html#a7bc2360723555a37bbb51c2d0724ce81',1,'systemc_clang::SuspensionAutomata::addSimTime()'],['../classsystemc__clang_1_1State.html#afae55d45430056860b2e6b3ef244f9c2',1,'systemc_clang::State::addSimTime()']]],
   ['addsimulationtime_44',['addSimulationTime',['../classsystemc__clang_1_1Model.html#a74a2ff371b953881310a41432331b3d9',1,'systemc_clang::Model']]],
   ['addsuccblocks_45',['addSuccBlocks',['../classsystemc__clang_1_1SusCFG.html#a89e88ace80fd920e9a3b15989b18b47a',1,'systemc_clang::SusCFG']]],
   ['addsuccessor_46',['addSuccessor',['../classsystemc__clang_1_1Node.html#ac7a0a758941576297cf66216f8af7db9',1,'systemc_clang::Node']]],
@@ -66,5 +66,6 @@ var searchData=
   ['arrangegpususcfgblocks_63',['arrangeGPUSusCFGBlocks',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#acad967eb6262a3354775642a5189b92c',1,'systemc_clang::GlobalSuspensionAutomata']]],
   ['arraydimlength_64',['arraydimlength',['../classparselib_1_1transforms_1_1alias__translation_1_1AliasTranslation.html#a7e7c56dbcbcac74731388e012ef3b3cb',1,'parselib::transforms::alias_translation::AliasTranslation']]],
   ['asstring_65',['asString',['../classsystemc__clang_1_1FindGlobalEvents.html#ab72029e530f6899e910af3263ee5edba',1,'systemc_clang::FindGlobalEvents::asString()'],['../classsystemc__clang_1_1FindTemplateTypes.html#ac80a53fe4f36c12c9dca309500f902ac',1,'systemc_clang::FindTemplateTypes::asString()'],['../classsystemc__clang_1_1PortDecl.html#a492f16d90d0553082e482a942042a692',1,'systemc_clang::PortDecl::asString()'],['../classsystemc__clang_1_1ProcessDecl.html#a8b7d38cfa105b762c09b4d6df8dca3ed',1,'systemc_clang::ProcessDecl::asString()'],['../classsystemc__clang_1_1SignalDecl.html#aea5cc56c9a1c56c10ac5222b4557862e',1,'systemc_clang::SignalDecl::asString()']]],
-  ['augment_5fname_5fstub_66',['augment_name_stub',['../classparselib_1_1transforms_1_1function__info__pass_1_1FunctionInfoPass2.html#af24d425f6c88b203d8968f15ac2966de',1,'parselib::transforms::function_info_pass::FunctionInfoPass2']]]
+  ['ast_5fmatcher_66',['AST_MATCHER',['../namespacesc__ast__matchers.html#aecbd44732ff832f51ed8708076c5b769',1,'sc_ast_matchers']]],
+  ['augment_5fname_5fstub_67',['augment_name_stub',['../classparselib_1_1transforms_1_1function__info__pass_1_1FunctionInfoPass2.html#af24d425f6c88b203d8968f15ac2966de',1,'parselib::transforms::function_info_pass::FunctionInfoPass2']]]
 ];

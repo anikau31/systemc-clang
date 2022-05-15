@@ -94,9 +94,10 @@ var searchData=
   ['arraytypeutils_2eh_91',['ArrayTypeUtils.h',['../ArrayTypeUtils_8h.html',1,'']]],
   ['asstring_92',['asString',['../classsystemc__clang_1_1FindTemplateTypes.html#ac80a53fe4f36c12c9dca309500f902ac',1,'systemc_clang::FindTemplateTypes::asString()'],['../classsystemc__clang_1_1PortDecl.html#a492f16d90d0553082e482a942042a692',1,'systemc_clang::PortDecl::asString()'],['../classsystemc__clang_1_1ProcessDecl.html#a8b7d38cfa105b762c09b4d6df8dca3ed',1,'systemc_clang::ProcessDecl::asString()'],['../classsystemc__clang_1_1SignalDecl.html#aea5cc56c9a1c56c10ac5222b4557862e',1,'systemc_clang::SignalDecl::asString()'],['../classsystemc__clang_1_1FindGlobalEvents.html#ab72029e530f6899e910af3263ee5edba',1,'systemc_clang::FindGlobalEvents::asString()']]],
   ['ast_5fcontext_5f_93',['ast_context_',['../classsystemc__hdl_1_1HDLBody.html#a09991f11eb7e41766147a1ac9ee1f4ba',1,'systemc_hdl::HDLBody::ast_context_()'],['../classsystemc__hdl_1_1HDLThread.html#a626c4002ae94c580bb8cd6d0168c52b7',1,'systemc_hdl::HDLThread::ast_context_()']]],
-  ['ast_5fnode_5f_94',['ast_node_',['../classsystemc__clang_1_1EventContainer.html#a5ab22eb0938980328d209a4d389782e3',1,'systemc_clang::EventContainer::ast_node_()'],['../classsystemc__clang_1_1EventDecl.html#a1eee9f1db428b3e794e679e4975f4069',1,'systemc_clang::EventDecl::ast_node_()']]],
-  ['aststate_95',['ASTSTATE',['../namespacesystemc__clang.html#a0891e13e2390eb5b553cdb2444cc6ed0',1,'systemc_clang']]],
-  ['augment_5fname_5fstub_96',['augment_name_stub',['../classparselib_1_1transforms_1_1function__info__pass_1_1FunctionInfoPass2.html#af24d425f6c88b203d8968f15ac2966de',1,'parselib::transforms::function_info_pass::FunctionInfoPass2']]],
-  ['automata_2ecpp_97',['Automata.cpp',['../Automata_8cpp.html',1,'']]],
-  ['automata_2eh_98',['Automata.h',['../Automata_8h.html',1,'']]]
+  ['ast_5fmatcher_94',['AST_MATCHER',['../namespacesc__ast__matchers.html#aecbd44732ff832f51ed8708076c5b769',1,'sc_ast_matchers']]],
+  ['ast_5fnode_5f_95',['ast_node_',['../classsystemc__clang_1_1EventContainer.html#a5ab22eb0938980328d209a4d389782e3',1,'systemc_clang::EventContainer::ast_node_()'],['../classsystemc__clang_1_1EventDecl.html#a1eee9f1db428b3e794e679e4975f4069',1,'systemc_clang::EventDecl::ast_node_()']]],
+  ['aststate_96',['ASTSTATE',['../namespacesystemc__clang.html#a0891e13e2390eb5b553cdb2444cc6ed0',1,'systemc_clang']]],
+  ['augment_5fname_5fstub_97',['augment_name_stub',['../classparselib_1_1transforms_1_1function__info__pass_1_1FunctionInfoPass2.html#af24d425f6c88b203d8968f15ac2966de',1,'parselib::transforms::function_info_pass::FunctionInfoPass2']]],
+  ['automata_2ecpp_98',['Automata.cpp',['../Automata_8cpp.html',1,'']]],
+  ['automata_2eh_99',['Automata.h',['../Automata_8h.html',1,'']]]
 ];
