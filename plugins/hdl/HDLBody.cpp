@@ -308,9 +308,12 @@ namespace systemc_hdl {
     std::vector<llvm::APInt> array_sizes = sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
     HDLt.SCtype2hcode(generate_vname(vardecl->getName().str()), te->getTemplateArgTreePtr(), &array_sizes,
 		      hNode::hdlopsEnum::hVardecl, h_varlist);
-    hNodep h_vardecl = h_varlist->child_list.back();
 
     h_ret = NULL;
+
+    if (h_varlist->child_list.size() == 0) return true;
+    
+    hNodep h_vardecl = h_varlist->child_list.back();
 
     if (Expr *declinit = vardecl->getInit()) {
       TraverseStmt(declinit);
@@ -492,7 +495,7 @@ namespace systemc_hdl {
 	  h_ret = hconcat;
 	  return true;
 	}
-	h_ret = new hNode(name, hNode::hdlopsEnum::hNoop);
+	h_ret = new hNode(name, hNode::hdlopsEnum::hBuiltinFunction);
 	return true;
 	// may have other special functions to recognize later
       }
@@ -580,7 +583,7 @@ namespace systemc_hdl {
     else if (methodname == "wait")
       opc = hNode::hdlopsEnum::hWait;
     else if (lutil.isSCType(qualmethodname)) {  // operator from simulation library
-      opc = hNode::hdlopsEnum::hNoop;
+      opc = hNode::hdlopsEnum::hBuiltinFunction;
     } else {
       opc = hNode::hdlopsEnum::hMethodCall;
       lutil.make_ident(qualmethodname);
