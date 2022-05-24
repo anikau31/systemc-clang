@@ -156,7 +156,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
       TemplateParametersMatcher template_matcher{};
       MatchFinder matchRegistry{};
       template_matcher.registerMatchers(matchRegistry);
-      matchRegistry.match(*ctd, astcontext); // getContext());
+      matchRegistry.match(*ctsd, astcontext); // getContext());
       LLVM_DEBUG(llvm::dbgs() << "####### ============================== END "
                                  "MATCHER ========================= ##### \n");
 
