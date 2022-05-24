@@ -53,26 +53,32 @@ public:
     //
     /* clang-format off */
        
-    auto match_template_decl =
-        classTemplateDecl(
-            has(cxxRecordDecl(forEachDescendant(
-                fieldDecl(
-                  anyOf(
-                    hasType(hasUnqualifiedDesugaredType(recordType().bind("record_type")))
-                    ,  hasType(hasUnqualifiedDesugaredType(isDependentNameType()))
-                    , hasType(hasUnqualifiedDesugaredType(typedefType().bind("typedef_type")))
-                    , hasType(hasUnqualifiedDesugaredType(templateSpecializationType().bind("specialization_type")))
-                    , hasType(hasUnqualifiedDesugaredType(templateTypeParmType().bind("parm_type")))
-                    , hasType(hasUnqualifiedDesugaredType(builtinType().bind( "builtin_type")))
-                    ) // anyOf
-                  ).bind("fd"))
-              )
-            )
+    auto match_template_special_decl = 
+      classTemplateSpecializationDecl(
+          cxxRecordDecl(forEachDescendant(fieldDecl(
+               ).bind("fd")))
           ).bind("template_decl");
-
+//
+    // auto match_template_decl =
+        // classTemplateDecl(
+            // has(cxxRecordDecl(forEachDescendant(
+                // fieldDecl(
+                  // anyOf(
+                    // hasType(hasUnqualifiedDesugaredType(recordType().bind("record_type")))
+                    // ,  hasType(hasUnqualifiedDesugaredType(isDependentNameType()))
+                    // , hasType(hasUnqualifiedDesugaredType(typedefType().bind("typedef_type")))
+                    // , hasType(hasUnqualifiedDesugaredType(templateSpecializationType().bind("specialization_type")))
+                    // , hasType(hasUnqualifiedDesugaredType(templateTypeParmType().bind("parm_type")))
+                    // , hasType(hasUnqualifiedDesugaredType(builtinType().bind( "builtin_type")))
+                    // ) // anyOf
+                  // ).bind("fd"))
+              // )
+            // )
+          // ).bind("template_decl");
     /* clang-format on */
 
-    finder.addMatcher(match_template_decl, this);
+    //finder.addMatcher(match_template_decl, this);
+    finder.addMatcher(match_template_special_decl, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
@@ -94,7 +100,6 @@ public:
       fd->dump(llvm::errs());
       fd->getType().getTypePtr()->dump();
       found_fields.push_back(fd);
- 
     }
 
     if (template_special && fd) {
