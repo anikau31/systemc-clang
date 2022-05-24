@@ -74,14 +74,14 @@ lark_grammar = Lark('''
         
         ?htotype: htouint | htoint | htolong | htoulong | hnoop | htoi64 | htou64
              
-        ?htobool: "hNoop" "to_bool" "[" harrayref "]"
-        htouint: "hNoop" "to_uint" "[" (syscread|hvarref) "]"
-        htoint: "hNoop" "to_int" "[" (syscread|hvarref) "]"
-        htolong: "hNoop" "to_long" "[" (syscread|hvarref) "]"
-        htoulong: "hNoop" "to_ulong" "[" (syscread|hvarref) "]"
+        ?htobool: ("hBuiltinFunction" "to_bool" | "hNoop" "to_bool") "[" harrayref "]"
+        htouint: "hBuiltinFunction" "to_uint" "[" (syscread|hvarref) "]"
+        htoint: "hBuiltinFunction" "to_int" "[" (syscread|hvarref) "]"
+        htolong: "hBuiltinFunction" "to_long" "[" (syscread|hvarref) "]"
+        htoulong: "hBuiltinFunction" "to_ulong" "[" (syscread|hvarref) "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
-        htoi64: "hNoop" "to_int64" "[" hvarref "]"
-        htou64: "hNoop" "to_uint64" "[" hvarref "]"
+        htoi64: "hBuiltinFunction" "to_int64" "[" hvarref "]"
+        htou64: "hBuiltinFunction" "to_uint64" "[" hvarref "]"
         
         // hmodinitblock: 
         // first component is the id of the module (in parent?)
@@ -150,12 +150,13 @@ lark_grammar = Lark('''
 
         hsenslist : "hSenslist" ID "[" hsensvar* "]"
                   | "hSenslist" ID "NOLIST"
-        hsensvar :  "hSensvar" "NONAME" "[" (expression|hvalchange) "hNoop" npa "NOLIST" "]"
+        hsensvar :  "hSensvar" "NONAME" "[" (expression|hvalchange) ("hNoop" | "hBuiltinFunction")  npa "NOLIST" "]"
                  |  hasync
         hasync   :  "hSensvar" "ASYNC" "[" expression hliteral "]"
 
         hvalchange: "hNoop" "value_changed_event" "[" expression "]"
         hsensedge : "hNoop" npa "NOLIST"
+                  | "hBuiltinFunction" npa "NOLIST"
         !npa : "neg" | "pos" | "always"
 
         // if and if-else, not handling if-elseif case
@@ -185,8 +186,8 @@ lark_grammar = Lark('''
         hfieldaccess: "hFieldaccess" "NONAME" "[" (harrayref|syscread) hfieldname "]"
         hfieldname:   "hField" ID "NOLIST"
                   
-        hlrotate : "hNoop" "lrotate" "[" expression expression "]"
-        horreduce: "hNoop" "or_reduce" "[" expression "]"
+        hlrotate : "hBuiltinFunction" "lrotate" "[" expression expression "]"
+        horreduce: "hBuiltinFunction" "or_reduce" "[" expression "]"
         hcondop : "hCondop" "NONAME" "[" (hslice | hliteral | hbinop | hunop | syscread | hvarref | hmethodcall) (hslice | expression | hprefix) (hslice | expression | hpostfix) "]"
 
         syscread : hsigassignr "[" (expression | harrayref) "]"
