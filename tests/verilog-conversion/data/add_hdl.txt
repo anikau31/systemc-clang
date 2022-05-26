@@ -52,7 +52,7 @@
       hSenslist topEntry [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]

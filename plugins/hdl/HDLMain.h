@@ -57,7 +57,8 @@ namespace systemc_hdl {
     
     clang::DiagnosticsEngine &main_diag_engine{getContext().getDiagnostics()};
     
-    hfunc_name_map_t allmethodecls;  //  all methods/functions called
+    hfunc_name_map_t allmethodecls;  //  all methods/functions called at top level of method
+    hfunc_name_map_t cumulativemethodecls;  //  all methods/functions called at any level of method
     
     std::unordered_set<string> module_vars;
 

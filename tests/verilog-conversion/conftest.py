@@ -23,6 +23,7 @@ sysctestdata = Path(os.environ["SYSTEMC_CLANG"]) / "tests" / "data"  # The tests
 zfpsynth = examples / "llnl-examples" / "zfpsynth"
 zfpshared = zfpsynth / "shared"
 zfpshared2 = zfpsynth / "shared2"
+zfpshared3 = zfpsynth / "shared3"
 modules_examples = examples / "llnl-examples" / "modules"
 
 
@@ -77,6 +78,13 @@ test_data = [
     ),
     # ('z4test', load_file(zfpsynth / 'zfp4/z4test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp4', None]),
     # ('z5test', load_file(zfpsynth / 'zfp5/z5test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp5', None])
+    (
+        "z7test",
+        load_file(zfpsynth / "zfp7/z7test.cpp"),
+        ("-I{}".format(zfpsynth / "zfp7"), ),
+        None,
+        None,
+    ),
     (
         "moving-average",
         load_file(modules_examples / "moving-average" / "moving-average.cpp"),

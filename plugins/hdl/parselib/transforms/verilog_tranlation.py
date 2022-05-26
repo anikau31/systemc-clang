@@ -80,6 +80,10 @@ class VerilogTranslationPass(TopDown):
         warnings.warn('hwait encountered, not implemented')
         return "// hwait"
 
+    def hvarinitlist(self, tree):
+        self.__push_up(tree)
+        return '{' + ','.join(tree.children) + '}'
+
     def blkassign(self, tree):
         # dprint("--------------START----------------")
         current_proc = self.get_current_proc_name()
@@ -203,10 +207,18 @@ class VerilogTranslationPass(TopDown):
             return self.__check_const(tree.children[1]) and self.__check_const(tree.children[2])
         return False
 
+    def _clean_harrayref(self, harrayref_node):
+        assert harrayref_node.data == 'harrayref'
+        if is_tree_type(harrayref_node.children[0], 'hsigassignr'):
+            # dprint(harrayref_node)
+            harrayref_node.children = harrayref_node.children[1:]
+            # dprint(harrayref_node)
+
     def harrayref(self, tree):
         # Check whether
         l_const = None
         r_const = None
+        self._clean_harrayref(tree)
         if isinstance(tree.children[0], Tree) and tree.children[0].data == 'hslice':
             if len(tree.children[0].children) == 3:
                 hslice = tree.children[0]
@@ -227,7 +239,7 @@ class VerilogTranslationPass(TopDown):
             # r_const = isinstance(r, int)
             if l_const and r_const:
                 idx = '{}:{}'.format(l, r)
-            elif m:
+            elif m is not None:
                 idx = '{}'.format(m)
             else:
                 # for slicing that is not constant
@@ -662,6 +674,7 @@ class VerilogTranslationPass(TopDown):
         return '{}[{}]'.format(tree.children[0], tree.children[1])
 
     def moduleinst(self, tree):
+        # dprint(tree)
         mod_name, mod_type = tree.children
         # expand if it is an element of module array
         mod_name = '_'.join(mod_name.split('#'))
@@ -674,12 +687,14 @@ class VerilogTranslationPass(TopDown):
         else:
             bindings = self.bindings[mod_name]
         def extract_binding_name(x):
+            # FIXME: when the port connection is 2D, the original approach may not work
             if is_tree_type(x[0], 'hbindingarrayref'):
                 return x[0].children[0].children[0]
             else:
                 return x[0].children[0]
-        bindings_normal = filter(lambda x: '.' not in extract_binding_name(x), bindings)
-        bindings_hier = filter(lambda x: '.' in extract_binding_name(x), bindings)
+        orig_bindings = bindings
+        bindings_normal = list(filter(lambda x: '.' not in extract_binding_name(x), orig_bindings))
+        bindings_hier = list(filter(lambda x: '.' in extract_binding_name(x), orig_bindings))
         bindings = bindings_normal
         ind = self.get_current_ind_prefix()
         res = ind + '{} {}('.format(mod_type_name, mod_name) + '\n'
@@ -812,6 +827,7 @@ class VerilogTranslationPass(TopDown):
         return tree
 
     def hfunction(self, tree):
+
         self.set_current_proc_name('#function#')
         self.inc_indent()
         self.__push_up(tree)

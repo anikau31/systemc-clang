@@ -7,6 +7,7 @@
 #include <stack>
 #include <algorithm>
 #include <unordered_map>
+#include <set>
 
 using namespace systemc_clang;
 
@@ -79,6 +80,7 @@ namespace hnode {
   etype(hLiteral), \
   etype(hFunction), \
   etype(hThreadFunction), \
+  etype(hBuiltinFunction), \
   etype(hFunctionRetType), \
   etype(hFunctionParams), \
   etype(hFunctionParamI), \
@@ -225,6 +227,9 @@ namespace hnode {
       "sc_logic"
     };
     int scbtlen [ 6 ];
+
+     const set<std::string> sc_built_in_funcs{
+       "concat", "wait", "range", "bit", "or_reduce", "xor_reduce", "nor_reduce","and_reduce", "nand_reduce"};
     
     util() {
       for (int i=0; i < numstr; i++)
@@ -254,20 +259,23 @@ namespace hnode {
       return false;
     }
 
-    static inline bool isSCFunc(const string &tstring) {
-      return (tstring == "concat") || (tstring == "wait");
+    inline bool isSCFunc(const string &tstring) {
+      return (sc_built_in_funcs.count(tstring)>0);
       // add more as we get them
     }
 
      
     static inline bool isSCType(const string &tstring) {
       // linear search and the length is hard coded in ...
-      // used in the method name logic
-      string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_rvd", "sc_inout",
+      // used in the method name logic.
+      // can't use set as we are searching for a substring of tstring
+      
+     string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_rvd", "sc_inout",
 			  "sc_signal", "sc_subref", "sc_dt"};
+
       for (string onestring : strings) {
-	if (tstring.find(onestring)!=string::npos)
-	  return true;
+      	if (tstring.find(onestring)!=string::npos)
+      	  return true;
       }
       return false;
       /* if (tstring.substr(0, 6) == "class ") // this is so stupid */
@@ -420,7 +428,7 @@ namespace hnode {
       hdecl_name_map.insert(newmap.begin(),
 			    newmap.end());
     }
-    
+ 
   };
 
   typedef newname_map_t<NamedDecl *> hdecl_name_map_t;

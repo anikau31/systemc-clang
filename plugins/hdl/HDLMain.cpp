@@ -333,8 +333,8 @@ namespace systemc_hdl {
     // Functions
     // Initially these are functions that were referenced in the module's sc_methods/threads
     // Function calls within functions get added to all methodecls.
-    // Still need to account for recursion (which shouldn't occur in a synthesizable systemc program)
-    
+
+    std::set<Decl *> generated_functions;
     while (allmethodecls.size() > 0) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
       //std::unordered_multimap<string, FunctionDecl *> modmethodecls;
@@ -352,6 +352,8 @@ namespace systemc_hdl {
 	LLVM_DEBUG(llvm::dbgs() << "---------\n");
 	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 	if (m.first->hasBody()) {
+	  if (generated_functions.count(m.first) > 0) continue; // already generated this one
+	  generated_functions.insert(m.first);
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
 	  QualType qrettype = m.first->getReturnType(); // m.first->getDeclaredReturnType();
 	  const clang::Type *rettype = qrettype.getTypePtr();
@@ -363,6 +365,7 @@ namespace systemc_hdl {
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	  if (m.first->getNumParams() > 0) {
 	    hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
+	    hNodep hparam_assign_list = new hNode(hNode::hdlopsEnum::hCStmt);
 	    hfunc->child_list.push_back(hparams);
 	    for (int i = 0; i < m.first->getNumParams(); i++) {
 	      VarDecl *vardecl = m.first->getParamDecl(i);
@@ -381,17 +384,39 @@ namespace systemc_hdl {
 	      if (mutil.is_sc_macro(m.second.oldn)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      else if (vardecl->getType()->isReferenceType())
 		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
-	      else paramtype = hNode::hdlopsEnum::hFunctionParamI;
+	      else { // handle actual parameter
+		
+		paramtype = hNode::hdlopsEnum::hFunctionParamI;
+		// create an entry in mod_vname_map for this parameter's local variable
+		string objname = vardecl->getName().str()+"_actual";
+
+		HDLt.SCtype2hcode(objname, te->getTemplateArgTreePtr(),
+				&array_sizes, hNode::hdlopsEnum::hVardecl, h_ports);
+		mod_vname_map.add_entry(vardecl, objname, h_ports->child_list.back());
+		hNodep hparam_assign = new hNode("=", hNode::hdlopsEnum::hBinop);
+		hNodep hv = new hNode(mod_vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref);
+		hparam_assign->append(hv);
+		hv = new hNode(vardecl->getName().str(), hNode::hdlopsEnum::hVarref);
+		hparam_assign->append(hv);
+		hparam_assign_list->append(hparam_assign);
+	      }
+	      
 	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
 				&array_sizes, paramtype, hparams);
 	    }
+	    
+	    if (hparam_assign_list->child_list.size()>0) { // there were some actual parameters
+	      hNodep htmpf = new hNode( hNode::hdlopsEnum::hCStmt);
+	      xbodyp->Run(m.first->getBody(), htmpf, rnomode); // suppress output of unqualified name
+	      hNodep hfunccstmt = htmpf->child_list.back();  // htmpf is list of vardecls followed by function body in a cstmt
+	      hfunccstmt->child_list.insert(hfunccstmt->child_list.begin(), hparam_assign_list->child_list.begin(), hparam_assign_list->child_list.end());
+	      
+	      hfunc->child_list.insert(hfunc->child_list.end(), htmpf->child_list.begin(), htmpf->child_list.end());
 
-	    //HDLBody xfunction(m.first->getBody(), hfunc, main_diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
+	    }
+	    else {
 	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
-	  } else {
-	    //HDLBody xfunction(m.first->getBody(), hfunc, main_diag_engine, getContext(), mod_vname_map, false); // suppress output of unqualified name
-	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
-
+	    }
 	  }
 	  // If this function invoked other functions, add them to the list to be generated
 	  allmethodecls.insertall(xbodyp->methodecls);

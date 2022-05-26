@@ -308,9 +308,12 @@ namespace systemc_hdl {
     std::vector<llvm::APInt> array_sizes = sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
     HDLt.SCtype2hcode(generate_vname(vardecl->getName().str()), te->getTemplateArgTreePtr(), &array_sizes,
 		      hNode::hdlopsEnum::hVardecl, h_varlist);
-    hNodep h_vardecl = h_varlist->child_list.back();
 
     h_ret = NULL;
+
+    if (h_varlist->child_list.size() == 0) return true;
+    
+    hNodep h_vardecl = h_varlist->child_list.back();
 
     if (Expr *declinit = vardecl->getInit()) {
       TraverseStmt(declinit);
@@ -492,7 +495,7 @@ namespace systemc_hdl {
 	  h_ret = hconcat;
 	  return true;
 	}
-	h_ret = new hNode(name, hNode::hdlopsEnum::hNoop);
+	h_ret = new hNode(name, hNode::hdlopsEnum::hBuiltinFunction);
 	return true;
 	// may have other special functions to recognize later
       }
@@ -525,24 +528,43 @@ namespace systemc_hdl {
   }
 
   bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
+    bool is_overridden = false;
+    
     LLVM_DEBUG(llvm::dbgs()
 	       << "In TraverseCXXMemberCallExpr, printing implicit object arg\n");
     // Retrieves the implicit object argument for the member call.
     // For example, in "x.f(5)", this returns the sub-expression "x".
-    Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
 
+    Expr *rawarg = (callexpr->getImplicitObjectArgument());
+    LLVM_DEBUG(llvm::dbgs() << "raw implicitobjectargument follows\n");
+    LLVM_DEBUG(rawarg->dump(llvm::dbgs(), ast_context_));
+    
+    Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
+    LLVM_DEBUG(llvm::dbgs() << "implicitobjectargument, ignore implicit follows\n");
     LLVM_DEBUG(arg->dump(llvm::dbgs(), ast_context_));
-    QualType argtyp = arg->getType();
+
+    QualType argtyp;
+    if (dyn_cast<ImplicitCastExpr>(rawarg)) { // cast to a specfic type
+      argtyp = rawarg->getType();
+      is_overridden = true;
+    }
+    else {
+      argtyp = arg->getType();
+    }
     LLVM_DEBUG(llvm::dbgs() << "type of x in x.f(5) is " << argtyp.getAsString()
 	       << "\n");
-
+    QualType objtyp = callexpr->getObjectType();
+    LLVM_DEBUG(llvm::dbgs() << "... and object type is " << objtyp.getAsString()
+	       << "\n");
     string methodname = "NoMethod", qualmethodname = "NoQualMethod";
+    CXXRecordDecl *recdecl = callexpr->getRecordDecl();
+    LLVM_DEBUG(llvm::dbgs() << "here is method record decl name " << recdecl->getNameAsString() << "\n");
     CXXMethodDecl *methdcl = callexpr->getMethodDecl();
-    if ((overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
+    if ((!is_overridden) && (overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
       methdcl = const_cast<CXXMethodDecl *>(overridden_method_map_[methdcl]);
     }
-    // LLVM_DEBUG(llvm::dbgs() << "methoddecl follows\n");
-    // LLVM_DEBUG(methdcl->dump(llvm::dbgs());
+     LLVM_DEBUG(llvm::dbgs() << "methoddecl follows\n");
+     LLVM_DEBUG(methdcl->dump(llvm::dbgs()));
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {
       methodname = methdcl->getNameAsString();
       qualmethodname = methdcl->getQualifiedNameAsString();
@@ -576,7 +598,7 @@ namespace systemc_hdl {
     else if (methodname == "wait")
       opc = hNode::hdlopsEnum::hWait;
     else if (lutil.isSCType(qualmethodname)) {  // operator from simulation library
-      opc = hNode::hdlopsEnum::hNoop;
+      opc = hNode::hdlopsEnum::hBuiltinFunction;
     } else {
       opc = hNode::hdlopsEnum::hMethodCall;
       lutil.make_ident(qualmethodname);
