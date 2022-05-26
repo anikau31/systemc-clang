@@ -17,7 +17,8 @@ class HDLType {
 public:
   HDLType() {}
   ~HDLType() {}
-
+  typedef std::unordered_map<string, QualType> usertype_map_t;
+  
   void SCtype2hcode(string prefix, Tree<TemplateType> *template_argtp,
                     std::vector<llvm::APInt> *arr_sizes, hNode::hdlopsEnum h_op,
                     hNodep &h_info);
@@ -27,7 +28,7 @@ public:
       hNodep &h_info, bool generate_initial_htype = true);
   hNodep addtype(string typname, QualType qtyp, ASTContext &astcontext);
   void addfieldtype(const FieldDecl *fld, hNodep &h_typdef);
-  std::unordered_map<string, QualType> usertypes;
+  usertype_map_t usertypes;
 
 private:
   util tutil;

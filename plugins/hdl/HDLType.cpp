@@ -85,13 +85,14 @@ void HDLType::generatetype(
     systemc_clang::Tree<systemc_clang::TemplateType> *const &treehead,
     hNodep &h_info, bool generate_initial_htype) {
 
+  
   string tmps = (node->getDataPtr())->getTypeName();
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
     tutil.make_ident(tmps);
   // LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << " type
   // follows\n"); (node->getDataPtr())->getTypePtr()->dump(llvm::dbgs());
 
-  LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << "\n");
+  LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << " as string is " << node->toString() << "\n");
   hNodep nodetyp;
   if (generate_initial_htype) {
     nodetyp =
@@ -113,7 +114,7 @@ void HDLType::generatetype(
       usertypes[tmps] =
           ((tstp->getDecl())->getTypeForDecl())->getCanonicalTypeInternal();
     }
-    usertypes[tmps] =
+    else usertypes[tmps] =
         ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
   }
   auto const vectreeptr{treehead->getChildren(node)};
