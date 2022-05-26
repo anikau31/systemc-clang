@@ -86,13 +86,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a40c1447431ed1788a1a4a03e13f7005d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9963a7be4acd67aeb84f11a44ad9cd40"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a9963a7be4acd67aeb84f11a44ad9cd40">isSCBuiltinType</a> (const string &amp;tstring)</td></tr>
 <tr class="separator:a9963a7be4acd67aeb84f11a44ad9cd40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b5201193bd1bc94d041c1aacb9646e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a3b5201193bd1bc94d041c1aacb9646e6">isSCFunc</a> (const string &amp;tstring)</td></tr>
+<tr class="separator:a3b5201193bd1bc94d041c1aacb9646e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:af510b612fdd0ce12ab898c842d3f6736"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#af510b612fdd0ce12ab898c842d3f6736">make_ident</a> (string &amp;nm)</td></tr>
 <tr class="separator:af510b612fdd0ce12ab898c842d3f6736"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a544c879e110dde0e95f7feca2eb44300"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a544c879e110dde0e95f7feca2eb44300">isSCFunc</a> (const string &amp;tstring)</td></tr>
-<tr class="separator:a544c879e110dde0e95f7feca2eb44300"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2be8ad623002038dc6e331adc3d2487"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#ae2be8ad623002038dc6e331adc3d2487">isSCType</a> (const string &amp;tstring)</td></tr>
 <tr class="separator:ae2be8ad623002038dc6e331adc3d2487"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93b0dfd124e07343270874ecb28d1fce"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a93b0dfd124e07343270874ecb28d1fce">is_sc_macro</a> (const std::string &amp;str_in)</td></tr>
@@ -108,11 +108,13 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a942d5e2825dbec1bca7b9e3174420d66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a452e348d557d610adb1462cb0039b7b7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a452e348d557d610adb1462cb0039b7b7">scbtlen</a> [6]</td></tr>
 <tr class="separator:a452e348d557d610adb1462cb0039b7b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0b661365e3ee8a3d4a1f295b912a7c6"><td class="memItemLeft" align="right" valign="top">const set&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#af0b661365e3ee8a3d4a1f295b912a7c6">sc_built_in_funcs</a></td></tr>
+<tr class="separator:af0b661365e3ee8a3d4a1f295b912a7c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The util class provides small utility functions to generate and recognize C++ and SystemC conformant identifiers. </p>
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00216">216</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00218">218</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2f939b759f2612426d6e6832256c4228" name="a2f939b759f2612426d6e6832256c4228"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2f939b759f2612426d6e6832256c4228">&#9670;&nbsp;</a></span>util()</h2>
@@ -137,7 +139,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00229">229</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00234">234</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -164,7 +166,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00233">233</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00238">238</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -193,7 +195,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00290">290</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00298">298</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -221,7 +223,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00298">298</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00306">306</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -249,12 +251,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00246">246</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00251">251</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
-<a id="a544c879e110dde0e95f7feca2eb44300" name="a544c879e110dde0e95f7feca2eb44300"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a544c879e110dde0e95f7feca2eb44300">&#9670;&nbsp;</a></span>isSCFunc()</h2>
+<a id="a3b5201193bd1bc94d041c1aacb9646e6" name="a3b5201193bd1bc94d041c1aacb9646e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b5201193bd1bc94d041c1aacb9646e6">&#9670;&nbsp;</a></span>isSCFunc()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,7 +265,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool hnode::util::isSCFunc </td>
+          <td class="memname">bool hnode::util::isSCFunc </td>
           <td>(</td>
           <td class="paramtype">const string &amp;&#160;</td>
           <td class="paramname"><em>tstring</em></td><td>)</td>
@@ -272,12 +274,12 @@ Public Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00257">257</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00262">262</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -305,7 +307,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00263">263</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00268">268</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -333,7 +335,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00235">235</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00240">240</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -350,7 +352,25 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00218">218</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00220">220</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+
+</div>
+</div>
+<a id="af0b661365e3ee8a3d4a1f295b912a7c6" name="af0b661365e3ee8a3d4a1f295b912a7c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0b661365e3ee8a3d4a1f295b912a7c6">&#9670;&nbsp;</a></span>sc_built_in_funcs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const set&lt;std::string&gt; hnode::util::sc_built_in_funcs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">       <span class="stringliteral">&quot;concat&quot;</span>, <span class="stringliteral">&quot;wait&quot;</span>, <span class="stringliteral">&quot;range&quot;</span>, <span class="stringliteral">&quot;bit&quot;</span>, <span class="stringliteral">&quot;or_reduce&quot;</span>, <span class="stringliteral">&quot;xor_reduce&quot;</span>, <span class="stringliteral">&quot;nor_reduce&quot;</span>,<span class="stringliteral">&quot;and_reduce&quot;</span>, <span class="stringliteral">&quot;nand_reduce&quot;</span>}</div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00231">231</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -366,7 +386,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00227">227</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00229">229</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -390,7 +410,7 @@ Public Attributes</h2></td></tr>
 <div class="line">      <span class="stringliteral">&quot;sc_logic&quot;</span></div>
 <div class="line">    }</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00219">219</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00221">221</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
