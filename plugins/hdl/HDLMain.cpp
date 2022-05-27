@@ -362,6 +362,11 @@ namespace systemc_hdl {
 	  // what about returning an array type? this isn't handled 
 	  HDLt.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
+	  CXXMethodDecl * thismethod = dyn_cast<CXXMethodDecl>(m.first);
+	  if (thismethod != NULL) {
+	    LLVM_DEBUG(llvm::dbgs() << m.second.newn << " is a Method\n");
+	  }
+	  else LLVM_DEBUG(llvm::dbgs() << m.second.newn << " is a Function\n");
 	  if (m.first->getNumParams() > 0) {
 	    hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
 	    hNodep hparam_assign_list = new hNode(hNode::hdlopsEnum::hCStmt);
