@@ -157,7 +157,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
       TemplateParametersMatcher template_matcher{};
       MatchFinder matchRegistry{};
       template_matcher.registerMatchers(matchRegistry);
-      matchRegistry.match(*ctsd, astcontext); // getContext());
+      matchRegistry.match(*ctd, astcontext); // changed to ctd for user defined type, ctsd for actual
       LLVM_DEBUG(llvm::dbgs() << "####### ============================== END "
                                  "MATCHER ========================= ##### \n");
 
@@ -171,7 +171,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
             new hNode(param->getName().str(), hNode::hdlopsEnum::hTypeTemplateParam));
       }
       std::vector<const FieldDecl *> fields;
-      template_matcher.getFields(fields);
+      template_matcher.getParmFields(fields); // added Parm, use getArgFields for actual
       if (fields.size() > 0) {
         for (const FieldDecl *fld : fields) {
           addfieldtype(fld, h_typdef);
