@@ -14,21 +14,18 @@
 using namespace clang::ast_matchers;
 using namespace systemc_clang;
 
-
 namespace sc_ast_matchers {
-AST_MATCHER(Type, isDependentNameType) {
-   return (Node.isDependentType());
-  }
-};
-
+AST_MATCHER(Type, isDependentNameType) { return (Node.isDependentType()); }
+};  // namespace sc_ast_matchers
 
 using namespace sc_ast_matchers;
 
 class TemplateParametersMatcher : public MatchFinder::MatchCallback {
-private:
-  std::vector<const FieldDecl *> found_fields;
+ private:
+  std::vector<const FieldDecl *> found_fields_args;
+  std::vector<const FieldDecl *> found_fields_parms;
 
-public:
+ public:
   void registerMatchers(MatchFinder &finder) {
     // Overview of the matcher
     // Terminology: template parameter refers to the template typename name, and
@@ -56,13 +53,13 @@ public:
     auto match_template_special_decl = 
       classTemplateSpecializationDecl(
           cxxRecordDecl(forEachDescendant(fieldDecl(
-               ).bind("fd")))
-          ).bind("template_decl");
+               ).bind("fd_arg")))
+          ).bind("special_template_decl");
 //
-    // auto match_template_decl =
-        // classTemplateDecl(
-            // has(cxxRecordDecl(forEachDescendant(
-                // fieldDecl(
+    auto match_template_decl =
+        classTemplateDecl(
+            has(cxxRecordDecl(forEachDescendant(
+                fieldDecl(
                   // anyOf(
                     // hasType(hasUnqualifiedDesugaredType(recordType().bind("record_type")))
                     // ,  hasType(hasUnqualifiedDesugaredType(isDependentNameType()))
@@ -71,22 +68,23 @@ public:
                     // , hasType(hasUnqualifiedDesugaredType(templateTypeParmType().bind("parm_type")))
                     // , hasType(hasUnqualifiedDesugaredType(builtinType().bind( "builtin_type")))
                     // ) // anyOf
-                  // ).bind("fd"))
-              // )
-            // )
-          // ).bind("template_decl");
+                  ).bind("fd_parm"))
+              )
+            )
+          ).bind("template_decl");
     /* clang-format on */
 
-    //finder.addMatcher(match_template_decl, this);
+    finder.addMatcher(match_template_decl, this);
     finder.addMatcher(match_template_special_decl, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &result) {
     // auto decl{result.Nodes.getNodeAs<Decl>("decl")};
-    auto template_decl{
-        result.Nodes.getNodeAs<ClassTemplateDecl>("template_decl")};
+    // auto template_decl{
+    // result.Nodes.getNodeAs<ClassTemplateSpecializationDecl>("template_decl")};
 
-    auto fd{result.Nodes.getNodeAs<FieldDecl>("fd")};
+    auto fd_arg{result.Nodes.getNodeAs<FieldDecl>("fd_arg")};
+    auto fd_parm{result.Nodes.getNodeAs<FieldDecl>("fd_parm")};
 
     auto record_type{result.Nodes.getNodeAs<RecordType>("record_type")};
     auto parm_type{result.Nodes.getNodeAs<TemplateTypeParmType>("parm_type")};
@@ -95,62 +93,85 @@ public:
     LLVM_DEBUG(llvm::dbgs()
                << "=============== TEST Template Parm Matcher ====== \n");
 
+    if (fd_arg) {
+      LLVM_DEBUG(llvm::dbgs() << "Found a Arg FieldDecl\n");
+      fd_arg->dump(llvm::errs());
+      fd_arg->getType().getTypePtr()->dump();
+      found_fields_args.push_back(fd_arg);
+    }
+
+    if (fd_parm) {
+      LLVM_DEBUG(llvm::dbgs() << "Found a Parm FieldDecl\n");
+      fd_parm->dump(llvm::errs());
+      fd_parm->getType().getTypePtr()->dump();
+      found_fields_parms.push_back(fd_parm);
+    }
+
+    /*
     if (fd) {
-      LLVM_DEBUG(llvm::dbgs() << "Found a FieldDecl\n");
-      fd->dump(llvm::errs());
-      fd->getType().getTypePtr()->dump();
-      found_fields.push_back(fd);
-    }
+      if (auto cxx = fd->getType().getTypePtr()->getAsCXXRecordDecl()) {
+        if (auto template_decl =
+                dyn_cast<ClassTemplateSpecializationDecl>(cxx)) {
+          (llvm::dbgs() << "#### TemplateSpecializationType\n");
+          template_decl->dump();
 
-    if (template_special && fd) {
-      LLVM_DEBUG(llvm::dbgs() << "#### TemplateSpecializationType\n");
-      template_special->dump();
+          (llvm::dbgs() << "##### Try to find the template types\n");
+          FindTemplateTypes ftt{};
+          ftt.Enumerate(template_decl);
+          ftt.printTemplateArguments(llvm::outs());
+          (llvm::dbgs() << "##### END\n");
 
-      LLVM_DEBUG(llvm::dbgs() << "##### Try to find the template types\n");
-      FindTemplateTypes ftt{};
-      ftt.Enumerate(template_special);
-      ftt.printTemplateArguments(llvm::outs());
-      LLVM_DEBUG(llvm::dbgs() << "##### END\n");
+          const TemplateArgumentList &arg_list{
+              template_decl->getTemplateArgs()};
 
-      const TemplateArgument &targ{template_special->getArg(0)};
+          const TemplateArgument &targ{arg_list.get(0)};
+          targ.getAsType().dump();
 
-      switch (targ.getKind()) {
-      case TemplateArgument::ArgKind::Integral: {
-        auto q{targ.getAsIntegral()};
-        LLVM_DEBUG(llvm::dbgs() << "@@ Integral: " << q << "\n");
-      }; break;
-      case TemplateArgument::ArgKind::Type: {
-        auto q{targ.getAsType()};
-        auto name{q.getAsString()};
-        LLVM_DEBUG(llvm::dbgs() << "@@ arg: " << name << "\n");
-      }; break;
-      case TemplateArgument::ArgKind::Expression: {
-        Expr *expr{targ.getAsExpr()};
-        DeclRefExpr *dexpr{dyn_cast<DeclRefExpr>(expr)};
-        if (dexpr) {
-          LLVM_DEBUG(llvm::dbgs()
-                     << "Template parameter: "
-                     << dexpr->getNameInfo().getAsString() << "\n");
+          switch (targ.getKind()) {
+            case TemplateArgument::ArgKind::Integral: {
+              auto q{targ.getAsIntegral()};
+              (llvm::dbgs() << "@@ Integral: " << q << "\n");
+            }; break;
+            case TemplateArgument::ArgKind::Type: {
+              auto q{targ.getAsType()};
+              auto name{q.getAsString()};
+              (llvm::dbgs() << "@@ arg: " << name << "\n");
+            }; break;
+            case TemplateArgument::ArgKind::Expression: {
+              Expr *expr{targ.getAsExpr()};
+              DeclRefExpr *dexpr{dyn_cast<DeclRefExpr>(expr)};
+              if (dexpr) {
+                (llvm::dbgs() << "Template parameter: "
+                              << dexpr->getNameInfo().getAsString() << "\n");
+              }
+            }
+            default: {
+            }
+          };
         }
-      }
-      default: {
-      }
-      };
-    }
 
-    // Since this is a RecordType, we can reuse our template type parsing.
-    if (record_type && fd) {
-      LLVM_DEBUG(llvm::dbgs() << "#### RecordType\n");
-      record_type->dump();
-      FindTemplateTypes ftt{};
-      ftt.Enumerate(record_type);
-      ftt.printTemplateArguments(llvm::errs());
+        // Since this is a RecordType, we can reuse our template type parsing.
+        // if (record_type && fd) {
+        // (llvm::dbgs() << "#### RecordType\n");
+        // record_type->dump();
+        // FindTemplateTypes ftt{};
+        // ftt.Enumerate(record_type);
+        // ftt.printTemplateArguments(llvm::errs());
+        // }
+        (llvm::dbgs() << "\n");
+      }
     }
-    LLVM_DEBUG(llvm::dbgs() << "\n");
+  */
   }
 
   void dump() {}
-  void getFields(std::vector<const FieldDecl *> &flds) { flds = found_fields; }
+  void getFields(std::vector<const FieldDecl *> &flds) { flds = found_fields_parms; }
+  void getArgFields(std::vector<const FieldDecl *> &flds) {
+    flds = found_fields_args;
+  }
+  void getParmFields(std::vector<const FieldDecl *> &flds) {
+    flds = found_fields_parms;
+  }
 };
 
 #endif

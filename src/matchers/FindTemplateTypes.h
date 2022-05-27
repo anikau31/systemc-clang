@@ -72,6 +72,7 @@ class FindTemplateTypes : public clang::RecursiveASTVisitor<FindTemplateTypes> {
   bool VisitCXXRecordDecl(clang::CXXRecordDecl *cxx_type);
   bool VisitRecordType(clang::RecordType *rt);
   bool VisitBuiltinType(clang::BuiltinType *bi_type);
+bool VisitDependentNameType(clang::DependentNameType *type);
 
   bool VisitDeclRefExpr(clang::DeclRefExpr *dre);
 
