@@ -85,157 +85,179 @@ $(function() {
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">using namespace </span>clang::ast_matchers;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacesystemc__clang.html">systemc_clang</a>;</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacesc__ast__matchers.html">sc_ast_matchers</a> {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="namespacesc__ast__matchers.html#aecbd44732ff832f51ed8708076c5b769">   19</a></span><a class="code hl_function" href="namespacesc__ast__matchers.html#aecbd44732ff832f51ed8708076c5b769">AST_MATCHER</a>(Type, isDependentNameType) {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>   <span class="keywordflow">return</span> (<a class="code hl_class" href="classsystemc__clang_1_1Node.html">Node</a>.isDependentType());</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  }</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>};</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacesc__ast__matchers.html">sc_ast_matchers</a>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html">   27</a></span><span class="keyword">class </span><a class="code hl_class" href="classTemplateParametersMatcher.html">TemplateParametersMatcher</a> : <span class="keyword">public</span> MatchFinder::MatchCallback {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a4613db05892de0f2b4d8376bb120bed5">   29</a></span>  std::vector&lt;const FieldDecl *&gt; <a class="code hl_variable" href="classTemplateParametersMatcher.html#a4613db05892de0f2b4d8376bb120bed5">found_fields</a>;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#ad34002dc6999c71092062e4aeba31929">   32</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#ad34002dc6999c71092062e4aeba31929">registerMatchers</a>(MatchFinder &amp;finder) {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="comment">// Overview of the matcher</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="comment">// Terminology: template parameter refers to the template typename name, and</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="comment">// template arguments refers to the substituted type. For example, template</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="comment">// &lt;typename T&gt; X{}; X&lt;int&gt; x; has the parameter as T and the argument as</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="comment">// int.</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// 1. Start matching within a ClassTemplateDecl. Note that the match() call</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// has to be updated to ensure that the appropriate ClassTemplateDecl is</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// provided.</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// 2. The isExpansionInMainFile() makes the matcher focus on the provided</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// file (input), and not the underlying C++ files.</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// 3. We check if the ClassTemplateDecl has a CXXRecordDecl within it (note</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// that it will have a CXXRecordDecl and a ClassTemplateSpecializationDecl,</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="comment">// but we want the former to extract the template parameters).</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// 4. For every fieldDecl that is a descendant, it is going to check if the</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// type for the FieldDecl&#39;s desugared type is a TemplateSpecialization or a</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// TemplateTypeParm.  This should cover typedefs as well. An alternative way</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// would be to just match with Type, and then in the callback one could cast</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// it to respective types that one cares about.</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">//</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">/* clang-format off */</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>       </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">auto</span> match_template_special_decl = </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      classTemplateSpecializationDecl(</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>          cxxRecordDecl(forEachDescendant(fieldDecl(</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>               ).bind(<span class="stringliteral">&quot;fd&quot;</span>)))</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>          ).bind(<span class="stringliteral">&quot;template_decl&quot;</span>);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">//</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="comment">// auto match_template_decl =</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="comment">// classTemplateDecl(</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            <span class="comment">// has(cxxRecordDecl(forEachDescendant(</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                <span class="comment">// fieldDecl(</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                  <span class="comment">// anyOf(</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                    <span class="comment">// hasType(hasUnqualifiedDesugaredType(recordType().bind(&quot;record_type&quot;)))</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                    <span class="comment">// ,  hasType(hasUnqualifiedDesugaredType(isDependentNameType()))</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                    <span class="comment">// , hasType(hasUnqualifiedDesugaredType(typedefType().bind(&quot;typedef_type&quot;)))</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                    <span class="comment">// , hasType(hasUnqualifiedDesugaredType(templateSpecializationType().bind(&quot;specialization_type&quot;)))</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                    <span class="comment">// , hasType(hasUnqualifiedDesugaredType(templateTypeParmType().bind(&quot;parm_type&quot;)))</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                    <span class="comment">// , hasType(hasUnqualifiedDesugaredType(builtinType().bind( &quot;builtin_type&quot;)))</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                    <span class="comment">// ) // anyOf</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                  <span class="comment">// ).bind(&quot;fd&quot;))</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>              <span class="comment">// )</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <span class="comment">// )</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>          <span class="comment">// ).bind(&quot;template_decl&quot;);</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">/* clang-format on */</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">//finder.addMatcher(match_template_decl, this);</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    finder.addMatcher(match_template_special_decl, <span class="keyword">this</span>);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  }</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a3006709170adfd3c69c35ebba7386aff">   84</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#a3006709170adfd3c69c35ebba7386aff">run</a>(<span class="keyword">const</span> MatchFinder::MatchResult &amp;result) {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="comment">// auto decl{result.Nodes.getNodeAs&lt;Decl&gt;(&quot;decl&quot;)};</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">auto</span> template_decl{</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        result.Nodes.getNodeAs&lt;ClassTemplateDecl&gt;(<span class="stringliteral">&quot;template_decl&quot;</span>)};</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacesc__ast__matchers.html">sc_ast_matchers</a> {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="namespacesc__ast__matchers.html#aecbd44732ff832f51ed8708076c5b769">   18</a></span><a class="code hl_function" href="namespacesc__ast__matchers.html#aecbd44732ff832f51ed8708076c5b769">AST_MATCHER</a>(Type, isDependentNameType) { <span class="keywordflow">return</span> (<a class="code hl_class" href="classsystemc__clang_1_1Node.html">Node</a>.isDependentType()); }</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>};  <span class="comment">// namespace sc_ast_matchers</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacesc__ast__matchers.html">sc_ast_matchers</a>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html">   23</a></span><span class="keyword">class </span><a class="code hl_class" href="classTemplateParametersMatcher.html">TemplateParametersMatcher</a> : <span class="keyword">public</span> MatchFinder::MatchCallback {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a770563f11351a3bfabe19d553d5ee220">   25</a></span>  std::vector&lt;const FieldDecl *&gt; <a class="code hl_variable" href="classTemplateParametersMatcher.html#a770563f11351a3bfabe19d553d5ee220">found_fields_args</a>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a10969c65bff5200d354f887b8a1a9792">   26</a></span>  std::vector&lt;const FieldDecl *&gt; <a class="code hl_variable" href="classTemplateParametersMatcher.html#a10969c65bff5200d354f887b8a1a9792">found_fields_parms</a>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#ad34002dc6999c71092062e4aeba31929">   29</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#ad34002dc6999c71092062e4aeba31929">registerMatchers</a>(MatchFinder &amp;finder) {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// Overview of the matcher</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="comment">// Terminology: template parameter refers to the template typename name, and</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="comment">// template arguments refers to the substituted type. For example, template</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="comment">// &lt;typename T&gt; X{}; X&lt;int&gt; x; has the parameter as T and the argument as</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="comment">// int.</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="comment">// 1. Start matching within a ClassTemplateDecl. Note that the match() call</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="comment">// has to be updated to ensure that the appropriate ClassTemplateDecl is</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="comment">// provided.</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// 2. The isExpansionInMainFile() makes the matcher focus on the provided</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// file (input), and not the underlying C++ files.</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// 3. We check if the ClassTemplateDecl has a CXXRecordDecl within it (note</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// that it will have a CXXRecordDecl and a ClassTemplateSpecializationDecl,</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">// but we want the former to extract the template parameters).</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// 4. For every fieldDecl that is a descendant, it is going to check if the</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// type for the FieldDecl&#39;s desugared type is a TemplateSpecialization or a</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="comment">// TemplateTypeParm.  This should cover typedefs as well. An alternative way</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// would be to just match with Type, and then in the callback one could cast</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// it to respective types that one cares about.</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">//</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">/* clang-format off */</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>       </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">auto</span> match_template_special_decl = </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      classTemplateSpecializationDecl(</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>          cxxRecordDecl(forEachDescendant(fieldDecl(</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>               ).bind(<span class="stringliteral">&quot;fd_arg&quot;</span>)))</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>          ).bind(<span class="stringliteral">&quot;special_template_decl&quot;</span>);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">//</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">auto</span> match_template_decl =</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        classTemplateDecl(</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            has(cxxRecordDecl(forEachDescendant(</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                fieldDecl(</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                  <span class="comment">// anyOf(</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                    <span class="comment">// hasType(hasUnqualifiedDesugaredType(recordType().bind(&quot;record_type&quot;)))</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                    <span class="comment">// ,  hasType(hasUnqualifiedDesugaredType(isDependentNameType()))</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                    <span class="comment">// , hasType(hasUnqualifiedDesugaredType(typedefType().bind(&quot;typedef_type&quot;)))</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                    <span class="comment">// , hasType(hasUnqualifiedDesugaredType(templateSpecializationType().bind(&quot;specialization_type&quot;)))</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                    <span class="comment">// , hasType(hasUnqualifiedDesugaredType(templateTypeParmType().bind(&quot;parm_type&quot;)))</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                    <span class="comment">// , hasType(hasUnqualifiedDesugaredType(builtinType().bind( &quot;builtin_type&quot;)))</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                    <span class="comment">// ) // anyOf</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                  ).bind(<span class="stringliteral">&quot;fd_parm&quot;</span>))</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>              )</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            )</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>          ).bind(<span class="stringliteral">&quot;template_decl&quot;</span>);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">/* clang-format on */</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    finder.addMatcher(match_template_decl, <span class="keyword">this</span>);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    finder.addMatcher(match_template_special_decl, <span class="keyword">this</span>);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  }</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a3006709170adfd3c69c35ebba7386aff">   81</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#a3006709170adfd3c69c35ebba7386aff">run</a>(<span class="keyword">const</span> MatchFinder::MatchResult &amp;result) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// auto decl{result.Nodes.getNodeAs&lt;Decl&gt;(&quot;decl&quot;)};</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="comment">// auto template_decl{</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="comment">// result.Nodes.getNodeAs&lt;ClassTemplateSpecializationDecl&gt;(&quot;template_decl&quot;)};</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">auto</span> fd_arg{result.Nodes.getNodeAs&lt;FieldDecl&gt;(<span class="stringliteral">&quot;fd_arg&quot;</span>)};</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">auto</span> fd_parm{result.Nodes.getNodeAs&lt;FieldDecl&gt;(<span class="stringliteral">&quot;fd_parm&quot;</span>)};</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">auto</span> fd{result.Nodes.getNodeAs&lt;FieldDecl&gt;(<span class="stringliteral">&quot;fd&quot;</span>)};</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">auto</span> record_type{result.Nodes.getNodeAs&lt;RecordType&gt;(<span class="stringliteral">&quot;record_type&quot;</span>)};</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">auto</span> parm_type{result.Nodes.getNodeAs&lt;TemplateTypeParmType&gt;(<span class="stringliteral">&quot;parm_type&quot;</span>)};</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">auto</span> template_special{result.Nodes.getNodeAs&lt;TemplateSpecializationType&gt;(</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="stringliteral">&quot;specialization_type&quot;</span>)};</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    LLVM_DEBUG(llvm::dbgs()</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>               &lt;&lt; <span class="stringliteral">&quot;=============== TEST Template Parm Matcher ====== \n&quot;</span>);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordflow">if</span> (fd) {</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;Found a FieldDecl\n&quot;</span>);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      fd-&gt;dump(llvm::errs());</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>      fd-&gt;getType().getTypePtr()-&gt;dump();</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      <a class="code hl_variable" href="classTemplateParametersMatcher.html#a4613db05892de0f2b4d8376bb120bed5">found_fields</a>.push_back(fd);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    }</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">if</span> (template_special &amp;&amp; fd) {</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;#### TemplateSpecializationType\n&quot;</span>);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>      template_special-&gt;dump();</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>      LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;##### Try to find the template types\n&quot;</span>);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>      <a class="code hl_class" href="classsystemc__clang_1_1FindTemplateTypes.html">FindTemplateTypes</a> ftt{};</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>      ftt.<a class="code hl_function" href="classsystemc__clang_1_1FindTemplateTypes.html#ae648d1354e92813a492ccb2f7011d183">Enumerate</a>(template_special);</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>      ftt.printTemplateArguments(llvm::outs());</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>      LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;##### END\n&quot;</span>);</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      <span class="keyword">const</span> TemplateArgument &amp;targ{template_special-&gt;getArg(0)};</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>      <span class="keywordflow">switch</span> (targ.getKind()) {</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>      <span class="keywordflow">case</span> TemplateArgument::ArgKind::Integral: {</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="keyword">auto</span> q{targ.getAsIntegral()};</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;@@ Integral: &quot;</span> &lt;&lt; q &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>      }; <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>      <span class="keywordflow">case</span> TemplateArgument::ArgKind::Type: {</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="keyword">auto</span> q{targ.getAsType()};</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keyword">auto</span> name{q.getAsString()};</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;@@ arg: &quot;</span> &lt;&lt; name &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>      }; <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>      <span class="keywordflow">case</span> TemplateArgument::ArgKind::Expression: {</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        Expr *expr{targ.getAsExpr()};</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        DeclRefExpr *dexpr{dyn_cast&lt;DeclRefExpr&gt;(expr)};</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keywordflow">if</span> (dexpr) {</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>          LLVM_DEBUG(llvm::dbgs()</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                     &lt;&lt; <span class="stringliteral">&quot;Template parameter: &quot;</span></div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                     &lt;&lt; dexpr-&gt;getNameInfo().getAsString() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        }</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      }</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      <span class="keywordflow">default</span>: {</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>      }</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>      };</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    }</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="comment">// Since this is a RecordType, we can reuse our template type parsing.</span></div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keywordflow">if</span> (record_type &amp;&amp; fd) {</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>      LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;#### RecordType\n&quot;</span>);</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>      record_type-&gt;dump();</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>      <a class="code hl_class" href="classsystemc__clang_1_1FindTemplateTypes.html">FindTemplateTypes</a> ftt{};</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>      ftt.<a class="code hl_function" href="classsystemc__clang_1_1FindTemplateTypes.html#ae648d1354e92813a492ccb2f7011d183">Enumerate</a>(record_type);</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>      ftt.printTemplateArguments(llvm::errs());</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    }</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  }</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a5bb903963b078fea484bdb03115e8cc9">  152</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#a5bb903963b078fea484bdb03115e8cc9">dump</a>() {}</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a4ae346305db4ff1dde8a5bf873daca48">  153</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#a4ae346305db4ff1dde8a5bf873daca48">getFields</a>(std::vector&lt;const FieldDecl *&gt; &amp;flds) { flds = <a class="code hl_variable" href="classTemplateParametersMatcher.html#a4613db05892de0f2b4d8376bb120bed5">found_fields</a>; }</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>};</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassTemplateParametersMatcher_html"><div class="ttname"><a href="classTemplateParametersMatcher.html">TemplateParametersMatcher</a></div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00027">TemplateParametersMatcher.h:27</a></div></div>
-<div class="ttc" id="aclassTemplateParametersMatcher_html_a3006709170adfd3c69c35ebba7386aff"><div class="ttname"><a href="classTemplateParametersMatcher.html#a3006709170adfd3c69c35ebba7386aff">TemplateParametersMatcher::run</a></div><div class="ttdeci">virtual void run(const MatchFinder::MatchResult &amp;result)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00084">TemplateParametersMatcher.h:84</a></div></div>
-<div class="ttc" id="aclassTemplateParametersMatcher_html_a4613db05892de0f2b4d8376bb120bed5"><div class="ttname"><a href="classTemplateParametersMatcher.html#a4613db05892de0f2b4d8376bb120bed5">TemplateParametersMatcher::found_fields</a></div><div class="ttdeci">std::vector&lt; const FieldDecl * &gt; found_fields</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00029">TemplateParametersMatcher.h:29</a></div></div>
-<div class="ttc" id="aclassTemplateParametersMatcher_html_a4ae346305db4ff1dde8a5bf873daca48"><div class="ttname"><a href="classTemplateParametersMatcher.html#a4ae346305db4ff1dde8a5bf873daca48">TemplateParametersMatcher::getFields</a></div><div class="ttdeci">void getFields(std::vector&lt; const FieldDecl * &gt; &amp;flds)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00153">TemplateParametersMatcher.h:153</a></div></div>
-<div class="ttc" id="aclassTemplateParametersMatcher_html_a5bb903963b078fea484bdb03115e8cc9"><div class="ttname"><a href="classTemplateParametersMatcher.html#a5bb903963b078fea484bdb03115e8cc9">TemplateParametersMatcher::dump</a></div><div class="ttdeci">void dump()</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00152">TemplateParametersMatcher.h:152</a></div></div>
-<div class="ttc" id="aclassTemplateParametersMatcher_html_ad34002dc6999c71092062e4aeba31929"><div class="ttname"><a href="classTemplateParametersMatcher.html#ad34002dc6999c71092062e4aeba31929">TemplateParametersMatcher::registerMatchers</a></div><div class="ttdeci">void registerMatchers(MatchFinder &amp;finder)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00032">TemplateParametersMatcher.h:32</a></div></div>
-<div class="ttc" id="aclasssystemc__clang_1_1FindTemplateTypes_html"><div class="ttname"><a href="classsystemc__clang_1_1FindTemplateTypes.html">systemc_clang::FindTemplateTypes</a></div><div class="ttdef"><b>Definition:</b> <a href="FindTemplateTypes_8h_source.html#l00049">FindTemplateTypes.h:49</a></div></div>
-<div class="ttc" id="aclasssystemc__clang_1_1FindTemplateTypes_html_ae648d1354e92813a492ccb2f7011d183"><div class="ttname"><a href="classsystemc__clang_1_1FindTemplateTypes.html#ae648d1354e92813a492ccb2f7011d183">systemc_clang::FindTemplateTypes::Enumerate</a></div><div class="ttdeci">void Enumerate(const clang::Type *type)</div><div class="ttdef"><b>Definition:</b> <a href="FindTemplateTypes_8cpp_source.html#l00053">FindTemplateTypes.cpp:53</a></div></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">auto</span> record_type{result.Nodes.getNodeAs&lt;RecordType&gt;(<span class="stringliteral">&quot;record_type&quot;</span>)};</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keyword">auto</span> parm_type{result.Nodes.getNodeAs&lt;TemplateTypeParmType&gt;(<span class="stringliteral">&quot;parm_type&quot;</span>)};</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">auto</span> template_special{result.Nodes.getNodeAs&lt;TemplateSpecializationType&gt;(</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="stringliteral">&quot;specialization_type&quot;</span>)};</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    LLVM_DEBUG(llvm::dbgs()</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>               &lt;&lt; <span class="stringliteral">&quot;=============== TEST Template Parm Matcher ====== \n&quot;</span>);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">if</span> (fd_arg) {</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;Found a Arg FieldDecl\n&quot;</span>);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      fd_arg-&gt;dump(llvm::errs());</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      fd_arg-&gt;getType().getTypePtr()-&gt;dump();</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      <a class="code hl_variable" href="classTemplateParametersMatcher.html#a770563f11351a3bfabe19d553d5ee220">found_fields_args</a>.push_back(fd_arg);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordflow">if</span> (fd_parm) {</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;Found a Parm FieldDecl\n&quot;</span>);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      fd_parm-&gt;dump(llvm::errs());</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      fd_parm-&gt;getType().getTypePtr()-&gt;dump();</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>      <a class="code hl_variable" href="classTemplateParametersMatcher.html#a10969c65bff5200d354f887b8a1a9792">found_fields_parms</a>.push_back(fd_parm);</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    }</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="comment">/*</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="comment">    if (fd) {</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment">      if (auto cxx = fd-&gt;getType().getTypePtr()-&gt;getAsCXXRecordDecl()) {</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment">        if (auto template_decl =</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="comment">                dyn_cast&lt;ClassTemplateSpecializationDecl&gt;(cxx)) {</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="comment">          (llvm::dbgs() &lt;&lt; &quot;#### TemplateSpecializationType\n&quot;);</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="comment">          template_decl-&gt;dump();</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="comment"></span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment">          (llvm::dbgs() &lt;&lt; &quot;##### Try to find the template types\n&quot;);</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">          FindTemplateTypes ftt{};</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment">          ftt.Enumerate(template_decl);</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment">          ftt.printTemplateArguments(llvm::outs());</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="comment">          (llvm::dbgs() &lt;&lt; &quot;##### END\n&quot;);</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="comment"></span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="comment">          const TemplateArgumentList &amp;arg_list{</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment">              template_decl-&gt;getTemplateArgs()};</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="comment"></span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="comment">          const TemplateArgument &amp;targ{arg_list.get(0)};</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="comment">          targ.getAsType().dump();</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="comment"></span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment">          switch (targ.getKind()) {</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment">            case TemplateArgument::ArgKind::Integral: {</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="comment">              auto q{targ.getAsIntegral()};</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="comment">              (llvm::dbgs() &lt;&lt; &quot;@@ Integral: &quot; &lt;&lt; q &lt;&lt; &quot;\n&quot;);</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="comment">            }; break;</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="comment">            case TemplateArgument::ArgKind::Type: {</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="comment">              auto q{targ.getAsType()};</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="comment">              auto name{q.getAsString()};</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="comment">              (llvm::dbgs() &lt;&lt; &quot;@@ arg: &quot; &lt;&lt; name &lt;&lt; &quot;\n&quot;);</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="comment">            }; break;</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="comment">            case TemplateArgument::ArgKind::Expression: {</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="comment">              Expr *expr{targ.getAsExpr()};</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="comment">              DeclRefExpr *dexpr{dyn_cast&lt;DeclRefExpr&gt;(expr)};</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="comment">              if (dexpr) {</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="comment">                (llvm::dbgs() &lt;&lt; &quot;Template parameter: &quot;</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="comment">                              &lt;&lt; dexpr-&gt;getNameInfo().getAsString() &lt;&lt; &quot;\n&quot;);</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="comment">              }</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="comment">            }</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="comment">            default: {</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="comment">            }</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="comment">          };</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="comment">        }</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="comment"></span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="comment">        // Since this is a RecordType, we can reuse our template type parsing.</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="comment">        // if (record_type &amp;&amp; fd) {</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="comment">        // (llvm::dbgs() &lt;&lt; &quot;#### RecordType\n&quot;);</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="comment">        // record_type-&gt;dump();</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="comment">        // FindTemplateTypes ftt{};</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="comment">        // ftt.Enumerate(record_type);</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="comment">        // ftt.printTemplateArguments(llvm::errs());</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="comment">        // }</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="comment">        (llvm::dbgs() &lt;&lt; &quot;\n&quot;);</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="comment">      }</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="comment">    }</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="comment">  */</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  }</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a5bb903963b078fea484bdb03115e8cc9">  167</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#a5bb903963b078fea484bdb03115e8cc9">dump</a>() {}</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a4ae346305db4ff1dde8a5bf873daca48">  168</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#a4ae346305db4ff1dde8a5bf873daca48">getFields</a>(std::vector&lt;const FieldDecl *&gt; &amp;flds) { flds = <a class="code hl_variable" href="classTemplateParametersMatcher.html#a10969c65bff5200d354f887b8a1a9792">found_fields_parms</a>; }</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#af9dc96194c8ff2e21994bcf37a1f3c41">  169</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#af9dc96194c8ff2e21994bcf37a1f3c41">getArgFields</a>(std::vector&lt;const FieldDecl *&gt; &amp;flds) {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    flds = <a class="code hl_variable" href="classTemplateParametersMatcher.html#a770563f11351a3bfabe19d553d5ee220">found_fields_args</a>;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>  }</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno"><a class="line" href="classTemplateParametersMatcher.html#a7883f29397d44c75d482ddf4ac5a6381">  172</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTemplateParametersMatcher.html#a7883f29397d44c75d482ddf4ac5a6381">getParmFields</a>(std::vector&lt;const FieldDecl *&gt; &amp;flds) {</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    flds = <a class="code hl_variable" href="classTemplateParametersMatcher.html#a10969c65bff5200d354f887b8a1a9792">found_fields_parms</a>;</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  }</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>};</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassTemplateParametersMatcher_html"><div class="ttname"><a href="classTemplateParametersMatcher.html">TemplateParametersMatcher</a></div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00023">TemplateParametersMatcher.h:23</a></div></div>
+<div class="ttc" id="aclassTemplateParametersMatcher_html_a10969c65bff5200d354f887b8a1a9792"><div class="ttname"><a href="classTemplateParametersMatcher.html#a10969c65bff5200d354f887b8a1a9792">TemplateParametersMatcher::found_fields_parms</a></div><div class="ttdeci">std::vector&lt; const FieldDecl * &gt; found_fields_parms</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00026">TemplateParametersMatcher.h:26</a></div></div>
+<div class="ttc" id="aclassTemplateParametersMatcher_html_a3006709170adfd3c69c35ebba7386aff"><div class="ttname"><a href="classTemplateParametersMatcher.html#a3006709170adfd3c69c35ebba7386aff">TemplateParametersMatcher::run</a></div><div class="ttdeci">virtual void run(const MatchFinder::MatchResult &amp;result)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00081">TemplateParametersMatcher.h:81</a></div></div>
+<div class="ttc" id="aclassTemplateParametersMatcher_html_a4ae346305db4ff1dde8a5bf873daca48"><div class="ttname"><a href="classTemplateParametersMatcher.html#a4ae346305db4ff1dde8a5bf873daca48">TemplateParametersMatcher::getFields</a></div><div class="ttdeci">void getFields(std::vector&lt; const FieldDecl * &gt; &amp;flds)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00168">TemplateParametersMatcher.h:168</a></div></div>
+<div class="ttc" id="aclassTemplateParametersMatcher_html_a5bb903963b078fea484bdb03115e8cc9"><div class="ttname"><a href="classTemplateParametersMatcher.html#a5bb903963b078fea484bdb03115e8cc9">TemplateParametersMatcher::dump</a></div><div class="ttdeci">void dump()</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00167">TemplateParametersMatcher.h:167</a></div></div>
+<div class="ttc" id="aclassTemplateParametersMatcher_html_a770563f11351a3bfabe19d553d5ee220"><div class="ttname"><a href="classTemplateParametersMatcher.html#a770563f11351a3bfabe19d553d5ee220">TemplateParametersMatcher::found_fields_args</a></div><div class="ttdeci">std::vector&lt; const FieldDecl * &gt; found_fields_args</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00025">TemplateParametersMatcher.h:25</a></div></div>
+<div class="ttc" id="aclassTemplateParametersMatcher_html_a7883f29397d44c75d482ddf4ac5a6381"><div class="ttname"><a href="classTemplateParametersMatcher.html#a7883f29397d44c75d482ddf4ac5a6381">TemplateParametersMatcher::getParmFields</a></div><div class="ttdeci">void getParmFields(std::vector&lt; const FieldDecl * &gt; &amp;flds)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00172">TemplateParametersMatcher.h:172</a></div></div>
+<div class="ttc" id="aclassTemplateParametersMatcher_html_ad34002dc6999c71092062e4aeba31929"><div class="ttname"><a href="classTemplateParametersMatcher.html#ad34002dc6999c71092062e4aeba31929">TemplateParametersMatcher::registerMatchers</a></div><div class="ttdeci">void registerMatchers(MatchFinder &amp;finder)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00029">TemplateParametersMatcher.h:29</a></div></div>
+<div class="ttc" id="aclassTemplateParametersMatcher_html_af9dc96194c8ff2e21994bcf37a1f3c41"><div class="ttname"><a href="classTemplateParametersMatcher.html#af9dc96194c8ff2e21994bcf37a1f3c41">TemplateParametersMatcher::getArgFields</a></div><div class="ttdeci">void getArgFields(std::vector&lt; const FieldDecl * &gt; &amp;flds)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00169">TemplateParametersMatcher.h:169</a></div></div>
 <div class="ttc" id="aclasssystemc__clang_1_1Node_html"><div class="ttname"><a href="classsystemc__clang_1_1Node.html">systemc_clang::Node</a></div><div class="ttdef"><b>Definition:</b> <a href="Automata_8h_source.html#l00019">Automata.h:19</a></div></div>
 <div class="ttc" id="anamespacesc__ast__matchers_html"><div class="ttname"><a href="namespacesc__ast__matchers.html">sc_ast_matchers</a></div><div class="ttdef"><b>Definition:</b> <a href="FindMemberFieldMatcher_8h_source.html#l00018">FindMemberFieldMatcher.h:18</a></div></div>
-<div class="ttc" id="anamespacesc__ast__matchers_html_aecbd44732ff832f51ed8708076c5b769"><div class="ttname"><a href="namespacesc__ast__matchers.html#aecbd44732ff832f51ed8708076c5b769">sc_ast_matchers::AST_MATCHER</a></div><div class="ttdeci">AST_MATCHER(Type, isDependentNameType)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00019">TemplateParametersMatcher.h:19</a></div></div>
+<div class="ttc" id="anamespacesc__ast__matchers_html_aecbd44732ff832f51ed8708076c5b769"><div class="ttname"><a href="namespacesc__ast__matchers.html#aecbd44732ff832f51ed8708076c5b769">sc_ast_matchers::AST_MATCHER</a></div><div class="ttdeci">AST_MATCHER(Type, isDependentNameType)</div><div class="ttdef"><b>Definition:</b> <a href="TemplateParametersMatcher_8h_source.html#l00018">TemplateParametersMatcher.h:18</a></div></div>
 <div class="ttc" id="anamespacesystemc__clang_html"><div class="ttname"><a href="namespacesystemc__clang.html">systemc_clang</a></div><div class="ttdef"><b>Definition:</b> <a href="SplitCFG_8h_source.html#l00010">SplitCFG.h:10</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

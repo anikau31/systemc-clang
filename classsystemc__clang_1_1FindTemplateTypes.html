@@ -135,6 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ada734ca77a15f0db5a68b9807d130cac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0892635ee2675f3479b818eff2712eab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindTemplateTypes.html#a0892635ee2675f3479b818eff2712eab">VisitBuiltinType</a> (clang::BuiltinType *bi_type)</td></tr>
 <tr class="separator:a0892635ee2675f3479b818eff2712eab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa126450fdaaa0983d00f0492374f93c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindTemplateTypes.html#aa126450fdaaa0983d00f0492374f93c1">VisitDependentNameType</a> (clang::DependentNameType *type)</td></tr>
+<tr class="separator:aa126450fdaaa0983d00f0492374f93c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0768d5fb61eb8673673c8722dcd994ac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindTemplateTypes.html#a0768d5fb61eb8673673c8722dcd994ac">VisitDeclRefExpr</a> (clang::DeclRefExpr *dre)</td></tr>
 <tr class="separator:a0768d5fb61eb8673673c8722dcd994ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a452d701c13c13cb79eaca7a9e7d46658"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1FindTemplateTypes.html#a452d701c13c13cb79eaca7a9e7d46658">~FindTemplateTypes</a> ()</td></tr>
@@ -319,7 +321,7 @@ Private Attributes</h2></td></tr>
 
 <p>Returns the <a class="el" href="classsystemc__clang_1_1TemplateType.html">TemplateType</a> data as a std::string. </p>
 
-<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00295">295</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00307">307</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
 
 </div>
 </div>
@@ -358,7 +360,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00291">291</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00303">303</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
 
 </div>
 </div>
@@ -378,7 +380,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00325">325</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00337">337</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
 
 </div>
 </div>
@@ -461,6 +463,26 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa126450fdaaa0983d00f0492374f93c1" name="aa126450fdaaa0983d00f0492374f93c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa126450fdaaa0983d00f0492374f93c1">&#9670;&nbsp;</a></span>VisitDependentNameType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FindTemplateTypes::VisitDependentNameType </td>
+          <td>(</td>
+          <td class="paramtype">clang::DependentNameType *&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00193">193</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
+
+</div>
+</div>
 <a id="a1bc2ee73e47e976117de90c619f9d589" name="a1bc2ee73e47e976117de90c619f9d589"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1bc2ee73e47e976117de90c619f9d589">&#9670;&nbsp;</a></span>VisitEnumType()</h2>
 
@@ -497,7 +519,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00282">282</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00294">294</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
 
 </div>
 </div>
@@ -517,7 +539,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00203">203</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00215">215</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
 
 </div>
 </div>
@@ -559,7 +581,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00193">193</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8cpp_source.html#l00205">205</a> of file <a class="el" href="FindTemplateTypes_8cpp_source.html">FindTemplateTypes.cpp</a>.</p>
 
 </div>
 </div>
@@ -584,7 +606,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8h_source.html#l00100">100</a> of file <a class="el" href="FindTemplateTypes_8h_source.html">FindTemplateTypes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8h_source.html#l00101">101</a> of file <a class="el" href="FindTemplateTypes_8h_source.html">FindTemplateTypes.h</a>.</p>
 
 </div>
 </div>
@@ -608,7 +630,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8h_source.html#l00101">101</a> of file <a class="el" href="FindTemplateTypes_8h_source.html">FindTemplateTypes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8h_source.html#l00102">102</a> of file <a class="el" href="FindTemplateTypes_8h_source.html">FindTemplateTypes.h</a>.</p>
 
 </div>
 </div>
@@ -632,7 +654,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8h_source.html#l00099">99</a> of file <a class="el" href="FindTemplateTypes_8h_source.html">FindTemplateTypes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FindTemplateTypes_8h_source.html#l00100">100</a> of file <a class="el" href="FindTemplateTypes_8h_source.html">FindTemplateTypes.h</a>.</p>
 
 </div>
 </div>

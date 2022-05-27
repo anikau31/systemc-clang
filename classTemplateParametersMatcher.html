@@ -101,15 +101,21 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5bb903963b078fea484bdb03115e8cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ae346305db4ff1dde8a5bf873daca48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplateParametersMatcher.html#a4ae346305db4ff1dde8a5bf873daca48">getFields</a> (std::vector&lt; const FieldDecl * &gt; &amp;flds)</td></tr>
 <tr class="separator:a4ae346305db4ff1dde8a5bf873daca48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9dc96194c8ff2e21994bcf37a1f3c41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplateParametersMatcher.html#af9dc96194c8ff2e21994bcf37a1f3c41">getArgFields</a> (std::vector&lt; const FieldDecl * &gt; &amp;flds)</td></tr>
+<tr class="separator:af9dc96194c8ff2e21994bcf37a1f3c41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7883f29397d44c75d482ddf4ac5a6381"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplateParametersMatcher.html#a7883f29397d44c75d482ddf4ac5a6381">getParmFields</a> (std::vector&lt; const FieldDecl * &gt; &amp;flds)</td></tr>
+<tr class="separator:a7883f29397d44c75d482ddf4ac5a6381"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a4613db05892de0f2b4d8376bb120bed5"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const FieldDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplateParametersMatcher.html#a4613db05892de0f2b4d8376bb120bed5">found_fields</a></td></tr>
-<tr class="separator:a4613db05892de0f2b4d8376bb120bed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a770563f11351a3bfabe19d553d5ee220"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const FieldDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplateParametersMatcher.html#a770563f11351a3bfabe19d553d5ee220">found_fields_args</a></td></tr>
+<tr class="separator:a770563f11351a3bfabe19d553d5ee220"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10969c65bff5200d354f887b8a1a9792"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const FieldDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplateParametersMatcher.html#a10969c65bff5200d354f887b8a1a9792">found_fields_parms</a></td></tr>
+<tr class="separator:a10969c65bff5200d354f887b8a1a9792"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00027">27</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00023">23</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a5bb903963b078fea484bdb03115e8cc9" name="a5bb903963b078fea484bdb03115e8cc9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5bb903963b078fea484bdb03115e8cc9">&#9670;&nbsp;</a></span>dump()</h2>
@@ -134,7 +140,35 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00152">152</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00167">167</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
+
+</div>
+</div>
+<a id="af9dc96194c8ff2e21994bcf37a1f3c41" name="af9dc96194c8ff2e21994bcf37a1f3c41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9dc96194c8ff2e21994bcf37a1f3c41">&#9670;&nbsp;</a></span>getArgFields()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateParametersMatcher::getArgFields </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; const FieldDecl * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>flds</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00169">169</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
 
 </div>
 </div>
@@ -162,7 +196,35 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00153">153</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00168">168</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
+
+</div>
+</div>
+<a id="a7883f29397d44c75d482ddf4ac5a6381" name="a7883f29397d44c75d482ddf4ac5a6381"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7883f29397d44c75d482ddf4ac5a6381">&#9670;&nbsp;</a></span>getParmFields()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateParametersMatcher::getParmFields </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; const FieldDecl * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>flds</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00172">172</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
 
 </div>
 </div>
@@ -190,7 +252,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00032">32</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00029">29</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
 
 </div>
 </div>
@@ -218,13 +280,13 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00084">84</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00081">81</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a4613db05892de0f2b4d8376bb120bed5" name="a4613db05892de0f2b4d8376bb120bed5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4613db05892de0f2b4d8376bb120bed5">&#9670;&nbsp;</a></span>found_fields</h2>
+<a id="a770563f11351a3bfabe19d553d5ee220" name="a770563f11351a3bfabe19d553d5ee220"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a770563f11351a3bfabe19d553d5ee220">&#9670;&nbsp;</a></span>found_fields_args</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -233,7 +295,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;const FieldDecl *&gt; TemplateParametersMatcher::found_fields</td>
+          <td class="memname">std::vector&lt;const FieldDecl *&gt; TemplateParametersMatcher::found_fields_args</td>
         </tr>
       </table>
   </td>
@@ -243,7 +305,31 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00029">29</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00025">25</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
+
+</div>
+</div>
+<a id="a10969c65bff5200d354f887b8a1a9792" name="a10969c65bff5200d354f887b8a1a9792"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10969c65bff5200d354f887b8a1a9792">&#9670;&nbsp;</a></span>found_fields_parms</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;const FieldDecl *&gt; TemplateParametersMatcher::found_fields_parms</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TemplateParametersMatcher_8h_source.html#l00026">26</a> of file <a class="el" href="TemplateParametersMatcher_8h_source.html">TemplateParametersMatcher.h</a>.</p>
 
 </div>
 </div>
