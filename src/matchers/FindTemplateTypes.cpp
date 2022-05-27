@@ -55,7 +55,7 @@ void FindTemplateTypes::Enumerate(const Type *type) {
     return;
   }
 
-  //llvm::outs() << "=Enumerate=\n";
+  llvm::outs() << "=Enumerate=\n";
 
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
 }
@@ -190,9 +190,21 @@ bool FindTemplateTypes::VisitEnumType(EnumType *e) {
   return false;
 }
 
+bool FindTemplateTypes::VisitDependentNameType(DependentNameType *type) {
+   llvm::outs() << "=DependentNameType=\n";
+   type->dump();
+
+  TemplateType tt{type->desugar().getAsString(), type};
+  current_type_node_ = template_args_.addNode(tt);
+  if (template_args_.size() == 1) {
+    template_args_.setRoot(current_type_node_);
+  }
+
+  return true;
+}
 bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
-  // llvm::outs() << "=VisitTypedefType=\n";
-  // typedef_type->dump();
+   llvm::outs() << "=VisitTypedefType=\n";
+   typedef_type->dump();
   // child nodes of TemplateSpecializationType are not being invoked.
   if (auto special_type = typedef_type->getAs<TemplateSpecializationType>()) {
     TraverseType(QualType(special_type->getUnqualifiedDesugaredType(), 0));
