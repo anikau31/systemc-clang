@@ -528,14 +528,29 @@ namespace systemc_hdl {
   }
 
   bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
+    bool is_overridden = false;
+    
     LLVM_DEBUG(llvm::dbgs()
 	       << "In TraverseCXXMemberCallExpr, printing implicit object arg\n");
     // Retrieves the implicit object argument for the member call.
     // For example, in "x.f(5)", this returns the sub-expression "x".
-    Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
 
+    Expr *rawarg = (callexpr->getImplicitObjectArgument());
+    LLVM_DEBUG(llvm::dbgs() << "raw implicitobjectargument follows\n");
+    LLVM_DEBUG(rawarg->dump(llvm::dbgs(), ast_context_));
+    
+    Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
+    LLVM_DEBUG(llvm::dbgs() << "implicitobjectargument, ignore implicit follows\n");
     LLVM_DEBUG(arg->dump(llvm::dbgs(), ast_context_));
-    QualType argtyp = arg->getType();
+
+    QualType argtyp;
+    if (dyn_cast<ImplicitCastExpr>(rawarg)) { // cast to a specfic type
+      argtyp = rawarg->getType();
+      is_overridden = true;
+    }
+    else {
+      argtyp = arg->getType();
+    }
     LLVM_DEBUG(llvm::dbgs() << "type of x in x.f(5) is " << argtyp.getAsString()
 	       << "\n");
     QualType objtyp = callexpr->getObjectType();
@@ -545,11 +560,11 @@ namespace systemc_hdl {
     CXXRecordDecl *recdecl = callexpr->getRecordDecl();
     LLVM_DEBUG(llvm::dbgs() << "here is method record decl name " << recdecl->getNameAsString() << "\n");
     CXXMethodDecl *methdcl = callexpr->getMethodDecl();
-    //if ((overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
-    //  methdcl = const_cast<CXXMethodDecl *>(overridden_method_map_[methdcl]);
-    //}
-    // LLVM_DEBUG(llvm::dbgs() << "methoddecl follows\n");
-    // LLVM_DEBUG(methdcl->dump(llvm::dbgs());
+    if ((!is_overridden) && (overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
+      methdcl = const_cast<CXXMethodDecl *>(overridden_method_map_[methdcl]);
+    }
+     LLVM_DEBUG(llvm::dbgs() << "methoddecl follows\n");
+     LLVM_DEBUG(methdcl->dump(llvm::dbgs()));
     if (isa<NamedDecl>(methdcl) && methdcl->getDeclName()) {
       methodname = methdcl->getNameAsString();
       qualmethodname = methdcl->getQualifiedNameAsString();

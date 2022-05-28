@@ -110,7 +110,6 @@ namespace systemc_hdl {
     SCmodule2hcode(modinstance, h_module, HCodeOut);
     // h_module->print(HCodeOut);
 
-
     LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
     while (!HDLt.usertypes.empty()) {
@@ -119,7 +118,7 @@ namespace systemc_hdl {
       for (auto t : usertypestmp) {
 	LLVM_DEBUG(llvm::dbgs()
 		   << "User Type --------\n"
-		   << t.first << ":" << t.second.getTypePtr() << "\n");
+		   << t.first << ":" << t.second.getTypePtr() << t.second.getAsString() <<"\n");
 	LLVM_DEBUG(t.second->dump(llvm::dbgs(), getContext()));
 	LLVM_DEBUG(llvm::dbgs() << "---------\n");
 	HDLt.addtype(t.first, t.second, getContext())->print(HCodeOut);
@@ -363,6 +362,11 @@ namespace systemc_hdl {
 	  // what about returning an array type? this isn't handled 
 	  HDLt.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
+	  CXXMethodDecl * thismethod = dyn_cast<CXXMethodDecl>(m.first);
+	  if (thismethod != NULL) {
+	    LLVM_DEBUG(llvm::dbgs() << m.second.newn << " is a Method\n");
+	  }
+	  else LLVM_DEBUG(llvm::dbgs() << m.second.newn << " is a Function\n");
 	  if (m.first->getNumParams() > 0) {
 	    hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
 	    hNodep hparam_assign_list = new hNode(hNode::hdlopsEnum::hCStmt);
@@ -375,7 +379,7 @@ namespace systemc_hdl {
 			 << q.getAsString() << "\n");
 	      FindTemplateTypes *te = new FindTemplateTypes();
 	      te->Enumerate(tp);
-	      HDLType HDLt;
+	      HDLType HDLt1;
 	      std::vector<llvm::APInt> array_sizes = sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
 	      hNode::hdlopsEnum paramtype;
 	      // special case if sc_min, max, abs, treat parameters as input
@@ -390,7 +394,7 @@ namespace systemc_hdl {
 		// create an entry in mod_vname_map for this parameter's local variable
 		string objname = vardecl->getName().str()+"_actual";
 
-		HDLt.SCtype2hcode(objname, te->getTemplateArgTreePtr(),
+		HDLt1.SCtype2hcode(objname, te->getTemplateArgTreePtr(),
 				&array_sizes, hNode::hdlopsEnum::hVardecl, h_ports);
 		mod_vname_map.add_entry(vardecl, objname, h_ports->child_list.back());
 		hNodep hparam_assign = new hNode("=", hNode::hdlopsEnum::hBinop);
@@ -401,7 +405,7 @@ namespace systemc_hdl {
 		hparam_assign_list->append(hparam_assign);
 	      }
 	      
-	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
+	      HDLt1.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
 				&array_sizes, paramtype, hparams);
 	    }
 	    

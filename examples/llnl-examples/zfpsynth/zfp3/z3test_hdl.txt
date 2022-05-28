@@ -347,34 +347,34 @@
           ]
         ]
       ]
+      hModdecl u_encode_ints [
+        hTypeinfo  NONAME [
+          hType encode_ints_sc_module_2 NOLIST
+        ]
+      ]
       hModdecl u_find_emax [
         hTypeinfo  NONAME [
-          hType find_emax_sc_module_2 NOLIST
+          hType find_emax_sc_module_3 NOLIST
         ]
       ]
       hModdecl u_ssplit_ex [
         hTypeinfo  NONAME [
-          hType ssplit_sc_module_3 NOLIST
+          hType ssplit_sc_module_4 NOLIST
         ]
       ]
       hModdecl u_fwd_cast [
         hTypeinfo  NONAME [
-          hType fwd_cast_sc_module_4 NOLIST
+          hType fwd_cast_sc_module_5 NOLIST
         ]
       ]
       hModdecl u_encode_block [
         hTypeinfo  NONAME [
-          hType encode_block_sc_module_5 NOLIST
+          hType encode_block_sc_module_6 NOLIST
         ]
       ]
       hModdecl u_block_buffer [
         hTypeinfo  NONAME [
-          hType block_buffer_sc_module_6 NOLIST
-        ]
-      ]
-      hModdecl u_encode_ints [
-        hTypeinfo  NONAME [
-          hType encode_ints_sc_module_7 NOLIST
+          hType block_buffer_sc_module_7 NOLIST
         ]
       ]
       hModdecl u_encode_stream [
@@ -1556,7 +1556,1545 @@
       ]
     ]
   ]
-  hModule find_emax_sc_module_2 [
+  hModule encode_ints_sc_module_2 [
+    hPortsigvarlist  NONAME [
+      hPortin clk [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin reset [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin s_block [
+        hTypeinfo  NONAME [
+          hType array##16 [
+            hType sc_in [
+              hType sc_uint [
+                hLiteral 64 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hPortin s_valid [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin s_flush [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin m_ready [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout s_ready [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout m_bc [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType sc_uint [
+              hLiteral 6 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortout m_bp [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType sc_bv [
+              hLiteral 33 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortout m_last [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout m_valid [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl bc1_scclang_global_0 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 5 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl bp1_scclang_global_1 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_bv [
+              hLiteral 16 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl c_bplane_scclang_global_2 [
+        hTypeinfo  NONAME [
+          hType array##64 [
+            hType sc_signal [
+              hType sc_bv [
+                hLiteral 16 NOLIST
+              ]
+            ]
+          ]
+        ]
+      ]
+      hSigdecl flush1_scclang_global_3 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl k0_scclang_global_4 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 6 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl last1_scclang_global_5 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl n0_scclang_global_6 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 5 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl n1_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 5 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl valid1_scclang_global_8 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hVardecl planes_scclang_global_9 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hVarInit  NONAME [
+          hLiteral 64 NOLIST
+        ]
+      ]
+    ]
+    hProcesses  NONAME [
+      hProcess mc_proc [
+        hMethod mc_proc [
+          hVardecl last_mc_proc_local_3 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl tmp_mc_proc_local_4 [
+            hTypeinfo  NONAME [
+              hType sc_bv [
+                hLiteral 16 NOLIST
+              ]
+            ]
+          ]
+          hVardecl j_mc_proc_local_5 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hVardecl i_mc_proc_local_6 [
+            hTypeinfo  NONAME [
+              hType int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hVarAssign  NONAME [
+              hVarref last_mc_proc_local_3 NOLIST
+              hBinop || [
+                hBinop == [
+                  hSigAssignR read [
+                    hVarref k0_scclang_global_4 NOLIST
+                  ]
+                  hBinop - [
+                    hLiteral 64 NOLIST
+                    hLiteral 1 NOLIST
+                  ]
+                ]
+                hBinop && [
+                  hSigAssignR read [
+                    hVarref s_flush NOLIST
+                  ]
+                  hBinop != [
+                    hSigAssignR read [
+                      hVarref s_flush NOLIST
+                    ]
+                    hSigAssignR read [
+                      hVarref flush1_scclang_global_3 NOLIST
+                    ]
+                  ]
+                ]
+              ]
+            ]
+            hForStmt  NONAME [
+              hVarAssign  NONAME [
+                hVarref j_mc_proc_local_5 NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop < [
+                hVarref j_mc_proc_local_5 NOLIST
+                hLiteral 64 NOLIST
+              ]
+              hPostfix ++ [
+                hVarref j_mc_proc_local_5 NOLIST
+              ]
+              hCStmt  NONAME [
+                hForStmt  NONAME [
+                  hVarAssign  NONAME [
+                    hVarref i_mc_proc_local_6 NOLIST
+                    hLiteral 0 NOLIST
+                  ]
+                  hBinop < [
+                    hVarref i_mc_proc_local_6 NOLIST
+                    hLiteral 16 NOLIST
+                  ]
+                  hPostfix ++ [
+                    hVarref i_mc_proc_local_6 NOLIST
+                  ]
+                  hCStmt  NONAME [
+                    hBinop = [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref tmp_mc_proc_local_4 NOLIST
+                        hVarref i_mc_proc_local_6 NOLIST
+                      ]
+                      hBuiltinFunction to_bool [
+                        hBinop ARRAYSUBSCRIPT [
+                          hSigAssignR read [
+                            hBinop ARRAYSUBSCRIPT [
+                              hVarref s_block NOLIST
+                              hVarref i_mc_proc_local_6 NOLIST
+                            ]
+                          ]
+                          hVarref j_mc_proc_local_5 NOLIST
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+                hSigAssignL write [
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref c_bplane_scclang_global_2 NOLIST
+                    hBinop - [
+                      hBinop - [
+                        hLiteral 64 NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                      hVarref j_mc_proc_local_5 NOLIST
+                    ]
+                  ]
+                  hVarref tmp_mc_proc_local_4 NOLIST
+                ]
+              ]
+            ]
+            hSigAssignL write [
+              hVarref s_ready NOLIST
+              hBinop || [
+                hBinop && [
+                  hVarref last_mc_proc_local_3 NOLIST
+                  hSigAssignR read [
+                    hVarref m_ready NOLIST
+                  ]
+                ]
+                hUnop ! [
+                  hSigAssignR read [
+                    hVarref s_valid NOLIST
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      hProcess ms_proc [
+        hMethod ms_proc [
+          hVardecl last_ms_proc_local_7 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl b_ms_proc_local_8 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl frst_ms_proc_local_9 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl i_ms_proc_local_10 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl tmp_ms_proc_local_11 [
+            hTypeinfo  NONAME [
+              hType sc_bv [
+                hLiteral 33 NOLIST
+              ]
+            ]
+          ]
+          hVardecl n_ms_proc_local_12 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl shiftamt_ms_proc_local_13 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl n1_shiftamt_ms_proc_local_14 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl first_after_bc_ms_proc_local_15 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl last_n_ms_proc_local_16 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl found_ms_proc_local_17 [
+            hTypeinfo  NONAME [
+              hType _Bool NOLIST
+            ]
+          ]
+          hVardecl shiftmask_ms_proc_local_18 [
+            hTypeinfo  NONAME [
+              hType sc_bv [
+                hLiteral 33 NOLIST
+              ]
+            ]
+          ]
+          hVardecl delta_ms_proc_local_19 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hVardecl shiftmask_2_ms_proc_local_20 [
+            hTypeinfo  NONAME [
+              hType sc_bv [
+                hLiteral 33 NOLIST
+              ]
+            ]
+          ]
+          hVardecl j_ms_proc_local_21 [
+            hTypeinfo  NONAME [
+              hType unsigned_int NOLIST
+            ]
+          ]
+          hCStmt  NONAME [
+            hIfStmt  NONAME [
+              hBinop == [
+                hVarref reset NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hCStmt  NONAME [
+                hBinop = [
+                  hVarref k0_scclang_global_4 NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_uint [
+                        hLiteral 6 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+                hBinop = [
+                  hVarref n0_scclang_global_6 NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_uint [
+                        hLiteral 5 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+                hBinop = [
+                  hVarref n1_scclang_global_7 NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_uint [
+                        hLiteral 5 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+                hBinop = [
+                  hVarref bc1_scclang_global_0 NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_uint [
+                        hLiteral 5 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+                hBinop = [
+                  hVarref m_bc NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_uint [
+                        hLiteral 6 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+                hBinop = [
+                  hVarref bp1_scclang_global_1 NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_bv [
+                        hLiteral 16 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+                hBinop = [
+                  hVarref m_bp NOLIST
+                  hLiteral 0 [
+                    hTypeinfo  NONAME [
+                      hType sc_bv [
+                        hLiteral 33 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+                hBinop = [
+                  hVarref last1_scclang_global_5 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref m_last NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref valid1_scclang_global_8 NOLIST
+                  hLiteral 0 NOLIST
+                ]
+                hBinop = [
+                  hVarref m_valid NOLIST
+                  hLiteral 0 NOLIST
+                ]
+              ]
+              hCStmt  NONAME [
+                hIfStmt  NONAME [
+                  hSigAssignR read [
+                    hVarref m_ready NOLIST
+                  ]
+                  hCStmt  NONAME [
+                    hVarAssign  NONAME [
+                      hVarref last_ms_proc_local_7 NOLIST
+                      hBinop || [
+                        hBinop == [
+                          hSigAssignR read [
+                            hVarref k0_scclang_global_4 NOLIST
+                          ]
+                          hBinop - [
+                            hLiteral 64 NOLIST
+                            hLiteral 1 NOLIST
+                          ]
+                        ]
+                        hBinop && [
+                          hSigAssignR read [
+                            hVarref s_flush NOLIST
+                          ]
+                          hBinop != [
+                            hSigAssignR read [
+                              hVarref s_flush NOLIST
+                            ]
+                            hSigAssignR read [
+                              hVarref flush1_scclang_global_3 NOLIST
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref b_ms_proc_local_8 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref frst_ms_proc_local_9 NOLIST
+                      hLiteral 1 NOLIST
+                    ]
+                    hForStmt  NONAME [
+                      hVarAssign  NONAME [
+                        hVarref i_ms_proc_local_10 NOLIST
+                        hLiteral 16 NOLIST
+                      ]
+                      hBinop > [
+                        hVarref i_ms_proc_local_10 NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                      hPostfix -- [
+                        hVarref i_ms_proc_local_10 NOLIST
+                      ]
+                      hCStmt  NONAME [
+                        hIfStmt  NONAME [
+                          hBinop ARRAYSUBSCRIPT [
+                            hSigAssignR read [
+                              hBinop ARRAYSUBSCRIPT [
+                                hVarref c_bplane_scclang_global_2 NOLIST
+                                hSigAssignR read [
+                                  hVarref k0_scclang_global_4 NOLIST
+                                ]
+                              ]
+                            ]
+                            hBinop - [
+                              hVarref i_ms_proc_local_10 NOLIST
+                              hLiteral 1 NOLIST
+                            ]
+                          ]
+                          hCStmt  NONAME [
+                            hIfStmt  NONAME [
+                              hVarref frst_ms_proc_local_9 NOLIST
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hVarref frst_ms_proc_local_9 NOLIST
+                                  hLiteral 0 NOLIST
+                                ]
+                                hBinop = [
+                                  hVarref b_ms_proc_local_8 NOLIST
+                                  hVarref i_ms_proc_local_10 NOLIST
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hVarref n1_scclang_global_7 NOLIST
+                      hSigAssignR read [
+                        hVarref n0_scclang_global_6 NOLIST
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hVarref bc1_scclang_global_0 NOLIST
+                      hVarref b_ms_proc_local_8 NOLIST
+                    ]
+                    hSigAssignL write [
+                      hVarref bp1_scclang_global_1 NOLIST
+                      hSigAssignR read [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref c_bplane_scclang_global_2 NOLIST
+                          hSigAssignR read [
+                            hVarref k0_scclang_global_4 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hVarref last1_scclang_global_5 NOLIST
+                      hVarref last_ms_proc_local_7 NOLIST
+                    ]
+                    hSigAssignL write [
+                      hVarref valid1_scclang_global_8 NOLIST
+                      hSigAssignR read [
+                        hVarref s_valid NOLIST
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hVarref flush1_scclang_global_3 NOLIST
+                      hSigAssignR read [
+                        hVarref s_flush NOLIST
+                      ]
+                    ]
+                    hIfStmt  NONAME [
+                      hSigAssignR read [
+                        hVarref s_valid NOLIST
+                      ]
+                      hCStmt  NONAME [
+                        hIfStmt  NONAME [
+                          hBinop > [
+                            hVarref b_ms_proc_local_8 NOLIST
+                            hSigAssignR read [
+                              hVarref n0_scclang_global_6 NOLIST
+                            ]
+                          ]
+                          hSigAssignL write [
+                            hVarref n0_scclang_global_6 NOLIST
+                            hVarref b_ms_proc_local_8 NOLIST
+                          ]
+                        ]
+                        hIfStmt  NONAME [
+                          hVarref last_ms_proc_local_7 NOLIST
+                          hCStmt  NONAME [
+                            hBinop = [
+                              hVarref k0_scclang_global_4 NOLIST
+                              hLiteral 0 [
+                                hTypeinfo  NONAME [
+                                  hType sc_uint [
+                                    hLiteral 6 NOLIST
+                                  ]
+                                ]
+                              ]
+                            ]
+                            hBinop = [
+                              hVarref n0_scclang_global_6 NOLIST
+                              hLiteral 0 [
+                                hTypeinfo  NONAME [
+                                  hType sc_uint [
+                                    hLiteral 5 NOLIST
+                                  ]
+                                ]
+                              ]
+                            ]
+                          ]
+                          hBinop = [
+                            hVarref k0_scclang_global_4 NOLIST
+                            hBinop + [
+                              hSigAssignR read [
+                                hVarref k0_scclang_global_4 NOLIST
+                              ]
+                              hLiteral 1 NOLIST
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref tmp_ms_proc_local_11 NOLIST
+                      hLiteral 0 [
+                        hTypeinfo  NONAME [
+                          hType sc_bv [
+                            hLiteral 33 NOLIST
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref shiftamt_ms_proc_local_13 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref n1_shiftamt_ms_proc_local_14 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref first_after_bc_ms_proc_local_15 NOLIST
+                      hSigAssignR read [
+                        hVarref n1_scclang_global_7 NOLIST
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref last_n_ms_proc_local_16 NOLIST
+                      hSigAssignR read [
+                        hVarref n1_scclang_global_7 NOLIST
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref found_ms_proc_local_17 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hBinop = [
+                      hVarref shiftamt_ms_proc_local_13 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hForStmt  NONAME [
+                      hBinop = [
+                        hVarref n_ms_proc_local_12 NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                      hBinop < [
+                        hVarref n_ms_proc_local_12 NOLIST
+                        hLiteral 16 NOLIST
+                      ]
+                      hPostfix ++ [
+                        hVarref n_ms_proc_local_12 NOLIST
+                      ]
+                      hCStmt  NONAME [
+                        hIfStmt  NONAME [
+                          hBinop == [
+                            hVarref n_ms_proc_local_12 NOLIST
+                            hSigAssignR read [
+                              hVarref n1_scclang_global_7 NOLIST
+                            ]
+                          ]
+                          hCStmt  NONAME [
+                            hBinop = [
+                              hVarref n1_shiftamt_ms_proc_local_14 NOLIST
+                              hVarref shiftamt_ms_proc_local_13 NOLIST
+                            ]
+                          ]
+                        ]
+                        hIfStmt  NONAME [
+                          hBinop == [
+                            hVarref n_ms_proc_local_12 NOLIST
+                            hLiteral 0 NOLIST
+                          ]
+                          hCStmt  NONAME [
+                            hBinop += [
+                              hVarref shiftamt_ms_proc_local_13 NOLIST
+                              hLiteral 2 NOLIST
+                            ]
+                            hIfStmt  NONAME [
+                              hBinop ARRAYSUBSCRIPT [
+                                hSigAssignR read [
+                                  hVarref bp1_scclang_global_1 NOLIST
+                                ]
+                                hLiteral 0 NOLIST
+                              ]
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref tmp_ms_proc_local_11 NOLIST
+                                    hLiteral 0 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref tmp_ms_proc_local_11 NOLIST
+                                    hLiteral 1 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref tmp_ms_proc_local_11 NOLIST
+                                    hLiteral 0 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref tmp_ms_proc_local_11 NOLIST
+                                    hLiteral 1 NOLIST
+                                  ]
+                                  hLiteral 0 NOLIST
+                                ]
+                              ]
+                            ]
+                          ]
+                          hCStmt  NONAME [
+                            hIfStmt  NONAME [
+                              hBinop && [
+                                hBuiltinFunction to_bool [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1_scclang_global_1 NOLIST
+                                    ]
+                                    hVarref n_ms_proc_local_12 NOLIST
+                                  ]
+                                ]
+                                hBuiltinFunction to_bool [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1_scclang_global_1 NOLIST
+                                    ]
+                                    hBinop - [
+                                      hVarref n_ms_proc_local_12 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref tmp_ms_proc_local_11 NOLIST
+                                    hVarref shiftamt_ms_proc_local_13 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                                hBinop = [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hVarref tmp_ms_proc_local_11 NOLIST
+                                    hBinop + [
+                                      hVarref shiftamt_ms_proc_local_13 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                                hBinop = [
+                                  hVarref shiftamt_ms_proc_local_13 NOLIST
+                                  hBinop + [
+                                    hVarref shiftamt_ms_proc_local_13 NOLIST
+                                    hLiteral 2 NOLIST
+                                  ]
+                                ]
+                              ]
+                              hIfStmt  NONAME [
+                                hBinop && [
+                                  hBuiltinFunction to_bool [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1_scclang_global_1 NOLIST
+                                      ]
+                                      hVarref n_ms_proc_local_12 NOLIST
+                                    ]
+                                  ]
+                                  hUnop ! [
+                                    hBuiltinFunction to_bool [
+                                      hBinop ARRAYSUBSCRIPT [
+                                        hSigAssignR read [
+                                          hVarref bp1_scclang_global_1 NOLIST
+                                        ]
+                                        hBinop - [
+                                          hVarref n_ms_proc_local_12 NOLIST
+                                          hLiteral 1 NOLIST
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                                hCStmt  NONAME [
+                                  hIfStmt  NONAME [
+                                    hBinop != [
+                                      hVarref n_ms_proc_local_12 NOLIST
+                                      hBinop - [
+                                        hLiteral 16 NOLIST
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                    hCStmt  NONAME [
+                                      hBinop = [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hVarref tmp_ms_proc_local_11 NOLIST
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                      hBinop = [
+                                        hVarref shiftamt_ms_proc_local_13 NOLIST
+                                        hBinop + [
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
+                                          hLiteral 1 NOLIST
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                                hIfStmt  NONAME [
+                                  hBinop && [
+                                    hUnop ! [
+                                      hBuiltinFunction to_bool [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hSigAssignR read [
+                                            hVarref bp1_scclang_global_1 NOLIST
+                                          ]
+                                          hVarref n_ms_proc_local_12 NOLIST
+                                        ]
+                                      ]
+                                    ]
+                                    hUnop ! [
+                                      hBuiltinFunction to_bool [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hSigAssignR read [
+                                            hVarref bp1_scclang_global_1 NOLIST
+                                          ]
+                                          hBinop - [
+                                            hVarref n_ms_proc_local_12 NOLIST
+                                            hLiteral 1 NOLIST
+                                          ]
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                  hCStmt  NONAME [
+                                    hBinop = [
+                                      hBinop ARRAYSUBSCRIPT [
+                                        hVarref tmp_ms_proc_local_11 NOLIST
+                                        hVarref shiftamt_ms_proc_local_13 NOLIST
+                                      ]
+                                      hLiteral 0 NOLIST
+                                    ]
+                                    hBinop = [
+                                      hVarref shiftamt_ms_proc_local_13 NOLIST
+                                      hBinop + [
+                                        hVarref shiftamt_ms_proc_local_13 NOLIST
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                  hIfStmt  NONAME [
+                                    hBinop && [
+                                      hUnop ! [
+                                        hBuiltinFunction to_bool [
+                                          hBinop ARRAYSUBSCRIPT [
+                                            hSigAssignR read [
+                                              hVarref bp1_scclang_global_1 NOLIST
+                                            ]
+                                            hVarref n_ms_proc_local_12 NOLIST
+                                          ]
+                                        ]
+                                      ]
+                                      hBuiltinFunction to_bool [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hSigAssignR read [
+                                            hVarref bp1_scclang_global_1 NOLIST
+                                          ]
+                                          hBinop - [
+                                            hVarref n_ms_proc_local_12 NOLIST
+                                            hLiteral 1 NOLIST
+                                          ]
+                                        ]
+                                      ]
+                                    ]
+                                    hCStmt  NONAME [
+                                      hBinop = [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hVarref tmp_ms_proc_local_11 NOLIST
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                      hBinop = [
+                                        hBinop ARRAYSUBSCRIPT [
+                                          hVarref tmp_ms_proc_local_11 NOLIST
+                                          hBinop + [
+                                            hVarref shiftamt_ms_proc_local_13 NOLIST
+                                            hLiteral 1 NOLIST
+                                          ]
+                                        ]
+                                        hLiteral 0 NOLIST
+                                      ]
+                                      hBinop = [
+                                        hVarref shiftamt_ms_proc_local_13 NOLIST
+                                        hBinop + [
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
+                                          hLiteral 2 NOLIST
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                        hIfStmt  NONAME [
+                          hBinop && [
+                            hBinop && [
+                              hBinop && [
+                                hUnop ! [
+                                  hVarref found_ms_proc_local_17 NOLIST
+                                ]
+                                hBuiltinFunction to_bool [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1_scclang_global_1 NOLIST
+                                    ]
+                                    hVarref n_ms_proc_local_12 NOLIST
+                                  ]
+                                ]
+                              ]
+                              hBinop >= [
+                                hVarref n_ms_proc_local_12 NOLIST
+                                hBinop - [
+                                  hSigAssignR read [
+                                    hVarref bc1_scclang_global_0 NOLIST
+                                  ]
+                                  hLiteral 1 NOLIST
+                                ]
+                              ]
+                            ]
+                            hBinop < [
+                              hVarref n1_scclang_global_7 NOLIST
+                              hSigAssignR read [
+                                hVarref bc1_scclang_global_0 NOLIST
+                              ]
+                            ]
+                          ]
+                          hCStmt  NONAME [
+                            hBinop = [
+                              hVarref found_ms_proc_local_17 NOLIST
+                              hLiteral 1 NOLIST
+                            ]
+                            hIfStmt  NONAME [
+                              hBinop && [
+                                hBuiltinFunction to_bool [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1_scclang_global_1 NOLIST
+                                    ]
+                                    hVarref n_ms_proc_local_12 NOLIST
+                                  ]
+                                ]
+                                hUnop ! [
+                                  hBuiltinFunction to_bool [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1_scclang_global_1 NOLIST
+                                      ]
+                                      hBinop - [
+                                        hVarref n_ms_proc_local_12 NOLIST
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hIfStmt  NONAME [
+                                  hBinop != [
+                                    hVarref n_ms_proc_local_12 NOLIST
+                                    hBinop - [
+                                      hLiteral 16 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                  hBinop = [
+                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                    hVarref shiftamt_ms_proc_local_13 NOLIST
+                                  ]
+                                  hBinop = [
+                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                    hVarref shiftamt_ms_proc_local_13 NOLIST
+                                  ]
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hIfStmt  NONAME [
+                                  hBinop != [
+                                    hVarref n_ms_proc_local_12 NOLIST
+                                    hBinop - [
+                                      hLiteral 16 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                  hBinop = [
+                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                    hVarref shiftamt_ms_proc_local_13 NOLIST
+                                  ]
+                                  hBinop = [
+                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                    hBinop - [
+                                      hVarref shiftamt_ms_proc_local_13 NOLIST
+                                      hLiteral 1 NOLIST
+                                    ]
+                                  ]
+                                ]
+                              ]
+                            ]
+                            hBinop = [
+                              hVarref last_n_ms_proc_local_16 NOLIST
+                              hBinop + [
+                                hVarref n_ms_proc_local_12 NOLIST
+                                hLiteral 1 NOLIST
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref shiftmask_ms_proc_local_18 NOLIST
+                      hUnop - [
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                    hIfStmt  NONAME [
+                      hBinop < [
+                        hVarref first_after_bc_ms_proc_local_15 NOLIST
+                        hLiteral 33 NOLIST
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref tmp_ms_proc_local_11 NOLIST
+                          hBinop & [
+                            hVarref tmp_ms_proc_local_11 NOLIST
+                            hUnop ~ [
+                              hBinop << [
+                                hVarref shiftmask_ms_proc_local_18 NOLIST
+                                hVarref first_after_bc_ms_proc_local_15 NOLIST
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref delta_ms_proc_local_19 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hIfStmt  NONAME [
+                      hBinop != [
+                        hVarref last_n_ms_proc_local_16 NOLIST
+                        hLiteral 16 NOLIST
+                      ]
+                      hBinop = [
+                        hBinop ARRAYSUBSCRIPT [
+                          hVarref tmp_ms_proc_local_11 NOLIST
+                          hVarref first_after_bc_ms_proc_local_15 NOLIST
+                        ]
+                        hLiteral 0 NOLIST
+                      ]
+                    ]
+                    hIfStmt  NONAME [
+                      hBinop >= [
+                        hSigAssignR read [
+                          hVarref n1_scclang_global_7 NOLIST
+                        ]
+                        hSigAssignR read [
+                          hVarref bc1_scclang_global_0 NOLIST
+                        ]
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref tmp_ms_proc_local_11 NOLIST
+                          hLiteral 0 NOLIST
+                        ]
+                      ]
+                      hCStmt  NONAME [
+                        hIfStmt  NONAME [
+                          hBinop == [
+                            hSigAssignR read [
+                              hVarref n1_scclang_global_7 NOLIST
+                            ]
+                            hLiteral 0 NOLIST
+                          ]
+                          hCStmt  NONAME NOLIST
+                          hCStmt  NONAME [
+                            hIfStmt  NONAME [
+                              hBinop || [
+                                hBinop && [
+                                  hUnop ! [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1_scclang_global_1 NOLIST
+                                      ]
+                                      hSigAssignR read [
+                                        hVarref n1_scclang_global_7 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                  hUnop ! [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1_scclang_global_1 NOLIST
+                                      ]
+                                      hBinop - [
+                                        hSigAssignR read [
+                                          hVarref n1_scclang_global_7 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                                hBinop && [
+                                  hBinop ARRAYSUBSCRIPT [
+                                    hSigAssignR read [
+                                      hVarref bp1_scclang_global_1 NOLIST
+                                    ]
+                                    hSigAssignR read [
+                                      hVarref n1_scclang_global_7 NOLIST
+                                    ]
+                                  ]
+                                  hUnop ! [
+                                    hBinop ARRAYSUBSCRIPT [
+                                      hSigAssignR read [
+                                        hVarref bp1_scclang_global_1 NOLIST
+                                      ]
+                                      hBinop - [
+                                        hSigAssignR read [
+                                          hVarref n1_scclang_global_7 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hVarref tmp_ms_proc_local_11 NOLIST
+                                  hBinop << [
+                                    hBinop | [
+                                      hBinop << [
+                                        hBinop >> [
+                                          hVarref tmp_ms_proc_local_11 NOLIST
+                                          hVarref n1_shiftamt_ms_proc_local_14 NOLIST
+                                        ]
+                                        hLiteral 1 NOLIST
+                                      ]
+                                      hLiteral 1 NOLIST
+                                    ]
+                                    hSigAssignR read [
+                                      hVarref n1_scclang_global_7 NOLIST
+                                    ]
+                                  ]
+                                ]
+                                hBinop = [
+                                  hVarref delta_ms_proc_local_19 NOLIST
+                                  hLiteral 1 NOLIST
+                                ]
+                              ]
+                              hCStmt  NONAME [
+                                hBinop = [
+                                  hVarref tmp_ms_proc_local_11 NOLIST
+                                  hBinop << [
+                                    hBinop >> [
+                                      hVarref tmp_ms_proc_local_11 NOLIST
+                                      hVarref n1_shiftamt_ms_proc_local_14 NOLIST
+                                    ]
+                                    hSigAssignR read [
+                                      hVarref n1_scclang_global_7 NOLIST
+                                    ]
+                                  ]
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref shiftmask_2_ms_proc_local_20 NOLIST
+                      hUnop - [
+                        hLiteral 1 NOLIST
+                      ]
+                    ]
+                    hBinop = [
+                      hVarref tmp_ms_proc_local_11 NOLIST
+                      hBinop | [
+                        hBinop & [
+                          hVarref tmp_ms_proc_local_11 NOLIST
+                          hBinop << [
+                            hVarref shiftmask_2_ms_proc_local_20 NOLIST
+                            hSigAssignR read [
+                              hVarref n1_scclang_global_7 NOLIST
+                            ]
+                          ]
+                        ]
+                        hBinop & [
+                          hSigAssignR read [
+                            hVarref bp1_scclang_global_1 NOLIST
+                          ]
+                          hUnop ~ [
+                            hBinop << [
+                              hVarref shiftmask_2_ms_proc_local_20 NOLIST
+                              hSigAssignR read [
+                                hVarref n1_scclang_global_7 NOLIST
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hVarAssign  NONAME [
+                      hVarref j_ms_proc_local_21 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hIfStmt  NONAME [
+                      hBinop >= [
+                        hSigAssignR read [
+                          hVarref n1_scclang_global_7 NOLIST
+                        ]
+                        hSigAssignR read [
+                          hVarref bc1_scclang_global_0 NOLIST
+                        ]
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref j_ms_proc_local_21 NOLIST
+                          hSigAssignR read [
+                            hVarref n1_scclang_global_7 NOLIST
+                          ]
+                        ]
+                        hIfStmt  NONAME [
+                          hBinop != [
+                            hSigAssignR read [
+                              hVarref n1_scclang_global_7 NOLIST
+                            ]
+                            hLiteral 16 NOLIST
+                          ]
+                          hCStmt  NONAME [
+                            hBinop = [
+                              hVarref j_ms_proc_local_21 NOLIST
+                              hBinop + [
+                                hVarref j_ms_proc_local_21 NOLIST
+                                hLiteral 1 NOLIST
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                      hCStmt  NONAME [
+                        hBinop = [
+                          hVarref j_ms_proc_local_21 NOLIST
+                          hBinop + [
+                            hBinop - [
+                              hBinop + [
+                                hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                hVarref delta_ms_proc_local_19 NOLIST
+                              ]
+                              hVarref n1_shiftamt_ms_proc_local_14 NOLIST
+                            ]
+                            hSigAssignR read [
+                              hVarref n1_scclang_global_7 NOLIST
+                            ]
+                          ]
+                        ]
+                        hIfStmt  NONAME [
+                          hBinop != [
+                            hVarref last_n_ms_proc_local_16 NOLIST
+                            hLiteral 16 NOLIST
+                          ]
+                          hCStmt  NONAME [
+                            hBinop = [
+                              hVarref j_ms_proc_local_21 NOLIST
+                              hBinop + [
+                                hVarref j_ms_proc_local_21 NOLIST
+                                hLiteral 1 NOLIST
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hVarref m_bc NOLIST
+                      hVarref j_ms_proc_local_21 NOLIST
+                    ]
+                    hSigAssignL write [
+                      hVarref m_bp NOLIST
+                      hVarref tmp_ms_proc_local_11 NOLIST
+                    ]
+                    hSigAssignL write [
+                      hVarref m_last NOLIST
+                      hSigAssignR read [
+                        hVarref last1_scclang_global_5 NOLIST
+                      ]
+                    ]
+                    hSigAssignL write [
+                      hVarref m_valid NOLIST
+                      hSigAssignR read [
+                        hVarref valid1_scclang_global_8 NOLIST
+                      ]
+                    ]
+                  ]
+                  hCStmt  NONAME [
+                    hIfStmt  NONAME [
+                      hUnop ! [
+                        hSigAssignR read [
+                          hVarref s_flush NOLIST
+                        ]
+                      ]
+                      hSigAssignL write [
+                        hVarref flush1_scclang_global_3 NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+    hModinitblock u_encode_ints [
+      hSenslist mc_proc [
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 0 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 1 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 2 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 3 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 4 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 5 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 6 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 7 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 8 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 9 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 10 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 11 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 12 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 13 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 14 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hBinop ARRAYSUBSCRIPT [
+            hVarref s_block NOLIST
+            hLiteral 15 NOLIST
+          ]
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hVarref k0_scclang_global_4 NOLIST
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hVarref flush1_scclang_global_3 NOLIST
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hVarref m_ready NOLIST
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hVarref s_valid NOLIST
+          hNoop always NOLIST
+        ]
+        hSensvar NONAME [
+          hVarref s_flush NOLIST
+          hNoop always NOLIST
+        ]
+      ]
+      hSenslist ms_proc [
+        hSensvar NONAME [
+          hVarref clk NOLIST
+          hBuiltinFunction pos NOLIST
+        ]
+      ]
+    ]
+  ]
+  hModule find_emax_sc_module_3 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -1985,7 +3523,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -2724,7 +4262,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -3106,12 +4644,12 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
   ]
-  hModule ssplit_sc_module_3 [
+  hModule ssplit_sc_module_4 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -3810,7 +5348,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -4432,12 +5970,12 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
   ]
-  hModule fwd_cast_sc_module_4 [
+  hModule fwd_cast_sc_module_5 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -4811,12 +6349,12 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
   ]
-  hModule encode_block_sc_module_5 [
+  hModule encode_block_sc_module_6 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -6689,7 +8227,7 @@
       hSenslist ms_fwd_order [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -6886,7 +8424,7 @@
             ]
             hSigAssignL write [
               hVarref m_valid NOLIST
-              hNoop to_bool [
+              hBuiltinFunction to_bool [
                 hBinop ARRAYSUBSCRIPT [
                   hSigAssignR read [
                     hVarref v_scclang_global_0 NOLIST
@@ -7459,7 +8997,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -7656,7 +9194,7 @@
             ]
             hSigAssignL write [
               hVarref m_valid NOLIST
-              hNoop to_bool [
+              hBuiltinFunction to_bool [
                 hBinop ARRAYSUBSCRIPT [
                   hSigAssignR read [
                     hVarref v_scclang_global_0 NOLIST
@@ -8229,12 +9767,12 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
   ]
-  hModule block_buffer_sc_module_6 [
+  hModule block_buffer_sc_module_7 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -9025,1545 +10563,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
-        ]
-      ]
-    ]
-  ]
-  hModule encode_ints_sc_module_7 [
-    hPortsigvarlist  NONAME [
-      hPortin clk [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortin reset [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortin s_block [
-        hTypeinfo  NONAME [
-          hType array##16 [
-            hType sc_in [
-              hType sc_uint [
-                hLiteral 64 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hPortin s_valid [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortin s_flush [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortin m_ready [
-        hTypeinfo  NONAME [
-          hType sc_in [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortout s_ready [
-        hTypeinfo  NONAME [
-          hType sc_out [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortout m_bc [
-        hTypeinfo  NONAME [
-          hType sc_out [
-            hType sc_uint [
-              hLiteral 6 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hPortout m_bp [
-        hTypeinfo  NONAME [
-          hType sc_out [
-            hType sc_bv [
-              hLiteral 33 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hPortout m_last [
-        hTypeinfo  NONAME [
-          hType sc_out [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hPortout m_valid [
-        hTypeinfo  NONAME [
-          hType sc_out [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl bc1_scclang_global_0 [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType sc_uint [
-              hLiteral 5 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl bp1_scclang_global_1 [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType sc_bv [
-              hLiteral 16 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl c_bplane_scclang_global_2 [
-        hTypeinfo  NONAME [
-          hType array##64 [
-            hType sc_signal [
-              hType sc_bv [
-                hLiteral 16 NOLIST
-              ]
-            ]
-          ]
-        ]
-      ]
-      hSigdecl flush1_scclang_global_3 [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl k0_scclang_global_4 [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType sc_uint [
-              hLiteral 6 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl last1_scclang_global_5 [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hSigdecl n0_scclang_global_6 [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType sc_uint [
-              hLiteral 5 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl n1_scclang_global_7 [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType sc_uint [
-              hLiteral 5 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl valid1_scclang_global_8 [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType _Bool NOLIST
-          ]
-        ]
-      ]
-      hVardecl planes_scclang_global_9 [
-        hTypeinfo  NONAME [
-          hType int NOLIST
-        ]
-        hVarInit  NONAME [
-          hLiteral 64 NOLIST
-        ]
-      ]
-    ]
-    hProcesses  NONAME [
-      hProcess mc_proc [
-        hMethod mc_proc [
-          hVardecl last_mc_proc_local_3 [
-            hTypeinfo  NONAME [
-              hType _Bool NOLIST
-            ]
-          ]
-          hVardecl tmp_mc_proc_local_4 [
-            hTypeinfo  NONAME [
-              hType sc_bv [
-                hLiteral 16 NOLIST
-              ]
-            ]
-          ]
-          hVardecl j_mc_proc_local_5 [
-            hTypeinfo  NONAME [
-              hType int NOLIST
-            ]
-          ]
-          hVardecl i_mc_proc_local_6 [
-            hTypeinfo  NONAME [
-              hType int NOLIST
-            ]
-          ]
-          hCStmt  NONAME [
-            hVarAssign  NONAME [
-              hVarref last_mc_proc_local_3 NOLIST
-              hBinop || [
-                hBinop == [
-                  hSigAssignR read [
-                    hVarref k0_scclang_global_4 NOLIST
-                  ]
-                  hBinop - [
-                    hLiteral 64 NOLIST
-                    hLiteral 1 NOLIST
-                  ]
-                ]
-                hBinop && [
-                  hSigAssignR read [
-                    hVarref s_flush NOLIST
-                  ]
-                  hBinop != [
-                    hSigAssignR read [
-                      hVarref s_flush NOLIST
-                    ]
-                    hSigAssignR read [
-                      hVarref flush1_scclang_global_3 NOLIST
-                    ]
-                  ]
-                ]
-              ]
-            ]
-            hForStmt  NONAME [
-              hVarAssign  NONAME [
-                hVarref j_mc_proc_local_5 NOLIST
-                hLiteral 0 NOLIST
-              ]
-              hBinop < [
-                hVarref j_mc_proc_local_5 NOLIST
-                hLiteral 64 NOLIST
-              ]
-              hPostfix ++ [
-                hVarref j_mc_proc_local_5 NOLIST
-              ]
-              hCStmt  NONAME [
-                hForStmt  NONAME [
-                  hVarAssign  NONAME [
-                    hVarref i_mc_proc_local_6 NOLIST
-                    hLiteral 0 NOLIST
-                  ]
-                  hBinop < [
-                    hVarref i_mc_proc_local_6 NOLIST
-                    hLiteral 16 NOLIST
-                  ]
-                  hPostfix ++ [
-                    hVarref i_mc_proc_local_6 NOLIST
-                  ]
-                  hCStmt  NONAME [
-                    hBinop = [
-                      hBinop ARRAYSUBSCRIPT [
-                        hVarref tmp_mc_proc_local_4 NOLIST
-                        hVarref i_mc_proc_local_6 NOLIST
-                      ]
-                      hNoop to_bool [
-                        hBinop ARRAYSUBSCRIPT [
-                          hSigAssignR read [
-                            hBinop ARRAYSUBSCRIPT [
-                              hVarref s_block NOLIST
-                              hVarref i_mc_proc_local_6 NOLIST
-                            ]
-                          ]
-                          hVarref j_mc_proc_local_5 NOLIST
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-                hSigAssignL write [
-                  hBinop ARRAYSUBSCRIPT [
-                    hVarref c_bplane_scclang_global_2 NOLIST
-                    hBinop - [
-                      hBinop - [
-                        hLiteral 64 NOLIST
-                        hLiteral 1 NOLIST
-                      ]
-                      hVarref j_mc_proc_local_5 NOLIST
-                    ]
-                  ]
-                  hVarref tmp_mc_proc_local_4 NOLIST
-                ]
-              ]
-            ]
-            hSigAssignL write [
-              hVarref s_ready NOLIST
-              hBinop || [
-                hBinop && [
-                  hVarref last_mc_proc_local_3 NOLIST
-                  hSigAssignR read [
-                    hVarref m_ready NOLIST
-                  ]
-                ]
-                hUnop ! [
-                  hSigAssignR read [
-                    hVarref s_valid NOLIST
-                  ]
-                ]
-              ]
-            ]
-          ]
-        ]
-      ]
-      hProcess ms_proc [
-        hMethod ms_proc [
-          hVardecl last_ms_proc_local_7 [
-            hTypeinfo  NONAME [
-              hType _Bool NOLIST
-            ]
-          ]
-          hVardecl b_ms_proc_local_8 [
-            hTypeinfo  NONAME [
-              hType unsigned_int NOLIST
-            ]
-          ]
-          hVardecl frst_ms_proc_local_9 [
-            hTypeinfo  NONAME [
-              hType _Bool NOLIST
-            ]
-          ]
-          hVardecl i_ms_proc_local_10 [
-            hTypeinfo  NONAME [
-              hType unsigned_int NOLIST
-            ]
-          ]
-          hVardecl tmp_ms_proc_local_11 [
-            hTypeinfo  NONAME [
-              hType sc_bv [
-                hLiteral 33 NOLIST
-              ]
-            ]
-          ]
-          hVardecl n_ms_proc_local_12 [
-            hTypeinfo  NONAME [
-              hType unsigned_int NOLIST
-            ]
-          ]
-          hVardecl shiftamt_ms_proc_local_13 [
-            hTypeinfo  NONAME [
-              hType unsigned_int NOLIST
-            ]
-          ]
-          hVardecl n1_shiftamt_ms_proc_local_14 [
-            hTypeinfo  NONAME [
-              hType unsigned_int NOLIST
-            ]
-          ]
-          hVardecl first_after_bc_ms_proc_local_15 [
-            hTypeinfo  NONAME [
-              hType unsigned_int NOLIST
-            ]
-          ]
-          hVardecl last_n_ms_proc_local_16 [
-            hTypeinfo  NONAME [
-              hType unsigned_int NOLIST
-            ]
-          ]
-          hVardecl found_ms_proc_local_17 [
-            hTypeinfo  NONAME [
-              hType _Bool NOLIST
-            ]
-          ]
-          hVardecl shiftmask_ms_proc_local_18 [
-            hTypeinfo  NONAME [
-              hType sc_bv [
-                hLiteral 33 NOLIST
-              ]
-            ]
-          ]
-          hVardecl delta_ms_proc_local_19 [
-            hTypeinfo  NONAME [
-              hType unsigned_int NOLIST
-            ]
-          ]
-          hVardecl shiftmask_2_ms_proc_local_20 [
-            hTypeinfo  NONAME [
-              hType sc_bv [
-                hLiteral 33 NOLIST
-              ]
-            ]
-          ]
-          hVardecl j_ms_proc_local_21 [
-            hTypeinfo  NONAME [
-              hType unsigned_int NOLIST
-            ]
-          ]
-          hCStmt  NONAME [
-            hIfStmt  NONAME [
-              hBinop == [
-                hVarref reset NOLIST
-                hLiteral 0 NOLIST
-              ]
-              hCStmt  NONAME [
-                hBinop = [
-                  hVarref k0_scclang_global_4 NOLIST
-                  hLiteral 0 [
-                    hTypeinfo  NONAME [
-                      hType sc_uint [
-                        hLiteral 6 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-                hBinop = [
-                  hVarref n0_scclang_global_6 NOLIST
-                  hLiteral 0 [
-                    hTypeinfo  NONAME [
-                      hType sc_uint [
-                        hLiteral 5 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-                hBinop = [
-                  hVarref n1_scclang_global_7 NOLIST
-                  hLiteral 0 [
-                    hTypeinfo  NONAME [
-                      hType sc_uint [
-                        hLiteral 5 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-                hBinop = [
-                  hVarref bc1_scclang_global_0 NOLIST
-                  hLiteral 0 [
-                    hTypeinfo  NONAME [
-                      hType sc_uint [
-                        hLiteral 5 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-                hBinop = [
-                  hVarref m_bc NOLIST
-                  hLiteral 0 [
-                    hTypeinfo  NONAME [
-                      hType sc_uint [
-                        hLiteral 6 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-                hBinop = [
-                  hVarref bp1_scclang_global_1 NOLIST
-                  hLiteral 0 [
-                    hTypeinfo  NONAME [
-                      hType sc_bv [
-                        hLiteral 16 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-                hBinop = [
-                  hVarref m_bp NOLIST
-                  hLiteral 0 [
-                    hTypeinfo  NONAME [
-                      hType sc_bv [
-                        hLiteral 33 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-                hBinop = [
-                  hVarref last1_scclang_global_5 NOLIST
-                  hLiteral 0 NOLIST
-                ]
-                hBinop = [
-                  hVarref m_last NOLIST
-                  hLiteral 0 NOLIST
-                ]
-                hBinop = [
-                  hVarref valid1_scclang_global_8 NOLIST
-                  hLiteral 0 NOLIST
-                ]
-                hBinop = [
-                  hVarref m_valid NOLIST
-                  hLiteral 0 NOLIST
-                ]
-              ]
-              hCStmt  NONAME [
-                hIfStmt  NONAME [
-                  hSigAssignR read [
-                    hVarref m_ready NOLIST
-                  ]
-                  hCStmt  NONAME [
-                    hVarAssign  NONAME [
-                      hVarref last_ms_proc_local_7 NOLIST
-                      hBinop || [
-                        hBinop == [
-                          hSigAssignR read [
-                            hVarref k0_scclang_global_4 NOLIST
-                          ]
-                          hBinop - [
-                            hLiteral 64 NOLIST
-                            hLiteral 1 NOLIST
-                          ]
-                        ]
-                        hBinop && [
-                          hSigAssignR read [
-                            hVarref s_flush NOLIST
-                          ]
-                          hBinop != [
-                            hSigAssignR read [
-                              hVarref s_flush NOLIST
-                            ]
-                            hSigAssignR read [
-                              hVarref flush1_scclang_global_3 NOLIST
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref b_ms_proc_local_8 NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref frst_ms_proc_local_9 NOLIST
-                      hLiteral 1 NOLIST
-                    ]
-                    hForStmt  NONAME [
-                      hVarAssign  NONAME [
-                        hVarref i_ms_proc_local_10 NOLIST
-                        hLiteral 16 NOLIST
-                      ]
-                      hBinop > [
-                        hVarref i_ms_proc_local_10 NOLIST
-                        hLiteral 0 NOLIST
-                      ]
-                      hPostfix -- [
-                        hVarref i_ms_proc_local_10 NOLIST
-                      ]
-                      hCStmt  NONAME [
-                        hIfStmt  NONAME [
-                          hBinop ARRAYSUBSCRIPT [
-                            hSigAssignR read [
-                              hBinop ARRAYSUBSCRIPT [
-                                hVarref c_bplane_scclang_global_2 NOLIST
-                                hSigAssignR read [
-                                  hVarref k0_scclang_global_4 NOLIST
-                                ]
-                              ]
-                            ]
-                            hBinop - [
-                              hVarref i_ms_proc_local_10 NOLIST
-                              hLiteral 1 NOLIST
-                            ]
-                          ]
-                          hCStmt  NONAME [
-                            hIfStmt  NONAME [
-                              hVarref frst_ms_proc_local_9 NOLIST
-                              hCStmt  NONAME [
-                                hBinop = [
-                                  hVarref frst_ms_proc_local_9 NOLIST
-                                  hLiteral 0 NOLIST
-                                ]
-                                hBinop = [
-                                  hVarref b_ms_proc_local_8 NOLIST
-                                  hVarref i_ms_proc_local_10 NOLIST
-                                ]
-                              ]
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                    hSigAssignL write [
-                      hVarref n1_scclang_global_7 NOLIST
-                      hSigAssignR read [
-                        hVarref n0_scclang_global_6 NOLIST
-                      ]
-                    ]
-                    hSigAssignL write [
-                      hVarref bc1_scclang_global_0 NOLIST
-                      hVarref b_ms_proc_local_8 NOLIST
-                    ]
-                    hSigAssignL write [
-                      hVarref bp1_scclang_global_1 NOLIST
-                      hSigAssignR read [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref c_bplane_scclang_global_2 NOLIST
-                          hSigAssignR read [
-                            hVarref k0_scclang_global_4 NOLIST
-                          ]
-                        ]
-                      ]
-                    ]
-                    hSigAssignL write [
-                      hVarref last1_scclang_global_5 NOLIST
-                      hVarref last_ms_proc_local_7 NOLIST
-                    ]
-                    hSigAssignL write [
-                      hVarref valid1_scclang_global_8 NOLIST
-                      hSigAssignR read [
-                        hVarref s_valid NOLIST
-                      ]
-                    ]
-                    hSigAssignL write [
-                      hVarref flush1_scclang_global_3 NOLIST
-                      hSigAssignR read [
-                        hVarref s_flush NOLIST
-                      ]
-                    ]
-                    hIfStmt  NONAME [
-                      hSigAssignR read [
-                        hVarref s_valid NOLIST
-                      ]
-                      hCStmt  NONAME [
-                        hIfStmt  NONAME [
-                          hBinop > [
-                            hVarref b_ms_proc_local_8 NOLIST
-                            hSigAssignR read [
-                              hVarref n0_scclang_global_6 NOLIST
-                            ]
-                          ]
-                          hSigAssignL write [
-                            hVarref n0_scclang_global_6 NOLIST
-                            hVarref b_ms_proc_local_8 NOLIST
-                          ]
-                        ]
-                        hIfStmt  NONAME [
-                          hVarref last_ms_proc_local_7 NOLIST
-                          hCStmt  NONAME [
-                            hBinop = [
-                              hVarref k0_scclang_global_4 NOLIST
-                              hLiteral 0 [
-                                hTypeinfo  NONAME [
-                                  hType sc_uint [
-                                    hLiteral 6 NOLIST
-                                  ]
-                                ]
-                              ]
-                            ]
-                            hBinop = [
-                              hVarref n0_scclang_global_6 NOLIST
-                              hLiteral 0 [
-                                hTypeinfo  NONAME [
-                                  hType sc_uint [
-                                    hLiteral 5 NOLIST
-                                  ]
-                                ]
-                              ]
-                            ]
-                          ]
-                          hBinop = [
-                            hVarref k0_scclang_global_4 NOLIST
-                            hBinop + [
-                              hSigAssignR read [
-                                hVarref k0_scclang_global_4 NOLIST
-                              ]
-                              hLiteral 1 NOLIST
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref tmp_ms_proc_local_11 NOLIST
-                      hLiteral 0 [
-                        hTypeinfo  NONAME [
-                          hType sc_bv [
-                            hLiteral 33 NOLIST
-                          ]
-                        ]
-                      ]
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref shiftamt_ms_proc_local_13 NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref n1_shiftamt_ms_proc_local_14 NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref first_after_bc_ms_proc_local_15 NOLIST
-                      hSigAssignR read [
-                        hVarref n1_scclang_global_7 NOLIST
-                      ]
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref last_n_ms_proc_local_16 NOLIST
-                      hSigAssignR read [
-                        hVarref n1_scclang_global_7 NOLIST
-                      ]
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref found_ms_proc_local_17 NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hBinop = [
-                      hVarref shiftamt_ms_proc_local_13 NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hForStmt  NONAME [
-                      hBinop = [
-                        hVarref n_ms_proc_local_12 NOLIST
-                        hLiteral 0 NOLIST
-                      ]
-                      hBinop < [
-                        hVarref n_ms_proc_local_12 NOLIST
-                        hLiteral 16 NOLIST
-                      ]
-                      hPostfix ++ [
-                        hVarref n_ms_proc_local_12 NOLIST
-                      ]
-                      hCStmt  NONAME [
-                        hIfStmt  NONAME [
-                          hBinop == [
-                            hVarref n_ms_proc_local_12 NOLIST
-                            hSigAssignR read [
-                              hVarref n1_scclang_global_7 NOLIST
-                            ]
-                          ]
-                          hCStmt  NONAME [
-                            hBinop = [
-                              hVarref n1_shiftamt_ms_proc_local_14 NOLIST
-                              hVarref shiftamt_ms_proc_local_13 NOLIST
-                            ]
-                          ]
-                        ]
-                        hIfStmt  NONAME [
-                          hBinop == [
-                            hVarref n_ms_proc_local_12 NOLIST
-                            hLiteral 0 NOLIST
-                          ]
-                          hCStmt  NONAME [
-                            hBinop += [
-                              hVarref shiftamt_ms_proc_local_13 NOLIST
-                              hLiteral 2 NOLIST
-                            ]
-                            hIfStmt  NONAME [
-                              hBinop ARRAYSUBSCRIPT [
-                                hSigAssignR read [
-                                  hVarref bp1_scclang_global_1 NOLIST
-                                ]
-                                hLiteral 0 NOLIST
-                              ]
-                              hCStmt  NONAME [
-                                hBinop = [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_11 NOLIST
-                                    hLiteral 0 NOLIST
-                                  ]
-                                  hLiteral 1 NOLIST
-                                ]
-                                hBinop = [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_11 NOLIST
-                                    hLiteral 1 NOLIST
-                                  ]
-                                  hLiteral 1 NOLIST
-                                ]
-                              ]
-                              hCStmt  NONAME [
-                                hBinop = [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_11 NOLIST
-                                    hLiteral 0 NOLIST
-                                  ]
-                                  hLiteral 1 NOLIST
-                                ]
-                                hBinop = [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_11 NOLIST
-                                    hLiteral 1 NOLIST
-                                  ]
-                                  hLiteral 0 NOLIST
-                                ]
-                              ]
-                            ]
-                          ]
-                          hCStmt  NONAME [
-                            hIfStmt  NONAME [
-                              hBinop && [
-                                hNoop to_bool [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hSigAssignR read [
-                                      hVarref bp1_scclang_global_1 NOLIST
-                                    ]
-                                    hVarref n_ms_proc_local_12 NOLIST
-                                  ]
-                                ]
-                                hNoop to_bool [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hSigAssignR read [
-                                      hVarref bp1_scclang_global_1 NOLIST
-                                    ]
-                                    hBinop - [
-                                      hVarref n_ms_proc_local_12 NOLIST
-                                      hLiteral 1 NOLIST
-                                    ]
-                                  ]
-                                ]
-                              ]
-                              hCStmt  NONAME [
-                                hBinop = [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_11 NOLIST
-                                    hVarref shiftamt_ms_proc_local_13 NOLIST
-                                  ]
-                                  hLiteral 1 NOLIST
-                                ]
-                                hBinop = [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hVarref tmp_ms_proc_local_11 NOLIST
-                                    hBinop + [
-                                      hVarref shiftamt_ms_proc_local_13 NOLIST
-                                      hLiteral 1 NOLIST
-                                    ]
-                                  ]
-                                  hLiteral 1 NOLIST
-                                ]
-                                hBinop = [
-                                  hVarref shiftamt_ms_proc_local_13 NOLIST
-                                  hBinop + [
-                                    hVarref shiftamt_ms_proc_local_13 NOLIST
-                                    hLiteral 2 NOLIST
-                                  ]
-                                ]
-                              ]
-                              hIfStmt  NONAME [
-                                hBinop && [
-                                  hNoop to_bool [
-                                    hBinop ARRAYSUBSCRIPT [
-                                      hSigAssignR read [
-                                        hVarref bp1_scclang_global_1 NOLIST
-                                      ]
-                                      hVarref n_ms_proc_local_12 NOLIST
-                                    ]
-                                  ]
-                                  hUnop ! [
-                                    hNoop to_bool [
-                                      hBinop ARRAYSUBSCRIPT [
-                                        hSigAssignR read [
-                                          hVarref bp1_scclang_global_1 NOLIST
-                                        ]
-                                        hBinop - [
-                                          hVarref n_ms_proc_local_12 NOLIST
-                                          hLiteral 1 NOLIST
-                                        ]
-                                      ]
-                                    ]
-                                  ]
-                                ]
-                                hCStmt  NONAME [
-                                  hIfStmt  NONAME [
-                                    hBinop != [
-                                      hVarref n_ms_proc_local_12 NOLIST
-                                      hBinop - [
-                                        hLiteral 16 NOLIST
-                                        hLiteral 1 NOLIST
-                                      ]
-                                    ]
-                                    hCStmt  NONAME [
-                                      hBinop = [
-                                        hBinop ARRAYSUBSCRIPT [
-                                          hVarref tmp_ms_proc_local_11 NOLIST
-                                          hVarref shiftamt_ms_proc_local_13 NOLIST
-                                        ]
-                                        hLiteral 1 NOLIST
-                                      ]
-                                      hBinop = [
-                                        hVarref shiftamt_ms_proc_local_13 NOLIST
-                                        hBinop + [
-                                          hVarref shiftamt_ms_proc_local_13 NOLIST
-                                          hLiteral 1 NOLIST
-                                        ]
-                                      ]
-                                    ]
-                                  ]
-                                ]
-                                hIfStmt  NONAME [
-                                  hBinop && [
-                                    hUnop ! [
-                                      hNoop to_bool [
-                                        hBinop ARRAYSUBSCRIPT [
-                                          hSigAssignR read [
-                                            hVarref bp1_scclang_global_1 NOLIST
-                                          ]
-                                          hVarref n_ms_proc_local_12 NOLIST
-                                        ]
-                                      ]
-                                    ]
-                                    hUnop ! [
-                                      hNoop to_bool [
-                                        hBinop ARRAYSUBSCRIPT [
-                                          hSigAssignR read [
-                                            hVarref bp1_scclang_global_1 NOLIST
-                                          ]
-                                          hBinop - [
-                                            hVarref n_ms_proc_local_12 NOLIST
-                                            hLiteral 1 NOLIST
-                                          ]
-                                        ]
-                                      ]
-                                    ]
-                                  ]
-                                  hCStmt  NONAME [
-                                    hBinop = [
-                                      hBinop ARRAYSUBSCRIPT [
-                                        hVarref tmp_ms_proc_local_11 NOLIST
-                                        hVarref shiftamt_ms_proc_local_13 NOLIST
-                                      ]
-                                      hLiteral 0 NOLIST
-                                    ]
-                                    hBinop = [
-                                      hVarref shiftamt_ms_proc_local_13 NOLIST
-                                      hBinop + [
-                                        hVarref shiftamt_ms_proc_local_13 NOLIST
-                                        hLiteral 1 NOLIST
-                                      ]
-                                    ]
-                                  ]
-                                  hIfStmt  NONAME [
-                                    hBinop && [
-                                      hUnop ! [
-                                        hNoop to_bool [
-                                          hBinop ARRAYSUBSCRIPT [
-                                            hSigAssignR read [
-                                              hVarref bp1_scclang_global_1 NOLIST
-                                            ]
-                                            hVarref n_ms_proc_local_12 NOLIST
-                                          ]
-                                        ]
-                                      ]
-                                      hNoop to_bool [
-                                        hBinop ARRAYSUBSCRIPT [
-                                          hSigAssignR read [
-                                            hVarref bp1_scclang_global_1 NOLIST
-                                          ]
-                                          hBinop - [
-                                            hVarref n_ms_proc_local_12 NOLIST
-                                            hLiteral 1 NOLIST
-                                          ]
-                                        ]
-                                      ]
-                                    ]
-                                    hCStmt  NONAME [
-                                      hBinop = [
-                                        hBinop ARRAYSUBSCRIPT [
-                                          hVarref tmp_ms_proc_local_11 NOLIST
-                                          hVarref shiftamt_ms_proc_local_13 NOLIST
-                                        ]
-                                        hLiteral 1 NOLIST
-                                      ]
-                                      hBinop = [
-                                        hBinop ARRAYSUBSCRIPT [
-                                          hVarref tmp_ms_proc_local_11 NOLIST
-                                          hBinop + [
-                                            hVarref shiftamt_ms_proc_local_13 NOLIST
-                                            hLiteral 1 NOLIST
-                                          ]
-                                        ]
-                                        hLiteral 0 NOLIST
-                                      ]
-                                      hBinop = [
-                                        hVarref shiftamt_ms_proc_local_13 NOLIST
-                                        hBinop + [
-                                          hVarref shiftamt_ms_proc_local_13 NOLIST
-                                          hLiteral 2 NOLIST
-                                        ]
-                                      ]
-                                    ]
-                                  ]
-                                ]
-                              ]
-                            ]
-                          ]
-                        ]
-                        hIfStmt  NONAME [
-                          hBinop && [
-                            hBinop && [
-                              hBinop && [
-                                hUnop ! [
-                                  hVarref found_ms_proc_local_17 NOLIST
-                                ]
-                                hNoop to_bool [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hSigAssignR read [
-                                      hVarref bp1_scclang_global_1 NOLIST
-                                    ]
-                                    hVarref n_ms_proc_local_12 NOLIST
-                                  ]
-                                ]
-                              ]
-                              hBinop >= [
-                                hVarref n_ms_proc_local_12 NOLIST
-                                hBinop - [
-                                  hSigAssignR read [
-                                    hVarref bc1_scclang_global_0 NOLIST
-                                  ]
-                                  hLiteral 1 NOLIST
-                                ]
-                              ]
-                            ]
-                            hBinop < [
-                              hVarref n1_scclang_global_7 NOLIST
-                              hSigAssignR read [
-                                hVarref bc1_scclang_global_0 NOLIST
-                              ]
-                            ]
-                          ]
-                          hCStmt  NONAME [
-                            hBinop = [
-                              hVarref found_ms_proc_local_17 NOLIST
-                              hLiteral 1 NOLIST
-                            ]
-                            hIfStmt  NONAME [
-                              hBinop && [
-                                hNoop to_bool [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hSigAssignR read [
-                                      hVarref bp1_scclang_global_1 NOLIST
-                                    ]
-                                    hVarref n_ms_proc_local_12 NOLIST
-                                  ]
-                                ]
-                                hUnop ! [
-                                  hNoop to_bool [
-                                    hBinop ARRAYSUBSCRIPT [
-                                      hSigAssignR read [
-                                        hVarref bp1_scclang_global_1 NOLIST
-                                      ]
-                                      hBinop - [
-                                        hVarref n_ms_proc_local_12 NOLIST
-                                        hLiteral 1 NOLIST
-                                      ]
-                                    ]
-                                  ]
-                                ]
-                              ]
-                              hCStmt  NONAME [
-                                hIfStmt  NONAME [
-                                  hBinop != [
-                                    hVarref n_ms_proc_local_12 NOLIST
-                                    hBinop - [
-                                      hLiteral 16 NOLIST
-                                      hLiteral 1 NOLIST
-                                    ]
-                                  ]
-                                  hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
-                                    hVarref shiftamt_ms_proc_local_13 NOLIST
-                                  ]
-                                  hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
-                                    hVarref shiftamt_ms_proc_local_13 NOLIST
-                                  ]
-                                ]
-                              ]
-                              hCStmt  NONAME [
-                                hIfStmt  NONAME [
-                                  hBinop != [
-                                    hVarref n_ms_proc_local_12 NOLIST
-                                    hBinop - [
-                                      hLiteral 16 NOLIST
-                                      hLiteral 1 NOLIST
-                                    ]
-                                  ]
-                                  hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
-                                    hVarref shiftamt_ms_proc_local_13 NOLIST
-                                  ]
-                                  hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
-                                    hBinop - [
-                                      hVarref shiftamt_ms_proc_local_13 NOLIST
-                                      hLiteral 1 NOLIST
-                                    ]
-                                  ]
-                                ]
-                              ]
-                            ]
-                            hBinop = [
-                              hVarref last_n_ms_proc_local_16 NOLIST
-                              hBinop + [
-                                hVarref n_ms_proc_local_12 NOLIST
-                                hLiteral 1 NOLIST
-                              ]
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref shiftmask_ms_proc_local_18 NOLIST
-                      hUnop - [
-                        hLiteral 1 NOLIST
-                      ]
-                    ]
-                    hIfStmt  NONAME [
-                      hBinop < [
-                        hVarref first_after_bc_ms_proc_local_15 NOLIST
-                        hLiteral 33 NOLIST
-                      ]
-                      hCStmt  NONAME [
-                        hBinop = [
-                          hVarref tmp_ms_proc_local_11 NOLIST
-                          hBinop & [
-                            hVarref tmp_ms_proc_local_11 NOLIST
-                            hUnop ~ [
-                              hBinop << [
-                                hVarref shiftmask_ms_proc_local_18 NOLIST
-                                hVarref first_after_bc_ms_proc_local_15 NOLIST
-                              ]
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref delta_ms_proc_local_19 NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hIfStmt  NONAME [
-                      hBinop != [
-                        hVarref last_n_ms_proc_local_16 NOLIST
-                        hLiteral 16 NOLIST
-                      ]
-                      hBinop = [
-                        hBinop ARRAYSUBSCRIPT [
-                          hVarref tmp_ms_proc_local_11 NOLIST
-                          hVarref first_after_bc_ms_proc_local_15 NOLIST
-                        ]
-                        hLiteral 0 NOLIST
-                      ]
-                    ]
-                    hIfStmt  NONAME [
-                      hBinop >= [
-                        hSigAssignR read [
-                          hVarref n1_scclang_global_7 NOLIST
-                        ]
-                        hSigAssignR read [
-                          hVarref bc1_scclang_global_0 NOLIST
-                        ]
-                      ]
-                      hCStmt  NONAME [
-                        hBinop = [
-                          hVarref tmp_ms_proc_local_11 NOLIST
-                          hLiteral 0 NOLIST
-                        ]
-                      ]
-                      hCStmt  NONAME [
-                        hIfStmt  NONAME [
-                          hBinop == [
-                            hSigAssignR read [
-                              hVarref n1_scclang_global_7 NOLIST
-                            ]
-                            hLiteral 0 NOLIST
-                          ]
-                          hCStmt  NONAME NOLIST
-                          hCStmt  NONAME [
-                            hIfStmt  NONAME [
-                              hBinop || [
-                                hBinop && [
-                                  hUnop ! [
-                                    hBinop ARRAYSUBSCRIPT [
-                                      hSigAssignR read [
-                                        hVarref bp1_scclang_global_1 NOLIST
-                                      ]
-                                      hSigAssignR read [
-                                        hVarref n1_scclang_global_7 NOLIST
-                                      ]
-                                    ]
-                                  ]
-                                  hUnop ! [
-                                    hBinop ARRAYSUBSCRIPT [
-                                      hSigAssignR read [
-                                        hVarref bp1_scclang_global_1 NOLIST
-                                      ]
-                                      hBinop - [
-                                        hSigAssignR read [
-                                          hVarref n1_scclang_global_7 NOLIST
-                                        ]
-                                        hLiteral 1 NOLIST
-                                      ]
-                                    ]
-                                  ]
-                                ]
-                                hBinop && [
-                                  hBinop ARRAYSUBSCRIPT [
-                                    hSigAssignR read [
-                                      hVarref bp1_scclang_global_1 NOLIST
-                                    ]
-                                    hSigAssignR read [
-                                      hVarref n1_scclang_global_7 NOLIST
-                                    ]
-                                  ]
-                                  hUnop ! [
-                                    hBinop ARRAYSUBSCRIPT [
-                                      hSigAssignR read [
-                                        hVarref bp1_scclang_global_1 NOLIST
-                                      ]
-                                      hBinop - [
-                                        hSigAssignR read [
-                                          hVarref n1_scclang_global_7 NOLIST
-                                        ]
-                                        hLiteral 1 NOLIST
-                                      ]
-                                    ]
-                                  ]
-                                ]
-                              ]
-                              hCStmt  NONAME [
-                                hBinop = [
-                                  hVarref tmp_ms_proc_local_11 NOLIST
-                                  hBinop << [
-                                    hBinop | [
-                                      hBinop << [
-                                        hBinop >> [
-                                          hVarref tmp_ms_proc_local_11 NOLIST
-                                          hVarref n1_shiftamt_ms_proc_local_14 NOLIST
-                                        ]
-                                        hLiteral 1 NOLIST
-                                      ]
-                                      hLiteral 1 NOLIST
-                                    ]
-                                    hSigAssignR read [
-                                      hVarref n1_scclang_global_7 NOLIST
-                                    ]
-                                  ]
-                                ]
-                                hBinop = [
-                                  hVarref delta_ms_proc_local_19 NOLIST
-                                  hLiteral 1 NOLIST
-                                ]
-                              ]
-                              hCStmt  NONAME [
-                                hBinop = [
-                                  hVarref tmp_ms_proc_local_11 NOLIST
-                                  hBinop << [
-                                    hBinop >> [
-                                      hVarref tmp_ms_proc_local_11 NOLIST
-                                      hVarref n1_shiftamt_ms_proc_local_14 NOLIST
-                                    ]
-                                    hSigAssignR read [
-                                      hVarref n1_scclang_global_7 NOLIST
-                                    ]
-                                  ]
-                                ]
-                              ]
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref shiftmask_2_ms_proc_local_20 NOLIST
-                      hUnop - [
-                        hLiteral 1 NOLIST
-                      ]
-                    ]
-                    hBinop = [
-                      hVarref tmp_ms_proc_local_11 NOLIST
-                      hBinop | [
-                        hBinop & [
-                          hVarref tmp_ms_proc_local_11 NOLIST
-                          hBinop << [
-                            hVarref shiftmask_2_ms_proc_local_20 NOLIST
-                            hSigAssignR read [
-                              hVarref n1_scclang_global_7 NOLIST
-                            ]
-                          ]
-                        ]
-                        hBinop & [
-                          hSigAssignR read [
-                            hVarref bp1_scclang_global_1 NOLIST
-                          ]
-                          hUnop ~ [
-                            hBinop << [
-                              hVarref shiftmask_2_ms_proc_local_20 NOLIST
-                              hSigAssignR read [
-                                hVarref n1_scclang_global_7 NOLIST
-                              ]
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                    hVarAssign  NONAME [
-                      hVarref j_ms_proc_local_21 NOLIST
-                      hLiteral 0 NOLIST
-                    ]
-                    hIfStmt  NONAME [
-                      hBinop >= [
-                        hSigAssignR read [
-                          hVarref n1_scclang_global_7 NOLIST
-                        ]
-                        hSigAssignR read [
-                          hVarref bc1_scclang_global_0 NOLIST
-                        ]
-                      ]
-                      hCStmt  NONAME [
-                        hBinop = [
-                          hVarref j_ms_proc_local_21 NOLIST
-                          hSigAssignR read [
-                            hVarref n1_scclang_global_7 NOLIST
-                          ]
-                        ]
-                        hIfStmt  NONAME [
-                          hBinop != [
-                            hSigAssignR read [
-                              hVarref n1_scclang_global_7 NOLIST
-                            ]
-                            hLiteral 16 NOLIST
-                          ]
-                          hCStmt  NONAME [
-                            hBinop = [
-                              hVarref j_ms_proc_local_21 NOLIST
-                              hBinop + [
-                                hVarref j_ms_proc_local_21 NOLIST
-                                hLiteral 1 NOLIST
-                              ]
-                            ]
-                          ]
-                        ]
-                      ]
-                      hCStmt  NONAME [
-                        hBinop = [
-                          hVarref j_ms_proc_local_21 NOLIST
-                          hBinop + [
-                            hBinop - [
-                              hBinop + [
-                                hVarref first_after_bc_ms_proc_local_15 NOLIST
-                                hVarref delta_ms_proc_local_19 NOLIST
-                              ]
-                              hVarref n1_shiftamt_ms_proc_local_14 NOLIST
-                            ]
-                            hSigAssignR read [
-                              hVarref n1_scclang_global_7 NOLIST
-                            ]
-                          ]
-                        ]
-                        hIfStmt  NONAME [
-                          hBinop != [
-                            hVarref last_n_ms_proc_local_16 NOLIST
-                            hLiteral 16 NOLIST
-                          ]
-                          hCStmt  NONAME [
-                            hBinop = [
-                              hVarref j_ms_proc_local_21 NOLIST
-                              hBinop + [
-                                hVarref j_ms_proc_local_21 NOLIST
-                                hLiteral 1 NOLIST
-                              ]
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                    hSigAssignL write [
-                      hVarref m_bc NOLIST
-                      hVarref j_ms_proc_local_21 NOLIST
-                    ]
-                    hSigAssignL write [
-                      hVarref m_bp NOLIST
-                      hVarref tmp_ms_proc_local_11 NOLIST
-                    ]
-                    hSigAssignL write [
-                      hVarref m_last NOLIST
-                      hSigAssignR read [
-                        hVarref last1_scclang_global_5 NOLIST
-                      ]
-                    ]
-                    hSigAssignL write [
-                      hVarref m_valid NOLIST
-                      hSigAssignR read [
-                        hVarref valid1_scclang_global_8 NOLIST
-                      ]
-                    ]
-                  ]
-                  hCStmt  NONAME [
-                    hIfStmt  NONAME [
-                      hUnop ! [
-                        hSigAssignR read [
-                          hVarref s_flush NOLIST
-                        ]
-                      ]
-                      hSigAssignL write [
-                        hVarref flush1_scclang_global_3 NOLIST
-                        hLiteral 0 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            ]
-          ]
-        ]
-      ]
-    ]
-    hModinitblock u_encode_ints [
-      hSenslist mc_proc [
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 1 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 2 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 3 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hVarref k0_scclang_global_4 NOLIST
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hVarref flush1_scclang_global_3 NOLIST
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hVarref m_ready NOLIST
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hVarref s_valid NOLIST
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hVarref s_flush NOLIST
-          hNoop always NOLIST
-        ]
-      ]
-      hSenslist ms_proc [
-        hSensvar NONAME [
-          hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -11276,68 +11276,6 @@
           ]
         ]
       ]
-      hFunction sc_dt__sc_min_func_0 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType unsigned_short NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamI a [
-            hTypeinfo  NONAME [
-              hType unsigned_short NOLIST
-            ]
-          ]
-          hFunctionParamI b [
-            hTypeinfo  NONAME [
-              hType unsigned_short NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hCondop  NONAME [
-              hBinop <= [
-                hVarref a NOLIST
-                hVarref b NOLIST
-              ]
-              hVarref a NOLIST
-              hVarref b NOLIST
-            ]
-          ]
-        ]
-      ]
-      hFunction sc_dt__sc_max_func_1 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType short NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamI a [
-            hTypeinfo  NONAME [
-              hType short NOLIST
-            ]
-          ]
-          hFunctionParamI b [
-            hTypeinfo  NONAME [
-              hType short NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hCondop  NONAME [
-              hBinop >= [
-                hVarref a NOLIST
-                hVarref b NOLIST
-              ]
-              hVarref a NOLIST
-              hVarref b NOLIST
-            ]
-          ]
-        ]
-      ]
       hFunction zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_2 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
@@ -11619,6 +11557,68 @@
           ]
         ]
       ]
+      hFunction sc_dt__sc_min_func_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType unsigned_short NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI a [
+            hTypeinfo  NONAME [
+              hType unsigned_short NOLIST
+            ]
+          ]
+          hFunctionParamI b [
+            hTypeinfo  NONAME [
+              hType unsigned_short NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hCondop  NONAME [
+              hBinop <= [
+                hVarref a NOLIST
+                hVarref b NOLIST
+              ]
+              hVarref a NOLIST
+              hVarref b NOLIST
+            ]
+          ]
+        ]
+      ]
+      hFunction sc_dt__sc_max_func_1 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType short NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI a [
+            hTypeinfo  NONAME [
+              hType short NOLIST
+            ]
+          ]
+          hFunctionParamI b [
+            hTypeinfo  NONAME [
+              hType short NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hCondop  NONAME [
+              hBinop >= [
+                hVarref a NOLIST
+                hVarref b NOLIST
+              ]
+              hVarref a NOLIST
+              hVarref b NOLIST
+            ]
+          ]
+        ]
+      ]
     ]
     hModinitblock u_encode_stream [
       hSenslist mc_proc [
@@ -11674,7 +11674,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -11684,12 +11684,12 @@
     hTypeTemplateParam F NOLIST
     hTypeField frac [
       hType sc_uint [
-        hType F NOLIST
+        hLiteral 52 NOLIST
       ]
     ]
     hTypeField expo [
       hType sc_uint [
-        hType E NOLIST
+        hLiteral 11 NOLIST
       ]
     ]
     hTypeField sign [
@@ -11702,7 +11702,7 @@
     hTypeTemplateParam D NOLIST
     hTypeField tdata [
       hType sc_bv [
-        hType D NOLIST
+        hLiteral 64 NOLIST
       ]
     ]
     hTypeField tlast [
