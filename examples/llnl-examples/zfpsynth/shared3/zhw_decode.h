@@ -929,11 +929,22 @@ template<typename FP> struct block_header
 public:
 	// block_header& set_exp(expo_t _exp) { exp = _exp; return *this; }//"fluent" API to set exponent.
 	// block_header& set_zb(bool _zb) { zb = _zb; return *this; } 		//"fluent" API to set zero block.
-  void set_exp(expo_t _exp) { exp = _exp;  }//"fluent" API to set exponent.
+	void set_exp(expo_t _exp) { exp = _exp;  }//"fluent" API to set exponent.
 	void set_zb(bool _zb) { zb = _zb;  } 		//"fluent" API to set zero block.
 
 	bool is_zero(){return zb;}
 };
+
+// functions on block_header to comply with current systemc-clang
+template<typename FP>
+void set_exp(block_header<FP>& blk_hdr, typename FP::expo_t _exp) { blk_hdr.exp = _exp;  }
+
+template<typename FP>
+void set_zb(block_header<FP>& blk_hdr, bool _zb) { blk_hdr.zb = _zb;  }
+
+template<typename FP>
+bool is_zero(block_header<FP>& blk_hdr){return blk_hdr.zb;}
+
 //overload operators.
 template<typename FP>
 std::ostream& operator<<(std::ostream& os, const block_header<FP>& val){os << "zb = " << val.zb << "; exp = " << val.exp << std::endl; return os;}
@@ -1054,10 +1065,12 @@ template<typename FP, typename B> struct decode_stream<FP, B, 2>: sc_module
 
 			//1. b, Down shift register file st. full registers start at index 0
 			sc_uint<log2rz(4)+1>tgtreg;
-			for(tgtreg=0; srcreg<4; srcreg++,tgtreg++)
+			for(tgtreg=0; srcreg<4; )
 			{
 				if(!pb_c[srcreg].f)	break;
 				else				tmp[tgtreg]=pb_c[srcreg];
+        srcreg++;
+        tgtreg++;
 			}
 
 			//2) copy in new data from bitstream fifo.
@@ -1198,7 +1211,8 @@ template<typename FP, typename B> struct decode_stream<FP, B, 2>: sc_module
 				w_rembits = s_maxbits.read();//Assume maxbits are available in the bitstream (well formed block).
 				w_wordoff+=s_bc.data_r();
 
-				bhdr.set_zb(!(get_window(b_wrk,w_wordoff)&1));
+				// bhdr.set_zb(!(get_window(b_wrk,w_wordoff)&1));
+				set_zb(bhdr, !(get_window(b_wrk,w_wordoff)&1));
 				w_wordoff+=1;
 
 				w_wordoff = w_wordoff%bw_w(2);	//working register file offset should drop to a bit offset within the first valid register in b_c[:] register file.
@@ -1213,7 +1227,8 @@ template<typename FP, typename B> struct decode_stream<FP, B, 2>: sc_module
 					blockexpt -= FP::ebias;			//Assume encoded with bias, and remove this bias from exponent
 
 					m_block_maxprec.write(get_block_maxprec(blockexpt));	//Compute and output per-block maxprec.
-					bhdr.set_exp(blockexpt);
+					// bhdr.set_exp(blockexpt);
+					set_exp(bhdr, blockexpt);
 					s_blk_start.ready_w(true);
 				}
 				else						//zero block. move to skip bits.
