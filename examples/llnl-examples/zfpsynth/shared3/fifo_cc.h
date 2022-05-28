@@ -119,7 +119,7 @@ SC_MODULE(fifo_cc)
 	fifo_cc(const sc_module_name& mn_) :
 		sc_module(mn_)
 	{
-		if (MAX_DEPTH <= 0) {
+		if (MAX_DEPTH <= 0 ) {
 			SC_REPORT_ERROR("FIFO size out of bounds", name());
 			return;
 		}
