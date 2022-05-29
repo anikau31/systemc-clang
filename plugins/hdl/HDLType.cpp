@@ -104,7 +104,7 @@ void HDLType::generatetype(
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
     return;
   if (!(tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps) ||
-        tutil.isposint(tmps))) {
+        tutil.isposint(tmps) || tutil.isTypename(tmps))) {
     LLVM_DEBUG(llvm::dbgs() << "adding user defined type " << tmps << "\n");
     const RecordType *tstp =
         dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());

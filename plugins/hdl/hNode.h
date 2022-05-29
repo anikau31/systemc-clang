@@ -264,6 +264,12 @@ namespace hnode {
       // add more as we get them
     }
 
+    inline bool isTypename(const string &tstring) {
+      size_t found = tstring.find("typename");
+      if (found == string::npos) return false;
+      else if (found == (size_t) 0) return true;
+      else return false;
+    }
      
     static inline bool isSCType(const string &tstring) {
       // linear search and the length is hard coded in ...
