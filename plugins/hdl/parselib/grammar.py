@@ -277,22 +277,24 @@ lark_grammar = Lark('''
         htype: htypearray
              | "hType" TYPESTR "NOLIST" 
              | "hType" TYPESTR "[" (htype|htypeint)+ "]"     // nested types, type parameters
+        hdeptype: "hType" "typename" TYPESTR "NOLIST"
+        htypealias: "hTypeAlias" TYPESTR "[" htype "]" 
+        htypealiases: htypealias* 
         htypearray : "hType" "array" arraydimlength "[" (htype|htypeint)+ "]"
         arraydimlength: "##" NUM 
                       | "##" NUM arraydimlength
         htypeint: "hLiteral" NUM "NOLIST"  // integer type parameters
-        htypedef: "hTypedef" TYPESTR "[" htypetemplateparams htypefields "]"
-        
+        htypedef: "hTypedef" TYPESTR "[" htypetemplateparams htypealiases htypefields "]"
         
         htypetemplateparams: htypetemplateparam*
         htypetemplateparam: "hTypeTemplateParam" TYPESTR "NOLIST"
         
         htypefields: htypefield*
-        htypefield: "hTypeField" ID "[" htype "]"
+        htypefield: "hTypeField" ID "[" (htype|hdeptype) "]"
 
         ID: /[a-zA-Z_][a-zA-Z_0-9#]*/
         NUM: /(\+|\-)?[0-9]+/
-        TYPESTR: /[a-zA-Z_][a-zA-Z_0-9]*/
+        TYPESTR: /[a-zA-Z_]([a-zA-Z_0-9]|::)*/
         BINOP: COMPOUND_ASSIGN | NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE" | "concat"
         NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&" | "@="
         ARITHOP: "+" | "-" | "*" | "/" | "^"
