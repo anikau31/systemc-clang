@@ -240,6 +240,8 @@ class SplitCFG {
                  llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited_waits,
                  llvm::SmallVector<SplitCFGPathPair> &curr_path);
   void dfs_rework();
+
+  bool isTernaryOperator(const SplitCFGBlock *block) const;
   bool isLoop(const SplitCFGBlock *block) const;
   bool isConditional(const SplitCFGBlock *block) const;
   bool getUnvisitedSuccessor(

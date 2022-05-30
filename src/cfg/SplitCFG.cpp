@@ -16,6 +16,7 @@
 #include "SplitCFG.h"
 
 #include <regex>
+#include <iostream>
 
 using namespace systemc_clang;
 
@@ -500,6 +501,19 @@ bool SplitCFG::isConditional(const SplitCFGBlock* block) const {
   }
 
   return block->isConditional();
+}
+
+bool SplitCFG::isTernaryOperator(const SplitCFGBlock* block) const {
+  if (block == nullptr) {
+    return false;
+  }
+  auto stmt{block->getCFGBlock()->getTerminatorStmt()};
+  return stmt && clang::dyn_cast<clang::ConditionalOperator>(stmt);
+  //if (auto condop = clang::dyn_cast<clang::ConditionalOperator>(
+  //        cfgb->getTerminatorStmt())) {
+  //  return true;
+  //}
+  //return false;
 }
 
 bool SplitCFG::isLoop(const SplitCFGBlock* block) const {
@@ -1027,6 +1041,26 @@ void SplitCFG::dumpToDot() const {
     std::regex reamp("\\&");
     element_str = std::regex_replace(element_str, reamp, "\\&");
 
+    if (sblock->getBlockID() == 5) {
+      auto cfgb{sblock->getCFGBlock()};
+      auto term{cfgb->getTerminator()};
+      llvm::dbgs() << "########## BLock of interest ######### \n";
+      cfgb->dump();
+      cfgb->getTerminatorStmt()->dump();
+
+      if (auto condop = clang::dyn_cast<clang::ConditionalOperator>(
+              cfgb->getTerminatorStmt())) {
+        llvm::dbgs() << "IS Condop\n";
+        condop->dump();
+      }
+
+      if (term.isValid()) {
+        llvm::dbgs() << "HAS TERMINATOR " << term.isStmtBranch() << "\n";
+      }
+
+      std::cin.get();
+    }
+
     if (sblock->hasWait()) {
       dotos << "SB" << sblock->getBlockID() << " [ \n color=red, label=\"SB"
             << sblock->getBlockID() << "\n"
@@ -1034,6 +1068,10 @@ void SplitCFG::dumpToDot() const {
             << "\"\n]"
             << "\n";
     } else {
+      if (isTernaryOperator(sblock)) {
+        element_str += " | TERNOP";
+      }
+
       if (isLoop(sblock)) {
         auto terminator{sblock->getCFGBlock()->getTerminatorStmt()};
         if (llvm::isa<clang::WhileStmt>(terminator)) {
