@@ -150,9 +150,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aff6f9e337f53259c120db693708efe1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedfc62cba95fb666a81dee59092a4fed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#aedfc62cba95fb666a81dee59092a4fed">dfs_rework</a> ()</td></tr>
 <tr class="separator:aedfc62cba95fb666a81dee59092a4fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac66d7a5b2ad7968079797a965124bf91"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#ac66d7a5b2ad7968079797a965124bf91">isTernaryOperator</a> (const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *block) const</td></tr>
+<tr class="memdesc:ac66d7a5b2ad7968079797a965124bf91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the block is contains a terminator that is a ternary operator.  <a href="classsystemc__clang_1_1SplitCFG.html#ac66d7a5b2ad7968079797a965124bf91">More...</a><br /></td></tr>
+<tr class="separator:ac66d7a5b2ad7968079797a965124bf91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7540b2cc0f97bf5d546aea9fcbfa6d8e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a7540b2cc0f97bf5d546aea9fcbfa6d8e">isLoop</a> (const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *block) const</td></tr>
+<tr class="memdesc:a7540b2cc0f97bf5d546aea9fcbfa6d8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the block is a loop block.  <a href="classsystemc__clang_1_1SplitCFG.html#a7540b2cc0f97bf5d546aea9fcbfa6d8e">More...</a><br /></td></tr>
 <tr class="separator:a7540b2cc0f97bf5d546aea9fcbfa6d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19c6657911e753a0ae1c1f19ff1fd843"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a19c6657911e753a0ae1c1f19ff1fd843">isConditional</a> (const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *block) const</td></tr>
+<tr class="memdesc:a19c6657911e753a0ae1c1f19ff1fd843"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the block is a conditional. Note that this is different than ternary since the terminator is different.  <a href="classsystemc__clang_1_1SplitCFG.html#a19c6657911e753a0ae1c1f19ff1fd843">More...</a><br /></td></tr>
 <tr class="separator:a19c6657911e753a0ae1c1f19ff1fd843"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a562461795ba3bd2f8b5df7d58ef9bdfd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__clang_1_1SplitCFG.html#a562461795ba3bd2f8b5df7d58ef9bdfd">getUnvisitedSuccessor</a> (const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *curr_block, <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html#a0eb2183d2f2098821fa4b4d8579f2372">SplitCFGBlock::const_succ_iterator</a> &amp;I, llvm::SmallPtrSetImpl&lt; const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> * &gt; &amp;visited, const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *&amp;block)</td></tr>
 <tr class="separator:a562461795ba3bd2f8b5df7d58ef9bdfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -355,7 +360,7 @@ Private Attributes</h2></td></tr>
 
 <p>Constructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l01087">1087</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l01060">1060</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -387,7 +392,7 @@ Private Attributes</h2></td></tr>
 
 <p>Overloaded constructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l01092">1092</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l01065">1065</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -444,7 +449,7 @@ Private Attributes</h2></td></tr>
 
 <p>Destructor that erases all SplitCFGBlocks created. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00970">970</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00943">943</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -472,7 +477,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00818">818</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00791">791</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -512,7 +517,7 @@ Private Attributes</h2></td></tr>
 
 <p>Add predecessors to the <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00778">778</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00751">751</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -552,7 +557,7 @@ Private Attributes</h2></td></tr>
 
 <p>Add successors to the <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00768">768</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00741">741</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -594,7 +599,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00450">450</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00431">431</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -616,7 +621,7 @@ Private Attributes</h2></td></tr>
 
 <p>Construct the SCCFG. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00941">941</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00914">914</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -647,7 +652,7 @@ Private Attributes</h2></td></tr>
 <p >Set if the block is an IF conditional</p>
 <p >Set if the block is a loop with two successors</p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00902">902</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00875">875</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -695,7 +700,7 @@ Private Attributes</h2></td></tr>
 <p >Get the first element of the SmallVector, which will be a wait()</p>
 <p >Propogate in the <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> whether the block has a terminator that has a break statement.</p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00693">693</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00666">666</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -716,7 +721,7 @@ Private Attributes</h2></td></tr>
 <p >G = cfg_</p>
 <p >Record the current path.</p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00519">519</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00497">497</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -789,7 +794,7 @@ Private Attributes</h2></td></tr>
 </ol>
 <p >Update the visited blocks when there is no more successor to visit in the subgraph. This means, the loop will be exiting.</p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00118">118</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00117">117</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -810,7 +815,7 @@ Private Attributes</h2></td></tr>
 
 <p>Dump member functions. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00978">978</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00951">951</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -830,7 +835,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00841">841</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00814">814</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -849,7 +854,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00890">890</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00863">863</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -868,7 +873,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00859">859</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00832">832</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -895,7 +900,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00788">788</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00761">761</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -957,7 +962,7 @@ template&lt;typename T &gt; </div>
 
 <p>Dump all the CFGElements that were split. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00796">796</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00769">769</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -979,7 +984,7 @@ template&lt;typename T &gt; </div>
 <p >Generate the string with CFGElements</p>
 <p >Generate the connections</p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00989">989</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00962">962</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -999,7 +1004,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00411">411</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00405">405</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1018,7 +1023,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00828">828</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00801">801</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1039,7 +1044,7 @@ template&lt;typename T &gt; </div>
 
 <p>Generates the paths between wait statements. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00816">816</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00789">789</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1058,7 +1063,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l01079">1079</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l01052">1052</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1079,7 +1084,7 @@ template&lt;typename T &gt; </div>
 
 <p>Returns the paths that were found in the SCCFG. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l01083">1083</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l01056">1056</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1121,7 +1126,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00468">468</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00449">449</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1144,7 +1149,7 @@ template&lt;typename T &gt; </div>
 <p>Returns the argument to a wait statement. Note that the only one supported are no arguments or integer arguments. </p>
 <p >=========================================== </p><h1><a class="el" href="classsystemc__clang_1_1SplitCFG.html">SplitCFG</a> </h1>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00578">578</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00551">551</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1163,9 +1168,11 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Checks if the block is a conditional. Note that this is different than ternary since the terminator is different. </p>
 <p >Loop block has a terminator. The terminator is a clang::Stmt</p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00494">494</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00464">464</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1197,7 +1204,7 @@ template&lt;typename T &gt; </div>
 <p >Use cast to CallExpr instead of CXXMemberCallExpr.</p>
 <p >Check that there is only 1 or 0 arguments</p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00602">602</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00575">575</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1216,9 +1223,11 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Checks if the block is a loop block. </p>
 <p >Loop block has a terminator. The terminator is a clang::Stmt</p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00505">505</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00483">483</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1238,7 +1247,29 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00428">428</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00422">422</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ac66d7a5b2ad7968079797a965124bf91" name="ac66d7a5b2ad7968079797a965124bf91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac66d7a5b2ad7968079797a965124bf91">&#9670;&nbsp;</a></span>isTernaryOperator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SplitCFG::isTernaryOperator </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classsystemc__clang_1_1SplitCFGBlock.html">SplitCFGBlock</a> *&#160;</td>
+          <td class="paramname"><em>block</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if the block is contains a terminator that is a ternary operator. </p>
+
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00475">475</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1268,7 +1299,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00402">402</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00396">396</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1315,7 +1346,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00961">961</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00934">934</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1353,7 +1384,7 @@ template&lt;typename T &gt; </div>
 
 <p>Compute the set difference between two SmallPtrSets. </p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00391">391</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00385">385</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1383,7 +1414,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00378">378</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00374">374</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1419,7 +1450,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00364">364</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00363">363</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1454,7 +1485,7 @@ template&lt;typename T &gt; </div>
 <p >There is only one statement and it's a wait().</p>
 <p >Add the wait as a separate entry in the list.</p>
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00630">630</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00603">603</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1484,7 +1515,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00420">420</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8cpp_source.html#l00414">414</a> of file <a class="el" href="SplitCFG_8cpp_source.html">SplitCFG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1629,7 +1660,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SplitCFG_8h_source.html#l00280">280</a> of file <a class="el" href="SplitCFG_8h_source.html">SplitCFG.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SplitCFG_8h_source.html#l00290">290</a> of file <a class="el" href="SplitCFG_8h_source.html">SplitCFG.h</a>.</p>
 
 </div>
 </div>

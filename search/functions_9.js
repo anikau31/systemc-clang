@@ -56,12 +56,13 @@ var searchData=
   ['isscfunc_53',['isSCFunc',['../classhnode_1_1util.html#a3b5201193bd1bc94d041c1aacb9646e6',1,'hnode::util']]],
   ['isscmainfound_54',['isSCMainFound',['../classsystemc__clang_1_1FindSCMain.html#a1861400b10d1338b0c4cfaebe2881cf6',1,'systemc_clang::FindSCMain']]],
   ['issctype_55',['isSCType',['../classhnode_1_1util.html#ae2be8ad623002038dc6e331adc3d2487',1,'hnode::util']]],
-  ['istimed_56',['isTimed',['../classsystemc__clang_1_1State.html#adcde585e5b1df5f64df6f0a194c901f7',1,'systemc_clang::State']]],
-  ['istimedwait_57',['isTimedWait',['../classsystemc__clang_1_1SuspensionAutomata.html#a131b474cba796a5d5e13fb7574c236da',1,'systemc_clang::SuspensionAutomata']]],
-  ['istruepath_58',['isTruePath',['../classsystemc__clang_1_1SplitCFG.html#a63606435093652063e3d8da0bacb6f0f',1,'systemc_clang::SplitCFG']]],
-  ['istruepathvalid_59',['isTruePathValid',['../classsystemc__clang_1_1SplitCFGPathInfo.html#abe2a39f9c28ff9e675eaf6e4a45281a2',1,'systemc_clang::SplitCFGPathInfo']]],
-  ['isvalidmethod_60',['isValidMethod',['../classsystemc__hdl_1_1HDLMain.html#ad26d40f0cbf7d74468a39b2788a9b382',1,'systemc_hdl::HDLMain']]],
-  ['iswaitblock_61',['isWaitBlock',['../classsystemc__clang_1_1SusCFG.html#a196e62967d4a2820873c7833b037d836',1,'systemc_clang::SusCFG']]],
-  ['iswaitcall_62',['isWaitCall',['../classsystemc__clang_1_1SuspensionAutomata.html#af045e731c974b5b321f0c808d2fa5773',1,'systemc_clang::SuspensionAutomata']]],
-  ['iswaitstmt_63',['IsWaitStmt',['../classsystemc__hdl_1_1HDLThread.html#ad28af83a8bd64cbd5e79bf1db4f417e2',1,'systemc_hdl::HDLThread']]]
+  ['isternaryoperator_56',['isTernaryOperator',['../classsystemc__clang_1_1SplitCFG.html#ac66d7a5b2ad7968079797a965124bf91',1,'systemc_clang::SplitCFG']]],
+  ['istimed_57',['isTimed',['../classsystemc__clang_1_1State.html#adcde585e5b1df5f64df6f0a194c901f7',1,'systemc_clang::State']]],
+  ['istimedwait_58',['isTimedWait',['../classsystemc__clang_1_1SuspensionAutomata.html#a131b474cba796a5d5e13fb7574c236da',1,'systemc_clang::SuspensionAutomata']]],
+  ['istruepath_59',['isTruePath',['../classsystemc__clang_1_1SplitCFG.html#a63606435093652063e3d8da0bacb6f0f',1,'systemc_clang::SplitCFG']]],
+  ['istruepathvalid_60',['isTruePathValid',['../classsystemc__clang_1_1SplitCFGPathInfo.html#abe2a39f9c28ff9e675eaf6e4a45281a2',1,'systemc_clang::SplitCFGPathInfo']]],
+  ['isvalidmethod_61',['isValidMethod',['../classsystemc__hdl_1_1HDLMain.html#ad26d40f0cbf7d74468a39b2788a9b382',1,'systemc_hdl::HDLMain']]],
+  ['iswaitblock_62',['isWaitBlock',['../classsystemc__clang_1_1SusCFG.html#a196e62967d4a2820873c7833b037d836',1,'systemc_clang::SusCFG']]],
+  ['iswaitcall_63',['isWaitCall',['../classsystemc__clang_1_1SuspensionAutomata.html#af045e731c974b5b321f0c808d2fa5773',1,'systemc_clang::SuspensionAutomata']]],
+  ['iswaitstmt_64',['IsWaitStmt',['../classsystemc__hdl_1_1HDLThread.html#ad28af83a8bd64cbd5e79bf1db4f417e2',1,'systemc_hdl::HDLThread']]]
 ];
