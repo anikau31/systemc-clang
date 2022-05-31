@@ -12,7 +12,6 @@
 // /
 // ===----------------------------------------------------------------------===//
 
-//#include "SplitCFGBlock.h"
 #include "SplitCFG.h"
 
 #include <regex>
@@ -362,10 +361,7 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
 }
 
 void SplitCFG::setTruePathInfo(const SplitCFGBlock* sblock,
-                               // const llvm::SmallVector<std::pair<const
-                               // SplitCFGBlock*, SplitCFGPathInfo>>&
                                const SplitCFGPath& newly_visited, int ix) {
-  // <SplitCFGBlock*, SplitCFGPathInfo>
   auto block_path{path_info_.find(sblock)};
   if (block_path != path_info_.end() && !block_path->second.isTruePathValid()) {
     block_path->second.false_startix = ix;  // index is start of false path
@@ -376,8 +372,6 @@ void SplitCFG::setTruePathInfo(const SplitCFGBlock* sblock,
 }
 
 void SplitCFG::setFalsePathInfo(const SplitCFGBlock* sblock,
-                                // const llvm::SmallVector<std::pair<const
-                                // SplitCFGBlock*, SplitCFGPathInfo>>&
                                 const SplitCFGPath& newly_visited) {
   auto block_path{path_info_.find(sblock)};
   if (block_path != path_info_.end() &&
@@ -431,19 +425,6 @@ bool SplitCFG::isLoopWithTwoSuccessors(const SplitCFGBlock* block) const {
   //
   // Note that CFGBlock often times has a NULL successor.  We have to ignore
   // that.
-  /*
-  auto cfg_block{block->getCFGBlock()};
-  bool last_succ_is_null{false};
-  if (cfg_block->succ_size() == 2) {
-    // Check that the last one is not NULL
-
-    if (*cfg_block->succ_rbegin() == nullptr) {
-      last_succ_is_null = true;
-    }
-  }
-
-  return (block && isLoop(block) && (last_succ_is_null == false));
-  */
   return block->isLoopWithTwoSuccessors();
 }
 
@@ -478,17 +459,6 @@ bool SplitCFG::getUnvisitedSuccessor(
     }
   }
   return found;
-
-  /*
-  bool FoundNew = false;
-  while (I != ParentBB->succ_end()) {
-    BB = *I++;
-    if ((BB != nullptr) && (visited_blocks.insert(BB).second)) {
-      FoundNew = true;
-      break;
-    }
-  }
-  */
 }
 
 bool SplitCFG::isConditional(const SplitCFGBlock* block) const {
@@ -500,6 +470,14 @@ bool SplitCFG::isConditional(const SplitCFGBlock* block) const {
   }
 
   return block->isConditional();
+}
+
+bool SplitCFG::isTernaryOperator(const SplitCFGBlock* block) const {
+  if (block == nullptr) {
+    return false;
+  }
+  auto stmt{block->getCFGBlock()->getTerminatorStmt()};
+  return stmt && clang::dyn_cast<clang::ConditionalOperator>(stmt);
 }
 
 bool SplitCFG::isLoop(const SplitCFGBlock* block) const {
@@ -540,11 +518,6 @@ void SplitCFG::dfs_rework() {
   llvm::dbgs() << "curr path 1 below\n";
   dumpCurrPath(curr_path);
   dumpPaths();
-
-  // Add the next state.
-  // wait_next_state_.insert(
-  //    std::make_pair(entry, std::make_pair(entry, next_state_count_)));
-  //++next_state_count_;  // Reset has been assigned to 0
 
   while (!waits_to_visit.empty()) {
     curr_path.clear();
@@ -1034,6 +1007,10 @@ void SplitCFG::dumpToDot() const {
             << "\"\n]"
             << "\n";
     } else {
+      if (isTernaryOperator(sblock)) {
+        element_str += " | TERNOP";
+      }
+
       if (isLoop(sblock)) {
         auto terminator{sblock->getCFGBlock()->getTerminatorStmt()};
         if (llvm::isa<clang::WhileStmt>(terminator)) {
@@ -1045,10 +1022,6 @@ void SplitCFG::dumpToDot() const {
         if (llvm::isa<clang::DoStmt>(terminator)) {
           element_str += " | DOWHILE ";
         }
-        // sblock->getCFGBlock()->getTerminatorStmt()->dumpPretty(context);
-        // auto stmt{sblock->getCFGBlock()->getTerminatorStmt()};
-        // stmt->printPretty(dotos, nullptr,
-        // clang::PrintingPolicy(context_.getLangOpts()));
       }
 
       if (isConditional(sblock)) {
