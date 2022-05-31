@@ -241,13 +241,21 @@ class SplitCFG {
                  llvm::SmallVector<SplitCFGPathPair> &curr_path);
   void dfs_rework();
 
+  /// \brief Checks if the block is contains a terminator that is a ternary operator.
   bool isTernaryOperator(const SplitCFGBlock *block) const;
+
+  /// \brief Checks if the block is a loop block.
   bool isLoop(const SplitCFGBlock *block) const;
+
+  /// \brief Checks if the block is a conditional.
+  /// Note that this is different than  ternary since the terminator is different.
   bool isConditional(const SplitCFGBlock *block) const;
+
   bool getUnvisitedSuccessor(
       const SplitCFGBlock *curr_block, SplitCFGBlock::const_succ_iterator &I,
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited,
       const SplitCFGBlock *&block);
+
   bool isLoopWithTwoSuccessors(const SplitCFGBlock *block) const;
   void addSuccessorToVisitOrPop(
       bool parent_has_wait, const SplitCFGBlock *BB,
