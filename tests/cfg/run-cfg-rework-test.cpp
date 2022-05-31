@@ -30,10 +30,11 @@ std::string pathToString(const llvm::SmallVectorImpl<std::pair<S, T> > &v) {
 extern std::string data_file;
 TEST_CASE("Simple thread test") {
   std::string code{};
+  llvm::dbgs() << "Data file: " << data_file << "\n";
 
   if (data_file.empty()) {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
-                                            "simple-thread-input.cpp");
+                                            "test_const_prop_loop.cpp");
   } else {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
                                             data_file);
@@ -58,18 +59,18 @@ TEST_CASE("Simple thread test") {
 
   // Want to find an instance named "testing".
 
-  ModuleInstance *test_module{model->getInstance("testing")};
-  ModuleInstance *dut{model->getInstance("d")};
+  ModuleInstance *test_module{model->getInstance("a_mod")};
+  // ModuleInstance *dut{model->getInstance("d")};
 
   SUBCASE("Found sc_module instances" ) {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: " << instances.size());
 
-    CHECK(instances.size() >= 2);
+    // CHECK(instances.size() >= 2);
 
     CHECK(test_module != nullptr);
 
-    INFO("Checking member ports for test instance.");
+    // INFO("Checking member ports for test instance.");
     // These checks should be performed on the declarations.
 
     // The module instances have all the information.
