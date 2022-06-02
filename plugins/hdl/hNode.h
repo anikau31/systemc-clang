@@ -217,14 +217,15 @@ namespace hnode {
   
   class util { 
   public:
-    const  int numstr = 6;
-    const string scbuiltintype [6] = {
+    const  int numstr = 7;
+    const string scbuiltintype [7] = {
       "sc_uint",
       "sc_int",
       "sc_bigint",
       "sc_biguint",
       "sc_bv",
-      "sc_logic"
+      "sc_logic",
+      "sc_clock"
     };
     int scbtlen [ 6 ];
 

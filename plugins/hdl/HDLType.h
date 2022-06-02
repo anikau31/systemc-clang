@@ -26,6 +26,8 @@ public:
       systemc_clang::TreeNode<systemc_clang::TemplateType> *const &node,
       systemc_clang::Tree<systemc_clang::TemplateType> *const &treehead,
       hNodep &h_info, bool generate_initial_htype = true);
+  bool checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType> *const &node,
+		     systemc_clang::Tree<systemc_clang::TemplateType> *const &treehead, string &tmps);
   hNodep addtype(string typname, QualType qtyp, ASTContext &astcontext);
   void addfieldtype(const FieldDecl *fld, hNodep &h_typdef);
   usertype_map_t usertypes;
