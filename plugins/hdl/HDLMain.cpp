@@ -139,7 +139,7 @@ namespace systemc_hdl {
     overridden_method_map_t overridden_method_map;
     
     LLVM_DEBUG( llvm::dbgs() << "dumping base instances \n");
-    mod->dump_base_instances(llvm::dbgs());
+    LLVM_DEBUG(mod->dump_base_instances(llvm::dbgs()));
     LLVM_DEBUG( llvm::dbgs() << "end base instances \n");
 
     const CXXRecordDecl *cdecl{mod->getModuleClassDecl()};
@@ -152,11 +152,11 @@ namespace systemc_hdl {
 	LLVM_DEBUG(llvm::dbgs() << "Method name is " << method->getParent()->getNameAsString() << "::" << method->getNameAsString()
 		   << "\n");
 	QualType qtype{method->getThisType()};
-	qtype.getTypePtr()->dump();
+	LLVM_DEBUG(qtype.getTypePtr()->dump());
 	LLVM_DEBUG(llvm::dbgs() << "\n");
 	if (method->getBody() != NULL) {
-	  LLVM_DEBUG(llvm::dbgs() << "Body of method\n");
-	  LLVM_DEBUG(method->getBody()->dump());
+	  LLVM_DEBUG(llvm::dbgs() << "Body of method non-null\n");
+	  //LLVM_DEBUG(method->getBody()->dump());
 	}
 	else LLVM_DEBUG(llvm::dbgs() << "Empty method body\n");
       
