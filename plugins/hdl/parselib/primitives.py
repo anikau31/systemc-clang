@@ -4,6 +4,9 @@ import warnings
 
 
 class TypeContext(object):
+    """
+    Type context provides a way to contextualize types, enabling generation of input ports and output ports
+    """
     def __init__(self, prefix=None, suffix=None, sep=None):
         self.prefix = prefix
         self.suffix = suffix

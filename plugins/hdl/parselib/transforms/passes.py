@@ -4,7 +4,7 @@ from .literal_expansion import LiteralExpansion
 from .node_merge import NodeMergePass
 from .sort_var_decl import SortVarDecl
 from .typedef_expansion import TypedefExpansion
-from .typedef_filter import TypeDefFilter
+from .typedef_filter import TypeDefFilter, TypeDefCleanup
 from .verilog_tranlation import VerilogTranslationPass
 from .port_expansion import PortExpansion
 from .slice_merge import SliceMerge
@@ -43,6 +43,7 @@ class VerilogTranslator:
         prev = FunctionInfoPass2().visit(prev)
         prev = FunctionParamMarker().visit(prev)
         prev = FunctionTransformationPass().visit(prev)
+        prev = TypeDefCleanup().visit(prev)
         prev = VerilogTranslationPass().visit(prev)
         return prev
 
