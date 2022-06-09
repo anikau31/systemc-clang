@@ -778,8 +778,10 @@ SC_MODULE(decode_ints)
 				bitoff = m;
 
 				//START unary decoder
-				while(n < fpblk_sz(DIM))
+				// while(n < fpblk_sz(DIM))
+        for(int i = 0; i < fpblk_sz(DIM); i++) 
 				{
+          if(!(n < fpblk_sz(DIM))) break;
 					//looking for 0's in a unary substring  INNER LOOP IN ZFP
 					if(state&FOUND_1)
 					{
@@ -1069,24 +1071,31 @@ template<typename FP, typename B> struct decode_stream<FP, B, 2>: sc_module
 
 			//1. b, Down shift register file st. full registers start at index 0
 			sc_uint<log2rz(4)+1>tgtreg;
-			for(tgtreg=0; srcreg<4; )
-			{
-				if(!pb_c[srcreg].f)	break;
-				else				tmp[tgtreg]=pb_c[srcreg];
-        srcreg++;
-        tgtreg++;
-			}
+      for(tgtreg=0; tgtreg<4; tgtreg++) {
+        if(srcreg>=4)break;
+        if(!pb_c[srcreg].f) break;
+        else {
+          tmp[tgtreg]=pb_c[srcreg];
+          srcreg++;
+        }
+      }
 
 			//2) copy in new data from bitstream fifo.
 			if(tgtreg<reg_thresh)
 			{
-				for(size_t i=0; i < B::dbits/bw_w(2); i++)
-					tmp[tgtreg++]=w[i];
+				for(size_t i=0; i < B::dbits/bw_w(2); i++) {
+					tmp[tgtreg]=w[i];
+					tgtreg++;
+        }
 			}
 
 		}
-		else
-			{tmp[0]=pb_c[0]; tmp[1]=pb_c[1]; tmp[2]=pb_c[2]; tmp[3]=pb_c[3];}	//If fifo data is not valid, do not update the register file.
+		else {
+      tmp[0]=pb_c[0]; 
+      tmp[1]=pb_c[1]; 
+      tmp[2]=pb_c[2]; 
+      tmp[3]=pb_c[3];
+    }	//If fifo data is not valid, do not update the register file.
 
 		//assign next state registers
 		b_c[0].write(tmp[0]); b_c[1].write(tmp[1]); b_c[2].write(tmp[2]); b_c[3].write(tmp[3]);
@@ -1432,8 +1441,10 @@ SC_MODULE(inv_cast)
 
 			// determine position, e, of leading one-bit: 2^e <= y < 2^(e+1)
 			ui_t e = 0;
-			while (rn >> (e + 1))
-			  e++;
+      for(ui_t i=0; i<FP::bits; i++) {
+        if(!(rn>> (e +1)))break;
+        else e++;
+      }
 
 			// align significand such that leading one-bit is in position FP::fbitsm
 			int shift = FP::fbits - e;
@@ -1462,7 +1473,8 @@ SC_MODULE(inv_cast)
 			rn += ((s << FP::ebits) + e) << FP::fbits;
 
 			//rn is now in IEEE floating point format. initialize SystemC stream type with rn's bits.
-			fp = FP(rn);
+      (fp.sign, fp.expo, fp.frac) = rn;
+			// fp = FP(rn);
 		}
 		m_stream.data_w(fp);			//always write out converted data
 
