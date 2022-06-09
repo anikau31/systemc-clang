@@ -18,13 +18,16 @@ import driver as drv
 
 # Handy paths
 examples = Path(os.environ["SYSTEMC_CLANG"]) / "examples"
+build_dir = Path(os.environ["SYSTEMC_CLANG_BUILD_DIR"]) / "tests" / "data"
 testdata = Path(os.environ["SYSTEMC_CLANG"]) / "tests" / "verilog-conversion" / "data"
 sysctestdata = Path(os.environ["SYSTEMC_CLANG"]) / "tests" / "data"  # The tests used in the systemc-clang
-zfpsynth = examples / "llnl-examples" / "zfpsynth"
+# zfpsynth = examples / "llnl-examples" / "zfpsynth"
+zfpsynth = build_dir / "llnl-examples" / "zfpsynth"
 zfpshared = zfpsynth / "shared"
 zfpshared2 = zfpsynth / "shared2"
 zfpshared3 = zfpsynth / "shared3"
-modules_examples = examples / "llnl-examples" / "modules"
+# modules_examples = examples / "llnl-examples" / "modules"
+modules_examples = build_dir/ "llnl-examples" / "modules"
 
 
 # Helper functions
@@ -61,7 +64,8 @@ test_data = [
         load_file(testdata / "add.cpp"),
         None,
         load_file(testdata / "add_hdl.txt.v"),
-        load_file(testdata / "add_hdl.txt")
+        load_file(testdata / "add_hdl.txt"),
+        False
     ),
     # ('sreg',   load_file(), [], None),
     # ('member-variable-sc-buffer',   load_file(), [], None),
@@ -75,6 +79,7 @@ test_data = [
         ("-I{}".format(zfpsynth / "zfp3"), ),
         None,
         None,
+        zfpsynth / "zfp3"
     ),
     # ('z4test', load_file(zfpsynth / 'zfp4/z4test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp4', None]),
     # ('z5test', load_file(zfpsynth / 'zfp5/z5test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp5', None])
@@ -84,6 +89,7 @@ test_data = [
         ("-I{}".format(zfpsynth / "zfp7"), ),
         None,
         None,
+        zfpsynth / "zfp7"
     ),
     (
         "moving-average",
@@ -91,6 +97,7 @@ test_data = [
         ("-I{}".format(modules_examples / "moving-average"), ),
         None,
         None,
+        False,
     ),
     (
        "test_while_iscs",
@@ -98,6 +105,7 @@ test_data = [
        None,
        None, # load_file(testdata / "test_while_iscs_hdl.txt.v"),
        None,
+       False,
     ),
     (
        "test_binary_iscs",
@@ -105,6 +113,7 @@ test_data = [
        None,
        None, # load_file(testdata / "test_binary_iscs_hdl.txt.v"),
        None,
+       False,
     ),
     (
        "test_break_iscs",
@@ -112,6 +121,7 @@ test_data = [
        None,
        None, # load_file(testdata / "test_break_iscs_hdl.txt.v"),
        None,
+       False,
     ),
     (
        "test_for_iscs",
@@ -119,6 +129,7 @@ test_data = [
        None,
        None, # load_file(testdata / "test_for_iscs_hdl.txt.v"),
        None,
+       False,
     ),
     ( 
        "test_child_module_iscs",
@@ -126,6 +137,7 @@ test_data = [
        None,
        None,
        None,
+       False,
     ),
     # ( 
     #     "test_dowhile_iscs",
@@ -144,7 +156,8 @@ test_data = [
         load_file(testdata / "test_forloop_other_types_iscs.cpp"),
         None,
         None,
-        None
+        None,
+        False,
     ),
     # ( 
     #     "test_virtual1_iscs",
@@ -164,6 +177,7 @@ test_data = [
         None,
         None,
         None,
+        False,
     ),
     ( 
         "test_thread_simple_wait",
@@ -171,6 +185,7 @@ test_data = [
         None,
         None,
         None,
+        False,
     ),
     ( 
         "test_thread_multiple_processes",
@@ -178,6 +193,7 @@ test_data = [
         None,
         None,
         None,
+        False,
     )
 
 ]
