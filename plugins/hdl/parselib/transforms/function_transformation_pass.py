@@ -236,6 +236,9 @@ class FunctionTransformationPass(TopDown):
 
 
     def hmethodcall(self, tree):
+        # process children
+        # Careful... this might cause issue
+        self.__push_up(tree)
         # we translate methods manually
         # dprint(tree.pretty())
         orig_len = len(tree.children)

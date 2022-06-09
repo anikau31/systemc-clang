@@ -314,7 +314,7 @@ class TypedefExpansion(TopDown):
             lhs_expanded_type = self.__expanded_type(lhs_var)
             assert lhs_expanded_type is not None, '{} should have expanded type'.format(lhs_var)
             lhs_type = self.__get_expandable_type_from_htype(lhs_expanded_type)
-            dprint(rhs_var)
+            # dprint(rhs_var)
             if isinstance(rhs_var,list):
                 rhs_type = self.__get_expandable_type_from_htype(self.__expanded_type(rhs_var[0]))
                 if lhs_type.children[0] != rhs_type.children[0]:
@@ -388,12 +388,17 @@ class TypedefExpansion(TopDown):
         self.expanded.pop()
         return tree
 
-
-    def hfunctionparams(self, tree):
+    def hfunction(self, tree):
         self.expanded.append(dict())
         self.__push_up(tree)
-        tree.children = self.__expand_decl_in_tree_children(tree, ['funcparami', 'funcparamio'])
         self.expanded.pop()
+        return tree
+
+    def hfunctionparams(self, tree):
+        # self.expanded.append(dict())
+        self.__push_up(tree)
+        tree.children = self.__expand_decl_in_tree_children(tree, ['funcparami', 'funcparamio'])
+        # self.expanded.pop()
         return tree
 
     def hmethodcall(self, tree):
@@ -439,6 +444,9 @@ class TypedefExpansion(TopDown):
                                  filter(lambda y: isinstance(y, str), x.children),
                                  var_type.iter_subtrees_topdown())
                 type_name = var_type.children[0]
+                if 'funcparamio' in expand_data:
+                    # dprint(var_name, var_type, type_name)
+                    pass
                 if not Primitive.get_primitive(type_name) and not type_name in self.types:
                     # module instantiate
                     assert False, 'Type {} not found or module instantiation cannot reside in process: {}, {}'.format(type_name, var_name, type_name)

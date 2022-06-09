@@ -278,16 +278,11 @@ lark_grammar = Lark('''
              | "hType" TYPESTR "NOLIST" 
              | "hType" TYPESTR "[" (htype|htypeint)+ "]"     // nested types, type parameters
         hdeptype: "hType" "typename" TYPESTR "NOLIST"
-        htypealias: "hTypeAlias" TYPESTR "[" htype "]" 
-        htypealiases: htypealias* 
         htypearray : "hType" "array" arraydimlength "[" (htype|htypeint)+ "]"
         arraydimlength: "##" NUM 
                       | "##" NUM arraydimlength
         htypeint: "hLiteral" NUM "NOLIST"  // integer type parameters
-        htypedef: "hTypedef" TYPESTR "[" htypetemplateparams htypealiases htypefields "]"
-        
-        htypetemplateparams: htypetemplateparam*
-        htypetemplateparam: "hTypeTemplateParam" TYPESTR "NOLIST"
+        htypedef: "hTypedef" TYPESTR "[" htypefields "]"
         
         htypefields: htypefield*
         htypefield: "hTypeField" ID "[" (htype|hdeptype) "]"
