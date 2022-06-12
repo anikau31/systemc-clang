@@ -4,13 +4,89 @@
 #include "clang/AST/DeclCXX.h"
 #include "clang/AST/ExprCXX.h"
 #include "llvm/Support/Debug.h"
+#include "llvm/ADT/StringSet.h"
 #include <queue>
 
 namespace sc_ast_matchers {
 namespace utils {
+
+namespace cxx_member_call_expr_utils {
+
+using namespace sc_ast_matchers::utils::cxx_construct_decl_utils;
+
+bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce) {
+  if (!mce) {
+    return false;
+  }
+  llvm::dbgs() << "isCXXMemberCallExprSystemCCall\n";
+
+  if (auto mdecl = mce->getMethodDecl()) {
+    if (auto rdecl = mdecl->getParent()) {
+      auto base_names{getAllBaseClassNames(rdecl)};
+
+      for (const auto &decl : base_names) {
+        llvm::dbgs() << "base is called " << decl->getNameAsString() << "\n";
+        auto name{ decl->getNameAsString()};
+        if (name == "sc_object" || (name == "sc_simcontext")) {
+          llvm::dbgs() << "() Member call is sc_object\n";
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+};  // namespace cxx_member_call_expr_utils
+
 namespace cxx_construct_decl_utils {
 
 using namespace utils::array_type;
+
+std::vector<const clang::CXXRecordDecl *> getAllBaseClassNames(
+    const clang::CXXRecordDecl *decl) {
+  /// Go through all the base classes, and its base classes and collect them
+  /// together. This will be used to flatten all the member fields
+
+  std::queue<const clang::CXXRecordDecl *> decl_queue;
+  std::vector<const clang::CXXRecordDecl *> bases;
+  llvm::StringSet<> bases_set;
+
+  // decl_queue.push(decl);
+  const clang::CXXRecordDecl *top_decl{decl};
+
+  while (top_decl) {
+    auto name{top_decl->getNameAsString()};
+
+    llvm::dbgs() << "Processing base named: " << name << "\n";
+
+    bases.push_back(top_decl);
+    bases_set.insert(top_decl->getName());
+    /// Go through all the bases of the base declaration.
+    for (auto &base : top_decl->bases()) {
+      const clang::CXXRecordDecl *base_decl{
+          base.getType().getTypePtr()->getAsCXXRecordDecl()};
+
+      decl_queue.push(base_decl);
+    }
+
+    if (!decl_queue.empty()) {
+      top_decl = decl_queue.front();
+      decl_queue.pop();
+    } else {
+      top_decl = nullptr;
+    }
+  }
+
+  /// Print all the base classes retrieved.
+  llvm::dbgs() << "Bases collected: ";
+  for (auto const &base : bases) {
+    llvm::dbgs() << base->getNameAsString() << "  ";
+  }
+  llvm::dbgs() << "\n";
+
+  return bases;
+}
 
 std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
     const clang::CXXRecordDecl *decl) {
@@ -48,7 +124,6 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
       decl_queue.pop();
     } else {
       top_decl = nullptr;
-
     }
   }
 
