@@ -104,7 +104,8 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   clang::LangOptions LangOpts;
   LangOpts.CPlusPlus = true;
   clang::PrintingPolicy Policy(LangOpts);
-  Policy.SuppressTagKeyword = true;
+  //Policy.SuppressTagKeyword = true;
+  Policy.adjustForCPlusPlus();
 
   std::string name_string;
   llvm::raw_string_ostream sstream(name_string);
@@ -152,6 +153,7 @@ bool FindTemplateTypes::VisitBuiltinType(BuiltinType *bi_type) {
   LangOpts.CPlusPlus = true;
   //LangOpts.Bool = 1;
   clang::PrintingPolicy Policy(LangOpts);
+  Policy.adjustForCPlusPlus();
 
   // auto type_name{bi_type->getNameAsCString(Policy)};
   auto type_name{bi_type->getName(Policy)};
