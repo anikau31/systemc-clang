@@ -15,7 +15,7 @@
 using namespace systemc_clang;
 
 using namespace sc_ast_matchers;
-using namespace sc_ast_matchers::utils::cxx_construct_decl_utils;
+using namespace sc_ast_matchers::utils;
 
 bool SystemCConsumer::preFire() { return true; }
 
