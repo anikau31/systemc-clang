@@ -37,10 +37,10 @@ endif()
 # file(GLOB TEST_FILES "t[0-9].cpp")
 
 # copy the directory of data to test build
-#file(COPY data DESTINATION ${CMAKE_BINARY_DIR}/tests/ )
+file(COPY data DESTINATION ${CMAKE_BINARY_DIR}/tests/ )
 # copy some of the examples that are necessary for testing
 # be careful about the filename as they may collide 
-#file(COPY ../examples/llnl-examples DESTINATION ${CMAKE_BINARY_DIR}/tests/data )
+file(COPY ../examples/llnl-examples DESTINATION ${CMAKE_BINARY_DIR}/tests/data )
 
 set(TEST_DIR "tests")
 
