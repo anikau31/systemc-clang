@@ -12,15 +12,23 @@ namespace clang {
 class CXXRecordDecl;
 class CXXCtorInitializer;
 class FieldDecl;
+class CXXMemberCallExpr;
 };  // namespace clang
 
 namespace sc_ast_matchers {
 namespace utils {
+
+  bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce);
+
+
 namespace cxx_construct_decl_utils {
 
 typedef std::tuple<clang::FieldDecl *, std::string,
                    const clang::CXXCtorInitializer *>
     ModuleInitializerTupleType;
+
+std::vector<const clang::CXXRecordDecl *> getAllBaseClassNames (
+    const clang::CXXRecordDecl *decl);
 
 std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
     const clang::CXXRecordDecl *decl);

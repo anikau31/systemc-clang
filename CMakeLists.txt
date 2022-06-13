@@ -414,6 +414,18 @@ foreach (ld_flag ${LLVM_LD_FLAGS} ${LLVM_SYSTEM_LIBS})
   target_link_libraries( ${TARGET} ${ld_flag} )
 endforeach()
 
+# add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
+        # COMMAND ${CMAKE_COMMAND} -E copy_directory
+                # ${CMAKE_CURRENT_SOURCE_DIR}/tests/data
+                # ${CMAKE_CURRENT_BINARY_DIR}/tests/data)
+#
+#
+# add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
+        # COMMAND ${CMAKE_COMMAND} -E copy_directory
+                # ${CMAKE_CURRENT_SOURCE_DIR}/examples/llnl-examples
+                # ${CMAKE_CURRENT_BINARY_DIR}/tests/data)
+#
+
 #set_property(TARGET "systemc-clang" PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
 
 # Print the summary of the build. 
