@@ -1,7 +1,7 @@
 var searchData=
 [
   ['memberdecltype_0',['MemberDeclType',['../classsc__ast__matchers_1_1PortMatcher.html#ae8f416e37b31a66f4fa78cda64cf1f02',1,'sc_ast_matchers::PortMatcher']]],
-  ['moduleinitializertupletype_1',['ModuleInitializerTupleType',['../namespacesc__ast__matchers_1_1utils_1_1cxx__construct__decl__utils.html#afc6572b6e6782ed0cd6b536bab71e0c7',1,'sc_ast_matchers::utils::cxx_construct_decl_utils']]],
+  ['moduleinitializertupletype_1',['ModuleInitializerTupleType',['../namespacesc__ast__matchers_1_1utils.html#a9eca54af25a4033101d4a4201501ff25',1,'sc_ast_matchers::utils']]],
   ['moduleinstancemaptype_2',['moduleInstanceMapType',['../classsystemc__clang_1_1Model.html#adb14c5fc604752f5a1b5a26b58b3590b',1,'systemc_clang::Model']]],
   ['moduleinstancepairtype_3',['moduleInstancePairType',['../classsystemc__clang_1_1Model.html#a5f9fe0bad369fa57dcce9957065e85fd',1,'systemc_clang::Model']]],
   ['moduleinstancetuple_4',['ModuleInstanceTuple',['../classsc__ast__matchers_1_1InstanceMatcher.html#a2da868d9005b524c65f6dc808f6a6e2b',1,'sc_ast_matchers::InstanceMatcher']]],
