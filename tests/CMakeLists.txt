@@ -44,14 +44,14 @@ endif()
 
 set(TEST_DIR "tests")
 
- # add_subdirectory(unit)
- # add_subdirectory(matchers)
- # add_subdirectory(parsing)
- add_subdirectory(cfg)
- # add_subdirectory(designs)
+add_subdirectory(unit)
+add_subdirectory(matchers)
+add_subdirectory(parsing)
+add_subdirectory(cfg)
+add_subdirectory(designs)
 #
 # # Plugins
-#add_subdirectory(hdl)
+add_subdirectory(hdl)
 
 
 include(CTest)
