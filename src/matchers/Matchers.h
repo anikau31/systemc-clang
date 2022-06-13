@@ -31,7 +31,7 @@ using namespace systemc_clang;
 
 namespace sc_ast_matchers {
 
-using namespace utils::cxx_construct_decl_utils;
+using namespace utils;
 ///////////////////////////////////////////////////////////////////////////////
 //
 /// Class ModuleDeclarationMatcher

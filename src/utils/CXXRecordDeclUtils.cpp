@@ -11,8 +11,6 @@ namespace sc_ast_matchers {
 namespace utils {
 
 
-using namespace sc_ast_matchers::utils::cxx_construct_decl_utils;
-
 bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce) {
   if (!mce) {
     return false;
@@ -37,7 +35,6 @@ bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce) {
   return false;
 }
 
-namespace cxx_construct_decl_utils {
 
 using namespace utils::array_type;
 
@@ -189,6 +186,5 @@ std::vector<ModuleInitializerTupleType> getModuleInitializerNames(
   return module_info;
 }
 
-}  // namespace cxx_construct_decl_utils
 }  // namespace utils
 }  // namespace sc_ast_matchers

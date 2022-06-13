@@ -21,7 +21,6 @@ namespace utils {
   bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce);
 
 
-namespace cxx_construct_decl_utils {
 
 typedef std::tuple<clang::FieldDecl *, std::string,
                    const clang::CXXCtorInitializer *>
@@ -38,7 +37,6 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
 std::vector<ModuleInitializerTupleType> getModuleInitializerNames(
     const clang::CXXCtorInitializer *init);
 
-}  // namespace cxx_construct_decl_utils
 
 }  // namespace utils
 
