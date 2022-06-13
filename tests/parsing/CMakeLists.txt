@@ -2,6 +2,7 @@
 
 set (TEST_LIST 
   # Structural parsing
+  member-function-base-type.cpp
   test-virtual-pure.cpp
   test-virtual2.cpp
   counter.cpp

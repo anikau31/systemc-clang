@@ -39,7 +39,7 @@ class Primitive:
     handles automatically subclass registration for primitive types
     """
     primitive_type_names = []
-    name_mapping = { '_Bool': 'cppbool', 'unsigned_int': 'cppuint', 'int': 'cppint', 'unsigned_short': 'cppushort', 'short': 'cppshort',
+    name_mapping = { '_Bool': 'cppbool', 'bool': 'cppbool', 'unsigned_int': 'cppuint', 'int': 'cppint', 'unsigned_short': 'cppushort', 'short': 'cppshort',
                      'char': 'cppchar', 'signed_char': 'cppsignedchar', 'long_long': 'cpplonglong', 'unsigned_long_long': 'cppulonglong'}
 
     def __init_subclass__(cls, **kwargs):
