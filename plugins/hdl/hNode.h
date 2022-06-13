@@ -440,8 +440,22 @@ namespace hnode {
 
   typedef newname_map_t<NamedDecl *> hdecl_name_map_t;
   typedef newname_map_t<ModuleInstance *> hmodinst_name_map_t;
-  typedef newname_map_t<FunctionDecl *> hfunc_name_map_t;
+  typedef newname_map_t<FunctionDecl *> hsimplefunc_name_map_t;
 
+  // map to record type of the method's class to be used as first parameter in the method call
+  typedef std::unordered_map<const CXXMethodDecl *, std::string> method_object_map_t;
+  
+  class hfunc_name_map_t:
+    public hsimplefunc_name_map_t
+  {
+  public:
+    method_object_map_t methodobjtypemap;
+    void insertall(hfunc_name_map_t newmap) {
+      hsimplefunc_name_map_t::insertall(newmap);
+      methodobjtypemap.insert(newmap.methodobjtypemap.begin(), newmap.methodobjtypemap.end());
+    }
+  };
+  
   typedef std::unordered_map<const CXXMethodDecl *, const CXXMethodDecl *> overridden_method_map_t;
   
   // thread name, reset var name, false|true, ASYNC|SYNC

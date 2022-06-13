@@ -7,6 +7,7 @@
 #include <unordered_map>
 
 #include "hNode.h"
+#include "HDLBody.h"
 
 using namespace clang;
 using namespace systemc_clang;

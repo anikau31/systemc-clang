@@ -142,7 +142,7 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
     const RecordType *tstp =
         dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());
     if (tstp) {
-      LLVM_DEBUG(llvm::dbgs() << "generatetype found record type\n");
+      LLVM_DEBUG(llvm::dbgs() << "generatetype found record type " << tstp << "\n");
       // RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
 
       usertypes[tmps] =
@@ -172,7 +172,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
 
   if (const RecordType *rectype = dyn_cast<RecordType>(typ)) {
     LLVM_DEBUG(llvm::dbgs()
-               << "addtype record type found, name is " << typname << "\n");
+               << "addtype record type found, name is " << typname << " rectype ptr is " << rectype << "\n");
     if (isa<ClassTemplateSpecializationDecl>(rectype->getDecl())) {
       LLVM_DEBUG(llvm::dbgs()
                  << "addtype isa template specialzation decl found, name is "

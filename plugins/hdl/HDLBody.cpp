@@ -573,7 +573,7 @@ namespace systemc_hdl {
       //      method decls
 
       LLVM_DEBUG(llvm::dbgs() << "here is method printname " << methodname
-		 << " and qual name " << qualmethodname << "and declp " << methdcl << " \n");
+		 << " and qual name " << qualmethodname << " and declp " << methdcl << " \n");
       if (methodname.compare(0, 8, "operator") ==
 	  0) {  // 0 means compare =, 8 is len("operator")
 	// the conversion we know about, can be skipped
@@ -612,6 +612,9 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "adding method " << qualmethodname << " with pointer " << methdcl << " \n");
 	  methodecls.print(llvm::dbgs());
 	  methodecls.add_entry(methdcl, qualmethodname,  h_callp);
+	  string objstr = objtyp.getAsString();
+	  lutil.make_ident(objstr);
+	  methodecls.methodobjtypemap[methdcl] = objstr;
 	}
 	else h_callp->set(tmpname);
       }

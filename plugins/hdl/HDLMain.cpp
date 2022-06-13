@@ -137,7 +137,8 @@ namespace systemc_hdl {
     //! warning: only supporting single inheritance
     //!
     overridden_method_map_t overridden_method_map;
-    
+
+    LLVM_DEBUG( llvm::dbgs() << "Processing module " << mod->getName() << " instance " << mod->getInstanceName() << "\n");
     LLVM_DEBUG( llvm::dbgs() << "dumping base instances \n");
     LLVM_DEBUG(mod->dump_base_instances(llvm::dbgs()));
     LLVM_DEBUG( llvm::dbgs() << "end base instances \n");
@@ -364,13 +365,21 @@ namespace systemc_hdl {
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	  CXXMethodDecl * thismethod = dyn_cast<CXXMethodDecl>(m.first);
 	  if (thismethod != NULL) {
-	    LLVM_DEBUG(llvm::dbgs() << m.second.newn << " is a Method\n");
+	    LLVM_DEBUG(llvm::dbgs() << thismethod->getParent()->getQualifiedNameAsString() << " " << m.second.newn << " is a Method\n");
 	  }
 	  else LLVM_DEBUG(llvm::dbgs() << m.second.newn << " is a Function\n");
-	  if (m.first->getNumParams() > 0) {
+	  if ((m.first->getNumParams() > 0) || (thismethod != NULL)) {
 	    hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
 	    hNodep hparam_assign_list = new hNode(hNode::hdlopsEnum::hCStmt);
 	    hfunc->child_list.push_back(hparams);
+	    if (thismethod != NULL) { // user defined method
+	      hNodep hthisparam = new hNode("hthis", hNode::hdlopsEnum::hFunctionParamIO);
+	      hNodep hthistype = new hNode(hNode::hdlopsEnum::hTypeinfo);
+	      // thismethod->getParent
+	      hthistype->append(new hNode(modmethodecls.methodobjtypemap[(const CXXMethodDecl *)m.first], hNode::hdlopsEnum::hType));
+	      hthisparam->append(hthistype);
+	      hparams->append(hthisparam);
+	    }
 	    for (int i = 0; i < m.first->getNumParams(); i++) {
 	      VarDecl *vardecl = m.first->getParamDecl(i);
 	      QualType q = vardecl->getType();
