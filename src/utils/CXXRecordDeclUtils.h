@@ -17,11 +17,9 @@ class CXXMemberCallExpr;
 
 namespace sc_ast_matchers {
 namespace utils {
-namespace cxx_member_call_expr_utils {
 
   bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce);
 
-};
 
 namespace cxx_construct_decl_utils {
 

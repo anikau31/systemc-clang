@@ -11,7 +11,7 @@
 using namespace clang;
 using namespace clang::ast_matchers;
 
-using namespace sc_ast_matchers::utils::cxx_member_call_expr_utils;
+using namespace sc_ast_matchers::utils;
 using namespace systemc_clang;
 
 class CXXDeclMatcher : public MatchFinder::MatchCallback {

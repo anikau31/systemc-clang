@@ -10,7 +10,6 @@
 namespace sc_ast_matchers {
 namespace utils {
 
-namespace cxx_member_call_expr_utils {
 
 using namespace sc_ast_matchers::utils::cxx_construct_decl_utils;
 
@@ -37,7 +36,6 @@ bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce) {
 
   return false;
 }
-};  // namespace cxx_member_call_expr_utils
 
 namespace cxx_construct_decl_utils {
 
