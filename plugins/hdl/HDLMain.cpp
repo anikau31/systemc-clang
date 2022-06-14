@@ -333,7 +333,7 @@ namespace systemc_hdl {
     // Functions
     // Initially these are functions that were referenced in the module's sc_methods/threads
     // Function calls within functions get added to all methodecls.
-
+    
     std::set<Decl *> generated_functions;
     while (allmethodecls.size() > 0) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
@@ -372,7 +372,8 @@ namespace systemc_hdl {
 	    hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
 	    hNodep hparam_assign_list = new hNode(hNode::hdlopsEnum::hCStmt);
 	    hfunc->child_list.push_back(hparams);
-	    if (thismethod != NULL) { // user defined method
+	    if ((thismethod != NULL) &&
+		(modmethodecls.methodobjtypemap.count((const CXXMethodDecl *)m.first))) { // user defined non scmodule method
 	      hNodep hthisparam = new hNode("hthis", hNode::hdlopsEnum::hFunctionParamIO);
 	      hNodep hthistype = new hNode(hNode::hdlopsEnum::hTypeinfo);
 	      // thismethod->getParent
@@ -638,6 +639,8 @@ namespace systemc_hdl {
       NamedDecl * portdecl = pd->getAsVarDecl();
       if (!portdecl)
 	portdecl = pd->getAsFieldDecl();
+      // ValueDecl * vd = (ValueDecl *)portdecl;
+      // LLVM_DEBUG(llvm::dbgs() << "Sig type is " << vd->getType().getAsString() << "\n");
       if (module_vars.count(objname)) {
 	LLVM_DEBUG(llvm::dbgs() << "duplicate object " << objname << "\n");
 	if (portdecl)

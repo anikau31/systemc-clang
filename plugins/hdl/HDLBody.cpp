@@ -529,6 +529,11 @@ namespace systemc_hdl {
 
   bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     bool is_overridden = false;
+        // this doesn't seem to help
+    LangOptions LangOpts;
+
+    LangOpts.CPlusPlus = true;
+    const PrintingPolicy Policy(LangOpts);
     
     LLVM_DEBUG(llvm::dbgs()
 	       << "In TraverseCXXMemberCallExpr, printing implicit object arg\n");
@@ -539,9 +544,9 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "raw implicitobjectargument follows\n");
     LLVM_DEBUG(rawarg->dump(llvm::dbgs(), ast_context_));
     
-    Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
+    Expr *objarg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
     LLVM_DEBUG(llvm::dbgs() << "implicitobjectargument, ignore implicit follows\n");
-    LLVM_DEBUG(arg->dump(llvm::dbgs(), ast_context_));
+    LLVM_DEBUG(objarg->dump(llvm::dbgs(), ast_context_));
 
     QualType argtyp;
     if (dyn_cast<ImplicitCastExpr>(rawarg)) { // cast to a specfic type
@@ -549,12 +554,12 @@ namespace systemc_hdl {
       is_overridden = true;
     }
     else {
-      argtyp = arg->getType();
+      argtyp = objarg->getType();
     }
-    LLVM_DEBUG(llvm::dbgs() << "type of x in x.f(5) is " << argtyp.getAsString()
+    LLVM_DEBUG(llvm::dbgs() << "type of x in x.f(5) is " << argtyp.getAsString(Policy)
 	       << "\n");
     QualType objtyp = callexpr->getObjectType();
-    LLVM_DEBUG(llvm::dbgs() << "... and object type is " << objtyp.getAsString()
+    LLVM_DEBUG(llvm::dbgs() << "... and object type is " << objtyp.getAsString(Policy)
 	       << "\n");
     string methodname = "NoMethod", qualmethodname = "NoQualMethod";
     CXXRecordDecl *recdecl = callexpr->getRecordDecl();
@@ -578,7 +583,7 @@ namespace systemc_hdl {
 	  0) {  // 0 means compare =, 8 is len("operator")
 	// the conversion we know about, can be skipped
 	LLVM_DEBUG(llvm::dbgs() << "Found operator conversion node\n");
-	TraverseStmt(arg);
+	TraverseStmt(objarg);
 	return true;
       }
     }
@@ -612,9 +617,9 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "adding method " << qualmethodname << " with pointer " << methdcl << " \n");
 	  methodecls.print(llvm::dbgs());
 	  methodecls.add_entry(methdcl, qualmethodname,  h_callp);
-	  string objstr = objtyp.getAsString();
+	  string objstr = objtyp.getAsString(Policy);
 	  lutil.make_ident(objstr);
-	  methodecls.methodobjtypemap[methdcl] = objstr;
+	  if (!isCXXMemberCallExprSystemCCall(callexpr)) methodecls.methodobjtypemap[methdcl] = objstr;
 	}
 	else h_callp->set(tmpname);
       }
@@ -624,14 +629,18 @@ namespace systemc_hdl {
     if (h_callp == NULL) h_callp = new hNode(methodname, opc);  // list to hold call expr node
 
     hNodep save_hret = h_ret;
-    TraverseStmt(arg);  // traverse the x in x.f(5)
-
-    if (h_ret && (h_ret != save_hret)) h_callp->child_list.push_back(h_ret);
+    // insert "this" argument if mod init block or recognized as special method (read|write|wait of sc type),
+    // or it is a method but not derived for scmodule hierarchy
+    if ((add_info) || ((opc != hNode::hdlopsEnum::hMethodCall) ||
+		       ( opc == hNode::hdlopsEnum::hMethodCall) && (!isCXXMemberCallExprSystemCCall(callexpr)))) {
+     TraverseStmt(objarg);  // traverse the x in x.f(5)
+     if (h_ret && (h_ret != save_hret)) h_callp->child_list.push_back(h_ret);
+    }
 
     for (auto arg : callexpr->arguments()) {
-      hNodep save_h_ret = h_ret;
+      save_hret = h_ret;
       TraverseStmt(arg);
-      if (h_ret != save_h_ret) h_callp->child_list.push_back(h_ret);
+      if (h_ret != save_hret) h_callp->child_list.push_back(h_ret);
     }
     h_ret = h_callp;
     return true;
