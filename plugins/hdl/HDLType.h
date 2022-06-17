@@ -50,6 +50,8 @@ public:
     }
     modelout << "Userrectypes end\n";
   }
+
+  // used in debugging due to lldb limitations
   void print(){
     llvm::dbgs() << "Userrectypes follows\n";
     for( auto entry:usertype_info.userrectypes) {

@@ -479,7 +479,7 @@ namespace systemc_hdl {
 	  string tmpname = FindFname((FunctionDecl *)value);
 	  if (tmpname == "") { // isn't in local or global symbol table
 	    LLVM_DEBUG(llvm::dbgs() << "adding method " << qualfuncname << " with pointer " << value << " \n");
-	    methodecls.print(llvm::dbgs());
+	    LLVM_DEBUG(methodecls.print(llvm::dbgs()));
 	    methodecls.add_entry((CXXMethodDecl *)funval, qualfuncname,  hfuncall);
 	  }
 	  else hfuncall->set(tmpname);
@@ -752,7 +752,7 @@ namespace systemc_hdl {
       }
       else {
 	LLVM_DEBUG(llvm::dbgs() << "Value returned from member expr base was not Varref\n");
-	h_ret->print(llvm::dbgs());
+	LLVM_DEBUG(h_ret->print(llvm::dbgs()));
 	string newname = FindVname(memberexpr->getMemberDecl());
 	LLVM_DEBUG(llvm::dbgs() << "member with base expr new name is " << newname << "\n");
 	if ((newname == "") && (thismode != rmodinit)) {

@@ -452,7 +452,7 @@ namespace systemc_hdl {
 
 	  LLVM_DEBUG(llvm::dbgs() << "after Run, htmp follows\n");
 	  //htmp->dumphcode();
-	  htmp->print(llvm::dbgs());
+	  LLVM_DEBUG(htmp->print(llvm::dbgs()));
 	  CheckVardecls(htmp, (sgb->getCFGBlock())->getBlockID());
 	  if (IsWaitStmt(htmp)) {
 	    ProcessHWait(htmp, sgb->getNextState());

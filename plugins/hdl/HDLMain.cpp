@@ -164,7 +164,7 @@ namespace systemc_hdl {
 	else LLVM_DEBUG(llvm::dbgs() << "Empty method body\n");
       
 	for (const auto &ometh : method->overridden_methods()) {
-	  llvm::dbgs() << " overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n";
+	  LLVM_DEBUG(llvm::dbgs() << " overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n");
 	  if (ometh->hasBody()) {
 	    overridden_method_map[ometh] = method; 
 	  }
@@ -271,7 +271,7 @@ namespace systemc_hdl {
     
       xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
       LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
-      h_constructor->print(llvm::dbgs());
+      LLVM_DEBUG(h_constructor->print(llvm::dbgs()));
       HDLConstructorHcode hcxxbody;
       hNodep modinithp = hcxxbody.ProcessCXXConstructorHcode(h_constructor);
       if (modinithp->child_list.size() != 0) { // if there was an initblock
@@ -390,7 +390,7 @@ namespace systemc_hdl {
 		}
 		else {
 		  LLVM_DEBUG(llvm::dbgs() << "Couldn't find userrectypes entry for " << tp << "\n");
-		  HDLt.print(llvm::dbgs());
+		  LLVM_DEBUG(HDLt.print(llvm::dbgs()));
 		  }
 		}
 	      hthistype->append(new hNode(HDLt.usertype_info.userrectypes[tp],
