@@ -927,10 +927,10 @@ template<typename FP> struct block_header
 
 	//setter pattern
 public:
-	 //block_header& set_exp(expo_t _exp) { exp = _exp; return *this; }//"fluent" API to set exponent.
-	 block_header& set_zb(bool _zb) { zb = _zb; return *this; } 		//"fluent" API to set zero block.
+	// block_header& set_exp(expo_t _exp) { exp = _exp; return *this; }//"fluent" API to set exponent.
+	// block_header& set_zb(bool _zb) { zb = _zb; return *this; } 		//"fluent" API to set zero block.
 	void set_exp(expo_t _exp) { exp = _exp;  }//"fluent" API to set exponent.
-	//void set_zb(bool _zb) { zb = _zb;  } 		//"fluent" API to set zero block.
+	void set_zb(bool _zb) { zb = _zb;  } 		//"fluent" API to set zero block.
 
 	bool is_zero(){return zb;}
 };
@@ -1231,7 +1231,7 @@ template<typename FP, typename B> struct decode_stream<FP, B, 2>: sc_module
 					blockexpt -= FP::ebias;			//Assume encoded with bias, and remove this bias from exponent
 
 					m_block_maxprec.write(get_block_maxprec(blockexpt));	//Compute and output per-block maxprec.
-					 bhdr.set_exp(blockexpt);
+					// bhdr.set_exp(blockexpt);
 					set_exp(bhdr, blockexpt);
 					s_blk_start.ready_w(true);
 				}

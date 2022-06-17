@@ -112,9 +112,11 @@ namespace systemc_hdl {
 
     LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
-    while (!HDLt.usertypes.empty()) {
-      std::unordered_map<string, QualType> usertypestmp = HDLt.usertypes;
-      HDLt.usertypes.clear();
+    while (!HDLt.usertype_info.usertypes.empty()) {
+     HDLType::usertype_map_t usertypestmp = HDLt.usertype_info.usertypes;
+     HDLType::userrectype_map_t userrecmaptmp = HDLt.usertype_info.userrectypes;
+      HDLt.usertype_info.usertypes.clear();
+      HDLt.usertype_info.userrectypes.clear();
       for (auto t : usertypestmp) {
 	LLVM_DEBUG(llvm::dbgs()
 		   << "User Type --------\n"
@@ -345,6 +347,8 @@ namespace systemc_hdl {
 		 << "size of allmethodecls is " << allmethodecls.size() << "\n");
       LLVM_DEBUG(llvm::dbgs()
 		 << "size of modmethodecls is " << modmethodecls.size() << "\n");
+      LLVM_DEBUG(modmethodecls.print(llvm::dbgs()));
+      LLVM_DEBUG(HDLt.print(llvm::dbgs()));
       for (auto const &m : modmethodecls) {
 	LLVM_DEBUG(llvm::dbgs() << "Method --------\n"
 		   << m.second.newn << "\n");
@@ -359,9 +363,9 @@ namespace systemc_hdl {
 	  const clang::Type *rettype = qrettype.getTypePtr();
 	  FindTemplateTypes *te = new FindTemplateTypes();
 	  te->Enumerate(rettype);
-	  HDLType HDLt;
+	  HDLType HDLt2;
 	  // what about returning an array type? this isn't handled 
-	  HDLt.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
+	  HDLt2.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	  CXXMethodDecl * thismethod = dyn_cast<CXXMethodDecl>(m.first);
 	  if (thismethod != NULL) {
@@ -373,11 +377,24 @@ namespace systemc_hdl {
 	    hNodep hparam_assign_list = new hNode(hNode::hdlopsEnum::hCStmt);
 	    hfunc->child_list.push_back(hparams);
 	    if ((thismethod != NULL) &&
-		(modmethodecls.methodobjtypemap.count((const CXXMethodDecl *)m.first))) { // user defined non scmodule method
+		(modmethodecls.methodobjtypemap.count(thismethod))) { // user defined non scmodule method
 	      hNodep hthisparam = new hNode("hthis", hNode::hdlopsEnum::hFunctionParamIO);
 	      hNodep hthistype = new hNode(hNode::hdlopsEnum::hTypeinfo);
-	      // thismethod->getParent
-	      hthistype->append(new hNode(modmethodecls.methodobjtypemap[(const CXXMethodDecl *)m.first], hNode::hdlopsEnum::hType));
+	      const clang::Type * tp = modmethodecls.methodobjtypemap[thismethod];
+	      if (tp == NULL) {
+		LLVM_DEBUG(llvm::dbgs() <<"Couldn't find methodobjtypemap entry for "  << thismethod << "\n");
+	      }
+	      else {
+		if (HDLt.usertype_info.userrectypes.count(tp)) {
+		  LLVM_DEBUG(llvm::dbgs() << "Found methodobjtypemap entry for " << thismethod << " and userrectypes gives " << HDLt.usertype_info.userrectypes[tp] << "\n");
+		}
+		else {
+		  LLVM_DEBUG(llvm::dbgs() << "Couldn't find userrectypes entry for " << tp << "\n");
+		  HDLt.print(llvm::dbgs());
+		  }
+		}
+	      hthistype->append(new hNode(HDLt.usertype_info.userrectypes[tp],
+					  hNode::hdlopsEnum::hType));
 	      hthisparam->append(hthistype);
 	      hparams->append(hthisparam);
 	    }

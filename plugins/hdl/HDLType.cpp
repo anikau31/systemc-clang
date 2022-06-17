@@ -142,13 +142,14 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
     const RecordType *tstp =
         dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());
     if (tstp) {
-      LLVM_DEBUG(llvm::dbgs() << "generatetype found record type " << tstp << "\n");
+      LLVM_DEBUG(llvm::dbgs() << "generatetype found record type and type pointer from RecordType is " << tstp << "\n");
       // RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
 
-      usertypes[tmps] =
+      usertype_info.usertypes[tmps] =
           ((tstp->getDecl())->getTypeForDecl())->getCanonicalTypeInternal();
+      usertype_info.userrectypes[tstp] = tmps;  // reverse map from RecType * to generated name
     }
-    else usertypes[tmps] =
+    else usertype_info.usertypes[tmps] =
         ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
    }
    return retval;

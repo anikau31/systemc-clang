@@ -443,7 +443,7 @@ namespace hnode {
   typedef newname_map_t<FunctionDecl *> hsimplefunc_name_map_t;
 
   // map to record type of the method's class to be used as first parameter in the method call
-  typedef std::unordered_map<const CXXMethodDecl *, std::string> method_object_map_t;
+  typedef std::unordered_map<const CXXMethodDecl *, const Type *> method_object_map_t;
   
   class hfunc_name_map_t:
     public hsimplefunc_name_map_t
@@ -453,6 +453,15 @@ namespace hnode {
     void insertall(hfunc_name_map_t newmap) {
       hsimplefunc_name_map_t::insertall(newmap);
       methodobjtypemap.insert(newmap.methodobjtypemap.begin(), newmap.methodobjtypemap.end());
+    }
+    void print(llvm::raw_ostream & modelout=llvm::outs(), unsigned int indnt=2) {
+      hsimplefunc_name_map_t::print(modelout, indnt);
+      modelout << "Methodobjtypemap follows\n";
+      for( auto entry:methodobjtypemap) {
+	modelout << entry.first << " " <<entry.second << "\n";
+      }
+      modelout << "Methodobjtypemap end\n";
+	    
     }
   };
   

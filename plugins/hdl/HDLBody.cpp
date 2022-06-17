@@ -547,7 +547,10 @@ namespace systemc_hdl {
     Expr *objarg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
     LLVM_DEBUG(llvm::dbgs() << "implicitobjectargument, ignore implicit follows\n");
     LLVM_DEBUG(objarg->dump(llvm::dbgs(), ast_context_));
-
+    CXXRecordDecl* cdecl = callexpr->getRecordDecl();
+    const Type * typeformethodclass = cdecl->getTypeForDecl();
+    LLVM_DEBUG(llvm::dbgs() << "Type pointer from RecordDecl is " << typeformethodclass << "\n");
+	       
     QualType argtyp;
     if (dyn_cast<ImplicitCastExpr>(rawarg)) { // cast to a specfic type
       argtyp = rawarg->getType();
@@ -617,9 +620,9 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "adding method " << qualmethodname << " with pointer " << methdcl << " \n");
 	  methodecls.print(llvm::dbgs());
 	  methodecls.add_entry(methdcl, qualmethodname,  h_callp);
-	  string objstr = objtyp.getAsString(Policy);
-	  lutil.make_ident(objstr);
-	  if (!isCXXMemberCallExprSystemCCall(callexpr)) methodecls.methodobjtypemap[methdcl] = objstr;
+	  //string objstr = objtyp.getAsString(Policy);
+	  //lutil.make_ident(objstr);
+	  if (!isCXXMemberCallExprSystemCCall(callexpr)) methodecls.methodobjtypemap[methdcl] = typeformethodclass;
 	}
 	else h_callp->set(tmpname);
       }
