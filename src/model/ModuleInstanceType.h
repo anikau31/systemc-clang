@@ -41,7 +41,7 @@ struct ModuleInstanceType {
   clang::Decl *getInstanceTypeDecl() const { return type_decl; }
   clang::Decl *getInstanceDecl() const { return instance_decl; }
   clang::ValueDecl *getParentDecl() const { return parent_decl; }
-  std::string getVarName() const {return var_name;}
+  std::string getVarName() const { return var_name; }
 
   /// Array handling
   void setArrayType() { is_array_ = true; }
@@ -100,15 +100,16 @@ struct ModuleInstanceType {
     return *this;
   }
 
-
   bool operator==(const ModuleInstanceType &rhs) {
     return std::tie(var_name, var_type_name, instance_name, parent_name,
                     is_field_decl, type_decl, instance_decl, parent_decl,
-                    is_array_, array_sizes_, instance_names, array_parameters_) ==
+                    is_array_, array_sizes_, instance_names,
+                    array_parameters_) ==
            std::tie(rhs.var_name, rhs.var_type_name, rhs.instance_name,
                     rhs.parent_name, rhs.is_field_decl, rhs.type_decl,
                     rhs.instance_decl, rhs.parent_decl, rhs.is_array_,
-                    rhs.array_sizes_, rhs.instance_names, rhs.array_parameters_);
+                    rhs.array_sizes_, rhs.instance_names,
+                    rhs.array_parameters_);
   }
 
   void dump() {

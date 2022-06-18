@@ -370,7 +370,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
       LLVM_DEBUG(llvm::dbgs() << "name: " << get<0>(i) << ", FieldDecl*: "
                               << get<1>(i)->getAsFieldDecl());
       LLVM_DEBUG(
-          get<1>(i)->getTemplateType()->printTemplateArguments(llvm::outs()));
+          get<1>(i)->getTemplateType()->printTemplateArguments(llvm::dbgs()));
       LLVM_DEBUG(llvm::dbgs() << "\n");
     }
   }
@@ -381,7 +381,7 @@ class PortMatcher : public MatchFinder::MatchCallback {
     const clang::Type *type_ptr{qual_type.getTypePtr()};
     auto template_ptr{new FindTemplateTypes()};
     template_ptr->Enumerate(type_ptr);
-    LLVM_DEBUG(template_ptr->printTemplateArguments(llvm::outs()));
+    LLVM_DEBUG(template_ptr->printTemplateArguments(llvm::dbgs()));
     return template_ptr;
   }
 

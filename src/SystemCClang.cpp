@@ -95,57 +95,58 @@ bool SystemCConsumer::fire() {
   auto found_module_declarations{
       module_declaration_handler.getFoundModuleDeclarations()};
 
-  llvm::outs()
-      << "############# ============= NEW FIRE ============ ################\n";
-  llvm::outs() << "Size of module instances: "
-               << found_module_declarations.size() << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "############# ============= NEW FIRE "
+                             "============ ################\n";
+             llvm::dbgs() << "Size of module instances: "
+                          << found_module_declarations.size() << "\n";);
 
-  for (const auto &inst: found_module_declarations) {
+  for (const auto &inst : found_module_declarations) {
     clang::CXXRecordDecl *cxx_decl{inst.first};
     ModuleInstance *add_module_decl{inst.second};
 
     /// Process the module declaration first.
-    //processModuleDeclaration(cxx_decl, add_module_decl);
+    // processModuleDeclaration(cxx_decl, add_module_decl);
 
     /// Process the base classes for the module declaration.
-    //auto base_decls{getAllBaseClasses(cxx_decl)};
-    //for (const auto &base: base_decls) {
-      // auto name{ base->getNameAsString() };
-      // ModuleInstance *base_module_instance{ new ModuleInstance{name, base} };
-      //processModuleDeclaration(const_cast<clang::CXXRecordDecl*>(base), base_module_instance);
-      //llvm::dbgs() << " ############### Base module instance ################# \n";
-      //add_module_decl->addBaseInstance( base_module_instance);
+    // auto base_decls{getAllBaseClasses(cxx_decl)};
+    // for (const auto &base: base_decls) {
+    //  auto name{ base->getNameAsString() };
+    //  ModuleInstance *base_module_instance{ new ModuleInstance{name, base} };
+    // processModuleDeclaration(const_cast<clang::CXXRecordDecl*>(base),
+    // base_module_instance); llvm::dbgs() << " ############### Base module
+    // instance ################# \n"; add_module_decl->addBaseInstance(
+    // base_module_instance);
 
-      /*
-  for (const auto &base_decl : base_decls) {
-        llvm::dbgs() << "=============================== BASES " << decl->getNameAsString() << " =======================\n";
-        llvm::dbgs() << "Run base instance matcher: "
-                     << base_decl->getNameAsString() << " \n";
-        InstanceMatcher base_instance_matcher;
-        MatchFinder base_instance_reg{};
-        base_instance_matcher.registerMatchers(base_instance_reg);
-        base_instance_matcher.setParentFieldDecl(vd);
-        base_instance_reg.match(*base_decl, context);
-        llvm::dbgs() << "+ Dump base instance matcher\n";
-        base_instance_matcher.dump();
-        llvm::dbgs() << "+ End dump base instance matcher\n";
+    /*
+for (const auto &base_decl : base_decls) {
+      llvm::dbgs() << "=============================== BASES " <<
+decl->getNameAsString() << " =======================\n"; llvm::dbgs() << "Run
+base instance matcher: "
+                   << base_decl->getNameAsString() << " \n";
+      InstanceMatcher base_instance_matcher;
+      MatchFinder base_instance_reg{};
+      base_instance_matcher.registerMatchers(base_instance_reg);
+      base_instance_matcher.setParentFieldDecl(vd);
+      base_instance_reg.match(*base_decl, context);
+      llvm::dbgs() << "+ Dump base instance matcher\n";
+      base_instance_matcher.dump();
+      llvm::dbgs() << "+ End dump base instance matcher\n";
 
-        /// Copy contents over.
-        instance_matcher_= base_instance_matcher;
-      }
+      /// Copy contents over.
+      instance_matcher_= base_instance_matcher;
+    }
 
-  */
-
+*/
 
     //}
 
     systemc_model_->addInstance(add_module_decl);
   }
 
-  llvm::outs()
-      << "############# =====  END NEW FIRE ============ ################\n";
-
   LLVM_DEBUG(
+      llvm::dbgs() << "############# =====  END NEW FIRE ============ "
+                      "################\n";
+
       llvm::dbgs() << "=============== Populate sub-modules ============= \n";);
   // This must have the instance matcher already run.
   // You need systemc_model_ and instance_matcher to build the hierarchy of

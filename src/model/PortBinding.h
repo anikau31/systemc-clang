@@ -238,7 +238,7 @@ class PortBinding {
     /// Cast to see if it's an array.
     caller_array_expr_ = dyn_cast<clang::ArraySubscriptExpr>(caller_expr);
 
-    llvm::outs() << "==> Extract caller port name\n";
+    LLVM_DEBUG(llvm::dbgs() << "==> Extract caller port name\n";);
     // Check to see if the port is initself an array
     if (caller_port_array_expr_) {
       caller_port_array_subscripts_ =
@@ -262,27 +262,30 @@ class PortBinding {
     if (caller_instance_me_expr_) {
       caller_instance_name_ =
           caller_instance_me_expr_->getMemberNameInfo().getAsString();
-      llvm::outs() << "========= CALLER ME EXPR ======== \n";
+      LLVM_DEBUG(
+          llvm::dbgs() << "========= CALLER ME EXPR ======== \n";
       caller_instance_me_expr_->dump();
+      );
       caller_instance_type_name_ = caller_instance_me_expr_->getMemberDecl()
                                        ->getType()
                                        .getBaseTypeIdentifier()
                                        ->getName().str();
-      llvm::outs() << "========= END CALLER ME EXPR ======== \n";
     }
 
-    llvm::outs() << "==> Extract callee port name\n";
+    LLVM_DEBUG(llvm::dbgs() << "==> Extract callee port name\n";);
     if (callee_port_me_expr_) {
       // callee_port_me_expr_->dump();
       callee_port_name_ =
           callee_port_me_expr_->getMemberNameInfo().getAsString();
-      llvm::outs() << " **** callee_port_name_: " << callee_port_name_ << "\n";
+      LLVM_DEBUG(
+      llvm::dbgs() << " **** callee_port_name_: " << callee_port_name_ << "\n";
+      );
     }
 
     // Callee is an array
     callee_array_expr_ = dyn_cast<clang::ArraySubscriptExpr>(callee_expr);
     if (callee_array_expr_) {
-      llvm::outs() << "extract callee name\n";
+      LLVM_DEBUG(llvm::dbgs() << "extract callee name\n";);
       callee_instance_me_expr_ = getArrayMemberExprName(callee_array_expr_);
       callee_array_subscripts_ = getArraySubscripts(callee_array_expr_);
     } else {

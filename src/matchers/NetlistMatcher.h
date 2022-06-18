@@ -191,11 +191,6 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         result.Nodes.getNodeAs<clang::NamedDecl>("named_decl"))};
     auto opcall{const_cast<clang::CXXOperatorCallExpr *>(
         result.Nodes.getNodeAs<clang::CXXOperatorCallExpr>("opcall"))};
-    opcall->dump();
-    llvm::outs() << " get type \n";
-    opcall->getDirectCallee()->dump();
-    llvm::outs() << "name: " << opcall->getDirectCallee()->getNameAsString()
-                 << "\n";
 
     auto caller_expr{const_cast<clang::Expr *>(
         result.Nodes.getNodeAs<clang::Expr>("caller_expr"))};
@@ -245,10 +240,11 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                                       caller_port_me_expr, callee_expr,
                                       callee_port_me_expr)};
 
-      pb->dump();
-
-      llvm::outs() << "Try to add it into the module\n";
-      caller_expr->dump();
+      LLVM_DEBUG(
+          pb->dump();
+        llvm::dbgs() << "Try to add it into the module\n";
+        caller_expr->dump();
+      );
 
       // Have to add the port binding into the appropriate module instance.
       //
@@ -261,24 +257,26 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
       }
 
       if (caller_me_expr) {
-        caller_me_expr->dump();
         auto caller_instance_decl{caller_me_expr->getMemberDecl()};
         auto caller_instance_type{caller_instance_decl->getType().getTypePtr()};
         ModuleInstance *instance_module_decl{
             findModuleDeclInstance(caller_instance_decl)};
-        llvm::outs() << "INSTANCE MODULE :"
+        LLVM_DEBUG(
+        llvm::dbgs() << "INSTANCE MODULE :"
                      << instance_module_decl->getInstanceName() << "\n";
-        llvm::outs() << " port name : " << pb->getCallerPortName() << "\n";
-        llvm::outs() << " PARENT@@@@ : "
+        llvm::dbgs() << " port name : " << pb->getCallerPortName() << "\n";
+        llvm::dbgs() << " PARENT@@@@ : "
                      << instance_module_decl->getInstanceInfo()
                             .getParentDecl()
                             ->getName()
                      << "\n";
+            );
         // Get the parent ModuleInstance and insert the port binding into that one.
         ModuleInstance *parent_decl{findModuleDeclInstance(
             instance_module_decl->getInstanceInfo().getParentDecl())};
-        llvm::outs() << " PARENT@@@@ INST NAME: "
+        LLVM_DEBUG(llvm::dbgs() << " PARENT@@@@ INST NAME: "
                      << parent_decl->getInstanceName() << "\n";
+            );
 
         /// This string is necessary since addPortbinding stores a map of string
         /// => Portbinding. Thus just using port name is not unique.
@@ -286,7 +284,6 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                                  pb->getCallerPortName()};
         parent_decl->addPortBinding(binding_name, pb);
         pb->setInstanceConstructorName(instance_module_decl->getInstanceName());
-        // instance_module_decl->dumpPortBinding();
       }
     }
   }

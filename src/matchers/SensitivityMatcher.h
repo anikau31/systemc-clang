@@ -352,7 +352,6 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
       /// If the argument is an ArraySubscriptExpr, then only provide access to
       /// the pointer to ArraySubscriptExpr.
       if (array_expr) {
-        llvm::outs() << "@@@@ Parse the array \n";
         auto me{getArrayMemberExprName(array_expr)};
         std::string name{me->getMemberDecl()->getNameAsString()};
         auto entry{std::make_tuple(name, me->getMemberDecl(),
@@ -389,8 +388,10 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
                    << std::get<2>(call) << "\n");
 
         if (auto array_expr = std::get<4>(call)) {
+          LLVM_DEBUG(
           llvm::dbgs() << "ArraySubscriptExpr\n";
           array_expr->dump();
+          );
         }
       }
     }
