@@ -227,7 +227,7 @@ namespace hnode {
       "sc_logic",
       "sc_clock"
     };
-    int scbtlen [ 6 ];
+    int scbtlen [ 7 ];
 
      const set<std::string> sc_built_in_funcs{
        "concat", "wait", "range", "bit", "or_reduce", "xor_reduce", "nor_reduce","and_reduce", "nand_reduce"};
