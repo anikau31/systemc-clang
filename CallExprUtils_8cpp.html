@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>systemc-clang: src/utils Directory Reference</title>
+<title>systemc-clang: src/utils/CallExprUtils.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -67,35 +67,43 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="headertitle"><div class="title">utils Directory Reference</div></div>
+  <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">CallExprUtils.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Directory dependency graph for utils:</div>
+<div class="textblock"><code>#include &quot;<a class="el" href="CallExprUtils_8h_source.html">CallExprUtils.h</a>&quot;</code><br />
+<code>#include &quot;clang/AST/DeclCXX.h&quot;</code><br />
+<code>#include &quot;clang/AST/ExprCXX.h&quot;</code><br />
+<code>#include &quot;llvm/Support/Debug.h&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for CallExprUtils.cpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="dir_313caf1132e152dd9b58bea13a4052ca_dep.png" border="0" usemap="#adir__313caf1132e152dd9b58bea13a4052ca__dep" alt="src/utils"/></div>
-<map name="adir__313caf1132e152dd9b58bea13a4052ca__dep" id="adir__313caf1132e152dd9b58bea13a4052ca__dep">
-<area shape="rect" href="dir_313caf1132e152dd9b58bea13a4052ca.html" title="utils" alt="" coords="27,52,99,100"/>
-<area shape="rect" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html" title="src" alt="" coords="16,16,109,111"/>
+<div class="center"><img src="CallExprUtils_8cpp__incl.png" border="0" usemap="#asrc_2utils_2CallExprUtils_8cpp" alt=""/></div>
+<map name="asrc_2utils_2CallExprUtils_8cpp" id="asrc_2utils_2CallExprUtils_8cpp">
+<area shape="rect" title=" " alt="" coords="232,5,403,32"/>
+<area shape="rect" href="CallExprUtils_8h.html" title=" " alt="" coords="24,80,131,107"/>
+<area shape="rect" title=" " alt="" coords="155,80,306,107"/>
+<area shape="rect" title=" " alt="" coords="331,80,480,107"/>
+<area shape="rect" title=" " alt="" coords="504,80,651,107"/>
+<area shape="rect" title=" " alt="" coords="5,155,149,181"/>
 </map>
 </div>
+</div>
+<p><a href="CallExprUtils_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="files" name="files"></a>
-Files</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="APIntUtils_8h.html">APIntUtils.h</a> <a href="APIntUtils_8h_source.html">[code]</a></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacesc__ast__matchers"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers.html">sc_ast_matchers</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ArrayTypeUtils_8cpp.html">ArrayTypeUtils.cpp</a> <a href="ArrayTypeUtils_8cpp_source.html">[code]</a></td></tr>
+<tr class="memitem:namespacesc__ast__matchers_1_1utils"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html">sc_ast_matchers::utils</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ArrayTypeUtils_8h.html">ArrayTypeUtils.h</a> <a href="ArrayTypeUtils_8h_source.html">[code]</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CallExprUtils_8cpp.html">CallExprUtils.cpp</a> <a href="CallExprUtils_8cpp_source.html">[code]</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CallExprUtils_8h.html">CallExprUtils.h</a> <a href="CallExprUtils_8h_source.html">[code]</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CXXRecordDeclUtils_8cpp.html">CXXRecordDeclUtils.cpp</a> <a href="CXXRecordDeclUtils_8cpp_source.html">[code]</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CXXRecordDeclUtils_8h.html">CXXRecordDeclUtils.h</a> <a href="CXXRecordDeclUtils_8h_source.html">[code]</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a6f3712406d0a4d393a478847371ebd4c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#a6f3712406d0a4d393a478847371ebd4c">sc_ast_matchers::utils::isInNamespace</a> (const clang::CallExpr *cexpr, llvm::StringRef name)</td></tr>
+<tr class="separator:a6f3712406d0a4d393a478847371ebd4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
