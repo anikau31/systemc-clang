@@ -217,8 +217,8 @@ namespace hnode {
   
   class util { 
   public:
-    const  int numstr = 7;
-    const string scbuiltintype [7] = {
+    const static int numstr = 7;
+    const string scbuiltintype [numstr] = {
       "sc_uint",
       "sc_int",
       "sc_bigint",
@@ -227,7 +227,7 @@ namespace hnode {
       "sc_logic",
       "sc_clock"
     };
-    int scbtlen [ 7 ];
+    int scbtlen [ numstr ];
 
      const set<std::string> sc_built_in_funcs{
        "concat", "wait", "range", "bit", "or_reduce", "xor_reduce", "nor_reduce","and_reduce", "nand_reduce"};

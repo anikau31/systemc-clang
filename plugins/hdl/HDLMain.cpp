@@ -188,9 +188,9 @@ namespace systemc_hdl {
     // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
 
     // LLVM_DEBUG(mod->getConstructorStmt()->dump(llvm::dbgs()));
-    LLVM_DEBUG( llvm::dbgs() << "dumping module constructor decl body\n");
-    LLVM_DEBUG(mod->getConstructorDecl()->getBody()->dump());
-    LLVM_DEBUG( llvm::dbgs() << "end dumping module constructor decl body\n");
+    //LLVM_DEBUG( llvm::dbgs() << "dumping module constructor decl body\n");
+    //LLVM_DEBUG(mod->getConstructorDecl()->getBody()->dump());
+    //LLVM_DEBUG( llvm::dbgs() << "end dumping module constructor decl body\n");
     //LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
 
     LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
@@ -270,8 +270,8 @@ namespace systemc_hdl {
 				hNode::hdlopsEnum::hModinitblock);
     
       xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
-      LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
-      LLVM_DEBUG(h_constructor->print(llvm::dbgs()));
+      //LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
+      //LLVM_DEBUG(h_constructor->print(llvm::dbgs()));
       HDLConstructorHcode hcxxbody;
       hNodep modinithp = hcxxbody.ProcessCXXConstructorHcode(h_constructor);
       if (modinithp->child_list.size() != 0) { // if there was an initblock
@@ -287,9 +287,9 @@ namespace systemc_hdl {
       mod_i = basemods[i];
     }
 
-    LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists follow\n");
-    LLVM_DEBUG(h_allsenslists->print(llvm::dbgs()));
-    LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists end\n");
+    //LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists follow\n");
+    //LLVM_DEBUG(h_allsenslists->print(llvm::dbgs()));
+    //LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists end\n");
 
     // build map of thread name to reset var name for this module
     MakeResetMap(threadresetmap, h_allsenslists);

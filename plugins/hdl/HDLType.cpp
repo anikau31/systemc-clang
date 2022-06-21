@@ -238,8 +238,7 @@ void HDLType::addfieldtype(const FieldDecl *fld, hNodep &h_typdef) {
   hNodep hfld =
       new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hTypeField);
   h_typdef->child_list.push_back(hfld);
-  LLVM_DEBUG(
-      llvm::dbgs() << "calling generatetype with template args of field\n");
+  LLVM_DEBUG(llvm::dbgs() << "calling generatetype with template args of field\n");
   if (template_args->getRoot())
     generatetype(template_args->getRoot(), template_args, hfld);
   else

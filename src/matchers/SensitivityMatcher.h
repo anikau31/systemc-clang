@@ -188,7 +188,7 @@ class SensitiveOperatorCallMatcher : public MatchFinder::MatchCallback {
     }
 
     auto cxxcall{result.Nodes.getNodeAs<clang::CXXOperatorCallExpr>("cxx_operator_call_expr")};
-    cxxcall->dump();
+    LLVM_DEBUG(cxxcall->dump());
 
     auto cxx_mcall{const_cast<clang::CXXMemberCallExpr*>(
         result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("cxx_mcall"))};

@@ -671,8 +671,8 @@ namespace systemc_hdl {
 
     LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr, Operator name is "
 	       << operatorname << "\n");
-    LLVM_DEBUG(llvm::dbgs() << "Type with name " << operatortype << " follows\n");
-    LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
+    LLVM_DEBUG(llvm::dbgs() << "Type name " << operatortype << "\n");
+    //LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
 
     if (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype) ||
 	(opcall->getType())->isBuiltinType() || (operatorname == "=") ||
