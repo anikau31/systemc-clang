@@ -16,8 +16,8 @@ bool isInNamespace(const clang::CallExpr *cexpr, llvm::StringRef name) {
       if (dc->isNamespace()) {
         if (const auto *nd = llvm::cast<clang::NamespaceDecl>(dc)) {
           auto iinfo = nd->getIdentifier();
-          llvm::dbgs() << "name is " << iinfo->getName() << " for "
-          << fd->getQualifiedNameAsString() ;
+          LLVM_DEBUG(llvm::dbgs() << "name is " << iinfo->getName() << " for "
+          << fd->getQualifiedNameAsString() ;);
           return iinfo->isStr(name);
         }
       }
