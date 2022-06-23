@@ -8,7 +8,7 @@
 #include "Tree.h"
 #include "HDLMain.h"
 //#include "TemplateParametersMatcher.h"
-#include "SensitivityMatcher.h"
+//#include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
 #include "clang/Basic/Diagnostic.h"
@@ -368,6 +368,7 @@ namespace systemc_hdl {
 	  HDLt2.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	  CXXMethodDecl * thismethod = dyn_cast<CXXMethodDecl>(m.first);
+	  bool isUserDefinedMethod = (thismethod != NULL) && (modmethodecls.methodobjtypemap.count(thismethod));
 	  if (thismethod != NULL) {
 	    LLVM_DEBUG(llvm::dbgs() << thismethod->getParent()->getQualifiedNameAsString() << " " << m.second.newn << " is a Method\n");
 	  }
@@ -376,8 +377,8 @@ namespace systemc_hdl {
 	    hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
 	    hNodep hparam_assign_list = new hNode(hNode::hdlopsEnum::hCStmt);
 	    hfunc->child_list.push_back(hparams);
-	    if ((thismethod != NULL) &&
-		(modmethodecls.methodobjtypemap.count(thismethod))) { // user defined non scmodule method
+
+	    if (isUserDefinedMethod) { // user defined non scmodule method
 	      hNodep hthisparam = new hNode("hthis", hNode::hdlopsEnum::hFunctionParamIO);
 	      hNodep hthistype = new hNode(hNode::hdlopsEnum::hTypeinfo);
 	      const clang::Type * tp = modmethodecls.methodobjtypemap[thismethod];
@@ -438,7 +439,13 @@ namespace systemc_hdl {
 	    
 	    if (hparam_assign_list->child_list.size()>0) { // there were some actual parameters
 	      hNodep htmpf = new hNode( hNode::hdlopsEnum::hCStmt);
-	      xbodyp->Run(m.first->getBody(), htmpf, rnomode); // suppress output of unqualified name
+	      if (isUserDefinedMethod) {
+		xbodyp->Run(m.first->getBody(), htmpf, ruserdefclass, &HDLt); // suppress output of unqualified name
+	      }
+	      else {
+		xbodyp->Run(m.first->getBody(), htmpf,rnomode);
+	      }
+	      
 	      hNodep hfunccstmt = htmpf->child_list.back();  // htmpf is list of vardecls followed by function body in a cstmt
 	      hfunccstmt->child_list.insert(hfunccstmt->child_list.begin(), hparam_assign_list->child_list.begin(), hparam_assign_list->child_list.end());
 	      
@@ -446,7 +453,12 @@ namespace systemc_hdl {
 
 	    }
 	    else {
-	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
+	      if (isUserDefinedMethod) {
+		xbodyp->Run(m.first->getBody(), hfunc, ruserdefclass, &HDLt); // suppress output of unqualified name
+	      }
+	      else {
+		xbodyp->Run(m.first->getBody(), hfunc,rnomode);
+	      }
 	    }
 	  }
 	  // If this function invoked other functions, add them to the list to be generated

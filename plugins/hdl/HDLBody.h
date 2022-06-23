@@ -19,6 +19,8 @@
 
 #include "SystemCClang.h"
 #include "hNode.h"
+#include "HDLType.h"
+
 // clang-format on
 
 using namespace clang;
@@ -28,8 +30,8 @@ using namespace systemc_clang;
 using namespace hnode;
 
 namespace systemc_hdl {
-  typedef enum { rnomode, rmethod, rmodinit, rthread } HDLBodyMode;
-  
+  typedef enum { rnomode, rmethod, rmodinit, rthread, ruserdefclass } HDLBodyMode;
+
   class HDLBody: public RecursiveASTVisitor <HDLBody> {
   public:
     HDLBody(clang::DiagnosticsEngine &diag_engine,
@@ -40,7 +42,7 @@ namespace systemc_hdl {
 
     virtual ~HDLBody();
 
-    void Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode);
+    void Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode, HDLType *HDLt_userclassesp = NULL);
         
     bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
     bool TraverseStmt(Stmt *stmt);
@@ -92,6 +94,13 @@ namespace systemc_hdl {
     
     HDLBodyMode thismode;
     hfunc_name_map_t &allmethodecls_;
+
+    HDLType *HDLt_userclassesp_;
+
+    inline bool isUserClass(const Type * classrectype) {
+      return  ((thismode == ruserdefclass) && (HDLt_userclassesp_ != NULL) &&
+	       (HDLt_userclassesp_->usertype_info.userrectypes.count(classrectype)));
+    }
     
     bool isLogicalOp(clang::OverloadedOperatorKind opc);
     

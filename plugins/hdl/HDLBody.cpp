@@ -1,7 +1,7 @@
 // clang-format off
 #include "SystemCClang.h"
 #include "HDLBody.h"
-#include "HDLType.h"
+//#include "HDLType.h"
 #include "clang/Basic/OperatorKinds.h"
 #include "clang/Basic/Diagnostic.h"
 #include "APIntUtils.h"
@@ -42,12 +42,13 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor\n");
     }
 
-  void HDLBody::Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode) 
+  void HDLBody::Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode, HDLType *HDLt_userclassesp) 
  
   {
     LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody Run Method\n");
     h_ret = NULL;
     add_info = (runmode == rmodinit);
+    HDLt_userclassesp_ = HDLt_userclassesp;
     thismode = runmode;
     methodecls.clear(); // clear out old state
     methodecls.set_prefix("_func_");
@@ -728,22 +729,35 @@ namespace systemc_hdl {
   }
 
   bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr) {
+
+    bool founduserclass = false;
     LLVM_DEBUG(llvm::dbgs() << "In TraverseMemberExpr\n");
     string nameinfo = (memberexpr->getMemberNameInfo()).getName().getAsString();
     LLVM_DEBUG(llvm::dbgs() << "name is " << nameinfo
 	       << ", base and memberdecl trees follow\n");
     LLVM_DEBUG(llvm::dbgs() << "base is \n");
     LLVM_DEBUG(memberexpr->getBase()->dump(llvm::dbgs(), ast_context_); );
-    LLVM_DEBUG(llvm::dbgs() << "memberdecl is \n");
+    LLVM_DEBUG(llvm::dbgs() << "memberdecl is " << memberexpr->getMemberDecl() << " \n");
+    // if field decl, check if parent is a userdefined type XXXXXX
     LLVM_DEBUG(memberexpr->getMemberDecl()->dump(llvm::dbgs()));
+    if ( FieldDecl * fld = dyn_cast<FieldDecl>( memberexpr->getMemberDecl())) {
+      LLVM_DEBUG(llvm::dbgs() << "and field decl parent record pointer is " << fld->getParent() << "\n");
+      const Type * classrectype = fld->getParent()->getTypeForDecl();
+      LLVM_DEBUG(llvm::dbgs() << "and field decl parent record type is " << classrectype << "\n");
+      if (isUserClass(classrectype)) {
+	LLVM_DEBUG(llvm::dbgs() << "member expr, found user defined class in usertypes " << classrectype << "\n");
+	founduserclass = true;
+      }
+    }
 
+    string thisref = founduserclass? "hthis##":"";
     // traverse the memberexpr base in case it is a nested structure
     hNodep old_h_ret = h_ret;
     TraverseStmt(memberexpr->getBase());  // get hcode for the base
     if (h_ret != old_h_ret) {
       if (h_ret->h_op == hNode::hdlopsEnum::hVarref){
 	// concatenate base name in front of field name
-	hNodep memexprnode = new hNode(h_ret->h_name + "##" + nameinfo,
+	hNodep memexprnode = new hNode(thisref + h_ret->h_name + "##" + nameinfo,
 				       hNode::hdlopsEnum::hVarref);
 	delete h_ret;
 	h_ret = memexprnode;  // replace returned h_ret with single node, field
@@ -759,12 +773,12 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "vname lookup of memberdecl is null, assuming field reference\n");
 	  hNodep hfieldref = new hNode(hNode::hdlopsEnum::hFieldaccess);
 	  hfieldref->append(h_ret);
-	  hfieldref->append(new hNode(nameinfo, hNode::hdlopsEnum::hField));
+	  hfieldref->append(new hNode(thisref+nameinfo, hNode::hdlopsEnum::hField));
 	  h_ret = hfieldref;
 	  return true;
 	}
 	else {
-	  hNodep memexprnode = new hNode(newname==""? nameinfo: newname, hNode::hdlopsEnum::hVarref);
+	  hNodep memexprnode = new hNode(newname==""? thisref+nameinfo: thisref+newname, hNode::hdlopsEnum::hVarref);
 	  memexprnode->child_list.push_back(h_ret);
 	  h_ret = memexprnode;
 	  return true;
@@ -776,7 +790,7 @@ namespace systemc_hdl {
     string newname = FindVname(memberexpr->getMemberDecl());
     LLVM_DEBUG(llvm::dbgs() << "member expr new name is " << newname << "\n");
 
-    h_ret = new hNode(newname.empty()? nameinfo : newname, hNode::hdlopsEnum::hVarref);
+    h_ret = new hNode(newname.empty()? thisref+nameinfo : thisref+newname, hNode::hdlopsEnum::hVarref);
 
     return true;
   }
