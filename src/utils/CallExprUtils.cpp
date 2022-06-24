@@ -7,25 +7,36 @@
 namespace sc_ast_matchers {
 namespace utils {
 
-bool isInNamespace(const clang::CallExpr *cexpr, llvm::StringRef name) {
+  using namespace clang;
+  using namespace llvm;
+
+bool isInNamespace(const CallExpr *cexpr, llvm::StringRef name) {
   if (!cexpr) {
     return false;
   }
-  if (const clang::FunctionDecl *fd = cexpr->getDirectCallee()) {
-    if (auto dc = fd->getDeclContext()) {
-      if (dc->isNamespace()) {
-        if (const auto *nd = llvm::cast<clang::NamespaceDecl>(dc)) {
-          auto iinfo = nd->getIdentifier();
-          LLVM_DEBUG(llvm::dbgs() << "name is " << iinfo->getName() << " for "
-          << fd->getQualifiedNameAsString() ;);
-          return iinfo->isStr(name);
-        }
-      }
+
+  /// This is a CXXMemberCallExpr.
+  DeclContext *dc{nullptr};
+  if (auto call = llvm::cast<CXXMemberCallExpr>(cexpr)) {
+    if (auto rdecl = call->getRecordDecl()) {
+      dc = const_cast<DeclContext *>(rdecl->getLexicalParent());
+    }
+  } else {
+    /// This is a function call.
+    if (const FunctionDecl *fd = cexpr->getDirectCallee()) {
+      dc = const_cast<DeclContext *>(fd->getDeclContext());
+    }
+  }
+
+  if (dc && dc->isNamespace()) {
+    if (const auto *nd = llvm::dyn_cast<NamespaceDecl>(dc)) {
+      auto iinfo = nd->getIdentifier();
+      LLVM_DEBUG(llvm::dbgs() << "name is " << iinfo->getName() << " ";);
+      return iinfo->isStr(name);
     }
   }
 
   return false;
 }
-
 }  // namespace utils
 }  // namespace sc_ast_matchers
