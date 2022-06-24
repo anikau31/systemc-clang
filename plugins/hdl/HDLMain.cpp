@@ -413,7 +413,7 @@ namespace systemc_hdl {
 	      // special case if sc_min, max, abs, treat parameters as input
 	      // unfortunately simulation library makes them I/O
 	      //if (mutil.is_sc_macro(m.first)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
-	      if (mutil.is_sc_macro(m.second.oldn)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
+	      if (mutil.isSCMacro(m.second.oldn)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      else if (vardecl->getType()->isReferenceType())
 		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
 	      else { // handle actual parameter

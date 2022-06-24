@@ -5,6 +5,8 @@
 #include "clang/Basic/OperatorKinds.h"
 #include "clang/Basic/Diagnostic.h"
 #include "APIntUtils.h"
+#include "CallExprUtils.h"
+
 #include <unordered_map>
 // clang-format on
 
@@ -623,6 +625,10 @@ namespace systemc_hdl {
 	  methodecls.add_entry(methdcl, qualmethodname,  h_callp);
 	  //string objstr = objtyp.getAsString(Policy);
 	  //lutil.make_ident(objstr);
+	  // bool a = !isCXXMemberCallExprSystemCCall(callexpr), b =sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") ;
+	  
+	  // LLVM_DEBUG(llvm::dbgs() << "is sysc call " << qualmethodname << " old, new "<< a
+	  // 	     << " " << b << " end\n");
 	  if (!isCXXMemberCallExprSystemCCall(callexpr)) methodecls.methodobjtypemap[methdcl] = typeformethodclass;
 	}
 	else h_callp->set(tmpname);

@@ -302,7 +302,7 @@ namespace hnode {
 
 
     
-    static inline bool is_sc_macro(const std::string &str_in) {
+    static inline bool isSCMacro(const std::string &str_in) {
       string sc_macro_strings [] = {"sc_min", "sc_max", "sc_abs"};
       for (string str : sc_macro_strings) {
 	if (str_in.find(str) != string::npos) return true;
