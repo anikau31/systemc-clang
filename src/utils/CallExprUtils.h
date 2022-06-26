@@ -8,11 +8,20 @@
 
 namespace clang {
 class CallExpr;
+class Type;
 };  // namespace clang
 
 namespace sc_ast_matchers {
 namespace utils {
 
+/*
+ * \brief Check if a Type is declared within a given namespace.
+ */
+bool isInNamespace(const clang::Type *tp, llvm::StringRef name);
+
+/*
+ * \brief Check if a CallExpr is declared within a given namespace.
+ */
 bool isInNamespace(const clang::CallExpr *cexpr, llvm::StringRef name);
 
 }  // namespace utils
