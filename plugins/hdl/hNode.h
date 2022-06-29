@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include <set>
 
+#include "CallExprUtils.h"
+
 using namespace systemc_clang;
 
 //!
@@ -249,15 +251,23 @@ namespace hnode {
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
 
     }
-    inline bool isSCBuiltinType(const string &tstring){
+    inline bool isSCBuiltinType(const string &tstring, const Type *typ=NULL){
       // linear search sorry, but at least the length
       // isn't hard coded in ...
-       int found = tstring.find_last_of(" "); // skip qualifiers if any
+      bool ret = false;
+      bool tmpisnamespace = sc_ast_matchers::utils::isInNamespace(typ, "sc_dt");
+      int found = tstring.find_last_of(" "); // skip qualifiers if any
       for (int i=0; i < numstr; i++) {
-	if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i])
-	  return true;
+	if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i]) {
+	  ret = true;
+	  break;
+	}
       }
-      return false;
+      if ((typ != NULL) && (tmpisnamespace != ret)) {
+	LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType: '" << tstring << "' (" << tmpisnamespace <<
+		   ", " << ret << ")\n");
+      }
+      return ret;
     }
 
     inline bool isSCFunc(const string &tstring) {
@@ -271,20 +281,31 @@ namespace hnode {
       else if (found == (size_t) 0) return true;
       else return false;
     }
-     
-    static inline bool isSCType(const string &tstring) {
+
+    static inline bool isSCType(const string &tstring, const clang::Type *typ = NULL) {
       // linear search and the length is hard coded in ...
       // used in the method name logic.
       // can't use set as we are searching for a substring of tstring
       
      string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_rvd", "sc_inout",
 			  "sc_signal", "sc_subref", "sc_dt"};
+     bool foundsctype = false;
+     
+     for (string onestring : strings) {
+       if (tstring.find(onestring)!=string::npos) {
+	 foundsctype = true;
+	 break;
+       }
+       else foundsctype = false;
+     }
+     if (typ != NULL) {
+       bool tmpsctype = sc_ast_matchers::utils::isInNamespace(typ, "sc_core");
+       if (tmpsctype != foundsctype)
+	 LLVM_DEBUG(llvm::dbgs() << "isSCType: '" << tstring << "' (" << tmpsctype <<", " << foundsctype << ")\n");
 
-      for (string onestring : strings) {
-      	if (tstring.find(onestring)!=string::npos)
-      	  return true;
-      }
-      return false;
+     }
+     return foundsctype;
+     
       /* if (tstring.substr(0, 6) == "class ") // this is so stupid */
       /* 	tstring = tstring.substr(6, tstring.length() - 6); */
       /* //return (tstring.find("sc_in")!=string::npos)  */

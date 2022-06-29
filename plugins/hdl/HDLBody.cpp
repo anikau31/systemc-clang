@@ -203,6 +203,11 @@ namespace systemc_hdl {
     else {
       if (isa<CXXConstructExpr>(stmt)) {
 	CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
+	// CXXConstructExpr argument not yet handled
+	// LLVM_DEBUG(llvm::dbgs()
+	// 	   << "CXXConstructExpr found, expr below\n");
+	// LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
+	 
 	if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
 	  LLVM_DEBUG(llvm::dbgs()
 		     << "CXXConstructExpr followed by integer literal found\n");
@@ -286,8 +291,7 @@ namespace systemc_hdl {
       if (DI) {
 	auto *vardecl = dyn_cast<VarDecl>(DI);
 	if (!vardecl) continue;
-	ProcessVarDecl(
-		       vardecl);  // adds it to the list of renamed local variables
+	ProcessVarDecl(vardecl);  // adds it to the list of renamed local variables
       }
     // h_ret = NULL;
     return true;
@@ -296,7 +300,6 @@ namespace systemc_hdl {
   bool HDLBody::ProcessVarDecl(VarDecl *vardecl) {
     LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl var name is " << vardecl->getName()
 	       << "\n");
-
     // create head node for the vardecl
     hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
 
@@ -319,6 +322,8 @@ namespace systemc_hdl {
     hNodep h_vardecl = h_varlist->child_list.back();
 
     if (Expr *declinit = vardecl->getInit()) {
+      LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl has an init:\n");
+      LLVM_DEBUG(declinit->dump(llvm::dbgs(), ast_context_));
       TraverseStmt(declinit);
     }
 
@@ -553,7 +558,7 @@ namespace systemc_hdl {
     CXXRecordDecl* cdecl = callexpr->getRecordDecl();
     const Type * typeformethodclass = cdecl->getTypeForDecl();
     LLVM_DEBUG(llvm::dbgs() << "Type pointer from RecordDecl is " << typeformethodclass << "\n");
-	       
+    
     QualType argtyp;
     if (dyn_cast<ImplicitCastExpr>(rawarg)) { // cast to a specfic type
       argtyp = rawarg->getType();
@@ -601,6 +606,8 @@ namespace systemc_hdl {
     // if type of x in x.f(5) is primitive sc type (sc_in, sc_out, sc_inout,
     // sc_signal and method name is either read or write, generate a SigAssignL|R
     // -- FIXME need to make sure it is templated to a primitive type
+
+    //lutil.isSCType(qualmethodname, typeformethodclass);
 
     if ((methodname == "read") && (lutil.isSCType(qualmethodname)))
       opc = hNode::hdlopsEnum::hSigAssignR;

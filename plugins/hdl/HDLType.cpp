@@ -76,7 +76,7 @@ void HDLType::SCtype2hcode(string prefix, Tree<TemplateType> *template_argtp,
 
    if (checkusertype(template_argtp->getRoot(), template_argtp, tmps)) {
     h_typ->set(tmps);
-    return;
+    return; // we are not pushing into the template tree parameters for user defined types since template specialization record is saved
   }
 
   // template arguments seem to be stored in reverse order
@@ -114,7 +114,7 @@ void HDLType::generatetype(
  
   if (checkusertype(node, treehead, tmps)) {
     nodetyp->set(tmps);
-    return;
+    return; // we are not pushing into the template tree parameters for user defined types since template specialization record is saved
   }
   auto const vectreeptr{treehead->getChildren(node)};
   // template arguments seem to be stored in reverse order
@@ -129,7 +129,9 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
 			      systemc_clang::Tree<systemc_clang::TemplateType> *const &treehead, string &tmps)
 {
   bool retval = false;
-   if (!(tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps) ||
+  const Type *typ = node->getDataPtr()->getTypePtr();
+  //if (!(tutil.isSCType(tmps, typ) || tutil.isSCBuiltinType(tmps, typ) ||
+  if (!(tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps) ||
         tutil.isposint(tmps) || tutil.isTypename(tmps))) {
     string tmps_full = treehead->dft();
     size_t type_ix = tmps_full.find(tmps);
