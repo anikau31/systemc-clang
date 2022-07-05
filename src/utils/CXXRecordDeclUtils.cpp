@@ -5,10 +5,34 @@
 #include "clang/AST/ExprCXX.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/ADT/StringSet.h"
+
 #include <queue>
 
 namespace sc_ast_matchers {
 namespace utils {
+
+bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce, const std::vector<llvm::StringRef> &names) {
+  if (!mce) {
+    return false;
+  }
+
+  if (auto mdecl = mce->getMethodDecl()) {
+    if (auto rdecl = mdecl->getParent()) {
+      auto base_names{getAllBaseClassNames(rdecl)};
+
+      for (const auto &decl : base_names) {
+        auto decl_name{ decl->getNameAsString()};
+        for (auto &n : names) {
+          if (decl_name == n) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
 
 
 bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce) {
