@@ -536,7 +536,7 @@ namespace systemc_hdl {
   }
 
   bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
-    bool is_overridden = false;
+    bool is_explicitly_overridden = false;
         // this doesn't seem to help
     LangOptions LangOpts;
 
@@ -562,7 +562,7 @@ namespace systemc_hdl {
     QualType argtyp;
     if (dyn_cast<ImplicitCastExpr>(rawarg)) { // cast to a specfic type
       argtyp = rawarg->getType();
-      is_overridden = true;
+      is_explicitly_overridden = true;
     }
     else {
       argtyp = objarg->getType();
@@ -573,10 +573,9 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "... and object type is " << objtyp.getAsString(Policy)
 	       << "\n");
     string methodname = "NoMethod", qualmethodname = "NoQualMethod";
-    CXXRecordDecl *recdecl = callexpr->getRecordDecl();
-    LLVM_DEBUG(llvm::dbgs() << "here is method record decl name " << recdecl->getNameAsString() << "\n");
+
     CXXMethodDecl *methdcl = callexpr->getMethodDecl();
-    if ((!is_overridden) && (overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
+    if ((!is_explicitly_overridden) && (overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
       methdcl = const_cast<CXXMethodDecl *>(overridden_method_map_[methdcl]);
     }
      LLVM_DEBUG(llvm::dbgs() << "methoddecl follows\n");
