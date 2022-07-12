@@ -10,7 +10,7 @@ namespace utils {
 using namespace clang;
 using namespace llvm;
 
-bool isInNamespace(const clang::Type *tp, llvm::StringRef name) {
+bool isInNamespace(const clang::Type *tp, std::vector<llvm::StringRef> &names) {
   if (!tp) {
     return false;
   }
@@ -49,7 +49,12 @@ bool isInNamespace(const clang::Type *tp, llvm::StringRef name) {
     if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dc)) {
       auto iinfo = nd->getIdentifier();
       llvm::dbgs() << "@@ name is " << iinfo->getName() << " for ";
-      return iinfo->isStr(name);
+      for (const auto name: names) {
+        if (iinfo->isStr(name)) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 
