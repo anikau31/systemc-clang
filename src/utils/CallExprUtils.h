@@ -5,6 +5,7 @@
 #define DEBUG_TYPE "CallExprUtils"
 
 #include "llvm/ADT/StringRef.h"
+#include <vector>
 
 namespace clang {
 class CallExpr;
@@ -17,7 +18,7 @@ namespace utils {
 /*
  * \brief Check if a Type is declared within a given namespace.
  */
-bool isInNamespace(const clang::Type *tp, llvm::StringRef name);
+bool isInNamespace(const clang::Type *tp, std::vector<llvm::StringRef> &names);
 
 /*
  * \brief Check if a CallExpr is declared within a given namespace.
