@@ -358,7 +358,9 @@ namespace systemc_hdl {
     string exprtypstr = expr->getType().getAsString();
     LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
 	       << opcodestr << "\n");
+    checktypematch(exprtypstr, expr->getType(), bothofthem); // 
     if ((opcodestr == ",") && (lutil.isSCType(exprtypstr) || lutil.isSCBuiltinType(exprtypstr))){
+      //if ((opcodestr == ",") && (lutil.isSCType(expr->getType()){
       LLVM_DEBUG(llvm::dbgs() << "found comma, with sc type, expr follows\n");
       LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_); );
       h_binop->set("concat");

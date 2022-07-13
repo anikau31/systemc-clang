@@ -251,11 +251,40 @@ namespace hnode {
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
 
     }
+
+    enum typetocheck {issctype, isscbuiltintype, bothofthem, isscfunc, isscmacro};
+
+    inline void checktypematch(std::string str, const Type *typ, typetocheck t2c){
+      bool dotheymatch = false;
+      switch (t2c) {
+      case issctype: { dotheymatch = isSCType(typ) == isSCType(str); break;}
+      case isscbuiltintype: { dotheymatch = isSCType(typ) == isSCBuiltinType(str); break;}
+      case bothofthem:  { dotheymatch = isSCType(typ) == (isSCType(str) || isSCBuiltinType(str)); break; }
+      case isscfunc: { dotheymatch = isSCType(typ) == isSCFunc(str); break;}
+      case isscmacro: {dotheymatch = isSCType(typ) == isSCMacro(str); break;}
+      default: ;
+      }
+      LLVM_DEBUG(llvm::dbgs() << "checktypematch returns " << dotheymatch << "\n");
+    }
+    
+    inline bool isSCType(const Type *typ) {
+      static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
+      static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base",
+	  "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if",
+	  "sc_prim_channel", "sc_thread_process"};
+      static std::vector<llvm::StringRef> rvd{"sc_rvd"};
+
+      if (sc_ast_matchers::utils::isInNamespace(typ, sc_dt_ns)) return true;
+      if (sc_ast_matchers::utils::isInNamespace(typ, ports_signals_wait)) return true;
+      if (sc_ast_matchers::utils::isInNamespace(typ, rvd)) return true;
+      return false;
+    }
+    
     inline bool isSCBuiltinType(const string &tstring, const Type *typ=NULL){
       // linear search sorry, but at least the length
       // isn't hard coded in ...
       bool ret = false;
-      bool tmpisnamespace = sc_ast_matchers::utils::isInNamespace(typ, "sc_dt");
+      bool tmpisnamespace = sc_ast_matchers::utils::isInNamespace(typ, std::vector<llvm::StringRef> {"sc_dt"});
       int found = tstring.find_last_of(" "); // skip qualifiers if any
       for (int i=0; i < numstr; i++) {
 	if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i]) {
@@ -287,7 +316,7 @@ namespace hnode {
       // used in the method name logic.
       // can't use set as we are searching for a substring of tstring
       
-     string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_rvd", "sc_inout",
+     string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_inout",
 			  "sc_signal", "sc_subref", "sc_dt"};
      bool foundsctype = false;
      
@@ -299,7 +328,7 @@ namespace hnode {
        else foundsctype = false;
      }
      if (typ != NULL) {
-       bool tmpsctype = sc_ast_matchers::utils::isInNamespace(typ, "sc_core");
+       bool tmpsctype = sc_ast_matchers::utils::isInNamespace(typ, "sc_dt");
        if (tmpsctype != foundsctype)
 	 LLVM_DEBUG(llvm::dbgs() << "isSCType: '" << tstring << "' (" << tmpsctype <<", " << foundsctype << ")\n");
 
