@@ -615,8 +615,10 @@ namespace systemc_hdl {
 
     //bool inns_result = sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") || sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt");
     bool foundsctype = lutil.isSCType(qualmethodname, typeformethodclass);
-    if (lutil.isSCType(callexpr) != foundsctype) {
-      LLVM_DEBUG(llvm::dbgs() << "callexpr isinnamespace nonmatch for " << qualmethodname << "\n");
+    bool newfoundsctype = lutil.isSCType(callexpr);
+    if (foundsctype != newfoundsctype ) {
+      LLVM_DEBUG(llvm::dbgs() << "callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
+      //foundsctype = newfoundsctype; // ADD THIS TO TEST SEGV
     }
     if ((methodname == "read") && foundsctype)
       opc = hNode::hdlopsEnum::hSigAssignR;

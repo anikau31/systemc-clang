@@ -270,8 +270,8 @@ namespace systemc_hdl {
 				hNode::hdlopsEnum::hModinitblock);
     
       xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
-      //LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
-      //LLVM_DEBUG(h_constructor->print(llvm::dbgs()));
+      LLVM_DEBUG(llvm::dbgs() << "HDL output for module constructor body\n");
+      LLVM_DEBUG(h_constructor->print(llvm::dbgs()));
       HDLConstructorHcode hcxxbody;
       hNodep modinithp = hcxxbody.ProcessCXXConstructorHcode(h_constructor);
       if (modinithp->child_list.size() != 0) { // if there was an initblock

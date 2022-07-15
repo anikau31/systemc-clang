@@ -30,13 +30,19 @@ namespace systemc_hdl {
     return (hp->getopc() == hNode::hdlopsEnum::hBinop) &&
       (hp->h_name == pbstring);
   }
+  
   static inline bool isInitSensitem(hNodep hp) {
     return (hp->getopc() == hNode::hdlopsEnum::hBinop) &&
       (hp->h_name == sensop);
   }
 
+    static inline bool isMorF(hNode::hdlopsEnum hop) {
+    return (hop == hNode::hdlopsEnum::hMethodCall) ||
+      (hop == hNode::hdlopsEnum::hBuiltinFunction);
+  }
+  
   static inline int isThreadSensitem(hNodep hp) {
-    if (hp->getopc() == hNode::hdlopsEnum::hMethodCall)
+    if (isMorF(hp->getopc()))
       if (hp->getname().find( "sc_core__sc_module__async_reset_signal_is")!=std::string::npos)
 	return reset_async;
       else if (hp->getname().find( "sc_core__sc_module__sync_reset_signal_is")!=std::string::npos)
@@ -44,11 +50,11 @@ namespace systemc_hdl {
       else return 0;
     else return 0;
   }
-  
+
   static inline bool isMethodCall(hNodep hp) {
     return ((hp->getopc() == hNode::hdlopsEnum::hVarAssign) &&
 	    (hp->child_list.size() == 2) &&
-	    (hp->child_list[1]->h_op == hNode::hdlopsEnum::hMethodCall));
+	    isMorF(hp->child_list[1]->h_op) );
   }
 
   static inline bool isEdge(string &s) {

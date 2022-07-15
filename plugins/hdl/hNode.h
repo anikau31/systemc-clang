@@ -300,9 +300,15 @@ namespace hnode {
     }
 
     inline bool isSCType(const CallExpr *callexpr) {
-      
-      return sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") ||
-	sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt");
+      if (isa<CXXMemberCallExpr>(callexpr)) {
+	LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) is a membercallexpr\n");
+	return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
+      }
+      else {
+	LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) not a membercallexpr\n");
+	return sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") || 
+	  sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt"); 
+      }
     }
     
     inline bool isSCBuiltinType(const string &tstring, const Type *typ=NULL){
