@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <set>
+#include <unordered_set>
 
 #include "CallExprUtils.h"
 
@@ -212,12 +213,18 @@ namespace hnode {
   
   };
 
+  // remember type pointers 
+  
+
   //!
   //! The util class provides small utility functions to generate and
   //! recognize C++ and SystemC conformant identifiers.
   //!
   
-  class util { 
+  class util {
+  private:
+    std::unordered_set<const Type *> types_seen = {};
+
   public:
     const static int numstr = 7;
     const string scbuiltintype [numstr] = {
@@ -259,32 +266,56 @@ namespace hnode {
       switch (t2c) {
       case issctype: { dotheymatch = isSCType(typ) == isSCType(str); break;}
       case isscbuiltintype: { dotheymatch = isSCType(typ) == isSCBuiltinType(str); break;}
-      case bothofthem:  { dotheymatch = isSCType(typ) == (isSCType(str) || isSCBuiltinType(str)); break; }
+      case bothofthem:  { dotheymatch = (isSCType(typ) == (isSCType(str) || isSCBuiltinType(str))); break; }
       case isscfunc: { dotheymatch = isSCType(typ) == isSCFunc(str); break;}
       case isscmacro: {dotheymatch = isSCType(typ) == isSCMacro(str); break;}
       default: ;
       }
-      LLVM_DEBUG(llvm::dbgs() << "checktypematch returns " << dotheymatch << "\n");
+      if (!dotheymatch) {
+
+	LLVM_DEBUG(llvm::dbgs() << "checktypematch nonmatch on " << str << " isInNamespace returns " << isSCType(typ)<<"\n");
+	LLVM_DEBUG(typ->dump());
+      }
     }
     
     inline bool isSCType(const Type *typ) {
+      
+      if  (types_seen.count(typ) > 0) {
+	LLVM_DEBUG(llvm::dbgs() << "isSCType(typ) found type pointer in set " << typ << "\n");
+	return true;
+      }
       static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
       static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base",
 	  "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if",
 	  "sc_prim_channel", "sc_thread_process"};
       static std::vector<llvm::StringRef> rvd{"sc_rvd"};
 
-      if (sc_ast_matchers::utils::isInNamespace(typ, sc_dt_ns)) return true;
-      if (sc_ast_matchers::utils::isInNamespace(typ, ports_signals_wait)) return true;
-      if (sc_ast_matchers::utils::isInNamespace(typ, rvd)) return true;
+      if (sc_ast_matchers::utils::isInNamespace(typ, sc_dt_ns) ||
+	  sc_ast_matchers::utils::isInNamespace(typ, ports_signals_wait) ||
+	  sc_ast_matchers::utils::isInNamespace(typ, rvd)) {
+	types_seen.insert(typ);
+	return true;
+      }
       return false;
+    }
+
+    inline bool isSCType(const CallExpr *callexpr) {
+      
+      return sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") ||
+	sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt");
     }
     
     inline bool isSCBuiltinType(const string &tstring, const Type *typ=NULL){
       // linear search sorry, but at least the length
       // isn't hard coded in ...
+
+      if ((typ != NULL) && (types_seen.count(typ) > 0)) {
+	//LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType(typ) found type pointer in set " << tstring << " " << typ << "\n");
+	return true;
+      }
       bool ret = false;
-      bool tmpisnamespace = sc_ast_matchers::utils::isInNamespace(typ, std::vector<llvm::StringRef> {"sc_dt"});
+      std::vector<llvm::StringRef> scdt{"sc_dt"};
+      bool tmpisnamespace = sc_ast_matchers::utils::isInNamespace(typ, scdt);
       int found = tstring.find_last_of(" "); // skip qualifiers if any
       for (int i=0; i < numstr; i++) {
 	if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i]) {
@@ -295,6 +326,10 @@ namespace hnode {
       if ((typ != NULL) && (tmpisnamespace != ret)) {
 	LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType: '" << tstring << "' (" << tmpisnamespace <<
 		   ", " << ret << ")\n");
+      }
+      if (ret && (typ != NULL)) {
+	types_seen.insert(typ);
+	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << "size = " << types_seen.size() << "\n");
       }
       return ret;
     }
@@ -311,48 +346,44 @@ namespace hnode {
       else return false;
     }
 
-    static inline bool isSCType(const string &tstring, const clang::Type *typ = NULL) {
+     inline bool isSCType(const string &tstring, const clang::Type *typ = NULL) {
       // linear search and the length is hard coded in ...
       // used in the method name logic.
       // can't use set as we are searching for a substring of tstring
       
      string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_inout",
 			  "sc_signal", "sc_subref", "sc_dt"};
+     
+     if ((typ != NULL) && (types_seen.count(typ) > 0)) {
+       //LLVM_DEBUG(llvm::dbgs() << "isSCType(str, typ) found type pointer in set " << tstring << " " << typ << "\n");
+       return true;
+     }
      bool foundsctype = false;
      
      for (string onestring : strings) {
        if (tstring.find(onestring)!=string::npos) {
 	 foundsctype = true;
+	 if (typ != NULL) {
+	   types_seen.insert(typ);
+	   LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	 }
 	 break;
        }
        else foundsctype = false;
      }
      if (typ != NULL) {
-       bool tmpsctype = sc_ast_matchers::utils::isInNamespace(typ, "sc_dt");
+       std::vector<llvm::StringRef> scdt{"sc_dt"};
+       bool tmpsctype = sc_ast_matchers::utils::isInNamespace(typ, scdt);
        if (tmpsctype != foundsctype)
 	 LLVM_DEBUG(llvm::dbgs() << "isSCType: '" << tstring << "' (" << tmpsctype <<", " << foundsctype << ")\n");
-
      }
+
      return foundsctype;
-     
-      /* if (tstring.substr(0, 6) == "class ") // this is so stupid */
-      /* 	tstring = tstring.substr(6, tstring.length() - 6); */
-      /* //return (tstring.find("sc_in")!=string::npos)  */
-      /* return ((tstring.substr(0, 12) == "sc_core::sc_") || */
-      /* 	      (tstring.substr(0, 5) == "sc_in") || */
-      /* 	      (tstring.substr(0, 9) == "sc_rvd_in") || */
-      /* 	      (tstring.substr(0, 6) == "sc_out") || */
-      /* 	      (tstring.substr(0, 10) == "sc_rvd_out") || */
-      /* 	      (tstring.substr(0, 8) == "sc_inout") || */
-      /* 	      (tstring.substr(0, 9) == "sc_signal") || */
-      /* 	      (tstring.substr(0, 6) == "sc_rvd") || */
-      /* 	      (tstring.substr(0, 9) == "sc_subref") || */
-      /* 	      (tstring.substr(0,5) == "sc_dt")); */
     }
 
 
     
-    static inline bool isSCMacro(const std::string &str_in) {
+     inline bool isSCMacro(const std::string &str_in) {
       string sc_macro_strings [] = {"sc_min", "sc_max", "sc_abs"};
       for (string str : sc_macro_strings) {
 	if (str_in.find(str) != string::npos) return true;

@@ -358,8 +358,9 @@ namespace systemc_hdl {
     string exprtypstr = expr->getType().getAsString();
     LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
 	       << opcodestr << "\n");
-    checktypematch(exprtypstr, expr->getType(), bothofthem); // 
-    if ((opcodestr == ",") && (lutil.isSCType(exprtypstr) || lutil.isSCBuiltinType(exprtypstr))){
+    //lutil.checktypematch(exprtypstr, expr->getType().getTypePtr(), lutil.bothofthem); // 
+    if ((opcodestr == ",") && (lutil.isSCType(exprtypstr, expr->getType().getTypePtr() ) ||
+			       lutil.isSCBuiltinType(exprtypstr, expr->getType().getTypePtr()))){
       //if ((opcodestr == ",") && (lutil.isSCType(expr->getType()){
       LLVM_DEBUG(llvm::dbgs() << "found comma, with sc type, expr follows\n");
       LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_); );
@@ -472,6 +473,7 @@ namespace systemc_hdl {
       }
     }
     if (isa<FunctionDecl>(value)) {
+      lutil.checktypematch(name, expr->getType().getTypePtr(), lutil.isscfunc);
       if (!lutil.isSCFunc(name)) {  // similar to method call, skip builtin
 	FunctionDecl *funval = (FunctionDecl *)value;
 	
@@ -609,14 +611,20 @@ namespace systemc_hdl {
     // -- FIXME need to make sure it is templated to a primitive type
 
     //lutil.isSCType(qualmethodname, typeformethodclass);
+    //lutil.checktypematch(qualmethodname, typeformethodclass, lutil.issctype);
 
-    if ((methodname == "read") && (lutil.isSCType(qualmethodname)))
+    //bool inns_result = sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") || sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt");
+    bool foundsctype = lutil.isSCType(qualmethodname, typeformethodclass);
+    if (lutil.isSCType(callexpr) != foundsctype) {
+      LLVM_DEBUG(llvm::dbgs() << "callexpr isinnamespace nonmatch for " << qualmethodname << "\n");
+    }
+    if ((methodname == "read") && foundsctype)
       opc = hNode::hdlopsEnum::hSigAssignR;
-    else if ((methodname == "write") && (lutil.isSCType(qualmethodname)))
+    else if ((methodname == "write") && foundsctype)
       opc = hNode::hdlopsEnum::hSigAssignL;
     else if (methodname == "wait")
       opc = hNode::hdlopsEnum::hWait;
-    else if (lutil.isSCType(qualmethodname)) {  // operator from simulation library
+    else if (foundsctype) {  // operator from simulation library
       opc = hNode::hdlopsEnum::hBuiltinFunction;
     } else {
       opc = hNode::hdlopsEnum::hMethodCall;
@@ -687,10 +695,17 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr, Operator name is "
 	       << operatorname << "\n");
     LLVM_DEBUG(llvm::dbgs() << "Type name " << operatortype << "\n");
-    //LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
+    LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
 
-    if (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype) ||
-	(opcall->getType())->isBuiltinType() || (operatorname == "=") ||
+    //lutil.checktypematch(operatortype, opcall->getType().getTypePtr(), lutil.bothofthem);
+
+    // if (lutil.isSCType(opcall) != lutil.isSCType(operatortype)) {
+    //   LLVM_DEBUG(llvm::dbgs() << "callexpr (operatorcall) isinnamespace nonmatch for " << operatortype << "\n");
+    // }
+    const Type *optypepointer = opcall->getType().getTypePtr();
+    if ((operatorname == "=") || lutil.isSCBuiltinType(operatortype,optypepointer ) ||
+	lutil.isSCType(operatortype, optypepointer) ||
+	(opcall->getType())->isBuiltinType() || 
 	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos))) {
       LLVM_DEBUG(llvm::dbgs() << "Processing operator call type\n");
       // operator for an SC type
