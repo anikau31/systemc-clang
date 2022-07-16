@@ -641,8 +641,8 @@ using namespace sc_ast_matchers::utils;
 
     bool is_sc_check = isSCConstruct(typeformethodclass, callexpr);
 
-    if (is_sc_check) {
-      (llvm::dbgs() << "###### callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
+    if (foundsctype != is_sc_check) {
+      LLVM_DEBUG(llvm::dbgs() << "###### callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
 
     }
      
