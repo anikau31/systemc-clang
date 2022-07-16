@@ -11,7 +11,7 @@
 namespace sc_ast_matchers {
 namespace utils {
 
-bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce, const std::vector<llvm::StringRef> &names) {
+  bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce, const std::vector<llvm::StringRef> &names) {
   if (!mce) {
     return false;
   }

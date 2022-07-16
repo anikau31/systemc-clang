@@ -49,7 +49,7 @@ bool isInNamespace(const clang::Type *tp, std::vector<llvm::StringRef> &names) {
     if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dc)) {
       auto iinfo = nd->getIdentifier();
       //llvm::dbgs() << "@@ name is " << iinfo->getName() << " for ";
-      for (const auto name: names) {
+      for (const auto name : names) {
         if (iinfo->isStr(name)) {
           return true;
         }
@@ -65,7 +65,9 @@ bool isInNamespace(const CallExpr *cexpr, llvm::StringRef name) {
   if (!cexpr) {
     return false;
   }
-
+  std::vector<llvm::StringRef> names{name};
+  return isInNamespace(cexpr->getType().getTypePtr(), names);
+  /*
   /// This is a CXXMemberCallExpr.
   DeclContext *dc{nullptr};
   if (auto call = llvm::cast<CXXMemberCallExpr>(cexpr)) {
@@ -86,8 +88,9 @@ bool isInNamespace(const CallExpr *cexpr, llvm::StringRef name) {
       return iinfo->isStr(name);
     }
   }
+  */
 
-  return false;
+  // return false;
 }
 }  // namespace utils
 }  // namespace sc_ast_matchers

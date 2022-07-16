@@ -6,6 +6,7 @@
 #include "clang/Basic/Diagnostic.h"
 #include "APIntUtils.h"
 #include "CallExprUtils.h"
+#include "CXXRecordDeclUtils.h"
 
 #include <unordered_map>
 // clang-format on
@@ -33,6 +34,23 @@ using namespace hnode;
 //! 
 
 namespace systemc_hdl {
+using namespace sc_ast_matchers::utils;
+
+  bool HDLBody::isSCConstruct(const Type* type, const CXXMemberCallExpr* ce) const {
+    if (!ce) { return false;}
+
+    std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
+    bool is_sc_builtin_t{ isInNamespace(type, sc_dt_ns)};
+
+    std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process"};
+    bool is_ports_signals_wait{isCXXMemberCallExprSystemCCall(ce, ports_signals_wait)};
+
+    std::vector<llvm::StringRef> rvd{"sc_rvd"};
+    bool is_rvd{isCXXMemberCallExprSystemCCall(ce, rvd)};
+
+
+  return is_sc_builtin_t || is_ports_signals_wait || is_rvd;
+  }
 
   HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine,
 		   const ASTContext &ast_context,
@@ -620,6 +638,14 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
       //foundsctype = newfoundsctype; // ADD THIS TO TEST SEGV
     }
+
+    bool is_sc_check = isSCConstruct(typeformethodclass, callexpr);
+
+    if (is_sc_check) {
+      (llvm::dbgs() << "###### callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
+
+    }
+     
     if ((methodname == "read") && foundsctype)
       opc = hNode::hdlopsEnum::hSigAssignR;
     else if ((methodname == "write") && foundsctype)
