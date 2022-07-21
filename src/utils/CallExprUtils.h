@@ -18,7 +18,9 @@ namespace utils {
 /*
  * \brief Check if a Type is declared within a given namespace.
  */
-bool isInNamespace(const clang::Type *tp, std::vector<llvm::StringRef> &names);
+bool isInNamespace(const clang::Type *tp, const std::vector<llvm::StringRef> &names);
+
+bool isInNamespace(const clang::CallExpr *cexpr, const std::vector<llvm::StringRef>& names);
 
 /*
  * \brief Check if a CallExpr is declared within a given namespace.

@@ -281,33 +281,34 @@ namespace hnode {
     inline bool isSCType(const Type *typ) {
       
       if  (types_seen.count(typ) > 0) {
-	LLVM_DEBUG(llvm::dbgs() << "isSCType(typ) found type pointer in set " << typ << "\n");
-	return true;
+        LLVM_DEBUG(llvm::dbgs() << "isSCType(typ) found type pointer in set " << typ << "\n");
+        return true;
       }
       static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
-      static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base",
-	  "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if",
-	  "sc_prim_channel", "sc_thread_process"};
       static std::vector<llvm::StringRef> rvd{"sc_rvd"};
 
-      if (sc_ast_matchers::utils::isInNamespace(typ, sc_dt_ns) ||
-	  sc_ast_matchers::utils::isInNamespace(typ, ports_signals_wait) ||
-	  sc_ast_matchers::utils::isInNamespace(typ, rvd)) {
-	types_seen.insert(typ);
-	return true;
+      static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process"};
+      if (isInNamespace(typ, sc_dt_ns) || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) || isInNamespace(typ, rvd)) {
+          types_seen.insert(typ);
+          return true;
       }
       return false;
     }
 
     inline bool isSCType(const CallExpr *callexpr) {
       if (isa<CXXMemberCallExpr>(callexpr)) {
-	LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) is a membercallexpr\n");
-	return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
+        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) is a membercallexpr\n");
+
+        std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd"};
+        return isCXXMemberCallExprSystemCCall((CXXMemberCallExpr*)callexpr, ports_signals_rvd_wait);
+
+        //return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
       }
       else {
-	LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) not a membercallexpr\n");
-	return sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") || 
-	  sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt"); 
+        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) not a membercallexpr\n");
+        std::vector<llvm::StringRef> core_dt{"sc_core", "sc_dt"};
+
+        return isInNamespace(callexpr, core_dt);
       }
     }
     
@@ -317,25 +318,25 @@ namespace hnode {
 
       if ((typ != NULL) && (types_seen.count(typ) > 0)) {
 	//LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType(typ) found type pointer in set " << tstring << " " << typ << "\n");
-	return true;
+        return true;
       }
       bool ret = false;
       std::vector<llvm::StringRef> scdt{"sc_dt"};
       bool tmpisnamespace = sc_ast_matchers::utils::isInNamespace(typ, scdt);
       int found = tstring.find_last_of(" "); // skip qualifiers if any
       for (int i=0; i < numstr; i++) {
-	if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i]) {
-	  ret = true;
-	  break;
-	}
+      if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i]) {
+        ret = true;
+        break;
+      }
       }
       if ((typ != NULL) && (tmpisnamespace != ret)) {
-	LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType: '" << tstring << "' (" << tmpisnamespace <<
-		   ", " << ret << ")\n");
+        LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType: '" << tstring << "' (" << tmpisnamespace <<
+             ", " << ret << ")\n");
       }
       if (ret && (typ != NULL)) {
-	types_seen.insert(typ);
-	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << "size = " << types_seen.size() << "\n");
+        types_seen.insert(typ);
+        LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << "size = " << types_seen.size() << "\n");
       }
       return ret;
     }

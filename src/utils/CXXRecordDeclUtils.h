@@ -16,13 +16,20 @@ class CXXRecordDecl;
 class CXXCtorInitializer;
 class FieldDecl;
 class CXXMemberCallExpr;
+class Type;
+class CallExpr;
 };  // namespace clang
 
 namespace sc_ast_matchers {
 namespace utils {
 
+bool isCXXMemberCallExprSystemCCall(const clang::Type *type,
+                                    const std::vector<llvm::StringRef> &names);
 bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce, const std::vector<llvm::StringRef> &names);
   bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce);
+
+bool isCXXMemberCallExprSystemCCall(const clang::CallExpr *ce,
+                                    const std::vector<llvm::StringRef> &names);
 
 
 

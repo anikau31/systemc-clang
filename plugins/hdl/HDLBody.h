@@ -70,7 +70,7 @@ class HDLBody : public RecursiveASTVisitor<HDLBody> {
   hNodep NormalizeAssignmentChain(hNodep hinp);
   void NormalizeSwitchStmt(hNodep hswitchbody);
 
-  bool isSCConstruct(const Type* type, const CXXMemberCallExpr* ce) const;
+  // bool isSCConstruct(const Type* type, const CXXMemberCallExpr* ce) const;
   hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
 
   clang::DiagnosticsEngine &diag_e;

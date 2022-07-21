@@ -10,7 +10,7 @@ namespace utils {
 using namespace clang;
 using namespace llvm;
 
-bool isInNamespace(const clang::Type *tp, std::vector<llvm::StringRef> &names) {
+bool isInNamespace(const clang::Type *tp, const std::vector<llvm::StringRef> &names) {
   if (!tp) {
     return false;
   }
@@ -59,6 +59,13 @@ bool isInNamespace(const clang::Type *tp, std::vector<llvm::StringRef> &names) {
   }
 
   return false;
+}
+
+bool isInNamespace(const CallExpr *cexpr, const std::vector<llvm::StringRef>& names) {
+  if (!cexpr) {
+    return false;
+  }
+  return isInNamespace(cexpr->getType().getTypePtr(), names);
 }
 
 bool isInNamespace(const CallExpr *cexpr, llvm::StringRef name) {
