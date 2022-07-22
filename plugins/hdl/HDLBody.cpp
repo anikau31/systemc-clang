@@ -388,7 +388,7 @@ using namespace sc_ast_matchers::utils;
     bool t21 = ((opcodestr == ",") && (lutil.isSCType(expr->getType().getTypePtr() )));
 
     if (t11 != t21) {
-      llvm::dbgs() << "### 1: t11 != t21\n";
+      llvm::dbgs() << "### CHECK1: t11 != t21\n";
         std::cin.get();
     }
     // ========================== END CHECK =====================
@@ -757,7 +757,7 @@ using namespace sc_ast_matchers::utils;
 	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos)));
 
     if (t12 != t22) {
-      llvm::dbgs() << "### 2: t12 != t22\n";
+      llvm::dbgs() << "CHECK### 2: t12 != t22\n";
         std::cin.get();
     }
     // ========================== END CHECK =====================
@@ -795,7 +795,7 @@ using namespace sc_ast_matchers::utils;
 	  bool t23 = ((operatorname == ",") && lutil.isSCType(opcall)); //lutil.isSCType(operatortype));
     
     if (t13 != t23) {
-      llvm::dbgs() << "### 3: t13 != t23\n";
+      llvm::dbgs() << "### CHECK3: t13 != t23\n";
 
       std::cin.get();
     }
