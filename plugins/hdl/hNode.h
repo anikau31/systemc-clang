@@ -271,10 +271,10 @@ namespace hnode {
       case isscmacro: {dotheymatch = isSCType(typ) == isSCMacro(str); break;}
       default: ;
       }
-      if (!dotheymatch) {
 
-	LLVM_DEBUG(llvm::dbgs() << "checktypematch nonmatch on " << str << " isInNamespace returns " << isSCType(typ)<<"\n");
-	LLVM_DEBUG(typ->dump());
+      if (!dotheymatch) {
+        LLVM_DEBUG(llvm::dbgs() << "checktypematch nonmatch on " << str << " isInNamespace returns " << isSCType(typ)<<"\n");
+        LLVM_DEBUG(typ->dump());
       }
     }
     
@@ -285,10 +285,10 @@ namespace hnode {
         return true;
       }
       static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
-      static std::vector<llvm::StringRef> rvd{"sc_rvd"};
+      static std::vector<llvm::StringRef> rvd{"sc_rvd","sc_rvd_in","sc_rvd_out"};
 
       static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process"};
-      if (isInNamespace(typ, sc_dt_ns) || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) || isInNamespace(typ, rvd)) {
+      if (isInNamespace(typ, sc_dt_ns) || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) || isCXXMemberCallExprSystemCCall(typ, rvd)) {
           types_seen.insert(typ);
           return true;
       }
