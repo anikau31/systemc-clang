@@ -25,7 +25,7 @@ namespace utils {
 
 bool isCXXMemberCallExprSystemCCall(const clang::Type *type,
                                     const std::vector<llvm::StringRef> &names);
-bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce, const std::vector<llvm::StringRef> &names);
+// bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce, const std::vector<llvm::StringRef> &names);
   bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce);
 
 bool isCXXMemberCallExprSystemCCall(const clang::CallExpr *ce,

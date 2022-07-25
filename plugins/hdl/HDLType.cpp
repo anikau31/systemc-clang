@@ -13,6 +13,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include <iostream>
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "HDL"
 
@@ -135,9 +136,10 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
   // ========================== CHECK HDLType =====================
   // FIXME: Cleanup
   bool t1 = tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps);
-  bool t2 = tutil.isSCType(typ);
+  bool t2 = tutil.isSCByType(typ);
   if (t1 != t2) {
     llvm::dbgs() << "### CHECK1: old " << t1 << " != new " << t2 << "\n";
+    std::cin.get();
   }
   // ========================== END CHECK =====================
   //

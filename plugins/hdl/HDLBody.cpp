@@ -385,7 +385,7 @@ using namespace sc_ast_matchers::utils;
     // FIXME: Cleanup
     bool t11 = ((opcodestr == ",") && (lutil.isSCType(exprtypstr, expr->getType().getTypePtr() ) ||
 			       lutil.isSCBuiltinType(exprtypstr, expr->getType().getTypePtr())));
-    bool t21 = ((opcodestr == ",") && (lutil.isSCType(expr->getType().getTypePtr() )));
+    bool t21 = ((opcodestr == ",") && (lutil.isSCByType(expr->getType().getTypePtr() )));
 
     if (t11 != t21) {
       llvm::dbgs() << "### CHECK1: t11 != t21\n";
@@ -649,19 +649,14 @@ using namespace sc_ast_matchers::utils;
 
     //bool inns_result = sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") || sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt");
     bool foundsctype = lutil.isSCType(qualmethodname, typeformethodclass);
-    bool newfoundsctype = lutil.isSCType(callexpr);
+    bool newfoundsctype = lutil.isSCByCallExpr(callexpr);// || lutil.isSCType(typeformethodclass);
     if (foundsctype != newfoundsctype ) {
       LLVM_DEBUG(llvm::dbgs() << "callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
+      callexpr->dump();
+      std::cin.get();
       //foundsctype = newfoundsctype; // ADD THIS TO TEST SEGV
     }
 
-    // bool is_sc_check = isSCConstruct(typeformethodclass, callexpr);
-//
-    // if (foundsctype != is_sc_check) {
-      // LLVM_DEBUG(llvm::dbgs() << "###### callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
-//
-    // }
-//
     if ((methodname == "read") && foundsctype)
       opc = hNode::hdlopsEnum::hSigAssignR;
     else if ((methodname == "write") && foundsctype)
@@ -752,8 +747,7 @@ using namespace sc_ast_matchers::utils;
 	lutil.isSCType(operatortype, optypepointer) ||
 	(opcall->getType())->isBuiltinType() || 
 	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos)));
-  bool t22 =  ((operatorname == "=") ||  lutil.isSCType(optypepointer) ||
-	(opcall->getType())->isBuiltinType() || 
+  bool t22 =  ((operatorname == "=") ||  lutil.isSCByType(optypepointer) || (opcall->getType())->isBuiltinType() || 
 	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos)));
 
     if (t12 != t22) {
@@ -792,7 +786,7 @@ using namespace sc_ast_matchers::utils;
 
     // ========================== CHECK 3 =====================
 	  bool t13 = ((operatorname == ",") && (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype)));
-	  bool t23 = ((operatorname == ",") && lutil.isSCType(opcall)); //lutil.isSCType(operatortype));
+	  bool t23 = ((operatorname == ",") && lutil.isSCByCallExpr(opcall)); //lutil.isSCType(operatortype));
     
     if (t13 != t23) {
       llvm::dbgs() << "### CHECK3: t13 != t23\n";

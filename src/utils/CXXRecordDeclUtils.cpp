@@ -19,7 +19,8 @@ bool isCXXMemberCallExprSystemCCall(const clang::CallExpr *ce,
     return false;
   }
   if (auto mce = dyn_cast<CXXMemberCallExpr>(ce)) {
-    return isCXXMemberCallExprSystemCCall(mce, names);
+    const Type* obj_ptr{ mce->getObjectType().getTypePtr()};
+    return isCXXMemberCallExprSystemCCall(obj_ptr, names);
   }
   if (auto oce = dyn_cast<CXXOperatorCallExpr>(ce)) {
     const Decl* decl{ oce->getCalleeDecl()};
@@ -64,31 +65,20 @@ bool isCXXMemberCallExprSystemCCall(const clang::Type *type,
 
   return false;
 }
-
-bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce,
-                                    const std::vector<llvm::StringRef> &names) {
-  if (!mce) {
-    return false;
-  }
-
-  if (auto mdecl = mce->getMethodDecl()) {
-    if (auto rdecl = mdecl->getParent()) {
-      auto base_names{getAllBaseClassNames(rdecl)};
-
-      for (const auto &decl : base_names) {
-        auto decl_name{decl->getNameAsString()};
-        for (auto &n : names) {
-          if (decl_name == n) {
-            return true;
-          }
-        }
-      }
-    }
-  }
-
-  return false;
-}
-
+//
+// bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce,
+                                    // const std::vector<llvm::StringRef> &names) {
+  // if (!mce) {
+    // return false;
+  // }
+//
+  // const Type* obj_ptr{ mce->getObjectType().getTypePtr()};
+  // llvm::dbgs() << "@@@@ obj_ptr\n";
+  // obj_ptr->dump();
+//
+  // return isCXXMemberCallExprSystemCCall(obj_ptr, names);
+// }
+//
 bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce) {
   if (!mce) {
     return false;

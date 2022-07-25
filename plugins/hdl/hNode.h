@@ -10,6 +10,7 @@
 #include <set>
 #include <unordered_set>
 
+#include <iostream>
 #include "CallExprUtils.h"
 
 using namespace systemc_clang;
@@ -264,20 +265,65 @@ namespace hnode {
     inline void checktypematch(std::string str, const Type *typ, typetocheck t2c){
       bool dotheymatch = false;
       switch (t2c) {
-      case issctype: { dotheymatch = isSCType(typ) == isSCType(str); break;}
-      case isscbuiltintype: { dotheymatch = isSCType(typ) == isSCBuiltinType(str); break;}
-      case bothofthem:  { dotheymatch = (isSCType(typ) == (isSCType(str) || isSCBuiltinType(str))); break; }
-      case isscfunc: { dotheymatch = isSCType(typ) == isSCFunc(str); break;}
-      case isscmacro: {dotheymatch = isSCType(typ) == isSCMacro(str); break;}
+      case issctype: { dotheymatch = isSCByType(typ) == isSCType(str); break;}
+      case isscbuiltintype: { dotheymatch = isSCByType(typ) == isSCBuiltinType(str); break;}
+      case bothofthem:  { dotheymatch = (isSCByType(typ) == (isSCType(str) || isSCBuiltinType(str))); break; }
+      case isscfunc: { dotheymatch = isSCByType(typ) == isSCFunc(str); break;}
+      case isscmacro: {dotheymatch = isSCByType(typ) == isSCMacro(str); break;}
       default: ;
       }
 
       if (!dotheymatch) {
         LLVM_DEBUG(llvm::dbgs() << "checktypematch nonmatch on " << str << " isInNamespace returns " << isSCType(typ)<<"\n");
         LLVM_DEBUG(typ->dump());
+        std::cin.get();
+      }
+    }
+ 
+    inline bool isSCByCallExpr(const CallExpr *callexpr) {
+      if (auto mce = dyn_cast<CXXMemberCallExpr>(callexpr)) {
+        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) is a membercallexpr\n");
+
+        std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd", "sc_rvd_in", "sc_rvd_out"};
+        std::vector<llvm::StringRef> core_dt{"sc_dt"};
+        bool t1 = isCXXMemberCallExprSystemCCall(callexpr, ports_signals_rvd_wait);
+        bool t2 = isInNamespace(mce->getObjectType().getTypePtr(), core_dt );
+        llvm::dbgs() << "isSCCall:: CXXMemberCallSCCall " << t1 << " inNS " << t2 << "\n";
+        return t1 || t2;
+
+        //return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
+      }
+      else {
+        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) not a membercallexpr\n");
+        std::vector<llvm::StringRef> core_dt{"sc_core", "sc_dt"};
+
+        return isInNamespace(callexpr, core_dt);
       }
     }
     
+   
+    inline bool isSCByType(const Type *typ) {
+      
+      // if  (types_seen.count(typ) > 0) {
+        // LLVM_DEBUG(llvm::dbgs() << "isSCType(typ) found type pointer in set " << typ << "\n");
+        // return true;
+      // }
+      llvm::dbgs() << "@@@@ isSCT\n";
+      static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
+      static std::vector<llvm::StringRef> rvd{"sc_rvd","sc_rvd_in","sc_rvd_out"};
+      static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base", "sc_signal_in_if", 
+        "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process"};
+      if (isInNamespace(typ, sc_dt_ns) 
+          || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) 
+          || isCXXMemberCallExprSystemCCall(typ, rvd)) {
+   //       types_seen.insert(typ);
+          return true;
+      }
+      return false;
+    }
+
+
+
     inline bool isSCType(const Type *typ) {
       
       if  (types_seen.count(typ) > 0) {
@@ -299,10 +345,14 @@ namespace hnode {
       if (isa<CXXMemberCallExpr>(callexpr)) {
         LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) is a membercallexpr\n");
 
-        std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd"};
-        return isCXXMemberCallExprSystemCCall((CXXMemberCallExpr*)callexpr, ports_signals_rvd_wait);
+        std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd", "sc_rvd_in", "sc_rvd_out"};
+        std::vector<llvm::StringRef> core_dt{"sc_dt"};
+        // bool t1 = isCXXMemberCallExprSystemCCall(callexpr, ports_signals_rvd_wait);
+        // bool t2 = isInNamespace(callexpr, core_dt );
+        // llvm::dbgs() << "CXXMemberCallSCCall " << t1 << " inNS " << t2 << "\n";
+        // return t1;// || t2;
 
-        //return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
+        return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
       }
       else {
         LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) not a membercallexpr\n");
