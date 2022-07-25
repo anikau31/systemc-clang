@@ -15,6 +15,7 @@ void collect_sugar(const Type *type,
   const Type *desugared_final{type->getUnqualifiedDesugaredType()};
   Type *curr_type{const_cast<Type *>(type)};
   unwrapped_types.push_back(const_cast<Type *>(desugared_final));
+  /// Remove each layer one-by-one of sugar, and then save it. 
   while (curr_type != desugared_final) {
     unwrapped_types.push_back(curr_type);
     curr_type = const_cast<Type *>(
@@ -27,8 +28,6 @@ bool isInNamespace(const clang::Type *tp,
   if (!tp) {
     return false;
   }
-
-  // Type *tap = const_cast<Type *>(tp->getUnqualifiedDesugaredType());
 
   /// Peel off every type and then check that each type (including typedef) is of a certain namespace or not.
   std::vector<clang::Type *> unwrapped_types{};

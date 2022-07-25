@@ -11,24 +11,27 @@
 
 namespace sc_ast_matchers {
 namespace utils {
-  using namespace clang;
+using namespace clang;
 
 bool isCXXMemberCallExprSystemCCall(const clang::CallExpr *ce,
                                     const std::vector<llvm::StringRef> &names) {
   if (!ce) {
     return false;
   }
+  /// There are only 4 possible CallExpr.  The ones we care about are
+  /// CXXMemberCallExpr, CXXOperatorCallExpr, and CallExpr. 
+  //
   if (auto mce = dyn_cast<CXXMemberCallExpr>(ce)) {
-    const Type* obj_ptr{ mce->getObjectType().getTypePtr()};
+    const Type *obj_ptr{mce->getObjectType().getTypePtr()};
     return isCXXMemberCallExprSystemCCall(obj_ptr, names);
   }
   if (auto oce = dyn_cast<CXXOperatorCallExpr>(ce)) {
-    const Decl* decl{ oce->getCalleeDecl()};
+    const Decl *decl{oce->getCalleeDecl()};
     if (auto cxxdecl = dyn_cast<CXXRecordDecl>(decl)) {
-     return isCXXMemberCallExprSystemCCall(oce->getType().getTypePtr(), names);
+      return isCXXMemberCallExprSystemCCall(oce->getType().getTypePtr(), names);
     }
   }
-  
+
   return false;
 }
 
@@ -54,7 +57,6 @@ bool isCXXMemberCallExprSystemCCall(const clang::Type *type,
           auto decl_name{decl->getNameAsString()};
           for (auto &n : names) {
             if (decl_name == n) {
-//              llvm::dbgs() << "@@@ Typep => RecordType\n";
               return true;
             }
           }
@@ -65,20 +67,7 @@ bool isCXXMemberCallExprSystemCCall(const clang::Type *type,
 
   return false;
 }
-//
-// bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce,
-                                    // const std::vector<llvm::StringRef> &names) {
-  // if (!mce) {
-    // return false;
-  // }
-//
-  // const Type* obj_ptr{ mce->getObjectType().getTypePtr()};
-  // llvm::dbgs() << "@@@@ obj_ptr\n";
-  // obj_ptr->dump();
-//
-  // return isCXXMemberCallExprSystemCCall(obj_ptr, names);
-// }
-//
+
 bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce) {
   if (!mce) {
     return false;

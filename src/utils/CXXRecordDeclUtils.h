@@ -25,19 +25,16 @@ namespace utils {
 
 bool isCXXMemberCallExprSystemCCall(const clang::Type *type,
                                     const std::vector<llvm::StringRef> &names);
-// bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce, const std::vector<llvm::StringRef> &names);
-  bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce);
+bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce);
 
 bool isCXXMemberCallExprSystemCCall(const clang::CallExpr *ce,
                                     const std::vector<llvm::StringRef> &names);
-
-
 
 typedef std::tuple<clang::FieldDecl *, std::string,
                    const clang::CXXCtorInitializer *>
     ModuleInitializerTupleType;
 
-std::vector<const clang::CXXRecordDecl *> getAllBaseClassNames (
+std::vector<const clang::CXXRecordDecl *> getAllBaseClassNames(
     const clang::CXXRecordDecl *decl);
 
 std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
@@ -47,7 +44,6 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
 //
 std::vector<ModuleInitializerTupleType> getModuleInitializerNames(
     const clang::CXXCtorInitializer *init);
-
 
 }  // namespace utils
 
