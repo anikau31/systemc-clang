@@ -389,7 +389,7 @@ using namespace sc_ast_matchers::utils;
 
     if (t11 != t21) {
       llvm::dbgs() << "### CHECK1: t11 != t21\n";
-        std::cin.get();
+      //        std::cin.get();
     }
     // ========================== END CHECK =====================
     //
@@ -653,7 +653,7 @@ using namespace sc_ast_matchers::utils;
     if (foundsctype != newfoundsctype ) {
       LLVM_DEBUG(llvm::dbgs() << "callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
       callexpr->dump();
-      std::cin.get();
+      //std::cin.get();
       //foundsctype = newfoundsctype; // ADD THIS TO TEST SEGV
     }
 
@@ -752,7 +752,7 @@ using namespace sc_ast_matchers::utils;
 
     if (t12 != t22) {
       llvm::dbgs() << "CHECK### 2: t12 != t22\n";
-        std::cin.get();
+      //std::cin.get();
     }
     // ========================== END CHECK =====================
     //
@@ -791,7 +791,7 @@ using namespace sc_ast_matchers::utils;
     if (t13 != t23) {
       llvm::dbgs() << "### CHECK3: t13 != t23\n";
 
-      std::cin.get();
+      //std::cin.get();
     }
     // ========================== END CHECK =====================
     //

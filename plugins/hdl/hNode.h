@@ -276,7 +276,7 @@ namespace hnode {
       if (!dotheymatch) {
         LLVM_DEBUG(llvm::dbgs() << "checktypematch nonmatch on " << str << " isInNamespace returns " << isSCType(typ)<<"\n");
         LLVM_DEBUG(typ->dump());
-        std::cin.get();
+        //std::cin.get();
       }
     }
  
