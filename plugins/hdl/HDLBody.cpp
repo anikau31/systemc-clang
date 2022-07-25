@@ -383,8 +383,10 @@ using namespace sc_ast_matchers::utils;
 
     // ========================== CHECK 1 =====================
     // FIXME: Cleanup
-    bool t11 = ((opcodestr == ",") && (lutil.isSCType(exprtypstr, expr->getType().getTypePtr() ) ||
-			       lutil.isSCBuiltinType(exprtypstr, expr->getType().getTypePtr())));
+    // bool t11 = ((opcodestr == ",") && (lutil.isSCType(exprtypstr, expr->getType().getTypePtr() ) ||
+    // 			       lutil.isSCBuiltinType(exprtypstr, expr->getType().getTypePtr())));
+    bool t11 = ((opcodestr == ",") && (lutil.isSCType(exprtypstr ) ||
+    			       lutil.isSCBuiltinType(exprtypstr)));   
     bool t21 = ((opcodestr == ",") && (lutil.isSCType(expr->getType().getTypePtr() )));
 
     if (t11 != t21) {
@@ -748,8 +750,8 @@ using namespace sc_ast_matchers::utils;
     // }
     // ========================== CHECK  2=====================
     const Type *optypepointer = opcall->getType().getTypePtr();
-    bool t12 =  ((operatorname == "=") || lutil.isSCBuiltinType(operatortype,optypepointer ) ||
-	lutil.isSCType(operatortype, optypepointer) ||
+    bool t12 =  ((operatorname == "=") || lutil.isSCBuiltinType(operatortype) ||
+	lutil.isSCType(operatortype) ||
 	(opcall->getType())->isBuiltinType() || 
 	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos)));
   bool t22 =  ((operatorname == "=") ||  lutil.isSCType(optypepointer) ||

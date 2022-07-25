@@ -134,7 +134,7 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
   
   // ========================== CHECK HDLType =====================
   // FIXME: Cleanup
-  bool t1 = tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps);
+  bool t1 = tutil.isSCType(tmps, typ) || tutil.isSCBuiltinType(tmps, typ);
   bool t2 = tutil.isSCType(typ);
   if (t1 != t2) {
     llvm::dbgs() << "### CHECK1: old " << t1 << " != new " << t2 << "\n";
