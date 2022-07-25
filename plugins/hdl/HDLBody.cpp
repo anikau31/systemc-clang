@@ -743,8 +743,8 @@ using namespace sc_ast_matchers::utils;
     // }
     // ========================== CHECK  2=====================
     const Type *optypepointer = opcall->getType().getTypePtr();
-    bool t12 =  ((operatorname == "=") || lutil.isSCBuiltinType(operatortype,optypepointer ) ||
-	lutil.isSCType(operatortype, optypepointer) ||
+    bool t12 =  ((operatorname == "=") || lutil.isSCBuiltinType(operatortype) ||
+	lutil.isSCType(operatortype) ||
 	(opcall->getType())->isBuiltinType() || 
 	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos)));
   bool t22 =  ((operatorname == "=") ||  lutil.isSCByType(optypepointer) || (opcall->getType())->isBuiltinType() || 
