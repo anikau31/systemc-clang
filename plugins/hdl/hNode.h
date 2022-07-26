@@ -227,25 +227,11 @@ namespace hnode {
     std::unordered_set<const Type *> types_seen = {};
 
   public:
-    const static int numstr = 7;
-    const string scbuiltintype [numstr] = {
-      "sc_uint",
-      "sc_int",
-      "sc_bigint",
-      "sc_biguint",
-      "sc_bv",
-      "sc_logic",
-      "sc_clock"
-    };
-    int scbtlen [ numstr ];
 
      const set<std::string> sc_built_in_funcs{
        "concat", "wait", "range", "bit", "or_reduce", "xor_reduce", "nor_reduce","and_reduce", "nand_reduce"};
     
-    util() {
-      for (int i=0; i < numstr; i++)
-	scbtlen[i] = scbuiltintype[i].length();
-    }
+    util() {}
     ~util() {}
     
     static inline void make_ident(string &nm) {
@@ -260,44 +246,34 @@ namespace hnode {
 
     }
 
-    enum typetocheck {issctype, isscbuiltintype, bothofthem, isscfunc, isscmacro};
-
-    inline void checktypematch(std::string str, const Type *typ, typetocheck t2c){
-      bool dotheymatch = false;
-      switch (t2c) {
-      case issctype: { dotheymatch = isSCByType(typ) == isSCType(str); break;}
-      case isscbuiltintype: { dotheymatch = isSCByType(typ) == isSCBuiltinType(str); break;}
-      case bothofthem:  { dotheymatch = (isSCByType(typ) == (isSCType(str) || isSCBuiltinType(str))); break; }
-      case isscfunc: { dotheymatch = isSCByType(typ) == isSCFunc(str); break;}
-      case isscmacro: {dotheymatch = isSCByType(typ) == isSCMacro(str); break;}
-      default: ;
-      }
-
-      if (!dotheymatch) {
-        LLVM_DEBUG(llvm::dbgs() << "checktypematch nonmatch on " << str << " isInNamespace returns " << isSCType(typ)<<"\n");
-        LLVM_DEBUG(typ->dump());
-        //std::cin.get();
-      }
-    }
- 
     inline bool isSCByCallExpr(const CallExpr *callexpr) {
       if (auto mce = dyn_cast<CXXMemberCallExpr>(callexpr)) {
-        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) is a membercallexpr\n");
+        LLVM_DEBUG(llvm::dbgs() << "isSCByType(callexpr) is a membercallexpr\n");
 
         std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd", "sc_rvd_in", "sc_rvd_out"};
         std::vector<llvm::StringRef> core_dt{"sc_dt"};
         bool t1 = isCXXMemberCallExprSystemCCall(callexpr, ports_signals_rvd_wait);
         bool t2 = isInNamespace(mce->getObjectType().getTypePtr(), core_dt );
         llvm::dbgs() << "isSCCall:: CXXMemberCallSCCall " << t1 << " inNS " << t2 << "\n";
+	if (t1 || t2) {
+	  const Type *typ = mce->getObjectType().getTypePtr();
+	  types_seen.insert(typ);
+	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	}
         return t1 || t2;
 
         //return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
       }
       else {
-        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) not a membercallexpr\n");
+        LLVM_DEBUG(llvm::dbgs() << "isSCByType(callexpr) not a membercallexpr\n");
         std::vector<llvm::StringRef> core_dt{"sc_core", "sc_dt"};
-
-        return isInNamespace(callexpr, core_dt);
+	bool inns = isInNamespace(callexpr, core_dt);
+	if (inns) {
+	  const Type *typ = callexpr->getType().getTypePtr();
+	  types_seen.insert(typ);
+	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	}
+        return inns;
       }
     }
     
@@ -305,7 +281,7 @@ namespace hnode {
     inline bool isSCByType(const Type *typ) {
       
       // if  (types_seen.count(typ) > 0) {
-        // LLVM_DEBUG(llvm::dbgs() << "isSCType(typ) found type pointer in set " << typ << "\n");
+        // LLVM_DEBUG(llvm::dbgs() << "isSCByType(typ) found type pointer in set " << typ << "\n");
         // return true;
       // }
       llvm::dbgs() << "@@@@ isSCT\n";
@@ -316,80 +292,13 @@ namespace hnode {
       if (isInNamespace(typ, sc_dt_ns) 
           || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) 
           || isCXXMemberCallExprSystemCCall(typ, rvd)) {
-   //       types_seen.insert(typ);
-          return true;
+	types_seen.insert(typ);
+	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	return true;
       }
       return false;
     }
 
-
-
-    inline bool isSCType(const Type *typ) {
-      
-      if  (types_seen.count(typ) > 0) {
-        LLVM_DEBUG(llvm::dbgs() << "isSCType(typ) found type pointer in set " << typ << "\n");
-        return true;
-      }
-      static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
-      static std::vector<llvm::StringRef> rvd{"sc_rvd","sc_rvd_in","sc_rvd_out"};
-
-      static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process"};
-      if (isInNamespace(typ, sc_dt_ns) || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) || isCXXMemberCallExprSystemCCall(typ, rvd)) {
-          types_seen.insert(typ);
-          return true;
-      }
-      return false;
-    }
-
-    inline bool isSCType(const CallExpr *callexpr) {
-      if (isa<CXXMemberCallExpr>(callexpr)) {
-        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) is a membercallexpr\n");
-
-        std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd", "sc_rvd_in", "sc_rvd_out"};
-        std::vector<llvm::StringRef> core_dt{"sc_dt"};
-        // bool t1 = isCXXMemberCallExprSystemCCall(callexpr, ports_signals_rvd_wait);
-        // bool t2 = isInNamespace(callexpr, core_dt );
-        // llvm::dbgs() << "CXXMemberCallSCCall " << t1 << " inNS " << t2 << "\n";
-        // return t1;// || t2;
-
-        return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
-      }
-      else {
-        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) not a membercallexpr\n");
-        std::vector<llvm::StringRef> core_dt{"sc_core", "sc_dt"};
-
-        return isInNamespace(callexpr, core_dt);
-      }
-    }
-    
-    inline bool isSCBuiltinType(const string &tstring, const Type *typ=NULL){
-      // linear search sorry, but at least the length
-      // isn't hard coded in ...
-
-      if ((typ != NULL) && (types_seen.count(typ) > 0)) {
-	//LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType(typ) found type pointer in set " << tstring << " " << typ << "\n");
-        return true;
-      }
-      bool ret = false;
-      std::vector<llvm::StringRef> scdt{"sc_dt"};
-      bool tmpisnamespace = sc_ast_matchers::utils::isInNamespace(typ, scdt);
-      int found = tstring.find_last_of(" "); // skip qualifiers if any
-      for (int i=0; i < numstr; i++) {
-      if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i]) {
-        ret = true;
-        break;
-      }
-      }
-      if ((typ != NULL) && (tmpisnamespace != ret)) {
-        LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType: '" << tstring << "' (" << tmpisnamespace <<
-             ", " << ret << ")\n");
-      }
-      if (ret && (typ != NULL)) {
-        types_seen.insert(typ);
-        LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << "size = " << types_seen.size() << "\n");
-      }
-      return ret;
-    }
 
     inline bool isSCFunc(const string &tstring) {
       return (sc_built_in_funcs.count(tstring)>0);
@@ -402,43 +311,6 @@ namespace hnode {
       else if (found == (size_t) 0) return true;
       else return false;
     }
-
-     inline bool isSCType(const string &tstring, const clang::Type *typ = NULL) {
-      // linear search and the length is hard coded in ...
-      // used in the method name logic.
-      // can't use set as we are searching for a substring of tstring
-      
-     string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_inout",
-			  "sc_signal", "sc_subref", "sc_dt"};
-     
-     if ((typ != NULL) && (types_seen.count(typ) > 0)) {
-       //LLVM_DEBUG(llvm::dbgs() << "isSCType(str, typ) found type pointer in set " << tstring << " " << typ << "\n");
-       return true;
-     }
-     bool foundsctype = false;
-     
-     for (string onestring : strings) {
-       if (tstring.find(onestring)!=string::npos) {
-	 foundsctype = true;
-	 if (typ != NULL) {
-	   types_seen.insert(typ);
-	   LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
-	 }
-	 break;
-       }
-       else foundsctype = false;
-     }
-     if (typ != NULL) {
-       std::vector<llvm::StringRef> scdt{"sc_dt"};
-       bool tmpsctype = sc_ast_matchers::utils::isInNamespace(typ, scdt);
-       if (tmpsctype != foundsctype)
-	 LLVM_DEBUG(llvm::dbgs() << "isSCType: '" << tstring << "' (" << tmpsctype <<", " << foundsctype << ")\n");
-     }
-
-     return foundsctype;
-    }
-
-
     
      inline bool isSCMacro(const std::string &str_in) {
       string sc_macro_strings [] = {"sc_min", "sc_max", "sc_abs"};

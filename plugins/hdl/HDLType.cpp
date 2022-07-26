@@ -131,19 +131,8 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
 {
   bool retval = false;
   const Type *typ = node->getDataPtr()->getTypePtr();
-  //if (!(tutil.isSCType(tmps, typ) || tutil.isSCBuiltinType(tmps, typ) ||
   
-  // ========================== CHECK HDLType =====================
-  // FIXME: Cleanup
-  bool t1 = tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps);
-  bool t2 = tutil.isSCByType(typ);
-  if (t1 != t2) {
-    llvm::dbgs() << "### CHECK1: old " << t1 << " != new " << t2 << "\n";
-    //std::cin.get();
-  }
-  // ========================== END CHECK =====================
-  //
-  if (!(tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps) ||
+  if (!(tutil.isSCByType(typ) ||
         tutil.isposint(tmps) || tutil.isTypename(tmps))) {
     string tmps_full = treehead->dft();
     size_t type_ix = tmps_full.find(tmps);

@@ -379,23 +379,8 @@ using namespace sc_ast_matchers::utils;
     string exprtypstr = expr->getType().getAsString();
     LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
 	       << opcodestr << "\n");
-    //lutil.checktypematch(exprtypstr, expr->getType().getTypePtr(), lutil.bothofthem); // 
 
-    // ========================== CHECK 1 =====================
-    // FIXME: Cleanup
-    bool t11 = ((opcodestr == ",") && (lutil.isSCType(exprtypstr, expr->getType().getTypePtr() ) ||
-			       lutil.isSCBuiltinType(exprtypstr, expr->getType().getTypePtr())));
-    bool t21 = ((opcodestr == ",") && (lutil.isSCByType(expr->getType().getTypePtr() )));
-
-    if (t11 != t21) {
-      llvm::dbgs() << "### CHECK1: t11 != t21\n";
-      //        std::cin.get();
-    }
-    // ========================== END CHECK =====================
-    //
-    if ((opcodestr == ",") && (lutil.isSCType(exprtypstr, expr->getType().getTypePtr() ) ||
-			       lutil.isSCBuiltinType(exprtypstr, expr->getType().getTypePtr()))){
-      //if ((opcodestr == ",") && (lutil.isSCType(expr->getType()){
+    if ((opcodestr == ",") && (lutil.isSCByType(expr->getType().getTypePtr()))){
       LLVM_DEBUG(llvm::dbgs() << "found comma, with sc type, expr follows\n");
       LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_); );
       h_binop->set("concat");
@@ -507,7 +492,6 @@ using namespace sc_ast_matchers::utils;
       }
     }
     if (isa<FunctionDecl>(value)) {
-      lutil.checktypematch(name, expr->getType().getTypePtr(), lutil.isscfunc);
       if (!lutil.isSCFunc(name)) {  // similar to method call, skip builtin
 	FunctionDecl *funval = (FunctionDecl *)value;
 	
@@ -644,18 +628,8 @@ using namespace sc_ast_matchers::utils;
     // sc_signal and method name is either read or write, generate a SigAssignL|R
     // -- FIXME need to make sure it is templated to a primitive type
 
-    //lutil.isSCType(qualmethodname, typeformethodclass);
-    //lutil.checktypematch(qualmethodname, typeformethodclass, lutil.issctype);
 
-    //bool inns_result = sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") || sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt");
-    bool foundsctype = lutil.isSCType(qualmethodname, typeformethodclass);
-    bool newfoundsctype = lutil.isSCByCallExpr(callexpr);// || lutil.isSCType(typeformethodclass);
-    if (foundsctype != newfoundsctype ) {
-      LLVM_DEBUG(llvm::dbgs() << "callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
-      callexpr->dump();
-      //std::cin.get();
-      //foundsctype = newfoundsctype; // ADD THIS TO TEST SEGV
-    }
+    bool foundsctype = lutil.isSCByCallExpr(callexpr);
 
     if ((methodname == "read") && foundsctype)
       opc = hNode::hdlopsEnum::hSigAssignR;
@@ -735,32 +709,8 @@ using namespace sc_ast_matchers::utils;
 	       << operatorname << "\n");
     LLVM_DEBUG(llvm::dbgs() << "Type name " << operatortype << "\n");
     LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
-
-    //lutil.checktypematch(operatortype, opcall->getType().getTypePtr(), lutil.bothofthem);
-
-    // if (lutil.isSCType(opcall) != lutil.isSCType(operatortype)) {
-    //   LLVM_DEBUG(llvm::dbgs() << "callexpr (operatorcall) isinnamespace nonmatch for " << operatortype << "\n");
-    // }
-    // ========================== CHECK  2=====================
     const Type *optypepointer = opcall->getType().getTypePtr();
-    bool t12 =  ((operatorname == "=") || lutil.isSCBuiltinType(operatortype) ||
-	lutil.isSCType(operatortype) ||
-	(opcall->getType())->isBuiltinType() || 
-	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos)));
-  bool t22 =  ((operatorname == "=") ||  lutil.isSCByType(optypepointer) || (opcall->getType())->isBuiltinType() || 
-	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos)));
-
-    if (t12 != t22) {
-      llvm::dbgs() << "CHECK### 2: t12 != t22\n";
-      //std::cin.get();
-    }
-    // ========================== END CHECK =====================
-    //
-
-
-     
-    if ((operatorname == "=") || lutil.isSCBuiltinType(operatortype,optypepointer ) ||
-	lutil.isSCType(operatortype, optypepointer) ||
+    if ((operatorname == "=") || lutil.isSCByType(optypepointer ) ||
 	(opcall->getType())->isBuiltinType() || 
 	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos))) {
       LLVM_DEBUG(llvm::dbgs() << "Processing operator call type\n");
@@ -783,20 +733,7 @@ using namespace sc_ast_matchers::utils;
 	  else
 	    h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
 
-
-    // ========================== CHECK 3 =====================
-	  bool t13 = ((operatorname == ",") && (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype)));
-	  bool t23 = ((operatorname == ",") && lutil.isSCByCallExpr(opcall)); //lutil.isSCType(operatortype));
-    
-    if (t13 != t23) {
-      llvm::dbgs() << "### CHECK3: t13 != t23\n";
-
-      //std::cin.get();
-    }
-    // ========================== END CHECK =====================
-    //
-
-	  if ((operatorname == ",") && (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype)))
+    if ((operatorname == ",") && (lutil.isSCByCallExpr(opcall)))
 	    h_operop->set("concat"); // overloaded comma is concat for sc types
                                //
                                //
