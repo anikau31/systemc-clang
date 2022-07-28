@@ -15,6 +15,7 @@ class Type;
 namespace sc_ast_matchers {
 namespace utils {
 
+<<<<<<< HEAD
 /*
  * \brief Check if a Type is declared within a given namespace.
  */
