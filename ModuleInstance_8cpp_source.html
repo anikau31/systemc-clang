@@ -604,7 +604,7 @@ $(function() {
 <div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>    str += <span class="stringliteral">&quot;\n\n&quot;</span>;</div>
 <div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>    binding-&gt;dump();</div>
 <div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>  }</div>
-<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>  llvm::outs() &lt;&lt; str;</div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>  LLVM_DEBUG(llvm::dbgs() &lt;&lt; str;);</div>
 <div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>  <span class="keywordflow">return</span> str;</div>
 <div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>}</div>
 <div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span> </div>
@@ -818,7 +818,7 @@ $(function() {
 <div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>  }</div>
 <div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span> </div>
 <div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>  str += <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>  llvm::outs() &lt;&lt; str;</div>
+<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>  LLVM_DEBUG(llvm::outs() &lt;&lt; str;);</div>
 <div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>  <span class="keywordflow">return</span> str;</div>
 <div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>}</div>
 <div class="ttc" id="aAPIntUtils_8h_html"><div class="ttname"><a href="APIntUtils_8h.html">APIntUtils.h</a></div></div>

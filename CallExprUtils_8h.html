@@ -75,13 +75,15 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;llvm/ADT/StringRef.h&quot;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for CallExprUtils.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="CallExprUtils_8h__incl.png" border="0" usemap="#asrc_2utils_2CallExprUtils_8h" alt=""/></div>
 <map name="asrc_2utils_2CallExprUtils_8h" id="asrc_2utils_2CallExprUtils_8h">
-<area shape="rect" title=" " alt="" coords="5,5,161,32"/>
-<area shape="rect" title=" " alt="" coords="11,80,155,107"/>
+<area shape="rect" title=" " alt="" coords="62,5,218,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,149,107"/>
+<area shape="rect" title=" " alt="" coords="173,80,232,107"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -89,8 +91,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="CallExprUtils_8h__dep__incl.png" border="0" usemap="#asrc_2utils_2CallExprUtils_8hdep" alt=""/></div>
 <map name="asrc_2utils_2CallExprUtils_8hdep" id="asrc_2utils_2CallExprUtils_8hdep">
-<area shape="rect" title=" " alt="" coords="13,5,169,32"/>
-<area shape="rect" href="CallExprUtils_8cpp.html" title=" " alt="" coords="5,80,176,107"/>
+<area shape="rect" title=" " alt="" coords="281,5,437,32"/>
+<area shape="rect" href="HDLBody_8cpp.html" title=" " alt="" coords="5,304,173,331"/>
+<area shape="rect" href="hNode_8h.html" title=" " alt="" coords="291,80,427,107"/>
+<area shape="rect" href="CallExprUtils_8cpp.html" title=" " alt="" coords="451,80,621,107"/>
+<area shape="rect" href="HDLBody_8h.html" title=" " alt="" coords="196,229,351,256"/>
+<area shape="rect" href="HDLMain_8h.html" title=" " alt="" coords="394,304,547,331"/>
+<area shape="rect" href="HDLThread_8h.html" title=" " alt="" coords="197,304,363,331"/>
+<area shape="rect" href="HDLHnode_8h.html" title=" " alt="" coords="676,155,839,181"/>
+<area shape="rect" href="HDLType_8h.html" title=" " alt="" coords="430,155,583,181"/>
+<area shape="rect" href="HDLMain_8cpp.html" title=" " alt="" coords="390,379,557,405"/>
+<area shape="rect" href="HDLThread_8cpp.html" title=" " alt="" coords="187,379,365,405"/>
+<area shape="rect" href="HDLHnode_8cpp.html" title=" " alt="" coords="669,229,846,256"/>
+<area shape="rect" href="HDLType_8cpp.html" title=" " alt="" coords="426,229,593,256"/>
 </map>
 </div>
 </div>
@@ -113,6 +126,12 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:af06574adfc294d7923625ee80056766d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#af06574adfc294d7923625ee80056766d">sc_ast_matchers::utils::isInNamespace</a> (const clang::Type *tp, const std::vector&lt; llvm::StringRef &gt; &amp;names)</td></tr>
+<tr class="separator:af06574adfc294d7923625ee80056766d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a920c704b116a3dbfce97201a00587699"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#a920c704b116a3dbfce97201a00587699">sc_ast_matchers::utils::isInNamespace</a> (const clang::CallExpr *cexpr, const std::vector&lt; llvm::StringRef &gt; &amp;names)</td></tr>
+<tr class="separator:a920c704b116a3dbfce97201a00587699"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a994d4d1dc2f1b7956801cf194dc62c01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#a994d4d1dc2f1b7956801cf194dc62c01">sc_ast_matchers::utils::collect_sugar</a> (const clang::Type *type, std::vector&lt; clang::Type * &gt; &amp;unwrapped_types)</td></tr>
+<tr class="separator:a994d4d1dc2f1b7956801cf194dc62c01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f3712406d0a4d393a478847371ebd4c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#a6f3712406d0a4d393a478847371ebd4c">sc_ast_matchers::utils::isInNamespace</a> (const clang::CallExpr *cexpr, llvm::StringRef name)</td></tr>
 <tr class="separator:a6f3712406d0a4d393a478847371ebd4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

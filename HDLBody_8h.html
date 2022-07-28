@@ -87,61 +87,62 @@ $(function() {
 <code>#include &quot;llvm/ADT/StringRef.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="SystemCClang_8h_source.html">SystemCClang.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="hNode_8h_source.html">hNode.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="HDLType_8h_source.html">HDLType.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for HDLBody.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="HDLBody_8h__incl.png" border="0" usemap="#aplugins_2hdl_2HDLBody_8h" alt=""/></div>
 <map name="aplugins_2hdl_2HDLBody_8h" id="aplugins_2hdl_2HDLBody_8h">
-<area shape="rect" title=" " alt="" coords="1564,5,1719,32"/>
-<area shape="rect" title=" " alt="" coords="2661,692,2720,719"/>
-<area shape="rect" title=" " alt="" coords="2598,767,2653,793"/>
-<area shape="rect" title=" " alt="" coords="716,80,820,107"/>
-<area shape="rect" title=" " alt="" coords="845,80,907,107"/>
-<area shape="rect" title=" " alt="" coords="418,767,569,793"/>
-<area shape="rect" title=" " alt="" coords="1431,80,1556,107"/>
-<area shape="rect" title=" " alt="" coords="1580,80,1703,107"/>
-<area shape="rect" title=" " alt="" coords="1037,767,1221,793"/>
-<area shape="rect" title=" " alt="" coords="1367,692,1585,719"/>
-<area shape="rect" title=" " alt="" coords="3201,80,3367,107"/>
-<area shape="rect" title=" " alt="" coords="3391,80,3535,107"/>
-<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="1727,80,1846,107"/>
-<area shape="rect" href="hNode_8h.html" title=" " alt="" coords="3637,617,3707,644"/>
-<area shape="rect" title=" " alt="" coords="2943,162,3126,189"/>
-<area shape="rect" title=" " alt="" coords="5,767,200,793"/>
-<area shape="rect" title=" " alt="" coords="1150,162,1373,189"/>
-<area shape="rect" title=" " alt="" coords="1397,155,1595,196"/>
-<area shape="rect" title=" " alt="" coords="1619,155,1819,196"/>
-<area shape="rect" title=" " alt="" coords="1944,162,2099,189"/>
-<area shape="rect" href="Model_8h.html" title=" " alt="" coords="1019,162,1125,189"/>
-<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="1889,244,1975,271"/>
-<area shape="rect" href="FindSCMain_8h.html" title=" " alt="" coords="1921,617,2082,644"/>
-<area shape="rect" href="EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="1237,543,1403,569"/>
-<area shape="rect" title=" " alt="" coords="1290,692,1337,719"/>
-<area shape="rect" href="EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="2744,692,2864,719"/>
-<area shape="rect" href="FindGlobalEvents_8h.html" title=" " alt="" coords="1762,617,1897,644"/>
-<area shape="rect" href="FindNetlist_8h.html" title=" " alt="" coords="657,617,751,644"/>
-<area shape="rect" href="FindSimTime_8h.html" title=" " alt="" coords="292,617,401,644"/>
-<area shape="rect" href="ModuleInstance_8h.html" title=" " alt="" coords="1651,393,1775,420"/>
-<area shape="rect" href="FindGPUMacro_8h.html" title=" " alt="" coords="775,617,958,644"/>
-<area shape="rect" href="FindNotify_8h.html" title=" " alt="" coords="1084,617,1175,644"/>
-<area shape="rect" href="SensitivityMatcher_8h.html" title=" " alt="" coords="2279,617,2417,644"/>
-<area shape="rect" href="FindWait_8h.html" title=" " alt="" coords="1199,617,1281,644"/>
-<area shape="rect" href="SuspensionAutomata_8h.html" title=" " alt="" coords="477,617,633,644"/>
-<area shape="rect" href="Utility_8h.html" title="A set of utility functions in the Utility class." alt="" coords="406,692,471,719"/>
-<area shape="rect" title=" " alt="" coords="2965,692,3195,719"/>
-<area shape="rect" title=" " alt="" coords="225,767,394,793"/>
-<area shape="rect" href="FindConstructor_8h.html" title=" " alt="" coords="1489,468,1613,495"/>
-<area shape="rect" href="FindEntryFunctions_8h.html" title=" " alt="" coords="1739,468,1882,495"/>
-<area shape="rect" href="FindTLMInterfaces_8h.html" title=" " alt="" coords="1530,543,1673,569"/>
-<area shape="rect" href="InstanceMatcher_8h.html" title=" " alt="" coords="2999,617,3129,644"/>
-<area shape="rect" href="CXXRecordDeclUtils_8h.html" title=" " alt="" coords="3205,617,3358,644"/>
-<area shape="rect" href="PortMatcher_8h.html" title=" " alt="" coords="2719,319,2822,345"/>
-<area shape="rect" href="FindEvents_8h.html" title=" " alt="" coords="2106,617,2203,644"/>
-<area shape="rect" href="FindTemplateParameters_8h.html" title=" " alt="" coords="2543,617,2721,644"/>
-<area shape="rect" title=" " alt="" coords="2164,692,2204,719"/>
-<area shape="rect" title=" " alt="" coords="3637,692,3691,719"/>
-<area shape="rect" title=" " alt="" coords="3716,692,3791,719"/>
-<area shape="rect" title=" " alt="" coords="3815,692,3926,719"/>
+<area shape="rect" title=" " alt="" coords="3020,5,3175,32"/>
+<area shape="rect" title=" " alt="" coords="1277,617,1336,644"/>
+<area shape="rect" title=" " alt="" coords="1305,692,1359,719"/>
+<area shape="rect" title=" " alt="" coords="3071,543,3175,569"/>
+<area shape="rect" title=" " alt="" coords="3313,80,3375,107"/>
+<area shape="rect" title=" " alt="" coords="2597,767,2747,793"/>
+<area shape="rect" title=" " alt="" coords="3400,80,3525,107"/>
+<area shape="rect" title=" " alt="" coords="3549,80,3672,107"/>
+<area shape="rect" title=" " alt="" coords="2191,767,2375,793"/>
+<area shape="rect" title=" " alt="" coords="559,767,777,793"/>
+<area shape="rect" title=" " alt="" coords="3696,80,3861,107"/>
+<area shape="rect" title=" " alt="" coords="1508,617,1652,644"/>
+<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="1926,155,2045,181"/>
+<area shape="rect" href="hNode_8h.html" title=" " alt="" coords="2958,468,3029,495"/>
+<area shape="rect" href="HDLType_8h.html" title=" " alt="" coords="2897,80,2983,107"/>
+<area shape="rect" title=" " alt="" coords="1787,237,1970,263"/>
+<area shape="rect" title=" " alt="" coords="1995,237,2189,263"/>
+<area shape="rect" title=" " alt="" coords="2214,237,2437,263"/>
+<area shape="rect" title=" " alt="" coords="2461,229,2659,271"/>
+<area shape="rect" title=" " alt="" coords="2683,229,2883,271"/>
+<area shape="rect" title=" " alt="" coords="1427,237,1581,263"/>
+<area shape="rect" href="Model_8h.html" title=" " alt="" coords="1605,237,1712,263"/>
+<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="1187,319,1274,345"/>
+<area shape="rect" href="FindSCMain_8h.html" title=" " alt="" coords="2058,692,2219,719"/>
+<area shape="rect" href="EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="731,617,898,644"/>
+<area shape="rect" title=" " alt="" coords="1717,767,1763,793"/>
+<area shape="rect" href="EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="1980,617,2100,644"/>
+<area shape="rect" href="FindGlobalEvents_8h.html" title=" " alt="" coords="1755,543,1890,569"/>
+<area shape="rect" href="FindNetlist_8h.html" title=" " alt="" coords="1887,692,1982,719"/>
+<area shape="rect" href="FindSimTime_8h.html" title=" " alt="" coords="2345,692,2455,719"/>
+<area shape="rect" href="ModuleInstance_8h.html" title=" " alt="" coords="709,468,833,495"/>
+<area shape="rect" href="FindGPUMacro_8h.html" title=" " alt="" coords="2581,692,2763,719"/>
+<area shape="rect" href="FindNotify_8h.html" title=" " alt="" coords="737,692,828,719"/>
+<area shape="rect" href="FindWait_8h.html" title=" " alt="" coords="996,692,1079,719"/>
+<area shape="rect" href="FindConstructor_8h.html" title=" " alt="" coords="195,543,319,569"/>
+<area shape="rect" href="FindEntryFunctions_8h.html" title=" " alt="" coords="699,543,842,569"/>
+<area shape="rect" href="FindTLMInterfaces_8h.html" title=" " alt="" coords="259,617,402,644"/>
+<area shape="rect" href="InstanceMatcher_8h.html" title=" " alt="" coords="1294,393,1423,420"/>
+<area shape="rect" href="CXXRecordDeclUtils_8h.html" title=" " alt="" coords="1395,543,1549,569"/>
+<area shape="rect" href="PortMatcher_8h.html" title=" " alt="" coords="959,393,1062,420"/>
+<area shape="rect" href="FindEvents_8h.html" title=" " alt="" coords="1019,543,1117,569"/>
+<area shape="rect" href="FindTemplateParameters_8h.html" title=" " alt="" coords="445,543,624,569"/>
+<area shape="rect" title=" " alt="" coords="3061,767,3101,793"/>
+<area shape="rect" title=" " alt="" coords="2581,617,2635,644"/>
+<area shape="rect" title=" " alt="" coords="2775,543,2849,569"/>
+<area shape="rect" title=" " alt="" coords="2589,543,2699,569"/>
+<area shape="rect" title=" " alt="" coords="2873,543,2945,569"/>
+<area shape="rect" href="CallExprUtils_8h.html" title=" " alt="" coords="1573,543,1680,569"/>
+<area shape="rect" href="Tree_8h.html" title=" " alt="" coords="2455,543,2513,569"/>
+<area shape="rect" title=" " alt="" coords="2883,155,2933,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -164,6 +165,8 @@ This graph shows which files directly or indirectly include this file:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html">systemc_hdl::HDLBody</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1StmtVisitor.html">systemc_hdl::StmtVisitor</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -172,10 +175,14 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:aeef6b9516f3e8320515d66110f5f9d5f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5f">systemc_hdl::HDLBodyMode</a> { <a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5fa354c7096aca571dcb8444a1586949b94">systemc_hdl::rnomode</a>
+<tr class="memitem:aeef6b9516f3e8320515d66110f5f9d5f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5f">systemc_hdl::HDLBodyMode</a> { <br />
+&#160;&#160;<a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5fa354c7096aca571dcb8444a1586949b94">systemc_hdl::rnomode</a>
 , <a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5faa75073048e80e18eaa4adc79ddab2045">systemc_hdl::rmethod</a>
 , <a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5fa00b58b9adcbbbb2353bdf66f9b755401">systemc_hdl::rmodinit</a>
 , <a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5fa743914761c4513bf88f12155da0f9ca4">systemc_hdl::rthread</a>
+, <br />
+&#160;&#160;<a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5faa7d5c4aa52c288af721b1072641e2e73">systemc_hdl::ruserdefclass</a>
+<br />
  }</td></tr>
 <tr class="separator:aeef6b9516f3e8320515d66110f5f9d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

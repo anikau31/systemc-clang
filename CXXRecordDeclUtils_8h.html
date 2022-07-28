@@ -77,14 +77,16 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
+<code>#include &quot;llvm/ADT/StringRef.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for CXXRecordDeclUtils.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="CXXRecordDeclUtils_8h__incl.png" border="0" usemap="#asrc_2utils_2CXXRecordDeclUtils_8h" alt=""/></div>
 <map name="asrc_2utils_2CXXRecordDeclUtils_8h" id="asrc_2utils_2CXXRecordDeclUtils_8h">
-<area shape="rect" title=" " alt="" coords="5,5,208,32"/>
-<area shape="rect" title=" " alt="" coords="39,80,94,107"/>
-<area shape="rect" title=" " alt="" coords="119,80,177,107"/>
+<area shape="rect" title=" " alt="" coords="13,5,215,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,60,107"/>
+<area shape="rect" title=" " alt="" coords="85,80,143,107"/>
+<area shape="rect" title=" " alt="" coords="167,80,311,107"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -92,29 +94,29 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="CXXRecordDeclUtils_8h__dep__incl.png" border="0" usemap="#asrc_2utils_2CXXRecordDeclUtils_8hdep" alt=""/></div>
 <map name="asrc_2utils_2CXXRecordDeclUtils_8hdep" id="asrc_2utils_2CXXRecordDeclUtils_8hdep">
-<area shape="rect" title=" " alt="" coords="1489,5,1691,32"/>
-<area shape="rect" href="SystemCClang_8cpp.html" title=" " alt="" coords="1557,326,1711,353"/>
-<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="1217,80,1384,107"/>
-<area shape="rect" href="CXXRecordDeclUtils_8cpp.html" title=" " alt="" coords="1628,80,1845,107"/>
-<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="949,237,1089,263"/>
-<area shape="rect" href="NetlistMatcher_8h.html" title=" " alt="" coords="1270,155,1467,181"/>
-<area shape="rect" href="Model_8h.html" title=" " alt="" coords="865,155,993,181"/>
-<area shape="rect" href="HDLBody_8cpp.html" title=" " alt="" coords="615,408,783,435"/>
-<area shape="rect" href="HDLBody_8h.html" title=" " alt="" coords="777,326,931,353"/>
-<area shape="rect" href="HDLMain_8h.html" title=" " alt="" coords="808,408,961,435"/>
-<area shape="rect" href="HDLMain_8cpp.html" title=" " alt="" coords="1060,483,1227,509"/>
-<area shape="rect" href="HDLThread_8h.html" title=" " alt="" coords="1471,408,1637,435"/>
-<area shape="rect" href="HDLHnode_8h.html" title=" " alt="" coords="239,326,402,353"/>
-<area shape="rect" href="HDLType_8cpp.html" title=" " alt="" coords="424,408,591,435"/>
-<area shape="rect" href="HDLType_8h.html" title=" " alt="" coords="497,326,651,353"/>
-<area shape="rect" href="PluginAction_8h.html" title="This file contains the class for defining basic plugin actions." alt="" coords="956,326,1083,353"/>
-<area shape="rect" href="SAPlugin_8h.html" title="Plugin consumer for generating suspension automata." alt="" coords="1107,326,1215,353"/>
-<area shape="rect" href="TimeAnalysis_8h.html" title="A short example of how to use the plugin architecture." alt="" coords="1239,326,1431,353"/>
-<area shape="rect" href="HDLThread_8cpp.html" title=" " alt="" coords="1465,483,1643,509"/>
-<area shape="rect" href="HDLHnode_8cpp.html" title=" " alt="" coords="223,408,400,435"/>
-<area shape="rect" href="GlobalSuspensionAutomata_8h.html" title=" " alt="" coords="288,229,497,271"/>
-<area shape="rect" href="Model_8cpp.html" title=" " alt="" coords="783,237,925,263"/>
-<area shape="rect" href="GlobalSuspensionAutomata_8cpp.html" title=" " alt="" coords="5,319,215,360"/>
+<area shape="rect" title=" " alt="" coords="1116,5,1319,32"/>
+<area shape="rect" href="HDLBody_8cpp.html" title=" " alt="" coords="1465,483,1633,509"/>
+<area shape="rect" href="SystemCClang_8cpp.html" title=" " alt="" coords="5,326,160,353"/>
+<area shape="rect" href="Matchers_8h.html" title=" " alt="" coords="669,80,835,107"/>
+<area shape="rect" href="CXXRecordDeclUtils_8cpp.html" title=" " alt="" coords="1638,80,1855,107"/>
+<area shape="rect" href="SystemCClang_8h.html" title=" " alt="" coords="765,237,905,263"/>
+<area shape="rect" href="NetlistMatcher_8h.html" title=" " alt="" coords="365,155,563,181"/>
+<area shape="rect" href="Model_8h.html" title=" " alt="" coords="621,155,749,181"/>
+<area shape="rect" href="HDLBody_8h.html" title=" " alt="" coords="1137,408,1292,435"/>
+<area shape="rect" href="HDLMain_8h.html" title=" " alt="" coords="758,483,911,509"/>
+<area shape="rect" href="HDLMain_8cpp.html" title=" " alt="" coords="625,557,791,584"/>
+<area shape="rect" href="HDLThread_8h.html" title=" " alt="" coords="1132,483,1297,509"/>
+<area shape="rect" href="HDLHnode_8h.html" title=" " alt="" coords="469,326,632,353"/>
+<area shape="rect" href="HDLType_8cpp.html" title=" " alt="" coords="751,408,918,435"/>
+<area shape="rect" href="HDLType_8h.html" title=" " alt="" coords="758,326,911,353"/>
+<area shape="rect" href="PluginAction_8h.html" title="This file contains the class for defining basic plugin actions." alt="" coords="935,326,1062,353"/>
+<area shape="rect" href="SAPlugin_8h.html" title="Plugin consumer for generating suspension automata." alt="" coords="1086,326,1194,353"/>
+<area shape="rect" href="TimeAnalysis_8h.html" title="A short example of how to use the plugin architecture." alt="" coords="1219,326,1411,353"/>
+<area shape="rect" href="HDLThread_8cpp.html" title=" " alt="" coords="1125,557,1304,584"/>
+<area shape="rect" href="HDLHnode_8cpp.html" title=" " alt="" coords="498,408,675,435"/>
+<area shape="rect" href="GlobalSuspensionAutomata_8h.html" title=" " alt="" coords="341,229,550,271"/>
+<area shape="rect" href="Model_8cpp.html" title=" " alt="" coords="598,237,741,263"/>
+<area shape="rect" href="GlobalSuspensionAutomata_8cpp.html" title=" " alt="" coords="185,319,394,360"/>
 </map>
 </div>
 </div>
@@ -142,8 +144,12 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a762d4ffc37e02e7ca22ef105d5d19b7e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#a762d4ffc37e02e7ca22ef105d5d19b7e">sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall</a> (const clang::Type *type, const std::vector&lt; llvm::StringRef &gt; &amp;names)</td></tr>
+<tr class="separator:a762d4ffc37e02e7ca22ef105d5d19b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a962ecbfc9eb1a52e6a65b4fafbc1bafe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#a962ecbfc9eb1a52e6a65b4fafbc1bafe">sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall</a> (const clang::CXXMemberCallExpr *mce)</td></tr>
 <tr class="separator:a962ecbfc9eb1a52e6a65b4fafbc1bafe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c3e714775fb729e6229051ae1bc7565"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#a5c3e714775fb729e6229051ae1bc7565">sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall</a> (const clang::CallExpr *ce, const std::vector&lt; llvm::StringRef &gt; &amp;names)</td></tr>
+<tr class="separator:a5c3e714775fb729e6229051ae1bc7565"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9783053a358476470de028a34baed544"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const clang::CXXRecordDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#a9783053a358476470de028a34baed544">sc_ast_matchers::utils::getAllBaseClassNames</a> (const clang::CXXRecordDecl *decl)</td></tr>
 <tr class="separator:a9783053a358476470de028a34baed544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01265a86f775f3e9e458372f52ef031c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const clang::CXXRecordDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesc__ast__matchers_1_1utils.html#a01265a86f775f3e9e458372f52ef031c">sc_ast_matchers::utils::getAllBaseClasses</a> (const clang::CXXRecordDecl *decl)</td></tr>

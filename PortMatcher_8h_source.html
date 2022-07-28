@@ -380,7 +380,7 @@ $(function() {
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>      LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;name: &quot;</span> &lt;&lt; get&lt;0&gt;(i) &lt;&lt; <span class="stringliteral">&quot;, FieldDecl*: &quot;</span></div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>                              &lt;&lt; get&lt;1&gt;(i)-&gt;getAsFieldDecl());</div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>      LLVM_DEBUG(</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>          get&lt;1&gt;(i)-&gt;getTemplateType()-&gt;<a class="code hl_function" href="classsc__ast__matchers_1_1PortMatcher.html#a20ca4349a2d84d35992a77ad30805430">printTemplateArguments</a>(llvm::outs()));</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>          get&lt;1&gt;(i)-&gt;getTemplateType()-&gt;<a class="code hl_function" href="classsc__ast__matchers_1_1PortMatcher.html#a20ca4349a2d84d35992a77ad30805430">printTemplateArguments</a>(llvm::dbgs()));</div>
 <div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>      LLVM_DEBUG(llvm::dbgs() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    }</div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>  }</div>
@@ -391,7 +391,7 @@ $(function() {
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keyword">const</span> clang::Type *type_ptr{qual_type.getTypePtr()};</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keyword">auto</span> template_ptr{<span class="keyword">new</span> <a class="code hl_class" href="classsystemc__clang_1_1FindTemplateTypes.html">FindTemplateTypes</a>()};</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    template_ptr-&gt;<a class="code hl_function" href="classsystemc__clang_1_1FindTemplateTypes.html#ae648d1354e92813a492ccb2f7011d183">Enumerate</a>(type_ptr);</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    LLVM_DEBUG(template_ptr-&gt;printTemplateArguments(llvm::outs()));</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    LLVM_DEBUG(template_ptr-&gt;printTemplateArguments(llvm::dbgs()));</div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keywordflow">return</span> template_ptr;</div>
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>  }</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>

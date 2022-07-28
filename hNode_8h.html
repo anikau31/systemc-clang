@@ -81,17 +81,25 @@ $(function() {
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &lt;set&gt;</code><br />
+<code>#include &lt;unordered_set&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
+<code>#include &quot;<a class="el" href="CallExprUtils_8h_source.html">CallExprUtils.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for hNode.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="hNode_8h__incl.png" border="0" usemap="#aplugins_2hdl_2hNode_8h" alt=""/></div>
 <map name="aplugins_2hdl_2hNode_8h" id="aplugins_2hdl_2hNode_8h">
-<area shape="rect" title=" " alt="" coords="263,5,399,32"/>
+<area shape="rect" title=" " alt="" coords="429,5,565,32"/>
 <area shape="rect" title=" " alt="" coords="5,80,189,107"/>
 <area shape="rect" title=" " alt="" coords="214,80,269,107"/>
 <area shape="rect" title=" " alt="" coords="293,80,368,107"/>
 <area shape="rect" title=" " alt="" coords="393,80,503,107"/>
 <area shape="rect" title=" " alt="" coords="528,80,568,107"/>
+<area shape="rect" title=" " alt="" coords="592,80,696,107"/>
+<area shape="rect" title=" " alt="" coords="720,80,792,107"/>
+<area shape="rect" href="CallExprUtils_8h.html" title=" " alt="" coords="816,80,923,107"/>
+<area shape="rect" title=" " alt="" coords="735,155,879,181"/>
+<area shape="rect" title=" " alt="" coords="903,155,961,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -99,17 +107,17 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="hNode_8h__dep__incl.png" border="0" usemap="#aplugins_2hdl_2hNode_8hdep" alt=""/></div>
 <map name="aplugins_2hdl_2hNode_8hdep" id="aplugins_2hdl_2hNode_8hdep">
-<area shape="rect" title=" " alt="" coords="434,5,570,32"/>
-<area shape="rect" href="HDLBody_8h.html" title=" " alt="" coords="425,80,579,107"/>
-<area shape="rect" href="HDLMain_8h.html" title=" " alt="" coords="196,155,349,181"/>
-<area shape="rect" href="HDLThread_8h.html" title=" " alt="" coords="566,155,731,181"/>
-<area shape="rect" href="HDLHnode_8h.html" title=" " alt="" coords="687,80,850,107"/>
-<area shape="rect" href="HDLType_8h.html" title=" " alt="" coords="196,80,349,107"/>
-<area shape="rect" href="HDLBody_8cpp.html" title=" " alt="" coords="374,155,542,181"/>
-<area shape="rect" href="HDLMain_8cpp.html" title=" " alt="" coords="467,229,633,256"/>
-<area shape="rect" href="HDLThread_8cpp.html" title=" " alt="" coords="658,229,837,256"/>
-<area shape="rect" href="HDLHnode_8cpp.html" title=" " alt="" coords="807,155,984,181"/>
-<area shape="rect" href="HDLType_8cpp.html" title=" " alt="" coords="5,155,172,181"/>
+<area shape="rect" title=" " alt="" coords="256,5,392,32"/>
+<area shape="rect" href="HDLBody_8h.html" title=" " alt="" coords="132,155,287,181"/>
+<area shape="rect" href="HDLMain_8h.html" title=" " alt="" coords="394,229,547,256"/>
+<area shape="rect" href="HDLThread_8h.html" title=" " alt="" coords="12,229,177,256"/>
+<area shape="rect" href="HDLHnode_8h.html" title=" " alt="" coords="604,80,767,107"/>
+<area shape="rect" href="HDLType_8h.html" title=" " alt="" coords="247,80,401,107"/>
+<area shape="rect" href="HDLBody_8cpp.html" title=" " alt="" coords="201,229,369,256"/>
+<area shape="rect" href="HDLMain_8cpp.html" title=" " alt="" coords="387,304,554,331"/>
+<area shape="rect" href="HDLThread_8cpp.html" title=" " alt="" coords="5,304,184,331"/>
+<area shape="rect" href="HDLHnode_8cpp.html" title=" " alt="" coords="655,155,833,181"/>
+<area shape="rect" href="HDLType_8cpp.html" title=" " alt="" coords="362,155,529,181"/>
 </map>
 </div>
 </div>
@@ -126,6 +134,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1name__serve.html">hnode::name_serve</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1newname__map__t.html">hnode::newname_map_t&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1hfunc__name__map__t.html">hnode::hfunc_name_map_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -150,8 +160,10 @@ Typedefs</h2></td></tr>
 <tr class="separator:a13b8790df9ef35638a389976f0b632fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5a136465a64b865624526c06cb43bc8"><td class="memItemLeft" align="right" valign="top">typedef newname_map_t&lt; <a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#ae5a136465a64b865624526c06cb43bc8">hnode::hmodinst_name_map_t</a></td></tr>
 <tr class="separator:ae5a136465a64b865624526c06cb43bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a683d2e9c6b4ac48f26f3837a33175c"><td class="memItemLeft" align="right" valign="top">typedef newname_map_t&lt; FunctionDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#a7a683d2e9c6b4ac48f26f3837a33175c">hnode::hfunc_name_map_t</a></td></tr>
-<tr class="separator:a7a683d2e9c6b4ac48f26f3837a33175c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab787563a011c95e78e47e5d326dde32b"><td class="memItemLeft" align="right" valign="top">typedef newname_map_t&lt; FunctionDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#ab787563a011c95e78e47e5d326dde32b">hnode::hsimplefunc_name_map_t</a></td></tr>
+<tr class="separator:ab787563a011c95e78e47e5d326dde32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8cbafd372ebac64fcc36a9aad1fe45f"><td class="memItemLeft" align="right" valign="top">typedef std::unordered_map&lt; const CXXMethodDecl *, const Type * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#ab8cbafd372ebac64fcc36a9aad1fe45f">hnode::method_object_map_t</a></td></tr>
+<tr class="separator:ab8cbafd372ebac64fcc36a9aad1fe45f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9b47ac8fc9acfb60877d41ce71174ba"><td class="memItemLeft" align="right" valign="top">typedef std::unordered_map&lt; const CXXMethodDecl *, const CXXMethodDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#ae9b47ac8fc9acfb60877d41ce71174ba">hnode::overridden_method_map_t</a></td></tr>
 <tr class="separator:ae9b47ac8fc9acfb60877d41ce71174ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75602926168cb57d34e616f688a3edc1"><td class="memItemLeft" align="right" valign="top">typedef std::unordered_map&lt; string, hNodep &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#a75602926168cb57d34e616f688a3edc1">hnode::resetvar_map_t</a></td></tr>
@@ -179,7 +191,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00107">107</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00111">111</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -199,7 +211,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00107">107</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00111">111</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -215,7 +227,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00028">28</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00032">32</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>

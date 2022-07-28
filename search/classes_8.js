@@ -8,5 +8,6 @@ var searchData=
   ['hdlpluginaction_5',['HDLPluginAction',['../classsystemc__hdl_1_1HDLPluginAction.html',1,'systemc_hdl']]],
   ['hdlthread_6',['HDLThread',['../classsystemc__hdl_1_1HDLThread.html',1,'systemc_hdl']]],
   ['hdltype_7',['HDLType',['../classHDLType.html',1,'']]],
-  ['hnode_8',['hNode',['../classhnode_1_1hNode.html',1,'hnode']]]
+  ['hfunc_5fname_5fmap_5ft_8',['hfunc_name_map_t',['../classhnode_1_1hfunc__name__map__t.html',1,'hnode']]],
+  ['hnode_9',['hNode',['../classhnode_1_1hNode.html',1,'hnode']]]
 ];

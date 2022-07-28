@@ -8,7 +8,7 @@ var searchData=
   ['newn_5',['newn',['../structhnode_1_1names__t.html#afc0e10eb6caf6805206423e99b2a8650',1,'hnode::names_t']]],
   ['next_5fstate_5f_6',['next_state_',['../classsystemc__clang_1_1SplitCFGBlock.html#abc0367134fc9022762180d095b69878e',1,'systemc_clang::SplitCFGBlock']]],
   ['next_5fstate_5fcount_5f_7',['next_state_count_',['../classsystemc__clang_1_1SplitCFG.html#a00ed4b691aec8b1ac5ab9dc7cb12e153',1,'systemc_clang::SplitCFG']]],
-  ['nextstate_5fstring_8',['nextstate_string',['../classsystemc__hdl_1_1HDLThread.html#a211ce89a75076a27bd1b8c1d5d1fee81',1,'systemc_hdl::HDLThread::nextstate_string()'],['../classsystemc__hdl_1_1HDLBody.html#a68b111006651da58b4fad35aa30e13a2',1,'systemc_hdl::HDLBody::nextstate_string()']]],
+  ['nextstate_5fstring_8',['nextstate_string',['../classsystemc__hdl_1_1HDLBody.html#a68b111006651da58b4fad35aa30e13a2',1,'systemc_hdl::HDLBody::nextstate_string()'],['../classsystemc__hdl_1_1HDLThread.html#a211ce89a75076a27bd1b8c1d5d1fee81',1,'systemc_hdl::HDLThread::nextstate_string()']]],
   ['nextstring_9',['nextstring',['../classsystemc__hdl_1_1HDLThread.html#a5267d8e8fe126f30b0a4a0fefe2074ac',1,'systemc_hdl::HDLThread']]],
   ['nextwaitctr_5fstring_10',['nextwaitctr_string',['../classsystemc__hdl_1_1HDLThread.html#a0922af665015123ba6446d11f23416a3',1,'systemc_hdl::HDLThread']]],
   ['nodes_5fbft_5f_11',['nodes_bft_',['../classsystemc__clang_1_1Tree.html#a3ec4582fc73412f591f07e4a9dec78c7',1,'systemc_clang::Tree']]],
@@ -16,6 +16,5 @@ var searchData=
   ['notify_5fcall_5f_13',['notify_call_',['../classsystemc__clang_1_1FindNotify.html#a95e9c0fdda39d6f0ced21e3f8d2eb844',1,'systemc_clang::FindNotify']]],
   ['notify_5fcall_5flist_5f_14',['notify_call_list_',['../classsystemc__clang_1_1FindNotify.html#a3a49ad8c12643d399b9e1c76a5d30979',1,'systemc_clang::FindNotify::notify_call_list_()'],['../classsystemc__clang_1_1NotifyCalls.html#abea71681d233e979c80c5f615172f606',1,'systemc_clang::NotifyCalls::notify_call_list_()']]],
   ['ns_15',['ns',['../classhnode_1_1newname__map__t.html#a769e4c6b63efb3986cd805b4674bda62',1,'hnode::newname_map_t']]],
-  ['numstates_16',['numstates',['../classsystemc__hdl_1_1HDLThread.html#a3594305d96a526ef01ec166bc43d9e95',1,'systemc_hdl::HDLThread']]],
-  ['numstr_17',['numstr',['../classhnode_1_1util.html#aa328c7a165b1c61c2f40826d13a98391',1,'hnode::util']]]
+  ['numstates_16',['numstates',['../classsystemc__hdl_1_1HDLThread.html#a3594305d96a526ef01ec166bc43d9e95',1,'systemc_hdl::HDLThread']]]
 ];

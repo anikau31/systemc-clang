@@ -64,6 +64,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
@@ -78,11 +80,24 @@ Collaboration diagram for HDLType:</div>
 <div class="dyncontent">
 <div class="center"><img src="classHDLType__coll__graph.png" border="0" usemap="#aHDLType_coll__map" alt="Collaboration graph"/></div>
 <map name="aHDLType_coll__map" id="aHDLType_coll__map">
-<area shape="rect" title=" " alt="" coords="7,95,84,121"/>
-<area shape="rect" href="classhnode_1_1util.html" title=" " alt="" coords="5,5,85,32"/>
+<area shape="rect" title=" " alt="" coords="127,95,204,121"/>
+<area shape="rect" href="structHDLType_1_1usertype__info__t.html" title=" " alt="" coords="5,5,176,32"/>
+<area shape="rect" href="classhnode_1_1util.html" title=" " alt="" coords="200,5,280,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structHDLType_1_1usertype__info__t.html">usertype_info_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a337473de31019450dfe4ac68ccae483b"><td class="memItemLeft" align="right" valign="top">typedef std::unordered_map&lt; string, QualType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#a337473de31019450dfe4ac68ccae483b">usertype_map_t</a></td></tr>
+<tr class="separator:a337473de31019450dfe4ac68ccae483b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9ac9be87d59969e3f75f5a44a4aada7"><td class="memItemLeft" align="right" valign="top">typedef std::unordered_map&lt; const clang::Type *, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#af9ac9be87d59969e3f75f5a44a4aada7">userrectype_map_t</a></td></tr>
+<tr class="separator:af9ac9be87d59969e3f75f5a44a4aada7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aaa8e5116a4baaba73ab526315de39c78"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#aaa8e5116a4baaba73ab526315de39c78">HDLType</a> ()</td></tr>
@@ -93,15 +108,21 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6438b9a449e3fedf55ab579878a33480"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab10cea49909ac746af38024ee2358b7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#ab10cea49909ac746af38024ee2358b7a">generatetype</a> (<a class="el" href="classsystemc__clang_1_1TreeNode.html">systemc_clang::TreeNode</a>&lt; <a class="el" href="classsystemc__clang_1_1TemplateType.html">systemc_clang::TemplateType</a> &gt; *const &amp;node, <a class="el" href="classsystemc__clang_1_1Tree.html">systemc_clang::Tree</a>&lt; <a class="el" href="classsystemc__clang_1_1TemplateType.html">systemc_clang::TemplateType</a> &gt; *const &amp;treehead, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_info, bool generate_initial_htype=true)</td></tr>
 <tr class="separator:ab10cea49909ac746af38024ee2358b7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8a8b48c5c7ff5800f952b028c136d01"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#ac8a8b48c5c7ff5800f952b028c136d01">checkusertype</a> (<a class="el" href="classsystemc__clang_1_1TreeNode.html">systemc_clang::TreeNode</a>&lt; <a class="el" href="classsystemc__clang_1_1TemplateType.html">systemc_clang::TemplateType</a> &gt; *const &amp;node, <a class="el" href="classsystemc__clang_1_1Tree.html">systemc_clang::Tree</a>&lt; <a class="el" href="classsystemc__clang_1_1TemplateType.html">systemc_clang::TemplateType</a> &gt; *const &amp;treehead, string &amp;tmps)</td></tr>
+<tr class="separator:ac8a8b48c5c7ff5800f952b028c136d01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3af4b2476e7143388f415531d5b2384f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#a3af4b2476e7143388f415531d5b2384f">addtype</a> (string typname, QualType qtyp, ASTContext &amp;astcontext)</td></tr>
 <tr class="separator:a3af4b2476e7143388f415531d5b2384f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7311aa244ba45252456b87a56000e102"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#a7311aa244ba45252456b87a56000e102">addfieldtype</a> (const FieldDecl *fld, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_typdef)</td></tr>
 <tr class="separator:a7311aa244ba45252456b87a56000e102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d98fa7cfaf54532eaa2d4a588e3d658"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#a4d98fa7cfaf54532eaa2d4a588e3d658">print</a> (llvm::raw_ostream &amp;modelout=llvm::outs(), unsigned int indnt=2)</td></tr>
+<tr class="separator:a4d98fa7cfaf54532eaa2d4a588e3d658"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e5d07939e3e11ff552f4b7679fefcae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#a2e5d07939e3e11ff552f4b7679fefcae">print</a> ()</td></tr>
+<tr class="separator:a2e5d07939e3e11ff552f4b7679fefcae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a18f4ba5ed554687ef615dbf573740797"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; string, QualType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#a18f4ba5ed554687ef615dbf573740797">usertypes</a></td></tr>
-<tr class="separator:a18f4ba5ed554687ef615dbf573740797"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51b5a73e21223fe099be3e213e742ea9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structHDLType_1_1usertype__info__t.html">usertype_info_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHDLType.html#a51b5a73e21223fe099be3e213e742ea9">usertype_info</a></td></tr>
+<tr class="separator:a51b5a73e21223fe099be3e213e742ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -111,7 +132,40 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="HDLType_8h_source.html#l00016">16</a> of file <a class="el" href="HDLType_8h_source.html">HDLType.h</a>.</p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="af9ac9be87d59969e3f75f5a44a4aada7" name="af9ac9be87d59969e3f75f5a44a4aada7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9ac9be87d59969e3f75f5a44a4aada7">&#9670;&nbsp;</a></span>userrectype_map_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::unordered_map&lt;const clang::Type *, string&gt; <a class="el" href="classHDLType.html#af9ac9be87d59969e3f75f5a44a4aada7">HDLType::userrectype_map_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLType_8h_source.html#l00021">21</a> of file <a class="el" href="HDLType_8h_source.html">HDLType.h</a>.</p>
+
+</div>
+</div>
+<a id="a337473de31019450dfe4ac68ccae483b" name="a337473de31019450dfe4ac68ccae483b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a337473de31019450dfe4ac68ccae483b">&#9670;&nbsp;</a></span>usertype_map_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::unordered_map&lt;string, QualType&gt; <a class="el" href="classHDLType.html#a337473de31019450dfe4ac68ccae483b">HDLType::usertype_map_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLType_8h_source.html#l00020">20</a> of file <a class="el" href="HDLType_8h_source.html">HDLType.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aaa8e5116a4baaba73ab526315de39c78" name="aaa8e5116a4baaba73ab526315de39c78"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaa8e5116a4baaba73ab526315de39c78">&#9670;&nbsp;</a></span>HDLType()</h2>
 
@@ -193,7 +247,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLType_8cpp_source.html#l00195">195</a> of file <a class="el" href="HDLType_8cpp_source.html">HDLType.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLType_8cpp_source.html#l00230">230</a> of file <a class="el" href="HDLType_8cpp_source.html">HDLType.cpp</a>.</p>
 
 </div>
 </div>
@@ -229,7 +283,43 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLType_8cpp_source.html#l00128">128</a> of file <a class="el" href="HDLType_8cpp_source.html">HDLType.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLType_8cpp_source.html#l00162">162</a> of file <a class="el" href="HDLType_8cpp_source.html">HDLType.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ac8a8b48c5c7ff5800f952b028c136d01" name="ac8a8b48c5c7ff5800f952b028c136d01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8a8b48c5c7ff5800f952b028c136d01">&#9670;&nbsp;</a></span>checkusertype()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HDLType::checkusertype </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classsystemc__clang_1_1TreeNode.html">systemc_clang::TreeNode</a>&lt; <a class="el" href="classsystemc__clang_1_1TemplateType.html">systemc_clang::TemplateType</a> &gt; *const &amp;&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classsystemc__clang_1_1Tree.html">systemc_clang::Tree</a>&lt; <a class="el" href="classsystemc__clang_1_1TemplateType.html">systemc_clang::TemplateType</a> &gt; *const &amp;&#160;</td>
+          <td class="paramname"><em>treehead</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string &amp;&#160;</td>
+          <td class="paramname"><em>tmps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLType_8cpp_source.html#l00129">129</a> of file <a class="el" href="HDLType_8cpp_source.html">HDLType.cpp</a>.</p>
 
 </div>
 </div>
@@ -271,7 +361,72 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLType_8cpp_source.html#l00083">83</a> of file <a class="el" href="HDLType_8cpp_source.html">HDLType.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLType_8cpp_source.html#l00092">92</a> of file <a class="el" href="HDLType_8cpp_source.html">HDLType.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a2e5d07939e3e11ff552f4b7679fefcae" name="a2e5d07939e3e11ff552f4b7679fefcae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e5d07939e3e11ff552f4b7679fefcae">&#9670;&nbsp;</a></span>print() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HDLType::print </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLType_8h_source.html#l00054">54</a> of file <a class="el" href="HDLType_8h_source.html">HDLType.h</a>.</p>
+
+</div>
+</div>
+<a id="a4d98fa7cfaf54532eaa2d4a588e3d658" name="a4d98fa7cfaf54532eaa2d4a588e3d658"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d98fa7cfaf54532eaa2d4a588e3d658">&#9670;&nbsp;</a></span>print() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HDLType::print </td>
+          <td>(</td>
+          <td class="paramtype">llvm::raw_ostream &amp;&#160;</td>
+          <td class="paramname"><em>modelout</em> = <code>llvm::outs()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>indnt</em> = <code>2</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLType_8h_source.html#l00045">45</a> of file <a class="el" href="HDLType_8h_source.html">HDLType.h</a>.</p>
 
 </div>
 </div>
@@ -320,7 +475,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Resolve types of systemc variables, signals, and ports including templated types and generate primitive type declarations Relies on TemplateTree matcher provided by front end and can handle structured types. </p>
 
-<p class="definition">Definition at line <a class="el" href="HDLType_8cpp_source.html#l00026">26</a> of file <a class="el" href="HDLType_8cpp_source.html">HDLType.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLType_8cpp_source.html#l00027">27</a> of file <a class="el" href="HDLType_8cpp_source.html">HDLType.cpp</a>.</p>
 
 </div>
 </div>
@@ -345,23 +500,23 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLType_8h_source.html#l00033">33</a> of file <a class="el" href="HDLType_8h_source.html">HDLType.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLType_8h_source.html#l00062">62</a> of file <a class="el" href="HDLType_8h_source.html">HDLType.h</a>.</p>
 
 </div>
 </div>
-<a id="a18f4ba5ed554687ef615dbf573740797" name="a18f4ba5ed554687ef615dbf573740797"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a18f4ba5ed554687ef615dbf573740797">&#9670;&nbsp;</a></span>usertypes</h2>
+<a id="a51b5a73e21223fe099be3e213e742ea9" name="a51b5a73e21223fe099be3e213e742ea9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51b5a73e21223fe099be3e213e742ea9">&#9670;&nbsp;</a></span>usertype_info</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;string, QualType&gt; HDLType::usertypes</td>
+          <td class="memname"><a class="el" href="structHDLType_1_1usertype__info__t.html">usertype_info_t</a> HDLType::usertype_info</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLType_8h_source.html#l00030">30</a> of file <a class="el" href="HDLType_8h_source.html">HDLType.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLType_8h_source.html#l00044">44</a> of file <a class="el" href="HDLType_8h_source.html">HDLType.h</a>.</p>
 
 </div>
 </div>

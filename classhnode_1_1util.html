@@ -71,6 +71,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classhnode_1_1util-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">hnode::util Class Reference</div></div>
 </div><!--header-->
@@ -84,37 +85,38 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2f939b759f2612426d6e6832256c4228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40c1447431ed1788a1a4a03e13f7005d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a40c1447431ed1788a1a4a03e13f7005d">~util</a> ()</td></tr>
 <tr class="separator:a40c1447431ed1788a1a4a03e13f7005d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9963a7be4acd67aeb84f11a44ad9cd40"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a9963a7be4acd67aeb84f11a44ad9cd40">isSCBuiltinType</a> (const string &amp;tstring)</td></tr>
-<tr class="separator:a9963a7be4acd67aeb84f11a44ad9cd40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af985b0c0935d3897d2073a47b5628b8d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#af985b0c0935d3897d2073a47b5628b8d">isSCByCallExpr</a> (const CallExpr *callexpr)</td></tr>
+<tr class="separator:af985b0c0935d3897d2073a47b5628b8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7686ae9b00eaf6f84c604776af23c9a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#aa7686ae9b00eaf6f84c604776af23c9a">isSCByType</a> (const Type *typ)</td></tr>
+<tr class="separator:aa7686ae9b00eaf6f84c604776af23c9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b5201193bd1bc94d041c1aacb9646e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a3b5201193bd1bc94d041c1aacb9646e6">isSCFunc</a> (const string &amp;tstring)</td></tr>
 <tr class="separator:a3b5201193bd1bc94d041c1aacb9646e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bba15dca969ac22cc4e1779e4ea7620"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a9bba15dca969ac22cc4e1779e4ea7620">isTypename</a> (const string &amp;tstring)</td></tr>
+<tr class="separator:a9bba15dca969ac22cc4e1779e4ea7620"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a758eac997df82bd7cd138b0559f7fbc3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a758eac997df82bd7cd138b0559f7fbc3">isSCMacro</a> (const std::string &amp;str_in)</td></tr>
+<tr class="separator:a758eac997df82bd7cd138b0559f7fbc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:af510b612fdd0ce12ab898c842d3f6736"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#af510b612fdd0ce12ab898c842d3f6736">make_ident</a> (string &amp;nm)</td></tr>
 <tr class="separator:af510b612fdd0ce12ab898c842d3f6736"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2be8ad623002038dc6e331adc3d2487"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#ae2be8ad623002038dc6e331adc3d2487">isSCType</a> (const string &amp;tstring)</td></tr>
-<tr class="separator:ae2be8ad623002038dc6e331adc3d2487"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93b0dfd124e07343270874ecb28d1fce"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a93b0dfd124e07343270874ecb28d1fce">is_sc_macro</a> (const std::string &amp;str_in)</td></tr>
-<tr class="separator:a93b0dfd124e07343270874ecb28d1fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec9118a21d646bbc50205199825839fd"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#aec9118a21d646bbc50205199825839fd">isposint</a> (const std::string &amp;str)</td></tr>
 <tr class="separator:aec9118a21d646bbc50205199825839fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aa328c7a165b1c61c2f40826d13a98391"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#aa328c7a165b1c61c2f40826d13a98391">numstr</a> = 6</td></tr>
-<tr class="separator:aa328c7a165b1c61c2f40826d13a98391"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a942d5e2825dbec1bca7b9e3174420d66"><td class="memItemLeft" align="right" valign="top">const string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a942d5e2825dbec1bca7b9e3174420d66">scbuiltintype</a> [6]</td></tr>
-<tr class="separator:a942d5e2825dbec1bca7b9e3174420d66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a452e348d557d610adb1462cb0039b7b7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a452e348d557d610adb1462cb0039b7b7">scbtlen</a> [6]</td></tr>
-<tr class="separator:a452e348d557d610adb1462cb0039b7b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0b661365e3ee8a3d4a1f295b912a7c6"><td class="memItemLeft" align="right" valign="top">const set&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#af0b661365e3ee8a3d4a1f295b912a7c6">sc_built_in_funcs</a></td></tr>
 <tr class="separator:af0b661365e3ee8a3d4a1f295b912a7c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a2eb6cdcc2e5d86e046f47ff9beb00ca3"><td class="memItemLeft" align="right" valign="top">std::unordered_set&lt; const Type * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1util.html#a2eb6cdcc2e5d86e046f47ff9beb00ca3">types_seen</a> = {}</td></tr>
+<tr class="separator:a2eb6cdcc2e5d86e046f47ff9beb00ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The util class provides small utility functions to generate and recognize C++ and SystemC conformant identifiers. </p>
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00218">218</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00225">225</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2f939b759f2612426d6e6832256c4228" name="a2f939b759f2612426d6e6832256c4228"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2f939b759f2612426d6e6832256c4228">&#9670;&nbsp;</a></span>util()</h2>
@@ -166,39 +168,11 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00238">238</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00235">235</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a93b0dfd124e07343270874ecb28d1fce" name="a93b0dfd124e07343270874ecb28d1fce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93b0dfd124e07343270874ecb28d1fce">&#9670;&nbsp;</a></span>is_sc_macro()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool hnode::util::is_sc_macro </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>str_in</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00298">298</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
-
-</div>
-</div>
 <a id="aec9118a21d646bbc50205199825839fd" name="aec9118a21d646bbc50205199825839fd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aec9118a21d646bbc50205199825839fd">&#9670;&nbsp;</a></span>isposint()</h2>
 
@@ -223,12 +197,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00306">306</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00323">323</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
-<a id="a9963a7be4acd67aeb84f11a44ad9cd40" name="a9963a7be4acd67aeb84f11a44ad9cd40"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9963a7be4acd67aeb84f11a44ad9cd40">&#9670;&nbsp;</a></span>isSCBuiltinType()</h2>
+<a id="af985b0c0935d3897d2073a47b5628b8d" name="af985b0c0935d3897d2073a47b5628b8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af985b0c0935d3897d2073a47b5628b8d">&#9670;&nbsp;</a></span>isSCByCallExpr()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,10 +211,10 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool hnode::util::isSCBuiltinType </td>
+          <td class="memname">bool hnode::util::isSCByCallExpr </td>
           <td>(</td>
-          <td class="paramtype">const string &amp;&#160;</td>
-          <td class="paramname"><em>tstring</em></td><td>)</td>
+          <td class="paramtype">const CallExpr *&#160;</td>
+          <td class="paramname"><em>callexpr</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -251,7 +225,35 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00251">251</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00249">249</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+
+</div>
+</div>
+<a id="aa7686ae9b00eaf6f84c604776af23c9a" name="aa7686ae9b00eaf6f84c604776af23c9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7686ae9b00eaf6f84c604776af23c9a">&#9670;&nbsp;</a></span>isSCByType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool hnode::util::isSCByType </td>
+          <td>(</td>
+          <td class="paramtype">const Type *&#160;</td>
+          <td class="paramname"><em>typ</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00281">281</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -279,12 +281,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00262">262</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00303">303</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
-<a id="ae2be8ad623002038dc6e331adc3d2487" name="ae2be8ad623002038dc6e331adc3d2487"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2be8ad623002038dc6e331adc3d2487">&#9670;&nbsp;</a></span>isSCType()</h2>
+<a id="a758eac997df82bd7cd138b0559f7fbc3" name="a758eac997df82bd7cd138b0559f7fbc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a758eac997df82bd7cd138b0559f7fbc3">&#9670;&nbsp;</a></span>isSCMacro()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,7 +295,35 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool hnode::util::isSCType </td>
+          <td class="memname">bool hnode::util::isSCMacro </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>str_in</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00315">315</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+
+</div>
+</div>
+<a id="a9bba15dca969ac22cc4e1779e4ea7620" name="a9bba15dca969ac22cc4e1779e4ea7620"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bba15dca969ac22cc4e1779e4ea7620">&#9670;&nbsp;</a></span>isTypename()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool hnode::util::isTypename </td>
           <td>(</td>
           <td class="paramtype">const string &amp;&#160;</td>
           <td class="paramname"><em>tstring</em></td><td>)</td>
@@ -302,12 +332,12 @@ Public Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00268">268</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00308">308</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -335,27 +365,11 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00240">240</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00237">237</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="aa328c7a165b1c61c2f40826d13a98391" name="aa328c7a165b1c61c2f40826d13a98391"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa328c7a165b1c61c2f40826d13a98391">&#9670;&nbsp;</a></span>numstr</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int hnode::util::numstr = 6</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00220">220</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
-
-</div>
-</div>
 <a id="af0b661365e3ee8a3d4a1f295b912a7c6" name="af0b661365e3ee8a3d4a1f295b912a7c6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af0b661365e3ee8a3d4a1f295b912a7c6">&#9670;&nbsp;</a></span>sc_built_in_funcs</h2>
 
@@ -374,43 +388,27 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a452e348d557d610adb1462cb0039b7b7" name="a452e348d557d610adb1462cb0039b7b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a452e348d557d610adb1462cb0039b7b7">&#9670;&nbsp;</a></span>scbtlen</h2>
+<a id="a2eb6cdcc2e5d86e046f47ff9beb00ca3" name="a2eb6cdcc2e5d86e046f47ff9beb00ca3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2eb6cdcc2e5d86e046f47ff9beb00ca3">&#9670;&nbsp;</a></span>types_seen</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int hnode::util::scbtlen[6]</td>
+          <td class="memname">std::unordered_set&lt;const Type *&gt; hnode::util::types_seen = {}</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00229">229</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
-
-</div>
-</div>
-<a id="a942d5e2825dbec1bca7b9e3174420d66" name="a942d5e2825dbec1bca7b9e3174420d66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a942d5e2825dbec1bca7b9e3174420d66">&#9670;&nbsp;</a></span>scbuiltintype</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const string hnode::util::scbuiltintype[6]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">      <span class="stringliteral">&quot;sc_uint&quot;</span>,</div>
-<div class="line">      <span class="stringliteral">&quot;sc_int&quot;</span>,</div>
-<div class="line">      <span class="stringliteral">&quot;sc_bigint&quot;</span>,</div>
-<div class="line">      <span class="stringliteral">&quot;sc_biguint&quot;</span>,</div>
-<div class="line">      <span class="stringliteral">&quot;sc_bv&quot;</span>,</div>
-<div class="line">      <span class="stringliteral">&quot;sc_logic&quot;</span></div>
-<div class="line">    }</div>
-</div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00221">221</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00227">227</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,5 @@
 <map id="parselib.transforms.top_down.TopDown" name="parselib.transforms.top_down.TopDown">
-<area shape="rect" id="node1" title=" " alt="" coords="135,528,288,569"/>
+<area shape="rect" id="node1" title=" " alt="" coords="135,561,288,603"/>
 <area shape="rect" id="node3" href="$classparselib_1_1transforms_1_1alias__translation_1_1AliasTranslation.html" title=" " alt="" coords="402,5,587,47"/>
 <area shape="rect" id="node4" href="$classparselib_1_1transforms_1_1comma__transformation_1_1CommaTransformation.html" title=" " alt="" coords="371,71,618,112"/>
 <area shape="rect" id="node5" href="$classparselib_1_1transforms_1_1function__info__pass_1_1FunctionInfoPass.html" title=" " alt="" coords="399,136,590,177"/>
@@ -15,7 +15,8 @@
 <area shape="rect" id="node15" href="$classparselib_1_1transforms_1_1sort__var__decl_1_1SortVarDecl.html" title=" " alt="" coords="416,789,573,831"/>
 <area shape="rect" id="node16" href="$classparselib_1_1transforms_1_1structure__collector_1_1StructureCollector.html" title=" " alt="" coords="401,855,588,896"/>
 <area shape="rect" id="node17" href="$classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html" title=" " alt="" coords="397,920,592,961"/>
-<area shape="rect" id="node18" href="$classparselib_1_1transforms_1_1typedef__filter_1_1TypeDefFilter.html" title=" " alt="" coords="406,985,583,1027"/>
-<area shape="rect" id="node19" href="$classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html" title=" " alt="" coords="385,1051,604,1092"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,535,87,562"/>
+<area shape="rect" id="node18" href="$classparselib_1_1transforms_1_1typedef__filter_1_1TypeDefCleanup.html" title=" " alt="" coords="406,985,583,1027"/>
+<area shape="rect" id="node19" href="$classparselib_1_1transforms_1_1typedef__filter_1_1TypeDefFilter.html" title=" " alt="" coords="406,1051,583,1092"/>
+<area shape="rect" id="node20" href="$classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html" title=" " alt="" coords="385,1116,604,1157"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,569,87,595"/>
 </map>

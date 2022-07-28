@@ -73,6 +73,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1hfunc__name__map__t.html">hfunc_name_map_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1hNode.html">hNode</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhnode_1_1name__serve.html">name_serve</a></td></tr>
@@ -92,8 +94,10 @@ Typedefs</h2></td></tr>
 <tr class="separator:a13b8790df9ef35638a389976f0b632fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5a136465a64b865624526c06cb43bc8"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classhnode_1_1newname__map__t.html">newname_map_t</a>&lt; <a class="el" href="classsystemc__clang_1_1ModuleInstance.html">ModuleInstance</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#ae5a136465a64b865624526c06cb43bc8">hmodinst_name_map_t</a></td></tr>
 <tr class="separator:ae5a136465a64b865624526c06cb43bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a683d2e9c6b4ac48f26f3837a33175c"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classhnode_1_1newname__map__t.html">newname_map_t</a>&lt; FunctionDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#a7a683d2e9c6b4ac48f26f3837a33175c">hfunc_name_map_t</a></td></tr>
-<tr class="separator:a7a683d2e9c6b4ac48f26f3837a33175c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab787563a011c95e78e47e5d326dde32b"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classhnode_1_1newname__map__t.html">newname_map_t</a>&lt; FunctionDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#ab787563a011c95e78e47e5d326dde32b">hsimplefunc_name_map_t</a></td></tr>
+<tr class="separator:ab787563a011c95e78e47e5d326dde32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8cbafd372ebac64fcc36a9aad1fe45f"><td class="memItemLeft" align="right" valign="top">typedef std::unordered_map&lt; const CXXMethodDecl *, const Type * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#ab8cbafd372ebac64fcc36a9aad1fe45f">method_object_map_t</a></td></tr>
+<tr class="separator:ab8cbafd372ebac64fcc36a9aad1fe45f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9b47ac8fc9acfb60877d41ce71174ba"><td class="memItemLeft" align="right" valign="top">typedef std::unordered_map&lt; const CXXMethodDecl *, const CXXMethodDecl * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#ae9b47ac8fc9acfb60877d41ce71174ba">overridden_method_map_t</a></td></tr>
 <tr class="separator:ae9b47ac8fc9acfb60877d41ce71174ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75602926168cb57d34e616f688a3edc1"><td class="memItemLeft" align="right" valign="top">typedef std::unordered_map&lt; string, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehnode.html#a75602926168cb57d34e616f688a3edc1">resetvar_map_t</a></td></tr>
@@ -119,23 +123,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00434">434</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
-
-</div>
-</div>
-<a id="a7a683d2e9c6b4ac48f26f3837a33175c" name="a7a683d2e9c6b4ac48f26f3837a33175c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a683d2e9c6b4ac48f26f3837a33175c">&#9670;&nbsp;</a></span>hfunc_name_map_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="classhnode_1_1newname__map__t.html">newname_map_t</a>&lt;FunctionDecl *&gt; <a class="el" href="namespacehnode.html#a7a683d2e9c6b4ac48f26f3837a33175c">hnode::hfunc_name_map_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00436">436</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00451">451</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -151,7 +139,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00435">435</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00452">452</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -167,7 +155,39 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00024">24</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00028">28</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+
+</div>
+</div>
+<a id="ab787563a011c95e78e47e5d326dde32b" name="ab787563a011c95e78e47e5d326dde32b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab787563a011c95e78e47e5d326dde32b">&#9670;&nbsp;</a></span>hsimplefunc_name_map_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="classhnode_1_1newname__map__t.html">newname_map_t</a>&lt;FunctionDecl *&gt; <a class="el" href="namespacehnode.html#ab787563a011c95e78e47e5d326dde32b">hnode::hsimplefunc_name_map_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00453">453</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+
+</div>
+</div>
+<a id="ab8cbafd372ebac64fcc36a9aad1fe45f" name="ab8cbafd372ebac64fcc36a9aad1fe45f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8cbafd372ebac64fcc36a9aad1fe45f">&#9670;&nbsp;</a></span>method_object_map_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::unordered_map&lt;const CXXMethodDecl *, const Type *&gt; <a class="el" href="namespacehnode.html#ab8cbafd372ebac64fcc36a9aad1fe45f">hnode::method_object_map_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00456">456</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -183,7 +203,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00438">438</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00478">478</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -199,7 +219,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00441">441</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00481">481</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
@@ -228,7 +248,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00332">332</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="hNode_8h_source.html#l00349">349</a> of file <a class="el" href="hNode_8h_source.html">hNode.h</a>.</p>
 
 </div>
 </div>
