@@ -2,6 +2,7 @@ import pytest
 import os
 import subprocess
 import difflib
+import shutil
 from pathlib import Path
 from pytest_steps import test_steps
 from conftest import test_data
@@ -37,8 +38,8 @@ def vivado_tcl_template():
 
 
 @test_steps('hcode', 'translation', 'translation-match-check', 'synthesis')
-@pytest.mark.parametrize("name,content,extra_args,golden,golden_hcode", test_data, ids=[x[0] for x in test_data])
-def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, default_params, clang_args_params, vivado_tcl_template, has_vivado):
+@pytest.mark.parametrize("name,content,extra_args,golden,golden_hcode,copy_back_path", test_data, ids=[x[0] for x in test_data])
+def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, copy_back_path, default_params, clang_args_params, vivado_tcl_template, has_vivado):
     # move files to the target directory
     target_path = tmp_path / '{}.cpp'.format(name)
     hcode_target_path = tmp_path / '{}_hdl.txt'.format(name)
@@ -53,6 +54,10 @@ def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, 
     print(' '.join(args))
     target = sysc_clang.invoke_sysc(args)
     assert hcode_target_path.exists(), 'hCode txt should be present'
+    # We need to copy this back to the build directory
+    if copy_back_path:
+        shutil.copy(hcode_target_path, copy_back_path)
+
 
     if golden_hcode is not None:
         # check for the code
@@ -63,6 +68,9 @@ def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, 
     # step: translation
     print("Generated _hdl.txt file at: {}".format(target))
     sysc_clang.invoke_translation(target, [])
+    assert verilog_target_path.exists(), 'Verilog should be present'
+    if copy_back_path:
+        shutil.copy(verilog_target_path, copy_back_path)
     yield
 
     # step: translation-match (checks whether the translation matches a golden file, if exists)

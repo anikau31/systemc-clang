@@ -13,6 +13,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include <iostream>
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "HDL"
 
@@ -27,9 +28,10 @@ void HDLType::SCtype2hcode(string prefix, Tree<TemplateType> *template_argtp,
                            std::vector<llvm::APInt> *arr_sizes,
                            hNode::hdlopsEnum h_op, hNodep &h_info) {
 
-  LLVM_DEBUG(llvm::dbgs() << "HDLtype dump of templatetree args follows\n");
+  LLVM_DEBUG(llvm::dbgs() << "prefix "<< prefix << " HDLtype dump of templatetree args follows\n");
   LLVM_DEBUG(template_argtp->dump(llvm::dbgs()) ; );
-
+  LLVM_DEBUG(llvm::dbgs() << "as string: " << template_argtp->dft() << "\n");
+  
   if (!(template_argtp && (template_argtp->getRoot()))) {
     LLVM_DEBUG(llvm::dbgs() << "HDLtype no root prefix is " << prefix << " "
                             << template_argtp << "\n");
@@ -43,11 +45,11 @@ void HDLType::SCtype2hcode(string prefix, Tree<TemplateType> *template_argtp,
     tmps = "int";
   }
   else tmps = ((template_argtp->getRoot())->getDataPtr())->getTypeName();
-  std::replace(tmps.begin(), tmps.end(), ' ',
-               '_'); // replace spaces in type name with _
+  if ((((template_argtp->getRoot())->getDataPtr())->getTypePtr())->isBuiltinType())
+    tutil.make_ident(tmps); 
   hNodep h_typeinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
   hmainp->child_list.push_back(h_typeinfo);
-
+  
   hNodep h_typ = new hNode(tmps, hNode::hdlopsEnum::hType);
   if ((arr_sizes) && (arr_sizes->size() > 0)) {
     string arr_string = "array";
@@ -63,15 +65,22 @@ void HDLType::SCtype2hcode(string prefix, Tree<TemplateType> *template_argtp,
     h_typeinfo->child_list.push_back(h_typ);
   }
 
-  
+  if ((((template_argtp->getRoot())->getDataPtr())->getTypePtr())->isBuiltinType()) return;
   auto const vectreeptr{template_argtp->getChildren(template_argtp->getRoot())};
-  // template arguments seem to be stored in reverse order
   if ((vectreeptr.size() == 0) && ((template_argtp->getRoot())->getDataPtr())->getTypePtr()->isStructureType())
     {
+      LLVM_DEBUG(llvm::dbgs() << "root node has no children, is structure type, type dump follows\n");
       LLVM_DEBUG(((template_argtp->getRoot())->getDataPtr())->getTypePtr()->dump() ; );
       generatetype(template_argtp->getRoot(), template_argtp, h_typ, false);  // skip initial hType, already generated
       return;
     }
+
+   if (checkusertype(template_argtp->getRoot(), template_argtp, tmps)) {
+    h_typ->set(tmps);
+    return; // we are not pushing into the template tree parameters for user defined types since template specialization record is saved
+  }
+
+  // template arguments seem to be stored in reverse order
   for (int i = vectreeptr.size() - 1; i >= 0; i--) {
     // for (auto const &node : vectreeptr) {
     // generatetype(node, template_argtp, h_typ);
@@ -85,13 +94,14 @@ void HDLType::generatetype(
     systemc_clang::Tree<systemc_clang::TemplateType> *const &treehead,
     hNodep &h_info, bool generate_initial_htype) {
 
+  
   string tmps = (node->getDataPtr())->getTypeName();
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
     tutil.make_ident(tmps);
   // LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << " type
   // follows\n"); (node->getDataPtr())->getTypePtr()->dump(llvm::dbgs());
 
-  LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << "\n");
+  LLVM_DEBUG(llvm::dbgs() << "generatetype node name is " << tmps << " as string is " << node->toString() << "\n");
   hNodep nodetyp;
   if (generate_initial_htype) {
     nodetyp =
@@ -102,19 +112,10 @@ void HDLType::generatetype(
   else nodetyp = h_info; // the type node was already generated
   if (((node->getDataPtr())->getTypePtr())->isBuiltinType())
     return;
-  if (!(tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps) ||
-        tutil.isposint(tmps))) {
-    LLVM_DEBUG(llvm::dbgs() << "adding user defined type " << tmps << "\n");
-    const RecordType *tstp =
-        dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());
-    if (tstp) {
-      LLVM_DEBUG(llvm::dbgs() << "generatetype found record type\n");
-      // RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
-      usertypes[tmps] =
-          ((tstp->getDecl())->getTypeForDecl())->getCanonicalTypeInternal();
-    }
-    usertypes[tmps] =
-        ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
+ 
+  if (checkusertype(node, treehead, tmps)) {
+    nodetyp->set(tmps);
+    return; // we are not pushing into the template tree parameters for user defined types since template specialization record is saved
   }
   auto const vectreeptr{treehead->getChildren(node)};
   // template arguments seem to be stored in reverse order
@@ -123,6 +124,39 @@ void HDLType::generatetype(
     // generatetype(chnode, treehead, nodetyp);
     generatetype(vectreeptr[i], treehead, nodetyp);
   }
+}
+
+bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType> *const &node,
+			      systemc_clang::Tree<systemc_clang::TemplateType> *const &treehead, string &tmps)
+{
+  bool retval = false;
+  const Type *typ = node->getDataPtr()->getTypePtr();
+  
+  if (!(tutil.isSCByType(typ) ||
+        tutil.isposint(tmps) || tutil.isTypename(tmps))) {
+    string tmps_full = treehead->dft();
+    size_t type_ix = tmps_full.find(tmps);
+    if (type_ix != string::npos) { // found the name in the template args
+      tmps = tmps_full.substr(type_ix);
+      tutil.make_ident(tmps);
+      retval = true;
+    }
+    LLVM_DEBUG(llvm::dbgs() << "user defined type full " << tmps+ " " + tmps_full << "\n"); // here build specialized type
+    const RecordType *tstp =
+        dyn_cast<RecordType>((node->getDataPtr())->getTypePtr());
+    if (tstp) {
+      LLVM_DEBUG(llvm::dbgs() << "generatetype found record type and type pointer from RecordType is " << tstp << "\n");
+      // RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
+
+      usertype_info.usertypes[tmps] =
+          ((tstp->getDecl())->getTypeForDecl())->getCanonicalTypeInternal();
+      usertype_info.userrectypes[tstp] = tmps;  // reverse map from RecType * to generated name
+    }
+    else usertype_info.usertypes[tmps] =
+        ((node->getDataPtr())->getTypePtr())->getCanonicalTypeInternal();
+   }
+   return retval;
+
 }
 
 hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
@@ -142,7 +176,7 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
 
   if (const RecordType *rectype = dyn_cast<RecordType>(typ)) {
     LLVM_DEBUG(llvm::dbgs()
-               << "addtype record type found, name is " << typname << "\n");
+               << "addtype record type found, name is " << typname << " rectype ptr is " << rectype << "\n");
     if (isa<ClassTemplateSpecializationDecl>(rectype->getDecl())) {
       LLVM_DEBUG(llvm::dbgs()
                  << "addtype isa template specialzation decl found, name is "
@@ -156,21 +190,22 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
       TemplateParametersMatcher template_matcher{};
       MatchFinder matchRegistry{};
       template_matcher.registerMatchers(matchRegistry);
-      matchRegistry.match(*ctsd, astcontext); // getContext());
+      matchRegistry.match(*ctsd, astcontext); // ctd for user defined type, ctsd for actual
       LLVM_DEBUG(llvm::dbgs() << "####### ============================== END "
                                  "MATCHER ========================= ##### \n");
 
-      TemplateParameterList *tpl = ctd->getTemplateParameters();
-      LLVM_DEBUG(llvm::dbgs() << "addtype her are template parameters\n");
-      for (auto param : *tpl) {
-        LLVM_DEBUG(llvm::dbgs() << "addtype template param name is "
-                                << param->getName() << "\n");
-        // param->dump(llvm::dbgs());
-        h_typdef->child_list.push_back(
-            new hNode(param->getName().str(), hNode::hdlopsEnum::hTypeTemplateParam));
-      }
+      // TemplateParameterList *tpl = ctd->getTemplateParameters();
+      // LLVM_DEBUG(llvm::dbgs() << "addtype her are template parameters\n");
+      // for (auto param : *tpl) {
+      //   LLVM_DEBUG(llvm::dbgs() << "addtype template param name is "
+      //                           << param->getName() << "\n");
+      //   // param->dump(llvm::dbgs());
+      //   h_typdef->child_list.push_back(
+      //       new hNode(param->getName().str(), hNode::hdlopsEnum::hTypeTemplateParam));
+      // }
+      
       std::vector<const FieldDecl *> fields;
-      template_matcher.getFields(fields);
+      template_matcher.getArgFields(fields); //  Parm for formal, use getArgFields for actual
       if (fields.size() > 0) {
         for (const FieldDecl *fld : fields) {
           addfieldtype(fld, h_typdef);
@@ -206,8 +241,7 @@ void HDLType::addfieldtype(const FieldDecl *fld, hNodep &h_typdef) {
   hNodep hfld =
       new hNode(fld->getNameAsString(), hNode::hdlopsEnum::hTypeField);
   h_typdef->child_list.push_back(hfld);
-  LLVM_DEBUG(
-      llvm::dbgs() << "calling generatetype with template args of field\n");
+  LLVM_DEBUG(llvm::dbgs() << "calling generatetype with template args of field\n");
   if (template_args->getRoot())
     generatetype(template_args->getRoot(), template_args, hfld);
   else

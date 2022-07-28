@@ -55,24 +55,16 @@ void FindTemplateTypes::Enumerate(const Type *type) {
     return;
   }
 
-  llvm::outs() << "=Enumerate=\n";
-
   TraverseType(QualType(type->getUnqualifiedDesugaredType(), 1));
 }
 
 bool FindTemplateTypes::VisitDeclRefExpr(DeclRefExpr *dre) {
-  //llvm::outs() << "=VisitDeclRefExpr=\n";
   dre->dump();
 
   if (FunctionDecl *fd = dyn_cast<FunctionDecl>(dre->getDecl())) {
     //llvm::outs() << " ### FUNCTION DECL\n";
     return true;
   }
-  if (CXXRecordDecl *fd = dyn_cast<CXXRecordDecl>(dre->getDecl())) {
-    //llvm::outs() << " ### CXX DECL\n";
-  }
-
-  //llvm::outs() << "type name: " << dre->getType().getAsString() << "=== \n";
 
   std::string template_parm{dre->getNameInfo().getAsString()};
 
@@ -85,7 +77,6 @@ bool FindTemplateTypes::VisitDeclRefExpr(DeclRefExpr *dre) {
 
 bool FindTemplateTypes::VisitTemplateSpecializationType(
     TemplateSpecializationType *special_type) {
-  //llvm::outs() << "=VisitTemplateSpecializationType=\n";
 
   /// The specialized template type is used for user-defined template type
   /// arguments, and constexpr fpblk_sz (as in ZFP). The issue here is that one
@@ -110,7 +101,6 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
   std::string name_string;
   llvm::raw_string_ostream sstream(name_string);
   template_name.print(sstream, Policy, 0);
-  llvm::outs() << "== template_name: " << sstream.str() << "\n";
 
   auto new_node{
       template_args_.addNode(TemplateType{sstream.str(), special_type})};
@@ -131,7 +121,6 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
 }
 
 bool FindTemplateTypes::VisitCXXRecordDecl(CXXRecordDecl *cxx_record) {
-  // llvm::outs() << "=VisitCXXRecordDecl=\n";
   if (cxx_record != nullptr) {
     IdentifierInfo *info{cxx_record->getIdentifier()};
     if (info != nullptr) {
@@ -193,9 +182,6 @@ bool FindTemplateTypes::VisitEnumType(EnumType *e) {
 }
 
 bool FindTemplateTypes::VisitDependentNameType(DependentNameType *type) {
-   llvm::outs() << "=DependentNameType=\n";
-   type->dump();
-
   TemplateType tt{type->desugar().getAsString(), type};
   current_type_node_ = template_args_.addNode(tt);
   if (template_args_.size() == 1) {
@@ -205,8 +191,8 @@ bool FindTemplateTypes::VisitDependentNameType(DependentNameType *type) {
   return true;
 }
 bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
-   llvm::outs() << "=VisitTypedefType=\n";
-   typedef_type->dump();
+   LLVM_DEBUG(llvm::dbgs() << "=VisitTypedefType=\n";
+   typedef_type->dump(););
   // child nodes of TemplateSpecializationType are not being invoked.
   if (auto special_type = typedef_type->getAs<TemplateSpecializationType>()) {
     TraverseType(QualType(special_type->getUnqualifiedDesugaredType(), 0));
@@ -215,10 +201,8 @@ bool FindTemplateTypes::VisitTypedefType(TypedefType *typedef_type) {
 }
 
 bool FindTemplateTypes::VisitRecordType(RecordType *rt) {
-  //llvm::outs() << "=VisitRecordType=\n";
   auto type_decl{rt->getDecl()};
   auto type_name{type_decl->getName().str()};
-  // llvm::outs() << " ==> name : " << type_name << "\n";
 
   current_type_node_ = template_args_.addNode(TemplateType(type_name, rt));
 
@@ -332,7 +316,7 @@ std::string FindTemplateTypes::asString() {
     }
   }
   str += "\n";
-  llvm::outs() << str; //tree_j.dump(4);
+  LLVM_DEBUG(llvm::dbgs() << str; );
   return str;
 }
 

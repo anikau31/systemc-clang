@@ -27,13 +27,10 @@ IndexMapType getArrayInstanceIndex(
 
   if (auto init_expr_list = clang::dyn_cast<clang::InitListExpr>(expr)) {
     /// Retrieve the number of initializer lists.
-    llvm::outs() << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-    llvm::outs() << "Number of inits: " << init_expr_list->getNumInits()
-                 << "\n";
     clang::Expr **iexpr_set{init_expr_list->getInits()};
 
     for (std::size_t i{0}; i < init_expr_list->getNumInits(); ++i) {
-      llvm::outs() << "Iterate over init 1d lists: " << i << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "Iterate over init 1d lists: " << i << "\n";);
       clang::Expr *iexpr{iexpr_set[i]};
 
       // Level 1
@@ -52,8 +49,9 @@ IndexMapType getArrayInstanceIndex(
             cxxctor->getArg(0)->IgnoreImpCasts())};
         //
 
-        llvm::outs() << "Argument 1d: [" << i << ", "
-                     << "x, x ] " << slit->getString().str() << " \n";
+        LLVM_DEBUG(llvm::dbgs()
+                       << "Argument 1d: [" << i << ", "
+                       << "x, x ] " << slit->getString().str() << " \n";);
         indices.insert(
             IndexPairType(slit->getString().str(), std::make_tuple(i, 0, 0)));
       }
@@ -63,7 +61,8 @@ IndexMapType getArrayInstanceIndex(
               clang::dyn_cast<clang::InitListExpr>(iexpr)) {
         clang::Expr **iexpr_2d_set{init_expr_list_2d->getInits()};
         for (std::size_t j{0}; j < init_expr_list_2d->getNumInits(); ++j) {
-          llvm::outs() << "Iterate over 2d init lists: " << j << "\n";
+          LLVM_DEBUG(llvm::dbgs()
+                         << "Iterate over 2d init lists: " << j << "\n";);
           clang::Expr *iexpr_2d{iexpr_2d_set[j]};
 
           // iexpr_2d->dump();
@@ -74,8 +73,8 @@ IndexMapType getArrayInstanceIndex(
                     cexpr->getArg(0)->IgnoreImplicit())};
             clang::StringLiteral *slit{clang::dyn_cast<clang::StringLiteral>(
                 nested_cexpr->getArg(0)->IgnoreImpCasts())};
-            llvm::outs() << "Argument 2d: [" << i << ", " << j << "] "
-                         << slit->getString().str() << " \n";
+            LLVM_DEBUG(llvm::dbgs() << "Argument 2d: [" << i << ", " << j << "] "
+                                   << slit->getString().str() << " \n";);
             indices.insert(IndexPairType(slit->getString().str(),
                                          std::make_tuple(i, j, 0)));
           }
@@ -85,7 +84,8 @@ IndexMapType getArrayInstanceIndex(
                   clang::dyn_cast<clang::InitListExpr>(iexpr_2d)) {
             clang::Expr **iexpr_3d_set{init_expr_list_3d->getInits()};
             for (std::size_t k{0}; k < init_expr_list_3d->getNumInits(); ++k) {
-              llvm::outs() << "Iterate over 3d init lists: " << k << "\n";
+              LLVM_DEBUG(llvm::dbgs()
+                             << "Iterate over 3d init lists: " << k << "\n";);
               clang::Expr *iexpr_3d{iexpr_3d_set[k]};
               // iexpr_3d->dump();
 
@@ -102,8 +102,8 @@ IndexMapType getArrayInstanceIndex(
                     clang::dyn_cast<clang::StringLiteral>(
                         cxxctor->getArg(0)->IgnoreImpCasts())};
                 // slit->dump();
-                llvm::outs() << "Argument 3d: [" << i << ", " << j << ", " << k
-                             << "] " << slit->getString().str() << " \n";
+                LLVM_DEBUG(llvm::dbgs() << "Argument 3d: [" << i << ", " << j << ", " << k
+                             << "] " << slit->getString().str() << " \n";);
                 indices.insert(IndexPairType(slit->getString().str(),
                                              std::make_tuple(i, j, k)));
               }
@@ -116,7 +116,7 @@ IndexMapType getArrayInstanceIndex(
   return indices;
 }
 
-//ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd) {
+// ArraySizesType getConstantArraySizes(const clang::FieldDecl *fd) {
 ArraySizesType getConstantArraySizes(const clang::ValueDecl *fd) {
   ArraySizesType sizes;
 
@@ -124,7 +124,8 @@ ArraySizesType getConstantArraySizes(const clang::ValueDecl *fd) {
   clang::QualType save_field_type = field_type;
   if (field_type->isReferenceType()) {
     // need a qualtype
-    field_type = field_type->getPointeeType()->getLocallyUnqualifiedSingleStepDesugaredType();
+    field_type = field_type->getPointeeType()
+                     ->getLocallyUnqualifiedSingleStepDesugaredType();
   }
 
   auto array_type{clang::dyn_cast<clang::ConstantArrayType>(field_type)};
@@ -159,14 +160,16 @@ ArraySizesExprType getArraySubscripts(const clang::Expr *expr) {
         arr_sub_expr->getIdx()->IgnoreImpCasts())};
 
     if (int_lit) {
-      llvm::outs() << "SUBSCRIPT: " << int_lit->getValue() << "\n";
+      // llvm::outs() << "SUBSCRIPT: " << int_lit->getValue() << "\n";
       // subscripts.insert(subscripts.begin(), int_lit->getValue());
       subscripts.insert(subscripts.begin(), arr_sub_expr->getIdx());
     }
 
     if (decl_ref_expr) {
-      llvm::outs() << "SUBSCRIPT: " << decl_ref_expr->getNameInfo().getName().getAsString()
-                   << "\n";
+      LLVM_DEBUG(
+      llvm::dbgs() << "SUBSCRIPT: "
+                   << decl_ref_expr->getNameInfo().getName().getAsString()
+                   << "\n";);
       subscripts.insert(subscripts.begin(), decl_ref_expr);
       /// TODO: Need to insert into subscripts, but it should really be Expr
       /// that is the value element. So, change subscripts to hold that, and
@@ -193,8 +196,6 @@ const clang::MemberExpr *getArrayMemberExprName(const clang::Expr *expr) {
     if (nested_sub_expr == nullptr) {
       const clang::MemberExpr *name_me{clang::dyn_cast<clang::MemberExpr>(
           arr_sub_expr->getBase()->IgnoreParenImpCasts())};
-      llvm::outs() << "me_name: " << name_me->getMemberNameInfo().getAsString()
-                   << "\n";
       return name_me;
     }
     arr_sub_expr = nested_sub_expr;

@@ -55,7 +55,7 @@ namespace systemc_hdl {
 		   (x->child_list.empty())) ||
 		  (x->h_op==hNode::hdlopsEnum::hVarAssign) ||
 		  ((x->h_op == hNode::hdlopsEnum::hVarref) && (x->h_name == "sensitive")) ||
-		  ((x->h_op==hNode::hdlopsEnum::hMethodCall) && (x->h_name.find(strsccore) !=std::string::npos)) ||
+		  (isMorF(x->h_op) && (x->h_name.find(strsccore) !=std::string::npos)) ||
 		  ((x->h_op == hNode::hdlopsEnum::hNoop) &&
 		   (x->h_name==arrsub)));}), hp->child_list.end());
     // for (hNodep hpi :hp->child_list)
@@ -346,7 +346,7 @@ namespace systemc_hdl {
     //         hLiteral 0 NOLIST
     //       ]
 
-    if (hp->h_op == hNode::hdlopsEnum::hMethodCall) {
+    if (isMorF(hp->h_op)) {
       for (hNodep hpi: hp->child_list) {
 	if (hpi->h_op == hNode::hdlopsEnum::hUnop) {
 	  std::size_t found = (hpi->child_list[0]->h_name).find(qualnamedelim);

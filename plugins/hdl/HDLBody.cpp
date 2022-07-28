@@ -1,10 +1,14 @@
 // clang-format off
 #include "SystemCClang.h"
 #include "HDLBody.h"
-#include "HDLType.h"
+//#include "HDLType.h"
 #include "clang/Basic/OperatorKinds.h"
 #include "clang/Basic/Diagnostic.h"
 #include "APIntUtils.h"
+#include "CallExprUtils.h"
+#include "CXXRecordDeclUtils.h"
+
+#include <iostream>
 #include <unordered_map>
 // clang-format on
 
@@ -31,6 +35,25 @@ using namespace hnode;
 //! 
 
 namespace systemc_hdl {
+using namespace sc_ast_matchers::utils;
+
+/*
+  bool HDLBody::isSCConstruct(const Type* type, const CXXMemberCallExpr* ce) const {
+    if (!ce) { return false;}
+
+    std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
+    bool is_sc_builtin_t{ isInNamespace(type, sc_dt_ns)};
+
+    std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process"};
+    bool is_ports_signals_wait{isCXXMemberCallExprSystemCCall(ce, ports_signals_wait)};
+
+    std::vector<llvm::StringRef> rvd{"sc_rvd"};
+    bool is_rvd{isCXXMemberCallExprSystemCCall(ce, rvd)};
+
+
+  return is_sc_builtin_t || is_ports_signals_wait || is_rvd;
+  }
+  */
 
   HDLBody::HDLBody(clang::DiagnosticsEngine &diag_engine,
 		   const ASTContext &ast_context,
@@ -42,12 +65,13 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody constructor\n");
     }
 
-  void HDLBody::Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode) 
+  void HDLBody::Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode, HDLType *HDLt_userclassesp) 
  
   {
     LLVM_DEBUG(llvm::dbgs() << "Entering HDLBody Run Method\n");
     h_ret = NULL;
     add_info = (runmode == rmodinit);
+    HDLt_userclassesp_ = HDLt_userclassesp;
     thismode = runmode;
     methodecls.clear(); // clear out old state
     methodecls.set_prefix("_func_");
@@ -200,6 +224,11 @@ namespace systemc_hdl {
     else {
       if (isa<CXXConstructExpr>(stmt)) {
 	CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
+	// CXXConstructExpr argument not yet handled
+	// LLVM_DEBUG(llvm::dbgs()
+	// 	   << "CXXConstructExpr found, expr below\n");
+	// LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
+	 
 	if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
 	  LLVM_DEBUG(llvm::dbgs()
 		     << "CXXConstructExpr followed by integer literal found\n");
@@ -283,8 +312,7 @@ namespace systemc_hdl {
       if (DI) {
 	auto *vardecl = dyn_cast<VarDecl>(DI);
 	if (!vardecl) continue;
-	ProcessVarDecl(
-		       vardecl);  // adds it to the list of renamed local variables
+	ProcessVarDecl(vardecl);  // adds it to the list of renamed local variables
       }
     // h_ret = NULL;
     return true;
@@ -293,7 +321,6 @@ namespace systemc_hdl {
   bool HDLBody::ProcessVarDecl(VarDecl *vardecl) {
     LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl var name is " << vardecl->getName()
 	       << "\n");
-
     // create head node for the vardecl
     hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
 
@@ -316,6 +343,8 @@ namespace systemc_hdl {
     hNodep h_vardecl = h_varlist->child_list.back();
 
     if (Expr *declinit = vardecl->getInit()) {
+      LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl has an init:\n");
+      LLVM_DEBUG(declinit->dump(llvm::dbgs(), ast_context_));
       TraverseStmt(declinit);
     }
 
@@ -350,7 +379,8 @@ namespace systemc_hdl {
     string exprtypstr = expr->getType().getAsString();
     LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
 	       << opcodestr << "\n");
-    if ((opcodestr == ",") && (lutil.isSCType(exprtypstr) || lutil.isSCBuiltinType(exprtypstr))){
+
+    if ((opcodestr == ",") && (lutil.isSCByType(expr->getType().getTypePtr()))){
       LLVM_DEBUG(llvm::dbgs() << "found comma, with sc type, expr follows\n");
       LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_); );
       h_binop->set("concat");
@@ -479,7 +509,7 @@ namespace systemc_hdl {
 	  string tmpname = FindFname((FunctionDecl *)value);
 	  if (tmpname == "") { // isn't in local or global symbol table
 	    LLVM_DEBUG(llvm::dbgs() << "adding method " << qualfuncname << " with pointer " << value << " \n");
-	    methodecls.print(llvm::dbgs());
+	    LLVM_DEBUG(methodecls.print(llvm::dbgs()));
 	    methodecls.add_entry((CXXMethodDecl *)funval, qualfuncname,  hfuncall);
 	  }
 	  else hfuncall->set(tmpname);
@@ -528,7 +558,12 @@ namespace systemc_hdl {
   }
 
   bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
-    bool is_overridden = false;
+    bool is_explicitly_overridden = false;
+        // this doesn't seem to help
+    LangOptions LangOpts;
+
+    LangOpts.CPlusPlus = true;
+    const PrintingPolicy Policy(LangOpts);
     
     LLVM_DEBUG(llvm::dbgs()
 	       << "In TraverseCXXMemberCallExpr, printing implicit object arg\n");
@@ -539,28 +574,30 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "raw implicitobjectargument follows\n");
     LLVM_DEBUG(rawarg->dump(llvm::dbgs(), ast_context_));
     
-    Expr *arg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
+    Expr *objarg = (callexpr->getImplicitObjectArgument())->IgnoreImplicit();
     LLVM_DEBUG(llvm::dbgs() << "implicitobjectargument, ignore implicit follows\n");
-    LLVM_DEBUG(arg->dump(llvm::dbgs(), ast_context_));
-
+    LLVM_DEBUG(objarg->dump(llvm::dbgs(), ast_context_));
+    CXXRecordDecl* cdecl = callexpr->getRecordDecl();
+    const Type * typeformethodclass = cdecl->getTypeForDecl();
+    LLVM_DEBUG(llvm::dbgs() << "Type pointer from RecordDecl is " << typeformethodclass << "\n");
+    
     QualType argtyp;
     if (dyn_cast<ImplicitCastExpr>(rawarg)) { // cast to a specfic type
       argtyp = rawarg->getType();
-      is_overridden = true;
+      is_explicitly_overridden = true;
     }
     else {
-      argtyp = arg->getType();
+      argtyp = objarg->getType();
     }
-    LLVM_DEBUG(llvm::dbgs() << "type of x in x.f(5) is " << argtyp.getAsString()
+    LLVM_DEBUG(llvm::dbgs() << "type of x in x.f(5) is " << argtyp.getAsString(Policy)
 	       << "\n");
     QualType objtyp = callexpr->getObjectType();
-    LLVM_DEBUG(llvm::dbgs() << "... and object type is " << objtyp.getAsString()
+    LLVM_DEBUG(llvm::dbgs() << "... and object type is " << objtyp.getAsString(Policy)
 	       << "\n");
     string methodname = "NoMethod", qualmethodname = "NoQualMethod";
-    CXXRecordDecl *recdecl = callexpr->getRecordDecl();
-    LLVM_DEBUG(llvm::dbgs() << "here is method record decl name " << recdecl->getNameAsString() << "\n");
+
     CXXMethodDecl *methdcl = callexpr->getMethodDecl();
-    if ((!is_overridden) && (overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
+    if ((!is_explicitly_overridden) && (overridden_method_map_.size() > 0) && (overridden_method_map_.find(methdcl) != overridden_method_map_.end())) {
       methdcl = const_cast<CXXMethodDecl *>(overridden_method_map_[methdcl]);
     }
      LLVM_DEBUG(llvm::dbgs() << "methoddecl follows\n");
@@ -573,12 +610,12 @@ namespace systemc_hdl {
       //      method decls
 
       LLVM_DEBUG(llvm::dbgs() << "here is method printname " << methodname
-		 << " and qual name " << qualmethodname << "and declp " << methdcl << " \n");
+		 << " and qual name " << qualmethodname << " and declp " << methdcl << " \n");
       if (methodname.compare(0, 8, "operator") ==
 	  0) {  // 0 means compare =, 8 is len("operator")
 	// the conversion we know about, can be skipped
 	LLVM_DEBUG(llvm::dbgs() << "Found operator conversion node\n");
-	TraverseStmt(arg);
+	TraverseStmt(objarg);
 	return true;
       }
     }
@@ -591,13 +628,16 @@ namespace systemc_hdl {
     // sc_signal and method name is either read or write, generate a SigAssignL|R
     // -- FIXME need to make sure it is templated to a primitive type
 
-    if ((methodname == "read") && (lutil.isSCType(qualmethodname)))
+
+    bool foundsctype = lutil.isSCByCallExpr(callexpr);
+
+    if ((methodname == "read") && foundsctype)
       opc = hNode::hdlopsEnum::hSigAssignR;
-    else if ((methodname == "write") && (lutil.isSCType(qualmethodname)))
+    else if ((methodname == "write") && foundsctype)
       opc = hNode::hdlopsEnum::hSigAssignL;
     else if (methodname == "wait")
       opc = hNode::hdlopsEnum::hWait;
-    else if (lutil.isSCType(qualmethodname)) {  // operator from simulation library
+    else if (foundsctype) {  // operator from simulation library
       opc = hNode::hdlopsEnum::hBuiltinFunction;
     } else {
       opc = hNode::hdlopsEnum::hMethodCall;
@@ -612,6 +652,13 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "adding method " << qualmethodname << " with pointer " << methdcl << " \n");
 	  methodecls.print(llvm::dbgs());
 	  methodecls.add_entry(methdcl, qualmethodname,  h_callp);
+	  //string objstr = objtyp.getAsString(Policy);
+	  //lutil.make_ident(objstr);
+	  // bool a = !isCXXMemberCallExprSystemCCall(callexpr), b =sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") ;
+	  
+	  // LLVM_DEBUG(llvm::dbgs() << "is sysc call " << qualmethodname << " old, new "<< a
+	  // 	     << " " << b << " end\n");
+	  if (!isCXXMemberCallExprSystemCCall(callexpr)) methodecls.methodobjtypemap[methdcl] = typeformethodclass;
 	}
 	else h_callp->set(tmpname);
       }
@@ -621,14 +668,18 @@ namespace systemc_hdl {
     if (h_callp == NULL) h_callp = new hNode(methodname, opc);  // list to hold call expr node
 
     hNodep save_hret = h_ret;
-    TraverseStmt(arg);  // traverse the x in x.f(5)
-
-    if (h_ret && (h_ret != save_hret)) h_callp->child_list.push_back(h_ret);
+    // insert "this" argument if mod init block or recognized as special method (read|write|wait of sc type),
+    // or it is a method but not derived for scmodule hierarchy
+    if ((add_info) || ((opc != hNode::hdlopsEnum::hMethodCall) ||
+		       ( opc == hNode::hdlopsEnum::hMethodCall) && (!isCXXMemberCallExprSystemCCall(callexpr)))) {
+     TraverseStmt(objarg);  // traverse the x in x.f(5)
+     if (h_ret && (h_ret != save_hret)) h_callp->child_list.push_back(h_ret);
+    }
 
     for (auto arg : callexpr->arguments()) {
-      hNodep save_h_ret = h_ret;
+      save_hret = h_ret;
       TraverseStmt(arg);
-      if (h_ret != save_h_ret) h_callp->child_list.push_back(h_ret);
+      if (h_ret != save_hret) h_callp->child_list.push_back(h_ret);
     }
     h_ret = h_callp;
     return true;
@@ -656,11 +707,11 @@ namespace systemc_hdl {
 
     LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr, Operator name is "
 	       << operatorname << "\n");
-    LLVM_DEBUG(llvm::dbgs() << "Type with name " << operatortype << " follows\n");
+    LLVM_DEBUG(llvm::dbgs() << "Type name " << operatortype << "\n");
     LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
-
-    if (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype) ||
-	(opcall->getType())->isBuiltinType() || (operatorname == "=") ||
+    const Type *optypepointer = opcall->getType().getTypePtr();
+    if ((operatorname == "=") || lutil.isSCByType(optypepointer ) ||
+	(opcall->getType())->isBuiltinType() || 
 	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos))) {
       LLVM_DEBUG(llvm::dbgs() << "Processing operator call type\n");
       // operator for an SC type
@@ -681,8 +732,11 @@ namespace systemc_hdl {
 	    h_operop = new hNode(operatorname, hNode::hdlopsEnum::hUnop);
 	  else
 	    h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
-	  if ((operatorname == ",") && (lutil.isSCBuiltinType(operatortype) || lutil.isSCType(operatortype)))
+
+    if ((operatorname == ",") && (lutil.isSCByCallExpr(opcall)))
 	    h_operop->set("concat"); // overloaded comma is concat for sc types
+                               //
+                               //
 	}
       }
       int nargs = (h_operop->getopc() == hNode::hdlopsEnum::hPostfix ||
@@ -713,22 +767,35 @@ namespace systemc_hdl {
   }
 
   bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr) {
+
+    bool founduserclass = false;
     LLVM_DEBUG(llvm::dbgs() << "In TraverseMemberExpr\n");
     string nameinfo = (memberexpr->getMemberNameInfo()).getName().getAsString();
     LLVM_DEBUG(llvm::dbgs() << "name is " << nameinfo
 	       << ", base and memberdecl trees follow\n");
     LLVM_DEBUG(llvm::dbgs() << "base is \n");
     LLVM_DEBUG(memberexpr->getBase()->dump(llvm::dbgs(), ast_context_); );
-    LLVM_DEBUG(llvm::dbgs() << "memberdecl is \n");
+    LLVM_DEBUG(llvm::dbgs() << "memberdecl is " << memberexpr->getMemberDecl() << " \n");
+    // if field decl, check if parent is a userdefined type XXXXXX
     LLVM_DEBUG(memberexpr->getMemberDecl()->dump(llvm::dbgs()));
+    if ( FieldDecl * fld = dyn_cast<FieldDecl>( memberexpr->getMemberDecl())) {
+      LLVM_DEBUG(llvm::dbgs() << "and field decl parent record pointer is " << fld->getParent() << "\n");
+      const Type * classrectype = fld->getParent()->getTypeForDecl();
+      LLVM_DEBUG(llvm::dbgs() << "and field decl parent record type is " << classrectype << "\n");
+      if (isUserClass(classrectype)) {
+	LLVM_DEBUG(llvm::dbgs() << "member expr, found user defined class in usertypes " << classrectype << "\n");
+	founduserclass = true;
+      }
+    }
 
+    string thisref = founduserclass? "hthis##":"";
     // traverse the memberexpr base in case it is a nested structure
     hNodep old_h_ret = h_ret;
     TraverseStmt(memberexpr->getBase());  // get hcode for the base
     if (h_ret != old_h_ret) {
       if (h_ret->h_op == hNode::hdlopsEnum::hVarref){
 	// concatenate base name in front of field name
-	hNodep memexprnode = new hNode(h_ret->h_name + "##" + nameinfo,
+	hNodep memexprnode = new hNode(thisref + h_ret->h_name + "##" + nameinfo,
 				       hNode::hdlopsEnum::hVarref);
 	delete h_ret;
 	h_ret = memexprnode;  // replace returned h_ret with single node, field
@@ -737,19 +804,19 @@ namespace systemc_hdl {
       }
       else {
 	LLVM_DEBUG(llvm::dbgs() << "Value returned from member expr base was not Varref\n");
-	h_ret->print(llvm::dbgs());
+	LLVM_DEBUG(h_ret->print(llvm::dbgs()));
 	string newname = FindVname(memberexpr->getMemberDecl());
 	LLVM_DEBUG(llvm::dbgs() << "member with base expr new name is " << newname << "\n");
 	if ((newname == "") && (thismode != rmodinit)) {
 	  LLVM_DEBUG(llvm::dbgs() << "vname lookup of memberdecl is null, assuming field reference\n");
 	  hNodep hfieldref = new hNode(hNode::hdlopsEnum::hFieldaccess);
 	  hfieldref->append(h_ret);
-	  hfieldref->append(new hNode(nameinfo, hNode::hdlopsEnum::hField));
+	  hfieldref->append(new hNode(thisref+nameinfo, hNode::hdlopsEnum::hField));
 	  h_ret = hfieldref;
 	  return true;
 	}
 	else {
-	  hNodep memexprnode = new hNode(newname==""? nameinfo: newname, hNode::hdlopsEnum::hVarref);
+	  hNodep memexprnode = new hNode(newname==""? thisref+nameinfo: thisref+newname, hNode::hdlopsEnum::hVarref);
 	  memexprnode->child_list.push_back(h_ret);
 	  h_ret = memexprnode;
 	  return true;
@@ -761,7 +828,7 @@ namespace systemc_hdl {
     string newname = FindVname(memberexpr->getMemberDecl());
     LLVM_DEBUG(llvm::dbgs() << "member expr new name is " << newname << "\n");
 
-    h_ret = new hNode(newname.empty()? nameinfo : newname, hNode::hdlopsEnum::hVarref);
+    h_ret = new hNode(newname.empty()? thisref+nameinfo : thisref+newname, hNode::hdlopsEnum::hVarref);
 
     return true;
   }

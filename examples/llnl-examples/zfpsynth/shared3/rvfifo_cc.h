@@ -39,9 +39,9 @@ public:
 
 	/* * * * * constructors * * * * */
 
-	rvfifo_cc(const sc_module_name& mn_, int size_ = MAX_DEPTH) :
+	rvfifo_cc(const sc_module_name& mn_) :
 		sc_module(mn_),
-		u_fifo("u_fifo", size_)
+		u_fifo("u_fifo")
 	{
 		u_fifo.clk(clk);
 		u_fifo.reset(reset);

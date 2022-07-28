@@ -8,7 +8,7 @@
 #include "Tree.h"
 #include "HDLMain.h"
 //#include "TemplateParametersMatcher.h"
-#include "SensitivityMatcher.h"
+//#include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
 #include "clang/Basic/Diagnostic.h"
@@ -110,16 +110,17 @@ namespace systemc_hdl {
     SCmodule2hcode(modinstance, h_module, HCodeOut);
     // h_module->print(HCodeOut);
 
-
     LLVM_DEBUG(llvm::dbgs() << "User Types Map\n");
 
-    while (!HDLt.usertypes.empty()) {
-      std::unordered_map<string, QualType> usertypestmp = HDLt.usertypes;
-      HDLt.usertypes.clear();
+    while (!HDLt.usertype_info.usertypes.empty()) {
+     HDLType::usertype_map_t usertypestmp = HDLt.usertype_info.usertypes;
+     HDLType::userrectype_map_t userrecmaptmp = HDLt.usertype_info.userrectypes;
+      HDLt.usertype_info.usertypes.clear();
+      HDLt.usertype_info.userrectypes.clear();
       for (auto t : usertypestmp) {
 	LLVM_DEBUG(llvm::dbgs()
 		   << "User Type --------\n"
-		   << t.first << ":" << t.second.getTypePtr() << "\n");
+		   << t.first << ":" << t.second.getTypePtr() << t.second.getAsString() <<"\n");
 	LLVM_DEBUG(t.second->dump(llvm::dbgs(), getContext()));
 	LLVM_DEBUG(llvm::dbgs() << "---------\n");
 	HDLt.addtype(t.first, t.second, getContext())->print(HCodeOut);
@@ -138,9 +139,10 @@ namespace systemc_hdl {
     //! warning: only supporting single inheritance
     //!
     overridden_method_map_t overridden_method_map;
-    
+
+    LLVM_DEBUG( llvm::dbgs() << "Processing module " << mod->getName() << " instance " << mod->getInstanceName() << "\n");
     LLVM_DEBUG( llvm::dbgs() << "dumping base instances \n");
-    mod->dump_base_instances(llvm::dbgs());
+    LLVM_DEBUG(mod->dump_base_instances(llvm::dbgs()));
     LLVM_DEBUG( llvm::dbgs() << "end base instances \n");
 
     const CXXRecordDecl *cdecl{mod->getModuleClassDecl()};
@@ -153,16 +155,16 @@ namespace systemc_hdl {
 	LLVM_DEBUG(llvm::dbgs() << "Method name is " << method->getParent()->getNameAsString() << "::" << method->getNameAsString()
 		   << "\n");
 	QualType qtype{method->getThisType()};
-	qtype.getTypePtr()->dump();
+	LLVM_DEBUG(qtype.getTypePtr()->dump());
 	LLVM_DEBUG(llvm::dbgs() << "\n");
 	if (method->getBody() != NULL) {
-	  LLVM_DEBUG(llvm::dbgs() << "Body of method\n");
-	  LLVM_DEBUG(method->getBody()->dump());
+	  LLVM_DEBUG(llvm::dbgs() << "Body of method non-null\n");
+	  //LLVM_DEBUG(method->getBody()->dump());
 	}
 	else LLVM_DEBUG(llvm::dbgs() << "Empty method body\n");
       
 	for (const auto &ometh : method->overridden_methods()) {
-	  llvm::dbgs() << " overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n";
+	  LLVM_DEBUG(llvm::dbgs() << " overridden method " << ometh->getParent()->getNameAsString() << "::" << ometh->getNameAsString() << "\n");
 	  if (ometh->hasBody()) {
 	    overridden_method_map[ometh] = method; 
 	  }
@@ -186,9 +188,9 @@ namespace systemc_hdl {
     // LLVM_DEBUG(llvm::dbgs() << "dumping module constructor stmt\n");
 
     // LLVM_DEBUG(mod->getConstructorStmt()->dump(llvm::dbgs()));
-    LLVM_DEBUG( llvm::dbgs() << "dumping module constructor decl body\n");
-    LLVM_DEBUG(mod->getConstructorDecl()->getBody()->dump());
-    LLVM_DEBUG( llvm::dbgs() << "end dumping module constructor decl body\n");
+    //LLVM_DEBUG( llvm::dbgs() << "dumping module constructor decl body\n");
+    //LLVM_DEBUG(mod->getConstructorDecl()->getBody()->dump());
+    //LLVM_DEBUG( llvm::dbgs() << "end dumping module constructor decl body\n");
     //LLVM_DEBUG(mod->getConstructorDecl()->dump(llvm::dbgs()));
 
     LLVM_DEBUG(llvm::dbgs() << "submodule count is " << submodv.size() << "\n");
@@ -268,8 +270,8 @@ namespace systemc_hdl {
 				hNode::hdlopsEnum::hModinitblock);
     
       xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
-      LLVM_DEBUG(llvm::dbgs() << "HDL output for module body\n");
-      h_constructor->print(llvm::dbgs());
+      LLVM_DEBUG(llvm::dbgs() << "HDL output for module constructor body\n");
+      LLVM_DEBUG(h_constructor->print(llvm::dbgs()));
       HDLConstructorHcode hcxxbody;
       hNodep modinithp = hcxxbody.ProcessCXXConstructorHcode(h_constructor);
       if (modinithp->child_list.size() != 0) { // if there was an initblock
@@ -285,9 +287,9 @@ namespace systemc_hdl {
       mod_i = basemods[i];
     }
 
-    LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists follow\n");
-    LLVM_DEBUG(h_allsenslists->print(llvm::dbgs()));
-    LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists end\n");
+    //LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists follow\n");
+    //LLVM_DEBUG(h_allsenslists->print(llvm::dbgs()));
+    //LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists end\n");
 
     // build map of thread name to reset var name for this module
     MakeResetMap(threadresetmap, h_allsenslists);
@@ -333,7 +335,7 @@ namespace systemc_hdl {
     // Functions
     // Initially these are functions that were referenced in the module's sc_methods/threads
     // Function calls within functions get added to all methodecls.
-
+    
     std::set<Decl *> generated_functions;
     while (allmethodecls.size() > 0) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
@@ -345,6 +347,8 @@ namespace systemc_hdl {
 		 << "size of allmethodecls is " << allmethodecls.size() << "\n");
       LLVM_DEBUG(llvm::dbgs()
 		 << "size of modmethodecls is " << modmethodecls.size() << "\n");
+      LLVM_DEBUG(modmethodecls.print(llvm::dbgs()));
+      LLVM_DEBUG(HDLt.print(llvm::dbgs()));
       for (auto const &m : modmethodecls) {
 	LLVM_DEBUG(llvm::dbgs() << "Method --------\n"
 		   << m.second.newn << "\n");
@@ -359,14 +363,42 @@ namespace systemc_hdl {
 	  const clang::Type *rettype = qrettype.getTypePtr();
 	  FindTemplateTypes *te = new FindTemplateTypes();
 	  te->Enumerate(rettype);
-	  HDLType HDLt;
+	  HDLType HDLt2;
 	  // what about returning an array type? this isn't handled 
-	  HDLt.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
+	  HDLt2.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
-	  if (m.first->getNumParams() > 0) {
+	  CXXMethodDecl * thismethod = dyn_cast<CXXMethodDecl>(m.first);
+	  bool isUserDefinedMethod = (thismethod != NULL) && (modmethodecls.methodobjtypemap.count(thismethod));
+	  if (thismethod != NULL) {
+	    LLVM_DEBUG(llvm::dbgs() << thismethod->getParent()->getQualifiedNameAsString() << " " << m.second.newn << " is a Method\n");
+	  }
+	  else LLVM_DEBUG(llvm::dbgs() << m.second.newn << " is a Function\n");
+	  if ((m.first->getNumParams() > 0) || (thismethod != NULL)) {
 	    hNodep hparams = new hNode(hNode::hdlopsEnum::hFunctionParams);
 	    hNodep hparam_assign_list = new hNode(hNode::hdlopsEnum::hCStmt);
 	    hfunc->child_list.push_back(hparams);
+
+	    if (isUserDefinedMethod) { // user defined non scmodule method
+	      hNodep hthisparam = new hNode("hthis", hNode::hdlopsEnum::hFunctionParamIO);
+	      hNodep hthistype = new hNode(hNode::hdlopsEnum::hTypeinfo);
+	      const clang::Type * tp = modmethodecls.methodobjtypemap[thismethod];
+	      if (tp == NULL) {
+		LLVM_DEBUG(llvm::dbgs() <<"Couldn't find methodobjtypemap entry for "  << thismethod << "\n");
+	      }
+	      else {
+		if (HDLt.usertype_info.userrectypes.count(tp)) {
+		  LLVM_DEBUG(llvm::dbgs() << "Found methodobjtypemap entry for " << thismethod << " and userrectypes gives " << HDLt.usertype_info.userrectypes[tp] << "\n");
+		}
+		else {
+		  LLVM_DEBUG(llvm::dbgs() << "Couldn't find userrectypes entry for " << tp << "\n");
+		  LLVM_DEBUG(HDLt.print(llvm::dbgs()));
+		  }
+		}
+	      hthistype->append(new hNode(HDLt.usertype_info.userrectypes[tp],
+					  hNode::hdlopsEnum::hType));
+	      hthisparam->append(hthistype);
+	      hparams->append(hthisparam);
+	    }
 	    for (int i = 0; i < m.first->getNumParams(); i++) {
 	      VarDecl *vardecl = m.first->getParamDecl(i);
 	      QualType q = vardecl->getType();
@@ -375,13 +407,13 @@ namespace systemc_hdl {
 			 << q.getAsString() << "\n");
 	      FindTemplateTypes *te = new FindTemplateTypes();
 	      te->Enumerate(tp);
-	      HDLType HDLt;
+	      HDLType HDLt1;
 	      std::vector<llvm::APInt> array_sizes = sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
 	      hNode::hdlopsEnum paramtype;
 	      // special case if sc_min, max, abs, treat parameters as input
 	      // unfortunately simulation library makes them I/O
 	      //if (mutil.is_sc_macro(m.first)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
-	      if (mutil.is_sc_macro(m.second.oldn)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
+	      if (mutil.isSCMacro(m.second.oldn)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      else if (vardecl->getType()->isReferenceType())
 		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
 	      else { // handle actual parameter
@@ -390,7 +422,7 @@ namespace systemc_hdl {
 		// create an entry in mod_vname_map for this parameter's local variable
 		string objname = vardecl->getName().str()+"_actual";
 
-		HDLt.SCtype2hcode(objname, te->getTemplateArgTreePtr(),
+		HDLt1.SCtype2hcode(objname, te->getTemplateArgTreePtr(),
 				&array_sizes, hNode::hdlopsEnum::hVardecl, h_ports);
 		mod_vname_map.add_entry(vardecl, objname, h_ports->child_list.back());
 		hNodep hparam_assign = new hNode("=", hNode::hdlopsEnum::hBinop);
@@ -401,13 +433,19 @@ namespace systemc_hdl {
 		hparam_assign_list->append(hparam_assign);
 	      }
 	      
-	      HDLt.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
+	      HDLt1.SCtype2hcode(vardecl->getName().str(), te->getTemplateArgTreePtr(),
 				&array_sizes, paramtype, hparams);
 	    }
 	    
 	    if (hparam_assign_list->child_list.size()>0) { // there were some actual parameters
 	      hNodep htmpf = new hNode( hNode::hdlopsEnum::hCStmt);
-	      xbodyp->Run(m.first->getBody(), htmpf, rnomode); // suppress output of unqualified name
+	      if (isUserDefinedMethod) {
+		xbodyp->Run(m.first->getBody(), htmpf, ruserdefclass, &HDLt); // suppress output of unqualified name
+	      }
+	      else {
+		xbodyp->Run(m.first->getBody(), htmpf,rnomode);
+	      }
+	      
 	      hNodep hfunccstmt = htmpf->child_list.back();  // htmpf is list of vardecls followed by function body in a cstmt
 	      hfunccstmt->child_list.insert(hfunccstmt->child_list.begin(), hparam_assign_list->child_list.begin(), hparam_assign_list->child_list.end());
 	      
@@ -415,7 +453,12 @@ namespace systemc_hdl {
 
 	    }
 	    else {
-	    xbodyp->Run(m.first->getBody(), hfunc, rnomode); // suppress output of unqualified name
+	      if (isUserDefinedMethod) {
+		xbodyp->Run(m.first->getBody(), hfunc, ruserdefclass, &HDLt); // suppress output of unqualified name
+	      }
+	      else {
+		xbodyp->Run(m.first->getBody(), hfunc,rnomode);
+	      }
 	    }
 	  }
 	  // If this function invoked other functions, add them to the list to be generated
@@ -625,6 +668,8 @@ namespace systemc_hdl {
       NamedDecl * portdecl = pd->getAsVarDecl();
       if (!portdecl)
 	portdecl = pd->getAsFieldDecl();
+      // ValueDecl * vd = (ValueDecl *)portdecl;
+      // LLVM_DEBUG(llvm::dbgs() << "Sig type is " << vd->getType().getAsString() << "\n");
       if (module_vars.count(objname)) {
 	LLVM_DEBUG(llvm::dbgs() << "duplicate object " << objname << "\n");
 	if (portdecl)

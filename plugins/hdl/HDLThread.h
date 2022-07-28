@@ -71,6 +71,12 @@ namespace systemc_hdl {
     std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited
     std::unordered_set<int> pathnodevisited; // index of visited node in path
 
+    inline void updatepnvisited(int i) {
+      if (pathnodevisited.find(i) == pathnodevisited.end()) { //haven't visited
+	pathnodevisited.insert(i);
+      }
+    }
+	      
     inline bool isBreak(const Stmt* S) {
       return dyn_cast<BreakStmt> (S) != NULL;
     }

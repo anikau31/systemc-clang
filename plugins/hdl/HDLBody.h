@@ -19,100 +19,131 @@
 
 #include "SystemCClang.h"
 #include "hNode.h"
+#include "HDLType.h"
+
 // clang-format on
 
 using namespace clang;
 using namespace systemc_clang;
 
-
 using namespace hnode;
 
 namespace systemc_hdl {
-  typedef enum { rnomode, rmethod, rmodinit, rthread } HDLBodyMode;
-  
-  class HDLBody: public RecursiveASTVisitor <HDLBody> {
-  public:
-    HDLBody(clang::DiagnosticsEngine &diag_engine,
-	    const ASTContext &ast_context,
-	    hdecl_name_map_t &mod_vname_map,
-	    hfunc_name_map_t &allmethodecls,
-	    overridden_method_map_t &overridden_method_map);
+typedef enum { rnomode, rmethod, rmodinit, rthread, ruserdefclass } HDLBodyMode;
 
-    virtual ~HDLBody();
+class HDLBody : public RecursiveASTVisitor<HDLBody> {
+ public:
+  HDLBody(clang::DiagnosticsEngine &diag_engine, const ASTContext &ast_context,
+          hdecl_name_map_t &mod_vname_map, hfunc_name_map_t &allmethodecls,
+          overridden_method_map_t &overridden_method_map);
 
-    void Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode);
-        
-    bool TraverseCompoundStmt(CompoundStmt* compoundStmt);
-    bool TraverseStmt(Stmt *stmt);
-    bool TraverseDeclStmt(DeclStmt * declstmt);
-    bool ProcessVarDecl(VarDecl * vardecl);
-    bool TraverseBinaryOperator(BinaryOperator* expr);
-    bool TraverseUnaryOperator(UnaryOperator* expr);
-    bool TraverseConditionalOperator(ConditionalOperator * expr);
-    bool TraverseIntegerLiteral(IntegerLiteral * lit);
-    bool TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr * b);
-    bool TraverseDeclRefExpr(DeclRefExpr* expr);
-    bool TraverseArraySubscriptExpr(ArraySubscriptExpr* expr);
-    bool TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr);
-    bool TraverseCXXOperatorCallExpr(CXXOperatorCallExpr * opcall);
-    bool TraverseCallExpr(CallExpr *callexpr);
-    bool TraverseMemberExpr(MemberExpr *memberexpr);
-    bool TraverseIfStmt(IfStmt *ifs);
-    bool TraverseForStmt(ForStmt *fors);
-    bool TraverseSwitchStmt(SwitchStmt *switchs);
-    bool ProcessSwitchCase(SwitchCase *cases);
-    bool TraverseWhileStmt(WhileStmt *whiles);
-    bool TraverseDoStmt(DoStmt *whiles);
-    string FindVname(NamedDecl *vard);
-    void AddVnames(hNodep &hvns);
-    string FindFname(FunctionDecl *funcd);
+  virtual ~HDLBody();
 
-    hNodep NormalizeAssignmentChain(hNodep hinp);
-    void NormalizeSwitchStmt(hNodep hswitchbody);
+  void Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode,
+           HDLType *HDLt_userclassesp = NULL);
 
-    hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
-    
-    clang::DiagnosticsEngine &diag_e;
-    
-    hdecl_name_map_t vname_map;
-    
-    overridden_method_map_t &overridden_method_map_;
-    
-  private:
-  
-    hNodep h_ret;   // value returned by each subexpression
+  bool TraverseCompoundStmt(CompoundStmt *compoundStmt);
+  bool TraverseStmt(Stmt *stmt);
+  bool TraverseDeclStmt(DeclStmt *declstmt);
+  bool ProcessVarDecl(VarDecl *vardecl);
+  bool TraverseBinaryOperator(BinaryOperator *expr);
+  bool TraverseUnaryOperator(UnaryOperator *expr);
+  bool TraverseConditionalOperator(ConditionalOperator *expr);
+  bool TraverseIntegerLiteral(IntegerLiteral *lit);
+  bool TraverseCXXBoolLiteralExpr(CXXBoolLiteralExpr *b);
+  bool TraverseDeclRefExpr(DeclRefExpr *expr);
+  bool TraverseArraySubscriptExpr(ArraySubscriptExpr *expr);
+  bool TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr);
+  bool TraverseCXXOperatorCallExpr(CXXOperatorCallExpr *opcall);
+  bool TraverseCallExpr(CallExpr *callexpr);
+  bool TraverseMemberExpr(MemberExpr *memberexpr);
+  bool TraverseIfStmt(IfStmt *ifs);
+  bool TraverseForStmt(ForStmt *fors);
+  bool TraverseSwitchStmt(SwitchStmt *switchs);
+  bool ProcessSwitchCase(SwitchCase *cases);
+  bool TraverseWhileStmt(WhileStmt *whiles);
+  bool TraverseDoStmt(DoStmt *whiles);
+  string FindVname(NamedDecl *vard);
+  void AddVnames(hNodep &hvns);
+  string FindFname(FunctionDecl *funcd);
 
-    //    hdecl_name_map_t vname_map;
-    hdecl_name_map_t &mod_vname_map_;
-    
-    bool add_info; // variation in some hcode generated for modinit body
+  hNodep NormalizeAssignmentChain(hNodep hinp);
+  void NormalizeSwitchStmt(hNodep hswitchbody);
 
+  // bool isSCConstruct(const Type* type, const CXXMemberCallExpr* ce) const;
+  hfunc_name_map_t methodecls;  //  methods called in this SC_METHOD or function
 
-    const string nextstate_string = "_scclang_nextstate_";
-    
-    HDLBodyMode thismode;
-    hfunc_name_map_t &allmethodecls_;
-    
-    bool isLogicalOp(clang::OverloadedOperatorKind opc);
-    
-    inline bool isAssignOp(hNodep hp) {
-      return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
-	(hp->h_name == "=");
-    }
+  clang::DiagnosticsEngine &diag_e;
 
-    inline bool isArrayRef(hNodep hp) {
-      return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
-	(hp->h_name == "ARRAYSUBSCRIPT");
-    }
+  hdecl_name_map_t vname_map;
 
-    inline string generate_vname(string nm) {
-      return vname_map.get_prefix()+ nm;
-    }
-    
-    util lutil;
+  overridden_method_map_t &overridden_method_map_;
 
-    const ASTContext &ast_context_;
-  };
-}
+ private:
+  hNodep h_ret;  // value returned by each subexpression
+
+  //    hdecl_name_map_t vname_map;
+  hdecl_name_map_t &mod_vname_map_;
+
+  bool add_info;  // variation in some hcode generated for modinit body
+
+  const string nextstate_string = "_scclang_nextstate_";
+
+  HDLBodyMode thismode;
+  hfunc_name_map_t &allmethodecls_;
+
+  HDLType *HDLt_userclassesp_;
+
+  inline bool isUserClass(const Type *classrectype) {
+    return (
+        (thismode == ruserdefclass) && (HDLt_userclassesp_ != NULL) &&
+        (HDLt_userclassesp_->usertype_info.userrectypes.count(classrectype)));
+  }
+
+  bool isLogicalOp(clang::OverloadedOperatorKind opc);
+
+  inline bool isAssignOp(hNodep hp) {
+    return (hp->h_op == hNode::hdlopsEnum::hBinop) && (hp->h_name == "=");
+  }
+
+  inline bool isArrayRef(hNodep hp) {
+    return (hp->h_op == hNode::hdlopsEnum::hBinop) &&
+           (hp->h_name == "ARRAYSUBSCRIPT");
+  }
+
+  inline string generate_vname(string nm) {
+    return vname_map.get_prefix() + nm;
+  }
+
+  util lutil;
+
+  const ASTContext &ast_context_;
+};
+
+class StmtVisitor : public clang::RecursiveASTVisitor<StmtVisitor> {
+ public:
+  using hNodePtr = hnode::hNode *;
+
+ public:
+  StmtVisitor(clang::Stmt *st, HDLBodyMode mode);
+  virtual ~StmtVisitor();
+
+  bool shouldVisitTemplateInstantiations() const;
+  virtual bool VisitStmt(Stmt *s);
+  bool VisitCaseStmt(CaseStmt *st);
+  bool VisitCompoundStmt(Stmt *st);
+  bool VisitDefaultStmt(DefaultStmt *st);
+  bool VisitBreakStmt(BreakStmt *st);
+  bool VisitContinueStmt(ContinueStmt *st);
+  bool VisitCXXDefaultArgExpr(CXXDefaultArgExpr *st);
+  bool VisitReturnStmt(ReturnStmt *st);
+  bool VisitMaterializeTemporaryExpr(Stmt *st);
+
+ private:
+  hNodePtr h_ret;
+  HDLBodyMode thismode;
+};
+
+}  // namespace systemc_hdl
 
 #endif

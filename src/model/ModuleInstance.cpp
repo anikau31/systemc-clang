@@ -534,7 +534,7 @@ std::string ModuleInstance::dumpPortBinding() {
     str += "\n\n";
     binding->dump();
   }
-  llvm::outs() << str;
+  LLVM_DEBUG(llvm::dbgs() << str;);
   return str;
 }
 
@@ -748,6 +748,6 @@ std::string ModuleInstance::dump_json() {
   }
 
   str += "\n";
-  llvm::outs() << str;
+  LLVM_DEBUG(llvm::outs() << str;);
   return str;
 }

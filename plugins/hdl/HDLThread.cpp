@@ -71,6 +71,8 @@ namespace systemc_hdl {
 
       for (state_num = 0; state_num < paths_found.size(); state_num++) {
 	SGVisited.clear();
+	// pathnodevisited keeps track of nodes alread traversed in true and false paths.
+	// those were already done by ProcessSplitGraphGropu and should be skipped
 	pathnodevisited.clear();
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
 	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
@@ -374,9 +376,7 @@ namespace systemc_hdl {
 	    xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
 	    for (int i = thisix+1; i < pt[thisix].second.getFalseId(); i++) {
 	      // need to mark all the true branch nodes in path vector as visited.
-	      if (pathnodevisited.find(i) == pathnodevisited.end()) { //haven't visited
-		pathnodevisited.insert(i);
-	      }
+	      updatepnvisited(i);
 	    }
 	    return;
 	  }
@@ -386,11 +386,24 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is an if stmt\n");
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
 	}
+	else if (const ConditionalOperator *S1 = dyn_cast<ConditionalOperator>(S)) {
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is conditional operator, skipping\n");
+	  // below code doesn't work due to skipping too many nodes in true and false paths
+	  // int flsix = pt[thisix].second.getFalseId();
+	  // for (int i = thisix+1; i <flsix; i++) {
+	  //     // need to mark all the true branch nodes in path vector as visited.
+	  //   updatepnvisited(i);
+	  // }
+	  // for (int i =flsix; i < flsix+GetFalseLength(pt, thisix); i++) {
+	  //   // need to mark all the false branch nodes in path vector as visited.
+	  //   updatepnvisited(i);
+	  // }
+	  return;
+	}
 	else {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is not handled\n");
 	}
 
-	// revert true branch to go back in if false branch when false branch info is fixed to be correct
 	// process true branch
 	hNodep if1 = new hNode(hNode::hdlopsEnum::hCStmt);
 	int flseix = pt[thisix].second.getFalseId();
@@ -439,7 +452,7 @@ namespace systemc_hdl {
 
 	  LLVM_DEBUG(llvm::dbgs() << "after Run, htmp follows\n");
 	  //htmp->dumphcode();
-	  htmp->print(llvm::dbgs());
+	  LLVM_DEBUG(htmp->print(llvm::dbgs()));
 	  CheckVardecls(htmp, (sgb->getCFGBlock())->getBlockID());
 	  if (IsWaitStmt(htmp)) {
 	    ProcessHWait(htmp, sgb->getNextState());

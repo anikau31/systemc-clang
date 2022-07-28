@@ -92,17 +92,16 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
   /// types.
   //
   /// deprecated
-  //InstanceDeclarationsType instances_;
+  // InstanceDeclarationsType instances_;
 
   /// Map of Decl* => ModuleInstanceType
   InstanceDeclarations instance_map_;
 
   clang::ValueDecl *parent_fd_;
+
  public:
-  InstanceMatcher& operator=( const InstanceMatcher& from ) {
-    llvm::dbgs() << "==================== OPERATOR:" << instance_map_.size() << "=\n";
-    instance_map_.insert( from.instance_map_.begin(), from.instance_map_.end() );
-    llvm::dbgs() << "==================== END OPERATOR:" << instance_map_.size() << "=\n";
+  InstanceMatcher &operator=(const InstanceMatcher &from) {
+    instance_map_.insert(from.instance_map_.begin(), from.instance_map_.end());
     return *this;
   }
 
@@ -421,7 +420,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     ModuleInstanceType parsed_instance{};
     parsed_instance.var_name = var_name;
     parsed_instance.var_type_name = var_type_name;
-    instance_decl->getType()->dump();
+    LLVM_DEBUG(instance_decl->getType()->dump(););
 
     /// Get all the 1D, 2D and 3D array type pointers.
     const ArrayType *array_1d{
@@ -460,10 +459,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       auto element_type{array_type->getElementType().getTypePtr()};
       parsed_instance.type_decl = element_type->getAsCXXRecordDecl();
       LLVM_DEBUG(
-          llvm::outs()
+          llvm::dbgs()
               << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IS ARRAY type decl null: "
-              << parsed_instance.type_decl << "\n";);
-      element_type->dump();
+              << parsed_instance.type_decl << "\n";
+          element_type->dump(););
       parsed_instance.setArrayType();
       parsed_instance.addArraySizes(getConstantArraySizes(instance_decl));
       parsed_instance.setArrayParameters(index_map[instance_name]);
@@ -474,12 +473,14 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       parsed_instance.type_decl =
           instance_decl->getType().getTypePtr()->getAsCXXRecordDecl();
       LLVM_DEBUG(
-          llvm::outs()
+          llvm::dbgs()
               << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ NOT ARRAY type decl null: "
               << parsed_instance.type_decl << "\n";);
     }
 
+    LLVM_DEBUG(
     instance_decl->dump();
+    );
     parsed_instance.instance_decl = instance_decl;
     parsed_instance.is_field_decl = true;
     parsed_instance.parent_name = parent_name;
@@ -500,12 +501,10 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     if (exists_instance == instance_map_.end()) {
       instance_map_.insert(std::pair<Decl *, ModuleInstanceType>(
           instance_decl, parsed_instance));
-      LLVM_DEBUG(llvm::outs() << "INSERTED\n";);
     } else {
       // Instance IS found.
 
       exists_instance->second.add_instance_name(instance_name);
-      LLVM_DEBUG(llvm::outs() << "INSERTED INSTANCE NAME\n";);
     }
   }
 
@@ -531,7 +530,6 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
     auto ctor_arg = const_cast<clang::Stmt *>(
         result.Nodes.getNodeAs<clang::Stmt>("ctor_arg"));
 
-    
     /// ctor_fd:    Field initialized in the constructor.
     /// ctor_init:  Constructor initializer.
     /// parent_fd:  The FieldDecl whose CXXRecordDecl has the initialization.
@@ -557,9 +555,9 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
       //
 
       if ((iexpr != nullptr) && (cexpr == nullptr)) {
-        LLVM_DEBUG(llvm::outs() << "### IEXPR is not NULL\n";
+        LLVM_DEBUG(llvm::dbgs() << "### IEXPR is not NULL\n";
 
-                   llvm::outs() << "######## Going through index map: "
+                   llvm::dbgs() << "######## Going through index map: "
                                 << index_map.size() << "\n";);
         for (auto const &init : index_map) {
           auto submodule_instance_name{init.first};
@@ -586,8 +584,7 @@ class InstanceMatcher : public MatchFinder::MatchCallback {
         }
 
         LLVM_DEBUG(iarg_matcher.dump();
-
-                   llvm::outs()
+                   llvm::dbgs()
                    << "#### IndexMap: " << index_map.size() << "\n";);
         // This retrieves the submodule instance name.
         if (auto inst_literal = iarg_matcher.getInstanceLiteral()) {

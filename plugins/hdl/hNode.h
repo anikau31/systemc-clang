@@ -8,6 +8,10 @@
 #include <algorithm>
 #include <unordered_map>
 #include <set>
+#include <unordered_set>
+
+#include <iostream>
+#include "CallExprUtils.h"
 
 using namespace systemc_clang;
 
@@ -210,31 +214,24 @@ namespace hnode {
   
   };
 
+  // remember type pointers 
+  
+
   //!
   //! The util class provides small utility functions to generate and
   //! recognize C++ and SystemC conformant identifiers.
   //!
   
-  class util { 
+  class util {
+  private:
+    std::unordered_set<const Type *> types_seen = {};
+
   public:
-    const  int numstr = 6;
-    const string scbuiltintype [6] = {
-      "sc_uint",
-      "sc_int",
-      "sc_bigint",
-      "sc_biguint",
-      "sc_bv",
-      "sc_logic"
-    };
-    int scbtlen [ 6 ];
 
      const set<std::string> sc_built_in_funcs{
        "concat", "wait", "range", "bit", "or_reduce", "xor_reduce", "nor_reduce","and_reduce", "nand_reduce"};
     
-    util() {
-      for (int i=0; i < numstr; i++)
-	scbtlen[i] = scbuiltintype[i].length();
-    }
+    util() {}
     ~util() {}
     
     static inline void make_ident(string &nm) {
@@ -248,54 +245,74 @@ namespace hnode {
 			      [](char c){ return c!='_' && !isalnum(c) ;}), nm.end());
 
     }
-    inline bool isSCBuiltinType(const string &tstring){
-      // linear search sorry, but at least the length
-      // isn't hard coded in ...
-       int found = tstring.find_last_of(" "); // skip qualifiers if any
-      for (int i=0; i < numstr; i++) {
-	if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i])
-	  return true;
+
+    inline bool isSCByCallExpr(const CallExpr *callexpr) {
+      if (auto mce = dyn_cast<CXXMemberCallExpr>(callexpr)) {
+        LLVM_DEBUG(llvm::dbgs() << "isSCByType(callexpr) is a membercallexpr\n");
+
+        std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd", "sc_rvd_in", "sc_rvd_out"};
+        std::vector<llvm::StringRef> core_dt{"sc_dt"};
+        bool t1 = isCXXMemberCallExprSystemCCall(callexpr, ports_signals_rvd_wait);
+        bool t2 = isInNamespace(mce->getObjectType().getTypePtr(), core_dt );
+        llvm::dbgs() << "isSCCall:: CXXMemberCallSCCall " << t1 << " inNS " << t2 << "\n";
+	if (t1 || t2) {
+	  const Type *typ = mce->getObjectType().getTypePtr();
+	  types_seen.insert(typ);
+	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	}
+        return t1 || t2;
+
+        //return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
+      }
+      else {
+        LLVM_DEBUG(llvm::dbgs() << "isSCByType(callexpr) not a membercallexpr\n");
+        std::vector<llvm::StringRef> core_dt{"sc_core", "sc_dt"};
+	bool inns = isInNamespace(callexpr, core_dt);
+	if (inns) {
+	  const Type *typ = callexpr->getType().getTypePtr();
+	  types_seen.insert(typ);
+	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	}
+        return inns;
+      }
+    }
+    
+   
+    inline bool isSCByType(const Type *typ) {
+      
+      // if  (types_seen.count(typ) > 0) {
+        // LLVM_DEBUG(llvm::dbgs() << "isSCByType(typ) found type pointer in set " << typ << "\n");
+        // return true;
+      // }
+      llvm::dbgs() << "@@@@ isSCT\n";
+      static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
+      static std::vector<llvm::StringRef> rvd{"sc_rvd","sc_rvd_in","sc_rvd_out"};
+      static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base", "sc_signal_in_if", 
+        "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process"};
+      if (isInNamespace(typ, sc_dt_ns) 
+          || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) 
+          || isCXXMemberCallExprSystemCCall(typ, rvd)) {
+	types_seen.insert(typ);
+	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	return true;
       }
       return false;
     }
+
 
     inline bool isSCFunc(const string &tstring) {
       return (sc_built_in_funcs.count(tstring)>0);
       // add more as we get them
     }
 
-     
-    static inline bool isSCType(const string &tstring) {
-      // linear search and the length is hard coded in ...
-      // used in the method name logic.
-      // can't use set as we are searching for a substring of tstring
-      
-     string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_rvd", "sc_inout",
-			  "sc_signal", "sc_subref", "sc_dt"};
-
-      for (string onestring : strings) {
-      	if (tstring.find(onestring)!=string::npos)
-      	  return true;
-      }
-      return false;
-      /* if (tstring.substr(0, 6) == "class ") // this is so stupid */
-      /* 	tstring = tstring.substr(6, tstring.length() - 6); */
-      /* //return (tstring.find("sc_in")!=string::npos)  */
-      /* return ((tstring.substr(0, 12) == "sc_core::sc_") || */
-      /* 	      (tstring.substr(0, 5) == "sc_in") || */
-      /* 	      (tstring.substr(0, 9) == "sc_rvd_in") || */
-      /* 	      (tstring.substr(0, 6) == "sc_out") || */
-      /* 	      (tstring.substr(0, 10) == "sc_rvd_out") || */
-      /* 	      (tstring.substr(0, 8) == "sc_inout") || */
-      /* 	      (tstring.substr(0, 9) == "sc_signal") || */
-      /* 	      (tstring.substr(0, 6) == "sc_rvd") || */
-      /* 	      (tstring.substr(0, 9) == "sc_subref") || */
-      /* 	      (tstring.substr(0,5) == "sc_dt")); */
+    inline bool isTypename(const string &tstring) {
+      size_t found = tstring.find("typename");
+      if (found == string::npos) return false;
+      else if (found == (size_t) 0) return true;
+      else return false;
     }
-
-
     
-    static inline bool is_sc_macro(const std::string &str_in) {
+     inline bool isSCMacro(const std::string &str_in) {
       string sc_macro_strings [] = {"sc_min", "sc_max", "sc_abs"};
       for (string str : sc_macro_strings) {
 	if (str_in.find(str) != string::npos) return true;
@@ -433,8 +450,31 @@ namespace hnode {
 
   typedef newname_map_t<NamedDecl *> hdecl_name_map_t;
   typedef newname_map_t<ModuleInstance *> hmodinst_name_map_t;
-  typedef newname_map_t<FunctionDecl *> hfunc_name_map_t;
+  typedef newname_map_t<FunctionDecl *> hsimplefunc_name_map_t;
 
+  // map to record type of the method's class to be used as first parameter in the method call
+  typedef std::unordered_map<const CXXMethodDecl *, const Type *> method_object_map_t;
+  
+  class hfunc_name_map_t:
+    public hsimplefunc_name_map_t
+  {
+  public:
+    method_object_map_t methodobjtypemap;
+    void insertall(hfunc_name_map_t newmap) {
+      hsimplefunc_name_map_t::insertall(newmap);
+      methodobjtypemap.insert(newmap.methodobjtypemap.begin(), newmap.methodobjtypemap.end());
+    }
+    void print(llvm::raw_ostream & modelout=llvm::outs(), unsigned int indnt=2) {
+      hsimplefunc_name_map_t::print(modelout, indnt);
+      modelout << "Methodobjtypemap follows\n";
+      for( auto entry:methodobjtypemap) {
+	modelout << entry.first << " " <<entry.second << "\n";
+      }
+      modelout << "Methodobjtypemap end\n";
+	    
+    }
+  };
+  
   typedef std::unordered_map<const CXXMethodDecl *, const CXXMethodDecl *> overridden_method_map_t;
   
   // thread name, reset var name, false|true, ASYNC|SYNC

@@ -5,27 +5,92 @@
 #include "clang/AST/ExprCXX.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/ADT/StringSet.h"
+
 #include <queue>
+#include <iostream>
 
 namespace sc_ast_matchers {
 namespace utils {
+  using namespace clang;
 
+bool isCXXMemberCallExprSystemCCall(const clang::CallExpr *ce,
+                                    const std::vector<llvm::StringRef> &names) {
+  if (!ce) {
+    return false;
+  }
+  if (auto mce = dyn_cast<CXXMemberCallExpr>(ce)) {
+    const Type* obj_ptr{ mce->getObjectType().getTypePtr()};
+    return isCXXMemberCallExprSystemCCall(obj_ptr, names);
+  }
+  if (auto oce = dyn_cast<CXXOperatorCallExpr>(ce)) {
+    const Decl* decl{ oce->getCalleeDecl()};
+    if (auto cxxdecl = dyn_cast<CXXRecordDecl>(decl)) {
+     return isCXXMemberCallExprSystemCCall(oce->getType().getTypePtr(), names);
+    }
+  }
+  
+  return false;
+}
 
+bool isCXXMemberCallExprSystemCCall(const clang::Type *type,
+                                    const std::vector<llvm::StringRef> &names) {
+  if (!type) {
+    return false;
+  }
+
+  /// Builtin type
+  if (type->isBuiltinType()) {
+    return false;
+  }
+
+  /// Is it a Record type
+  if (type->isClassType()) {
+    if (const clang::CXXRecordDecl *rdecl = type->getAsCXXRecordDecl()) {
+      if (rdecl->hasDefinition()) {
+        // rdecl->dump();
+        auto base_names{getAllBaseClassNames(rdecl)};
+
+        for (const auto &decl : base_names) {
+          auto decl_name{decl->getNameAsString()};
+          for (auto &n : names) {
+            if (decl_name == n) {
+//              llvm::dbgs() << "@@@ Typep => RecordType\n";
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
+//
+// bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce,
+                                    // const std::vector<llvm::StringRef> &names) {
+  // if (!mce) {
+    // return false;
+  // }
+//
+  // const Type* obj_ptr{ mce->getObjectType().getTypePtr()};
+  // llvm::dbgs() << "@@@@ obj_ptr\n";
+  // obj_ptr->dump();
+//
+  // return isCXXMemberCallExprSystemCCall(obj_ptr, names);
+// }
+//
 bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce) {
   if (!mce) {
     return false;
   }
-  llvm::dbgs() << "isCXXMemberCallExprSystemCCall\n";
 
   if (auto mdecl = mce->getMethodDecl()) {
     if (auto rdecl = mdecl->getParent()) {
       auto base_names{getAllBaseClassNames(rdecl)};
 
       for (const auto &decl : base_names) {
-        llvm::dbgs() << "base is called " << decl->getNameAsString() << "\n";
-        auto name{ decl->getNameAsString()};
+        auto name{decl->getNameAsString()};
         if (name == "sc_object" || (name == "sc_simcontext")) {
-          llvm::dbgs() << "() Member call is sc_object\n";
           return true;
         }
       }
@@ -34,7 +99,6 @@ bool isCXXMemberCallExprSystemCCall(const clang::CXXMemberCallExpr *mce) {
 
   return false;
 }
-
 
 using namespace utils::array_type;
 
@@ -53,7 +117,7 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClassNames(
   while (top_decl) {
     auto name{top_decl->getNameAsString()};
 
-    llvm::dbgs() << "Processing base named: " << name << "\n";
+    // llvm::dbgs() << "Processing base named: " << name << "\n";
 
     bases.push_back(top_decl);
     bases_set.insert(top_decl->getName());
@@ -74,11 +138,11 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClassNames(
   }
 
   /// Print all the base classes retrieved.
-  llvm::dbgs() << "Bases collected: ";
+  LLVM_DEBUG(llvm::dbgs() << "Bases collected: ";);
   for (auto const &base : bases) {
-    llvm::dbgs() << base->getNameAsString() << "  ";
+    LLVM_DEBUG(llvm::dbgs() << base->getNameAsString() << "  ";);
   }
-  llvm::dbgs() << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "\n";);
 
   return bases;
 }
@@ -97,12 +161,12 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
   while (top_decl) {
     auto name{top_decl->getNameAsString()};
 
-    llvm::dbgs() << "Processing base named: " << name << "\n";
+    LLVM_DEBUG(llvm::dbgs() << "Processing base named: " << name << "\n";);
 
     /// Do not insert into bases the decl class.
     if ((top_decl != decl) && (name != "sc_object") &&
         (name != "sc_process_host") && (name != "sc_module")) {
-      llvm::dbgs() << "+ Insert into bases\n";
+      LLVM_DEBUG(llvm::dbgs() << "+ Insert into bases\n";);
       bases.push_back(top_decl);
     }
 
@@ -123,11 +187,11 @@ std::vector<const clang::CXXRecordDecl *> getAllBaseClasses(
   }
 
   /// Print all the base classes retrieved.
-  llvm::dbgs() << "Bases collected: ";
+  LLVM_DEBUG(llvm::dbgs() << "Bases collected: ";);
   for (auto const &base : bases) {
-    llvm::dbgs() << base->getNameAsString() << "  ";
+    LLVM_DEBUG(llvm::dbgs() << base->getNameAsString() << "  ";);
   }
-  llvm::dbgs() << "\n";
+  LLVM_DEBUG(llvm::dbgs() << "\n";);
 
   return bases;
 }
@@ -143,20 +207,21 @@ std::vector<ModuleInitializerTupleType> getModuleInitializerNames(
 
   /// Retrieve the first argument
   clang::Expr *str_expr{init->getInit()->IgnoreUnlessSpelledInSource()};
-  llvm::dbgs() << "CtorInit dump\n";
   str_expr->dump();
 
   clang::StringLiteral *str_lit{llvm::dyn_cast<clang::StringLiteral>(str_expr)};
   if (str_lit) {  // = llvm::dyn_cast<clang::StringLiteral>(str_expr)) {
-    llvm::dbgs() << "Get first arg: " << str_lit->getString() << "\n";
+    LLVM_DEBUG(llvm::dbgs()
+                   << "Get first arg: " << str_lit->getString() << "\n";);
   }
 
   /// Get the FieldDecl corresponding to the constructor initializer.
   clang::FieldDecl *fd{init->getMember()};
   if (fd) {
     auto name{fd->getType().getAsString()};
-    llvm::dbgs() << "\n   *************** Initializer names ****** : " << name
-                 << "\n";
+    LLVM_DEBUG(llvm::dbgs()
+                   << "\n   *************** Initializer names ****** : " << name
+                   << "\n";);
     fd->dump();
     /// Check the type of the FieldDecl.
     auto decl{fd->getType()
@@ -165,17 +230,18 @@ std::vector<ModuleInitializerTupleType> getModuleInitializerNames(
                   ->getAsCXXRecordDecl()};
 
     if (decl) {
-      llvm::dbgs() << "decl: " << decl->getNameAsString() << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "decl: " << decl->getNameAsString() << "\n";);
       for (const auto &base : decl->bases()) {
         clang::CXXRecordDecl *base_decl{base.getType()
                                             .getTypePtr()
                                             ->getUnqualifiedDesugaredType()
                                             ->getAsCXXRecordDecl()};
         if (base_decl) {
-          llvm::dbgs() << "base decl: " << base_decl->getNameAsString() << "\n";
+          LLVM_DEBUG(llvm::dbgs() << "base decl: "
+                                  << base_decl->getNameAsString() << "\n";);
 
           if (base_decl->getNameAsString() == "sc_module") {
-            llvm::dbgs() << "Module class\n";
+            LLVM_DEBUG(llvm::dbgs() << "Module class\n";);
             module_info.push_back(
                 std::make_tuple(fd, str_lit->getString().str(), init));
           }

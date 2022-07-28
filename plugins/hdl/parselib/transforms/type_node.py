@@ -6,14 +6,17 @@ class TypeNode(object):
         1. representing the nested type itself, with typedef, in which it is a tree like structure
         2. representing the type instantiation, which is only provided with concrete value of type params
     """
-    def __init__(self, name, params, fields):
+    def __init__(self, name, params, aliases, fields):
         """
         name: type name
         params: type parameteres, a list of string, in fp_t, this would be E, F
+        aliases: type aliases, used to represent typedef's within a type, in block_header, this would be
+                 hType typename FP::expo_t NOLIST
         fields: a list of (string, TypeNode) tuple, representing the fields, a primitive type should keep this as empty. In fp_t, this would be (frac, ... ), (expo, ... ), (sign, ... )
         """
         self.name = name
         self.params = params
+        self.aliases = aliases
         self.fields = fields
 
     
@@ -45,14 +48,12 @@ class TypeNode(object):
                         raise
         return type_nodes
 
-
     def bind(self, param_list, param_dict=None):
         """
         if params_dict is not empty, use params_dict, otherwise, first build param dict
         currently, things like template<E, sc_in<E> > is not supported
         """
-        if not param_dict:
-            param_dict = self.build_param_dict(param_list)
+        param_dict = param_dict or self.build_param_dict(param_list)
         fields = []
         for field_name, field_type in self.fields:
             if len(field_type.params) > 0:
@@ -63,7 +64,6 @@ class TypeNode(object):
                 fields.append((field_name, field_type.instantiate()))
         fields = [ (str(field[0]), field[1]) for field in fields ]
         return aggregate(params=None, fields=fields)
-
 
     def instantiate(self, params=None):
         # create an object with to_str for the classes

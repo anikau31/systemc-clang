@@ -74,8 +74,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     port_matcher.registerMatchers(port_registry);
     port_registry.match(*decl, context);
     // decl->dump();
-    LLVM_DEBUG(llvm::dbgs() << "========== Port Matcher =============\n");
+    LLVM_DEBUG(llvm::dbgs() << "========== Port Matcher =============\n";
     port_matcher.dump();
+    );
 
     // All the ports for the CXXRecordDecl should be matched.
     // We can populate the ModuleInstance with that information.
@@ -163,22 +164,22 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       clang::ValueDecl *vd{
           dyn_cast<clang::ValueDecl>(inst.second.getInstanceDecl())};
 
-      llvm::dbgs() << ">>>> Getting bases for " << decl->getNameAsString() << "\n";
       auto base_decls{getAllBaseClasses(decl)};
       for (const auto &base_decl : base_decls) {
-        llvm::dbgs() << "=============================== BASES "
-                     << decl->getNameAsString() << " =======================\n";
-        llvm::dbgs() << "Run base instance matcher: "
-                     << base_decl->getNameAsString() << " \n";
+        LLVM_DEBUG(llvm::dbgs() << "=============================== BASES "
+                                << decl->getNameAsString()
+                                << " =======================\n";
+                   llvm::dbgs() << "Run base instance matcher: "
+                                << base_decl->getNameAsString() << " \n";);
 
         InstanceMatcher base_instance_matcher;
         MatchFinder base_instance_reg{};
         base_instance_matcher.registerMatchers(base_instance_reg);
         base_instance_matcher.setParentFieldDecl(vd);
         base_instance_reg.match(*base_decl, context);
-        llvm::dbgs() << "+ Dump base instance matcher\n";
-        base_instance_matcher.dump();
-        llvm::dbgs() << "+ End dump base instance matcher\n";
+        LLVM_DEBUG(llvm::dbgs() << "+ Dump base instance matcher\n";
+                   base_instance_matcher.dump();
+                   llvm::dbgs() << "+ End dump base instance matcher\n";);
 
         /// Copy contents over.
         instance_matcher_ = base_instance_matcher;
@@ -191,8 +192,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
     // 1. For every module found, check if there is an instance.
     // 2. If there is an instance, then add it into the list.
 
+    LLVM_DEBUG(
     llvm::dbgs() << "###### DUMP Instance Matches \n";
     instance_matcher_.dump();
+    );
 
     auto instance_map{instance_matcher_.getInstanceMap()};
 
@@ -208,13 +211,10 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
 
     /// DEBUG: output all the classes that have been identified. =======
     for (const auto &inst : instance_map) {
-      llvm::dbgs()
-          << "@@@@@@@@@@@@@ INSTANCE MAP with base instances @@@@@@@@@@@\n";
-
       clang::CXXRecordDecl *decl{
           dyn_cast<clang::CXXRecordDecl>(inst.second.getInstanceTypeDecl())};
       auto name{decl->getNameAsString()};
-      llvm::dbgs() << "class: " << name << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "class: " << name << "\n";);
     }
     /// END DEBUG ===========================================
 
@@ -227,9 +227,9 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       clang::CXXRecordDecl *decl{
           dyn_cast<clang::CXXRecordDecl>(inst.second.getInstanceTypeDecl())};
       auto name{decl->getNameAsString()};
-      llvm::outs() << "############### ====> INST: " << inst.first
-                   << ", name: " << name
-                   << ", instance_name: " << inst.second.instance_name << "\n";
+      LLVM_DEBUG(llvm::dbgs() << "############### ====> INST: " << inst.first
+                              << ", name: " << name << ", instance_name: "
+                              << inst.second.instance_name << "\n";);
 
       auto add_module{new ModuleInstance(name, decl)};
       add_module->setInstanceInfo(instance);
@@ -239,12 +239,12 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
       modules_.insert(std::pair<clang::CXXRecordDecl *, ModuleInstance *>(
           decl, add_module));
 
-      llvm::dbgs() << "[Running module declaration matchers]\n";
+      LLVM_DEBUG(llvm::dbgs() << "[Running module declaration matchers]\n";);
       runModuleDeclarationMatchers(context, decl, add_module);
-      llvm::dbgs() << "[Running port matcher]\n";
+      LLVM_DEBUG(llvm::dbgs() << "[Running port matcher]\n";);
       runPortMatcher(context, decl, add_module);
 
-      llvm::dbgs() << "[Running Base class logic]\n";
+      LLVM_DEBUG(llvm::dbgs() << "[Running Base class logic]\n";);
       /// Find if the instance CXXREcordDecl has a base class, and parse that
       /// too. Any ports, signals, etc. should be incorporated into the module
       /// instance.
@@ -253,17 +253,16 @@ class ModuleDeclarationMatcher : public MatchFinder::MatchCallback {
         auto name{base_decl->getNameAsString()};
         ModuleInstance *base_module_instance{
             new ModuleInstance{name, base_decl}};
-        llvm::dbgs() << "=============================== BASES for " << name << " size  " << base_decls.size() 
-                     << " =======================\n";
-        base_decl->dump();
-        llvm::dbgs() << "Base class: " << base_decl->getNameAsString() << "\n";
+        LLVM_DEBUG(base_decl->dump();
+                   llvm::dbgs()
+                   << "Base class: " << base_decl->getNameAsString() << "\n";);
 
         runModuleDeclarationMatchers(
             context, const_cast<clang::CXXRecordDecl *>(base_decl),
             base_module_instance);
         runPortMatcher(context, base_decl, base_module_instance);
         add_module->addBaseInstance(base_module_instance);
-      llvm::dbgs() << "End base logic loop\n";
+        LLVM_DEBUG(llvm::dbgs() << "End base logic loop\n";);
       }
     }
   }

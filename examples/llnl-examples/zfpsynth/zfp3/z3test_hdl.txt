@@ -43,19 +43,14 @@
       hVardecl c_driver_fp_scclang_global_6 [
         hTypeinfo  NONAME [
           hType sc_rvd [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
       hVardecl c_dut_enc_scclang_global_7 [
         hTypeinfo  NONAME [
           hType sc_rvd [
-            hType bits_t [
-              hLiteral 64 NOLIST
-            ]
+            hType bits_t_64_ NOLIST
           ]
         ]
       ]
@@ -173,19 +168,14 @@
       hPortin s_fp [
         hTypeinfo  NONAME [
           hType sc_rvd_in [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
       hPortout m_bits [
         hTypeinfo  NONAME [
           hType sc_rvd_out [
-            hType bits_t [
-              hLiteral 64 NOLIST
-            ]
+            hType bits_t_64_ NOLIST
           ]
         ]
       ]
@@ -313,10 +303,7 @@
       hVardecl c_fe_fp_scclang_global_15 [
         hTypeinfo  NONAME [
           hType sc_rvd [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
@@ -1575,20 +1562,14 @@
       hPortin s_fp [
         hTypeinfo  NONAME [
           hType sc_rvd_in [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
       hPortout m_fp [
         hTypeinfo  NONAME [
           hType sc_rvd_out [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
@@ -1636,10 +1617,7 @@
       hVardecl c_fp_scclang_global_4 [
         hTypeinfo  NONAME [
           hType sc_rvd [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
@@ -1719,15 +1697,12 @@
         hMethod ms_proc [
           hVardecl last_ms_proc_local_2 [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
           hVardecl fp_ms_proc_local_3 [
             hTypeinfo  NONAME [
-              hType fp_t [
-                hLiteral 11 NOLIST
-                hLiteral 52 NOLIST
-              ]
+              hType fp_t_11_52_ NOLIST
             ]
           ]
           hVardecl expo_ms_proc_local_4 [
@@ -1985,7 +1960,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -2009,20 +1984,14 @@
       hPortin s_port [
         hTypeinfo  NONAME [
           hType sc_rvd_in [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
       hPortout m_port [
         hTypeinfo  NONAME [
           hType sc_rvd_out [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
@@ -2096,10 +2065,7 @@
       hPortin din [
         hTypeinfo  NONAME [
           hType sc_in [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
@@ -2127,10 +2093,7 @@
       hPortout dout [
         hTypeinfo  NONAME [
           hType sc_out [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
@@ -2145,10 +2108,7 @@
         hTypeinfo  NONAME [
           hType array##32 [
             hType sc_signal [
-              hType fp_t [
-                hLiteral 11 NOLIST
-                hLiteral 52 NOLIST
-              ]
+              hType fp_t_11_52_ NOLIST
             ]
           ]
         ]
@@ -2724,7 +2684,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -3106,7 +3066,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -3810,7 +3770,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -4432,7 +4392,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -4472,10 +4432,7 @@
       hPortin s_fp [
         hTypeinfo  NONAME [
           hType sc_rvd_in [
-            hType fp_t [
-              hLiteral 11 NOLIST
-              hLiteral 52 NOLIST
-            ]
+            hType fp_t_11_52_ NOLIST
           ]
         ]
       ]
@@ -4535,10 +4492,7 @@
           ]
           hVardecl fp_mc_proc_local_3 [
             hTypeinfo  NONAME [
-              hType fp_t [
-                hLiteral 11 NOLIST
-                hLiteral 52 NOLIST
-              ]
+              hType fp_t_11_52_ NOLIST
             ]
           ]
           hVardecl hid_mc_proc_local_4 [
@@ -4811,7 +4765,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -6689,7 +6643,7 @@
       hSenslist ms_fwd_order [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -6886,7 +6840,7 @@
             ]
             hSigAssignL write [
               hVarref m_valid NOLIST
-              hNoop to_bool [
+              hBuiltinFunction to_bool [
                 hBinop ARRAYSUBSCRIPT [
                   hSigAssignR read [
                     hVarref v_scclang_global_0 NOLIST
@@ -7459,7 +7413,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -7656,7 +7610,7 @@
             ]
             hSigAssignL write [
               hVarref m_valid NOLIST
-              hNoop to_bool [
+              hBuiltinFunction to_bool [
                 hBinop ARRAYSUBSCRIPT [
                   hSigAssignR read [
                     hVarref v_scclang_global_0 NOLIST
@@ -8229,7 +8183,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -9025,7 +8979,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -9208,7 +9162,7 @@
         hMethod mc_proc [
           hVardecl last_mc_proc_local_3 [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
           hVardecl tmp_mc_proc_local_4 [
@@ -9287,7 +9241,7 @@
                         hVarref tmp_mc_proc_local_4 NOLIST
                         hVarref i_mc_proc_local_6 NOLIST
                       ]
-                      hNoop to_bool [
+                      hBuiltinFunction to_bool [
                         hBinop ARRAYSUBSCRIPT [
                           hSigAssignR read [
                             hBinop ARRAYSUBSCRIPT [
@@ -9339,7 +9293,7 @@
         hMethod ms_proc [
           hVardecl last_ms_proc_local_7 [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
           hVardecl b_ms_proc_local_8 [
@@ -9349,7 +9303,7 @@
           ]
           hVardecl frst_ms_proc_local_9 [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
           hVardecl i_ms_proc_local_10 [
@@ -9391,7 +9345,7 @@
           ]
           hVardecl found_ms_proc_local_17 [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
           hVardecl shiftmask_ms_proc_local_18 [
@@ -9808,7 +9762,7 @@
                           hCStmt  NONAME [
                             hIfStmt  NONAME [
                               hBinop && [
-                                hNoop to_bool [
+                                hBuiltinFunction to_bool [
                                   hBinop ARRAYSUBSCRIPT [
                                     hSigAssignR read [
                                       hVarref bp1_scclang_global_1 NOLIST
@@ -9816,7 +9770,7 @@
                                     hVarref n_ms_proc_local_12 NOLIST
                                   ]
                                 ]
-                                hNoop to_bool [
+                                hBuiltinFunction to_bool [
                                   hBinop ARRAYSUBSCRIPT [
                                     hSigAssignR read [
                                       hVarref bp1_scclang_global_1 NOLIST
@@ -9856,7 +9810,7 @@
                               ]
                               hIfStmt  NONAME [
                                 hBinop && [
-                                  hNoop to_bool [
+                                  hBuiltinFunction to_bool [
                                     hBinop ARRAYSUBSCRIPT [
                                       hSigAssignR read [
                                         hVarref bp1_scclang_global_1 NOLIST
@@ -9865,7 +9819,7 @@
                                     ]
                                   ]
                                   hUnop ! [
-                                    hNoop to_bool [
+                                    hBuiltinFunction to_bool [
                                       hBinop ARRAYSUBSCRIPT [
                                         hSigAssignR read [
                                           hVarref bp1_scclang_global_1 NOLIST
@@ -9908,7 +9862,7 @@
                                 hIfStmt  NONAME [
                                   hBinop && [
                                     hUnop ! [
-                                      hNoop to_bool [
+                                      hBuiltinFunction to_bool [
                                         hBinop ARRAYSUBSCRIPT [
                                           hSigAssignR read [
                                             hVarref bp1_scclang_global_1 NOLIST
@@ -9918,7 +9872,7 @@
                                       ]
                                     ]
                                     hUnop ! [
-                                      hNoop to_bool [
+                                      hBuiltinFunction to_bool [
                                         hBinop ARRAYSUBSCRIPT [
                                           hSigAssignR read [
                                             hVarref bp1_scclang_global_1 NOLIST
@@ -9950,7 +9904,7 @@
                                   hIfStmt  NONAME [
                                     hBinop && [
                                       hUnop ! [
-                                        hNoop to_bool [
+                                        hBuiltinFunction to_bool [
                                           hBinop ARRAYSUBSCRIPT [
                                             hSigAssignR read [
                                               hVarref bp1_scclang_global_1 NOLIST
@@ -9959,7 +9913,7 @@
                                           ]
                                         ]
                                       ]
-                                      hNoop to_bool [
+                                      hBuiltinFunction to_bool [
                                         hBinop ARRAYSUBSCRIPT [
                                           hSigAssignR read [
                                             hVarref bp1_scclang_global_1 NOLIST
@@ -10010,7 +9964,7 @@
                                 hUnop ! [
                                   hVarref found_ms_proc_local_17 NOLIST
                                 ]
-                                hNoop to_bool [
+                                hBuiltinFunction to_bool [
                                   hBinop ARRAYSUBSCRIPT [
                                     hSigAssignR read [
                                       hVarref bp1_scclang_global_1 NOLIST
@@ -10043,7 +9997,7 @@
                             ]
                             hIfStmt  NONAME [
                               hBinop && [
-                                hNoop to_bool [
+                                hBuiltinFunction to_bool [
                                   hBinop ARRAYSUBSCRIPT [
                                     hSigAssignR read [
                                       hVarref bp1_scclang_global_1 NOLIST
@@ -10052,7 +10006,7 @@
                                   ]
                                 ]
                                 hUnop ! [
-                                  hNoop to_bool [
+                                  hBuiltinFunction to_bool [
                                     hBinop ARRAYSUBSCRIPT [
                                       hSigAssignR read [
                                         hVarref bp1_scclang_global_1 NOLIST
@@ -10563,7 +10517,7 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
@@ -10670,23 +10624,21 @@
       hPortout m_bits [
         hTypeinfo  NONAME [
           hType sc_rvd_out [
-            hType bits_t [
-              hLiteral 64 NOLIST
-            ]
+            hType bits_t_64_ NOLIST
           ]
         ]
       ]
       hSigdecl cs_scclang_global_0 [
         hTypeinfo  NONAME [
           hType sc_signal [
-            hType state_t NOLIST
+            hType state_t_ NOLIST
           ]
         ]
       ]
       hSigdecl ns_scclang_global_1 [
         hTypeinfo  NONAME [
           hType sc_signal [
-            hType state_t NOLIST
+            hType state_t_ NOLIST
           ]
         ]
       ]
@@ -10738,7 +10690,7 @@
       ]
       hVardecl done_actual_scclang_global_8 [
         hTypeinfo  NONAME [
-          hType _Bool NOLIST
+          hType bool NOLIST
         ]
       ]
     ]
@@ -10747,27 +10699,27 @@
         hMethod mc_proc [
           hVardecl ts_mc_proc_local_2 [
             hTypeinfo  NONAME [
-              hType state_t NOLIST
+              hType state_t_ NOLIST
             ]
           ]
           hVardecl dis_done_mc_proc_local_3 [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
           hVardecl add_done_mc_proc_local_4 [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
           hVardecl pad_done_mc_proc_local_5 [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
           hVardecl fls_done_mc_proc_local_6 [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
           hVardecl pbits_mc_proc_local_7 [
@@ -11276,78 +11228,16 @@
           ]
         ]
       ]
-      hFunction sc_dt__sc_min_func_0 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType unsigned_short NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamI a [
-            hTypeinfo  NONAME [
-              hType unsigned_short NOLIST
-            ]
-          ]
-          hFunctionParamI b [
-            hTypeinfo  NONAME [
-              hType unsigned_short NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hCondop  NONAME [
-              hBinop <= [
-                hVarref a NOLIST
-                hVarref b NOLIST
-              ]
-              hVarref a NOLIST
-              hVarref b NOLIST
-            ]
-          ]
-        ]
-      ]
-      hFunction sc_dt__sc_max_func_1 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType short NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamI a [
-            hTypeinfo  NONAME [
-              hType short NOLIST
-            ]
-          ]
-          hFunctionParamI b [
-            hTypeinfo  NONAME [
-              hType short NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hCondop  NONAME [
-              hBinop >= [
-                hVarref a NOLIST
-                hVarref b NOLIST
-              ]
-              hVarref a NOLIST
-              hVarref b NOLIST
-            ]
-          ]
-        ]
-      ]
       hFunction zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_2 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
-            hType _Bool NOLIST
+            hType bool NOLIST
           ]
         ]
         hFunctionParams  NONAME [
           hFunctionParamIO ts [
             hTypeinfo  NONAME [
-              hType state_t NOLIST
+              hType state_t_ NOLIST
             ]
           ]
           hFunctionParamI bc [
@@ -11450,18 +11340,18 @@
       hFunction zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_3 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
-            hType _Bool NOLIST
+            hType bool NOLIST
           ]
         ]
         hFunctionParams  NONAME [
           hFunctionParamIO ts [
             hTypeinfo  NONAME [
-              hType state_t NOLIST
+              hType state_t_ NOLIST
             ]
           ]
           hFunctionParamI done [
             hTypeinfo  NONAME [
-              hType _Bool NOLIST
+              hType bool NOLIST
             ]
           ]
         ]
@@ -11474,9 +11364,7 @@
         ]
         hVardecl flit__local_12 [
           hTypeinfo  NONAME [
-            hType bits_t [
-              hLiteral 64 NOLIST
-            ]
+            hType bits_t_64_ NOLIST
           ]
         ]
         hCStmt  NONAME [
@@ -11582,6 +11470,68 @@
           ]
         ]
       ]
+      hFunction sc_dt__sc_min_func_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType unsigned_short NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI a [
+            hTypeinfo  NONAME [
+              hType unsigned_short NOLIST
+            ]
+          ]
+          hFunctionParamI b [
+            hTypeinfo  NONAME [
+              hType unsigned_short NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hCondop  NONAME [
+              hBinop <= [
+                hVarref a NOLIST
+                hVarref b NOLIST
+              ]
+              hVarref a NOLIST
+              hVarref b NOLIST
+            ]
+          ]
+        ]
+      ]
+      hFunction sc_dt__sc_max_func_1 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType short NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI a [
+            hTypeinfo  NONAME [
+              hType short NOLIST
+            ]
+          ]
+          hFunctionParamI b [
+            hTypeinfo  NONAME [
+              hType short NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hCondop  NONAME [
+              hBinop >= [
+                hVarref a NOLIST
+                hVarref b NOLIST
+              ]
+              hVarref a NOLIST
+              hVarref b NOLIST
+            ]
+          ]
+        ]
+      ]
       hFunction sc_dt__sc_min_func_4 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
@@ -11674,22 +11624,20 @@
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
   ]
-  hTypedef fp_t [
-    hTypeTemplateParam E NOLIST
-    hTypeTemplateParam F NOLIST
+  hTypedef fp_t_11_52_ [
     hTypeField frac [
       hType sc_uint [
-        hType F NOLIST
+        hLiteral 52 NOLIST
       ]
     ]
     hTypeField expo [
       hType sc_uint [
-        hType E NOLIST
+        hLiteral 11 NOLIST
       ]
     ]
     hTypeField sign [
@@ -11698,18 +11646,17 @@
       ]
     ]
   ]
-  hTypedef bits_t [
-    hTypeTemplateParam D NOLIST
+  hTypedef bits_t_64_ [
     hTypeField tdata [
       hType sc_bv [
-        hType D NOLIST
+        hLiteral 64 NOLIST
       ]
     ]
     hTypeField tlast [
-      hType _Bool NOLIST
+      hType bool NOLIST
     ]
   ]
-  hTypedef state_t [
+  hTypedef state_t_ [
     hTypeField s [
       hType sc_uint [
         hLiteral 3 NOLIST
