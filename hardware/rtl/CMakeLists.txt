@@ -12,6 +12,10 @@ add_systemc_module(
   DESIGN_SOURCE ${PROJECT_SOURCE_DIR}/examples/llnl-examples/zfpsynth/zfp5/z5test.cpp
 )
 add_systemc_module(
+  DESIGN sysc_z7test
+  DESIGN_SOURCE ${PROJECT_SOURCE_DIR}/examples/llnl-examples/zfpsynth/zfp7/z7test.cpp
+)
+add_systemc_module(
   DESIGN sysc_hash
   DESIGN_SOURCE ${PROJECT_SOURCE_DIR}/examples/llnl-examples/modules/hash-unit/hash-unit.cpp
 )
@@ -29,6 +33,16 @@ add_reconf_module(DESIGN reconf_z3
   RECONF_INST "inst_rp" 
   RTL z3wrapper.sv
   SYSC_MODULE sysc_z3test
+  # CONSTR "" 
+  SYNTHESIS_OPTS "-directive AlternateRoutability" 
+  # BDS "" 
+  IPS axis_dwidth_32_64 axis_dwidth_64_32
+  )
+add_reconf_module(DESIGN reconf_z7
+  RECONF_PART "reconf_part_0" 
+  RECONF_INST "inst_rp" 
+  RTL z7wrapper.sv
+  SYSC_MODULE sysc_z7test
   # CONSTR "" 
   SYNTHESIS_OPTS "-directive AlternateRoutability" 
   # BDS "" 
@@ -70,6 +84,17 @@ add_static_config(DESIGN top_hash
   TOP_MOD     top
 )
 
+add_static_config(DESIGN top_z7_static
+  RECONF_PART reconf_part_0
+  RECONF_INST inst_rp
+  RECONF_MOD  reconf_z7
+  RTL         top_mcdma.sv
+  SYNTHESIS_OPTS "-directive  AlternateRoutability -verilog_define ${BOARD}"
+  BDS         bd
+  CONSTR      ${BOARD}.xdc 
+  TOP_MOD     top
+)
+
 add_config_from_static(DESIGN top_z3
   RECONF_PART   reconf_part_0
   RECONF_INST   inst_rp
@@ -81,6 +106,13 @@ add_config_from_static(DESIGN top_z5
   RECONF_PART   reconf_part_0
   RECONF_INST   inst_rp
   RECONF_MOD    reconf_z5
+  STATIC_DESIGN top_hash  
+  # CONSTR        vu9p.xdc inst_rp.xdc
+)
+add_config_from_static(DESIGN top_z7
+  RECONF_PART   reconf_part_0
+  RECONF_INST   inst_rp
+  RECONF_MOD    reconf_z7
   STATIC_DESIGN top_hash  
   # CONSTR        vu9p.xdc inst_rp.xdc
 )

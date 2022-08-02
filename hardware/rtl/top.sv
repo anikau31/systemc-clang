@@ -18,6 +18,7 @@ module top;
 
 
 
+
    wire S_BSCAN_drck;
    wire S_BSCAN_shift;
    wire S_BSCAN_tdi;
