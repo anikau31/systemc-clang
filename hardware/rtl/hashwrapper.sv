@@ -112,12 +112,13 @@ module reconf_part_0(
 
 
   mymodule_sc_module_0 dut ();
-  assign dut.clk = clk50mhz_0;
-  assign dut.reset = peripheral_aresetn_0;
+
+  assign dut.clk_scclang_global_0 = clk50mhz_0;
+  assign dut.reset_scclang_global_1 = peripheral_aresetn_0;
   // assign dut.hdata_data  = hdata_tvalid ? hdata_tdata : 32'h0;
-  assign dut.hdata_data  = hdata_tdata;
-  assign dut.hdata_valid = hdata_tvalid;
-  assign hdata_tready    = dut.hdata_ready;
+  assign dut.hdata_scclang_global_2_data  = hdata_tdata;
+  assign dut.hdata_scclang_global_2_valid = hdata_tvalid;
+  assign hdata_tready    = dut.hdata_scclang_global_2_ready;
 
   `ifndef SYNTHESIS
   always @(posedge clk50mhz_0) begin
@@ -130,13 +131,13 @@ module reconf_part_0(
   `endif
 
   // assign dut.htaptoshash_data  = htaptoshash_tvalid ? htaptoshash_tdata : 32'h0;
-  assign dut.htaptoshash_data  = htaptoshash_tdata;
-  assign dut.htaptoshash_valid = htaptoshash_tvalid;
-  assign htaptoshash_tready    = dut.htaptoshash_ready;
+  assign dut.htaptoshash_scclang_global_3_data  = htaptoshash_tdata;
+  assign dut.htaptoshash_scclang_global_3_valid = htaptoshash_tvalid;
+  assign htaptoshash_tready    = dut.htaptoshash_scclang_global_3_ready;
 
-  assign htapfromshash_tdata      = dut.htapfromshash_data ;
-  assign htapfromshash_tvalid     = dut.htapfromshash_valid;
-  assign dut.htapfromshash_ready = htapfromshash_tready;
+  assign htapfromshash_tdata      = dut.htapfromshash_scclang_global_4_data ;
+  assign htapfromshash_tvalid     = dut.htapfromshash_scclang_global_4_valid;
+  assign dut.htapfromshash_scclang_global_4_ready = htapfromshash_tready;
 
 
   // INST_TAG_END ------ End INSTANTIATION Template ---------

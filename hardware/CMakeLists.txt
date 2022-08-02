@@ -33,6 +33,12 @@ if(${BOARD} STREQUAL "pynqz1") # pynq z1 board
 elseif(${BOARD} STREQUAL "ultra96v2") # ultra96v2 board
   set(PART xczu3eg-sbva484-1-i)
   set(BOARDPART avnet.com:ultra96v2:part0:1.2)
+elseif(${BOARD} STREQUAL "ultra96v2_20211") # ultra96v2 board, but for Vivado 2021.1 boardfiles
+  set(PART xczu3eg-sbva484-1-i)
+  set(BOARDPART avnet.com:ultra96v2:part0:1.2)
+elseif(${BOARD} STREQUAL "ultra96v2_20221") # ultra96v2 board, but for Vivado 2022.1 boardfiles
+  set(PART xczu3eg-sbva484-1-i)
+  set(BOARDPART avnet.com:ultra96v2:part0:1.2)
 endif()
 
 configure_file(common.tcl.config common.tcl)

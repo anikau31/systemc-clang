@@ -55,20 +55,20 @@ module reconf_part_0(
   logic        out_last;
 
   axis_dwidth_32_64 in_traffic_32_64 (
-    .aclk(clk50mhz_0),                    // input wire aclk
+    .aclk(clk25mhz_0),                    // input wire aclk
     .aresetn(peripheral_aresetn_0),              // input wire aresetn
     .s_axis_tvalid(M_AXIS_MM2S_0_tvalid),  // input wire s_axis_tvalid
     .s_axis_tready(M_AXIS_MM2S_0_tready),  // output wire s_axis_tready
     .s_axis_tdata(M_AXIS_MM2S_0_tdata),    // input wire [31 : 0] s_axis_tdata
-    .s_axis_tlast(M_AXIS_MM2S_0_tlast),    
+    .s_axis_tlast(M_AXIS_MM2S_0_tlast),    // input wire [31 : 0] s_axis_tdata
 
     .m_axis_tvalid(in_valid),  // output wire m_axis_tvalid
     .m_axis_tready(in_ready),  // input wire m_axis_tready
     .m_axis_tdata(in_data),    // output wire [63 : 0] m_axis_tdata
-    .m_axis_tlast(in_last)
+    .m_axis_tlast(in_last)    // 
   );
   axis_dwidth_64_32 out_traffic_64_32 (
-    .aclk(clk50mhz_0),                    // input wire aclk
+    .aclk(clk25mhz_0),                    // input wire aclk
     .aresetn(peripheral_aresetn_0),              // input wire aresetn
     .s_axis_tvalid(out_valid),  // input wire s_axis_tvalid
     .s_axis_tready(out_ready),  // output wire s_axis_tready
@@ -82,31 +82,22 @@ module reconf_part_0(
   );
 
   // declarations
+  //
+  // logic [0:0] c_driver_enc_scclang_global_7_data_tlast;
 
   mymodule_sc_module_0 dut ();
-
-  logic [51:0] c_driver_fp_scclang_global_6_data_frac;
-  logic [10:0] c_driver_fp_scclang_global_6_data_expo;
-  logic [0:0] c_driver_fp_scclang_global_6_data_sign;
-  logic [0:0] c_driver_fp_scclang_global_6_valid;
-  logic [0:0] c_driver_fp_scclang_global_6_ready;
-  logic [63:0] c_dut_enc_scclang_global_7_data_tdata;
-  logic [0:0] c_dut_enc_scclang_global_7_data_tlast;
-  logic [0:0] c_dut_enc_scclang_global_7_valid;
-  logic [0:0] c_dut_enc_scclang_global_7_ready;
-
-
-  assign dut.clk_scclang_global_0 = clk50mhz_0;
+  assign dut.clk_scclang_global_0= clk25mhz_0;
   assign dut.reset_scclang_global_5 = peripheral_aresetn_0;
-  assign {dut.c_driver_fp_scclang_global_6_data_sign, dut.c_driver_fp_scclang_global_6_data_expo, dut.c_driver_fp_scclang_global_6_data_frac} = in_data;
 
-  assign dut.c_driver_fp_scclang_global_6_valid = in_valid;
-  assign in_ready = dut.c_driver_fp_scclang_global_6_ready;
+  assign dut.c_driver_enc_scclang_global_7_data_tdata = in_data;
+  assign dut.c_driver_enc_scclang_global_7_valid = in_valid;
+  assign in_ready = dut.c_driver_enc_scclang_global_7_ready;
 
-  assign out_data  = dut.c_dut_enc_scclang_global_7_data_tdata;
-  assign out_last = dut.c_dut_enc_scclang_global_7_data_tlast;
-  assign out_valid = dut.c_dut_enc_scclang_global_7_valid;
-  assign dut.c_dut_enc_scclang_global_7_ready = out_ready;
+  assign out_data = {dut.c_dut_fp_scclang_global_6_data_sign, dut.c_dut_fp_scclang_global_6_data_expo, dut.c_dut_fp_scclang_global_6_data_frac};
+
+  assign out_last = 1;
+  assign out_valid = dut.c_dut_fp_scclang_global_6_valid;
+  assign dut.c_dut_fp_scclang_global_6_ready = out_ready;
 
   assign S_AXIS_S2MM_0_tdest = 0;
   assign S_AXIS_S2MM_0_tkeep = 4'hf;

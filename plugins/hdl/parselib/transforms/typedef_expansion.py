@@ -253,6 +253,10 @@ class TypedefExpansion(TopDown):
                 var_name = tree.children[0].children[0]
             if self.__expanded_type(var_name):
                 return var_name
+        elif tree.data == 'hbinop' and tree.children[0] == 'ARRAYSUBSCRIPT': # simmilar to array ref
+            var_name = tree.children[1].children[0]
+            if self.__expanded_type(var_name):
+                return var_name
         elif tree.data == 'hvarref':
             var_name = tree.children[0]
             if self.__expanded_type(var_name):
@@ -277,6 +281,7 @@ class TypedefExpansion(TopDown):
 
     def __append_to_expandable_var_to_tree(self, tree, field_name):
         """append the field_name to the expandable variable in tree"""
+        # TODO: the self.__expanded_type is excessive
         assert isinstance(tree, Tree)
         if tree.data in ['hliteral', 'hvarref']:
             var_name = tree.children[0]
@@ -286,6 +291,10 @@ class TypedefExpansion(TopDown):
             var_name = tree.children[0].children[0]
             if self.__expanded_type(var_name):
                 tree.children[0].children[0] = var_name + '_' + field_name
+        elif tree.data == 'hbinop' and tree.children[0] == 'ARRAYSUBSCRIPT':
+            var_name = tree.children[1].children[0]
+            if self.__expanded_type(var_name):
+                tree.children[1].children[0] = var_name + '_' + field_name
         elif tree.data == 'syscread':
             assert tree.children[1].data in ['hliteral', 'hvarref', 'harrayref']
             if tree.children[1].data in ['harrayref']:
@@ -405,7 +414,8 @@ class TypedefExpansion(TopDown):
         self.__push_up(tree)
         new_children = []
         for sense_var in tree.children[1:]:
-            var_name = sense_var.children[0]
+            # add case for function call on array member
+            var_name = self.__get_expandable_var_from_tree(sense_var)
             var_type = self.__expanded_type(var_name)
             # dprint(var_name, self.__expanded_type(var_name))
             if var_type:
@@ -415,7 +425,12 @@ class TypedefExpansion(TopDown):
                 tpe = self.types[type_name]
                 fields = tpe.get_fields_with_instantiation(type_params, self.types)
                 for field_name, _ in fields:
-                    new_children.append(var_name + '_' + field_name)
+                    new_sense_var = copy.deepcopy(sense_var)
+                    self.__append_to_expandable_var_to_tree(new_sense_var, field_name)
+                    # dprint("Origina...", var_name + '_' + field_name)
+                    # dprint(new_sense_var)
+                    # new_children.append(var_name + '_' + field_name)
+                    new_children.append(new_sense_var)
             else:
                 new_children.append(sense_var)
         tree.children[1:] = new_children
