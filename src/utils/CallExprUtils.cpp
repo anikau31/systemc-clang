@@ -22,6 +22,34 @@ void collect_sugar(const Type *type,
   }
 }
 
+bool isInNamespace(const clang::FunctionDecl *fd,
+                   const std::vector<llvm::StringRef> &names) {
+  if (!fd) {
+    return false;
+  }
+
+  if (auto dc= cast<DeclContext>(fd)) {
+        llvm::dbgs() << "DeclContext\n";
+        auto dcc = dc->getLexicalParent();
+
+        if (dcc->isNamespace()) {
+          if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dcc)) {
+          // llvm::dbgs() << "Namespace\n";
+            std::vector<llvm::StringRef> names{"sc_dt"};
+            auto iinfo = nd->getIdentifier();
+           // llvm::dbgs() << "@@@@ name " << nd->getName() << "\n";
+            for (const auto name : names) {
+              if (iinfo->isStr(name)) {
+                  return true;
+              }
+            }
+          return false;
+          }
+        }
+      }
+  return false;
+}
+
 bool isInNamespace(const clang::Type *tp,
                    const std::vector<llvm::StringRef> &names) {
   if (!tp) {

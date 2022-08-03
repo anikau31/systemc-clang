@@ -10,6 +10,7 @@
 namespace clang {
 class CallExpr;
 class Type;
+class FunctionDecl;
 };  // namespace clang
 
 namespace sc_ast_matchers {
@@ -19,6 +20,8 @@ namespace utils {
  * \brief Check if a Type is declared within a given namespace.
  */
 bool isInNamespace(const clang::Type *tp, const std::vector<llvm::StringRef> &names);
+
+bool isInNamespace(const clang::FunctionDecl *fd, const std::vector<llvm::StringRef> &names);
 
 bool isInNamespace(const clang::CallExpr *cexpr, const std::vector<llvm::StringRef>& names);
 void collect_sugar(const clang::Type* type, std::vector<clang::Type*> &unwrapped_types);

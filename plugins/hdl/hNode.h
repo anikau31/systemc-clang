@@ -246,7 +246,20 @@ namespace hnode {
 
     }
 
-    inline bool isSCByCallExpr(const CallExpr *callexpr) {
+    inline bool isSCByFunctionDecl(const FunctionDecl *fd) {
+      if (!fd) { return false; }
+
+      std::vector<llvm::StringRef> sc_dt{"sc_dt"};
+      return isInNamespace(fd, sc_dt);
+    }
+
+    inline bool isSCByCallExpr(const Expr *expr) {
+      auto callexpr = dyn_cast<CallExpr>(expr);
+
+      if (!callexpr) {
+        return false;
+      }
+
       if (auto mce = dyn_cast<CXXMemberCallExpr>(callexpr)) {
         LLVM_DEBUG(llvm::dbgs() << "isSCByType(callexpr) is a membercallexpr\n");
 
@@ -255,24 +268,23 @@ namespace hnode {
         bool t1 = isCXXMemberCallExprSystemCCall(callexpr, ports_signals_rvd_wait);
         bool t2 = isInNamespace(mce->getObjectType().getTypePtr(), core_dt );
         llvm::dbgs() << "isSCCall:: CXXMemberCallSCCall " << t1 << " inNS " << t2 << "\n";
-	if (t1 || t2) {
-	  const Type *typ = mce->getObjectType().getTypePtr();
-	  types_seen.insert(typ);
-	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
-	}
+        if (t1 || t2) {
+          const Type *typ = mce->getObjectType().getTypePtr();
+          types_seen.insert(typ);
+        LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+        }
         return t1 || t2;
 
         //return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
-      }
-      else {
+      } else {
         LLVM_DEBUG(llvm::dbgs() << "isSCByType(callexpr) not a membercallexpr\n");
         std::vector<llvm::StringRef> core_dt{"sc_core", "sc_dt"};
-	bool inns = isInNamespace(callexpr, core_dt);
-	if (inns) {
-	  const Type *typ = callexpr->getType().getTypePtr();
-	  types_seen.insert(typ);
-	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
-	}
+        bool inns = isInNamespace(callexpr, core_dt);
+        if (inns) {
+          const Type *typ = callexpr->getType().getTypePtr();
+          types_seen.insert(typ);
+        LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+        }
         return inns;
       }
     }
