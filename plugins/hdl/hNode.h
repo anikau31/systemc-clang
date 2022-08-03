@@ -260,10 +260,11 @@ namespace hnode {
         return false;
       }
 
+
       if (auto mce = dyn_cast<CXXMemberCallExpr>(callexpr)) {
         LLVM_DEBUG(llvm::dbgs() << "isSCByType(callexpr) is a membercallexpr\n");
 
-        std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd", "sc_rvd_in", "sc_rvd_out"};
+        std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd", "sc_rvd_in", "sc_rvd_out", "sc_simcontext"};
         std::vector<llvm::StringRef> core_dt{"sc_dt"};
         bool t1 = isCXXMemberCallExprSystemCCall(callexpr, ports_signals_rvd_wait);
         bool t2 = isInNamespace(mce->getObjectType().getTypePtr(), core_dt );

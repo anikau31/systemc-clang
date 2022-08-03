@@ -492,6 +492,15 @@ using namespace sc_ast_matchers::utils;
       }
     }
     if (isa<FunctionDecl>(value)) {
+
+      // ============= CHECK ================
+       bool t1 =  !lutil.isSCFunc(name);
+       bool t2 =  !lutil.isSCByCallExpr(expr); 
+
+       if (t1 != t2) {
+         llvm::dbgs() << "@@@@ CHECK isSCFunc failed " << t1 << " t2 " << t2 << " name " << name << "\n";
+       }
+      // ============= END CHECK ================
       if (!lutil.isSCFunc(name)) {  // similar to method call, skip builtin
 	FunctionDecl *funval = (FunctionDecl *)value;
 	
