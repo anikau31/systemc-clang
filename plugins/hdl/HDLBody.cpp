@@ -357,6 +357,9 @@ using namespace sc_ast_matchers::utils;
     //vname_map[vardecl] = names;
 
     if (h_ret) {
+      if (isUserClass(tp)) {
+	LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl init of user class\n");
+      }
       hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
       varinitp->child_list.push_back(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
       varinitp->child_list.push_back(h_ret);
