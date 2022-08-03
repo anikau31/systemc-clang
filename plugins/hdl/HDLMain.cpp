@@ -15,6 +15,8 @@
 #include "HDLHnode.h"
 #include "HDLThread.h"
 
+#include <iostream>
+
 #include "APIntUtils.h"
 // clang-format on
 /// Different matchers may use different DEBUG_TYPE
@@ -413,7 +415,19 @@ namespace systemc_hdl {
 	      // special case if sc_min, max, abs, treat parameters as input
 	      // unfortunately simulation library makes them I/O
 	      //if (mutil.is_sc_macro(m.first)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
-	      if (mutil.isSCMacro(m.second.oldn)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
+	      
+        // ============= CHECK ==============
+        bool t1 = mutil.isSCByFunctionDecl(m.first);
+        bool t2 = mutil.isSCMacro(m.second.oldn);
+
+        if (t1 != t2) {
+          llvm::dbgs() << "@@@@ isSCMacro does not match.  t1 = " << t1 << ", t2 = " << t2 << "  " << m.second.oldn << "\n";
+        }
+        // ============= END CHECK ==============
+        //
+        if (mutil.isSCMacro(m.second.oldn)) {
+          paramtype = hNode::hdlopsEnum::hFunctionParamI;
+        }
 	      else if (vardecl->getType()->isReferenceType())
 		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
 	      else { // handle actual parameter
