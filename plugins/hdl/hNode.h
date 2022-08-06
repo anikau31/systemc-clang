@@ -254,19 +254,20 @@ namespace hnode {
     }
 
     inline bool isSCByCallExpr(const Expr *expr) {
-      auto callexpr = dyn_cast<CallExpr>(expr);
+      // auto callexpr = dyn_cast<CallExpr>(expr);
+//
+      // if (!callexpr) {
+        // llvm::dbgs() << "Not a callexpr - return false\n";
+        // return false;
+      // }
+//
 
-      if (!callexpr) {
-        return false;
-      }
-
-
-      if (auto mce = dyn_cast<CXXMemberCallExpr>(callexpr)) {
+      if (auto mce = dyn_cast<CXXMemberCallExpr>(expr)) {
         LLVM_DEBUG(llvm::dbgs() << "isSCByType(callexpr) is a membercallexpr\n");
 
         std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_rvd", "sc_rvd_in", "sc_rvd_out", "sc_simcontext"};
         std::vector<llvm::StringRef> core_dt{"sc_dt"};
-        bool t1 = isCXXMemberCallExprSystemCCall(callexpr, ports_signals_rvd_wait);
+        bool t1 = isCXXMemberCallExprSystemCCall(mce, ports_signals_rvd_wait);
         bool t2 = isInNamespace(mce->getObjectType().getTypePtr(), core_dt );
         llvm::dbgs() << "isSCCall:: CXXMemberCallSCCall " << t1 << " inNS " << t2 << "\n";
         if (t1 || t2) {
@@ -279,13 +280,18 @@ namespace hnode {
         //return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
       } else {
         LLVM_DEBUG(llvm::dbgs() << "isSCByType(callexpr) not a membercallexpr\n");
+        expr->dump();
+       // auto callexpr = dyn_cast<CallExpr>(expr);
+
         std::vector<llvm::StringRef> core_dt{"sc_core", "sc_dt"};
-        bool inns = isInNamespace(callexpr, core_dt);
+        llvm::dbgs() << "calling isnamespace\n";
+        bool inns = isInNamespace(expr, core_dt);
         if (inns) {
-          const Type *typ = callexpr->getType().getTypePtr();
+          const Type *typ = expr->getType().getTypePtr();
           types_seen.insert(typ);
-        LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+          LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
         }
+
         return inns;
       }
     }

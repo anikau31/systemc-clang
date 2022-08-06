@@ -22,22 +22,21 @@ void collect_sugar(const Type *type,
   }
 }
 
-bool isInNamespace(const clang::FunctionDecl *fd,
+bool isInNamespace(const clang::ValueDecl *fd,
                    const std::vector<llvm::StringRef> &names) {
   if (!fd) {
     return false;
   }
-
   if (auto dc= cast<DeclContext>(fd)) {
-        llvm::dbgs() << "DeclContext\n";
+        LLVM_DEBUG(llvm::dbgs() << "DeclContext\n";);
         auto dcc = dc->getLexicalParent();
 
         if (dcc->isNamespace()) {
           if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dcc)) {
-          // llvm::dbgs() << "Namespace\n";
+           LLVM_DEBUG(llvm::dbgs() << "Namespace\n";);
             std::vector<llvm::StringRef> names{"sc_dt"};
             auto iinfo = nd->getIdentifier();
-           // llvm::dbgs() << "@@@@ name " << nd->getName() << "\n";
+            LLVM_DEBUG(llvm::dbgs() << "@@@@ name " << nd->getName() << "\n";);
             for (const auto name : names) {
               if (iinfo->isStr(name)) {
                   return true;
@@ -56,6 +55,7 @@ bool isInNamespace(const clang::Type *tp,
     return false;
   }
 
+  llvm::dbgs() << "@@@@ type one\n";
   // Type *tap = const_cast<Type *>(tp->getUnqualifiedDesugaredType());
 
   /// Peel off every type and then check that each type (including typedef) is of a certain namespace or not.
@@ -65,6 +65,7 @@ bool isInNamespace(const clang::Type *tp,
   for (auto tap : unwrapped_types) {
   llvm::dbgs() << "@@@@ isNS type\n";
     if (tap->isBuiltinType()) {
+      llvm::dbgs() << "isBuiltinType\n";
       return false;
     }
 
@@ -87,12 +88,15 @@ bool isInNamespace(const clang::Type *tp,
       tap = unwrap_tp;
     }
 
+    // tap->dump();
     if (tap->isRecordType()) {
+      llvm::dbgs() << "isRecordType\n";
       const RecordDecl *rdecl = tap->getAsRecordDecl();
       dc = const_cast<clang::DeclContext *>(rdecl->getLexicalParent());
-    }
+    } 
 
     if (dc && dc->isNamespace()) {
+      llvm::dbgs() << "isNamespace \n";
       if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dc)) {
         auto iinfo = nd->getIdentifier();
         // llvm::dbgs() << "@@ name is " << iinfo->getName() << " for ";
@@ -109,13 +113,31 @@ bool isInNamespace(const clang::Type *tp,
   return false;
 }
 
-bool isInNamespace(const CallExpr *cexpr,
+bool isInNamespace(const Expr *expr,
                    const std::vector<llvm::StringRef> &names) {
-  if (!cexpr) {
-    return false;
+  if (auto cexpr = dyn_cast<CallExpr>(expr)) {
+    return isInNamespace(cexpr->getType().getTypePtr(), names);
   }
-  return isInNamespace(cexpr->getType().getTypePtr(), names);
+
+  if (auto dexpr = dyn_cast<DeclRefExpr>(expr)) {
+    llvm::dbgs() << "@@@@ in DeclRefExpr\n";
+    dexpr->dump();
+    dexpr->getDecl()->dump();
+    return isInNamespace(dexpr->getDecl(), names);
+  }
+
+  return false;
 }
+
+//
+// bool isInNamespace(const CallExpr *cexpr,
+                   // const std::vector<llvm::StringRef> &names) {
+  // llvm::dbgs() << "@@@ callexpr version of isNS\n";
+  // if (!cexpr) {
+    // return false;
+  // }
+  // return isInNamespace(cexpr->getType().getTypePtr(), names);
+// }
 
 bool isInNamespace(const CallExpr *cexpr, llvm::StringRef name) {
   if (!cexpr) {
