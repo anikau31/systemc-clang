@@ -341,25 +341,36 @@ using namespace sc_ast_matchers::utils;
     if (h_varlist->child_list.size() == 0) return true;
     
     hNodep h_vardecl = h_varlist->child_list.back();
+    vname_map.add_entry(vardecl, vardecl->getName().str(), h_vardecl);
 
+    bool isuserdefinedclass = false;
+    if (HDLt.usertype_info.userrectypes.size()>0) {
+      const Type * tstp = (((te->getTemplateArgTreePtr())->getRoot())->getDataPtr())->getTypePtr();
+      LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl init of user class, tstp in processvardecl is " << tstp << " isscbytype says " << lutil.isSCByType(tstp) << "\n");
+      LLVM_DEBUG(HDLt.print(llvm::dbgs()));
+      auto recmapiter = HDLt.usertype_info.userrectypes.find(tstp);
+      if (recmapiter != HDLt.usertype_info.userrectypes.end()) {// && (recmapiter->second.find("sc_process_handle")== string::npos)) {
+	isuserdefinedclass = true;
+	//varinitp->set( hNode::hdlopsEnum::hMethodCall, recmapiter->second);
+      }
+    }
+    
     if (Expr *declinit = vardecl->getInit()) {
-      LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl has an init:\n");
+      LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl has an init: \n");
       LLVM_DEBUG(declinit->dump(llvm::dbgs(), ast_context_));
+      CXXConstructExpr *tmpdeclinit = dyn_cast<CXXConstructExpr>(declinit);
+      if (isuserdefinedclass && (tmpdeclinit!= NULL)) {
+	CXXConstructorDecl *cnstrdcl = tmpdeclinit->getConstructor();
+	string methodname = cnstrdcl->getNameAsString();
+	string qualmethodname = cnstrdcl->getQualifiedNameAsString();
+	LLVM_DEBUG(llvm::dbgs() << "ConstructorDecl " << methodname << ", " << qualmethodname << " for var follows\n");
+	LLVM_DEBUG(cnstrdcl->dump());
+	
+      }
       TraverseStmt(declinit);
     }
 
-    vname_map.add_entry(vardecl, vardecl->getName().str(), h_vardecl);
-    //string newn = lname.newname();
-    // prepend original name to new name so it retains association
-    //newn = vardecl->getName().str() + newn;
-    //h_vardecl->set(newn);  // replace original name with new name
-    //names_t names = {vardecl->getName().str(), newn, h_vardecl};
-    //vname_map[vardecl] = names;
-
     if (h_ret) {
-      if (isUserClass(tp)) {
-	LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl init of user class\n");
-      }
       hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
       varinitp->child_list.push_back(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
       varinitp->child_list.push_back(h_ret);
@@ -382,8 +393,26 @@ using namespace sc_ast_matchers::utils;
     string exprtypstr = expr->getType().getAsString();
     LLVM_DEBUG(llvm::dbgs() << "in TraverseBinaryOperator, opcode is "
 	       << opcodestr << "\n");
+//lutil.checktypematch(exprtypstr, expr->getType().getTypePtr(), lutil.bothofthem); // 
 
-    if ((opcodestr == ",") && (lutil.isSCByType(expr->getType().getTypePtr()))){
+    // ========================== CHECK 1 =====================
+    // FIXME: Cleanup
+    bool t11 = ((opcodestr == ",") && (lutil.isSCType(exprtypstr, expr->getType().getTypePtr() ) ||
+                              lutil.isSCBuiltinType(exprtypstr, expr->getType().getTypePtr())));
+    bool t21 = ((opcodestr == ",") && (lutil.isSCByType(expr->getType().getTypePtr() )));
+ 
+    if (t11 != t21) {
+      llvm::dbgs() << "### CHECK1: t11 != t21\n";
+      llvm::dbgs() << t11/0;
+      //        std::cin.get();
+    }
+    // ========================== END CHECK =====================
+    //
+    if ((opcodestr == ",") && (lutil.isSCType(exprtypstr, expr->getType().getTypePtr() ) ||
+                              lutil.isSCBuiltinType(exprtypstr, expr->getType().getTypePtr()))){
+      //if ((opcodestr == ",") && (lutil.isSCType(expr->getType()){
+
+      //if ((opcodestr == ",") && (lutil.isSCByType(expr->getType().getTypePtr()))){
       LLVM_DEBUG(llvm::dbgs() << "found comma, with sc type, expr follows\n");
       LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_); );
       h_binop->set("concat");
@@ -640,8 +669,20 @@ using namespace sc_ast_matchers::utils;
     // sc_signal and method name is either read or write, generate a SigAssignL|R
     // -- FIXME need to make sure it is templated to a primitive type
 
+    //lutil.isSCType(qualmethodname, typeformethodclass);
+    //lutil.checktypematch(qualmethodname, typeformethodclass, lutil.issctype);
 
-    bool foundsctype = lutil.isSCByCallExpr(callexpr);
+    //bool inns_result = sc_ast_matchers::utils::isInNamespace(callexpr, "sc_core") || sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt");
+    bool foundsctype = lutil.isSCType(qualmethodname, typeformethodclass);
+    bool newfoundsctype = lutil.isSCByCallExpr(callexpr);// || lutil.isSCType(typeformethodclass);
+    if (foundsctype != newfoundsctype ) {
+      LLVM_DEBUG(llvm::dbgs() << "callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
+      callexpr->dump();
+      //std::cin.get();
+      //foundsctype = newfoundsctype; // ADD THIS TO TEST SEGV
+    }
+
+    //    bool foundsctype = lutil.isSCByCallExpr(callexpr);
 
     if ((methodname == "read") && foundsctype)
       opc = hNode::hdlopsEnum::hSigAssignR;
@@ -721,8 +762,30 @@ using namespace sc_ast_matchers::utils;
 	       << operatorname << "\n");
     LLVM_DEBUG(llvm::dbgs() << "Type name " << operatortype << "\n");
     LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
+
+    // ========================== CHECK  2=====================
     const Type *optypepointer = opcall->getType().getTypePtr();
-    if ((operatorname == "=") || lutil.isSCByType(optypepointer ) ||
+
+    bool t12 =  ((operatorname == "=") || lutil.isSCBuiltinType(operatortype) ||
+       lutil.isSCType(operatortype) ||
+       (opcall->getType())->isBuiltinType() || 
+       ((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos)));
+  bool t22 =  ((operatorname == "=") ||  lutil.isSCByType(optypepointer) || (opcall->getType())->isBuiltinType() || 
+       ((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos)));
+
+    if (t12 != t22) {
+      llvm::dbgs() << "CHECK### 2: t12 != t22\n";
+      //std::cin.get();
+    }
+    // ========================== END CHECK =====================
+    //
+
+
+     
+    if ((operatorname == "=") || lutil.isSCBuiltinType(operatortype,optypepointer ) ||
+       lutil.isSCType(operatortype, optypepointer) ||
+
+	 //if ((operatorname == "=") || lutil.isSCByType(optypepointer ) ||
 	(opcall->getType())->isBuiltinType() || 
 	((operatorname=="<<") && (operatortype.find("sensitive") != std::string::npos))) {
       LLVM_DEBUG(llvm::dbgs() << "Processing operator call type\n");

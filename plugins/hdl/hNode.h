@@ -29,69 +29,69 @@ namespace hnode {
 
   class hNode {
 
-#define HNODEen \
-  etype(hNoop), \
-  etype(hModule), \
-  etype(hModinitblock), \
-  etype(hPortbindings), \
-  etype(hPortbinding), \
-  etype(hProcesses), \
-  etype(hProcess), \
-  etype(hMethod), \
-  etype(hThread),		 \
-  etype(hCStmt), \
-  etype(hPortsigvarlist), \
-  etype(hPortin), \
-  etype(hPortout), \
-  etype(hPortio), \
-  etype(hSenslist), \
-  etype(hSensvar), \
-  etype(hSensedge), \
-  etype(hTypeinfo), \
-  etype(hType), \
-  etype(hTypeField), \
-  etype(hTypedef), \
-  etype(hTypeTemplateParam), \
-  etype(hInt), \
-  etype(hSigdecl), \
-  etype(hVardecl), \
-  etype(hVardeclrn), \
-  etype(hModdecl), \
-  etype(hVarref), \
-  etype(hField), \
-  etype(hFieldaccess), \
-  etype(hVarInit), \
-  etype(hVarInitList), \
-  etype(hSigAssignL), \
-  etype(hSigAssignR), \
-  etype(hVarAssign), \
-  etype(hBinop), \
-  etype(hUnop), \
-  etype(hPostfix), \
-  etype(hPrefix), \
-  etype(hCondop), \
-  etype(hMethodCall), \
-  etype(hIfStmt), \
-  etype(hForStmt), \
-  etype(hSwitchStmt), \
-  etype(hSwitchCase), \
-  etype(hSwitchDefault), \
-  etype(hBreak), \
-  etype(hContinue), \
-  etype(hWhileStmt),   	\
-  etype(hDoStmt),   	\
-  etype(hReturnStmt),  	\
-  etype(hLiteral), \
-  etype(hFunction), \
-  etype(hThreadFunction), \
-  etype(hBuiltinFunction), \
-  etype(hFunctionRetType), \
-  etype(hFunctionParams), \
-  etype(hFunctionParamI), \
-  etype(hFunctionParamIO), \
-  etype(hWait), \
-  etype(hUnimpl), \
-  etype(hLast)
+#define HNODEen					\
+    etype(hNoop),				\
+      etype(hModule),				\
+      etype(hModinitblock),			\
+      etype(hPortbindings),			\
+      etype(hPortbinding),			\
+      etype(hProcesses),			\
+      etype(hProcess),				\
+      etype(hMethod),				\
+      etype(hThread),				\
+      etype(hCStmt),				\
+      etype(hPortsigvarlist),			\
+      etype(hPortin),				\
+      etype(hPortout),				\
+      etype(hPortio),				\
+      etype(hSenslist),				\
+      etype(hSensvar),				\
+      etype(hSensedge),				\
+      etype(hTypeinfo),				\
+      etype(hType),				\
+      etype(hTypeField),			\
+      etype(hTypedef),				\
+      etype(hTypeTemplateParam),		\
+      etype(hInt),				\
+      etype(hSigdecl),				\
+      etype(hVardecl),				\
+      etype(hVardeclrn),			\
+      etype(hModdecl),				\
+      etype(hVarref),				\
+      etype(hField),				\
+      etype(hFieldaccess),			\
+      etype(hVarInit),				\
+      etype(hVarInitList),			\
+      etype(hSigAssignL),			\
+      etype(hSigAssignR),			\
+      etype(hVarAssign),			\
+      etype(hBinop),				\
+      etype(hUnop),				\
+      etype(hPostfix),				\
+      etype(hPrefix),				\
+      etype(hCondop),				\
+      etype(hMethodCall),			\
+      etype(hIfStmt),				\
+      etype(hForStmt),				\
+      etype(hSwitchStmt),			\
+      etype(hSwitchCase),			\
+      etype(hSwitchDefault),			\
+      etype(hBreak),				\
+      etype(hContinue),				\
+      etype(hWhileStmt),			\
+      etype(hDoStmt),				\
+      etype(hReturnStmt),			\
+      etype(hLiteral),				\
+      etype(hFunction),				\
+      etype(hThreadFunction),			\
+      etype(hBuiltinFunction),			\
+      etype(hFunctionRetType),			\
+      etype(hFunctionParams),			\
+      etype(hFunctionParamI),			\
+      etype(hFunctionParamIO),			\
+      etype(hWait),				\
+      etype(hUnimpl),				\
+      etype(hLast)
 
 
   public:
@@ -206,7 +206,7 @@ namespace hnode {
       }
     }
 
-      // default arguments don't work in lldb
+    // default arguments don't work in lldb
     void dumphcode() {
       print(llvm::outs(), 2);
       LLVM_DEBUG(print(llvm::dbgs(), 2));
@@ -227,11 +227,26 @@ namespace hnode {
     std::unordered_set<const Type *> types_seen = {};
 
   public:
-
-     const set<std::string> sc_built_in_funcs{
-       "concat", "wait", "range", "bit", "or_reduce", "xor_reduce", "nor_reduce","and_reduce", "nand_reduce"};
     
-    util() {}
+    const static int numstr = 7;
+    const string scbuiltintype [numstr] = {
+      "sc_uint",
+      "sc_int",
+      "sc_bigint",
+      "sc_biguint",
+      "sc_bv",
+      "sc_logic",
+      "sc_clock"
+    };
+    int scbtlen [ numstr ];
+    const set<std::string> sc_built_in_funcs{
+      "concat", "wait", "range", "bit", "or_reduce", "xor_reduce", "nor_reduce","and_reduce", "nand_reduce"};
+    
+    util() {
+      for (int i=0; i < numstr; i++)
+	scbtlen[i] = scbuiltintype[i].length();
+    }
+    
     ~util() {}
     
     static inline void make_ident(string &nm) {
@@ -246,6 +261,7 @@ namespace hnode {
 
     }
 
+    
     inline bool isSCByFunctionDecl(const FunctionDecl *fd) {
       if (!fd) { return false; }
 
@@ -272,7 +288,7 @@ namespace hnode {
         if (t1 || t2) {
           const Type *typ = mce->getObjectType().getTypePtr();
           types_seen.insert(typ);
-        LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	  LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
         }
         return t1 || t2;
 
@@ -284,7 +300,7 @@ namespace hnode {
         if (inns) {
           const Type *typ = callexpr->getType().getTypePtr();
           types_seen.insert(typ);
-        LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	  LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
         }
         return inns;
       }
@@ -294,14 +310,14 @@ namespace hnode {
     inline bool isSCByType(const Type *typ) {
       
       // if  (types_seen.count(typ) > 0) {
-        // LLVM_DEBUG(llvm::dbgs() << "isSCByType(typ) found type pointer in set " << typ << "\n");
-        // return true;
+      // LLVM_DEBUG(llvm::dbgs() << "isSCByType(typ) found type pointer in set " << typ << "\n");
+      // return true;
       // }
       llvm::dbgs() << "@@@@ isSCT\n";
       static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
       static std::vector<llvm::StringRef> rvd{"sc_rvd","sc_rvd_in","sc_rvd_out"};
       static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base", "sc_signal_in_if", 
-        "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process"};
+	  "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_process_handle"};
       if (isInNamespace(typ, sc_dt_ns) 
           || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) 
           || isCXXMemberCallExprSystemCCall(typ, rvd)) {
@@ -312,6 +328,72 @@ namespace hnode {
       return false;
     }
 
+    inline bool isSCType(const Type *typ) {
+      
+      if  (types_seen.count(typ) > 0) {
+        LLVM_DEBUG(llvm::dbgs() << "isSCType(typ) found type pointer in set " << typ << "\n");
+        return true;
+      }
+      static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
+      static std::vector<llvm::StringRef> rvd{"sc_rvd","sc_rvd_in","sc_rvd_out"};
+
+      static std::vector<llvm::StringRef> ports_signals_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_process_handle", "sc_thread_process"};
+      if (isInNamespace(typ, sc_dt_ns) || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) || isCXXMemberCallExprSystemCCall(typ, rvd)) {
+	types_seen.insert(typ);
+	return true;
+      }
+      return false;
+    }
+
+    inline bool isSCType(const CallExpr *callexpr) {
+      if (isa<CXXMemberCallExpr>(callexpr)) {
+        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) is a membercallexpr\n");
+
+        std::vector<llvm::StringRef> ports_signals_rvd_wait{"sc_port_base", "sc_signal_in_if", "sc_signal_out_if", "sc_signal_inout_if", "sc_prim_channel", "sc_thread_process", "sc_process_handle", "sc_rvd", "sc_rvd_in", "sc_rvd_out"};
+        std::vector<llvm::StringRef> core_dt{"sc_dt"};
+        // bool t1 = isCXXMemberCallExprSystemCCall(callexpr, ports_signals_rvd_wait);
+        // bool t2 = isInNamespace(callexpr, core_dt );
+        // llvm::dbgs() << "CXXMemberCallSCCall " << t1 << " inNS " << t2 << "\n";
+        // return t1;// || t2;
+
+        return sc_ast_matchers::utils::isCXXMemberCallExprSystemCCall((CXXMemberCallExpr *)callexpr);
+      }
+      else {
+        LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) not a membercallexpr\n");
+        std::vector<llvm::StringRef> core_dt{"sc_core", "sc_dt"};
+
+        return isInNamespace(callexpr, core_dt);
+      }
+    }
+    
+    inline bool isSCBuiltinType(const string &tstring, const Type *typ=NULL){
+      // linear search sorry, but at least the length
+      // isn't hard coded in ...
+
+      if ((typ != NULL) && (types_seen.count(typ) > 0)) {
+	//LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType(typ) found type pointer in set " << tstring << " " << typ << "\n");
+        return true;
+      }
+      bool ret = false;
+      std::vector<llvm::StringRef> scdt{"sc_dt"};
+      bool tmpisnamespace = sc_ast_matchers::utils::isInNamespace(typ, scdt);
+      int found = tstring.find_last_of(" "); // skip qualifiers if any
+      for (int i=0; i < numstr; i++) {
+	if (tstring.substr(found>=0 ? found+1:0, scbtlen[i]) == scbuiltintype[i]) {
+	  ret = true;
+	  break;
+	}
+      }
+      if ((typ != NULL) && (tmpisnamespace != ret)) {
+        LLVM_DEBUG(llvm::dbgs() << "isSCBuiltinType: '" << tstring << "' (" << tmpisnamespace <<
+		   ", " << ret << ")\n");
+      }
+      if (ret && (typ != NULL)) {
+        types_seen.insert(typ);
+        LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << "size = " << types_seen.size() << "\n");
+      }
+      return ret;
+    }
 
     inline bool isSCFunc(const string &tstring) {
       return (sc_built_in_funcs.count(tstring)>0);
@@ -325,12 +407,47 @@ namespace hnode {
       else return false;
     }
     
-     inline bool isSCMacro(const std::string &str_in) {
+    inline bool isSCMacro(const std::string &str_in) {
       string sc_macro_strings [] = {"sc_min", "sc_max", "sc_abs"};
       for (string str : sc_macro_strings) {
 	if (str_in.find(str) != string::npos) return true;
       }
       return false;
+    }
+
+    inline bool isSCType(const string &tstring, const clang::Type *typ = NULL) {
+      // linear search and the length is hard coded in ...
+      // used in the method name logic.
+      // can't use set as we are searching for a substring of tstring
+      
+     string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_inout",
+			  "sc_signal", "sc_subref", "sc_process_handle", "sc_dt"};
+     
+     if ((typ != NULL) && (types_seen.count(typ) > 0)) {
+       //LLVM_DEBUG(llvm::dbgs() << "isSCType(str, typ) found type pointer in set " << tstring << " " << typ << "\n");
+       return true;
+     }
+     bool foundsctype = false;
+     
+     for (string onestring : strings) {
+       if (tstring.find(onestring)!=string::npos) {
+	 foundsctype = true;
+	 if (typ != NULL) {
+	   types_seen.insert(typ);
+	   LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+	 }
+	 break;
+       }
+       else foundsctype = false;
+     }
+     if (typ != NULL) {
+       std::vector<llvm::StringRef> scdt{"sc_dt"};
+       bool tmpsctype = sc_ast_matchers::utils::isInNamespace(typ, scdt);
+       if (tmpsctype != foundsctype)
+	 LLVM_DEBUG(llvm::dbgs() << "isSCType: '" << tstring << "' (" << tmpsctype <<", " << foundsctype << ")\n");
+     }
+
+     return foundsctype;
     }
     
     static inline bool isposint(const std::string &str) {

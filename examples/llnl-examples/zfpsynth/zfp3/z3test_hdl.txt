@@ -11228,6 +11228,68 @@
           ]
         ]
       ]
+      hFunction sc_dt__sc_min_func_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType unsigned_short NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI a [
+            hTypeinfo  NONAME [
+              hType unsigned_short NOLIST
+            ]
+          ]
+          hFunctionParamI b [
+            hTypeinfo  NONAME [
+              hType unsigned_short NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hCondop  NONAME [
+              hBinop <= [
+                hVarref a NOLIST
+                hVarref b NOLIST
+              ]
+              hVarref a NOLIST
+              hVarref b NOLIST
+            ]
+          ]
+        ]
+      ]
+      hFunction sc_dt__sc_max_func_1 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType short NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamI a [
+            hTypeinfo  NONAME [
+              hType short NOLIST
+            ]
+          ]
+          hFunctionParamI b [
+            hTypeinfo  NONAME [
+              hType short NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hReturnStmt  NONAME [
+            hCondop  NONAME [
+              hBinop >= [
+                hVarref a NOLIST
+                hVarref b NOLIST
+              ]
+              hVarref a NOLIST
+              hVarref b NOLIST
+            ]
+          ]
+        ]
+      ]
       hFunction zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_2 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
@@ -11466,68 +11528,6 @@
                 hVarref bbits__local_11 NOLIST
                 hLiteral 0 NOLIST
               ]
-            ]
-          ]
-        ]
-      ]
-      hFunction sc_dt__sc_min_func_0 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType unsigned_short NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamI a [
-            hTypeinfo  NONAME [
-              hType unsigned_short NOLIST
-            ]
-          ]
-          hFunctionParamI b [
-            hTypeinfo  NONAME [
-              hType unsigned_short NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hCondop  NONAME [
-              hBinop <= [
-                hVarref a NOLIST
-                hVarref b NOLIST
-              ]
-              hVarref a NOLIST
-              hVarref b NOLIST
-            ]
-          ]
-        ]
-      ]
-      hFunction sc_dt__sc_max_func_1 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType short NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamI a [
-            hTypeinfo  NONAME [
-              hType short NOLIST
-            ]
-          ]
-          hFunctionParamI b [
-            hTypeinfo  NONAME [
-              hType short NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hReturnStmt  NONAME [
-            hCondop  NONAME [
-              hBinop >= [
-                hVarref a NOLIST
-                hVarref b NOLIST
-              ]
-              hVarref a NOLIST
-              hVarref b NOLIST
             ]
           ]
         ]
