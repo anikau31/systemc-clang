@@ -65,7 +65,8 @@ test_data = [
         None,
         load_file(testdata / "add_hdl.txt.v"),
         load_file(testdata / "add_hdl.txt"),
-        False
+        False,
+        "topadd2_sc_module_0"  # top_module name for synthesis check
     ),
     # ('sreg',   load_file(), [], None),
     # ('member-variable-sc-buffer',   load_file(), [], None),
@@ -79,7 +80,8 @@ test_data = [
         ("-I{}".format(zfpsynth / "zfp3"), ),
         None,
         None,
-        zfpsynth / "zfp3"
+        zfpsynth / "zfp3",
+        "mymodule_sc_module_0"
     ),
     # ('z4test', load_file(zfpsynth / 'zfp4/z4test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp4', None]),
     # ('z5test', load_file(zfpsynth / 'zfp5/z5test.cpp'), ['-I', zfpshared2.stem, '-I', zfpsynth / 'zfp5', None])
@@ -89,7 +91,8 @@ test_data = [
         ("-I{}".format(zfpsynth / "zfp7"), ),
         None,
         None,
-        zfpsynth / "zfp7"
+        zfpsynth / "zfp7",
+        "mymodule_sc_module_0"
     ),
     (
         "moving-average",
@@ -98,6 +101,7 @@ test_data = [
         None,
         None,
         False,
+        "mymodule_sc_module_0"
     ),
     (
        "test_while_iscs",
@@ -106,6 +110,7 @@ test_data = [
        None, # load_file(testdata / "test_while_iscs_hdl.txt.v"),
        None,
        False,
+       None
     ),
     (
        "test_binary_iscs",
@@ -114,6 +119,7 @@ test_data = [
        None, # load_file(testdata / "test_binary_iscs_hdl.txt.v"),
        None,
        False,
+       None
     ),
     (
        "test_break_iscs",
@@ -122,6 +128,7 @@ test_data = [
        None, # load_file(testdata / "test_break_iscs_hdl.txt.v"),
        None,
        False,
+       None
     ),
     (
        "test_for_iscs",
@@ -130,6 +137,7 @@ test_data = [
        None, # load_file(testdata / "test_for_iscs_hdl.txt.v"),
        None,
        False,
+       None
     ),
     ( 
        "test_child_module_iscs",
@@ -138,6 +146,7 @@ test_data = [
        None,
        None,
        False,
+       None
     ),
     # ( 
     #     "test_dowhile_iscs",
@@ -158,6 +167,7 @@ test_data = [
         None,
         None,
         False,
+        None
     ),
     # ( 
     #     "test_virtual1_iscs",
@@ -178,6 +188,7 @@ test_data = [
         None,
         None,
         False,
+        None
     ),
     ( 
         "test_thread_simple_wait",
@@ -186,6 +197,7 @@ test_data = [
         None,
         None,
         False,
+        None
     ),
     ( 
         "test_thread_multiple_processes",
@@ -194,6 +206,7 @@ test_data = [
         None,
         None,
         False,
+        None
     )
 
 ]
