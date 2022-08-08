@@ -531,6 +531,7 @@ using namespace sc_ast_matchers::utils;
 
        if (t1 != t2) {
          llvm::dbgs() << "@@@@ CHECK isSCFunc failed " << t1 << " t2 " << t2 << " name " << name << "\n";
+         // std::cin.get();
        }
       // ============= END CHECK ================
       if (!lutil.isSCFunc(name)) {  // similar to method call, skip builtin
