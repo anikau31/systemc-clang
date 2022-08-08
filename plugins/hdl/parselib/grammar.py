@@ -145,6 +145,7 @@ lark_grammar = Lark('''
         hfunctionrettype: "hFunctionRetType" "NONAME" "[" htypeinfo "]"
                         | "hFunctionRetType" "NONAME" "NOLIST" // only appears in generated statements
         hfunctionparams : "hFunctionParams" "NONAME" "[" (funcparami|funcparamio)* "]"
+                        | "hFunctionParams" "NONAME" "NOLIST"
         hreturnstmt: "hReturnStmt" "NONAME" "[" expression "]"
                    | "hReturnStmt" "NONAME" "NOLIST"  // return;
 
@@ -204,6 +205,7 @@ lark_grammar = Lark('''
              |  "hUnop" UNOP_SUB "[" (expression|hslice) "]"
              |  "hUnop" UNOP_BNOT "[" (expression|hslice) "]"
              |  "hBinop" UNOP_NOT "[" (expression|hslice) "]"
+             |  "hBinop" UNOP_BNOT "[" (expression|hslice) "]"
              | hpostfix
              | hprefix
              | hunopdec
@@ -258,8 +260,8 @@ lark_grammar = Lark('''
         harrayref: "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread | harrayref) expression  "]"
                  | hslice
         hslice: "hBinop" "SLICE" "[" hvarref expression expression "]"
-              | "hNoop" "range" "[" (hvarref | harrayref | syscread ) expression expression "]"
-              | "hNoop" "bit" "[" (hvarref | harrayref | syscread) expression "]"
+              | "hBuiltinFunction" "range" "[" (hvarref | harrayref | syscread ) expression expression "]"
+              | "hBuiltinFunction" "bit" "[" (hvarref | harrayref | syscread) expression "]"
         hnsbinop:  "hBinop" NONSUBBINOP "[" (expression|hslice) (expression|hslice) "]"
         // Comma op is the C++ comma where the latter part of the comma expression is returned
         hcomma: "hBinop" "," "[" (blkassign | hunop | hmethodcall) (hunop | expression | hmethodcall) "]"

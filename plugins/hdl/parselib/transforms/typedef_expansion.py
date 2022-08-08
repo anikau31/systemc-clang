@@ -313,8 +313,8 @@ class TypedefExpansion(TopDown):
         expand them with the fields"""
         # Note: we only need fields here, and we don't need the actual type
         lhs, rhs = tree.children
-        # dprint('LHS ', lhs)
-        # dprint('RHS ', rhs, tree.data)
+        dprint('LHS ', lhs)
+        dprint('RHS ', rhs, tree.data)
         lhs_var = self.__get_expandable_var_from_tree(lhs)
         rhs_var = self.__get_expandable_var_from_tree(rhs)
         # dprint('LHS var ', lhs_var)
