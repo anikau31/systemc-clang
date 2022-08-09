@@ -428,7 +428,7 @@ namespace hnode {
       // can't use set as we are searching for a substring of tstring
       
      string strings[] = {"sc_in", "sc_rvd", "sc_out", "sc_inout",
-			  "sc_signal", "sc_subref", "sc_process_handle", "sc_dt"};
+			 "sc_signal", "sc_subref", "sc_process_handle", "sc_simcontext", "sc_dt"};
      
      if ((typ != NULL) && (types_seen.count(typ) > 0)) {
        //LLVM_DEBUG(llvm::dbgs() << "isSCType(str, typ) found type pointer in set " << tstring << " " << typ << "\n");

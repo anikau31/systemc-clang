@@ -356,6 +356,12 @@ using namespace sc_ast_matchers::utils;
       }
     }
 
+    // here need to check whether it is a record with a non-trivial constructor.
+    // if so, define the method for the constructor and insert a call to the
+    // method as the varinit. If there are parameters, they need to be supplied.
+    // if it is a user-defined class defined outside an sc_module, the "this"
+    // parameter needs to be supplied as first parameter to the constructor method,
+    
     string qualmethodname = "ConstructorMethod";
     if (Expr *declinit = vardecl->getInit()) {
       LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl has an init: \n");
@@ -540,7 +546,7 @@ using namespace sc_ast_matchers::utils;
     if (isa<FunctionDecl>(value)) {
 
       // ============= CHECK ================
-       bool t1 =  !lutil.isSCFunc(name);
+      bool t1 =  !(lutil.isSCFunc(name) || lutil.isSCMacro(name));
        bool t2 =  !lutil.isSCByCallExpr(expr); 
 
        if (t1 != t2) {
@@ -548,7 +554,7 @@ using namespace sc_ast_matchers::utils;
          // std::cin.get();
        }
       // ============= END CHECK ================
-      if (!lutil.isSCFunc(name)) {  // similar to method call, skip builtin
+       if (!(lutil.isSCFunc(name) || lutil.isSCMacro(name))) {  // similar to method call, skip builtin
 	FunctionDecl *funval = (FunctionDecl *)value;
 	
 	string qualfuncname{value->getQualifiedNameAsString()};
