@@ -204,10 +204,14 @@ class FunctionTransformationPass(TopDown):
         return func_name, ret_type, func_params, local_vars, func_body
 
     def __extract_id_from_func_arg(self, tree):
+        dprint(tree)
+        dprint(hasattr(tree, 'original_name'))
         if hasattr(tree, 'phantom_var'):
             return tree.phantom_var
         elif isinstance(tree, str):
             return tree
+        elif hasattr(tree, 'original_name'):
+            return tree.original_name
         return tree.children[0]
 
     @property
@@ -226,8 +230,12 @@ class FunctionTransformationPass(TopDown):
 
     def check_blocking(self, var_name):
         in_global_scope = var_name in self.__current_module_scope_vars
-        proc_name = self.__current_process.children[0]
-        in_sens_list = var_name in self.__current_module_sense_list[proc_name]
+        # A method might be called in another function
+        if self.__current_process is not None:
+            proc_name = self.__current_process.children[0]
+            in_sens_list = var_name in self.__current_module_sense_list[proc_name]
+        else:
+            in_sens_list = False
         if not in_global_scope or (in_global_scope and in_sens_list):
             return True
         else:
@@ -236,6 +244,9 @@ class FunctionTransformationPass(TopDown):
 
 
     def hmethodcall(self, tree):
+        # process children
+        # Careful... this might cause issue
+        self.__push_up(tree)
         # we translate methods manually
         # dprint(tree.pretty())
         orig_len = len(tree.children)
@@ -291,10 +302,12 @@ class FunctionTransformationPass(TopDown):
 
     def hvarref(self, tree):
         if hasattr(tree, 'func_repl_id'):
+            tree.original_name = tree.children[0]
             tree.children[0] = self.__get_func_param_stub(tree.children[0])
         else:  # check for stub in process
             stub = self.__get_current_process_stub(tree.children[0])
             if stub:
+                tree.original_name = tree.children[0]
                 tree.children[0] = stub.children[0]
 
         return tree

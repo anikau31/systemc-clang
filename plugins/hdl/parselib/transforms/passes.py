@@ -16,6 +16,8 @@ from .function_transformation_pass import FunctionTransformationPass
 from .comma_transformation import CommaTransformation
 from .structure_collector import StructureCollector
 
+from ..utils import dprint
+
 
 class VerilogTranslator:
     """Translate hcode to verilog"""
