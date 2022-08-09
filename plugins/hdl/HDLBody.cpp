@@ -343,9 +343,10 @@ using namespace sc_ast_matchers::utils;
     hNodep h_vardecl = h_varlist->child_list.back();
     vname_map.add_entry(vardecl, vardecl->getName().str(), h_vardecl);
 
+    const Type *tstp;
     bool isuserdefinedclass = false;
     if (HDLt.usertype_info.userrectypes.size()>0) {
-      const Type * tstp = (((te->getTemplateArgTreePtr())->getRoot())->getDataPtr())->getTypePtr();
+      tstp = (((te->getTemplateArgTreePtr())->getRoot())->getDataPtr())->getTypePtr();
       LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl init of user class, tstp in processvardecl is " << tstp << " isscbytype says " << lutil.isSCByType(tstp) << "\n");
       LLVM_DEBUG(HDLt.print(llvm::dbgs()));
       auto recmapiter = HDLt.usertype_info.userrectypes.find(tstp);
@@ -354,27 +355,40 @@ using namespace sc_ast_matchers::utils;
 	//varinitp->set( hNode::hdlopsEnum::hMethodCall, recmapiter->second);
       }
     }
-    
+
+    string qualmethodname = "ConstructorMethod";
     if (Expr *declinit = vardecl->getInit()) {
       LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl has an init: \n");
       LLVM_DEBUG(declinit->dump(llvm::dbgs(), ast_context_));
       CXXConstructExpr *tmpdeclinit = dyn_cast<CXXConstructExpr>(declinit);
       if (isuserdefinedclass && (tmpdeclinit!= NULL)) {
-	CXXConstructorDecl *cnstrdcl = tmpdeclinit->getConstructor();
+	const CXXConstructorDecl *cnstrdcl = tmpdeclinit->getConstructor();
 	string methodname = cnstrdcl->getNameAsString();
-	string qualmethodname = cnstrdcl->getQualifiedNameAsString();
+	qualmethodname = cnstrdcl->getQualifiedNameAsString();
+	lutil.make_ident(qualmethodname);
 	LLVM_DEBUG(llvm::dbgs() << "ConstructorDecl " << methodname << ", " << qualmethodname << " for var follows\n");
 	LLVM_DEBUG(cnstrdcl->dump());
-	
+	// add method decl for constructor
+	hNodep h_callp = new hNode(qualmethodname, hNode::hdlopsEnum::hMethodCall);
+	h_callp->append(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
+	methodecls.add_entry((CXXMethodDecl *)cnstrdcl, qualmethodname,  h_callp);
+	methodecls.methodobjtypemap[(const CXXMethodDecl *)cnstrdcl] = tstp;
+	TraverseStmt(tmpdeclinit);
+	if (h_ret) {
+	  h_callp->append(h_ret);
+	  h_ret = h_callp;
+	}
+	return true;
       }
-      TraverseStmt(declinit);
-    }
 
-    if (h_ret) {
-      hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
-      varinitp->child_list.push_back(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
-      varinitp->child_list.push_back(h_ret);
-      h_ret = varinitp;
+      TraverseStmt(declinit);
+
+      if (h_ret) {
+	hNodep varinitp = new hNode(hNode::hdlopsEnum::hVarAssign);
+	varinitp->child_list.push_back(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
+	varinitp->child_list.push_back(h_ret);
+	h_ret = varinitp;
+      }
     }
     return true;
   }
@@ -677,7 +691,7 @@ using namespace sc_ast_matchers::utils;
     bool foundsctype = lutil.isSCType(qualmethodname, typeformethodclass);
     bool newfoundsctype = lutil.isSCByCallExpr(callexpr);// || lutil.isSCType(typeformethodclass);
     if (foundsctype != newfoundsctype ) {
-      LLVM_DEBUG(llvm::dbgs() << "callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
+      LLVM_DEBUG(llvm::dbgs() << "CHECK callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
       callexpr->dump();
       //std::cin.get();
       //foundsctype = newfoundsctype; // ADD THIS TO TEST SEGV
