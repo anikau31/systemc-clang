@@ -30,16 +30,16 @@ def check_text_same(data, golden, target_path):
 @pytest.fixture
 def vivado_tcl_template():
     return (
-            "create_project -in_memory -part xc7z020-clg400-1\n"
+            "create_project -in_memory -part xczu3eg-sbva484-1-i\n"
             "read_verilog -sv {}\n"
-            "synth_design -flatten none -mode out_of_context -top _sc_module_0\n"
+            "synth_design -flatten none -mode out_of_context -top {}\n"
             "exit"
             )
 
 
 @test_steps('hcode', 'translation', 'translation-match-check', 'synthesis')
-@pytest.mark.parametrize("name,content,extra_args,golden,golden_hcode,copy_back_path", test_data, ids=[x[0] for x in test_data])
-def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, copy_back_path, default_params, clang_args_params, vivado_tcl_template, has_vivado):
+@pytest.mark.parametrize("name,content,extra_args,golden,golden_hcode,copy_back_path,top_name", test_data, ids=[x[0] for x in test_data])
+def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, copy_back_path, default_params, clang_args_params, vivado_tcl_template, has_vivado, top_name):
     # move files to the target directory
     target_path = tmp_path / '{}.cpp'.format(name)
     hcode_target_path = tmp_path / '{}_hdl.txt'.format(name)
@@ -73,9 +73,11 @@ def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, 
         shutil.copy(verilog_target_path, copy_back_path)
     yield
 
+
     # step: translation-match (checks whether the translation matches a golden file, if exists)
     if golden is None:
-        pytest.skip('Golden Verilog file is not included, translation-match test is skipped')
+        yield
+        # pytest.skip('Golden Verilog file is not included, translation-match test is skipped')
     else:
         with open(verilog_target_path, 'r') as f:
             data = f.read()
@@ -94,14 +96,14 @@ def test_translation(tmp_path, name, content, extra_args, golden, golden_hcode, 
                 print('{:7}   a[{}:{}] --> b[{}:{}] {!r:>8} --> {!r}'.format( 
                     tag, i1, i2, j1, j2, golden[i1:i2], data[j1:j2]))
                 assert False, '\nTranslated file: \n' + str(verilog_target_path) + '\nTranslated file and golden file mismatch, diff result:\n' + ''.join(diff_res)
-    yield
+        yield
 
 
     # synthesis: synthesis
-    if has_vivado:
+    if has_vivado and top_name is not None:
         tcl_path = tmp_path / '{}.tcl'.format(name)
         with open(tcl_path, 'w') as f:
-            f.writelines(vivado_tcl_template.format(name + '_hdl.txt.v'))  # TODO: change this to customized suffix
+            f.writelines(vivado_tcl_template.format(name + '_hdl.txt.v', top_name))  # TODO: change this to customized suffix
         synth_res = subprocess.run(
                 ['vivado', '-mode', 'batch', '-source',  str(tmp_path / '{}.tcl'.format(name))], 
                 stdout=subprocess.PIPE, 

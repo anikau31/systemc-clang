@@ -308,8 +308,6 @@ class FunctionInfoPass2(TopDown):
         tree.name_stub = dict()
         tree.phantom_vars = dict()
         names_to_stub = set()
-
-
         for invoc in tree.function_invocations:
             invoc_params = invoc.children[1:]
             f_name = invoc.children[0]

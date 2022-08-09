@@ -8,11 +8,24 @@ import argparse
 import pathlib
 logging.basicConfig(level=logging.DEBUG)
 
+from lark import logger
+
+logger.setLevel(logging.DEBUG)
+
 
 def translate_text(file_content):
     t = lark_grammar.parse(file_content)
-    x = VerilogTranslator
-    return x.translate(t)
+
+    try:
+        x = VerilogTranslator
+        return x.translate(t)
+    except Exception as e:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        print("***** print_exception:")
+        # exc_type below is ignored on 3.5 and later
+        traceback.print_exception(exc_type, exc_value, exc_traceback, file=sys.stdout, limit=-60)
+        traceback.print_stack(exc_traceback, limit=-2)
+        exit(3)
 
 
 def main():
@@ -43,6 +56,7 @@ def main():
         print("***** print_exception:")
         # exc_type below is ignored on 3.5 and later
         traceback.print_exception(exc_type, exc_value, exc_traceback, file=sys.stdout, limit=-60)
+        traceback.print_stack(exc_traceback, limit=-2)
         exit(3)
     with open(outputname, 'w+') as f:
         f.writelines(res)
