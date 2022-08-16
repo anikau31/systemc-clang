@@ -117,7 +117,8 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     } else if (isa<CXXMemberCallExpr>(stmt)) {
       VisitCXXMemberCallExpr((CXXMemberCallExpr *)stmt);
     } else {
-      VisitCallExpr((CallExpr *)stmt);
+    RecursiveASTVisitor::TraverseStmt(stmt);
+      // VisitCallExpr((CallExpr *)stmt);
     }
   } else {
     LLVM_DEBUG(llvm::dbgs()
@@ -982,7 +983,7 @@ bool HDLBody::VisitCallExpr(CallExpr *callexpr) {
             res, callexpr->getCalleeDecl()->getASTContext())) {
       h_ret = new hNode(systemc_clang::utils::apint::toString(res.Val.getInt()),
                         hNode::hdlopsEnum::hLiteral);
-      return true;
+      return false;
     }
   }
 
@@ -1010,7 +1011,7 @@ bool HDLBody::VisitCallExpr(CallExpr *callexpr) {
   LLVM_DEBUG(llvm::dbgs() << "found a call expr"
                           << " AST follows\n ");
   LLVM_DEBUG(callexpr->dump(llvm::dbgs(), ast_context_););
-  return true;
+  return false;
 }
 
 bool HDLBody::VisitIfStmt(IfStmt *ifs) {
