@@ -140,7 +140,8 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     TraverseStmt(((MaterializeTemporaryExpr *)stmt)->getSubExpr());
     // TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary());
   } else if (isa<DeclRefExpr>(stmt)) {
-    VisitDeclRefExpr((DeclRefExpr *)stmt);
+    // VisitDeclRefExpr((DeclRefExpr *)stmt);
+    RecursiveASTVisitor::TraverseStmt(stmt);
   } else if (isa<MemberExpr>(stmt)) {
     // VisitMemberExpr((MemberExpr *)stmt);
     RecursiveASTVisitor::TraverseStmt(stmt);
@@ -694,7 +695,7 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
                << "got enum constant value " << cd->getInitVal() << "\n");
     h_ret = new hNode(systemc_clang::utils::apint::toString(cd->getInitVal()),
                       hNode::hdlopsEnum::hLiteral);
-    return true;
+    return false;
   }
 
   // get a name
@@ -711,7 +712,7 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
       h_ret =
           new hNode(systemc_clang::utils::apint::toString(result.Val.getInt()),
                     hNode::hdlopsEnum::hLiteral);
-      return true;
+      return false;
     }
   }
   if (isa<FunctionDecl>(value)) {
@@ -751,17 +752,17 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
           hfuncall->set(tmpname);
       }
       h_ret = hfuncall;
-      return true;
+      return false;
     } else {  // here it is an SCFunc
       string typname = (expr->getType()).getAsString();
       if (typname.find("sc_dt::sc_concat") != std::string::npos) {
         // found concat function call
         hNodep hconcat = new hNode(name, hNode::hdlopsEnum::hBinop);
         h_ret = hconcat;
-        return true;
+        return false;
       }
       h_ret = new hNode(name, hNode::hdlopsEnum::hBuiltinFunction);
-      return true;
+      return false;
       // may have other special functions to recognize later
     }
   }
@@ -772,7 +773,7 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
 
   h_ret =
       new hNode(newname.empty() ? name : newname, hNode::hdlopsEnum::hVarref);
-  return true;
+  return false;
 }
 
 bool HDLBody::TraverseArraySubscriptExpr(ArraySubscriptExpr *expr) {
