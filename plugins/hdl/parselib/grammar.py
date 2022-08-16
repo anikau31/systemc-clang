@@ -82,6 +82,10 @@ lark_grammar = Lark('''
         hnoop: "hNoop" "NONAME" "NOLIST"
         htoi64: "hBuiltinFunction" "to_int64" "[" hvarref "]"
         htou64: "hBuiltinFunction" "to_uint64" "[" hvarref "]"
+        hscmin: "hBuiltinFunction" "sc_min" "[" expression expression "]"
+        hscmax: "hBuiltinFunction" "sc_max" "[" expression expression "]"
+        
+        hbuiltin: hscmin | hscmax
         
         // hmodinitblock: 
         // first component is the id of the module (in parent?)
@@ -183,6 +187,7 @@ lark_grammar = Lark('''
                   | hlrotate
                   | horreduce
                   | hfieldaccess
+                  | hbuiltin
                   
         hfieldaccess: "hFieldaccess" "NONAME" "[" (harrayref|syscread) hfieldname "]"
         hfieldname:   "hField" ID "NOLIST"
@@ -218,7 +223,7 @@ lark_grammar = Lark('''
         REDUCE_OP: "and_reduce" | "or_reduce" | "xor_reduce" | "nand_reduce" | "nor_reduce" | "xnor_reduce"
 
         // Separate '=' out from so that it is not an expression but a standalone statement
-        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (htotype | hconcat | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
+        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (hbuiltin | htotype | hconcat | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
                  | "hBinop" "=" "[" harrayref  arrayrhs "]"
                  | nblkassign
                  | vassign

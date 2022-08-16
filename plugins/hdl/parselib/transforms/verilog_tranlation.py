@@ -1093,6 +1093,24 @@ class VerilogTranslationPass(TopDown):
         res += "endmodule"
         return res
 
+    def hbuiltin(self, tree):
+        self.__push_up(tree)
+        return tree.children[0]
+
+    def hscmax(self, tree):
+        assert len(tree.children) == 2, "sc_max node should only have 2 children"
+        self.__push_up(tree)
+        L = tree.children[0]
+        R = tree.children[1]
+        return "(({}) < ({}) ? ({}) : ({}))".format(L, R, R, L)
+
+    def hscmin(self, tree):
+        assert len(tree.children) == 2, "sc_min node should only have 2 children"
+        self.__push_up(tree)
+        L = tree.children[0]
+        R = tree.children[1]
+        return "(({}) < ({}) ? ({}) : ({}))".format(L, R, L, R)
+
     def __is_generated_signal(self, name):
         return name.endswith('#')
 

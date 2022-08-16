@@ -10,15 +10,18 @@ function(add_static_synthesis design rtl_files constraint_files synthesis_option
   # board design wrappers
   set(bd_wrappers_space_sep "")
   foreach(bd ${bd_wrappers})
-    string(APPEND bd_wrappers_space_sep "${CMAKE_CURRENT_BINARY_DIR}/../bd/${bd}/.srcs/sources_1/bd/${bd}/hdl/${bd}_wrapper.v ")
+    # string(APPEND bd_wrappers_space_sep "${CMAKE_CURRENT_BINARY_DIR}/../bd/${bd}/.srcs/sources_1/bd/${bd}/hdl/${bd}_wrapper.v ")
+    string(APPEND bd_wrappers_space_sep "${CMAKE_CURRENT_BINARY_DIR}/../bd/${bd}/.gen/sources_1/bd/${bd}/hdl/${bd}_wrapper.v ")
     list(APPEND bd_dcps "bd/${bd}.dcp")
   endforeach()
 
   # ip stubs
   set(ip_wrappers_space_sep "")
   foreach(ip ${ip_wrappers})
-    string(APPEND ip_wrappers_space_sep "${CMAKE_CURRENT_BINARY_DIR}/../ip/${ip}/.srcs/sources_1/ip/${ip}/${ip}_stub.v ")
-    list(APPEND ip_dcps "ip/${ip}/${ip}.dcp")
+    # string(APPEND ip_wrappers_space_sep "${CMAKE_CURRENT_BINARY_DIR}/../ip/${ip}/.srcs/sources_1/ip/${ip}/${ip}_stub.v ")
+    string(APPEND ip_wrappers_space_sep "${CMAKE_CURRENT_BINARY_DIR}/../ip/${ip}/.gen/sources_1/ip/${ip}/${ip}_stub.v ")
+    # list(APPEND ip_dcps "ip/${ip}/${ip}.dcp")
+    list(APPEND ip_dcps "ip/${ip}/.gen/sources_1/ip/${ip}/${ip}.dcp")
   endforeach()
 
 
@@ -129,7 +132,7 @@ function(add_static_implementation)
     list(GET DS_RECONF_MOD ${idx} mod)
 
     message(STATUS "RPartition ${part}:${inst} instantiated with ${mod}")
-    list(APPEND reconf_command_list "set_property HD.RECONFIGURABLE true [get_cells ${inst}]")
+    # list(APPEND reconf_command_list "set_property HD.RECONFIGURABLE true [get_cells ${inst}]")
 
     list(APPEND blackboxing_command_list "update_design -cell ${inst} -black_box")
   endforeach()
