@@ -119,10 +119,6 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     } else {
       VisitCallExpr((CallExpr *)stmt);
     }
-  } else if (isa<MaterializeTemporaryExpr>(stmt)) {
-    TraverseStmt(((MaterializeTemporaryExpr *)stmt)->getSubExpr());
-  } else if (isa<CXXDefaultArgExpr>(stmt)) {
-    TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
   } else {
     LLVM_DEBUG(llvm::dbgs()
                << "stmt type " << stmt->getStmtClassName()
@@ -266,7 +262,7 @@ bool HDLBody::VisitDefaultStmt(DefaultStmt *stmt) {
 
 bool HDLBody::VisitCompoundStmt(CompoundStmt *cstmt) {
   // Traverse each statement and append it to the array
-  LLVM_DEBUG( llvm::dbgs() << "In VisitCompoundStmt\n"; );
+  LLVM_DEBUG(llvm::dbgs() << "In VisitCompoundStmt\n";);
   hNodep h_cstmt = new hNode(hNode::hdlopsEnum::hCStmt);
   // std::cin.get();
 
@@ -814,9 +810,8 @@ bool HDLBody::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
 
   LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr, Operator name is "
                           << operatorname << "\n";
-  llvm::dbgs() << "Type name " << operatortype << "\n";
-  opcall->getType()->dump(llvm::dbgs(), ast_context_);
-  );
+             llvm::dbgs() << "Type name " << operatortype << "\n";
+             opcall->getType()->dump(llvm::dbgs(), ast_context_););
 
   // ========================== CHECK  2=====================
   const Type *optypepointer = opcall->getType().getTypePtr();
