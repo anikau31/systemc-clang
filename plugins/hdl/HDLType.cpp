@@ -14,6 +14,8 @@
 #include <vector>
 
 #include <iostream>
+#include <assert.h>
+
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "HDL"
 
@@ -138,7 +140,7 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
 
   if (t1 != t2) {
     llvm::dbgs() << "### CHECK1: old " << t1 << " != new " << t2 << "\n";
-    llvm::dbgs() << t1/0;
+    assert(0); //llvm::dbgs() << t1/0;
     //std::cin.get();
   }
   // ========================== END CHECK =====================

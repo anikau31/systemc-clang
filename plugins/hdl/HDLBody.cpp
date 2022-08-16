@@ -10,6 +10,9 @@
 
 #include <iostream>
 #include <unordered_map>
+
+#include <assert.h>
+
 // clang-format on
 
 /// Different matchers may use different DEBUG_TYPE
@@ -356,11 +359,11 @@ using namespace sc_ast_matchers::utils;
       }
     }
 
-    // here need to check whether it is a record with a non-trivial constructor.
-    // if so, define the method for the constructor and insert a call to the
+    // If there is an initializer, define the method for the constructor and insert a call to the
     // method as the varinit. If there are parameters, they need to be supplied.
     // if it is a user-defined class defined outside an sc_module, the "this"
-    // parameter needs to be supplied as first parameter to the constructor method,
+    // parameter needs to be supplied as first parameter to the constructor method.
+    // currently "this" is always inserted as an additional parameter.
     
     string qualmethodname = "ConstructorMethod";
     if (Expr *declinit = vardecl->getInit()) {
@@ -423,7 +426,7 @@ using namespace sc_ast_matchers::utils;
  
     if (t11 != t21) {
       llvm::dbgs() << "### CHECK1: t11 != t21\n";
-      llvm::dbgs() << t11/0;
+      assert(0);//llvm::dbgs() << t11/0;
       //        std::cin.get();
     }
     // ========================== END CHECK =====================
@@ -699,6 +702,7 @@ using namespace sc_ast_matchers::utils;
     if (foundsctype != newfoundsctype ) {
       LLVM_DEBUG(llvm::dbgs() << "CHECK callexpr isSCType nonmatch -- old one returned " << foundsctype << " for " << qualmethodname << "\n");
       callexpr->dump();
+      assert(0);
       //std::cin.get();
       //foundsctype = newfoundsctype; // ADD THIS TO TEST SEGV
     }
@@ -796,6 +800,7 @@ using namespace sc_ast_matchers::utils;
 
     if (t12 != t22) {
       llvm::dbgs() << "CHECK### 2: t12 != t22\n";
+      assert(0);
       //std::cin.get();
     }
     // ========================== END CHECK =====================
