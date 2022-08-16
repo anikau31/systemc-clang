@@ -110,14 +110,7 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   if (stmt == nullptr)
     return false;  // null statement, keep going
                    // Actually with RVT we should return false instead.
-
-  if (isa<CompoundStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs()
-               << "calling traverse compoundstmt from traversestmt\n");
-    VisitCompoundStmt((CompoundStmt *)stmt);
-    //} else if (isa<DeclStmt>(stmt)) {
-    // RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<CallExpr>(stmt)) {
+  if (isa<CallExpr>(stmt)) {
     if (CXXOperatorCallExpr *opercall = dyn_cast<CXXOperatorCallExpr>(stmt)) {
       LLVM_DEBUG(llvm::dbgs() << "found cxxoperatorcallexpr\n");
       VisitCXXOperatorCallExpr(opercall);
@@ -273,7 +266,9 @@ bool HDLBody::VisitDefaultStmt(DefaultStmt *stmt) {
 
 bool HDLBody::VisitCompoundStmt(CompoundStmt *cstmt) {
   // Traverse each statement and append it to the array
+  LLVM_DEBUG( llvm::dbgs() << "In VisitCompoundStmt\n"; );
   hNodep h_cstmt = new hNode(hNode::hdlopsEnum::hCStmt);
+  // std::cin.get();
 
   for (clang::Stmt *stmt : cstmt->body()) {
     TraverseStmt(stmt);
@@ -294,7 +289,7 @@ bool HDLBody::VisitCompoundStmt(CompoundStmt *cstmt) {
   }
 
   h_ret = h_cstmt;
-  return true;
+  return false;
 }
 
 //!
@@ -818,9 +813,10 @@ bool HDLBody::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
   hNodep h_operop;
 
   LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr, Operator name is "
-                          << operatorname << "\n");
-  LLVM_DEBUG(llvm::dbgs() << "Type name " << operatortype << "\n");
-  LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
+                          << operatorname << "\n";
+  llvm::dbgs() << "Type name " << operatortype << "\n";
+  opcall->getType()->dump(llvm::dbgs(), ast_context_);
+  );
 
   // ========================== CHECK  2=====================
   const Type *optypepointer = opcall->getType().getTypePtr();
