@@ -115,9 +115,8 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     LLVM_DEBUG(llvm::dbgs()
                << "calling traverse compoundstmt from traversestmt\n");
     VisitCompoundStmt((CompoundStmt *)stmt);
-  } else if (isa<DeclStmt>(stmt)) {
-    // VisitDeclStmt((DeclStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
+    //} else if (isa<DeclStmt>(stmt)) {
+    // RecursiveASTVisitor::TraverseStmt(stmt);
   } else if (isa<CallExpr>(stmt)) {
     if (CXXOperatorCallExpr *opercall = dyn_cast<CXXOperatorCallExpr>(stmt)) {
       LLVM_DEBUG(llvm::dbgs() << "found cxxoperatorcallexpr\n");
@@ -127,170 +126,18 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     } else {
       VisitCallExpr((CallExpr *)stmt);
     }
-  } else if (isa<BinaryOperator>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitBinaryOperator((BinaryOperator *)stmt);
-  } else if (isa<UnaryOperator>(stmt)) {
-    // VisitUnaryOperator((UnaryOperator *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<ConditionalOperator>(stmt)) {
-    // VisitConditionalOperator((ConditionalOperator *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
   } else if (isa<MaterializeTemporaryExpr>(stmt)) {
     TraverseStmt(((MaterializeTemporaryExpr *)stmt)->getSubExpr());
-    // TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary());
-  } else if (isa<DeclRefExpr>(stmt)) {
-    // VisitDeclRefExpr((DeclRefExpr *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<MemberExpr>(stmt)) {
-    // VisitMemberExpr((MemberExpr *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<IntegerLiteral>(stmt)) {
-    // VisitIntegerLiteral((IntegerLiteral *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<CXXBoolLiteralExpr>(stmt)) {
-    // VisitCXXBoolLiteralExpr((CXXBoolLiteralExpr *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<IfStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found if stmt\n");
-    // VisitIfStmt((IfStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<ForStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found for stmt\n");
-    // VisitForStmt((ForStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<WhileStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found while stmt\n");
-    // VisitWhileStmt((WhileStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<DoStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found do-while stmt\n");
-    // VisitDoStmt((DoStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<SwitchStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found switch stmt\n");
-    // VisitSwitchStmt((SwitchStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<CaseStmt>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    /*
-    LLVM_DEBUG(llvm::dbgs() << "Found case stmt\n");
-    hNodep old_hret = h_ret;
-    hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
-    if (ConstantExpr *expr =
-            dyn_cast<ConstantExpr>(((CaseStmt *)stmt)->getLHS())) {
-      llvm::APSInt val = expr->getResultAsAPSInt();
-      hcasep->child_list.push_back(
-          new hNode(systemc_clang::utils::apint::toString(val),
-                    hNode::hdlopsEnum::hLiteral));
-    }
-
-    TraverseStmt(((CaseStmt *)stmt)->getSubStmt());
-    if (h_ret != old_hret)
-      hcasep->child_list.push_back(h_ret);
-    else
-      hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
-
-    h_ret = hcasep;
-    */
-  } else if (isa<DefaultStmt>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    /*
-    LLVM_DEBUG(llvm::dbgs() << "Found default stmt\n");
-    hNodep old_hret = h_ret;
-    hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
-    TraverseStmt(((DefaultStmt *)stmt)->getSubStmt());
-    if (h_ret != old_hret)
-      hcasep->child_list.push_back(h_ret);
-    else
-      hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
-    h_ret = hcasep;
-    */
-  } else if (isa<BreakStmt>(stmt)) {
-    // const unsigned cxx_record_id =
-    // diag_e.getCustomDiagID(clang::DiagnosticsEngine::Remark,
-    //           "Break stmt not supported, substituting noop");
-    // clang::DiagnosticBuilder diag_builder{
-    // diag_e.Report(stmt->getBeginLoc(), cxx_record_id)};
-    //
-
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    /*
-    LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
-    h_ret = new hNode(thismode == rthread ? hNode::hdlopsEnum::hReturnStmt
-                                          : hNode::hdlopsEnum::hBreak);
-                                          */
-
-  } else if (isa<ContinueStmt>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    /*
-    LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
-    h_ret = new hNode(hNode::hdlopsEnum::hContinue);
-    */
   } else if (isa<CXXDefaultArgExpr>(stmt)) {
     TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
-  } else if (isa<ReturnStmt>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    /*
-    hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
-    if (((ReturnStmt *)stmt)->getRetValue() != nullptr) {
-      TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
-      hretstmt->child_list.push_back(h_ret);
-    }
-    h_ret = hretstmt;
-    */
-  } else if (isa<CXXTemporaryObjectExpr>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    /*
-    int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
-    if (nargs == 0) {  // end of the road
-      h_ret = new hNode(
-          "0",
-          (hNode::hdlopsEnum::hLiteral));  // assume this is an initializer of 0
-    } else {
-      Expr **objargs = ((CXXTemporaryObjectExpr *)stmt)->getArgs();
-      for (int i = 0; i < nargs; i++) {
-        TraverseStmt(objargs[i]);
-      }
-    }
-    */
-  } else if (isa<InitListExpr>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    /*
-  hNodep h_initlist = new hNode(hNode::hdlopsEnum::hVarInitList);
-  for (auto tmpexpr : ((InitListExpr *)stmt)->inits()) {
-    TraverseStmt(tmpexpr);
-    h_initlist->append(h_ret);
-  }
-  h_ret = h_initlist;
-  */
   } else {
-    if (isa<CXXConstructExpr>(stmt)) {
-      RecursiveASTVisitor::TraverseStmt(stmt);
-      /*
-      CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
-      if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
-        LLVM_DEBUG(llvm::dbgs()
-                   << "CXXConstructExpr followed by integer literal found\n");
-        LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
-        IntegerLiteral *lit = (IntegerLiteral *)exp->getArg(0);
-        string s = systemc_clang::utils::apint::toString(lit->getValue());
-        // need to add type to back of h_ret
-        FindTemplateTypes *te = new FindTemplateTypes();
-        te->Enumerate((exp->getType()).getTypePtr());
-        HDLType HDLt;
-        hNodep h_tmp = new hNode(hNode::hdlopsEnum::hNoop);
-        HDLt.SCtype2hcode(s, te->getTemplateArgTreePtr(), 0,
-                          hNode::hdlopsEnum::hLiteral, h_tmp);
-        h_ret = h_tmp->child_list.back();
-        return true;
-      }
-      */
-    }
     LLVM_DEBUG(llvm::dbgs()
                << "stmt type " << stmt->getStmtClassName()
                << " not recognized, calling default recursive ast visitor\n");
-    hNodep oldh_ret = h_ret;
+    hNodep oldh_ret{nullptr};
+    if (oldh_ret != h_ret) {
+      oldh_ret = h_ret;
+    }
     RecursiveASTVisitor::TraverseStmt(stmt);
     if (h_ret != oldh_ret) {
       LLVM_DEBUG(
@@ -315,11 +162,10 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
 }
 
 bool HDLBody::VisitContinueStmt(ContinueStmt *stmt) {
+  LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
+  h_ret = new hNode(hNode::hdlopsEnum::hContinue);
 
-    LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
-    h_ret = new hNode(hNode::hdlopsEnum::hContinue);
-
-    return false;
+  return false;
 }
 
 bool HDLBody::VisitBreakStmt(BreakStmt *stmt) {
@@ -1120,7 +966,7 @@ bool HDLBody::VisitMemberExpr(MemberExpr *memberexpr) {
                       hNode::hdlopsEnum::hVarref);
         memexprnode->child_list.push_back(h_ret);
         h_ret = memexprnode;
-  return false;
+        return false;
       }
     }
   }
