@@ -121,6 +121,25 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
       // VisitCallExpr((CallExpr *)stmt);
     }
   } else {
+    if (isa<CXXConstructExpr>(stmt)) {
+      CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
+      if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
+        LLVM_DEBUG(llvm::dbgs()
+                   << "CXXConstructExpr followed by integer literal found\n");
+        LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
+        IntegerLiteral *lit = (IntegerLiteral *)exp->getArg(0);
+        string s = systemc_clang::utils::apint::toString(lit->getValue());
+        // need to add type to back of h_ret
+        FindTemplateTypes *te = new FindTemplateTypes();
+        te->Enumerate((exp->getType()).getTypePtr());
+        HDLType HDLt;
+        hNodep h_tmp = new hNode(hNode::hdlopsEnum::hNoop);
+        HDLt.SCtype2hcode(s, te->getTemplateArgTreePtr(), 0,
+                          hNode::hdlopsEnum::hLiteral, h_tmp);
+        h_ret = h_tmp->child_list.back();
+        return true;
+      }
+    }
     LLVM_DEBUG(llvm::dbgs()
                << "stmt type " << stmt->getStmtClassName()
                << " not recognized, calling default recursive ast visitor\n");
@@ -227,7 +246,7 @@ bool HDLBody::VisitInitListExpr(InitListExpr *stmt) {
 }
 
 bool HDLBody::VisitCXXConstructExpr(CXXConstructExpr *stmt) {
-  CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
+  CXXConstructExpr *exp = stmt;//(CXXConstructExpr *)stmt;
   if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
     LLVM_DEBUG(llvm::dbgs()
                << "CXXConstructExpr followed by integer literal found\n");
