@@ -358,19 +358,19 @@ using namespace sc_ast_matchers::utils;
 	//varinitp->set( hNode::hdlopsEnum::hMethodCall, recmapiter->second);
       }
     }
-
-    // If there is an initializer, define the method for the constructor and insert a call to the
-    // method as the varinit. If there are parameters, they need to be supplied.
-    // if it is a user-defined class defined outside an sc_module, the "this"
-    // parameter needs to be supplied as first parameter to the constructor method.
-    // currently "this" is always inserted as an additional parameter.
-    
+  
     string qualmethodname = "ConstructorMethod";
     if (Expr *declinit = vardecl->getInit()) {
       LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl has an init: \n");
       LLVM_DEBUG(declinit->dump(llvm::dbgs(), ast_context_));
       CXXConstructExpr *tmpdeclinit = dyn_cast<CXXConstructExpr>(declinit);
       if (isuserdefinedclass && (tmpdeclinit!= NULL)) {
+	// For user-defined classes:
+	// If there is an initializer, define the method for the initializer and insert a call to the
+	// method. If there are parameters, they need to be supplied.
+	// if it is a user-defined class defined outside an sc_module, the "this"
+	// parameter needs to be supplied as first parameter to the constructor method.
+	
 	const CXXConstructorDecl *cnstrdcl = tmpdeclinit->getConstructor();
 	string methodname = cnstrdcl->getNameAsString();
 	qualmethodname = cnstrdcl->getQualifiedNameAsString();
@@ -379,7 +379,11 @@ using namespace sc_ast_matchers::utils;
 	LLVM_DEBUG(cnstrdcl->dump());
 	// add method decl for constructor
 	hNodep h_callp = new hNode(qualmethodname, hNode::hdlopsEnum::hMethodCall);
-	h_callp->append(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
+	const std::vector<StringRef> tmpmodstr{"sc_module"};
+	if (sc_ast_matchers::utils::isInNamespace(tstp,tmpmodstr )) {
+	 LLVM_DEBUG(llvm::dbgs() << "user-defined class is defined in sc module\n");
+	}
+	else h_callp->append(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
 	methodecls.add_entry((CXXMethodDecl *)cnstrdcl, qualmethodname,  h_callp);
 	methodecls.methodobjtypemap[(const CXXMethodDecl *)cnstrdcl] = tstp;
 	TraverseStmt(tmpdeclinit);
