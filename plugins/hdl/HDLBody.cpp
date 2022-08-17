@@ -1068,8 +1068,9 @@ bool HDLBody::VisitForStmt(ForStmt *fors) {
   h_forstmt->child_list.push_back(h_forbody);
   h_ret = h_forstmt;
 
-  return true;
+  return false;
 }
+
 bool HDLBody::ProcessSwitchCase(SwitchCase *sc) {
   LLVM_DEBUG(llvm::dbgs() << "In ProcessSwitchCase\n");
   hNodep hcasep;
