@@ -117,11 +117,27 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     } else if (isa<CXXMemberCallExpr>(stmt)) {
       VisitCXXMemberCallExpr((CXXMemberCallExpr *)stmt);
     } else {
-    RecursiveASTVisitor::TraverseStmt(stmt);
+      RecursiveASTVisitor::TraverseStmt(stmt);
       // VisitCallExpr((CallExpr *)stmt);
+    }
+  } else if (isa<CXXTemporaryObjectExpr>(stmt)) {
+    // RecursiveASTVisitor::TraverseStmt(stmt);
+    int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
+    if (nargs == 0) {  // end of the road
+      h_ret = new hNode(
+          "0",
+          (hNode::hdlopsEnum::hLiteral));  // assume this is an initializer of 0
+    } else {
+      Expr **objargs = ((CXXTemporaryObjectExpr *)stmt)->getArgs();
+      for (int i = 0; i < nargs; i++) {
+        TraverseStmt(objargs[i]);
+      }
     }
   } else {
     if (isa<CXXConstructExpr>(stmt)) {
+      // if (VisitCXXConstructExpr((CXXConstructExpr *)stmt)) {
+        // return true;
+      // }
       CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
       if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
         LLVM_DEBUG(llvm::dbgs()
@@ -219,6 +235,7 @@ bool HDLBody::VisitReturnStmt(ReturnStmt *stmt) {
   return false;
 }
 
+/*
 bool HDLBody::VisitCXXTemporaryObjectExpr(CXXTemporaryObjectExpr *stmt) {
   int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
   if (nargs == 0) {  // end of the road
@@ -234,6 +251,7 @@ bool HDLBody::VisitCXXTemporaryObjectExpr(CXXTemporaryObjectExpr *stmt) {
 
   return false;
 }
+*/
 
 bool HDLBody::VisitInitListExpr(InitListExpr *stmt) {
   hNodep h_initlist = new hNode(hNode::hdlopsEnum::hVarInitList);
@@ -245,8 +263,9 @@ bool HDLBody::VisitInitListExpr(InitListExpr *stmt) {
   return false;
 }
 
+/*
 bool HDLBody::VisitCXXConstructExpr(CXXConstructExpr *stmt) {
-  CXXConstructExpr *exp = stmt;//(CXXConstructExpr *)stmt;
+  CXXConstructExpr *exp = stmt;  //(CXXConstructExpr *)stmt;
   if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
     LLVM_DEBUG(llvm::dbgs()
                << "CXXConstructExpr followed by integer literal found\n");
@@ -266,6 +285,7 @@ bool HDLBody::VisitCXXConstructExpr(CXXConstructExpr *stmt) {
 
   return false;
 }
+*/
 
 bool HDLBody::VisitDefaultStmt(DefaultStmt *stmt) {
   LLVM_DEBUG(llvm::dbgs() << "Found default stmt\n");
