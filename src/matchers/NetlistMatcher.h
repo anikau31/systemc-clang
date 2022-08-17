@@ -261,6 +261,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
         auto caller_instance_type{caller_instance_decl->getType().getTypePtr()};
         ModuleInstance *instance_module_decl{
             findModuleDeclInstance(caller_instance_decl)};
+        if (instance_module_decl) {
         LLVM_DEBUG(
         llvm::dbgs() << "INSTANCE MODULE :"
                      << instance_module_decl->getInstanceName() << "\n";
@@ -272,6 +273,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                      << "\n";
             );
         // Get the parent ModuleInstance and insert the port binding into that one.
+
         ModuleInstance *parent_decl{findModuleDeclInstance(
             instance_module_decl->getInstanceInfo().getParentDecl())};
         LLVM_DEBUG(llvm::dbgs() << " PARENT@@@@ INST NAME: "
@@ -284,6 +286,7 @@ class NetlistMatcher : public MatchFinder::MatchCallback {
                                  pb->getCallerPortName()};
         parent_decl->addPortBinding(binding_name, pb);
         pb->setInstanceConstructorName(instance_module_decl->getInstanceName());
+        }
       }
     }
   }

@@ -49,11 +49,13 @@ IndexMapType getArrayInstanceIndex(
             cxxctor->getArg(0)->IgnoreImpCasts())};
         //
 
+        if (slit) {
         LLVM_DEBUG(llvm::dbgs()
                        << "Argument 1d: [" << i << ", "
                        << "x, x ] " << slit->getString().str() << " \n";);
         indices.insert(
             IndexPairType(slit->getString().str(), std::make_tuple(i, 0, 0)));
+        }
       }
 
       /// Level 2
@@ -73,10 +75,12 @@ IndexMapType getArrayInstanceIndex(
                     cexpr->getArg(0)->IgnoreImplicit())};
             clang::StringLiteral *slit{clang::dyn_cast<clang::StringLiteral>(
                 nested_cexpr->getArg(0)->IgnoreImpCasts())};
+            if (slit) {
             LLVM_DEBUG(llvm::dbgs() << "Argument 2d: [" << i << ", " << j << "] "
                                    << slit->getString().str() << " \n";);
             indices.insert(IndexPairType(slit->getString().str(),
                                          std::make_tuple(i, j, 0)));
+            }
           }
 
           /// Level 3
@@ -102,10 +106,12 @@ IndexMapType getArrayInstanceIndex(
                     clang::dyn_cast<clang::StringLiteral>(
                         cxxctor->getArg(0)->IgnoreImpCasts())};
                 // slit->dump();
+                if (slit) {
                 LLVM_DEBUG(llvm::dbgs() << "Argument 3d: [" << i << ", " << j << ", " << k
                              << "] " << slit->getString().str() << " \n";);
                 indices.insert(IndexPairType(slit->getString().str(),
                                              std::make_tuple(i, j, k)));
+                }
               }
             }
           }
