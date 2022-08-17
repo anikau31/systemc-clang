@@ -70,7 +70,7 @@ class HDLBody : public RecursiveASTVisitor<HDLBody> {
   bool VisitContinueStmt(ContinueStmt *stmt);
 
   /// TODO: causes problems
-  bool TraverseArraySubscriptExpr(ArraySubscriptExpr *expr);
+  bool VisitArraySubscriptExpr(ArraySubscriptExpr *expr);
 
   bool TraverseStmt(Stmt *stmt);
   bool ProcessVarDecl(VarDecl *vardecl);

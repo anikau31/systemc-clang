@@ -614,7 +614,7 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
   return false;
 }
 
-bool HDLBody::TraverseArraySubscriptExpr(ArraySubscriptExpr *expr) {
+bool HDLBody::VisitArraySubscriptExpr(ArraySubscriptExpr *expr) {
   LLVM_DEBUG(llvm::dbgs()
              << "In TraverseArraySubscriptExpr, base, idx, tree follow\n");
   LLVM_DEBUG(llvm::dbgs() << "base:\n");
@@ -629,7 +629,7 @@ bool HDLBody::TraverseArraySubscriptExpr(ArraySubscriptExpr *expr) {
   TraverseStmt(expr->getRHS());
   h_arrexpr->child_list.push_back(h_ret);
   h_ret = h_arrexpr;
-  return true;
+  return false;
 }
 
 bool HDLBody::VisitCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
