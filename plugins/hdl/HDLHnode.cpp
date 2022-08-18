@@ -3,6 +3,8 @@
 #include <assert.h>
 #include "HDLHnode.h"
 
+#include "assert.h"
+
 #include "clang/Basic/Diagnostic.h"
 
 // clang-format on
@@ -282,6 +284,8 @@ namespace systemc_hdl {
 	hportchild = hportchild->child_list[0];
       }
       for (hNodep hsubmodixname:hmodarrix) {
+	// assume simple case of "i" not "i+1" or "i+j"
+	assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
 	string ixname = hsubmodixname->h_name;
 	for (int i = 0; i < for_info.size(); i++) {
 	  if (for_info[i].name == ixname) {
