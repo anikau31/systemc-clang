@@ -227,7 +227,7 @@ namespace systemc_hdl {
     }
 
     // add the submodule declarations
-    
+   
     for (const auto &smod : submodv) {
       std::vector<std::string> instnames;
       if (smod->getInstanceInfo().isArrayType()) {

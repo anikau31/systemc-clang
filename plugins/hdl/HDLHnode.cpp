@@ -114,7 +114,7 @@ namespace systemc_hdl {
 	(hlo->child_list.size() == 2) &&
 	(hlo->child_list[0]-> h_op == hNode::hdlopsEnum::hVarref) &&
 	(hlo->child_list[1]->h_op ==  hNode::hdlopsEnum::hLiteral)) {
-      // check that names are same ... tmp.name = hlo->child_list[0]->h_name;
+      //FIXME -- check that names are same ... tmp.name = hi->child_list[0]->h_name;
       //FIXME -- put in error message if not a numeric constant
       if (is_numeric(hi->child_list[1]->h_name))
 	tmp.hi = stoi(hi->child_list[1]->h_name);
@@ -269,25 +269,30 @@ namespace systemc_hdl {
     // ]
       hNodep hportchild = hsubmodport->child_list[0];
       hNodep hparent = hsubmodport;
+      std::vector<hNodep> hmodarrix;
+      // look for submodule name
       while ((hportchild != nullptr) && (hportchild->h_name == arrsub)) {
+	hmodarrix.push_back(hportchild->child_list[1]); // save i in A[i]
 	if ((hportchild->child_list[0]->h_op == hNode::hdlopsEnum::hVarref) &&
-	    (hportchild->child_list[0]->child_list.empty())) { // simple varref
+	    (hportchild->child_list[0]->child_list.empty())) { // simple varref of A
 	  submod = hportchild->child_list[0]->h_name;  
 	  break;
 	}
 	hparent = hportchild;
 	hportchild = hportchild->child_list[0];
       }
-      hNodep hsubmodixname = hportchild->child_list[1];
-      string ixname = hsubmodixname->h_name;
-      for (int i = 0; i < for_info.size(); i++) {
-	if (for_info[i].name == ixname) {
-	  submod+=tokendelim+to_string(for_info[i].curix);
-	  break;
+      for (hNodep hsubmodixname:hmodarrix) {
+	string ixname = hsubmodixname->h_name;
+	for (int i = 0; i < for_info.size(); i++) {
+	  if (for_info[i].name == ixname) {
+	    submod+=tokendelim+to_string(for_info[i].curix);
+	    break;
+	  }
 	}
       }
-      hparent->child_list.pop_back();
-      delete hportchild;
+      if (hsubmodport->child_list[0]->h_name == arrsub) {
+	hsubmodport->child_list.erase(hsubmodport->child_list.begin());
+      }
     }
     else if (hsubmodport->h_name ==  arrsub) { // check Case 1, 3
       hNodep hportchild = hsubmodport->child_list[0];
@@ -485,6 +490,7 @@ namespace systemc_hdl {
   
   
   hNodep HDLConstructorHcode::ProcessCXXConstructorHcode(hNodep xconstructor) {
+    
     std::vector<for_info_t> for_info; 
 
     if (xconstructor==nullptr) return xconstructor;

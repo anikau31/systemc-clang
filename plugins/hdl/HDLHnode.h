@@ -71,6 +71,7 @@ namespace systemc_hdl {
   class HDLConstructorHcode {
   public:
     HDLConstructorHcode() {};
+    
     typedef struct {
       string name;
       int lo, hi, step;
