@@ -4,6 +4,8 @@
 #include "clang/AST/ExprCXX.h"
 #include "llvm/Support/Debug.h"
 
+#include <iostream>
+
 namespace sc_ast_matchers {
 namespace utils {
 namespace array_type {
@@ -50,11 +52,11 @@ IndexMapType getArrayInstanceIndex(
         //
 
         if (slit) {
-        LLVM_DEBUG(llvm::dbgs()
-                       << "Argument 1d: [" << i << ", "
-                       << "x, x ] " << slit->getString().str() << " \n";);
-        indices.insert(
-            IndexPairType(slit->getString().str(), std::make_tuple(i, 0, 0)));
+          LLVM_DEBUG(llvm::dbgs()
+                         << "Argument 1d: [" << i << ", "
+                         << "x, x ] " << slit->getString().str() << " \n";);
+          indices.insert(
+              IndexPairType(slit->getString().str(), std::make_tuple(i, 0, 0)));
         }
       }
 
@@ -67,51 +69,72 @@ IndexMapType getArrayInstanceIndex(
                          << "Iterate over 2d init lists: " << j << "\n";);
           clang::Expr *iexpr_2d{iexpr_2d_set[j]};
 
-          // iexpr_2d->dump();
           /// Get the constructor argument.
-          if (auto cexpr = clang::dyn_cast<clang::CXXConstructExpr>(iexpr_2d)) {
-            clang::CXXConstructExpr *nested_cexpr{
-                clang::dyn_cast<clang::CXXConstructExpr>(
-                    cexpr->getArg(0)->IgnoreImplicit())};
+          // Unwrap CXXConstructExpr
+          clang::CXXConstructExpr *peel{
+              clang::dyn_cast<clang::CXXConstructExpr>(iexpr_2d)};
+          clang::CXXConstructExpr *cexpr{nullptr};
+          while (peel) {
+            cexpr = peel;
+            peel = clang::dyn_cast<clang::CXXConstructExpr>(
+                peel->getArg(0)->IgnoreImplicit());
+          }
+          llvm::dbgs() << "unwrap 2d dump\n";
+          cexpr->dump();
+
+          if (cexpr) {  // auto cexpr =
+                        // clang::dyn_cast<clang::CXXConstructExpr>(iexpr_2d)) {
+            llvm::dbgs() << "0 arg dump\n";
             clang::StringLiteral *slit{clang::dyn_cast<clang::StringLiteral>(
-                nested_cexpr->getArg(0)->IgnoreImpCasts())};
-            if (slit) {
-            LLVM_DEBUG(llvm::dbgs() << "Argument 2d: [" << i << ", " << j << "] "
-                                   << slit->getString().str() << " \n";);
+                cexpr->getArg(0)->IgnoreImpCasts())};
+            LLVM_DEBUG(llvm::dbgs()
+                           << "Argument 2d: [" << i << ", " << j << "] "
+                           << slit->getString().str() << " \n";);
             indices.insert(IndexPairType(slit->getString().str(),
                                          std::make_tuple(i, j, 0)));
-            }
           }
 
           /// Level 3
           if (auto init_expr_list_3d =
                   clang::dyn_cast<clang::InitListExpr>(iexpr_2d)) {
             clang::Expr **iexpr_3d_set{init_expr_list_3d->getInits()};
+            init_expr_list_3d->dump();
             for (std::size_t k{0}; k < init_expr_list_3d->getNumInits(); ++k) {
               LLVM_DEBUG(llvm::dbgs()
                              << "Iterate over 3d init lists: " << k << "\n";);
               clang::Expr *iexpr_3d{iexpr_3d_set[k]};
-              // iexpr_3d->dump();
+              iexpr_3d->dump();
 
-              if (auto cexpr =
-                      clang::dyn_cast<clang::CXXConstructExpr>(iexpr_3d)) {
-                clang::CXXConstructExpr *nested_cexpr{
-                    clang::dyn_cast<clang::CXXConstructExpr>(
-                        cexpr->getArg(0)->IgnoreImplicit())};
-                auto cxxbindexpr{clang::dyn_cast<clang::CXXBindTemporaryExpr>(
-                    nested_cexpr->getArg(0)->IgnoreParenImpCasts())};
-                auto cxxctor{clang::dyn_cast<clang::CXXConstructExpr>(
-                    cxxbindexpr->getSubExpr()->IgnoreParenImpCasts())};
+              clang::CXXConstructExpr *peel{
+                  clang::dyn_cast<clang::CXXConstructExpr>(iexpr_3d)};
+              clang::CXXConstructExpr *cexpr{nullptr};
+              while (peel) {
+                cexpr = peel;
+                peel = clang::dyn_cast<clang::CXXConstructExpr>(
+                    peel->getArg(0)->IgnoreImplicit());
+              }
+              llvm::dbgs() << "unwrap 3d dump\n";
+              cexpr->dump();
+
+              if (cexpr) {
+                // auto cexpr =
+                      // clang::dyn_cast<clang::CXXConstructExpr>(iexpr_3d)) {
+                // clang::CXXConstructExpr *nested_cexpr{
+                    // clang::dyn_cast<clang::CXXConstructExpr>(
+                        // cexpr->getArg(0)->IgnoreImplicit())};
+                // auto cxxbindexpr{clang::dyn_cast<clang::CXXBindTemporaryExpr>(
+                    // nested_cexpr->getArg(0)->IgnoreParenImpCasts())};
+                // auto cxxctor{clang::dyn_cast<clang::CXXConstructExpr>(
+                    // cxxbindexpr->getSubExpr()->IgnoreParenImpCasts())};
                 clang::StringLiteral *slit{
                     clang::dyn_cast<clang::StringLiteral>(
-                        cxxctor->getArg(0)->IgnoreImpCasts())};
+                        cexpr->getArg(0)->IgnoreImpCasts())};
                 // slit->dump();
-                if (slit) {
-                LLVM_DEBUG(llvm::dbgs() << "Argument 3d: [" << i << ", " << j << ", " << k
-                             << "] " << slit->getString().str() << " \n";);
-                indices.insert(IndexPairType(slit->getString().str(),
-                                             std::make_tuple(i, j, k)));
-                }
+                  LLVM_DEBUG(llvm::dbgs() << "Argument 3d: [" << i << ", " << j
+                                          << ", " << k << "] "
+                                          << slit->getString().str() << " \n";);
+                  indices.insert(IndexPairType(slit->getString().str(),
+                                               std::make_tuple(i, j, k)));
               }
             }
           }
@@ -172,10 +195,10 @@ ArraySizesExprType getArraySubscripts(const clang::Expr *expr) {
     }
 
     if (decl_ref_expr) {
-      LLVM_DEBUG(
-      llvm::dbgs() << "SUBSCRIPT: "
-                   << decl_ref_expr->getNameInfo().getName().getAsString()
-                   << "\n";);
+      LLVM_DEBUG(llvm::dbgs()
+                     << "SUBSCRIPT: "
+                     << decl_ref_expr->getNameInfo().getName().getAsString()
+                     << "\n";);
       subscripts.insert(subscripts.begin(), decl_ref_expr);
       /// TODO: Need to insert into subscripts, but it should really be Expr
       /// that is the value element. So, change subscripts to hold that, and
