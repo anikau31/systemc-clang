@@ -127,7 +127,9 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     } else {
       VisitCallExpr((CallExpr *)stmt);
     }
-  } else if (isa<BinaryOperator>(stmt)) {
+  }
+  /*
+  else if (isa<BinaryOperator>(stmt)) {
     RecursiveASTVisitor::TraverseStmt(stmt);
     // VisitBinaryOperator((BinaryOperator *)stmt);
   } else if (isa<UnaryOperator>(stmt)) {
@@ -165,7 +167,8 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     LLVM_DEBUG(llvm::dbgs() << "Found while stmt\n");
     // VisitWhileStmt((WhileStmt *)stmt);
     RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<DoStmt>(stmt)) {
+  }
+  else if (isa<DoStmt>(stmt)) {
     LLVM_DEBUG(llvm::dbgs() << "Found do-while stmt\n");
     // VisitDoStmt((DoStmt *)stmt);
     RecursiveASTVisitor::TraverseStmt(stmt);
@@ -175,40 +178,37 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     RecursiveASTVisitor::TraverseStmt(stmt);
   } else if (isa<CaseStmt>(stmt)) {
     RecursiveASTVisitor::TraverseStmt(stmt);
-    /*
-    LLVM_DEBUG(llvm::dbgs() << "Found case stmt\n");
-    hNodep old_hret = h_ret;
-    hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
-    if (ConstantExpr *expr =
-            dyn_cast<ConstantExpr>(((CaseStmt *)stmt)->getLHS())) {
-      llvm::APSInt val = expr->getResultAsAPSInt();
-      hcasep->child_list.push_back(
-          new hNode(systemc_clang::utils::apint::toString(val),
-                    hNode::hdlopsEnum::hLiteral));
-    }
-
-    TraverseStmt(((CaseStmt *)stmt)->getSubStmt());
-    if (h_ret != old_hret)
-      hcasep->child_list.push_back(h_ret);
-    else
-      hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
-
-    h_ret = hcasep;
-    */
+    // LLVM_DEBUG(llvm::dbgs() << "Found case stmt\n");
+    // hNodep old_hret = h_ret;
+    // hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
+    // if (ConstantExpr *expr =
+            // dyn_cast<ConstantExpr>(((CaseStmt *)stmt)->getLHS())) {
+      // llvm::APSInt val = expr->getResultAsAPSInt();
+      // hcasep->child_list.push_back(
+          // new hNode(systemc_clang::utils::apint::toString(val),
+                    // hNode::hdlopsEnum::hLiteral));
+    // }
+//
+    // TraverseStmt(((CaseStmt *)stmt)->getSubStmt());
+    // if (h_ret != old_hret)
+      // hcasep->child_list.push_back(h_ret);
+    // else
+      // hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+//
+    // h_ret = hcasep;
   } else if (isa<DefaultStmt>(stmt)) {
     RecursiveASTVisitor::TraverseStmt(stmt);
-    /*
-    LLVM_DEBUG(llvm::dbgs() << "Found default stmt\n");
-    hNodep old_hret = h_ret;
-    hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
-    TraverseStmt(((DefaultStmt *)stmt)->getSubStmt());
-    if (h_ret != old_hret)
-      hcasep->child_list.push_back(h_ret);
-    else
-      hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
-    h_ret = hcasep;
-    */
-  } else if (isa<BreakStmt>(stmt)) {
+    // LLVM_DEBUG(llvm::dbgs() << "Found default stmt\n");
+    // hNodep old_hret = h_ret;
+    // hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
+    // TraverseStmt(((DefaultStmt *)stmt)->getSubStmt());
+    // if (h_ret != old_hret)
+      // hcasep->child_list.push_back(h_ret);
+    // else
+      // hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+    // h_ret = hcasep;
+  }
+else if (isa<BreakStmt>(stmt)) {
     // const unsigned cxx_record_id =
     // diag_e.getCustomDiagID(clang::DiagnosticsEngine::Remark,
     //           "Break stmt not supported, substituting noop");
@@ -218,33 +218,28 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
 
     RecursiveASTVisitor::TraverseStmt(stmt);
     // VisitBreakStmt((BreakStmt*)stmt);
-    /*
-    LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
-    h_ret = new hNode(thismode == rthread ? hNode::hdlopsEnum::hReturnStmt
-                                          : hNode::hdlopsEnum::hBreak);
-                                          */
+    // LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
+    // h_ret = new hNode(thismode == rthread ? hNode::hdlopsEnum::hReturnStmt
+                                          // : hNode::hdlopsEnum::hBreak);
 
   } else if (isa<ContinueStmt>(stmt)) {
     RecursiveASTVisitor::TraverseStmt(stmt);
     // VisitContinueStmt((ContinueStmt*)stmt);
 
-    /*
-    LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
-    h_ret = new hNode(hNode::hdlopsEnum::hContinue);
-    */
-  } else if (isa<CXXDefaultArgExpr>(stmt)) {
+    // LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
+    // h_ret = new hNode(hNode::hdlopsEnum::hContinue);
+  } */
+  else if (isa<CXXDefaultArgExpr>(stmt)) {
     TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
   } else if (isa<ReturnStmt>(stmt)) {
     RecursiveASTVisitor::TraverseStmt(stmt);
     // VisitReturnStmt((ReturnStmt*)stmt);
-    /*
-    hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
-    if (((ReturnStmt *)stmt)->getRetValue() != nullptr) {
-      TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
-      hretstmt->child_list.push_back(h_ret);
-    }
-    h_ret = hretstmt;
-    */
+    // hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
+    // if (((ReturnStmt *)stmt)->getRetValue() != nullptr) {
+      // TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
+      // hretstmt->child_list.push_back(h_ret);
+    // }
+    // h_ret = hretstmt;
   } else if (isa<CXXTemporaryObjectExpr>(stmt)) {
     RecursiveASTVisitor::TraverseStmt(stmt);
     // VisitCXXTemporaryObjectExpr((CXXTemporaryObjectExpr*) stmt);
@@ -261,22 +256,22 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
       }
     }
     */
-  } else if (isa<InitListExpr>(stmt)) {
+  } /*
+       else if (isa<InitListExpr>(stmt)) {
     RecursiveASTVisitor::TraverseStmt(stmt);
     // VisitInitListExpr((InitListExpr*)stmt);
-    /*
-  hNodep h_initlist = new hNode(hNode::hdlopsEnum::hVarInitList);
-  for (auto tmpexpr : ((InitListExpr *)stmt)->inits()) {
-    TraverseStmt(tmpexpr);
-    h_initlist->append(h_ret);
-  }
-  h_ret = h_initlist;
-  */
-  } else {
-    if (isa<CXXConstructExpr>(stmt)) {
+  // hNodep h_initlist = new hNode(hNode::hdlopsEnum::hVarInitList);
+  // for (auto tmpexpr : ((InitListExpr *)stmt)->inits()) {
+    // TraverseStmt(tmpexpr);
+    // h_initlist->append(h_ret);
+  // }
+  // h_ret = h_initlist;
 
+  } */
+else {
+    if (isa<CXXConstructExpr>(stmt)) {
       // RecursiveASTVisitor::TraverseStmt(stmt);
-     // VisitCXXConstructExpr((CXXConstructExpr*)stmt);
+      // VisitCXXConstructExpr((CXXConstructExpr*)stmt);
       CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
       if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
         LLVM_DEBUG(llvm::dbgs()
@@ -323,11 +318,10 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
 }
 
 bool HDLBody::VisitContinueStmt(ContinueStmt *stmt) {
+  LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
+  h_ret = new hNode(hNode::hdlopsEnum::hContinue);
 
-    LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
-    h_ret = new hNode(hNode::hdlopsEnum::hContinue);
-
-    return false;
+  return false;
 }
 
 bool HDLBody::VisitBreakStmt(BreakStmt *stmt) {
@@ -399,7 +393,7 @@ bool HDLBody::VisitInitListExpr(InitListExpr *stmt) {
 }
 
 bool HDLBody::VisitCXXConstructExpr(CXXConstructExpr *stmt) {
-  CXXConstructExpr *exp = stmt; //(CXXConstructExpr *)stmt;
+  CXXConstructExpr *exp = stmt;  //(CXXConstructExpr *)stmt;
   if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
     LLVM_DEBUG(llvm::dbgs()
                << "CXXConstructExpr followed by integer literal found\n");
@@ -1128,7 +1122,7 @@ bool HDLBody::VisitMemberExpr(MemberExpr *memberexpr) {
                       hNode::hdlopsEnum::hVarref);
         memexprnode->child_list.push_back(h_ret);
         h_ret = memexprnode;
-  return false;
+        return false;
       }
     }
   }
