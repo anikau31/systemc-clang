@@ -240,7 +240,7 @@ namespace hnode {
     };
     int scbtlen [ numstr ];
     const set<std::string> sc_built_in_funcs{
-      "concat", "wait", "range", "bit", "or_reduce", "xor_reduce", "nor_reduce","and_reduce", "nand_reduce"};
+      "concat", "wait", "range", "bit", "or_reduce", "xor_reduce", "nor_reduce","xnor_reduce", "and_reduce", "nand_reduce"};
     
     util() {
       for (int i=0; i < numstr; i++)

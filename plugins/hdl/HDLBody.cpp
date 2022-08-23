@@ -181,7 +181,7 @@ using namespace sc_ast_matchers::utils;
       if (h_ret != old_hret)
 	hcasep->child_list.push_back(h_ret);
       else
-	hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+	hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hNoop));
       h_ret = hcasep;
     } else if (isa<BreakStmt>(stmt)) {
       //const unsigned cxx_record_id =
@@ -558,6 +558,7 @@ using namespace sc_ast_matchers::utils;
 
        if (t1 != t2) {
          llvm::dbgs() << "@@@@ CHECK isSCFunc failed " << t1 << " t2 " << t2 << " name " << name << "\n";
+	 assert(0);
          // std::cin.get();
        }
       // ============= END CHECK ================

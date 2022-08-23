@@ -299,13 +299,48 @@ namespace systemc_hdl {
       }
     }
     else if (hsubmodport->h_name ==  arrsub) { // check Case 1, 3
+    // Case 1: hBinop () [
+    //         hBinop ARRAYSUBSCRIPT [
+    //           hVarref u_fwd_cast##m_block NOLIST
+    //           hVarref _local_0 NOLIST
+    //         ]
+    //         hBinop ARRAYSUBSCRIPT [
+    //           hVarref c_fc_block NOLIST
+    //           hVarref _local_0 NOLIST
+    //         ]
+    //       ]
+    //     ]
+
+    // Case 3: hBinop () [
+    // hBinop ARRAYSUBSCRIPT [
+    //     hVarref m_port [
+    //       hBinop ARRAYSUBSCRIPT [
+    //         hVarref u_xt NOLIST
+    //         hVarref _local_0 NOLIST
+    //       ]
+    //     ]
+    //     hVarref _local_1 NOLIST
+    //   ]
+    //   hBinop ARRAYSUBSCRIPT [
+    //     hBinop ARRAYSUBSCRIPT [
+    //       hVarref c_xt_data NOLIST
+    //       hVarref _local_0 NOLIST
+    //     ]
+    //     hVarref _local_1 NOLIST
+    //   ]
+    // ]
+
       hNodep hportchild = hsubmodport->child_list[0];
       hNodep hparent = hsubmodport;
+      std::vector<hNodep> hmodarrix;
       
       while ((hportchild != nullptr) &&
 	     ((hportchild->h_name == arrsub) ||
 	      ((hportchild->h_op == hNode::hdlopsEnum::hVarref) &&
 	       (hportchild->child_list.size() > 0)))) {
+	if (hportchild->h_name == arrsub) {
+	    hmodarrix.push_back(hportchild->child_list[1]); // save i in A[i]
+	  }
 	hparent = hportchild;
 	hportchild = hportchild->child_list[0];
       }
@@ -318,16 +353,26 @@ namespace systemc_hdl {
 	    submod = submod.substr(0, found);
 	  }
 	  else { // Varref has child; need to handle Case 3 by removing the (arraysubscript submod ix) node
-	    hNodep hsubmodixname = hparent->child_list[1];
-	    string ixname = hsubmodixname->h_name;
-	    for (int i = 0; i < for_info.size(); i++) {
-	      if (for_info[i].name == ixname) {
-		submod+=tokendelim+to_string(for_info[i].curix);
-		break;
+	    for (hNodep hsubmodixname:hmodarrix) {
+	      // assume simple case of "i" not "i+1" or "i+j"
+	      assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
+	      string ixname = hsubmodixname->h_name;
+	      for (int i = 0; i < for_info.size(); i++) {
+		if (for_info[i].name == ixname) {
+		  submod+=tokendelim+to_string(for_info[i].curix);
+		  break;
+		}
 	      }
 	    }
-	    hparent->h_op = hNode::hdlopsEnum::hNoop; // get rid of mod instance reference
-	    hparent->child_list.clear();
+	    hparent = hsubmodport; 
+	    hportchild = hsubmodport->child_list[0];
+	    while ((hportchild != nullptr) && (hportchild->h_name != arrsub)) {
+	      hparent = hportchild;
+	      hportchild = hportchild->child_list[0];
+	    }
+	    if (hportchild != nullptr) { // it's an array subscript
+	      hparent->child_list.erase(hparent->child_list.begin());
+	    }
 	  }
 	} 
       }
