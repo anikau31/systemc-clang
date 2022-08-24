@@ -110,34 +110,33 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   if (stmt == nullptr)
     return false;  // null statement, keep going
                    // Actually with RVT we should return false instead.
-  if (isa<CallExpr>(stmt)) {
+
+  if (isa<CompoundStmt>(stmt)) {
+    LLVM_DEBUG(llvm::dbgs()
+               << "calling traverse compoundstmt from traversestmt\n");
+    VisitCompoundStmt((CompoundStmt *)stmt);
+  } else if (isa<DeclStmt>(stmt)) {
+    RecursiveASTVisitor::TraverseStmt(stmt);
+    // VisitDeclStmt((DeclStmt *)stmt);
+  } else if (isa<CallExpr>(stmt)) {
     if (CXXOperatorCallExpr *opercall = dyn_cast<CXXOperatorCallExpr>(stmt)) {
       LLVM_DEBUG(llvm::dbgs() << "found cxxoperatorcallexpr\n");
       VisitCXXOperatorCallExpr(opercall);
     } else if (isa<CXXMemberCallExpr>(stmt)) {
       VisitCXXMemberCallExpr((CXXMemberCallExpr *)stmt);
     } else {
-      RecursiveASTVisitor::TraverseStmt(stmt);
-      // VisitCallExpr((CallExpr *)stmt);
+      VisitCallExpr((CallExpr *)stmt);
     }
+  } else if (isa<CXXDefaultArgExpr>(stmt)) {
+    TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
+  } else if (isa<ReturnStmt>(stmt)) {
+    RecursiveASTVisitor::TraverseStmt(stmt);
   } else if (isa<CXXTemporaryObjectExpr>(stmt)) {
-    // RecursiveASTVisitor::TraverseStmt(stmt);
-    int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
-    if (nargs == 0) {  // end of the road
-      h_ret = new hNode(
-          "0",
-          (hNode::hdlopsEnum::hLiteral));  // assume this is an initializer of 0
-    } else {
-      Expr **objargs = ((CXXTemporaryObjectExpr *)stmt)->getArgs();
-      for (int i = 0; i < nargs; i++) {
-        TraverseStmt(objargs[i]);
-      }
-    }
+    RecursiveASTVisitor::TraverseStmt(stmt);
   } else {
     if (isa<CXXConstructExpr>(stmt)) {
-      // if (VisitCXXConstructExpr((CXXConstructExpr *)stmt)) {
-        // return true;
-      // }
+      // RecursiveASTVisitor::TraverseStmt(stmt);
+      // VisitCXXConstructExpr((CXXConstructExpr*)stmt);
       CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
       if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
         LLVM_DEBUG(llvm::dbgs()
@@ -159,10 +158,7 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     LLVM_DEBUG(llvm::dbgs()
                << "stmt type " << stmt->getStmtClassName()
                << " not recognized, calling default recursive ast visitor\n");
-    hNodep oldh_ret{nullptr};
-    if (oldh_ret != h_ret) {
-      oldh_ret = h_ret;
-    }
+    hNodep oldh_ret = h_ret;
     RecursiveASTVisitor::TraverseStmt(stmt);
     if (h_ret != oldh_ret) {
       LLVM_DEBUG(
@@ -235,7 +231,6 @@ bool HDLBody::VisitReturnStmt(ReturnStmt *stmt) {
   return false;
 }
 
-/*
 bool HDLBody::VisitCXXTemporaryObjectExpr(CXXTemporaryObjectExpr *stmt) {
   int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
   if (nargs == 0) {  // end of the road
@@ -251,7 +246,6 @@ bool HDLBody::VisitCXXTemporaryObjectExpr(CXXTemporaryObjectExpr *stmt) {
 
   return false;
 }
-*/
 
 bool HDLBody::VisitInitListExpr(InitListExpr *stmt) {
   hNodep h_initlist = new hNode(hNode::hdlopsEnum::hVarInitList);
@@ -263,7 +257,6 @@ bool HDLBody::VisitInitListExpr(InitListExpr *stmt) {
   return false;
 }
 
-/*
 bool HDLBody::VisitCXXConstructExpr(CXXConstructExpr *stmt) {
   CXXConstructExpr *exp = stmt;  //(CXXConstructExpr *)stmt;
   if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
@@ -283,9 +276,8 @@ bool HDLBody::VisitCXXConstructExpr(CXXConstructExpr *stmt) {
     return true;
   }
 
-  return false;
+  return true;
 }
-*/
 
 bool HDLBody::VisitDefaultStmt(DefaultStmt *stmt) {
   LLVM_DEBUG(llvm::dbgs() << "Found default stmt\n");
@@ -302,9 +294,7 @@ bool HDLBody::VisitDefaultStmt(DefaultStmt *stmt) {
 
 bool HDLBody::VisitCompoundStmt(CompoundStmt *cstmt) {
   // Traverse each statement and append it to the array
-  LLVM_DEBUG(llvm::dbgs() << "In VisitCompoundStmt\n";);
   hNodep h_cstmt = new hNode(hNode::hdlopsEnum::hCStmt);
-  // std::cin.get();
 
   for (clang::Stmt *stmt : cstmt->body()) {
     TraverseStmt(stmt);
@@ -325,7 +315,7 @@ bool HDLBody::VisitCompoundStmt(CompoundStmt *cstmt) {
   }
 
   h_ret = h_cstmt;
-  return false;
+  return true;
 }
 
 //!
@@ -572,7 +562,7 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
                << "got enum constant value " << cd->getInitVal() << "\n");
     h_ret = new hNode(systemc_clang::utils::apint::toString(cd->getInitVal()),
                       hNode::hdlopsEnum::hLiteral);
-    return false;
+    return true;
   }
 
   // get a name
@@ -589,7 +579,7 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
       h_ret =
           new hNode(systemc_clang::utils::apint::toString(result.Val.getInt()),
                     hNode::hdlopsEnum::hLiteral);
-      return false;
+      return true;
     }
   }
   if (isa<FunctionDecl>(value)) {
@@ -629,17 +619,17 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
           hfuncall->set(tmpname);
       }
       h_ret = hfuncall;
-      return false;
+      return true;
     } else {  // here it is an SCFunc
       string typname = (expr->getType()).getAsString();
       if (typname.find("sc_dt::sc_concat") != std::string::npos) {
         // found concat function call
         hNodep hconcat = new hNode(name, hNode::hdlopsEnum::hBinop);
         h_ret = hconcat;
-        return false;
+        return true;
       }
       h_ret = new hNode(name, hNode::hdlopsEnum::hBuiltinFunction);
-      return false;
+      return true;
       // may have other special functions to recognize later
     }
   }
@@ -650,10 +640,10 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
 
   h_ret =
       new hNode(newname.empty() ? name : newname, hNode::hdlopsEnum::hVarref);
-  return false;
+  return true;
 }
 
-bool HDLBody::VisitArraySubscriptExpr(ArraySubscriptExpr *expr) {
+bool HDLBody::TraverseArraySubscriptExpr(ArraySubscriptExpr *expr) {
   LLVM_DEBUG(llvm::dbgs()
              << "In TraverseArraySubscriptExpr, base, idx, tree follow\n");
   LLVM_DEBUG(llvm::dbgs() << "base:\n");
@@ -668,7 +658,7 @@ bool HDLBody::VisitArraySubscriptExpr(ArraySubscriptExpr *expr) {
   TraverseStmt(expr->getRHS());
   h_arrexpr->child_list.push_back(h_ret);
   h_ret = h_arrexpr;
-  return false;
+  return true;
 }
 
 bool HDLBody::VisitCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
@@ -849,9 +839,9 @@ bool HDLBody::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
   hNodep h_operop;
 
   LLVM_DEBUG(llvm::dbgs() << "In TraverseCXXOperatorCallExpr, Operator name is "
-                          << operatorname << "\n";
-             llvm::dbgs() << "Type name " << operatortype << "\n";
-             opcall->getType()->dump(llvm::dbgs(), ast_context_););
+                          << operatorname << "\n");
+  LLVM_DEBUG(llvm::dbgs() << "Type name " << operatortype << "\n");
+  LLVM_DEBUG(opcall->getType()->dump(llvm::dbgs(), ast_context_));
 
   // ========================== CHECK  2=====================
   const Type *optypepointer = opcall->getType().getTypePtr();
@@ -1022,7 +1012,7 @@ bool HDLBody::VisitCallExpr(CallExpr *callexpr) {
             res, callexpr->getCalleeDecl()->getASTContext())) {
       h_ret = new hNode(systemc_clang::utils::apint::toString(res.Val.getInt()),
                         hNode::hdlopsEnum::hLiteral);
-      return false;
+      return true;
     }
   }
 
@@ -1050,7 +1040,7 @@ bool HDLBody::VisitCallExpr(CallExpr *callexpr) {
   LLVM_DEBUG(llvm::dbgs() << "found a call expr"
                           << " AST follows\n ");
   LLVM_DEBUG(callexpr->dump(llvm::dbgs(), ast_context_););
-  return false;
+  return true;
 }
 
 bool HDLBody::VisitIfStmt(IfStmt *ifs) {

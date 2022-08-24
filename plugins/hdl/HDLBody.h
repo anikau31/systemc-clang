@@ -61,16 +61,16 @@ class HDLBody : public RecursiveASTVisitor<HDLBody> {
   bool VisitDeclStmt(DeclStmt *declstmt);
   bool VisitCompoundStmt(CompoundStmt *compoundStmt);
   bool VisitDefaultStmt(DefaultStmt *stmt);
-  // bool VisitCXXConstructExpr(CXXConstructExpr *exp);
+  bool VisitCXXConstructExpr(CXXConstructExpr *exp);
   bool VisitInitListExpr(InitListExpr *stmt);
-  // bool VisitCXXTemporaryObjectExpr(CXXTemporaryObjectExpr *stmt);
+  bool VisitCXXTemporaryObjectExpr(CXXTemporaryObjectExpr *stmt);
   bool VisitReturnStmt(ReturnStmt *stmt);
   bool VisitCaseStmt(CaseStmt *stmt);
   bool VisitBreakStmt(BreakStmt *stmt);
   bool VisitContinueStmt(ContinueStmt *stmt);
 
   /// TODO: causes problems
-  bool VisitArraySubscriptExpr(ArraySubscriptExpr *expr);
+  bool TraverseArraySubscriptExpr(ArraySubscriptExpr *expr);
 
   bool TraverseStmt(Stmt *stmt);
   bool ProcessVarDecl(VarDecl *vardecl);
