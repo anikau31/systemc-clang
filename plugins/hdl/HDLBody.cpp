@@ -127,148 +127,10 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     } else {
       VisitCallExpr((CallExpr *)stmt);
     }
-  }
-  /*
-  else if (isa<BinaryOperator>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitBinaryOperator((BinaryOperator *)stmt);
-  } else if (isa<UnaryOperator>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitUnaryOperator((UnaryOperator *)stmt);
-  } else if (isa<ConditionalOperator>(stmt)) {
-    // VisitConditionalOperator((ConditionalOperator *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<MaterializeTemporaryExpr>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // TraverseStmt(((MaterializeTemporaryExpr *)stmt)->getSubExpr());
-    // TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary());
-  } else if (isa<DeclRefExpr>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitDeclRefExpr((DeclRefExpr *)stmt);
-  } else if (isa<MemberExpr>(stmt)) {
-    // RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitMemberExpr((MemberExpr *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<IntegerLiteral>(stmt)) {
-    // VisitIntegerLiteral((IntegerLiteral *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<CXXBoolLiteralExpr>(stmt)) {
-    // VisitCXXBoolLiteralExpr((CXXBoolLiteralExpr *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<IfStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found if stmt\n");
-    // VisitIfStmt((IfStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<ForStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found for stmt\n");
-    // VisitForStmt((ForStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<WhileStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found while stmt\n");
-    // VisitWhileStmt((WhileStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  }
-  else if (isa<DoStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found do-while stmt\n");
-    // VisitDoStmt((DoStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<SwitchStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found switch stmt\n");
-    // VisitSwitchStmt((SwitchStmt *)stmt);
-    RecursiveASTVisitor::TraverseStmt(stmt);
-  } else if (isa<CaseStmt>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // LLVM_DEBUG(llvm::dbgs() << "Found case stmt\n");
-    // hNodep old_hret = h_ret;
-    // hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
-    // if (ConstantExpr *expr =
-            // dyn_cast<ConstantExpr>(((CaseStmt *)stmt)->getLHS())) {
-      // llvm::APSInt val = expr->getResultAsAPSInt();
-      // hcasep->child_list.push_back(
-          // new hNode(systemc_clang::utils::apint::toString(val),
-                    // hNode::hdlopsEnum::hLiteral));
-    // }
-//
-    // TraverseStmt(((CaseStmt *)stmt)->getSubStmt());
-    // if (h_ret != old_hret)
-      // hcasep->child_list.push_back(h_ret);
-    // else
-      // hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
-//
-    // h_ret = hcasep;
-  } else if (isa<DefaultStmt>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // LLVM_DEBUG(llvm::dbgs() << "Found default stmt\n");
-    // hNodep old_hret = h_ret;
-    // hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
-    // TraverseStmt(((DefaultStmt *)stmt)->getSubStmt());
-    // if (h_ret != old_hret)
-      // hcasep->child_list.push_back(h_ret);
-    // else
-      // hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
-    // h_ret = hcasep;
-  }
-else if (isa<BreakStmt>(stmt)) {
-    // const unsigned cxx_record_id =
-    // diag_e.getCustomDiagID(clang::DiagnosticsEngine::Remark,
-    //           "Break stmt not supported, substituting noop");
-    // clang::DiagnosticBuilder diag_builder{
-    // diag_e.Report(stmt->getBeginLoc(), cxx_record_id)};
-    //
-
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitBreakStmt((BreakStmt*)stmt);
-    // LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
-    // h_ret = new hNode(thismode == rthread ? hNode::hdlopsEnum::hReturnStmt
-                                          // : hNode::hdlopsEnum::hBreak);
-
-  } else if (isa<ContinueStmt>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitContinueStmt((ContinueStmt*)stmt);
-
-    // LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
-    // h_ret = new hNode(hNode::hdlopsEnum::hContinue);
-  } */
-  else if (isa<CXXDefaultArgExpr>(stmt)) {
+  } else if (isa<CXXDefaultArgExpr>(stmt)) {
+    /// Removal: Introduces hUnImpl nodes.
     TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
-  } else if (isa<ReturnStmt>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitReturnStmt((ReturnStmt*)stmt);
-    // hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
-    // if (((ReturnStmt *)stmt)->getRetValue() != nullptr) {
-      // TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
-      // hretstmt->child_list.push_back(h_ret);
-    // }
-    // h_ret = hretstmt;
-  } else if (isa<CXXTemporaryObjectExpr>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitCXXTemporaryObjectExpr((CXXTemporaryObjectExpr*) stmt);
-    /*
-    int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
-    if (nargs == 0) {  // end of the road
-      h_ret = new hNode(
-          "0",
-          (hNode::hdlopsEnum::hLiteral));  // assume this is an initializer of 0
-    } else {
-      Expr **objargs = ((CXXTemporaryObjectExpr *)stmt)->getArgs();
-      for (int i = 0; i < nargs; i++) {
-        TraverseStmt(objargs[i]);
-      }
-    }
-    */
-  } /*
-       else if (isa<InitListExpr>(stmt)) {
-    RecursiveASTVisitor::TraverseStmt(stmt);
-    // VisitInitListExpr((InitListExpr*)stmt);
-  // hNodep h_initlist = new hNode(hNode::hdlopsEnum::hVarInitList);
-  // for (auto tmpexpr : ((InitListExpr *)stmt)->inits()) {
-    // TraverseStmt(tmpexpr);
-    // h_initlist->append(h_ret);
-  // }
-  // h_ret = h_initlist;
-
-  } */
-else {
+  } else {
     if (isa<CXXConstructExpr>(stmt)) {
       // RecursiveASTVisitor::TraverseStmt(stmt);
       // VisitCXXConstructExpr((CXXConstructExpr*)stmt);
@@ -408,10 +270,10 @@ bool HDLBody::VisitCXXConstructExpr(CXXConstructExpr *stmt) {
     HDLt.SCtype2hcode(s, te->getTemplateArgTreePtr(), 0,
                       hNode::hdlopsEnum::hLiteral, h_tmp);
     h_ret = h_tmp->child_list.back();
-    return true;
+    return false;
   }
 
-  return true;
+  return false;
 }
 
 bool HDLBody::VisitDefaultStmt(DefaultStmt *stmt) {
