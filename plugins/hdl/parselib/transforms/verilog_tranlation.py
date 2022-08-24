@@ -168,6 +168,7 @@ class VerilogTranslationPass(TopDown):
         res = '{} {} {}'.format(tree.children[1], tree.children[0], tree.children[2])
         return res
 
+
     def numlitwidth(self, tree):
         self.__push_up(tree)
         lit, tpe = tree.children
@@ -183,7 +184,7 @@ class VerilogTranslationPass(TopDown):
         """stops at literal, it is some kinds of terminal"""
         self.__push_up(tree)
         assert len(tree.children) == 1
-        return tree.children[0]
+        return str(tree.children[0])
 
     def hvarref(self, tree):
         assert len(tree.children) == 1
@@ -316,6 +317,9 @@ class VerilogTranslationPass(TopDown):
             return tree.children[0]
         else:
             return ''
+
+    def continuestmt(self, tree):
+        return 'continue'
 
     def get_current_ind_prefix(self):
         ind = self.current_indent * self.indent_character

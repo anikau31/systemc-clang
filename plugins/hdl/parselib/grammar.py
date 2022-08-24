@@ -75,17 +75,17 @@ lark_grammar = Lark('''
         ?htotype: htouint | htoint | htolong | htoulong | hnoop | htoi64 | htou64
              
         ?htobool: ("hBuiltinFunction" "to_bool" | "hNoop" "to_bool") "[" harrayref "]"
-        htouint: "hBuiltinFunction" "to_uint" "[" (syscread|hvarref) "]"
-        htoint: "hBuiltinFunction" "to_int" "[" (syscread|hvarref) "]"
-        htolong: "hBuiltinFunction" "to_long" "[" (syscread|hvarref) "]"
-        htoulong: "hBuiltinFunction" "to_ulong" "[" (syscread|hvarref) "]"
+        htouint: "hBuiltinFunction" "to_uint" "[" (syscread|hvarref|hslice) "]"
+        htoint: "hBuiltinFunction" "to_int" "[" (syscread|hvarref|hslice) "]"
+        htolong: "hBuiltinFunction" "to_long" "[" (syscread|hvarref|hslice) "]"
+        htoulong: "hBuiltinFunction" "to_ulong" "[" (syscread|hvarref|hslice) "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
-        htoi64: "hBuiltinFunction" "to_int64" "[" hvarref "]"
-        htou64: "hBuiltinFunction" "to_uint64" "[" hvarref "]"
+        htoi64: "hBuiltinFunction" "to_int64" "[" (hvarref|hslice) "]"
+        htou64: "hBuiltinFunction" "to_uint64" "[" (hvarref|hslice) "]"
         hscmin: "hBuiltinFunction" "sc_min" "[" expression expression "]"
         hscmax: "hBuiltinFunction" "sc_max" "[" expression expression "]"
         
-        hbuiltin: hscmin | hscmax
+        hbuiltin: hscmin | hscmax | hreduceop
         
         // hmodinitblock: 
         // first component is the id of the module (in parent?)
@@ -136,9 +136,9 @@ lark_grammar = Lark('''
         // Note: we don't make this a noraml statement as in the context of switch, 
         // we don't use general statements
         switchbody: "hCStmt" "NONAME" "[" ((casestmt* breakstmt?)+) "]"
-        casestmt: "hSwitchCase" "NONAME" "[" casevalue stmt+ "]" hnoop
+        casestmt: "hSwitchCase" "NONAME" "[" casevalue (casestmt | (stmt+)) breakstmt? "]" hnoop
                 | "hSwitchCase" "NONAME" "[" casevalue hnoop "]"
-                | "hSwitchCase" "NONAME" "[" casevalue stmt+ "]" 
+                | "hSwitchCase" "NONAME" "[" casevalue (casestmt | (stmt+)) breakstmt? "]" 
                 | "hSwitchDefault" "NONAME" "[" stmt+ "]"
         casevalue: expression
         
@@ -194,7 +194,7 @@ lark_grammar = Lark('''
                   
         hlrotate : "hBuiltinFunction" "lrotate" "[" expression expression "]"
         horreduce: "hBuiltinFunction" "or_reduce" "[" expression "]"
-        hcondop : "hCondop" "NONAME" "[" (hslice | hliteral | hbinop | hunop | syscread | hvarref | hmethodcall) (hslice | expression | hprefix) (hslice | expression | hpostfix) "]"
+        hcondop : "hCondop" "NONAME" "[" (hcondop | hslice | hliteral | hbinop | hunop | syscread | hvarref | hmethodcall) (hslice | expression | hprefix) (hslice | expression | hpostfix) "]"
 
         syscread : hsigassignr "[" (expression | harrayref) "]"
         syscwrite : hsigassignl "["  expression  (expression | hfieldaccess) "]"
@@ -214,12 +214,12 @@ lark_grammar = Lark('''
              | hpostfix
              | hprefix
              | hunopdec
-             | hreduceop
+             // | hreduceop
         hpostfix: "hPostfix" (UNOP_INC | UNOP_DEC) "[" expression "]"
         hprefix: "hPrefix" (UNOP_INC | UNOP_DEC) "[" expression "]"
         hunopdec: "hUnop" "-" "-" "[" expression "]" // hack to work with --
         
-        hreduceop: "hNoop" REDUCE_OP "[" expression "]"
+        hreduceop: "hBuiltinFunction" REDUCE_OP "[" expression "]"
         REDUCE_OP: "and_reduce" | "or_reduce" | "xor_reduce" | "nand_reduce" | "nor_reduce" | "xnor_reduce"
 
         // Separate '=' out from so that it is not an expression but a standalone statement
