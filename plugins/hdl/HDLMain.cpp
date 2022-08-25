@@ -12,6 +12,7 @@
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
 #include "clang/Basic/Diagnostic.h"
+
 #include "HDLHnode.h"
 #include "HDLThread.h"
 
@@ -422,6 +423,7 @@ namespace systemc_hdl {
 
 	      if (t1 != t2) {
 		llvm::dbgs() << "@@@@ isSCMacro does not match.  t1 = " << t1 << ", t2 = " << t2 << "  " << m.second.oldn << "\n";
+		assert(0 && "isSCMacro does not match");
 	      }
 	      // ============= END CHECK ==============
 	      //
@@ -623,15 +625,35 @@ namespace systemc_hdl {
 	  FieldDecl *fieldd = pd->getAsFieldDecl();
 	  if (fieldd) {
 	    LLVM_DEBUG(llvm::dbgs() << "field decl dump follows\n");
-	    LLVM_DEBUG(fieldd->dump(llvm::dbgs()));
+	    LLVM_DEBUG(fieldd->dump(llvm::dbgs())); 
 	    Expr* initializer = fieldd->getInClassInitializer();
 	    if (initializer != NULL) {
 	      LLVM_DEBUG(llvm::dbgs() << "field initializer dump follows\n");
 	      LLVM_DEBUG(initializer->dump(llvm::dbgs(), getContext()));
-	      hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);
-	      //HDLBody xmethod(initializer, h_init, main_diag_engine, getContext(), mod_vname_map);
-	      xbodyp->Run(initializer, h_init, rnomode);
-	      (h_info->child_list.back())->child_list.push_back(h_init);
+	      hNodep h_init = new hNode(hNode::hdlopsEnum::hVarInit);	   
+	      if (const CXXConstructExpr *ce = dyn_cast<CXXConstructExpr>(initializer->IgnoreUnlessSpelledInSource())) {
+		if (ce->isListInitialization()) {
+		  for (const auto arg : ce->arguments()) {
+		    const Expr *ex{arg->IgnoreUnlessSpelledInSource()};
+		    
+		    if (auto il = dyn_cast<IntegerLiteral>(ex)) {
+		      llvm::dbgs()  << ">> IntegerLiteral value is " << il->getValue() << "\n";
+		      h_init->append(new hNode(systemc_clang::utils::apint::toString(il->getValue()), hNode::hdlopsEnum::hLiteral));
+		    }
+		    
+		    if (auto booll = dyn_cast<CXXBoolLiteralExpr>(ex)) {
+		      bool val =  booll->getValue();
+		      llvm::dbgs() << ">> CXXBoolLiteralExpr value is "  << val << "\n";
+		      h_init->append(new hNode(to_string(val), hNode::hdlopsEnum::hLiteral));
+		      (h_info->child_list.back())->child_list.push_back(h_init);
+		    }
+		  }
+		}
+	      }
+	      else {
+		xbodyp->Run(initializer, h_init, rnomode);
+		(h_info->child_list.back())->child_list.push_back(h_init);
+	      }
 	    }
 	  }
 	}

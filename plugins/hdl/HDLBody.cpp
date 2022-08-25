@@ -231,7 +231,7 @@ using namespace sc_ast_matchers::utils;
 	// LLVM_DEBUG(llvm::dbgs()
 	// 	   << "CXXConstructExpr found, expr below\n");
 	// LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
-	 
+	
 	if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
 	  LLVM_DEBUG(llvm::dbgs()
 		     << "CXXConstructExpr followed by integer literal found\n");
