@@ -48,6 +48,10 @@ class HDLBody : public RecursiveASTVisitor<HDLBody> {
   bool VisitCXXMemberCallExpr(CXXMemberCallExpr *callexpr);
   bool VisitCallExpr(CallExpr *callexpr);
 
+  bool VisitCXXTemporaryObjectExpr(CXXTemporaryObjectExpr *stmt);
+  bool VisitReturnStmt(ReturnStmt *stmt);
+  bool VisitInitListExpr(InitListExpr *stmt);
+  bool VisitCaseStmt(CaseStmt *stmt);
   bool VisitDefaultStmt(DefaultStmt *stmt);
   bool VisitBreakStmt (BreakStmt *stmt);
   bool VisitContinueStmt(ContinueStmt *stmt);

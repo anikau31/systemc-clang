@@ -162,8 +162,9 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   } else if (isa<SwitchStmt>(stmt)) {
     LLVM_DEBUG(llvm::dbgs() << "Found switch stmt\n");
     VisitSwitchStmt((SwitchStmt *)stmt);
-  } */
+  }
   else if (isa<CaseStmt>(stmt)) {
+
     LLVM_DEBUG(llvm::dbgs() << "Found case stmt\n");
     hNodep old_hret = h_ret;
     hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
@@ -182,7 +183,7 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
       hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
 
     h_ret = hcasep;
-  } /* else if (isa<DefaultStmt>(stmt)) {
+  }  else if (isa<DefaultStmt>(stmt)) {
     LLVM_DEBUG(llvm::dbgs() << "Found default stmt\n");
     VisitDefaultStmt(stmt);
     // hNodep old_hret = h_ret;
@@ -209,32 +210,34 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   else if (isa<CXXDefaultArgExpr>(stmt)) {
     TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
   } else if (isa<ReturnStmt>(stmt)) {
-    hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
-    if (((ReturnStmt *)stmt)->getRetValue() != nullptr) {
-      TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
-      hretstmt->child_list.push_back(h_ret);
-    }
-    h_ret = hretstmt;
+    RecursiveASTVisitor::TraverseStmt(stmt);
+    // hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
+    // if (((ReturnStmt *)stmt)->getRetValue() != nullptr) {
+      // TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
+      // hretstmt->child_list.push_back(h_ret);
+    // }
+    // h_ret = hretstmt;
   } else if (isa<CXXTemporaryObjectExpr>(stmt)) {
-    int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
-    if (nargs == 0) {  // end of the road
-      h_ret = new hNode(
-          "0",
-          (hNode::hdlopsEnum::hLiteral));  // assume this is an initializer of 0
-    } else {
-      Expr **objargs = ((CXXTemporaryObjectExpr *)stmt)->getArgs();
-      for (int i = 0; i < nargs; i++) {
-        TraverseStmt(objargs[i]);
-      }
-    }
-  } else if (isa<InitListExpr>(stmt)) {
+    RecursiveASTVisitor::TraverseStmt(stmt);
+    // int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
+    // if (nargs == 0) {  // end of the road
+      // h_ret = new hNode(
+          // "0",
+          // (hNode::hdlopsEnum::hLiteral));  // assume this is an initializer of 0
+    // } else {
+      // Expr **objargs = ((CXXTemporaryObjectExpr *)stmt)->getArgs();
+      // for (int i = 0; i < nargs; i++) {
+        // TraverseStmt(objargs[i]);
+      // }
+    // }
+  } /*else if (isa<InitListExpr>(stmt)) {
     hNodep h_initlist = new hNode(hNode::hdlopsEnum::hVarInitList);
     for (auto tmpexpr : ((InitListExpr *)stmt)->inits()) {
       TraverseStmt(tmpexpr);
       h_initlist->append(h_ret);
     }
     h_ret = h_initlist;
-  } else {
+  } */ else {
     if (isa<CXXConstructExpr>(stmt)) {
       CXXConstructExpr *exp = (CXXConstructExpr *)stmt;
       // CXXConstructExpr argument not yet handled
@@ -284,6 +287,64 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   }
 
   return true;
+}
+
+bool HDLBody::VisitCXXTemporaryObjectExpr(CXXTemporaryObjectExpr *stmt) {
+int nargs = ((CXXTemporaryObjectExpr *)stmt)->getNumArgs();
+    if (nargs == 0) {  // end of the road
+      h_ret = new hNode(
+          "0",
+          (hNode::hdlopsEnum::hLiteral));  // assume this is an initializer of 0
+    } else {
+      Expr **objargs = ((CXXTemporaryObjectExpr *)stmt)->getArgs();
+      for (int i = 0; i < nargs; i++) {
+        TraverseStmt(objargs[i]);
+      }
+    }
+    return false;
+}
+
+bool HDLBody::VisitInitListExpr(InitListExpr *stmt) {
+  hNodep h_initlist = new hNode(hNode::hdlopsEnum::hVarInitList);
+  for (auto tmpexpr : ((InitListExpr *)stmt)->inits()) {
+    TraverseStmt(tmpexpr);
+    h_initlist->append(h_ret);
+  }
+  h_ret = h_initlist;
+  return false;
+}
+
+bool HDLBody::VisitReturnStmt(ReturnStmt *stmt) {
+hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
+    if (((ReturnStmt *)stmt)->getRetValue() != nullptr) {
+      TraverseStmt(((ReturnStmt *)stmt)->getRetValue());
+      hretstmt->child_list.push_back(h_ret);
+    }
+    h_ret = hretstmt;
+return false;
+}
+
+bool HDLBody::VisitCaseStmt(CaseStmt *stmt) {
+  LLVM_DEBUG(llvm::dbgs() << "Found case stmt\n");
+  hNodep old_hret = h_ret;
+  hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
+  if (ConstantExpr *expr =
+          dyn_cast<ConstantExpr>(((CaseStmt *)stmt)->getLHS())) {
+    llvm::APSInt val = expr->getResultAsAPSInt();
+    hcasep->child_list.push_back(
+        new hNode(systemc_clang::utils::apint::toString(val),
+                  hNode::hdlopsEnum::hLiteral));
+  }
+
+  TraverseStmt(((CaseStmt *)stmt)->getSubStmt());
+  if (h_ret != old_hret)
+    hcasep->child_list.push_back(h_ret);
+  else
+    hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
+
+  h_ret = hcasep;
+
+  return false;
 }
 
 bool HDLBody::VisitDefaultStmt(DefaultStmt *stmt) {
