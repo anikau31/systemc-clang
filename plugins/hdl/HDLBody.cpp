@@ -135,7 +135,7 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     VisitUnaryOperator((UnaryOperator *)stmt);
   } else if (isa<ConditionalOperator>(stmt)) {
     VisitConditionalOperator((ConditionalOperator *)stmt);
-  } 
+  }
   else if (isa<MaterializeTemporaryExpr>(stmt)) {
     TraverseStmt(((MaterializeTemporaryExpr *)stmt)->getSubExpr());
     // TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary());
@@ -182,17 +182,18 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
       hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hUnimpl));
 
     h_ret = hcasep;
-  } else if (isa<DefaultStmt>(stmt)) {
+  } /* else if (isa<DefaultStmt>(stmt)) {
     LLVM_DEBUG(llvm::dbgs() << "Found default stmt\n");
-    hNodep old_hret = h_ret;
-    hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
-    TraverseStmt(((DefaultStmt *)stmt)->getSubStmt());
-    if (h_ret != old_hret)
-      hcasep->child_list.push_back(h_ret);
-    else
-      hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hNoop));
-    h_ret = hcasep;
-  } else if (isa<BreakStmt>(stmt)) {
+    VisitDefaultStmt(stmt);
+    // hNodep old_hret = h_ret;
+    // hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
+    // TraverseStmt(((DefaultStmt *)stmt)->getSubStmt());
+    // if (h_ret != old_hret)
+      // hcasep->child_list.push_back(h_ret);
+    // else
+      // hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hNoop));
+    // h_ret = hcasep;
+  }  else if (isa<BreakStmt>(stmt)) {
     // const unsigned cxx_record_id =
     // diag_e.getCustomDiagID(clang::DiagnosticsEngine::Remark,
     //           "Break stmt not supported, substituting noop");
@@ -201,10 +202,11 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
     h_ret = new hNode(thismode == rthread ? hNode::hdlopsEnum::hReturnStmt
                                           : hNode::hdlopsEnum::hBreak);
-  } else if (isa<ContinueStmt>(stmt)) {
-    LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
-    h_ret = new hNode(hNode::hdlopsEnum::hContinue);
-  } else if (isa<CXXDefaultArgExpr>(stmt)) {
+  }  else if (isa<ContinueStmt>(stmt)) {
+    // LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
+    // h_ret = new hNode(hNode::hdlopsEnum::hContinue);
+  } */
+  else if (isa<CXXDefaultArgExpr>(stmt)) {
     TraverseStmt(((CXXDefaultArgExpr *)stmt)->getExpr());
   } else if (isa<ReturnStmt>(stmt)) {
     hNodep hretstmt = new hNode(hNode::hdlopsEnum::hReturnStmt);
@@ -282,6 +284,33 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   }
 
   return true;
+}
+
+bool HDLBody::VisitDefaultStmt(DefaultStmt *stmt) {
+  hNodep old_hret = h_ret;
+  hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchDefault);
+  TraverseStmt(((DefaultStmt *)stmt)->getSubStmt());
+  if (h_ret != old_hret)
+    hcasep->child_list.push_back(h_ret);
+  else
+    hcasep->child_list.push_back(new hNode(hNode::hdlopsEnum::hNoop));
+  h_ret = hcasep;
+
+  return false;
+}
+
+bool HDLBody::VisitBreakStmt(BreakStmt *stmt) {
+  LLVM_DEBUG(llvm::dbgs() << "Found break stmt\n");
+  h_ret = new hNode(thismode == rthread ? hNode::hdlopsEnum::hReturnStmt
+                                        : hNode::hdlopsEnum::hBreak);
+  return false;
+}
+
+bool HDLBody::VisitContinueStmt(ContinueStmt *stmt) {
+  LLVM_DEBUG(llvm::dbgs() << "Found continue stmt\n");
+  h_ret = new hNode(hNode::hdlopsEnum::hContinue);
+
+  return false;
 }
 
 bool HDLBody::VisitCompoundStmt(CompoundStmt *cstmt) {
