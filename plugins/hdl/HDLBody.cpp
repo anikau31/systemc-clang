@@ -110,14 +110,15 @@ HDLBody::~HDLBody() {
 
 bool HDLBody::TraverseStmt(Stmt *stmt) {
   LLVM_DEBUG(llvm::dbgs() << "In TraverseStmt\n");
-  if (stmt == nullptr) return true;  // null statement, keep going
+  if (stmt == nullptr) return false;  // null statement, keep going
 
   if (isa<CompoundStmt>(stmt)) {
     LLVM_DEBUG(llvm::dbgs()
                << "calling traverse compoundstmt from traversestmt\n");
     VisitCompoundStmt((CompoundStmt *)stmt);
   } else if (isa<DeclStmt>(stmt)) {
-    VisitDeclStmt((DeclStmt *)stmt);
+    RecursiveASTVisitor::TraverseStmt(stmt);
+    // VisitDeclStmt((DeclStmt *)stmt);
   } else if (isa<CallExpr>(stmt)) {
     if (CXXOperatorCallExpr *opercall = dyn_cast<CXXOperatorCallExpr>(stmt)) {
       LLVM_DEBUG(llvm::dbgs() << "found cxxoperatorcallexpr\n");
@@ -127,16 +128,18 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     } else {
       VisitCallExpr((CallExpr *)stmt);
     }
-  } else if (isa<BinaryOperator>(stmt)) {
+  } /*
+       else if (isa<BinaryOperator>(stmt)) {
     VisitBinaryOperator((BinaryOperator *)stmt);
   } else if (isa<UnaryOperator>(stmt)) {
     VisitUnaryOperator((UnaryOperator *)stmt);
   } else if (isa<ConditionalOperator>(stmt)) {
     VisitConditionalOperator((ConditionalOperator *)stmt);
-  } else if (isa<MaterializeTemporaryExpr>(stmt)) {
+  } 
+  else if (isa<MaterializeTemporaryExpr>(stmt)) {
     TraverseStmt(((MaterializeTemporaryExpr *)stmt)->getSubExpr());
     // TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary());
-  } else if (isa<DeclRefExpr>(stmt)) {
+  }  else if (isa<DeclRefExpr>(stmt)) {
     VisitDeclRefExpr((DeclRefExpr *)stmt);
   } else if (isa<MemberExpr>(stmt)) {
     VisitMemberExpr((MemberExpr *)stmt);
@@ -159,7 +162,8 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   } else if (isa<SwitchStmt>(stmt)) {
     LLVM_DEBUG(llvm::dbgs() << "Found switch stmt\n");
     VisitSwitchStmt((SwitchStmt *)stmt);
-  } else if (isa<CaseStmt>(stmt)) {
+  } */
+  else if (isa<CaseStmt>(stmt)) {
     LLVM_DEBUG(llvm::dbgs() << "Found case stmt\n");
     hNodep old_hret = h_ret;
     hNodep hcasep = new hNode(hNode::hdlopsEnum::hSwitchCase);
