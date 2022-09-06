@@ -115,17 +115,17 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   if (isa<CompoundStmt>(stmt)) {
     LLVM_DEBUG(llvm::dbgs()
                << "calling traverse compoundstmt from traversestmt\n");
-    TraverseCompoundStmt((CompoundStmt *)stmt);
+    VisitCompoundStmt((CompoundStmt *)stmt);
   } else if (isa<DeclStmt>(stmt)) {
-    TraverseDeclStmt((DeclStmt *)stmt);
+    VisitDeclStmt((DeclStmt *)stmt);
   } else if (isa<CallExpr>(stmt)) {
     if (CXXOperatorCallExpr *opercall = dyn_cast<CXXOperatorCallExpr>(stmt)) {
       LLVM_DEBUG(llvm::dbgs() << "found cxxoperatorcallexpr\n");
-      TraverseCXXOperatorCallExpr(opercall);
+      VisitCXXOperatorCallExpr(opercall);
     } else if (isa<CXXMemberCallExpr>(stmt)) {
-      TraverseCXXMemberCallExpr((CXXMemberCallExpr *)stmt);
+      VisitCXXMemberCallExpr((CXXMemberCallExpr *)stmt);
     } else {
-      TraverseCallExpr((CallExpr *)stmt);
+      VisitCallExpr((CallExpr *)stmt);
     }
   } else if (isa<BinaryOperator>(stmt)) {
     VisitBinaryOperator((BinaryOperator *)stmt);
@@ -137,9 +137,9 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
     TraverseStmt(((MaterializeTemporaryExpr *)stmt)->getSubExpr());
     // TraverseStmt(((MaterializeTemporaryExpr *) stmt)->getTemporary());
   } else if (isa<DeclRefExpr>(stmt)) {
-    TraverseDeclRefExpr((DeclRefExpr *)stmt);
+    VisitDeclRefExpr((DeclRefExpr *)stmt);
   } else if (isa<MemberExpr>(stmt)) {
-    TraverseMemberExpr((MemberExpr *)stmt);
+    VisitMemberExpr((MemberExpr *)stmt);
   } else if (isa<IntegerLiteral>(stmt)) {
     VisitIntegerLiteral((IntegerLiteral *)stmt);
   } else if (isa<CXXBoolLiteralExpr>(stmt)) {
@@ -280,7 +280,7 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
   return true;
 }
 
-bool HDLBody::TraverseCompoundStmt(CompoundStmt *cstmt) {
+bool HDLBody::VisitCompoundStmt(CompoundStmt *cstmt) {
   // Traverse each statement and append it to the array
   hNodep h_cstmt = new hNode(hNode::hdlopsEnum::hCStmt);
 
@@ -303,7 +303,7 @@ bool HDLBody::TraverseCompoundStmt(CompoundStmt *cstmt) {
   }
 
   h_ret = h_cstmt;
-  return true;
+  return false;
 }
 
 //!
@@ -311,7 +311,7 @@ bool HDLBody::TraverseCompoundStmt(CompoundStmt *cstmt) {
 //! promoting to module level with unique names
 //!
 
-bool HDLBody::TraverseDeclStmt(DeclStmt *declstmt) {
+bool HDLBody::VisitDeclStmt(DeclStmt *declstmt) {
   // hNodep h_varlist = NULL;
   // if (!declstmt->isSingleDecl()) {
   //     h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
@@ -325,7 +325,7 @@ bool HDLBody::TraverseDeclStmt(DeclStmt *declstmt) {
           vardecl);  // adds it to the list of renamed local variables
     }
   // h_ret = NULL;
-  return true;
+  return false;
 }
 
 bool HDLBody::ProcessVarDecl(VarDecl *vardecl) {
@@ -549,7 +549,7 @@ bool HDLBody::VisitCXXBoolLiteralExpr(CXXBoolLiteralExpr *b) {
   return false;
 }
 
-bool HDLBody::TraverseDeclRefExpr(DeclRefExpr *expr) {
+bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
   // ... handle expr
   LLVM_DEBUG(llvm::dbgs() << "In TraverseDeclRefExpr\n");
 
@@ -560,7 +560,7 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr *expr) {
                << "got enum constant value " << cd->getInitVal() << "\n");
     h_ret = new hNode(systemc_clang::utils::apint::toString(cd->getInitVal()),
                       hNode::hdlopsEnum::hLiteral);
-    return true;
+    return false;
   }
 
   // get a name
@@ -577,7 +577,7 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr *expr) {
       h_ret =
           new hNode(systemc_clang::utils::apint::toString(result.Val.getInt()),
                     hNode::hdlopsEnum::hLiteral);
-      return true;
+      return false;
     }
   }
   if (isa<FunctionDecl>(value)) {
@@ -619,17 +619,17 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr *expr) {
           hfuncall->set(tmpname);
       }
       h_ret = hfuncall;
-      return true;
+      return false;
     } else {  // here it is an SCFunc
       string typname = (expr->getType()).getAsString();
       if (typname.find("sc_dt::sc_concat") != std::string::npos) {
         // found concat function call
         hNodep hconcat = new hNode(name, hNode::hdlopsEnum::hBinop);
         h_ret = hconcat;
-        return true;
+        return false;
       }
       h_ret = new hNode(name, hNode::hdlopsEnum::hBuiltinFunction);
-      return true;
+      return false;
       // may have other special functions to recognize later
     }
   }
@@ -640,10 +640,10 @@ bool HDLBody::TraverseDeclRefExpr(DeclRefExpr *expr) {
 
   h_ret =
       new hNode(newname.empty() ? name : newname, hNode::hdlopsEnum::hVarref);
-  return true;
+  return false;
 }
 
-bool HDLBody::TraverseArraySubscriptExpr(ArraySubscriptExpr *expr) {
+bool HDLBody::VisitArraySubscriptExpr(ArraySubscriptExpr *expr) {
   LLVM_DEBUG(llvm::dbgs()
              << "In TraverseArraySubscriptExpr, base, idx, tree follow\n");
   LLVM_DEBUG(llvm::dbgs() << "base:\n");
@@ -658,10 +658,10 @@ bool HDLBody::TraverseArraySubscriptExpr(ArraySubscriptExpr *expr) {
   TraverseStmt(expr->getRHS());
   h_arrexpr->child_list.push_back(h_ret);
   h_ret = h_arrexpr;
-  return true;
+  return false;
 }
 
-bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
+bool HDLBody::VisitCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
   bool is_explicitly_overridden = false;
   // this doesn't seem to help
   LangOptions LangOpts;
@@ -723,7 +723,7 @@ bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
       // the conversion we know about, can be skipped
       LLVM_DEBUG(llvm::dbgs() << "Found operator conversion node\n");
       TraverseStmt(objarg);
-      return true;
+      return false;
     }
   }
 
@@ -816,7 +816,7 @@ bool HDLBody::TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     if (h_ret != save_hret) h_callp->child_list.push_back(h_ret);
   }
   h_ret = h_callp;
-  return true;
+  return false;
 }
 
 bool HDLBody::isLogicalOp(clang::OverloadedOperatorKind opc) {
@@ -834,7 +834,7 @@ bool HDLBody::isLogicalOp(clang::OverloadedOperatorKind opc) {
   }
 }
 
-bool HDLBody::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
+bool HDLBody::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
   string operatorname = getOperatorSpelling(opcall->getOperator());
   string operatortype = (opcall->getType()).getAsString();
   hNodep h_operop;
@@ -916,7 +916,7 @@ bool HDLBody::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
       LLVM_DEBUG(opcall->getArg(i)->dump(llvm::dbgs(), ast_context_));
     }
     h_ret = h_operop;
-    return true;
+    return false;
   }
 
   LLVM_DEBUG(llvm::dbgs() << "not yet implemented operator call expr, opc is "
@@ -925,10 +925,10 @@ bool HDLBody::TraverseCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
                           << " skipping\n");
   LLVM_DEBUG(opcall->dump(llvm::dbgs(), ast_context_));
   h_ret = new hNode(hNode::hdlopsEnum::hUnimpl);
-  return true;
+  return false;
 }
 
-bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr) {
+bool HDLBody::VisitMemberExpr(MemberExpr *memberexpr) {
   bool founduserclass = false;
   LLVM_DEBUG(llvm::dbgs() << "In TraverseMemberExpr\n");
   string nameinfo = (memberexpr->getMemberNameInfo()).getName().getAsString();
@@ -966,7 +966,7 @@ bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr) {
       delete h_ret;
       h_ret = memexprnode;  // replace returned h_ret with single node, field
       // names concatenated
-      return true;
+      return false;
     } else {
       LLVM_DEBUG(llvm::dbgs()
                  << "Value returned from member expr base was not Varref\n");
@@ -982,14 +982,14 @@ bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr) {
         hfieldref->append(
             new hNode(thisref + nameinfo, hNode::hdlopsEnum::hField));
         h_ret = hfieldref;
-        return true;
+        return false;
       } else {
         hNodep memexprnode =
             new hNode(newname == "" ? thisref + nameinfo : thisref + newname,
                       hNode::hdlopsEnum::hVarref);
         memexprnode->child_list.push_back(h_ret);
         h_ret = memexprnode;
-        return true;
+        return false;
       }
     }
   }
@@ -1000,10 +1000,10 @@ bool HDLBody::TraverseMemberExpr(MemberExpr *memberexpr) {
   h_ret = new hNode(newname.empty() ? thisref + nameinfo : thisref + newname,
                     hNode::hdlopsEnum::hVarref);
 
-  return true;
+  return false;
 }
 
-bool HDLBody::TraverseCallExpr(CallExpr *callexpr) {
+bool HDLBody::VisitCallExpr(CallExpr *callexpr) {
   hNodep hcall;  // = new hNode(hNode::hdlopsEnum::hMethodCall);
   hNodep save_hret = h_ret;
 
@@ -1014,7 +1014,7 @@ bool HDLBody::TraverseCallExpr(CallExpr *callexpr) {
             res, callexpr->getCalleeDecl()->getASTContext())) {
       h_ret = new hNode(systemc_clang::utils::apint::toString(res.Val.getInt()),
                         hNode::hdlopsEnum::hLiteral);
-      return true;
+      return false;
     }
   }
 
@@ -1042,7 +1042,7 @@ bool HDLBody::TraverseCallExpr(CallExpr *callexpr) {
   LLVM_DEBUG(llvm::dbgs() << "found a call expr"
                           << " AST follows\n ");
   LLVM_DEBUG(callexpr->dump(llvm::dbgs(), ast_context_););
-  return true;
+  return false;
 }
 
 bool HDLBody::VisitIfStmt(IfStmt *ifs) {

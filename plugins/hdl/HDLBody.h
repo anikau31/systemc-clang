@@ -42,28 +42,29 @@ class HDLBody : public RecursiveASTVisitor<HDLBody> {
   void Run(Stmt *stmt, hNodep &h_top, HDLBodyMode runmode,
            HDLType *HDLt_userclassesp = NULL);
 
-  bool TraverseCXXOperatorCallExpr(CXXOperatorCallExpr *opcall);
-  bool TraverseCXXMemberCallExpr(CXXMemberCallExpr *callexpr);
-  bool TraverseCallExpr(CallExpr *callexpr);
-
-  bool TraverseCompoundStmt(CompoundStmt *compoundStmt);
   bool TraverseStmt(Stmt *stmt);
-  bool TraverseDeclStmt(DeclStmt *declstmt);
+
+  bool VisitCXXOperatorCallExpr(CXXOperatorCallExpr *opcall);
+  bool VisitCXXMemberCallExpr(CXXMemberCallExpr *callexpr);
+  bool VisitCallExpr(CallExpr *callexpr);
+
+  bool VisitCompoundStmt(CompoundStmt *compoundStmt);
+  bool VisitDeclStmt(DeclStmt *declstmt);
   bool ProcessVarDecl(VarDecl *vardecl);
   bool VisitBinaryOperator(BinaryOperator *expr);
   bool VisitUnaryOperator(UnaryOperator *expr);
   bool VisitConditionalOperator(ConditionalOperator *expr);
   bool VisitIntegerLiteral(IntegerLiteral *lit);
   bool VisitCXXBoolLiteralExpr(CXXBoolLiteralExpr *b);
-  bool TraverseDeclRefExpr(DeclRefExpr *expr);
-  bool TraverseArraySubscriptExpr(ArraySubscriptExpr *expr);
-  bool TraverseMemberExpr(MemberExpr *memberexpr);
+  bool VisitDeclRefExpr(DeclRefExpr *expr);
+  bool VisitArraySubscriptExpr(ArraySubscriptExpr *expr);
+  bool VisitMemberExpr(MemberExpr *memberexpr);
   bool VisitIfStmt(IfStmt *ifs);
   bool VisitForStmt(ForStmt *fors);
   bool VisitSwitchStmt(SwitchStmt *switchs);
-  bool ProcessSwitchCase(SwitchCase *cases);
   bool VisitWhileStmt(WhileStmt *whiles);
   bool VisitDoStmt(DoStmt *whiles);
+  bool ProcessSwitchCase(SwitchCase *cases);
   string FindVname(NamedDecl *vard);
   void AddVnames(hNodep &hvns);
   string FindFname(FunctionDecl *funcd);
