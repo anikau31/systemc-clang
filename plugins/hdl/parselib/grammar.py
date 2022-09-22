@@ -80,12 +80,13 @@ lark_grammar = Lark('''
         htolong: "hBuiltinFunction" "to_long" "[" (syscread|hvarref|hslice) "]"
         htoulong: "hBuiltinFunction" "to_ulong" "[" (syscread|hvarref|hslice) "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
-        htoi64: "hBuiltinFunction" "to_int64" "[" (hvarref|hslice) "]"
-        htou64: "hBuiltinFunction" "to_uint64" "[" (hvarref|hslice) "]"
+        htoi64: "hBuiltinFunction" "to_int64" "[" (syscread|hvarref|hslice) "]"
+        htou64: "hBuiltinFunction" "to_uint64" "[" (syscread|hvarref|hslice) "]"
         hscmin: "hBuiltinFunction" "sc_min" "[" expression expression "]"
         hscmax: "hBuiltinFunction" "sc_max" "[" expression expression "]"
+        hlength: "hBuiltinFunction" "length" "[" (syscread|hvarref) "]"
         
-        hbuiltin: hscmin | hscmax | hreduceop
+        hbuiltin: hscmin | hscmax | hreduceop | hlength
         
         // hmodinitblock: 
         // first component is the id of the module (in parent?)
@@ -271,7 +272,7 @@ lark_grammar = Lark('''
         // Comma op is the C++ comma where the latter part of the comma expression is returned
         hcomma: "hBinop" "," "[" (blkassign | hunop | hmethodcall) (hunop | expression | hmethodcall) "]"
 
-        hmethodcall: "hMethodCall" hidorstr  "[" expression expression* "]" 
+        hmethodcall: "hMethodCall" hidorstr  "[" (expression|hslice) (expression|hslice)* "]" 
                    | "hMethodCall" hidorstr  "NOLIST"
                    
         ?hidorstr: ID | STRING
