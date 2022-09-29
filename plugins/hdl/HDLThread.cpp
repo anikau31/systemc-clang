@@ -71,8 +71,8 @@ namespace systemc_hdl {
 
       for (state_num = 0; state_num < paths_found.size(); state_num++) {
 	SGVisited.clear();
-	// pathnodevisited keeps track of nodes alread traversed in true and false paths.
-	// those were already done by ProcessSplitGraphGropu and should be skipped
+	// pathnodevisited keeps track of nodes already traversed in true and false paths.
+	// those were already done by ProcessSplitGraphGroup and should be skipped
 	pathnodevisited.clear();
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
 	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
@@ -186,25 +186,32 @@ namespace systemc_hdl {
     return ((hp->child_list.size() >=1) and ((hp->child_list.back())->getopc() == hNode::hdlopsEnum::hWait));
   }
 
-  void HDLThread::CheckVardecls(hNodep &hp, unsigned int cfgblockid) {
+  void HDLThread::CheckVardecls(hNodep &hp, string &blockid) { 
     int varcnt = 0;
     for (auto oneop : hp->child_list) {
       if ((oneop != NULL) && ((oneop->getopc() == hNode::hdlopsEnum::hVardecl) || (oneop->getopc() == hNode::hdlopsEnum::hSigdecl))) {
-	LLVM_DEBUG(llvm::dbgs() << "Detected vardecl for CFG Block ID " << cfgblockid << "\n");
-	if (CFGVisited[cfgblockid]==1) hlocalvarsp->append(oneop);
+	LLVM_DEBUG(llvm::dbgs() << "Detected vardecl for SG Block ID " << blockid << "\n");
+	if (SGVisited[blockid] == 1) { 	  hlocalvarsp->append(oneop);
+	}
+	else {
+	  LLVM_DEBUG(llvm::dbgs() << "SGVisited for blockid " << SGVisited[blockid] 
+		     << " " << blockid << "\n");
+	}
 	varcnt += 1;
       }
       else break; // all vardecls are first in the list of ops
     }
     if (varcnt >=1) {
       hp->child_list.erase(hp->child_list.begin(), hp->child_list.begin()+varcnt);
-      if (CFGVisited[cfgblockid]==1) thread_vname_map.insertall(xtbodyp->vname_map);
+      if (SGVisited[blockid] == 1) { 
+	thread_vname_map.insertall(xtbodyp->vname_map);
+      }
     }
   }
 
   void HDLThread::ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp) {
     //!
-    //! called when a CFG declstmt is instantiated more than once
+    //! called when a declstmt is instantiated more than once
     //! can skip the decl, but need to process initializer
     //!
     
@@ -329,6 +336,8 @@ namespace systemc_hdl {
 					 int state_num, hNodep h_switchcase)
   {
 
+    LLVM_DEBUG(llvm::dbgs() << "Split Graph Group startix, num_ele, state_num are " << startix << " " << num_ele << " " <<  state_num << "\n");
+
     int pvix = startix;
     while ( pvix<startix+num_ele) {
       if (pathnodevisited.find(pvix) == pathnodevisited.end()) { //haven't visited
@@ -343,7 +352,6 @@ namespace systemc_hdl {
   //  SplitCFGPath = llvm::SmallVector<SplitCFGPathPair>;
   //  SplitCFGPathPair = std::pair<const SplitCFGBlock *, SupplementaryInfo>;
   void HDLThread::ProcessSplitGraphBlock(const SplitCFG::SplitCFGPath &pt,
-
 					 int thisix,
 					 int state_num, hNodep h_switchcase)
   {
@@ -353,8 +361,10 @@ namespace systemc_hdl {
       string blkid = "S" + std::to_string(state_num) + "_" + std::to_string(sgb->getBlockID());
 
       if (SGVisited.find(blkid) == SGVisited.end()) {
-      	SGVisited[blkid] = true;
-      	CFGVisited[(sgb->getCFGBlock())->getBlockID()]+= 1;
+      	SGVisited[blkid] = 1;
+      }
+      else {
+	SGVisited[blkid] += 1;
       }
       //else return; // already visited this block
       
@@ -446,14 +456,14 @@ namespace systemc_hdl {
 	  // first instantiation
 	  // However, still need to generate code for their initializers
 	  const DeclStmt *declstmt = dyn_cast<DeclStmt>(S);
-	  if ((declstmt!=NULL) &&  (CFGVisited[(sgb->getCFGBlock()->getBlockID()) > 1]))
+	  if ((declstmt!=NULL) && (SGVisited[blkid]>1))
 	    ProcessDeclStmt(declstmt, htmp);
 	  else xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread); // not declstmt
 
 	  LLVM_DEBUG(llvm::dbgs() << "after Run, htmp follows\n");
 	  //htmp->dumphcode();
 	  LLVM_DEBUG(htmp->print(llvm::dbgs()));
-	  CheckVardecls(htmp, (sgb->getCFGBlock())->getBlockID());
+	  CheckVardecls(htmp,blkid);
 	  if (IsWaitStmt(htmp)) {
 	    ProcessHWait(htmp, sgb->getNextState());
 	    //htmp->child_list.back()->set(std::to_string(sgb->getNextState()));
@@ -583,7 +593,7 @@ namespace systemc_hdl {
   
   // Code below this line is obsolete
   // BFS traversal so all local decls are seen before being referenced
-  
+ #if 0 
   void HDLThread::AddThreadMethod(const CFGBlock &BI) {
     std::vector<const CFGBlock *> succlist, nextsucclist;
     ProcessBB(BI);
@@ -639,5 +649,6 @@ namespace systemc_hdl {
       hthreadblocksp->append(h_body);
     }
   }
-
+#endif
+  
 }
