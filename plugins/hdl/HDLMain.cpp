@@ -403,7 +403,7 @@ namespace systemc_hdl {
 	      hparams->append(hthisparam);
 	    }
 	    for (int i = 0; i < m.first->getNumParams(); i++) {
-	      VarDecl *vardecl = m.first->getParamDecl(i);
+	      ParmVarDecl *vardecl = m.first->getParamDecl(i);
 	      QualType q = vardecl->getType();
 	      const clang::Type *tp = q.getTypePtr();
 	      LLVM_DEBUG(llvm::dbgs() << "ProcessParmVarDecl type name is "
@@ -430,7 +430,7 @@ namespace systemc_hdl {
 	      if (mutil.isSCMacro(m.second.oldn)) {
 		paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      }
-	      else if (vardecl->getType()->isReferenceType())
+	      else if ((vardecl->getType()->isReferenceType()) && !(vardecl->getType().getNonReferenceType().isConstQualified()))
 		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
 	      else { // handle actual parameter
 		
