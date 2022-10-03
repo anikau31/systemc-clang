@@ -200,7 +200,8 @@ namespace systemc_hdl {
     
     hdecl_name_map_t mod_vname_map("_scclang_global_");
     xbodyp = new HDLBody(main_diag_engine, getContext(), mod_vname_map, allmethodecls, overridden_method_map);
-    
+
+    allmethodecls.clear();
     module_vars.clear();
     threadresetmap.clear();
     
@@ -340,27 +341,34 @@ namespace systemc_hdl {
     // Function calls within functions get added to all methodecls.
     
     std::set<Decl *> generated_functions;
-    while (allmethodecls.size() > 0) {
+    //while (allmethodecls.size() > 0) {
+    while (allmethodecls.size()>generated_functions.size()) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
-      //std::unordered_multimap<string, FunctionDecl *> modmethodecls;
-      hfunc_name_map_t modmethodecls;
-      modmethodecls =
-        std::move(allmethodecls);  // procedures/functions found in this module
+
+      hfunc_name_map_t &modmethodecls = allmethodecls;
+      //modmethodecls =
+      //  std::move(allmethodecls);  // procedures/functions found in this module
       LLVM_DEBUG(llvm::dbgs()
 		 << "size of allmethodecls is " << allmethodecls.size() << "\n");
+      LLVM_DEBUG(allmethodecls.print(llvm::dbgs()));
       LLVM_DEBUG(llvm::dbgs()
-		 << "size of modmethodecls is " << modmethodecls.size() << "\n");
-      LLVM_DEBUG(modmethodecls.print(llvm::dbgs()));
+		 << "size of generated_functions is " << generated_functions.size() << "\n");
+      LLVM_DEBUG(llvm::dbgs()
+      	 << "size of modmethodecls is " << modmethodecls.size() << "\n");
+      //LLVM_DEBUG(modmethodecls.print(llvm::dbgs()));
       LLVM_DEBUG(HDLt.print(llvm::dbgs()));
       for (auto const &m : modmethodecls) {
+	//for (auto const &m : allmethodecls) {
 	LLVM_DEBUG(llvm::dbgs() << "Method --------\n"
-		   << m.second.newn << "\n");
+		   << m.first << " " << m.second.newn << " generatedcount is " << generated_functions.count(m.first)<< "\n");
 	LLVM_DEBUG(m.first->dump(llvm::dbgs()));
 	LLVM_DEBUG(llvm::dbgs() << "---------\n");
+	if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
+	generated_functions.insert(m.first);
 	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 	if (m.first->hasBody()) {
-	  if (generated_functions.count(m.first) > 0) continue; // already generated this one
-	  generated_functions.insert(m.first);
+	  //if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
+	  //generated_functions.insert(m.first);
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
 	  QualType qrettype = m.first->getReturnType(); // m.first->getDeclaredReturnType();
 	  const clang::Type *rettype = qrettype.getTypePtr();
@@ -371,7 +379,7 @@ namespace systemc_hdl {
 	  HDLt2.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	  CXXMethodDecl * thismethod = dyn_cast<CXXMethodDecl>(m.first);
-	  bool isUserDefinedMethod = (thismethod != NULL) && (modmethodecls.methodobjtypemap.count(thismethod));
+	  bool isUserDefinedMethod = (thismethod != NULL) && (modmethodecls.methodobjtypemap.count(thismethod));//modmethodecls.methodobjtypemap.count(thismethod));
 	  if (thismethod != NULL) {
 	    LLVM_DEBUG(llvm::dbgs() << thismethod->getParent()->getQualifiedNameAsString() << " " << m.second.newn << " is a Method\n");
 	  }
@@ -384,7 +392,7 @@ namespace systemc_hdl {
 	    if (isUserDefinedMethod) { // user defined non scmodule method
 	      hNodep hthisparam = new hNode("hthis", hNode::hdlopsEnum::hFunctionParamIO);
 	      hNodep hthistype = new hNode(hNode::hdlopsEnum::hTypeinfo);
-	      const clang::Type * tp = modmethodecls.methodobjtypemap[thismethod];
+	      const clang::Type * tp = modmethodecls.methodobjtypemap[thismethod];// modmethodecls.methodobjtypemap[thismethod];
 	      if (tp == NULL) {
 		LLVM_DEBUG(llvm::dbgs() <<"Couldn't find methodobjtypemap entry for "  << thismethod << "\n");
 	      }
@@ -478,7 +486,7 @@ namespace systemc_hdl {
 	    }
 	  }
 	  // If this function invoked other functions, add them to the list to be generated
-	  allmethodecls.insertall(xbodyp->methodecls);
+	  allmethodecls.insertall(xbodyp->methodecls); // if a function called
 	  h_processes->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
 	} // end non-null body
