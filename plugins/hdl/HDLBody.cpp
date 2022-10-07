@@ -142,12 +142,22 @@ bool HDLBody::TraverseStmt(Stmt *stmt) {
       // 	   << "CXXConstructExpr found, expr below\n");
       // LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
 
-      if ((exp->getNumArgs() == 1) && (isa<IntegerLiteral>(exp->getArg(0)))) {
+      if ((exp->getNumArgs() == 1) &&
+	  ((isa<IntegerLiteral>(exp->getArg(0))) || (isa<CXXBoolLiteralExpr>(exp->getArg(0)))) ) {
         LLVM_DEBUG(llvm::dbgs()
                    << "CXXConstructExpr followed by integer literal found\n");
         LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
-        IntegerLiteral *lit = (IntegerLiteral *)exp->getArg(0);
-        string s = systemc_clang::utils::apint::toString(lit->getValue());
+	string s;
+	if (isa<IntegerLiteral>(exp->getArg(0))) {
+	  IntegerLiteral *lit = (IntegerLiteral *)exp->getArg(0);
+	  s = systemc_clang::utils::apint::toString(lit->getValue());
+	}
+	else { // bool
+	  CXXBoolLiteralExpr * boollit = (CXXBoolLiteralExpr *) exp->getArg(0);
+	  if (boollit->getValue()) s = "1"; else s = "0";
+	  h_ret = new hNode(s, hNode::hdlopsEnum::hLiteral);
+	  return true;
+	}
         // need to add type to back of h_ret
         FindTemplateTypes *te = new FindTemplateTypes();
         te->Enumerate((exp->getType()).getTypePtr());
@@ -363,6 +373,24 @@ bool HDLBody::ProcessVarDecl(VarDecl *vardecl) {
                        // string::npos)) {
       isuserdefinedclass = true;
       // varinitp->set( hNode::hdlopsEnum::hMethodCall, recmapiter->second);
+
+      /*
+
+      // we know it is a userdefined class, now handle the constructor initializer
+
+      if (lutil.isSCType(exp->getType().getTypePtr())) {
+	LLVM_DEBUG(llvm::dbgs() << "CXXConstructExpr type is sctype " << exp->getType().getAsString()<< "\n");
+      }
+      else {
+	if ((exp->getNumArgs() == 0) || // 
+	    (exp->getNumArgs()>0) && !isa<CXXDefaultArgExpr>(exp->getArg(0))) // non-sctype with a true init
+	  LLVM_DEBUG(llvm::dbgs() << "CXXConstructExpr type is not sctype " << exp->getType().getAsString()
+		     << "num args is " << exp->getNumArgs() << "\n");
+	 LLVM_DEBUG(exp->dump(llvm::dbgs(), ast_context_));
+      }
+       */
+
+      
     }
   }
 
@@ -401,8 +429,9 @@ bool HDLBody::ProcessVarDecl(VarDecl *vardecl) {
       TraverseStmt(tmpdeclinit);
       if (h_ret) {
         h_callp->append(h_ret);
-        h_ret = h_callp;
       }
+      h_ret = h_callp;
+      //}
       return true;
     }
 
