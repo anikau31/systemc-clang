@@ -120,62 +120,48 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad5ca9f42bdfcd0663d41aba6c57800c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9aebf447ff8177aa7b30d260bc8314e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a9aebf447ff8177aa7b30d260bc8314e3">Run</a> (Stmt *stmt, <a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;h_top, <a class="el" href="namespacesystemc__hdl.html#aeef6b9516f3e8320515d66110f5f9d5f">HDLBodyMode</a> runmode, <a class="el" href="classHDLType.html">HDLType</a> *HDLt_userclassesp=NULL)</td></tr>
 <tr class="separator:a9aebf447ff8177aa7b30d260bc8314e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafad671a20a179ef463167b25485e8fd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#aafad671a20a179ef463167b25485e8fd">TraverseCompoundStmt</a> (CompoundStmt *compoundStmt)</td></tr>
+<tr class="separator:aafad671a20a179ef463167b25485e8fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74516f472ce4e35722be7643c053b7b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a74516f472ce4e35722be7643c053b7b6">TraverseStmt</a> (Stmt *stmt)</td></tr>
 <tr class="separator:a74516f472ce4e35722be7643c053b7b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e03b8ec6dd7572b40d16033b2e4b3ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a0e03b8ec6dd7572b40d16033b2e4b3ee">VisitCXXOperatorCallExpr</a> (CXXOperatorCallExpr *opcall)</td></tr>
-<tr class="separator:a0e03b8ec6dd7572b40d16033b2e4b3ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9557e2a57ea8b618095d774fba32df1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ae9557e2a57ea8b618095d774fba32df1">VisitCXXMemberCallExpr</a> (CXXMemberCallExpr *callexpr)</td></tr>
-<tr class="separator:ae9557e2a57ea8b618095d774fba32df1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5b130e359f85a66a69693ad77cd5252"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ad5b130e359f85a66a69693ad77cd5252">VisitCallExpr</a> (CallExpr *callexpr)</td></tr>
-<tr class="separator:ad5b130e359f85a66a69693ad77cd5252"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad877adc1d1825e58513da9899c42be43"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ad877adc1d1825e58513da9899c42be43">VisitCXXTemporaryObjectExpr</a> (CXXTemporaryObjectExpr *stmt)</td></tr>
-<tr class="separator:ad877adc1d1825e58513da9899c42be43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a540cb5120c92ae277fd2c3266b724613"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a540cb5120c92ae277fd2c3266b724613">VisitReturnStmt</a> (ReturnStmt *stmt)</td></tr>
-<tr class="separator:a540cb5120c92ae277fd2c3266b724613"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5ec257dc7cda0c3f4f6924c1fa21889"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#aa5ec257dc7cda0c3f4f6924c1fa21889">VisitInitListExpr</a> (InitListExpr *stmt)</td></tr>
-<tr class="separator:aa5ec257dc7cda0c3f4f6924c1fa21889"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2620702c745a2b24c9f89e10231cdc88"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a2620702c745a2b24c9f89e10231cdc88">VisitCaseStmt</a> (CaseStmt *stmt)</td></tr>
-<tr class="separator:a2620702c745a2b24c9f89e10231cdc88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ec144767770cbb44ea3e01d0bb5cfc9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a3ec144767770cbb44ea3e01d0bb5cfc9">VisitDefaultStmt</a> (DefaultStmt *stmt)</td></tr>
-<tr class="separator:a3ec144767770cbb44ea3e01d0bb5cfc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb8d8c181357be0091d30e223f21dc77"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#adb8d8c181357be0091d30e223f21dc77">VisitBreakStmt</a> (BreakStmt *stmt)</td></tr>
-<tr class="separator:adb8d8c181357be0091d30e223f21dc77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f249134babafd50bf0308987f4195b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a8f249134babafd50bf0308987f4195b1">VisitContinueStmt</a> (ContinueStmt *stmt)</td></tr>
-<tr class="separator:a8f249134babafd50bf0308987f4195b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e8a2eed3a9081cbff7520dda48b0c25"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a3e8a2eed3a9081cbff7520dda48b0c25">VisitCompoundStmt</a> (CompoundStmt *compoundStmt)</td></tr>
-<tr class="separator:a3e8a2eed3a9081cbff7520dda48b0c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a548d4f0dc307c47a032e2eecc0c80c3c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a548d4f0dc307c47a032e2eecc0c80c3c">VisitDeclStmt</a> (DeclStmt *declstmt)</td></tr>
-<tr class="separator:a548d4f0dc307c47a032e2eecc0c80c3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca201d3841cae13a158ad56804b39702"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#aca201d3841cae13a158ad56804b39702">TraverseDeclStmt</a> (DeclStmt *declstmt)</td></tr>
+<tr class="separator:aca201d3841cae13a158ad56804b39702"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55042a90189466a86766cfb296246ae3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a55042a90189466a86766cfb296246ae3">ProcessVarDecl</a> (VarDecl *vardecl)</td></tr>
 <tr class="separator:a55042a90189466a86766cfb296246ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ecc3e5de791a2e7d29d83e9234e8605"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a0ecc3e5de791a2e7d29d83e9234e8605">VisitBinaryOperator</a> (BinaryOperator *expr)</td></tr>
-<tr class="separator:a0ecc3e5de791a2e7d29d83e9234e8605"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ecf3838daeb7b200bbb9a86cc8b395a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a5ecf3838daeb7b200bbb9a86cc8b395a">VisitUnaryOperator</a> (UnaryOperator *expr)</td></tr>
-<tr class="separator:a5ecf3838daeb7b200bbb9a86cc8b395a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50bd1506d1c0ab644c3d83a6ba68a1cb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a50bd1506d1c0ab644c3d83a6ba68a1cb">VisitConditionalOperator</a> (ConditionalOperator *expr)</td></tr>
-<tr class="separator:a50bd1506d1c0ab644c3d83a6ba68a1cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1bcc28811cb1c3958272beec6d6e74d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#af1bcc28811cb1c3958272beec6d6e74d">VisitIntegerLiteral</a> (IntegerLiteral *lit)</td></tr>
-<tr class="separator:af1bcc28811cb1c3958272beec6d6e74d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2b9de6a015efe28e3292f141039c6e3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ad2b9de6a015efe28e3292f141039c6e3">VisitCXXBoolLiteralExpr</a> (CXXBoolLiteralExpr *b)</td></tr>
-<tr class="separator:ad2b9de6a015efe28e3292f141039c6e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9fadb2f18880d4966fd9f0b4ef6ec8e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ae9fadb2f18880d4966fd9f0b4ef6ec8e">VisitDeclRefExpr</a> (DeclRefExpr *expr)</td></tr>
-<tr class="separator:ae9fadb2f18880d4966fd9f0b4ef6ec8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ae286b2c49906b0ad978224ee706498"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a6ae286b2c49906b0ad978224ee706498">VisitArraySubscriptExpr</a> (ArraySubscriptExpr *expr)</td></tr>
-<tr class="separator:a6ae286b2c49906b0ad978224ee706498"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a93a335bb4abf43d42cb17a6682d4ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a5a93a335bb4abf43d42cb17a6682d4ee">VisitMemberExpr</a> (MemberExpr *memberexpr)</td></tr>
-<tr class="separator:a5a93a335bb4abf43d42cb17a6682d4ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3020aa7be4330a149abbf8dca588dc2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ad3020aa7be4330a149abbf8dca588dc2">VisitIfStmt</a> (IfStmt *ifs)</td></tr>
-<tr class="separator:ad3020aa7be4330a149abbf8dca588dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecf90d6cb16a04ab0b70e7c0b54d5f96"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#aecf90d6cb16a04ab0b70e7c0b54d5f96">VisitForStmt</a> (ForStmt *fors)</td></tr>
-<tr class="separator:aecf90d6cb16a04ab0b70e7c0b54d5f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72def54e587a7d8b69bbb353359a255e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a72def54e587a7d8b69bbb353359a255e">VisitSwitchStmt</a> (SwitchStmt *switchs)</td></tr>
-<tr class="separator:a72def54e587a7d8b69bbb353359a255e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a7ed707a17438b304872240dc9da3ff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a8a7ed707a17438b304872240dc9da3ff">VisitWhileStmt</a> (WhileStmt *whiles)</td></tr>
-<tr class="separator:a8a7ed707a17438b304872240dc9da3ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9f4718fdd559e0662eafc17ae38d790"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ac9f4718fdd559e0662eafc17ae38d790">VisitDoStmt</a> (DoStmt *whiles)</td></tr>
-<tr class="separator:ac9f4718fdd559e0662eafc17ae38d790"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc81f61d10ee061d86ccc73dd5f9de01"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#acc81f61d10ee061d86ccc73dd5f9de01">TraverseBinaryOperator</a> (BinaryOperator *expr)</td></tr>
+<tr class="separator:acc81f61d10ee061d86ccc73dd5f9de01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea5adec11845becc800e3d0e10c58008"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#aea5adec11845becc800e3d0e10c58008">TraverseUnaryOperator</a> (UnaryOperator *expr)</td></tr>
+<tr class="separator:aea5adec11845becc800e3d0e10c58008"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb7a15568d3f6a9f4a45248a2793fcc0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#adb7a15568d3f6a9f4a45248a2793fcc0">TraverseConditionalOperator</a> (ConditionalOperator *expr)</td></tr>
+<tr class="separator:adb7a15568d3f6a9f4a45248a2793fcc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5927cd7ddc838f65bf54e11893e84df3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a5927cd7ddc838f65bf54e11893e84df3">TraverseIntegerLiteral</a> (IntegerLiteral *lit)</td></tr>
+<tr class="separator:a5927cd7ddc838f65bf54e11893e84df3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a458fceb18a00fa69d63b9e8a83ea798a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a458fceb18a00fa69d63b9e8a83ea798a">TraverseCXXBoolLiteralExpr</a> (CXXBoolLiteralExpr *b)</td></tr>
+<tr class="separator:a458fceb18a00fa69d63b9e8a83ea798a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c8d6b9029cf7bba2982d7253d610412"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a0c8d6b9029cf7bba2982d7253d610412">TraverseDeclRefExpr</a> (DeclRefExpr *expr)</td></tr>
+<tr class="separator:a0c8d6b9029cf7bba2982d7253d610412"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8406d03c977f43a3b31ed07962ea9845"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a8406d03c977f43a3b31ed07962ea9845">TraverseArraySubscriptExpr</a> (ArraySubscriptExpr *expr)</td></tr>
+<tr class="separator:a8406d03c977f43a3b31ed07962ea9845"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eb4f05f7689a354ebc629757f607d5c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a0eb4f05f7689a354ebc629757f607d5c">TraverseCXXMemberCallExpr</a> (CXXMemberCallExpr *callexpr)</td></tr>
+<tr class="separator:a0eb4f05f7689a354ebc629757f607d5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dc3dfd50bf589fc7c69981eea7ac1c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a0dc3dfd50bf589fc7c69981eea7ac1c2">TraverseCXXOperatorCallExpr</a> (CXXOperatorCallExpr *opcall)</td></tr>
+<tr class="separator:a0dc3dfd50bf589fc7c69981eea7ac1c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab511f4ac8481cf7c2484a66a6126d513"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ab511f4ac8481cf7c2484a66a6126d513">TraverseCallExpr</a> (CallExpr *callexpr)</td></tr>
+<tr class="separator:ab511f4ac8481cf7c2484a66a6126d513"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ca3d90287f200a28ed63964f597dd56"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a3ca3d90287f200a28ed63964f597dd56">TraverseMemberExpr</a> (MemberExpr *memberexpr)</td></tr>
+<tr class="separator:a3ca3d90287f200a28ed63964f597dd56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebb8def7816135ee91e7bafafb156ddf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#aebb8def7816135ee91e7bafafb156ddf">TraverseIfStmt</a> (IfStmt *ifs)</td></tr>
+<tr class="separator:aebb8def7816135ee91e7bafafb156ddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac93015ba58e789a3b7cf6811bd4ed31d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ac93015ba58e789a3b7cf6811bd4ed31d">TraverseForStmt</a> (ForStmt *fors)</td></tr>
+<tr class="separator:ac93015ba58e789a3b7cf6811bd4ed31d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7fd58793093f1b4a92b15c82fb1f931"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ac7fd58793093f1b4a92b15c82fb1f931">TraverseSwitchStmt</a> (SwitchStmt *switchs)</td></tr>
+<tr class="separator:ac7fd58793093f1b4a92b15c82fb1f931"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc6014214ed2dc52d3e7d28188387112"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#abc6014214ed2dc52d3e7d28188387112">ProcessSwitchCase</a> (SwitchCase *cases)</td></tr>
 <tr class="separator:abc6014214ed2dc52d3e7d28188387112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee15dc90242038d2cca3beef78cfac45"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#aee15dc90242038d2cca3beef78cfac45">TraverseWhileStmt</a> (WhileStmt *whiles)</td></tr>
+<tr class="separator:aee15dc90242038d2cca3beef78cfac45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ef5ffca9baf785d63882c594e3a9e66"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a3ef5ffca9baf785d63882c594e3a9e66">TraverseDoStmt</a> (DoStmt *whiles)</td></tr>
+<tr class="separator:a3ef5ffca9baf785d63882c594e3a9e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5a81b5fcaa4ada7d3935ccd88c90cff"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#ae5a81b5fcaa4ada7d3935ccd88c90cff">FindVname</a> (NamedDecl *vard)</td></tr>
 <tr class="separator:ae5a81b5fcaa4ada7d3935ccd88c90cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b7efd524dc48ad45e362c6abe3b6c50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsystemc__hdl_1_1HDLBody.html#a6b7efd524dc48ad45e362c6abe3b6c50">AddVnames</a> (<a class="el" href="namespacehnode.html#ae5db0847c00e6e0627bc73df624628d0">hNodep</a> &amp;hvns)</td></tr>
@@ -280,7 +266,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00063">63</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00061">61</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -307,7 +293,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00104">104</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00100">100</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -328,7 +314,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01244">1244</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01184">1184</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -348,7 +334,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01235">1235</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01177">1177</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -368,7 +354,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01226">1226</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01170">1170</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -396,7 +382,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00123">123</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00114">114</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -424,7 +410,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00118">118</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00109">109</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -452,7 +438,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00114">114</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00105">105</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -480,7 +466,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00813">813</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00771">771</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -508,7 +494,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00106">106</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00097">97</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -528,7 +514,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01264">1264</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01203">1203</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -548,7 +534,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01282">1282</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01221">1221</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -568,7 +554,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01096">1096</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01039">1039</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -588,7 +574,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00322">322</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00324">324</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -630,7 +616,308 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00075">75</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00071">71</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a8406d03c977f43a3b31ed07962ea9845" name="a8406d03c977f43a3b31ed07962ea9845"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8406d03c977f43a3b31ed07962ea9845">&#9670;&#160;</a></span>TraverseArraySubscriptExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseArraySubscriptExpr </td>
+          <td>(</td>
+          <td class="paramtype">ArraySubscriptExpr *&#160;</td>
+          <td class="paramname"><em>expr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00613">613</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="acc81f61d10ee061d86ccc73dd5f9de01" name="acc81f61d10ee061d86ccc73dd5f9de01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc81f61d10ee061d86ccc73dd5f9de01">&#9670;&#160;</a></span>TraverseBinaryOperator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseBinaryOperator </td>
+          <td>(</td>
+          <td class="paramtype">BinaryOperator *&#160;</td>
+          <td class="paramname"><em>expr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00409">409</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ab511f4ac8481cf7c2484a66a6126d513" name="ab511f4ac8481cf7c2484a66a6126d513"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab511f4ac8481cf7c2484a66a6126d513">&#9670;&#160;</a></span>TraverseCallExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseCallExpr </td>
+          <td>(</td>
+          <td class="paramtype">CallExpr *&#160;</td>
+          <td class="paramname"><em>callexpr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00942">942</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aafad671a20a179ef463167b25485e8fd" name="aafad671a20a179ef463167b25485e8fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafad671a20a179ef463167b25485e8fd">&#9670;&#160;</a></span>TraverseCompoundStmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseCompoundStmt </td>
+          <td>(</td>
+          <td class="paramtype">CompoundStmt *&#160;</td>
+          <td class="paramname"><em>compoundStmt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00279">279</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="adb7a15568d3f6a9f4a45248a2793fcc0" name="adb7a15568d3f6a9f4a45248a2793fcc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb7a15568d3f6a9f4a45248a2793fcc0">&#9670;&#160;</a></span>TraverseConditionalOperator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseConditionalOperator </td>
+          <td>(</td>
+          <td class="paramtype">ConditionalOperator *&#160;</td>
+          <td class="paramname"><em>expr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00490">490</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a458fceb18a00fa69d63b9e8a83ea798a" name="a458fceb18a00fa69d63b9e8a83ea798a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a458fceb18a00fa69d63b9e8a83ea798a">&#9670;&#160;</a></span>TraverseCXXBoolLiteralExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseCXXBoolLiteralExpr </td>
+          <td>(</td>
+          <td class="paramtype">CXXBoolLiteralExpr *&#160;</td>
+          <td class="paramname"><em>b</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00515">515</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0eb4f05f7689a354ebc629757f607d5c" name="a0eb4f05f7689a354ebc629757f607d5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eb4f05f7689a354ebc629757f607d5c">&#9670;&#160;</a></span>TraverseCXXMemberCallExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseCXXMemberCallExpr </td>
+          <td>(</td>
+          <td class="paramtype">CXXMemberCallExpr *&#160;</td>
+          <td class="paramname"><em>callexpr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00630">630</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0dc3dfd50bf589fc7c69981eea7ac1c2" name="a0dc3dfd50bf589fc7c69981eea7ac1c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dc3dfd50bf589fc7c69981eea7ac1c2">&#9670;&#160;</a></span>TraverseCXXOperatorCallExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseCXXOperatorCallExpr </td>
+          <td>(</td>
+          <td class="paramtype">CXXOperatorCallExpr *&#160;</td>
+          <td class="paramname"><em>opcall</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00786">786</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0c8d6b9029cf7bba2982d7253d610412" name="a0c8d6b9029cf7bba2982d7253d610412"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c8d6b9029cf7bba2982d7253d610412">&#9670;&#160;</a></span>TraverseDeclRefExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseDeclRefExpr </td>
+          <td>(</td>
+          <td class="paramtype">DeclRefExpr *&#160;</td>
+          <td class="paramname"><em>expr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00523">523</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aca201d3841cae13a158ad56804b39702" name="aca201d3841cae13a158ad56804b39702"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca201d3841cae13a158ad56804b39702">&#9670;&#160;</a></span>TraverseDeclStmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseDeclStmt </td>
+          <td>(</td>
+          <td class="paramtype">DeclStmt *&#160;</td>
+          <td class="paramname"><em>declstmt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Process local variable and signal declarations, promoting to module level with unique names </p>
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00308">308</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a3ef5ffca9baf785d63882c594e3a9e66" name="a3ef5ffca9baf785d63882c594e3a9e66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ef5ffca9baf785d63882c594e3a9e66">&#9670;&#160;</a></span>TraverseDoStmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseDoStmt </td>
+          <td>(</td>
+          <td class="paramtype">DoStmt *&#160;</td>
+          <td class="paramname"><em>whiles</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01148">1148</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ac93015ba58e789a3b7cf6811bd4ed31d" name="ac93015ba58e789a3b7cf6811bd4ed31d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac93015ba58e789a3b7cf6811bd4ed31d">&#9670;&#160;</a></span>TraverseForStmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseForStmt </td>
+          <td>(</td>
+          <td class="paramtype">ForStmt *&#160;</td>
+          <td class="paramname"><em>fors</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01010">1010</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aebb8def7816135ee91e7bafafb156ddf" name="aebb8def7816135ee91e7bafafb156ddf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebb8def7816135ee91e7bafafb156ddf">&#9670;&#160;</a></span>TraverseIfStmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseIfStmt </td>
+          <td>(</td>
+          <td class="paramtype">IfStmt *&#160;</td>
+          <td class="paramname"><em>ifs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00983">983</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5927cd7ddc838f65bf54e11893e84df3" name="a5927cd7ddc838f65bf54e11893e84df3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5927cd7ddc838f65bf54e11893e84df3">&#9670;&#160;</a></span>TraverseIntegerLiteral()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseIntegerLiteral </td>
+          <td>(</td>
+          <td class="paramtype">IntegerLiteral *&#160;</td>
+          <td class="paramname"><em>lit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00507">507</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a3ca3d90287f200a28ed63964f597dd56" name="a3ca3d90287f200a28ed63964f597dd56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ca3d90287f200a28ed63964f597dd56">&#9670;&#160;</a></span>TraverseMemberExpr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseMemberExpr </td>
+          <td>(</td>
+          <td class="paramtype">MemberExpr *&#160;</td>
+          <td class="paramname"><em>memberexpr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00875">875</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -650,459 +937,18 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00111">111</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00107">107</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a6ae286b2c49906b0ad978224ee706498" name="a6ae286b2c49906b0ad978224ee706498"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ae286b2c49906b0ad978224ee706498">&#9670;&#160;</a></span>VisitArraySubscriptExpr()</h2>
+<a id="ac7fd58793093f1b4a92b15c82fb1f931" name="ac7fd58793093f1b4a92b15c82fb1f931"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7fd58793093f1b4a92b15c82fb1f931">&#9670;&#160;</a></span>TraverseSwitchStmt()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitArraySubscriptExpr </td>
-          <td>(</td>
-          <td class="paramtype">ArraySubscriptExpr *&#160;</td>
-          <td class="paramname"><em>expr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00637">637</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a0ecc3e5de791a2e7d29d83e9234e8605" name="a0ecc3e5de791a2e7d29d83e9234e8605"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ecc3e5de791a2e7d29d83e9234e8605">&#9670;&#160;</a></span>VisitBinaryOperator()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitBinaryOperator </td>
-          <td>(</td>
-          <td class="paramtype">BinaryOperator *&#160;</td>
-          <td class="paramname"><em>expr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00422">422</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="adb8d8c181357be0091d30e223f21dc77" name="adb8d8c181357be0091d30e223f21dc77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb8d8c181357be0091d30e223f21dc77">&#9670;&#160;</a></span>VisitBreakStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitBreakStmt </td>
-          <td>(</td>
-          <td class="paramtype">BreakStmt *&#160;</td>
-          <td class="paramname"><em>stmt</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00260">260</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="ad5b130e359f85a66a69693ad77cd5252" name="ad5b130e359f85a66a69693ad77cd5252"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5b130e359f85a66a69693ad77cd5252">&#9670;&#160;</a></span>VisitCallExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitCallExpr </td>
-          <td>(</td>
-          <td class="paramtype">CallExpr *&#160;</td>
-          <td class="paramname"><em>callexpr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00997">997</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a2620702c745a2b24c9f89e10231cdc88" name="a2620702c745a2b24c9f89e10231cdc88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2620702c745a2b24c9f89e10231cdc88">&#9670;&#160;</a></span>VisitCaseStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitCaseStmt </td>
-          <td>(</td>
-          <td class="paramtype">CaseStmt *&#160;</td>
-          <td class="paramname"><em>stmt</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00224">224</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a3e8a2eed3a9081cbff7520dda48b0c25" name="a3e8a2eed3a9081cbff7520dda48b0c25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e8a2eed3a9081cbff7520dda48b0c25">&#9670;&#160;</a></span>VisitCompoundStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitCompoundStmt </td>
-          <td>(</td>
-          <td class="paramtype">CompoundStmt *&#160;</td>
-          <td class="paramname"><em>compoundStmt</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00274">274</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a50bd1506d1c0ab644c3d83a6ba68a1cb" name="a50bd1506d1c0ab644c3d83a6ba68a1cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50bd1506d1c0ab644c3d83a6ba68a1cb">&#9670;&#160;</a></span>VisitConditionalOperator()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitConditionalOperator </td>
-          <td>(</td>
-          <td class="paramtype">ConditionalOperator *&#160;</td>
-          <td class="paramname"><em>expr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00509">509</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a8f249134babafd50bf0308987f4195b1" name="a8f249134babafd50bf0308987f4195b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f249134babafd50bf0308987f4195b1">&#9670;&#160;</a></span>VisitContinueStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitContinueStmt </td>
-          <td>(</td>
-          <td class="paramtype">ContinueStmt *&#160;</td>
-          <td class="paramname"><em>stmt</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00267">267</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="ad2b9de6a015efe28e3292f141039c6e3" name="ad2b9de6a015efe28e3292f141039c6e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2b9de6a015efe28e3292f141039c6e3">&#9670;&#160;</a></span>VisitCXXBoolLiteralExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitCXXBoolLiteralExpr </td>
-          <td>(</td>
-          <td class="paramtype">CXXBoolLiteralExpr *&#160;</td>
-          <td class="paramname"><em>b</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00535">535</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="ae9557e2a57ea8b618095d774fba32df1" name="ae9557e2a57ea8b618095d774fba32df1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae9557e2a57ea8b618095d774fba32df1">&#9670;&#160;</a></span>VisitCXXMemberCallExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitCXXMemberCallExpr </td>
-          <td>(</td>
-          <td class="paramtype">CXXMemberCallExpr *&#160;</td>
-          <td class="paramname"><em>callexpr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00655">655</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a0e03b8ec6dd7572b40d16033b2e4b3ee" name="a0e03b8ec6dd7572b40d16033b2e4b3ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e03b8ec6dd7572b40d16033b2e4b3ee">&#9670;&#160;</a></span>VisitCXXOperatorCallExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitCXXOperatorCallExpr </td>
-          <td>(</td>
-          <td class="paramtype">CXXOperatorCallExpr *&#160;</td>
-          <td class="paramname"><em>opcall</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00828">828</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="ad877adc1d1825e58513da9899c42be43" name="ad877adc1d1825e58513da9899c42be43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad877adc1d1825e58513da9899c42be43">&#9670;&#160;</a></span>VisitCXXTemporaryObjectExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitCXXTemporaryObjectExpr </td>
-          <td>(</td>
-          <td class="paramtype">CXXTemporaryObjectExpr *&#160;</td>
-          <td class="paramname"><em>stmt</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00189">189</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="ae9fadb2f18880d4966fd9f0b4ef6ec8e" name="ae9fadb2f18880d4966fd9f0b4ef6ec8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae9fadb2f18880d4966fd9f0b4ef6ec8e">&#9670;&#160;</a></span>VisitDeclRefExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitDeclRefExpr </td>
-          <td>(</td>
-          <td class="paramtype">DeclRefExpr *&#160;</td>
-          <td class="paramname"><em>expr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00543">543</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a548d4f0dc307c47a032e2eecc0c80c3c" name="a548d4f0dc307c47a032e2eecc0c80c3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a548d4f0dc307c47a032e2eecc0c80c3c">&#9670;&#160;</a></span>VisitDeclStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitDeclStmt </td>
-          <td>(</td>
-          <td class="paramtype">DeclStmt *&#160;</td>
-          <td class="paramname"><em>declstmt</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Process local variable and signal declarations, promoting to module level with unique names </p>
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00305">305</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a3ec144767770cbb44ea3e01d0bb5cfc9" name="a3ec144767770cbb44ea3e01d0bb5cfc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ec144767770cbb44ea3e01d0bb5cfc9">&#9670;&#160;</a></span>VisitDefaultStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitDefaultStmt </td>
-          <td>(</td>
-          <td class="paramtype">DefaultStmt *&#160;</td>
-          <td class="paramname"><em>stmt</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00247">247</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="ac9f4718fdd559e0662eafc17ae38d790" name="ac9f4718fdd559e0662eafc17ae38d790"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9f4718fdd559e0662eafc17ae38d790">&#9670;&#160;</a></span>VisitDoStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitDoStmt </td>
-          <td>(</td>
-          <td class="paramtype">DoStmt *&#160;</td>
-          <td class="paramname"><em>whiles</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01205">1205</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="aecf90d6cb16a04ab0b70e7c0b54d5f96" name="aecf90d6cb16a04ab0b70e7c0b54d5f96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aecf90d6cb16a04ab0b70e7c0b54d5f96">&#9670;&#160;</a></span>VisitForStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitForStmt </td>
-          <td>(</td>
-          <td class="paramtype">ForStmt *&#160;</td>
-          <td class="paramname"><em>fors</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01066">1066</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="ad3020aa7be4330a149abbf8dca588dc2" name="ad3020aa7be4330a149abbf8dca588dc2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3020aa7be4330a149abbf8dca588dc2">&#9670;&#160;</a></span>VisitIfStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitIfStmt </td>
-          <td>(</td>
-          <td class="paramtype">IfStmt *&#160;</td>
-          <td class="paramname"><em>ifs</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01039">1039</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="aa5ec257dc7cda0c3f4f6924c1fa21889" name="aa5ec257dc7cda0c3f4f6924c1fa21889"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5ec257dc7cda0c3f4f6924c1fa21889">&#9670;&#160;</a></span>VisitInitListExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitInitListExpr </td>
-          <td>(</td>
-          <td class="paramtype">InitListExpr *&#160;</td>
-          <td class="paramname"><em>stmt</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00204">204</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="af1bcc28811cb1c3958272beec6d6e74d" name="af1bcc28811cb1c3958272beec6d6e74d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1bcc28811cb1c3958272beec6d6e74d">&#9670;&#160;</a></span>VisitIntegerLiteral()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitIntegerLiteral </td>
-          <td>(</td>
-          <td class="paramtype">IntegerLiteral *&#160;</td>
-          <td class="paramname"><em>lit</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00527">527</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a5a93a335bb4abf43d42cb17a6682d4ee" name="a5a93a335bb4abf43d42cb17a6682d4ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a93a335bb4abf43d42cb17a6682d4ee">&#9670;&#160;</a></span>VisitMemberExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitMemberExpr </td>
-          <td>(</td>
-          <td class="paramtype">MemberExpr *&#160;</td>
-          <td class="paramname"><em>memberexpr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00922">922</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a540cb5120c92ae277fd2c3266b724613" name="a540cb5120c92ae277fd2c3266b724613"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a540cb5120c92ae277fd2c3266b724613">&#9670;&#160;</a></span>VisitReturnStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitReturnStmt </td>
-          <td>(</td>
-          <td class="paramtype">ReturnStmt *&#160;</td>
-          <td class="paramname"><em>stmt</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00214">214</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a72def54e587a7d8b69bbb353359a255e" name="a72def54e587a7d8b69bbb353359a255e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72def54e587a7d8b69bbb353359a255e">&#9670;&#160;</a></span>VisitSwitchStmt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitSwitchStmt </td>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseSwitchStmt </td>
           <td>(</td>
           <td class="paramtype">SwitchStmt *&#160;</td>
           <td class="paramname"><em>switchs</em></td><td>)</td>
@@ -1111,18 +957,18 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01125">1125</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01067">1067</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a5ecf3838daeb7b200bbb9a86cc8b395a" name="a5ecf3838daeb7b200bbb9a86cc8b395a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ecf3838daeb7b200bbb9a86cc8b395a">&#9670;&#160;</a></span>VisitUnaryOperator()</h2>
+<a id="aea5adec11845becc800e3d0e10c58008" name="aea5adec11845becc800e3d0e10c58008"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea5adec11845becc800e3d0e10c58008">&#9670;&#160;</a></span>TraverseUnaryOperator()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitUnaryOperator </td>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseUnaryOperator </td>
           <td>(</td>
           <td class="paramtype">UnaryOperator *&#160;</td>
           <td class="paramname"><em>expr</em></td><td>)</td>
@@ -1131,18 +977,18 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00481">481</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l00462">462</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a8a7ed707a17438b304872240dc9da3ff" name="a8a7ed707a17438b304872240dc9da3ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a7ed707a17438b304872240dc9da3ff">&#9670;&#160;</a></span>VisitWhileStmt()</h2>
+<a id="aee15dc90242038d2cca3beef78cfac45" name="aee15dc90242038d2cca3beef78cfac45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee15dc90242038d2cca3beef78cfac45">&#9670;&#160;</a></span>TraverseWhileStmt()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool systemc_hdl::HDLBody::VisitWhileStmt </td>
+          <td class="memname">bool systemc_hdl::HDLBody::TraverseWhileStmt </td>
           <td>(</td>
           <td class="paramtype">WhileStmt *&#160;</td>
           <td class="paramname"><em>whiles</em></td><td>)</td>
@@ -1151,7 +997,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01178">1178</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8cpp_source.html#l01121">1121</a> of file <a class="el" href="HDLBody_8cpp_source.html">HDLBody.cpp</a>.</p>
 
 </div>
 </div>
@@ -1176,7 +1022,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00097">97</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00088">88</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1200,7 +1046,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00102">102</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00093">93</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1224,7 +1070,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00129">129</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00120">120</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1240,7 +1086,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00085">85</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00076">76</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1264,7 +1110,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00092">92</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00083">83</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1288,7 +1134,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00104">104</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00095">95</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1312,7 +1158,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00127">127</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00118">118</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1328,7 +1174,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00083">83</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00074">74</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1352,7 +1198,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00095">95</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00086">86</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1376,7 +1222,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00099">99</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00090">90</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1392,7 +1238,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00089">89</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00080">80</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1416,7 +1262,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00101">101</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00092">92</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
@@ -1432,7 +1278,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00087">87</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="HDLBody_8h_source.html#l00078">78</a> of file <a class="el" href="HDLBody_8h_source.html">HDLBody.h</a>.</p>
 
 </div>
 </div>
