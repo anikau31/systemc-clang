@@ -1,9 +1,9 @@
 <map id="systemc_clang::InterfaceDecl" name="systemc_clang::InterfaceDecl">
-<area shape="rect" id="node1" title=" " alt="" coords="1321,46,1513,73"/>
-<area shape="rect" id="node2" href="$classsystemc__clang_1_1FindTemplateTypes.html" title=" " alt="" coords="987,39,1181,80"/>
-<area shape="rect" id="node3" title=" " alt="" coords="622,5,802,47"/>
-<area shape="rect" id="node4" href="$classsystemc__clang_1_1Tree.html" title=" " alt="" coords="603,71,821,112"/>
-<area shape="rect" id="node5" href="$classsystemc__clang_1_1TreeNode.html" title=" " alt="" coords="303,71,521,112"/>
-<area shape="rect" id="node6" href="$classsystemc__clang_1_1TemplateType.html" title=" " alt="" coords="8,34,205,61"/>
-<area shape="rect" id="node7" href="$classsystemc__clang_1_1TreeNode.html" title="class TreeNode&lt;T&gt;" alt="" coords="5,123,208,150"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1321,45,1513,70"/>
+<area shape="rect" id="node2" href="$classsystemc__clang_1_1FindTemplateTypes.html" title=" " alt="" coords="987,37,1181,77"/>
+<area shape="rect" id="node3" title=" " alt="" coords="622,5,802,45"/>
+<area shape="rect" id="node4" href="$classsystemc__clang_1_1Tree.html" title=" " alt="" coords="603,69,821,109"/>
+<area shape="rect" id="node5" href="$classsystemc__clang_1_1TreeNode.html" title=" " alt="" coords="303,69,521,109"/>
+<area shape="rect" id="node6" href="$classsystemc__clang_1_1TemplateType.html" title=" " alt="" coords="8,33,205,58"/>
+<area shape="rect" id="node7" href="$classsystemc__clang_1_1TreeNode.html" title="class TreeNode&lt;T&gt;" alt="" coords="5,121,208,146"/>
 </map>

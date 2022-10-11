@@ -1,10 +1,10 @@
 <map id="plugins/hdl/HDLType.h" name="plugins/hdl/HDLType.h">
-<area shape="rect" id="node1" title=" " alt="" coords="370,5,523,32"/>
-<area shape="rect" id="node2" href="$HDLBody_8h.html" title=" " alt="" coords="237,80,392,107"/>
-<area shape="rect" id="node4" href="$HDLMain_8h.html" title=" " alt="" coords="387,155,541,181"/>
-<area shape="rect" id="node8" href="$HDLType_8cpp.html" title=" " alt="" coords="485,80,651,107"/>
-<area shape="rect" id="node3" href="$HDLBody_8cpp.html" title=" " alt="" coords="5,155,173,181"/>
-<area shape="rect" id="node6" href="$HDLThread_8h.html" title=" " alt="" coords="197,155,363,181"/>
-<area shape="rect" id="node5" href="$HDLMain_8cpp.html" title=" " alt="" coords="381,229,547,256"/>
-<area shape="rect" id="node7" href="$HDLThread_8cpp.html" title=" " alt="" coords="177,229,356,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="370,5,523,31"/>
+<area shape="rect" id="node2" href="$HDLBody_8h.html" title=" " alt="" coords="237,79,392,104"/>
+<area shape="rect" id="node4" href="$HDLMain_8h.html" title=" " alt="" coords="387,152,541,177"/>
+<area shape="rect" id="node8" href="$HDLType_8cpp.html" title=" " alt="" coords="485,79,651,104"/>
+<area shape="rect" id="node3" href="$HDLBody_8cpp.html" title=" " alt="" coords="5,152,173,177"/>
+<area shape="rect" id="node6" href="$HDLThread_8h.html" title=" " alt="" coords="197,152,363,177"/>
+<area shape="rect" id="node5" href="$HDLMain_8cpp.html" title=" " alt="" coords="381,225,547,251"/>
+<area shape="rect" id="node7" href="$HDLThread_8cpp.html" title=" " alt="" coords="177,225,356,251"/>
 </map>

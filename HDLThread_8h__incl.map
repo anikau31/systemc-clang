@@ -1,52 +1,52 @@
 <map id="plugins/hdl/HDLThread.h" name="plugins/hdl/HDLThread.h">
-<area shape="rect" id="node1" title=" " alt="" coords="1015,5,1180,32"/>
-<area shape="rect" id="node2" href="$SystemCClang_8h.html" title=" " alt="" coords="1733,229,1851,256"/>
-<area shape="rect" id="node15" title=" " alt="" coords="2039,543,2223,569"/>
-<area shape="rect" id="node26" title=" " alt="" coords="475,543,621,569"/>
-<area shape="rect" id="node28" title=" " alt="" coords="149,543,293,569"/>
-<area shape="rect" id="node33" title=" " alt="" coords="1927,229,2073,256"/>
-<area shape="rect" id="node34" href="$hNode_8h.html" title=" " alt="" coords="642,229,713,256"/>
-<area shape="rect" id="node38" title=" " alt="" coords="924,311,1028,338"/>
-<area shape="rect" id="node41" href="$HDLBody_8h.html" title=" " alt="" coords="1053,80,1141,107"/>
-<area shape="rect" id="node47" href="$SplitCFG_8h.html" title=" " alt="" coords="1948,80,2033,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="1857,311,2039,338"/>
-<area shape="rect" id="node4" title=" " alt="" coords="1664,692,1883,719"/>
-<area shape="rect" id="node5" title=" " alt="" coords="2064,311,2259,338"/>
-<area shape="rect" id="node6" title=" " alt="" coords="2283,311,2506,338"/>
-<area shape="rect" id="node7" title=" " alt="" coords="2530,304,2729,345"/>
-<area shape="rect" id="node8" title=" " alt="" coords="2752,304,2952,345"/>
-<area shape="rect" id="node9" title=" " alt="" coords="1677,311,1832,338"/>
-<area shape="rect" id="node10" href="$Model_8h.html" title=" " alt="" coords="1395,311,1501,338"/>
-<area shape="rect" id="node24" href="$Matchers_8h.html" title=" " alt="" coords="1131,393,1218,420"/>
-<area shape="rect" id="node32" href="$FindSCMain_8h.html" title=" " alt="" coords="2361,468,2522,495"/>
-<area shape="rect" id="node11" href="$EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="1246,692,1413,719"/>
-<area shape="rect" id="node12" title=" " alt="" coords="1897,767,1943,793"/>
-<area shape="rect" id="node13" title=" " alt="" coords="1079,767,1134,793"/>
-<area shape="rect" id="node14" href="$EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="1395,468,1515,495"/>
-<area shape="rect" id="node16" href="$FindGlobalEvents_8h.html" title=" " alt="" coords="1797,468,1931,495"/>
-<area shape="rect" id="node17" title=" " alt="" coords="664,692,723,719"/>
-<area shape="rect" id="node18" href="$FindNetlist_8h.html" title=" " alt="" coords="1955,468,2050,495"/>
-<area shape="rect" id="node19" title=" " alt="" coords="1509,543,1659,569"/>
-<area shape="rect" id="node20" href="$FindSimTime_8h.html" title=" " alt="" coords="2075,468,2184,495"/>
-<area shape="rect" id="node21" href="$ModuleInstance_8h.html" title=" " alt="" coords="1166,543,1290,569"/>
-<area shape="rect" id="node30" href="$FindGPUMacro_8h.html" title=" " alt="" coords="1590,468,1773,495"/>
-<area shape="rect" id="node22" href="$FindConstructor_8h.html" title=" " alt="" coords="1465,617,1589,644"/>
-<area shape="rect" id="node23" href="$FindEntryFunctions_8h.html" title=" " alt="" coords="1246,617,1389,644"/>
-<area shape="rect" id="node25" href="$InstanceMatcher_8h.html" title=" " alt="" coords="555,468,685,495"/>
-<area shape="rect" id="node27" href="$CXXRecordDeclUtils_8h.html" title=" " alt="" coords="326,468,479,495"/>
-<area shape="rect" id="node29" href="$PortMatcher_8h.html" title=" " alt="" coords="1014,468,1117,495"/>
-<area shape="rect" id="node31" title=" " alt="" coords="797,543,837,569"/>
-<area shape="rect" id="node35" title=" " alt="" coords="650,311,705,338"/>
-<area shape="rect" id="node36" title=" " alt="" coords="729,311,804,338"/>
-<area shape="rect" id="node37" title=" " alt="" coords="1053,311,1163,338"/>
-<area shape="rect" id="node39" title=" " alt="" coords="828,311,900,338"/>
-<area shape="rect" id="node40" href="$CallExprUtils_8h.html" title=" " alt="" coords="195,468,301,495"/>
-<area shape="rect" id="node42" title=" " alt="" coords="1289,155,1351,181"/>
-<area shape="rect" id="node43" title=" " alt="" coords="1376,155,1501,181"/>
-<area shape="rect" id="node44" title=" " alt="" coords="952,155,1075,181"/>
-<area shape="rect" id="node45" title=" " alt="" coords="1099,155,1264,181"/>
-<area shape="rect" id="node46" href="$HDLType_8h.html" title=" " alt="" coords="841,155,927,181"/>
-<area shape="rect" id="node48" href="$SplitCFGBlock_8h.html" title=" " alt="" coords="1931,155,2050,181"/>
-<area shape="rect" id="node49" title=" " alt="" coords="2074,155,2235,181"/>
-<area shape="rect" id="node50" title=" " alt="" coords="2260,155,2420,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1015,5,1180,31"/>
+<area shape="rect" id="node2" href="$SystemCClang_8h.html" title=" " alt="" coords="1733,225,1851,251"/>
+<area shape="rect" id="node15" title=" " alt="" coords="2039,533,2223,559"/>
+<area shape="rect" id="node26" title=" " alt="" coords="475,533,621,559"/>
+<area shape="rect" id="node28" title=" " alt="" coords="149,533,293,559"/>
+<area shape="rect" id="node33" title=" " alt="" coords="1927,225,2073,251"/>
+<area shape="rect" id="node34" href="$hNode_8h.html" title=" " alt="" coords="642,225,713,251"/>
+<area shape="rect" id="node38" title=" " alt="" coords="924,306,1028,331"/>
+<area shape="rect" id="node41" href="$HDLBody_8h.html" title=" " alt="" coords="1053,79,1141,104"/>
+<area shape="rect" id="node47" href="$SplitCFG_8h.html" title=" " alt="" coords="1948,79,2033,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="1857,306,2039,331"/>
+<area shape="rect" id="node4" title=" " alt="" coords="1664,680,1883,705"/>
+<area shape="rect" id="node5" title=" " alt="" coords="2064,306,2259,331"/>
+<area shape="rect" id="node6" title=" " alt="" coords="2283,306,2506,331"/>
+<area shape="rect" id="node7" title=" " alt="" coords="2530,299,2729,339"/>
+<area shape="rect" id="node8" title=" " alt="" coords="2752,299,2952,339"/>
+<area shape="rect" id="node9" title=" " alt="" coords="1677,306,1832,331"/>
+<area shape="rect" id="node10" href="$Model_8h.html" title=" " alt="" coords="1395,306,1501,331"/>
+<area shape="rect" id="node24" href="$Matchers_8h.html" title=" " alt="" coords="1131,387,1218,412"/>
+<area shape="rect" id="node32" href="$FindSCMain_8h.html" title=" " alt="" coords="2361,460,2522,485"/>
+<area shape="rect" id="node11" href="$EntryFunctionContainer_8h.html" title="A container class to hold entry function information." alt="" coords="1246,680,1413,705"/>
+<area shape="rect" id="node12" title=" " alt="" coords="1897,753,1943,779"/>
+<area shape="rect" id="node13" title=" " alt="" coords="1079,753,1134,779"/>
+<area shape="rect" id="node14" href="$EventContainer_8h.html" title="Container class to hold sc_event information." alt="" coords="1395,460,1515,485"/>
+<area shape="rect" id="node16" href="$FindGlobalEvents_8h.html" title=" " alt="" coords="1797,460,1931,485"/>
+<area shape="rect" id="node17" title=" " alt="" coords="664,680,723,705"/>
+<area shape="rect" id="node18" href="$FindNetlist_8h.html" title=" " alt="" coords="1955,460,2050,485"/>
+<area shape="rect" id="node19" title=" " alt="" coords="1509,533,1659,559"/>
+<area shape="rect" id="node20" href="$FindSimTime_8h.html" title=" " alt="" coords="2075,460,2184,485"/>
+<area shape="rect" id="node21" href="$ModuleInstance_8h.html" title=" " alt="" coords="1166,533,1290,559"/>
+<area shape="rect" id="node30" href="$FindGPUMacro_8h.html" title=" " alt="" coords="1590,460,1773,485"/>
+<area shape="rect" id="node22" href="$FindConstructor_8h.html" title=" " alt="" coords="1465,607,1589,632"/>
+<area shape="rect" id="node23" href="$FindEntryFunctions_8h.html" title=" " alt="" coords="1246,607,1389,632"/>
+<area shape="rect" id="node25" href="$InstanceMatcher_8h.html" title=" " alt="" coords="555,460,685,485"/>
+<area shape="rect" id="node27" href="$CXXRecordDeclUtils_8h.html" title=" " alt="" coords="326,460,479,485"/>
+<area shape="rect" id="node29" href="$PortMatcher_8h.html" title=" " alt="" coords="1014,460,1117,485"/>
+<area shape="rect" id="node31" title=" " alt="" coords="797,533,837,559"/>
+<area shape="rect" id="node35" title=" " alt="" coords="650,306,705,331"/>
+<area shape="rect" id="node36" title=" " alt="" coords="729,306,804,331"/>
+<area shape="rect" id="node37" title=" " alt="" coords="1053,306,1163,331"/>
+<area shape="rect" id="node39" title=" " alt="" coords="828,306,900,331"/>
+<area shape="rect" id="node40" href="$CallExprUtils_8h.html" title=" " alt="" coords="195,460,301,485"/>
+<area shape="rect" id="node42" title=" " alt="" coords="1289,152,1351,177"/>
+<area shape="rect" id="node43" title=" " alt="" coords="1376,152,1501,177"/>
+<area shape="rect" id="node44" title=" " alt="" coords="952,152,1075,177"/>
+<area shape="rect" id="node45" title=" " alt="" coords="1099,152,1264,177"/>
+<area shape="rect" id="node46" href="$HDLType_8h.html" title=" " alt="" coords="841,152,927,177"/>
+<area shape="rect" id="node48" href="$SplitCFGBlock_8h.html" title=" " alt="" coords="1931,152,2050,177"/>
+<area shape="rect" id="node49" title=" " alt="" coords="2074,152,2235,177"/>
+<area shape="rect" id="node50" title=" " alt="" coords="2260,152,2420,177"/>
 </map>

@@ -1,12 +1,12 @@
 <map id="systemc_hdl::HDLBody" name="systemc_hdl::HDLBody">
-<area shape="rect" id="node1" title=" " alt="" coords="932,169,1089,195"/>
-<area shape="rect" id="node2" title=" " alt="" coords="579,5,759,47"/>
-<area shape="rect" id="node3" href="$classhnode_1_1hfunc__name__map__t.html" title=" " alt="" coords="580,71,757,98"/>
-<area shape="rect" id="node4" href="$classhnode_1_1newname__map__t.html" title=" " alt="" coords="205,81,380,107"/>
-<area shape="rect" id="node5" href="$classhnode_1_1name__serve.html" title=" " alt="" coords="5,113,140,139"/>
-<area shape="rect" id="node6" href="$classhnode_1_1newname__map__t.html" title=" " alt="" coords="404,129,555,171"/>
-<area shape="rect" id="node7" href="$classhnode_1_1hNode.html" title=" " alt="" coords="618,199,719,226"/>
-<area shape="rect" id="node8" href="$classHDLType.html" title=" " alt="" coords="630,250,707,277"/>
-<area shape="rect" id="node9" href="$structHDLType_1_1usertype__info__t.html" title=" " alt="" coords="207,213,378,239"/>
-<area shape="rect" id="node10" href="$classhnode_1_1util.html" title=" " alt="" coords="253,282,333,309"/>
+<area shape="rect" id="node1" title=" " alt="" coords="932,167,1089,193"/>
+<area shape="rect" id="node2" title=" " alt="" coords="579,5,759,45"/>
+<area shape="rect" id="node3" href="$classhnode_1_1hfunc__name__map__t.html" title=" " alt="" coords="580,70,757,95"/>
+<area shape="rect" id="node4" href="$classhnode_1_1newname__map__t.html" title=" " alt="" coords="205,79,380,105"/>
+<area shape="rect" id="node5" href="$classhnode_1_1name__serve.html" title=" " alt="" coords="5,111,140,137"/>
+<area shape="rect" id="node6" href="$classhnode_1_1newname__map__t.html" title=" " alt="" coords="404,128,555,168"/>
+<area shape="rect" id="node7" href="$classhnode_1_1hNode.html" title=" " alt="" coords="618,198,719,223"/>
+<area shape="rect" id="node8" href="$classHDLType.html" title=" " alt="" coords="630,247,707,273"/>
+<area shape="rect" id="node9" href="$structHDLType_1_1usertype__info__t.html" title=" " alt="" coords="207,210,378,235"/>
+<area shape="rect" id="node10" href="$classhnode_1_1util.html" title=" " alt="" coords="253,279,333,305"/>
 </map>
