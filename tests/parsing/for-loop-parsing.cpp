@@ -15,7 +15,12 @@ using namespace sc_ast_matchers::utils;
 using namespace systemc_clang;
 
 class ForLoopMatcher : public MatchFinder::MatchCallback {
+  private:
+    llvm::SmallVector<const ForStmt*> notnested_loops_;
+
  public:
+    llvm::SmallVector<const ForStmt*> getNotNestedLoops() const { return notnested_loops_; }
+
    auto makeLoopMatcher(llvm::StringRef name, bool nested = true) {
 
     auto InitVar =
@@ -88,6 +93,8 @@ class ForLoopMatcher : public MatchFinder::MatchCallback {
     }
 
     if (cxx_decl && not_nested) {
+      notnested_loops_.push_back(not_nested);
+
       llvm::dbgs() << "#Not nested Loop\n";
       not_nested->getInit()->dump();
       if (nn_init_vd) {
@@ -172,10 +179,13 @@ SC_MODULE( test ){
           sensitive << out_array_port[k];
           for (int k1{0}; k1 <= MAX_DEPTH+2; ++k1) {
           sensitive << out_array_port[k1];
-
-
-        }
+          }
    
+          for (int k2{0}; k2 <= MAX_DEPTH+2; ++k2) {
+          sensitive << out_array_port[k2];
+          }
+   
+
 
         }
       }
