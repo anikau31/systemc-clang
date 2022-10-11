@@ -16,124 +16,87 @@ using namespace systemc_clang;
 
 class ForLoopMatcher : public MatchFinder::MatchCallback {
  public:
+   auto makeLoopMatcher(llvm::StringRef name, bool nested = true) {
+
+    auto InitVar =
+        hasLoopInit(declStmt(hasSingleDecl(varDecl().bind(name.str() + "_init_vd"))));
+    auto CondVar = 
+      hasCondition(binaryOperator(hasLHS(declRefExpr(to(varDecl().bind(name.str() + "_cond_vd"))))));
+    auto IncVar = 
+      hasIncrement(unaryOperator(hasUnaryOperand(declRefExpr(to(varDecl().bind(name.str() + "_inc_vd"))))));
+
+    if (nested) {
+      return forStmt(InitVar, CondVar, IncVar).bind(name);
+    } else {
+      return forStmt(InitVar, CondVar, IncVar, unless(hasDescendant(forStmt())), unless(hasAncestor(forStmt()))).bind(name);
+    }
+   }
+
   void registerMatchers(MatchFinder &finder) {
-    // auto ForLoop = cxxRecordDecl(hasName("test"),
-                                 // forEach(forStmt().bind("for_stmt")))
-                       // .bind("cxx_decl");
+    /* clang-format off */
     auto TestClass = cxxRecordDecl(hasName("test")).bind("cxx_decl");
-    auto ForLoop = cxxRecordDecl(hasName("test"), 
-        forEachDescendant(forStmt().bind("for_stmt")))
-      .bind("cxx_decl");
-    // auto NoNestedForLoop = cxxRecordDecl(hasName("test"),
-        // forEachDescendant(forStmt().bind("for_stmt"),
-          // ))
-      // .bind("cxx_decl");
-
-    finder.addMatcher(traverse(TK_IgnoreUnlessSpelledInSource, ForLoop), this);
-    // finder.addMatcher(traverse(TK_IgnoreUnlessSpelledInSource, NoNestedForLoop), this);
-  }
-
-  virtual void run(const MatchFinder::MatchResult &Result) {
-    // if (const clang::CXXRecordDecl *decl =
-            // Result.Nodes.getNodeAs<clang::CXXRecordDecl>("cxx_decl")) {
-      // llvm::dbgs() << "### CXXDeclMatcher\n";
-      // decl->dump();
-      if (const clang::ForStmt *fs =
-              Result.Nodes.getNodeAs<clang::ForStmt>("for_stmt")) {
-        llvm::dbgs() << "For Stmt\n";
-        fs->dump();
-
-        llvm::dbgs() << "init\n";
-        fs->getInit()->dump();
-        llvm::dbgs() << "cond\n";
-        fs->getCond()->dump();
-        llvm::dbgs() << "inc\n";
-        fs->getInc()->dump();
-      }
-    // }
-  }
-};
-
-class CXXDeclMatcher : public MatchFinder::MatchCallback {
- public:
-  void registerMatchers(MatchFinder &finder) {
-    auto DeclMatcher = cxxRecordDecl(hasName("A")).bind("cxx_decl");
-    auto ParmVar = cxxRecordDecl(hasName("A"),
-                                 hasDescendant(cxxMethodDecl(
-                                     hasDescendant(parmVarDecl().bind("pvd")))))
-                       .bind("cxx_decl");
-    auto MEMatcher = cxxMemberCallExpr().bind("cxx_mce");
-
     auto ForLoop = cxxRecordDecl(hasName("test"),
-                                 hasDescendant(forStmt().bind("for_stmt")))
+                                 forEachDescendant(forStmt().bind("for_stmt")))
                        .bind("cxx_decl");
+    auto LoopInLoop =
+        forStmt(hasDescendant(makeLoopMatcher("nested"))).bind("for_stmt");
 
-    // finder.addMatcher(DeclMatcher, this);
-    // finder.addMatcher(ParmVar, this);
-    // finder.addMatcher(MEMatcher, this);
-    finder.addMatcher(ForLoop, this);
+    auto NestedForLoop =
+        cxxRecordDecl(hasName("test"), forEachDescendant(LoopInLoop))
+            .bind("cxx_decl");
+
+    auto NotNestedForLoop = 
+        cxxRecordDecl(hasName("test"), 
+            forEachDescendant(makeLoopMatcher("notnested", false))
+            ).bind("cxx_decl");
+        // cxxRecordDecl(hasName("test"), forEachDescendant(forStmt(unless(hasDescendant(forStmt())),
+            // unless(hasAncestor(forStmt()))
+            // ).bind("notnested_for"))).bind("cxx_decl");
+//
+    auto cxxdecl = cxxRecordDecl(hasName("test")).bind("cxx_decl");
+
+    /* clang-format on */
+
+    finder.addMatcher(traverse(TK_IgnoreUnlessSpelledInSource, NestedForLoop),
+                      this);
+    finder.addMatcher(
+        traverse(TK_IgnoreUnlessSpelledInSource, NotNestedForLoop), this);
   }
 
   virtual void run(const MatchFinder::MatchResult &Result) {
-    /*
-    if (const clang::CXXMemberCallExpr *me =
-            Result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("cxx_mce")) {
-      llvm::dbgs() << "\n### CXX MCE\n";
-      bool is_sc{isCXXMemberCallExprSystemCCall(me)};
+    const clang::CXXRecordDecl *cxx_decl=
+        Result.Nodes.getNodeAs<clang::CXXRecordDecl>("cxx_decl");
+    const clang::ForStmt *parent =
+        Result.Nodes.getNodeAs<clang::ForStmt>("for_stmt");
+    const clang::ForStmt *nested =
+        Result.Nodes.getNodeAs<clang::ForStmt>("nested");
+    const clang::ForStmt *not_nested =
+        Result.Nodes.getNodeAs<clang::ForStmt>("notnested");
 
-      if (is_sc) {
-        llvm::dbgs() << "@ Is sc_object call\n";
-      } else {
-        llvm::dbgs() << "@ Is NOT sc_object call\n";
-      }
+    const clang::VarDecl *nn_init_vd=
+        Result.Nodes.getNodeAs<clang::VarDecl>("notnested_init_vd");
+
+    if (cxx_decl && parent && nested) {
+      llvm::dbgs() << "##### \n For Stmt\n";
+      // parent->dump();
+
+      llvm::dbgs() << "#Parent Loop\n";
+      parent->getInit()->dump();
+
+      llvm::dbgs() << "#Nested loop\n";
+      nested->getInit()->dump();
     }
-    */
 
-    if (const clang::CXXRecordDecl *decl =
-            Result.Nodes.getNodeAs<clang::CXXRecordDecl>("cxx_decl")) {
-      llvm::dbgs() << "### CXXDeclMatcher\n";
-      decl->dump();
-      if (const clang::ForStmt *fs =
-              Result.Nodes.getNodeAs<clang::ForStmt>("for_stmt")) {
-        llvm::dbgs() << "For Stmt\n";
-        fs->dump();
-
-        llvm::dbgs() << "init\n";
-        fs->getInit()->dump();
-        llvm::dbgs() << "cond\n";
-        fs->getCond()->dump();
-        llvm::dbgs() << "inc\n";
-        fs->getInc()->dump();
+    if (cxx_decl && not_nested) {
+      llvm::dbgs() << "#Not nested Loop\n";
+      not_nested->getInit()->dump();
+      if (nn_init_vd) {
+      llvm::dbgs() << "#INIT\n";
+        nn_init_vd->dump();
       }
-
-      /*
-      if (const clang::ParmVarDecl *pvd =
-              Result.Nodes.getNodeAs<clang::ParmVarDecl>("pvd")) {
-        llvm::dbgs() << "### PARMVARDECL: \n";
-        pvd->getType().dump();
-        llvm::dbgs() << "### Isconst : " << pvd->getType().isConstQualified() <<
-      " \n"; clang::QualType q{pvd->getType().getNonReferenceType()};
-        llvm::dbgs() << "### q: " << q.isConstQualified() << " \n";
-        q.dump();
-
-        pvd->dump();
-      }
-      */
     }
   }
 };
-
-// Source:
-// https://www.toptip.ca/2010/03/trim-leading-or-trailing-white-spaces.html
-std::string &trim(std::string &s) {
-  size_t p = s.find_first_not_of(" \t");
-  s.erase(0, p);
-
-  p = s.find_last_not_of(" \t");
-  if (string::npos != p) s.erase(p + 1);
-
-  return s;
-}
 
 TEST_CASE("Basic parsing checks") {
   std::string code = R"(
@@ -204,12 +167,24 @@ SC_MODULE( test ){
       sensitive << out_array_port[i];
       for (int j{0}; j <= MAX_DEPTH+1; ++j) {
         sensitive << out_array_port[j];
+
+        for (int k{0}; k <= MAX_DEPTH+2; ++k) {
+          sensitive << out_array_port[k];
+          for (int k1{0}; k1 <= MAX_DEPTH+2; ++k1) {
+          sensitive << out_array_port[k1];
+
+
+        }
+   
+
+        }
       }
     }
 
-    for (int k{0}; k <= MAX_DEPTH+2; ++k) {
-      sensitive << out_array_port[k];
-    }
+    for (int l{0}; l <= MAX_DEPTH+2; ++l) {
+          sensitive << out_array_port[l];
+        }
+     
   }
 };
 
@@ -274,335 +249,4 @@ int sc_main(int argc, char *argv[]) {
   matcher.registerMatchers(finder);
   //  finder.addMatcher(DeclMatcher, &matcher);
   finder.matchAST(from_ast->getASTContext());
-
-  /*
-/// Turn debug on
-//
-llvm::DebugFlag = true;
-// llvm::setCurrentDebugType("SensitivityMatcher");
-
-SystemCConsumer systemc_clang_consumer{from_ast};
-systemc_clang_consumer.HandleTranslationUnit(from_ast->getASTContext());
-
-auto model{systemc_clang_consumer.getSystemCModel()};
-
-// This provides the module declarations.
-auto instances{model->getInstances()};
-
-// Want to find an instance named "testing".
-
-ModuleInstance *test_module{model->getInstance("testing")};
-ModuleInstance *simple_module{model->getInstance("simple_module_instance")};
-ModuleInstance *dut{model->getInstance("d")};
-
-SUBCASE("Found sc_module instances"){
-// There should be 2 modules identified.
-INFO("Checking number of sc_module instances found: " << instances.size());
-
-CHECK(instances.size() == 3);
-
-CHECK(test_module != nullptr);
-CHECK(simple_module != nullptr);
-
-
-INFO("Checking member ports for test instance.");
-// These checks should be performed on the declarations.
-
-// The module instances have all the information.
-// This is necessary until the parsing code is restructured.
-// There is only one module instance
-// auto module_instances{model->getModuleInstanceMap()};
-// auto p_module{module_decl.find("test")};
-//
-//
-auto test_module_inst{test_module};
-
-// Check if the proper number of ports are found.
-CHECK(test_module_inst->getIPorts().size() == 5);
-CHECK(test_module_inst->getOPorts().size() == 5);
-CHECK(test_module_inst->getIOPorts().size() == 1);
-CHECK(test_module_inst->getSignals().size() == 5);
-CHECK(test_module_inst->getInputStreamPorts().size() == 0);
-CHECK(test_module_inst->getOutputStreamPorts().size() == 0);
-CHECK(test_module_inst->getOtherVars().size() == 3);
-
-// Check process information
-//
-
-// processMapType
-auto process_map{test_module_inst->getProcessMap()};
-CHECK(process_map.size() == 1);
-
-for (auto const &proc : process_map) {
-auto entry_func{proc.second->getEntryFunction()};
-if (entry_func) {
-auto sense_map{entry_func->getSenseMap()};
-CHECK(sense_map.size() == 3);
-
-int check{3};
-for (auto const &sense : sense_map) {
-  llvm::outs() << "@@@@@@@@@@@@@@@@@@************************* : "
-               << sense.first << "\n";
-  if ((sense.first == "entry_function_1_handle__clkpos") ||
-      (sense.first == "entry_function_1_handle__out_array_port") ||
-      (sense.first == "entry_function_1_handle__data")
-      ) {
-    --check;
-  }
-}
-CHECK(check == 0);
-}
-}
-
-//
-// Check port types
-//
-//
-for (auto const &port : test_module_inst->getIPorts()) {
-std::string name{get<0>(port)};
-PortDecl *pd{get<1>(port)};
-FindTemplateTypes *template_type{pd->getTemplateType()};
-Tree<TemplateType> *template_args{template_type->getTemplateArgTreePtr()};
-
-// Print out each argument individually using the iterators.
-//
-
-// Note: template_args must be dereferenced.
-for (auto const &node : *template_args) {
-const TemplateType *type_data{node->getDataPtr()};
-llvm::outs() << "\n- name: " << name
-             << ", type name: " << type_data->getTypeName() << " ";
-
-// Access the parent of the current node.
-// If the node is a pointer to itself, then the node itself is the
-// parent. Otherwise, it points to the parent node.
-auto parent_node{node->getParent()};
-if (parent_node == node) {
-  llvm::outs() << "\n@> parent (itself) type name: "
-               << parent_node->getDataPtr()->getTypeName() << "\n";
-} else {
-  // It is a different parent.
-  llvm::outs() << "\n@> parent (different) type name: "
-               << parent_node->getDataPtr()->getTypeName() << "\n";
-}
-
-// Access the children for each parent.
-// We use the template_args to access it.
-
-auto children{template_args->getChildren(parent_node)};
-for (auto const &kid : children) {
-  llvm::outs() << "@> child type name: "
-               << kid->getDataPtr()->getTypeName() << "\n";
-}
-}
-llvm::outs() << "\n";
-
-std::string dft_str{template_args->dft()};
-
-if (name == "clk") {
-CHECK(trim(dft_str) == "sc_in _Bool");
-}
-if ((name == "in1") || (name == "in2")) {
-CHECK(trim(dft_str) == "sc_in int");
-}
-
-if (name == "three_dim") {
-CHECK(pd->getArrayType() == true);
-CHECK(pd->getArraySizes().size() == 3);
-std::vector<llvm::APInt> sizes{pd->getArraySizes()};
-CHECK(sizes[0].getLimitedValue() == 2);
-CHECK(sizes[1].getLimitedValue() == 3);
-CHECK(sizes[2].getLimitedValue() == 4);
-}
-
-if ((name == "p_in")) {
-CHECK(trim(dft_str) == "sc_in int");
-}
-
-
-}
-
-for (auto const &port : test_module_inst->getOPorts()) {
-auto name{get<0>(port)};
-PortDecl *pd{get<1>(port)};
-auto template_type{pd->getTemplateType()};
-auto template_args{template_type->getTemplateArgTreePtr()};
-
-std::string dft_str{template_args->dft()};
-
-if ((name == "out1") || (name == "out2")) {
-CHECK(trim(dft_str) == "sc_out int");
-}
-
-if (name == "out_array_port") {
-CHECK(pd->getArrayType() == true);
-CHECK(pd->getArraySizes().front() == 5);
-}
-
-if (name == "two_dim") {
-CHECK(pd->getArrayType() == true);
-CHECK(pd->getArraySizes().size() == 2);
-std::vector<llvm::APInt> sizes{pd->getArraySizes()};
-CHECK(sizes[0].getLimitedValue() == 2);
-CHECK(sizes[1].getLimitedValue() == 3);
-}
-}
-
-for (auto const &port : test_module_inst->getIOPorts()) {
-auto name{get<0>(port)};
-PortDecl *pd{get<1>(port)};
-auto template_type{pd->getTemplateType()};
-auto template_args{template_type->getTemplateArgTreePtr()};
-
-std::string dft_str{template_args->dft()};
-
-if ((name == "in_out")) CHECK(trim(dft_str) == "sc_inout double");
-}
-
-for (auto const &sig : test_module_inst->getSignals()) {
-auto name{get<0>(sig)};
-SignalDecl *sg{get<1>(sig)};
-auto template_type{sg->getTemplateTypes()};
-auto template_args{template_type->getTemplateArgTreePtr()};
-
-// Get the tree as a string and check if it is correct.
-std::string dft_str{template_args->dft()};
-if (name == "internal_signal") {
-CHECK(trim(dft_str) == "sc_signal int");
-}
-
-/// Check array parameters
-if (name == "p_sig") {
-CHECK(trim(dft_str) == "sc_signal int");
-}
-
-if (name == "data") {
-CHECK(sg->getArrayType() == true);
-CHECK(sg->getArraySizes().front() == 4);
-}
-
-if (name == "two_dim_sig") {
-CHECK(sg->getArrayType() == true);
-CHECK(sg->getArraySizes().size() == 2);
-std::vector<llvm::APInt> sizes{sg->getArraySizes()};
-CHECK(sizes[0].getLimitedValue() == 2);
-CHECK(sizes[1].getLimitedValue() == 3);
-}
-
-if (name == "three_dim_sig") {
-CHECK(sg->getArrayType() == true);
-CHECK(sg->getArraySizes().size() == 3);
-std::vector<llvm::APInt> sizes{sg->getArraySizes()};
-CHECK(sizes[0].getLimitedValue() == 2);
-CHECK(sizes[1].getLimitedValue() == 3);
-CHECK(sizes[2].getLimitedValue() == 4);
-}
-}
-
-INFO("Checking member ports for simple module instance.");
-auto simple_module_inst{simple_module};
-
-// Check if the proper number of ports are found.
-CHECK(simple_module_inst->getIPorts().size() == 3);
-CHECK(simple_module_inst->getOPorts().size() == 1);
-CHECK(simple_module_inst->getIOPorts().size() == 0);
-CHECK(simple_module_inst->getSignals().size() == 0);
-CHECK(simple_module_inst->getOtherVars().size() == 2);
-CHECK(simple_module_inst->getInputStreamPorts().size() == 0);
-CHECK(simple_module_inst->getOutputStreamPorts().size() == 0);
-
-//
-// Check port types
-//
-//
-for (auto const &port : simple_module_inst->getIPorts()) {
-auto name{get<0>(port)};
-PortDecl *pd{get<1>(port)};
-auto template_type{pd->getTemplateType()};
-auto template_args{template_type->getTemplateArgTreePtr()};
-
-std::string dft_str{template_args->dft()};
-
-if (name == "clk") {
-CHECK(trim(dft_str) == "sc_in _Bool");
-}
-if ((name == "one") || (name == "two")) {
-CHECK(trim(dft_str) == "sc_in int");
-}
-}
-
-for (auto const &port : simple_module_inst->getOPorts()) {
-auto name{get<0>(port)};
-PortDecl *pd{get<1>(port)};
-auto template_type{pd->getTemplateType()};
-auto template_args{template_type->getTemplateArgTreePtr()};
-
-std::string dft_str{template_args->dft()};
-
-if ((name == "out_one")) {
-CHECK(trim(dft_str) == "sc_out int");
-}
-}
-
-int check_count{2};
-for (auto const &ovar : simple_module_inst->getOtherVars()) {
-auto name{get<0>(ovar)};
-PortDecl *pd{get<1>(ovar)};
-auto template_type{pd->getTemplateType()};
-auto template_args{template_type->getTemplateArgTreePtr()};
-
-std::string dft_str{template_args->dft()};
-
-if ((name == "xy")) {
-CHECK(trim(dft_str) == "int");
---check_count;
-}
-
-if (name == "str") {
-if (pd->isPointerType()) {
-  CHECK(trim(dft_str) == "char");
-  --check_count;
-}
-}
-}
-
-//
-//
-// Check netlist
-//
-//
-
-/// Port bindings
-//
-// Instance: testing
-CHECK(test_module->getPortBindings().size() == 0);
-
-// Instance: d
-auto port_bindings{dut->getPortBindings()};
-
-check_count = 3;
-for (auto const &binding : port_bindings) {
-PortBinding *pb{binding.second};
-std::string port_name{pb->getCallerPortName()};
-std::string caller_name{pb->getCallerInstanceName()};
-std::string as_string{pb->toString()};
-llvm::outs() << "check string: " << as_string << "\n";
-if (caller_name == "test_instance") {
-if (port_name == "in1") {
-  CHECK(as_string == "test test_instance testing in1 sig1");
-  --check_count;
-}
-if (port_name == "in_out") {
-  CHECK(as_string == "test test_instance testing in_out double_sig");
-  --check_count;
-}
-if (port_name == "out1") {
-  CHECK(as_string == "test test_instance testing out1 sig1");
-  --check_count;
-}
-}
-}
-CHECK(check_count == 0);
-}
-*/
 }
