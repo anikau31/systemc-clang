@@ -14,24 +14,64 @@ using namespace clang::ast_matchers;
 using namespace sc_ast_matchers::utils;
 using namespace systemc_clang;
 
+class ForLoopMatcher : public MatchFinder::MatchCallback {
+ public:
+  void registerMatchers(MatchFinder &finder) {
+    // auto ForLoop = cxxRecordDecl(hasName("test"),
+                                 // forEach(forStmt().bind("for_stmt")))
+                       // .bind("cxx_decl");
+    auto TestClass = cxxRecordDecl(hasName("test")).bind("cxx_decl");
+    auto ForLoop = cxxRecordDecl(hasName("test"), 
+        forEachDescendant(forStmt().bind("for_stmt")))
+      .bind("cxx_decl");
+    // auto NoNestedForLoop = cxxRecordDecl(hasName("test"),
+        // forEachDescendant(forStmt().bind("for_stmt"),
+          // ))
+      // .bind("cxx_decl");
+
+    finder.addMatcher(traverse(TK_IgnoreUnlessSpelledInSource, ForLoop), this);
+    // finder.addMatcher(traverse(TK_IgnoreUnlessSpelledInSource, NoNestedForLoop), this);
+  }
+
+  virtual void run(const MatchFinder::MatchResult &Result) {
+    // if (const clang::CXXRecordDecl *decl =
+            // Result.Nodes.getNodeAs<clang::CXXRecordDecl>("cxx_decl")) {
+      // llvm::dbgs() << "### CXXDeclMatcher\n";
+      // decl->dump();
+      if (const clang::ForStmt *fs =
+              Result.Nodes.getNodeAs<clang::ForStmt>("for_stmt")) {
+        llvm::dbgs() << "For Stmt\n";
+        fs->dump();
+
+        llvm::dbgs() << "init\n";
+        fs->getInit()->dump();
+        llvm::dbgs() << "cond\n";
+        fs->getCond()->dump();
+        llvm::dbgs() << "inc\n";
+        fs->getInc()->dump();
+      }
+    // }
+  }
+};
+
 class CXXDeclMatcher : public MatchFinder::MatchCallback {
  public:
   void registerMatchers(MatchFinder &finder) {
     auto DeclMatcher = cxxRecordDecl(hasName("A")).bind("cxx_decl");
-    auto ParmVar =
-        cxxRecordDecl(hasName("A"),
-            hasDescendant(cxxMethodDecl(hasDescendant(parmVarDecl().bind("pvd"))))
-            ).bind("cxx_decl");
+    auto ParmVar = cxxRecordDecl(hasName("A"),
+                                 hasDescendant(cxxMethodDecl(
+                                     hasDescendant(parmVarDecl().bind("pvd")))))
+                       .bind("cxx_decl");
     auto MEMatcher = cxxMemberCallExpr().bind("cxx_mce");
 
-    auto ForLoop =
-        cxxRecordDecl(hasName("A"),
-            hasDescendant(cxxMethodDecl(hasDescendant(parmVarDecl().bind("pvd"))))
-            ).bind("cxx_decl");
+    auto ForLoop = cxxRecordDecl(hasName("test"),
+                                 hasDescendant(forStmt().bind("for_stmt")))
+                       .bind("cxx_decl");
 
     // finder.addMatcher(DeclMatcher, this);
     // finder.addMatcher(ParmVar, this);
     // finder.addMatcher(MEMatcher, this);
+    finder.addMatcher(ForLoop, this);
   }
 
   virtual void run(const MatchFinder::MatchResult &Result) {
@@ -53,18 +93,32 @@ class CXXDeclMatcher : public MatchFinder::MatchCallback {
             Result.Nodes.getNodeAs<clang::CXXRecordDecl>("cxx_decl")) {
       llvm::dbgs() << "### CXXDeclMatcher\n";
       decl->dump();
+      if (const clang::ForStmt *fs =
+              Result.Nodes.getNodeAs<clang::ForStmt>("for_stmt")) {
+        llvm::dbgs() << "For Stmt\n";
+        fs->dump();
 
+        llvm::dbgs() << "init\n";
+        fs->getInit()->dump();
+        llvm::dbgs() << "cond\n";
+        fs->getCond()->dump();
+        llvm::dbgs() << "inc\n";
+        fs->getInc()->dump();
+      }
+
+      /*
       if (const clang::ParmVarDecl *pvd =
               Result.Nodes.getNodeAs<clang::ParmVarDecl>("pvd")) {
         llvm::dbgs() << "### PARMVARDECL: \n";
         pvd->getType().dump();
-        llvm::dbgs() << "### Isconst : " << pvd->getType().isConstQualified() << " \n";
-        clang::QualType q{pvd->getType().getNonReferenceType()};
+        llvm::dbgs() << "### Isconst : " << pvd->getType().isConstQualified() <<
+      " \n"; clang::QualType q{pvd->getType().getNonReferenceType()};
         llvm::dbgs() << "### q: " << q.isConstQualified() << " \n";
         q.dump();
 
         pvd->dump();
       }
+      */
     }
   }
 };
@@ -148,6 +202,13 @@ SC_MODULE( test ){
     // Sensitivity
     for (int i{0}; i <= MAX_DEPTH; ++i) {
       sensitive << out_array_port[i];
+      for (int j{0}; j <= MAX_DEPTH+1; ++j) {
+        sensitive << out_array_port[j];
+      }
+    }
+
+    for (int k{0}; k <= MAX_DEPTH+2; ++k) {
+      sensitive << out_array_port[k];
     }
   }
 };
@@ -208,7 +269,7 @@ int sc_main(int argc, char *argv[]) {
       tooling::buildASTFromCodeWithArgs(code, systemc_clang::catch_test_args)
           .release();
 
-  CXXDeclMatcher matcher;
+  ForLoopMatcher matcher;
   MatchFinder finder;
   matcher.registerMatchers(finder);
   //  finder.addMatcher(DeclMatcher, &matcher);
