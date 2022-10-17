@@ -1,7 +1,7 @@
 # Test CMakeFile
 
 set (TEST_LIST 
-  # Structural parsing
+  ##  Structural parsing
   member-function-base-type.cpp
   test-virtual-pure.cpp
   test-virtual2.cpp
@@ -16,6 +16,8 @@ set (TEST_LIST
   sreg.cpp
   portarray-example.cpp
   inherit.cpp
+  # TODO
+  # for-loop-parsing.cpp
   )
 
 set(SCC_LIBS libsystemc-clang)
