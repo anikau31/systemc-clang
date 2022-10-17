@@ -28,8 +28,6 @@
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "SensitivityMatcher"
 
-#include <iostream>
-
 namespace sc_ast_matchers {
 using namespace clang::ast_matchers;
 using namespace sc_ast_matchers::utils::array_type;
