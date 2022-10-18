@@ -6,6 +6,9 @@ set (TEST_LIST
   netlist-templated-matcher.cpp
   find-members.cpp
   sensitivity-matcher.cpp
+  # To Complete
+  # arrays-sensitivity-matcher.cpp
+  # Delete
   #template-parameters-matcher.cpp
   )
 
