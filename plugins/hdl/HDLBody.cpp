@@ -1100,7 +1100,10 @@ bool HDLBody::VisitForStmt(ForStmt *fors) {
     LLVM_DEBUG(llvm::dbgs()
                << "Compound stmt not handled in for init, skipping\n");
   else {
-    // if (isa<DeclStmt>(stmt)) {
+    if (isa<DeclStmt>(fors->getInit())) {
+      LLVM_DEBUG(llvm::dbgs() << "for init is a decl stmt\n");
+      LLVM_DEBUG((fors->getInit())->dump(llvm::dbgs(), ast_context_));
+    }
     TraverseStmt(fors->getInit());
   }
   h_forinit = (h_ret == NULL) ? new hNode(hNode::hdlopsEnum::hNoop)
