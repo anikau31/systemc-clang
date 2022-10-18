@@ -1100,7 +1100,7 @@ bool HDLBody::VisitForStmt(ForStmt *fors) {
     LLVM_DEBUG(llvm::dbgs()
                << "Compound stmt not handled in for init, skipping\n");
   else {
-    if (isa<DeclStmt>(fors->getInit())) {
+    if ((fors->getInit() != NULL) && isa<DeclStmt>(fors->getInit())) {
       LLVM_DEBUG(llvm::dbgs() << "for init is a decl stmt\n");
       LLVM_DEBUG((fors->getInit())->dump(llvm::dbgs(), ast_context_));
     }
@@ -1109,9 +1109,11 @@ bool HDLBody::VisitForStmt(ForStmt *fors) {
   h_forinit = (h_ret == NULL) ? new hNode(hNode::hdlopsEnum::hNoop)
                               : h_ret;  // null if in place var decl
   TraverseStmt(fors->getCond());
-  h_forcond = h_ret;
+  h_forcond = (h_ret == NULL) ? new hNode(hNode::hdlopsEnum::hNoop)
+                              : h_ret;  // null if in place if no cond
   TraverseStmt(fors->getInc());
-  h_forinc = h_ret;
+  h_forinc =(h_ret == NULL) ? new hNode(hNode::hdlopsEnum::hNoop)
+                              : h_ret;  // null if in place no inc
   LLVM_DEBUG(llvm::dbgs() << "For loop body\n");
   LLVM_DEBUG(fors->getBody()->dump(llvm::dbgs(), ast_context_););
   TraverseStmt(fors->getBody());

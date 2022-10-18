@@ -8,7 +8,7 @@
 #include "Tree.h"
 #include "HDLMain.h"
 //#include "TemplateParametersMatcher.h"
-//#include "SensitivityMatcher.h"
+#include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
 #include "clang/Basic/Diagnostic.h"
@@ -263,6 +263,7 @@ namespace systemc_hdl {
       }
     }
 
+    // look at sensitivitiy list info
     // init block
     mod_i = mod;
     hNodep h_modinitblockhead = new hNode( hNode::hdlopsEnum::hNoop); // hold list of module constructors
@@ -272,7 +273,10 @@ namespace systemc_hdl {
       if (mod_i->getConstructorDecl() ==NULL) continue; // null constructor
       h_constructor = new hNode(mod_i->getInstanceInfo().getVarName()+ (mod_i->getInstanceInfo().isArrayType()? "_0" :""),
 				hNode::hdlopsEnum::hModinitblock);
-    
+      // SenseMapType sensmap = mod_i->getSensitivityMap();
+      // for (auto sensitem : sensmap) {
+      // 	sensitem->dump();
+      // }
       xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
       LLVM_DEBUG(llvm::dbgs() << "HDL output for module constructor body\n");
       LLVM_DEBUG(h_constructor->print(llvm::dbgs()));
