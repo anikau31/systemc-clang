@@ -380,16 +380,16 @@ namespace systemc_hdl {
 	}
 	else if (const ForStmt *S1 = dyn_cast<ForStmt> (S)) {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is a for stmt\n");
-	  if (!sgb->hasTerminatorWait()) {
-	    LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " doesn't have a wait()\n");
-	    LLVM_DEBUG(S1->dump(llvm::dbgs(), ast_context_));
-	    xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
-	    for (int i = thisix+1; i < pt[thisix].second.getFalseId(); i++) {
-	      // need to mark all the true branch nodes in path vector as visited.
-	      updatepnvisited(i);
-	    }
-	    return;
-	  }
+	  // if (!sgb->hasTerminatorWait()) {
+	  //   LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " doesn't have a wait()\n");
+	  //   LLVM_DEBUG(S1->dump(llvm::dbgs(), ast_context_));
+	  //   xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
+	  //   for (int i = thisix+1; i < pt[thisix].second.getFalseId(); i++) {
+	  //     // need to mark all the true branch nodes in path vector as visited.
+	  //     updatepnvisited(i);
+	  //   }
+	  //   return;
+	  // }
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
 	}
 	else if (const IfStmt *S1 = dyn_cast<IfStmt> (S)) {

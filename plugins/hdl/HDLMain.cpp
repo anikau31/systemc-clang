@@ -677,6 +677,7 @@ namespace systemc_hdl {
 			    hNode::hdlopsEnum h_op, hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
 
     const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark, "Pointer type not synthesized, '%0' skipped.");
+    const unsigned cxx_record_id2 = main_diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark, "Class Constructor at module level not supported.");
     for (ModuleInstance::signalMapType::iterator mit = pmap.begin();
 	 mit != pmap.end(); mit++) {
       string objname = get<0>(*mit);
@@ -716,6 +717,12 @@ namespace systemc_hdl {
       NamedDecl * portdecl = pd->getAsVarDecl();
       if (!portdecl)
 	portdecl = pd->getAsFieldDecl();
+      else {
+	if (((VarDecl *)portdecl)->hasInit()) {
+	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(portdecl->getLocation(), cxx_record_id2)};
+	  diag_builder << portdecl->getName();
+	}
+      }
       // ValueDecl * vd = (ValueDecl *)portdecl;
       // LLVM_DEBUG(llvm::dbgs() << "Sig type is " << vd->getType().getAsString() << "\n");
       if (module_vars.count(objname)) {
