@@ -326,7 +326,8 @@ class TypedefExpansion(TopDown):
         lhs_var = self.__get_expandable_var_from_tree(lhs)
         rhs_var = self.__get_expandable_var_from_tree(rhs)
         # dprint('LHS var ', lhs_var)
-        if lhs_var is not None and not self.__is_all_none(rhs_var) and (rhs_var is not None or rhs.data == 'hliteral'):
+        # dprint('isallnone ', self.__is_all_none(rhs_var))
+        if lhs_var is not None and (not self.__is_all_none(rhs_var) or rhs.data == 'hliteral') and (rhs_var is not None or rhs.data == 'hliteral'):
             lhs_expanded_type = self.__expanded_type(lhs_var)
             assert lhs_expanded_type is not None, '{} should have expanded type'.format(lhs_var)
             lhs_type = self.__get_expandable_type_from_htype(lhs_expanded_type)
@@ -364,6 +365,7 @@ class TypedefExpansion(TopDown):
                 else:
                     self.__append_to_expandable_var_to_tree(new_rhs, field_member)
                 res.append(new_assign)
+            dprint(res)
             return res
         elif lhs_var is None and self.__is_all_none(rhs_var):
             return [tree]

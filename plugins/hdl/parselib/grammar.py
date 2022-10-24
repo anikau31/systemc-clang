@@ -204,7 +204,7 @@ lark_grammar = Lark('''
         // function call
         hvarref : "hVarref" ID "NOLIST"
         hunimp:  "hUnimpl" ID "NOLIST"
-        hbinop:  "hBinop" BINOP "[" (expression|hslice) (expression|hslice) "]"
+        hbinop:  "hBinop" BINOP "[" (expression|hslice) (expression|hslice|blkassign) "]"
         
         // A temporary hack to handle --
         hunop:  "hUnop" UNOP_NON_SUB "[" (expression|hslice) "]"
@@ -228,7 +228,6 @@ lark_grammar = Lark('''
                  | "hBinop" "=" "[" harrayref  arrayrhs "]"
                  | nblkassign
                  | vassign
-                 | hmodassign
         // These assignments are only intended to be used as blocking assignments
         // The semantics may not be straightforward in clocked block
         hcompoundassign: "hBinop" COMPOUND_ASSIGN "[" hvarref hvarref "]"
@@ -254,11 +253,7 @@ lark_grammar = Lark('''
                   | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
         hconcat: ("hBinop" "concat" "[" | "hMethodCall" "NONAME" "[" "hBinop" "concat" "NOLIST") (expression|harrayref|hconcat) (expression|harrayref|hconcat) "]"
                  
-        // Temporary hack to handle -= / +=
-        hmodassign : "hBinop" hmodassigntype "[" hvarref (hliteral|hvarref) "]"
-        ?hmodassigntype : haddassign | hsubassign
-        haddassign : "+" "=" 
-        hsubassign : "-" "="
+
         vassign: "hVarAssign" "NONAME" "[" hvarref (hnsbinop | syscread | hliteral | hvarref | expression | harrayref | hvarinitlist)"]"
         // Normal expressions that can not be expanded
         nonrefexp: hbinop
@@ -269,6 +264,13 @@ lark_grammar = Lark('''
               | "hBuiltinFunction" "range" "[" (hvarref | harrayref | syscread ) expression expression "]"
               | "hBuiltinFunction" "bit" "[" (hvarref | harrayref | syscread) expression "]"
         hnsbinop:  "hBinop" NONSUBBINOP "[" (expression|hslice) (expression|hslice) "]"
+        
+        // Temporary hack to handle -= / +=
+        hmodassign : "hBinop" hmodassigntype "[" hvarref (hliteral|hvarref|hbinop) "]"
+        ?hmodassigntype : haddassign | hsubassign
+        haddassign : "+" "=" 
+        hsubassign : "-" "="
+        
         // Comma op is the C++ comma where the latter part of the comma expression is returned
         hcomma: "hBinop" "," "[" (blkassign | hunop | hmethodcall) (hunop | expression | hmethodcall) "]"
 
@@ -299,7 +301,7 @@ lark_grammar = Lark('''
         NUM: /(\+|\-)?[0-9]+/
         TYPESTR: /[a-zA-Z_]([a-zA-Z_0-9]|::)*/
         BINOP: COMPOUND_ASSIGN | NONSUBBINOP | "ARRAYSUBSCRIPT" | "SLICE" | "concat"
-        NONSUBBINOP: "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&" | "@="
+        NONSUBBINOP: "+=" | "-=" | "*=" | "/=" | "==" | "<<" | ">>" | "&&" | "||" | "|" | ">=" | ">" | ARITHOP | "<=" | "<" | "%" | "!=" | "&" | "@="
         ARITHOP: "+" | "-" | "*" | "/" | "^"
         UNOP_NON_SUB: "!" | "++" | "-" | "+"
         UNOP_SUB:  "-"

@@ -1,7 +1,7 @@
 import warnings
 from .top_down import TopDown
 from ..primitives import *
-from ..utils import dprint, is_tree_type, get_ids_in_tree_dfs
+from ..utils import dprint, is_tree_type, get_ids_in_tree
 from lark import Tree, Token
 from functools import reduce
 import pprint
@@ -618,7 +618,6 @@ class VerilogTranslationPass(TopDown):
             """Return statement is detected and omitted.\n"""
             """  A return statement may not produce expected result,\n"""
             """  consider removing it in the C++ code.\n"""
-            """  On line: {}""".format(tree.line)
         )
         if len(tree.children) == 1:
             return 'return {}'.format(tree.children[0])
@@ -692,10 +691,12 @@ class VerilogTranslationPass(TopDown):
             bindings = self.bindings[mod_name]
         def extract_binding_name(x):
             # FIXME: when the port connection is 2D, the original approach may not work
-            if is_tree_type(x[0], 'hbindingarrayref'):
-                return x[0].children[0].children[0]
-            else:
-                return x[0].children[0]
+            return get_ids_in_tree(x[0])[0]
+            # if is_tree_type(x[0], 'hbindingarrayref'):
+            #     res = x[0].children[0].children[0]
+            # else:
+            #     res = x[0].children[0]
+            # return res
         orig_bindings = bindings
         bindings_normal = list(filter(lambda x: '.' not in extract_binding_name(x), orig_bindings))
         bindings_hier = list(filter(lambda x: '.' in extract_binding_name(x), orig_bindings))
@@ -715,11 +716,11 @@ class VerilogTranslationPass(TopDown):
                 sub, par = binding.children
             if is_tree_type(sub, 'hbindingarrayref'):
                 # The .xxx part is an array
-                sub_name = sub.children[0].children[0].value  # assuming varref
+                sub_name = get_ids_in_tree(sub)[0].value  # assuming varref
                 if sub_name not in array_bindings:
                     array_bindings[sub_name] = {}
-                if sub.children[0].data == 'hbindingarrayref':
-                    raise ValueError('nested 2-D array port is not supported')
+                # if sub.children[0].data == 'hbindingarrayref':
+                #     raise ValueError('nested 2-D array port is not supported')
                 array_bindings[sub_name][sub.children[1].children[0]] = par
             else:
                 # at this point, the par should be able to be fully expanded even if it is an array
