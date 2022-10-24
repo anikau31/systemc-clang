@@ -40,7 +40,7 @@ class Primitive:
     """
     primitive_type_names = []
     name_mapping = { '_Bool': 'cppbool', 'bool': 'cppbool', 'unsigned_int': 'cppuint', 'int': 'cppint', 'unsigned_short': 'cppushort', 'short': 'cppshort',
-                     'char': 'cppchar', 'signed_char': 'cppsignedchar', 'long_long': 'cpplonglong', 'unsigned_long_long': 'cppulonglong'}
+                     'char': 'cppchar', 'unsigned_char': 'cppunsignedchar', 'signed_char': 'cppsignedchar', 'long_long': 'cpplonglong', 'unsigned_long_long': 'cppulonglong'}
 
     def __init_subclass__(cls, **kwargs):
         """registers subclass automatically"""
@@ -267,6 +267,10 @@ class cppchar(Primitive):
 class cppsignedchar(Primitive):
     def __new__(cls):
         return sc_int(8)
+
+class cppunsignedchar(Primitive):
+    def __new__(cls):
+        return sc_uint(8)
 
 class cppuint(Primitive):
     def __new__(cls):

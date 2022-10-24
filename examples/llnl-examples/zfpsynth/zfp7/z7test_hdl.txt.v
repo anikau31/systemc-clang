@@ -261,10 +261,11 @@ module decode_stream_sc_module_2 (
   logic [0:0] c_m_bfifo_scclang_global_8_valid;
   logic [0:0] c_m_bfifo_scclang_global_8_ready;
   logic [0:0] _zb_actual_scclang_global_9;
-  logic [10:0] _exp_actual_scclang_global_10;
-  logic [0:0] _zb_actual_scclang_global_11;
-  logic [5:0] bitoff_actual_scclang_global_12;
-  logic [10:0] maxexp_actual_scclang_global_13;
+  logic [0:0] _zb_actual_scclang_global_10;
+  logic [10:0] _exp_actual_scclang_global_11;
+  logic [0:0] _zb_actual_scclang_global_12;
+  logic [5:0] bitoff_actual_scclang_global_13;
+  logic [10:0] maxexp_actual_scclang_global_14;
   rvfifo_cc_sc_module_9 u_bfifo(
     .clk(clk),
     .reset(reset),
@@ -308,15 +309,15 @@ module decode_stream_sc_module_2 (
     logic signed[15:0] dreg_bits_ms_proc_local_13;
     logic [10:0] blockexpt_ms_proc_local_14;
     logic [31:0] planewdw_ms_proc_local_15;
-    logic [10:0] bhdr_ms_proc_local_11_exp__ref_0;
     logic [0:0] bhdr_ms_proc_local_11_zb__ref_0;
     logic [0:0] b_wrk_ms_proc_local_8_f__ref_0[0:3];
     logic [31:0] b_wrk_ms_proc_local_8_w__ref_0[0:3];
+    logic [10:0] bhdr_ms_proc_local_11_exp__ref_0;
     
+    bhdr_ms_proc_local_11_exp__ref_0 = bhdr_ms_proc_local_11_exp;
     b_wrk_ms_proc_local_8_w__ref_0 = b_wrk_ms_proc_local_8_w;
     b_wrk_ms_proc_local_8_f__ref_0 = b_wrk_ms_proc_local_8_f;
     bhdr_ms_proc_local_11_zb__ref_0 = bhdr_ms_proc_local_11_zb;
-    bhdr_ms_proc_local_11_exp__ref_0 = bhdr_ms_proc_local_11_exp;
     if ((reset) == (0)) begin
       minbits_scclang_global_5 <= (s_maxbits) - (s_minbits);
       c_m_bfifo_scclang_global_8_ready <= 0;
@@ -337,18 +338,17 @@ module decode_stream_sc_module_2 (
       b_wrk_ms_proc_local_8_w__ref_0 = {b_c_scclang_global_0_w[0],b_c_scclang_global_0_w[1],b_c_scclang_global_0_w[2],b_c_scclang_global_0_w[3]};
       w_wordoff_ms_proc_local_9 = c_wordoff_scclang_global_3;
       _s_blk_cycle_ms_proc_local_10 = ((s_blk_start_data) == (1)) && (s_blk_start_valid);
-      bhdr_ms_proc_local_11_zb__ref_0 = 0;
-      bhdr_ms_proc_local_11_exp__ref_0 = 0;
-      zhw__block_headerfp_t11_52__init_func_0(bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0,1,bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0);
+      zhw__block_headerfp_t11_52__block_header_func_1(bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0,1,bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0);
+      zhw__block_headerfp_t11_52__init_func_2(bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0,1,bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0);
       if ((!(csync_scclang_global_4)) && ((_s_blk_cycle_ms_proc_local_10) || (skpbts_scclang_global_6))) begin
         w_rembits_ms_proc_local_12 = c_rembits_scclang_global_2;
         if ((w_rembits_ms_proc_local_12) > (0)) begin
           if ((w_rembits_ms_proc_local_12) / (32)) begin
             dreg_bits_ms_proc_local_13 = 32;
-            zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,dreg_bits_ms_proc_local_13,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
+            zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,dreg_bits_ms_proc_local_13,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
           end else begin
             dreg_bits_ms_proc_local_13 = (w_rembits_ms_proc_local_12) % (32);
-            zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,(dreg_bits_ms_proc_local_13) + (1),b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
+            zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,(dreg_bits_ms_proc_local_13) + (1),b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
           end
 
           c_rembits_scclang_global_2 <= (w_rembits_ms_proc_local_12) - (dreg_bits_ms_proc_local_13);
@@ -367,18 +367,18 @@ module decode_stream_sc_module_2 (
       if ((((!(csync_scclang_global_4)) && (_s_blk_cycle_ms_proc_local_10)) && (!(skpbts_scclang_global_6))) && ((m_bp_ready) && (s_bc_valid))) begin
         w_rembits_ms_proc_local_12 = s_maxbits;
         w_wordoff_ms_proc_local_9 = (w_wordoff_ms_proc_local_9) + (s_bc_data);
-        zhw__block_headerfp_t11_52__set_zb_func_2(bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0,!((zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,w_wordoff_ms_proc_local_9,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0)) & (1)),bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0);
+        zhw__block_headerfp_t11_52__set_zb_func_4(bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0,!((zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,w_wordoff_ms_proc_local_9,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0)) & (1)),bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0);
         w_wordoff_ms_proc_local_9 = (w_wordoff_ms_proc_local_9) + (1);
         w_wordoff_ms_proc_local_9 = (w_wordoff_ms_proc_local_9) % (32);
         w_rembits_ms_proc_local_12 = (w_rembits_ms_proc_local_12) - (1);
         if (!(bhdr_ms_proc_local_11_zb__ref_0)) begin
-          blockexpt_ms_proc_local_14 = zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,w_wordoff_ms_proc_local_9,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
+          blockexpt_ms_proc_local_14 = zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,w_wordoff_ms_proc_local_9,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
           w_wordoff_ms_proc_local_9 = (w_wordoff_ms_proc_local_9) + (11);
           w_wordoff_ms_proc_local_9 = (w_wordoff_ms_proc_local_9) % (32);
           w_rembits_ms_proc_local_12 = (w_rembits_ms_proc_local_12) - (11);
           blockexpt_ms_proc_local_14 = (blockexpt_ms_proc_local_14) - (1023);
-          m_block_maxprec <= zhw__decode_streamfp_t11_52_bits_t64_2__get_block_maxprec_func_3(blockexpt_ms_proc_local_14);
-          zhw__block_headerfp_t11_52__set_exp_func_4(bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0,blockexpt_ms_proc_local_14,bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0);
+          m_block_maxprec <= zhw__decode_streamfp_t11_52_bits_t64_2__get_block_maxprec_func_5(blockexpt_ms_proc_local_14);
+          zhw__block_headerfp_t11_52__set_exp_func_6(bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0,blockexpt_ms_proc_local_14,bhdr_ms_proc_local_11_zb__ref_0,bhdr_ms_proc_local_11_exp__ref_0);
           s_blk_start_ready <= 1;
         end else begin
           m_bp_valid <= 0;
@@ -403,7 +403,7 @@ module decode_stream_sc_module_2 (
         if (!(_s_blk_cycle_ms_proc_local_10)) begin
           w_wordoff_ms_proc_local_9 = (w_wordoff_ms_proc_local_9) + (s_bc_data);
         end
-        planewdw_ms_proc_local_15 = zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,w_wordoff_ms_proc_local_9,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
+        planewdw_ms_proc_local_15 = zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,w_wordoff_ms_proc_local_9,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
         w_wordoff_ms_proc_local_9 = (w_wordoff_ms_proc_local_9) % (32);
         m_bp_data <= planewdw_ms_proc_local_15;
         m_bp_valid <= 1;
@@ -417,15 +417,22 @@ module decode_stream_sc_module_2 (
         end
       end
 
-      c_m_bfifo_scclang_global_8_ready <= zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
+      c_m_bfifo_scclang_global_8_ready <= zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7(b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0,b_wrk_ms_proc_local_8_f__ref_0,b_wrk_ms_proc_local_8_w__ref_0);
     end
 
-    bhdr_ms_proc_local_11_exp = bhdr_ms_proc_local_11_exp__ref_0;
     bhdr_ms_proc_local_11_zb = bhdr_ms_proc_local_11_zb__ref_0;
     b_wrk_ms_proc_local_8_f = b_wrk_ms_proc_local_8_f__ref_0;
     b_wrk_ms_proc_local_8_w = b_wrk_ms_proc_local_8_w__ref_0;
+    bhdr_ms_proc_local_11_exp = bhdr_ms_proc_local_11_exp__ref_0;
   end
-  function automatic void zhw__block_headerfp_t11_52__init_func_0 (input logic [0:0] hthis_zb, input logic [10:0] hthis_exp, input logic [0:0] _zb, inout logic [0:0] hthis_zb__ref_0, inout logic [10:0] hthis_exp__ref_0);
+  function automatic void zhw__plane_reg2__plane_reg_func_0 (input logic [0:0] hthis_f, input logic [31:0] hthis_w, inout logic [0:0] hthis_f__ref_0, inout logic [31:0] hthis_w__ref_0);
+  begin
+
+    hthis_f__ref_0 = 0;
+    hthis_w__ref_0 = 0;
+  end
+  endfunction
+  function automatic void zhw__block_headerfp_t11_52__block_header_func_1 (input logic [0:0] hthis_zb, input logic [10:0] hthis_exp, input logic [0:0] _zb, inout logic [0:0] hthis_zb__ref_0, inout logic [10:0] hthis_exp__ref_0);
   begin
 
     _zb_actual_scclang_global_9 = _zb;
@@ -433,117 +440,131 @@ module decode_stream_sc_module_2 (
     hthis_exp__ref_0 = 0;
   end
   endfunction
-  function automatic void zhw__block_headerfp_t11_52__set_exp_func_4 (input logic [0:0] hthis_zb, input logic [10:0] hthis_exp, input logic [10:0] _exp, inout logic [0:0] hthis_zb__ref_0, inout logic [10:0] hthis_exp__ref_0);
+  function automatic void zhw__block_headerfp_t11_52__init_func_2 (input logic [0:0] hthis_zb, input logic [10:0] hthis_exp, input logic [0:0] _zb, inout logic [0:0] hthis_zb__ref_0, inout logic [10:0] hthis_exp__ref_0);
   begin
 
-    _exp_actual_scclang_global_10 = _exp;
-    hthis_exp__ref_0 = _exp_actual_scclang_global_10;
+    _zb_actual_scclang_global_10 = _zb;
+    hthis_zb__ref_0 = _zb_actual_scclang_global_10;
+    hthis_exp__ref_0 = 0;
   end
   endfunction
-  function automatic void zhw__block_headerfp_t11_52__set_zb_func_2 (input logic [0:0] hthis_zb, input logic [10:0] hthis_exp, input logic [0:0] _zb, inout logic [0:0] hthis_zb__ref_0, inout logic [10:0] hthis_exp__ref_0);
+  function automatic void zhw__block_headerfp_t11_52__set_exp_func_6 (input logic [0:0] hthis_zb, input logic [10:0] hthis_exp, input logic [10:0] _exp, inout logic [0:0] hthis_zb__ref_0, inout logic [10:0] hthis_exp__ref_0);
   begin
 
-    _zb_actual_scclang_global_11 = _zb;
-    hthis_zb__ref_0 = _zb_actual_scclang_global_11;
+    _exp_actual_scclang_global_11 = _exp;
+    hthis_exp__ref_0 = _exp_actual_scclang_global_11;
   end
   endfunction
-  function automatic logic [0:0] zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5 (input logic [0:0] pb_c_f[0:3], input logic [31:0] pb_c_w[0:3], inout logic [0:0] pb_c_f__ref_0[0:3], inout logic [31:0] pb_c_w__ref_0[0:3]);
+  function automatic void zhw__block_headerfp_t11_52__set_zb_func_4 (input logic [0:0] hthis_zb, input logic [10:0] hthis_exp, input logic [0:0] _zb, inout logic [0:0] hthis_zb__ref_0, inout logic [10:0] hthis_exp__ref_0);
   begin
-    logic signed[31:0] reg_thresh_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_16;
-    logic [63:0] word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_17_tdata;
-    logic [0:0] word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_17_tlast;
-    logic [0:0] w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18_f[0:1];
-    logic [31:0] w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18_w[0:1];
-    logic [0:0] empty_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_19_f;
-    logic [31:0] empty_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_19_w;
-    logic [0:0] tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[0:3];
-    logic [31:0] tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[0:3];
-    logic signed[31:0] i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21;
-    logic signed[31:0] i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22;
-    logic [0:0] read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23;
-    logic [63:0] i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24;
-    logic [2:0] srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25;
-    logic [2:0] tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26;
-    logic [63:0] i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27;
-    logic [31:0] __phantom_var_1__ref_0;
+
+    _zb_actual_scclang_global_12 = _zb;
+    hthis_zb__ref_0 = _zb_actual_scclang_global_12;
+  end
+  endfunction
+  function automatic logic [0:0] zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7 (input logic [0:0] pb_c_f[0:3], input logic [31:0] pb_c_w[0:3], inout logic [0:0] pb_c_f__ref_0[0:3], inout logic [31:0] pb_c_w__ref_0[0:3]);
+  begin
+    logic signed[31:0] reg_thresh_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_16;
+    logic [63:0] word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17_tdata;
+    logic [0:0] word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17_tlast;
+    logic [0:0] w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18_f[0:1];
+    logic [31:0] w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18_w[0:1];
+    logic [0:0] empty_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_19_f;
+    logic [31:0] empty_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_19_w;
+    logic [0:0] tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[0:3];
+    logic [31:0] tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[0:3];
+    logic signed[31:0] i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21;
+    logic signed[31:0] i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22;
+    logic [0:0] read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23;
+    logic [63:0] i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24;
+    logic [2:0] srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25;
+    logic [2:0] tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26;
+    logic [63:0] i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27;
+    logic [63:0] word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17_tdata__ref_0;
     logic [0:0] __phantom_var_2__ref_0;
-    logic [0:0] __phantom_var_0__ref_0;
+    logic [0:0] __phantom_var_4__ref_0;
+    logic [0:0] __phantom_var_1__ref_0;
+    logic [0:0] word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17_tlast__ref_0;
+    logic [31:0] __phantom_var_5__ref_0;
     logic [31:0] __phantom_var_3__ref_0;
-    logic [0:0] __phantom_var_0;
-    logic [31:0] __phantom_var_1;
+    logic [63:0] __phantom_var_0__ref_0;
+    logic [63:0] __phantom_var_0;
+    logic [0:0] __phantom_var_1;
     logic [0:0] __phantom_var_2;
     logic [31:0] __phantom_var_3;
-    reg_thresh_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_16 = 3;
-    word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_17_tdata = c_m_bfifo_scclang_global_8_data_tdata;
-    word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_17_tlast = c_m_bfifo_scclang_global_8_data_tlast;
-    for (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21 = 0;(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21) < ((64) / (32));i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21++) begin
-      zhw__plane_reg2__init_func_6(w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18_f[(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21)],w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18_w[(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21)],__phantom_var_0__ref_0,__phantom_var_1__ref_0);
+    logic [0:0] __phantom_var_4;
+    logic [31:0] __phantom_var_5;
+    reg_thresh_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_16 = 3;
+    bits_t64__bits_t_func_8(word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17_tdata,word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17_tlast,c_m_bfifo_scclang_global_8_data_tdata,c_m_bfifo_scclang_global_8_data_tlast,word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17_tdata__ref_0,word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17_tlast__ref_0,__phantom_var_0__ref_0,__phantom_var_1__ref_0);
+    for (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21 = 0;(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21) < ((64) / (32));i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21++) begin
+      zhw__plane_reg2__init_func_10(w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18_f[(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21)],w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18_w[(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21)],__phantom_var_2__ref_0,__phantom_var_3__ref_0);
     end
-    for (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22 = 0;(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22) < (4);i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22++) begin
-      zhw__plane_reg2__init_func_6(tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22)],tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22)],__phantom_var_2__ref_0,__phantom_var_3__ref_0);
+    for (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22 = 0;(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22) < (4);i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22++) begin
+      zhw__plane_reg2__init_func_10(tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22)],tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22)],__phantom_var_4__ref_0,__phantom_var_5__ref_0);
     end
-    read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23 = 0;
+    read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23 = 0;
     if (c_m_bfifo_scclang_global_8_valid) begin
       if (c_m_bfifo_scclang_global_8_ready) begin
-        for (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24 = 0;(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24) < ((64) / (32));i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24++) begin
-          w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18_f[i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24] = 1;
-          w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18_w[i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24] = (word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_17_tdata) >>> ((32) * (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24));
+        for (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24 = 0;(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24) < ((64) / (32));i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24++) begin
+          w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18_f[i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24] = 1;
+          w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18_w[i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24] = (word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17_tdata) >>> ((32) * (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24));
         end
       end
-      for (srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 = 0;(srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25) < (4);srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25++) begin
-        if (pb_c_f[srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25]) begin
+      for (srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 = 0;(srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25) < (4);srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25++) begin
+        if (pb_c_f[srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25]) begin
           break;
         end
       end
-      for (tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26 = 0;(tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26) < (4);tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26++) begin
-        if ((srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25) >= (4)) begin
+      for (tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26 = 0;(tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26) < (4);tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26++) begin
+        if ((srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25) >= (4)) begin
           break;
         end
-        if (!(pb_c_f[srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25])) begin
+        if (!(pb_c_f[srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25])) begin
           break;
         end else begin
-          tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26] = pb_c_f[srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25];
-          tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26] = pb_c_w[srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25];
-          srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25++;
+          tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26] = pb_c_f[srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25];
+          tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26] = pb_c_w[srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25];
+          srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25++;
         end
 
       end
-      if ((tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26) < (3)) begin
-        for (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27 = 0;(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27) < ((64) / (32));i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27++) begin
-          tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26] = w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18_f[i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27];
-          tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26] = w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18_w[i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27];
-          tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26++;
+      if ((tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26) < (3)) begin
+        for (i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27 = 0;(i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27) < ((64) / (32));i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27++) begin
+          tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26] = w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18_f[i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27];
+          tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26] = w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18_w[i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27];
+          tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26++;
         end
       end
     end else begin
-      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[0] = pb_c_f[0];
-      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[0] = pb_c_w[0];
-      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[1] = pb_c_f[1];
-      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[1] = pb_c_w[1];
-      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[2] = pb_c_f[2];
-      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[2] = pb_c_w[2];
-      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[3] = pb_c_f[3];
-      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[3] = pb_c_w[3];
+      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[0] = pb_c_f[0];
+      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[0] = pb_c_w[0];
+      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[1] = pb_c_f[1];
+      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[1] = pb_c_w[1];
+      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[2] = pb_c_f[2];
+      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[2] = pb_c_w[2];
+      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[3] = pb_c_f[3];
+      tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[3] = pb_c_w[3];
     end
 
-    b_c_scclang_global_0_f[0] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[0];
-    b_c_scclang_global_0_w[0] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[0];
-    b_c_scclang_global_0_f[1] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[1];
-    b_c_scclang_global_0_w[1] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[1];
-    b_c_scclang_global_0_f[2] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[2];
-    b_c_scclang_global_0_w[2] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[2];
-    b_c_scclang_global_0_f[3] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[3];
-    b_c_scclang_global_0_w[3] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_w[3];
-    if (!(tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20_f[2])) begin
-      read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23 = 1;
+    b_c_scclang_global_0_f[0] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[0];
+    b_c_scclang_global_0_w[0] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[0];
+    b_c_scclang_global_0_f[1] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[1];
+    b_c_scclang_global_0_w[1] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[1];
+    b_c_scclang_global_0_f[2] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[2];
+    b_c_scclang_global_0_w[2] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[2];
+    b_c_scclang_global_0_f[3] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[3];
+    b_c_scclang_global_0_w[3] <= tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_w[3];
+    read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23 = 0;
+    if (!(tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20_f[2])) begin
+      read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23 = 1;
     end else begin
-      read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23 = 0;
+      read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23;
     end
 
-    return read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23;
+    return read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23;
   end
   endfunction
-  function automatic logic [31:0] zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1 (input logic [0:0] wb_c_f[0:3], input logic [31:0] wb_c_w[0:3], input logic [5:0] bitoff, inout logic [0:0] wb_c_f__ref_0[0:3], inout logic [31:0] wb_c_w__ref_0[0:3]);
+  function automatic logic [31:0] zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3 (input logic [0:0] wb_c_f[0:3], input logic [31:0] wb_c_w[0:3], input logic [5:0] bitoff, inout logic [0:0] wb_c_f__ref_0[0:3], inout logic [31:0] wb_c_w__ref_0[0:3]);
   begin
     logic [1:0] wordoff__local_28;
     logic signed[31:0] i__local_29;
@@ -553,8 +574,8 @@ module decode_stream_sc_module_2 (
     logic [1:0] i__local_33;
     logic [5:0] b1rshift__local_34;
     logic [5:0] b2lshift__local_35;
-    bitoff_actual_scclang_global_12 = bitoff;
-    wordoff__local_28 = (bitoff_actual_scclang_global_12) / (32);
+    bitoff_actual_scclang_global_13 = bitoff;
+    wordoff__local_28 = (bitoff_actual_scclang_global_13) / (32);
     for (i__local_29 = 0;(i__local_29) < (4);i__local_29++) begin
       if (!(wb_c_f[i__local_29])) begin
         wordoff__local_28++;
@@ -565,22 +586,24 @@ module decode_stream_sc_module_2 (
     end
     b1__local_30 = wb_c_w[wordoff__local_28];
     b2__local_31 = wb_c_w[(wordoff__local_28) + (1)];
+    wb_c_f__ref_0[i__local_33] = 0;
     for (i__local_33 = 2'd0;(i__local_33) < (wordoff__local_28);i__local_33++) begin
-      wb_c_f__ref_0[i__local_33] = 0;
+      wb_c_f__ref_0[i__local_33];
     end
-    b1rshift__local_34 = (bitoff_actual_scclang_global_12) % (32);
+    b1rshift__local_34 = (bitoff_actual_scclang_global_13) % (32);
     b2lshift__local_35 = (32) - (b1rshift__local_34);
     window__local_32 = ((b1__local_30) >>> (b1rshift__local_34)) | ((b2__local_31) << (b2lshift__local_35));
     return window__local_32;
   end
   endfunction
-  function automatic logic [15:0] zhw__decode_streamfp_t11_52_bits_t64_2__get_block_maxprec_func_3 (input logic [10:0] maxexp);
+  function automatic logic [15:0] zhw__decode_streamfp_t11_52_bits_t64_2__get_block_maxprec_func_5 (input logic [10:0] maxexp);
   begin
     logic signed[15:0] _MAX__local_36;
-    maxexp_actual_scclang_global_13 = maxexp;
-    _MAX__local_36 = (((maxexp_actual_scclang_global_13) - (s_minexp)) + ((2) * (2))) + (2);
+    maxexp_actual_scclang_global_14 = maxexp;
+    _MAX__local_36 = (((maxexp_actual_scclang_global_14) - (s_minexp)) + ((2) * (2))) + (2);
+    _MAX__local_36 = 0;
     if ((_MAX__local_36) < (0)) begin
-      _MAX__local_36 = 0;
+      _MAX__local_36;
     end
     if ((_MAX__local_36) < (s_maxprec)) begin
       return _MAX__local_36;
@@ -590,11 +613,17 @@ module decode_stream_sc_module_2 (
 
   end
   endfunction
-  function automatic void zhw__plane_reg2__init_func_6 (input logic [0:0] hthis_f, input logic [31:0] hthis_w, inout logic [0:0] hthis_f__ref_0, inout logic [31:0] hthis_w__ref_0);
+  function automatic void zhw__plane_reg2__init_func_10 (input logic [0:0] hthis_f, input logic [31:0] hthis_w, inout logic [0:0] hthis_f__ref_0, inout logic [31:0] hthis_w__ref_0);
   begin
 
     hthis_f__ref_0 = 0;
     hthis_w__ref_0 = 0;
+  end
+  endfunction
+  function automatic void bits_t64__bits_t_func_8 (input logic [63:0] hthis_tdata, input logic [0:0] hthis_tlast, input logic [63:0] NONAME_tdata, input logic [0:0] NONAME_tlast, inout logic [63:0] hthis_tdata__ref_0, inout logic [0:0] hthis_tlast__ref_0, inout logic [63:0] NONAME_tdata__ref_0, inout logic [0:0] NONAME_tlast__ref_0);
+  begin
+
+
   end
   endfunction
 endmodule
@@ -671,14 +700,16 @@ module fifo_cc_sc_module_10 (
     
     wr_inc_ms_proc_local_3 = ((wr_idx_scclang_global_6) + (1)) % (4);
     rd_inc_ms_proc_local_4 = ((rd_idx_scclang_global_4) + (1)) % (4);
+    empty_i_scclang_global_1 <= 1;
     if ((reset) == (0)) begin
       if (!(1)) begin
         dout_tdata <= 0;
         dout_tlast <= 0;
       end
+      data_scclang_global_0_tdata[i_ms_proc_local_5] <= 0;
+      data_scclang_global_0_tlast[i_ms_proc_local_5] <= 0;
       for (i_ms_proc_local_5 = 0;(i_ms_proc_local_5) < (4);i_ms_proc_local_5++) begin
-        data_scclang_global_0_tdata[i_ms_proc_local_5] <= 0;
-        data_scclang_global_0_tlast[i_ms_proc_local_5] <= 0;
+        data_scclang_global_0[i_ms_proc_local_5];
       end
       rd_idx_scclang_global_4 <= 2'd0;
       wr_idx_scclang_global_6 <= 2'd0;
@@ -696,18 +727,22 @@ module fifo_cc_sc_module_10 (
         data_scclang_global_0_tlast[wr_idx_scclang_global_6] <= din_tlast;
         wr_idx_scclang_global_6 <= wr_inc_ms_proc_local_3;
         if (!(rd_en_i_scclang_global_3)) begin
+          full_i_scclang_global_2 <= 1;
           if ((wr_inc_ms_proc_local_3) == (rd_idx_scclang_global_4)) begin
-            full_i_scclang_global_2 <= 1;
+            full_i_scclang_global_2;
           end
           empty_i_scclang_global_1 <= 0;
         end
       end
+      empty_i_scclang_global_1 <= 1;
       if (rd_en_i_scclang_global_3) begin
         rd_idx_scclang_global_4 <= rd_inc_ms_proc_local_4;
+        empty_i_scclang_global_1 <= 1;
         if (!(wr_en_i_scclang_global_5)) begin
           full_i_scclang_global_2 <= 0;
+          empty_i_scclang_global_1 <= 1;
           if ((rd_inc_ms_proc_local_4) == (wr_idx_scclang_global_6)) begin
-            empty_i_scclang_global_1 <= 1;
+            empty_i_scclang_global_1;
           end
         end
       end
@@ -788,14 +823,16 @@ module fifo_cc_sc_module_11 (
     
     wr_inc_ms_proc_local_3 = ((wr_idx_scclang_global_6) + (1)) % (4);
     rd_inc_ms_proc_local_4 = ((rd_idx_scclang_global_4) + (1)) % (4);
+    empty_i_scclang_global_1 <= 1;
     if ((reset) == (0)) begin
       if (!(1)) begin
         dout_zb <= 0;
         dout_exp <= 0;
       end
+      data_scclang_global_0_zb[i_ms_proc_local_5] <= 0;
+      data_scclang_global_0_exp[i_ms_proc_local_5] <= 0;
       for (i_ms_proc_local_5 = 0;(i_ms_proc_local_5) < (4);i_ms_proc_local_5++) begin
-        data_scclang_global_0_zb[i_ms_proc_local_5] <= 0;
-        data_scclang_global_0_exp[i_ms_proc_local_5] <= 0;
+        data_scclang_global_0[i_ms_proc_local_5];
       end
       rd_idx_scclang_global_4 <= 2'd0;
       wr_idx_scclang_global_6 <= 2'd0;
@@ -813,18 +850,22 @@ module fifo_cc_sc_module_11 (
         data_scclang_global_0_exp[wr_idx_scclang_global_6] <= din_exp;
         wr_idx_scclang_global_6 <= wr_inc_ms_proc_local_3;
         if (!(rd_en_i_scclang_global_3)) begin
+          full_i_scclang_global_2 <= 1;
           if ((wr_inc_ms_proc_local_3) == (rd_idx_scclang_global_4)) begin
-            full_i_scclang_global_2 <= 1;
+            full_i_scclang_global_2;
           end
           empty_i_scclang_global_1 <= 0;
         end
       end
+      empty_i_scclang_global_1 <= 1;
       if (rd_en_i_scclang_global_3) begin
         rd_idx_scclang_global_4 <= rd_inc_ms_proc_local_4;
+        empty_i_scclang_global_1 <= 1;
         if (!(wr_en_i_scclang_global_5)) begin
           full_i_scclang_global_2 <= 0;
+          empty_i_scclang_global_1 <= 1;
           if ((rd_inc_ms_proc_local_4) == (wr_idx_scclang_global_6)) begin
-            empty_i_scclang_global_1 <= 1;
+            empty_i_scclang_global_1;
           end
         end
       end
@@ -972,9 +1013,11 @@ module decode_ints_sc_module_4 (
           bits_scclang_global_7--;
         end
         state_scclang_global_4 = 0;
+        c_bplane_scclang_global_0[i_ms_proc_local_10] <= 16'd0;
         if ((k_scclang_global_1) == ((64) - (1))) begin
+          c_bplane_scclang_global_0[i_ms_proc_local_10] = 16'd0;
           for (i_ms_proc_local_10 = 0;(i_ms_proc_local_10) < ((64) - (1));i_ms_proc_local_10++) begin
-            c_bplane_scclang_global_0[i_ms_proc_local_10] <= 16'd0;
+            c_bplane_scclang_global_0[i_ms_proc_local_10];
           end
         end
         c_bplane_scclang_global_0[k_scclang_global_1] <= x_scclang_global_5;
@@ -1030,13 +1073,15 @@ module block_buffer_sc_module_5 (
     logic signed[31:0] i_mc_proc_local_4;
     logic signed[31:0] i_mc_proc_local_5;
     
+    bbufi_mc_proc_local_2[((i_mc_proc_local_4) * (64)) +: (64)] = s_block[i_mc_proc_local_4];
     for (i_mc_proc_local_4 = 0;(i_mc_proc_local_4) < (16);i_mc_proc_local_4++) begin
-      bbufi_mc_proc_local_2[((i_mc_proc_local_4) * (64)) +: (64)] = s_block[i_mc_proc_local_4];
+      bbufi_mc_proc_local_2[((i_mc_proc_local_4) * (64)) +: (64)];
     end
     c_bi_scclang_global_0 <= bbufi_mc_proc_local_2;
     bbufo_mc_proc_local_3 = c_bo_scclang_global_1;
+    m_block[i_mc_proc_local_5] = bbufo_mc_proc_local_3[((i_mc_proc_local_5) * (64)) +: (64)];
     for (i_mc_proc_local_5 = 0;(i_mc_proc_local_5) < (16);i_mc_proc_local_5++) begin
-      m_block[i_mc_proc_local_5] = bbufo_mc_proc_local_3[((i_mc_proc_local_5) * (64)) +: (64)];
+      m_block[i_mc_proc_local_5];
     end
   end
 endmodule
@@ -1080,12 +1125,14 @@ module fifo_cc_sc_module_12 (
     
     wr_inc_ms_proc_local_3 = ((wr_idx_scclang_global_6) + (1)) % (2);
     rd_inc_ms_proc_local_4 = ((rd_idx_scclang_global_4) + (1)) % (2);
+    empty_i_scclang_global_1 <= 1;
     if ((reset) == (0)) begin
       if (!(1)) begin
         dout <= 0;
       end
+      data_scclang_global_0[i_ms_proc_local_5] <= 0;
       for (i_ms_proc_local_5 = 0;(i_ms_proc_local_5) < (2);i_ms_proc_local_5++) begin
-        data_scclang_global_0[i_ms_proc_local_5] <= 0;
+        data_scclang_global_0[i_ms_proc_local_5];
       end
       rd_idx_scclang_global_4 <= 1'd0;
       wr_idx_scclang_global_6 <= 1'd0;
@@ -1101,18 +1148,22 @@ module fifo_cc_sc_module_12 (
         data_scclang_global_0[wr_idx_scclang_global_6] <= din;
         wr_idx_scclang_global_6 <= wr_inc_ms_proc_local_3;
         if (!(rd_en_i_scclang_global_3)) begin
+          full_i_scclang_global_2 <= 1;
           if ((wr_inc_ms_proc_local_3) == (rd_idx_scclang_global_4)) begin
-            full_i_scclang_global_2 <= 1;
+            full_i_scclang_global_2;
           end
           empty_i_scclang_global_1 <= 0;
         end
       end
+      empty_i_scclang_global_1 <= 1;
       if (rd_en_i_scclang_global_3) begin
         rd_idx_scclang_global_4 <= rd_inc_ms_proc_local_4;
+        empty_i_scclang_global_1 <= 1;
         if (!(wr_en_i_scclang_global_5)) begin
           full_i_scclang_global_2 <= 0;
+          empty_i_scclang_global_1 <= 1;
           if ((rd_inc_ms_proc_local_4) == (wr_idx_scclang_global_6)) begin
-            empty_i_scclang_global_1 <= 1;
+            empty_i_scclang_global_1;
           end
         end
       end
@@ -1445,13 +1496,15 @@ module block_buffer_sc_module_7 (
     logic signed[31:0] i_mc_proc_local_4;
     logic signed[31:0] i_mc_proc_local_5;
     
+    bbufi_mc_proc_local_2[((i_mc_proc_local_4) * (64)) +: (64)] = s_block[i_mc_proc_local_4];
     for (i_mc_proc_local_4 = 0;(i_mc_proc_local_4) < (16);i_mc_proc_local_4++) begin
-      bbufi_mc_proc_local_2[((i_mc_proc_local_4) * (64)) +: (64)] = s_block[i_mc_proc_local_4];
+      bbufi_mc_proc_local_2[((i_mc_proc_local_4) * (64)) +: (64)];
     end
     c_bi_scclang_global_0 <= bbufi_mc_proc_local_2;
     bbufo_mc_proc_local_3 = c_bo_scclang_global_1;
+    m_block[i_mc_proc_local_5] = bbufo_mc_proc_local_3[((i_mc_proc_local_5) * (64)) +: (64)];
     for (i_mc_proc_local_5 = 0;(i_mc_proc_local_5) < (16);i_mc_proc_local_5++) begin
-      m_block[i_mc_proc_local_5] = bbufo_mc_proc_local_3[((i_mc_proc_local_5) * (64)) +: (64)];
+      m_block[i_mc_proc_local_5];
     end
   end
 endmodule
@@ -1495,12 +1548,14 @@ module fifo_cc_sc_module_15 (
     
     wr_inc_ms_proc_local_3 = ((wr_idx_scclang_global_6) + (1)) % (2);
     rd_inc_ms_proc_local_4 = ((rd_idx_scclang_global_4) + (1)) % (2);
+    empty_i_scclang_global_1 <= 1;
     if ((reset) == (0)) begin
       if (!(1)) begin
         dout <= 0;
       end
+      data_scclang_global_0[i_ms_proc_local_5] <= 0;
       for (i_ms_proc_local_5 = 0;(i_ms_proc_local_5) < (2);i_ms_proc_local_5++) begin
-        data_scclang_global_0[i_ms_proc_local_5] <= 0;
+        data_scclang_global_0[i_ms_proc_local_5];
       end
       rd_idx_scclang_global_4 <= 1'd0;
       wr_idx_scclang_global_6 <= 1'd0;
@@ -1516,18 +1571,22 @@ module fifo_cc_sc_module_15 (
         data_scclang_global_0[wr_idx_scclang_global_6] <= din;
         wr_idx_scclang_global_6 <= wr_inc_ms_proc_local_3;
         if (!(rd_en_i_scclang_global_3)) begin
+          full_i_scclang_global_2 <= 1;
           if ((wr_inc_ms_proc_local_3) == (rd_idx_scclang_global_4)) begin
-            full_i_scclang_global_2 <= 1;
+            full_i_scclang_global_2;
           end
           empty_i_scclang_global_1 <= 0;
         end
       end
+      empty_i_scclang_global_1 <= 1;
       if (rd_en_i_scclang_global_3) begin
         rd_idx_scclang_global_4 <= rd_inc_ms_proc_local_4;
+        empty_i_scclang_global_1 <= 1;
         if (!(wr_en_i_scclang_global_5)) begin
           full_i_scclang_global_2 <= 0;
+          empty_i_scclang_global_1 <= 1;
           if ((rd_inc_ms_proc_local_4) == (wr_idx_scclang_global_6)) begin
-            empty_i_scclang_global_1 <= 1;
+            empty_i_scclang_global_1;
           end
         end
       end
@@ -1558,6 +1617,7 @@ module inv_cast_sc_module_8 (
   logic signed[63:0] r_blk_scclang_global_4[0:15];
   logic [10:0] r_ex_scclang_global_5;
   logic [0:0] zb_scclang_global_6;
+  logic [63:0] ui_actual_scclang_global_7;
   always @(s_valid or s_bhdr_valid or got_blk_scclang_global_3 or got_bhdr_scclang_global_2 or m_stream_ready or count_scclang_global_1 or c_sync_scclang_global_0) begin: mc_proc
     logic [51:0] fp_mc_proc_local_2_frac;
     logic [10:0] fp_mc_proc_local_2_expo;
@@ -1572,10 +1632,14 @@ module inv_cast_sc_module_8 (
     logic [63:0] e_mc_proc_local_10;
     logic [63:0] i_mc_proc_local_11;
     logic signed[31:0] shift_mc_proc_local_12;
+    logic [0:0] fp_mc_proc_local_2_sign__ref_0;
+    logic [51:0] fp_mc_proc_local_2_frac__ref_0;
+    logic [10:0] fp_mc_proc_local_2_expo__ref_0;
     
-    fp_mc_proc_local_2_frac = 0;
-    fp_mc_proc_local_2_expo = 0;
-    fp_mc_proc_local_2_sign = 0;
+    fp_mc_proc_local_2_expo__ref_0 = fp_mc_proc_local_2_expo;
+    fp_mc_proc_local_2_frac__ref_0 = fp_mc_proc_local_2_frac;
+    fp_mc_proc_local_2_sign__ref_0 = fp_mc_proc_local_2_sign;
+    fp_t11_52__fp_t_func_0(fp_mc_proc_local_2_frac__ref_0,fp_mc_proc_local_2_expo__ref_0,fp_mc_proc_local_2_sign__ref_0,0,fp_mc_proc_local_2_frac__ref_0,fp_mc_proc_local_2_expo__ref_0,fp_mc_proc_local_2_sign__ref_0);
     s_mc_proc_local_3 = 1'd0;
     _r_ex_mc_proc_local_4 = 11'd0;
     stall_mc_proc_local_5 = (((m_stream_ready) == (0)) || (((count_scclang_global_1) == (0)) && (!(got_bhdr_scclang_global_2)))) || (((count_scclang_global_1) == (0)) && ((got_bhdr_scclang_global_2) && (!(got_blk_scclang_global_3))));
@@ -1589,9 +1653,9 @@ module inv_cast_sc_module_8 (
     end
     zero_output_mc_proc_local_8 = ((si_mc_proc_local_6) == (0)) || (zb_scclang_global_6);
     if (zero_output_mc_proc_local_8) begin
-      fp_mc_proc_local_2_frac = 0;
-      fp_mc_proc_local_2_expo = 0;
-      fp_mc_proc_local_2_sign = 0;
+      fp_mc_proc_local_2_frac__ref_0 = 0;
+      fp_mc_proc_local_2_expo__ref_0 = 0;
+      fp_mc_proc_local_2_sign__ref_0 = 0;
     end else begin
       rn_mc_proc_local_9 = si_mc_proc_local_6;
       e_mc_proc_local_10 = 64'd0;
@@ -1604,10 +1668,12 @@ module inv_cast_sc_module_8 (
 
       end
       shift_mc_proc_local_12 = (52) - (e_mc_proc_local_10);
+      rn_mc_proc_local_9 = (rn_mc_proc_local_9) << (+(shift_mc_proc_local_12));
+      rn_mc_proc_local_9 = (rn_mc_proc_local_9) >>> (-(shift_mc_proc_local_12));
       if ((shift_mc_proc_local_12) > (0)) begin
-        rn_mc_proc_local_9 = (rn_mc_proc_local_9) << (+(shift_mc_proc_local_12));
+        rn_mc_proc_local_9;
       end else begin
-        rn_mc_proc_local_9 = (rn_mc_proc_local_9) >>> (-(shift_mc_proc_local_12));
+        rn_mc_proc_local_9;
       end
 
       e_mc_proc_local_10 = (e_mc_proc_local_10) + (((1023) + (r_ex_scclang_global_5)) - ((64) - (2)));
@@ -1619,12 +1685,15 @@ module inv_cast_sc_module_8 (
       end
 
       rn_mc_proc_local_9 = (rn_mc_proc_local_9) + ((((s_mc_proc_local_3) << (11)) + (e_mc_proc_local_10)) << (52));
-      { { fp_mc_proc_local_2_sign, fp_mc_proc_local_2_expo }, fp_mc_proc_local_2_frac } = rn_mc_proc_local_9;
+      { { fp_mc_proc_local_2_sign__ref_0, fp_mc_proc_local_2_expo__ref_0 }, fp_mc_proc_local_2_frac__ref_0 } = rn_mc_proc_local_9;
     end
 
-    m_stream_data_frac <= fp_mc_proc_local_2_frac;
-    m_stream_data_expo <= fp_mc_proc_local_2_expo;
-    m_stream_data_sign <= fp_mc_proc_local_2_sign;
+    m_stream_data_frac <= fp_mc_proc_local_2_frac__ref_0;
+    m_stream_data_expo <= fp_mc_proc_local_2_expo__ref_0;
+    m_stream_data_sign <= fp_mc_proc_local_2_sign__ref_0;
+    fp_mc_proc_local_2_sign = fp_mc_proc_local_2_sign__ref_0;
+    fp_mc_proc_local_2_frac = fp_mc_proc_local_2_frac__ref_0;
+    fp_mc_proc_local_2_expo = fp_mc_proc_local_2_expo__ref_0;
   end
   always_ff @(posedge clk) begin: ms_proc
     logic [0:0] _zb_ms_proc_local_13;
@@ -1648,21 +1717,24 @@ module inv_cast_sc_module_8 (
         zb_scclang_global_6 <= _zb_ms_proc_local_13;
         r_ex_scclang_global_5 <= s_bhdr_data_exp;
         if (_zb_ms_proc_local_13) begin
+          r_blk_scclang_global_4[i_ms_proc_local_15] <= 64'd0;
           for (i_ms_proc_local_15 = 0;(i_ms_proc_local_15) < (16);i_ms_proc_local_15++) begin
-            r_blk_scclang_global_4[i_ms_proc_local_15] <= 64'd0;
+            r_blk_scclang_global_4[i_ms_proc_local_15];
           end
           got_blk_scclang_global_3 <= 1;
         end
         s_bhdr_ready <= 1;
       end
+      s_bhdr_ready <= 0;
       if ((got_bhdr_scclang_global_2) == (1)) begin
-        s_bhdr_ready <= 0;
+        s_bhdr_ready;
       end
       if (((count_scclang_global_1) == (0)) && (((_got_bhdr_ms_proc_local_14) && (!(_zb_ms_proc_local_13))) || ((got_bhdr_scclang_global_2) && (!(zb_scclang_global_6))))) begin
         if (s_valid) begin
           got_blk_scclang_global_3 <= 1;
+          r_blk_scclang_global_4[i_ms_proc_local_16] <= s_block[i_ms_proc_local_16];
           for (i_ms_proc_local_16 = 0;(i_ms_proc_local_16) < (16);i_ms_proc_local_16++) begin
-            r_blk_scclang_global_4[i_ms_proc_local_16] <= s_block[i_ms_proc_local_16];
+            r_blk_scclang_global_4[i_ms_proc_local_16];
           end
           s_ready <= 1;
         end
@@ -1685,4 +1757,11 @@ module inv_cast_sc_module_8 (
     end
 
   end
+  function automatic void fp_t11_52__fp_t_func_0 (input logic [51:0] hthis_frac, input logic [10:0] hthis_expo, input logic [0:0] hthis_sign, input logic [63:0] ui, inout logic [51:0] hthis_frac__ref_0, inout logic [10:0] hthis_expo__ref_0, inout logic [0:0] hthis_sign__ref_0);
+  begin
+
+    ui_actual_scclang_global_7 = ui;
+    { { hthis_sign, hthis_expo }, hthis_frac } = ui_actual_scclang_global_7;
+  end
+  endfunction
 endmodule

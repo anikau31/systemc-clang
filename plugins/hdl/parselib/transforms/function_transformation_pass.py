@@ -204,8 +204,8 @@ class FunctionTransformationPass(TopDown):
         return func_name, ret_type, func_params, local_vars, func_body
 
     def __extract_id_from_func_arg(self, tree):
-        dprint(tree)
-        dprint(hasattr(tree, 'original_name'))
+        # dprint(tree)
+        # dprint(hasattr(tree, 'original_name'))
         if hasattr(tree, 'phantom_var'):
             return tree.phantom_var
         elif isinstance(tree, str):
@@ -300,10 +300,15 @@ class FunctionTransformationPass(TopDown):
             return self.__func_param_stubs[id]
         return id
 
+    def __extract_func_id(self, tree):
+        if is_tree_type(tree, 'func_param_name_stub'):
+            return tree.children[0]
+        return tree
+
     def hvarref(self, tree):
         if hasattr(tree, 'func_repl_id'):
             tree.original_name = tree.children[0]
-            tree.children[0] = self.__get_func_param_stub(tree.children[0])
+            tree.children[0] = self.__get_func_param_stub(self.__extract_func_id(tree.children[0]))
         else:  # check for stub in process
             stub = self.__get_current_process_stub(tree.children[0])
             if stub:
