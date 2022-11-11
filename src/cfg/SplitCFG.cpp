@@ -15,6 +15,7 @@
 #include "SplitCFG.h"
 
 #include <regex>
+#include <iostream>
 
 using namespace systemc_clang;
 
@@ -236,6 +237,7 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
               false_path_ = true;
               llvm::dbgs() << "Going down the FALSE path for BB"
                            << block_path->first->getBlockID() << " \n";
+
             }
           }
         }
@@ -696,7 +698,8 @@ void SplitCFG::createWaitSplitCFGBlocks(
       // Prececessor: prev block from CFGBlock
       addPredecessors(new_split, block);
     } else {
-      new_split = new SplitCFGBlock{};
+      auto scit{sccfg_.find(block->getBlockID())};
+      new_split = new SplitCFGBlock{*scit->second};
       new_split->id_ = block->getBlockID() * 10 + id;
 
       /// Succesors
@@ -839,6 +842,8 @@ void SplitCFG::dumpPaths() const {
       auto sblock{block.first};
       auto supp_info{block.second};
       auto found_it{path_info_.find(supp_info.split_block_)};
+      // (path idx, blockID, false idx)
+
       llvm::dbgs() << "(" << supp_info.path_idx_ << "," << sblock->getBlockID()
                    << "," << supp_info.false_idx_;
       if (found_it != path_info_.end()) {
