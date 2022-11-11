@@ -699,8 +699,14 @@ void SplitCFG::createWaitSplitCFGBlocks(
       addPredecessors(new_split, block);
     } else {
       auto scit{sccfg_.find(block->getBlockID())};
-      new_split = new SplitCFGBlock{*scit->second};
+      new_split = new SplitCFGBlock{}; //*scit->second};
       new_split->id_ = block->getBlockID() * 10 + id;
+
+    auto stmt{block->getTerminatorStmt()};
+      new_split->is_conditional_ = stmt && (llvm::isa<clang::IfStmt>(stmt) ||
+                 llvm::isa<clang::ConditionalOperator>(stmt));
+
+
 
       /// Succesors
       //
