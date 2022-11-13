@@ -237,7 +237,6 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
               false_path_ = true;
               llvm::dbgs() << "Going down the FALSE path for BB"
                            << block_path->first->getBlockID() << " \n";
-
             }
           }
         }
@@ -300,6 +299,10 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
 
         // setDifference(loop_visited_blocks, capture_visited_blocks,
         // new_visited);
+        //
+
+        found_succ = getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB);
+
         if (true_path_) {
           llvm::dbgs() << "TRUE PATH DIFF BB# " << ParentBB->getBlockID()
                        << " curr_path size is " << curr_path.size() << " ";
@@ -308,15 +311,32 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
           dumpSmallVector(curr_path);
           auto& info{curr_path[id]};
           info.second.false_idx_ = curr_path.size();
-          //
-          // llvm::dbgs() <<
-          // "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"; for (auto p :
-          // curr_path) { llvm::dbgs() << "(" << p.second.path_idx_ << ", "
-          // << p.first->getBlockID() << "," << p.second.getpathix()
-          // << ", " << ") ";
-          // }
-        }
-        if (false_path_) {
+
+          // If there is no successor, then we should find the next block on the
+          // false path and set that to the false_idx_ from curr_path.
+          if (!found_succ) {
+            // There is no successor for ParentBB that is not visited.  So, it
+            // must have already been visited, and we must find it in the
+            // curr_path.
+            const clang::CFGBlock* cblock{ParentBB->getCFGBlock()};
+            const clang::CFGBlock* fsucc{*cblock->succ_rbegin()};
+            fsucc->dump();
+
+            // Find the index from curr_path, and set it to the false_idx_, if
+            // found.
+            for (auto const visited_blk : curr_path) {
+              if (visited_blk.first->getCFGBlock() == fsucc) {
+                info.second.false_idx_ = visited_blk.second.path_idx_;
+              }
+            }
+          }
+
+          llvm::dbgs() << "ID is " << id << " INFO id is "
+                       << info.second.path_idx_ << " SB "
+                       << info.first->getBlockID() << " size of path "
+                       << curr_path.size() << "\n";
+          //          std::cin.get();
+        } else if (false_path_) {
           llvm::dbgs() << "FALSE PATH DIFF BB# " << ParentBB->getBlockID();
           false_path_ = false;
           setFalsePathInfo(ParentBB, sub_path_to_special_node);
@@ -335,8 +355,6 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
         /// update the visited_blocks with all the blocks visited so that we let
         /// the DFS know to not revist them. The below is doing (2).
         //
-
-        found_succ = getUnvisitedSuccessor(ParentBB, I, visited_blocks, BB);
 
         if (!found_succ) {
           llvm::dbgs() << "\nNO SUCCESOR for BB " << ParentBB->getBlockID()
@@ -699,14 +717,13 @@ void SplitCFG::createWaitSplitCFGBlocks(
       addPredecessors(new_split, block);
     } else {
       auto scit{sccfg_.find(block->getBlockID())};
-      new_split = new SplitCFGBlock{}; //*scit->second};
+      new_split = new SplitCFGBlock{};  //*scit->second};
       new_split->id_ = block->getBlockID() * 10 + id;
 
-    auto stmt{block->getTerminatorStmt()};
-      new_split->is_conditional_ = stmt && (llvm::isa<clang::IfStmt>(stmt) ||
-                 llvm::isa<clang::ConditionalOperator>(stmt));
-
-
+      auto stmt{block->getTerminatorStmt()};
+      new_split->is_conditional_ =
+          stmt && (llvm::isa<clang::IfStmt>(stmt) ||
+                   llvm::isa<clang::ConditionalOperator>(stmt));
 
       /// Succesors
       //
@@ -848,7 +865,11 @@ void SplitCFG::dumpPaths() const {
       auto sblock{block.first};
       auto supp_info{block.second};
       auto found_it{path_info_.find(supp_info.split_block_)};
-      // (path idx, blockID, false idx)
+      // The key thing to remember about the false idx (third element) is that
+      // it is the index created in the path.  It points to the index of the
+      // first block that is in the false path.
+      //
+      // (path idx, blockID, false idx).
 
       llvm::dbgs() << "(" << supp_info.path_idx_ << "," << sblock->getBlockID()
                    << "," << supp_info.false_idx_;
