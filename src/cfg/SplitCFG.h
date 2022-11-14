@@ -68,7 +68,7 @@ class SplitCFGPathInfo {
   /// \brief Return the list of blocks visited on the FALSE path.
   const SplitCFGBlockPtrVector &getFalsePath() const { return false_path_; }
 
-  int getpathix() { return false_startix; }
+  //int getpathix() { return false_startix; }
 
   /// \brief Converts the TRUE path into a string for testing.
   std::string toStringFalsePath() const;
@@ -83,7 +83,7 @@ class SplitCFGPathInfo {
   const SplitCFGBlock *split_block_;
   const clang::CFGBlock *cfg_block_;
   SplitCFGBlockPtrVector true_path_;
-  int false_startix;
+  //int false_startix;
   int path_idx_;
   SplitCFGBlockPtrVector false_path_;
 };

@@ -51,7 +51,7 @@ SupplementaryInfo::~SupplementaryInfo() {}
 ////////////////////////////////////////////////////////
 SplitCFGPathInfo::SplitCFGPathInfo(const SplitCFGBlock* block)
     : split_block_{block}, cfg_block_{block->getCFGBlock()} {
-  false_startix = -1;
+  //false_startix = -1;
 };
 
 SplitCFGPathInfo::SplitCFGPathInfo(const SplitCFGPathInfo& from) {
@@ -61,7 +61,7 @@ SplitCFGPathInfo::SplitCFGPathInfo(const SplitCFGPathInfo& from) {
 SplitCFGPathInfo& SplitCFGPathInfo::operator=(const SplitCFGPathInfo& from) {
   split_block_ = from.split_block_;
   cfg_block_ = from.cfg_block_;
-  false_startix = from.false_startix;
+  //false_startix = from.false_startix;
   true_path_ = from.true_path_;
   false_path_ = from.false_path_;
   path_idx_ = from.path_idx_;
@@ -95,8 +95,8 @@ std::string SplitCFGPathInfo::toStringTruePath() const {
 }
 
 void SplitCFGPathInfo::dump() const {
-  llvm::dbgs() << " BB# " << split_block_->getBlockID()
-               << " F:" << false_startix << "\n";
+  llvm::dbgs() << " BB# " << split_block_->getBlockID();
+    //           << " F:" << false_startix << "\n";
   llvm::dbgs() << "  TRUE ";
   for (const auto block : true_path_) {
     llvm::dbgs() << block->getBlockID() << " ";
@@ -307,10 +307,11 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
           llvm::dbgs() << "TRUE PATH DIFF BB# " << ParentBB->getBlockID()
                        << " curr_path size is " << curr_path.size() << " ";
           true_path_ = false;
-          setTruePathInfo(ParentBB, sub_path_to_special_node, curr_path.size());
-          dumpSmallVector(curr_path);
           auto& info{curr_path[id]};
-          info.second.false_idx_ = curr_path.size();
+            setTruePathInfo(ParentBB, sub_path_to_special_node,
+                            curr_path.size());
+            dumpSmallVector(curr_path);
+            info.second.false_idx_ = curr_path.size();
 
           // If there is no successor, then we should find the next block on the
           // false path and set that to the false_idx_ from curr_path.
@@ -384,7 +385,7 @@ void SplitCFG::setTruePathInfo(const SplitCFGBlock* sblock,
                                const SplitCFGPath& newly_visited, int ix) {
   auto block_path{path_info_.find(sblock)};
   if (block_path != path_info_.end() && !block_path->second.isTruePathValid()) {
-    block_path->second.false_startix = ix;  // index is start of false path
+    //block_path->second.false_startix = ix;  // index is start of false path
     for (const auto block : newly_visited) {
       block_path->second.true_path_.push_back(block.first);
     }
@@ -875,6 +876,10 @@ void SplitCFG::dumpPaths() const {
                    << "," << supp_info.false_idx_;
       if (found_it != path_info_.end()) {
         llvm::dbgs() << " |" << found_it->second.getFalsePath().size() << "|";
+        if (found_it->second.getFalsePath().size() > 0 ) {
+          found_it->second.dump();
+
+        }
       }
       llvm::dbgs() << ") ";
       // Print the wait state
