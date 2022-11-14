@@ -102,6 +102,7 @@ namespace systemc_hdl {
     void GenerateWaitCntUpdate(hNodep h_switchcase);
     hNodep GenerateBinop(string opname, string lhs, string rhs, bool rhs_is_literal=true);
     bool IsWaitStmt(hNodep hp);
+    bool isContinueorBreak(const Stmt *S);
     void ProcessHWait(hNodep htmp, int nxtstate); // rewrite the hWait into next state update
 
     util lutil;

@@ -182,6 +182,12 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "[[ Destructor HDLThread ]]\n");
   }
 
+  bool HDLThread::isContinueorBreak(const Stmt *S) {
+    if (isa<BreakStmt>(S)) return true;
+    if (isa<ContinueStmt>(S)) return true;
+    return false;
+  }
+
   bool HDLThread::IsWaitStmt(hNodep hp) {
     return ((hp->child_list.size() >=1) and ((hp->child_list.back())->getopc() == hNode::hdlopsEnum::hWait));
   }
@@ -370,10 +376,20 @@ namespace systemc_hdl {
       
       LLVM_DEBUG(llvm::dbgs() << "Split Graph num ele, blockid are " << sgb->getNumOfElements() << " " << blkid << "\n");
 
-      if (((sgb->getCFGBlock())->getTerminator().isValid()) && !isBreak(sgb->getCFGBlock()->getTerminatorStmt())){
-	hNodep hcondstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
-	const Stmt * S = sgb->getCFGBlock()->getTerminatorStmt();
+      if ((sgb->getCFGBlock())->getTerminator().isValid()){ 
+	if (isContinueorBreak(sgb->getCFGBlock()->getTerminatorStmt()) && (sgb->getNumOfElements() ==0)) {
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block is singleton continue or break\n");	    
+	  //if (h_switchcase->child_list.size()>0) h_switchcase->append(new hNode(hNode::hdlopsEnum::hReturnStmt));
+	  return;
+	}
 
+	const Stmt * S = sgb->getCFGBlock()->getTerminatorStmt();
+	hNodep hcondstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
+	if (isContinueorBreak(sgb->getCFGBlock()->getTerminatorStmt())) {
+	  // continue or break as part of a block
+	  hcondstmt->set(hNode::hdlopsEnum::hCStmt);
+	}
+	
 	if (const WhileStmt *S1 = dyn_cast<WhileStmt> (S)) {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " <<blkid << " is a while stmt\n");
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
@@ -411,7 +427,8 @@ namespace systemc_hdl {
 	  return;
 	}
 	else {
-	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is not handled\n");
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " not handled, is as follows\n");
+	  LLVM_DEBUG(sgb->getCFGBlock()->getTerminatorStmt()->dump(llvm::dbgs(), ast_context_));
 	}
 
 	// process true branch
