@@ -104,7 +104,7 @@ void SplitCFGBlock::dump() const {
     }
     /// Print the terminator.
     clang::LangOptions lang_opts;
-    if (block_->getTerminator().isValid()) {
+    if (!hasWait() && block_->getTerminator().isValid()) {
       llvm::dbgs() << "  T: ";
       block_->printTerminator(llvm::dbgs(), lang_opts);
     }
