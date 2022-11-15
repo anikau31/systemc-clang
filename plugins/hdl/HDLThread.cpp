@@ -375,8 +375,10 @@ namespace systemc_hdl {
       //else return; // already visited this block
       
       LLVM_DEBUG(llvm::dbgs() << "Split Graph num ele, blockid are " << sgb->getNumOfElements() << " " << blkid << "\n");
-
-      if ((sgb->getCFGBlock())->getTerminator().isValid()){ 
+      if ((sgb->getCFGBlock())->getTerminator().isValid() && sgb->hasWait()) {
+	LLVM_DEBUG(llvm::dbgs() << "found valid terminator with hasWait(), num ele in block is " <<  sgb->getNumOfElements() << "\n");
+      }
+      if ((sgb->getCFGBlock())->getTerminator().isValid() && !sgb->hasWait()){  // artifact of splitting graph is that wait retains terminator of cfg block
 	if (isContinueorBreak(sgb->getCFGBlock()->getTerminatorStmt()) && (sgb->getNumOfElements() ==0)) {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block is singleton continue or break\n");	    
 	  //if (h_switchcase->child_list.size()>0) h_switchcase->append(new hNode(hNode::hdlopsEnum::hReturnStmt));

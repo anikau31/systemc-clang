@@ -352,7 +352,7 @@ namespace systemc_hdl {
 	    hportchild->h_name = submod.substr(found+fielddelim.size());
 	    submod = submod.substr(0, found);
 	  }
-	  else { // Varref has child; need to handle Case 3 by removing the (arraysubscript submod ix) node
+	  else if (hportchild->child_list.size() > 0) { // Varref has child; need to handle Case 3 by removing the (arraysubscript submod ix) node
 	    for (hNodep hsubmodixname:hmodarrix) {
 	      // assume simple case of "i" not "i+1" or "i+j"
 	      assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
