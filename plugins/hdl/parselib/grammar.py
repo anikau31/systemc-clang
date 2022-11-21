@@ -128,8 +128,10 @@ lark_grammar = Lark('''
                  | vardeclinit
                  | hnoop
                  | blkassign
-        forcond: expression
+        forcond: expression 
+                | hnoop
         forpostcond: expression
+                | hnoop
         forbody: stmt
 
         switchstmt: "hSwitchStmt" "NONAME" "[" switchcond switchbody "]"
