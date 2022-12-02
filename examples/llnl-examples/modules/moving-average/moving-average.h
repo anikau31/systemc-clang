@@ -68,7 +68,8 @@ SC_MODULE(moving_average)
       if (datastrm.valid_r()) { // new data
 	if (cur_min > datastrm.data) cur_min = datastrm.data;
 	if (cur_max < datastrm.data) cur_max = datastrm.data;
-	window[n.read().to_uint()] = datastrm.data;
+	//window[n.read().to_uint()] = datastrm.data;
+	window[insert.read().to_uint()] = datastrm.data;
 	if (n.read().to_uint() < WINDOW_SIZE) n.write(n.read().to_uint() +1);
 	cur_avg.write((sum.read().to_uint() + datastrm.data.read().to_int() )/ (n.read().to_uint()+1));
 	sum.write(sum.read().to_uint() + datastrm.data.read().to_uint() - window[insert.read().to_uint()].read().to_uint());

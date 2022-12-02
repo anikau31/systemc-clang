@@ -1,18 +1,18 @@
-  hModule _sc_module_0 [
+  hModule mymodule_sc_module_0 [
     hPortsigvarlist  NONAME [
-      hSigdecl clk [
+      hSigdecl clk_scclang_global_0 [
         hTypeinfo  NONAME [
           hType sc_clock NOLIST
         ]
       ]
-      hSigdecl reset [
+      hSigdecl reset_scclang_global_1 [
         hTypeinfo  NONAME [
           hType sc_signal [
             hType _Bool NOLIST
           ]
         ]
       ]
-      hVardecl driv_data [
+      hVardecl driv_data_scclang_global_2 [
         hTypeinfo  NONAME [
           hType sc_rvd [
             hType sc_uint [
@@ -21,7 +21,7 @@
           ]
         ]
       ]
-      hVardecl dut_min [
+      hVardecl dut_min_scclang_global_3 [
         hTypeinfo  NONAME [
           hType sc_rvd [
             hType sc_uint [
@@ -30,7 +30,7 @@
           ]
         ]
       ]
-      hVardecl dut_max [
+      hVardecl dut_max_scclang_global_4 [
         hTypeinfo  NONAME [
           hType sc_rvd [
             hType sc_uint [
@@ -39,7 +39,7 @@
           ]
         ]
       ]
-      hVardecl dut_avg [
+      hVardecl dut_avg_scclang_global_5 [
         hTypeinfo  NONAME [
           hType sc_rvd [
             hType sc_uint [
@@ -50,41 +50,40 @@
       ]
       hModdecl u_dut [
         hTypeinfo  NONAME [
-          hType _sc_module_1 NOLIST
+          hType moving_average_sc_module_1 NOLIST
         ]
       ]
     ]
     hModinitblock mymod [
-      hCStmt  NONAME NOLIST
       hPortbindings mymod [
         hPortbinding u_dut [
           hVarref clk NOLIST
-          hVarref clk NOLIST
+          hVarref clk_scclang_global_0 NOLIST
         ]
         hPortbinding u_dut [
           hVarref reset NOLIST
-          hVarref reset NOLIST
+          hVarref reset_scclang_global_1 NOLIST
         ]
         hPortbinding u_dut [
           hVarref datastrm NOLIST
-          hVarref driv_data NOLIST
+          hVarref driv_data_scclang_global_2 NOLIST
         ]
         hPortbinding u_dut [
           hVarref min_out NOLIST
-          hVarref dut_min NOLIST
+          hVarref dut_min_scclang_global_3 NOLIST
         ]
         hPortbinding u_dut [
           hVarref max_out NOLIST
-          hVarref dut_max NOLIST
+          hVarref dut_max_scclang_global_4 NOLIST
         ]
         hPortbinding u_dut [
           hVarref avg_out NOLIST
-          hVarref dut_avg NOLIST
+          hVarref dut_avg_scclang_global_5 NOLIST
         ]
       ]
     ]
   ]
-  hModule _sc_module_1 [
+  hModule moving_average_sc_module_1 [
     hPortsigvarlist  NONAME [
       hPortin clk [
         hTypeinfo  NONAME [
@@ -136,7 +135,7 @@
           ]
         ]
       ]
-      hSigdecl cur_avg [
+      hSigdecl cur_avg_scclang_global_0 [
         hTypeinfo  NONAME [
           hType sc_signal [
             hType sc_uint [
@@ -145,7 +144,7 @@
           ]
         ]
       ]
-      hSigdecl cur_max [
+      hSigdecl cur_max_scclang_global_1 [
         hTypeinfo  NONAME [
           hType sc_signal [
             hType sc_uint [
@@ -154,7 +153,7 @@
           ]
         ]
       ]
-      hSigdecl cur_min [
+      hSigdecl cur_min_scclang_global_2 [
         hTypeinfo  NONAME [
           hType sc_signal [
             hType sc_uint [
@@ -163,14 +162,14 @@
           ]
         ]
       ]
-      hSigdecl datardy [
+      hSigdecl datardy_scclang_global_3 [
         hTypeinfo  NONAME [
           hType sc_signal [
             hType _Bool NOLIST
           ]
         ]
       ]
-      hSigdecl insert [
+      hSigdecl insert_scclang_global_4 [
         hTypeinfo  NONAME [
           hType sc_signal [
             hType sc_uint [
@@ -179,7 +178,7 @@
           ]
         ]
       ]
-      hSigdecl n [
+      hSigdecl n_scclang_global_5 [
         hTypeinfo  NONAME [
           hType sc_signal [
             hType sc_uint [
@@ -188,7 +187,7 @@
           ]
         ]
       ]
-      hSigdecl sum [
+      hSigdecl sum_scclang_global_6 [
         hTypeinfo  NONAME [
           hType sc_signal [
             hType sc_uint [
@@ -197,7 +196,7 @@
           ]
         ]
       ]
-      hSigdecl window [
+      hSigdecl window_scclang_global_7 [
         hTypeinfo  NONAME [
           hType array##64 [
             hType sc_signal [
@@ -211,31 +210,31 @@
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
-        hMethod  NONAME [
+        hMethod mc_proc [
           hCStmt  NONAME [
             hSigAssignL write [
               hVarref min_out##valid NOLIST
-              hVarref datardy NOLIST
+              hVarref datardy_scclang_global_3 NOLIST
             ]
             hSigAssignL write [
               hVarref min_out##data NOLIST
-              hVarref cur_min NOLIST
+              hVarref cur_min_scclang_global_2 NOLIST
             ]
             hSigAssignL write [
               hVarref max_out##valid NOLIST
-              hVarref datardy NOLIST
+              hVarref datardy_scclang_global_3 NOLIST
             ]
             hSigAssignL write [
               hVarref max_out##data NOLIST
-              hVarref cur_max NOLIST
+              hVarref cur_max_scclang_global_1 NOLIST
             ]
             hSigAssignL write [
               hVarref avg_out##valid NOLIST
-              hVarref datardy NOLIST
+              hVarref datardy_scclang_global_3 NOLIST
             ]
             hSigAssignL write [
               hVarref avg_out##data NOLIST
-              hVarref cur_avg NOLIST
+              hVarref cur_avg_scclang_global_0 NOLIST
             ]
             hSigAssignL write [
               hVarref datastrm##ready NOLIST
@@ -245,8 +244,8 @@
         ]
       ]
       hProcess ms_proc [
-        hMethod  NONAME [
-          hVardecl _local_0 [
+        hMethod ms_proc [
+          hVardecl i_ms_proc_local_2 [
             hTypeinfo  NONAME [
               hType int NOLIST
             ]
@@ -259,7 +258,7 @@
               ]
               hCStmt  NONAME [
                 hBinop = [
-                  hVarref n NOLIST
+                  hVarref n_scclang_global_5 NOLIST
                   hLiteral 0 [
                     hTypeinfo  NONAME [
                       hType sc_uint [
@@ -269,7 +268,7 @@
                   ]
                 ]
                 hBinop = [
-                  hVarref insert NOLIST
+                  hVarref insert_scclang_global_4 NOLIST
                   hLiteral 0 [
                     hTypeinfo  NONAME [
                       hType sc_uint [
@@ -279,7 +278,7 @@
                   ]
                 ]
                 hBinop = [
-                  hVarref cur_avg NOLIST
+                  hVarref cur_avg_scclang_global_0 NOLIST
                   hLiteral 0 [
                     hTypeinfo  NONAME [
                       hType sc_uint [
@@ -289,15 +288,15 @@
                   ]
                 ]
                 hBinop = [
-                  hVarref cur_max NOLIST
-                  hVarref cur_avg NOLIST
+                  hVarref cur_max_scclang_global_1 NOLIST
+                  hVarref cur_avg_scclang_global_0 NOLIST
                 ]
                 hBinop = [
-                  hVarref cur_min NOLIST
-                  hVarref cur_max NOLIST
+                  hVarref cur_min_scclang_global_2 NOLIST
+                  hVarref cur_max_scclang_global_1 NOLIST
                 ]
                 hBinop = [
-                  hVarref sum NOLIST
+                  hVarref sum_scclang_global_6 NOLIST
                   hLiteral 0 [
                     hTypeinfo  NONAME [
                       hType sc_uint [
@@ -308,20 +307,20 @@
                 ]
                 hForStmt  NONAME [
                   hVarAssign  NONAME [
-                    hVarref _local_0 NOLIST
+                    hVarref i_ms_proc_local_2 NOLIST
                     hLiteral 0 NOLIST
                   ]
                   hBinop < [
-                    hVarref _local_0 NOLIST
+                    hVarref i_ms_proc_local_2 NOLIST
                     hLiteral 64 NOLIST
                   ]
-                  hUnop ++ [
-                    hVarref _local_0 NOLIST
+                  hPostfix ++ [
+                    hVarref i_ms_proc_local_2 NOLIST
                   ]
                   hBinop = [
                     hBinop ARRAYSUBSCRIPT [
-                      hVarref window NOLIST
-                      hVarref _local_0 NOLIST
+                      hVarref window_scclang_global_7 NOLIST
+                      hVarref i_ms_proc_local_2 NOLIST
                     ]
                     hLiteral 0 [
                       hTypeinfo  NONAME [
@@ -333,7 +332,7 @@
                   ]
                 ]
                 hBinop = [
-                  hVarref datardy NOLIST
+                  hVarref datardy_scclang_global_3 NOLIST
                   hLiteral 1 NOLIST
                 ]
               ]
@@ -345,30 +344,30 @@
                   hCStmt  NONAME [
                     hIfStmt  NONAME [
                       hBinop > [
-                        hVarref cur_min NOLIST
+                        hVarref cur_min_scclang_global_2 NOLIST
                         hVarref datastrm##data NOLIST
                       ]
                       hBinop = [
-                        hVarref cur_min NOLIST
+                        hVarref cur_min_scclang_global_2 NOLIST
                         hVarref datastrm##data NOLIST
                       ]
                     ]
                     hIfStmt  NONAME [
                       hBinop < [
-                        hVarref cur_max NOLIST
+                        hVarref cur_max_scclang_global_1 NOLIST
                         hVarref datastrm##data NOLIST
                       ]
                       hBinop = [
-                        hVarref cur_max NOLIST
+                        hVarref cur_max_scclang_global_1 NOLIST
                         hVarref datastrm##data NOLIST
                       ]
                     ]
                     hBinop = [
                       hBinop ARRAYSUBSCRIPT [
-                        hVarref window NOLIST
-                        hNoop to_uint [
+                        hVarref window_scclang_global_7 NOLIST
+                        hBuiltinFunction to_uint [
                           hSigAssignR read [
-                            hVarref n NOLIST
+                            hVarref insert_scclang_global_4 NOLIST
                           ]
                         ]
                       ]
@@ -376,19 +375,19 @@
                     ]
                     hIfStmt  NONAME [
                       hBinop < [
-                        hNoop to_uint [
+                        hBuiltinFunction to_uint [
                           hSigAssignR read [
-                            hVarref n NOLIST
+                            hVarref n_scclang_global_5 NOLIST
                           ]
                         ]
                         hLiteral 64 NOLIST
                       ]
                       hSigAssignL write [
-                        hVarref n NOLIST
+                        hVarref n_scclang_global_5 NOLIST
                         hBinop + [
-                          hNoop to_uint [
+                          hBuiltinFunction to_uint [
                             hSigAssignR read [
-                              hVarref n NOLIST
+                              hVarref n_scclang_global_5 NOLIST
                             ]
                           ]
                           hLiteral 1 NOLIST
@@ -396,24 +395,24 @@
                       ]
                     ]
                     hSigAssignL write [
-                      hVarref cur_avg NOLIST
+                      hVarref cur_avg_scclang_global_0 NOLIST
                       hBinop / [
                         hBinop + [
-                          hNoop to_uint [
+                          hBuiltinFunction to_uint [
                             hSigAssignR read [
-                              hVarref sum NOLIST
+                              hVarref sum_scclang_global_6 NOLIST
                             ]
                           ]
-                          hNoop to_int [
+                          hBuiltinFunction to_int [
                             hSigAssignR read [
                               hVarref datastrm##data NOLIST
                             ]
                           ]
                         ]
                         hBinop + [
-                          hNoop to_uint [
+                          hBuiltinFunction to_uint [
                             hSigAssignR read [
-                              hVarref n NOLIST
+                              hVarref n_scclang_global_5 NOLIST
                             ]
                           ]
                           hLiteral 1 NOLIST
@@ -421,27 +420,27 @@
                       ]
                     ]
                     hSigAssignL write [
-                      hVarref sum NOLIST
+                      hVarref sum_scclang_global_6 NOLIST
                       hBinop - [
                         hBinop + [
-                          hNoop to_uint [
+                          hBuiltinFunction to_uint [
                             hSigAssignR read [
-                              hVarref sum NOLIST
+                              hVarref sum_scclang_global_6 NOLIST
                             ]
                           ]
-                          hNoop to_uint [
+                          hBuiltinFunction to_uint [
                             hSigAssignR read [
                               hVarref datastrm##data NOLIST
                             ]
                           ]
                         ]
-                        hNoop to_uint [
+                        hBuiltinFunction to_uint [
                           hSigAssignR read [
                             hBinop ARRAYSUBSCRIPT [
-                              hVarref window NOLIST
-                              hNoop to_uint [
+                              hVarref window_scclang_global_7 NOLIST
+                              hBuiltinFunction to_uint [
                                 hSigAssignR read [
-                                  hVarref insert NOLIST
+                                  hVarref insert_scclang_global_4 NOLIST
                                 ]
                               ]
                             ]
@@ -452,7 +451,7 @@
                     hIfStmt  NONAME [
                       hBinop >= [
                         hSigAssignR read [
-                          hVarref insert NOLIST
+                          hVarref insert_scclang_global_4 NOLIST
                         ]
                         hBinop - [
                           hLiteral 64 NOLIST
@@ -460,7 +459,7 @@
                         ]
                       ]
                       hSigAssignL write [
-                        hVarref insert NOLIST
+                        hVarref insert_scclang_global_4 NOLIST
                         hLiteral 0 [
                           hTypeinfo  NONAME [
                             hType sc_uint [
@@ -470,17 +469,17 @@
                         ]
                       ]
                       hSigAssignL write [
-                        hVarref insert NOLIST
+                        hVarref insert_scclang_global_4 NOLIST
                         hBinop + [
                           hSigAssignR read [
-                            hVarref insert NOLIST
+                            hVarref insert_scclang_global_4 NOLIST
                           ]
                           hLiteral 1 NOLIST
                         ]
                       ]
                     ]
                     hBinop = [
-                      hVarref datardy NOLIST
+                      hVarref datardy_scclang_global_3 NOLIST
                       hLiteral 1 NOLIST
                     ]
                   ]
@@ -492,20 +491,16 @@
       ]
     ]
     hModinitblock u_dut [
-      hCStmt  NONAME [
-        hCStmt  NONAME NOLIST
-        hCStmt  NONAME NOLIST
-      ]
       hSenslist mc_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
       hSenslist ms_proc [
         hSensvar NONAME [
           hVarref clk NOLIST
-          hNoop pos NOLIST
+          hBuiltinFunction pos NOLIST
         ]
       ]
     ]
