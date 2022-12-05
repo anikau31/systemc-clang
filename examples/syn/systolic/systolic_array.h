@@ -274,7 +274,7 @@ SC_MODULE(systolic) {
     void sa_mc_proc() {
         sc_bv<N1> valid_D_d;
         for(int i =0; i < N1; i++) {
-            valid_D_d[i].write(valid_write[i][N2])
+            valid_D_d[i] = valid_wire[i][N2];
             // valid_D[i].write(valid_wire[i][N2]);
             D[i].write(data_wire[i][N2]);
             a_wire[i][0].write(A[i]);
