@@ -229,7 +229,8 @@ SC_MODULE(systolic) {
     control<_Tin, _Tacc, N1, N2, M> control_inst { "control_inst" };
     // pe<_Tin, _Tmult, _Tacc> pe_inst[N1][N2];
     // pe<_Tin, _Tmult, _Tacc>* pe_inst;
-    sc_vector<pe<_Tin, _Tmult, _Tacc>> pe_inst {"pe_inst", N1 * N2} ;
+    //sc_vector<pe<_Tin, _Tmult, _Tacc>> pe_inst {"pe_inst", N1 * N2} ;
+    sc_vector<pe<_Tin, _Tmult, _Tacc>> pe_inst; // {"pe_inst", N1 * N2} ;
 
     sc_in<bool> clk;
     sc_in<bool> rst;
@@ -290,7 +291,8 @@ SC_MODULE(systolic) {
 
     // this module is only used for forcing the generation of pe
 
-    SC_CTOR(systolic) /* : pe_inst {"pe_inst", N1 * N2} */   {
+    //SC_CTOR(systolic) /* : pe_inst {"pe_inst", N1 * N2} */   {
+    SC_CTOR(systolic) : pe_inst("pe_inst", N1 * N2}    {
         
         SC_METHOD(ms_proc);
         sensitive << clk.pos();

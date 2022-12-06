@@ -228,13 +228,14 @@ namespace hnode {
 
   public:
     
-    const static int numstr = 7;
+    const static int numstr = 8;
     const string scbuiltintype [numstr] = {
       "sc_uint",
       "sc_int",
       "sc_bigint",
       "sc_biguint",
       "sc_bv",
+      "sc_vector",
       "sc_logic",
       "sc_clock"
     };
