@@ -138,7 +138,7 @@ SC_MODULE(pe) {
 
   // SC_CTOR(pe) : ::sc_core::sc_module { "pe_inst" } {
   SC_HAS_PROCESS(pe);
-  pe(const sc_core::sc_module_name& name) : ::sc_core::sc_module { name  } {
+  pe(const sc_module_name& name = "pe_inst") : ::sc_core::sc_module { name  } {
     SC_METHOD(ms_proc);
     sensitive << clk.pos();
     SC_METHOD(mc_proc);
@@ -229,8 +229,7 @@ SC_MODULE(systolic) {
     control<_Tin, _Tacc, N1, N2, M> control_inst { "control_inst" };
     // pe<_Tin, _Tmult, _Tacc> pe_inst[N1][N2];
     // pe<_Tin, _Tmult, _Tacc>* pe_inst;
-    //sc_vector<pe<_Tin, _Tmult, _Tacc>> pe_inst {"pe_inst", N1 * N2} ;
-    sc_vector<pe<_Tin, _Tmult, _Tacc>> pe_inst; // {"pe_inst", N1 * N2} ;
+    pe<_Tin, _Tmult, _Tacc> pe_inst[N1][N2];
 
     sc_in<bool> clk;
     sc_in<bool> rst;
@@ -249,8 +248,8 @@ SC_MODULE(systolic) {
     sc_out<_Tacc> D[N1];
     sc_out<sc_bv<N1>> valid_D;
 
-    sc_signal<_Tin>   a_wire[N1][N2];
-    sc_signal<_Tin>   b_wire[N1][N2];
+    sc_signal<_Tin>   a_wire[N1][N2 + 1];
+    sc_signal<_Tin>   b_wire[N1 + 1][N2];
     sc_signal<bool>   valid_wire[N1][N2 + 1];
     sc_signal<_Tacc>  data_wire[N1][N2 + 1];
 
@@ -270,7 +269,11 @@ SC_MODULE(systolic) {
             } else {
                 shift[0].write(0);
             }
+            for(int i = 1; i < 2 * N1; i++) {
+                shift[i].write(shift[i - 1].read());
+            }
         }
+
     }
 
     void sa_mc_proc() {
@@ -290,9 +293,7 @@ SC_MODULE(systolic) {
     }
 
     // this module is only used for forcing the generation of pe
-
-    //SC_CTOR(systolic) /* : pe_inst {"pe_inst", N1 * N2} */   {
-    SC_CTOR(systolic) : pe_inst("pe_inst", N1 * N2}    {
+    SC_CTOR(systolic)  /*: pe_inst {"pe_inst", N1 * N2}*/   {
         
         SC_METHOD(ms_proc);
         sensitive << clk.pos();
@@ -315,13 +316,12 @@ SC_MODULE(systolic) {
         control_inst.rd_addr_A(rd_addr_A);
         control_inst.rd_addr_B(rd_addr_B);
 
-        // sc_vector
-        for(int i = 0; i < N1 * N2; i++) {
-            pe_inst[i].clk(clk);
-            // remaining signals not supported due to complex index patterns
-        }
+        // // sc_vector
+        // for(int i = 0; i < N1 * N2; i++) {
+        //     pe_inst[i].clk(clk);
+        //     // remaining signals not supported due to complex index patterns
+        // }
         // 2D array
-        /*
         for(int i = 0; i < N1; i++) {
             for(int j = 0; j < N2; j++) {
                 pe_inst[i][j].clk(clk);
@@ -337,7 +337,6 @@ SC_MODULE(systolic) {
                 pe_inst[i][j].out_data(data_wire[i][j + 1]);
             }
         }
-        */
 
     }
 
