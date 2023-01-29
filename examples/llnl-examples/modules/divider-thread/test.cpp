@@ -9,11 +9,11 @@
 #endif
 
 #ifndef DATAW
-#define DATAW 64   // bitstream data width
+#define DATAW 2   // bitstream data width
 #endif
 
 #include "shared2/pulse.h"
-#include "divider.h"
+#include "divider-pipeline.h"
 
 #define BLOCK_LEN 256
 

@@ -10,10 +10,10 @@
 #endif
 
 #ifndef DATAW
-#define DATAW 64   // bitstream data width
+#define DATAW 2 // bitstream data width
 #endif
 
-#include "divider.h"
+#include "divider-pipeline.h"
 
 sc_trace_file *tf;
 

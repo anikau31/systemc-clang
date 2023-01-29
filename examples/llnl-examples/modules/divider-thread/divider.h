@@ -98,7 +98,7 @@ SC_MODULE(divider) {
         _vld.write(true);
       }
       if(_sync_out.read()) {
-        _vld.write(false):
+        _vld.write(false);
       }
       wait();
 

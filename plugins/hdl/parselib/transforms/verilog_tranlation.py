@@ -25,6 +25,8 @@ class VerilogTranslationPass(TopDown):
         self.module_var_type = None
         self.current_proc_name = None
         self.__current_scope_type = [None]
+        self.is_in_thread = False
+        self.thread_comb = False
 
     def get_current_scope_type(self):
         """denotes one of four types of scope: loop, switch, branch, None
@@ -104,7 +106,7 @@ class VerilogTranslationPass(TopDown):
         # is_nb checks whether one of the type needs to be non-blocking assignment
         # and special case for thread
         all_nb = all(is_nb) or current_proc in ['#thread_sync#']
-        all_b = all(not p for p in is_nb)
+        all_b = all(not p for p in is_nb) or (self.is_in_thread and current_proc in ['#function#'])
         if not all_nb and not all_b:
             raise ValueError('The assignment must not mix blocking assignment and non-blocking assignment. On line: {}.'.format(tree.line))
 
@@ -118,7 +120,7 @@ class VerilogTranslationPass(TopDown):
         # non-blocking assignments in a function so that its value can get properly assigned
         # An example of such is the m_bits_data_valid signal in encode_stream
         # In SystemC, when a signal is used in RHS, it will be added to the sensitivity list
-        if current_proc in sense_list or current_proc in ['#function#', '#thread_sync#']:
+        if current_proc in sense_list or (current_proc in ['#function#', '#thread_sync#'] and not (self.is_in_thread and current_proc == '#function#')):
             # sense_list = sense_list[current_proc]
             # tpe is only recorded if the declaration crosses process boundary
             # if tpe is not None:
@@ -130,6 +132,8 @@ class VerilogTranslationPass(TopDown):
                 #    dprint('Changed to non-blocking assignment: '.format(var_name))
                 if all_nb:
                     blocking = False
+        if self.thread_comb:
+            blocking = True
         self.__push_up(tree)
         assert len(tree.children) == 2
         is_local_var = self.__all_local_variables(var_names)
@@ -832,7 +836,6 @@ class VerilogTranslationPass(TopDown):
         return tree
 
     def hfunction(self, tree):
-
         self.set_current_proc_name('#function#')
         self.inc_indent()
         self.__push_up(tree)
@@ -909,9 +912,11 @@ class VerilogTranslationPass(TopDown):
         # 3. synchronous hmethod for setting state to next_state and reset
         # 4. combinational hmethod for driving next_state
         # We need 2 to be at the module level and thus its processing will be handled in hmodule
+        self.is_in_thread = True
         self.thread_name = tree.children[0]
         self.__push_up(tree)
         del self.thread_name
+        self.is_in_thread = False
         return tree
 
     def __generate_hthread_block(self, tree, is_sync):
@@ -945,10 +950,14 @@ class VerilogTranslationPass(TopDown):
         return res
 
     def hthreadsync(self, tree):
-        return self.__generate_hthread_block(tree, is_sync=True)
+        res = self.__generate_hthread_block(tree, is_sync=True)
+        return res
 
     def hthreadswitch(self, tree):
-        return self.__generate_hthread_block(tree, is_sync=False)
+        self.thread_comb = True
+        res = self.__generate_hthread_block(tree, is_sync=False)
+        self.thread_comb = False
+        return res
 
     def hmodule(self, tree):
         # dprint("Processing Module: ", tree.children[0])
