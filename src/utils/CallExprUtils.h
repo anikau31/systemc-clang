@@ -105,7 +105,7 @@ void dumpExprName(const clang::Expr *expr);
  */
 bool isInNamespace(const clang::Type *tp,
                    const std::vector<llvm::StringRef> &names);
-bool isInNamespace(const clang::Expr *expr, clang::ASTContext &context,
+bool isInNamespace(const clang::Expr *expr,
                    const std::vector<llvm::StringRef> &names);
 
 bool isInNamespace(const clang::ValueDecl *fd,
