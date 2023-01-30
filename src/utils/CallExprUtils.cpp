@@ -1,5 +1,6 @@
 #include "CallExprUtils.h"
 
+#include "clang/AST/Type.h"
 #include "clang/AST/DeclCXX.h"
 #include "clang/AST/ExprCXX.h"
 #include "llvm/Support/Debug.h"
@@ -8,7 +9,6 @@ namespace sc_ast_matchers {
 namespace utils {
 
 using namespace clang;
-using namespace llvm;
 
 void collect_sugar(const Type *type,
                    std::vector<clang::Type *> &unwrapped_types) {
@@ -28,24 +28,24 @@ bool isInNamespace(const clang::ValueDecl *fd,
     return false;
   }
   if (auto dc = dyn_cast<DeclContext>(fd)) {
-        LLVM_DEBUG(llvm::dbgs() << "DeclContext\n";);
-        auto dcc = dc->getLexicalParent();
+    LLVM_DEBUG(llvm::dbgs() << "DeclContext\n";);
+    auto dcc = dc->getLexicalParent();
 
-        if (dcc->isNamespace()) {
-          if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dcc)) {
-           LLVM_DEBUG(llvm::dbgs() << "Namespace\n";);
-            std::vector<llvm::StringRef> names{"sc_dt"};
-            auto iinfo = nd->getIdentifier();
-            LLVM_DEBUG(llvm::dbgs() << "@@@@ name " << nd->getName() << "\n";);
-            for (const auto name : names) {
-              if (iinfo->isStr(name)) {
-                  return true;
-              }
-            }
-          return false;
+    if (dcc->isNamespace()) {
+      if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dcc)) {
+        LLVM_DEBUG(llvm::dbgs() << "Namespace\n";);
+        std::vector<llvm::StringRef> names{"sc_dt"};
+        auto iinfo = nd->getIdentifier();
+        LLVM_DEBUG(llvm::dbgs() << "@@@@ name " << nd->getName() << "\n";);
+        for (const auto name : names) {
+          if (iinfo->isStr(name)) {
+            return true;
           }
         }
+        return false;
       }
+    }
+  }
   return false;
 }
 
@@ -55,7 +55,8 @@ bool isInNamespace(const clang::Type *tp,
     return false;
   }
 
-  /// Peel off every type and then check that each type (including typedef) is of a certain namespace or not.
+  /// Peel off every type and then check that each type (including typedef) is
+  /// of a certain namespace or not.
   std::vector<clang::Type *> unwrapped_types{};
   collect_sugar(tp, unwrapped_types);
 
@@ -89,7 +90,7 @@ bool isInNamespace(const clang::Type *tp,
       llvm::dbgs() << "isRecordType\n";
       const RecordDecl *rdecl = tap->getAsRecordDecl();
       dc = const_cast<clang::DeclContext *>(rdecl->getLexicalParent());
-    } 
+    }
 
     if (dc && dc->isNamespace()) {
       llvm::dbgs() << "isNamespace \n";
@@ -134,7 +135,6 @@ bool matchNames(StringRef str, const std::vector<llvm::StringRef> &names) {
 //   return StringRef{""};
 // }
 
-
 // llvm::StringRef getClassNameFromDecl(const clang::CXXRecordDecl *decl) {
 //   if (!decl) return StringRef{""};
 
@@ -150,11 +150,69 @@ bool matchNames(StringRef str, const std::vector<llvm::StringRef> &names) {
 //   return StringRef{""};
 // }
 
-bool isInNamespace(const Expr *expr,
+void dumpExprName(const Expr *expr) {
+  if (auto cexpr = dyn_cast<CXXOperatorCallExpr>(expr)) {
+    if (const FunctionDecl *fd = cexpr->getDirectCallee()) {
+      auto decl_info{fd->getNameInfo()};
+      llvm::dbgs() << decl_info.getName().getAsString();
+    }
+  }
+
+  if (auto cexpr = dyn_cast<CallExpr>(expr)) {
+    if (const FunctionDecl *fd = cexpr->getDirectCallee()) {
+      auto decl_info{fd->getNameInfo()};
+      if (decl_info.getName().isIdentifier()) {
+        llvm::dbgs() << decl_info.getName().getAsString();
+      }
+    }
+  }
+}
+
+bool isInNamespace(const Expr *expr, ASTContext &context,
                    const std::vector<llvm::StringRef> &names) {
-                    llvm::dbgs() << "Expr isNamespace\n";
+  // std::vector<llvm::StringRef> func_names{"range", "or_reduce" };
+  llvm::dbgs() << "2. Expr isNamespace\n";
+
+  // do not handle operator=
+  // if (auto cexpr = dyn_cast <CXXOperatorCallExpr>(expr)) {
+  // return false;
+  // }
+  //
+  if (auto cexpr = dyn_cast<CallExpr>(expr)) {
+    MatchFinder finder{};
+    NamespaceMatcher ns_matcher{};
+    ns_matcher.registerMatchers(finder);
+    finder.match(*expr, context);
+    llvm::dbgs() << "@@@ MATCHNAMES " << ns_matcher.getNamespaceName() << "  "
+                 << ns_matcher.getFunctionName() << "\n";
+    return matchNames(ns_matcher.getNamespaceName(), names);
+  }
+
+  /*
+  // wait() call
+// Expr is a MemberExpr ()
+if (auto me_expr = dyn_cast<MemberExpr>(expr) ) {
+  if (auto mdecl = dyn_cast<CXXMethodDecl>(me_expr->getMemberDecl()) ) {
+    auto cxxdecl{ mdecl->getParent() };
+    llvm::dbgs() << "@@@@@@@@@@@@ MemberExpr\n";
+    cxxdecl->dump();
+    StringRef ns_name{ getClassNameFromDecl(cxxdecl) };
+    llvm::dbgs() << "@@@@ name is " << cxxdecl->getNameAsString() << " and ref
+is " << ns_name << "\n"; return matchNames(ns_name, names);
+  }
+}
+*/
+
+  /*
   if (auto cexpr = dyn_cast<CallExpr>(expr)) {
     llvm::dbgs() << "Decl for callexpr\n";
+    cexpr->getCallee()->dump();
+    // const Decl *d = cexpr->getCalleeDecl();
+    // const DeclContext* dc = d->getLexicalParent();
+    // d->dump();
+      // StringRef ns_name{ getClassNameFromDecl(d) };
+      // llvm::dbgs() << "NS NAME = " << ns_name << "\n";
+
       if (const FunctionDecl* fd = cexpr->getDirectCallee()) {
         StringRef ns_name{ getClassNameFromDecl(fd) };
         return matchNames(ns_name, names);
@@ -162,7 +220,9 @@ bool isInNamespace(const Expr *expr,
 
     //return isInNamespace(cexpr->getType().getTypePtr(), names);
   }
+  */
 
+  /*
   if (auto dexpr = dyn_cast<DeclRefExpr>(expr)) {
     llvm::dbgs() << "@@@@ in DeclRefExpr\n";
     dexpr->dump();
@@ -170,28 +230,18 @@ bool isInNamespace(const Expr *expr,
     return isInNamespace(dexpr->getDecl(), names);
   }
 
-// wait() call
-// Expr is a MemberExpr ()
-  if (auto me_expr = dyn_cast<MemberExpr>(expr) ) {
-    if (auto mdecl = dyn_cast<CXXMethodDecl>(me_expr->getMemberDecl()) ) {
-      auto cxxdecl{ mdecl->getParent() };
-      StringRef ns_name{ getClassNameFromDecl(cxxdecl) };
-      llvm::dbgs() << "@@@@ name is " << cxxdecl->getNameAsString() << " and ref is " << ns_name << "\n";
-      return matchNames(ns_name, names);
-    }
-  }
-
+  */
   return false;
 }
 
 //
 // bool isInNamespace(const CallExpr *cexpr,
-                   // const std::vector<llvm::StringRef> &names) {
-  // llvm::dbgs() << "@@@ callexpr version of isNS\n";
-  // if (!cexpr) {
-    // return false;
-  // }
-  // return isInNamespace(cexpr->getType().getTypePtr(), names);
+// const std::vector<llvm::StringRef> &names) {
+// llvm::dbgs() << "@@@ callexpr version of isNS\n";
+// if (!cexpr) {
+// return false;
+// }
+// return isInNamespace(cexpr->getType().getTypePtr(), names);
 // }
 
 bool isInNamespace(const CallExpr *cexpr, llvm::StringRef name) {

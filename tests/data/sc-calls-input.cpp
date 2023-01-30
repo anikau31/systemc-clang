@@ -118,7 +118,7 @@ SC_MODULE(test) {
       // Bit selection
       bit_size = dword_size[2];
       // Range selection
-      nibble_size = dword_size.range(4, 1);  // Can not assign out of range
+      //nibble_size = dword_size.range(4, 1);  // Can not assign out of range
       // Concatenated
       dword_size = (byte_size, byte_size, byte_size, byte_size);
 

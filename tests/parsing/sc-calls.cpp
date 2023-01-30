@@ -30,7 +30,14 @@ class CallsMatcher : public MatchFinder::MatchCallback {
     //auto stmt_expr = stmt().bind("stmt");
     /* clang-format on */
 
-    //finder.addMatcher(stmt_expr, this);
+    auto sc_min =
+        cxxRecordDecl(has(functionDecl(forEachDescendant(stmt().bind("stmt")),
+                                       hasName("simple_wait"))
+                              .bind("fdecl")),
+                      isExpansionInMainFile())
+            .bind("cxx_decl");
+
+    // finder.addMatcher(stmt_expr, this);
     finder.addMatcher(cxx_decl, this);
   }
 
@@ -39,11 +46,36 @@ class CallsMatcher : public MatchFinder::MatchCallback {
     auto cdecl{result.Nodes.getNodeAs<CXXRecordDecl>("cxx_decl")};
     auto stmt{result.Nodes.getNodeAs<Stmt>("stmt")};
 
+    auto call_expr{result.Nodes.getNodeAs<CallExpr>("call_expr")};
     LLVM_DEBUG(llvm::outs() << "=============== TEST SC CALLS====== \n";);
 
     if (cdecl && fdecl && stmt) {
       llvm::dbgs() << "cxx decl " << cdecl->getNameAsString() << "\n";
-      checkWaitCalls(stmt, result);
+      //cdecl->dump();
+      // checkWaitCalls(stmt, result);
+      checkSCFunctions(stmt, result);
+    }
+  }
+
+  void checkSCFunctions(const Stmt *stmt,
+                        const MatchFinder::MatchResult &result) {
+    auto st = stmt;
+    // st->dump();
+
+
+    // Checks sc_min, sc_max, sc_abs
+    if (auto cexpr = dyn_cast<CallExpr>(st)) {
+      llvm::dbgs() << "\n1. ########## CallExpr \n";
+      cexpr->dump();
+      std::vector<llvm::StringRef> scdt{"sc_dt", "sc_core"};
+      if (isInNamespace(cexpr, *result.Context, scdt)) {
+        llvm::dbgs() << "#### SC FUNCTION FOUND called ";
+        dumpExprName(cexpr);
+        llvm::dbgs() << " ";
+        clang::LangOptions lopt;
+        SourceRange sr = cexpr->getSourceRange();
+        sr.dump(*result.SourceManager);
+      }
     }
   }
 
@@ -56,8 +88,9 @@ class CallsMatcher : public MatchFinder::MatchCallback {
       llvm::dbgs() << "\n########## ISExpr \n";
       expr->dump();
       std::vector<llvm::StringRef> wait{"sc_core"};
-      if (isInNamespace(expr, wait)) {
+      if (isInNamespace(expr, *result.Context, wait)) {
         llvm::dbgs() << "#### WAIT FOUND at ";
+        dumpExprName(expr);
         clang::LangOptions lopt;
         SourceRange sr = expr->getSourceRange();
         sr.dump(*result.SourceManager);
@@ -81,5 +114,4 @@ TEST_CASE("Read SystemC model from file for testing") {
   call_match.registerMatchers(match_reg);
   // Run all the matchers
   match_reg.matchAST(from_ast->getASTContext());
-
 }
