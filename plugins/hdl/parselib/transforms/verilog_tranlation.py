@@ -534,17 +534,29 @@ class VerilogTranslationPass(TopDown):
         assert proc_name not in self.senselist, 'Duplicated process: {}'.format(proc_name)
         self.senselist[proc_name] = []
         for sv in tree.children[1:]:
+            # special treatment
             sens_var, sens_edge = sv.children
-            if isinstance(sens_var, Token):
-                sens_var = sens_var.value
-            if sens_edge == 'always':
-                sen_str = sens_var
-            elif sens_edge == 'pos':
-                sen_str = 'posedge {}'.format(sens_var)
-            elif sens_edge == 'neg':
-                sen_str = 'negedge {}'.format(sens_var)
+            if is_tree_type(sv.children[0], "hsensvar"):
+                warnings.warn("Malformatted sensitivity list")
+                sens_edge, sens_var  = sv.children[0].children
+                if sens_edge == 'posedge_event':
+                    edge = 'posedge'
+                elif sens_edge == 'negedge_event':
+                    edge = 'negedge'
+                else:
+                    edge = ''
+                sen_str = '{} {}'.format(edge, sens_var)
             else:
-                raise ValueError('Edge can only be one of pos/neg/always')
+                if isinstance(sens_var, Token):
+                    sens_var = sens_var.value
+                if sens_edge == 'always':
+                    sen_str = sens_var
+                elif sens_edge == 'pos':
+                    sen_str = 'posedge {}'.format(sens_var)
+                elif sens_edge == 'neg':
+                    sen_str = 'negedge {}'.format(sens_var)
+                else:
+                    raise ValueError('Edge can only be one of pos/neg/always')
             self.senselist[proc_name].append(sen_str)
         return None
 

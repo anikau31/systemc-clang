@@ -158,14 +158,15 @@ lark_grammar = Lark('''
 
         hsenslist : "hSenslist" ID "[" hsensvar* "]"
                   | "hSenslist" ID "NOLIST"
-        hsensvar :  "hSensvar" "NONAME" "[" (expression|hvalchange) ("hNoop" | "hBuiltinFunction")  npa "NOLIST" "]"
+        hsensvar :  "hSensvar" "NONAME" "[" (hsensedge|expression|hvalchange) ("hNoop" | "hBuiltinFunction")  npa "NOLIST" ("hNoop" npa "NOLIST")* "]"
                  |  hasync
         hasync   :  "hSensvar" "ASYNC" "[" expression hliteral "]"
 
         hvalchange: "hNoop" "value_changed_event" "[" expression "]"
         hsensedge : "hNoop" npa "NOLIST"
                   | "hBuiltinFunction" npa "NOLIST"
-        !npa : "neg" | "pos" | "always"
+                  | "hBuiltinFunction" npa "[" expression "]"
+        !npa : "neg" | "pos" | "always" | "posedge_event" | "negedge_event"
 
         // if and if-else, not handling if-elseif case
         ifstmt: "hIfStmt" "NONAME" "[" expression  stmt? stmt?"]"
