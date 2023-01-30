@@ -24,28 +24,38 @@ void collect_sugar(const Type *type,
 
 bool isInNamespace(const clang::ValueDecl *fd,
                    const std::vector<llvm::StringRef> &names) {
+  llvm::dbgs() << "isInNamespace with ValueDecl\n";
+
+
   if (!fd) {
     return false;
   }
-  if (auto dc = dyn_cast<DeclContext>(fd)) {
-    LLVM_DEBUG(llvm::dbgs() << "DeclContext\n";);
-    auto dcc = dc->getLexicalParent();
 
-    if (dcc->isNamespace()) {
-      if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dcc)) {
-        LLVM_DEBUG(llvm::dbgs() << "Namespace\n";);
-        std::vector<llvm::StringRef> names{"sc_dt"};
-        auto iinfo = nd->getIdentifier();
-        LLVM_DEBUG(llvm::dbgs() << "@@@@ name " << nd->getName() << "\n";);
-        for (const auto name : names) {
-          if (iinfo->isStr(name)) {
-            return true;
-          }
-        }
-        return false;
-      }
-    }
-  }
+  //fd->dump();
+  return isInNamespace(fd->getType().getTypePtr(), names);
+
+  /*
+   *  When is this used?  Must have comments next time.
+   */
+  // if (auto dc = dyn_cast<DeclContext>(fd)) {
+        // llvm::dbgs() << "DeclContext\n";
+    // auto dcc = dc->getLexicalParent();
+//
+    // if (dcc->isNamespace()) {
+      // if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dcc)) {
+        // llvm::dbgs() << "Namespace\n";
+        // std::vector<llvm::StringRef> names{"sc_dt"};
+        // auto iinfo = nd->getIdentifier();
+        // llvm::dbgs() << "@@@@ name " << nd->getName() << "\n";
+        // for (const auto name : names) {
+          // if (iinfo->isStr(name)) {
+            // return true;
+          // }
+        // }
+        // return false;
+      // }
+    // }
+  // }
   return false;
 }
 
