@@ -164,7 +164,8 @@ int sc_main(int argc , char *argv[])
   
   pulse<0,3,RLEVEL> u_pulse("u_pulse");
   tb_driver<data_t, data_t> u_tb_driver("u_tb_driver");
-  moving_average<DATAW> u_dut("moving_average");
+  //moving_average<DATAW> u_dut("moving_average");
+  moving_average<5> u_dut("moving_average");  // 1 << 5 = 64 = DATAW
 
 
   // connect reset
