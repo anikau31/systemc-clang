@@ -178,16 +178,7 @@
           ]
         ]
       ]
-      hSigdecl n_scclang_global_5 [
-        hTypeinfo  NONAME [
-          hType sc_signal [
-            hType sc_uint [
-              hLiteral 8 NOLIST
-            ]
-          ]
-        ]
-      ]
-      hSigdecl sum_scclang_global_6 [
+      hSigdecl sum_scclang_global_5 [
         hTypeinfo  NONAME [
           hType sc_signal [
             hType sc_uint [
@@ -196,7 +187,7 @@
           ]
         ]
       ]
-      hSigdecl window_scclang_global_7 [
+      hSigdecl window_scclang_global_6 [
         hTypeinfo  NONAME [
           hType array##64 [
             hType sc_signal [
@@ -258,16 +249,6 @@
               ]
               hCStmt  NONAME [
                 hBinop = [
-                  hVarref n_scclang_global_5 NOLIST
-                  hLiteral 0 [
-                    hTypeinfo  NONAME [
-                      hType sc_uint [
-                        hLiteral 8 NOLIST
-                      ]
-                    ]
-                  ]
-                ]
-                hBinop = [
                   hVarref insert_scclang_global_4 NOLIST
                   hLiteral 0 [
                     hTypeinfo  NONAME [
@@ -296,7 +277,7 @@
                   hVarref cur_max_scclang_global_1 NOLIST
                 ]
                 hBinop = [
-                  hVarref sum_scclang_global_6 NOLIST
+                  hVarref sum_scclang_global_5 NOLIST
                   hLiteral 0 [
                     hTypeinfo  NONAME [
                       hType sc_uint [
@@ -319,7 +300,7 @@
                   ]
                   hBinop = [
                     hBinop ARRAYSUBSCRIPT [
-                      hVarref window_scclang_global_7 NOLIST
+                      hVarref window_scclang_global_6 NOLIST
                       hVarref i_ms_proc_local_2 NOLIST
                     ]
                     hLiteral 0 [
@@ -364,7 +345,7 @@
                     ]
                     hBinop = [
                       hBinop ARRAYSUBSCRIPT [
-                        hVarref window_scclang_global_7 NOLIST
+                        hVarref window_scclang_global_6 NOLIST
                         hBuiltinFunction to_uint [
                           hSigAssignR read [
                             hVarref insert_scclang_global_4 NOLIST
@@ -373,34 +354,13 @@
                       ]
                       hVarref datastrm##data NOLIST
                     ]
-                    hIfStmt  NONAME [
-                      hBinop < [
-                        hBuiltinFunction to_uint [
-                          hSigAssignR read [
-                            hVarref n_scclang_global_5 NOLIST
-                          ]
-                        ]
-                        hLiteral 64 NOLIST
-                      ]
-                      hSigAssignL write [
-                        hVarref n_scclang_global_5 NOLIST
-                        hBinop + [
-                          hBuiltinFunction to_uint [
-                            hSigAssignR read [
-                              hVarref n_scclang_global_5 NOLIST
-                            ]
-                          ]
-                          hLiteral 1 NOLIST
-                        ]
-                      ]
-                    ]
                     hSigAssignL write [
                       hVarref cur_avg_scclang_global_0 NOLIST
-                      hBinop / [
+                      hBinop >> [
                         hBinop + [
                           hBuiltinFunction to_uint [
                             hSigAssignR read [
-                              hVarref sum_scclang_global_6 NOLIST
+                              hVarref sum_scclang_global_5 NOLIST
                             ]
                           ]
                           hBuiltinFunction to_int [
@@ -409,23 +369,16 @@
                             ]
                           ]
                         ]
-                        hBinop + [
-                          hBuiltinFunction to_uint [
-                            hSigAssignR read [
-                              hVarref n_scclang_global_5 NOLIST
-                            ]
-                          ]
-                          hLiteral 1 NOLIST
-                        ]
+                        hLiteral 32 NOLIST
                       ]
                     ]
                     hSigAssignL write [
-                      hVarref sum_scclang_global_6 NOLIST
+                      hVarref sum_scclang_global_5 NOLIST
                       hBinop - [
                         hBinop + [
                           hBuiltinFunction to_uint [
                             hSigAssignR read [
-                              hVarref sum_scclang_global_6 NOLIST
+                              hVarref sum_scclang_global_5 NOLIST
                             ]
                           ]
                           hBuiltinFunction to_uint [
@@ -437,7 +390,7 @@
                         hBuiltinFunction to_uint [
                           hSigAssignR read [
                             hBinop ARRAYSUBSCRIPT [
-                              hVarref window_scclang_global_7 NOLIST
+                              hVarref window_scclang_global_6 NOLIST
                               hBuiltinFunction to_uint [
                                 hSigAssignR read [
                                   hVarref insert_scclang_global_4 NOLIST
