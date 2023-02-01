@@ -435,20 +435,26 @@ namespace systemc_hdl {
 
 	// process true branch
 	hNodep if1 = new hNode(hNode::hdlopsEnum::hCStmt);
+	hNodep if2 = NULL;
 	int flseix = pt[thisix].second.getFalseId();
 	ProcessSplitGraphGroup(pt, thisix+1, flseix - (thisix+1), state_num, if1);
 	//ProcessSplitGraphGroup(pt, thisix+1, flseix_vec[thisix].first - (thisix+1),
 	//state_num,if1);
-	hcondstmt->append(if1);
-		  
+	if (if1->size() > 0) hcondstmt->append(if1);
 	if (flseix != 0) {// has false branch
-	  if1 = new hNode(hNode::hdlopsEnum::hCStmt);
-	  
+	  if2 = new hNode(hNode::hdlopsEnum::hCStmt);
 	  ProcessSplitGraphGroup(pt, flseix, GetFalseLength(pt, thisix),
-				 state_num, if1);
-	  hcondstmt->append(if1);
+				 state_num, if2);
 	}
-	h_switchcase->append(hcondstmt);
+
+	if (if2!=NULL && if2->size() > 0) {
+	  if (if1->size()==0) {
+	    if1->set(hNode::hdlopsEnum::hNoop);
+	    hcondstmt->append(if1);
+	  }
+	  hcondstmt->append(if2);
+	}
+	if (hcondstmt->size() >0) h_switchcase->append(hcondstmt);
 	return;
       } // end if this was a terminator block
       
