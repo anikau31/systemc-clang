@@ -30,32 +30,37 @@ bool isInNamespace(const clang::ValueDecl *fd,
     return false;
   }
 
+  // llvm::dbgs() << "Value decl dump\n";
   // fd->dump();
+
+
+  // This handles the DeclRefExpr expressions.  Examples include concat.
+  // TODO: Is there some way to make this work with the types?
+ if (auto dc = dyn_cast<DeclContext>(fd)) {
+    // llvm::dbgs() << "DeclContext\n";
+    auto dcc = dc->getLexicalParent();
+
+    if (dcc->isNamespace()) {
+      if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dcc)) {
+        // llvm::dbgs() << "Namespace\n";
+        std::vector<llvm::StringRef> names{"sc_dt"};
+        auto iinfo = nd->getIdentifier();
+        // llvm::dbgs() << "@@@@ name " << nd->getName() << "\n";
+        for (const auto name : names) {
+          if (iinfo->isStr(name)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    }
+  }
+
+  // llvm::dbgs() << "Type dump\n";
+  // fd->getType().getTypePtr()->dump();
   return isInNamespace(fd->getType().getTypePtr(), names);
 
-  /*
-   *  When is this used?  Must have comments next time.
-   */
-  // if (auto dc = dyn_cast<DeclContext>(fd)) {
-  // llvm::dbgs() << "DeclContext\n";
-  // auto dcc = dc->getLexicalParent();
-  //
-  // if (dcc->isNamespace()) {
-  // if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dcc)) {
-  // llvm::dbgs() << "Namespace\n";
-  // std::vector<llvm::StringRef> names{"sc_dt"};
-  // auto iinfo = nd->getIdentifier();
-  // llvm::dbgs() << "@@@@ name " << nd->getName() << "\n";
-  // for (const auto name : names) {
-  // if (iinfo->isStr(name)) {
-  // return true;
-  // }
-  // }
-  // return false;
-  // }
-  // }
-  // }
-  return false;
+  //return false;
 }
 
 bool isInNamespace(const clang::Type *tp,
@@ -101,11 +106,19 @@ bool isInNamespace(const clang::Type *tp,
       dc = const_cast<clang::DeclContext *>(rdecl->getLexicalParent());
     }
 
+    if (tap->isFunctionType()) {
+      llvm::dbgs() << "isFunctionType\n";
+      if (auto rdecl = tap->getAsCXXRecordDecl()) {
+        llvm::dbgs() << "Got in as CXX\n";
+        dc = const_cast<clang::DeclContext *>(rdecl->getLexicalParent());
+      }
+    }
+
     if (dc && dc->isNamespace()) {
       llvm::dbgs() << "isNamespace \n";
       if (const auto *nd = llvm::dyn_cast<clang::NamespaceDecl>(dc)) {
         auto iinfo = nd->getIdentifier();
-        // llvm::dbgs() << "@@ name is " << iinfo->getName() << " for ";
+        llvm::dbgs() << "@@ name is " << iinfo->getName() << " for ";
         for (const auto name : names) {
           if (iinfo->isStr(name)) {
             return true;
@@ -180,7 +193,9 @@ void dumpExprName(const Expr *expr) {
 bool isInNamespace(const Expr *expr,
                    const std::vector<llvm::StringRef> &names) {
   // Get access to the ASTContext from Expr.
-  if (!expr) { return false; }
+  if (!expr) {
+    return false;
+  }
   // std::vector<llvm::StringRef> func_names{"range", "or_reduce" };
   llvm::dbgs() << "2. Expr isNamespace\n";
 
@@ -190,11 +205,8 @@ bool isInNamespace(const Expr *expr,
   // }
   //
   if (auto cexpr = dyn_cast<CallExpr>(expr)) {
-
-    const Decl * decl = cexpr->getCalleeDecl();
-    ASTContext& Context =decl->getASTContext();
-
-
+    const Decl *decl = cexpr->getCalleeDecl();
+    ASTContext &Context = decl->getASTContext();
 
     MatchFinder finder{};
     NamespaceMatcher ns_matcher{};
@@ -239,7 +251,7 @@ is " << ns_name << "\n"; return matchNames(ns_name, names);
   }
   */
 
-  /*
+  // Concat needs this.
   if (auto dexpr = dyn_cast<DeclRefExpr>(expr)) {
     llvm::dbgs() << "@@@@ in DeclRefExpr\n";
     dexpr->dump();
@@ -247,7 +259,6 @@ is " << ns_name << "\n"; return matchNames(ns_name, names);
     return isInNamespace(dexpr->getDecl(), names);
   }
 
-  */
   return false;
 }
 
