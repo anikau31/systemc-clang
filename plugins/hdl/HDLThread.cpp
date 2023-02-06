@@ -396,6 +396,10 @@ namespace systemc_hdl {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " <<blkid << " is a while stmt\n");
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
 	}
+	else if (const DoStmt *S1 = dyn_cast<DoStmt> (S)) {
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is a do stmt\n");
+	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
+	}
 	else if (const ForStmt *S1 = dyn_cast<ForStmt> (S)) {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is a for stmt\n");
 	  // if (!sgb->hasTerminatorWait()) {
