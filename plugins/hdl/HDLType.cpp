@@ -140,7 +140,7 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
 
   if (t1 != t2) {
     llvm::dbgs() << "### CHECK1: old " << t1 << " != new " << t2 << "\n";
-    // comment out to see hcode output. assert(0); //llvm::dbgs() << t1/0;
+    assert(0); //llvm::dbgs() << t1/0;
     //std::cin.get();
   }
   // ========================== END CHECK =====================
