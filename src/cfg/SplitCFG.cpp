@@ -323,7 +323,7 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
             const clang::CFGBlock* fsucc{*cblock->succ_rbegin()};
 
             if (fsucc) {
-            fsucc->dump();
+              fsucc->dump();
               // Find the index from curr_path, and set it to the false_idx_, if
               // found.
               for (auto const visited_blk : curr_path) {
@@ -582,10 +582,17 @@ llvm::APInt SplitCFG::getWaitArgument(const clang::CFGElement& element) const {
           if (auto first_arg{cxx_me->getArg(0)}) {
             llvm::dbgs() << "*************** FIRST ARG ****************\n";
             first_arg->dump();
-            const clang::IntegerLiteral* IntLiteral =
-                clang::dyn_cast<clang::IntegerLiteral>(first_arg);
-            llvm::dbgs() << " ARG VAL: " << IntLiteral->getValue() << "\n";
-            return IntLiteral->getValue();
+
+            // Check if we can evaluate the expression with constant folding
+            // We only accept integer ones.  So, for other expressions it might
+            // not work.
+            if (first_arg->isEvaluatable(context_)) {
+              clang::Expr::EvalResult result{};
+              first_arg->EvaluateAsInt(result, context_);
+              llvm::dbgs() << " ARG VAL: ";
+              result.Val.dump();
+              return result.Val.getInt();
+            }
           }
         }
       }
