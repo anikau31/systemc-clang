@@ -361,10 +361,12 @@ bool HDLBody::ProcessVarDecl(VarDecl *vardecl) {
   if (HDLt.usertype_info.userrectypes.size() > 0) {
     tstp = (((te->getTemplateArgTreePtr())->getRoot())->getDataPtr())
                ->getTypePtr();
+    /*
     LLVM_DEBUG(
         llvm::dbgs()
         << "ProcessVarDecl init of user class, tstp in processvardecl is "
         << tstp << " isscbytype says " << lutil.isSCByType(tstp) << "\n");
+        */
     LLVM_DEBUG(HDLt.print(llvm::dbgs()));
     auto recmapiter = HDLt.usertype_info.userrectypes.find(tstp);
     if (recmapiter !=
@@ -467,6 +469,7 @@ bool HDLBody::VisitBinaryOperator(BinaryOperator *expr) {
 
   // ========================== CHECK 1 =====================
   // FIXME: Cleanup
+  /*
   bool t11 =
       ((opcodestr == ",") &&
        (lutil.isSCType(exprtypstr, expr->getType().getTypePtr()) ||
@@ -479,6 +482,7 @@ bool HDLBody::VisitBinaryOperator(BinaryOperator *expr) {
     assert(0);  // llvm::dbgs() << t11/0;
     //        std::cin.get();
   }
+  */
   // ========================== END CHECK =====================
   //
   if ((opcodestr == ",") &&
@@ -602,6 +606,7 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
   }
   if (isa<FunctionDecl>(value)) {
     // ============= CHECK ================
+    /*
     bool t1 = !(lutil.isSCFunc(name) || lutil.isSCMacro(name));
     bool t2 = !lutil.isSCByCallExpr(expr);
 
@@ -611,6 +616,7 @@ bool HDLBody::VisitDeclRefExpr(DeclRefExpr *expr) {
       assert(0);
       // std::cin.get();
     }
+    */
     // ============= END CHECK ================
     if (!(lutil.isSCFunc(name) ||
           lutil.isSCMacro(name))) {  // similar to method call, skip builtin
@@ -761,6 +767,7 @@ bool HDLBody::VisitCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
   // bool inns_result = sc_ast_matchers::utils::isInNamespace(callexpr,
   // "sc_core") || sc_ast_matchers::utils::isInNamespace(callexpr, "sc_dt");
   bool foundsctype = lutil.isSCType(qualmethodname, typeformethodclass);
+  /*
   bool newfoundsctype =
       lutil.isSCByCallExpr(callexpr);  // || lutil.isSCType(typeformethodclass);
   if (foundsctype != newfoundsctype) {
@@ -772,6 +779,7 @@ bool HDLBody::VisitCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     // std::cin.get();
     // foundsctype = newfoundsctype; // ADD THIS TO TEST SEGV
   }
+  */
 
   //    bool foundsctype = lutil.isSCByCallExpr(callexpr);
 
@@ -867,6 +875,7 @@ bool HDLBody::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
   // ========================== CHECK  2=====================
   const Type *optypepointer = opcall->getType().getTypePtr();
 
+  /*
   bool t12 =
       ((operatorname == "=") || lutil.isSCBuiltinType(operatortype) ||
        lutil.isSCType(operatortype) || (opcall->getType())->isBuiltinType() ||
@@ -882,6 +891,7 @@ bool HDLBody::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
     assert(0);
     // std::cin.get();
   }
+  */
   // ========================== END CHECK =====================
   //
 
@@ -914,7 +924,7 @@ bool HDLBody::VisitCXXOperatorCallExpr(CXXOperatorCallExpr *opcall) {
         else
           h_operop = new hNode(operatorname, hNode::hdlopsEnum::hBinop);
 
-        if ((operatorname == ",") && (lutil.isSCByCallExpr(opcall)))
+        if ((operatorname == ",") /*&& (lutil.isSCByCallExpr(opcall))*/ )
           h_operop->set("concat");  // overloaded comma is concat for sc types
                                     //
                                     //
