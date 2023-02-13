@@ -551,9 +551,9 @@ class VerilogTranslationPass(TopDown):
                     sens_var = sens_var.value
                 if sens_edge == 'always':
                     sen_str = sens_var
-                elif sens_edge == 'pos':
+                elif sens_edge in ['pos', 'posedge_event']:
                     sen_str = 'posedge {}'.format(sens_var)
-                elif sens_edge == 'neg':
+                elif sens_edge in ['neg', 'negedge_event']:
                     sen_str = 'negedge {}'.format(sens_var)
                 else:
                     raise ValueError('Edge can only be one of pos/neg/always')

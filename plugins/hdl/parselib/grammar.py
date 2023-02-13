@@ -61,6 +61,7 @@ lark_grammar = Lark('''
              | breakstmt
              | continuestmt
              | hwait
+             | hslice
              
         continuestmt: "hContinue" "NONAME" "NOLIST"
         // hvarinitlist can be empty
@@ -169,7 +170,7 @@ lark_grammar = Lark('''
         !npa : "neg" | "pos" | "always" | "posedge_event" | "negedge_event"
 
         // if and if-else, not handling if-elseif case
-        ifstmt: "hIfStmt" "NONAME" "[" expression  stmt? stmt?"]"
+        ifstmt: "hIfStmt" "NONAME" "[" (expression|harrayref)  stmt? stmt?"]"
 
          
         ?expression: hbinop
@@ -207,7 +208,7 @@ lark_grammar = Lark('''
         // function call
         hvarref : "hVarref" ID "NOLIST"
         hunimp:  "hUnimpl" ID "NOLIST"
-        hbinop:  "hBinop" BINOP "[" (expression|hslice) (expression|hslice|blkassign) "]"
+        hbinop:  "hBinop" BINOP "[" (expression|hslice|harrayref) (expression|hslice|blkassign) "]"
         
         // A temporary hack to handle --
         hunop:  "hUnop" UNOP_NON_SUB "[" (expression|hslice) "]"
@@ -227,7 +228,7 @@ lark_grammar = Lark('''
         REDUCE_OP: "and_reduce" | "or_reduce" | "xor_reduce" | "nand_reduce" | "nor_reduce" | "xnor_reduce"
 
         // Separate '=' out from so that it is not an expression but a standalone statement
-        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (hbuiltin | htotype | hconcat | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
+        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (hbuiltin | htotype | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop | hconcat) "]"
                  | "hBinop" "=" "[" harrayref  arrayrhs "]"
                  | nblkassign
                  | vassign
@@ -251,6 +252,7 @@ lark_grammar = Lark('''
                   | hliteral
                   | hcondop
                   | htoint
+                  | hconcat
                   
         nblkassign: "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool | hmethodcall | hfieldaccess)  "]"
                   | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
