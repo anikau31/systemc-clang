@@ -488,6 +488,12 @@ namespace systemc_hdl {
 		xbodyp->Run(m.first->getBody(), hfunc,rnomode);
 	      }
 	    }
+	  } // num of parameters > 0
+	  else {
+	    LLVM_DEBUG(llvm::dbgs() << " No parameters found for " << m.second.newn << "\n");
+	    hNodep htmpf = new hNode( hNode::hdlopsEnum::hCStmt);
+	    xbodyp->Run(m.first->getBody(), htmpf,rnomode);
+	    hfunc->append(htmpf);
 	  }
 	  // If this function invoked other functions, add them to the list to be generated
 	  allmethodecls.insertall(xbodyp->methodecls); // if a function called
