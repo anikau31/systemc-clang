@@ -262,21 +262,26 @@ namespace hnode {
 
     }
 
+    // New functions
+    inline bool checkNamespace(const FunctionDecl *fd) {
+      std::vector<llvm::StringRef> sc_dt{"sc_dt", "sc_core"};
+      return isInNamespace(fd, sc_dt);
+    }
     
+    /*
+     * Old functions
     inline bool isSCByFunctionDecl(const FunctionDecl *fd) {
       if (!fd) { return false; }
 
       std::vector<llvm::StringRef> sc_dt{"sc_dt"};
       return isInNamespace(fd, sc_dt);
     }
+    */
 
+    /*
     inline bool isSCByCallExpr(const Expr *expr) {
-      // auto callexpr = dyn_cast<CallExpr>(expr);
-//
-      // if (!callexpr) {
-        // llvm::dbgs() << "Not a callexpr - return false\n";
-        // return false;
-      // }
+      // std::vector<llvm::StringRef> sc_dt{"sc_dt", "sc_core"};
+      // return isInNamespace(expr, sc_dt);
 //
 
       if (auto mce = dyn_cast<CXXMemberCallExpr>(expr)) {
@@ -313,12 +318,14 @@ namespace hnode {
         return inns;
       }
     }
+    */
     
    
+    /*
     inline bool isSCByType(const Type *typ) {
       
       // if  (types_seen.count(typ) > 0) {
-      // LLVM_DEBUG(llvm::dbgs() << "isSCByType(typ) found type pointer in set " << typ << "\n");
+    //   LLVM_DEBUG(llvm::dbgs() << "isSCByType(typ) found type pointer in set " << typ << "\n");
       // return true;
       // }
       llvm::dbgs() << "@@@@ isSCT\n";
@@ -329,9 +336,9 @@ namespace hnode {
       if (isInNamespace(typ, sc_dt_ns) 
           || isCXXMemberCallExprSystemCCall(typ, ports_signals_wait) 
           || isCXXMemberCallExprSystemCCall(typ, rvd)) {
-	types_seen.insert(typ);
-	LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
-	return true;
+          types_seen.insert(typ);
+          LLVM_DEBUG(llvm::dbgs() << "types_seen insert " << typ << " size = " << types_seen.size() << "\n");
+          return true;
       }
       return false;
     }
@@ -342,6 +349,7 @@ namespace hnode {
         LLVM_DEBUG(llvm::dbgs() << "isSCType(typ) found type pointer in set " << typ << "\n");
         return true;
       }
+
       static std::vector<llvm::StringRef> sc_dt_ns{"sc_dt"};
       static std::vector<llvm::StringRef> rvd{"sc_rvd","sc_rvd_in","sc_rvd_out"};
 
@@ -352,7 +360,9 @@ namespace hnode {
       }
       return false;
     }
+    */
 
+    /*
     inline bool isSCType(const CallExpr *callexpr) {
       if (isa<CXXMemberCallExpr>(callexpr)) {
         LLVM_DEBUG(llvm::dbgs() << "isSCType(callexpr) is a membercallexpr\n");
@@ -373,6 +383,7 @@ namespace hnode {
         return isInNamespace(callexpr, core_dt);
       }
     }
+    */
     
     inline bool isSCBuiltinType(const string &tstring, const Type *typ=NULL){
       // linear search sorry, but at least the length
