@@ -430,17 +430,18 @@ namespace systemc_hdl {
 	      //if (mutil.is_sc_macro(m.first)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      
         // ============= CHECK ==============
-	      bool t1 = mutil.isSCByFunctionDecl(m.first);
+	      //bool t1 = mutil.isSCByFunctionDecl(m.first);
+	      bool t1 = mutil.checkNamespace(m.first);
 	      bool t2 = mutil.isSCMacro(m.second.oldn);
 
 	      if (t1 != t2) {
-		llvm::dbgs() << "@@@@ isSCMacro does not match.  t1 = " << t1 << ", t2 = " << t2 << "  " << m.second.oldn << "\n";
-		assert(0 && "isSCMacro does not match");
+          llvm::dbgs() << "@@@@ isSCMacro does not match.  t1 = " << t1 << ", t2 = " << t2 << "  " << m.second.oldn << "\n";
+          assert(0 && "isSCMacro does not match");
 	      }
 	      // ============= END CHECK ==============
 	      //
 	      if (mutil.isSCMacro(m.second.oldn)) {
-		paramtype = hNode::hdlopsEnum::hFunctionParamI;
+          paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      }
 	      else if ((vardecl->getType()->isReferenceType()) && !(vardecl->getType().getNonReferenceType().isConstQualified()))
 		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
