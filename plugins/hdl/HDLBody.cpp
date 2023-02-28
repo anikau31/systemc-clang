@@ -787,7 +787,7 @@ bool HDLBody::VisitCXXMemberCallExpr(CXXMemberCallExpr *callexpr) {
     opc = hNode::hdlopsEnum::hSigAssignR;
   else if ((methodname == "write") && foundsctype)
     opc = hNode::hdlopsEnum::hSigAssignL;
-  else if (methodname == "wait")
+  else if ((methodname == "wait") && thismode == rthread)
     opc = hNode::hdlopsEnum::hWait;
   else if (foundsctype) {  // operator from simulation library
     opc = hNode::hdlopsEnum::hBuiltinFunction;
