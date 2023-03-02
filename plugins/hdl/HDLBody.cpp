@@ -81,7 +81,7 @@ namespace systemc_hdl {
     add_info = (runmode == rmodinit);
     HDLt_userclassesp_ = HDLt_userclassesp;
     thismode = runmode;
-    methodecls.clear();  // clear out old state
+    if (thismode != rthread) methodecls.clear();  // clear out old state but need to preserve for thread
     methodecls.set_prefix("_func_");
 
     vname_map.clear();
@@ -541,19 +541,16 @@ namespace systemc_hdl {
   }
 
   bool HDLBody::VisitConditionalOperator(ConditionalOperator *expr) {
-    LLVM_DEBUG(llvm::dbgs() << "in TraverseConditionalOperator expr node is \n");
+    LLVM_DEBUG(llvm::dbgs() << "in VisitConditionalOperator expr node is \n");
     LLVM_DEBUG(expr->dump(llvm::dbgs(), ast_context_););
 
     hNodep h_condop = new hNode(hNode::hdlopsEnum::hCondop);
     TraverseStmt(expr->getCond());
-    h_condop->child_list.push_back(
-				   h_ret);  // need to check if it's null or didn't get changed
+    h_condop->child_list.push_back(h_ret);  // need to check if it's null or didn't get changed
     TraverseStmt(expr->getTrueExpr());
-    h_condop->child_list.push_back(
-				   h_ret);  // need to check if it's null or didn't get changed
+    h_condop->child_list.push_back(h_ret);  // need to check if it's null or didn't get changed
     TraverseStmt(expr->getFalseExpr());
-    h_condop->child_list.push_back(
-				   h_ret);  // need to check if it's null or didn't get changed
+    h_condop->child_list.push_back(h_ret);  // need to check if it's null or didn't get changed
     h_ret = h_condop;
     return false;
   }
@@ -1332,8 +1329,7 @@ namespace systemc_hdl {
 		 hassignchain->child_list.end());
     return hassignchain;
   }
-
-  void HDLBody::GetWaitArg(hNodep h_callp, Expr *callarg) {
+  void HDLBody::GetWaitArg(hNodep &h_callp, Expr *callarg) {
     int64_t waitarg = 0;
     if (callarg->isEvaluatable(ast_context_)) {
       clang::Expr::EvalResult result{};

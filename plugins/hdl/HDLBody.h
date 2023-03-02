@@ -76,7 +76,7 @@ class HDLBody : public RecursiveASTVisitor<HDLBody> {
   void AddVnames(hNodep &hvns);
   string FindFname(FunctionDecl *funcd);
 
-  void GetWaitArg(hNodep h_callp, Expr *callarg);
+  void GetWaitArg(hNodep &h_callp, Expr *callarg);
   hNodep NormalizeAssignmentChain(hNodep hinp);
   void NormalizeSwitchStmt(hNodep hswitchbody);
 
