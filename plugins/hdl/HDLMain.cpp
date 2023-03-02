@@ -345,6 +345,7 @@ namespace systemc_hdl {
     // Function calls within functions get added to all methodecls.
     
     std::set<Decl *> generated_functions;
+    bool addfunc = false;
     //while (allmethodecls.size() > 0) {
     while (allmethodecls.size()>generated_functions.size()) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
@@ -494,7 +495,7 @@ namespace systemc_hdl {
 	    LLVM_DEBUG(llvm::dbgs() << " No parameters found for " << m.second.newn << "\n");
 	    hNodep htmpf = new hNode( hNode::hdlopsEnum::hCStmt);
 	    xbodyp->Run(m.first->getBody(), htmpf,rnomode);
-	    hfunc->append(htmpf);
+	    hfunc->child_list.insert(hfunc->child_list.end(), htmpf->child_list.begin(), htmpf->child_list.end());
 	  }
 	  // If this function invoked other functions, add them to the list to be generated
 	  allmethodecls.insertall(xbodyp->methodecls); // if a function called
