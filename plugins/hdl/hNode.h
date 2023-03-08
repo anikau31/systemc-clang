@@ -44,7 +44,6 @@ namespace hnode {
       etype(hPortin),				\
       etype(hPortout),				\
       etype(hPortio),				\
-      etype(hPortref),				\
       etype(hSenslist),				\
       etype(hSensvar),				\
       etype(hSensedge),				\
@@ -90,6 +89,7 @@ namespace hnode {
       etype(hFunctionParams),			\
       etype(hFunctionParamI),			\
       etype(hFunctionParamIO),			\
+      etype(hFunctionParamRef),				\
       etype(hWait),				\
       etype(hUnimpl),				\
       etype(hLast)

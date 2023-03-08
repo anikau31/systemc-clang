@@ -445,7 +445,7 @@ namespace systemc_hdl {
           paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      }
 	      else if ((vardecl->getType()->isReferenceType()) && !(vardecl->getType().getNonReferenceType().isConstQualified()))
-		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
+		paramtype = hNode::hdlopsEnum::hFunctionParamRef;
 	      else { // handle actual parameter
 		
 		paramtype = hNode::hdlopsEnum::hFunctionParamI;
