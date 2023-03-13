@@ -25,6 +25,7 @@ lark_grammar = Lark('''
         vardeclrn: "hVardeclrn" ID "[" htypeinfo hliteral "]"
         funcparami: "hFunctionParamI" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
         funcparamio: "hFunctionParamIO" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
+                   | "hFunctionParamRef" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
         ?hvarinit: "hVarInit" "NONAME" expression
                  | "hVarInit" "NONAME" "[" hvarinitlist "]"
         ?hvarinitint: "hVarInit" NUM "NOLIST"
@@ -67,7 +68,6 @@ lark_grammar = Lark('''
         // hvarinitlist can be empty
         hvarinitlist: "hVarInitList" "NONAME" "[" (hvarinitlist | expression)+ "]"
                     | "hVarInitList" "NONAME" "NOLIST"
-                    | hliteral*
         // hvarinitlist: "hVarInitList" "NONAME" "NOLIST"
         
         hwait: "hWait" "wait" "NOLIST" | "hWait" NUM ("[" hliteral "]" | "NOLIST")
