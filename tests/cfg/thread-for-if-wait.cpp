@@ -63,7 +63,8 @@ TEST_CASE("Simple thread test") {
 
   SUBCASE("Found sc_module instances") {
     // There should be 2 modules identified.
-    //INFO("Checking number of sc_module instances found: " << instances.size());
+    // INFO("Checking number of sc_module instances found: " <<
+    // instances.size());
 
     CHECK(instances.size() >= 2);
 
@@ -126,34 +127,51 @@ TEST_CASE("Simple thread test") {
       /// 4 Paths
       CHECK(i == 4);
 
-
       /// Check if the TRUE/FALSE paths are correct.
-      auto path_info{scfg.getPathInfo()};
-      int check{2};
-      for (const auto &block : path_info) {
-        auto sblock{block.first};
-        auto info{block.second};
-        auto id{ sblock->getBlockID()};
-        std::string tstr{info.toStringTruePath()};
-        std::string fstr{info.toStringFalsePath()};
+      auto path_info{scfg.getAllPathInfo()};
+      int check{8};
+      int state{0};
+      for (const auto &pi : path_info) {
+        for (const auto &block : pi) {
+          auto sblock{block.first};
+          auto info{block.second};
+          auto id{sblock->getBlockID()};
+          std::string tstr{info.toStringTruePath()};
+          std::string fstr{info.toStringFalsePath()};
 
-        if (id == 7) {
-          CHECK(tstr == "6");
-          CHECK(fstr == "2 1 9 8 81");
-          --check;
+          if (state == 0) {
+            if (id == 7) {
+              CHECK(tstr == "");
+              CHECK(fstr == "");
+              --check;
+            }
+
+            if (id == 6) {
+              CHECK(tstr == "");
+              CHECK(fstr == "");
+              --check;
+            }
+          }
+
+          if (state > 0 ) {
+            if (id == 7) {
+              CHECK(tstr == "6");
+              CHECK(fstr == "2 1 9 8 81");
+              --check;
+            }
+
+            if (id == 6) {
+              CHECK(tstr == "5");
+              CHECK(fstr == "4");
+              --check;
+            }
+          }
         }
 
-        if (id == 6) {
-          CHECK(tstr == "5" );
-          CHECK(fstr == "4" );
-          --check;
-        }
+        ++state;
       }
 
       CHECK(check == 0);
-
-
-
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";
