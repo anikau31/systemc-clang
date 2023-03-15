@@ -280,7 +280,7 @@ const SplitCFG::SplitCFGPath SplitCFG::dfs_visit_wait(
                      << " parent BB# " << ParentBB->getBlockID() << " T "
                      << true_path_ << " F " << false_path_ << "\n";
 
-        std::cin.get();
+        // std::cin.get();
         /// Haven't looked at new successor yet.
         /// Find the new visited blocks.
         // new_visited.insert(BB);
@@ -736,10 +736,12 @@ void SplitCFG::createWaitSplitCFGBlocks(
       new_split = new SplitCFGBlock{};  //*scit->second};
       new_split->id_ = block->getBlockID() * 10 + id;
 
+      auto is_wait = elements.second;
       auto stmt{block->getTerminatorStmt()};
-      new_split->is_conditional_ =
+      // A wait block cannot be a conditional.
+      new_split->is_conditional_ = !is_wait && (
           stmt && (llvm::isa<clang::IfStmt>(stmt) ||
-                   llvm::isa<clang::ConditionalOperator>(stmt));
+                   llvm::isa<clang::ConditionalOperator>(stmt)));
 
       /// Succesors
       //
