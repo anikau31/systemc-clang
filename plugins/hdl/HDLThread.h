@@ -88,7 +88,7 @@ namespace systemc_hdl {
       void CheckVardecls(hNodep &hp, string &cfgblockid);
     void ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp);
 
-    int GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix);
+    int GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix, int state_num);
     
     void ProcessSplitGraphGroup(const SplitCFG::SplitCFGPath pt,
 					 int startix, int num_ele,

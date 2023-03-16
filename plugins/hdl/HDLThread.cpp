@@ -318,16 +318,16 @@ namespace systemc_hdl {
     }
   }
 
-  int HDLThread::GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix) {
-    auto path_info_{scfg.getPathInfo()};
+  int HDLThread::GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix, int state_num) {
+    auto path_info_{scfg.getAllPathInfo()};
     auto sblock{pt[cond_node_ix].first};
     auto supp_info{pt[cond_node_ix].second};
-    auto found_it{path_info_.find(supp_info.split_block_)};
+    auto found_it{path_info_[state_num].find(supp_info.split_block_)};
     int flen = 0;
     LLVM_DEBUG(llvm::dbgs() << "Getting false path length of ");
     LLVM_DEBUG(llvm::dbgs() << "(" << supp_info.path_idx_ << "," << sblock->getBlockID()
 	       << "," << supp_info.false_idx_);
-    if (found_it != path_info_.end()) {
+    if (found_it != path_info_[state_num].end()) {
       flen = found_it->second.getFalsePath().size();
     }
     LLVM_DEBUG(llvm::dbgs() << " |" << flen << "|");
@@ -447,7 +447,7 @@ namespace systemc_hdl {
 	if (if1->size() > 0) hcondstmt->append(if1);
 	if (flseix != 0) {// has false branch
 	  if2 = new hNode(hNode::hdlopsEnum::hCStmt);
-	  ProcessSplitGraphGroup(pt, flseix, GetFalseLength(pt, thisix),
+	  ProcessSplitGraphGroup(pt, flseix, GetFalseLength(pt, thisix, state_num),
 				 state_num, if2);
 	}
 
