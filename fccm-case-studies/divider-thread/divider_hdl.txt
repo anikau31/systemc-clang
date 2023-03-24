@@ -1,0 +1,743 @@
+  hModule mymodule_sc_module_0 [
+    hPortsigvarlist  NONAME [
+      hSigdecl areset_scclang_global_0 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl clk_scclang_global_1 [
+        hTypeinfo  NONAME [
+          hType sc_clock NOLIST
+        ]
+      ]
+      hSigdecl dividend_scclang_global_2 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl divisor_scclang_global_3 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl quotient_scclang_global_4 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl valid_scclang_global_5 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl vld_scclang_global_6 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hModdecl u_dut [
+        hTypeinfo  NONAME [
+          hType divider_sc_module_1 NOLIST
+        ]
+      ]
+    ]
+    hModinitblock mymod [
+      hPortbindings mymod [
+        hPortbinding u_dut [
+          hVarref clk NOLIST
+          hVarref clk_scclang_global_1 NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref arst NOLIST
+          hVarref areset_scclang_global_0 NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref dividend NOLIST
+          hVarref dividend_scclang_global_2 NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref divisor NOLIST
+          hVarref divisor_scclang_global_3 NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref valid NOLIST
+          hVarref valid_scclang_global_5 NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref quotient NOLIST
+          hVarref quotient_scclang_global_4 NOLIST
+        ]
+        hPortbinding u_dut [
+          hVarref vld NOLIST
+          hVarref vld_scclang_global_6 NOLIST
+        ]
+      ]
+    ]
+  ]
+  hModule divider_sc_module_1 [
+    hPortsigvarlist  NONAME [
+      hPortin clk [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin arst [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortin dividend [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortin divisor [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortin valid [
+        hTypeinfo  NONAME [
+          hType sc_in [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout quotient [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hPortout vld [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hPortout busy [
+        hTypeinfo  NONAME [
+          hType sc_out [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hSigdecl _op1_scclang_global_0 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl _op2_scclang_global_1 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_biguint [
+              hLiteral 128 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl _quotient_scclang_global_2 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl _res_scclang_global_3 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl _temp_scclang_global_4 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl _vld_scclang_global_5 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType _Bool NOLIST
+          ]
+        ]
+      ]
+      hVardecl i_thread_proc_1_thread_0 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl state_thread_proc_1# [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _next_state_thread_proc_1# [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl wait_counter_thread_proc_1# [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _next_wait_counter_thread_proc_1# [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl wait_next_state_thread_proc_1# [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _next_wait_next_state_thread_proc_1# [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hVardecl _main_i_thread_proc_1_thread_0 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+      ]
+      hSigdecl _main__op1_scclang_global_0 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl _main__op2_scclang_global_1 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_biguint [
+              hLiteral 128 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl _main__quotient_scclang_global_2 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+      hSigdecl _main__temp_scclang_global_4 [
+        hTypeinfo  NONAME [
+          hType sc_signal [
+            hType sc_uint [
+              hLiteral 64 NOLIST
+            ]
+          ]
+        ]
+      ]
+    ]
+    hProcesses  NONAME [
+      hProcess thread_proc_1 [
+        hFunction thread_proc_1_func [
+          hFunctionRetType  NONAME NOLIST
+          hCStmt  NONAME [
+            hSwitchStmt  NONAME [
+              hVarref state_thread_proc_1# NOLIST
+              hCStmt  NONAME [
+                hSwitchCase  NONAME [
+                  hLiteral 0 NOLIST
+                  hSigAssignL write [
+                    hVarref vld NOLIST
+                    hLiteral 0 NOLIST
+                  ]
+                  hSigAssignL write [
+                    hVarref busy NOLIST
+                    hLiteral 0 NOLIST
+                  ]
+                  hIfStmt  NONAME [
+                    hLiteral 1 NOLIST
+                    hCStmt  NONAME NOLIST
+                  ]
+                  hIfStmt  NONAME [
+                    hSigAssignR read [
+                      hVarref valid NOLIST
+                    ]
+                    hCStmt  NONAME [
+                      hBinop = [
+                        hVarref _quotient_scclang_global_2 NOLIST
+                        hLiteral 0 [
+                          hTypeinfo  NONAME [
+                            hType sc_uint [
+                              hLiteral 64 NOLIST
+                            ]
+                          ]
+                        ]
+                      ]
+                      hBinop = [
+                        hVarref _temp_scclang_global_4 NOLIST
+                        hLiteral 0 [
+                          hTypeinfo  NONAME [
+                            hType sc_uint [
+                              hLiteral 64 NOLIST
+                            ]
+                          ]
+                        ]
+                      ]
+                      hBinop = [
+                        hVarref _op1_scclang_global_0 NOLIST
+                        hSigAssignR read [
+                          hVarref dividend NOLIST
+                        ]
+                      ]
+                      hSigAssignL write [
+                        hVarref _op2_scclang_global_1 NOLIST
+                        hSigAssignR read [
+                          hVarref divisor NOLIST
+                        ]
+                      ]
+                      hSigAssignL write [
+                        hVarref vld NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                      hBinop = [
+                        hVarref _next_state_thread_proc_1# NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                      hReturnStmt  NONAME NOLIST
+                    ]
+                    hCStmt  NONAME [
+                      hBinop = [
+                        hVarref _next_state_thread_proc_1# NOLIST
+                        hLiteral 2 NOLIST
+                      ]
+                      hReturnStmt  NONAME NOLIST
+                    ]
+                  ]
+                ]
+                hSwitchCase  NONAME [
+                  hLiteral 1 NOLIST
+                  hVarAssign  NONAME [
+                    hVarref i_thread_proc_1_thread_0 NOLIST
+                    hBinop - [
+                      hLiteral 64 NOLIST
+                      hLiteral 1 NOLIST
+                    ]
+                  ]
+                  hIfStmt  NONAME [
+                    hBinop >= [
+                      hVarref i_thread_proc_1_thread_0 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hCStmt  NONAME [
+                      hIfStmt  NONAME [
+                        hBinop <= [
+                          hBinop + [
+                            hSigAssignR read [
+                              hVarref _temp_scclang_global_4 NOLIST
+                            ]
+                            hBinop << [
+                              hSigAssignR read [
+                                hVarref _op2_scclang_global_1 NOLIST
+                              ]
+                              hVarref i_thread_proc_1_thread_0 NOLIST
+                            ]
+                          ]
+                          hSigAssignR read [
+                            hVarref _op1_scclang_global_0 NOLIST
+                          ]
+                        ]
+                        hCStmt  NONAME [
+                          hSigAssignL write [
+                            hVarref _temp_scclang_global_4 NOLIST
+                            hBinop + [
+                              hSigAssignR read [
+                                hVarref _temp_scclang_global_4 NOLIST
+                              ]
+                              hBinop << [
+                                hSigAssignR read [
+                                  hVarref _op2_scclang_global_1 NOLIST
+                                ]
+                                hLiteral 1 NOLIST
+                              ]
+                            ]
+                          ]
+                          hSigAssignL write [
+                            hVarref _quotient_scclang_global_2 NOLIST
+                            hBinop | [
+                              hSigAssignR read [
+                                hVarref _quotient_scclang_global_2 NOLIST
+                              ]
+                              hBinop << [
+                                hLiteral 1 NOLIST
+                                hVarref i_thread_proc_1_thread_0 NOLIST
+                              ]
+                            ]
+                          ]
+                          hBinop = [
+                            hVarref _next_state_thread_proc_1# NOLIST
+                            hLiteral 3 NOLIST
+                          ]
+                          hReturnStmt  NONAME NOLIST
+                        ]
+                        hCStmt  NONAME [
+                          hBinop = [
+                            hVarref _next_state_thread_proc_1# NOLIST
+                            hLiteral 3 NOLIST
+                          ]
+                          hReturnStmt  NONAME NOLIST
+                        ]
+                      ]
+                    ]
+                    hCStmt  NONAME [
+                      hSigAssignL write [
+                        hVarref vld NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                      hSigAssignL write [
+                        hVarref busy NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                      hSigAssignL write [
+                        hVarref quotient NOLIST
+                        hSigAssignR read [
+                          hVarref _quotient_scclang_global_2 NOLIST
+                        ]
+                      ]
+                      hBinop = [
+                        hVarref _next_state_thread_proc_1# NOLIST
+                        hLiteral 2 NOLIST
+                      ]
+                      hReturnStmt  NONAME NOLIST
+                    ]
+                  ]
+                ]
+                hSwitchCase  NONAME [
+                  hLiteral 2 NOLIST
+                  hIfStmt  NONAME [
+                    hLiteral 1 NOLIST
+                    hCStmt  NONAME NOLIST
+                  ]
+                  hIfStmt  NONAME [
+                    hSigAssignR read [
+                      hVarref valid NOLIST
+                    ]
+                    hCStmt  NONAME [
+                      hBinop = [
+                        hVarref _quotient_scclang_global_2 NOLIST
+                        hLiteral 0 [
+                          hTypeinfo  NONAME [
+                            hType sc_uint [
+                              hLiteral 64 NOLIST
+                            ]
+                          ]
+                        ]
+                      ]
+                      hBinop = [
+                        hVarref _temp_scclang_global_4 NOLIST
+                        hLiteral 0 [
+                          hTypeinfo  NONAME [
+                            hType sc_uint [
+                              hLiteral 64 NOLIST
+                            ]
+                          ]
+                        ]
+                      ]
+                      hBinop = [
+                        hVarref _op1_scclang_global_0 NOLIST
+                        hSigAssignR read [
+                          hVarref dividend NOLIST
+                        ]
+                      ]
+                      hSigAssignL write [
+                        hVarref _op2_scclang_global_1 NOLIST
+                        hSigAssignR read [
+                          hVarref divisor NOLIST
+                        ]
+                      ]
+                      hSigAssignL write [
+                        hVarref vld NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                      hBinop = [
+                        hVarref _next_state_thread_proc_1# NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                      hReturnStmt  NONAME NOLIST
+                    ]
+                    hCStmt  NONAME [
+                      hBinop = [
+                        hVarref _next_state_thread_proc_1# NOLIST
+                        hLiteral 2 NOLIST
+                      ]
+                      hReturnStmt  NONAME NOLIST
+                    ]
+                  ]
+                ]
+                hSwitchCase  NONAME [
+                  hLiteral 3 NOLIST
+                  hPostfix -- [
+                    hVarref i_thread_proc_1_thread_0 NOLIST
+                  ]
+                  hIfStmt  NONAME [
+                    hBinop >= [
+                      hVarref i_thread_proc_1_thread_0 NOLIST
+                      hLiteral 0 NOLIST
+                    ]
+                    hCStmt  NONAME [
+                      hIfStmt  NONAME [
+                        hBinop <= [
+                          hBinop + [
+                            hSigAssignR read [
+                              hVarref _temp_scclang_global_4 NOLIST
+                            ]
+                            hBinop << [
+                              hSigAssignR read [
+                                hVarref _op2_scclang_global_1 NOLIST
+                              ]
+                              hVarref i_thread_proc_1_thread_0 NOLIST
+                            ]
+                          ]
+                          hSigAssignR read [
+                            hVarref _op1_scclang_global_0 NOLIST
+                          ]
+                        ]
+                        hCStmt  NONAME [
+                          hSigAssignL write [
+                            hVarref _temp_scclang_global_4 NOLIST
+                            hBinop + [
+                              hSigAssignR read [
+                                hVarref _temp_scclang_global_4 NOLIST
+                              ]
+                              hBinop << [
+                                hSigAssignR read [
+                                  hVarref _op2_scclang_global_1 NOLIST
+                                ]
+                                hLiteral 1 NOLIST
+                              ]
+                            ]
+                          ]
+                          hSigAssignL write [
+                            hVarref _quotient_scclang_global_2 NOLIST
+                            hBinop | [
+                              hSigAssignR read [
+                                hVarref _quotient_scclang_global_2 NOLIST
+                              ]
+                              hBinop << [
+                                hLiteral 1 NOLIST
+                                hVarref i_thread_proc_1_thread_0 NOLIST
+                              ]
+                            ]
+                          ]
+                          hBinop = [
+                            hVarref _next_state_thread_proc_1# NOLIST
+                            hLiteral 3 NOLIST
+                          ]
+                          hReturnStmt  NONAME NOLIST
+                        ]
+                        hCStmt  NONAME [
+                          hBinop = [
+                            hVarref _next_state_thread_proc_1# NOLIST
+                            hLiteral 3 NOLIST
+                          ]
+                          hReturnStmt  NONAME NOLIST
+                        ]
+                      ]
+                    ]
+                    hCStmt  NONAME [
+                      hSigAssignL write [
+                        hVarref vld NOLIST
+                        hLiteral 1 NOLIST
+                      ]
+                      hSigAssignL write [
+                        hVarref busy NOLIST
+                        hLiteral 0 NOLIST
+                      ]
+                      hSigAssignL write [
+                        hVarref quotient NOLIST
+                        hSigAssignR read [
+                          hVarref _quotient_scclang_global_2 NOLIST
+                        ]
+                      ]
+                      hBinop = [
+                        hVarref _next_state_thread_proc_1# NOLIST
+                        hLiteral 2 NOLIST
+                      ]
+                      hReturnStmt  NONAME NOLIST
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+        hMethod thread_proc_1_state_update [
+          hIfStmt  NONAME [
+            hBinop == [
+              hVarref arst NOLIST
+              hLiteral 0 NOLIST
+            ]
+            hCStmt  NONAME [
+              hBinop @= [
+                hVarref state_thread_proc_1# NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop @= [
+                hVarref wait_next_state_thread_proc_1# NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop @= [
+                hVarref wait_counter_thread_proc_1# NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop @= [
+                hVarref _main__op1_scclang_global_0 NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop @= [
+                hVarref _main__op2_scclang_global_1 NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop @= [
+                hVarref _main__quotient_scclang_global_2 NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop @= [
+                hVarref _main__temp_scclang_global_4 NOLIST
+                hLiteral 0 NOLIST
+              ]
+              hBinop @= [
+                hVarref _main_i_thread_proc_1_thread_0 NOLIST
+                hLiteral 0 NOLIST
+              ]
+            ]
+            hCStmt  NONAME [
+              hBinop @= [
+                hVarref state_thread_proc_1# NOLIST
+                hVarref _next_state_thread_proc_1# NOLIST
+              ]
+              hBinop @= [
+                hVarref wait_counter_thread_proc_1# NOLIST
+                hVarref _next_wait_counter_thread_proc_1# NOLIST
+              ]
+              hBinop @= [
+                hVarref wait_next_state_thread_proc_1# NOLIST
+                hVarref _next_wait_next_state_thread_proc_1# NOLIST
+              ]
+              hBinop @= [
+                hVarref _main__op1_scclang_global_0 NOLIST
+                hVarref _op1_scclang_global_0 NOLIST
+              ]
+              hBinop @= [
+                hVarref _main__op2_scclang_global_1 NOLIST
+                hVarref _op2_scclang_global_1 NOLIST
+              ]
+              hBinop @= [
+                hVarref _main__quotient_scclang_global_2 NOLIST
+                hVarref _quotient_scclang_global_2 NOLIST
+              ]
+              hBinop @= [
+                hVarref _main__temp_scclang_global_4 NOLIST
+                hVarref _temp_scclang_global_4 NOLIST
+              ]
+              hBinop @= [
+                hVarref _main_i_thread_proc_1_thread_0 NOLIST
+                hVarref i_thread_proc_1_thread_0 NOLIST
+              ]
+            ]
+          ]
+        ]
+        hMethod thread_proc_1 [
+          hBinop = [
+            hVarref _next_state_thread_proc_1# NOLIST
+            hVarref state_thread_proc_1# NOLIST
+          ]
+          hBinop = [
+            hVarref _next_wait_counter_thread_proc_1# NOLIST
+            hVarref wait_counter_thread_proc_1# NOLIST
+          ]
+          hBinop = [
+            hVarref _next_wait_next_state_thread_proc_1# NOLIST
+            hVarref wait_next_state_thread_proc_1# NOLIST
+          ]
+          hBinop = [
+            hVarref _op1_scclang_global_0 NOLIST
+            hLiteral _main__op1_scclang_global_0 NOLIST
+          ]
+          hBinop = [
+            hVarref _op2_scclang_global_1 NOLIST
+            hLiteral _main__op2_scclang_global_1 NOLIST
+          ]
+          hBinop = [
+            hVarref _quotient_scclang_global_2 NOLIST
+            hLiteral _main__quotient_scclang_global_2 NOLIST
+          ]
+          hBinop = [
+            hVarref _temp_scclang_global_4 NOLIST
+            hLiteral _main__temp_scclang_global_4 NOLIST
+          ]
+          hBinop = [
+            hVarref i_thread_proc_1_thread_0 NOLIST
+            hLiteral _main_i_thread_proc_1_thread_0 NOLIST
+          ]
+          hMethodCall thread_proc_1_func NOLIST
+        ]
+      ]
+    ]
+    hModinitblock u_dut [
+      hSenslist thread_proc_1 [
+        hSensvar ASYNC [
+          hVarref arst NOLIST
+          hLiteral 0 NOLIST
+        ]
+      ]
+    ]
+  ]
