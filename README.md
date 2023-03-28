@@ -3,7 +3,7 @@
 SCCL: A SystemC translator to RTL
 ==========================================
 
-`systemc-clang <https://github.com/anikau31/systemc-clang>`_ parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. There is a HDL synthesis plugin that generates Verilog from SystemC RTL descriptions. 
+(systemc-clang)[https://github.com/anikau31/systemc-clang] parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. There is a HDL synthesis plugin that generates Verilog from SystemC RTL descriptions. 
 
 Requirements
 ------------
@@ -16,7 +16,7 @@ Requirements
 Docker use
 -----------
 
-- Clone the FCCM AE SCCL repository
+- Clone the FCCM AE SCCL repository. TODO: Update the repository link.
 ```
 git clone https://github.com/rseac/systemc-clang.git
 ```
