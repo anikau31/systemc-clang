@@ -75,6 +75,8 @@ sh step1.sh;
 exit
 ```
 
+## Generating the bitstreams for the case studies
+
 - Go to the bitstream generation folder on the host, and modify `env.sh`, such that `ULTRA96_V2_SSH_NAME` points to the Ultra96V2 host name and `ULTRA96_V2_PLATFORM` points to the official Ultra96V2 platform file:
 ```
 cd systemc-clang/fccm-case-studies/ultra96-vitis-ae/
