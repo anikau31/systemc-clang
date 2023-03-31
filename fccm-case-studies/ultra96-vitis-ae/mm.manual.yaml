@@ -1,0 +1,25 @@
+kernel_name: mm_axi
+clock: clk
+reset:
+  clock: clk
+  name: rst_n
+  polarity: ACTIVE_LOW
+files: [mem_read_A.sv mem_read_B.sv mem_write.sv s2mm.sv mm2s.sv mem.v mm_axi.v mm.sv systolic.sv]
+bus_interfaces:
+  x:
+    clock: clk
+    bus_type: stream
+    interface_mode: slave
+    port_map:
+      TDATA: x_TDATA 
+      TVALID: x_TVALID
+      TREADY: x_TREADY
+      TLAST: x_TLAST
+  y:
+    bus_type: stream
+    interface_mode: master
+    port_map:
+      TDATA: y_TDATA
+      TVALID: y_TVALID
+      TREADY: y_TREADY
+      TLAST: y_TLAST

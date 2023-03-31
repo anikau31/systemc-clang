@@ -10,7 +10,8 @@ function(add_ip_dcp input)
   set(gen_sim_tcl ${working_dir}/gen_sim.tcl)
   configure_file(${HW_SOURCE_DIR}/ip/gen_sim.tcl ${gen_sim_tcl})
   add_custom_command(
-    OUTPUT ${input}/.gen/sources_1/ip/${input}/${input}.dcp ${input}/${input}.dcp
+    # OUTPUT ${input}/.gen/sources_1/ip/${input}/${input}.dcp ${input}/${input}.dcp
+    OUTPUT ${input}/.gen ${input}/${input}.dcp
     # remove hidden files created by Vivado, which will not be overwritten on a new build
     COMMAND ${CMAKE_COMMAND} -E echo "removing ${CMAKE_CURRENT_BINARY_DIR}/${input}/.*"
     COMMAND ${CMAKE_COMMAND} -E remove_directory -rf ${CMAKE_CURRENT_BINARY_DIR}/${input}/.hbs
@@ -24,7 +25,8 @@ function(add_ip_dcp input)
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${input}
     VERBATIM
   )
-  add_custom_target(${input} DEPENDS ${input}/.gen/sources_1/ip/${input}/${input}.dcp ${input}/${input}.dcp)
+  # add_custom_target(${input} DEPENDS ${input}/.gen/sources_1/ip/${input}/${input}.dcp ${input}/${input}.dcp)
+  add_custom_target(${input} DEPENDS ${input}/.gen ${input}/${input}.dcp)
 
 endfunction()
 
@@ -34,5 +36,6 @@ add_ip_dcp(axis_dwidth_32_136)
 add_ip_dcp(axis_dwidth_32_256)
 add_ip_dcp(axis_dwidth_32_64)
 add_ip_dcp(axis_dwidth_64_32)
+add_ip_dcp(axis_dwidth_32_32)
 add_ip_dcp(axis_interconnect_1_2)
 

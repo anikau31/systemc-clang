@@ -980,7 +980,8 @@ template<int DIM> struct plane_reg
 {
 	bool f;					//full flag.
 	sc_uint<bw_w(DIM)> w;	//word
-	plane_reg(){f=false;w=0;}
+  // no need for constructor
+	// plane_reg(){f=false;w=0;}
 	plane_reg(sc_uint<bw_w(DIM)> wi){f=true;w=wi;}
 	plane_reg& operator=(const plane_reg<DIM>& rhs){f = rhs.f; w = rhs.w; return *this;}
 	bool operator==(const plane_reg<DIM>& rhs){return f == rhs.f && w == rhs.w;}
@@ -1204,7 +1205,7 @@ template<typename FP, typename B> struct decode_stream<FP, B, 2>: sc_module
       m_bp.valid_w(false);
       c_wordoff = 0;
       c_rembits = 0;
-      plane_reg<2> b_c_init_v{};
+      plane_reg<2> b_c_init_v;
       b_c_init_v.f = 0;
       b_c_init_v.w = 0;
       for(int i = 0; i < 4; i++) {

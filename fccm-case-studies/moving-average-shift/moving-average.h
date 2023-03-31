@@ -59,22 +59,28 @@ SC_MODULE(moving_average)
   void ms_proc ()
   {
     if (reset == RLEVEL) {
-      insert = 0; cur_min = cur_max = cur_avg = 0;
+      insert = 0; /* cur_min = cur_max = cur_avg = 0; */
+      cur_min = -1;
+      cur_max = 0;
+      cur_avg = 0; 
       sum = 0;
-      for (int i=0; i<(WINDOW_SIZE); i++)
-	window[i] = 0; datardy = true;
+      for (int i=0; i<(WINDOW_SIZE); i++) {
+        window[i] = 0; 
+      }
+      datardy = false;
     } else {
+      datardy = true;
       if (datastrm.valid_r()) { // new data
-	if (cur_min > datastrm.data) cur_min = datastrm.data;
-	if (cur_max < datastrm.data) cur_max = datastrm.data;
-	//window[n.read().to_uint()] = datastrm.data;
-	window[insert.read().to_uint()] = datastrm.data;
-		//cur_avg.write((sum.read().to_uint() + datastrm.data.read().to_int() )/ (n.read().to_uint()+1));
-	cur_avg.write((sum.read().to_uint() + datastrm.data.read().to_int() )>> WINDOW_SIZE_EXP );
-	sum.write(sum.read().to_uint() + datastrm.data.read().to_uint() - window[insert.read().to_uint()].read().to_uint());
-	if ((int) insert.read() >= WINDOW_SIZE-1) insert.write(0);
-	else insert.write(insert.read() + 1);
-	datardy = true;
+        if (cur_min > datastrm.data) cur_min = datastrm.data;
+        if (cur_max < datastrm.data) cur_max = datastrm.data;
+        //window[n.read().to_uint()] = datastrm.data;
+        window[insert.read().to_uint()] = datastrm.data;
+        //cur_avg.write((sum.read().to_uint() + datastrm.data.read().to_int() )/ (n.read().to_uint()+1));
+        cur_avg.write((sum.read().to_uint() + datastrm.data.read().to_int() )>> WINDOW_SIZE_EXP );
+        sum.write(sum.read().to_uint() + datastrm.data.read().to_uint() - window[insert.read().to_uint()].read().to_uint());
+        if ((int) insert.read() >= WINDOW_SIZE-1) insert.write(0);
+        else insert.write(insert.read() + 1);
+        datardy = true;
       }
     }
   }

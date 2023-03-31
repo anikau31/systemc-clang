@@ -1,0 +1,12 @@
+find . -name "package" | xargs -I{} rm -rf {}
+find . -name "report" | xargs -I{} rm -rf {}
+find . -name "log" | xargs -I{} rm -rf {}
+find . -name "tmp_*" | xargs -I{} rm -rf {}
+find . -name "temp" | xargs -I{} rm -rf {}
+find . -name "*.xo" | xargs -I{} rm -rf {}
+find . -name "*.log" | xargs -I{} rm -rf {}
+find . -name "*.txt" | xargs -I{} rm -rf {}
+find . -name "*.jou" | xargs -I{} rm -rf {}
+find . -name "*.link_summary" | xargs -I{} rm -rf {}
+find . -name "*.info" | xargs -I{} rm -rf {}
+find . -name "*.xclbin" | xargs -I{} rm -rf {}

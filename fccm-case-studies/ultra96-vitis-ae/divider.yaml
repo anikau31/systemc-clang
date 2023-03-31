@@ -1,0 +1,31 @@
+kernel_name: divider_sc_module_1
+clock: clk
+# xdc: [constr.xdc]
+reset:
+  name: arst
+  polarity: ACTIVE_LOW
+files: [divider_hdl.txt.sv]
+bus_interfaces:
+  dividend:
+    clock: clk
+    bus_type: stream
+    interface_mode: slave
+    port_map:
+      TDATA: dividend_data
+      TVALID: dividend_valid
+      TREADY: dividend_ready
+  divisor:
+    clock: clk
+    bus_type: stream
+    interface_mode: slave
+    port_map:
+      TDATA: divisor_data
+      TVALID: divisor_valid
+      TREADY: divisor_ready
+  quotient:
+    bus_type: stream
+    interface_mode: master
+    port_map:
+      TDATA:  quotient_data
+      TVALID: quotient_valid
+      TREADY: quotient_ready

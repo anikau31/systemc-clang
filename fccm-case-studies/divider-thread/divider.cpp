@@ -13,7 +13,7 @@
 #define DATAW 2 // bitstream data width
 #endif
 
-#include "divider-pipeline.h"
+#include "divider.h"
 
 sc_trace_file *tf;
 

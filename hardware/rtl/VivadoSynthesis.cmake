@@ -1,4 +1,4 @@
-function(add_static_synthesis design rtl_files constraint_files synthesis_options bds ips external_dcps top_module sysc_modules)
+function(add_static_synthesis design rtl_files raw_rtl_files constraint_files synthesis_options bds ips external_dcps top_module sysc_modules)
   set(bd_dcps "")
   set(bd_wrappers ${bds})
   set(ip_dcps "")
@@ -32,6 +32,7 @@ function(add_static_synthesis design rtl_files constraint_files synthesis_option
   set(dcps_dep ${bd_dcps} ${external_dcps})
   # set(dcps_dep ${dcps})
   list(TRANSFORM rtl_files        PREPEND "${HW_SOURCE_DIR}/rtl/")
+  list(APPEND    rtl_files "${raw_rtl_files}")
   list(TRANSFORM sysc_modules     PREPEND "${SYNTH_ROOT_DIR}/rtl/")
   list(TRANSFORM sysc_modules     APPEND  ".sv")
   list(TRANSFORM constraint_files PREPEND "${HW_SOURCE_DIR}/constr/")
@@ -73,7 +74,7 @@ function(add_static_synthesis design rtl_files constraint_files synthesis_option
   list(TRANSFORM bds              APPEND  ".bd")
   add_custom_command(OUTPUT ${design}/${design}_synth.dcp
     COMMAND vivado -mode batch -source  -source ${COMMON_DIR} -source ${synthesis_tcl}
-    DEPENDS ${dcps_dep} ${rtl_files} ${bds} ${constraint_files} ${ips_dep} ${sysc_modules}
+    DEPENDS ${dcps_dep} ${rtl_files} ${raw_rtl_files} ${bds} ${constraint_files} ${ips_dep} ${sysc_modules}
     WORKING_DIRECTORY ${working_dir})
 
 
@@ -86,12 +87,13 @@ endfunction()
 # the reconf_partition should have the full path name
 function(add_reconf_module) # design reconf_partition reconf_module rtl_files constraint_files synthesis_options bds ips)
   set(oneValArgs DESIGN RECONF_PART RECONF_INST SYNTHESIS_OPTS)
-  set(multiValArgs RTL SYSC_MODULE CONSTR BDS IPS DCPS)
+  set(multiValArgs RTL RAW_RTL SYSC_MODULE CONSTR BDS IPS DCPS)
   cmake_parse_arguments(RM "" "${oneValArgs}" "${multiValArgs}" ${ARGN})
 
   set(RM_SYNTHESIS_OPTS "${RM_SYNTHESIS_OPTS} -mode out_of_context")
   message(STATUS "Reconfigurable module (name:modname:partition): ${RM_DESIGN}:${RM_RECONF_PART}:${RM_RECONF_INST}")
   message(STATUS "RTL files: ${RM_RTL}")
+  message(STATUS "RAW_RTL files: ${RM_RAW_RTL}")
   message(STATUS "SystemC modules: ${RM_SYSC_MODULE}")
   message(STATUS "Constraints: ${RM_CONSTR}")
   message(STATUS "Synthesis options: ${RM_SYNTHESIS_OPTS}")
@@ -99,6 +101,7 @@ function(add_reconf_module) # design reconf_partition reconf_module rtl_files co
 
   add_static_synthesis(RM_${RM_DESIGN} 
     "${RM_RTL}" 
+    "${RM_RAW_RTL}" 
     "${RM_CONSTR}" "${RM_SYNTHESIS_OPTS}" "${RM_BDS}" "${RM_IPS}" "${RM_DCPS}" ${RM_RECONF_PART} "${RM_SYSC_MODULE}")
   message(STATUS "")
 endfunction()
@@ -206,6 +209,7 @@ function(add_static_config) # design reconf_partition reconf_module rtl_files co
 
   add_static_synthesis(DS_${DS_DESIGN} 
     "${DS_RTL}" 
+    ""
     "${DS_CONSTR}" "${DS_SYNTHESIS_OPTS}" "${DS_BDS}" "${DS_IPS}" "${DS_DCPS}" ${DS_TOP_MOD} "")
   message(STATUS ">> Adding implementation for the configuration...")
   add_static_implementation(
@@ -317,4 +321,3 @@ function(add_systemc_module)
   )
 
 endfunction()
-

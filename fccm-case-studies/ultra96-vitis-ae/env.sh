@@ -1,0 +1,2 @@
+export ULTRA96_V2_PLATFORM=/home/allen/mount2/vitis_platforms/u96v2_sbc_base/u96v2_sbc_base.xpfm
+export ULTRA96_V2_SSH_NAME=ultra96v2

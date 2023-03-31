@@ -1640,6 +1640,11 @@
           hType sreg_sc_module_10 NOLIST
         ]
       ]
+      hVardecl _actual_scclang_global_6 [
+        hTypeinfo  NONAME [
+          hType fp_t_8_23_ NOLIST
+        ]
+      ]
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
@@ -1903,13 +1908,18 @@
               hType fp_t_8_23_ NOLIST
             ]
           ]
-          hFunctionParamIO  NONAME [
+          hFunctionParamI  NONAME [
             hTypeinfo  NONAME [
               hType fp_t_8_23_ NOLIST
             ]
           ]
         ]
-        hCStmt  NONAME NOLIST
+        hCStmt  NONAME [
+          hBinop = [
+            hVarref _actual_scclang_global_6 NOLIST
+            hVarref  NONAME NOLIST
+          ]
+        ]
       ]
     ]
     hModinitblock u_find_emax [
@@ -4499,6 +4509,11 @@
           ]
         ]
       ]
+      hVardecl _actual_scclang_global_3 [
+        hTypeinfo  NONAME [
+          hType fp_t_8_23_ NOLIST
+        ]
+      ]
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
@@ -4758,13 +4773,18 @@
               hType fp_t_8_23_ NOLIST
             ]
           ]
-          hFunctionParamIO  NONAME [
+          hFunctionParamI  NONAME [
             hTypeinfo  NONAME [
               hType fp_t_8_23_ NOLIST
             ]
           ]
         ]
-        hCStmt  NONAME NOLIST
+        hCStmt  NONAME [
+          hBinop = [
+            hVarref _actual_scclang_global_3 NOLIST
+            hVarref  NONAME NOLIST
+          ]
+        ]
       ]
     ]
     hModinitblock u_fwd_cast [
@@ -10072,9 +10092,30 @@
                                     hVarref first_after_bc_ms_proc_local_15 NOLIST
                                     hVarref shiftamt_ms_proc_local_13 NOLIST
                                   ]
-                                  hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
-                                    hVarref shiftamt_ms_proc_local_13 NOLIST
+                                  hCStmt  NONAME [
+                                    hIfStmt  NONAME [
+                                      hBinop == [
+                                        hSigAssignR read [
+                                          hVarref bc1_scclang_global_0 NOLIST
+                                        ]
+                                        hLiteral 16 NOLIST
+                                      ]
+                                      hCStmt  NONAME [
+                                        hBinop = [
+                                          hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
+                                        ]
+                                      ]
+                                      hCStmt  NONAME [
+                                        hBinop = [
+                                          hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                          hBinop - [
+                                            hVarref shiftamt_ms_proc_local_13 NOLIST
+                                            hLiteral 1 NOLIST
+                                          ]
+                                        ]
+                                      ]
+                                    ]
                                   ]
                                 ]
                               ]
@@ -10784,6 +10825,9 @@
             ]
           ]
           hCStmt  NONAME [
+            hMethodCall zhw__encode_streamfp_t8_23_2_bits_t32__state_t__state_t_func_0 [
+              hVarref ts_mc_proc_local_2 NOLIST
+            ]
             hSigAssignL write [
               hVarref s_ex##ready NOLIST
               hLiteral 0 NOLIST
@@ -11430,6 +11474,9 @@
               ]
             ]
             hCStmt  NONAME [
+              hMethodCall bits_t32__bits_t_func_3 [
+                hVarref flit__local_12 NOLIST
+              ]
               hBinop = [
                 hVarref flit__local_12##tdata NOLIST
                 hBinop SLICE [
@@ -11510,21 +11557,6 @@
           ]
         ]
       ]
-      hFunction zhw__encode_streamfp_t8_23_2_bits_t32__state_t__state_t_func_0 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType void NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamIO hthis [
-            hTypeinfo  NONAME [
-              hType state_t_ NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME NOLIST
-      ]
       hFunction bits_t32__bits_t_func_3 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
@@ -11535,6 +11567,21 @@
           hFunctionParamIO hthis [
             hTypeinfo  NONAME [
               hType bits_t_32_ NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME NOLIST
+      ]
+      hFunction zhw__encode_streamfp_t8_23_2_bits_t32__state_t__state_t_func_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType void NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamIO hthis [
+            hTypeinfo  NONAME [
+              hType state_t_ NOLIST
             ]
           ]
         ]

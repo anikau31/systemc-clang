@@ -24,7 +24,7 @@ include(Targets.cmake)
 # global settings
 set(COMMON_DIR ${SYNTH_ROOT_DIR}/common.tcl)
 if(NOT DEFINED BOARD) # default setup
-  set(BOARD "ultra96v2")  # default board
+  set(BOARD "ultra96v2_20221")  # default board
 endif()
 
 if(${BOARD} STREQUAL "pynqz1") # pynq z1 board
@@ -40,6 +40,8 @@ elseif(${BOARD} STREQUAL "ultra96v2_20221") # ultra96v2 board, but for Vivado 20
   set(PART xczu3eg-sbva484-1-i)
   set(BOARDPART avnet.com:ultra96v2:part0:1.2)
 endif()
+
+set(BOARDPATH ${PROJECT_SOURCE_DIR}/hardware/board_files)
 
 configure_file(common.tcl.config common.tcl)
 message(STATUS "BOARD: ${BOARD} (${BOARDPART})")

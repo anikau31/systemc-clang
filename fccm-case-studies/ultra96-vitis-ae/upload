@@ -1,0 +1,2 @@
+#!/bin/bash
+rsync -amv --include="*/" --include="*.xclbin"  --exclude="*" . ${ULTRA96_V2_SSH_NAME}:~/ae/

@@ -25,6 +25,7 @@ lark_grammar = Lark('''
         vardeclrn: "hVardeclrn" ID "[" htypeinfo hliteral "]"
         funcparami: "hFunctionParamI" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
         funcparamio: "hFunctionParamIO" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
+                   | "hFunctionParamRef" ID "[" htypeinfo (hvarinit | hvarinitint)? "]"
         ?hvarinit: "hVarInit" "NONAME" expression
                  | "hVarInit" "NONAME" "[" hvarinitlist "]"
         ?hvarinitint: "hVarInit" NUM "NOLIST"
@@ -61,6 +62,7 @@ lark_grammar = Lark('''
              | breakstmt
              | continuestmt
              | hwait
+             | hslice
              
         continuestmt: "hContinue" "NONAME" "NOLIST"
         // hvarinitlist can be empty
@@ -76,7 +78,7 @@ lark_grammar = Lark('''
              
         ?htobool: ("hBuiltinFunction" "to_bool" | "hNoop" "to_bool") "[" harrayref "]"
         htouint: "hBuiltinFunction" "to_uint" "[" (syscread|hvarref|hslice) "]"
-        htoint: "hBuiltinFunction" "to_int" "[" (syscread|hvarref|hslice) "]"
+        htoint: "hBuiltinFunction" "to_int" "[" (syscread|hvarref|hslice|harrayref) "]"
         htolong: "hBuiltinFunction" "to_long" "[" (syscread|hvarref|hslice) "]"
         htoulong: "hBuiltinFunction" "to_ulong" "[" (syscread|hvarref|hslice) "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
@@ -153,22 +155,23 @@ lark_grammar = Lark('''
                         | "hFunctionRetType" "NONAME" "NOLIST" // only appears in generated statements
         hfunctionparams : "hFunctionParams" "NONAME" "[" (funcparami|funcparamio)* "]"
                         | "hFunctionParams" "NONAME" "NOLIST"
-        hreturnstmt: "hReturnStmt" "NONAME" "[" expression "]"
+        hreturnstmt: "hReturnStmt" "NONAME" "[" (expression|hslice) "]"
                    | "hReturnStmt" "NONAME" "NOLIST"  // return;
 
         hsenslist : "hSenslist" ID "[" hsensvar* "]"
                   | "hSenslist" ID "NOLIST"
-        hsensvar :  "hSensvar" "NONAME" "[" (expression|hvalchange) ("hNoop" | "hBuiltinFunction")  npa "NOLIST" "]"
+        hsensvar :  "hSensvar" "NONAME" "[" (hsensedge|expression|hvalchange) ("hNoop" | "hBuiltinFunction")  npa "NOLIST" ("hNoop" npa "NOLIST")* "]"
                  |  hasync
         hasync   :  "hSensvar" "ASYNC" "[" expression hliteral "]"
 
         hvalchange: "hNoop" "value_changed_event" "[" expression "]"
         hsensedge : "hNoop" npa "NOLIST"
                   | "hBuiltinFunction" npa "NOLIST"
-        !npa : "neg" | "pos" | "always"
+                  | "hBuiltinFunction" npa "[" expression "]"
+        !npa : "neg" | "pos" | "always" | "posedge_event" | "negedge_event"
 
         // if and if-else, not handling if-elseif case
-        ifstmt: "hIfStmt" "NONAME" "[" expression  stmt? stmt?"]"
+        ifstmt: "hIfStmt" "NONAME" "[" (expression|harrayref)  stmt? stmt?"]"
 
          
         ?expression: hbinop
@@ -206,7 +209,7 @@ lark_grammar = Lark('''
         // function call
         hvarref : "hVarref" ID "NOLIST"
         hunimp:  "hUnimpl" ID "NOLIST"
-        hbinop:  "hBinop" BINOP "[" (expression|hslice) (expression|hslice|blkassign) "]"
+        hbinop:  "hBinop" BINOP "[" (expression|hslice|harrayref) (expression|hslice|blkassign) "]"
         
         // A temporary hack to handle --
         hunop:  "hUnop" UNOP_NON_SUB "[" (expression|hslice) "]"
@@ -226,7 +229,7 @@ lark_grammar = Lark('''
         REDUCE_OP: "and_reduce" | "or_reduce" | "xor_reduce" | "nand_reduce" | "nor_reduce" | "xnor_reduce"
 
         // Separate '=' out from so that it is not an expression but a standalone statement
-        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (hbuiltin | htotype | hconcat | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop) "]"
+        blkassign: "hBinop" "=" "[" (hconcat | hvarref | hliteral | hfieldaccess) (hbuiltin | htotype | hfieldaccess | hcomma | htobool | hunop | hvarref | hliteral | harrayref | hnsbinop | hunimp | syscread | hmethodcall | hcondop | hconcat) "]"
                  | "hBinop" "=" "[" harrayref  arrayrhs "]"
                  | nblkassign
                  | vassign
@@ -250,6 +253,7 @@ lark_grammar = Lark('''
                   | hliteral
                   | hcondop
                   | htoint
+                  | hconcat
                   
         nblkassign: "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) (syscread | hliteral | harrayref | hunop | hvarref | htobool | hmethodcall | hfieldaccess)  "]"
                   | "hSigAssignL" "write" "[" (hliteral | hvarref | harrayref) nonrefexp  "]"
@@ -263,8 +267,8 @@ lark_grammar = Lark('''
         harrayref: "hBinop" "ARRAYSUBSCRIPT"  "[" (hliteral | hvarref | syscread | harrayref) expression  "]"
                  | hslice
         hslice: "hBinop" "SLICE" "[" hvarref expression expression "]"
-              | "hBuiltinFunction" "range" "[" (hvarref | harrayref | syscread ) expression expression "]"
-              | "hBuiltinFunction" "bit" "[" (hvarref | harrayref | syscread) expression "]"
+              | "hBuiltinFunction" "range" "[" (hvarref | harrayref | syscread | hmethodcall ) expression expression "]"
+              | "hBuiltinFunction" "bit" "[" (hvarref | harrayref | syscread | hmethodcall) expression "]"
         hnsbinop:  "hBinop" NONSUBBINOP "[" (expression|hslice) (expression|hslice) "]"
         
         // Temporary hack to handle -= / +=
