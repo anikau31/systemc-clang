@@ -46,22 +46,34 @@ cd ..
 ./systemc-clang/start.sh fccm-ae fccm-ae-dev systemc-clang systemc-clang-build
 ```
 
+## Building SCCL
 
-- The following steps should be conducted in the container.
+The following steps should be conducted in the container, which should have been started with the previous command to `start.sh`.
 
 - Build systemc-clang within the docker image under `/systemc-clang-build` using `cmake` and `ninja`.
+
 ```
 cmake ../systemc-clang -DHDL=ON -DENABLE_TESTS=ON -DENABLE_VERILOG_TESTS=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_HARDWARE_FLOW=ON -G Ninja
 ```
 
-- Within the systemc-clang source directory, execute `step1.sh`. 
-This command automatically runs systemc-clang and generates the IR and the SystemVerilog design files.
+- Compile the source code with `ninja`.
+```
+ninja
+```
+
+## Generate the RTL for the case studies
+
+- Within the systemc-clang source directory, execute `step1.sh`.  This command automatically runs SCCL, generates the IR and the SystemVerilog design files.
 ```
 cd /systemc-clang/;
 sh step1.sh;
 ```
 
 - Leave the docker container and the generated files could be found in various directories in the SCCL folders, specifically in `systemc-clang/fccm-case-studies`.
+
+```
+exit
+```
 
 - Go to the bitstream generation folder on the host, and modify `env.sh`, such that `ULTRA96_V2_SSH_NAME` points to the Ultra96V2 host name and `ULTRA96_V2_PLATFORM` points to the official Ultra96V2 platform file:
 ```
