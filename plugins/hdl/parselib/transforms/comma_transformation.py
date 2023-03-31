@@ -1,6 +1,7 @@
 from lark import Tree, Token
 from parselib.utils import dprint
 from parselib.transforms import TopDown
+from ..utils import dprint, is_tree_types
 
 
 class CommaTransformation(TopDown):
@@ -42,7 +43,9 @@ class CommaTransformation(TopDown):
             return tree
 
     def hbinop(self, tree):
-        self.nesting_assign = True
+        op = tree.children[0]
+        if op in ['+=', '-=', '*=', '/=']:
+            self.nesting_assign = True
         self.__push_up(tree)
         op, lhs, rhs = tree.children
         if op in ['+=', '-=', '*=', '/=']:
@@ -52,7 +55,9 @@ class CommaTransformation(TopDown):
             return tree
 
     def hnsbinop(self, tree):
-        self.nesting_assign = True
+        op = tree.children[0]
+        if op in ['+=', '-=', '*=', '/=']:
+            self.nesting_assign = True
         self.__push_up(tree)
         op, lhs, rhs = tree.children
         if op in ['+=', '-=', '*=', '/=']:
@@ -62,15 +67,18 @@ class CommaTransformation(TopDown):
             return tree
 
     def stmts(self, tree):
+        # TODO: this only covers a small case, and does not support for cases like
+        # for(...) a += b++;
         new_children = []
         for ch in tree.children:
             self.broken_down_ops = []
             self.nesting_assign = False
-            if isinstance(ch, Tree):
+            if isinstance(ch, Tree) and is_tree_types(ch, ["hbinop", "hnsbinop", "blkassign"]):
                 ch_new = self.visit(ch)
+                new_children.extend(map(lambda x: Tree('stmt', [x]), self.broken_down_ops))
+                new_children.append(ch_new)
             else:
-                ch_new = ch
-            new_children.extend(map(lambda x: Tree('stmt', [x]), self.broken_down_ops))
-            new_children.append(ch_new)
+                self.__push_up(ch)
+                new_children.append(ch)
         tree.children = new_children
         return tree

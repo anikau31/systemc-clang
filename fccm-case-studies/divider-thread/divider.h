@@ -45,12 +45,12 @@ SC_MODULE(divider) {
   sc_signal<bool>  _sync_out;
 
   void mc_proc() {
-    _sync.write(dividend.valid_r() && divisor.valid_r() && !_vld.read());
-    dividend.ready_w(!_op1_vld);
-    divisor.ready_w(!_op2_vld);
+    _sync.write(dividend.valid_r() && divisor.valid_r());
+    dividend.ready_w(_op1_vld);
+    divisor.ready_w(_op2_vld);
     quotient.valid_w(_vld.read());
     quotient.data_w(_quotient.read());
-    _sync_out.write(_vld.read() && quotient.ready_r());
+    _sync_out.write(quotient.ready_r());
   }
 
   void thread_proc_1() {
@@ -77,28 +77,31 @@ SC_MODULE(divider) {
         _op1_vld.write(false);
         _op2_vld.write(false);
 
-        wait();
+        //wait();
 
 
         // perform div-sub division
 
         _quotient = 0;
         _temp = 0;
-        _op1 = dividend.read();
-        _op2.write(tmp_t(divisor.read()));
+        // _op1 = dividend.data_r();
+        // _op2.write(tmp_t(divisor.data_r()));
         _vld.write(false);
         wait();
         for(int i = BW - 1; i >= 0; i--) {
           if(_temp.read() + (_op2.read() << i) <= _op1.read()) {
-            _temp.write(_temp.read() + (_op2.read() << 1));
+            _temp.write(_temp.read() + (_op2.read() << i));
             _quotient.write(_quotient.read() | (1LL << i));
           }
           wait();
         }
         _vld.write(true);
+        wait();
       }
       if(_sync_out.read()) {
         _vld.write(false);
+        // _op1_vld.write(false);
+        // _op2_vld.write(false);
       }
       wait();
 
@@ -108,9 +111,9 @@ SC_MODULE(divider) {
   SC_CTOR(divider) 
   {
     SC_METHOD(mc_proc);
-    sensitive << _op1_vld << _op2_vld;
+    sensitive << _vld << _op1_vld << _op2_vld;
     SC_CTHREAD(thread_proc_1, clk.pos());
-    async_reset_signal_is(arst, RLEVEL);
+    async_reset_signal_is(arst, 1);
   }
 };
 

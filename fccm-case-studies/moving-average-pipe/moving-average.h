@@ -180,7 +180,7 @@ SC_MODULE(moving_average)
       for (int i=0; i<WINDOW_SIZE; i++) {
         window[i] = 0; 
       }
-      datardy = true;
+      datardy = false;
     } else {
       dividend.write((sum.read().to_uint() + datastrm.data.read().to_int() ));
       divisor.write((n.read().to_uint()+1));

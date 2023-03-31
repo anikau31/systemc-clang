@@ -1,0 +1,72 @@
+create_project -force kernel_pack "/home/allen/mount2/ultra96-vitis/tmp_moving_average"
+add_files -norecurse [list /home/allen/mount2/ultra96-vitis/moving-average_hdl.txt.sv]
+set_property top moving_average_sc_module_1 [current_fileset]
+update_compile_order -fileset sources_1
+update_compile_order -fileset sim_1
+ipx::package_project -root_dir /home/allen/mount2/ultra96-vitis/moving_average -vendor xilinx.com -library RTLKernel -taxonomy /KernelIP -import_files -set_current false
+ipx::unload_core /home/allen/mount2/ultra96-vitis/moving_average/component.xml
+ipx::edit_ip_in_project -upgrade true -name tmp_edit_project -directory /home/allen/mount2/ultra96-vitis/moving_average  /home/allen/mount2/ultra96-vitis/moving_average/component.xml
+set core [ipx::current_core]
+set_property core_revision 2 $core
+foreach up [ipx::get_user_parameters] {
+  ipx::remove_user_parameter [get_property NAME $up] $core
+}
+set_property sdx_kernel true [ipx::current_core]
+set_property sdx_kernel_type rtl [ipx::current_core]
+set_property vitis_drc {ctrl_protocol ap_ctrl_none} [ipx::current_core]
+set_property ipi_drc {ignore_freq_hz true} [ipx::current_core]
+ipx::add_bus_interface datastrm [ipx::current_core]
+set_property abstraction_type_vlnv xilinx.com:interface:axis_rtl:1.0 [ipx::get_bus_interfaces datastrm -of_objects [ipx::current_core]]
+set_property bus_type_vlnv xilinx.com:interface:axis:1.0 [ipx::get_bus_interfaces datastrm -of_objects [ipx::current_core]]
+set_property interface_mode slave [ipx::get_bus_interfaces datastrm -of_objects [ipx::current_core]]
+ipx::add_port_map TDATA [ipx::get_bus_interfaces datastrm -of_objects [ipx::current_core]]
+set_property physical_name datastrm_data [ipx::get_port_maps TDATA -of_objects [ipx::get_bus_interfaces datastrm -of_objects [ipx::current_core]]]
+ipx::add_port_map TVALID [ipx::get_bus_interfaces datastrm -of_objects [ipx::current_core]]
+set_property physical_name datastrm_valid [ipx::get_port_maps TVALID -of_objects [ipx::get_bus_interfaces datastrm -of_objects [ipx::current_core]]]
+ipx::add_port_map TREADY [ipx::get_bus_interfaces datastrm -of_objects [ipx::current_core]]
+set_property physical_name datastrm_ready [ipx::get_port_maps TREADY -of_objects [ipx::get_bus_interfaces datastrm -of_objects [ipx::current_core]]]
+ipx::associate_bus_interfaces -busif datastrm -clock clk [ipx::current_core]
+ipx::add_bus_interface avg_out [ipx::current_core]
+set_property abstraction_type_vlnv xilinx.com:interface:axis_rtl:1.0 [ipx::get_bus_interfaces avg_out -of_objects [ipx::current_core]]
+set_property bus_type_vlnv xilinx.com:interface:axis:1.0 [ipx::get_bus_interfaces avg_out -of_objects [ipx::current_core]]
+set_property interface_mode master [ipx::get_bus_interfaces avg_out -of_objects [ipx::current_core]]
+ipx::add_port_map TDATA [ipx::get_bus_interfaces avg_out -of_objects [ipx::current_core]]
+set_property physical_name avg_out_data [ipx::get_port_maps TDATA -of_objects [ipx::get_bus_interfaces avg_out -of_objects [ipx::current_core]]]
+ipx::add_port_map TVALID [ipx::get_bus_interfaces avg_out -of_objects [ipx::current_core]]
+set_property physical_name avg_out_valid [ipx::get_port_maps TVALID -of_objects [ipx::get_bus_interfaces avg_out -of_objects [ipx::current_core]]]
+ipx::add_port_map TREADY [ipx::get_bus_interfaces avg_out -of_objects [ipx::current_core]]
+set_property physical_name avg_out_ready [ipx::get_port_maps TREADY -of_objects [ipx::get_bus_interfaces avg_out -of_objects [ipx::current_core]]]
+ipx::associate_bus_interfaces -busif avg_out -clock clk [ipx::current_core]
+ipx::add_bus_interface min_out [ipx::current_core]
+set_property abstraction_type_vlnv xilinx.com:interface:axis_rtl:1.0 [ipx::get_bus_interfaces min_out -of_objects [ipx::current_core]]
+set_property bus_type_vlnv xilinx.com:interface:axis:1.0 [ipx::get_bus_interfaces min_out -of_objects [ipx::current_core]]
+set_property interface_mode master [ipx::get_bus_interfaces min_out -of_objects [ipx::current_core]]
+ipx::add_port_map TDATA [ipx::get_bus_interfaces min_out -of_objects [ipx::current_core]]
+set_property physical_name min_out_data [ipx::get_port_maps TDATA -of_objects [ipx::get_bus_interfaces min_out -of_objects [ipx::current_core]]]
+ipx::add_port_map TVALID [ipx::get_bus_interfaces min_out -of_objects [ipx::current_core]]
+set_property physical_name min_out_valid [ipx::get_port_maps TVALID -of_objects [ipx::get_bus_interfaces min_out -of_objects [ipx::current_core]]]
+ipx::add_port_map TREADY [ipx::get_bus_interfaces min_out -of_objects [ipx::current_core]]
+set_property physical_name min_out_ready [ipx::get_port_maps TREADY -of_objects [ipx::get_bus_interfaces min_out -of_objects [ipx::current_core]]]
+ipx::associate_bus_interfaces -busif min_out -clock clk [ipx::current_core]
+ipx::add_bus_interface max_out [ipx::current_core]
+set_property abstraction_type_vlnv xilinx.com:interface:axis_rtl:1.0 [ipx::get_bus_interfaces max_out -of_objects [ipx::current_core]]
+set_property bus_type_vlnv xilinx.com:interface:axis:1.0 [ipx::get_bus_interfaces max_out -of_objects [ipx::current_core]]
+set_property interface_mode master [ipx::get_bus_interfaces max_out -of_objects [ipx::current_core]]
+ipx::add_port_map TDATA [ipx::get_bus_interfaces max_out -of_objects [ipx::current_core]]
+set_property physical_name max_out_data [ipx::get_port_maps TDATA -of_objects [ipx::get_bus_interfaces max_out -of_objects [ipx::current_core]]]
+ipx::add_port_map TVALID [ipx::get_bus_interfaces max_out -of_objects [ipx::current_core]]
+set_property physical_name max_out_valid [ipx::get_port_maps TVALID -of_objects [ipx::get_bus_interfaces max_out -of_objects [ipx::current_core]]]
+ipx::add_port_map TREADY [ipx::get_bus_interfaces max_out -of_objects [ipx::current_core]]
+set_property physical_name max_out_ready [ipx::get_port_maps TREADY -of_objects [ipx::get_bus_interfaces max_out -of_objects [ipx::current_core]]]
+ipx::associate_bus_interfaces -busif max_out -clock clk [ipx::current_core]
+set_property supported_families { } $core
+set_property auto_family_support_level level_2 $core
+ipx::create_xgui_files $core
+ipx::update_checksums $core
+ipx::check_integrity -kernel $core
+ipx::save_core $core
+close_project -delete
+if {[file exists "/home/allen/mount2/ultra96-vitis/moving_average.xo"]} {
+    file delete -force "/home/allen/mount2/ultra96-vitis/moving_average.xo"
+}
+package_xo -ctrl_protocol user_managed -xo_path /home/allen/mount2/ultra96-vitis/moving_average.xo -kernel_name moving_average_sc_module_1 -ip_directory /home/allen/mount2/ultra96-vitis/moving_average

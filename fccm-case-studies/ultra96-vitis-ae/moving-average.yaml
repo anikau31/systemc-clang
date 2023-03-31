@@ -1,0 +1,37 @@
+kernel_name: moving_average_sc_module_1
+clock: clk
+# xdc: [constr.xdc]
+reset:
+  name: reset
+  polarity: ACTIVE_LOW
+files: [moving-average_hdl.txt.sv]
+bus_interfaces:
+  datastrm:
+    clock: clk
+    bus_type: stream
+    interface_mode: slave
+    port_map:
+      TDATA: datastrm_data
+      TVALID: datastrm_valid
+      TREADY: datastrm_ready
+  avg_out:
+    bus_type: stream
+    interface_mode: master
+    port_map:
+      TDATA: avg_out_data
+      TVALID: avg_out_valid
+      TREADY: avg_out_ready
+  min_out:
+    bus_type: stream
+    interface_mode: master
+    port_map:
+      TDATA:  min_out_data
+      TVALID: min_out_valid
+      TREADY: min_out_ready
+  max_out:
+    bus_type: stream
+    interface_mode: master
+    port_map:
+      TDATA:  max_out_data
+      TVALID: max_out_valid
+      TREADY: max_out_ready

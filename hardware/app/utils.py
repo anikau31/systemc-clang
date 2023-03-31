@@ -1,9 +1,9 @@
 import logging
 import numpy as np
 from pynq import Overlay, allocate, Device
-from pynq.pl_server.device import _preload_binfile
+# from pynq.pl_server.device import _preload_binfile
 
-static_bitstream = 'DS_top_hash.bit'
+# static_bitstream = 'DS_top_hash.bit'
 
 def load_memory(filename, bytes_per_line, base=16):
     byte_array = []
@@ -19,21 +19,21 @@ def load_memory(filename, bytes_per_line, base=16):
         res[i] = byte_array[i]
     return res
 
-def pr_download(self, bitstream):
-    """Download partial bitstream
-
-    Note that this does not provide any checks and simply
-    push the bitstream (converted to .bin by _preload_binfile) over the ICAP interface maintained by the PYNQ
-    library
-    
-    """
-    logging.debug('downloading partial bitstream: {}'.format(bitstream.bitfile_name))
-    if not bitstream.binfile_name:
-        _preload_binfile(bitstream)
-
-    assert bitstream.partial
-    flag = '1'
-    with open(self.BS_FPGA_MAN_FLAGS, 'w') as fd:
-        fd.write(flag)
-    with open(self.BS_FPGA_MAN, 'w') as fd:
-        fd.write(bitstream.binfile_name)
+# def pr_download(self, bitstream):
+#     """Download partial bitstream
+# 
+#     Note that this does not provide any checks and simply
+#     push the bitstream (converted to .bin by _preload_binfile) over the ICAP interface maintained by the PYNQ
+#     library
+#     
+#     """
+#     logging.debug('downloading partial bitstream: {}'.format(bitstream.bitfile_name))
+#     if not bitstream.binfile_name:
+#         _preload_binfile(bitstream)
+# 
+#     assert bitstream.partial
+#     flag = '1'
+#     with open(self.BS_FPGA_MAN_FLAGS, 'w') as fd:
+#         fd.write(flag)
+#     with open(self.BS_FPGA_MAN, 'w') as fd:
+#         fd.write(bitstream.binfile_name)

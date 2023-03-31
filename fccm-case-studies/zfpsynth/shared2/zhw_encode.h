@@ -76,7 +76,11 @@ SC_MODULE(find_emax)
 			emax_v = false;
 		} else {
 			bool last = (count.read() == 0);
-			FP fp = s_fp.data_r();
+			// FP fp = s_fp.data_r();
+      FP fp;
+      fp.sign = s_fp.data_r().sign;
+      fp.expo = s_fp.data_r().expo;
+      fp.frac = s_fp.data_r().frac;
 			expo_t expo;
 			// Does not handle infinity (fp.expo == expo_t(~0) && fp.frac == 0).
 			// Zero is encoded as a special case and one is added to all other.
@@ -178,7 +182,11 @@ SC_MODULE(fwd_cast)
 
 		expo_t emax = s_ex.data_r();
 		if (emax != 0) emax -= expo_t(1); // decode exponent
-		FP fp = s_fp.data_r();
+		// FP fp = s_fp.data_r();
+    FP fp;
+		fp.sign = s_fp.data_r().sign;
+		fp.expo = s_fp.data_r().expo;
+		fp.frac = s_fp.data_r().frac;
 		sc_uint<3> hid = fp.expo != 0; // hidden bit, handle subnormals
 		ui_t ui = (hid,fp.frac,sc_uint<FP::ebits-2>(0)) >> (emax-fp.expo);
 		si_t si;
@@ -1320,7 +1328,7 @@ SC_MODULE(encode_stream)
 		s_ex.ready_w(false);
 		s_ready.write(false);
 		m_flush.write(false);
-		m_bits.valid_w(false);
+		// m_bits.valid_w(false);
 		ts = cs; // get current state
 		switch (ts.s) {
 		case START: {
