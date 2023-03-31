@@ -1,17 +1,20 @@
 # SCCL: FCCM AE 2023
 
+This repository is a customization of the main repostiroy of [systemc-clang]()[systemc-clang](https://github.com/anikau31/systemc-clang)  for the artifact evaluation for FCCM 2023.
+
 SCCL: A SystemC translator to RTL
 ==========================================
 
-(systemc-clang)[https://github.com/anikau31/systemc-clang] parses SystemC 2.3.3. It parses RTL constructs and some TLM 2.0 constructs. There is a HDL synthesis plugin that generates Verilog from SystemC RTL descriptions. 
+[systemc-clang](https://github.com/anikau31/systemc-clang) is a SystemC to RTL translator. Currently, SCCL supports translating SystemC 2.3.3 to Verilog RTL. 
 
 Requirements
 ------------
 
-*  `llvm/clang <https://releases.llvm.org/download.html>`_ (version 13.0.0)
-*  `SystemC <http://systemc.org>`_ version 2.3.3. 
-*  c++17 is required. 
-*  docker 23.0.1
+*  (Clang)[https://releases.llvm.org/download.html]: version 13.0.0
+*  (SystemC)[http://systemc.org]:  version 2.3.3. 
+*  c++17
+*  docker: version 23.0.1
+*  git: version 2.25.1
 
 Docker use
 -----------
