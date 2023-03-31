@@ -12,7 +12,7 @@ HOST_SYSTEMC_CLANG=$(readlink -f $3)
 HOST_SYSTEMC_CLANG_BUILD_DIR=$(readlink -f $4)
 
 
-sudo docker run --rm -it --entrypoint bash \
+docker run --rm -it --entrypoint bash \
   -v $HOST_SYSTEMC_CLANG:/systemc-clang \
   -v $HOST_SYSTEMC_CLANG_BUILD_DIR:/systemc-clang-build \
   --net=host \
