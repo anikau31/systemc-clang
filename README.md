@@ -10,6 +10,7 @@ SCCL: A SystemC translator to RTL
 Requirements
 ------------
 
+*  Host OS: Ubuntu 20.0.4
 *  Clang: version 13.0.0
 *  SystemC:  version 2.3.3 
 *  c++17
@@ -111,3 +112,44 @@ cd systemc-clang/fccm-case-studies/ultra96-vitis-ae/
 bash upload.sh
 ```
 - We provide a notebook file for running the bitstreams at `systemc-clang/fccm-case-studies/ultra96-vitis-ae/FCCM-2023-AE.ipynb`
+
+# Suggestions on Errors
+
+
+You may encounter some of these errors during setup.  Please consult this log for suggestions.
+
+Docker permission
+-----------------
+
+* Error: Unable to build the docker image
+
+```
+$ docker build -t fccm-ae .
+Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/build?buildargs=%7B%7D&cachefrom=%5B%5D&cgroupparent=&cpuperiod=0&cpuquota=0&cpusetcpus=&cpusetmems=&cpushares=0&dockerfile=Dockerfile&labels=%7B%7D&memory=0&memswap=0&networkmode=default&rm=1&shmsize=0&t=fccm-ae&target=&ulimits=null&version=1": dial unix /var/run/docker.sock: connect: permission denied
+```
+
+- Ensure that docker service is running
+```
+$ service docker status
+● docker.service - Docker Application Container Engine
+     Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+     Active: active (running) since Fri 2023-03-31 10:01:35 EDT; 10s ago
+TriggeredBy: ● docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 3464 (dockerd)
+      Tasks: 9
+     Memory: 21.1M
+        CPU: 181ms
+     CGroup: /system.slice/docker.service
+             └─3464 /usr/bin/dockerd -H fd:// --containerd=
+```
+
+* Solution:  Need to create a docker group, and add curren tuser.
+```
+sudo groupadd docker
+sudo usermod -aG docker ${USER}
+```
+
+You will need to log out from the shell, and re-login.
+
+
