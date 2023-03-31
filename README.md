@@ -1,6 +1,6 @@
 # SCCL: FCCM AE 2023
 
-This repository is a customization of the main repostiroy of [systemc-clang]()[systemc-clang](https://github.com/anikau31/systemc-clang)  for the artifact evaluation for FCCM 2023.
+This repository is a customization of the main repostiroy of [systemc-clang](https://github.com/anikau31/systemc-clang)  for the artifact evaluation for FCCM 2023.
 
 SCCL: A SystemC translator to RTL
 ==========================================
@@ -10,18 +10,23 @@ SCCL: A SystemC translator to RTL
 Requirements
 ------------
 
-*  (Clang)[https://releases.llvm.org/download.html]: version 13.0.0
-*  (SystemC)[http://systemc.org]:  version 2.3.3. 
+*  Clang: version 13.0.0
+*  SystemC:  version 2.3.3 
 *  c++17
-*  docker: version 23.0.1
+*  docker: version 23.0.2
 *  git: version 2.25.1
 
 Docker use
 -----------
 
-- Clone the FCCM AE SCCL repository. TODO: Update the repository link.
+- Clone the FCCM AE SCCL repository. This will clone a specific branch customized to simplify the AE process for FCCM. 
 ```
-git clone https://github.com/rseac/systemc-clang.git
+git clone --single-branch --branch fccm-ae https://github.com/rseac/systemc-clang.git
+```
+
+- Make a directory to store the compiled binaries
+```
+mkdir systemc-clang-build;
 ```
 
 - Change into the directory
@@ -29,22 +34,17 @@ git clone https://github.com/rseac/systemc-clang.git
 cd systemc-clang;
 ```
 
-- Ensure that docker is present. We use version 23.0.1.
-```
-docker --version
-```
-
-- Build the docker container.
+- Build the docker container. This should take some time to build. 
 ```
 docker build -t fccm-ae
 ```
 
-- After building the docker image, go to the folder containing the systemc-clang, start the docker image with start.sh with the following command
+- After building the docker image, go up one directory and start the docker image with the script `start.sh` with the following command
 ```
 cd ..
-mkdir systemc-clang-build
 ./systemc-clang/start.sh fccm-ae fccm-ae-dev systemc-clang systemc-clang-build
 ```
+
 
 - The following steps should be conducted in the container.
 
