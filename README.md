@@ -36,7 +36,7 @@ cd systemc-clang;
 
 - Build the docker container. This should take some time to build. 
 ```
-docker build -t fccm-ae
+docker build -t fccm-ae .
 ```
 
 - After building the docker image, go up one directory and start the docker image with the script `start.sh` with the following command
