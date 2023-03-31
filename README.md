@@ -69,7 +69,7 @@ cd /systemc-clang/;
 sh step1.sh;
 ```
 
-- Leave the docker container and the generated files could be found in various directories in the SCCL folders, specifically in `systemc-clang/fccm-case-studies`.
+- Leave the docker container and the generated files could be found in various directories in the SCCL folders, specifically in `systemc-clang/fccm-case-studies/ultra96-vitis-ae/`.
 
 ```
 exit
