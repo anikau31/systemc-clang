@@ -83,5 +83,5 @@ COPY requirements.txt /systemc-clang-build
 # COPY docs/source/requirements.txt /systemc-clang-build/requirements-docs.txt
 RUN pip3 install -r $SYSTEMC_CLANG_BUILD_DIR/requirements.txt
 # RUN pip3 install -r $SYSTEMC_CLANG_BUILD_DIR/requirements-docs.txt
-COPY . /systemc-clang
+#COPY . /systemc-clang
 #RUN cmake ../systemc-clang -DHDL=ON -DENABLE_VERILOG_TESTS=OFF -DENABLE_TESTS=OFF -G "Ninja" -DCMAKE_BUILD_TYPE=Release && ninja
