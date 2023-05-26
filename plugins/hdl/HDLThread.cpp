@@ -71,8 +71,8 @@ namespace systemc_hdl {
 
       for (state_num = 0; state_num < paths_found.size(); state_num++) {
 	SGVisited.clear();
-	// pathnodevisited keeps track of nodes alread traversed in true and false paths.
-	// those were already done by ProcessSplitGraphGropu and should be skipped
+	// pathnodevisited keeps track of nodes already traversed in true and false paths.
+	// those were already done by ProcessSplitGraphGroup and should be skipped
 	pathnodevisited.clear();
 	hNodep h_switchcase = new hNode( hNode::hdlopsEnum::hSwitchCase);
 	h_switchcase->append(new hNode(std::to_string(state_num), hNode::hdlopsEnum::hLiteral));
@@ -182,29 +182,42 @@ namespace systemc_hdl {
     LLVM_DEBUG(llvm::dbgs() << "[[ Destructor HDLThread ]]\n");
   }
 
+  bool HDLThread::isContinueorBreak(const Stmt *S) {
+    if (isa<BreakStmt>(S)) return true;
+    if (isa<ContinueStmt>(S)) return true;
+    return false;
+  }
+
   bool HDLThread::IsWaitStmt(hNodep hp) {
     return ((hp->child_list.size() >=1) and ((hp->child_list.back())->getopc() == hNode::hdlopsEnum::hWait));
   }
 
-  void HDLThread::CheckVardecls(hNodep &hp, unsigned int cfgblockid) {
+  void HDLThread::CheckVardecls(hNodep &hp, string &blockid) { 
     int varcnt = 0;
     for (auto oneop : hp->child_list) {
       if ((oneop != NULL) && ((oneop->getopc() == hNode::hdlopsEnum::hVardecl) || (oneop->getopc() == hNode::hdlopsEnum::hSigdecl))) {
-	LLVM_DEBUG(llvm::dbgs() << "Detected vardecl for CFG Block ID " << cfgblockid << "\n");
-	if (CFGVisited[cfgblockid]==1) hlocalvarsp->append(oneop);
+	LLVM_DEBUG(llvm::dbgs() << "Detected vardecl for SG Block ID " << blockid << "\n");
+	if (SGVisited[blockid] == 1) { 	  hlocalvarsp->append(oneop);
+	}
+	else {
+	  LLVM_DEBUG(llvm::dbgs() << "SGVisited for blockid " << SGVisited[blockid] 
+		     << " " << blockid << "\n");
+	}
 	varcnt += 1;
       }
       else break; // all vardecls are first in the list of ops
     }
     if (varcnt >=1) {
       hp->child_list.erase(hp->child_list.begin(), hp->child_list.begin()+varcnt);
-      if (CFGVisited[cfgblockid]==1) thread_vname_map.insertall(xtbodyp->vname_map);
+      if (SGVisited[blockid] == 1) { 
+	thread_vname_map.insertall(xtbodyp->vname_map);
+      }
     }
   }
 
   void HDLThread::ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp) {
     //!
-    //! called when a CFG declstmt is instantiated more than once
+    //! called when a declstmt is instantiated more than once
     //! can skip the decl, but need to process initializer
     //!
     
@@ -305,16 +318,16 @@ namespace systemc_hdl {
     }
   }
 
-  int HDLThread::GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix) {
-    auto path_info_{scfg.getPathInfo()};
+  int HDLThread::GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix, int state_num) {
+    auto path_info_{scfg.getAllPathInfo()};
     auto sblock{pt[cond_node_ix].first};
     auto supp_info{pt[cond_node_ix].second};
-    auto found_it{path_info_.find(supp_info.split_block_)};
+    auto found_it{path_info_[state_num].find(supp_info.split_block_)};
     int flen = 0;
     LLVM_DEBUG(llvm::dbgs() << "Getting false path length of ");
     LLVM_DEBUG(llvm::dbgs() << "(" << supp_info.path_idx_ << "," << sblock->getBlockID()
 	       << "," << supp_info.false_idx_);
-    if (found_it != path_info_.end()) {
+    if (found_it != path_info_[state_num].end()) {
       flen = found_it->second.getFalsePath().size();
     }
     LLVM_DEBUG(llvm::dbgs() << " |" << flen << "|");
@@ -328,6 +341,8 @@ namespace systemc_hdl {
 					 int startix, int num_ele,
 					 int state_num, hNodep h_switchcase)
   {
+
+    LLVM_DEBUG(llvm::dbgs() << "Split Graph Group startix, num_ele, state_num are " << startix << " " << num_ele << " " <<  state_num << "\n");
 
     int pvix = startix;
     while ( pvix<startix+num_ele) {
@@ -343,7 +358,6 @@ namespace systemc_hdl {
   //  SplitCFGPath = llvm::SmallVector<SplitCFGPathPair>;
   //  SplitCFGPathPair = std::pair<const SplitCFGBlock *, SupplementaryInfo>;
   void HDLThread::ProcessSplitGraphBlock(const SplitCFG::SplitCFGPath &pt,
-
 					 int thisix,
 					 int state_num, hNodep h_switchcase)
   {
@@ -353,33 +367,51 @@ namespace systemc_hdl {
       string blkid = "S" + std::to_string(state_num) + "_" + std::to_string(sgb->getBlockID());
 
       if (SGVisited.find(blkid) == SGVisited.end()) {
-      	SGVisited[blkid] = true;
-      	CFGVisited[(sgb->getCFGBlock())->getBlockID()]+= 1;
+      	SGVisited[blkid] = 1;
+      }
+      else {
+	SGVisited[blkid] += 1;
       }
       //else return; // already visited this block
       
       LLVM_DEBUG(llvm::dbgs() << "Split Graph num ele, blockid are " << sgb->getNumOfElements() << " " << blkid << "\n");
+      if ((sgb->getCFGBlock())->getTerminator().isValid() && sgb->hasWait()) {
+	LLVM_DEBUG(llvm::dbgs() << "found valid terminator with hasWait(), num ele in block is " <<  sgb->getNumOfElements() << "\n");
+      }
+      if ((sgb->getCFGBlock())->getTerminator().isValid() && !sgb->hasWait()){  // artifact of splitting graph is that wait retains terminator of cfg block
+	if (isContinueorBreak(sgb->getCFGBlock()->getTerminatorStmt()) && (sgb->getNumOfElements() ==0)) {
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block is singleton continue or break\n");	    
+	  //if (h_switchcase->child_list.size()>0) h_switchcase->append(new hNode(hNode::hdlopsEnum::hReturnStmt));
+	  return;
+	}
 
-      if (((sgb->getCFGBlock())->getTerminator().isValid()) && !isBreak(sgb->getCFGBlock()->getTerminatorStmt())){
-	hNodep hcondstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
 	const Stmt * S = sgb->getCFGBlock()->getTerminatorStmt();
-
+	hNodep hcondstmt = new hNode(hNode::hdlopsEnum::hIfStmt);
+	if (isContinueorBreak(sgb->getCFGBlock()->getTerminatorStmt())) {
+	  // continue or break as part of a block
+	  hcondstmt->set(hNode::hdlopsEnum::hCStmt);
+	}
+	
 	if (const WhileStmt *S1 = dyn_cast<WhileStmt> (S)) {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " <<blkid << " is a while stmt\n");
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
 	}
+	else if (const DoStmt *S1 = dyn_cast<DoStmt> (S)) {
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is a do stmt\n");
+	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
+	}
 	else if (const ForStmt *S1 = dyn_cast<ForStmt> (S)) {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is a for stmt\n");
-	  if (!sgb->hasTerminatorWait()) {
-	    LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " doesn't have a wait()\n");
-	    LLVM_DEBUG(S1->dump(llvm::dbgs(), ast_context_));
-	    xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
-	    for (int i = thisix+1; i < pt[thisix].second.getFalseId(); i++) {
-	      // need to mark all the true branch nodes in path vector as visited.
-	      updatepnvisited(i);
-	    }
-	    return;
-	  }
+	  // if (!sgb->hasTerminatorWait()) {
+	  //   LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " doesn't have a wait()\n");
+	  //   LLVM_DEBUG(S1->dump(llvm::dbgs(), ast_context_));
+	  //   xtbodyp->Run((Stmt *)S1, h_switchcase, rmethod);
+	  //   for (int i = thisix+1; i < pt[thisix].second.getFalseId(); i++) {
+	  //     // need to mark all the true branch nodes in path vector as visited.
+	  //     updatepnvisited(i);
+	  //   }
+	  //   return;
+	  // }
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
 	}
 	else if (const IfStmt *S1 = dyn_cast<IfStmt> (S)) {
@@ -401,25 +433,32 @@ namespace systemc_hdl {
 	  return;
 	}
 	else {
-	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is not handled\n");
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " not handled, is as follows\n");
+	  LLVM_DEBUG(sgb->getCFGBlock()->getTerminatorStmt()->dump(llvm::dbgs(), ast_context_));
 	}
 
 	// process true branch
 	hNodep if1 = new hNode(hNode::hdlopsEnum::hCStmt);
+	hNodep if2 = NULL;
 	int flseix = pt[thisix].second.getFalseId();
 	ProcessSplitGraphGroup(pt, thisix+1, flseix - (thisix+1), state_num, if1);
 	//ProcessSplitGraphGroup(pt, thisix+1, flseix_vec[thisix].first - (thisix+1),
 	//state_num,if1);
-	hcondstmt->append(if1);
-		  
+	if (if1->size() > 0) hcondstmt->append(if1);
 	if (flseix != 0) {// has false branch
-	  if1 = new hNode(hNode::hdlopsEnum::hCStmt);
-	  
-	  ProcessSplitGraphGroup(pt, flseix, GetFalseLength(pt, thisix),
-				 state_num, if1);
-	  hcondstmt->append(if1);
+	  if2 = new hNode(hNode::hdlopsEnum::hCStmt);
+	  ProcessSplitGraphGroup(pt, flseix, GetFalseLength(pt, thisix, state_num),
+				 state_num, if2);
 	}
-	h_switchcase->append(hcondstmt);
+
+	if (if2!=NULL && if2->size() > 0) {
+	  if (if1->size()==0) {
+	    if1->set(hNode::hdlopsEnum::hNoop);
+	    hcondstmt->append(if1);
+	  }
+	  hcondstmt->append(if2);
+	}
+	if (hcondstmt->size() >0) h_switchcase->append(hcondstmt);
 	return;
       } // end if this was a terminator block
       
@@ -446,14 +485,14 @@ namespace systemc_hdl {
 	  // first instantiation
 	  // However, still need to generate code for their initializers
 	  const DeclStmt *declstmt = dyn_cast<DeclStmt>(S);
-	  if ((declstmt!=NULL) &&  (CFGVisited[(sgb->getCFGBlock()->getBlockID()) > 1]))
+	  if ((declstmt!=NULL) && (SGVisited[blkid]>1))
 	    ProcessDeclStmt(declstmt, htmp);
 	  else xtbodyp->Run(const_cast<Stmt *>(S), htmp, rthread); // not declstmt
 
 	  LLVM_DEBUG(llvm::dbgs() << "after Run, htmp follows\n");
 	  //htmp->dumphcode();
 	  LLVM_DEBUG(htmp->print(llvm::dbgs()));
-	  CheckVardecls(htmp, (sgb->getCFGBlock())->getBlockID());
+	  CheckVardecls(htmp,blkid);
 	  if (IsWaitStmt(htmp)) {
 	    ProcessHWait(htmp, sgb->getNextState());
 	    //htmp->child_list.back()->set(std::to_string(sgb->getNextState()));
@@ -583,7 +622,7 @@ namespace systemc_hdl {
   
   // Code below this line is obsolete
   // BFS traversal so all local decls are seen before being referenced
-  
+ #if 0 
   void HDLThread::AddThreadMethod(const CFGBlock &BI) {
     std::vector<const CFGBlock *> succlist, nextsucclist;
     ProcessBB(BI);
@@ -639,5 +678,6 @@ namespace systemc_hdl {
       hthreadblocksp->append(h_body);
     }
   }
-
+#endif
+  
 }

@@ -18,7 +18,7 @@ typedef sc_uint<DATAW> data_t;
 
 extern sc_trace_file *tf;
 
-template<int WINDOW_SIZE>
+template<int WINDOW_SIZE_EXP=5, int WINDOW_SIZE = 64>
 SC_MODULE(moving_average)
 {
   sc_in<bool> clk;
@@ -31,11 +31,10 @@ SC_MODULE(moving_average)
   sc_stream_out<data_t> max_out;
   sc_stream_out<data_t> avg_out;
  
-
   /*-------- registers --------*/
   sc_signal <data_t> window[WINDOW_SIZE];
-  
-  sc_signal<sc_uint<8>> n, insert;
+
+  sc_signal<sc_uint<8>> insert;
   sc_signal<data_t> sum;
   sc_signal<data_t> cur_min, cur_max, cur_avg;
   sc_signal<bool> datardy;
@@ -60,17 +59,18 @@ SC_MODULE(moving_average)
   void ms_proc ()
   {
     if (reset == RLEVEL) {
-      n = 0; insert = 0; cur_min = cur_max = cur_avg = 0;
+      insert = 0; cur_min = cur_max = cur_avg = 0;
       sum = 0;
-      for (int i=0; i<WINDOW_SIZE; i++)
+      for (int i=0; i<(WINDOW_SIZE); i++)
 	window[i] = 0; datardy = true;
     } else {
       if (datastrm.valid_r()) { // new data
 	if (cur_min > datastrm.data) cur_min = datastrm.data;
 	if (cur_max < datastrm.data) cur_max = datastrm.data;
-	window[n.read().to_uint()] = datastrm.data;
-	if (n.read().to_uint() < WINDOW_SIZE) n.write(n.read().to_uint() +1);
-	cur_avg.write((sum.read().to_uint() + datastrm.data.read().to_int() )/ (n.read().to_uint()+1));
+	//window[n.read().to_uint()] = datastrm.data;
+	window[insert.read().to_uint()] = datastrm.data;
+		//cur_avg.write((sum.read().to_uint() + datastrm.data.read().to_int() )/ (n.read().to_uint()+1));
+	cur_avg.write((sum.read().to_uint() + datastrm.data.read().to_int() )>> WINDOW_SIZE_EXP );
 	sum.write(sum.read().to_uint() + datastrm.data.read().to_uint() - window[insert.read().to_uint()].read().to_uint());
 	if ((int) insert.read() >= WINDOW_SIZE-1) insert.write(0);
 	else insert.write(insert.read() + 1);

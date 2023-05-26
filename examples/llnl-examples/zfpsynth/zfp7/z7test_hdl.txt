@@ -2016,30 +2016,40 @@
           hType bool NOLIST
         ]
       ]
-      hVardecl _exp_actual_scclang_global_10 [
+      hVardecl _zb_actual_scclang_global_10 [
+        hTypeinfo  NONAME [
+          hType bool NOLIST
+        ]
+      ]
+      hVardecl _exp_actual_scclang_global_11 [
         hTypeinfo  NONAME [
           hType sc_uint [
             hLiteral 11 NOLIST
           ]
         ]
       ]
-      hVardecl _zb_actual_scclang_global_11 [
+      hVardecl _zb_actual_scclang_global_12 [
         hTypeinfo  NONAME [
           hType bool NOLIST
         ]
       ]
-      hVardecl bitoff_actual_scclang_global_12 [
+      hVardecl bitoff_actual_scclang_global_13 [
         hTypeinfo  NONAME [
           hType sc_uint [
             hLiteral 6 NOLIST
           ]
         ]
       ]
-      hVardecl maxexp_actual_scclang_global_13 [
+      hVardecl maxexp_actual_scclang_global_14 [
         hTypeinfo  NONAME [
           hType sc_uint [
             hLiteral 11 NOLIST
           ]
+        ]
+      ]
+      hVardecl _actual_scclang_global_15 [
+        hTypeinfo  NONAME [
+          hType bits_t_64_ NOLIST
         ]
       ]
     ]
@@ -2237,6 +2247,9 @@
                   hVarref c_rembits_scclang_global_2 NOLIST
                   hLiteral 0 NOLIST
                 ]
+                hMethodCall zhw__plane_reg2__plane_reg_func_0 [
+                  hVarref b_c_init_v_ms_proc_local_6 NOLIST
+                ]
                 hBinop = [
                   hVarref b_c_init_v_ms_proc_local_6##f NOLIST
                   hLiteral 0 NOLIST
@@ -2322,11 +2335,11 @@
                     ]
                   ]
                 ]
-                hVarAssign  NONAME [
+                hMethodCall zhw__block_headerfp_t11_52__block_header_func_1 [
                   hVarref bhdr_ms_proc_local_11 NOLIST
                   hLiteral 1 NOLIST
                 ]
-                hMethodCall zhw__block_headerfp_t11_52__init_func_0 [
+                hMethodCall zhw__block_headerfp_t11_52__init_func_2 [
                   hVarref bhdr_ms_proc_local_11 NOLIST
                   hLiteral 1 NOLIST
                 ]
@@ -2367,7 +2380,7 @@
                               hVarref dreg_bits_ms_proc_local_13 NOLIST
                               hLiteral 32 NOLIST
                             ]
-                            hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1 [
+                            hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3 [
                               hVarref b_wrk_ms_proc_local_8 NOLIST
                               hVarref dreg_bits_ms_proc_local_13 NOLIST
                             ]
@@ -2380,7 +2393,7 @@
                                 hLiteral 32 NOLIST
                               ]
                             ]
-                            hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1 [
+                            hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3 [
                               hVarref b_wrk_ms_proc_local_8 NOLIST
                               hBinop + [
                                 hVarref dreg_bits_ms_proc_local_13 NOLIST
@@ -2473,11 +2486,11 @@
                         hVarref s_bc##data NOLIST
                       ]
                     ]
-                    hMethodCall zhw__block_headerfp_t11_52__set_zb_func_2 [
+                    hMethodCall zhw__block_headerfp_t11_52__set_zb_func_4 [
                       hVarref bhdr_ms_proc_local_11 NOLIST
                       hUnop ! [
                         hBinop & [
-                          hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1 [
+                          hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3 [
                             hVarref b_wrk_ms_proc_local_8 NOLIST
                             hVarref w_wordoff_ms_proc_local_9 NOLIST
                           ]
@@ -2507,7 +2520,7 @@
                       hCStmt  NONAME [
                         hVarAssign  NONAME [
                           hVarref blockexpt_ms_proc_local_14 NOLIST
-                          hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1 [
+                          hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3 [
                             hVarref b_wrk_ms_proc_local_8 NOLIST
                             hVarref w_wordoff_ms_proc_local_9 NOLIST
                           ]
@@ -2533,11 +2546,11 @@
                         ]
                         hSigAssignL write [
                           hVarref m_block_maxprec NOLIST
-                          hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_block_maxprec_func_3 [
+                          hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_block_maxprec_func_5 [
                             hVarref blockexpt_ms_proc_local_14 NOLIST
                           ]
                         ]
-                        hMethodCall zhw__block_headerfp_t11_52__set_exp_func_4 [
+                        hMethodCall zhw__block_headerfp_t11_52__set_exp_func_6 [
                           hVarref bhdr_ms_proc_local_11 NOLIST
                           hVarref blockexpt_ms_proc_local_14 NOLIST
                         ]
@@ -2656,7 +2669,7 @@
                     ]
                     hVarAssign  NONAME [
                       hVarref planewdw_ms_proc_local_15 NOLIST
-                      hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1 [
+                      hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3 [
                         hVarref b_wrk_ms_proc_local_8 NOLIST
                         hVarref w_wordoff_ms_proc_local_9 NOLIST
                       ]
@@ -2714,7 +2727,7 @@
                 ]
                 hSigAssignL write [
                   hVarref c_m_bfifo_scclang_global_8##ready NOLIST
-                  hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5 [
+                  hMethodCall zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7 [
                     hVarref b_wrk_ms_proc_local_8 NOLIST
                   ]
                 ]
@@ -2723,7 +2736,31 @@
           ]
         ]
       ]
-      hFunction zhw__block_headerfp_t11_52__init_func_0 [
+      hFunction zhw__plane_reg2__plane_reg_func_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType void NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamIO hthis [
+            hTypeinfo  NONAME [
+              hType plane_reg_2_ NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hBinop = [
+            hVarref hthis##f NOLIST
+            hLiteral 0 NOLIST
+          ]
+          hBinop = [
+            hVarref hthis##w NOLIST
+            hLiteral 0 NOLIST
+          ]
+        ]
+      ]
+      hFunction zhw__block_headerfp_t11_52__block_header_func_1 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType void NOLIST
@@ -2756,7 +2793,40 @@
           ]
         ]
       ]
-      hFunction zhw__block_headerfp_t11_52__set_exp_func_4 [
+      hFunction zhw__block_headerfp_t11_52__init_func_2 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType void NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamIO hthis [
+            hTypeinfo  NONAME [
+              hType block_header_fp_t_11_52_ NOLIST
+            ]
+          ]
+          hFunctionParamI _zb [
+            hTypeinfo  NONAME [
+              hType bool NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hBinop = [
+            hVarref _zb_actual_scclang_global_10 NOLIST
+            hVarref _zb NOLIST
+          ]
+          hBinop = [
+            hVarref hthis##zb NOLIST
+            hVarref _zb_actual_scclang_global_10 NOLIST
+          ]
+          hBinop = [
+            hVarref hthis##exp NOLIST
+            hLiteral 0 NOLIST
+          ]
+        ]
+      ]
+      hFunction zhw__block_headerfp_t11_52__set_exp_func_6 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType void NOLIST
@@ -2778,16 +2848,16 @@
         ]
         hCStmt  NONAME [
           hBinop = [
-            hVarref _exp_actual_scclang_global_10 NOLIST
+            hVarref _exp_actual_scclang_global_11 NOLIST
             hVarref _exp NOLIST
           ]
           hBinop = [
             hVarref hthis##exp NOLIST
-            hVarref _exp_actual_scclang_global_10 NOLIST
+            hVarref _exp_actual_scclang_global_11 NOLIST
           ]
         ]
       ]
-      hFunction zhw__block_headerfp_t11_52__set_zb_func_2 [
+      hFunction zhw__block_headerfp_t11_52__set_zb_func_4 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType void NOLIST
@@ -2807,16 +2877,16 @@
         ]
         hCStmt  NONAME [
           hBinop = [
-            hVarref _zb_actual_scclang_global_11 NOLIST
+            hVarref _zb_actual_scclang_global_12 NOLIST
             hVarref _zb NOLIST
           ]
           hBinop = [
             hVarref hthis##zb NOLIST
-            hVarref _zb_actual_scclang_global_11 NOLIST
+            hVarref _zb_actual_scclang_global_12 NOLIST
           ]
         ]
       ]
-      hFunction zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5 [
+      hFunction zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType bool NOLIST
@@ -2831,132 +2901,141 @@
             ]
           ]
         ]
-        hVardecl reg_thresh_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_16 [
+        hVardecl reg_thresh_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_16 [
           hTypeinfo  NONAME [
             hType int NOLIST
           ]
         ]
-        hVardecl word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_17 [
+        hVardecl word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17 [
           hTypeinfo  NONAME [
             hType bits_t_64_ NOLIST
           ]
         ]
-        hVardecl w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18 [
+        hVardecl w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18 [
           hTypeinfo  NONAME [
             hType array##2 [
               hType plane_reg_2_ NOLIST
             ]
           ]
         ]
-        hVardecl empty_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_19 [
+        hVardecl empty_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_19 [
           hTypeinfo  NONAME [
             hType plane_reg_2_ NOLIST
           ]
         ]
-        hVardecl tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 [
+        hVardecl tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 [
           hTypeinfo  NONAME [
             hType array##4 [
               hType plane_reg_2_ NOLIST
             ]
           ]
         ]
-        hVardecl i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21 [
+        hVardecl i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21 [
           hTypeinfo  NONAME [
             hType int NOLIST
           ]
         ]
-        hVardecl i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22 [
+        hVardecl i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22 [
           hTypeinfo  NONAME [
             hType int NOLIST
           ]
         ]
-        hVardecl read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23 [
+        hVardecl read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23 [
           hTypeinfo  NONAME [
             hType bool NOLIST
           ]
         ]
-        hVardecl i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24 [
+        hVardecl i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24 [
           hTypeinfo  NONAME [
             hType unsigned_long NOLIST
           ]
         ]
-        hVardecl srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 [
+        hVardecl srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 [
           hTypeinfo  NONAME [
             hType sc_uint [
               hLiteral 3 NOLIST
             ]
           ]
         ]
-        hVardecl tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26 [
+        hVardecl tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26 [
           hTypeinfo  NONAME [
             hType sc_uint [
               hLiteral 3 NOLIST
             ]
           ]
         ]
-        hVardecl i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27 [
+        hVardecl i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27 [
           hTypeinfo  NONAME [
             hType unsigned_long NOLIST
           ]
         ]
         hCStmt  NONAME [
           hVarAssign  NONAME [
-            hVarref reg_thresh_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_16 NOLIST
+            hVarref reg_thresh_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_16 NOLIST
             hLiteral 3 NOLIST
           ]
-          hVarAssign  NONAME [
-            hVarref word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_17 NOLIST
+          hMethodCall bits_t64__bits_t_func_8 [
+            hVarref word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17 NOLIST
             hSigAssignR read [
               hVarref c_m_bfifo_scclang_global_8##data NOLIST
             ]
           ]
+          hMethodCall zhw__plane_reg2__plane_reg_func_9 [
+            hVarref w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18 NOLIST
+          ]
+          hMethodCall zhw__plane_reg2__plane_reg_func_9 [
+            hVarref empty_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_19 NOLIST
+          ]
+          hMethodCall zhw__plane_reg2__plane_reg_func_9 [
+            hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
+          ]
           hForStmt  NONAME [
             hVarAssign  NONAME [
-              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21 NOLIST
+              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21 NOLIST
               hLiteral 0 NOLIST
             ]
             hBinop < [
-              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21 NOLIST
+              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21 NOLIST
               hBinop / [
                 hLiteral 64 NOLIST
                 hLiteral 32 NOLIST
               ]
             ]
             hPostfix ++ [
-              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21 NOLIST
+              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21 NOLIST
             ]
             hCStmt  NONAME [
-              hMethodCall zhw__plane_reg2__init_func_6 [
+              hMethodCall zhw__plane_reg2__init_func_10 [
                 hBinop ARRAYSUBSCRIPT [
-                  hVarref w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18 NOLIST
-                  hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_21 NOLIST
+                  hVarref w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18 NOLIST
+                  hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_21 NOLIST
                 ]
               ]
             ]
           ]
           hForStmt  NONAME [
             hVarAssign  NONAME [
-              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22 NOLIST
+              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22 NOLIST
               hLiteral 0 NOLIST
             ]
             hBinop < [
-              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22 NOLIST
+              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22 NOLIST
               hLiteral 4 NOLIST
             ]
             hPostfix ++ [
-              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22 NOLIST
+              hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22 NOLIST
             ]
             hCStmt  NONAME [
-              hMethodCall zhw__plane_reg2__init_func_6 [
+              hMethodCall zhw__plane_reg2__init_func_10 [
                 hBinop ARRAYSUBSCRIPT [
-                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
-                  hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_22 NOLIST
+                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
+                  hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_22 NOLIST
                 ]
               ]
             ]
           ]
           hVarAssign  NONAME [
-            hVarref read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23 NOLIST
+            hVarref read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23 NOLIST
             hLiteral 0 NOLIST
           ]
           hIfStmt  NONAME [
@@ -2971,25 +3050,25 @@
                 hCStmt  NONAME [
                   hForStmt  NONAME [
                     hVarAssign  NONAME [
-                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24 NOLIST
+                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24 NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hBinop < [
-                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24 NOLIST
+                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24 NOLIST
                       hBinop / [
                         hLiteral 64 NOLIST
                         hLiteral 32 NOLIST
                       ]
                     ]
                     hPostfix ++ [
-                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24 NOLIST
+                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24 NOLIST
                     ]
                     hCStmt  NONAME [
                       hBinop = [
                         hFieldaccess  NONAME [
                           hBinop ARRAYSUBSCRIPT [
-                            hVarref w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18 NOLIST
-                            hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24 NOLIST
+                            hVarref w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18 NOLIST
+                            hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24 NOLIST
                           ]
                           hField f NOLIST
                         ]
@@ -2998,16 +3077,16 @@
                       hBinop = [
                         hFieldaccess  NONAME [
                           hBinop ARRAYSUBSCRIPT [
-                            hVarref w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18 NOLIST
-                            hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24 NOLIST
+                            hVarref w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18 NOLIST
+                            hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24 NOLIST
                           ]
                           hField w NOLIST
                         ]
                         hBinop >> [
-                          hVarref word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_17##tdata NOLIST
+                          hVarref word_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_17##tdata NOLIST
                           hBinop * [
                             hLiteral 32 NOLIST
-                            hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_24 NOLIST
+                            hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_24 NOLIST
                           ]
                         ]
                       ]
@@ -3017,21 +3096,21 @@
               ]
               hForStmt  NONAME [
                 hBinop = [
-                  hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 NOLIST
+                  hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 NOLIST
                   hLiteral 0 NOLIST
                 ]
                 hBinop < [
-                  hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 NOLIST
+                  hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 NOLIST
                   hLiteral 4 NOLIST
                 ]
                 hPostfix ++ [
-                  hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 NOLIST
+                  hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 NOLIST
                 ]
                 hIfStmt  NONAME [
                   hFieldaccess  NONAME [
                     hBinop ARRAYSUBSCRIPT [
                       hVarref pb_c NOLIST
-                      hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 NOLIST
+                      hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 NOLIST
                     ]
                     hField f NOLIST
                   ]
@@ -3040,20 +3119,20 @@
               ]
               hForStmt  NONAME [
                 hBinop = [
-                  hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26 NOLIST
+                  hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26 NOLIST
                   hLiteral 0 NOLIST
                 ]
                 hBinop < [
-                  hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26 NOLIST
+                  hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26 NOLIST
                   hLiteral 4 NOLIST
                 ]
                 hPostfix ++ [
-                  hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26 NOLIST
+                  hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26 NOLIST
                 ]
                 hCStmt  NONAME [
                   hIfStmt  NONAME [
                     hBinop >= [
-                      hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 NOLIST
+                      hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 NOLIST
                       hLiteral 4 NOLIST
                     ]
                     hBreak  NONAME NOLIST
@@ -3063,7 +3142,7 @@
                       hFieldaccess  NONAME [
                         hBinop ARRAYSUBSCRIPT [
                           hVarref pb_c NOLIST
-                          hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 NOLIST
+                          hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 NOLIST
                         ]
                         hField f NOLIST
                       ]
@@ -3072,16 +3151,16 @@
                     hCStmt  NONAME [
                       hBinop = [
                         hBinop ARRAYSUBSCRIPT [
-                          hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
-                          hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26 NOLIST
+                          hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
+                          hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26 NOLIST
                         ]
                         hBinop ARRAYSUBSCRIPT [
                           hVarref pb_c NOLIST
-                          hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 NOLIST
+                          hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 NOLIST
                         ]
                       ]
                       hPostfix ++ [
-                        hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_25 NOLIST
+                        hVarref srcreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_25 NOLIST
                       ]
                     ]
                   ]
@@ -3089,38 +3168,38 @@
               ]
               hIfStmt  NONAME [
                 hBinop < [
-                  hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26 NOLIST
+                  hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26 NOLIST
                   hLiteral 3 NOLIST
                 ]
                 hCStmt  NONAME [
                   hForStmt  NONAME [
                     hVarAssign  NONAME [
-                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27 NOLIST
+                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27 NOLIST
                       hLiteral 0 NOLIST
                     ]
                     hBinop < [
-                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27 NOLIST
+                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27 NOLIST
                       hBinop / [
                         hLiteral 64 NOLIST
                         hLiteral 32 NOLIST
                       ]
                     ]
                     hPostfix ++ [
-                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27 NOLIST
+                      hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27 NOLIST
                     ]
                     hCStmt  NONAME [
                       hBinop = [
                         hBinop ARRAYSUBSCRIPT [
-                          hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
-                          hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26 NOLIST
+                          hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
+                          hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26 NOLIST
                         ]
                         hBinop ARRAYSUBSCRIPT [
-                          hVarref w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_18 NOLIST
-                          hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_27 NOLIST
+                          hVarref w_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_18 NOLIST
+                          hVarref i_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_27 NOLIST
                         ]
                       ]
                       hPostfix ++ [
-                        hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_26 NOLIST
+                        hVarref tgtreg_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_26 NOLIST
                       ]
                     ]
                   ]
@@ -3130,7 +3209,7 @@
             hCStmt  NONAME [
               hBinop = [
                 hBinop ARRAYSUBSCRIPT [
-                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
+                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
                   hLiteral 0 NOLIST
                 ]
                 hBinop ARRAYSUBSCRIPT [
@@ -3140,7 +3219,7 @@
               ]
               hBinop = [
                 hBinop ARRAYSUBSCRIPT [
-                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
+                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
                   hLiteral 1 NOLIST
                 ]
                 hBinop ARRAYSUBSCRIPT [
@@ -3150,7 +3229,7 @@
               ]
               hBinop = [
                 hBinop ARRAYSUBSCRIPT [
-                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
+                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
                   hLiteral 2 NOLIST
                 ]
                 hBinop ARRAYSUBSCRIPT [
@@ -3160,7 +3239,7 @@
               ]
               hBinop = [
                 hBinop ARRAYSUBSCRIPT [
-                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
+                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
                   hLiteral 3 NOLIST
                 ]
                 hBinop ARRAYSUBSCRIPT [
@@ -3176,7 +3255,7 @@
               hLiteral 0 NOLIST
             ]
             hBinop ARRAYSUBSCRIPT [
-              hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
+              hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
               hLiteral 0 NOLIST
             ]
           ]
@@ -3186,7 +3265,7 @@
               hLiteral 1 NOLIST
             ]
             hBinop ARRAYSUBSCRIPT [
-              hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
+              hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
               hLiteral 1 NOLIST
             ]
           ]
@@ -3196,7 +3275,7 @@
               hLiteral 2 NOLIST
             ]
             hBinop ARRAYSUBSCRIPT [
-              hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
+              hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
               hLiteral 2 NOLIST
             ]
           ]
@@ -3206,7 +3285,7 @@
               hLiteral 3 NOLIST
             ]
             hBinop ARRAYSUBSCRIPT [
-              hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
+              hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
               hLiteral 3 NOLIST
             ]
           ]
@@ -3214,27 +3293,27 @@
             hUnop ! [
               hFieldaccess  NONAME [
                 hBinop ARRAYSUBSCRIPT [
-                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_20 NOLIST
+                  hVarref tmp_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_20 NOLIST
                   hLiteral 2 NOLIST
                 ]
                 hField f NOLIST
               ]
             ]
             hBinop = [
-              hVarref read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23 NOLIST
+              hVarref read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23 NOLIST
               hLiteral 1 NOLIST
             ]
             hBinop = [
-              hVarref read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23 NOLIST
+              hVarref read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23 NOLIST
               hLiteral 0 NOLIST
             ]
           ]
           hReturnStmt  NONAME [
-            hVarref read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_5_local_23 NOLIST
+            hVarref read_data_zhw__decode_streamfp_t11_52_bits_t64_2__refresh_next_bs_regs_func_7_local_23 NOLIST
           ]
         ]
       ]
-      hFunction zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_1 [
+      hFunction zhw__decode_streamfp_t11_52_bits_t64_2__get_window_func_3 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType sc_uint [
@@ -3314,13 +3393,13 @@
         ]
         hCStmt  NONAME [
           hBinop = [
-            hVarref bitoff_actual_scclang_global_12 NOLIST
+            hVarref bitoff_actual_scclang_global_13 NOLIST
             hVarref bitoff NOLIST
           ]
           hVarAssign  NONAME [
             hVarref wordoff__local_28 NOLIST
             hBinop / [
-              hVarref bitoff_actual_scclang_global_12 NOLIST
+              hVarref bitoff_actual_scclang_global_13 NOLIST
               hLiteral 32 NOLIST
             ]
           ]
@@ -3418,7 +3497,7 @@
           hVarAssign  NONAME [
             hVarref b1rshift__local_34 NOLIST
             hBinop % [
-              hVarref bitoff_actual_scclang_global_12 NOLIST
+              hVarref bitoff_actual_scclang_global_13 NOLIST
               hLiteral 32 NOLIST
             ]
           ]
@@ -3447,7 +3526,7 @@
           ]
         ]
       ]
-      hFunction zhw__decode_streamfp_t11_52_bits_t64_2__get_block_maxprec_func_3 [
+      hFunction zhw__decode_streamfp_t11_52_bits_t64_2__get_block_maxprec_func_5 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType unsigned_short NOLIST
@@ -3469,7 +3548,7 @@
         ]
         hCStmt  NONAME [
           hBinop = [
-            hVarref maxexp_actual_scclang_global_13 NOLIST
+            hVarref maxexp_actual_scclang_global_14 NOLIST
             hVarref maxexp NOLIST
           ]
           hVarAssign  NONAME [
@@ -3477,7 +3556,7 @@
             hBinop + [
               hBinop + [
                 hBinop - [
-                  hVarref maxexp_actual_scclang_global_13 NOLIST
+                  hVarref maxexp_actual_scclang_global_14 NOLIST
                   hSigAssignR read [
                     hVarref s_minexp NOLIST
                   ]
@@ -3518,7 +3597,7 @@
           ]
         ]
       ]
-      hFunction zhw__plane_reg2__init_func_6 [
+      hFunction zhw__plane_reg2__init_func_10 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType void NOLIST
@@ -3539,6 +3618,31 @@
           hBinop = [
             hVarref hthis##w NOLIST
             hLiteral 0 NOLIST
+          ]
+        ]
+      ]
+      hFunction bits_t64__bits_t_func_8 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType void NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamIO hthis [
+            hTypeinfo  NONAME [
+              hType bits_t_64_ NOLIST
+            ]
+          ]
+          hFunctionParamI  NONAME [
+            hTypeinfo  NONAME [
+              hType bits_t_64_ NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hBinop = [
+            hVarref _actual_scclang_global_15 NOLIST
+            hVarref  NONAME NOLIST
           ]
         ]
       ]
@@ -11244,6 +11348,11 @@
           ]
         ]
       ]
+      hVardecl ui_actual_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType unsigned_long_long NOLIST
+        ]
+      ]
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
@@ -11318,7 +11427,7 @@
             ]
           ]
           hCStmt  NONAME [
-            hVarAssign  NONAME [
+            hMethodCall fp_t11_52__fp_t_func_0 [
               hVarref fp_mc_proc_local_2 NOLIST
               hLiteral 0 NOLIST
             ]
@@ -11925,6 +12034,41 @@
           ]
         ]
       ]
+      hFunction fp_t11_52__fp_t_func_0 [
+        hFunctionRetType  NONAME [
+          hTypeinfo  NONAME [
+            hType void NOLIST
+          ]
+        ]
+        hFunctionParams  NONAME [
+          hFunctionParamIO hthis [
+            hTypeinfo  NONAME [
+              hType fp_t_11_52_ NOLIST
+            ]
+          ]
+          hFunctionParamI ui [
+            hTypeinfo  NONAME [
+              hType unsigned_long_long NOLIST
+            ]
+          ]
+        ]
+        hCStmt  NONAME [
+          hBinop = [
+            hVarref ui_actual_scclang_global_7 NOLIST
+            hVarref ui NOLIST
+          ]
+          hBinop = [
+            hBinop concat [
+              hBinop concat [
+                hVarref hthis##sign NOLIST
+                hVarref hthis##expo NOLIST
+              ]
+              hVarref hthis##frac NOLIST
+            ]
+            hVarref ui_actual_scclang_global_7 NOLIST
+          ]
+        ]
+      ]
     ]
     hModinitblock u_inv_cast [
       hSenslist mc_proc [
@@ -11965,36 +12109,6 @@
       ]
     ]
   ]
-  hTypedef plane_reg_2_ [
-    hTypeField f [
-      hType bool NOLIST
-    ]
-    hTypeField w [
-      hType sc_uint [
-        hLiteral 32 NOLIST
-      ]
-    ]
-  ]
-  hTypedef block_header_fp_t_11_52_ [
-    hTypeField zb [
-      hType bool NOLIST
-    ]
-    hTypeField exp [
-      hType sc_uint [
-        hLiteral 11 NOLIST
-      ]
-    ]
-  ]
-  hTypedef bits_t_64_ [
-    hTypeField tdata [
-      hType sc_bv [
-        hLiteral 64 NOLIST
-      ]
-    ]
-    hTypeField tlast [
-      hType bool NOLIST
-    ]
-  ]
   hTypedef fp_t_11_52_ [
     hTypeField frac [
       hType sc_uint [
@@ -12009,6 +12123,36 @@
     hTypeField sign [
       hType sc_uint [
         hLiteral 1 NOLIST
+      ]
+    ]
+  ]
+  hTypedef bits_t_64_ [
+    hTypeField tdata [
+      hType sc_bv [
+        hLiteral 64 NOLIST
+      ]
+    ]
+    hTypeField tlast [
+      hType bool NOLIST
+    ]
+  ]
+  hTypedef block_header_fp_t_11_52_ [
+    hTypeField zb [
+      hType bool NOLIST
+    ]
+    hTypeField exp [
+      hType sc_uint [
+        hLiteral 11 NOLIST
+      ]
+    ]
+  ]
+  hTypedef plane_reg_2_ [
+    hTypeField f [
+      hType bool NOLIST
+    ]
+    hTypeField w [
+      hType sc_uint [
+        hLiteral 32 NOLIST
       ]
     ]
   ]

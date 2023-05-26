@@ -134,6 +134,7 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
   bool retval = false;
   const Type *typ = node->getDataPtr()->getTypePtr();
   // ========================== CHECK HDLType =====================
+  /*
   // FIXME: Cleanup
   bool t1 = tutil.isSCType(tmps) || tutil.isSCBuiltinType(tmps);
   bool t2 = tutil.isSCByType(typ);
@@ -143,6 +144,7 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
     assert(0); //llvm::dbgs() << t1/0;
     //std::cin.get();
   }
+  */
   // ========================== END CHECK =====================
   //
   //if (!(tutil.isSCByType(typ) ||
@@ -208,15 +210,16 @@ hNodep HDLType::addtype(string typname, QualType qtyp, ASTContext &astcontext) {
       LLVM_DEBUG(llvm::dbgs() << "####### ============================== END "
                                  "MATCHER ========================= ##### \n");
 
-      // TemplateParameterList *tpl = ctd->getTemplateParameters();
-      // LLVM_DEBUG(llvm::dbgs() << "addtype her are template parameters\n");
-      // for (auto param : *tpl) {
-      //   LLVM_DEBUG(llvm::dbgs() << "addtype template param name is "
-      //                           << param->getName() << "\n");
-      //   // param->dump(llvm::dbgs());
-      //   h_typdef->child_list.push_back(
-      //       new hNode(param->getName().str(), hNode::hdlopsEnum::hTypeTemplateParam));
-      // }
+      TemplateParameterList *tpl = ctd->getTemplateParameters();
+      LLVM_DEBUG(llvm::dbgs() << "addtype here are template parameters\n");
+      for (auto param : *tpl) {
+        LLVM_DEBUG(llvm::dbgs() << "addtype template param name is "
+                                << param->getName() << "\n");
+         param->dump(llvm::dbgs());
+	 LLVM_DEBUG(llvm::dbgs() << "end dump of param\n");
+        //h_typdef->child_list.push_back(
+	//  new hNode(param->getName().str(), hNode::hdlopsEnum::hTypeTemplateParam));
+      }
       
       std::vector<const FieldDecl *> fields;
       template_matcher.getArgFields(fields); //  Parm for formal, use getArgFields for actual

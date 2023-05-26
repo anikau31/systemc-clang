@@ -15,6 +15,7 @@ using namespace sc_ast_matchers;
 #undef DEBUG_TYPE
 #define DEBUG_TYPE "Tests"
 
+
 template <typename T>
 bool find_name(std::vector<T> &names, const T &find_name) {
   auto found_it = std::find(names.begin(), names.end(), find_name);
@@ -40,7 +41,7 @@ std::string generateSensitivityName(
 TEST_CASE("Read SystemC model from file for testing") {
 
   /// Enable debug
-  llvm::DebugFlag = false;
+  llvm::DebugFlag = true;
 
   std::string code = R"(
 #include "systemc.h"
@@ -54,6 +55,7 @@ template <typename T, int IW,  bool RLEV> using sfifo_cc = rvfifo_cc<T, IW, RLEV
 
 
 SC_MODULE( test ){
+
 
   // clock ports
   sc_in_clk clk;
@@ -145,7 +147,7 @@ int sc_main(int argc, char *argv[]) {
   CHECK(processes.size() == 2);
   CHECK(first_proc != processes.end());
 
-  LLVM_DEBUG(llvm::dbgs() << "PROCESS: " << first_proc->first << "\n";);
+  llvm::dbgs() << "PROCESS: " << first_proc->first << "\n";
 
   // Get access to the sensitivity list.
   EntryFunctionContainer *ef{proc->getEntryFunction()};
@@ -164,7 +166,7 @@ int sc_main(int argc, char *argv[]) {
     // This is a vector of tuples
     auto entry{arg.second};
 
-    LLVM_DEBUG(llvm::dbgs() << name << "\n";);
+    llvm::dbgs() << name << "\n";
     find_name(arg_names, generateSensitivityName(entry));
 
     /// The tuple now has the last element std::get<3>(.) that provides a
@@ -173,13 +175,24 @@ int sc_main(int argc, char *argv[]) {
     /// separate structure to hold DeclRefExpr => sensitivity list. If needed,
     /// we can add that.
 
+    llvm::dbgs() << "Dump sensitivity found\n";
     for (auto const &call : entry) {
-      DeclRefExpr *to_get_process_handle{std::get<3>(call)};
+      VarDecl *to_get_process_handle{std::get<3>(call)};
       auto process_handle_name{
-          to_get_process_handle->getNameInfo().getAsString()};
-      LLVM_DEBUG(llvm::dbgs() << process_handle_name << "  " << std::get<0>(call) << "  "
+          to_get_process_handle->getNameAsString()};
+      std::string sig_name { std::get<0>(call)};
+      clang::ValueDecl* vdecl{ std::get<1>(call)};
+
+      llvm::dbgs() << "name is " << sig_name << "\n";
+      llvm::dbgs() << "value decl is\n";
+      vdecl->dump();
+      llvm::dbgs() << "vd is\n";
+      to_get_process_handle->dump();
+      llvm::dbgs() << "default output is \n";
+
+      llvm::dbgs() << process_handle_name << "  " << std::get<0>(call) << "  "
                    << std::get<1>(call) << "  " << std::get<2>(call) << "  "
-                   << std::get<3>(call) << "\n";);
+                   << std::get<3>(call) << "\n";
     }
   }
 

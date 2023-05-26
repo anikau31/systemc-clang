@@ -23,11 +23,11 @@ LABEL = V$(subst .,_,$(VERSION))
 # SystemC specific
 DEFS += -DTIMEOFDAY
 SCDIR = $(SYSTEMC)
-LDFLAGS += -L$(SCDIR)/lib-macosx64
+LDFLAGS += -L$(SCDIR)/src/.libs
 #ifeq ($(findstring c++11,$(CXXFLAGS)),)
-  CXXFLAGS += -std=c++17 -g
+  CXXFLAGS += -std=c++14 -g
 #endif
-SRC += $(SCDIR)/include
+SRC += $(SCDIR)/src/
 # squelch warning from SystemC sc_bit_proxies.h
 CFLAGS += -Wno-strict-overflow
 # application build -std=option must match SystemC library build

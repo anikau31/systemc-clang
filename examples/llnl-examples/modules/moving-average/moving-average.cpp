@@ -35,7 +35,7 @@ SC_MODULE(mymodule)
   sc_stream <data_t>  dut_avg;
 
  
-  moving_average<DATAW> u_dut;
+  moving_average<1<<5> u_dut;  // window size as power of 2; 2^4 = 16 elements
 
   SC_CTOR(mymodule) : u_dut("u_dut")
         {

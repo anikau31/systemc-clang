@@ -122,37 +122,39 @@ TEST_CASE("Simple thread test") {
       CHECK(i == 2);
 
       /// Check if the TRUE/FALSE paths are correct.
-      auto path_info{scfg.getPathInfo()};
-      int check{4};
-      for (const auto &block : path_info) {
-        auto sblock{block.first};
-        auto info{block.second};
-        auto id{ sblock->getBlockID()};
-        std::string tstr{info.toStringTruePath()};
-        std::string fstr{info.toStringFalsePath()};
+      auto path_info{scfg.getAllPathInfo()};
+      int check{8};
+      for (const auto &pi : path_info) {
+        for (const auto &block : pi) {
+          auto sblock{block.first};
+          auto info{block.second};
+          auto id{sblock->getBlockID()};
+          std::string tstr{info.toStringTruePath()};
+          std::string fstr{info.toStringFalsePath()};
 
-        if (id == 9) {
-          CHECK(tstr == "8 4 3");
-          CHECK(fstr == "7 6");
-          --check;
-        }
+          if (id == 9) {
+            CHECK(tstr == "8 4 3");
+            CHECK(fstr == "7 6");
+            --check;
+          }
 
-        if (id == 10) {
-          CHECK(tstr == "9" );
-          CHECK(fstr == "4 3" );
-          --check;
-        }
+          if (id == 10) {
+            CHECK(tstr == "9");
+            CHECK(fstr == "4 3");
+            --check;
+          }
 
-        if (id == 12) {
-          CHECK(tstr == "11 10" );
-          CHECK(fstr == "5 4 3" );
-          --check;
-        }
+          if (id == 12) {
+            CHECK(tstr == "11 10");
+            CHECK(fstr == "5 4 3");
+            --check;
+          }
 
-        if (id == 13) {
-          CHECK(tstr == "12" );
-          CHECK(fstr == "2 21" );
-          --check;
+          if (id == 13) {
+            CHECK(tstr == "12");
+            CHECK(fstr == "2 21");
+            --check;
+          }
         }
       }
 

@@ -29,7 +29,7 @@ std::string pathToString(const llvm::SmallVectorImpl<std::pair<S, T> > &v) {
 }
 
 extern std::string data_file;
-TEST_CASE("Simple thread test" ) {
+TEST_CASE("Simple thread test") {
   std::string code{};
 
   if (data_file.empty()) {
@@ -62,14 +62,15 @@ TEST_CASE("Simple thread test" ) {
   ModuleInstance *test_module{model->getInstance("testing")};
   ModuleInstance *dut{model->getInstance("d")};
 
-  SUBCASE("Found sc_module instances" ) {
+  SUBCASE("Found sc_module instances") {
     // There should be 2 modules identified.
-//    INFO("Checking number of sc_module instances found: " << instances.size());
+    //    INFO("Checking number of sc_module instances found: " <<
+    //    instances.size());
     CHECK(instances.size() >= 2);
 
     CHECK(test_module != nullptr);
 
- //   INFO("Checking member ports for test instance.");
+    //   INFO("Checking member ports for test instance.");
     // These checks should be performed on the declarations.
 
     // The module instances have all the information.
@@ -127,34 +128,80 @@ TEST_CASE("Simple thread test" ) {
       /// 4 Paths
       CHECK(i == 4);
 
-
       /// Check if the TRUE/FALSE paths are correct.
-      auto path_info{scfg.getPathInfo()};
-      int check{2};
-      for (const auto &block : path_info) {
-        auto sblock{block.first};
-        auto info{block.second};
-        auto id{ sblock->getBlockID()};
-        std::string tstr{info.toStringTruePath()};
-        std::string fstr{info.toStringFalsePath()};
+      auto path_info{scfg.getAllPathInfo()};
+      int check{12};
+      int state{0};
+      for (const auto &pi : path_info) {
+        for (const auto &block : pi) {
+          auto sblock{block.first};
+          auto info{block.second};
+          auto id{sblock->getBlockID()};
+          std::string tstr{info.toStringTruePath()};
+          std::string fstr{info.toStringFalsePath()};
 
-        if (id == 5) {
-          CHECK(tstr == "51");
-          CHECK(fstr == "");
-          --check;
+          if ((state == 0) || (state == 3)) {
+            if (id == 5) {
+              CHECK(tstr == "");
+              CHECK(fstr == "");
+              --check;
+            }
+
+            if (id == 6) {
+              CHECK(tstr == "");
+              CHECK(fstr == "");
+              --check;
+            }
+            if (id == 52) {
+              CHECK(tstr == "");
+              CHECK(fstr == "");
+              --check;
+            }
+          }
+
+          if (state == 1) {
+            if (id == 5) {
+              CHECK(tstr == "51");
+              CHECK(fstr == "");
+              --check;
+            }
+
+            if (id == 6) {
+              CHECK(tstr == "5");
+              CHECK(fstr == "2 1 8 7 71");
+              --check;
+            }
+            if (id == 52) {
+              CHECK(tstr == "");
+              CHECK(fstr == "");
+              --check;
+            }
+          }
+ 
+          if (state == 2) {
+            if (id == 5) {
+              CHECK(tstr == "51");
+              CHECK(fstr == "");
+              --check;
+            }
+
+            if (id == 6) {
+              CHECK(tstr == "5");
+              CHECK(fstr == "2 1 8 7 71");
+              --check;
+            }
+            if (id == 52) {
+              CHECK(tstr == "4 41");
+              CHECK(fstr == "3 6");
+              --check;
+            }
+          }
         }
 
-        if (id == 6) {
-          CHECK(tstr == "5" );
-          CHECK(fstr == "2 1 8 7 71" );
-          --check;
-        }
+        ++state;
       }
 
       CHECK(check == 0);
-
-
-
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";

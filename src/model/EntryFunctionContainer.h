@@ -29,7 +29,7 @@
 namespace clang {
   class ValueDecl;
   class MemberExpr;
-  class DeclRefExpr;
+  class VarDecl;
   class ArraySubscriptExpr;
   class Stmt;
   class CXXMethodDecl;
@@ -80,7 +80,7 @@ class EntryFunctionContainer {
 
   // Sensitivity information
   typedef std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
-                     clang::DeclRefExpr *, clang::ArraySubscriptExpr *>
+                     clang::VarDecl*, clang::ArraySubscriptExpr *, clang::ForStmt *>
       SensitivityTupleType;
   typedef std::pair<std::string, std::vector<SensitivityTupleType>>
       SensitivityPairType;

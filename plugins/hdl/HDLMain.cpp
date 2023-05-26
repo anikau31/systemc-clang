@@ -8,7 +8,7 @@
 #include "Tree.h"
 #include "HDLMain.h"
 //#include "TemplateParametersMatcher.h"
-//#include "SensitivityMatcher.h"
+#include "SensitivityMatcher.h"
 #include "clang/Basic/FileManager.h"
 #include "llvm/Support/Debug.h"
 #include "clang/Basic/Diagnostic.h"
@@ -200,7 +200,8 @@ namespace systemc_hdl {
     
     hdecl_name_map_t mod_vname_map("_scclang_global_");
     xbodyp = new HDLBody(main_diag_engine, getContext(), mod_vname_map, allmethodecls, overridden_method_map);
-    
+
+    allmethodecls.clear();
     module_vars.clear();
     threadresetmap.clear();
     
@@ -262,6 +263,7 @@ namespace systemc_hdl {
       }
     }
 
+    // look at sensitivitiy list info
     // init block
     mod_i = mod;
     hNodep h_modinitblockhead = new hNode( hNode::hdlopsEnum::hNoop); // hold list of module constructors
@@ -271,7 +273,10 @@ namespace systemc_hdl {
       if (mod_i->getConstructorDecl() ==NULL) continue; // null constructor
       h_constructor = new hNode(mod_i->getInstanceInfo().getVarName()+ (mod_i->getInstanceInfo().isArrayType()? "_0" :""),
 				hNode::hdlopsEnum::hModinitblock);
-    
+      // SenseMapType sensmap = mod_i->getSensitivityMap();
+      // for (auto sensitem : sensmap) {
+      // 	sensitem->dump();
+      // }
       xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
       LLVM_DEBUG(llvm::dbgs() << "HDL output for module constructor body\n");
       LLVM_DEBUG(h_constructor->print(llvm::dbgs()));
@@ -340,27 +345,35 @@ namespace systemc_hdl {
     // Function calls within functions get added to all methodecls.
     
     std::set<Decl *> generated_functions;
-    while (allmethodecls.size() > 0) {
+    bool addfunc = false;
+    //while (allmethodecls.size() > 0) {
+    while (allmethodecls.size()>generated_functions.size()) {
       LLVM_DEBUG(llvm::dbgs() << "Module Method/Function Map\n");
-      //std::unordered_multimap<string, FunctionDecl *> modmethodecls;
-      hfunc_name_map_t modmethodecls;
-      modmethodecls =
-        std::move(allmethodecls);  // procedures/functions found in this module
+
+      hfunc_name_map_t &modmethodecls = allmethodecls;
+      //modmethodecls =
+      //  std::move(allmethodecls);  // procedures/functions found in this module
       LLVM_DEBUG(llvm::dbgs()
 		 << "size of allmethodecls is " << allmethodecls.size() << "\n");
+      LLVM_DEBUG(allmethodecls.print(llvm::dbgs()));
       LLVM_DEBUG(llvm::dbgs()
-		 << "size of modmethodecls is " << modmethodecls.size() << "\n");
-      LLVM_DEBUG(modmethodecls.print(llvm::dbgs()));
+		 << "size of generated_functions is " << generated_functions.size() << "\n");
+      LLVM_DEBUG(llvm::dbgs()
+      	 << "size of modmethodecls is " << modmethodecls.size() << "\n");
+      //LLVM_DEBUG(modmethodecls.print(llvm::dbgs()));
       LLVM_DEBUG(HDLt.print(llvm::dbgs()));
       for (auto const &m : modmethodecls) {
+	//for (auto const &m : allmethodecls) {
 	LLVM_DEBUG(llvm::dbgs() << "Method --------\n"
-		   << m.second.newn << "\n");
+		   << m.first << " " << m.second.newn << " generatedcount is " << generated_functions.count(m.first)<< "\n");
 	LLVM_DEBUG(m.first->dump(llvm::dbgs()));
 	LLVM_DEBUG(llvm::dbgs() << "---------\n");
+	if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
+	generated_functions.insert(m.first);
 	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
 	if (m.first->hasBody()) {
-	  if (generated_functions.count(m.first) > 0) continue; // already generated this one
-	  generated_functions.insert(m.first);
+	  //if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
+	  //generated_functions.insert(m.first);
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
 	  QualType qrettype = m.first->getReturnType(); // m.first->getDeclaredReturnType();
 	  const clang::Type *rettype = qrettype.getTypePtr();
@@ -371,7 +384,7 @@ namespace systemc_hdl {
 	  HDLt2.SCtype2hcode("", te->getTemplateArgTreePtr(), NULL,
 			    hNode::hdlopsEnum::hFunctionRetType, hfunc);
 	  CXXMethodDecl * thismethod = dyn_cast<CXXMethodDecl>(m.first);
-	  bool isUserDefinedMethod = (thismethod != NULL) && (modmethodecls.methodobjtypemap.count(thismethod));
+	  bool isUserDefinedMethod = (thismethod != NULL) && (modmethodecls.methodobjtypemap.count(thismethod));//modmethodecls.methodobjtypemap.count(thismethod));
 	  if (thismethod != NULL) {
 	    LLVM_DEBUG(llvm::dbgs() << thismethod->getParent()->getQualifiedNameAsString() << " " << m.second.newn << " is a Method\n");
 	  }
@@ -384,7 +397,7 @@ namespace systemc_hdl {
 	    if (isUserDefinedMethod) { // user defined non scmodule method
 	      hNodep hthisparam = new hNode("hthis", hNode::hdlopsEnum::hFunctionParamIO);
 	      hNodep hthistype = new hNode(hNode::hdlopsEnum::hTypeinfo);
-	      const clang::Type * tp = modmethodecls.methodobjtypemap[thismethod];
+	      const clang::Type * tp = modmethodecls.methodobjtypemap[thismethod];// modmethodecls.methodobjtypemap[thismethod];
 	      if (tp == NULL) {
 		LLVM_DEBUG(llvm::dbgs() <<"Couldn't find methodobjtypemap entry for "  << thismethod << "\n");
 	      }
@@ -403,7 +416,7 @@ namespace systemc_hdl {
 	      hparams->append(hthisparam);
 	    }
 	    for (int i = 0; i < m.first->getNumParams(); i++) {
-	      VarDecl *vardecl = m.first->getParamDecl(i);
+	      ParmVarDecl *vardecl = m.first->getParamDecl(i);
 	      QualType q = vardecl->getType();
 	      const clang::Type *tp = q.getTypePtr();
 	      LLVM_DEBUG(llvm::dbgs() << "ProcessParmVarDecl type name is "
@@ -418,20 +431,21 @@ namespace systemc_hdl {
 	      //if (mutil.is_sc_macro(m.first)) paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      
         // ============= CHECK ==============
-	      bool t1 = mutil.isSCByFunctionDecl(m.first);
+	      //bool t1 = mutil.isSCByFunctionDecl(m.first);
+	      bool t1 = mutil.checkNamespace(m.first);
 	      bool t2 = mutil.isSCMacro(m.second.oldn);
 
 	      if (t1 != t2) {
-		llvm::dbgs() << "@@@@ isSCMacro does not match.  t1 = " << t1 << ", t2 = " << t2 << "  " << m.second.oldn << "\n";
-		assert(0 && "isSCMacro does not match");
+          llvm::dbgs() << "@@@@ isSCMacro does not match.  t1 = " << t1 << ", t2 = " << t2 << "  " << m.second.oldn << "\n";
+          assert(0 && "isSCMacro does not match");
 	      }
 	      // ============= END CHECK ==============
 	      //
 	      if (mutil.isSCMacro(m.second.oldn)) {
-		paramtype = hNode::hdlopsEnum::hFunctionParamI;
+          paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      }
-	      else if (vardecl->getType()->isReferenceType())
-		paramtype = hNode::hdlopsEnum::hFunctionParamIO;
+	      else if ((vardecl->getType()->isReferenceType()) && !(vardecl->getType().getNonReferenceType().isConstQualified()))
+		paramtype = hNode::hdlopsEnum::hFunctionParamRef;
 	      else { // handle actual parameter
 		
 		paramtype = hNode::hdlopsEnum::hFunctionParamI;
@@ -476,9 +490,15 @@ namespace systemc_hdl {
 		xbodyp->Run(m.first->getBody(), hfunc,rnomode);
 	      }
 	    }
+	  } // num of parameters > 0
+	  else {
+	    LLVM_DEBUG(llvm::dbgs() << " No parameters found for " << m.second.newn << "\n");
+	    hNodep htmpf = new hNode( hNode::hdlopsEnum::hCStmt);
+	    xbodyp->Run(m.first->getBody(), htmpf,rnomode);
+	    hfunc->child_list.insert(hfunc->child_list.end(), htmpf->child_list.begin(), htmpf->child_list.end());
 	  }
 	  // If this function invoked other functions, add them to the list to be generated
-	  allmethodecls.insertall(xbodyp->methodecls);
+	  allmethodecls.insertall(xbodyp->methodecls); // if a function called
 	  h_processes->child_list.push_back(hfunc);
 	  // LLVM_DEBUG(m.second->dump(llvm::dbgs()));
 	} // end non-null body
@@ -665,6 +685,7 @@ namespace systemc_hdl {
 			    hNode::hdlopsEnum h_op, hNodep &h_info, hdecl_name_map_t &mod_vname_map) {
 
     const unsigned cxx_record_id1 = main_diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark, "Pointer type not synthesized, '%0' skipped.");
+    const unsigned cxx_record_id2 = main_diag_engine.getCustomDiagID(clang::DiagnosticsEngine::Remark, "Class Constructor at module level not supported.");
     for (ModuleInstance::signalMapType::iterator mit = pmap.begin();
 	 mit != pmap.end(); mit++) {
       string objname = get<0>(*mit);
@@ -704,6 +725,12 @@ namespace systemc_hdl {
       NamedDecl * portdecl = pd->getAsVarDecl();
       if (!portdecl)
 	portdecl = pd->getAsFieldDecl();
+      else {
+	if (((VarDecl *)portdecl)->hasInit()) {
+	  clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(portdecl->getLocation(), cxx_record_id2)};
+	  diag_builder << portdecl->getName();
+	}
+      }
       // ValueDecl * vd = (ValueDecl *)portdecl;
       // LLVM_DEBUG(llvm::dbgs() << "Sig type is " << vd->getType().getAsString() << "\n");
       if (module_vars.count(objname)) {

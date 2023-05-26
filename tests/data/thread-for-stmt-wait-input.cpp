@@ -17,7 +17,7 @@ SC_MODULE(test) {
     wait();
     while (true) {
       k = 1;
-      wait();
+      wait(); // this is the troublemaker
 
       for (int i = 0; i < 2; i++) {
         k = 2;
