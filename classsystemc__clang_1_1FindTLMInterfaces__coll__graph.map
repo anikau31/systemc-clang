@@ -1,4 +1,5 @@
 <map id="systemc_clang::FindTLMInterfaces" name="systemc_clang::FindTLMInterfaces">
-<area shape="rect" id="node1" title=" " alt="" coords="5,93,231,119"/>
-<area shape="rect" id="node2" title=" " alt="" coords="28,5,208,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,94,230,120"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="28,5,207,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,61,120,93,115,93,115,61"/>
 </map>

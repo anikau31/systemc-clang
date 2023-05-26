@@ -11,5 +11,6 @@ var searchData=
   ['cppsignedchar_8',['cppsignedchar',['../classparselib_1_1primitives_1_1cppsignedchar.html',1,'parselib::primitives']]],
   ['cppuint_9',['cppuint',['../classparselib_1_1primitives_1_1cppuint.html',1,'parselib::primitives']]],
   ['cppulonglong_10',['cppulonglong',['../classparselib_1_1primitives_1_1cppulonglong.html',1,'parselib::primitives']]],
-  ['cppushort_11',['cppushort',['../classparselib_1_1primitives_1_1cppushort.html',1,'parselib::primitives']]]
+  ['cppunsignedchar_11',['cppunsignedchar',['../classparselib_1_1primitives_1_1cppunsignedchar.html',1,'parselib::primitives']]],
+  ['cppushort_12',['cppushort',['../classparselib_1_1primitives_1_1cppushort.html',1,'parselib::primitives']]]
 ];

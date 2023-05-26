@@ -1,7 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,92,63,117"/>
-<area shape="rect" id="node2" href="$classparselib_1_1compound_1_1aggregate.html" title=" " alt="" coords="111,5,301,31"/>
-<area shape="rect" id="node3" href="$classparselib_1_1primitives_1_1TypeContext.html" title=" " alt="" coords="127,55,285,95"/>
-<area shape="rect" id="node4" href="$classparselib_1_1primitives_1_1vmodule.html" title=" " alt="" coords="117,120,295,145"/>
-<area shape="rect" id="node5" href="$classparselib_1_1transforms_1_1type__node_1_1TypeNode.html" title=" " alt="" coords="127,170,285,210"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,92,62,118"/>
+<area shape="rect" id="Node000001" href="$classparselib_1_1compound_1_1aggregate.html" title=" " alt="" coords="110,5,299,31"/>
+<area shape="poly" id="edge67_Node000000_Node000001" title=" " alt="" coords="56,80,80,59,108,41,138,29,140,34,111,46,83,64,60,84"/>
+<area shape="rect" id="Node000002" href="$classparselib_1_1primitives_1_1TypeContext.html" title=" " alt="" coords="126,55,283,96"/>
+<area shape="poly" id="edge68_Node000000_Node000002" title=" " alt="" coords="76,95,125,86,126,92,77,100"/>
+<area shape="rect" id="Node000003" href="$classparselib_1_1primitives_1_1vmodule.html" title=" " alt="" coords="116,120,293,146"/>
+<area shape="poly" id="edge69_Node000000_Node000003" title=" " alt="" coords="77,109,123,117,122,122,76,114"/>
+<area shape="rect" id="Node000004" href="$classparselib_1_1transforms_1_1type__node_1_1TypeNode.html" title=" " alt="" coords="125,170,284,211"/>
+<area shape="poly" id="edge70_Node000000_Node000004" title=" " alt="" coords="64,125,111,156,136,167,134,172,108,161,61,129"/>
 </map>

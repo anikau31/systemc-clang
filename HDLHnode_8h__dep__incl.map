@@ -1,5 +1,7 @@
 <map id="plugins/hdl/HDLHnode.h" name="plugins/hdl/HDLHnode.h">
-<area shape="rect" id="node1" title=" " alt="" coords="110,5,273,31"/>
-<area shape="rect" id="node2" href="$HDLHnode_8cpp.html" title=" " alt="" coords="5,79,183,104"/>
-<area shape="rect" id="node3" href="$HDLMain_8cpp.html" title=" " alt="" coords="207,79,373,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="110,5,272,31"/>
+<area shape="rect" id="Node000002" href="$HDLHnode_8cpp.html" title=" " alt="" coords="5,79,182,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,42,111,81,108,76,161,38"/>
+<area shape="rect" id="Node000003" href="$HDLMain_8cpp.html" title=" " alt="" coords="206,79,373,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,38,275,76,271,81,218,42"/>
 </map>

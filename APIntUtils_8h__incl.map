@@ -1,6 +1,9 @@
 <map id="src/utils/APIntUtils.h" name="src/utils/APIntUtils.h">
-<area shape="rect" id="node1" title=" " alt="" coords="75,5,217,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,60,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="85,79,207,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="231,79,389,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="73,5,215,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,59,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,34,65,73,62,68,124,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="83,79,205,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="147,31,147,64,141,64,141,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="230,79,386,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,29,268,70,266,75,171,34"/>
 </map>

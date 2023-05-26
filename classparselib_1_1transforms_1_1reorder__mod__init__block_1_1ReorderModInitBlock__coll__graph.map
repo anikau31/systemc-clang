@@ -1,5 +1,7 @@
 <map id="parselib.transforms.reorder_mod_init_block.ReorderModInitBlock" name="parselib.transforms.reorder_mod_init_block.ReorderModInitBlock">
-<area shape="rect" id="node1" title=" " alt="" coords="5,167,245,207"/>
-<area shape="rect" id="node2" href="$classparselib_1_1transforms_1_1top__down_1_1TopDown.html" title=" " alt="" coords="49,79,202,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="85,5,166,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,168,245,208"/>
+<area shape="rect" id="Node000002" href="$classparselib_1_1transforms_1_1top__down_1_1TopDown.html" title=" " alt="" coords="49,79,201,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,134,128,167,122,167,122,134"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="85,5,165,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,46,128,79,122,79,122,46"/>
 </map>

@@ -1,7 +1,11 @@
 <map id="src/matchers/FindNetlist.h" name="src/matchers/FindNetlist.h">
-<area shape="rect" id="node1" title=" " alt="" coords="315,5,489,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,156,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="181,79,399,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="423,79,607,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="632,79,679,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="313,5,487,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,155,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="346,34,149,78,148,73,345,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="179,79,397,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="382,34,321,73,318,68,380,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="420,79,604,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="420,29,482,68,479,73,418,34"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="628,79,674,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="447,29,614,76,612,81,446,34"/>
 </map>

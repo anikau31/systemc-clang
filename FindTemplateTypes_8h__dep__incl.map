@@ -1,36 +1,84 @@
 <map id="src/matchers/FindTemplateTypes.h" name="src/matchers/FindTemplateTypes.h">
-<area shape="rect" id="node1" title=" " alt="" coords="756,5,937,45"/>
-<area shape="rect" id="node2" href="$FindEvents_8cpp.html" title=" " alt="" coords="38,101,229,126"/>
-<area shape="rect" id="node3" href="$FindTLMInterfaces_8cpp.html" title=" " alt="" coords="146,181,382,207"/>
-<area shape="rect" id="node4" href="$FindTLMInterfaces_8h.html" title=" " alt="" coords="303,101,526,126"/>
-<area shape="rect" id="node29" href="$FindTemplateParameters_8cpp.html" title=" " alt="" coords="551,93,732,133"/>
-<area shape="rect" id="node30" href="$FindTemplateTypes_8cpp.html" title=" " alt="" coords="756,93,937,133"/>
-<area shape="rect" id="node31" href="$EventDecl_8cpp.html" title=" " alt="" coords="962,101,1129,126"/>
-<area shape="rect" id="node32" href="$InterfaceDecl_8cpp.html" title=" " alt="" coords="1153,101,1337,126"/>
-<area shape="rect" id="node33" href="$PortDecl_8cpp.html" title=" " alt="" coords="1361,101,1519,126"/>
-<area shape="rect" id="node34" href="$SignalDecl_8cpp.html" title=" " alt="" coords="1543,101,1713,126"/>
-<area shape="rect" id="node5" href="$Matchers_8h.html" title=" " alt="" coords="439,328,606,353"/>
-<area shape="rect" id="node26" href="$ModuleInstance_8h.html" title=" " alt="" coords="506,181,691,207"/>
-<area shape="rect" id="node6" href="$SystemCClang_8h.html" title=" " alt="" coords="654,482,794,507"/>
-<area shape="rect" id="node21" href="$NetlistMatcher_8h.html" title=" " alt="" coords="356,401,553,427"/>
-<area shape="rect" id="node22" href="$Model_8h.html" title=" " alt="" coords="872,401,1000,427"/>
-<area shape="rect" id="node7" href="$HDLBody_8cpp.html" title=" " alt="" coords="1132,724,1300,749"/>
-<area shape="rect" id="node8" href="$HDLBody_8h.html" title=" " alt="" coords="781,651,936,676"/>
-<area shape="rect" id="node9" href="$HDLMain_8h.html" title=" " alt="" coords="511,724,665,749"/>
-<area shape="rect" id="node10" href="$HDLMain_8cpp.html" title=" " alt="" coords="378,797,545,823"/>
-<area shape="rect" id="node11" href="$HDLThread_8h.html" title=" " alt="" coords="776,724,941,749"/>
-<area shape="rect" id="node13" href="$HDLHnode_8h.html" title=" " alt="" coords="293,570,456,595"/>
-<area shape="rect" id="node15" href="$HDLType_8cpp.html" title=" " alt="" coords="539,651,706,676"/>
-<area shape="rect" id="node16" href="$HDLType_8h.html" title=" " alt="" coords="590,570,743,595"/>
-<area shape="rect" id="node17" href="$PluginAction_8h.html" title="This file contains the class for defining basic plugin actions." alt="" coords="819,570,946,595"/>
-<area shape="rect" id="node18" href="$SAPlugin_8h.html" title="Plugin consumer for generating suspension automata." alt="" coords="970,570,1078,595"/>
-<area shape="rect" id="node19" href="$TimeAnalysis_8h.html" title="A short example of how to use the plugin architecture." alt="" coords="1103,570,1295,595"/>
-<area shape="rect" id="node20" href="$SystemCClang_8cpp.html" title=" " alt="" coords="5,570,160,595"/>
-<area shape="rect" id="node12" href="$HDLThread_8cpp.html" title=" " alt="" coords="769,797,948,823"/>
-<area shape="rect" id="node14" href="$HDLHnode_8cpp.html" title=" " alt="" coords="286,651,463,676"/>
-<area shape="rect" id="node23" href="$GlobalSuspensionAutomata_8h.html" title=" " alt="" coords="831,475,1041,515"/>
-<area shape="rect" id="node25" href="$Model_8cpp.html" title=" " alt="" coords="1065,482,1207,507"/>
-<area shape="rect" id="node24" href="$GlobalSuspensionAutomata_8cpp.html" title=" " alt="" coords="1421,563,1630,603"/>
-<area shape="rect" id="node27" href="$PortMatcher_8h.html" title=" " alt="" coords="507,255,690,280"/>
-<area shape="rect" id="node28" href="$ModuleInstance_8cpp.html" title=" " alt="" coords="714,255,913,280"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="748,5,928,46"/>
+<area shape="rect" id="Node000002" href="$FindEvents_8cpp.html" title=" " alt="" coords="34,102,224,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="733,40,507,64,242,97,198,103,197,98,242,91,507,58,733,34"/>
+<area shape="rect" id="Node000003" href="$FindTLMInterfaces_8cpp.html" title=" " alt="" coords="140,183,376,208"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="733,29,613,32,481,42,419,51,364,63,319,78,288,96,273,115,264,139,260,182,255,182,259,138,268,113,284,92,317,73,363,57,418,46,481,37,613,27,733,24"/>
+<area shape="rect" id="Node000004" href="$FindTLMInterfaces_8h.html" title=" " alt="" coords="298,102,519,127"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="734,51,470,103,469,98,733,45"/>
+<area shape="rect" id="Node000029" href="$FindTemplateParameters_8cpp.html" title=" " alt="" coords="544,94,724,135"/>
+<area shape="poly" id="edge43_Node000001_Node000029" title=" " alt="" coords="779,55,681,96,679,91,777,50"/>
+<area shape="rect" id="Node000030" href="$FindTemplateTypes_8cpp.html" title=" " alt="" coords="748,94,928,135"/>
+<area shape="poly" id="edge44_Node000001_Node000030" title=" " alt="" coords="841,61,841,94,835,94,835,61"/>
+<area shape="rect" id="Node000031" href="$EventDecl_8cpp.html" title=" " alt="" coords="953,102,1118,127"/>
+<area shape="poly" id="edge45_Node000001_Node000031" title=" " alt="" coords="897,50,1009,99,1007,103,895,55"/>
+<area shape="rect" id="Node000032" href="$InterfaceDecl_8cpp.html" title=" " alt="" coords="1142,102,1326,127"/>
+<area shape="poly" id="edge46_Node000001_Node000032" title=" " alt="" coords="943,47,1179,98,1178,103,942,52"/>
+<area shape="rect" id="Node000033" href="$PortDecl_8cpp.html" title=" " alt="" coords="1349,102,1506,127"/>
+<area shape="poly" id="edge47_Node000001_Node000033" title=" " alt="" coords="944,36,1128,59,1338,91,1374,98,1373,103,1338,97,1127,65,943,41"/>
+<area shape="rect" id="Node000034" href="$SignalDecl_8cpp.html" title=" " alt="" coords="1530,102,1698,127"/>
+<area shape="poly" id="edge48_Node000001_Node000034" title=" " alt="" coords="943,32,1205,54,1362,71,1518,91,1558,98,1557,104,1518,97,1361,76,1205,59,943,37"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="374,137,282,184,280,180,372,132"/>
+<area shape="rect" id="Node000005" href="$Matchers_8h.html" title=" " alt="" coords="434,330,599,356"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="421,140,446,205,482,281,511,328,506,331,477,283,442,207,416,142"/>
+<area shape="rect" id="Node000026" href="$ModuleInstance_8h.html" title=" " alt="" coords="499,183,684,208"/>
+<area shape="poly" id="edge37_Node000004_Node000026" title=" " alt="" coords="451,131,565,180,562,185,449,136"/>
+<area shape="rect" id="Node000006" href="$SystemCClang_8h.html" title=" " alt="" coords="648,485,788,511"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="546,363,704,482,701,487,542,367"/>
+<area shape="rect" id="Node000021" href="$NetlistMatcher_8h.html" title=" " alt="" coords="351,404,547,429"/>
+<area shape="poly" id="edge30_Node000005_Node000021" title=" " alt="" coords="497,368,462,405,458,401,494,364"/>
+<area shape="rect" id="Node000022" href="$Model_8h.html" title=" " alt="" coords="865,404,992,429"/>
+<area shape="poly" id="edge32_Node000005_Node000022" title=" " alt="" coords="602,356,865,401,864,407,601,361"/>
+<area shape="rect" id="Node000007" href="$HDLBody_8cpp.html" title=" " alt="" coords="1124,728,1291,754"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="788,511,813,515,912,520,1077,527,1239,539,1297,550,1317,556,1329,564,1342,587,1342,611,1332,635,1315,658,1270,700,1228,730,1225,726,1267,696,1311,655,1327,632,1337,610,1337,588,1325,568,1315,561,1296,555,1238,544,1077,532,911,526,812,521,787,516"/>
+<area shape="rect" id="Node000008" href="$HDLBody_8h.html" title=" " alt="" coords="776,655,929,680"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="738,521,803,605,844,652,840,656,799,608,733,524"/>
+<area shape="rect" id="Node000009" href="$HDLMain_8h.html" title=" " alt="" coords="507,728,660,754"/>
+<area shape="poly" id="edge19_Node000006_Node000009" title=" " alt="" coords="653,518,607,538,565,568,540,594,524,620,518,647,526,679,544,706,567,726,563,730,540,709,521,681,513,647,519,618,536,591,562,564,604,533,651,513"/>
+<area shape="rect" id="Node000010" href="$HDLMain_8cpp.html" title=" " alt="" coords="375,802,541,828"/>
+<area shape="poly" id="edge18_Node000006_Node000010" title=" " alt="" coords="634,503,538,508,433,519,340,539,305,552,281,568,263,590,252,613,247,637,248,661,255,685,268,708,285,731,306,752,328,768,352,781,401,799,399,804,350,786,325,772,303,756,281,734,263,711,251,687,243,662,242,637,247,612,258,587,278,564,303,547,339,533,432,514,537,503,634,498"/>
+<area shape="rect" id="Node000011" href="$HDLThread_8h.html" title=" " alt="" coords="771,728,935,754"/>
+<area shape="poly" id="edge20_Node000006_Node000011" title=" " alt="" coords="788,511,813,515,906,521,1062,527,1215,540,1270,550,1288,557,1300,564,1316,586,1323,607,1321,626,1311,643,1295,658,1273,672,1217,694,1148,711,1073,724,935,738,935,733,1073,718,1147,706,1215,689,1271,667,1292,654,1307,640,1316,624,1317,608,1311,589,1296,568,1286,561,1268,555,1214,545,1062,533,906,526,812,521,787,516"/>
+<area shape="rect" id="Node000013" href="$HDLHnode_8h.html" title=" " alt="" coords="292,574,454,599"/>
+<area shape="poly" id="edge15_Node000006_Node000013" title=" " alt="" coords="656,517,422,576,421,570,654,512"/>
+<area shape="rect" id="Node000015" href="$HDLType_8cpp.html" title=" " alt="" coords="535,655,701,680"/>
+<area shape="poly" id="edge21_Node000006_Node000015" title=" " alt="" coords="645,518,606,538,590,551,576,567,572,578,571,589,578,613,592,635,608,653,604,656,588,638,573,615,566,590,567,577,572,565,586,547,603,533,642,513"/>
+<area shape="rect" id="Node000016" href="$HDLType_8h.html" title=" " alt="" coords="586,574,738,599"/>
+<area shape="poly" id="edge22_Node000006_Node000016" title=" " alt="" coords="705,524,672,575,667,572,700,521"/>
+<area shape="rect" id="Node000017" href="$PluginAction_8h.html" title="This file contains the class for defining basic plugin actions." alt="" coords="812,574,939,599"/>
+<area shape="poly" id="edge26_Node000006_Node000017" title=" " alt="" coords="754,516,855,571,852,575,752,520"/>
+<area shape="rect" id="Node000018" href="$SAPlugin_8h.html" title="Plugin consumer for generating suspension automata." alt="" coords="963,574,1070,599"/>
+<area shape="poly" id="edge27_Node000006_Node000018" title=" " alt="" coords="775,513,975,570,974,575,773,518"/>
+<area shape="rect" id="Node000019" href="$TimeAnalysis_8h.html" title="A short example of how to use the plugin architecture." alt="" coords="1094,574,1286,599"/>
+<area shape="poly" id="edge28_Node000006_Node000019" title=" " alt="" coords="792,511,813,515,1122,570,1121,575,812,521,791,517"/>
+<area shape="rect" id="Node000020" href="$SystemCClang_8cpp.html" title=" " alt="" coords="5,574,159,599"/>
+<area shape="poly" id="edge29_Node000006_Node000020" title=" " alt="" coords="634,510,426,534,178,569,140,575,139,570,178,563,426,529,633,505"/>
+<area shape="poly" id="edge9_Node000008_Node000007" title=" " alt="" coords="928,681,1148,725,1146,730,927,686"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="794,687,630,730,629,725,792,682"/>
+<area shape="poly" id="edge12_Node000008_Node000011" title=" " alt="" coords="855,695,855,728,850,728,850,695"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="551,764,481,804,478,799,548,759"/>
+<area shape="poly" id="edge13_Node000011_Node000010" title=" " alt="" coords="772,760,526,804,525,799,771,755"/>
+<area shape="rect" id="Node000012" href="$HDLThread_8cpp.html" title=" " alt="" coords="764,802,942,828"/>
+<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="855,769,855,802,850,802,850,769"/>
+<area shape="poly" id="edge17_Node000013_Node000010" title=" " alt="" coords="329,608,304,622,283,639,272,658,272,668,275,679,289,701,306,721,346,755,389,781,427,799,425,804,387,786,343,760,302,725,285,704,270,681,266,669,267,657,279,635,301,618,326,603"/>
+<area shape="rect" id="Node000014" href="$HDLHnode_8cpp.html" title=" " alt="" coords="285,655,461,680"/>
+<area shape="poly" id="edge16_Node000013_Node000014" title=" " alt="" coords="375,614,375,654,370,654,370,614"/>
+<area shape="poly" id="edge23_Node000016_Node000008" title=" " alt="" coords="705,603,825,652,823,657,703,608"/>
+<area shape="poly" id="edge24_Node000016_Node000009" title=" " alt="" coords="689,607,704,623,715,642,720,662,715,682,701,699,683,712,644,730,642,725,680,708,697,695,710,679,715,662,711,644,700,627,685,611"/>
+<area shape="poly" id="edge25_Node000016_Node000015" title=" " alt="" coords="651,614,627,655,622,653,646,611"/>
+<area shape="poly" id="edge31_Node000021_Node000020" title=" " alt="" coords="410,438,110,575,108,570,408,433"/>
+<area shape="poly" id="edge35_Node000022_Node000006" title=" " alt="" coords="884,437,751,487,750,482,882,432"/>
+<area shape="rect" id="Node000023" href="$GlobalSuspensionAutomata_8h.html" title=" " alt="" coords="825,477,1033,518"/>
+<area shape="poly" id="edge33_Node000022_Node000023" title=" " alt="" coords="931,444,931,477,926,477,926,444"/>
+<area shape="rect" id="Node000025" href="$Model_8cpp.html" title=" " alt="" coords="1057,485,1198,511"/>
+<area shape="poly" id="edge36_Node000022_Node000025" title=" " alt="" coords="974,433,1098,482,1096,487,972,438"/>
+<area shape="rect" id="Node000024" href="$GlobalSuspensionAutomata_8cpp.html" title=" " alt="" coords="1411,566,1620,607"/>
+<area shape="poly" id="edge34_Node000023_Node000024" title=" " alt="" coords="1048,516,1393,563,1411,566,1411,571,1392,569,1047,521"/>
+<area shape="poly" id="edge38_Node000026_Node000005" title=" " alt="" coords="540,217,512,234,491,258,486,276,490,295,509,329,505,331,485,297,481,276,486,255,509,230,537,212"/>
+<area shape="poly" id="edge41_Node000026_Node000022" title=" " alt="" coords="699,200,764,207,829,217,883,233,904,243,919,255,931,272,939,292,944,335,941,374,935,404,929,403,936,374,939,335,933,294,926,275,915,258,901,247,881,238,827,223,763,212,698,205"/>
+<area shape="rect" id="Node000027" href="$PortMatcher_8h.html" title=" " alt="" coords="500,256,683,282"/>
+<area shape="poly" id="edge39_Node000026_Node000027" title=" " alt="" coords="594,223,594,256,589,256,589,223"/>
+<area shape="rect" id="Node000028" href="$ModuleInstance_8cpp.html" title=" " alt="" coords="707,256,905,282"/>
+<area shape="poly" id="edge42_Node000026_Node000028" title=" " alt="" coords="642,211,770,253,769,258,641,216"/>
+<area shape="poly" id="edge40_Node000027_Node000005" title=" " alt="" coords="570,294,531,332,527,328,566,291"/>
 </map>

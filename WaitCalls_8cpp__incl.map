@@ -1,12 +1,25 @@
 <map id="src/model/WaitCalls.cpp" name="src/model/WaitCalls.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="409,5,571,31"/>
-<area shape="rect" id="node2" href="$WaitCalls_8h.html" title="Stores the data members found in a class." alt="" coords="253,79,340,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="557,299,708,324"/>
-<area shape="rect" id="node3" href="$FindWait_8h.html" title=" " alt="" coords="255,152,338,177"/>
-<area shape="rect" id="node9" title=" " alt="" coords="5,299,60,324"/>
-<area shape="rect" id="node4" href="$WaitContainer_8h.html" title=" " alt="" coords="145,225,259,251"/>
-<area shape="rect" id="node7" title=" " alt="" coords="349,299,533,324"/>
-<area shape="rect" id="node8" title=" " alt="" coords="84,299,131,324"/>
-<area shape="rect" id="node10" title=" " alt="" coords="283,225,502,251"/>
-<area shape="rect" id="node6" title=" " alt="" coords="155,299,324,324"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="406,5,567,31"/>
+<area shape="rect" id="Node000002" href="$WaitCalls_8h.html" title="Stores the data members found in a class." alt="" coords="250,79,337,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="455,34,341,76,339,71,453,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="553,300,703,326"/>
+<area shape="poly" id="edge13_Node000001_Node000005" title=" " alt="" coords="495,30,618,286,614,288,490,32"/>
+<area shape="rect" id="Node000003" href="$FindWait_8h.html" title=" " alt="" coords="252,153,335,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="296,105,296,138,291,138,291,105"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="5,300,59,326"/>
+<area shape="poly" id="edge12_Node000002_Node000009" title=" " alt="" coords="276,107,201,157,111,228,52,291,49,287,108,224,198,153,273,103"/>
+<area shape="rect" id="Node000004" href="$WaitContainer_8h.html" title=" " alt="" coords="143,226,255,252"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="279,181,228,219,225,215,276,177"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="346,300,529,326"/>
+<area shape="poly" id="edge10_Node000003_Node000007" title=" " alt="" coords="335,170,436,190,482,205,500,214,512,225,517,244,510,263,494,280,475,294,471,290,490,276,505,260,512,244,507,228,497,219,480,210,435,195,334,175"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="82,300,129,326"/>
+<area shape="poly" id="edge11_Node000003_Node000008" title=" " alt="" coords="252,174,190,191,159,207,133,228,117,256,110,285,104,284,112,254,129,225,156,202,188,186,251,169"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="279,226,497,252"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="311,177,362,215,359,219,308,181"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="256,247,268,249,541,294,540,300,268,255,255,253"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="153,300,322,326"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="207,251,226,286,222,288,203,253"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="240,250,384,293,382,298,238,255"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="184,255,134,293,131,289,181,250"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="171,255,73,297,71,292,169,250"/>
 </map>

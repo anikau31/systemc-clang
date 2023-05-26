@@ -1,5 +1,7 @@
 <map id="src/model/NotifyContainer.h" name="src/model/NotifyContainer.h">
-<area shape="rect" id="node1" title=" " alt="" coords="156,5,339,31"/>
-<area shape="rect" id="node2" href="$EntryFunctionContainer_8cpp.html" title=" " alt="" coords="5,79,247,104"/>
-<area shape="rect" id="node3" href="$NotifyContainer_8cpp.html" title=" " alt="" coords="271,79,467,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="155,5,336,31"/>
+<area shape="rect" id="Node000002" href="$EntryFunctionContainer_8cpp.html" title=" " alt="" coords="5,79,246,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,41,147,81,145,76,211,37"/>
+<area shape="rect" id="Node000003" href="$NotifyContainer_8cpp.html" title=" " alt="" coords="269,79,465,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="280,37,347,76,345,81,277,41"/>
 </map>

@@ -1,13 +1,29 @@
 <map id="plugins/hdl/hNode.h" name="plugins/hdl/hNode.h">
-<area shape="rect" id="node1" title=" " alt="" coords="256,5,392,31"/>
-<area shape="rect" id="node2" href="$HDLBody_8h.html" title=" " alt="" coords="132,152,287,177"/>
-<area shape="rect" id="node4" href="$HDLMain_8h.html" title=" " alt="" coords="394,225,547,251"/>
-<area shape="rect" id="node6" href="$HDLThread_8h.html" title=" " alt="" coords="12,225,177,251"/>
-<area shape="rect" id="node8" href="$HDLHnode_8h.html" title=" " alt="" coords="604,79,767,104"/>
-<area shape="rect" id="node10" href="$HDLType_8h.html" title=" " alt="" coords="247,79,401,104"/>
-<area shape="rect" id="node3" href="$HDLBody_8cpp.html" title=" " alt="" coords="201,225,369,251"/>
-<area shape="rect" id="node5" href="$HDLMain_8cpp.html" title=" " alt="" coords="387,299,554,324"/>
-<area shape="rect" id="node7" href="$HDLThread_8cpp.html" title=" " alt="" coords="5,299,184,324"/>
-<area shape="rect" id="node9" href="$HDLHnode_8cpp.html" title=" " alt="" coords="655,152,833,177"/>
-<area shape="rect" id="node11" href="$HDLType_8cpp.html" title=" " alt="" coords="362,152,529,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="256,5,392,31"/>
+<area shape="rect" id="Node000002" href="$HDLBody_8h.html" title=" " alt="" coords="133,153,286,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="286,41,260,58,238,81,228,99,220,118,213,153,208,151,215,117,223,96,234,77,257,54,283,36"/>
+<area shape="rect" id="Node000004" href="$HDLMain_8h.html" title=" " alt="" coords="392,226,544,252"/>
+<area shape="poly" id="edge11_Node000001_Node000004" title=" " alt="" coords="380,34,422,52,467,77,508,110,541,151,545,163,544,175,533,196,513,214,492,228,489,223,510,210,528,193,539,173,540,164,536,154,505,113,464,81,420,56,378,39"/>
+<area shape="rect" id="Node000006" href="$HDLThread_8h.html" title=" " alt="" coords="12,226,177,252"/>
+<area shape="poly" id="edge12_Node000001_Node000006" title=" " alt="" coords="279,40,240,58,197,84,156,116,122,154,105,192,98,226,93,225,100,190,118,151,153,112,194,79,237,54,277,35"/>
+<area shape="rect" id="Node000008" href="$HDLHnode_8h.html" title=" " alt="" coords="601,79,764,105"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="400,32,622,76,621,81,399,37"/>
+<area shape="rect" id="Node000010" href="$HDLType_8h.html" title=" " alt="" coords="248,79,400,105"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="327,46,327,79,321,79,321,46"/>
+<area shape="rect" id="Node000003" href="$HDLBody_8cpp.html" title=" " alt="" coords="200,226,368,252"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="234,187,273,224,270,228,230,191"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="268,180,424,223,423,228,266,185"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="179,189,115,228,113,223,176,184"/>
+<area shape="rect" id="Node000005" href="$HDLMain_8cpp.html" title=" " alt="" coords="385,300,551,326"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="471,267,471,300,465,300,465,267"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="173,253,405,297,404,302,172,258"/>
+<area shape="rect" id="Node000007" href="$HDLThread_8cpp.html" title=" " alt="" coords="5,300,184,326"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="97,267,97,300,92,300,92,267"/>
+<area shape="poly" id="edge10_Node000008_Node000005" title=" " alt="" coords="667,118,611,192,558,254,523,281,491,302,488,297,520,277,554,250,607,189,663,115"/>
+<area shape="rect" id="Node000009" href="$HDLHnode_8cpp.html" title=" " alt="" coords="652,153,828,178"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="703,114,732,151,728,154,699,118"/>
+<area shape="poly" id="edge14_Node000010_Node000002" title=" " alt="" coords="293,115,230,154,227,150,291,111"/>
+<area shape="poly" id="edge15_Node000010_Node000004" title=" " alt="" coords="329,119,336,148,351,177,367,192,386,205,426,223,423,228,383,210,364,196,347,180,331,150,324,120"/>
+<area shape="rect" id="Node000011" href="$HDLType_8cpp.html" title=" " alt="" coords="361,153,527,178"/>
+<area shape="poly" id="edge16_Node000010_Node000011" title=" " alt="" coords="358,110,425,150,422,154,355,115"/>
 </map>

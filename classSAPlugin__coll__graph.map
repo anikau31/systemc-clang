@@ -1,9 +1,15 @@
 <map id="SAPlugin" name="SAPlugin">
-<area shape="rect" id="node1" title=" " alt="" coords="189,359,265,384"/>
-<area shape="rect" id="node2" href="$classsystemc__clang_1_1SystemCConsumer.html" title="This is the main consumer class that beings the parsing of SystemC." alt="" coords="113,284,340,309"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,189,112,214"/>
-<area shape="rect" id="node4" title=" " alt="" coords="137,181,317,221"/>
-<area shape="rect" id="node5" href="$classsystemc__clang_1_1Model.html" title=" " alt="" coords="341,189,491,214"/>
-<area shape="rect" id="node6" href="$classsystemc__clang_1_1ModuleInstance.html" title="Forward declarations." alt="" coords="313,93,519,119"/>
-<area shape="rect" id="node7" href="$structsc__ast__matchers_1_1ModuleInstanceType.html" title=" " alt="" coords="292,5,540,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="188,361,263,387"/>
+<area shape="rect" id="Node000002" href="$classsystemc__clang_1_1SystemCConsumer.html" title="This is the main consumer class that beings the parsing of SystemC." alt="" coords="112,286,338,312"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,327,228,361,223,361,223,327"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,190,112,216"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,221,205,284,202,288,91,226"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="136,183,315,223"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="228,238,228,286,223,286,223,238"/>
+<area shape="rect" id="Node000005" href="$classsystemc__clang_1_1Model.html" title=" " alt="" coords="339,190,488,216"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="377,225,250,288,248,283,375,220"/>
+<area shape="rect" id="Node000006" href="$classsystemc__clang_1_1ModuleInstance.html" title="Forward declarations." alt="" coords="310,94,516,120"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="416,134,416,190,411,190,411,134"/>
+<area shape="rect" id="Node000007" href="$structsc__ast__matchers_1_1ModuleInstanceType.html" title=" " alt="" coords="290,5,537,31"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="416,46,416,94,411,94,411,46"/>
 </map>

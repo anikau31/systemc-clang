@@ -1,4 +1,5 @@
 <map id="src/model/WaitCalls.h" name="src/model/WaitCalls.h">
-<area shape="rect" id="node1" title="Stores the data members found in a class." alt="" coords="13,5,161,31"/>
-<area shape="rect" id="node2" href="$WaitCalls_8cpp.html" title=" " alt="" coords="5,79,168,104"/>
+<area shape="rect" id="Node000001" title="Stores the data members found in a class." alt="" coords="12,5,160,31"/>
+<area shape="rect" id="Node000002" href="$WaitCalls_8cpp.html" title=" " alt="" coords="5,79,167,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,46,89,79,83,79,83,46"/>
 </map>

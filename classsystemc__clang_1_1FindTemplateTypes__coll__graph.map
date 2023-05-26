@@ -1,8 +1,14 @@
 <map id="systemc_clang::FindTemplateTypes" name="systemc_clang::FindTemplateTypes">
-<area shape="rect" id="node1" title=" " alt="" coords="987,37,1181,77"/>
-<area shape="rect" id="node2" title=" " alt="" coords="622,5,802,45"/>
-<area shape="rect" id="node3" href="$classsystemc__clang_1_1Tree.html" title=" " alt="" coords="603,69,821,109"/>
-<area shape="rect" id="node4" href="$classsystemc__clang_1_1TreeNode.html" title=" " alt="" coords="303,69,521,109"/>
-<area shape="rect" id="node5" href="$classsystemc__clang_1_1TemplateType.html" title=" " alt="" coords="8,33,205,58"/>
-<area shape="rect" id="node6" href="$classsystemc__clang_1_1TreeNode.html" title="class TreeNode&lt;T&gt;" alt="" coords="5,121,208,146"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="981,37,1175,78"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="619,5,798,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="813,32,958,44,981,46,981,52,957,50,812,37"/>
+<area shape="rect" id="Node000003" href="$classsystemc__clang_1_1Tree.html" title=" " alt="" coords="599,71,817,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="832,88,957,80,983,76,983,81,958,85,832,93"/>
+<area shape="rect" id="Node000004" href="$classsystemc__clang_1_1TreeNode.html" title=" " alt="" coords="301,71,519,111"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="534,88,598,88,598,94,534,94"/>
+<area shape="rect" id="Node000005" href="$classsystemc__clang_1_1TemplateType.html" title=" " alt="" coords="8,34,204,60"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="214,60,301,73,300,78,213,65"/>
+<area shape="rect" id="Node000006" href="$classsystemc__clang_1_1TreeNode.html" title="class TreeNode&lt;T&gt;" alt="" coords="5,124,207,149"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="211,118,300,105,301,110,212,123"/>
+<area shape="poly" id="edge6_Node000006_Node000006" title=" " alt="" coords="78,107,87,100,106,97,123,99,133,105,136,115,131,124,127,122,131,114,129,109,121,104,106,102,89,105,81,111"/>
 </map>

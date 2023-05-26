@@ -1,9 +1,15 @@
 <map id="systemc_clang::SystemCConsumer" name="systemc_clang::SystemCConsumer">
-<area shape="rect" id="node1" title="This is the main consumer class that beings the parsing of SystemC." alt="" coords="129,93,355,119"/>
-<area shape="rect" id="node4" href="$classSAPlugin.html" title=" " alt="" coords="5,167,81,192"/>
-<area shape="rect" id="node5" href="$classTimeAnalysis.html" title=" " alt="" coords="105,167,205,192"/>
-<area shape="rect" id="node6" href="$classsystemc__clang_1_1SystemCClang.html" title=" " alt="" coords="229,167,431,192"/>
-<area shape="rect" id="node7" href="$classsystemc__hdl_1_1HDLMain.html" title=" " alt="" coords="455,167,611,192"/>
-<area shape="rect" id="node2" title=" " alt="" coords="105,13,211,38"/>
-<area shape="rect" id="node3" title=" " alt="" coords="236,5,416,45"/>
+<area shape="rect" id="Node000001" title="This is the main consumer class that beings the parsing of SystemC." alt="" coords="129,94,355,120"/>
+<area shape="rect" id="Node000004" href="$classSAPlugin.html" title=" " alt="" coords="5,168,81,193"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="195,128,78,170,76,165,193,123"/>
+<area shape="rect" id="Node000005" href="$classTimeAnalysis.html" title=" " alt="" coords="105,168,205,193"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="217,131,171,169,168,165,214,127"/>
+<area shape="rect" id="Node000006" href="$classsystemc__clang_1_1SystemCClang.html" title=" " alt="" coords="228,168,429,193"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="269,127,316,165,312,169,266,131"/>
+<area shape="rect" id="Node000007" href="$classsystemc__hdl_1_1HDLMain.html" title=" " alt="" coords="452,168,607,193"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="305,121,481,164,480,170,304,126"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="106,13,212,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,47,231,92,227,95,180,51"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="236,5,415,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="296,58,256,95,253,91,293,54"/>
 </map>

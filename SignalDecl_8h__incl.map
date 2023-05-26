@@ -1,5 +1,8 @@
 <map id="src/model/SignalDecl.h" name="src/model/SignalDecl.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,160,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="55,152,110,177"/>
-<area shape="rect" id="node3" href="$PortDecl_8h.html" title=" " alt="" coords="81,79,164,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,160,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="56,153,109,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,32,74,65,72,104,78,138,73,139,67,105,68,64,76,31"/>
+<area shape="rect" id="Node000003" href="$PortDecl_8h.html" title=" " alt="" coords="82,79,163,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="91,30,111,65,106,67,87,33"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="118,106,99,141,94,138,114,104"/>
 </map>

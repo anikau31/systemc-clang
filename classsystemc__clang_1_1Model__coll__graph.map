@@ -1,5 +1,7 @@
 <map id="systemc_clang::Model" name="systemc_clang::Model">
-<area shape="rect" id="node1" title=" " alt="" coords="54,181,205,207"/>
-<area shape="rect" id="node2" href="$classsystemc__clang_1_1ModuleInstance.html" title="Forward declarations." alt="" coords="26,93,233,119"/>
-<area shape="rect" id="node3" href="$structsc__ast__matchers_1_1ModuleInstanceType.html" title=" " alt="" coords="5,5,253,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="54,183,204,208"/>
+<area shape="rect" id="Node000002" href="$classsystemc__clang_1_1ModuleInstance.html" title="Forward declarations." alt="" coords="26,94,232,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,134,132,182,126,182,126,134"/>
+<area shape="rect" id="Node000003" href="$structsc__ast__matchers_1_1ModuleInstanceType.html" title=" " alt="" coords="5,5,253,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="132,46,132,94,126,94,126,46"/>
 </map>

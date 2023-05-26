@@ -1,8 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,141,84,166"/>
-<area shape="rect" id="node2" href="$classparselib_1_1grammar_1_1UnexpectedHCodeStructureError.html" title=" " alt="" coords="149,5,342,45"/>
-<area shape="rect" id="node3" href="$classsystemc-clang_1_1InvalidCommandlineFormat.html" title=" " alt="" coords="132,69,359,109"/>
-<area shape="rect" id="node4" href="$classsystemc-clang_1_1MissingSystemCClang.html" title=" " alt="" coords="146,133,345,173"/>
-<area shape="rect" id="node5" href="$classsystemc-clang_1_1SystemCClangFatalError.html" title=" " alt="" coords="148,197,343,237"/>
-<area shape="rect" id="node6" href="$classsystemc-clang_1_1UnconfiguredEnvironment.html" title=" " alt="" coords="153,261,338,301"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,144,83,169"/>
+<area shape="rect" id="Node000001" href="$classparselib_1_1grammar_1_1UnexpectedHCodeStructureError.html" title=" " alt="" coords="147,5,340,46"/>
+<area shape="poly" id="edge29_Node000000_Node000001" title=" " alt="" coords="59,129,89,92,129,57,154,44,156,49,132,61,93,96,63,133"/>
+<area shape="rect" id="Node000002" href="$classsystemc-clang_1_1InvalidCommandlineFormat.html" title=" " alt="" coords="131,71,356,111"/>
+<area shape="poly" id="edge30_Node000000_Node000002" title=" " alt="" coords="92,135,130,122,168,109,170,115,132,127,94,140"/>
+<area shape="rect" id="Node000003" href="$classsystemc-clang_1_1MissingSystemCClang.html" title=" " alt="" coords="145,136,342,177"/>
+<area shape="poly" id="edge31_Node000000_Node000003" title=" " alt="" coords="98,154,144,154,144,159,98,159"/>
+<area shape="rect" id="Node000004" href="$classsystemc-clang_1_1SystemCClangFatalError.html" title=" " alt="" coords="146,201,341,242"/>
+<area shape="poly" id="edge32_Node000000_Node000004" title=" " alt="" coords="94,172,132,186,170,198,168,203,130,191,92,177"/>
+<area shape="rect" id="Node000005" href="$classsystemc-clang_1_1UnconfiguredEnvironment.html" title=" " alt="" coords="151,267,336,307"/>
+<area shape="poly" id="edge33_Node000000_Node000005" title=" " alt="" coords="63,180,93,217,132,251,156,264,154,269,129,256,89,221,59,183"/>
 </map>

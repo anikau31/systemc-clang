@@ -1,4 +1,5 @@
 <map id="systemc_clang::ProcessDecl" name="systemc_clang::ProcessDecl">
-<area shape="rect" id="node1" title=" " alt="" coords="8,108,197,133"/>
-<area shape="rect" id="node2" href="$classsystemc__clang_1_1EntryFunctionContainer.html" title=" " alt="" coords="5,5,200,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="8,109,196,135"/>
+<area shape="rect" id="Node000002" href="$classsystemc__clang_1_1EntryFunctionContainer.html" title=" " alt="" coords="5,5,199,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,61,105,109,99,109,99,61"/>
 </map>

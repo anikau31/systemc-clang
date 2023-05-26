@@ -1,10 +1,17 @@
 <map id="src/cfg/SplitCFG.h" name="src/cfg/SplitCFG.h">
-<area shape="rect" id="node1" title=" " alt="" coords="309,5,438,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="98,79,209,104"/>
-<area shape="rect" id="node3" href="$SplitCFGBlock_8h.html" title=" " alt="" coords="233,79,351,104"/>
-<area shape="rect" id="node7" title=" " alt="" coords="375,79,537,104"/>
-<area shape="rect" id="node8" title=" " alt="" coords="561,79,721,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,159,152,185"/>
-<area shape="rect" id="node5" title=" " alt="" coords="177,159,407,185"/>
-<area shape="rect" id="node6" title=" " alt="" coords="432,152,635,192"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="308,5,436,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="98,79,208,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="336,34,205,77,203,71,334,29"/>
+<area shape="rect" id="Node000003" href="$SplitCFGBlock_8h.html" title=" " alt="" coords="232,79,349,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="360,34,317,71,313,67,356,30"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="373,79,533,105"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="387,30,430,67,427,71,384,34"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="558,79,717,105"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="418,29,579,72,577,77,416,34"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,160,152,186"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="259,108,126,157,124,152,257,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="175,160,406,186"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="293,105,293,145,288,145,288,105"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="429,153,632,193"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="328,103,458,145,456,150,327,108"/>
 </map>
