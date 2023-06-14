@@ -482,10 +482,8 @@ namespace systemc_hdl {
       hp->child_list.push_back(new hNode("always", hNode::hdlopsEnum::hNoop));
     };
     
-    if (hnewsens.size()>0) hnewsens.back()->child_list.push_back(hp);
-    else {
-      hnewsens.push_back(hp);
-    }
+    hnewsens.back()->child_list.push_back(hp);
+ 
   }
   
   void HDLConstructorHcode::HDLLoop(hNodep &hp, std::vector<for_info_t> &for_info ) {
