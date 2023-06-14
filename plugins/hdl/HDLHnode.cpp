@@ -154,16 +154,25 @@ namespace systemc_hdl {
   string HDLConstructorHcode::ExtractModuleName(hNodep hp) {
     string tmpstr;
     if (hp == NULL) return "";
-    if (hp->getopc() == hNode::hdlopsEnum::hVarref) {
-      tmpstr = hp->getname();
-      hp->set(tmpstr.substr(tmpstr.find(fielddelim)+fielddelim.size()));
-      return tmpstr.substr(0, tmpstr.find(fielddelim));
+    if ((hp->getopc() == hNode::hdlopsEnum::hBinop) && (hp->getname() == "ARRAYSUBSCRIPT")) {
+      return ExtractModuleName(hp->child_list[0]);
     }
-    for (auto hp1: hp->child_list) {
-      tmpstr = ExtractModuleName(hp1);
-      if (tmpstr!="") return tmpstr;
+    else if (hp->getopc() == hNode::hdlopsEnum::hVarref) {
+      if (hp->size() == 0) {
+	tmpstr = hp->getname();
+	int delimix = tmpstr.find(fielddelim);
+	if (delimix != string::npos) {
+	  hp->set(tmpstr.substr(tmpstr.find(fielddelim)+fielddelim.size()));
+	  return tmpstr.substr(0, tmpstr.find(fielddelim));
+	}
+	else return tmpstr;
+      }
+      else {  // Varref with child node(s)
+	return ExtractModuleName(hp->child_list[0]);
+      }
     }
     return "";
+   
   }
   
   // Generate a port binding
@@ -220,7 +229,7 @@ namespace systemc_hdl {
   void HDLConstructorHcode::UnrollBinding(hNodep &hp_orig, std::vector<for_info_t> &for_info) {
     
     assert ((hp_orig->h_op == hNode::hdlopsEnum::hBinop) && (hp_orig->h_name == pbstring));
-    hp_orig->set(hNode::hdlopsEnum::hPortbinding);
+    hp_orig->set(hNode::hdlopsEnum::hPortbinding, ExtractModuleName(hp_orig->child_list[0]));
     hnewpb->append(hp_orig);
     return;
     
