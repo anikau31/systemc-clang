@@ -332,19 +332,26 @@ namespace systemc_hdl {
   bool HDLBody::ProcessVarDecl(VarDecl *vardecl) {
     LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl var name is " << vardecl->getName()
 	       << "\n");
-    // create head node for the vardecl
-    hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
-
+ 
     QualType q = vardecl->getType();
     const Type *tp = q.getTypePtr();
     LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl type name is " << q.getAsString()
 	       << "\n");
+    // if (q.getAsString()=="::sc_core::sc_process_handle") { // simulation variable
+    //   h_ret = NULL;
+    //   return true; 
+    // }
+
     FindTemplateTypes *te = new FindTemplateTypes();
 
     te->Enumerate(tp);
     HDLType HDLt;
     std::vector<llvm::APInt> array_sizes =
       sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
+    
+    // create head node for the vardecl
+    hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
+
     HDLt.SCtype2hcode(generate_vname(vardecl->getName().str()),
 		      te->getTemplateArgTreePtr(), &array_sizes,
 		      hNode::hdlopsEnum::hVardecl, h_varlist);

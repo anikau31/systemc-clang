@@ -229,9 +229,9 @@ namespace systemc_hdl {
     }
 
     // add the submodule declarations
-   
+
     for (const auto &smod : submodv) {
-      std::vector<std::string> instnames;
+      //std::vector<std::string> instnames;
       if (smod->getInstanceInfo().isArrayType()) {
 	LLVM_DEBUG(llvm::dbgs() << "Array submodule " << smod->getInstanceInfo().getVarName() << "\n");
       }
@@ -239,31 +239,43 @@ namespace systemc_hdl {
 	LLVM_DEBUG(llvm::dbgs() << "Non-Array submodule " << smod->getInstanceInfo().getVarName() << "\n");
       }
 
+      // Not doing below:
       // we generate instance names based on the array indices so that the names match
       // names used in the portbindings for each instance, which are generated in
       // for loops (see HDLHNode.cpp code to unroll portbindings).
       
-      GenerateInstanceNames(smod, instnames);
-      bool frsttime = true;
-      for (auto instname: instnames) {
-	LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
+      //GenerateInstanceNames(smod, instnames);
+      //bool frsttime = true;
+      //for (auto instname: instnames) {
+      //LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
+      //string instname = instnames[0];
+      LLVM_DEBUG(llvm::dbgs() << "Submod name is " << smod->getName() << "\n"); // fwd_lift
 
-	hNodep h_smod =
-	  new hNode(instname, hNode::hdlopsEnum::hModdecl);
-	h_ports->child_list.push_back(h_smod);
-	hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-	if (frsttime) { // only enter the first one into the map
-	  mod_name_map.add_entry(smod, smod->getName(), h_smod);
-	  h_smod->set(instname); // override name inserted by map service
-	  frsttime = false;
+      LLVM_DEBUG(llvm::dbgs() << "Instance Var name is " << smod->getInstanceInfo().getVarName() << "\n"); //u_xt
+      LLVM_DEBUG(llvm::dbgs() << "Instance  name is " << smod->getInstanceInfo().getInstanceNames()[0] << "\n"); //u_xt_0
+      string instname = smod->getInstanceInfo().getVarName(); //smod->getInstanceInfo().getInstanceNames()[0];
+
+      hNodep h_smod =
+	new hNode(instname, hNode::hdlopsEnum::hModdecl);
+      h_ports->child_list.push_back(h_smod);
+      hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
+      //if (frsttime) { // only enter the first one into the map
+      mod_name_map.add_entry(smod, smod->getName(), h_smod);
+      h_smod->set(instname); // override name inserted by map service
+      //frsttime = false;
+      //}
+	hNodep h_smod_typep = new hNode( hNode::hdlopsEnum::hType);
+	if (smod->getInstanceInfo().isArrayType()) {
+	  h_smod_typep->set("array##"+std::to_string(smod->getInstanceInfo().getInstanceNames().size()));
+	  h_smod_typep->append(new hNode(mod_name_map.find_entry_newn(smod), hNode::hdlopsEnum::hType));
 	}
-	h_smodtypinfo->child_list.push_back(
-					    new hNode(mod_name_map.find_entry_newn(smod), hNode::hdlopsEnum::hType));
+	else {
+	  h_smod_typep->set(mod_name_map.find_entry_newn(smod));
+	}
+	h_smodtypinfo->child_list.push_back(h_smod_typep);
 	h_smod->child_list.push_back(h_smodtypinfo);
-      }
     }
 
-    // look at sensitivitiy list info
     // init block
     mod_i = mod;
     hNodep h_modinitblockhead = new hNode( hNode::hdlopsEnum::hNoop); // hold list of module constructors
@@ -271,12 +283,13 @@ namespace systemc_hdl {
     hNodep h_allsenslists = new hNode( hNode::hdlopsEnum::hNoop);
     for (int i = 0; i <= basemods.size(); i++) {
       if (mod_i->getConstructorDecl() ==NULL) continue; // null constructor
-      h_constructor = new hNode(mod_i->getInstanceInfo().getVarName()+ (mod_i->getInstanceInfo().isArrayType()? "_0" :""),
+      h_constructor = new hNode(mod_i->getInstanceInfo().getVarName(),// + (mod_i->getInstanceInfo().isArrayType()? "_0" :""),
 				hNode::hdlopsEnum::hModinitblock);
       // SenseMapType sensmap = mod_i->getSensitivityMap();
       // for (auto sensitem : sensmap) {
       // 	sensitem->dump();
       // }
+    
       xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
       LLVM_DEBUG(llvm::dbgs() << "HDL output for module constructor body\n");
       LLVM_DEBUG(h_constructor->print(llvm::dbgs()));

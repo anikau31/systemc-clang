@@ -47,15 +47,17 @@ namespace systemc_hdl {
     for (hNodep hpi :hp->child_list)
       CleanupInitHcode(hpi); 
     hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [] (hNodep x) {
-	  return (((x->h_op==hNode::hdlopsEnum::hBinop) &&
-		   (x->h_name==pbstring) || (x->h_name==sensop)) ||
-		  ((x->h_op == hNode::hdlopsEnum::hSensvar) && // gratuitous sim method sens vars
-		   (x->child_list[0]->h_name.find(localstr) != std::string::npos)) ||
-		  (x->h_op==hNode::hdlopsEnum::hForStmt) ||
+	  return (
+		  ((x->h_op==hNode::hdlopsEnum::hBinop) &&
+		   (x->h_name==pbstring) || (x->h_name==sensop))
+		  ||
+		  //((x->h_op == hNode::hdlopsEnum::hSensvar) && // gratuitous sim method sens vars
+		  //(x->child_list[0]->h_name.find(localstr) != std::string::npos)) ||
+		  //(x->h_op==hNode::hdlopsEnum::hForStmt) ||
 		  (x->h_op == hNode::hdlopsEnum::hVardeclrn)  || // renamed index variables
 		  ((x->h_op==hNode::hdlopsEnum::hCStmt) &&
 		   (x->child_list.empty())) ||
-		  (x->h_op==hNode::hdlopsEnum::hVarAssign) ||
+		  //(x->h_op==hNode::hdlopsEnum::hVarAssign) ||
 		  ((x->h_op == hNode::hdlopsEnum::hVarref) && (x->h_name == "sensitive")) ||
 		  (isMorF(x->h_op) && (x->h_name.find(strsccore) !=std::string::npos)) ||
 		  ((x->h_op == hNode::hdlopsEnum::hNoop) &&
@@ -218,7 +220,10 @@ namespace systemc_hdl {
   void HDLConstructorHcode::UnrollBinding(hNodep &hp_orig, std::vector<for_info_t> &for_info) {
     
     assert ((hp_orig->h_op == hNode::hdlopsEnum::hBinop) && (hp_orig->h_name == pbstring));
-
+    hp_orig->set(hNode::hdlopsEnum::hPortbinding);
+    hnewpb->append(hp_orig);
+    return;
+    
     // Case 0
     if (for_info.empty()) { // simple case, not in a for loop
       string submodport;
@@ -284,18 +289,18 @@ namespace systemc_hdl {
 	hportchild = hportchild->child_list[0];
       }
       for (hNodep hsubmodixname:hmodarrix) {
-	// assume simple case of "i" not "i+1" or "i+j"
-	assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
-	string ixname = hsubmodixname->h_name;
-	for (int i = 0; i < for_info.size(); i++) {
-	  if (for_info[i].name == ixname) {
-	    submod+=tokendelim+to_string(for_info[i].curix);
-	    break;
-	  }
-	}
+      	// assume simple case of "i" not "i+1" or "i+j"
+      	assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
+      	string ixname = hsubmodixname->h_name;
+      	for (int i = 0; i < for_info.size(); i++) {
+      	  if (for_info[i].name == ixname) {
+      	    submod+=tokendelim+to_string(for_info[i].curix);
+      	    break;
+      	  }
+      	}
       }
       if (hsubmodport->child_list[0]->h_name == arrsub) {
-	hsubmodport->child_list.erase(hsubmodport->child_list.begin());
+      	hsubmodport->child_list.erase(hsubmodport->child_list.begin());
       }
     }
     else if (hsubmodport->h_name ==  arrsub) { // check Case 1, 3
@@ -358,10 +363,10 @@ namespace systemc_hdl {
 	      assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
 	      string ixname = hsubmodixname->h_name;
 	      for (int i = 0; i < for_info.size(); i++) {
-		if (for_info[i].name == ixname) {
-		  submod+=tokendelim+to_string(for_info[i].curix);
-		  break;
-		}
+	  	if (for_info[i].name == ixname) {
+	  	  submod+=tokendelim+to_string(for_info[i].curix);
+	  	  break;
+	  	}
 	      }
 	    }
 	    hparent = hsubmodport; 
@@ -477,7 +482,10 @@ namespace systemc_hdl {
       hp->child_list.push_back(new hNode("always", hNode::hdlopsEnum::hNoop));
     };
     
-    hnewsens.back()->child_list.push_back(hp);
+    if (hnewsens.size()>0) hnewsens.back()->child_list.push_back(hp);
+    else {
+      hnewsens.push_back(hp);
+    }
   }
   
   void HDLConstructorHcode::HDLLoop(hNodep &hp, std::vector<for_info_t> &for_info ) {
@@ -543,7 +551,7 @@ namespace systemc_hdl {
     std::vector<for_info_t> for_info; 
 
     if (xconstructor==nullptr) return xconstructor;
-
+    
     // this is a workaround to make lldb find dumphcode
     // since lldb doesn't pick up default parameters in print
     // and doesn't recognize llvm::outs()
@@ -555,11 +563,15 @@ namespace systemc_hdl {
     //hnewsens = new hNode(xconstructor->h_name, hNode::hdlopsEnum::hSenslist); 
     for (hNodep hp : xconstructor->child_list)
       HDLLoop(hp, for_info);
-    if (!hnewpb->child_list.empty()) {
-      xconstructor->child_list.push_back(hnewpb);
-    }
+    // if (!hnewpb->child_list.empty()) {
+    //   xconstructor->child_list.push_back(hnewpb);
+    // }
     if (!hnewsens.empty()) {
-      xconstructor->child_list.insert( xconstructor->child_list.end(), hnewsens.begin(), hnewsens.end());
+      if ( (xconstructor->size() == 1) && (xconstructor->child_list[0]->getopc()==hNode::hdlopsEnum::hCStmt)) {
+	hNodep hcstmtp = xconstructor->child_list[0];
+	hcstmtp->child_list.insert(hcstmtp->child_list.end(), hnewsens.begin(), hnewsens.end());
+      }
+      else xconstructor->child_list.insert( xconstructor->child_list.end(), hnewsens.begin(), hnewsens.end());
     }
     CleanupInitHcode(xconstructor);
     return xconstructor;
