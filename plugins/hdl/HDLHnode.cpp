@@ -27,9 +27,45 @@ namespace systemc_hdl {
     }
     return true;
   }
+
+  bool HDLConstructorHcode::isSimRelated(hNodep hp) {
+    bool ret;
+    //hVarAssign  NONAME [
+          //   hVarref mc_proc_handle_u_fifo_local_0 NOLIST
+          //   hBuiltinFunction create_method_process [
+          //     hLiteral 0 NOLIST
+          //     hUnop & [
+          //       hMethodCall fifo_ccfp_t11_52_5_true_false_false__mc_proc:mc_proc NOLIST
+          //     ]
+          //     hLiteral 0 NOLIST
+          //   ]
+          // ]
+
+    if ((hp->getopc()==hNode::hdlopsEnum::hVarAssign) &&
+	(hp->size()>0) &&
+	(hp->child_list[0]->getopc() == hNode::hdlopsEnum::hVarref) &&
+        (hp->child_list[0]->getname().find("_handle_")!=std::string::npos))
+      return true;
+
+    //hVardeclrn mc_proc_handle_u_fifo_local_0 [
+        // hTypeinfo  NONAME [
+        //   hType sc_process_handle NOLIST
+        // ]
+        // hLiteral mc_proc_handle NOLIST
+
+    if ((hp->getopc()==hNode::hdlopsEnum::hVardeclrn) &&
+	(hp->getname().find("_handle_")!=std::string::npos))
+      return true;
+    if (hp->getname() == "sc_process_handle") return true;
+    if ((hp->getopc()==hNode::hdlopsEnum::hBuiltinFunction) &&
+	(hp->getname().find("create_method_process")!=std::string::npos))
+      return true;
+    return false;
+  }
+  
   void HDLConstructorHcode::RemoveSCMethod(hNodep &hp) {
  
-    hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [] (hNodep x) {
+    hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [&] (hNodep x) {
 	  return (
 		  //((x->h_op==hNode::hdlopsEnum::hVarAssign) &&
 		  //(x->child_list.size()==2) &&
@@ -51,10 +87,37 @@ namespace systemc_hdl {
 		  ((x->h_op==hNode::hdlopsEnum::hBinop) &&
 		   (x->h_name==pbstring) || (x->h_name==sensop))
 		  ||
+		      //hVarAssign  NONAME [
+          //   hVarref mc_proc_handle_u_fifo_local_0 NOLIST
+          //   hBuiltinFunction create_method_process [
+          //     hLiteral 0 NOLIST
+          //     hUnop & [
+          //       hMethodCall fifo_ccfp_t11_52_5_true_false_false__mc_proc:mc_proc NOLIST
+          //     ]
+          //     hLiteral 0 NOLIST
+          //   ]
+          // ]
+		  (((x->getopc()==hNode::hdlopsEnum::hVarAssign) || (x->getopc()==hNode::hdlopsEnum::hSensvar)) &&
+		   (x->size()>0) &&
+		   (x->child_list[0]->getopc() == hNode::hdlopsEnum::hVarref) &&
+		   (x->child_list[0]->getname().find("_handle_")!=std::string::npos))
+		  ||
+		  
+		  //hVardeclrn mc_proc_handle_u_fifo_local_0 [
+        // hTypeinfo  NONAME [
+        //   hType sc_process_handle NOLIST
+        // ]
+        // hLiteral mc_proc_handle NOLIST
+		  
+		  ((x->getopc()==hNode::hdlopsEnum::hVardeclrn) &&
+		   (x->getname().find("_handle_")!=std::string::npos))
+		  ||
+
+		  //(isSimRelated(x)) ||
 		  //((x->h_op == hNode::hdlopsEnum::hSensvar) && // gratuitous sim method sens vars
 		  //(x->child_list[0]->h_name.find(localstr) != std::string::npos)) ||
 		  //(x->h_op==hNode::hdlopsEnum::hForStmt) ||
-		  (x->h_op == hNode::hdlopsEnum::hVardeclrn)  || // renamed index variables
+		  //(x->h_op == hNode::hdlopsEnum::hVardeclrn)  || // renamed index variables
 		  ((x->h_op==hNode::hdlopsEnum::hCStmt) &&
 		   (x->child_list.empty())) ||
 		  //(x->h_op==hNode::hdlopsEnum::hVarAssign) ||
