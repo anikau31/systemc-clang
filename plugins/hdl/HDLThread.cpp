@@ -566,11 +566,12 @@ namespace systemc_hdl {
     //   hLiteral 0 NOLIST
     // ]
 	    
-    if ((h_resetvarinfo_ != NULL) && (h_resetvarinfo_->child_list.size() == 2)) {
-      hifblock->append(GenerateBinop("==", h_resetvarinfo_->child_list[0]->getname(),
-				     h_resetvarinfo_->child_list[1]->getname()));
-    }
-    else hifblock->append(GenerateBinop("==", efc_->getResetSignal().first, efc_->getResetEdge().first, false));
+    // if ((h_resetvarinfo_ != NULL) && (h_resetvarinfo_->child_list.size() == 2)) {
+    //   hifblock->append(GenerateBinop("==", h_resetvarinfo_->child_list[0]->getname(),
+    // 				     h_resetvarinfo_->child_list[1]->getname()));
+    // }
+    //else
+      hifblock->append(GenerateBinop("==", efc_->getResetSignal().first, efc_->getResetEdge().first, false));
 
     // then part: reset state transition variables
     hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);

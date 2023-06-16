@@ -497,6 +497,7 @@ namespace systemc_hdl {
   }
     
   void HDLConstructorHcode::UnrollSensitem(hNodep &hp_orig, std::vector<for_info_t> &for_info) {
+
     // hBinop << [
     //      hVarref sensitive NOLIST
     //      hNoop pos [
@@ -505,8 +506,8 @@ namespace systemc_hdl {
     //    ]
 
     // check for list of sens items
-    if (isInitSensitem(hp_orig->child_list[0])) {
-      UnrollSensitem(hp_orig->child_list[0], for_info);
+     if (isInitSensitem(hp_orig->child_list[0])) {
+       UnrollSensitem(hp_orig->child_list[0], for_info);
       }
 
     // at a primitive sens item
@@ -517,9 +518,9 @@ namespace systemc_hdl {
     
     delete hp->child_list[0]; // release that hnode
     hp->child_list.erase(hp->child_list.begin()); // remove the first item
-    if (!for_info.empty()) {
-      SubstituteIndex(hp, for_info);
-    }
+    // if (!for_info.empty()) {
+    //   SubstituteIndex(hp, for_info);
+    //}
 
     // check for edge sensitivity
     // eg
@@ -553,8 +554,9 @@ namespace systemc_hdl {
    
       hp->child_list.push_back(new hNode("always", hNode::hdlopsEnum::hNoop));
     };
-    
-    hnewsens.back()->child_list.push_back(hp);
+
+    if (!for_info.empty()) hp_orig = hp; // this caused the array sens item to be generated in the for loop.
+    else  hnewsens.back()->child_list.push_back(hp);
  
   }
   

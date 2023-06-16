@@ -313,7 +313,7 @@ namespace systemc_hdl {
     //LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists end\n");
 
     // build map of thread name to reset var name for this module
-    MakeResetMap(threadresetmap, h_allsenslists);
+    //MakeResetMap(threadresetmap, h_allsenslists);
 
     LLVM_DEBUG(llvm::dbgs() << "Module vname map size is " << mod_vname_map.size() << " \n");
 
@@ -799,19 +799,19 @@ namespace systemc_hdl {
 	  CXXMethodDecl *emd = efc->getEntryMethod();
 	  if (emd->hasBody()) {
 
-	    auto got = threadresetmap.find(efc->getName());
-	    // should be an error if there isn't a reset var for this thread
-           clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(
-                (efc->getEntryMethod())->getLocation(),
-                main_diag_engine.getCustomDiagID(
-                  clang::DiagnosticsEngine::Remark, "Reset not found in SC_[C]THREAD."))};
-           diag_builder << "\n";
-	    auto h_resetvarinfo = (got == threadresetmap.end() ? NULL : got->second);
+	   //  auto got = threadresetmap.find(efc->getName());
+	   //  // should be an error if there isn't a reset var for this thread
+           // clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(
+           //      (efc->getEntryMethod())->getLocation(),
+           //      main_diag_engine.getCustomDiagID(
+           //        clang::DiagnosticsEngine::Remark, "Reset not found in SC_[C]THREAD."))};
+           // diag_builder << "\n";
+	   //  auto h_resetvarinfo = (got == threadresetmap.end() ? NULL : got->second);
 
 	    // params includes portsigvarlist so thread local vars get promoted to module level
 	    // have to pass efc to get the reset info
 
-	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map, allmethodecls, overridden_method_map, h_resetvarinfo );
+	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map, allmethodecls, overridden_method_map, NULL);//, h_resetvarinfo );
 	    allmethodecls.insertall(xthread.methodecls);
 	    //h_thread->child_list.push_back(h_body);
 	    h_top->child_list.push_back(h_thread);
