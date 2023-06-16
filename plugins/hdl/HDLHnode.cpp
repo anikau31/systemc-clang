@@ -555,7 +555,11 @@ namespace systemc_hdl {
       hp->child_list.push_back(new hNode("always", hNode::hdlopsEnum::hNoop));
     };
 
-    if (!for_info.empty()) hp_orig = hp; // this caused the array sens item to be generated in the for loop.
+    if (!for_info.empty()) {
+      if (hnewsens.size() >0) hp->set(hnewsens.back()->getname());
+      hp_orig = hp; // this caused the array sens item to be generated in the for loop.
+    }
+
     else  hnewsens.back()->child_list.push_back(hp);
  
   }
