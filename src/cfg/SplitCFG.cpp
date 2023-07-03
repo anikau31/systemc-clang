@@ -489,7 +489,7 @@ bool SplitCFG::isConditional(const SplitCFGBlock* block) const {
     return false;
   }
 
-  return block->isConditional();
+  return block->isConditional() && !isTernaryOperator(block);
 }
 
 bool SplitCFG::isTernaryOperator(const SplitCFGBlock* block) const {
