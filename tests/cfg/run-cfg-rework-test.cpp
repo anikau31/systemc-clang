@@ -34,7 +34,8 @@ TEST_CASE("Simple thread test") {
 
   if (data_file.empty()) {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
-                                            "test_const_prop_loop.cpp");
+                                            "test_conditional_longrun.cpp");
+                                            // "test_const_prop_loop.cpp");
   } else {
     code = systemc_clang::read_systemc_file(systemc_clang::test_data_dir,
                                             data_file);
@@ -59,7 +60,7 @@ TEST_CASE("Simple thread test") {
 
   // Want to find an instance named "testing".
 
-  ModuleInstance *test_module{model->getInstance("a_mod")};
+  ModuleInstance *test_module{model->getInstance("top_inst")};
   // ModuleInstance *dut{model->getInstance("d")};
 
   SUBCASE("Found sc_module instances" ) {
@@ -105,6 +106,9 @@ TEST_CASE("Simple thread test") {
       scfg.dumpToDot();
       scfg.generate_paths();
       scfg.dump();
+      auto conf_blks{ scfg.getConfluenceBlocks() };
+      // auto conf_blks{ scfg.identifyConfluenceBlocks() };
+      llvm::dbgs() << "Number of confluence blocks found: " << conf_blks.size() << "\n";
       llvm::dbgs() << " ===================================================\n";
 
       /*

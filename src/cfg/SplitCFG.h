@@ -136,6 +136,13 @@ class SplitCFG {
 
   unsigned int next_state_count_;
 
+  /// \brief Set to true if the CFG has a ternary operator (ConditionalOperator).
+  bool has_ternary_op_;
+
+  /// Map to store the confluence blocks.
+  /// Ternary op block => Confluence block
+  std::map<SplitCFGBlock*,SplitCFGBlock*> cop_;
+
  private:
   /// \brief Checks if a CFGBlock has a wait() call in it.
   bool isElementWait(const clang::CFGElement &element) const;
@@ -208,6 +215,7 @@ class SplitCFG {
   /// Note that the only one supported are no arguments or integer arguments.
   llvm::APInt getWaitArgument(const clang::CFGElement &element) const;
 
+
   /// Dump member functions.
   void dump() const;
   void dumpToDot() const;
@@ -223,6 +231,14 @@ class SplitCFG {
   /// Rework
   //
   //
+
+  // Identify confluence blocks.
+  //
+  /// \brief Returns the confluence map.
+  std::map<SplitCFGBlock*,SplitCFGBlock*> getConfluenceBlocks() const;
+
+  /// \brief Identify confluence blocks in the CFG.
+  void identifyConfluenceBlocks();
 
   template <typename T>
   void dumpSmallVector(llvm::SmallVectorImpl<T> &vlist) {
