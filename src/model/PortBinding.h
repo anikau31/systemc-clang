@@ -74,6 +74,15 @@ class PortBinding {
     return callee_array_subscripts_;
   }
 
+const clang::Expr *getCallerExpr() const { return caller_expr_; }
+const clang::MemberExpr *getCallerInstanceMeExpr() const { return caller_instance_me_expr_; }
+const clang::Expr *getCallerPortArrayExpr() const { return caller_port_array_expr_; }
+const clang::MemberExpr *getCallerPortMeExpr() const { return caller_port_me_expr_; }
+
+const clang::Expr *getCalleeExpr() const { return callee_expr_; }
+const clang::MemberExpr *getCalleeInstanceMeExpr() const { return callee_instance_me_expr_; }
+const clang::MemberExpr *getCalleePortMeExpr() const { return callee_port_me_expr_; }
+ 
   void setInstanceVarName(const std::string &name) {
     instance_var_name_ = name;
   }

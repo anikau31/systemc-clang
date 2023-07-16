@@ -18,6 +18,7 @@
 #include <iostream>
 
 using namespace systemc_clang;
+using namespace clang;
 
 ////////////////////////////////////////////////////////
 /// class SupplementaryInfo
@@ -489,7 +490,7 @@ bool SplitCFG::isConditional(const SplitCFGBlock* block) const {
     return false;
   }
 
-  return block->isConditional();
+  return block->isConditional() && !isTernaryOperator(block);
 }
 
 bool SplitCFG::isTernaryOperator(const SplitCFGBlock* block) const {
@@ -994,9 +995,19 @@ void SplitCFG::construct_sccfg(const clang::CXXMethodDecl* method) {
        ++begin_it) {
     auto block{*begin_it};
 
+    // Identify whether the CFG block is a ternary operator.
+    auto stmt{block->getTerminatorStmt()};
+    if (stmt && clang::dyn_cast<clang::ConditionalOperator>(stmt)) { 
+      has_ternary_op_ = true;
+    }
+
     splitBlock(block);
   }
   preparePathInfo();
+
+  // Only generate the confluence block map if there is a ternary operator in the CFG.
+  if (has_ternary_op_) { identifyConfluenceBlocks(); }
+
   llvm::dbgs() << "\nPrepare to update successors\n";
   dumpSCCFG();
 }
@@ -1135,14 +1146,70 @@ SplitCFG::getPathsFound() {
 }
 
 SplitCFG::SplitCFG(clang::ASTContext& context)
-    : context_{context}, next_state_count_{0}, popping_{false} {}
+    : context_{context}, next_state_count_{0}, popping_{false}, has_ternary_op_{false} {}
 // true_path_{false},
 // false_path_{false} {}
 
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)
-    : context_{context}, next_state_count_{0}, popping_{false} {
+    : context_{context}, next_state_count_{0}, popping_{false}, has_ternary_op_{false} {
   //     true_path_{false},
   //      false_path_{false} {
   construct_sccfg(method);
+}
+
+std::map<SplitCFGBlock*,SplitCFGBlock*> SplitCFG::getConfluenceBlocks() const { return cop_; }
+
+void SplitCFG::identifyConfluenceBlocks() {
+  llvm::dbgs() << "########### Identify confluence blocks ############ \n";
+
+  // ConditionalOperator block => Confluence Block 
+  std::map<SplitCFGBlock*, SplitCFGBlock*> cop_;
+  std::vector<SplitCFGBlock *> ternops;
+
+  std::vector<SplitCFGBlock*> S{};
+  std::set<SplitCFGBlock*> discovered{};
+  // Do DFS whenever you reach a conditional operator block.
+  SplitCFGBlock *v = sccfg_[cfg_->getEntry().getBlockID()];
+
+  S.push_back(v);
+  while ( !S.empty() ) {
+    v = S.back();  S.pop_back();
+    if (discovered.find(v) == discovered.end()) {
+      discovered.insert(v);
+      llvm::dbgs() << "visited " << v->getBlockID() << "\n";
+
+      // Found ConditionalOperator
+      auto stmt{v->getCFGBlock()->getTerminatorStmt()};
+      if (stmt && clang::dyn_cast<clang::ConditionalOperator>(stmt)) {
+        llvm::dbgs() << "Found a TERNARY OP block\n";
+
+        cop_.insert(std::make_pair(v,nullptr));
+        ternops.push_back( v );
+
+      } else if (ternops.size() > 0) { 
+        auto top_cop{ ternops.back() };
+          //Successor is the confluence
+          if (v->getCFGBlock()->succ_size() == 1) {
+            auto conf_blk{ *v->getCFGBlock()->succ_begin() };
+            llvm::dbgs() << "Found confluence block of " << conf_blk->getBlockID() << " from block " << v->getBlockID() << " of " << top_cop->getBlockID() << "\n";
+            cop_[top_cop] = sccfg_[conf_blk->getBlockID()];
+
+            conf_blk->dump();
+            ternops.pop_back();
+          }
+      }
+
+      for (auto next_v : v->getCFGBlock()->succs()) {
+        if (next_v) S.push_back(sccfg_[next_v->getBlockID()]);
+      }
+    }
+  }
+      // Print the cop map.
+      llvm::dbgs() << "Block ids for COP ";
+      for (auto & co : cop_ ) {
+        llvm::dbgs() << co.first->getBlockID() << " :=> " << co.second->getBlockID() << " ;  ";
+      }
+      llvm::dbgs() << "\n";
+
 }

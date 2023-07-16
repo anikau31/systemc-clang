@@ -110,6 +110,7 @@ class SplitCFGBlock {
   /// The wait argument.
   llvm::APInt wait_arg_;
 
+
   /// This holds the ids in split_elements_ that correspond to the wait
   /// statements.  This will be a single vector with just the wait() element.
   llvm::SmallVector<unsigned int> wait_element_ids_;
