@@ -427,7 +427,9 @@ namespace systemc_hdl {
 	  if (conflmapit != condmap.end()) {
 	    condcfgb = conflmapit->second;
 	    xtbodyp->Run((Stmt *)condcfgb->getCFGBlock()->getTerminatorStmt(), hcondstmt, rthread);
+	    LLVM_DEBUG(llvm::dbgs() << "confluence block " << condcfgb->getBlockID() << "\n");
 	    for (int i = thisix; i < pt.size(); i++) {
+	      LLVM_DEBUG(llvm::dbgs() << "splitgraph block " << pt[i].first->getBlockID() << "\n");
 	      if (pt[i].first == condcfgb) break;
 	      else updatepnvisited(i);
 	    }

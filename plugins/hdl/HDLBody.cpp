@@ -1017,7 +1017,7 @@ namespace systemc_hdl {
 	string newname = FindVname(memberexpr->getMemberDecl());
 	LLVM_DEBUG(llvm::dbgs()
 		   << "member with base expr new name is " << newname << "\n");
-	if ((newname == "") && (thismode != rmodinit)) {
+	if ((newname == "")) { //&& (thismode != rmodinit)) {  TRY this for new portbinding code
 	  LLVM_DEBUG(llvm::dbgs() << "vname lookup of memberdecl is null, "
 		     "assuming field reference\n");
 	  hNodep hfieldref = new hNode(hNode::hdlopsEnum::hFieldaccess);
