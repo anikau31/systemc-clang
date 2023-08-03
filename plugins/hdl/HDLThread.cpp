@@ -69,6 +69,10 @@ namespace systemc_hdl {
       numstates = paths_found.size();
       int state_num;
 
+      // in case there are cond exprs in the split graph, get their information
+      condexp_confluence_block_map = scfg.getConfluenceBlocks();
+      condexp_skip_block_set = scfg.identifySkipBlocks();
+      
       for (state_num = 0; state_num < paths_found.size(); state_num++) {
 	SGVisited.clear();
 	// pathnodevisited keeps track of nodes already traversed in true and false paths.
@@ -421,17 +425,22 @@ namespace systemc_hdl {
 	else if (const ConditionalOperator *S1 = dyn_cast<ConditionalOperator>(S)) {
 	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is conditional operator, skipping (not?)\n");
 	  LLVM_DEBUG(sgb->getCFGBlock()->getTerminatorStmt()->dump(llvm::dbgs(), ast_context_));
-	   std::map<SplitCFGBlock*,SplitCFGBlock*> condmap = scfg.getConfluenceBlocks();
+	  //std::map<SplitCFGBlock*,SplitCFGBlock*> condmap = scfg.getConfluenceBlocks();
 	  const SplitCFGBlock * condcfgb;
-	  auto conflmapit =condmap.find((const_cast<SplitCFGBlock*>(sgb)));
-	  if (conflmapit != condmap.end()) {
+	  auto conflmapit =condexp_confluence_block_map.find((const_cast<SplitCFGBlock*>(sgb)));
+	  if (conflmapit != condexp_confluence_block_map.end()) {
 	    condcfgb = conflmapit->second;
 	    xtbodyp->Run((Stmt *)condcfgb->getCFGBlock()->getTerminatorStmt(), hcondstmt, rthread);
 	    LLVM_DEBUG(llvm::dbgs() << "confluence block " << condcfgb->getBlockID() << "\n");
 	    for (int i = thisix; i < pt.size(); i++) {
 	      LLVM_DEBUG(llvm::dbgs() << "splitgraph block " << pt[i].first->getBlockID() << "\n");
-	      if (pt[i].first == condcfgb) break;
-	      else updatepnvisited(i);
+	      // if (pt[i].first == condcfgb) break;
+	      // else updatepnvisited(i);
+	      //SplitCFGBlock * scfgb = const_cast<SplitCFGBlock *>(pt[i].first);
+	      if ((pt[i].first != condcfgb) &&
+		  (condexp_skip_block_set.find(const_cast<SplitCFGBlock *>(pt[i].first)) != condexp_skip_block_set.end())) {
+		updatepnvisited(i);
+	      }
 	    }
 	  }
 	  else {
