@@ -1164,7 +1164,7 @@ void SplitCFG::identifyConfluenceBlocks() {
   llvm::dbgs() << "########### Identify confluence blocks ############ \n";
 
   // ConditionalOperator block => Confluence Block 
-  //std::map<SplitCFGBlock*, SplitCFGBlock*> cop_;
+  // std::map<SplitFGBlock*, SplitCFGBlock*> cop_;
   std::vector<SplitCFGBlock *> ternops;
 
   std::vector<SplitCFGBlock*> S{};
