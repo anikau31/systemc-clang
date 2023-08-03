@@ -106,9 +106,35 @@ TEST_CASE("Simple thread test") {
       scfg.dumpToDot();
       scfg.generate_paths();
       scfg.dump();
-      auto conf_blks{ scfg.getConfluenceBlocks() };
+      // //auto conf_blks{ scfg.getConfluenceBlocks() };
+      // //
+      // //
+      // //
+      // std::map<SplitCFGBlock*, SplitCFGBlock*> conf_blks{ scfg.getConfluenceBlocks() };
+      // const SplitCFGBlock* null{nullptr};
+      //
+      // auto it = conf_blks.find(null);
+      // if (it == conf_blks.end()) {
+      //   llvm::dbgs() << "ERRRRR NOT FOUND\n";
+      // }
+      ///
+      ///
+      ///
+      ///
+      ///
       // auto conf_blks{ scfg.identifyConfluenceBlocks() };
-      llvm::dbgs() << "Number of confluence blocks found: " << conf_blks.size() << "\n";
+     // llvm::dbgs() << "Number of confluence blocks found: " << conf_blks.size() << "\n";
+      
+      auto conf_blks{scfg.getConfluenceBlocks()};
+      auto source{ conf_blks.begin()->first };
+      auto target{ conf_blks.begin()->second};
+      llvm::dbgs() <<"Discover the blocks to skip for ternop " <<source->getBlockID() << " with conf block as " << target->getBlockID() << "\n";
+      auto skip{ scfg.identifySkipBlocks()};
+  llvm::dbgs() << "SKIP\n";
+  for (auto disc : skip) {
+    llvm::dbgs() << disc->getBlockID() <<"  ";
+
+  }
       llvm::dbgs() << " ===================================================\n";
 
       /*
