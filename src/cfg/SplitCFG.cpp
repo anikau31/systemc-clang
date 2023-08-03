@@ -16,6 +16,8 @@
 
 #include <regex>
 #include <iostream>
+#include <queue>
+#include <set>
 
 using namespace systemc_clang;
 using namespace clang;
@@ -740,9 +742,9 @@ void SplitCFG::createWaitSplitCFGBlocks(
       auto is_wait = elements.second;
       auto stmt{block->getTerminatorStmt()};
       // A wait block cannot be a conditional.
-      new_split->is_conditional_ = !is_wait && (
-          stmt && (llvm::isa<clang::IfStmt>(stmt) ||
-                   llvm::isa<clang::ConditionalOperator>(stmt)));
+      new_split->is_conditional_ =
+          !is_wait && (stmt && (llvm::isa<clang::IfStmt>(stmt) ||
+                                llvm::isa<clang::ConditionalOperator>(stmt)));
 
       /// Succesors
       //
@@ -997,7 +999,7 @@ void SplitCFG::construct_sccfg(const clang::CXXMethodDecl* method) {
 
     // Identify whether the CFG block is a ternary operator.
     auto stmt{block->getTerminatorStmt()};
-    if (stmt && clang::dyn_cast<clang::ConditionalOperator>(stmt)) { 
+    if (stmt && clang::dyn_cast<clang::ConditionalOperator>(stmt)) {
       has_ternary_op_ = true;
     }
 
@@ -1005,8 +1007,11 @@ void SplitCFG::construct_sccfg(const clang::CXXMethodDecl* method) {
   }
   preparePathInfo();
 
-  // Only generate the confluence block map if there is a ternary operator in the CFG.
-  if (has_ternary_op_) { identifyConfluenceBlocks(); }
+  // Only generate the confluence block map if there is a ternary operator in
+  // the CFG.
+  if (has_ternary_op_) {
+    identifyConfluenceBlocks();
+  }
 
   llvm::dbgs() << "\nPrepare to update successors\n";
   dumpSCCFG();
@@ -1129,13 +1134,14 @@ void SplitCFG::dumpToDot() const {
   dotos << "}\n";
 }
 
-[[deprecated("Use SplitCFG::getAllPathInfo()")]]
-const std::unordered_map<const SplitCFGBlock*, SplitCFGPathInfo>&
+[[deprecated("Use SplitCFG::getAllPathInfo()")]] const std::unordered_map<
+    const SplitCFGBlock*, SplitCFGPathInfo>&
 SplitCFG::getPathInfo() const {
   return path_info_;
 }
 
-const llvm::SmallVector<std::unordered_map<const SplitCFGBlock*, SplitCFGPathInfo>>&
+const llvm::SmallVector<
+    std::unordered_map<const SplitCFGBlock*, SplitCFGPathInfo>>&
 SplitCFG::getAllPathInfo() const {
   return all_path_info_;
 }
@@ -1146,35 +1152,85 @@ SplitCFG::getPathsFound() {
 }
 
 SplitCFG::SplitCFG(clang::ASTContext& context)
-    : context_{context}, next_state_count_{0}, popping_{false}, has_ternary_op_{false} {}
+    : context_{context},
+      next_state_count_{0},
+      popping_{false},
+      has_ternary_op_{false} {}
 // true_path_{false},
 // false_path_{false} {}
 
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)
-    : context_{context}, next_state_count_{0}, popping_{false}, has_ternary_op_{false} {
+    : context_{context},
+      next_state_count_{0},
+      popping_{false},
+      has_ternary_op_{false} {
   //     true_path_{false},
   //      false_path_{false} {
   construct_sccfg(method);
 }
 
-std::map<SplitCFGBlock*,SplitCFGBlock*> SplitCFG::getConfluenceBlocks() const { return cop_; }
+std::map<SplitCFGBlock*, SplitCFGBlock*> SplitCFG::getConfluenceBlocks() const {
+  return cop_;
+}
+
+std::set<SplitCFGBlock*> SplitCFG::identifySkipBlocks() {
+  llvm::dbgs() << "########### BFS Identify confluence blocks ############ \n";
+  std::queue<SplitCFGBlock*> Q{};
+  std::set<SplitCFGBlock*> discovered{};
+
+  SplitCFGBlock* v{outter_top};
+  SplitCFGBlock* target = cop_[outter_top];
+  llvm::dbgs() << "Outter ternop is BB" << outter_top->getBlockID() << " and confluence block is BB" << target->getBlockID() << "\n";
+  // if (!source) v = sccfg_[cfg_->getEntry().getBlockID()];
+  // else v = source; 
+
+  discovered.insert(v);
+
+  Q.push(v);
+
+  while (!Q.empty()) {
+    v = Q.front();
+    Q.pop();
+    llvm::dbgs() << "visited " << v->getBlockID() << "\n";
+
+    for (auto succ : v->getCFGBlock()->succs()) {
+      if (succ && (v->getBlockID() != target->getBlockID())) {
+        auto blk{sccfg_[succ->getBlockID()]};
+        if (discovered.find(blk) == discovered.end()) {
+          discovered.insert(blk);
+          Q.push(blk);
+        }
+      }
+    }
+  }
+
+  llvm::dbgs() << "Discovered\n";
+  for (auto disc : discovered ) {
+    llvm::dbgs() << disc->getBlockID() <<"  ";
+
+  }
+  return discovered;
+}
 
 void SplitCFG::identifyConfluenceBlocks() {
   llvm::dbgs() << "########### Identify confluence blocks ############ \n";
 
-  // ConditionalOperator block => Confluence Block 
+  // ConditionalOperator block => Confluence Block
   // std::map<SplitFGBlock*, SplitCFGBlock*> cop_;
-  std::vector<SplitCFGBlock *> ternops;
+  std::vector<SplitCFGBlock*> ternops;
 
   std::vector<SplitCFGBlock*> S{};
   std::set<SplitCFGBlock*> discovered{};
   // Do DFS whenever you reach a conditional operator block.
-  SplitCFGBlock *v = sccfg_[cfg_->getEntry().getBlockID()];
+  SplitCFGBlock* v = sccfg_[cfg_->getEntry().getBlockID()];
+
+  SplitCFGBlock* outter{nullptr};
 
   S.push_back(v);
-  while ( !S.empty() ) {
-    v = S.back();  S.pop_back();
+  while (!S.empty()) {
+    v = S.back();
+    S.pop_back();
     if (discovered.find(v) == discovered.end()) {
       discovered.insert(v);
       llvm::dbgs() << "visited " << v->getBlockID() << "\n";
@@ -1184,20 +1240,24 @@ void SplitCFG::identifyConfluenceBlocks() {
       if (stmt && clang::dyn_cast<clang::ConditionalOperator>(stmt)) {
         llvm::dbgs() << "Found a TERNARY OP block\n";
 
-        cop_.insert(std::make_pair(v,nullptr));
-        ternops.push_back( v );
+        if (!outter) outter = v;
 
-      } else if (ternops.size() > 0) { 
-        auto top_cop{ ternops.back() };
-          //Successor is the confluence
-          if (v->getCFGBlock()->succ_size() == 1) {
-            auto conf_blk{ *v->getCFGBlock()->succ_begin() };
-            llvm::dbgs() << "Found confluence block of " << conf_blk->getBlockID() << " from block " << v->getBlockID() << " of " << top_cop->getBlockID() << "\n";
-            cop_[top_cop] = sccfg_[conf_blk->getBlockID()];
+        cop_.insert(std::make_pair(v, nullptr));
+        ternops.push_back(v);
 
-            conf_blk->dump();
-            ternops.pop_back();
-          }
+      } else if (ternops.size() > 0) {
+        auto top_cop{ternops.back()};
+        // Successor is the confluence
+        if (v->getCFGBlock()->succ_size() == 1) {
+          auto conf_blk{*v->getCFGBlock()->succ_begin()};
+          llvm::dbgs() << "Found confluence block of " << conf_blk->getBlockID()
+                       << " from block " << v->getBlockID() << " of "
+                       << top_cop->getBlockID() << "\n";
+          cop_[top_cop] = sccfg_[conf_blk->getBlockID()];
+
+          conf_blk->dump();
+          ternops.pop_back();
+        }
       }
 
       for (auto next_v : v->getCFGBlock()->succs()) {
@@ -1205,11 +1265,13 @@ void SplitCFG::identifyConfluenceBlocks() {
       }
     }
   }
-      // Print the cop map.
-      llvm::dbgs() << "Block ids for COP ";
-      for (auto & co : cop_ ) {
-        llvm::dbgs() << co.first->getBlockID() << " :=> " << co.second->getBlockID() << " ;  ";
-      }
-      llvm::dbgs() << "\n";
+  // Print the cop map.
+  llvm::dbgs() << "Block ids for COP ";
+  for (auto& co : cop_) {
+    llvm::dbgs() << co.first->getBlockID() << " :=> " << co.second->getBlockID()
+                 << " ;  ";
+  }
+  llvm::dbgs() << "\n";
 
+  outter_top = outter;
 }

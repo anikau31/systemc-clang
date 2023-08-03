@@ -6,7 +6,7 @@
 #include "SplitCFGBlock.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/SmallPtrSet.h"
-
+#include <set>
 namespace systemc_clang {
 
 /* \class Additional information for paths traversed in SplitCFG
@@ -239,6 +239,9 @@ class SplitCFG {
 
   /// \brief Identify confluence blocks in the CFG.
   void identifyConfluenceBlocks();
+  std::set<SplitCFGBlock*> identifySkipBlocks();
+
+  SplitCFGBlock *outter_top;
 
   template <typename T>
   void dumpSmallVector(llvm::SmallVectorImpl<T> &vlist) {
