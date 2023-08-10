@@ -1155,6 +1155,7 @@ SplitCFG::SplitCFG(clang::ASTContext& context)
     : context_{context},
       next_state_count_{0},
       popping_{false},
+      outter_top(nullptr),
       has_ternary_op_{false} {}
 // true_path_{false},
 // false_path_{false} {}
@@ -1164,6 +1165,7 @@ SplitCFG::SplitCFG(clang::ASTContext& context,
     : context_{context},
       next_state_count_{0},
       popping_{false},
+      outter_top(nullptr),
       has_ternary_op_{false} {
   //     true_path_{false},
   //      false_path_{false} {
@@ -1178,6 +1180,8 @@ std::set<SplitCFGBlock*> SplitCFG::identifySkipBlocks() {
   llvm::dbgs() << "########### BFS Identify confluence blocks ############ \n";
   std::queue<SplitCFGBlock*> Q{};
   std::set<SplitCFGBlock*> discovered{};
+
+  if (!outter_top) return discovered;
 
   SplitCFGBlock* v{outter_top};
   SplitCFGBlock* target = cop_[outter_top];
