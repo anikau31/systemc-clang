@@ -143,6 +143,9 @@ class SplitCFG {
   /// Ternary op block => Confluence block
   std::map<SplitCFGBlock*,SplitCFGBlock*> cop_;
 
+  /// \brief This is the pointer to the outtermost ternary operator
+  SplitCFGBlock *outter_top_;
+
  private:
   /// \brief Checks if a CFGBlock has a wait() call in it.
   bool isElementWait(const clang::CFGElement &element) const;
@@ -241,7 +244,8 @@ class SplitCFG {
   void identifyConfluenceBlocks();
   std::set<SplitCFGBlock*> identifySkipBlocks();
 
-  SplitCFGBlock *outter_top;
+
+ public:
 
   template <typename T>
   void dumpSmallVector(llvm::SmallVectorImpl<T> &vlist) {

@@ -1155,7 +1155,7 @@ SplitCFG::SplitCFG(clang::ASTContext& context)
     : context_{context},
       next_state_count_{0},
       popping_{false},
-      outter_top(nullptr),
+      outter_top_(nullptr),
       has_ternary_op_{false} {}
 // true_path_{false},
 // false_path_{false} {}
@@ -1165,7 +1165,7 @@ SplitCFG::SplitCFG(clang::ASTContext& context,
     : context_{context},
       next_state_count_{0},
       popping_{false},
-      outter_top(nullptr),
+      outter_top_(nullptr),
       has_ternary_op_{false} {
   //     true_path_{false},
   //      false_path_{false} {
@@ -1181,11 +1181,11 @@ std::set<SplitCFGBlock*> SplitCFG::identifySkipBlocks() {
   std::queue<SplitCFGBlock*> Q{};
   std::set<SplitCFGBlock*> discovered{};
 
-  if (!outter_top) return discovered;
+  if (!outter_top_) return discovered;
 
-  SplitCFGBlock* v{outter_top};
-  SplitCFGBlock* target = cop_[outter_top];
-  llvm::dbgs() << "Outter ternop is BB" << outter_top->getBlockID() << " and confluence block is BB" << target->getBlockID() << "\n";
+  SplitCFGBlock* v{outter_top_};
+  SplitCFGBlock* target = cop_[outter_top_];
+  llvm::dbgs() << "Outter ternop is BB" << outter_top_->getBlockID() << " and confluence block is BB" << target->getBlockID() << "\n";
   // if (!source) v = sccfg_[cfg_->getEntry().getBlockID()];
   // else v = source; 
 
@@ -1277,5 +1277,5 @@ void SplitCFG::identifyConfluenceBlocks() {
   }
   llvm::dbgs() << "\n";
 
-  outter_top = outter;
+  outter_top_ = outter;
 }
