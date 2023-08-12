@@ -1,9 +1,10 @@
 import warnings
 
+import lark
 from lark import Token
 
 from parselib.transforms import TopDown
-from ..utils import dprint, is_tree_type
+from ..utils import dprint, is_tree_type, get_ids_in_tree
 from ..grammar import UnexpectedHCodeStructureError
 
 
@@ -16,9 +17,24 @@ class LiteralExpansion(TopDown):
         self.port_binding_module = None
         self.field_access = None
 
+    def _get_port_binding_moduel(self, tree):
+        """
+        Get the name of the module that corresponds
+        to this port-binding
+        """
+        if type(tree) == lark.Tree:
+            if tree.children[0] != 'NONAME':
+                res = str(self.structure[self.current_module][tree.children[0]])
+            else:
+                ids = get_ids_in_tree(tree)
+                res = str(self.structure[self.current_module][ids[0]])
+        else:
+            res = str(self.structure[self.current_module][tree.children[0]])
+        return res
+
     def portbinding(self, tree):
         self.is_port_binding = True
-        self.port_binding_module = str(self.structure[self.current_module][tree.children[0]])
+        self.port_binding_module = self._get_port_binding_moduel(tree)
         self.__push_up(tree)
         self.is_port_binding = False
         self.port_binding_module = None

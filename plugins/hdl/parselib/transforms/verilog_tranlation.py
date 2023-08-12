@@ -27,6 +27,7 @@ class VerilogTranslationPass(TopDown):
         self.__current_scope_type = [None]
         self.is_in_thread = False
         self.thread_comb = False
+        self.non_thread_comb_signals = set()
 
     def get_current_scope_type(self):
         """denotes one of four types of scope: loop, switch, branch, None
@@ -163,7 +164,14 @@ class VerilogTranslationPass(TopDown):
         elif type(r) == Tree and r.data == 'harrayref':
             r = r.children[3]
 
+        # FIXME: this handling of shared signal across thread/comb block should be fixed
+        if 'thread' not in current_proc and '#function#' not in current_proc:
+            self.non_thread_comb_signals.add(l)
+
         res = '{} {} {}'.format(l, op, r)
+
+        if 'thread' in current_proc and l in self.non_thread_comb_signals:
+            res = ''
         return res
 
     def syscwrite(self, tree):
@@ -389,9 +397,17 @@ class VerilogTranslationPass(TopDown):
                     if x[1].data == 'expression_in_stmt':
                         # logging.warning('Expression as a statement may not have an effect. On line: {}'.format(x[1].line))
                         x = (x[0], x[1].children[0], x[2])
+                        res = str(x[0]) + str(x[1]) + str(x[2])
+                    elif x[1].data == 'portbinding':
+                        ch = x[1].children
+                        assignment = f"{ch[0]}.{ch[1]} = {ch[2]}"
+                        res = ''.join([x[0], assignment, x[2]])
+                    elif x[1].data == 'hnamedsensvar':
+                        res = f'{x[0]} /* always {x[1].children[1]} */ {x[2]}'
                     else:
                         assert False, 'Unrecognized construct: {}'.format(x[1])
-                res = str(x[0]) + str(x[1]) + str(x[2])
+                else:
+                    res = ''.join(x)
                 return res
             except Exception as e:
                 print(x[0])
@@ -505,7 +521,12 @@ class VerilogTranslationPass(TopDown):
         new_children.extend(self.visit(t) for t in tree.children[3:])
         self.dec_indent()
 
-        for_init, for_cond, for_post, for_body = new_children
+        if len(new_children) == 3:
+            warnings.warn("empty for loop")
+            for_init, for_cond, for_post = new_children
+            for_body = ''
+        else:
+            for_init, for_cond, for_post, for_body = new_children
 
         ind = self.get_current_ind_prefix()
         res = ind + 'for ({};{};{}) begin\n'.format(for_init, for_cond, for_post)
@@ -946,7 +967,11 @@ class VerilogTranslationPass(TopDown):
         sense_list = self.get_sense_list()
         assert thread_name in sense_list, "Process name {} is not in module {}".format(proc_name, self.current_module)
         if is_sync:
-            res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[thread_name]), proc_name)
+            sense_list = self.get_sense_list()[thread_name]
+            if 'posedge clk' not in sense_list:
+                warnings.warn("Clock not detected in senstivity list, adding one by default")
+            sense_list = ['posedge clk'] + sense_list
+            res = ind + 'always @({}) begin: {}\n'.format(' or '.join(sense_list), proc_name)
         else:
             res = ind + 'always @(*) begin: {}\n'.format(proc_name)
         self.inc_indent()
@@ -995,6 +1020,10 @@ class VerilogTranslationPass(TopDown):
                     elif ch.data == 'portbindinglist':
                         portbindings = ch
                     elif ch.data == 'hsenslist':
+                        senslist.append(ch)
+                    elif ch.data == 'vardecl':
+                        initblock = ch
+                    elif ch.data == 'hnamedsensevar':
                         senslist.append(ch)
                     else:
                         raise ValueError(ch.pretty())

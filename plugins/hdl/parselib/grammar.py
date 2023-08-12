@@ -63,6 +63,8 @@ lark_grammar = Lark('''
              | continuestmt
              | hwait
              | hslice
+             | portbinding
+             | hnamedsensvar
              
         continuestmt: "hContinue" "NONAME" "NOLIST"
         // hvarinitlist can be empty
@@ -78,7 +80,7 @@ lark_grammar = Lark('''
              
         ?htobool: ("hBuiltinFunction" "to_bool" | "hNoop" "to_bool") "[" harrayref "]"
         htouint: "hBuiltinFunction" "to_uint" "[" (syscread|hvarref|hslice) "]"
-        htoint: "hBuiltinFunction" "to_int" "[" (syscread|hvarref|hslice) "]"
+        htoint: "hBuiltinFunction" "to_int" "[" (syscread|hvarref|hslice|harrayref) "]"
         htolong: "hBuiltinFunction" "to_long" "[" (syscread|hvarref|hslice) "]"
         htoulong: "hBuiltinFunction" "to_ulong" "[" (syscread|hvarref|hslice) "]"
         hnoop: "hNoop" "NONAME" "NOLIST"
@@ -94,11 +96,10 @@ lark_grammar = Lark('''
         // first component is the id of the module (in parent?)
         // second component is initialization list              
         // third component is port binding list
-        hmodinitblock: "hModinitblock" ID "[" hcstmt* portbindinglist* hsenslist*"]"
+        hmodinitblock: "hModinitblock" ID "[" vardecl* hcstmt*  hsenslist*"]"
                      | "hModinitblock" ID "NOLIST"
-
         // Port Bindings
-        portbindinglist: "hPortbindings" ID "[" portbinding* "]"
+        portbindinglist: "hCStmt" "NONAME" "[" portbinding* "]"
         // hPortbinding u_dut [
         //   hVarref avg_out NOLIST
         //   hVarref dut_avg NOLIST
@@ -108,11 +109,13 @@ lark_grammar = Lark('''
                    | "hPortbinding" ID "[" hvarref hbindingref "]"
                    | "hPortbinding" ID "[" hbindingarrayref hbindingarrayref "]"  
                    | "hPortbinding" ID "[" hvarref hbindingarrayref "]"  
+                   | "hPortbinding" ID "[" hfieldaccess (hvarref|hbinop) "]"
+                   | "hPortbinding" ID "[" hbinop (hvarref|hbinop) "]"
                    // TODO: replace portbinding with succinct syntax
         hbindingref: "hVarref" ID "[" hliteral "]"
         // compared array ref in normal expressions
         // we use a more restrictive form here
-        hbindingarrayref: "hBinop" "ARRAYSUBSCRIPT" "[" (hvarref|hbindingarrayref) (hliteral|hbinop) "]"  
+        hbindingarrayref: "hBinop" "ARRAYSUBSCRIPT" "[" (hfieldaccess | hvarref|hbindingarrayref) (hvarref|hliteral|hbinop) "]"  
 
 
         // This is solely for maintaining the semicolon
@@ -125,7 +128,7 @@ lark_grammar = Lark('''
         dostmt: "hDoStmt" "NONAME" "[" expression stmt "]"
 
         // for(forinit; forcond; forpostcond) stmts
-        forstmt: "hForStmt" "NONAME" "[" forinit forcond forpostcond forbody "]"
+        forstmt: "hForStmt" "NONAME" "[" forinit forcond forpostcond forbody? "]"
         forinit: "hPortsigvarlist" "NONAME" "[" vardeclinit  "]"
                  | vardeclinit
                  | hnoop
@@ -162,6 +165,7 @@ lark_grammar = Lark('''
                   | "hSenslist" ID "NOLIST"
         hsensvar :  "hSensvar" "NONAME" "[" (hsensedge|expression|hvalchange) ("hNoop" | "hBuiltinFunction")  npa "NOLIST" ("hNoop" npa "NOLIST")* "]"
                  |  hasync
+        hnamedsensvar :  "hSensvar" ID "[" (hsensedge|expression|hvalchange) ("hNoop" | "hBuiltinFunction")  npa "NOLIST" ("hNoop" npa "NOLIST")* "]"
         hasync   :  "hSensvar" "ASYNC" "[" expression hliteral "]"
 
         hvalchange: "hNoop" "value_changed_event" "[" expression "]"

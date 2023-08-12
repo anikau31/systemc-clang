@@ -291,7 +291,6 @@ class FunctionInfoPass2(TopDown):
         return phantom_var
 
     def __extract_name_from_method_args(self, arg_node, arg_tpe):
-        dprint(arg_node, arg_tpe)
         if is_tree_type(arg_node, 'hvarref'):
             return arg_node.children[0]
         elif is_tree_types(arg_node, ['hliteral', 'hbinop', 'hmethodcall', 'syscread', 'hunop', 'hslice']):
