@@ -45,5 +45,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run doxygen
         run: |
+          git config --global --add safe.directory /systemc-clang
           cd /systemc-clang-build 
           cmake /systemc-clang -DHDL=ON -DENABLE_TESTS=ON -DENABLE_VERILOG_TESTS=ON -DBUILD_DOC=ON -G Ninja && ninja docs
