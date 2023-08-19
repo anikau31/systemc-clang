@@ -30,6 +30,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build systemc-clang and run tests
         run: |
+          git config --global --add safe.directory /systemc-clang
           cd /systemc-clang-build 
           cmake /systemc-clang -DHDL=ON -DENABLE_TESTS=ON -DENABLE_VERILOG_TESTS=ON -G Ninja && ninja && ctest -j4
           # Debug the Verilog tests.
