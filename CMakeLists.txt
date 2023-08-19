@@ -344,6 +344,7 @@ set(CLANG_LIBS
   clangToolingInclusionsStdlib
   clangToolingRefactoring
   clangToolingSyntax
+  clangSupport
   #clangStaticAnalyzerCheckers
   #clangARCMigrate
   #clangRewriteFrontend
