@@ -21,7 +21,7 @@ WORKDIR /tmp
 
 # Set up llvm/clang
 # in /tmp now
-ENV CLANG_VERSION=13.0.0
+ENV CLANG_VERSION=16.0.0
 ENV TARGET_ARCH=linux64
 
 # run systemc
@@ -29,9 +29,9 @@ RUN mkdir /opt/systemc-2.3.3 && curl -L https://github.com/rseac/systemc-travisc
       | tar -xzC /tmp/ \
       && mv systemc-2.3.3/systemc/* /opt/systemc-2.3.3 \
       && rm -rf systemc-2.3.3 \
-      && mkdir /opt/clang-$CLANG_VERSION && curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-$CLANG_VERSION/clang+llvm-$CLANG_VERSION-x86_64-linux-gnu-ubuntu-20.04.tar.xz \
+      && mkdir /opt/clang-$CLANG_VERSION && curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-$CLANG_VERSION/clang+llvm-$CLANG_VERSION-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
       |  tar -xJC /tmp/  \
-      && mv clang+llvm-$CLANG_VERSION-x86_64-linux-gnu-ubuntu-20.04/* /opt/clang-$CLANG_VERSION/ \
+      && mv clang+llvm-$CLANG_VERSION-x86_64-linux-gnu-ubuntu-18.04/* /opt/clang-$CLANG_VERSION/ \
       && rm -rf /tmp/*
 
 # Install other requirements
@@ -44,7 +44,8 @@ RUN apt-get update && apt-get install -y -q --no-install-recommends \
   python3-pip \
   git \
   libz-dev \
-  libncurses-dev
+  libncurses-dev \
+  libncurses5
 
   
 # Install doxygen and graphviz
