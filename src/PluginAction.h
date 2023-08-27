@@ -16,6 +16,7 @@
 #define _PLUGIN_ACTION_H_
 
 #include <clang/Tooling/Tooling.h>
+#include <llvm/Support/Error.h>
 #include "llvm/Support/Debug.h"
 
 #include "SystemCClang.h"
@@ -59,6 +60,13 @@ class PluginAction {
     /// Specify the top-level module.
     llvm::Expected<clang::tooling::CommonOptionsParser> options_parser{
         clang::tooling::CommonOptionsParser::create(argc, argv, category)};
+
+    llvm::dbgs() << "Options parser\n";
+    if (auto err = options_parser.takeError() ) {
+      llvm::logAllUnhandledErrors(std::move(err), llvm::errs(), "[PluginAction Error]");
+      return;
+    }
+
     ClangTool Tool(options_parser->getCompilations(),
                    options_parser->getSourcePathList());
 
@@ -79,6 +87,8 @@ class PluginAction {
 
     std::unique_ptr<FrontendActionFactory> FrontendFactory;
     FrontendFactory = newFrontendActionFactory<SystemCClangAXN>();
+
+    llvm::dbgs() << "Start SCCL\n";
     Tool.run(FrontendFactory.get());
   };
 };

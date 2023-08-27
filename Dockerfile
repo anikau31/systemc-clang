@@ -21,7 +21,7 @@ WORKDIR /tmp
 
 # Set up llvm/clang
 # in /tmp now
-ENV CLANG_VERSION=16.0.0
+ENV CLANG_VERSION=15.0.6
 ENV TARGET_ARCH=linux64
 
 # run systemc

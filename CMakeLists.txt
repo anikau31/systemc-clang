@@ -338,17 +338,18 @@ set(CLANG_LIBS
   clangLex
   clangBasic
   clangASTMatchers
+  clangDynamicASTMatchers
   clangToolingASTDiff
   clangToolingCore
-  clangToolingInclusions
-  clangToolingInclusionsStdlib
+  # clangToolingInclusions
+  # clangToolingInclusionsStdlib
   clangToolingRefactoring
   clangToolingSyntax
   clangSupport
   #clangStaticAnalyzerCheckers
   #clangARCMigrate
-  #clangRewriteFrontend
-  #clangRewrite
+  clangRewriteFrontend
+  clangRewrite
 
   )
 

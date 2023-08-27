@@ -159,6 +159,15 @@ namespace systemc_hdl {
 
     llvm::Expected<clang::tooling::CommonOptionsParser> options_parser{
         clang::tooling::CommonOptionsParser::create(argc, argv, HDLcategory)};
+
+    llvm::dbgs() << "Options parser\n";
+    if (auto err = options_parser.takeError() ) {
+      llvm::logAllUnhandledErrors(std::move(err), llvm::errs(), "[PluginAction Error]");
+      return;
+    }
+
+
+
       ClangTool Tool(options_parser->getCompilations(),
 		     options_parser->getSourcePathList());
 
