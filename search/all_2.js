@@ -11,5 +11,6 @@ var searchData=
   ['breakmatcher_8',['BreakMatcher',['../classsystemc__clang_1_1BreakMatcher.html',1,'systemc_clang']]],
   ['breakstmt_9',['breakstmt',['../classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#abdc69f8b1cee016c3215ab099bbfda41',1,'parselib::transforms::verilog_tranlation::VerilogTranslationPass']]],
   ['broken_5fdown_5fops_10',['broken_down_ops',['../classparselib_1_1transforms_1_1comma__transformation_1_1CommaTransformation.html#a73ba37b8f548e24a6db95926bb59ec17',1,'parselib::transforms::comma_transformation::CommaTransformation']]],
-  ['build_5fparam_5fdict_11',['build_param_dict',['../classparselib_1_1transforms_1_1type__node_1_1TypeNode.html#abf0b965ec1349df68565680dfb7da631',1,'parselib::transforms::type_node::TypeNode']]]
+  ['build_5fparam_5fdict_11',['build_param_dict',['../classparselib_1_1transforms_1_1type__node_1_1TypeNode.html#abf0b965ec1349df68565680dfb7da631',1,'parselib::transforms::type_node::TypeNode']]],
+  ['built_20using_20clang_12',['systemc-clang is a parser for SystemC constructs built using clang.',['../index.html',1,'']]]
 ];
