@@ -53,6 +53,7 @@ RUN apt-get install -y doxygen graphviz
 
 # Install sphinx
 RUN pip3 install -U sphinx 
+RUN pip3 install sphinx --upgrade
 
 # Set up environment variables across images
 ENV SYSTEMC=/opt/systemc-2.3.3
