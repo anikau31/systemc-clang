@@ -64,8 +64,7 @@ If you're interested in contributing to ``SCCL``, then we keep a list of interes
 
 Publications
 ---------------
-
-Z. Wu, M. Gokhale, S. Lloyd and H. Patel, `SCCL: An open-source SystemC to RTL translator <https://caesr.uwaterloo.ca/assets/pdfs/wu_23_sccl_fccm.pdf>`_, 2023 IEEE 31st Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM), Marina Del Rey, CA, USA, 2023, pp. 23-33, doi: 10.1109/FCCM57271.2023.00012.
+* Zhuanhao Wu, Maya Gokhale, Scott Lloyd and Hiren Patel, `SCCL: An open-source SystemC to RTL translator <https://caesr.uwaterloo.ca/assets/pdfs/wu_23_sccl_fccm.pdf>`_, 2023 IEEE 31st Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM), Marina Del Rey, CA, USA, 2023, pp. 23-33, doi: 10.1109/FCCM57271.2023.00012.
 
 Developers
 ----------
