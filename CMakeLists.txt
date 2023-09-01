@@ -14,9 +14,9 @@ project(sccl)
 set(CMAKE_CXX_STANDARD 17)
 
 if(DEFINED Clang_ROOT)
-  set(CT_CLANG_PACKAGE_DIR "${Clang_ROOT}/../../..")
+  set(CT_CLANG_PACKAGE_DIR "${Clang_ROOT}")
 elseif(DEFINED Clang_DIR)
-  set(CT_CLANG_PACKAGE_DIR "${Clang_DIR}/../../..")
+  set(CT_CLANG_PACKAGE_DIR "${Clang_DIR}")
 endif()
 mark_as_advanced(CT_CLANG_PACKAGE_DIR)
 
