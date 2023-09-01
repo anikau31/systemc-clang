@@ -20,5 +20,5 @@ if [ -z "$SYSTEMC" ]; then
     exit;
 fi
 
-gdb --args $SYSTEMC_CLANG_BUILD_DIR/systemc-clang $1 -- -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -I$LLVM_INSTALL_DIR/lib/clang/13.0.0/include/ -I/usr/include -I$SYSTEMC/include -x c++ -w -c 
+gdb --args $SYSTEMC_CLANG_BUILD_DIR/systemc-clang $1 -- -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -I$LLVM_INSTALL_DIR/lib/clang/16/include/ -I/usr/include -I$SYSTEMC/include -x c++ -w -c 
 

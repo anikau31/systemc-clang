@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "Matchers.h"
-#include "SCuitable/FindGPUMacro.h"
+#include "FindGPUMacro.h"
 #include "clang/AST/DeclCXX.h"
 
 namespace systemc_clang {
