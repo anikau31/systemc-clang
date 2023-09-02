@@ -46,6 +46,13 @@ option( ENABLE_VERILOG_TESTS "Build Verilog tests" OFF )
 option( HW_FLOW "Build hardware flow" OFF )
 option( USE_CCACHE "Build using ccache" OFF )
 
+set( EXTRA_INCLUDE_DIR $ENV{EXTRA_INCLUDE_DIR} )
+
+if(NOT "${EXTRA_INCLUDE_DIR}" STREQUAL "")
+  include_directories( "${EXTRA_INCLUDE_DIR}")
+endif()
+
+
 if (ENABLE_VERILOG_TESTS)
   # find_package(PythonInterp 3 REQUIRED)
   find_package(Python3 COMPONENTS Interpreter)
@@ -77,6 +84,7 @@ include( cmake/FindDoxygen.cmake )
 # Testing
 # ===========================================
 include(CTest)
+set(TESTING_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
 
 # ===========================================
 # Build paths
@@ -172,10 +180,20 @@ endif()
 # )
 
 # Set the LLVM and Clang header and library paths
-include_directories(SYSTEM "${LLVM_INCLUDE_DIRS};${CLANG_INCLUDE_DIRS}")
+include_directories(SYSTEM 
+  "${LLVM_INCLUDE_DIRS}"
+  "${CLANG_INCLUDE_DIRS}"
+  "${TESTING_INCLUDE_DIR}/doctest"
+  "src/"
+  "src/matchers"
+  "src/model"
+  "src/cfg"
+  "src/utils"
+  "src/SCuitable"
+  )
 
 #===============================================================================
-# 3. CLANG-TUTOR BUILD CONFIGURATION
+# 3. BUILD CONFIGURATION
 #===============================================================================
 # Use the same C++ standard as LLVM does
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
@@ -215,6 +233,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 # available for the sub-projects.
 #===============================================================================
 add_subdirectory(src)
+add_subdirectory(tests)
 
 # Print the summary of the build. 
 message(STATUS "")

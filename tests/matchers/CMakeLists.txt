@@ -12,7 +12,7 @@ set (TEST_LIST
   #template-parameters-matcher.cpp
   )
 
-set(SCC_LIBS libsystemc-clang)
+set(SCC_LIBS sccl hdl "clangTooling")
 
 # catch2 may have headers colliding with other local files, 
 # so we can use -iquote instead of -I to include files in src folder

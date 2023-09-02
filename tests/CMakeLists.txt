@@ -10,7 +10,7 @@ endforeach()
 configure_file( ClangArgs.h.in ClangArgs.h)
 
 # updating submodules
-if(V_TESTS_ON)
+if(ENABLE_VERILOG_TESTS)
   # pull and update submodule
   find_package(Git QUIET)
   if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
@@ -60,7 +60,7 @@ include(CTest)
 # so we can use -iquote instead of -I to include files in src folder
 
 # for pytest tests
-if(V_TESTS_ON)
+if(ENABLE_VERILOG_TESTS)
   # integrate into ctest
   set(V_TEST_LIST hmethod_call port_location unimpl syntax_error generate_file)
   set(V_TRANSLATION_TEST_LIST 
