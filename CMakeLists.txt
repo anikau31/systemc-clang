@@ -47,7 +47,12 @@ option( HW_FLOW "Build hardware flow" OFF )
 option( USE_CCACHE "Build using ccache" OFF )
 
 set( EXTRA_INCLUDE_DIR $ENV{EXTRA_INCLUDE_DIR} )
-
+# set( SCCL_LIBS sccl "clangTooling")
+#
+# if(HDL)
+#     set(SCCL_LIBS ${SCCL_LIBS} hdl)
+# endif()
+#
 if(NOT "${EXTRA_INCLUDE_DIR}" STREQUAL "")
   include_directories( "${EXTRA_INCLUDE_DIR}")
 endif()
@@ -227,7 +232,7 @@ endif()
 
 # Set the build directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
 #===============================================================================
 # 4. ADD SUB-TARGETS
