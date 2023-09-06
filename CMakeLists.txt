@@ -111,6 +111,7 @@ if (NOT SYSTEMC_DIR) #("${SYSTEMC_DIR}" STREQUAL "")
 endif()
 
 if (DEFINED LLVM_INSTALL_DIR)
+  set(Clang_ROOT ${LLVM_INSTALL_DIR})
   set(SCCL_CLANG_PACKAGE_DIR "${Clang_ROOT}")
 endif()
 mark_as_advanced(SCCL_CLANG_PACKAGE_DIR)
