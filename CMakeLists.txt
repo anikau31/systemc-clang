@@ -83,7 +83,78 @@ endif()
 # ===========================================
 # Documentation packages
 # ===========================================
-include( cmake/FindDoxygen.cmake )
+
+if (BUILD_DOC)
+##################################################
+# Sphinx
+##################################################
+find_program(SPHINX_EXECUTABLE
+             NAMES sphinx-build sphinx-build2
+             DOC "Path to sphinx-build executable")
+
+# Handle REQUIRED and QUIET arguments
+# this will also set SPHINX_FOUND to true if SPHINX_EXECUTABLE exists
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Sphinx
+                                  "Failed to locate sphinx-build executable"
+                                  SPHINX_EXECUTABLE)
+
+# Provide options for controlling different types of output
+option(SPHINX_OUTPUT_HTML "Output standalone HTML files" ON)
+option(SPHINX_OUTPUT_MAN "Output man pages" ON)
+
+option(SPHINX_WARNINGS_AS_ERRORS "When building documentation treat warnings as errors" ON)
+
+set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/docs/source/)
+set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/docs/)
+
+add_custom_target(sphinx
+                  COMMAND
+                  ${SPHINX_EXECUTABLE} -M html
+                  ${SPHINX_SOURCE} ${SPHINX_BUILD}
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                  COMMENT "Generating documentation with Sphinx")
+
+
+
+##################################################
+# Doxygen
+##################################################
+# look for Doxygen package
+find_package(Doxygen)
+
+if (DOXYGEN_FOUND)
+    # set input and output files
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/source//Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+    # request to configure the file
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+
+    # Note: do not put "ALL" - this builds docs together with application EVERY TIME!
+    add_custom_target( doxygen
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM )
+else (DOXYGEN_FOUND)
+  message("Doxygen need to be installed to generate the doxygen documentation")
+  message(FATAL_ERROR "FATAL: DOXYGEN not found.")
+
+endif (DOXYGEN_FOUND)
+
+if (DOXYGEN_FOUND AND SPHINX_EXECUTABLE)
+add_custom_target(docs  
+    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+    COMMAND
+              ${SPHINX_EXECUTABLE} -M html
+              ${SPHINX_SOURCE} ${SPHINX_BUILD}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating Doxygen and Sphinx documentation"
+    VERBATIM )
+endif()
+
+endif (BUILD_DOC)
 
 # ===========================================
 # Testing
