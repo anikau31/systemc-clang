@@ -44,14 +44,14 @@ file(COPY ../examples/llnl-examples DESTINATION ${CMAKE_BINARY_DIR}/tests/data )
 
 set(TEST_DIR "tests")
 
-# add_subdirectory(unit)
-# add_subdirectory(matchers)
+add_subdirectory(unit)
+add_subdirectory(matchers)
 add_subdirectory(parsing)
-# add_subdirectory(cfg)
-# add_subdirectory(designs)
+add_subdirectory(cfg)
+add_subdirectory(designs)
 #
 # # Plugins
-# add_subdirectory(hdl)
+add_subdirectory(hdl)
 
 
 include(CTest)
@@ -82,11 +82,11 @@ if(ENABLE_VERILOG_TESTS)
 
   foreach(V_TEST_NAME IN LISTS V_TEST_LIST)
     add_test(NAME ${V_TEST_NAME}
-      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest --doctest-glob="*.py" -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k ${V_TEST_NAME})
+      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${Python3_EXECUTABLE} -B -m pytest --doctest-glob="*.py" -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k ${V_TEST_NAME})
   endforeach()
   foreach(V_TEST_NAME IN LISTS V_TRANSLATION_TEST_LIST)
     add_test(NAME verilog_${V_TEST_NAME}
-      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${PYTHON_EXECUTABLE} -B -m pytest --doctest-glob="*.py" -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[${V_TEST_NAME}-)
+      COMMAND  ${CMAKE_COMMAND} -E env SYSTEMC_CLANG=${PROJECT_SOURCE_DIR} ${Python3_EXECUTABLE} -B -m pytest --doctest-glob="*.py" -v --color=yes ${CMAKE_CURRENT_SOURCE_DIR} -k translation[${V_TEST_NAME}-)
   endforeach()
 
 

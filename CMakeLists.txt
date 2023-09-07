@@ -232,7 +232,7 @@ if(${SUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG} EQUAL "1")
 endif()
 
 # Set the build directories
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/")
 #set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
 #===============================================================================
@@ -243,6 +243,44 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 add_subdirectory(src)
 add_subdirectory(tests)
 
+set(SCCL systemc-clang)
+
+if(HDL)
+  set(sccl_SOURCE driver-hdl.cpp )
+elseif()
+  set(sccl_SOURCE driver-tooling.cpp )
+endif()
+
+
+# CONFIGURE THE TOOLS
+# ===================
+foreach( tool ${SCCL} )
+  # Create a library corresponding to 'plugin'
+  add_executable(
+    ${tool}
+    ${CMAKE_SOURCE_DIR}/${sccl_SOURCE} # ${${tool}_SOURCES}
+  )
+
+  # Configure include directories for 'tool'
+  target_include_directories(
+    ${tool}
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/plugins/hdl/
+    ${CMAKE_CURRENT_SOURCE_DIR}/
+    ${CMAKE_CURRENT_SOURCE_DIR}/model/
+    ${CMAKE_CURRENT_SOURCE_DIR}/cfg/
+    ${CMAKE_CURRENT_SOURCE_DIR}/SCuitable/
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils
+    ${CMAKE_CURRENT_SOURCE_DIR}/matchers/
+  )
+
+  # Link in the required libraries 
+  target_link_libraries(${tool}
+    sccl
+    hdl
+    "clangTooling"
+  )
+endforeach()
 # Print the summary of the build. 
 message(STATUS "")
 message(STATUS "[ Build summary ]")
@@ -276,6 +314,7 @@ message(STATUS "CMAKE_BINARY_DIR      : ${CMAKE_BINARY_DIR}")
 message(STATUS "EXTRA_INCLUDE_DIR     : ${EXTRA_INCLUDE_DIR}")
 message(STATUS "")
 message(STATUS "Python interpreter    : ${Python3_Interpreter_FOUND}")
+message(STATUS "Python executable     : ${Python3_EXECUTABLE}")
 message(STATUS "")
 message(STATUS "[ Documentation ]")
 message(STATUS "Build documentation   : ${BUILD_DOC}")

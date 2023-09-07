@@ -1,12 +1,5 @@
 set(SCCL systemc-clang)
 
-if(HDL)
-  set(sccl_SOURCE driver-hdl.cpp )
-elseif()
-  set(sccl_SOURCE driver-tooling.cpp )
-endif()
-
-
 add_library(model
   ./model/EventDecl.cpp
   ./model/PortDecl.cpp
@@ -78,32 +71,4 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/plugins/hdl/
 )
 
-# CONFIGURE THE TOOLS
-# ===================
-foreach( tool ${SCCL} )
-  # Create a library corresponding to 'plugin'
-  add_executable(
-    ${tool}
-    ${CMAKE_SOURCE_DIR}/${sccl_SOURCE} # ${${tool}_SOURCES}
-  )
 
-  # Configure include directories for 'tool'
-  target_include_directories(
-    ${tool}
-    PRIVATE
-    ${CMAKE_SOURCE_DIR}/plugins/hdl/
-    ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_SOURCE_DIR}/model/
-    ${CMAKE_CURRENT_SOURCE_DIR}/cfg/
-    ${CMAKE_CURRENT_SOURCE_DIR}/SCuitable/
-    ${CMAKE_CURRENT_SOURCE_DIR}/utils
-    ${CMAKE_CURRENT_SOURCE_DIR}/matchers/
-  )
-
-  # Link in the required libraries 
-  target_link_libraries(${tool}
-    sccl
-    hdl
-    "clangTooling"
-  )
-endforeach()
