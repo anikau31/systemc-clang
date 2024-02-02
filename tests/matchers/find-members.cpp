@@ -55,9 +55,9 @@ TEST_CASE("Read SystemC model from file for testing") {
     std::vector<std::string> var_names{"dut", "d", "n1",
                                        "n2",  "n3",      "n4"};
     std::vector<std::string> var_type_names{
-        "struct exor2", "struct DUT",
-        "struct nand2", "struct nand2",
-        "struct nand2", "struct nand2"};
+        "exor2", "DUT",
+        "nand2", "nand2",
+        "nand2", "nand2"};
     std::vector<std::string> instance_names{"exor2", "N1",
                                             "N2",    "N3",        "N4"};
 

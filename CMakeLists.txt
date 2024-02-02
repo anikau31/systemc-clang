@@ -321,6 +321,30 @@ set( LLVM_LD_FLAGS "${LLVM_LD_FLAGS}" )
 
 set( LLVM_LIBS ${LLVM_LIBS} )
 
+# set(CLANG_LIBS
+#   clangTooling
+#   clangFrontendTool
+#   clangFrontend
+#   clangDriver
+#   clangSerialization
+#   clangCodeGen
+#   clangParse
+#   clangSema
+#   clangStaticAnalyzerFrontend
+#   clangStaticAnalyzerCore
+#   clangAnalysis
+#   clangEdit
+#   clangAST
+#   clangLex
+#   clangBasic
+#   clangASTMatchers
+#   #clangStaticAnalyzerCheckers
+#   #clangARCMigrate
+#   #clangRewriteFrontend
+#   #clangRewrite
+
+#   )
+
 set(CLANG_LIBS
   clangTooling
   clangFrontendTool
@@ -329,6 +353,7 @@ set(CLANG_LIBS
   clangSerialization
   clangCodeGen
   clangParse
+  clangAPINotes
   clangSema
   clangStaticAnalyzerFrontend
   clangStaticAnalyzerCore
@@ -338,10 +363,18 @@ set(CLANG_LIBS
   clangLex
   clangBasic
   clangASTMatchers
+  clangDynamicASTMatchers
+  clangToolingASTDiff
+  clangToolingCore
+  # clangToolingInclusions
+  # clangToolingInclusionsStdlib
+  clangToolingRefactoring
+  clangToolingSyntax
+  clangSupport
   #clangStaticAnalyzerCheckers
   #clangARCMigrate
-  #clangRewriteFrontend
-  #clangRewrite
+  clangRewriteFrontend
+  clangRewrite
 
   )
 

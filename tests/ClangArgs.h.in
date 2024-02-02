@@ -22,6 +22,7 @@ static std::vector<std::string> catch_test_args{
     ${EXTRA_INCLUDE_DIR_EXPAND}
     "-I${LLVM_INSTALL_DIR}/include",
     "-I${LLVM_INSTALL_DIR}/lib/clang/${CLANG_VERSION}/include",
+    "-I${LLVM_INSTALL_DIR}/lib/clang/19/include",
     "-I${SYSTEMC_DIR}/include/",
     "-std=c++14"};
 };  // namespace systemc_clang

@@ -98,7 +98,8 @@ class SplitCFG {
   using VectorSplitCFGBlock = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorSplitCFGBlockImpl = llvm::SmallVector<const SplitCFGBlock *>;
   using VectorCFGElementPtrImpl =
-      llvm::SmallVectorImpl<const clang::CFGElement *>;
+      llvm::SmallVector<const clang::CFGElement *>;
+      // llvm::SmallVectorImpl<const clang::CFGElement *>;
   using VectorCFGElementPtr = llvm::SmallVector<const clang::CFGElement *>;
 
  private:
