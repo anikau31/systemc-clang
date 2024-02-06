@@ -365,7 +365,7 @@ class TypedefExpansion(TopDown):
                 else:
                     self.__append_to_expandable_var_to_tree(new_rhs, field_member)
                 res.append(new_assign)
-            dprint(res)
+            # dprint(res)
             return res
         elif lhs_var is None and self.__is_all_none(rhs_var):
             return [tree]
@@ -379,8 +379,11 @@ class TypedefExpansion(TopDown):
         # TODO: expand blkassign for aggregated types
         self.__push_up(tree)
         new_children = []
+        dprint(tree.pretty())
         for ch in tree.children:
-            if ch.data == 'blkassign':
+            if isinstance(ch, list):
+                new_children.append(ch)
+            elif ch.data == 'blkassign':
                 res = self.__expand_blkassign(ch)
                 new_children.extend(res)
             else:
@@ -490,10 +493,105 @@ class TypedefExpansion(TopDown):
         hmodinitblock includes a initialization block and portdecl block, both of which can include
         aggregated types
         """
+        self.is_in_initblock = True
         self.__push_up(tree)
+        self.is_in_initblock = False
         return tree
 
+    def stmts(self, tree):
+        self.__push_up(tree)
+        if not self.is_in_initblock:
+            return tree
+
+        # we might need to flatten port binidngs
+        new_children = []
+        for child in tree.children:
+            if isinstance(child, list):
+                new_children.extend(child)
+            else:
+                new_children.append(child)
+        tree.children = new_children
+        return tree
+
+    def forbody(self, tree):
+        self.__push_up(tree)
+        if not self.is_in_initblock:
+            return tree
+        new_children = []
+        for ch in tree.children:
+            if isinstance(ch, list):
+                new_children.extend(ch)
+            else:
+                new_children.append(ch)
+        tree.children = new_children
+        return tree
+        
+    
+    def __check_stmt_portbinding(self, stmt):
+        assert stmt.data == 'stmt'
+        # portbinding is the only child
+        if len(stmt.children) == 1 and stmt.children[0].data == 'portbinding':
+            return True
+        return False
+
+    def stmt(self, tree):
+        is_portbinding = self.__check_stmt_portbinding(tree)
+        self.__push_up(tree)
+        if not self.is_in_initblock or not is_portbinding:
+            return tree
+
+        # portbinding
+
+        assert len(tree.children) == 1
+        new_children = tree.children[0]
+        tree.children = []
+        res = [
+            copy.deepcopy(tree)
+            for child in new_children
+        ]
+        for r, ch in zip(res, new_children):
+            r.children = [ch]
+        return res
+
+
+
+    def portbinding(self, binding):
+        new_bindings = []
+        mod_name, sub, par = binding.children
+        sub_v = sub.children[0]
+        if is_tree_type(par, 'hbindingarrayref'):
+            par_v = get_ids_in_tree(par)[0]
+        else:
+            par_v = par.children[0]
+        typeinfo = self.__expanded_type(par_v.value)
+        if typeinfo:  # if the bindinding is on a customized type
+            type_name = self.__get_expandable_type_from_htype(typeinfo).children[0]
+            tpe = self.types[type_name]
+            b = []
+            for field in tpe.fields:
+                new_sub = copy.deepcopy(sub)
+                new_par = copy.deepcopy(par)
+
+                # TODO: this doesn't seem good, should have a more general wrapper
+                def __alternate(x):
+                    assert isinstance(x, Token)
+                    x.value += '_' + field.children[0]
+
+                alternate_ids(new_sub, [__alternate])
+                alternate_ids(new_par, [__alternate])
+                # new_sub.children[0].value += '_' + field.children[0]
+                # new_par.children[0].value += '_' + field.children[0]
+
+                new_binding = copy.copy(binding)
+                new_binding.children = [mod_name, new_sub, new_par]
+                b.append(new_binding)
+            new_bindings.extend(b)
+        else:
+            new_bindings.append(binding)
+        return new_bindings
+
     def portbindinglist(self, tree):
+        # TODO: deadcode, we need to remove this
         module_name, *bindings = tree.children
         new_bindings = []
         for binding in bindings:

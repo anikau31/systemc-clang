@@ -71,6 +71,17 @@ def get_ids_in_tree(tree):
             res.append(t.children[0])
     return res
 
+def get_ids_in_tree_types(tree, types=['hvarref']):
+    """get all ids"""
+    __id_types = types
+    if not isinstance(tree, Tree):
+        raise ValueError('Only Tree type is accepted')
+    res = []
+    for t in tree.iter_subtrees():
+        if is_tree_types(t, __id_types):
+            assert t.children[0], 'hvarref should only contain one children'
+            res.append(t.children[0])
+    return res
 
 def get_ids_in_tree_dfs(tree):
     """get all ids"""

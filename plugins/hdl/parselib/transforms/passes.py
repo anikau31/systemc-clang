@@ -15,6 +15,7 @@ from .function_info_pass import FunctionInfoPass, FunctionInfoPass2
 from .function_transformation_pass import FunctionTransformationPass
 from .comma_transformation import CommaTransformation
 from .structure_collector import StructureCollector
+from .sensevar_movement import SensevarMovement
 
 from ..utils import dprint
 
@@ -42,6 +43,7 @@ class VerilogTranslator:
         prev = PortExpansion().visit(prev)
         # note typedef should be after port expansion to prevent duplicate valid/ready
         prev = TypedefExpansion(f.types).visit(prev)
+        prev = SensevarMovement().visit(prev)
         prev = FunctionInfoPass().visit(prev)
         prev = FunctionInfoPass2().visit(prev)
         prev = FunctionParamMarker().visit(prev)

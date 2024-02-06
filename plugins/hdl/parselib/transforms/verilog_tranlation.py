@@ -28,6 +28,7 @@ class VerilogTranslationPass(TopDown):
         self.is_in_thread = False
         self.thread_comb = False
         self.non_thread_comb_signals = set()
+        self.is_in_gen_block = False
 
     def get_current_scope_type(self):
         """denotes one of four types of scope: loop, switch, branch, None
@@ -165,12 +166,12 @@ class VerilogTranslationPass(TopDown):
             r = r.children[3]
 
         # FIXME: this handling of shared signal across thread/comb block should be fixed
-        if 'thread' not in current_proc and '#function#' not in current_proc:
+        if (current_proc is None) or ('thread' not in current_proc and '#function#' not in current_proc):
             self.non_thread_comb_signals.add(l)
 
         res = '{} {} {}'.format(l, op, r)
 
-        if 'thread' in current_proc and l in self.non_thread_comb_signals:
+        if (current_proc is not None) and 'thread' in current_proc and l in self.non_thread_comb_signals:
             res = ''
         return res
 
@@ -381,6 +382,8 @@ class VerilogTranslationPass(TopDown):
         noindent = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt', 'whilestmt', 'dostmt']
         nosemico = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt', 'whilestmt', 'dostmt']
         for x in tree.children:
+            if x is None:
+                continue
             if x.data in noindent:
                 indentation.append('')
             else:
@@ -510,6 +513,8 @@ class VerilogTranslationPass(TopDown):
         return tree.children[0]
 
     def forstmt(self, tree):
+        if self.is_in_gen_block:
+            return self.__forstmt_gen_block(tree)
 
         self.push_current_scope_type('loop')
         new_children = []
@@ -600,12 +605,19 @@ class VerilogTranslationPass(TopDown):
 
     def hprocess(self, tree):
         proc_name, proc_name_2, prevardecl, *body = tree.children
+        
         self.set_current_proc_name(proc_name)
         for n in prevardecl.children:
             var_name = n.children[0].children[0]  # get the variable name of local variables
             self.__add_local_variables(var_name)
         self.inc_indent()
+
+        if hasattr(tree, 'force_sensevar'):
+            tree.children = [tree.force_sensevar] + tree.children
         self.__push_up(tree)
+        if hasattr(tree, 'force_sensevar'):
+            tree.force_sensevar = tree.children[0]
+            tree.children = tree.children[1:]
         self.dec_indent()
 
         proc_name, proc_name_2, prevardecl, *body = tree.children
@@ -618,7 +630,9 @@ class VerilogTranslationPass(TopDown):
         sense_list = self.get_sense_list()
         assert proc_name in sense_list, "Process name {} is not in module {}".format(proc_name, self.current_module)
         # res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
-        if self.__is_synchronous_sensitivity_list(sense_list[proc_name]):
+        if hasattr(tree, 'force_sensevar'):
+            res = ind + 'always @({}) begin: {}\n'.format(tree.force_sensevar, proc_name)
+        elif self.__is_synchronous_sensitivity_list(sense_list[proc_name]):
             res = ind + 'always_ff @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
         else:
             res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
@@ -1053,6 +1067,7 @@ class VerilogTranslationPass(TopDown):
         module_name = tree.children[0]
         modportsiglist = None
         processlist = None
+        generatelist = []
         functionlist = []
         vars = None
         mods = []
@@ -1062,6 +1077,8 @@ class VerilogTranslationPass(TopDown):
                     modportsiglist = t
                 elif t.data == 'processlist':
                     processlist = t
+                elif t.data == 'hgenerateblock':
+                    generatelist.append(t.children[0])
                 elif t.data =='hfunction':
                     functionlist.append(t)
 
@@ -1145,6 +1162,9 @@ class VerilogTranslationPass(TopDown):
             # for f in functionlist:
             #     res += f + '\n'
             assert False, "functionlist should be empty, there may be a bug in the code"
+        if generatelist:
+            for f in generatelist:
+                res += f + '\n'
         res += "endmodule"
         return res
 
@@ -1180,3 +1200,54 @@ class VerilogTranslationPass(TopDown):
                 decl += ';'
             res += ind + decl + '\n'
         return res
+
+    def hgenvardecl(self, tree):
+        new_children = []
+        for t in tree.children:
+            for v in self.vardecl(t):
+                new_children.append(v.children)
+        ctx = TypeContext(prefix='genvar', suffix='')
+        tree.children = [
+            (t[1].to_str(t[0], context=ctx), t[0], None) for t in new_children
+        ]
+        return tree.children
+
+    """called for the special genblock"""
+    def __forstmt_gen_block(self, tree):
+
+        self.push_current_scope_type('loop')
+        new_children = []
+        self.push_indent()
+        new_children.extend(self.visit(t) for t in tree.children[:3])
+        self.pop_indent()
+
+        self.inc_indent()
+        new_children.extend(self.visit(t) for t in tree.children[3:])
+        self.dec_indent()
+
+        if len(new_children) == 3:
+            warnings.warn("empty for loop")
+            for_init, for_cond, for_post = new_children
+            for_body = ''
+        else:
+            for_init, for_cond, for_post, for_body = new_children
+
+        ind = self.get_current_ind_prefix()
+        res = ind + 'genereate for ({};{};{}) begin\n'.format(for_init, for_cond, for_post)
+        res += for_body + '\n'
+        res += ind + 'end'
+        self.pop_current_scope_type()
+        return res
+
+
+    def hgenerateblock(self, tree):
+        self.is_in_gen_block = True
+        self.__push_up(tree)
+
+        hgenvarecl, *body = tree.children
+        tree.children = [';\n'.join([
+            t[0] for t in hgenvarecl
+        ]) + ';\n' + "\n".join(body)]
+
+        self.is_in_gen_block = False
+        return tree
