@@ -384,7 +384,7 @@ namespace systemc_hdl {
 	if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
 	generated_functions.insert(m.first);
 	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
-	if (m.first->hasBody()) {
+	if (m.first->hasBody() && !m.first->hasTrivialBody()) {
 	  //if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
 	  //generated_functions.insert(m.first);
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
@@ -455,7 +455,7 @@ namespace systemc_hdl {
 	      // ============= END CHECK ==============
 	      //
 	      if (mutil.isSCMacro(m.second.oldn)) {
-          paramtype = hNode::hdlopsEnum::hFunctionParamI;
+		paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      }
 	      else if ((vardecl->getType()->isReferenceType()) && !(vardecl->getType().getNonReferenceType().isConstQualified()))
 		paramtype = hNode::hdlopsEnum::hFunctionParamRef;

@@ -330,6 +330,7 @@ set(CLANG_LIBS
   clangCodeGen
   clangParse
   clangSema
+  clangSupport
   clangStaticAnalyzerFrontend
   clangStaticAnalyzerCore
   clangAnalysis
