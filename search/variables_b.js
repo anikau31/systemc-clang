@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['name_0',['name',['../classparselib_1_1transforms_1_1node_1_1TypeDefType.html#a6433c8c7a670f83fdd248a01a9e46942',1,'parselib.transforms.node.TypeDefType.name'],['../classparselib_1_1transforms_1_1type__node_1_1TypeNode.html#a1e3e7c439ede68d2de0bfcd4ecf64b76',1,'parselib.transforms.type_node.TypeNode.name'],['../structsystemc__hdl_1_1HDLConstructorHcode_1_1for__info__t.html#a74fd072f16e39644d8fad44b23b26201',1,'systemc_hdl::HDLConstructorHcode::for_info_t::name']]],
+  ['name_0',['name',['../structsystemc__hdl_1_1HDLConstructorHcode_1_1for__info__t.html#a74fd072f16e39644d8fad44b23b26201',1,'systemc_hdl::HDLConstructorHcode::for_info_t::name'],['../classparselib_1_1transforms_1_1node_1_1TypeDefType.html#a6433c8c7a670f83fdd248a01a9e46942',1,'parselib.transforms.node.TypeDefType.name'],['../classparselib_1_1transforms_1_1type__node_1_1TypeNode.html#a1e3e7c439ede68d2de0bfcd4ecf64b76',1,'parselib.transforms.type_node.TypeNode.name']]],
   ['name_5f_1',['name_',['../classsystemc__clang_1_1EventDecl.html#a66e51ad163fd2172a9632b98be35c62b',1,'systemc_clang::EventDecl::name_'],['../classsystemc__clang_1_1InterfaceDecl.html#a4021bf768bd39f6fe1992fd928e87b9a',1,'systemc_clang::InterfaceDecl::name_'],['../classsystemc__clang_1_1NotifyCalls.html#ac53160a5973881e68fd83ae37dd027b2',1,'systemc_clang::NotifyCalls::name_']]],
   ['name_5fmapping_2',['name_mapping',['../classparselib_1_1primitives_1_1Primitive.html#ac0a083ff5577c920f1430cb248816150',1,'parselib::primitives::Primitive']]],
   ['needwaitswitchcase_3',['needwaitswitchcase',['../classsystemc__hdl_1_1HDLThread.html#ae3897a690e32c79981c8e025a94ce8bf',1,'systemc_hdl::HDLThread']]],
@@ -9,7 +9,7 @@ var searchData=
   ['newn_6',['newn',['../structhnode_1_1names__t.html#afc0e10eb6caf6805206423e99b2a8650',1,'hnode::names_t']]],
   ['next_5fstate_5f_7',['next_state_',['../classsystemc__clang_1_1SplitCFGBlock.html#abc0367134fc9022762180d095b69878e',1,'systemc_clang::SplitCFGBlock']]],
   ['next_5fstate_5fcount_5f_8',['next_state_count_',['../classsystemc__clang_1_1SplitCFG.html#a00ed4b691aec8b1ac5ab9dc7cb12e153',1,'systemc_clang::SplitCFG']]],
-  ['nextstate_5fstring_9',['nextstate_string',['../classsystemc__hdl_1_1HDLThread.html#a211ce89a75076a27bd1b8c1d5d1fee81',1,'systemc_hdl::HDLThread::nextstate_string'],['../classsystemc__hdl_1_1HDLBody.html#a68b111006651da58b4fad35aa30e13a2',1,'systemc_hdl::HDLBody::nextstate_string']]],
+  ['nextstate_5fstring_9',['nextstate_string',['../classsystemc__hdl_1_1HDLBody.html#a68b111006651da58b4fad35aa30e13a2',1,'systemc_hdl::HDLBody::nextstate_string'],['../classsystemc__hdl_1_1HDLThread.html#a211ce89a75076a27bd1b8c1d5d1fee81',1,'systemc_hdl::HDLThread::nextstate_string']]],
   ['nextstring_10',['nextstring',['../classsystemc__hdl_1_1HDLThread.html#a5267d8e8fe126f30b0a4a0fefe2074ac',1,'systemc_hdl::HDLThread']]],
   ['nextwaitctr_5fstring_11',['nextwaitctr_string',['../classsystemc__hdl_1_1HDLThread.html#a0922af665015123ba6446d11f23416a3',1,'systemc_hdl::HDLThread']]],
   ['nodes_5fbft_5f_12',['nodes_bft_',['../classsystemc__clang_1_1Tree.html#a3ec4582fc73412f591f07e4a9dec78c7',1,'systemc_clang::Tree']]],

@@ -22,7 +22,7 @@ var searchData=
   ['usertypes_19',['usertypes',['../structHDLType_1_1usertype__info__t.html#a8da1507c2c2c499ddf19a2ac618ea482',1,'HDLType::usertype_info_t']]],
   ['using_20clang_20',['systemc-clang is a parser for SystemC constructs built using clang.',['../index.html',1,'']]],
   ['util_21',['util',['../classhnode_1_1util.html',1,'hnode::util'],['../classhnode_1_1util.html#a2f939b759f2612426d6e6832256c4228',1,'hnode::util::util()']]],
-  ['utility_22',['utility',['../classsystemc__clang_1_1Utility.html',1,'systemc_clang::Utility'],['../classsystemc__clang_1_1Utility.html#a28bedc1e035e19b9d24726c57d224eb9',1,'systemc_clang::Utility::Utility()']]],
+  ['utility_22',['Utility',['../classsystemc__clang_1_1Utility.html',1,'systemc_clang::Utility'],['../classsystemc__clang_1_1Utility.html#a28bedc1e035e19b9d24726c57d224eb9',1,'systemc_clang::Utility::Utility()']]],
   ['utility_2ecpp_23',['Utility.cpp',['../Utility_8cpp.html',1,'']]],
   ['utility_2eh_24',['Utility.h',['../Utility_8h.html',1,'']]],
   ['utils_2epy_25',['utils.py',['../utils_8py.html',1,'']]]

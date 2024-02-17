@@ -1,7 +1,7 @@
 <map id="src/model/EventDecl.h" name="src/model/EventDecl.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="92,5,243,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,189,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,33,121,70,117,66,154,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,33,121,70,118,66,154,29"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="213,79,266,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="181,29,219,67,216,70,178,33"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="181,29,219,66,215,70,178,33"/>
 </map>

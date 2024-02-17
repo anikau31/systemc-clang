@@ -5,7 +5,7 @@ var searchData=
   ['namespacematcher_2',['NamespaceMatcher',['../classsc__ast__matchers_1_1utils_1_1NamespaceMatcher.html',1,'sc_ast_matchers::utils']]],
   ['netlistmatcher_3',['NetlistMatcher',['../classsc__ast__matchers_1_1NetlistMatcher.html',1,'sc_ast_matchers']]],
   ['newname_5fmap_5ft_4',['newname_map_t',['../classhnode_1_1newname__map__t.html',1,'hnode']]],
-  ['node_5',['node',['../classparselib_1_1transforms_1_1node_1_1Node.html',1,'parselib.transforms.node.Node'],['../classsystemc__clang_1_1Node.html',1,'systemc_clang::Node']]],
+  ['node_5',['Node',['../classparselib_1_1transforms_1_1node_1_1Node.html',1,'parselib.transforms.node.Node'],['../classsystemc__clang_1_1Node.html',1,'systemc_clang::Node']]],
   ['nodemergepass_6',['NodeMergePass',['../classparselib_1_1transforms_1_1node__merge_1_1NodeMergePass.html',1,'parselib::transforms::node_merge']]],
   ['nodemovement_7',['NodeMovement',['../classparselib_1_1transforms_1_1node__movement_1_1NodeMovement.html',1,'parselib::transforms::node_movement']]],
   ['notifycalls_8',['NotifyCalls',['../classsystemc__clang_1_1NotifyCalls.html',1,'systemc_clang']]],

@@ -1,7 +1,7 @@
 <map id="systemc_clang::FindSimTime" name="systemc_clang::FindSimTime">
 <area shape="rect" id="Node000001" title=" " alt="" coords="93,94,284,120"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,185,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,53,176,91,172,95,127,58"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,54,176,91,172,95,128,58"/>
 <area shape="rect" id="Node000003" href="$classsystemc__clang_1_1Utility.html" title=" " alt="" coords="209,13,357,39"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="259,50,205,96,201,91,256,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="259,51,205,96,201,91,255,47"/>
 </map>

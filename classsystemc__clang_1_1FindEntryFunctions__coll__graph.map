@@ -1,7 +1,7 @@
 <map id="systemc_clang::FindEntryFunctions" name="systemc_clang::FindEntryFunctions">
 <area shape="rect" id="Node000001" title=" " alt="" coords="261,39,429,79"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="12,5,192,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,37,261,45,260,50,206,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,37,261,45,260,50,207,43"/>
 <area shape="rect" id="Node000003" href="$classsystemc__clang_1_1EntryFunctionContainer.html" title=" " alt="" coords="5,71,199,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,74,260,67,260,73,214,79"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,74,260,67,260,73,214,79"/>
 </map>

@@ -1,13 +1,13 @@
 <map id="src/matchers/FindGlobalEvents.h" name="src/matchers/FindGlobalEvents.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="370,5,583,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,223,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="415,34,190,78,189,73,414,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="415,34,191,78,190,73,414,29"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="246,79,430,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="454,34,376,74,373,69,452,29"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="454,34,376,74,374,69,452,29"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="454,79,500,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="479,31,479,64,474,64,474,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="479,31,479,63,474,63,474,31"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="523,79,577,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="491,29,529,67,525,70,487,33"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="491,29,529,66,525,70,487,33"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="601,79,659,105"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="504,29,592,70,590,75,502,34"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="504,29,591,70,589,75,502,34"/>
 </map>

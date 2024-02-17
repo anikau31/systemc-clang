@@ -1,6 +1,6 @@
 <map id="systemc_clang::State" name="systemc_clang::State">
 <area shape="rect" id="Node000001" title=" " alt="" coords="15,94,160,120"/>
 <area shape="rect" id="Node000002" href="$classsystemc__clang_1_1SusCFG.html" title=" " alt="" coords="5,5,170,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,46,90,94,85,94,85,46"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="186,10,196,18,188,26,171,29,170,23,186,21,191,18,183,15"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,47,90,94,85,94,85,47"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="187,10,196,18,188,26,171,29,170,23,186,21,191,18,184,15"/>
 </map>

@@ -28,7 +28,7 @@ var searchData=
   ['supplementaryinfo_25',['SupplementaryInfo',['../structsystemc__clang_1_1SupplementaryInfo.html',1,'systemc_clang']]],
   ['suscfg_26',['SusCFG',['../classsystemc__clang_1_1SusCFG.html',1,'systemc_clang']]],
   ['suspensionautomata_27',['SuspensionAutomata',['../classsystemc__clang_1_1SuspensionAutomata.html',1,'systemc_clang']]],
-  ['systemcclang_28',['systemcclang',['../classsystemc-clang_1_1SystemCClang.html',1,'systemc-clang.SystemCClang'],['../classsystemc__clang_1_1SystemCClang.html',1,'systemc_clang::SystemCClang']]],
+  ['systemcclang_28',['SystemCClang',['../classsystemc-clang_1_1SystemCClang.html',1,'systemc-clang.SystemCClang'],['../classsystemc__clang_1_1SystemCClang.html',1,'systemc_clang::SystemCClang']]],
   ['systemcclangaxn_29',['SystemCClangAXN',['../classsystemc__clang_1_1SystemCClangAXN.html',1,'systemc_clang']]],
   ['systemcclangfatalerror_30',['SystemCClangFatalError',['../classsystemc-clang_1_1SystemCClangFatalError.html',1,'systemc-clang']]],
   ['systemcconsumer_31',['SystemCConsumer',['../classsystemc__clang_1_1SystemCConsumer.html',1,'systemc_clang']]]

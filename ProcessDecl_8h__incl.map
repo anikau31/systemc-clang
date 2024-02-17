@@ -1,7 +1,7 @@
 <map id="src/model/ProcessDecl.h" name="src/model/ProcessDecl.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,172,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="12,79,80,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,33,63,68,58,65,79,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,33,63,67,59,64,79,30"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="105,79,158,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,30,119,65,114,68,93,33"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,30,118,64,114,67,93,33"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="src/model/InterfaceDecl.h" name="src/model/InterfaceDecl.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="9,5,178,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,59,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,33,54,70,50,66,81,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,33,54,69,50,65,81,29"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="83,79,229,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="106,29,138,66,134,70,102,33"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="106,29,137,65,133,69,102,33"/>
 </map>

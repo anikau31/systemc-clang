@@ -1,11 +1,11 @@
 <map id="systemc_clang::GlobalSuspensionAutomata" name="systemc_clang::GlobalSuspensionAutomata">
 <area shape="rect" id="Node000001" title=" " alt="" coords="23,271,242,312"/>
 <area shape="rect" id="Node000002" href="$classsystemc__clang_1_1Utility.html" title=" " alt="" coords="5,183,153,208"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,220,123,269,119,272,91,223"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,221,123,269,119,272,91,223"/>
 <area shape="rect" id="Node000003" href="$classsystemc__clang_1_1Model.html" title=" " alt="" coords="176,183,326,208"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="226,220,159,273,156,269,223,216"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="226,220,159,273,156,269,222,216"/>
 <area shape="rect" id="Node000004" href="$classsystemc__clang_1_1ModuleInstance.html" title="Forward declarations." alt="" coords="148,94,354,120"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="254,134,254,182,248,182,248,134"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="254,135,254,182,248,182,248,135"/>
 <area shape="rect" id="Node000005" href="$structsc__ast__matchers_1_1ModuleInstanceType.html" title=" " alt="" coords="127,5,375,31"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="254,46,254,94,248,94,248,46"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="254,47,254,94,248,94,248,47"/>
 </map>
