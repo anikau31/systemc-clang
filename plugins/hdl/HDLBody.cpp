@@ -408,6 +408,10 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl has an init: \n");
       LLVM_DEBUG(declinit->dump(llvm::dbgs(), ast_context_));
       CXXConstructExpr *tmpdeclinit = dyn_cast<CXXConstructExpr>(declinit);
+      if ((tmpdeclinit != NULL) &&(tmpdeclinit->getConstructor()->hasTrivialBody())) {
+	isuserdefinedclass = false; // no need to generate a method for it
+      }
+	
       if (isuserdefinedclass && (tmpdeclinit != NULL)) {
 	// For user-defined classes:
 	// If there is an initializer, define the method for the initializer and
@@ -417,6 +421,10 @@ namespace systemc_hdl {
 	// constructor method.
 
 	const CXXConstructorDecl *cnstrdcl = tmpdeclinit->getConstructor();
+	// if (cnstrdcl->hasTrivialBody()) {
+	  
+	//   return true; // no real initializer
+	// }
 	string methodname = cnstrdcl->getNameAsString();
 	qualmethodname = cnstrdcl->getQualifiedNameAsString();
 	lutil.make_ident(qualmethodname);
@@ -425,14 +433,13 @@ namespace systemc_hdl {
 	LLVM_DEBUG(cnstrdcl->dump());
 	// add method decl for constructor
 	hNodep h_callp =
-          new hNode(qualmethodname, hNode::hdlopsEnum::hMethodCall);
+	  new hNode(qualmethodname, hNode::hdlopsEnum::hMethodCall);
 	const std::vector<StringRef> tmpmodstr{"sc_module"};
 	if (sc_ast_matchers::utils::isInNamespace(tstp, tmpmodstr)) {
 	  LLVM_DEBUG(llvm::dbgs()
 		     << "user-defined class is defined in sc module\n");
 	} else
-	  h_callp->append(
-			  new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
+	  h_callp->append(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
 	methodecls.add_entry((CXXMethodDecl *)cnstrdcl, qualmethodname, h_callp);
 	methodecls.methodobjtypemap[(const CXXMethodDecl *)cnstrdcl] = tstp;
 	TraverseStmt(tmpdeclinit);
@@ -443,6 +450,7 @@ namespace systemc_hdl {
 	//}
 	return true;
       }
+      
 
       TraverseStmt(declinit);
 

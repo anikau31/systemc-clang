@@ -384,7 +384,7 @@ namespace systemc_hdl {
 	if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
 	generated_functions.insert(m.first);
 	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
-	if (m.first->hasBody() && !m.first->hasTrivialBody()) {
+	if (m.first->hasBody()) { // && !m.first->hasTrivialBody()) {
 	  //if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
 	  //generated_functions.insert(m.first);
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
@@ -460,7 +460,10 @@ namespace systemc_hdl {
 	      else if ((vardecl->getType()->isReferenceType()) && !(vardecl->getType().getNonReferenceType().isConstQualified()))
 		paramtype = hNode::hdlopsEnum::hFunctionParamRef;
 	      else { // handle actual parameter
-		
+		// still messed up here for user defined struct:  hFunctionParamI  NONAME,  hType fp_t_11_52_ NOLIST;
+		//hBinop = [
+		//hVarref _actual_scclang_global_3 NOLIST
+		//hVarref _actual NOLIST
 		paramtype = hNode::hdlopsEnum::hFunctionParamI;
 		// create an entry in mod_vname_map for this parameter's local variable
 		string objname = vardecl->getName().str()+"_actual";
@@ -472,6 +475,7 @@ namespace systemc_hdl {
 		hNodep hv = new hNode(mod_vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref);
 		hparam_assign->append(hv);
 		hv = new hNode(vardecl->getName().str(), hNode::hdlopsEnum::hVarref);
+		//doesn't work when name isn't given hv = new hNode(objname, hNode::hdlopsEnum::hVarref); // dummy actual parameter for user defined types
 		hparam_assign->append(hv);
 		hparam_assign_list->append(hparam_assign);
 	      }
