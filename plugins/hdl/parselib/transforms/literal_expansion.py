@@ -33,11 +33,12 @@ class LiteralExpansion(TopDown):
         return res
 
     def portbinding(self, tree):
-        self.is_port_binding = True
-        self.port_binding_module = self._get_port_binding_moduel(tree)
-        self.__push_up(tree)
-        self.is_port_binding = False
-        self.port_binding_module = None
+        # For now we just move port binding as is
+        # self.is_port_binding = True
+        # port_binding_module = self._get_port_binding_moduel(tree)
+        # self.__push_up(tree)
+        # self.is_port_binding = False
+        # self.port_binding_module = None
         return tree
 
     def hfieldaccess(self, tree):
@@ -69,8 +70,8 @@ class LiteralExpansion(TopDown):
             new_val = ''
             parts = orig_token.split('##')
             start = self.current_module
-            if self.is_port_binding:  # if we are in port binding, we shall take the ids directly
-                start = self.port_binding_module
+            # if self.is_port_binding:  # if we are in port binding, we shall take the ids directly
+            #     start = self.port_binding_module
             if start in self.structure:
                 m = self.structure[start]
                 end_point = False
@@ -146,4 +147,25 @@ class LiteralExpansion(TopDown):
         self.current_module = tree.children[0]
         self.__push_up(tree)
         self.current_module = None
+        return tree
+
+
+class LiteralExpansion2(TopDown):
+    def __init__(self):
+        super().__init__() 
+    
+    def hvarref(self, tree):
+        if isinstance(tree.children[0], Token) and '##' in tree.children[0].value:
+            tree.children[0] = Token('ID', tree.children[0].value.replace('##', '_'))
+        return tree
+
+    def handle_list(self, lst):
+        for idx in range(len(lst)):
+            if isinstance(lst[idx], lark.Tree):
+                self.__push_up(lst[idx])
+
+    def portbindinglist(self, tree):
+        for c in tree.children:
+            if isinstance(c, list):
+                self.handle_list(c)
         return tree

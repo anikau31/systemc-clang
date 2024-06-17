@@ -92,7 +92,7 @@ class SensevarMovement(TopDown):
         for_loop_sensevar = self.is_in_initblock and self.is_for_stmt
 
         self.__push_up(tree)
-        init, cond, step, body = tree.children
+        # init, cond, step, body = tree.children
         
 
         self.is_for_stmt = False

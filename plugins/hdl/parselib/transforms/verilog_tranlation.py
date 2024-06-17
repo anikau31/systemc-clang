@@ -2,6 +2,7 @@ import warnings
 from .top_down import TopDown
 from ..primitives import *
 from ..utils import dprint, is_tree_type, get_ids_in_tree
+from ..utils import terminate_with_no_trace
 from lark import Tree, Token
 from functools import reduce
 import pprint
@@ -403,7 +404,22 @@ class VerilogTranslationPass(TopDown):
                         res = str(x[0]) + str(x[1]) + str(x[2])
                     elif x[1].data == 'portbinding':
                         ch = x[1].children
-                        assignment = f"{ch[0]}.{ch[1]} = {ch[2]}"
+                        if hasattr(x[1], 'swap_for_for_loop'):
+                            # TODO: this assign here is just to please the synthesizer
+                            # otherwise synthesis won't go through
+                            dot_access = '' if 'NONAME' in ch[0] else (ch[0] + '.')
+                            assignment = f"assign {ch[1]} = {dot_access}{ch[2]}"
+                        else:
+                            ind = self.get_current_ind_prefix()
+                            self.inc_indent()
+                            self.inc_indent()
+                            ind_always = self.get_current_ind_prefix()
+                            self.dec_indent()
+                            self.dec_indent()
+                            ind_end = self.get_current_ind_prefix()
+                            dot_access = '' if 'NONAME' in ch[0] else (ch[0] + '.')
+                            # assignment = f"always @(*) begin\n{ind_always}{dot_access}{ch[1]} = {ch[2]};\n{ind_end}end"
+                            assignment = f"{ind}assign {dot_access}{ch[1]} = {ch[2]}"
                         res = ''.join([x[0], assignment, x[2]])
                     elif x[1].data == 'hnamedsensvar':
                         res = f'{x[0]} /* always {x[1].children[1]} */ {x[2]}'
@@ -727,8 +743,103 @@ class VerilogTranslationPass(TopDown):
         self.__push_back(tree)
         return '{}[{}]'.format(tree.children[0], tree.children[1])
 
+    def modulearrayinst(self, tree):
+        res: str = ''
+        ind = self.get_current_ind_prefix()
+
+        mod_name, mod_type = tree.children
+        mod_type_name = mod_type.children[0].children[1].children[0]
+        mod_array_dimension = mod_type.children[0].children[2]
+
+        genvar_names = list(
+            map(lambda x: '_'.join([self.current_module, mod_name, str(x)]), range(len(mod_array_dimension)))
+        )
+        # genvar decl
+        for genvar in genvar_names:
+            res += ind + 'genvar {};\n'.format(genvar)
+
+        for idx, (genvar, dim) in enumerate(zip(genvar_names, mod_array_dimension)):
+            res += ind + "/*generate*/ for ({} = 0; {} < {}; {} = {} + 1) begin {}\n".format(
+                genvar, genvar, dim, genvar, genvar, ': ' + mod_name if idx == 0 else ''
+            )
+
+        # the actual module def
+        res += ind + "{} mod(\n".format(mod_type_name)
+
+        # now collect the normal port binding
+        if mod_name not in self.bindings:
+            warnings.warn('Port bindings for module instance name {} not found'.format(mod_name))
+            bindings = []
+        else:
+            bindings = self.bindings[mod_name]
+
+
+
+        def extract_binding_name(x):
+            # FIXME: when the port connection is 2D, the original approach may not work
+            return get_ids_in_tree(x[0])[0]
+            # if is_tree_type(x[0], 'hbindingarrayref'):
+            #     res = x[0].children[0].children[0]
+            # else:
+            #     res = x[0].children[0]
+            # return res
+        # these are us trying to pull non-indexed bindings to the declaration point
+        orig_bindings = bindings
+        bindings_normal = list(filter(lambda x: '.' not in extract_binding_name(x), orig_bindings))
+        bindings_hier = list(filter(lambda x: '.' in extract_binding_name(x), orig_bindings))
+        bindings = bindings_normal
+        # ind = self.get_current_ind_prefix()
+        # res = ind + '{} {}('.format(mod_type_name, mod_name) + '\n'
+        # self.inc_indent()
+        # ind = self.get_current_ind_prefix()
+        binding_str = []
+        array_bindings = {}
+        for binding in bindings:
+            # for backward compatibility, we keep the case where binding is a list
+            if type(binding) == list:
+                sub, par = binding
+            else:
+                warnings.warn('Using Tree as binding is deprecated', DeprecationWarning)
+                sub, par = binding.children
+            if is_tree_type(sub, 'hbindingarrayref'):
+                # The .xxx part is an array
+                sub_name = get_ids_in_tree(sub)[0].value  # assuming varref
+                if sub_name not in array_bindings:
+                    array_bindings[sub_name] = {}
+                # if sub.children[0].data == 'hbindingarrayref':
+                #     raise ValueError('nested 2-D array port is not supported')
+                array_bindings[sub_name][sub.children[1].children[0]] = par
+            else:
+                # at this point, the par should be able to be fully expanded even if it is an array
+                if is_tree_type(par, 'hbindingarrayref'):
+                    par = self.expand_binding_ref(par)
+                else:
+                    par = par.children[0].value
+                binding_str.append(ind + '.{}({})'.format(sub.children[0].value, par))
+        for sub_name, bindings in array_bindings.items():
+            # for now, we keep a dict of array binding
+            array_seq = [None] * len(bindings)
+            for idx, b in bindings.items():
+                # dprint(self.expand_binding_ref(b))
+                # array_seq[idx] = '{}[{}]'.format(b.children[0].children[0].value, b.children[1].children[0])
+                array_seq[idx] = self.expand_binding_ref(b)
+            binding_str.append(ind + ".{}('{{ {} }})".format(
+                sub_name, ','.join(array_seq)
+            ))
+        res += ',\n'.join(binding_str)
+
+        res += ind + ");\n"
+
+        for _ in mod_array_dimension:
+            res += ind + "end\n"
+
+
+        tree.children = [res]
+        return tree
+
     def moduleinst(self, tree):
-        # dprint(tree)
+        # -- these are actually for handling module array instance
+        # we should be ablt to forgo these
         mod_name, mod_type = tree.children
         # expand if it is an element of module array
         mod_name = '_'.join(mod_name.split('#'))
@@ -748,6 +859,7 @@ class VerilogTranslationPass(TopDown):
             # else:
             #     res = x[0].children[0]
             # return res
+        # these are us trying to pull non-indexed bindings to the declaration point
         orig_bindings = bindings
         bindings_normal = list(filter(lambda x: '.' not in extract_binding_name(x), orig_bindings))
         bindings_hier = list(filter(lambda x: '.' in extract_binding_name(x), orig_bindings))
@@ -1010,6 +1122,20 @@ class VerilogTranslationPass(TopDown):
         self.thread_comb = False
         return res
 
+    def genbindinglist(self, tree):
+        # this node is created in portbinding_recollect.py passes
+        self.__push_up(tree)
+        return tree
+
+    def genvardecl(self, tree):
+        genvars = list(map(lambda x: "{}genvar {};".format(self.get_current_ind_prefix(), x), tree.children))
+        res = '\n'.join(genvars)
+        return res
+
+    def genfor(self, tree):
+        self.__push_up(tree)
+        return "\n".join(tree.children)
+
     def hmodule(self, tree):
         # dprint("Processing Module: ", tree.children[0])
         # print("Retrieving Portbindings")
@@ -1027,7 +1153,7 @@ class VerilogTranslationPass(TopDown):
                     raise ValueError('Only one hmodinitblock should present')
                 encountered_initblock = True
                 name = t.children[0]
-                initblock, portbindings, senslist = None, None, []
+                initblock, portbindings, senslist, genbindinglist = None, None, [], None
                 for ch in t.children[1:]:
                     if ch.data == 'hcstmt':  # TODO: have a dedicated node for initial block
                         initblock = ch
@@ -1039,6 +1165,8 @@ class VerilogTranslationPass(TopDown):
                         initblock = ch
                     elif ch.data == 'hnamedsensevar':
                         senslist.append(ch)
+                    elif ch.data == 'genbindinglist':
+                        genbindinglist = ch
                     else:
                         raise ValueError(ch.pretty())
                 if initblock:
@@ -1087,7 +1215,9 @@ class VerilogTranslationPass(TopDown):
             ports = list(filter(lambda x: isinstance(x, Tree) and x.data == 'portdecltype', modportsiglist.children))
             sigs = list(filter(lambda x: isinstance(x, Tree) and x.data == 'sigdecltype', modportsiglist.children))
             vars = list(filter(lambda x: isinstance(x, tuple), modportsiglist.children))
-            mods = list(filter(lambda x: isinstance(x, Tree) and x.data == 'moduleinst', modportsiglist.children))
+            mods = list(filter(lambda x: isinstance(x, Tree) and 
+                                (x.data == 'moduleinst' or x.data == 'modulearrayinst'), 
+                                modportsiglist.children))
         else:
             ports, sigs = None, None
 
@@ -1134,6 +1264,7 @@ class VerilogTranslationPass(TopDown):
         if len(mods) > 0:
             for m in mods:
                 res += m.children[0] + '\n'
+
         # Generate processes
         if processlist:
             for proc in processlist.children:
@@ -1165,6 +1296,8 @@ class VerilogTranslationPass(TopDown):
         if generatelist:
             for f in generatelist:
                 res += f + '\n'
+        if genbindinglist:
+            res += "\n".join(genbindinglist.children) + "\n"
         res += "endmodule"
         return res
 
@@ -1233,7 +1366,7 @@ class VerilogTranslationPass(TopDown):
             for_init, for_cond, for_post, for_body = new_children
 
         ind = self.get_current_ind_prefix()
-        res = ind + 'genereate for ({};{};{}) begin\n'.format(for_init, for_cond, for_post)
+        res = ind + '/*generate*/ for ({};{};{}) begin\n'.format(for_init, for_cond, for_post)
         res += for_body + '\n'
         res += ind + 'end'
         self.pop_current_scope_type()

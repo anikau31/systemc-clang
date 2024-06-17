@@ -88,6 +88,9 @@ module encode_sc_module_1 (
   logic [10:0] c_sp_ex2_scclang_global_18_data;
   logic [0:0] c_sp_ex2_scclang_global_18_valid;
   logic [0:0] c_sp_ex2_scclang_global_18_ready;
+  initial begin
+
+  end
   find_emax_sc_module_2 u_find_emax(
     .clk(clk),
     .reset(reset),
@@ -136,8 +139,7 @@ module encode_sc_module_1 (
     .s_ex_valid(c_sp_ex1_scclang_global_17_valid),
     .s_ex_ready(c_sp_ex1_scclang_global_17_ready),
     .m_valid(c_fc_valid_scclang_global_14),
-    .m_ready(c_fc_ready_scclang_global_13),
-    .m_block('{ c_fc_block_scclang_global_12[0],c_fc_block_scclang_global_12[1],c_fc_block_scclang_global_12[2],c_fc_block_scclang_global_12[3],c_fc_block_scclang_global_12[4],c_fc_block_scclang_global_12[5],c_fc_block_scclang_global_12[6],c_fc_block_scclang_global_12[7],c_fc_block_scclang_global_12[8],c_fc_block_scclang_global_12[9],c_fc_block_scclang_global_12[10],c_fc_block_scclang_global_12[11],c_fc_block_scclang_global_12[12],c_fc_block_scclang_global_12[13],c_fc_block_scclang_global_12[14],c_fc_block_scclang_global_12[15] })
+    .m_ready(c_fc_ready_scclang_global_13)
   );
   always @(*) begin
   end
@@ -148,9 +150,7 @@ module encode_sc_module_1 (
     .s_valid(c_fc_valid_scclang_global_14),
     .s_ready(c_fc_ready_scclang_global_13),
     .m_valid(c_eb_valid_scclang_global_5),
-    .m_ready(c_eb_ready_scclang_global_4),
-    .s_block('{ c_fc_block_scclang_global_12[0],c_fc_block_scclang_global_12[1],c_fc_block_scclang_global_12[2],c_fc_block_scclang_global_12[3],c_fc_block_scclang_global_12[4],c_fc_block_scclang_global_12[5],c_fc_block_scclang_global_12[6],c_fc_block_scclang_global_12[7],c_fc_block_scclang_global_12[8],c_fc_block_scclang_global_12[9],c_fc_block_scclang_global_12[10],c_fc_block_scclang_global_12[11],c_fc_block_scclang_global_12[12],c_fc_block_scclang_global_12[13],c_fc_block_scclang_global_12[14],c_fc_block_scclang_global_12[15] }),
-    .m_block('{ c_eb_block_scclang_global_3[0],c_eb_block_scclang_global_3[1],c_eb_block_scclang_global_3[2],c_eb_block_scclang_global_3[3],c_eb_block_scclang_global_3[4],c_eb_block_scclang_global_3[5],c_eb_block_scclang_global_3[6],c_eb_block_scclang_global_3[7],c_eb_block_scclang_global_3[8],c_eb_block_scclang_global_3[9],c_eb_block_scclang_global_3[10],c_eb_block_scclang_global_3[11],c_eb_block_scclang_global_3[12],c_eb_block_scclang_global_3[13],c_eb_block_scclang_global_3[14],c_eb_block_scclang_global_3[15] })
+    .m_ready(c_eb_ready_scclang_global_4)
   );
   always @(*) begin
   end
@@ -161,9 +161,7 @@ module encode_sc_module_1 (
     .s_valid(c_eb_valid_scclang_global_5),
     .s_ready(c_eb_ready_scclang_global_4),
     .m_valid(c_bb_valid_scclang_global_2),
-    .m_ready(c_bb_ready_scclang_global_1),
-    .s_block('{ c_eb_block_scclang_global_3[0],c_eb_block_scclang_global_3[1],c_eb_block_scclang_global_3[2],c_eb_block_scclang_global_3[3],c_eb_block_scclang_global_3[4],c_eb_block_scclang_global_3[5],c_eb_block_scclang_global_3[6],c_eb_block_scclang_global_3[7],c_eb_block_scclang_global_3[8],c_eb_block_scclang_global_3[9],c_eb_block_scclang_global_3[10],c_eb_block_scclang_global_3[11],c_eb_block_scclang_global_3[12],c_eb_block_scclang_global_3[13],c_eb_block_scclang_global_3[14],c_eb_block_scclang_global_3[15] }),
-    .m_block('{ c_bb_block_scclang_global_0[0],c_bb_block_scclang_global_0[1],c_bb_block_scclang_global_0[2],c_bb_block_scclang_global_0[3],c_bb_block_scclang_global_0[4],c_bb_block_scclang_global_0[5],c_bb_block_scclang_global_0[6],c_bb_block_scclang_global_0[7],c_bb_block_scclang_global_0[8],c_bb_block_scclang_global_0[9],c_bb_block_scclang_global_0[10],c_bb_block_scclang_global_0[11],c_bb_block_scclang_global_0[12],c_bb_block_scclang_global_0[13],c_bb_block_scclang_global_0[14],c_bb_block_scclang_global_0[15] })
+    .m_ready(c_bb_ready_scclang_global_1)
   );
   always @(*) begin
   end
@@ -178,8 +176,7 @@ module encode_sc_module_1 (
     .m_bp(c_ei_bp_scclang_global_7),
     .m_last(c_ei_last_scclang_global_8),
     .m_valid(c_ei_valid_scclang_global_10),
-    .m_ready(c_ei_ready_scclang_global_9),
-    .s_block('{ c_bb_block_scclang_global_0[0],c_bb_block_scclang_global_0[1],c_bb_block_scclang_global_0[2],c_bb_block_scclang_global_0[3],c_bb_block_scclang_global_0[4],c_bb_block_scclang_global_0[5],c_bb_block_scclang_global_0[6],c_bb_block_scclang_global_0[7],c_bb_block_scclang_global_0[8],c_bb_block_scclang_global_0[9],c_bb_block_scclang_global_0[10],c_bb_block_scclang_global_0[11],c_bb_block_scclang_global_0[12],c_bb_block_scclang_global_0[13],c_bb_block_scclang_global_0[14],c_bb_block_scclang_global_0[15] })
+    .m_ready(c_ei_ready_scclang_global_9)
   );
   always @(*) begin
   end
@@ -208,6 +205,30 @@ module encode_sc_module_1 (
   always @(*) begin
   end
 
+  genvar i_u_dut_local_0;
+  genvar i_u_dut_local_3;
+  genvar i_u_dut_local_1;
+  genvar i_u_dut_local_4;
+  genvar i_u_dut_local_2;
+  genvar i_u_dut_local_5;
+  for (i_u_dut_local_0 = 0;(i_u_dut_local_0) < (16);i_u_dut_local_0++) begin
+    u_fwd_cast.m_block[i_u_dut_local_0] = c_fc_block_scclang_global_12[i_u_dut_local_0];
+  end
+  for (i_u_dut_local_1 = 0;(i_u_dut_local_1) < (16);i_u_dut_local_1++) begin
+    u_encode_block.s_block[i_u_dut_local_1] = c_fc_block_scclang_global_12[i_u_dut_local_1];
+  end
+  for (i_u_dut_local_2 = 0;(i_u_dut_local_2) < (16);i_u_dut_local_2++) begin
+    u_encode_block.m_block[i_u_dut_local_2] = c_eb_block_scclang_global_3[i_u_dut_local_2];
+  end
+  for (i_u_dut_local_3 = 0;(i_u_dut_local_3) < (16);i_u_dut_local_3++) begin
+    u_block_buffer.s_block[i_u_dut_local_3] = c_eb_block_scclang_global_3[i_u_dut_local_3];
+  end
+  for (i_u_dut_local_4 = 0;(i_u_dut_local_4) < (16);i_u_dut_local_4++) begin
+    u_block_buffer.m_block[i_u_dut_local_4] = c_bb_block_scclang_global_0[i_u_dut_local_4];
+  end
+  for (i_u_dut_local_5 = 0;(i_u_dut_local_5) < (16);i_u_dut_local_5++) begin
+    u_encode_ints.s_block[i_u_dut_local_5] = c_bb_block_scclang_global_0[i_u_dut_local_5];
+  end
 endmodule
 module find_emax_sc_module_2 (
   input logic [0:0] clk,
@@ -238,6 +259,12 @@ module find_emax_sc_module_2 (
   logic [10:0] c_ex_scclang_global_5_data;
   logic [0:0] c_ex_scclang_global_5_valid;
   logic [0:0] c_ex_scclang_global_5_ready;
+  logic [51:0] _actual_scclang_global_6_frac;
+  logic [10:0] _actual_scclang_global_6_expo;
+  logic [0:0] _actual_scclang_global_6_sign;
+  initial begin
+
+  end
   rvfifo_cc_sc_module_9 u_que_fp(
     .clk(clk),
     .reset(reset),
@@ -272,9 +299,7 @@ module find_emax_sc_module_2 (
     
     
     s_fp_ready <= c_sync_scclang_global_0;
-    c_fp_scclang_global_4_data_frac <= s_fp_data_frac;
-    c_fp_scclang_global_4_data_expo <= s_fp_data_expo;
-    c_fp_scclang_global_4_data_sign <= s_fp_data_sign;
+    c_fp_scclang_global_4_data = s_fp_data;
     c_fp_scclang_global_4_valid <= c_sync_scclang_global_0;
     c_ex_scclang_global_5_data <= emax_scclang_global_2;
     c_ex_scclang_global_5_valid <= emax_v_scclang_global_3;
@@ -286,20 +311,24 @@ module find_emax_sc_module_2 (
     logic [10:0] fp_ms_proc_local_3_expo;
     logic [0:0] fp_ms_proc_local_3_sign;
     logic [10:0] expo_ms_proc_local_4;
+    logic [51:0] fp_ms_proc_local_3_frac__ref_0;
+    logic [0:0] fp_ms_proc_local_3_sign__ref_0;
+    logic [10:0] fp_ms_proc_local_3_expo__ref_0;
     
+    fp_ms_proc_local_3_expo__ref_0 = fp_ms_proc_local_3_expo;
+    fp_ms_proc_local_3_sign__ref_0 = fp_ms_proc_local_3_sign;
+    fp_ms_proc_local_3_frac__ref_0 = fp_ms_proc_local_3_frac;
     if ((reset) == (0)) begin
       count_scclang_global_1 <= (16) - (1);
       emax_scclang_global_2 <= 11'd0;
       emax_v_scclang_global_3 <= 0;
     end else begin
       last_ms_proc_local_2 = (count_scclang_global_1) == (0);
-      fp_ms_proc_local_3_frac = s_fp_data_frac;
-      fp_ms_proc_local_3_expo = s_fp_data_expo;
-      fp_ms_proc_local_3_sign = s_fp_data_sign;
-      if (((fp_ms_proc_local_3_expo) == (0)) && ((fp_ms_proc_local_3_frac) == (0))) begin
-        expo_ms_proc_local_4 = fp_ms_proc_local_3_expo;
+      fp_t11_52__fp_t_func_0(fp_ms_proc_local_3_frac__ref_0,fp_ms_proc_local_3_expo__ref_0,fp_ms_proc_local_3_sign__ref_0,s_fp_data_frac,s_fp_data_expo,s_fp_data_sign,fp_ms_proc_local_3_frac__ref_0,fp_ms_proc_local_3_expo__ref_0,fp_ms_proc_local_3_sign__ref_0);
+      if (((fp_ms_proc_local_3_expo__ref_0) == (0)) && ((fp_ms_proc_local_3_frac__ref_0) == (0))) begin
+        expo_ms_proc_local_4 = fp_ms_proc_local_3_expo__ref_0;
       end else begin
-        expo_ms_proc_local_4 = (fp_ms_proc_local_3_expo) + (11'd1);
+        expo_ms_proc_local_4 = (fp_ms_proc_local_3_expo__ref_0) + (11'd1);
       end
 
       if (c_sync_scclang_global_0) begin
@@ -333,7 +362,16 @@ module find_emax_sc_module_2 (
 
     end
 
+    fp_ms_proc_local_3_frac = fp_ms_proc_local_3_frac__ref_0;
+    fp_ms_proc_local_3_sign = fp_ms_proc_local_3_sign__ref_0;
+    fp_ms_proc_local_3_expo = fp_ms_proc_local_3_expo__ref_0;
   end
+  function automatic void fp_t11_52__fp_t_func_0 (input logic [51:0] hthis_frac, input logic [10:0] hthis_expo, input logic [0:0] hthis_sign, input logic [51:0] NONAME_frac, input logic [10:0] NONAME_expo, input logic [0:0] NONAME_sign, inout logic [51:0] hthis_frac__ref_0, inout logic [10:0] hthis_expo__ref_0, inout logic [0:0] hthis_sign__ref_0);
+  begin
+
+    _actual_scclang_global_6 = NONAME;
+  end
+  endfunction
 endmodule
 module rvfifo_cc_sc_module_9 (
   input logic [0:0] clk,
@@ -350,6 +388,9 @@ module rvfifo_cc_sc_module_9 (
   input logic [0:0] m_port_ready
 );
   logic signed[31:0] MAX_DEPTH_scclang_global_0 = 32;
+  initial begin
+
+  end
   fifo_cc_sc_module_11 u_fifo(
     .clk(clk),
     .reset(reset),
@@ -396,13 +437,11 @@ module fifo_cc_sc_module_11 (
     if ((32) <= (0)) begin
     end
   end
-  always @(wr_en or rd_en or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4 or data_scclang_global_0_frac[(0)] or data_scclang_global_0_expo[(0)] or data_scclang_global_0_sign[(0)] or data_scclang_global_0_frac[(1)] or data_scclang_global_0_expo[(1)] or data_scclang_global_0_sign[(1)] or data_scclang_global_0_frac[(2)] or data_scclang_global_0_expo[(2)] or data_scclang_global_0_sign[(2)] or data_scclang_global_0_frac[(3)] or data_scclang_global_0_expo[(3)] or data_scclang_global_0_sign[(3)] or data_scclang_global_0_frac[(4)] or data_scclang_global_0_expo[(4)] or data_scclang_global_0_sign[(4)] or data_scclang_global_0_frac[(5)] or data_scclang_global_0_expo[(5)] or data_scclang_global_0_sign[(5)] or data_scclang_global_0_frac[(6)] or data_scclang_global_0_expo[(6)] or data_scclang_global_0_sign[(6)] or data_scclang_global_0_frac[(7)] or data_scclang_global_0_expo[(7)] or data_scclang_global_0_sign[(7)] or data_scclang_global_0_frac[(8)] or data_scclang_global_0_expo[(8)] or data_scclang_global_0_sign[(8)] or data_scclang_global_0_frac[(9)] or data_scclang_global_0_expo[(9)] or data_scclang_global_0_sign[(9)] or data_scclang_global_0_frac[(10)] or data_scclang_global_0_expo[(10)] or data_scclang_global_0_sign[(10)] or data_scclang_global_0_frac[(11)] or data_scclang_global_0_expo[(11)] or data_scclang_global_0_sign[(11)] or data_scclang_global_0_frac[(12)] or data_scclang_global_0_expo[(12)] or data_scclang_global_0_sign[(12)] or data_scclang_global_0_frac[(13)] or data_scclang_global_0_expo[(13)] or data_scclang_global_0_sign[(13)] or data_scclang_global_0_frac[(14)] or data_scclang_global_0_expo[(14)] or data_scclang_global_0_sign[(14)] or data_scclang_global_0_frac[(15)] or data_scclang_global_0_expo[(15)] or data_scclang_global_0_sign[(15)] or data_scclang_global_0_frac[(16)] or data_scclang_global_0_expo[(16)] or data_scclang_global_0_sign[(16)] or data_scclang_global_0_frac[(17)] or data_scclang_global_0_expo[(17)] or data_scclang_global_0_sign[(17)] or data_scclang_global_0_frac[(18)] or data_scclang_global_0_expo[(18)] or data_scclang_global_0_sign[(18)] or data_scclang_global_0_frac[(19)] or data_scclang_global_0_expo[(19)] or data_scclang_global_0_sign[(19)] or data_scclang_global_0_frac[(20)] or data_scclang_global_0_expo[(20)] or data_scclang_global_0_sign[(20)] or data_scclang_global_0_frac[(21)] or data_scclang_global_0_expo[(21)] or data_scclang_global_0_sign[(21)] or data_scclang_global_0_frac[(22)] or data_scclang_global_0_expo[(22)] or data_scclang_global_0_sign[(22)] or data_scclang_global_0_frac[(23)] or data_scclang_global_0_expo[(23)] or data_scclang_global_0_sign[(23)] or data_scclang_global_0_frac[(24)] or data_scclang_global_0_expo[(24)] or data_scclang_global_0_sign[(24)] or data_scclang_global_0_frac[(25)] or data_scclang_global_0_expo[(25)] or data_scclang_global_0_sign[(25)] or data_scclang_global_0_frac[(26)] or data_scclang_global_0_expo[(26)] or data_scclang_global_0_sign[(26)] or data_scclang_global_0_frac[(27)] or data_scclang_global_0_expo[(27)] or data_scclang_global_0_sign[(27)] or data_scclang_global_0_frac[(28)] or data_scclang_global_0_expo[(28)] or data_scclang_global_0_sign[(28)] or data_scclang_global_0_frac[(29)] or data_scclang_global_0_expo[(29)] or data_scclang_global_0_sign[(29)] or data_scclang_global_0_frac[(30)] or data_scclang_global_0_expo[(30)] or data_scclang_global_0_sign[(30)] or data_scclang_global_0_frac[(31)] or data_scclang_global_0_expo[(31)] or data_scclang_global_0_sign[(31)]) begin: mc_proc
+  always @(wr_en or rd_en or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4) begin: mc_proc
     
     
     if (1) begin
-      dout_frac <= data_scclang_global_0_frac[rd_idx_scclang_global_4];
-      dout_expo <= data_scclang_global_0_expo[rd_idx_scclang_global_4];
-      dout_sign <= data_scclang_global_0_sign[rd_idx_scclang_global_4];
+      dout = data_scclang_global_0[rd_idx_scclang_global_4];
     end
     wr_en_i_scclang_global_5 <= (wr_en) && (!(full_i_scclang_global_2));
     rd_en_i_scclang_global_3 <= (rd_en) && (!(empty_i_scclang_global_1));
@@ -418,14 +457,10 @@ module fifo_cc_sc_module_11 (
     rd_inc_ms_proc_local_4 = ((rd_idx_scclang_global_4) + (1)) % (32);
     if ((reset) == (0)) begin
       if (!(1)) begin
-        dout_frac <= 0;
-        dout_expo <= 0;
-        dout_sign <= 0;
+        dout = 0;
       end
       for (i_ms_proc_local_5 = 0;(i_ms_proc_local_5) < (32);i_ms_proc_local_5++) begin
-        data_scclang_global_0_frac[i_ms_proc_local_5] <= 0;
-        data_scclang_global_0_expo[i_ms_proc_local_5] <= 0;
-        data_scclang_global_0_sign[i_ms_proc_local_5] <= 0;
+        data_scclang_global_0[i_ms_proc_local_5] = 0;
       end
       rd_idx_scclang_global_4 <= 5'd0;
       wr_idx_scclang_global_6 <= 5'd0;
@@ -434,15 +469,11 @@ module fifo_cc_sc_module_11 (
     end else begin
       if (!(1)) begin
         if (rd_en_i_scclang_global_3) begin
-          dout_frac <= data_scclang_global_0_frac[rd_idx_scclang_global_4];
-          dout_expo <= data_scclang_global_0_expo[rd_idx_scclang_global_4];
-          dout_sign <= data_scclang_global_0_sign[rd_idx_scclang_global_4];
+          dout = data_scclang_global_0[rd_idx_scclang_global_4];
         end
       end
       if (wr_en_i_scclang_global_5) begin
-        data_scclang_global_0_frac[wr_idx_scclang_global_6] <= din_frac;
-        data_scclang_global_0_expo[wr_idx_scclang_global_6] <= din_expo;
-        data_scclang_global_0_sign[wr_idx_scclang_global_6] <= din_sign;
+        data_scclang_global_0[wr_idx_scclang_global_6] = din;
         wr_idx_scclang_global_6 <= wr_inc_ms_proc_local_3;
         if (!(rd_en_i_scclang_global_3)) begin
           if ((wr_inc_ms_proc_local_3) == (rd_idx_scclang_global_4)) begin
@@ -462,6 +493,20 @@ module fifo_cc_sc_module_11 (
       end
     end
 
+  end
+genvar i_u_fifo_local_1;
+  genereate for (i_u_fifo_local_1 = 0;(i_u_fifo_local_1) < (32);i_u_fifo_local_1++) begin
+    always @(data_scclang_global_0[(i_u_fifo_local_1)]) begin: mc_proc
+      
+      
+      if (1) begin
+        dout = data_scclang_global_0[rd_idx_scclang_global_4];
+      end
+      wr_en_i_scclang_global_5 <= (wr_en) && (!(full_i_scclang_global_2));
+      rd_en_i_scclang_global_3 <= (rd_en) && (!(empty_i_scclang_global_1));
+      full <= (full_i_scclang_global_2) == (0);
+      empty <= (empty_i_scclang_global_1) == (0);
+    end
   end
 endmodule
 module sreg_sc_module_10 (
@@ -483,7 +528,10 @@ module sreg_sc_module_10 (
   logic [0:0] wr_idx_scclang_global_6;
   logic signed[31:0] IW_scclang_global_7 = 1;
   logic [31:0] depth_scclang_global_8 = 2;
-  always @(s_port_valid or m_port_ready or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4 or data_scclang_global_0[(0)] or data_scclang_global_0[(1)]) begin: mc_proc
+  initial begin
+
+  end
+  always @(s_port_valid or m_port_ready or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4) begin: mc_proc
     
     
     m_port_data <= data_scclang_global_0[rd_idx_scclang_global_4];
@@ -530,6 +578,18 @@ module sreg_sc_module_10 (
     end
 
   end
+genvar i_u_reg_ex_local_1;
+  genereate for (i_u_reg_ex_local_1 = 0;(i_u_reg_ex_local_1) < (2);i_u_reg_ex_local_1++) begin
+    always @(data_scclang_global_0[(i_u_reg_ex_local_1)]) begin: mc_proc
+      
+      
+      m_port_data <= data_scclang_global_0[rd_idx_scclang_global_4];
+      wr_en_i_scclang_global_5 <= (s_port_valid) && (!(full_i_scclang_global_2));
+      rd_en_i_scclang_global_3 <= (m_port_ready) && (!(empty_i_scclang_global_1));
+      s_port_ready <= !(full_i_scclang_global_2);
+      m_port_valid <= !(empty_i_scclang_global_1);
+    end
+  end
 endmodule
 module ssplit_sc_module_3 (
   input logic [0:0] clk,
@@ -550,6 +610,9 @@ module ssplit_sc_module_3 (
   logic [10:0] c_port2_scclang_global_1_data;
   logic [0:0] c_port2_scclang_global_1_valid;
   logic [0:0] c_port2_scclang_global_1_ready;
+  initial begin
+
+  end
   rvfifo_cc_sc_module_12 u_que1(
     .clk(clk),
     .reset(reset),
@@ -597,6 +660,9 @@ module rvfifo_cc_sc_module_12 (
   input logic [0:0] m_port_ready
 );
   logic signed[31:0] MAX_DEPTH_scclang_global_0 = 2;
+  initial begin
+
+  end
   fifo_cc_sc_module_14 u_fifo(
     .clk(clk),
     .reset(reset),
@@ -633,7 +699,7 @@ module fifo_cc_sc_module_14 (
     if ((2) <= (0)) begin
     end
   end
-  always @(wr_en or rd_en or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4 or data_scclang_global_0[(0)] or data_scclang_global_0[(1)]) begin: mc_proc
+  always @(wr_en or rd_en or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4) begin: mc_proc
     
     
     if (1) begin
@@ -690,6 +756,20 @@ module fifo_cc_sc_module_14 (
     end
 
   end
+genvar i_u_fifo_local_1;
+  genereate for (i_u_fifo_local_1 = 0;(i_u_fifo_local_1) < (2);i_u_fifo_local_1++) begin
+    always @(data_scclang_global_0[(i_u_fifo_local_1)]) begin: mc_proc
+      
+      
+      if (1) begin
+        dout <= data_scclang_global_0[rd_idx_scclang_global_4];
+      end
+      wr_en_i_scclang_global_5 <= (wr_en) && (!(full_i_scclang_global_2));
+      rd_en_i_scclang_global_3 <= (rd_en) && (!(empty_i_scclang_global_1));
+      full <= (full_i_scclang_global_2) == (0);
+      empty <= (empty_i_scclang_global_1) == (0);
+    end
+  end
 endmodule
 module rvfifo_cc_sc_module_13 (
   input logic [0:0] clk,
@@ -702,6 +782,9 @@ module rvfifo_cc_sc_module_13 (
   input logic [0:0] m_port_ready
 );
   logic signed[31:0] MAX_DEPTH_scclang_global_0 = 16;
+  initial begin
+
+  end
   fifo_cc_sc_module_15 u_fifo(
     .clk(clk),
     .reset(reset),
@@ -738,7 +821,7 @@ module fifo_cc_sc_module_15 (
     if ((16) <= (0)) begin
     end
   end
-  always @(wr_en or rd_en or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4 or data_scclang_global_0[(0)] or data_scclang_global_0[(1)] or data_scclang_global_0[(2)] or data_scclang_global_0[(3)] or data_scclang_global_0[(4)] or data_scclang_global_0[(5)] or data_scclang_global_0[(6)] or data_scclang_global_0[(7)] or data_scclang_global_0[(8)] or data_scclang_global_0[(9)] or data_scclang_global_0[(10)] or data_scclang_global_0[(11)] or data_scclang_global_0[(12)] or data_scclang_global_0[(13)] or data_scclang_global_0[(14)] or data_scclang_global_0[(15)]) begin: mc_proc
+  always @(wr_en or rd_en or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4) begin: mc_proc
     
     
     if (1) begin
@@ -795,6 +878,20 @@ module fifo_cc_sc_module_15 (
     end
 
   end
+genvar i_u_fifo_local_1;
+  genereate for (i_u_fifo_local_1 = 0;(i_u_fifo_local_1) < (16);i_u_fifo_local_1++) begin
+    always @(data_scclang_global_0[(i_u_fifo_local_1)]) begin: mc_proc
+      
+      
+      if (1) begin
+        dout <= data_scclang_global_0[rd_idx_scclang_global_4];
+      end
+      wr_en_i_scclang_global_5 <= (wr_en) && (!(full_i_scclang_global_2));
+      rd_en_i_scclang_global_3 <= (rd_en) && (!(empty_i_scclang_global_1));
+      full <= (full_i_scclang_global_2) == (0);
+      empty <= (empty_i_scclang_global_1) == (0);
+    end
+  end
 endmodule
 module fwd_cast_sc_module_4 (
   input logic [0:0] clk,
@@ -814,6 +911,9 @@ module fwd_cast_sc_module_4 (
   logic signed[63:0] c_int_scclang_global_0;
   logic [0:0] c_sync_scclang_global_1;
   logic [3:0] count_scclang_global_2;
+  logic [51:0] _actual_scclang_global_3_frac;
+  logic [10:0] _actual_scclang_global_3_expo;
+  logic [0:0] _actual_scclang_global_3_sign;
   always @(s_ex_valid or s_ex_data or s_fp_valid or s_fp_data_frac or s_fp_data_expo or s_fp_data_sign or m_ready or count_scclang_global_2 or c_sync_scclang_global_1 or c_int_scclang_global_0) begin: mc_proc
     logic [10:0] emax_mc_proc_local_2;
     logic [51:0] fp_mc_proc_local_3_frac;
@@ -822,7 +922,13 @@ module fwd_cast_sc_module_4 (
     logic [2:0] hid_mc_proc_local_4;
     logic [63:0] ui_mc_proc_local_5;
     logic signed[63:0] si_mc_proc_local_6;
+    logic [51:0] fp_mc_proc_local_3_frac__ref_0;
+    logic [0:0] fp_mc_proc_local_3_sign__ref_0;
+    logic [10:0] fp_mc_proc_local_3_expo__ref_0;
     
+    fp_mc_proc_local_3_expo__ref_0 = fp_mc_proc_local_3_expo;
+    fp_mc_proc_local_3_sign__ref_0 = fp_mc_proc_local_3_sign;
+    fp_mc_proc_local_3_frac__ref_0 = fp_mc_proc_local_3_frac;
     c_sync_scclang_global_1 <= ((s_ex_valid) && (s_fp_valid)) && (m_ready);
     s_ex_ready <= (c_sync_scclang_global_1) && ((count_scclang_global_2) == ((16) - (1)));
     s_fp_ready <= c_sync_scclang_global_1;
@@ -830,18 +936,19 @@ module fwd_cast_sc_module_4 (
     if ((emax_mc_proc_local_2) != (0)) begin
       emax_mc_proc_local_2 = (emax_mc_proc_local_2) - (11'd1);
     end
-    fp_mc_proc_local_3_frac = s_fp_data_frac;
-    fp_mc_proc_local_3_expo = s_fp_data_expo;
-    fp_mc_proc_local_3_sign = s_fp_data_sign;
-    hid_mc_proc_local_4 = (fp_mc_proc_local_3_expo) != (0);
-    ui_mc_proc_local_5 = ({ ({ (hid_mc_proc_local_4) , (fp_mc_proc_local_3_frac) }) , (9'd0) }) >>> ((emax_mc_proc_local_2) - (fp_mc_proc_local_3_expo));
-    if (fp_mc_proc_local_3_sign) begin
+    fp_t11_52__fp_t_func_0(fp_mc_proc_local_3_frac__ref_0,fp_mc_proc_local_3_expo__ref_0,fp_mc_proc_local_3_sign__ref_0,s_fp_data_frac,s_fp_data_expo,s_fp_data_sign,fp_mc_proc_local_3_frac__ref_0,fp_mc_proc_local_3_expo__ref_0,fp_mc_proc_local_3_sign__ref_0);
+    hid_mc_proc_local_4 = (fp_mc_proc_local_3_expo__ref_0) != (0);
+    ui_mc_proc_local_5 = ({ ({ (hid_mc_proc_local_4) , (fp_mc_proc_local_3_frac__ref_0) }) , (9'd0) }) >>> ((emax_mc_proc_local_2) - (fp_mc_proc_local_3_expo__ref_0));
+    if (fp_mc_proc_local_3_sign__ref_0) begin
       si_mc_proc_local_6 = -(ui_mc_proc_local_5);
     end else begin
       si_mc_proc_local_6 = ui_mc_proc_local_5;
     end
 
     c_int_scclang_global_0 <= si_mc_proc_local_6;
+    fp_mc_proc_local_3_frac = fp_mc_proc_local_3_frac__ref_0;
+    fp_mc_proc_local_3_sign = fp_mc_proc_local_3_sign__ref_0;
+    fp_mc_proc_local_3_expo = fp_mc_proc_local_3_expo__ref_0;
   end
   always_ff @(posedge clk) begin: ms_proc
     
@@ -869,6 +976,12 @@ module fwd_cast_sc_module_4 (
     end
 
   end
+  function automatic void fp_t11_52__fp_t_func_0 (input logic [51:0] hthis_frac, input logic [10:0] hthis_expo, input logic [0:0] hthis_sign, input logic [51:0] NONAME_frac, input logic [10:0] NONAME_expo, input logic [0:0] NONAME_sign, inout logic [51:0] hthis_frac__ref_0, inout logic [10:0] hthis_expo__ref_0, inout logic [0:0] hthis_sign__ref_0);
+  begin
+
+    _actual_scclang_global_3 = NONAME;
+  end
+  endfunction
 endmodule
 module encode_block_sc_module_5 (
   input logic [0:0] clk,
@@ -886,106 +999,53 @@ module encode_block_sc_module_5 (
   logic signed[63:0] c_yt_data_scclang_global_3[0:3][0:3];
   logic [0:0] c_yt_ready_scclang_global_4[0:3];
   logic [0:0] c_yt_valid_scclang_global_5[0:3];
+  initial begin
+
+  end
   fwd_lift_sc_module_16 u_xt_0(
-    .clk(clk),
-    .reset(reset),
-    .s_valid(s_valid),
-    .s_ready(c_xt_ready_scclang_global_1[0]),
-    .m_valid(c_xt_valid_scclang_global_2[0]),
-    .m_ready(m_ready),
-    .s_port('{ s_block[((0) * (4)) + (0)],s_block[((0) * (4)) + (1)],s_block[((0) * (4)) + (2)],s_block[((0) * (4)) + (3)] }),
-    .m_port('{ c_xt_data_scclang_global_0[0][0],c_xt_data_scclang_global_0[0][1],c_xt_data_scclang_global_0[0][2],c_xt_data_scclang_global_0[0][3] })
+
   );
   always @(*) begin
   end
 
   fwd_lift_sc_module_16 u_xt_1(
-    .clk(clk),
-    .reset(reset),
-    .s_valid(s_valid),
-    .s_ready(c_xt_ready_scclang_global_1[1]),
-    .m_valid(c_xt_valid_scclang_global_2[1]),
-    .m_ready(m_ready),
-    .s_port('{ s_block[((1) * (4)) + (0)],s_block[((1) * (4)) + (1)],s_block[((1) * (4)) + (2)],s_block[((1) * (4)) + (3)] }),
-    .m_port('{ c_xt_data_scclang_global_0[1][0],c_xt_data_scclang_global_0[1][1],c_xt_data_scclang_global_0[1][2],c_xt_data_scclang_global_0[1][3] })
+
   );
   always @(*) begin
   end
 
   fwd_lift_sc_module_16 u_xt_2(
-    .clk(clk),
-    .reset(reset),
-    .s_valid(s_valid),
-    .s_ready(c_xt_ready_scclang_global_1[2]),
-    .m_valid(c_xt_valid_scclang_global_2[2]),
-    .m_ready(m_ready),
-    .s_port('{ s_block[((2) * (4)) + (0)],s_block[((2) * (4)) + (1)],s_block[((2) * (4)) + (2)],s_block[((2) * (4)) + (3)] }),
-    .m_port('{ c_xt_data_scclang_global_0[2][0],c_xt_data_scclang_global_0[2][1],c_xt_data_scclang_global_0[2][2],c_xt_data_scclang_global_0[2][3] })
+
   );
   always @(*) begin
   end
 
   fwd_lift_sc_module_16 u_xt_3(
-    .clk(clk),
-    .reset(reset),
-    .s_valid(s_valid),
-    .s_ready(c_xt_ready_scclang_global_1[3]),
-    .m_valid(c_xt_valid_scclang_global_2[3]),
-    .m_ready(m_ready),
-    .s_port('{ s_block[((3) * (4)) + (0)],s_block[((3) * (4)) + (1)],s_block[((3) * (4)) + (2)],s_block[((3) * (4)) + (3)] }),
-    .m_port('{ c_xt_data_scclang_global_0[3][0],c_xt_data_scclang_global_0[3][1],c_xt_data_scclang_global_0[3][2],c_xt_data_scclang_global_0[3][3] })
+
   );
   always @(*) begin
   end
 
   fwd_lift_sc_module_17 u_yt_0(
-    .clk(clk),
-    .reset(reset),
-    .s_valid(c_xt_valid_scclang_global_2[0]),
-    .s_ready(c_yt_ready_scclang_global_4[0]),
-    .m_valid(c_yt_valid_scclang_global_5[0]),
-    .m_ready(m_ready),
-    .s_port('{ c_xt_data_scclang_global_0[0][0],c_xt_data_scclang_global_0[1][0],c_xt_data_scclang_global_0[2][0],c_xt_data_scclang_global_0[3][0] }),
-    .m_port('{ c_yt_data_scclang_global_3[0][0],c_yt_data_scclang_global_3[1][0],c_yt_data_scclang_global_3[2][0],c_yt_data_scclang_global_3[3][0] })
+
   );
   always @(*) begin
   end
 
   fwd_lift_sc_module_17 u_yt_1(
-    .clk(clk),
-    .reset(reset),
-    .s_valid(c_xt_valid_scclang_global_2[0]),
-    .s_ready(c_yt_ready_scclang_global_4[1]),
-    .m_valid(c_yt_valid_scclang_global_5[1]),
-    .m_ready(m_ready),
-    .s_port('{ c_xt_data_scclang_global_0[0][1],c_xt_data_scclang_global_0[1][1],c_xt_data_scclang_global_0[2][1],c_xt_data_scclang_global_0[3][1] }),
-    .m_port('{ c_yt_data_scclang_global_3[0][1],c_yt_data_scclang_global_3[1][1],c_yt_data_scclang_global_3[2][1],c_yt_data_scclang_global_3[3][1] })
+
   );
   always @(*) begin
   end
 
   fwd_lift_sc_module_17 u_yt_2(
-    .clk(clk),
-    .reset(reset),
-    .s_valid(c_xt_valid_scclang_global_2[0]),
-    .s_ready(c_yt_ready_scclang_global_4[2]),
-    .m_valid(c_yt_valid_scclang_global_5[2]),
-    .m_ready(m_ready),
-    .s_port('{ c_xt_data_scclang_global_0[0][2],c_xt_data_scclang_global_0[1][2],c_xt_data_scclang_global_0[2][2],c_xt_data_scclang_global_0[3][2] }),
-    .m_port('{ c_yt_data_scclang_global_3[0][2],c_yt_data_scclang_global_3[1][2],c_yt_data_scclang_global_3[2][2],c_yt_data_scclang_global_3[3][2] })
+
   );
   always @(*) begin
   end
 
   fwd_lift_sc_module_17 u_yt_3(
-    .clk(clk),
-    .reset(reset),
-    .s_valid(c_xt_valid_scclang_global_2[0]),
-    .s_ready(c_yt_ready_scclang_global_4[3]),
-    .m_valid(c_yt_valid_scclang_global_5[3]),
-    .m_ready(m_ready),
-    .s_port('{ c_xt_data_scclang_global_0[0][3],c_xt_data_scclang_global_0[1][3],c_xt_data_scclang_global_0[2][3],c_xt_data_scclang_global_0[3][3] }),
-    .m_port('{ c_yt_data_scclang_global_3[0][3],c_yt_data_scclang_global_3[1][3],c_yt_data_scclang_global_3[2][3],c_yt_data_scclang_global_3[3][3] })
+
   );
   always @(*) begin
   end
@@ -1016,6 +1076,28 @@ module encode_block_sc_module_5 (
       m_block[14] = ((c_yt_data_scclang_global_3[3][2]) + (-64'd6148914691236517206)) ^ (-64'd6148914691236517206);
       m_block[15] = ((c_yt_data_scclang_global_3[3][3]) + (-64'd6148914691236517206)) ^ (-64'd6148914691236517206);
       m_valid <= c_yt_valid_scclang_global_5[0];
+    end
+  end
+  genvar i_u_encode_block_local_1;
+  genvar j_u_encode_block_local_0;
+  for (j_u_encode_block_local_0 = 0;(j_u_encode_block_local_0) < (4);j_u_encode_block_local_0++) begin
+    NONAME.u_xt_clk[j_u_encode_block_local_0] = clk;
+    NONAME.u_xt_reset[j_u_encode_block_local_0] = reset;
+    NONAME.u_xt_s_valid[j_u_encode_block_local_0] = s_valid;
+    NONAME.u_xt_s_ready[j_u_encode_block_local_0] = c_xt_ready_scclang_global_1[(j_u_encode_block_local_0)];
+    NONAME.u_xt_m_valid[j_u_encode_block_local_0] = c_xt_valid_scclang_global_2[(j_u_encode_block_local_0)];
+    NONAME.u_xt_m_ready[j_u_encode_block_local_0] = m_ready;
+    NONAME.u_yt_clk[j_u_encode_block_local_0] = clk;
+    NONAME.u_yt_reset[j_u_encode_block_local_0] = reset;
+    NONAME.u_yt_s_valid[j_u_encode_block_local_0] = c_xt_valid_scclang_global_2[(0)];
+    NONAME.u_yt_s_ready[j_u_encode_block_local_0] = c_yt_ready_scclang_global_4[(j_u_encode_block_local_0)];
+    NONAME.u_yt_m_valid[j_u_encode_block_local_0] = c_yt_valid_scclang_global_5[(j_u_encode_block_local_0)];
+    NONAME.u_yt_m_ready[j_u_encode_block_local_0] = m_ready;
+    for (i_u_encode_block_local_1 = 0;(i_u_encode_block_local_1) < (4);i_u_encode_block_local_1++) begin
+      NONAME.u_xt_s_port[j_u_encode_block_local_0][i_u_encode_block_local_1] = s_block[((j_u_encode_block_local_0) * (4)) + (i_u_encode_block_local_1)];
+      NONAME.u_xt_m_port[j_u_encode_block_local_0][i_u_encode_block_local_1] = c_xt_data_scclang_global_0[j_u_encode_block_local_0][i_u_encode_block_local_1];
+      NONAME.u_yt_s_port[j_u_encode_block_local_0][i_u_encode_block_local_1] = c_xt_data_scclang_global_0[i_u_encode_block_local_1][j_u_encode_block_local_0];
+      NONAME.u_yt_m_port[j_u_encode_block_local_0][i_u_encode_block_local_1] = c_yt_data_scclang_global_3[i_u_encode_block_local_1][j_u_encode_block_local_0];
     end
   end
 endmodule
@@ -1169,6 +1251,9 @@ module block_buffer_sc_module_6 (
 );
   logic [1023:0] c_bi_scclang_global_0;
   logic [1023:0] c_bo_scclang_global_1;
+  initial begin
+
+  end
   fifo_cc_sc_module_18 u_bbuf(
     .clk(clk),
     .reset(reset),
@@ -1182,7 +1267,7 @@ module block_buffer_sc_module_6 (
   always @(*) begin
   end
 
-  always @(s_block[(0)] or s_block[(1)] or s_block[(2)] or s_block[(3)] or s_block[(4)] or s_block[(5)] or s_block[(6)] or s_block[(7)] or s_block[(8)] or s_block[(9)] or s_block[(10)] or s_block[(11)] or s_block[(12)] or s_block[(13)] or s_block[(14)] or s_block[(15)] or c_bo_scclang_global_1) begin: mc_proc
+  always @(c_bo_scclang_global_1) begin: mc_proc
     logic [1023:0] bbufi_mc_proc_local_2;
     logic [1023:0] bbufo_mc_proc_local_3;
     logic signed[31:0] i_mc_proc_local_4;
@@ -1195,6 +1280,24 @@ module block_buffer_sc_module_6 (
     bbufo_mc_proc_local_3 = c_bo_scclang_global_1;
     for (i_mc_proc_local_5 = 0;(i_mc_proc_local_5) < (16);i_mc_proc_local_5++) begin
       m_block[i_mc_proc_local_5] = bbufo_mc_proc_local_3[((i_mc_proc_local_5) * (64)) +: (64)];
+    end
+  end
+genvar i_u_block_buffer_local_1;
+  genereate for (i_u_block_buffer_local_1 = 0;(i_u_block_buffer_local_1) < (16);i_u_block_buffer_local_1++) begin
+    always @(s_block[(i_u_block_buffer_local_1)]) begin: mc_proc
+      logic [1023:0] bbufi_mc_proc_local_2;
+      logic [1023:0] bbufo_mc_proc_local_3;
+      logic signed[31:0] i_mc_proc_local_4;
+      logic signed[31:0] i_mc_proc_local_5;
+      
+      genereate for (i_mc_proc_local_4 = 0;(i_mc_proc_local_4) < (16);i_mc_proc_local_4++) begin
+        bbufi_mc_proc_local_2[((i_mc_proc_local_4) * (64)) +: (64)] = s_block[i_mc_proc_local_4];
+      end
+      c_bi_scclang_global_0 <= bbufi_mc_proc_local_2;
+      bbufo_mc_proc_local_3 = c_bo_scclang_global_1;
+      genereate for (i_mc_proc_local_5 = 0;(i_mc_proc_local_5) < (16);i_mc_proc_local_5++) begin
+        m_block[i_mc_proc_local_5] = bbufo_mc_proc_local_3[((i_mc_proc_local_5) * (64)) +: (64)];
+      end
     end
   end
 endmodule
@@ -1220,7 +1323,7 @@ module fifo_cc_sc_module_18 (
     if ((2) <= (0)) begin
     end
   end
-  always @(wr_en or rd_en or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4 or data_scclang_global_0[(0)] or data_scclang_global_0[(1)]) begin: mc_proc
+  always @(wr_en or rd_en or full_i_scclang_global_2 or empty_i_scclang_global_1 or rd_idx_scclang_global_4) begin: mc_proc
     
     
     if (1) begin
@@ -1277,6 +1380,20 @@ module fifo_cc_sc_module_18 (
     end
 
   end
+genvar i_u_bbuf_local_1;
+  genereate for (i_u_bbuf_local_1 = 0;(i_u_bbuf_local_1) < (2);i_u_bbuf_local_1++) begin
+    always @(data_scclang_global_0[(i_u_bbuf_local_1)]) begin: mc_proc
+      
+      
+      if (1) begin
+        dout <= data_scclang_global_0[rd_idx_scclang_global_4];
+      end
+      wr_en_i_scclang_global_5 <= (wr_en) && (!(full_i_scclang_global_2));
+      rd_en_i_scclang_global_3 <= (rd_en) && (!(empty_i_scclang_global_1));
+      full <= (full_i_scclang_global_2) == (0);
+      empty <= (empty_i_scclang_global_1) == (0);
+    end
+  end
 endmodule
 module encode_ints_sc_module_7 (
   input logic [0:0] clk,
@@ -1301,7 +1418,10 @@ module encode_ints_sc_module_7 (
   logic [4:0] n1_scclang_global_7;
   logic [0:0] valid1_scclang_global_8;
   logic signed[31:0] planes_scclang_global_9 = 64;
-  always @(s_block[(0)] or s_block[(1)] or s_block[(2)] or s_block[(3)] or s_block[(4)] or s_block[(5)] or s_block[(6)] or s_block[(7)] or s_block[(8)] or s_block[(9)] or s_block[(10)] or s_block[(11)] or s_block[(12)] or s_block[(13)] or s_block[(14)] or s_block[(15)] or k0_scclang_global_4 or flush1_scclang_global_3 or m_ready or s_valid or s_flush) begin: mc_proc
+  initial begin
+
+  end
+  always @(k0_scclang_global_4 or flush1_scclang_global_3 or m_ready or s_valid or s_flush) begin: mc_proc
     logic [0:0] last_mc_proc_local_3;
     logic [15:0] tmp_mc_proc_local_4;
     logic signed[31:0] j_mc_proc_local_5;
@@ -1351,7 +1471,7 @@ module encode_ints_sc_module_7 (
         b_ms_proc_local_8 = 0;
         frst_ms_proc_local_9 = 1;
         for (i_ms_proc_local_10 = 16;(i_ms_proc_local_10) > (0);i_ms_proc_local_10--) begin
-          if (c_bplane_scclang_global_2[k0_scclang_global_4][((i_ms_proc_local_10) - (1))]) begin
+          if (c_bplane_scclang_global_2[k0_scclang_global_4][(i_ms_proc_local_10) - (1)]) begin
             if (frst_ms_proc_local_9) begin
               frst_ms_proc_local_9 = 0;
               b_ms_proc_local_8 = i_ms_proc_local_10;
@@ -1389,7 +1509,7 @@ module encode_ints_sc_module_7 (
           end
           if ((n_ms_proc_local_12) == (0)) begin
             shiftamt_ms_proc_local_13 = (shiftamt_ms_proc_local_13) + (2);
-            if (bp1_scclang_global_1[(0)]) begin
+            if (bp1_scclang_global_1[0]) begin
               tmp_ms_proc_local_11[0] = 1;
               tmp_ms_proc_local_11[1] = 1;
             end else begin
@@ -1432,7 +1552,12 @@ module encode_ints_sc_module_7 (
               if ((n_ms_proc_local_12) != ((16) - (1))) begin
                 first_after_bc_ms_proc_local_15 = shiftamt_ms_proc_local_13;
               end else begin
-                first_after_bc_ms_proc_local_15 = shiftamt_ms_proc_local_13;
+                if ((bc1_scclang_global_0) == (16)) begin
+                  first_after_bc_ms_proc_local_15 = shiftamt_ms_proc_local_13;
+                end else begin
+                  first_after_bc_ms_proc_local_15 = (shiftamt_ms_proc_local_13) - (1);
+                end
+
               end
 
             end else begin
@@ -1461,7 +1586,7 @@ module encode_ints_sc_module_7 (
           if ((n1_scclang_global_7) == (0)) begin
 
           end else begin
-            if (((!(bp1_scclang_global_1[(n1_scclang_global_7)])) && (!(bp1_scclang_global_1[((n1_scclang_global_7) - (1))]))) || ((bp1_scclang_global_1[(n1_scclang_global_7)]) && (!(bp1_scclang_global_1[((n1_scclang_global_7) - (1))])))) begin
+            if (((!(bp1_scclang_global_1[(n1_scclang_global_7)])) && (!(bp1_scclang_global_1[((n1_scclang_global_7) - (1))]))) || ((bp1_scclang_global_1[n1_scclang_global_7]) && (!(bp1_scclang_global_1[((n1_scclang_global_7) - (1))])))) begin
               tmp_ms_proc_local_11 = ((((tmp_ms_proc_local_11) >>> (n1_shiftamt_ms_proc_local_14)) << (1)) | (1)) << (n1_scclang_global_7);
               delta_ms_proc_local_19 = 1;
             end else begin
@@ -1499,6 +1624,24 @@ module encode_ints_sc_module_7 (
 
     end
 
+  end
+genvar i_u_encode_ints_local_1;
+  genereate for (i_u_encode_ints_local_1 = 0;(i_u_encode_ints_local_1) < (16);i_u_encode_ints_local_1++) begin
+    always @(s_block[(i_u_encode_ints_local_1)]) begin: mc_proc
+      logic [0:0] last_mc_proc_local_3;
+      logic [15:0] tmp_mc_proc_local_4;
+      logic signed[31:0] j_mc_proc_local_5;
+      logic signed[31:0] i_mc_proc_local_6;
+      
+      last_mc_proc_local_3 = ((k0_scclang_global_4) == ((64) - (1))) || ((s_flush) && ((s_flush) != (flush1_scclang_global_3)));
+      genereate for (j_mc_proc_local_5 = 0;(j_mc_proc_local_5) < (64);j_mc_proc_local_5++) begin
+        genereate for (i_mc_proc_local_6 = 0;(i_mc_proc_local_6) < (16);i_mc_proc_local_6++) begin
+          tmp_mc_proc_local_4[i_mc_proc_local_6] = s_block[i_mc_proc_local_6][j_mc_proc_local_5];
+        end
+        c_bplane_scclang_global_2[((64) - (1)) - (j_mc_proc_local_5)] <= tmp_mc_proc_local_4;
+      end
+      s_ready <= ((last_mc_proc_local_3) && (m_ready)) || (!(s_valid));
+    end
   end
 endmodule
 module encode_stream_sc_module_8 (
@@ -1558,35 +1701,30 @@ module encode_stream_sc_module_8 (
     logic [11:0] pbits_mc_proc_local_7;
     logic [11:0] abits_mc_proc_local_8;
     logic [11:0] n_mc_proc_local_9;
-    logic [6:0] ts_mc_proc_local_2_prec__ref_0;
     logic [127:0] ts_mc_proc_local_2_buf__ref_0;
-    logic [6:0] ts_mc_proc_local_2_planes__ref_0;
+    logic [6:0] ts_mc_proc_local_2_prec__ref_0;
+    logic [2:0] ts_mc_proc_local_2_s__ref_0;
     logic [11:0] ts_mc_proc_local_2_bits__ref_0;
     logic [7:0] ts_mc_proc_local_2_posr__ref_0;
+    logic [6:0] ts_mc_proc_local_2_planes__ref_0;
     logic [7:0] ts_mc_proc_local_2_posw__ref_0;
-    logic [2:0] ts_mc_proc_local_2_s__ref_0;
     
-    ts_mc_proc_local_2_s__ref_0 = ts_mc_proc_local_2_s;
     ts_mc_proc_local_2_posw__ref_0 = ts_mc_proc_local_2_posw;
+    ts_mc_proc_local_2_planes__ref_0 = ts_mc_proc_local_2_planes;
     ts_mc_proc_local_2_posr__ref_0 = ts_mc_proc_local_2_posr;
     ts_mc_proc_local_2_bits__ref_0 = ts_mc_proc_local_2_bits;
-    ts_mc_proc_local_2_planes__ref_0 = ts_mc_proc_local_2_planes;
-    ts_mc_proc_local_2_buf__ref_0 = ts_mc_proc_local_2_buf;
+    ts_mc_proc_local_2_s__ref_0 = ts_mc_proc_local_2_s;
     ts_mc_proc_local_2_prec__ref_0 = ts_mc_proc_local_2_prec;
+    ts_mc_proc_local_2_buf__ref_0 = ts_mc_proc_local_2_buf;
+    zhw__encode_streamfp_t11_52_2_bits_t64__state_t__state_t_func_0(ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0,ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0);
     s_ex_ready <= 0;
     s_ready <= 0;
     m_flush <= 0;
     m_bits_valid <= 0;
-    ts_mc_proc_local_2_s__ref_0 = cs_scclang_global_0_s;
-    ts_mc_proc_local_2_prec__ref_0 = cs_scclang_global_0_prec;
-    ts_mc_proc_local_2_planes__ref_0 = cs_scclang_global_0_planes;
-    ts_mc_proc_local_2_buf__ref_0 = cs_scclang_global_0_buf;
-    ts_mc_proc_local_2_bits__ref_0 = cs_scclang_global_0_bits;
-    ts_mc_proc_local_2_posr__ref_0 = cs_scclang_global_0_posr;
-    ts_mc_proc_local_2_posw__ref_0 = cs_scclang_global_0_posw;
+    ts_mc_proc_local_2 = cs_scclang_global_0;
     case(ts_mc_proc_local_2_s__ref_0)
       0: begin
-        ts_mc_proc_local_2_prec__ref_0 = sc_dt__sc_min_func_0(maxprec,sc_dt__sc_max_func_1(0,((s_ex_data) - (minexp)) + ((2) * ((2) + (1)))));
+        ts_mc_proc_local_2_prec__ref_0 = ((maxprec) < (((0) < (((s_ex_data) - (minexp)) + ((2) * ((2) + (1)))) ? (((s_ex_data) - (minexp)) + ((2) * ((2) + (1)))) : (0))) ? (maxprec) : (((0) < (((s_ex_data) - (minexp)) + ((2) * ((2) + (1)))) ? (((s_ex_data) - (minexp)) + ((2) * ((2) + (1)))) : (0))));
         ts_mc_proc_local_2_bits__ref_0 = 0;
         ts_mc_proc_local_2_planes__ref_0 = 0;
         ts_mc_proc_local_2_buf__ref_0 = 0;
@@ -1626,7 +1764,7 @@ module encode_stream_sc_module_8 (
       end
       3: begin
         if (s_valid) begin
-          if (zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_2(ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0,s_bc,s_bp,ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0)) begin
+          if (zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_1(ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0,s_bc,s_bp,ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0)) begin
             s_ready <= 1;
             if (s_last) begin
               ts_mc_proc_local_2_planes__ref_0 = 64;
@@ -1642,7 +1780,7 @@ module encode_stream_sc_module_8 (
         dis_done_mc_proc_local_3 = (ts_mc_proc_local_2_planes__ref_0) == (64);
         add_done_mc_proc_local_4 = ((ts_mc_proc_local_2_planes__ref_0) >= (ts_mc_proc_local_2_prec__ref_0)) || ((ts_mc_proc_local_2_bits__ref_0) >= (maxbits));
         pad_done_mc_proc_local_5 = (ts_mc_proc_local_2_bits__ref_0) >= (minbits);
-        fls_done_mc_proc_local_6 = zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_3(ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0,(add_done_mc_proc_local_4) && (pad_done_mc_proc_local_5),ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0);
+        fls_done_mc_proc_local_6 = zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_2(ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0,(add_done_mc_proc_local_4) && (pad_done_mc_proc_local_5),ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0);
         if (add_done_mc_proc_local_4) begin
           if (((dis_done_mc_proc_local_3) && (pad_done_mc_proc_local_5)) && (fls_done_mc_proc_local_6)) begin
             ts_mc_proc_local_2_s__ref_0 = 0;
@@ -1674,73 +1812,43 @@ module encode_stream_sc_module_8 (
         if ((ts_mc_proc_local_2_bits__ref_0) < (minbits)) begin
           pbits_mc_proc_local_7 = (minbits) - (ts_mc_proc_local_2_bits__ref_0);
           abits_mc_proc_local_8 = (64) - ((ts_mc_proc_local_2_bits__ref_0) & ((64) - (1)));
-          n_mc_proc_local_9 = sc_dt__sc_min_func_4(pbits_mc_proc_local_7,abits_mc_proc_local_8);
-          zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_2(ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0,n_mc_proc_local_9,64'd0,ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0);
+          n_mc_proc_local_9 = ((pbits_mc_proc_local_7) < (abits_mc_proc_local_8) ? (pbits_mc_proc_local_7) : (abits_mc_proc_local_8));
+          zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_1(ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0,n_mc_proc_local_9,64'd0,ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0);
         end
         dis_done_mc_proc_local_3 = (ts_mc_proc_local_2_planes__ref_0) == (64);
         pad_done_mc_proc_local_5 = (ts_mc_proc_local_2_bits__ref_0) >= (minbits);
-        fls_done_mc_proc_local_6 = zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_3(ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0,pad_done_mc_proc_local_5,ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0);
+        fls_done_mc_proc_local_6 = zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_2(ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0,pad_done_mc_proc_local_5,ts_mc_proc_local_2_s__ref_0,ts_mc_proc_local_2_prec__ref_0,ts_mc_proc_local_2_planes__ref_0,ts_mc_proc_local_2_buf__ref_0,ts_mc_proc_local_2_bits__ref_0,ts_mc_proc_local_2_posr__ref_0,ts_mc_proc_local_2_posw__ref_0);
         if (((dis_done_mc_proc_local_3) && (pad_done_mc_proc_local_5)) && (fls_done_mc_proc_local_6)) begin
           ts_mc_proc_local_2_s__ref_0 = 0;
         end
 
       end
     endcase
-    ns_scclang_global_1_s <= ts_mc_proc_local_2_s__ref_0;
-    ns_scclang_global_1_prec <= ts_mc_proc_local_2_prec__ref_0;
-    ns_scclang_global_1_planes <= ts_mc_proc_local_2_planes__ref_0;
-    ns_scclang_global_1_buf <= ts_mc_proc_local_2_buf__ref_0;
-    ns_scclang_global_1_bits <= ts_mc_proc_local_2_bits__ref_0;
-    ns_scclang_global_1_posr <= ts_mc_proc_local_2_posr__ref_0;
-    ns_scclang_global_1_posw <= ts_mc_proc_local_2_posw__ref_0;
-    ts_mc_proc_local_2_prec = ts_mc_proc_local_2_prec__ref_0;
+    ns_scclang_global_1 = ts_mc_proc_local_2;
     ts_mc_proc_local_2_buf = ts_mc_proc_local_2_buf__ref_0;
-    ts_mc_proc_local_2_planes = ts_mc_proc_local_2_planes__ref_0;
+    ts_mc_proc_local_2_prec = ts_mc_proc_local_2_prec__ref_0;
+    ts_mc_proc_local_2_s = ts_mc_proc_local_2_s__ref_0;
     ts_mc_proc_local_2_bits = ts_mc_proc_local_2_bits__ref_0;
     ts_mc_proc_local_2_posr = ts_mc_proc_local_2_posr__ref_0;
+    ts_mc_proc_local_2_planes = ts_mc_proc_local_2_planes__ref_0;
     ts_mc_proc_local_2_posw = ts_mc_proc_local_2_posw__ref_0;
-    ts_mc_proc_local_2_s = ts_mc_proc_local_2_s__ref_0;
   end
   always_ff @(posedge clk) begin: ms_proc
     
     
     if ((reset) == (0)) begin
-      cs_scclang_global_0_s <= 0;
-      cs_scclang_global_0_prec <= 0;
-      cs_scclang_global_0_planes <= 0;
-      cs_scclang_global_0_buf <= 0;
-      cs_scclang_global_0_bits <= 0;
-      cs_scclang_global_0_posr <= 0;
-      cs_scclang_global_0_posw <= 0;
+      cs_scclang_global_0 = 0;
     end else begin
-      cs_scclang_global_0_s <= ns_scclang_global_1_s;
-      cs_scclang_global_0_prec <= ns_scclang_global_1_prec;
-      cs_scclang_global_0_planes <= ns_scclang_global_1_planes;
-      cs_scclang_global_0_buf <= ns_scclang_global_1_buf;
-      cs_scclang_global_0_bits <= ns_scclang_global_1_bits;
-      cs_scclang_global_0_posr <= ns_scclang_global_1_posr;
-      cs_scclang_global_0_posw <= ns_scclang_global_1_posw;
+      cs_scclang_global_0 = ns_scclang_global_1;
     end
 
   end
-  function automatic logic [15:0] sc_dt__sc_min_func_0 (input logic [15:0] a, input logic [15:0] b);
-  begin
-
-    return (a) <= (b) ? a : b;
-  end
-  endfunction
-  function automatic logic signed[15:0] sc_dt__sc_max_func_1 (input logic signed[15:0] a, input logic signed[15:0] b);
-  begin
-
-    return (a) >= (b) ? a : b;
-  end
-  endfunction
-  function automatic logic [0:0] zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_2 (input logic [2:0] ts_s, input logic [6:0] ts_prec, input logic [6:0] ts_planes, input logic [127:0] ts_buf, input logic [11:0] ts_bits, input logic [7:0] ts_posr, input logic [7:0] ts_posw, input logic [11:0] bc, input logic [127:0] bp, inout logic [2:0] ts_s__ref_0, inout logic [6:0] ts_prec__ref_0, inout logic [6:0] ts_planes__ref_0, inout logic [127:0] ts_buf__ref_0, inout logic [11:0] ts_bits__ref_0, inout logic [7:0] ts_posr__ref_0, inout logic [7:0] ts_posw__ref_0);
+  function automatic logic [0:0] zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_1 (input logic [2:0] ts_s, input logic [6:0] ts_prec, input logic [6:0] ts_planes, input logic [127:0] ts_buf, input logic [11:0] ts_bits, input logic [7:0] ts_posr, input logic [7:0] ts_posw, input logic [11:0] bc, input logic [127:0] bp, inout logic [2:0] ts_s__ref_0, inout logic [6:0] ts_prec__ref_0, inout logic [6:0] ts_planes__ref_0, inout logic [127:0] ts_buf__ref_0, inout logic [11:0] ts_bits__ref_0, inout logic [7:0] ts_posr__ref_0, inout logic [7:0] ts_posw__ref_0);
   begin
     logic [11:0] n__local_10;
     bc_actual_scclang_global_6 = bc;
     bp_actual_scclang_global_7 = bp;
-    n__local_10 = sc_dt__sc_min_func_4(bc_actual_scclang_global_6,(maxbits) - (ts_bits));
+    n__local_10 = ((bc_actual_scclang_global_6) < ((maxbits) - (ts_bits)) ? (bc_actual_scclang_global_6) : ((maxbits) - (ts_bits)));
     if (((128) - (ts_posw)) >= (n__local_10)) begin
       ts_buf__ref_0 = ((((bp_actual_scclang_global_7) >> (0)) & ~(~($bits(bp_actual_scclang_global_7)'('b0)) << (((n__local_10) - (1)) - (0) + 1)) & ~(~($bits(bp_actual_scclang_global_7)'('b0)) << ((((ts_posw) + (n__local_10)) - (1))-(ts_posw)+1))) << (ts_posw)) | ((ts_buf__ref_0) & ((~($bits(ts_buf__ref_0)'('b0)) ) << ((((ts_posw) + (n__local_10)) - (1)) + 1) | ~(( ~($bits(ts_buf__ref_0)'('b0)) ) << (ts_posw))));
       ts_bits__ref_0 = (ts_bits) + (n__local_10);
@@ -1750,18 +1858,20 @@ module encode_stream_sc_module_8 (
     return 0;
   end
   endfunction
-  function automatic logic [0:0] zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_3 (input logic [2:0] ts_s, input logic [6:0] ts_prec, input logic [6:0] ts_planes, input logic [127:0] ts_buf, input logic [11:0] ts_bits, input logic [7:0] ts_posr, input logic [7:0] ts_posw, input logic [0:0] done, inout logic [2:0] ts_s__ref_0, inout logic [6:0] ts_prec__ref_0, inout logic [6:0] ts_planes__ref_0, inout logic [127:0] ts_buf__ref_0, inout logic [11:0] ts_bits__ref_0, inout logic [7:0] ts_posr__ref_0, inout logic [7:0] ts_posw__ref_0);
+  function automatic logic [0:0] zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_2 (input logic [2:0] ts_s, input logic [6:0] ts_prec, input logic [6:0] ts_planes, input logic [127:0] ts_buf, input logic [11:0] ts_bits, input logic [7:0] ts_posr, input logic [7:0] ts_posw, input logic [0:0] done, inout logic [2:0] ts_s__ref_0, inout logic [6:0] ts_prec__ref_0, inout logic [6:0] ts_planes__ref_0, inout logic [127:0] ts_buf__ref_0, inout logic [11:0] ts_bits__ref_0, inout logic [7:0] ts_posr__ref_0, inout logic [7:0] ts_posw__ref_0);
   begin
     logic [7:0] bbits__local_11;
     logic [63:0] flit__local_12_tdata;
     logic [0:0] flit__local_12_tlast;
+    logic [63:0] flit__local_12_tdata__ref_0;
+    logic [0:0] flit__local_12_tlast__ref_0;
     done_actual_scclang_global_8 = done;
     bbits__local_11 = (ts_posw) - (ts_posr);
     if (((bbits__local_11) >= (64)) && (m_bits_ready)) begin
+      bits_t64__bits_t_func_3(flit__local_12_tdata,flit__local_12_tlast,flit__local_12_tdata__ref_0,flit__local_12_tlast__ref_0);
       flit__local_12_tdata = ((ts_buf__ref_0) >> (ts_posr)) & ~(~($bits(ts_buf__ref_0)'('b0)) << ((((ts_posr) + (64)) - (1)) - (ts_posr) + 1));
       flit__local_12_tlast = (done_actual_scclang_global_8) && ((bbits__local_11) == (64));
-      m_bits_data_tdata <= flit__local_12_tdata;
-      m_bits_data_tlast <= flit__local_12_tlast;
+      m_bits_data = flit__local_12;
       m_bits_valid <= 1;
       ts_buf__ref_0 = ((((ts_buf__ref_0) >> ((ts_posr) + (64))) & ~(~($bits(ts_buf__ref_0)'('b0)) << (((ts_posw) - (1)) - ((ts_posr) + (64)) + 1)) & ~(~($bits(ts_buf__ref_0)'('b0)) << (((ts_posw) - (64))-(0)+1))) << (0)) | ((ts_buf__ref_0) & ((~($bits(ts_buf__ref_0)'('b0)) ) << (((ts_posw) - (64)) + 1) | ~(( ~($bits(ts_buf__ref_0)'('b0)) ) << (0))));
       ts_posr__ref_0 = 0;
@@ -1771,10 +1881,16 @@ module encode_stream_sc_module_8 (
     return (done_actual_scclang_global_8) && ((bbits__local_11) == (0));
   end
   endfunction
-  function automatic logic [11:0] sc_dt__sc_min_func_4 (input logic [11:0] a, input logic [11:0] b);
+  function automatic void bits_t64__bits_t_func_3 (input logic [63:0] hthis_tdata, input logic [0:0] hthis_tlast, inout logic [63:0] hthis_tdata__ref_0, inout logic [0:0] hthis_tlast__ref_0);
   begin
 
-    return (a) <= (b) ? a : b;
+
+  end
+  endfunction
+  function automatic void zhw__encode_streamfp_t11_52_2_bits_t64__state_t__state_t_func_0 (input logic [2:0] hthis_s, input logic [6:0] hthis_prec, input logic [6:0] hthis_planes, input logic [127:0] hthis_buf, input logic [11:0] hthis_bits, input logic [7:0] hthis_posr, input logic [7:0] hthis_posw, inout logic [2:0] hthis_s__ref_0, inout logic [6:0] hthis_prec__ref_0, inout logic [6:0] hthis_planes__ref_0, inout logic [127:0] hthis_buf__ref_0, inout logic [11:0] hthis_bits__ref_0, inout logic [7:0] hthis_posr__ref_0, inout logic [7:0] hthis_posw__ref_0);
+  begin
+
+
   end
   endfunction
 endmodule
