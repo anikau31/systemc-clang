@@ -179,7 +179,7 @@ struct decode_block<FP, 1> : sc_module
 
 	void mc_proc()
 	{
-		s_ready.write(m_ready.read()); 	//bypass u_xt and u_yt s_ready
+		s_ready.write(m_ready.read()); // bypass u_xt and u_yt s_ready
 		m_valid.write(c_xt_valid);		//forward xt transform valid out of decode_block.
 	}
 
@@ -430,7 +430,7 @@ struct decode_block<FP, 3> : sc_module
 
 	void mc_proc()
 	{
-		s_ready.write(m_ready.read()); 		// bypass u_xt, u_yt, & u_zt s_ready
+		s_ready.write(m_ready.read()); // bypass u_xt, u_yt, & u_zt s_ready
 		m_valid.write(c_xt_valid[0][0]);	//forward xt transform valid out of decode_block.
 	}
 
@@ -640,6 +640,13 @@ struct decode_block<FP, 3> : sc_module
 
 };
 
+#define DXP \
+  std::cout << "hihi" << std::endl; \
+  if(k.read() == 0x37) { \
+  std::cout << "m=" << m << ", bits=" << bits << ", stream_window" << std::hex << stream_window << std::dec << ", x=" << x << ", bitoff=" \
+  << bitoff << ", n=" << n << ", state="  << state << ", k=" << k << ", kmin=" << kmin << std::endl; \
+  } \
+
 //-----------------------------------------------------------------------------
 // decompress sequence of unsigned integers
 //-----------------------------------------------------------------------------
@@ -687,7 +694,7 @@ SC_MODULE(decode_ints)
 	/*-------- registers --------*/				//let DIM=2 and planes = 64
 	sc_signal<sc_uint<log2rz(planes-1)+1> > k;	//log2rz(... = 7
 	sc_signal<uconfig_t> kmin;
-
+	sc_signal<sc_uint<SBITS>> s_state;
 
 	/*-------- channels --------*/
 	sc_signal<sc_bv<fpblk_sz(DIM)> > c_bplane[planes];	//sc_signal<int16> c_bplane[64], 64 sets of 16 bit "vector" types
@@ -715,11 +722,12 @@ SC_MODULE(decode_ints)
 
 		//maintain k_min based on maxprec (difficult to synchronize maxprec read on bootstrap)
 		// intprec > s_maxprec.read() ? kmin.write(intprec - s_maxprec.read()) : kmin.write(0);//lowest bitplane to decode (computed per block)
-    if(intprec > s_maxprec.read()) {
-      kmin.write(intprec - s_maxprec.read());
-    } else {
-      kmin.write(0);
-    }
+        //lowest bitplane to decode (computed per block)
+        if(intprec > s_maxprec.read()) {
+        kmin.write(intprec - s_maxprec.read());
+        } else {
+        kmin.write(0);
+        }
 	}
 
 	//On clock.
@@ -734,6 +742,9 @@ SC_MODULE(decode_ints)
 						- (FP::ebits +1);	//subtract header bits (exponent bits + zero bit), which would have been read and parsed upstream
 			bitoff = 0;
 			m_blk_start.data_w(true);m_blk_start.valid_w(true);
+            s_bp.ready_w(false);
+            m_bc.valid_w(false);
+            m_bc.data_w(false);
 		}
 		else
 		{
@@ -745,12 +756,15 @@ SC_MODULE(decode_ints)
 			bool s_bp_ready = (	m_ready.read()
 								&& (!s_bp.valid_r() || m_bc.ready_r())
 																			);
+
 			s_bp.ready_w(s_bp_ready);
 			m_bc.valid_w(m_bc_valid);
 
 			//RESET READY VALID FOR START BLK. (set lower to override reset logic)
 			if(m_blk_start.ready_r() == true)
-				{m_blk_start.data_w(false);m_blk_start.valid_w(false);}
+            {
+                m_blk_start.data_w(false);m_blk_start.valid_w(false);
+            }
 
 			//--- Data flow ---
 			if (	(m_ready.read() || (k.read()!=kmin.read()) ) 	//progress with decode unless it is time to output the block and m_block listner is not ready
@@ -762,39 +776,54 @@ SC_MODULE(decode_ints)
 				stream_window = s_bp.data_r();	//get flit from stream reader.
 				// decode first n bits of bit plane #k
 				// n < bits ? m=n : m=bits;//		m = MIN(n, bits);
-        if(n < bits) {
-          m = n;
-        } else {
-          m = bits;
-        }
+                if(n < bits) {
+                    m = n;
+                } else {
+                    m = bits;
+                }
 				bits -= m;
 
 				//copy first m bits into results plane (unless m is 0, then do nothing)
-				if(m > 0)
+				if(m > 0) {
 					x = stream_window & (~ui_t(0)>>(planes-m));
-				else
+                } else {
 					x = 0;
+                }
 
 				//make this work on sub strings. but how?
 				bitoff = m;
 
 				//START unary decoder
-				while(n < fpblk_sz(DIM))
+        // DXP;
+				// while(n < fpblk_sz(DIM))
+                for(int i = 0; i < 2 * fpblk_sz(DIM); i++)
 				{
+                    if(!(n < fpblk_sz(DIM))) break;
 					//looking for 0's in a unary substring  INNER LOOP IN ZFP
 					if(state&FOUND_1)
 					{
 						if(state&FIRST_0)			//account for the first 1 seen in the unary substring using the "bits" state variable.
-							{state=S2;if(n < fpblk_sz(DIM))bits--;}
+							{
+                                state=S2;
+                                if(n < fpblk_sz(DIM)) {
+                                    bits--;
+                                }
+                            }
 
 						if(n < fpblk_sz(DIM) - 1 && !(state&FOUND_0S))	//Find length of '0's substring. terminate (go->S3) if a '1' is found.
 						{
-							if((!bits) || (!bits--))			//if bits cannot still be decoded..
-								{x[n]=true; state=S3;}			//tally the last bit positively identified and terminate (go->S3).
+							// if(bits) bits--;			//if bits cannot still be decoded..
+							if(!bits)			//if bits cannot still be decoded..
+							// if((!bits) || (!bits--))			//if bits cannot still be decoded..
+								{
+                                    x[n]=true; state=S3;
+                                    }			//tally the last bit positively identified and terminate (go->S3).
 							else								//however if bits can still be decoded...
 							{
+                                bits--;
 								if(stream_window[bitoff++])		//check if '0' is in the current string position
-									{x[n]=true; state=S3;} 	//a 1 was found, signifying end of substring (go->S3)
+									{
+                                        x[n]=true; state=S3;} 	//a 1 was found, signifying end of substring (go->S3)
 							}
 							n++;	//consider next bit in the plane to be decoded
 						}
@@ -803,7 +832,9 @@ SC_MODULE(decode_ints)
 						if((n==fpblk_sz(DIM)-1) || (state&FOUND_0S))
 						{
 							if((n >= fpblk_sz(DIM)-1) && !(state&FOUND_0S))
-								{x[n]=true; n++;}			  //force substring end
+								{
+                                    x[n]=true; n++;
+                                }			  //force substring end
 							state=S3;						  //force substring termination (go->S3)
 						}
 					}
@@ -811,24 +842,32 @@ SC_MODULE(decode_ints)
 					//looking for 1's in a unary substring. OUTER LOOP IN ZFP
 					if(!(state&FOUND_1))
 					{
-						if(!bits || (n>=fpblk_sz(DIM)))	//nothing left to search through...
+						if(!bits || (n>=fpblk_sz(DIM))) {	//nothing left to search through...
 							break;				//exit the unary decoder state machine.
+                        }
 						//account for n = size case? what should happen is that n gets incremented to size and you break here before doing the stuff below.
-						if(stream_window[bitoff++])			//A unary substring was found, next find all '0''s after this '1' in the string.
+						if(stream_window[bitoff++]) {			//A unary substring was found, next find all '0''s after this '1' in the string.
 							state=S1;
-						else break;	//stop looking for valid unary strings. This is the same as going to S0.
+                        }
+						else {
+                            break;	//stop looking for valid unary strings. This is the same as going to S0.
+                        }
+
 					}
 
 				}
 				//implicit bit fix, patch end of outer loop logic to emulate side effects in original code.
-				if((n < fpblk_sz(DIM)) && bits)
+				if((n < fpblk_sz(DIM)) && bits) {
 					bits--;
+                }
 
 				state = S0;	//reset state machine for next block.
 				//END unary decoder.
 
 				if(k.read()==planes-1)										//must re-initialize planes every block
+                {
 					for(size_t i=0; i<planes-1; i++)c_bplane[i].write(0);
+                }
 				c_bplane[k.read()].write(x);								//write new plane to registers
 				m_bc.data_w(bitoff);										//number of bits to offset in next plane
 
@@ -858,6 +897,7 @@ SC_MODULE(decode_ints)
 			if(m_valid.read() && m_ready.read())
 				m_valid.write(false);
 		}
+    s_state.write(state);
 	}
 
 #if defined(VCD)
@@ -881,6 +921,7 @@ SC_MODULE(decode_ints)
 		sc_trace(tf, k,   (std::string(name())+".k").c_str());
 		//check what kmin is
 		sc_trace(tf, kmin,   (std::string(name())+".kmin").c_str());
+		// sc_trace(tf, s_state,   (std::string(name())+".state").c_str());
 		//check what n is
 		sc_trace(tf, n,   (std::string(name())+".n").c_str());
 
@@ -933,8 +974,9 @@ template<typename FP> struct block_header
 public:
 	// block_header& set_exp(expo_t _exp) { exp = _exp; return *this; }//"fluent" API to set exponent.
 	// block_header& set_zb(bool _zb) { zb = _zb; return *this; } 		//"fluent" API to set zero block.
-	void set_exp(expo_t _exp) { exp = _exp;  }//"fluent" API to set exponent.
+    void set_exp(expo_t _exp) { exp = _exp;  }//"fluent" API to set exponent.
 	void set_zb(bool _zb) { zb = _zb;  } 		//"fluent" API to set zero block.
+
 
 	bool is_zero(){return zb;}
 };
@@ -959,11 +1001,11 @@ template<int DIM> struct plane_reg
 
 	//setter pattern
 public:
+    void init() { f = false; w = 0; }
 	plane_reg& set_word(sc_uint<pr_w(DIM)> nw) { f=true; w = nw; return *this; } //"fluent" API to set word.
 
 	bool is_empty(){return f;}
 };
-
 
 //overload operators.
 template<int DIM>
@@ -982,15 +1024,22 @@ inline sc_bv<pr_w(DIM) > get_window(plane_reg<DIM> (&wb_c)[sr_sz(DIM)],		//curre
 inline sc_bv<pr_w(2) > get_window(plane_reg<2> (&wb_c)[sr_sz(2)],		//current cycle bitstream register file
 									sc_uint<log2rz(pr_w(2))+2> bitoff)		//current cycle working bit offset within register file.
 {
-
+    // We need to get an upper bound on the loop
 	sc_uint<log2rz(pr_w(2))+1> wordoff = bitoff/pr_w(2);
 	for(int i =0; i<sr_sz(2); i++)
 	{
 		if(!wb_c[i].f)wordoff++;						//corner case where something else cleared a full flag.
 		if(wb_c[i].f)break;
 	}
-	sc_bv<pr_w(2)> b1(wb_c[wordoff].w), b2(wb_c[wordoff+1].w),window;
-	for(sc_uint<log2rz(sr_sz(2))+1>i=0; i<wordoff; i++)wb_c[i].f=false;	//clear any full flags necessary
+	// sc_bv<pr_w(2)> b1(wb_c[wordoff].w), b2(wb_c[wordoff+1].w),window;
+	sc_bv<pr_w(2)> b1, b2, window;
+    b1 = wb_c[wordoff].w;
+    b2 = wb_c[wordoff+1].w;
+	for(sc_uint<log2rz(sr_sz(2))+1>i=0; i<sr_sz(2); i++) {
+        if(i < wordoff) {
+            wb_c[i].f=false;	//clear any full flags necessary
+        }
+    }
 
 	sc_uint<log2rz(pr_w(2))+2>b1rshift = bitoff%pr_w(2);
 	sc_uint<log2rz(pr_w(2))+2>b2lshift = pr_w(2) - b1rshift;
@@ -1016,7 +1065,11 @@ inline sc_bv<pr_w(1) > get_window(plane_reg<1> (&wb_c)[sr_sz(1)],			//current cy
 		if(wb_c[i].f)break;
 	}
 	sc_bv<pr_w(1)> b1(wb_c[wordoff].w), b2(wb_c[wordoff+1].w),window;
-	for(sc_uint<log2rz(sr_sz(1))+1>i=0; i<wordoff; i++)wb_c[i].f=false;	//clear any full flags necessary
+	for(sc_uint<log2rz(sr_sz(1))+1>i=0; i<sr_sz(1); i++) {
+        if(i < wordoff) {
+            wb_c[i].f=false;	//clear any full flags necessary
+        }
+    }
 
 	sc_uint<log2rz(pr_w(1))+2>b1rshift = bitoff%pr_w(1);
 	sc_uint<log2rz(pr_w(1))+2>b2lshift = pr_w(1) - b1rshift;
@@ -1154,8 +1207,11 @@ template<typename FP, typename B, int DIM> struct decode_stream: sc_module
 			if(c_m_bfifo.ready_r())
 			{
 				//chop the latest bitstream word into "sliding window (bw_w)" sized pieces and store in an array, "w"
-				for(size_t i=0; i < B::dbits/pr_w(DIM); i++)
-					w[i] = plane_reg<DIM>((sc_uint<pr_w(DIM)>)(word.tdata>>(pr_w(DIM)*i)));
+				for(size_t i=0; i < B::dbits/pr_w(DIM); i++) {
+					// w[i] = plane_reg<DIM>((sc_uint<pr_w(DIM)>)(word.tdata>>(pr_w(DIM)*i)));
+                    w[i].f = 1;
+					w[i].w = (sc_uint<pr_w(DIM)>)(word.tdata>>(pr_w(DIM)*i));
+                }
 			}
 			//else... have to just drain the register file by writing 0 in place of emptied registers.
 
@@ -1168,25 +1224,34 @@ template<typename FP, typename B, int DIM> struct decode_stream: sc_module
 
 			//1. b, Down shift register file st. full registers start at index 0
 			sc_uint<log2rz(sr_sz(DIM))+1>tgtreg;
-			for(tgtreg=0; srcreg<sr_sz(DIM); srcreg++,tgtreg++)
+			for(tgtreg=0; tgtreg<sr_sz(DIM); tgtreg++)
 			{
+                if(srcreg >= sr_sz(DIM)) break;
 				if(!pb_c[srcreg].f)	break;
-				else				tmp[tgtreg]=pb_c[srcreg];
+				else {
+                    tmp[tgtreg]=pb_c[srcreg];
+                    srcreg++;
+                }
 			}
 
 			//2) copy in new data from bitstream fifo.
 			if(tgtreg<reg_thresh)
 			{
-				for(size_t i=0; i < B::dbits/pr_w(DIM); i++)
-					tmp[tgtreg++]=w[i];
+				for(size_t i=0; i < B::dbits/pr_w(DIM); i++) {
+					tmp[tgtreg]=w[i];
+                    tgtreg++;
+                }
 			}
 
 		}
-		else
-			{for(size_t i=0; i<sr_sz(DIM); i++){tmp[i]=pb_c[i];}}	//If fifo data is not valid, do not update the register file.
+		else {
+            for(size_t i=0; i<sr_sz(DIM); i++){tmp[i]=pb_c[i];}
+        }	//If fifo data is not valid, do not update the register file.
 
 		//assign next state registers
-		for(size_t i=0; i<sr_sz(DIM); i++){b_c[i].write(tmp[i]);}
+		for(size_t i=0; i<sr_sz(DIM); i++){
+            b_c[i].write(tmp[i]);
+        }
 
 
 		if(!tmp[reg_thresh-1].f)			//the register file is empty enough to take in more data.
@@ -1262,19 +1327,31 @@ template<typename FP, typename B, int DIM> struct decode_stream: sc_module
 			//all sc_signals use default constructor, so b_c{:}=0 and x_wordoff=0.
 			minbits = s_maxbits.read() - s_minbits.read();
 			c_m_bfifo.ready_w(false);
-			c_rembits = 0;
+            skpbts = false;
+            s_bc.ready_w(false);
+            m_bp.valid_w(false);
+            c_wordoff = 0;
+            c_rembits = 0;
+            plane_reg<2> b_c_init_v{};
+            b_c_init_v.f = 0;
+            b_c_init_v.w = 0;
+            for(int i = 0; i < 4; i++) {
+                b_c[i].write(b_c_init_v);
+            }
+            bits = 0;
 		} else {
 			plane_reg<DIM>b_wrk[sr_sz(DIM)];
-			for(size_t i=0; i<sr_sz(DIM); i++){b_wrk[i]=b_c[i].read();}	//get most up to date register file.
+			for(size_t i=0; i<sr_sz(DIM); i++){
+                b_wrk[i]=b_c[i].read();
+            }	//get most up to date register file.
 
 			sc_uint<log2rz(pr_w(DIM))+3>w_wordoff = c_wordoff.read();
 			bool _s_blk_cycle = ((s_blk_start.data_r()==true) && s_blk_start.valid_r());
 
 			block_header<FP> bhdr(true);													//concatenate zero bit and exponent into one message
-      bhdr.init(true);
+            bhdr.init(true);
 
 			sconfig_t w_rembits;						 									//remaining bits in current block. Used to decide if pad bits should be read in zero block / variable mode decoding,
-
 			//skip bits if necessary.
 			if(		(!csync.read() && (_s_blk_cycle || skpbts.read()))	//not stalled and a start block , or already skipping bits
 																		)
@@ -1299,9 +1376,9 @@ template<typename FP, typename B, int DIM> struct decode_stream: sc_module
 
 					c_rembits.write((w_rembits-dreg_bits));		//update minimum remaining bits (to skip) for this block
 
-					if(w_rembits > pr_w(DIM))						//check if finished skipping bits
+					if(w_rembits > pr_w(DIM)) {						//check if finished skipping bits
 						skpbts.write(true);						//not finished skipping
-					else										//finished skipping, fix up bitstream offset and enable header search.
+                    } else										//finished skipping, fix up bitstream offset and enable header search.
 					{
 
 						c_wordoff.write((c_wordoff.read()+dreg_bits)%pr_w(DIM));			//modify the bitstream window register offset used by decoder to account for dreg bits
@@ -1309,8 +1386,9 @@ template<typename FP, typename B, int DIM> struct decode_stream: sc_module
 					}
 
 				}
-				else
+				else {
 					skpbts.write(false);
+                }
 			}
 
 
@@ -1336,8 +1414,7 @@ template<typename FP, typename B, int DIM> struct decode_stream: sc_module
 
 						w_wordoff = w_wordoff%pr_w(DIM);		//working register file offset should drop to a bit offset within the first valid register in b_c[:] register file.
 						w_rembits -= FP::ebits;					//keep track of all read bits
-																//TODO: remove unecessary ebias subtraction and re-adittion later downstream.
-						blockexpt -= FP::ebias;					//Assume encoded with bias, and remove this bias from exponent
+						//redundant. blockexpt -= FP::ebias;	//Assume encoded with bias, and remove this bias from exponent
 
 						m_block_maxprec.write(get_block_maxprec(blockexpt));	//Compute and output per-block maxprec.
 						bhdr.set_exp(blockexpt);
@@ -1375,8 +1452,9 @@ template<typename FP, typename B, int DIM> struct decode_stream: sc_module
 			}
 			else
 			{
-				if(m_bhdr.ready_r() )
+				if(m_bhdr.ready_r() ) {
 					m_bhdr.valid_w(false);
+                }
 
 				s_blk_start.ready_w(false);
 			}
@@ -1389,12 +1467,14 @@ template<typename FP, typename B, int DIM> struct decode_stream: sc_module
 
 					)
 			{
-				if(!_s_blk_cycle)											//if the start of the block, w_rembits was actually set already.
+				if(!_s_blk_cycle){									//if the start of the block, w_rembits was actually set already.
 					w_rembits = c_rembits.read() - s_bc.data_r();			//if not the start of the block, retrieve number of remaining bits.
+                }
 
 				//read in next bit count
-				if(!_s_blk_cycle)
+				if(!_s_blk_cycle) { 
 					w_wordoff+=s_bc.data_r();								//use last cycles feedback to offset to next bit plane window
+                }
 				sc_bv<bw_w(DIM) > planewdw= get_window(b_wrk,w_wordoff);	//get window in bitstream. could span b1, b2 and b3 after get_expt.s
 //need bit vector, uint not wide enough sc_uint<bw_w(DIM) > planewdw= get_window(b_wrk,w_wordoff);	//get window in bitstream. could span b1, b2 and b3 after get_expt.
 				w_wordoff = w_wordoff%pr_w(DIM);								//Register file offset should drop to a bit offset for the 0th register
@@ -1429,6 +1509,7 @@ template<typename FP, typename B, int DIM> struct decode_stream: sc_module
 		sc_trace(tf, s_maxbits, (std::string(name())+".s_maxbits").c_str());
 		sc_trace(tf, s_maxprec, (std::string(name())+".s_maxprec").c_str());
 		sc_trace(tf, s_minexp,  (std::string(name())+".s_minexp").c_str());
+
 
 		//Output
 		sc_trace(tf, m_bp,    (std::string(name())+".m_bp").c_str());
@@ -1537,7 +1618,8 @@ SC_MODULE(inv_cast)
 
 		// determine if number is negative
 		si_t si = r_blk[count.read()].read();	//convert the current block entry to be streamed out.
-		ui_t neg_mask = (1LL <<(FP::bits-1));	//a mask to see if an unsigned type is negative in twos compliment
+		ui_t neg_mask = (1ULL <<(FP::bits-1));	//a mask to see if an unsigned type is negative in twos compliment
+
 		if(si & neg_mask)						//check if the integer is "negative" in 2's compliment
 			{si = -si; s = 1;}					//separate sign (s) from scalar value
 
@@ -1547,18 +1629,20 @@ SC_MODULE(inv_cast)
 																);
 
 		if(zero_output)
-			fp =  (typename FP::ui_t)0;
+            fp =  (typename FP::ui_t)0;
 		else
 		{
 			// Compute x = 2^emax * (y / 2^(p - 2))
 			ui_t rn = ui_t(si);
 
 			// determine position, e, of leading one-bit: 2^e <= y < 2^(e+1)
-			ui_t e = 0;
-      for(ui_t i=0; i<FP::bits; i++) {
-        if(!(rn>> (e +1)))break;
-        else e++;
-      }
+			expo_t e = 0;
+			// while (rn >> (e + 1))
+			//   e++;
+            for(ui_t i=0; i<FP::bits; i++) {
+                if(!(rn>> (e +1)))break;
+                else e++;
+            }
 
 			// align significand such that leading one-bit is in position FP::fbitsm
 			int shift = FP::fbits - e;
@@ -1567,8 +1651,8 @@ SC_MODULE(inv_cast)
 			else
 				rn >>= -shift;
 
-			// add in bias, block exponent, and coefficient normalization
-			e += FP::ebias + r_ex.read() - (FP::bits - 2);
+			// add in block exponent, and coefficient normalization
+			e += r_ex.read() - (FP::bits - 2);	//Note: exponent bias was never subtracted and is tf not added here.
 
 			// handle special case of subnormals
 			if (e <= 0)
@@ -1587,7 +1671,7 @@ SC_MODULE(inv_cast)
 			rn += ((s << FP::ebits) + e) << FP::fbits;
 
 			//rn is now in IEEE floating point format. initialize SystemC stream type with rn's bits.
-      (fp.sign, fp.expo, fp.frac) = rn;
+            (fp.sign, fp.expo, fp.frac) = rn;
 			// fp = FP(rn);
 		}
 		m_stream.data_w(fp);			//always write out converted data
@@ -1601,6 +1685,10 @@ SC_MODULE(inv_cast)
 		if (reset == RLEVEL)			//On reset, clear everything. All registers.
 		{
 			count = 0;					//start stream counter at 0
+            s_bhdr.ready_w(false);
+            s_ready.write(false);
+            got_bhdr.write(0);
+            got_blk.write(0);
 		}
 		else							//On not reset, chug through all data and clock it out.
 		{

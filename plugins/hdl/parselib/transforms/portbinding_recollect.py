@@ -1,5 +1,4 @@
-
-from lark import Tree
+from lark import Tree, Token
 from parselib.transforms import TopDown
 from parselib.transforms.node import TypeDefType
 from ..utils import dprint, is_tree_type, get_ids_in_tree_types, ContextManager, get_tree_types
@@ -217,8 +216,9 @@ class LowerComplexPort(TopDown):
     """
     This pass simply lowers the the field access to a simple portbinding
     """
-    def __init__(self):
+    def __init__(self, port_meta):
         self.ctx = ContextManager()
+        self.port_meta = port_meta
         pass
 
     def genbindinglist(self, tree):
@@ -229,6 +229,23 @@ class LowerComplexPort(TopDown):
     def hvarref(self, tree):
         if not self.ctx.is_in_genbindinglist:
             return tree
+
+        assert len(tree.children) == 1, "Internal error, hvarref should only have one child"
+        cur_mod = self.ctx.current_module
+        if cur_mod not in self.port_meta:
+            return tree
+
+        # TODO: this checks whether a varref is a port of current module
+        # we could refactor this to be a function call such as _is_port_of_current_module()
+        interface = self.port_meta[cur_mod]
+        port_decls = interface.interfaces
+        for port_decl in port_decls:
+            # PortDecl
+            if port_decl.name == tree.children[0]:
+                # if this vardef is a local port
+                tree.children[0] = Token('ID', 
+                                         value=f'{interface.generate_interface_decl_name()}.{port_decl.name}')
+                break
         return tree.children[0]
         
     def harrayref(self, tree):
@@ -255,5 +272,10 @@ class LowerComplexPort(TopDown):
         if self.ctx.is_in_genbindinglist:
             with self.ctx.add_values(cur_depth=0):
                 self.__push_up(tree)
-                return tree.children[0] + ".mod." + tree.children[1]
+                return tree.children[0] + ".itf." + tree.children[1]
         return tree
+    
+    def hmodule(self, tree):
+        with self.ctx.add_values(current_module=tree.children[0].value):
+            self.__push_up(tree)
+            return tree

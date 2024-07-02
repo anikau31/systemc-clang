@@ -17,6 +17,7 @@ from .comma_transformation import CommaTransformation
 from .structure_collector import StructureCollector
 from .sensevar_movement import SensevarMovement
 from .portbinding_recollect import PortbindingRecollect, PortbindingPrecheck, PortDirectionCollector, LowerComplexPort
+from .interface_generation import InterfaceGeneration, InterfaceReplacement
 
 from ..utils import dprint, terminate_with_no_trace
 
@@ -60,6 +61,9 @@ class VerilogTranslator:
         
         prev = PortExpansion().visit(prev)
         prev = TypedefExpansion(f.types).visit(prev)
+
+        ig = InterfaceGeneration()
+        prev = ig.visit(prev)
         # terminate_with_no_trace()
         # PrettyPrintModule('fifo_cc_sc_module_11').visit(prev)
         # terminate_with_no_trace()
@@ -83,16 +87,17 @@ class VerilogTranslator:
 
         prev = PortbindingPrecheck().visit(prev)
         prev = PortbindingRecollect(ports=port_directions.ports).visit(prev)  # this pass should only work when PreCheck passes
-        prev = LowerComplexPort().visit(prev)
+        prev = LowerComplexPort(ig.interface_meta_data).visit(prev)
 
-        # PrettyPrintModule('encode_sc_module_1').visit(prev)
+        prev=  LiteralExpansion2().visit(prev)
+        prev = InterfaceReplacement(ig.interface_meta_data).visit(prev)
+        # PrettyPrintModule('decode_sc_module_1').visit(prev)
         # terminate_with_no_trace()
         # PrettyPrintModule('encode_block_sc_module_5').visit(prev)
         # terminate_with_no_trace()
 
-        prev=  LiteralExpansion2().visit(prev)
         # PrettyPrintModule('rvfifo_cc_sc_module_9').visit(prev)
-        prev = VerilogTranslationPass().visit(prev)
+        prev = VerilogTranslationPass(itf_meta=ig.interface_meta_data).visit(prev)
         # terminate_with_no_trace()
         return prev
 
