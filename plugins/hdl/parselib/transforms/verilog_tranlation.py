@@ -1018,14 +1018,15 @@ class VerilogTranslationPass(TopDown):
                     par = self.expand_binding_ref(par)
                 else:
                     par = par.children[0].value
-                for port_decl in interface.interfaces:  # type: PortDecl
-                    if port_decl.name == sub.children[0].value:
-                        assert port_decl.direction in ['input', 'output'], "Interface port direction not recognized"
-                        if port_decl.direction == 'input':
-                            binding_str.append(ind + 'assign {}.{} = {};'.format(interface_instance_name, sub.children[0].value, par))
-                        elif port_decl.direction == 'output':
-                            binding_str.append(ind + 'assign {} = {}.{};'.format(par, interface_instance_name, sub.children[0].value))
-                        break
+                if interface:
+                    for port_decl in interface.interfaces:  # type: PortDecl
+                        if port_decl.name == sub.children[0].value:
+                            assert port_decl.direction in ['input', 'output'], "Interface port direction not recognized"
+                            if port_decl.direction == 'input':
+                                binding_str.append(ind + 'assign {}.{} = {};'.format(interface_instance_name, sub.children[0].value, par))
+                            elif port_decl.direction == 'output':
+                                binding_str.append(ind + 'assign {} = {}.{};'.format(par, interface_instance_name, sub.children[0].value))
+                            break
         for sub_name, bindings in array_bindings.items():
             assert False
             # for now, we keep a dict of array binding
@@ -1042,7 +1043,8 @@ class VerilogTranslationPass(TopDown):
             pass
             # dprint(binding)
 
-        res += ind + interface_instance_name
+        if interface_instance_name:
+            res += ind + interface_instance_name
 
         res += '\n'
         self.dec_indent()
@@ -1290,6 +1292,7 @@ class VerilogTranslationPass(TopDown):
         initialization_block = []
         encountered_initblock = False
         self.bindings = dict()
+        genbindinglist = None
         for t in tree.children:
             if isinstance(t, Tree) and t.data == 'portbindinglist':
                 self.bindings[t.children[0]] = t.children[1]
