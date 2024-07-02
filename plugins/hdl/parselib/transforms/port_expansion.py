@@ -14,6 +14,7 @@ class PortExpansion(TopDown):
         """
         super().__init__()
         self.expanded = list()
+        self.is_in_initblock = True
 
     # The port expansion for sc_rvd_in and sc_rvd_out
     def create_inport(self, t, meta):
@@ -94,8 +95,10 @@ class PortExpansion(TopDown):
                 _, sub, par = t.children
                 sub_v = sub.children[0]
                 par_v = par.children[0]
-                t.children[0 + 1].children[0].value = sub_v + '_' + f
-                t.children[1 + 1].children[0].value = par_v + '_' + f
+                # t.children[0 + 1].children[0].value = sub_v + '_' + f
+                # t.children[1 + 1].children[0].value = par_v + '_' + f
+                t.children[0 + 1].children[0] = Token('ID', sub_v + '_' + f)
+                t.children[1 + 1].children[0] = Token('ID', par_v + '_' + f)
                 res.append(t)
             return res
         else:
@@ -158,6 +161,69 @@ class PortExpansion(TopDown):
         tree.children = new_children
         return tree
 
+    def hmodinitblock(self, tree):
+        self.is_in_initblock = True
+        self.__push_up(tree)
+        self.is_in_initblock = False
+        return tree
+
+    def stmts(self, tree):
+        self.__push_up(tree)
+        if not self.is_in_initblock:
+            return tree
+        new_children = []
+        for ch in tree.children:
+            if isinstance(ch, list):
+                new_children.extend(ch)
+            else:
+                new_children.append(ch)
+        tree.children = new_children
+        return tree
+
+    def forbody(self, tree):
+        self.__push_up(tree)
+        if not self.is_in_initblock:
+            return tree
+        new_children = []
+        for ch in tree.children:
+            if isinstance(ch, list):
+                new_children.extend(ch)
+            else:
+                new_children.append(ch)
+        tree.children = new_children
+        return tree
+        
+
+    def __check_stmt_portbinding(self, stmt):
+        assert stmt.data == 'stmt'
+        # portbinding is the only child
+        if len(stmt.children) == 1 and stmt.children[0].data == 'portbinding':
+            return True
+        return False
+
+    def stmt(self, tree):
+        if not self.is_in_initblock:
+            self.__push_up(tree)
+            return tree
+        if not self.__check_stmt_portbinding(tree):
+            self.__push_up(tree)
+            return tree
+        self.__push_up(tree)
+        assert len(tree.children) == 1
+        new_children = tree.children[0]
+        tree.children = []
+        res = [
+            copy.deepcopy(tree)
+            for child in new_children
+        ]
+        for r, ch in zip(res, new_children):
+            r.children = [ch]
+        return res
+
+
+    def portbinding(self, tree):
+        res = self.__expand_sc_rvd_binding_pair(tree)
+        return res
 
     def portbindinglist(self, tree):
         module_name, *bindings = tree.children

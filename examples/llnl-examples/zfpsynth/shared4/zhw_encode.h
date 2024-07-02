@@ -1075,8 +1075,13 @@ SC_MODULE(encode_ints)
 						if(bp1.read()[n].to_bool() && !bp1.read()[n - 1].to_bool()) {
 							if(n != fpblk_sz(DIM) - 1)
 								first_after_bc = shiftamt;
-							else
-								first_after_bc = shiftamt - 1;
+							else {
+								if(bc1.read() == fpblk_sz(DIM)) {
+									first_after_bc = shiftamt;
+								} else {
+									first_after_bc = shiftamt - 1;
+								}
+							}
 						} else { // 10
 							if(n != fpblk_sz(DIM) - 1)
 								first_after_bc = shiftamt;

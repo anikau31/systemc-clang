@@ -170,6 +170,8 @@ class sc_uint(Primitive):
                 prefix = context.prefix + ' '
             if context.suffix is not None:
                 suffix = context.suffix
+        if prefix == 'genvar ':  # genvar does not have a specific type
+            return f'{prefix}{var_name}{suffix}'
         if var_name:
             return f'{prefix}logic [{self.width-1}:0] {var_name}{suffix}'
         else:
@@ -187,6 +189,8 @@ class sc_int(Primitive):
                 prefix = context.prefix + ' '
             if context.suffix is not None:
                 suffix = context.suffix
+        if prefix == 'genvar ':  # genvar does not have a specific type
+            return f'{prefix}{var_name}{suffix}'
         if var_name:
             return f'{prefix}logic signed[{self.width-1}:0] {var_name}{suffix}'
         else:

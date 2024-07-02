@@ -1371,7 +1371,12 @@
           ]
         ]
       ]
-      hVardecl MAX_DEPTH_scclang_global_7 [
+      hVardecl depth_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+      ]
+      hVardecl MAX_DEPTH_scclang_global_8 [
         hTypeinfo  NONAME [
           hType int NOLIST
         ]
@@ -1646,12 +1651,6 @@
         hLiteral i NOLIST
       ]
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop <= [
-            hLiteral 32 NOLIST
-            hLiteral 0 NOLIST
-          ]
-        ]
         hForStmt  NONAME [
           hVarAssign  NONAME [
             hVarref i_u_fifo_local_1 NOLIST
@@ -2483,7 +2482,12 @@
           ]
         ]
       ]
-      hVardecl MAX_DEPTH_scclang_global_7 [
+      hVardecl depth_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+      ]
+      hVardecl MAX_DEPTH_scclang_global_8 [
         hTypeinfo  NONAME [
           hType int NOLIST
         ]
@@ -2758,12 +2762,6 @@
         hLiteral i NOLIST
       ]
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop <= [
-            hLiteral 2 NOLIST
-            hLiteral 0 NOLIST
-          ]
-        ]
         hForStmt  NONAME [
           hVarAssign  NONAME [
             hVarref i_u_fifo_local_1 NOLIST
@@ -3019,7 +3017,12 @@
           ]
         ]
       ]
-      hVardecl MAX_DEPTH_scclang_global_7 [
+      hVardecl depth_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+      ]
+      hVardecl MAX_DEPTH_scclang_global_8 [
         hTypeinfo  NONAME [
           hType int NOLIST
         ]
@@ -3294,12 +3297,6 @@
         hLiteral i NOLIST
       ]
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop <= [
-            hLiteral 16 NOLIST
-            hLiteral 0 NOLIST
-          ]
-        ]
         hForStmt  NONAME [
           hVarAssign  NONAME [
             hVarref i_u_fifo_local_1 NOLIST
@@ -6630,7 +6627,12 @@
           ]
         ]
       ]
-      hVardecl MAX_DEPTH_scclang_global_7 [
+      hVardecl depth_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+      ]
+      hVardecl MAX_DEPTH_scclang_global_8 [
         hTypeinfo  NONAME [
           hType int NOLIST
         ]
@@ -6905,12 +6907,6 @@
         hLiteral i NOLIST
       ]
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop <= [
-            hLiteral 2 NOLIST
-            hLiteral 0 NOLIST
-          ]
-        ]
         hForStmt  NONAME [
           hVarAssign  NONAME [
             hVarref i_u_bbuf_local_1 NOLIST
@@ -9445,23 +9441,6 @@
       ]
     ]
   ]
-  hTypedef fp_t_11_52_ [
-    hTypeField frac [
-      hType sc_uint [
-        hLiteral 52 NOLIST
-      ]
-    ]
-    hTypeField expo [
-      hType sc_uint [
-        hLiteral 11 NOLIST
-      ]
-    ]
-    hTypeField sign [
-      hType sc_uint [
-        hLiteral 1 NOLIST
-      ]
-    ]
-  ]
   hTypedef bits_t_64_ [
     hTypeField tdata [
       hType sc_bv [
@@ -9506,6 +9485,23 @@
     hTypeField posw [
       hType sc_uint [
         hLiteral 8 NOLIST
+      ]
+    ]
+  ]
+  hTypedef fp_t_11_52_ [
+    hTypeField frac [
+      hType sc_uint [
+        hLiteral 52 NOLIST
+      ]
+    ]
+    hTypeField expo [
+      hType sc_uint [
+        hLiteral 11 NOLIST
+      ]
+    ]
+    hTypeField sign [
+      hType sc_uint [
+        hLiteral 1 NOLIST
       ]
     ]
   ]
