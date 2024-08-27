@@ -9441,6 +9441,23 @@
       ]
     ]
   ]
+  hTypedef fp_t_11_52_ [
+    hTypeField frac [
+      hType sc_uint [
+        hLiteral 52 NOLIST
+      ]
+    ]
+    hTypeField expo [
+      hType sc_uint [
+        hLiteral 11 NOLIST
+      ]
+    ]
+    hTypeField sign [
+      hType sc_uint [
+        hLiteral 1 NOLIST
+      ]
+    ]
+  ]
   hTypedef bits_t_64_ [
     hTypeField tdata [
       hType sc_bv [
@@ -9485,23 +9502,6 @@
     hTypeField posw [
       hType sc_uint [
         hLiteral 8 NOLIST
-      ]
-    ]
-  ]
-  hTypedef fp_t_11_52_ [
-    hTypeField frac [
-      hType sc_uint [
-        hLiteral 52 NOLIST
-      ]
-    ]
-    hTypeField expo [
-      hType sc_uint [
-        hLiteral 11 NOLIST
-      ]
-    ]
-    hTypeField sign [
-      hType sc_uint [
-        hLiteral 1 NOLIST
       ]
     ]
   ]

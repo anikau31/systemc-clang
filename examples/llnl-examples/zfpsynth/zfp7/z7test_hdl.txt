@@ -9509,36 +9509,6 @@
       ]
     ]
   ]
-  hTypedef plane_reg_2_ [
-    hTypeField f [
-      hType bool NOLIST
-    ]
-    hTypeField w [
-      hType sc_uint [
-        hLiteral 32 NOLIST
-      ]
-    ]
-  ]
-  hTypedef block_header_fp_t_11_52_ [
-    hTypeField zb [
-      hType bool NOLIST
-    ]
-    hTypeField exp [
-      hType sc_uint [
-        hLiteral 11 NOLIST
-      ]
-    ]
-  ]
-  hTypedef bits_t_64_ [
-    hTypeField tdata [
-      hType sc_bv [
-        hLiteral 64 NOLIST
-      ]
-    ]
-    hTypeField tlast [
-      hType bool NOLIST
-    ]
-  ]
   hTypedef fp_t_11_52_ [
     hTypeField frac [
       hType sc_uint [
@@ -9553,6 +9523,36 @@
     hTypeField sign [
       hType sc_uint [
         hLiteral 1 NOLIST
+      ]
+    ]
+  ]
+  hTypedef bits_t_64_ [
+    hTypeField tdata [
+      hType sc_bv [
+        hLiteral 64 NOLIST
+      ]
+    ]
+    hTypeField tlast [
+      hType bool NOLIST
+    ]
+  ]
+  hTypedef block_header_fp_t_11_52_ [
+    hTypeField zb [
+      hType bool NOLIST
+    ]
+    hTypeField exp [
+      hType sc_uint [
+        hLiteral 11 NOLIST
+      ]
+    ]
+  ]
+  hTypedef plane_reg_2_ [
+    hTypeField f [
+      hType bool NOLIST
+    ]
+    hTypeField w [
+      hType sc_uint [
+        hLiteral 32 NOLIST
       ]
     ]
   ]
