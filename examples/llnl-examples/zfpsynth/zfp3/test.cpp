@@ -59,7 +59,7 @@ typedef zhw::uconfig_t uconfig_t; // unsigned configuration parameter type
 #define DEFAULT_RATE (fpn_t::bits)
 #define DEFAULT_TCARG "1"
 static unsigned blocks = DEFAULT_BLOCKS;
-static double rate = DEFAULT_RATE;
+static double rate = 16; //DEFAULT_RATE;
 static const char *tcarg = DEFAULT_TCARG;
 static tcase<real_t,enc_t::uic_t,DIMS> *ptcase;
 

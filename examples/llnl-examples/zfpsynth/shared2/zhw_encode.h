@@ -342,7 +342,7 @@ SC_MODULE(fwd_lift)
 			sensitive << m_ready;
 			sensitive << x[stages-1] << y[stages-1] << z[stages-1] << w[stages-1];
 			sensitive << v;
-		SC_METHOD(ms_proc)
+			SC_METHOD(ms_proc);
 			sensitive << clk.pos();
 			dont_initialize();
 	}
