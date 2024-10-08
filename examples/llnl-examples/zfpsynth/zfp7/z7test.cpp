@@ -9,10 +9,10 @@
 #include <unistd.h> // getopt, optarg, optind
 #include <limits> // numeric_limits
 
-#include "../shared3/pulse.h"
+#include "../shared4/pulse.h"
 // zhw_encode.h is required to bring in block_buffer with proper template type
-#include "../shared3/zhw_encode.h"
-#include "../shared3/zhw_decode.h"
+#include "../shared4/zhw_encode.h"
+#include "../shared4/zhw_decode.h"
 
 #ifndef DATAW
 #define DATAW 64   // bitstream data width
@@ -101,11 +101,11 @@ SC_MODULE(mymodule)
 
   SC_CTOR(mymodule) : u_dut("u_dut") {
     // These values are encoded in test/decode_test/tcasestream.h
-    minbits = 128;        /* minimum number of bits per 4^d block */
-    maxbits = 128;        /* maximum number of bits per 4^d block */
-    maxprec = fpn_t::bits; /* maximum precision (# bit planes coded) */
+    minbits = 0x20;        /* minimum number of bits per 4^d block */
+    maxbits = 0x20;        /* maximum number of bits per 4^d block */
+    maxprec = 0x40; // fpn_t::bits; /* maximum precision (# bit planes coded) */
     // minexp = 1-fpn_t::ebias-fpn_t::fbits;
-    minexp = -1074;
+    minexp = (0xFBCE);
 
     // connect DUT
     u_dut.clk(clk);

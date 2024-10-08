@@ -100,6 +100,7 @@ bool FindTemplateTypes::VisitTemplateSpecializationType(
 
   std::string name_string;
   llvm::raw_string_ostream sstream(name_string);
+
   template_name.print(sstream, Policy);
 
   auto new_node{

@@ -60,8 +60,10 @@ namespace systemc_hdl {
   static inline bool isEdge(string &s) {
     return (s=="pos" ||
 	    s=="posedge" ||
+	    s=="posedge_event" ||
 	    s=="neg" ||
-	    s=="negedge");
+	    s=="negedge" ||
+	    s=="negedge_event");
   }
 
   static inline bool isSimEvent(string &s) {
@@ -94,6 +96,7 @@ namespace systemc_hdl {
     hNodep HnodeDeepCopy(hNodep hp);
     void RemoveSCMethod(hNodep &hp);
     void CleanupInitHcode(hNodep &hp);
+    bool isSimRelated(hNodep hp);
 
     string ExtractModuleName(hNodep hp);
   private:

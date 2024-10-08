@@ -62,7 +62,7 @@ TEST_CASE("Simple thread test") {
   ModuleInstance *test_module{model->getInstance("testing")};
   ModuleInstance *dut{model->getInstance("d")};
 
-  SUBCASE("Found sc_module instances" ) {
+  SUBCASE("Found sc_module instances") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: " << instances.size());
 
@@ -128,29 +128,38 @@ TEST_CASE("Simple thread test") {
       /// 4 Paths
       CHECK(i == 4);
 
-
       /// Check if the TRUE/FALSE paths are correct.
-      auto path_info{scfg.getPathInfo()};
-      int check{1};
-      for (const auto &block : path_info) {
-        auto sblock{block.first};
-        auto info{block.second};
-        auto id{ sblock->getBlockID()};
-        std::string tstr{info.toStringTruePath()};
-        std::string fstr{info.toStringFalsePath()};
+      auto path_info{scfg.getAllPathInfo()};
+      int check{4};
+      int state{0};
+      for (const auto &pi : path_info) {
+        for (const auto &block : pi) {
+          auto sblock{block.first};
+          auto info{block.second};
+          auto id{sblock->getBlockID()};
+          std::string tstr{info.toStringTruePath()};
+          std::string fstr{info.toStringFalsePath()};
 
-        if (id == 5) {
-          CHECK(tstr == "4 41");
-          CHECK(fstr == "2 1 7 6 61");
-          --check;
+          if ((state == 0) || (state == 1)) {
+            if (id == 5) {
+              CHECK(tstr == "");
+              CHECK(fstr == "");
+              --check;
+            }
+          }
+
+          if (state > 1) {
+            if (id == 5) {
+              CHECK(tstr == "4 41");
+              CHECK(fstr == "2 1 7 6 61");
+              --check;
+            }
+          }
         }
+        ++state;
       }
 
       CHECK(check == 0);
-
-
-
-
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";

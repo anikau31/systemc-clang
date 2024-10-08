@@ -6,9 +6,8 @@
 #include "SplitCFGBlock.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/SmallPtrSet.h"
-
+#include <set>
 namespace systemc_clang {
-
 
 /* \class Additional information for paths traversed in SplitCFG
  */
@@ -29,7 +28,7 @@ struct SupplementaryInfo {
   /// \brief Returns the path identifier for the false path.
   int getFalseId() const;
 
-  /// \brief Returns pointer to the SplitCFGBlock. 
+  /// \brief Returns pointer to the SplitCFGBlock.
   const SplitCFGBlock *getSplitCFGBlock() const;
 
   /// Member variables
@@ -68,7 +67,7 @@ class SplitCFGPathInfo {
   /// \brief Return the list of blocks visited on the FALSE path.
   const SplitCFGBlockPtrVector &getFalsePath() const { return false_path_; }
 
-  int getpathix() { return false_startix; }
+  // int getpathix() { return false_startix; }
 
   /// \brief Converts the TRUE path into a string for testing.
   std::string toStringFalsePath() const;
@@ -82,10 +81,9 @@ class SplitCFGPathInfo {
  private:
   const SplitCFGBlock *split_block_;
   const clang::CFGBlock *cfg_block_;
-  SplitCFGBlockPtrVector true_path_;
-  int false_startix;
   int path_idx_;
   SplitCFGBlockPtrVector false_path_;
+  SplitCFGBlockPtrVector true_path_;
 };
 
 /// ===========================================
@@ -131,7 +129,22 @@ class SplitCFG {
   /// (1) conditionals, and (2) loop blocks with two outgoing edges.
   std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo> path_info_;
 
+  llvm::SmallVector<std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>>
+      all_path_info_;
+
+  SplitCFGPath sub_path_to_special_node_;
+
   unsigned int next_state_count_;
+
+  /// \brief Set to true if the CFG has a ternary operator (ConditionalOperator).
+  bool has_ternary_op_;
+
+  /// Map to store the confluence blocks.
+  /// Ternary op block => Confluence block
+  std::map<SplitCFGBlock*,SplitCFGBlock*> cop_;
+
+  /// \brief This is the pointer to the outtermost ternary operator
+  SplitCFGBlock *outter_top_;
 
  private:
   /// \brief Checks if a CFGBlock has a wait() call in it.
@@ -197,10 +210,14 @@ class SplitCFG {
   const std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>
       &getPathInfo() const;
 
+  const llvm::SmallVector<std::unordered_map<const SplitCFGBlock *, SplitCFGPathInfo>>
+      &getAllPathInfo() const;
+
   void preparePathInfo();
   /// \brief Returns the argument to a wait statement.
   /// Note that the only one supported are no arguments or integer arguments.
   llvm::APInt getWaitArgument(const clang::CFGElement &element) const;
+
 
   /// Dump member functions.
   void dump() const;
@@ -212,10 +229,23 @@ class SplitCFG {
       SplitCFGPath &curr_path) const;
 
   void dumpPathInfo() const;
+  void dumpAllPathInfo() const;
 
   /// Rework
   //
   //
+
+  // Identify confluence blocks.
+  //
+  /// \brief Returns the confluence map.
+  std::map<SplitCFGBlock*,SplitCFGBlock*> getConfluenceBlocks() const;
+
+  /// \brief Identify confluence blocks in the CFG.
+  void identifyConfluenceBlocks();
+  std::set<SplitCFGBlock*> identifySkipBlocks();
+
+
+ public:
 
   template <typename T>
   void dumpSmallVector(llvm::SmallVectorImpl<T> &vlist) {
@@ -241,14 +271,16 @@ class SplitCFG {
                  llvm::SmallVector<SplitCFGPathPair> &curr_path);
   void dfs_rework();
 
-  /// \brief Checks if the block is contains a terminator that is a ternary operator.
+  /// \brief Checks if the block is contains a terminator that is a ternary
+  /// operator.
   bool isTernaryOperator(const SplitCFGBlock *block) const;
 
   /// \brief Checks if the block is a loop block.
   bool isLoop(const SplitCFGBlock *block) const;
 
   /// \brief Checks if the block is a conditional.
-  /// Note that this is different than  ternary since the terminator is different.
+  /// Note that this is different than  ternary since the terminator is
+  /// different.
   bool isConditional(const SplitCFGBlock *block) const;
 
   bool getUnvisitedSuccessor(
@@ -282,12 +314,18 @@ class SplitCFG {
   // const llvm::SmallVector<
   // std::pair<const SplitCFGBlock *, SplitCFGPathInfo>> &newly_visited);
 
+  void addPathToSpecialNode(const SplitCFGPath &from);
+
   void updateVisitedBlocks(
       llvm::SmallPtrSetImpl<const SplitCFGBlock *> &to,
       const llvm::SmallPtrSetImpl<const SplitCFGBlock *> &from);
   void dumpVisitedBlocks(llvm::SmallPtrSetImpl<const SplitCFGBlock *> &visited);
 
   bool popping_;
+
+  ///////////////// TESTING
+ public:
+  // void make_edge_pairs( const SplitCFGBlock* block );
 };
 
 };  // namespace systemc_clang

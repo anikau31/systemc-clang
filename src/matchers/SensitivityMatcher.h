@@ -46,22 +46,22 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
   /// 3. The MemberExpr from where I got this information.
   typedef std::vector<
       std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
-                 clang::DeclRefExpr *, clang::ArraySubscriptExpr *>>
+                 clang::VarDecl *, clang::ArraySubscriptExpr *, clang::ForStmt*>>
       CallerCalleeType;
 
   /// Store the information.
   std::vector<std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
-                         clang::DeclRefExpr *, clang::ArraySubscriptExpr *>>
+                         clang::VarDecl *, clang::ArraySubscriptExpr *, clang::ForStmt*>>
       calls_;
 
-  clang::DeclRefExpr *vd_;
+  clang::VarDecl *vd_;
 
  public:
   /// This returns a list of all the caller and callees that are identified.
   CallerCalleeType getCallerCallee() const { return calls_; }
 
   /// Register the matchers to identify caller and callees.
-  void registerMatchers(MatchFinder &finder, clang::DeclRefExpr *vd) {
+  void registerMatchers(MatchFinder &finder, clang::VarDecl *vd) {
     vd_ = vd;
 
     /* clang-format off */
@@ -81,7 +81,7 @@ class CallerCalleeMatcher : public MatchFinder::MatchCallback {
     if (me) {
       std::string name{me->getMemberDecl()->getNameAsString()};
       calls_.insert(calls_.begin(), std::make_tuple(name, me->getMemberDecl(),
-                                                    me, vd_, nullptr));
+                                                    me, vd_, nullptr, nullptr));
     }
   }
 
@@ -188,7 +188,7 @@ class SensitiveOperatorCallMatcher : public MatchFinder::MatchCallback {
     }
 
     auto cxxcall{result.Nodes.getNodeAs<clang::CXXOperatorCallExpr>("cxx_operator_call_expr")};
-    LLVM_DEBUG(cxxcall->dump());
+    // LLVM_DEBUG(cxxcall->dump());
 
     auto cxx_mcall{const_cast<clang::CXXMemberCallExpr*>(
         result.Nodes.getNodeAs<clang::CXXMemberCallExpr>("cxx_mcall"))};
@@ -216,7 +216,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
   /// represent where this particular ValueDecl was found for further parsing.
   /// The VarDecl* is the process handle to which this sensitivity is bound to.
 
-  typedef std::tuple<std::string, clang::ValueDecl*, clang::MemberExpr*, clang::DeclRefExpr*, clang::ArraySubscriptExpr*> 
+  typedef std::tuple<std::string, clang::ValueDecl*, clang::MemberExpr*, clang::VarDecl*, clang::ArraySubscriptExpr*, clang::ForStmt*> 
       SensitivityTupleType;
 
   /// This is the pair for inserting key-value entries in the map.
@@ -232,7 +232,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
   SenseMapType sensitivity_;
 
   /// This provides access to the SystemC process' entry function handler. 
-  clang::DeclRefExpr *process_handle_;
+  clang::VarDecl *process_handle_;
 
   /// This generates an encoded name of the argument for the sensitivity.
   std::string generateSensitivityName(
@@ -242,7 +242,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     for (auto const entry : sense_args) {
       name = name + std::get<0>(entry);
       auto vd{std::get<3>(entry)};
-      if (vd) { ef_name = vd->getNameInfo().getAsString();}
+      if (vd) { ef_name = vd->getNameAsString();}
     }
     return ef_name+"__"+name;
   }
@@ -259,23 +259,48 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
   void registerMatchers(MatchFinder &finder) {
   /* clang-format off */
 
-    auto match = 
+    auto NoNestedFor = forStmt(unless(hasDescendant(forStmt())), unless(hasAncestor(forStmt()))).bind("for_stmt");
+    // Detect the variable declared for the process' handle. 
+    auto scProcessType = hasType(hasUnqualifiedDesugaredType(recordType()));
+    auto processHandle = hasDescendant(valueDecl(scProcessType).bind("proc_vd")); 
+    // Operator call that is <b>not</b> in a for statement.
+    auto operatorCall = forEachDescendant(cxxOperatorCallExpr( ).bind("opcall"));
+    // Operator call that is <b>within</b> a for statement.  Note that only one for statement is supported.
+    auto sensitivityInOneLoop = forStmt(operatorCall).bind("for_stmt");
+
+    auto match_single_for = 
       cxxConstructorDecl(
         has(
           compoundStmt(
-            forEachDescendant(
-              cxxOperatorCallExpr(optionally(
-                  hasDescendant(declRefExpr(hasType(cxxRecordDecl(hasName("::sc_core::sc_process_handle")))).bind("process_handle"))
-                  )
-                ).bind("opcall")
-            ) 
+            processHandle,
+            eachOf (
+              forEachDescendant(sensitivityInOneLoop)  // ForEachDescendant
+              ,
+              allOf(operatorCall, unless(sensitivityInOneLoop))
+            ) //anyOf
           ).bind("compound_stmt")
         )
       ).bind("cxx_constructor_decl");
 
+
+    // auto match_original =
+      // cxxConstructorDecl(
+        // has(
+          // compoundStmt(
+            // forEachDescendant(
+              // cxxOperatorCallExpr(optionally(
+                  // hasDescendant(declRefExpr(hasType(cxxRecordDecl(hasName("::sc_core::sc_process_handle")))).bind("process_handle"))
+                  // )
+                // ).bind("opcall")
+            // )
+          // ).bind("compound_stmt")
+        // )
+      // ).bind("cxx_constructor_decl");
+//
     /* clang-format on */
     /// Add the matcher.
-    finder.addMatcher(match, this);
+    // finder.addMatcher(match_original, this);
+    finder.addMatcher(match_single_for, this);
   }
 
   /// This is the callback function whenever there is a match.
@@ -290,20 +315,37 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     clang::ArraySubscriptExpr *array_expr{};
 
     /// Debug code
-    auto process_handle{const_cast<clang::DeclRefExpr *>(
-        result.Nodes.getNodeAs<clang::DeclRefExpr>("process_handle"))};
+    auto proc_vd{const_cast<clang::VarDecl *>(
+        result.Nodes.getNodeAs<clang::VarDecl>("proc_vd"))};
+    auto proc_handle = proc_vd;
+
+    auto cons_decl{const_cast<clang::CXXConstructorDecl *>(
+        result.Nodes.getNodeAs<clang::CXXConstructorDecl>(
+            "cxx_constructor_decl"))};
     auto opcall{const_cast<clang::CXXOperatorCallExpr *>(
         result.Nodes.getNodeAs<clang::CXXOperatorCallExpr>("opcall"))};
+    auto for_stmt{const_cast<clang::ForStmt *>(
+        result.Nodes.getNodeAs<clang::ForStmt>("for_stmt"))};
+
 
     if (opcall) {
-      // Check if there is process handle
-      if (process_handle) {
-        clang::ValueDecl *vd{process_handle->getDecl()};
-        LLVM_DEBUG(llvm::dbgs() << "# DeclRefExpr "
-                                << process_handle->getNameInfo().getAsString()
-                                << "   => " << vd->getNameAsString() << "\n");
-        process_handle_ = process_handle;
-      }
+      LLVM_DEBUG(
+
+        if (cons_decl) {
+          cons_decl->dump();
+        }
+        // Check if there is process handle
+        if (proc_vd) {
+          llvm::dbgs() << "# proc_vd " << " " << proc_vd->getNameAsString() << "\n";
+          process_handle_ = proc_vd;
+          opcall->dump();
+        }
+
+        if (for_stmt) {
+          LLVM_DEBUG(llvm::dbgs() << "# ForStmt \n";
+                     for_stmt->getInit()->dump(););
+        }
+      ); // LLVM_DEBUG
 
       MatchFinder sense_registry{};
       SensitiveOperatorCallMatcher sop_matcher{};
@@ -314,6 +356,14 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
       me_wo_mcall = sop_matcher.getMemberExprWithoutCall();
       array_expr = const_cast<clang::ArraySubscriptExpr *>(
           sop_matcher.getMemberArraySubscriptExpr());
+
+      LLVM_DEBUG(
+          if (cxx_mcall) {
+            llvm::dbgs() << "cxx_mcall is true; ";
+          } if (me_wo_mcall) {
+            llvm::dbgs() << "me_wo_mcall is true; ";
+          } if (array_expr) { llvm::dbgs() << "array_expr is true; "; }
+          );
     }
 
     /// If the argument to the operator<<() is a MemberExpr.
@@ -328,7 +378,7 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
         call_matcher.registerMatchers(call_registry, process_handle_);
         call_registry.match(*me_wo_mcall, *result.Context);
 
-        LLVM_DEBUG(call_matcher.dump());
+        // LLVM_DEBUG(call_matcher.dump());
         auto entry{call_matcher.getCallerCallee()};
         sensitivity_.insert(
             SensitivityPairType(generateSensitivityName(entry), entry));
@@ -342,7 +392,6 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
         CallerCalleeMatcher call_matcher{};
         call_matcher.registerMatchers(call_registry, process_handle_);
         call_registry.match(*cxx_mcall, *result.Context);
-        LLVM_DEBUG(call_matcher.dump());
 
         auto entry{call_matcher.getCallerCallee()};
         sensitivity_.insert(
@@ -357,14 +406,15 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
         auto entry{std::make_tuple(name, me->getMemberDecl(),
                                    const_cast<clang::MemberExpr *>(me),
                                    process_handle_, array_expr)};
-        std::vector<
-            std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
-                       clang::DeclRefExpr *, clang::ArraySubscriptExpr *>>
-            calls;
+        std::vector<SensitivityTupleType> calls;
+
+            // std::tuple<std::string, clang::ValueDecl *, clang::MemberExpr *,
+                       // clang::VarDecl *, clang::ArraySubscriptExpr *>>
+            // calls;
         calls.insert(calls.begin(),
                      std::make_tuple(name, me->getMemberDecl(),
                                      const_cast<clang::MemberExpr *>(me),
-                                     process_handle_, array_expr));
+                                     process_handle_, array_expr, for_stmt));
 
         sensitivity_.insert(
             SensitivityPairType(generateSensitivityName(calls), calls));
@@ -380,21 +430,34 @@ class SensitivityMatcher : public MatchFinder::MatchCallback {
     for (auto const entry : sensitivity_) {
       auto generated_name{entry.first};
       auto callercallee{entry.second};
-      LLVM_DEBUG(llvm::dbgs() << generated_name << "  \n");
+      LLVM_DEBUG(llvm::dbgs()
+                 << "generated name is " << generated_name << "  \n");
 
       for (auto const &call : callercallee) {
+        clang::VarDecl *vd{std::get<3>(call)};
+        clang::ForStmt *fs{std::get<5>(call)};
+
         LLVM_DEBUG(llvm::dbgs()
-                   << std::get<0>(call) << "  " << std::get<1>(call) << "  "
-                   << std::get<2>(call) << "\n");
+                   << "sensitive signal is " << std::get<0>(call) << "  "
+                   << std::get<1>(call) << "  " << std::get<2>(call) << "\n");
+        if (fs) {
+          llvm::dbgs() << "within a for statement \n";
+          fs->getInit()->dump();
+        }
 
         if (auto array_expr = std::get<4>(call)) {
-          LLVM_DEBUG(
-          llvm::dbgs() << "ArraySubscriptExpr\n";
-          array_expr->dump();
-          );
+          LLVM_DEBUG(llvm::dbgs() << "ArraySubscriptExpr\n";
+                     array_expr->dump(););
+          llvm::dbgs() << "Print subscripts\n";
+          std::vector<const clang::Expr *> arr_subs{
+              getArraySubscripts(array_expr)};
+          for (auto const &ex : arr_subs) {
+            ex->dump();
+          }
         }
       }
     }
+
   }
 };
 };  // namespace sc_ast_matchers

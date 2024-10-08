@@ -84,11 +84,11 @@ SC_MODULE(fifo_cc)
 		sc_uint<IW> wr_inc;
 		sc_uint<IW> rd_inc;
 
-		wr_inc = (wr_idx.read() + 1) % depth;
-		rd_inc = (rd_idx.read() + 1) % depth;
+		wr_inc = (wr_idx.read() + 1) % MAX_DEPTH;
+		rd_inc = (rd_idx.read() + 1) % MAX_DEPTH;
 		if (reset == RLEV) {
 			if (!FWFT) dout = T();
-			for (unsigned i = 0; i < depth; i++) data[i] = T();
+			for (unsigned i = 0; i < MAX_DEPTH; i++) data[i] = T();
 			rd_idx = 0;
 			wr_idx = 0;
 			full_i = false;
@@ -120,13 +120,13 @@ SC_MODULE(fifo_cc)
 	fifo_cc(const sc_module_name& mn_, int size_ = MAX_DEPTH) :
 		sc_module(mn_), depth(size_)
 	{
-		if (size_ <= 0 || MAX_DEPTH < size_) {
-			SC_REPORT_ERROR("FIFO size out of bounds", name());
-			return;
-		}
+		// if (size_ <= 0 || MAX_DEPTH < size_) {
+		// 	SC_REPORT_ERROR("FIFO size out of bounds", name());
+		// 	return;
+		// }
 		SC_METHOD(mc_proc);
 			sensitive << wr_en << rd_en << full_i << empty_i << rd_idx;
-			for (int i = 0; i < size_; i++) sensitive << data[i];
+			for (int i = 0; i < MAX_DEPTH; i++) sensitive << data[i];
 		SC_METHOD(ms_proc);
 			sensitive << clk.pos();
 			dont_initialize();

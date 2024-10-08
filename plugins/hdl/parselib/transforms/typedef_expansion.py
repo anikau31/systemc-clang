@@ -6,7 +6,7 @@ from ..compound import aggregate
 from lark import Tree, Token
 import copy
 import warnings
-from ..utils import dprint, is_tree_type, get_ids_in_tree, alternate_ids, set_ids_in_tree_dfs
+from ..utils import dprint, is_tree_type, get_ids_in_tree, alternate_ids, get_tree_types, set_ids_in_tree_dfs, map_hvarref_ids, ContextManager
 
 
 class TypedefExpansion(TopDown):
@@ -16,7 +16,7 @@ class TypedefExpansion(TopDown):
         self.types = types
         # expanded is the variable stack
         self.expanded = [dict()]
-        self.current_module = ''
+        self.ctx = ContextManager()
 
     def __expand_htype(self, htype):
         """expand non-primitive htype into primitive sub-field type"""
@@ -158,6 +158,36 @@ class TypedefExpansion(TopDown):
         tree.children = new_children
         return tree
 
+    def hnamedsensvar(self, tree):
+        """expand identifiers in sensitivity list with fields"""
+        self.__push_up(tree)
+        res = []
+        # there will only be one sense var for thjis node
+        sense_var = tree.children[1]
+        sense_var = get_ids_in_tree(sense_var)[0]
+        var_type = self.__expanded_type(sense_var)
+
+        # we will have to duplicate this node multiple times
+        if var_type:
+            var_type = self.__get_expandable_type_from_htype(var_type)
+            type_name = var_type.children[0]
+            type_params = var_type.children[1:]
+            tpe = self.types[type_name]
+            fields = tpe.get_fields_with_instantiation(type_params, self.types)
+            
+
+            # we need to modify the id so that, so that the array reference is
+            # expanded correctly
+            for field_name, _ in fields:
+                new_child = copy.deepcopy(tree)  
+                varrefs = get_tree_types(new_child, ['hvarref'])
+                for vars in varrefs:
+                    if vars.children[0].value == sense_var.value:
+                        vars.children[0] = Token('ID', sense_var.value + '_' + field_name)
+                res.append(new_child)
+            return res
+        return tree
+
     def modportsiglist(self, tree):
         self.__push_up(tree)
         new_children = []
@@ -205,12 +235,16 @@ class TypedefExpansion(TopDown):
                     sub_type_name = var_type.children[1].children[0]
                     if not Primitive.get_primitive(sub_type_name) and not sub_type_name in self.types:
                         # inst_name, module_name, array_size
-                        inst_arr_name = node.children[0]
-                        n_inst = var_type.children[2][0]
-                        inst_type = Tree('htypeinfo', children=[var_type.children[1]])
-                        for i in range(n_inst):
-                            inst_name = inst_arr_name + '#' + str(i)
-                            new_children.append(Tree('moduleinst', [inst_name, inst_type], node.meta))
+                        # NOTE: here we are trying to instantiate a module array
+                        # But we don't want to unroll the array
+                        new_node = Tree('modulearrayinst', node.children, node.meta)
+                        new_children.append(new_node)
+                        # inst_arr_name = node.children[0]
+                        # n_inst = var_type.children[2][0]
+                        # inst_type = Tree('htypeinfo', children=[var_type.children[1]])
+                        # for i in range(n_inst):
+                        #     inst_name = inst_arr_name + '#' + str(i)
+                        #     new_children.append(Tree('moduleinst', [inst_name, inst_type], node.meta))
                         continue
                 array_of_typedef = False
                 for var_type_name in itertools.chain.from_iterable(var_tokens):
@@ -307,19 +341,29 @@ class TypedefExpansion(TopDown):
             for t in tree.children:
                 self.__append_to_expandable_var_to_tree(t, field_name)
 
+    def __is_all_none(self, v):
+        """checks if v is None or is a (nested) list containing only none"""
+        if v is None:
+            return True
+        if type(v) == list:
+            return all(map(lambda e: self.__is_all_none(e), v))
+        return False
+
 
     def __expand_blkassign(self, tree):
         """detects the expandable variable on lhs and rhs and
         expand them with the fields"""
         # Note: we only need fields here, and we don't need the actual type
         lhs, rhs = tree.children
-        dprint('LHS ', lhs)
-        dprint('RHS ', rhs, tree.data)
+        # if lhs.children[0] == 'ts_mc_proc_local_2':
+        #     assert False
+        # dprint('LHS ', lhs)
+        # dprint('RHS ', rhs, tree.data)
         lhs_var = self.__get_expandable_var_from_tree(lhs)
         rhs_var = self.__get_expandable_var_from_tree(rhs)
         # dprint('LHS var ', lhs_var)
-        # dprint('RHS var ', rhs_var)
-        if lhs_var is not None and (rhs_var is not None or rhs.data == 'hliteral'):
+        # dprint('isallnone ', self.__is_all_none(rhs_var))
+        if lhs_var is not None and (not self.__is_all_none(rhs_var) or rhs.data == 'hliteral') and (rhs_var is not None or rhs.data == 'hliteral'):
             lhs_expanded_type = self.__expanded_type(lhs_var)
             assert lhs_expanded_type is not None, '{} should have expanded type'.format(lhs_var)
             lhs_type = self.__get_expandable_type_from_htype(lhs_expanded_type)
@@ -357,27 +401,16 @@ class TypedefExpansion(TopDown):
                 else:
                     self.__append_to_expandable_var_to_tree(new_rhs, field_member)
                 res.append(new_assign)
+            # dprint(res)
             return res
-        elif lhs_var is None and rhs_var is None:
+        elif lhs_var is None and self.__is_all_none(rhs_var):
             return [tree]
-        elif lhs_var is not None and rhs_var is None:
+        elif lhs_var is not None and self.__is_all_none(rhs_var):
             return [tree]
         else:
             raise RuntimeError('Error while expanding blkassign, LHS and RHS expandability does not match')
 
 
-    def stmt(self, tree):
-        # TODO: expand blkassign for aggregated types
-        self.__push_up(tree)
-        new_children = []
-        for ch in tree.children:
-            if ch.data == 'blkassign':
-                res = self.__expand_blkassign(ch)
-                new_children.extend(res)
-            else:
-                new_children.append(ch)
-        tree.children = new_children
-        return tree
 
     def __expanded_type(self, var_name):
         for d in reversed(self.expanded):
@@ -391,11 +424,16 @@ class TypedefExpansion(TopDown):
         self.expanded[-1][var_name] = var_type
 
     def hprocess(self, tree):
+
         """add another scope for a process"""
-        self.expanded.append(dict())
-        self.__push_up(tree)
-        self.expanded.pop()
-        return tree
+        with self.ctx.add_values(current_process=tree.children[0]):
+            self.expanded.append(dict())
+            self.__push_up(tree)
+            self.expanded.pop()
+            # if self.ctx.current_module == 'encode_stream_sc_module_8':
+            #     dprint(tree.pretty())
+            #     assert False
+            return tree
 
     def hfunction(self, tree):
         self.expanded.append(dict())
@@ -481,10 +519,161 @@ class TypedefExpansion(TopDown):
         hmodinitblock includes a initialization block and portdecl block, both of which can include
         aggregated types
         """
+        self.is_in_initblock = True
         self.__push_up(tree)
+        self.is_in_initblock = False
         return tree
 
+    # def stmt(self, tree):
+    #    # TODO: expand blkassign for aggregated types
+    #    assert False
+    #    if self.ctx.current_module == 'encode_stream_sc_module_8':
+    #        assert False
+    #    self.__push_up(tree)
+    #    new_children = []
+    #    # dprint(tree.pretty())
+    #    for ch in tree.children:
+    #        if isinstance(ch, list):
+    #            new_children.append(ch)
+    #        elif ch.data == 'blkassign':
+    #            res = self.__expand_blkassign(ch)
+    #            new_children.extend(res)
+    #        else:
+    #            new_children.append(ch)
+    #    tree.children = new_children
+    #    return tree
+
+    def stmts(self, tree):
+        # if self.ctx.current_module == 'encode_stream_sc_module_8':
+        #     tree.children = self.visit_children(tree)
+        # import pdb; pdb. set_trace()
+        #     dprint(tree)
+        #     assert False
+        # import pdb; pdb. set_trace()
+        self.__push_up(tree)
+
+        #     assert False
+
+        #     assert False
+        # if not self.is_in_initblock:
+        #     return tree
+
+        # we might need to flatten port binidngs
+        new_children = []
+        for child in tree.children:
+            if isinstance(child, list):
+                new_children.extend(child)
+            else:
+                new_children.append(child)
+        tree.children = new_children
+        return tree
+
+    def forbody(self, tree):
+        self.__push_up(tree)
+        if not self.is_in_initblock:
+            return tree
+        new_children = []
+        for ch in tree.children:
+            if isinstance(ch, list):
+                new_children.extend(ch)
+            else:
+                new_children.append(ch)
+        tree.children = new_children
+        return tree
+        
+    
+    def __check_stmt_portbinding(self, stmt):
+        assert stmt.data == 'stmt'
+        # portbinding is the only child
+        if len(stmt.children) == 1 and stmt.children[0].data == 'portbinding':
+            return True
+        return False
+
+    def stmt(self, tree):
+        is_portbinding = self.__check_stmt_portbinding(tree)
+        self.__push_up(tree)
+        if not self.is_in_initblock or not is_portbinding:
+            # self.__push_up(tree)
+            new_children = []
+            # dprint(tree.pretty())
+            for ch in tree.children:
+                if isinstance(ch, list):
+                    # new_children.append(ch)
+                    new_children.extend(ch)
+                elif ch.data == 'blkassign':
+                    res = self.__expand_blkassign(ch)
+                    new_children.extend(res)
+                else:
+                    new_children.append(ch)
+            tree.children = new_children
+            return tree
+
+        # portbinding
+
+        assert len(tree.children) == 1
+        new_children = tree.children[0]
+        tree.children = []
+        res = [
+            copy.deepcopy(tree)
+            for child in new_children
+        ]
+        for r, ch in zip(res, new_children):
+            r.children = [ch]
+        return res
+
+
+
+    def portbinding(self, binding):
+
+        new_bindings = []
+        mod_name, sub, par = binding.children
+        sub_v = sub.children[0]
+        if is_tree_type(par, 'hbindingarrayref'):
+            par_v = get_ids_in_tree(par)[0]
+        else:
+            par_v = par.children[0]
+        par_v_query = par_v.value.replace('##', '_')
+        typeinfo = self.__expanded_type(par_v_query)
+        if typeinfo:  # if the bindinding is on a customized type
+            type_name = self.__get_expandable_type_from_htype(typeinfo).children[0]
+            tpe = self.types[type_name]
+            b = []
+            for field in tpe.fields:
+                new_sub = copy.deepcopy(sub)
+                new_par = copy.deepcopy(par)
+
+                # TODO: this doesn't seem good, should have a more general wrapper
+                # def __alternate(x):
+                #     assert isinstance(x, Token)
+                #     x.value += '_' + field.children[0]
+
+                # alternate_ids(new_sub, [__alternate])
+                # alternate_ids(new_par, [__alternate])
+
+                def __map(x):
+                    assert isinstance(x, Token)
+                    return Token("ID", x.value + '_' + field.children[0], x.pos_in_stream, x.line, x.column)
+
+                map_hvarref_ids(new_sub, [__map])
+                map_hvarref_ids(new_par, [__map])
+                # new_sub.children[0].value += '_' + field.children[0]
+                # new_par.children[0].value += '_' + field.children[0]
+
+                new_binding = copy.copy(binding)
+                new_binding.children = [mod_name, new_sub, new_par]
+                b.append(new_binding)
+            new_bindings.extend(b)
+        else:
+            new_bindings.append(binding)
+
+        # if self.ctx.current_module == 'rvfifo_cc_sc_module_9':
+        #     dprint(new_bindings)
+        return new_bindings
+
     def portbindinglist(self, tree):
+        if self.ctx.current_module == 'rvfifo_cc_sc_module_9':
+            assert False
+        # TODO: deadcode, we need to remove this
         module_name, *bindings = tree.children
         new_bindings = []
         for binding in bindings:
@@ -555,8 +744,8 @@ class TypedefExpansion(TopDown):
 
     def hmodule(self, tree):
         """add another scope for a module"""
-        self.current_module = tree.children[0]
-        self.expanded.append(dict())
-        self.__push_up(tree)
-        self.expanded.pop()
-        return tree
+        with self.ctx.add_values(current_module=tree.children[0]):
+            self.expanded.append(dict())
+            self.__push_up(tree)
+            self.expanded.pop()
+            return tree

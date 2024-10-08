@@ -40,7 +40,7 @@ class Primitive:
     """
     primitive_type_names = []
     name_mapping = { '_Bool': 'cppbool', 'bool': 'cppbool', 'unsigned_int': 'cppuint', 'int': 'cppint', 'unsigned_short': 'cppushort', 'short': 'cppshort',
-                     'char': 'cppchar', 'signed_char': 'cppsignedchar', 'long_long': 'cpplonglong', 'unsigned_long_long': 'cppulonglong'}
+                     'char': 'cppchar', 'unsigned_char': 'cppunsignedchar', 'signed_char': 'cppsignedchar', 'long_long': 'cpplonglong', 'unsigned_long_long': 'cppulonglong'}
 
     def __init_subclass__(cls, **kwargs):
         """registers subclass automatically"""
@@ -170,6 +170,8 @@ class sc_uint(Primitive):
                 prefix = context.prefix + ' '
             if context.suffix is not None:
                 suffix = context.suffix
+        if prefix == 'genvar ':  # genvar does not have a specific type
+            return f'{prefix}{var_name}{suffix}'
         if var_name:
             return f'{prefix}logic [{self.width-1}:0] {var_name}{suffix}'
         else:
@@ -187,6 +189,8 @@ class sc_int(Primitive):
                 prefix = context.prefix + ' '
             if context.suffix is not None:
                 suffix = context.suffix
+        if prefix == 'genvar ':  # genvar does not have a specific type
+            return f'{prefix}{var_name}{suffix}'
         if var_name:
             return f'{prefix}logic signed[{self.width-1}:0] {var_name}{suffix}'
         else:
@@ -267,6 +271,10 @@ class cppchar(Primitive):
 class cppsignedchar(Primitive):
     def __new__(cls):
         return sc_int(8)
+
+class cppunsignedchar(Primitive):
+    def __new__(cls):
+        return sc_uint(8)
 
 class cppuint(Primitive):
     def __new__(cls):

@@ -36,6 +36,15 @@ namespace systemc_hdl {
   private:
 
     SplitCFG scfg;
+    // additional information about conditional expression a?b:c
+    // subgraphs. we generate hcode for the confluence block terminator
+    // of the outmost cond expr only, and skip split graph nodes that
+    // have a path from outermost cond expr block to confluence block.
+    // path vector is incorrect for intervening nodes of nested cond exprs.
+    
+    std::map<SplitCFGBlock*,SplitCFGBlock*> condexp_confluence_block_map;
+    std::set<SplitCFGBlock*> condexp_skip_block_set;
+    
     hNodep h_ret;   // value returned by each subexpression
     EntryFunctionContainer *efc_;
     hNodep h_top_; // reference to calling hnode pointer
@@ -67,8 +76,8 @@ namespace systemc_hdl {
     inline string NameNext(string &s) {return nextstring+s;} // convention for variable name holding next value of var s
     
     // inline string
-    std::unordered_map<std::string, bool> SGVisited; // Split Graph Blocks visited 
-    std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited
+    std::unordered_map<std::string, int> SGVisited; // Split Graph Blocks visited 
+    //std::unordered_map<unsigned int, int> CFGVisited; // CFG Blocks visited
     std::unordered_set<int> pathnodevisited; // index of visited node in path
 
     inline void updatepnvisited(int i) {
@@ -85,17 +94,16 @@ namespace systemc_hdl {
     void FindStatements(const CFGBlock &B, std::vector<const Stmt *> &SS);
     void FindStatements(const SplitCFGBlock *B, std::vector<const Stmt *> &SS);
     void MarkStatements(const Stmt *S, llvm::SmallDenseMap<const Stmt*, bool> &Map);
-    void CheckVardecls(hNodep &hp, unsigned int cfgblockid);
+      void CheckVardecls(hNodep &hp, string &cfgblockid);
     void ProcessDeclStmt(const DeclStmt *declstmt, hNodep htmp);
 
-    int GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix);
+    int GetFalseLength(const SplitCFG::SplitCFGPath &pt, int cond_node_ix, int state_num);
     
     void ProcessSplitGraphGroup(const SplitCFG::SplitCFGPath pt,
 					 int startix, int num_ele,
 				int state_num, hNodep h_switchcase);
 
-    //void ProcessSplitGraphBlock(const SplitCFGBlock *sgb, int state_num, hNodep h_switchcase, SplitCFG &scfg);
-    void ProcessSplitGraphBlock(const SplitCFG::SplitCFGPath &pt,
+      void ProcessSplitGraphBlock(const SplitCFG::SplitCFGPath &pt,
 				int thisix,
 				int state_num, hNodep h_switchcase);
     void GenerateStateUpdate(hNodep hstatemethod, hNodep hlocalvarsp);
@@ -103,6 +111,7 @@ namespace systemc_hdl {
     void GenerateWaitCntUpdate(hNodep h_switchcase);
     hNodep GenerateBinop(string opname, string lhs, string rhs, bool rhs_is_literal=true);
     bool IsWaitStmt(hNodep hp);
+    bool isContinueorBreak(const Stmt *S);
     void ProcessHWait(hNodep htmp, int nxtstate); // rewrite the hWait into next state update
 
     util lutil;

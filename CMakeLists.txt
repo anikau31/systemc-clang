@@ -306,7 +306,8 @@ llvm_config(CLANG_VERSION "--version" "")
 # https://github.com/halide/Halide/issues/1112
 llvm_config(LLVM_SYSTEM_LIBS "--system-libs" "")
 message(STATUS "LLVM_SYSTEM_LIBS: ${LLVM_SYSTEM_LIBS}")
-
+string(REGEX REPLACE "/opt/homebrew/lib/libzstd.1.5.2.dylib" "/usr/local/lib/libzstd.1.dylib" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS})
+message(STATUS "LLVM_SYSTEM_LIBS: ${LLVM_SYSTEM_LIBS}")
 #set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}" )
 set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}  -fvisibility=hidden -fvisibility-inlines-hidden" )
 
@@ -331,6 +332,7 @@ set(CLANG_LIBS
   clangParse
   clangAPINotes
   clangSema
+  clangSupport
   clangStaticAnalyzerFrontend
   clangStaticAnalyzerCore
   clangAnalysis

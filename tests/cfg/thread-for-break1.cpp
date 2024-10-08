@@ -29,7 +29,7 @@ std::string pathToString(const llvm::SmallVectorImpl<std::pair<S, T> > &v) {
 }
 
 extern std::string data_file;
-TEST_CASE("Simple thread test" ) {
+TEST_CASE("Simple thread test") {
   std::string code{};
 
   if (data_file.empty()) {
@@ -62,7 +62,7 @@ TEST_CASE("Simple thread test" ) {
   ModuleInstance *test_module{model->getInstance("testing")};
   ModuleInstance *dut{model->getInstance("d")};
 
-  SUBCASE("Found sc_module instances" ) {
+  SUBCASE("Found sc_module instances") {
     // There should be 2 modules identified.
     INFO("Checking number of sc_module instances found: " << instances.size());
 
@@ -123,32 +123,49 @@ TEST_CASE("Simple thread test" ) {
       CHECK(i == 2);
 
       /// Check if the TRUE/FALSE paths are correct.
-      auto path_info{scfg.getPathInfo()};
-      int check{2};
-      for (const auto &block : path_info) {
-        auto sblock{block.first};
-        auto info{block.second};
-        auto id{ sblock->getBlockID()};
-        std::string tstr{info.toStringTruePath()};
-        std::string fstr{info.toStringFalsePath()};
+      auto path_info{scfg.getAllPathInfo()};
+      int check{4};
+      int state{0};
+      for (const auto &pi : path_info) {
+        for (const auto &block : pi) {
+          auto sblock{block.first};
+          auto info{block.second};
+          auto id{sblock->getBlockID()};
+          std::string tstr{info.toStringTruePath()};
+          std::string fstr{info.toStringFalsePath()};
 
-        if (id == 7) {
-          CHECK(tstr == "6");
-          CHECK(fstr == "2 21");
-          --check;
+          if (id == 7) {
+            CHECK(tstr == "6");
+            CHECK(fstr == "2 21");
+            --check;
+          }
+
+          if (id == 6) {
+            CHECK(tstr == "5 2 21");
+            CHECK(fstr == "3");
+            --check;
+          }
+
+          /*
+        if (state > 1) {
+          if (id == 7) {
+            CHECK(tstr == "6");
+            CHECK(fstr == "2 21");
+            --check;
+          }
+
+          if (id == 6) {
+            CHECK(tstr == "5 2 21");
+            CHECK(fstr == "3");
+            --check;
+          }
+        }
+        */
         }
 
-        if (id == 6) {
-          CHECK(tstr == "5 2 21" );
-          CHECK(fstr == "3" );
-          --check;
-        }
+        ++state;
       }
-
       CHECK(check == 0);
-
-
-
     }
 
     llvm::outs() << "data_file: " << data_file << "\n";

@@ -9,8 +9,29 @@ import pathlib
 logging.basicConfig(level=logging.DEBUG)
 
 from lark import logger
+from pprint import pprint
 
 logger.setLevel(logging.DEBUG)
+
+__file_input = None
+
+def _handle_exception_and_exit(e, retcode=3):
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    print("***** print_exception:")
+    # exc_type below is ignored on 3.5 and later
+    traceback.print_exception(exc_type, exc_value, exc_traceback, file=sys.stdout, limit=-60)
+
+    stack_summary = list(traceback.walk_tb(exc_traceback))
+    if stack_summary:
+        f, lineno = stack_summary[-1]
+        if 'tree' in f.f_locals:
+            print("While processing the following tree node (the format might differ from hNode representation).")
+            if __file_input:
+                print("When parsing file: ", __file_input)
+            print("Line: ", f.f_locals['tree'].meta.line, ", Column: ", f.f_locals['tree'].meta.column)
+            print(f.f_locals['tree'].pretty())
+            print(f.f_locals['tree'].meta)
+    exit(retcode)
 
 
 def translate_text(file_content):
@@ -20,15 +41,12 @@ def translate_text(file_content):
         x = VerilogTranslator
         return x.translate(t)
     except Exception as e:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        print("***** print_exception:")
-        # exc_type below is ignored on 3.5 and later
-        traceback.print_exception(exc_type, exc_value, exc_traceback, file=sys.stdout, limit=-60)
-        traceback.print_stack(exc_traceback, limit=-2)
-        exit(3)
+        _handle_exception_and_exit(e)
 
 
 def main():
+    global __file_input
+
     parser = argparse.ArgumentParser()
     parser.add_argument('input', type=str, help='Input file name (normally the _hdl.txt file)')
     parser.add_argument('--output', type=str, help='The outpuf filename')
@@ -36,6 +54,7 @@ def main():
                         help='Whether the script overwrites resultant file')
     args = parser.parse_args()
     filename = args.input
+    __file_input = filename
     outputname = filename + ".sv"
     if args.output is not None:
         outputname = args.output
@@ -52,12 +71,8 @@ def main():
         x = VerilogTranslator
         res = x.translate(t)
     except Exception as e:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        print("***** print_exception:")
-        # exc_type below is ignored on 3.5 and later
-        traceback.print_exception(exc_type, exc_value, exc_traceback, file=sys.stdout, limit=-60)
-        traceback.print_stack(exc_traceback, limit=-2)
-        exit(3)
+        _handle_exception_and_exit(e)
+
     with open(outputname, 'w+') as f:
         f.writelines(res)
         f.write("\n\n")
