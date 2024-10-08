@@ -123,20 +123,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad83753efdd44051cfa710bfa00d57084"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7da5517adff2b424a37aa0a9c8ea4bba" id="r_a7da5517adff2b424a37aa0a9c8ea4bba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a5b3d49842a20bb26c6bdbafcc2bbaa25">ArraySubscriptsExprType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7da5517adff2b424a37aa0a9c8ea4bba">getCalleeArraySubscripts</a> () const</td></tr>
 <tr class="separator:a7da5517adff2b424a37aa0a9c8ea4bba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adebdf9edf2f765e6a39f7f521cd357da" id="r_adebdf9edf2f765e6a39f7f521cd357da"><td class="memItemLeft" align="right" valign="top">const clang::Expr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adebdf9edf2f765e6a39f7f521cd357da">getCallerExpr</a> () const</td></tr>
-<tr class="separator:adebdf9edf2f765e6a39f7f521cd357da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00959f0210d5d464db6b99d5d2e39155" id="r_a00959f0210d5d464db6b99d5d2e39155"><td class="memItemLeft" align="right" valign="top">const clang::MemberExpr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00959f0210d5d464db6b99d5d2e39155">getCallerInstanceMeExpr</a> () const</td></tr>
-<tr class="separator:a00959f0210d5d464db6b99d5d2e39155"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a169e8464745e26e40301461e916591f6" id="r_a169e8464745e26e40301461e916591f6"><td class="memItemLeft" align="right" valign="top">const clang::Expr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a169e8464745e26e40301461e916591f6">getCallerPortArrayExpr</a> () const</td></tr>
-<tr class="separator:a169e8464745e26e40301461e916591f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb2f4859c9fb0b680d2df5462f963297" id="r_abb2f4859c9fb0b680d2df5462f963297"><td class="memItemLeft" align="right" valign="top">const clang::MemberExpr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb2f4859c9fb0b680d2df5462f963297">getCallerPortMeExpr</a> () const</td></tr>
-<tr class="separator:abb2f4859c9fb0b680d2df5462f963297"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79e6d3ec5a30052d9add2236717fd723" id="r_a79e6d3ec5a30052d9add2236717fd723"><td class="memItemLeft" align="right" valign="top">const clang::Expr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79e6d3ec5a30052d9add2236717fd723">getCalleeExpr</a> () const</td></tr>
-<tr class="separator:a79e6d3ec5a30052d9add2236717fd723"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3a1c9b4e6c1ad4d70fd7a8ba5acac22" id="r_af3a1c9b4e6c1ad4d70fd7a8ba5acac22"><td class="memItemLeft" align="right" valign="top">const clang::MemberExpr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3a1c9b4e6c1ad4d70fd7a8ba5acac22">getCalleeInstanceMeExpr</a> () const</td></tr>
-<tr class="separator:af3a1c9b4e6c1ad4d70fd7a8ba5acac22"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab500c2d67f7df7607aeccfb3dc56004c" id="r_ab500c2d67f7df7607aeccfb3dc56004c"><td class="memItemLeft" align="right" valign="top">const clang::MemberExpr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab500c2d67f7df7607aeccfb3dc56004c">getCalleePortMeExpr</a> () const</td></tr>
-<tr class="separator:ab500c2d67f7df7607aeccfb3dc56004c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae351ed5cfcc4a1203d2c96160060872" id="r_aae351ed5cfcc4a1203d2c96160060872"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae351ed5cfcc4a1203d2c96160060872">setInstanceVarName</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:aae351ed5cfcc4a1203d2c96160060872"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a552fc900e72c58a08fe91a601d083d99" id="r_a552fc900e72c58a08fe91a601d083d99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a552fc900e72c58a08fe91a601d083d99">setInstanceConstructorName</a> (const std::string &amp;name)</td></tr>
@@ -283,7 +269,7 @@ Private Attributes</h2></td></tr>
 <p>Cast to see if it's an array.</p>
 <p>If it is an array.</p>
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00239">239</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00230">230</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -312,7 +298,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Dumps to llvm::outs() the recorded port binding information. </p>
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00179">179</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00170">170</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -343,60 +329,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a79e6d3ec5a30052d9add2236717fd723" name="a79e6d3ec5a30052d9add2236717fd723"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79e6d3ec5a30052d9add2236717fd723">&#9670;&#160;</a></span>getCalleeExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const clang::Expr * systemc_clang::PortBinding::getCalleeExpr </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00082">82</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
-
-</div>
-</div>
-<a id="af3a1c9b4e6c1ad4d70fd7a8ba5acac22" name="af3a1c9b4e6c1ad4d70fd7a8ba5acac22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3a1c9b4e6c1ad4d70fd7a8ba5acac22">&#9670;&#160;</a></span>getCalleeInstanceMeExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const clang::MemberExpr * systemc_clang::PortBinding::getCalleeInstanceMeExpr </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00083">83</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
-
-</div>
-</div>
 <a id="a1376ee922434c1d318027bf5623c936b" name="a1376ee922434c1d318027bf5623c936b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1376ee922434c1d318027bf5623c936b">&#9670;&#160;</a></span>getCalleeInstanceName()</h2>
 
@@ -421,33 +353,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00060">60</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
-
-</div>
-</div>
-<a id="ab500c2d67f7df7607aeccfb3dc56004c" name="ab500c2d67f7df7607aeccfb3dc56004c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab500c2d67f7df7607aeccfb3dc56004c">&#9670;&#160;</a></span>getCalleePortMeExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const clang::MemberExpr * systemc_clang::PortBinding::getCalleePortMeExpr </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00084">84</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -502,60 +407,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00065">65</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
-
-</div>
-</div>
-<a id="adebdf9edf2f765e6a39f7f521cd357da" name="adebdf9edf2f765e6a39f7f521cd357da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adebdf9edf2f765e6a39f7f521cd357da">&#9670;&#160;</a></span>getCallerExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const clang::Expr * systemc_clang::PortBinding::getCallerExpr </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00077">77</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
-
-</div>
-</div>
-<a id="a00959f0210d5d464db6b99d5d2e39155" name="a00959f0210d5d464db6b99d5d2e39155"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00959f0210d5d464db6b99d5d2e39155">&#9670;&#160;</a></span>getCallerInstanceMeExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const clang::MemberExpr * systemc_clang::PortBinding::getCallerInstanceMeExpr </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00078">78</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -636,34 +487,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00094">94</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
-
-</div>
-</div>
-<a id="a169e8464745e26e40301461e916591f6" name="a169e8464745e26e40301461e916591f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a169e8464745e26e40301461e916591f6">&#9670;&#160;</a></span>getCallerPortArrayExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const clang::Expr * systemc_clang::PortBinding::getCallerPortArrayExpr </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00079">79</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00085">85</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -691,33 +515,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00069">69</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
-
-</div>
-</div>
-<a id="abb2f4859c9fb0b680d2df5462f963297" name="abb2f4859c9fb0b680d2df5462f963297"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb2f4859c9fb0b680d2df5462f963297">&#9670;&#160;</a></span>getCallerPortMeExpr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const clang::MemberExpr * systemc_clang::PortBinding::getCallerPortMeExpr </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00080">80</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -771,7 +568,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00099">99</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00090">90</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -798,7 +595,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00097">97</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00088">88</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -825,7 +622,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00102">102</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00093">93</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -852,7 +649,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00098">98</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00089">89</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -879,7 +676,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00093">93</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00084">84</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -906,7 +703,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00089">89</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00080">80</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -933,7 +730,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00086">86</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00077">77</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
@@ -963,7 +760,7 @@ Private Attributes</h2></td></tr>
 <p>This is mainly used in the regression tests. The returned string is compared with what is expected. </p>
 <p>Caller port name</p>
 
-<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00110">110</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PortBinding_8h_source.html#l00101">101</a> of file <a class="el" href="PortBinding_8h_source.html">PortBinding.h</a>.</p>
 
 </div>
 </div>
