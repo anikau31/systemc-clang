@@ -57,15 +57,25 @@ namespace systemc_hdl {
 
     LLVM_DEBUG(llvm::dbgs() << "HDL-FILE-OUTPUT: " << hdl_file_out_ << "\n"; );
 
-    FileID fileID = getSourceManager().getMainFileID();
-    const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
+    SourceManager &sm = getSourceManager();
+    FileID fileID = sm.getMainFileID();
+    const FileEntry *fileentry = sm.getFileEntryForID(fileID);
+    auto opt_fref = sm.getFileEntryRefForID(fileID) ;
+    const FileEntryRef &fref = *opt_fref;
+
+
+    //FileID fileID = getSourceManager().getMainFileID();
+    //const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
     if (hdl_file_out_ == "") {
       if (!fileentry) {
 	outputfn = "HCodeout";
 	LLVM_DEBUG(llvm::dbgs()
 		   << "Null file entry for tranlation unit for this astcontext\n");
       } else {
-	outputfn = fileentry->getName().str();
+
+        outputfn = fref.getName().str();
+
+	//outputfn = fileentry->getName().str();
 	regex r("\\.cpp");
 	outputfn = regex_replace(outputfn, r, "_hdl");
 
