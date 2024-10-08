@@ -1181,8 +1181,8 @@ std::set<SplitCFGBlock*> SplitCFG::identifySkipBlocks() {
   std::queue<SplitCFGBlock*> Q{};
   std::set<SplitCFGBlock*> discovered{};
 
-  SplitCFGBlock* v{outter_top};
-  SplitCFGBlock* target = cop_[outter_top];
+  SplitCFGBlock* v{outter_top_};
+  SplitCFGBlock* target = cop_[outter_top_];
   llvm::dbgs() << "Outter ternop is BB" << outter_top->getBlockID() << " and confluence block is BB" << target->getBlockID() << "\n";
   // if (!source) v = sccfg_[cfg_->getEntry().getBlockID()];
   // else v = source; 
@@ -1277,8 +1277,6 @@ void SplitCFG::identifyConfluenceBlocks() {
 
   outter_top = outter;
 }
-||||||| fa72a6a0
-=======
 
 std::map<SplitCFGBlock*, SplitCFGBlock*> SplitCFG::getConfluenceBlocks() const {
   return cop_;
