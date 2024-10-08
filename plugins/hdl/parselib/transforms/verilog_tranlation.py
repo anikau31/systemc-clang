@@ -2,18 +2,32 @@ import warnings
 from .top_down import TopDown
 from ..primitives import *
 from ..utils import dprint, is_tree_type, get_ids_in_tree
+from ..utils import terminate_with_no_trace
+from ..utils import ContextManager
 from lark import Tree, Token
 from functools import reduce
 import pprint
 import logging
+from .interface_generation import Interface, PortDecl
 
+module_arg = ''
+module_inst_arg = ''
+interface_arg = ''
+interface_inst_arg = ''
+port_decl_inst_arg = ''
+
+# module_arg = '(* keep = "true" *) '
+# module_inst_arg = '(* keep = "true" *) '
+# interface_arg = '(* keep = "true" *) '
+# interface_inst_arg = '(* keep = "true" *) '
+# port_decl_inst_arg = '(* mark_debug = "true" *) (* keep = "true" *) '
 
 class VerilogTranslationPass(TopDown):
     """Translate low-level format of the _hdl.txt into Verilog
     Note that type defs are already expanded at this point, so all htypeinfo/htype should only include primitive types
     This pass does not perform any tree transformation that alters the semantics, but **only** generates Verilog
     """
-    def __init__(self):
+    def __init__(self, itf_meta):
         super().__init__()
         self.indent_character = ' '
         self.current_indent = 0
@@ -27,6 +41,10 @@ class VerilogTranslationPass(TopDown):
         self.__current_scope_type = [None]
         self.is_in_thread = False
         self.thread_comb = False
+        self.non_thread_comb_signals = set()
+        self.is_in_gen_block = False
+        self.itf_meta = itf_meta
+        self.ctx = ContextManager()
 
     def get_current_scope_type(self):
         """denotes one of four types of scope: loop, switch, branch, None
@@ -41,8 +59,51 @@ class VerilogTranslationPass(TopDown):
     def pop_current_scope_type(self):
         self.__current_scope_type.pop()
 
+    def interfaces(self, tree):
+        self.__push_up(tree)
+        return '\n'.join(tree.children)
+
+    def interface(self, tree):
+        itf_name = tree.children[0]
+        port_decls = tree.children[1:]
+        res = f'{self.get_current_ind_prefix()}{interface_arg}interface {itf_name};\n'
+        self.inc_indent()
+
+        for port_decl in port_decls:
+            self.__push_up(port_decl.type)
+            name, *args = port_decl.type.children
+            tpe = Primitive.get_primitive(name)
+            assert tpe is not None, 'Type {} is not defined'.format(name)
+            tx = tpe(*args)
+            if isinstance(tx, array):
+                tx.T = tx.T.T
+                type_signature = tx.to_str(port_decl.name)
+            else:
+                type_signature = tx.T.to_str(port_decl.name)
+            res += f'{self.get_current_ind_prefix()}{type_signature}\n'
+
+        in_names = []
+        out_names = []
+        for port_decl in port_decls:
+            p: PortDecl = port_decl
+            if p.direction == 'input':
+                in_names.append(p.name)
+            elif p.direction == 'output':
+                out_names.append(p.name)
+        modport = f'{self.get_current_ind_prefix()}modport port0(\n'
+        self.inc_indent()
+        modport += f'{self.get_current_ind_prefix()}input {",".join(in_names)},\n'
+        modport += f'{self.get_current_ind_prefix()}output {",".join(out_names)}\n'
+        self.dec_indent()
+        modport += f'{self.get_current_ind_prefix()});\n'
+
+        self.dec_indent()
+        res += modport
+        res += f'{self.get_current_ind_prefix()}endinterface\n'
+        return res
 
     def start(self, tree):
+        dprint(tree.pretty())
         self.__push_up(tree)
         return tree.children[0]
 
@@ -75,7 +136,11 @@ class VerilogTranslationPass(TopDown):
 
 
     def hmethodcall(self, tree):
-        self.__push_up(tree)
+        with self.ctx.add_values(is_in_hmethodcall=True):
+            self.__push_up(tree)
+        # temporary hack
+        if tree.children[0] == 'zhw__plane_reg2__plane_reg_func_0':
+            return f'// TODO: fix this function call {tree.children}';
         return '{}({})'.format(tree.children[0], ','.join(map(str, tree.children[1:])))
 
     def hwait(self, tree):
@@ -95,14 +160,25 @@ class VerilogTranslationPass(TopDown):
         # dprint('Sensitivity: ', pprint.pformat(self.get_sense_list()))
         # dprint('Var w/ type: ', pprint.pformat(self.module_var_type))
         var_names = self.__get_var_names(tree.children[0])
+        is_intf = [
+            isinstance(vn, Token) and vn.type == 'INTF_ID'
+            for vn in var_names
+        ]
         tpes = [self.get_current_module_var_type_or_default(vn) for vn in var_names]
         all_none = all(t is None for t in tpes)
-        all_non_none = all(t is not None for t in tpes)
+        all_non_none = all(
+            t is not None or is_intf[i] for i, t in enumerate(tpes)
+        )
+        assert len(is_intf) == len(tpes)
         if not all_none and not all_non_none:
             raise ValueError('LHS of assignment must be all local variables or all non-local variables. On line: {}.'.format(tree.line))
         is_nb = [isinstance(tpe, sc_signal) or
                      isinstance(tpe, sc_out) or
                      isinstance(tpe, array) and isinstance(tpe.get_element_type(), sc_signal) for tpe in tpes]
+
+        is_nb = [
+            is_nb[i] or is_intf[i] for i in range(len(is_nb))
+        ]
         # is_nb checks whether one of the type needs to be non-blocking assignment
         # and special case for thread
         all_nb = all(is_nb) or current_proc in ['#thread_sync#']
@@ -163,7 +239,14 @@ class VerilogTranslationPass(TopDown):
         elif type(r) == Tree and r.data == 'harrayref':
             r = r.children[3]
 
+        # FIXME: this handling of shared signal across thread/comb block should be fixed
+        if (current_proc is None) or ('thread' not in current_proc and '#function#' not in current_proc):
+            self.non_thread_comb_signals.add(l)
+
         res = '{} {} {}'.format(l, op, r)
+
+        if (current_proc is not None) and 'thread' in current_proc and l in self.non_thread_comb_signals:
+            res = ''
         return res
 
     def syscwrite(self, tree):
@@ -266,9 +349,15 @@ class VerilogTranslationPass(TopDown):
         return all(self.__is_local_variable(var_name) for var_name in var_names)
 
     def hbinop(self, tree):
+        method_call_lhs = is_tree_type(tree.children[1], 'hmethodcall')
         self.__push_up(tree)
         if tree.children[0] == 'ARRAYSUBSCRIPT':
             res = '{}[({})]'.format(tree.children[1], tree.children[2])
+            # special case handling for hemthodcall nodes:
+            # 
+            if self.ctx.is_in_hmethodcall:
+                if method_call_lhs:
+                    res = '{} & (1 << {})'.format(tree.children[1], tree.children[2])
         else:
             op = tree.children[0]
             if op == '=':
@@ -373,6 +462,8 @@ class VerilogTranslationPass(TopDown):
         noindent = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt', 'whilestmt', 'dostmt']
         nosemico = ['hcstmt', 'ifstmt', 'forstmt', 'switchstmt', 'casestmt', 'breakstmt', 'whilestmt', 'dostmt']
         for x in tree.children:
+            if x is None:
+                continue
             if x.data in noindent:
                 indentation.append('')
             else:
@@ -389,9 +480,42 @@ class VerilogTranslationPass(TopDown):
                     if x[1].data == 'expression_in_stmt':
                         # logging.warning('Expression as a statement may not have an effect. On line: {}'.format(x[1].line))
                         x = (x[0], x[1].children[0], x[2])
+                        res = str(x[0]) + str(x[1]) + str(x[2])
+                    elif x[1].data == 'portbinding':
+                        ch = x[1].children
+                        if hasattr(x[1], 'swap_for_for_loop'):
+                            # TODO: this assign here is just to please the synthesizer
+                            # otherwise synthesis won't go through
+                            if 'NONAME' in ch[0]:
+                                dot_access = '' if 'NONAME' in ch[0] else (ch[0] + '.')
+                            else:
+                                module_name = ch[0]
+                                interface_name = Interface.generate_instance_name(module_name, False)
+                                dot_access = '{}.'.format(interface_name)
+                            assignment = f"assign {ch[1]} = {dot_access}{ch[2]}"
+                        else:
+                            ind = self.get_current_ind_prefix()
+                            self.inc_indent()
+                            self.inc_indent()
+                            ind_always = self.get_current_ind_prefix()
+                            self.dec_indent()
+                            self.dec_indent()
+                            ind_end = self.get_current_ind_prefix()
+                            if 'NONAME' in ch[0]:
+                                dot_access = '' if 'NONAME' in ch[0] else (ch[0] + '.')
+                            else:
+                                module_name = ch[0]
+                                interface_name = Interface.generate_instance_name(module_name, False)
+                                dot_access = '{}.'.format(interface_name)
+                            # assignment = f"always @(*) begin\n{ind_always}{dot_access}{ch[1]} = {ch[2]};\n{ind_end}end"
+                            assignment = f"{ind}assign {dot_access}{ch[1]} = {ch[2]}"
+                        res = ''.join([x[0], assignment, x[2]])
+                    elif x[1].data == 'hnamedsensvar':
+                        res = f'{x[0]} /* always {x[1].children[1]} */ {x[2]}'
                     else:
                         assert False, 'Unrecognized construct: {}'.format(x[1])
-                res = str(x[0]) + str(x[1]) + str(x[2])
+                else:
+                    res = ''.join(x)
                 return res
             except Exception as e:
                 print(x[0])
@@ -494,6 +618,8 @@ class VerilogTranslationPass(TopDown):
         return tree.children[0]
 
     def forstmt(self, tree):
+        if self.is_in_gen_block:
+            return self.__forstmt_gen_block(tree)
 
         self.push_current_scope_type('loop')
         new_children = []
@@ -505,7 +631,12 @@ class VerilogTranslationPass(TopDown):
         new_children.extend(self.visit(t) for t in tree.children[3:])
         self.dec_indent()
 
-        for_init, for_cond, for_post, for_body = new_children
+        if len(new_children) == 3:
+            warnings.warn("empty for loop")
+            for_init, for_cond, for_post = new_children
+            for_body = ''
+        else:
+            for_init, for_cond, for_post, for_body = new_children
 
         ind = self.get_current_ind_prefix()
         res = ind + 'for ({};{};{}) begin\n'.format(for_init, for_cond, for_post)
@@ -579,12 +710,19 @@ class VerilogTranslationPass(TopDown):
 
     def hprocess(self, tree):
         proc_name, proc_name_2, prevardecl, *body = tree.children
+        
         self.set_current_proc_name(proc_name)
         for n in prevardecl.children:
             var_name = n.children[0].children[0]  # get the variable name of local variables
             self.__add_local_variables(var_name)
         self.inc_indent()
+
+        if hasattr(tree, 'force_sensevar'):
+            tree.children = [tree.force_sensevar] + tree.children
         self.__push_up(tree)
+        if hasattr(tree, 'force_sensevar'):
+            tree.force_sensevar = tree.children[0]
+            tree.children = tree.children[1:]
         self.dec_indent()
 
         proc_name, proc_name_2, prevardecl, *body = tree.children
@@ -597,7 +735,9 @@ class VerilogTranslationPass(TopDown):
         sense_list = self.get_sense_list()
         assert proc_name in sense_list, "Process name {} is not in module {}".format(proc_name, self.current_module)
         # res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
-        if self.__is_synchronous_sensitivity_list(sense_list[proc_name]):
+        if hasattr(tree, 'force_sensevar'):
+            res = ind + 'always @({}) begin: {}\n'.format(tree.force_sensevar, proc_name)
+        elif self.__is_synchronous_sensitivity_list(sense_list[proc_name]):
             res = ind + 'always_ff @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
         else:
             res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[proc_name]), proc_name)
@@ -692,19 +832,58 @@ class VerilogTranslationPass(TopDown):
         self.__push_back(tree)
         return '{}[{}]'.format(tree.children[0], tree.children[1])
 
-    def moduleinst(self, tree):
-        # dprint(tree)
+    def _get_interface_instance_decl(self, mod_name, mod_type_name, ind, is_array):
+        interface: Interface = self.itf_meta.get(mod_type_name, None)
+        res = ''
+        if interface:
+            res += ind + '{} {}();\n'.format(
+                interface.interface_name, 
+                Interface.generate_instance_name(mod_name, is_array)
+            )
+        return res
+
+    def _get_interface_instance(self, mod_name, mod_type_name, is_array):
+        interface: Interface = self.itf_meta.get(mod_type_name, None)
+        if interface:
+            return Interface.generate_instance_name(mod_name, is_array)
+        return None
+
+    def modulearrayinst(self, tree):
+        res: str = ''
+        ind = self.get_current_ind_prefix()
+
         mod_name, mod_type = tree.children
-        # expand if it is an element of module array
-        mod_name = '_'.join(mod_name.split('#'))
-        if len(mod_type.children[0].children) > 1:
-            warnings.warn('Type parameters for modules are not supported')
-        mod_type_name = mod_type.children[0].children[0]
+        mod_type_name = mod_type.children[0].children[1].children[0]
+        mod_array_dimension = mod_type.children[0].children[2]
+
+        genvar_names = list(
+            map(lambda x: '_'.join([self.current_module, mod_name, str(x)]), range(len(mod_array_dimension)))
+        )
+        # genvar decl
+        for genvar in genvar_names:
+            res += ind + 'genvar {};\n'.format(genvar)
+
+        for idx, (genvar, dim) in enumerate(zip(genvar_names, mod_array_dimension)):
+            res += ind + "/*generate*/ for ({} = 0; {} < {}; {} = {} + 1) begin {}\n".format(
+                genvar, genvar, dim, genvar, genvar, ': ' + mod_name if idx == 0 else ''
+            )
+
+        self.inc_indent()
+        ind = self.get_current_ind_prefix()
+        # intf meta
+        res += self._get_interface_instance_decl(mod_name, mod_type_name, ind, True)
+        # the actual module def
+        res += ind + "{} mod(\n".format(mod_type_name)
+
+        # now collect the normal port binding
         if mod_name not in self.bindings:
             warnings.warn('Port bindings for module instance name {} not found'.format(mod_name))
             bindings = []
         else:
             bindings = self.bindings[mod_name]
+
+
+
         def extract_binding_name(x):
             # FIXME: when the port connection is 2D, the original approach may not work
             return get_ids_in_tree(x[0])[0]
@@ -713,14 +892,15 @@ class VerilogTranslationPass(TopDown):
             # else:
             #     res = x[0].children[0]
             # return res
+        # these are us trying to pull non-indexed bindings to the declaration point
         orig_bindings = bindings
         bindings_normal = list(filter(lambda x: '.' not in extract_binding_name(x), orig_bindings))
         bindings_hier = list(filter(lambda x: '.' in extract_binding_name(x), orig_bindings))
         bindings = bindings_normal
-        ind = self.get_current_ind_prefix()
-        res = ind + '{} {}('.format(mod_type_name, mod_name) + '\n'
-        self.inc_indent()
-        ind = self.get_current_ind_prefix()
+        # ind = self.get_current_ind_prefix()
+        # res = ind + '{} {}('.format(mod_type_name, mod_name) + '\n'
+        # self.inc_indent()
+        # ind = self.get_current_ind_prefix()
         binding_str = []
         array_bindings = {}
         for binding in bindings:
@@ -755,11 +935,124 @@ class VerilogTranslationPass(TopDown):
             binding_str.append(ind + ".{}('{{ {} }})".format(
                 sub_name, ','.join(array_seq)
             ))
-        res += ',\n'.join(binding_str)
+        # res += ',\n'.join(binding_str)
+        # # switch to use interface
+        interface: Interface = self.itf_meta.get(mod_type_name, None)
+        self.inc_indent()
+        ind = self.get_current_ind_prefix()
+        res += ind + interface.generate_instance_name(mod_name, True)
+        self.dec_indent()
+        ind = self.get_current_ind_prefix()
+        res += "\n"
+
+        res += ind + ");\n"
+        self.dec_indent()
+        ind = self.get_current_ind_prefix()
+
+        for _ in mod_array_dimension:
+            res += ind + "end\n"
+
+
+        tree.children = [res]
+        return tree
+
+    def moduleinst(self, tree):
+        # -- these are actually for handling module array instance
+        # we should be ablt to forgo these
+        mod_name, mod_type = tree.children
+        # expand if it is an element of module array
+        mod_name = '_'.join(mod_name.split('#'))
+        if len(mod_type.children[0].children) > 1:
+            warnings.warn('Type parameters for modules are not supported')
+        mod_type_name = mod_type.children[0].children[0]
+        if mod_name not in self.bindings:
+            warnings.warn('Port bindings for module instance name {} not found'.format(mod_name))
+            bindings = []
+        else:
+            bindings = self.bindings[mod_name]
+        def extract_binding_name(x):
+            # FIXME: when the port connection is 2D, the original approach may not work
+            return get_ids_in_tree(x[0])[0]
+            # if is_tree_type(x[0], 'hbindingarrayref'):
+            #     res = x[0].children[0].children[0]
+            # else:
+            #     res = x[0].children[0]
+            # return res
+        # these are us trying to pull non-indexed bindings to the declaration point
+        interface_decl = self._get_interface_instance_decl(mod_name, 
+                                mod_type_name, '', False)
+        interface: Interface = self.itf_meta.get(mod_type_name, None)
+
+        # Now we need slightly different logic for port bindings since we are using interfaces
+
+        orig_bindings = bindings
+        bindings_normal = list(filter(lambda x: '.' not in extract_binding_name(x), orig_bindings))
+        bindings_hier = list(filter(lambda x: '.' in extract_binding_name(x), orig_bindings))
+        bindings = bindings_normal
+        ind = self.get_current_ind_prefix()
+        res = ind +  interface_inst_arg + interface_decl + '\n'
+        res += ind + '{}{} {}('.format(module_inst_arg, mod_type_name, mod_name) + '\n'
+        self.inc_indent()
+        ind = self.get_current_ind_prefix()
+        interface_instance_name: str = self._get_interface_instance(mod_name, mod_type_name, False)
+        binding_str = []
+        array_bindings = {}
+        for binding in bindings:
+            # for backward compatibility, we keep the case where binding is a list
+            if type(binding) == list:
+                sub, par = binding
+            else:
+                warnings.warn('Using Tree as binding is deprecated', DeprecationWarning)
+                sub, par = binding.children
+            if is_tree_type(sub, 'hbindingarrayref'):
+                # The .xxx part is an array
+                sub_name = get_ids_in_tree(sub)[0].value  # assuming varref
+                if sub_name not in array_bindings:
+                    array_bindings[sub_name] = {}
+                # if sub.children[0].data == 'hbindingarrayref':
+                #     raise ValueError('nested 2-D array port is not supported')
+                array_bindings[sub_name][sub.children[1].children[0]] = par
+            else:
+                # at this point, the par should be able to be fully expanded even if it is an array
+                if is_tree_type(par, 'hbindingarrayref'):
+                    par = self.expand_binding_ref(par)
+                else:
+                    par = par.children[0].value
+                if interface:
+                    for port_decl in interface.interfaces:  # type: PortDecl
+                        if port_decl.name == sub.children[0].value:
+                            assert port_decl.direction in ['input', 'output'], "Interface port direction not recognized"
+                            if port_decl.direction == 'input':
+                                binding_str.append(ind + 'assign {}.{} = {};'.format(interface_instance_name, sub.children[0].value, par))
+                            elif port_decl.direction == 'output':
+                                binding_str.append(ind + 'assign {} = {}.{};'.format(par, interface_instance_name, sub.children[0].value))
+                            break
+        for sub_name, bindings in array_bindings.items():
+            assert False
+            # for now, we keep a dict of array binding
+            array_seq = [None] * len(bindings)
+            for idx, b in bindings.items():
+                # dprint(self.expand_binding_ref(b))
+                # array_seq[idx] = '{}[{}]'.format(b.children[0].children[0].value, b.children[1].children[0])
+                array_seq[idx] = self.expand_binding_ref(b)
+            binding_str.append(ind + ".{}('{{ {} }})".format(
+                sub_name, ','.join(array_seq)
+            ))
+        # Insert binding for hierarchical ports
+        for binding in bindings:
+            pass
+            # dprint(binding)
+
+        if interface_instance_name:
+            res += ind + interface_instance_name
+
         res += '\n'
         self.dec_indent()
         ind = self.get_current_ind_prefix()
-        res += ind + ');'
+        res += ind + ');\n'
+
+        res += '\n'.join(binding_str)
+
         res += '\n'
         res += ind + "always @(*) begin\n"
         # res += ind + "always_comb begin\n"
@@ -946,7 +1239,11 @@ class VerilogTranslationPass(TopDown):
         sense_list = self.get_sense_list()
         assert thread_name in sense_list, "Process name {} is not in module {}".format(proc_name, self.current_module)
         if is_sync:
-            res = ind + 'always @({}) begin: {}\n'.format(' or '.join(self.get_sense_list()[thread_name]), proc_name)
+            sense_list = self.get_sense_list()[thread_name]
+            if 'posedge clk' not in sense_list:
+                warnings.warn("Clock not detected in senstivity list, adding one by default")
+            sense_list = ['posedge clk'] + sense_list
+            res = ind + 'always @({}) begin: {}\n'.format(' or '.join(sense_list), proc_name)
         else:
             res = ind + 'always @(*) begin: {}\n'.format(proc_name)
         self.inc_indent()
@@ -971,6 +1268,21 @@ class VerilogTranslationPass(TopDown):
         self.thread_comb = False
         return res
 
+    def genbindinglist(self, tree):
+        # this node is created in portbinding_recollect.py passes
+        # dprint(f"raw dynamically generated genbindinglist node:\n{tree.pretty()}")
+        self.__push_up(tree)
+        return tree
+
+    def genvardecl(self, tree):
+        genvars = list(map(lambda x: "{}genvar {};".format(self.get_current_ind_prefix(), x), tree.children))
+        res = '\n'.join(genvars)
+        return res
+
+    def genfor(self, tree):
+        self.__push_up(tree)
+        return "\n".join(tree.children)
+
     def hmodule(self, tree):
         # dprint("Processing Module: ", tree.children[0])
         # print("Retrieving Portbindings")
@@ -980,15 +1292,17 @@ class VerilogTranslationPass(TopDown):
         initialization_block = []
         encountered_initblock = False
         self.bindings = dict()
+        genbindinglist = None
         for t in tree.children:
             if isinstance(t, Tree) and t.data == 'portbindinglist':
                 self.bindings[t.children[0]] = t.children[1]
+                assert False, "Deadcode"
             elif is_tree_type(t, 'hmodinitblock'):  # currently we only have one block
                 if encountered_initblock:
                     raise ValueError('Only one hmodinitblock should present')
                 encountered_initblock = True
                 name = t.children[0]
-                initblock, portbindings, senslist = None, None, []
+                initblock, portbindings, senslist, genbindinglist = None, None, [], None
                 for ch in t.children[1:]:
                     if ch.data == 'hcstmt':  # TODO: have a dedicated node for initial block
                         initblock = ch
@@ -996,6 +1310,12 @@ class VerilogTranslationPass(TopDown):
                         portbindings = ch
                     elif ch.data == 'hsenslist':
                         senslist.append(ch)
+                    elif ch.data == 'vardecl':
+                        initblock = ch
+                    elif ch.data == 'hnamedsensevar':
+                        senslist.append(ch)
+                    elif ch.data == 'genbindinglist':
+                        genbindinglist = ch
                     else:
                         raise ValueError(ch.pretty())
                 if initblock:
@@ -1024,6 +1344,7 @@ class VerilogTranslationPass(TopDown):
         module_name = tree.children[0]
         modportsiglist = None
         processlist = None
+        generatelist = []
         functionlist = []
         vars = None
         mods = []
@@ -1033,6 +1354,8 @@ class VerilogTranslationPass(TopDown):
                     modportsiglist = t
                 elif t.data == 'processlist':
                     processlist = t
+                elif t.data == 'hgenerateblock':
+                    generatelist.append(t.children[0])
                 elif t.data =='hfunction':
                     functionlist.append(t)
 
@@ -1041,13 +1364,16 @@ class VerilogTranslationPass(TopDown):
             ports = list(filter(lambda x: isinstance(x, Tree) and x.data == 'portdecltype', modportsiglist.children))
             sigs = list(filter(lambda x: isinstance(x, Tree) and x.data == 'sigdecltype', modportsiglist.children))
             vars = list(filter(lambda x: isinstance(x, tuple), modportsiglist.children))
-            mods = list(filter(lambda x: isinstance(x, Tree) and x.data == 'moduleinst', modportsiglist.children))
+            mods = list(filter(lambda x: isinstance(x, Tree) and 
+                                (x.data == 'moduleinst' or x.data == 'modulearrayinst'), 
+                                modportsiglist.children))
         else:
             ports, sigs = None, None
 
 
-        res = 'module {} ('.format(module_name) + '\n'
+        res = module_arg + 'module {} ('.format(module_name) + '\n'
         # Generate ports
+        port_str = ''
         if ports:
             self.inc_indent()
             ind = self.get_current_ind_prefix()
@@ -1057,8 +1383,12 @@ class VerilogTranslationPass(TopDown):
                 type_context = None
                 if idx == len(ports) - 1:
                     type_context = TypeContext(suffix='')
-                res += ind + tpe.to_str(name, type_context) + '\n'
+                port_str  += ind + tpe.to_str(name, type_context) + '\n'
             self.dec_indent()
+        interface = self.itf_meta.get(module_name, None)
+        if interface:
+            port_str = port_decl_inst_arg + ' ' +  interface.interface_name + '.port0 ' + interface.generate_interface_decl_name() + '\n'
+        res += port_str
         res += ');\n'
         # Generate signals
         if sigs:
@@ -1088,6 +1418,7 @@ class VerilogTranslationPass(TopDown):
         if len(mods) > 0:
             for m in mods:
                 res += m.children[0] + '\n'
+
         # Generate processes
         if processlist:
             for proc in processlist.children:
@@ -1116,6 +1447,11 @@ class VerilogTranslationPass(TopDown):
             # for f in functionlist:
             #     res += f + '\n'
             assert False, "functionlist should be empty, there may be a bug in the code"
+        if generatelist:
+            for f in generatelist:
+                res += f + '\n'
+        if genbindinglist:
+            res += "\n".join(genbindinglist.children) + "\n"
         res += "endmodule"
         return res
 
@@ -1151,3 +1487,54 @@ class VerilogTranslationPass(TopDown):
                 decl += ';'
             res += ind + decl + '\n'
         return res
+
+    def hgenvardecl(self, tree):
+        new_children = []
+        for t in tree.children:
+            for v in self.vardecl(t):
+                new_children.append(v.children)
+        ctx = TypeContext(prefix='genvar', suffix='')
+        tree.children = [
+            (t[1].to_str(t[0], context=ctx), t[0], None) for t in new_children
+        ]
+        return tree.children
+
+    """called for the special genblock"""
+    def __forstmt_gen_block(self, tree):
+
+        self.push_current_scope_type('loop')
+        new_children = []
+        self.push_indent()
+        new_children.extend(self.visit(t) for t in tree.children[:3])
+        self.pop_indent()
+
+        self.inc_indent()
+        new_children.extend(self.visit(t) for t in tree.children[3:])
+        self.dec_indent()
+
+        if len(new_children) == 3:
+            warnings.warn("empty for loop")
+            for_init, for_cond, for_post = new_children
+            for_body = ''
+        else:
+            for_init, for_cond, for_post, for_body = new_children
+
+        ind = self.get_current_ind_prefix()
+        res = ind + '/*generate*/ for ({};{};{}) begin\n'.format(for_init, for_cond, for_post)
+        res += for_body + '\n'
+        res += ind + 'end'
+        self.pop_current_scope_type()
+        return res
+
+
+    def hgenerateblock(self, tree):
+        self.is_in_gen_block = True
+        self.__push_up(tree)
+
+        hgenvarecl, *body = tree.children
+        tree.children = [';\n'.join([
+            t[0] for t in hgenvarecl
+        ]) + ';\n' + "\n".join(body)]
+
+        self.is_in_gen_block = False
+        return tree

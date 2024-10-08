@@ -57,15 +57,25 @@ namespace systemc_hdl {
 
     LLVM_DEBUG(llvm::dbgs() << "HDL-FILE-OUTPUT: " << hdl_file_out_ << "\n"; );
 
-    FileID fileID = getSourceManager().getMainFileID();
-    const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
+    SourceManager &sm = getSourceManager();
+    FileID fileID = sm.getMainFileID();
+    const FileEntry *fileentry = sm.getFileEntryForID(fileID);
+    auto opt_fref = sm.getFileEntryRefForID(fileID) ;
+    const FileEntryRef &fref = *opt_fref;
+
+
+    //FileID fileID = getSourceManager().getMainFileID();
+    //const FileEntry *fileentry = getSourceManager().getFileEntryForID(fileID);
     if (hdl_file_out_ == "") {
       if (!fileentry) {
 	outputfn = "HCodeout";
 	LLVM_DEBUG(llvm::dbgs()
 		   << "Null file entry for tranlation unit for this astcontext\n");
       } else {
-	outputfn = fileentry->getName().str();
+
+        outputfn = fref.getName().str();
+
+	//outputfn = fileentry->getName().str();
 	regex r("\\.cpp");
 	outputfn = regex_replace(outputfn, r, "_hdl");
 
@@ -229,9 +239,9 @@ namespace systemc_hdl {
     }
 
     // add the submodule declarations
-   
+
     for (const auto &smod : submodv) {
-      std::vector<std::string> instnames;
+      //std::vector<std::string> instnames;
       if (smod->getInstanceInfo().isArrayType()) {
 	LLVM_DEBUG(llvm::dbgs() << "Array submodule " << smod->getInstanceInfo().getVarName() << "\n");
       }
@@ -239,31 +249,43 @@ namespace systemc_hdl {
 	LLVM_DEBUG(llvm::dbgs() << "Non-Array submodule " << smod->getInstanceInfo().getVarName() << "\n");
       }
 
+      // Not doing below:
       // we generate instance names based on the array indices so that the names match
       // names used in the portbindings for each instance, which are generated in
       // for loops (see HDLHNode.cpp code to unroll portbindings).
       
-      GenerateInstanceNames(smod, instnames);
-      bool frsttime = true;
-      for (auto instname: instnames) {
-	LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
+      //GenerateInstanceNames(smod, instnames);
+      //bool frsttime = true;
+      //for (auto instname: instnames) {
+      //LLVM_DEBUG(llvm::dbgs() << "Instance " << instname << "\n");
+      //string instname = instnames[0];
+      LLVM_DEBUG(llvm::dbgs() << "Submod name is " << smod->getName() << "\n"); // fwd_lift
 
-	hNodep h_smod =
-	  new hNode(instname, hNode::hdlopsEnum::hModdecl);
-	h_ports->child_list.push_back(h_smod);
-	hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
-	if (frsttime) { // only enter the first one into the map
-	  mod_name_map.add_entry(smod, smod->getName(), h_smod);
-	  h_smod->set(instname); // override name inserted by map service
-	  frsttime = false;
+      LLVM_DEBUG(llvm::dbgs() << "Instance Var name is " << smod->getInstanceInfo().getVarName() << "\n"); //u_xt
+      LLVM_DEBUG(llvm::dbgs() << "Instance  name is " << smod->getInstanceInfo().getInstanceNames()[0] << "\n"); //u_xt_0
+      string instname = smod->getInstanceInfo().getVarName(); //smod->getInstanceInfo().getInstanceNames()[0];
+
+      hNodep h_smod =
+	new hNode(instname, hNode::hdlopsEnum::hModdecl);
+      h_ports->child_list.push_back(h_smod);
+      hNodep h_smodtypinfo = new hNode(hNode::hdlopsEnum::hTypeinfo);
+      //if (frsttime) { // only enter the first one into the map
+      mod_name_map.add_entry(smod, smod->getName(), h_smod);
+      h_smod->set(instname); // override name inserted by map service
+      //frsttime = false;
+      //}
+	hNodep h_smod_typep = new hNode( hNode::hdlopsEnum::hType);
+	if (smod->getInstanceInfo().isArrayType()) {
+	  h_smod_typep->set("array##"+std::to_string(smod->getInstanceInfo().getInstanceNames().size()));
+	  h_smod_typep->append(new hNode(mod_name_map.find_entry_newn(smod), hNode::hdlopsEnum::hType));
 	}
-	h_smodtypinfo->child_list.push_back(
-					    new hNode(mod_name_map.find_entry_newn(smod), hNode::hdlopsEnum::hType));
+	else {
+	  h_smod_typep->set(mod_name_map.find_entry_newn(smod));
+	}
+	h_smodtypinfo->child_list.push_back(h_smod_typep);
 	h_smod->child_list.push_back(h_smodtypinfo);
-      }
     }
 
-    // look at sensitivitiy list info
     // init block
     mod_i = mod;
     hNodep h_modinitblockhead = new hNode( hNode::hdlopsEnum::hNoop); // hold list of module constructors
@@ -271,12 +293,13 @@ namespace systemc_hdl {
     hNodep h_allsenslists = new hNode( hNode::hdlopsEnum::hNoop);
     for (int i = 0; i <= basemods.size(); i++) {
       if (mod_i->getConstructorDecl() ==NULL) continue; // null constructor
-      h_constructor = new hNode(mod_i->getInstanceInfo().getVarName()+ (mod_i->getInstanceInfo().isArrayType()? "_0" :""),
+      h_constructor = new hNode(mod_i->getInstanceInfo().getVarName(),// + (mod_i->getInstanceInfo().isArrayType()? "_0" :""),
 				hNode::hdlopsEnum::hModinitblock);
       // SenseMapType sensmap = mod_i->getSensitivityMap();
       // for (auto sensitem : sensmap) {
       // 	sensitem->dump();
       // }
+    
       xbodyp->Run(mod_i->getConstructorDecl()->getBody(), h_constructor,rmodinit);
       LLVM_DEBUG(llvm::dbgs() << "HDL output for module constructor body\n");
       LLVM_DEBUG(h_constructor->print(llvm::dbgs()));
@@ -300,7 +323,7 @@ namespace systemc_hdl {
     //LLVM_DEBUG(llvm::dbgs() << "Module sensitivity lists end\n");
 
     // build map of thread name to reset var name for this module
-    MakeResetMap(threadresetmap, h_allsenslists);
+    //MakeResetMap(threadresetmap, h_allsenslists);
 
     LLVM_DEBUG(llvm::dbgs() << "Module vname map size is " << mod_vname_map.size() << " \n");
 
@@ -371,7 +394,7 @@ namespace systemc_hdl {
 	if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
 	generated_functions.insert(m.first);
 	//clang::DiagnosticsEngine &diag_engine{getContext().getDiagnostics()};
-	if (m.first->hasBody()) {
+	if (m.first->hasBody()) { // && !m.first->hasTrivialBody()) {
 	  //if (generated_functions.count(m.first) > 0) continue; // already generated this one !!!!!
 	  //generated_functions.insert(m.first);
 	  hNodep hfunc = new hNode(m.second.newn, hNode::hdlopsEnum::hFunction);
@@ -442,12 +465,15 @@ namespace systemc_hdl {
 	      // ============= END CHECK ==============
 	      //
 	      if (mutil.isSCMacro(m.second.oldn)) {
-          paramtype = hNode::hdlopsEnum::hFunctionParamI;
+		paramtype = hNode::hdlopsEnum::hFunctionParamI;
 	      }
 	      else if ((vardecl->getType()->isReferenceType()) && !(vardecl->getType().getNonReferenceType().isConstQualified()))
 		paramtype = hNode::hdlopsEnum::hFunctionParamRef;
 	      else { // handle actual parameter
-		
+		// still messed up here for user defined struct:  hFunctionParamI  NONAME,  hType fp_t_11_52_ NOLIST;
+		//hBinop = [
+		//hVarref _actual_scclang_global_3 NOLIST
+		//hVarref _actual NOLIST
 		paramtype = hNode::hdlopsEnum::hFunctionParamI;
 		// create an entry in mod_vname_map for this parameter's local variable
 		string objname = vardecl->getName().str()+"_actual";
@@ -459,6 +485,7 @@ namespace systemc_hdl {
 		hNodep hv = new hNode(mod_vname_map.find_entry_newn(vardecl), hNode::hdlopsEnum::hVarref);
 		hparam_assign->append(hv);
 		hv = new hNode(vardecl->getName().str(), hNode::hdlopsEnum::hVarref);
+		//doesn't work when name isn't given hv = new hNode(objname, hNode::hdlopsEnum::hVarref); // dummy actual parameter for user defined types
 		hparam_assign->append(hv);
 		hparam_assign_list->append(hparam_assign);
 	      }
@@ -786,19 +813,19 @@ namespace systemc_hdl {
 	  CXXMethodDecl *emd = efc->getEntryMethod();
 	  if (emd->hasBody()) {
 
-	    auto got = threadresetmap.find(efc->getName());
-	    // should be an error if there isn't a reset var for this thread
-           clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(
-                (efc->getEntryMethod())->getLocation(),
-                main_diag_engine.getCustomDiagID(
-                  clang::DiagnosticsEngine::Remark, "Reset not found in SC_[C]THREAD."))};
-           diag_builder << "\n";
-	    auto h_resetvarinfo = (got == threadresetmap.end() ? NULL : got->second);
+	   //  auto got = threadresetmap.find(efc->getName());
+	   //  // should be an error if there isn't a reset var for this thread
+           // clang::DiagnosticBuilder diag_builder{main_diag_engine.Report(
+           //      (efc->getEntryMethod())->getLocation(),
+           //      main_diag_engine.getCustomDiagID(
+           //        clang::DiagnosticsEngine::Remark, "Reset not found in SC_[C]THREAD."))};
+           // diag_builder << "\n";
+	   //  auto h_resetvarinfo = (got == threadresetmap.end() ? NULL : got->second);
 
 	    // params includes portsigvarlist so thread local vars get promoted to module level
 	    // have to pass efc to get the reset info
 
-	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map, allmethodecls, overridden_method_map, h_resetvarinfo );
+	    HDLThread xthread(efc, h_thread, h_port, main_diag_engine, getContext(), mod_vname_map, allmethodecls, overridden_method_map, NULL);//, h_resetvarinfo );
 	    allmethodecls.insertall(xthread.methodecls);
 	    //h_thread->child_list.push_back(h_body);
 	    h_top->child_list.push_back(h_thread);

@@ -69,6 +69,10 @@ namespace systemc_hdl {
       numstates = paths_found.size();
       int state_num;
 
+      // in case there are cond exprs in the split graph, get their information
+      condexp_confluence_block_map = scfg.getConfluenceBlocks();
+      condexp_skip_block_set = scfg.identifySkipBlocks();
+      
       for (state_num = 0; state_num < paths_found.size(); state_num++) {
 	SGVisited.clear();
 	// pathnodevisited keeps track of nodes already traversed in true and false paths.
@@ -419,14 +423,36 @@ namespace systemc_hdl {
 	  xtbodyp->Run((Stmt *)S1->getCond(), hcondstmt, rthread);
 	}
 	else if (const ConditionalOperator *S1 = dyn_cast<ConditionalOperator>(S)) {
-	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is conditional operator, skipping\n");
+	  LLVM_DEBUG(llvm::dbgs() << "Terminator for block " << blkid << " is conditional operator, skipping (not?)\n");
+	  LLVM_DEBUG(sgb->getCFGBlock()->getTerminatorStmt()->dump(llvm::dbgs(), ast_context_));
+	  //std::map<SplitCFGBlock*,SplitCFGBlock*> condmap = scfg.getConfluenceBlocks();
+	  const SplitCFGBlock * condcfgb;
+	  auto conflmapit =condexp_confluence_block_map.find((const_cast<SplitCFGBlock*>(sgb)));
+	  if (conflmapit != condexp_confluence_block_map.end()) {
+	    condcfgb = conflmapit->second;
+	    xtbodyp->Run((Stmt *)condcfgb->getCFGBlock()->getTerminatorStmt(), hcondstmt, rthread);
+	    LLVM_DEBUG(llvm::dbgs() << "confluence block " << condcfgb->getBlockID() << "\n");
+	    for (int i = thisix; i < pt.size(); i++) {
+	      LLVM_DEBUG(llvm::dbgs() << "splitgraph block " << pt[i].first->getBlockID() << "\n");
+	      // if (pt[i].first == condcfgb) break;
+	      // else updatepnvisited(i);
+	      //SplitCFGBlock * scfgb = const_cast<SplitCFGBlock *>(pt[i].first);
+	      if ((pt[i].first != condcfgb) &&
+		  (condexp_skip_block_set.find(const_cast<SplitCFGBlock *>(pt[i].first)) != condexp_skip_block_set.end())) {
+		updatepnvisited(i);
+	      }
+	    }
+	  }
+	  else {
+	    LLVM_DEBUG(llvm::dbgs() << "Confluence block for block " << blkid << " not found, skipping \n");
+	  }
 	  // below code doesn't work due to skipping too many nodes in true and false paths
 	  // int flsix = pt[thisix].second.getFalseId();
 	  // for (int i = thisix+1; i <flsix; i++) {
 	  //     // need to mark all the true branch nodes in path vector as visited.
 	  //   updatepnvisited(i);
 	  // }
-	  // for (int i =flsix; i < flsix+GetFalseLength(pt, thisix); i++) {
+	  // for (int i =flsix; i < flsix+GetFalseLength(pt, thisix, state_num); i++) {
 	  //   // need to mark all the false branch nodes in path vector as visited.
 	  //   updatepnvisited(i);
 	  // }
@@ -566,11 +592,12 @@ namespace systemc_hdl {
     //   hLiteral 0 NOLIST
     // ]
 	    
-    if ((h_resetvarinfo_ != NULL) && (h_resetvarinfo_->child_list.size() == 2)) {
-      hifblock->append(GenerateBinop("==", h_resetvarinfo_->child_list[0]->getname(),
-				     h_resetvarinfo_->child_list[1]->getname()));
-    }
-    else hifblock->append(GenerateBinop("==", efc_->getResetSignal().first, efc_->getResetEdge().first, false));
+    // if ((h_resetvarinfo_ != NULL) && (h_resetvarinfo_->child_list.size() == 2)) {
+    //   hifblock->append(GenerateBinop("==", h_resetvarinfo_->child_list[0]->getname(),
+    // 				     h_resetvarinfo_->child_list[1]->getname()));
+    // }
+    //else
+      hifblock->append(GenerateBinop("==", efc_->getResetSignal().first, efc_->getResetEdge().first, false));
 
     // then part: reset state transition variables
     hNodep hcstmt = new hNode(hNode::hdlopsEnum::hCStmt);

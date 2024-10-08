@@ -27,9 +27,45 @@ namespace systemc_hdl {
     }
     return true;
   }
+
+  bool HDLConstructorHcode::isSimRelated(hNodep hp) {
+    bool ret;
+    //hVarAssign  NONAME [
+          //   hVarref mc_proc_handle_u_fifo_local_0 NOLIST
+          //   hBuiltinFunction create_method_process [
+          //     hLiteral 0 NOLIST
+          //     hUnop & [
+          //       hMethodCall fifo_ccfp_t11_52_5_true_false_false__mc_proc:mc_proc NOLIST
+          //     ]
+          //     hLiteral 0 NOLIST
+          //   ]
+          // ]
+
+    if ((hp->getopc()==hNode::hdlopsEnum::hVarAssign) &&
+	(hp->size()>0) &&
+	(hp->child_list[0]->getopc() == hNode::hdlopsEnum::hVarref) &&
+        (hp->child_list[0]->getname().find("_handle_")!=std::string::npos))
+      return true;
+
+    //hVardeclrn mc_proc_handle_u_fifo_local_0 [
+        // hTypeinfo  NONAME [
+        //   hType sc_process_handle NOLIST
+        // ]
+        // hLiteral mc_proc_handle NOLIST
+
+    if ((hp->getopc()==hNode::hdlopsEnum::hVardeclrn) &&
+	(hp->getname().find("_handle_")!=std::string::npos))
+      return true;
+    if (hp->getname() == "sc_process_handle") return true;
+    if ((hp->getopc()==hNode::hdlopsEnum::hBuiltinFunction) &&
+	(hp->getname().find("create_method_process")!=std::string::npos))
+      return true;
+    return false;
+  }
+  
   void HDLConstructorHcode::RemoveSCMethod(hNodep &hp) {
  
-    hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [] (hNodep x) {
+    hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [&] (hNodep x) {
 	  return (
 		  //((x->h_op==hNode::hdlopsEnum::hVarAssign) &&
 		  //(x->child_list.size()==2) &&
@@ -47,15 +83,44 @@ namespace systemc_hdl {
     for (hNodep hpi :hp->child_list)
       CleanupInitHcode(hpi); 
     hp->child_list.erase( std::remove_if( hp->child_list.begin(), hp->child_list.end(), [] (hNodep x) {
-	  return (((x->h_op==hNode::hdlopsEnum::hBinop) &&
-		   (x->h_name==pbstring) || (x->h_name==sensop)) ||
-		  ((x->h_op == hNode::hdlopsEnum::hSensvar) && // gratuitous sim method sens vars
-		   (x->child_list[0]->h_name.find(localstr) != std::string::npos)) ||
-		  (x->h_op==hNode::hdlopsEnum::hForStmt) ||
-		  (x->h_op == hNode::hdlopsEnum::hVardeclrn)  || // renamed index variables
+	  return (
+		  ((x->h_op==hNode::hdlopsEnum::hBinop) &&
+		   (x->h_name==pbstring) || (x->h_name==sensop))
+		  ||
+		      //hVarAssign  NONAME [
+          //   hVarref mc_proc_handle_u_fifo_local_0 NOLIST
+          //   hBuiltinFunction create_method_process [
+          //     hLiteral 0 NOLIST
+          //     hUnop & [
+          //       hMethodCall fifo_ccfp_t11_52_5_true_false_false__mc_proc:mc_proc NOLIST
+          //     ]
+          //     hLiteral 0 NOLIST
+          //   ]
+          // ]
+		  (((x->getopc()==hNode::hdlopsEnum::hVarAssign) || (x->getopc()==hNode::hdlopsEnum::hSensvar)) &&
+		   (x->size()>0) &&
+		   (x->child_list[0]->getopc() == hNode::hdlopsEnum::hVarref) &&
+		   (x->child_list[0]->getname().find("_handle_")!=std::string::npos))
+		  ||
+		  
+		  //hVardeclrn mc_proc_handle_u_fifo_local_0 [
+        // hTypeinfo  NONAME [
+        //   hType sc_process_handle NOLIST
+        // ]
+        // hLiteral mc_proc_handle NOLIST
+		  
+		  ((x->getopc()==hNode::hdlopsEnum::hVardeclrn) &&
+		   (x->getname().find("_handle_")!=std::string::npos))
+		  ||
+
+		  //(isSimRelated(x)) ||
+		  //((x->h_op == hNode::hdlopsEnum::hSensvar) && // gratuitous sim method sens vars
+		  //(x->child_list[0]->h_name.find(localstr) != std::string::npos)) ||
+		  //(x->h_op==hNode::hdlopsEnum::hForStmt) ||
+		  //(x->h_op == hNode::hdlopsEnum::hVardeclrn)  || // renamed index variables
 		  ((x->h_op==hNode::hdlopsEnum::hCStmt) &&
 		   (x->child_list.empty())) ||
-		  (x->h_op==hNode::hdlopsEnum::hVarAssign) ||
+		  //(x->h_op==hNode::hdlopsEnum::hVarAssign) ||
 		  ((x->h_op == hNode::hdlopsEnum::hVarref) && (x->h_name == "sensitive")) ||
 		  (isMorF(x->h_op) && (x->h_name.find(strsccore) !=std::string::npos)) ||
 		  ((x->h_op == hNode::hdlopsEnum::hNoop) &&
@@ -98,6 +163,8 @@ namespace systemc_hdl {
   void HDLConstructorHcode::PushRange(hNodep &hp, std::vector<for_info_t> &for_info) {
 
     for_info_t tmp{"FORNAME", 0, 1, 1, 0};
+    for_info.push_back(tmp);
+    return;  // using generate, no need to symbolically traverse for loop to unroll bindings
     
     hNodep hlo = hp->child_list[0];
     hNodep hi = hp->child_list[1];
@@ -152,241 +219,36 @@ namespace systemc_hdl {
   string HDLConstructorHcode::ExtractModuleName(hNodep hp) {
     string tmpstr;
     if (hp == NULL) return "";
-    if (hp->getopc() == hNode::hdlopsEnum::hVarref) {
-      tmpstr = hp->getname();
-      hp->set(tmpstr.substr(tmpstr.find(fielddelim)+fielddelim.size()));
-      return tmpstr.substr(0, tmpstr.find(fielddelim));
+    if ((hp->getopc() == hNode::hdlopsEnum::hBinop) && (hp->getname() == "ARRAYSUBSCRIPT")) {
+      return ExtractModuleName(hp->child_list[0]);
     }
-    for (auto hp1: hp->child_list) {
-      tmpstr = ExtractModuleName(hp1);
-      if (tmpstr!="") return tmpstr;
+    else if (hp->getopc() == hNode::hdlopsEnum::hVarref) {
+      if (hp->size() == 0) {
+	tmpstr = hp->getname();
+	int delimix = tmpstr.find(fielddelim);
+	if (delimix != string::npos) {
+	  hp->set(tmpstr.substr(tmpstr.find(fielddelim)+fielddelim.size()));
+	  return tmpstr.substr(0, tmpstr.find(fielddelim));
+	}
+	else return tmpstr;
+      }
+      else {  // Varref with child node(s)
+	return ExtractModuleName(hp->child_list[0]);
+      }
     }
     return "";
+   
   }
-  
-  // Generate a port binding
-    // need to dismantle modname##field:
-    // modname is the h_name for the portbinding
-    // and field is the varref, e.g.
-    // Case 0: hBinop () [
-          // hVarref u_fwd_cast##clk NOLIST
-          // hVarref clk NOLIST
-    // but if the submod instance/port is ARRAYSUBSCRIPT in loop,
-    // can have (if submodule is not an array of submods)
-    // Case 1: hBinop () [
-    //         hBinop ARRAYSUBSCRIPT [
-    //           hVarref u_fwd_cast##m_block NOLIST
-    //           hVarref _local_0 NOLIST
-    //         ]
-    //         hBinop ARRAYSUBSCRIPT [
-    //           hVarref c_fc_block NOLIST
-    //           hVarref _local_0 NOLIST
-    //         ]
-    //       ]
-    //     ]
 
-    // or it will look like this if submod is array ( u_yt[_local_0].clk:clk )
-    // Case 2: hBinop () [
-    // hVarref clk [
-    //     hBinop ARRAYSUBSCRIPT [
-    //       hVarref u_yt NOLIST
-    //       hVarref _local_0 NOLIST
-    //     ]
-    //   ]
-    //   hVarref clk NOLIST
-    // ]
-    // or for module instance array ref and port array ref
-    // 
-    // Case 3: hBinop () [
-    // hBinop ARRAYSUBSCRIPT [
-    //     hVarref m_port [
-    //       hBinop ARRAYSUBSCRIPT [
-    //         hVarref u_xt NOLIST
-    //         hVarref _local_0 NOLIST
-    //       ]
-    //     ]
-    //     hVarref _local_1 NOLIST
-    //   ]
-    //   hBinop ARRAYSUBSCRIPT [
-    //     hBinop ARRAYSUBSCRIPT [
-    //       hVarref c_xt_data NOLIST
-    //       hVarref _local_0 NOLIST
-    //     ]
-    //     hVarref _local_1 NOLIST
-    //   ]
-    // ]
   void HDLConstructorHcode::UnrollBinding(hNodep &hp_orig, std::vector<for_info_t> &for_info) {
     
     assert ((hp_orig->h_op == hNode::hdlopsEnum::hBinop) && (hp_orig->h_name == pbstring));
-
-    // Case 0
-    if (for_info.empty()) { // simple case, not in a for loop
-      string submodport;
-      string thismodsig;
-      hNodep hpb;
-      if (hp_orig->child_list[0]->getopc() == hNode::hdlopsEnum::hVarref) {
-	submodport = hp_orig->child_list[0]->h_name;
-      // part before delimiter is submodule name, after delimiter is port name
-
-	hpb = new hNode(submodport.substr(0, submodport.find(fielddelim)),
-			hNode::hdlopsEnum::hPortbinding);
-	hpb->child_list.push_back(new hNode(submodport.substr(submodport.find(fielddelim)+fielddelim.size()),
-					    hNode::hdlopsEnum::hVarref));
-      }
-      else {
-	submodport = ExtractModuleName(hp_orig->child_list[0]);
-	hpb = new hNode(submodport, hNode::hdlopsEnum::hPortbinding);
-	hpb->append(hp_orig->child_list[0]); // need to remove module name 
-      }
-      if (hp_orig->child_list[1]->getopc() == hNode::hdlopsEnum::hVarref) {
-	thismodsig = hp_orig->child_list[1]->h_name;
-	hpb->child_list.push_back(new hNode(thismodsig, hNode::hdlopsEnum::hVarref));
-      }
-      else {
-	hpb->append(hp_orig->child_list[1]); // need to remove module name
-      }
-      hnewpb->child_list.push_back(hpb);
-      return;
-    }
-
-    hNodep hp = HnodeDeepCopy(hp_orig);  // will be modifying subtrees, so make a copy
-    
-    hNodep hsubmodport = hp->child_list[0];  // submoduleport being bound
-    hNodep hthismodsig = hp->child_list[1];
-
-    string submodport{"XXX"}, thismodsig{"YYY"};
-    string submod{"SUBMOD"};
-    
-    // Case 2
-    if ((hsubmodport->h_op ==  hNode::hdlopsEnum::hVarref) && (hsubmodport->child_list.size() > 0)) {
-      
-    // in a for loop, unroll the port bindings
-     // hVarref clk [
-    //     hBinop ARRAYSUBSCRIPT [
-    //       hVarref u_yt NOLIST
-    //       hVarref _local_0 NOLIST // changed to hLiteral by Substitute index
-    //     ]
-    //   ]
-    //   hVarref clk NOLIST
-    // ]
-      hNodep hportchild = hsubmodport->child_list[0];
-      hNodep hparent = hsubmodport;
-      std::vector<hNodep> hmodarrix;
-      // look for submodule name
-      while ((hportchild != nullptr) && (hportchild->h_name == arrsub)) {
-	hmodarrix.push_back(hportchild->child_list[1]); // save i in A[i]
-	if ((hportchild->child_list[0]->h_op == hNode::hdlopsEnum::hVarref) &&
-	    (hportchild->child_list[0]->child_list.empty())) { // simple varref of A
-	  submod = hportchild->child_list[0]->h_name;  
-	  break;
-	}
-	hparent = hportchild;
-	hportchild = hportchild->child_list[0];
-      }
-      for (hNodep hsubmodixname:hmodarrix) {
-	// assume simple case of "i" not "i+1" or "i+j"
-	assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
-	string ixname = hsubmodixname->h_name;
-	for (int i = 0; i < for_info.size(); i++) {
-	  if (for_info[i].name == ixname) {
-	    submod+=tokendelim+to_string(for_info[i].curix);
-	    break;
-	  }
-	}
-      }
-      if (hsubmodport->child_list[0]->h_name == arrsub) {
-	hsubmodport->child_list.erase(hsubmodport->child_list.begin());
-      }
-    }
-    else if (hsubmodport->h_name ==  arrsub) { // check Case 1, 3
-    // Case 1: hBinop () [
-    //         hBinop ARRAYSUBSCRIPT [
-    //           hVarref u_fwd_cast##m_block NOLIST
-    //           hVarref _local_0 NOLIST
-    //         ]
-    //         hBinop ARRAYSUBSCRIPT [
-    //           hVarref c_fc_block NOLIST
-    //           hVarref _local_0 NOLIST
-    //         ]
-    //       ]
-    //     ]
-
-    // Case 3: hBinop () [
-    // hBinop ARRAYSUBSCRIPT [
-    //     hVarref m_port [
-    //       hBinop ARRAYSUBSCRIPT [
-    //         hVarref u_xt NOLIST
-    //         hVarref _local_0 NOLIST
-    //       ]
-    //     ]
-    //     hVarref _local_1 NOLIST
-    //   ]
-    //   hBinop ARRAYSUBSCRIPT [
-    //     hBinop ARRAYSUBSCRIPT [
-    //       hVarref c_xt_data NOLIST
-    //       hVarref _local_0 NOLIST
-    //     ]
-    //     hVarref _local_1 NOLIST
-    //   ]
-    // ]
-
-      hNodep hportchild = hsubmodport->child_list[0];
-      hNodep hparent = hsubmodport;
-      std::vector<hNodep> hmodarrix;
-      
-      while ((hportchild != nullptr) &&
-	     ((hportchild->h_name == arrsub) ||
-	      ((hportchild->h_op == hNode::hdlopsEnum::hVarref) &&
-	       (hportchild->child_list.size() > 0)))) {
-	if (hportchild->h_name == arrsub) {
-	    hmodarrix.push_back(hportchild->child_list[1]); // save i in A[i]
-	  }
-	hparent = hportchild;
-	hportchild = hportchild->child_list[0];
-      }
-      if ((hportchild != nullptr) && (hportchild->h_op == hNode::hdlopsEnum::hVarref)) {
-	if (hportchild->child_list.empty()) { // Case 1
-	  submod = hportchild->h_name;  
-	  size_t found = submod.find(fielddelim);
-	  if ( found != std::string::npos) { // module name prefix, not a vector of modules
-	    hportchild->h_name = submod.substr(found+fielddelim.size());
-	    submod = submod.substr(0, found);
-	  }
-	  else { // Varref has child; need to handle Case 3 by removing the (arraysubscript submod ix) node
-	    for (hNodep hsubmodixname:hmodarrix) {
-	      // assume simple case of "i" not "i+1" or "i+j"
-	      assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
-	      string ixname = hsubmodixname->h_name;
-	      for (int i = 0; i < for_info.size(); i++) {
-		if (for_info[i].name == ixname) {
-		  submod+=tokendelim+to_string(for_info[i].curix);
-		  break;
-		}
-	      }
-	    }
-	    hparent = hsubmodport; 
-	    hportchild = hsubmodport->child_list[0];
-	    while ((hportchild != nullptr) && (hportchild->h_name != arrsub)) {
-	      hparent = hportchild;
-	      hportchild = hportchild->child_list[0];
-	    }
-	    if (hportchild != nullptr) { // it's an array subscript
-	      hparent->child_list.erase(hparent->child_list.begin());
-	    }
-	  }
-	} 
-      }
-    }
-    
-    hNodep hpb = new hNode( submod, hNode::hdlopsEnum::hPortbinding);
-    //hpb->child_list.push_back(new hNode(submodport+tokendelim+to_string(i), hNode::hdlopsEnum::hVarref));
-    //hpb->child_list.push_back(new hNode(thismodsig+tokendelim+to_string(i), hNode::hdlopsEnum::hVarref));
-
-    hpb->child_list.push_back(hsubmodport);
-    hpb->child_list.push_back(hthismodsig);
-    SubstituteIndex(hpb, for_info);
-    hnewpb->child_list.push_back(hpb);
+    hp_orig->set(hNode::hdlopsEnum::hPortbinding, ExtractModuleName(hp_orig->child_list[0]));
+    hnewpb->append(hp_orig);
+    return;
   }
+  
+
   bool HDLConstructorHcode::SetupSenslist(hNodep hp) {
 
     // hMethodCall sc_coresc_simcontextcreate_method_process:create_method_process [
@@ -420,6 +282,7 @@ namespace systemc_hdl {
   }
     
   void HDLConstructorHcode::UnrollSensitem(hNodep &hp_orig, std::vector<for_info_t> &for_info) {
+
     // hBinop << [
     //      hVarref sensitive NOLIST
     //      hNoop pos [
@@ -428,8 +291,8 @@ namespace systemc_hdl {
     //    ]
 
     // check for list of sens items
-    if (isInitSensitem(hp_orig->child_list[0])) {
-      UnrollSensitem(hp_orig->child_list[0], for_info);
+     if (isInitSensitem(hp_orig->child_list[0])) {
+       UnrollSensitem(hp_orig->child_list[0], for_info);
       }
 
     // at a primitive sens item
@@ -440,9 +303,9 @@ namespace systemc_hdl {
     
     delete hp->child_list[0]; // release that hnode
     hp->child_list.erase(hp->child_list.begin()); // remove the first item
-    if (!for_info.empty()) {
-      SubstituteIndex(hp, for_info);
-    }
+    // if (!for_info.empty()) {
+    //   SubstituteIndex(hp, for_info);
+    //}
 
     // check for edge sensitivity
     // eg
@@ -476,8 +339,14 @@ namespace systemc_hdl {
    
       hp->child_list.push_back(new hNode("always", hNode::hdlopsEnum::hNoop));
     };
-    
-    hnewsens.back()->child_list.push_back(hp);
+
+    if (!for_info.empty()) {
+      if (hnewsens.size() >0) hp->set(hnewsens.back()->getname());
+      hp_orig = hp; // this caused the array sens item to be generated in the for loop.
+    }
+
+    else  hnewsens.back()->child_list.push_back(hp);
+ 
   }
   
   void HDLConstructorHcode::HDLLoop(hNodep &hp, std::vector<for_info_t> &for_info ) {
@@ -543,7 +412,7 @@ namespace systemc_hdl {
     std::vector<for_info_t> for_info; 
 
     if (xconstructor==nullptr) return xconstructor;
-
+    
     // this is a workaround to make lldb find dumphcode
     // since lldb doesn't pick up default parameters in print
     // and doesn't recognize llvm::outs()
@@ -555,14 +424,248 @@ namespace systemc_hdl {
     //hnewsens = new hNode(xconstructor->h_name, hNode::hdlopsEnum::hSenslist); 
     for (hNodep hp : xconstructor->child_list)
       HDLLoop(hp, for_info);
-    if (!hnewpb->child_list.empty()) {
-      xconstructor->child_list.push_back(hnewpb);
-    }
+    // if (!hnewpb->child_list.empty()) {
+    //   xconstructor->child_list.push_back(hnewpb);
+    // }
     if (!hnewsens.empty()) {
-      xconstructor->child_list.insert( xconstructor->child_list.end(), hnewsens.begin(), hnewsens.end());
+      if ( (xconstructor->size() == 1) && (xconstructor->child_list[0]->getopc()==hNode::hdlopsEnum::hCStmt)) {
+	hNodep hcstmtp = xconstructor->child_list[0];
+	hcstmtp->child_list.insert(hcstmtp->child_list.end(), hnewsens.begin(), hnewsens.end());
+      }
+      else xconstructor->child_list.insert( xconstructor->child_list.end(), hnewsens.begin(), hnewsens.end());
     }
     CleanupInitHcode(xconstructor);
     return xconstructor;
   }
 
+  // legacy code to manyally unroll for loop bindings
+  #if 0
+    // Generate a port binding
+    // need to dismantle modname##field:
+    // modname is the h_name for the portbinding
+    // and field is the varref, e.g.
+    // Case 0: hBinop () [
+          // hVarref u_fwd_cast##clk NOLIST
+          // hVarref clk NOLIST
+    // but if the submod instance/port is ARRAYSUBSCRIPT in loop,
+    // can have (if submodule is not an array of submods)
+    // Case 1: hBinop () [
+    //         hBinop ARRAYSUBSCRIPT [
+    //           hVarref u_fwd_cast##m_block NOLIST
+    //           hVarref _local_0 NOLIST
+    //         ]
+    //         hBinop ARRAYSUBSCRIPT [
+    //           hVarref c_fc_block NOLIST
+    //           hVarref _local_0 NOLIST
+    //         ]
+    //       ]
+    //     ]
+
+    // or it will look like this if submod is array ( u_yt[_local_0].clk:clk )
+    // Case 2: hBinop () [
+    // hVarref clk [
+    //     hBinop ARRAYSUBSCRIPT [
+    //       hVarref u_yt NOLIST
+    //       hVarref _local_0 NOLIST
+    //     ]
+    //   ]
+    //   hVarref clk NOLIST
+    // ]
+    // or for module instance array ref and port array ref
+    // 
+    // Case 3: hBinop () [
+    // hBinop ARRAYSUBSCRIPT [
+    //     hVarref m_port [
+    //       hBinop ARRAYSUBSCRIPT [
+    //         hVarref u_xt NOLIST
+    //         hVarref _local_0 NOLIST
+    //       ]
+    //     ]
+    //     hVarref _local_1 NOLIST
+    //   ]
+    //   hBinop ARRAYSUBSCRIPT [
+    //     hBinop ARRAYSUBSCRIPT [
+    //       hVarref c_xt_data NOLIST
+    //       hVarref _local_0 NOLIST
+    //     ]
+    //     hVarref _local_1 NOLIST
+    //   ]
+    // ]
+  void HDLConstructorHcode::UnrollBindingNotUsed(hNodep &hp_orig, std::vector<for_info_t> &for_info) {
+    
+    assert ((hp_orig->h_op == hNode::hdlopsEnum::hBinop) && (hp_orig->h_name == pbstring));
+    hp_orig->set(hNode::hdlopsEnum::hPortbinding, ExtractModuleName(hp_orig->child_list[0]));
+    hnewpb->append(hp_orig);
+    return;
+    
+    // Case 0
+    if (for_info.empty()) { // simple case, not in a for loop
+      string submodport;
+      string thismodsig;
+      hNodep hpb;
+      if (hp_orig->child_list[0]->getopc() == hNode::hdlopsEnum::hVarref) {
+	submodport = hp_orig->child_list[0]->h_name;
+      // part before delimiter is submodule name, after delimiter is port name
+
+	hpb = new hNode(submodport.substr(0, submodport.find(fielddelim)),
+			hNode::hdlopsEnum::hPortbinding);
+	hpb->child_list.push_back(new hNode(submodport.substr(submodport.find(fielddelim)+fielddelim.size()),
+					    hNode::hdlopsEnum::hVarref));
+      }
+      else {
+	submodport = ExtractModuleName(hp_orig->child_list[0]);
+	hpb = new hNode(submodport, hNode::hdlopsEnum::hPortbinding);
+	hpb->append(hp_orig->child_list[0]); // need to remove module name 
+      }
+      if (hp_orig->child_list[1]->getopc() == hNode::hdlopsEnum::hVarref) {
+	thismodsig = hp_orig->child_list[1]->h_name;
+	hpb->child_list.push_back(new hNode(thismodsig, hNode::hdlopsEnum::hVarref));
+      }
+      else {
+	hpb->append(hp_orig->child_list[1]); // need to remove module name
+      }
+      hnewpb->child_list.push_back(hpb);
+      return;
+    }
+
+    hNodep hp = HnodeDeepCopy(hp_orig);  // will be modifying subtrees, so make a copy
+    
+    hNodep hsubmodport = hp->child_list[0];  // submoduleport being bound
+    hNodep hthismodsig = hp->child_list[1];
+
+    string submodport{"XXX"}, thismodsig{"YYY"};
+    string submod{"SUBMOD"};
+    
+    // Case 2
+    if ((hsubmodport->h_op ==  hNode::hdlopsEnum::hVarref) && (hsubmodport->child_list.size() > 0)) {
+      
+    // in a for loop, unroll the port bindings
+     // hVarref clk [
+    //     hBinop ARRAYSUBSCRIPT [
+    //       hVarref u_yt NOLIST
+    //       hVarref _local_0 NOLIST // changed to hLiteral by Substitute index
+    //     ]
+    //   ]
+    //   hVarref clk NOLIST
+    // ]
+      hNodep hportchild = hsubmodport->child_list[0];
+      hNodep hparent = hsubmodport;
+      std::vector<hNodep> hmodarrix;
+      // look for submodule name
+      while ((hportchild != nullptr) && (hportchild->h_name == arrsub)) {
+	hmodarrix.push_back(hportchild->child_list[1]); // save i in A[i]
+	if ((hportchild->child_list[0]->h_op == hNode::hdlopsEnum::hVarref) &&
+	    (hportchild->child_list[0]->child_list.empty())) { // simple varref of A
+	  submod = hportchild->child_list[0]->h_name;  
+	  break;
+	}
+	hparent = hportchild;
+	hportchild = hportchild->child_list[0];
+      }
+      for (hNodep hsubmodixname:hmodarrix) {
+      	// assume simple case of "i" not "i+1" or "i+j"
+      	assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
+      	string ixname = hsubmodixname->h_name;
+      	for (int i = 0; i < for_info.size(); i++) {
+      	  if (for_info[i].name == ixname) {
+      	    submod+=tokendelim+to_string(for_info[i].curix);
+      	    break;
+      	  }
+      	}
+      }
+      if (hsubmodport->child_list[0]->h_name == arrsub) {
+      	hsubmodport->child_list.erase(hsubmodport->child_list.begin());
+      }
+    }
+    else if (hsubmodport->h_name ==  arrsub) { // check Case 1, 3
+    // Case 1: hBinop () [
+    //         hBinop ARRAYSUBSCRIPT [
+    //           hVarref u_fwd_cast##m_block NOLIST
+    //           hVarref _local_0 NOLIST
+    //         ]
+    //         hBinop ARRAYSUBSCRIPT [
+    //           hVarref c_fc_block NOLIST
+    //           hVarref _local_0 NOLIST
+    //         ]
+    //       ]
+    //     ]
+
+    // Case 3: hBinop () [
+    // hBinop ARRAYSUBSCRIPT [
+    //     hVarref m_port [
+    //       hBinop ARRAYSUBSCRIPT [
+    //         hVarref u_xt NOLIST
+    //         hVarref _local_0 NOLIST
+    //       ]
+    //     ]
+    //     hVarref _local_1 NOLIST
+    //   ]
+    //   hBinop ARRAYSUBSCRIPT [
+    //     hBinop ARRAYSUBSCRIPT [
+    //       hVarref c_xt_data NOLIST
+    //       hVarref _local_0 NOLIST
+    //     ]
+    //     hVarref _local_1 NOLIST
+    //   ]
+    // ]
+
+      hNodep hportchild = hsubmodport->child_list[0];
+      hNodep hparent = hsubmodport;
+      std::vector<hNodep> hmodarrix;
+      
+      while ((hportchild != nullptr) &&
+	     ((hportchild->h_name == arrsub) ||
+	      ((hportchild->h_op == hNode::hdlopsEnum::hVarref) &&
+	       (hportchild->child_list.size() > 0)))) {
+	if (hportchild->h_name == arrsub) {
+	    hmodarrix.push_back(hportchild->child_list[1]); // save i in A[i]
+	  }
+	hparent = hportchild;
+	hportchild = hportchild->child_list[0];
+      }
+      if ((hportchild != nullptr) && (hportchild->h_op == hNode::hdlopsEnum::hVarref)) {
+	if (hportchild->child_list.empty()) { // Case 1
+	  submod = hportchild->h_name;  
+	  size_t found = submod.find(fielddelim);
+	  if ( found != std::string::npos) { // module name prefix, not a vector of modules
+	    hportchild->h_name = submod.substr(found+fielddelim.size());
+	    submod = submod.substr(0, found);
+	  }
+	  else { // Varref has child; need to handle Case 3 by removing the (arraysubscript submod ix) node
+	    for (hNodep hsubmodixname:hmodarrix) {
+	      // assume simple case of "i" not "i+1" or "i+j"
+	      assert((hsubmodixname->h_op == hNode::hdlopsEnum::hVarref) && "Submodule index must be simple loop variable name");
+	      string ixname = hsubmodixname->h_name;
+	      for (int i = 0; i < for_info.size(); i++) {
+	  	if (for_info[i].name == ixname) {
+	  	  submod+=tokendelim+to_string(for_info[i].curix);
+	  	  break;
+	  	}
+	      }
+	    }
+	    hparent = hsubmodport; 
+	    hportchild = hsubmodport->child_list[0];
+	    while ((hportchild != nullptr) && (hportchild->h_name != arrsub)) {
+	      hparent = hportchild;
+	      hportchild = hportchild->child_list[0];
+	    }
+	    if (hportchild != nullptr) { // it's an array subscript
+	      hparent->child_list.erase(hparent->child_list.begin());
+	    }
+	  }
+	} 
+      }
+    }
+    
+    hNodep hpb = new hNode( submod, hNode::hdlopsEnum::hPortbinding);
+    //hpb->child_list.push_back(new hNode(submodport+tokendelim+to_string(i), hNode::hdlopsEnum::hVarref));
+    //hpb->child_list.push_back(new hNode(thismodsig+tokendelim+to_string(i), hNode::hdlopsEnum::hVarref));
+
+    hpb->child_list.push_back(hsubmodport);
+    hpb->child_list.push_back(hthismodsig);
+    SubstituteIndex(hpb, for_info);
+    hnewpb->child_list.push_back(hpb);
+  }
+
+#endif
 }

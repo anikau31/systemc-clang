@@ -9,8 +9,8 @@
 #include <unistd.h> // getopt, optarg, optind
 #include <limits> // numeric_limits
 
-#include "../shared2/pulse.h"
-#include "../shared2/zhw_encode.h"
+#include "../shared4/pulse.h"
+#include "../shared4/zhw_encode.h"
 
 #ifndef DATAW
 #define DATAW 64   // bitstream data width

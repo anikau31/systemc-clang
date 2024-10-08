@@ -84,8 +84,6 @@
             hLiteral 52 NOLIST
           ]
         ]
-      ]
-      hPortbindings mymod [
         hPortbinding u_dut [
           hVarref clk NOLIST
           hVarref clk_scclang_global_0 NOLIST
@@ -371,7 +369,43 @@
       ]
     ]
     hModinitblock u_dut [
-      hPortbindings u_dut [
+      hVardeclrn i_u_dut_local_0 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
+      hVardeclrn i_u_dut_local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
+      hVardeclrn i_u_dut_local_2 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
+      hVardeclrn i_u_dut_local_3 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
+      hVardeclrn i_u_dut_local_4 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
+      hVardeclrn i_u_dut_local_5 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
+      hCStmt  NONAME [
         hPortbinding u_find_emax [
           hVarref clk NOLIST
           hVarref clk NOLIST
@@ -428,164 +462,27 @@
           hVarref s_ex NOLIST
           hVarref c_sp_ex1_scclang_global_17 NOLIST
         ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_dut_local_0 NOLIST
             hLiteral 0 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 0 NOLIST
+          hBinop < [
+            hVarref i_u_dut_local_0 NOLIST
+            hLiteral 16 NOLIST
           ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 1 NOLIST
+          hPostfix ++ [
+            hVarref i_u_dut_local_0 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 4 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 5 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 6 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 7 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 8 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 9 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 10 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 11 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 12 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 13 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 14 NOLIST
-          ]
-        ]
-        hPortbinding u_fwd_cast [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 15 NOLIST
+          hPortbinding u_fwd_cast [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref m_block NOLIST
+              hVarref i_u_dut_local_0 NOLIST
+            ]
+            hBinop ARRAYSUBSCRIPT [
+              hVarref c_fc_block_scclang_global_12 NOLIST
+              hVarref i_u_dut_local_0 NOLIST
+            ]
           ]
         ]
         hPortbinding u_fwd_cast [
@@ -604,164 +501,27 @@
           hVarref reset NOLIST
           hVarref reset NOLIST
         ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_dut_local_1 NOLIST
             hLiteral 0 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 0 NOLIST
+          hBinop < [
+            hVarref i_u_dut_local_1 NOLIST
+            hLiteral 16 NOLIST
           ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 1 NOLIST
+          hPostfix ++ [
+            hVarref i_u_dut_local_1 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 4 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 5 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 6 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 7 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 8 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 9 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 10 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 11 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 12 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 13 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 14 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_fc_block_scclang_global_12 NOLIST
-            hLiteral 15 NOLIST
+          hPortbinding u_encode_block [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref s_block NOLIST
+              hVarref i_u_dut_local_1 NOLIST
+            ]
+            hBinop ARRAYSUBSCRIPT [
+              hVarref c_fc_block_scclang_global_12 NOLIST
+              hVarref i_u_dut_local_1 NOLIST
+            ]
           ]
         ]
         hPortbinding u_encode_block [
@@ -772,164 +532,27 @@
           hVarref s_ready NOLIST
           hVarref c_fc_ready_scclang_global_13 NOLIST
         ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_dut_local_2 NOLIST
             hLiteral 0 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 0 NOLIST
+          hBinop < [
+            hVarref i_u_dut_local_2 NOLIST
+            hLiteral 16 NOLIST
           ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 1 NOLIST
+          hPostfix ++ [
+            hVarref i_u_dut_local_2 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 4 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 5 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 6 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 7 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 8 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 9 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 10 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 11 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 12 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 13 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 14 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_block [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 15 NOLIST
+          hPortbinding u_encode_block [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref m_block NOLIST
+              hVarref i_u_dut_local_2 NOLIST
+            ]
+            hBinop ARRAYSUBSCRIPT [
+              hVarref c_eb_block_scclang_global_3 NOLIST
+              hVarref i_u_dut_local_2 NOLIST
+            ]
           ]
         ]
         hPortbinding u_encode_block [
@@ -948,164 +571,27 @@
           hVarref reset NOLIST
           hVarref reset NOLIST
         ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_dut_local_3 NOLIST
             hLiteral 0 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 0 NOLIST
+          hBinop < [
+            hVarref i_u_dut_local_3 NOLIST
+            hLiteral 16 NOLIST
           ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 1 NOLIST
+          hPostfix ++ [
+            hVarref i_u_dut_local_3 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 4 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 5 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 6 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 7 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 8 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 9 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 10 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 11 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 12 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 13 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 14 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_eb_block_scclang_global_3 NOLIST
-            hLiteral 15 NOLIST
+          hPortbinding u_block_buffer [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref s_block NOLIST
+              hVarref i_u_dut_local_3 NOLIST
+            ]
+            hBinop ARRAYSUBSCRIPT [
+              hVarref c_eb_block_scclang_global_3 NOLIST
+              hVarref i_u_dut_local_3 NOLIST
+            ]
           ]
         ]
         hPortbinding u_block_buffer [
@@ -1116,164 +602,27 @@
           hVarref s_ready NOLIST
           hVarref c_eb_ready_scclang_global_4 NOLIST
         ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_dut_local_4 NOLIST
             hLiteral 0 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 0 NOLIST
+          hBinop < [
+            hVarref i_u_dut_local_4 NOLIST
+            hLiteral 16 NOLIST
           ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 1 NOLIST
+          hPostfix ++ [
+            hVarref i_u_dut_local_4 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 4 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 5 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 6 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 7 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 8 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 9 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 10 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 11 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 12 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 13 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 14 NOLIST
-          ]
-        ]
-        hPortbinding u_block_buffer [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_block NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 15 NOLIST
+          hPortbinding u_block_buffer [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref m_block NOLIST
+              hVarref i_u_dut_local_4 NOLIST
+            ]
+            hBinop ARRAYSUBSCRIPT [
+              hVarref c_bb_block_scclang_global_0 NOLIST
+              hVarref i_u_dut_local_4 NOLIST
+            ]
           ]
         ]
         hPortbinding u_block_buffer [
@@ -1292,164 +641,27 @@
           hVarref reset NOLIST
           hVarref reset NOLIST
         ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_dut_local_5 NOLIST
             hLiteral 0 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 0 NOLIST
+          hBinop < [
+            hVarref i_u_dut_local_5 NOLIST
+            hLiteral 16 NOLIST
           ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 1 NOLIST
+          hPostfix ++ [
+            hVarref i_u_dut_local_5 NOLIST
           ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 4 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 5 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 6 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 7 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 8 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 9 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 10 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 11 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 12 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 13 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 14 NOLIST
-          ]
-        ]
-        hPortbinding u_encode_ints [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_bb_block_scclang_global_0 NOLIST
-            hLiteral 15 NOLIST
+          hPortbinding u_encode_ints [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref s_block NOLIST
+              hVarref i_u_dut_local_5 NOLIST
+            ]
+            hBinop ARRAYSUBSCRIPT [
+              hVarref c_bb_block_scclang_global_0 NOLIST
+              hVarref i_u_dut_local_5 NOLIST
+            ]
           ]
         ]
         hPortbinding u_encode_ints [
@@ -1640,11 +852,6 @@
           hType sreg_sc_module_10 NOLIST
         ]
       ]
-      hVardecl _actual_scclang_global_6 [
-        hTypeinfo  NONAME [
-          hType fp_t_11_52_ NOLIST
-        ]
-      ]
     ]
     hProcesses  NONAME [
       hProcess mc_proc [
@@ -1756,7 +963,7 @@
                     hLiteral 0 NOLIST
                   ]
                 ]
-                hMethodCall fp_t11_52__fp_t_func_0 [
+                hVarAssign  NONAME [
                   hVarref fp_ms_proc_local_3 NOLIST
                   hSigAssignR read [
                     hVarref s_fp##data NOLIST
@@ -1896,34 +1103,9 @@
           ]
         ]
       ]
-      hFunction fp_t11_52__fp_t_func_0 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType void NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamIO hthis [
-            hTypeinfo  NONAME [
-              hType fp_t_11_52_ NOLIST
-            ]
-          ]
-          hFunctionParamI  NONAME [
-            hTypeinfo  NONAME [
-              hType fp_t_11_52_ NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hBinop = [
-            hVarref _actual_scclang_global_6 NOLIST
-            hVarref  NONAME NOLIST
-          ]
-        ]
-      ]
     ]
     hModinitblock u_find_emax [
-      hPortbindings u_find_emax [
+      hCStmt  NONAME [
         hPortbinding u_que_fp [
           hVarref clk NOLIST
           hVarref clk NOLIST
@@ -2040,7 +1222,7 @@
       ]
     ]
     hModinitblock u_que_fp [
-      hPortbindings u_que_fp [
+      hCStmt  NONAME [
         hPortbinding u_fifo [
           hVarref clk NOLIST
           hVarref clk NOLIST
@@ -2189,7 +1371,12 @@
           ]
         ]
       ]
-      hVardecl MAX_DEPTH_scclang_global_7 [
+      hVardecl depth_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+      ]
+      hVardecl MAX_DEPTH_scclang_global_8 [
         hTypeinfo  NONAME [
           hType int NOLIST
         ]
@@ -2457,11 +1644,31 @@
       ]
     ]
     hModinitblock u_fifo [
+      hVardeclrn i_u_fifo_local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop <= [
-            hLiteral 32 NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_fifo_local_1 NOLIST
             hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref i_u_fifo_local_1 NOLIST
+            hLiteral 32 NOLIST
+          ]
+          hPostfix ++ [
+            hVarref i_u_fifo_local_1 NOLIST
+          ]
+          hSensvar mc_proc [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref data_scclang_global_0 NOLIST
+              hVarref i_u_fifo_local_1 NOLIST
+            ]
+            hNoop always NOLIST
           ]
         ]
       ]
@@ -2484,230 +1691,6 @@
         ]
         hSensvar NONAME [
           hVarref rd_idx_scclang_global_4 NOLIST
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 1 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 2 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 3 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 16 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 17 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 18 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 19 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 20 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 21 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 22 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 23 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 24 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 25 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 26 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 27 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 28 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 29 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 30 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 31 NOLIST
-          ]
           hNoop always NOLIST
         ]
       ]
@@ -3057,6 +2040,34 @@
       ]
     ]
     hModinitblock u_reg_ex [
+      hVardeclrn i_u_reg_ex_local_1 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
+      hCStmt  NONAME [
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_reg_ex_local_1 NOLIST
+            hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref i_u_reg_ex_local_1 NOLIST
+            hLiteral 2 NOLIST
+          ]
+          hPostfix ++ [
+            hVarref i_u_reg_ex_local_1 NOLIST
+          ]
+          hSensvar mc_proc [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref data_scclang_global_0 NOLIST
+              hVarref i_u_reg_ex_local_1 NOLIST
+            ]
+            hNoop always NOLIST
+          ]
+        ]
+      ]
       hSenslist mc_proc [
         hSensvar NONAME [
           hVarref s_port##valid NOLIST
@@ -3076,20 +2087,6 @@
         ]
         hSensvar NONAME [
           hVarref rd_idx_scclang_global_4 NOLIST
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 1 NOLIST
-          ]
           hNoop always NOLIST
         ]
       ]
@@ -3227,7 +2224,7 @@
       ]
     ]
     hModinitblock u_ssplit_ex [
-      hPortbindings u_ssplit_ex [
+      hCStmt  NONAME [
         hPortbinding u_que1 [
           hVarref clk NOLIST
           hVarref clk NOLIST
@@ -3330,7 +2327,7 @@
       ]
     ]
     hModinitblock u_que1 [
-      hPortbindings u_que1 [
+      hCStmt  NONAME [
         hPortbinding u_fifo [
           hVarref clk NOLIST
           hVarref clk NOLIST
@@ -3485,7 +2482,12 @@
           ]
         ]
       ]
-      hVardecl MAX_DEPTH_scclang_global_7 [
+      hVardecl depth_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+      ]
+      hVardecl MAX_DEPTH_scclang_global_8 [
         hTypeinfo  NONAME [
           hType int NOLIST
         ]
@@ -3753,11 +2755,31 @@
       ]
     ]
     hModinitblock u_fifo [
+      hVardeclrn i_u_fifo_local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop <= [
-            hLiteral 2 NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_fifo_local_1 NOLIST
             hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref i_u_fifo_local_1 NOLIST
+            hLiteral 2 NOLIST
+          ]
+          hPostfix ++ [
+            hVarref i_u_fifo_local_1 NOLIST
+          ]
+          hSensvar mc_proc [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref data_scclang_global_0 NOLIST
+              hVarref i_u_fifo_local_1 NOLIST
+            ]
+            hNoop always NOLIST
           ]
         ]
       ]
@@ -3780,20 +2802,6 @@
         ]
         hSensvar NONAME [
           hVarref rd_idx_scclang_global_4 NOLIST
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 1 NOLIST
-          ]
           hNoop always NOLIST
         ]
       ]
@@ -3854,7 +2862,7 @@
       ]
     ]
     hModinitblock u_que2 [
-      hPortbindings u_que2 [
+      hCStmt  NONAME [
         hPortbinding u_fifo [
           hVarref clk NOLIST
           hVarref clk NOLIST
@@ -4009,7 +3017,12 @@
           ]
         ]
       ]
-      hVardecl MAX_DEPTH_scclang_global_7 [
+      hVardecl depth_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+      ]
+      hVardecl MAX_DEPTH_scclang_global_8 [
         hTypeinfo  NONAME [
           hType int NOLIST
         ]
@@ -4277,11 +3290,31 @@
       ]
     ]
     hModinitblock u_fifo [
+      hVardeclrn i_u_fifo_local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop <= [
-            hLiteral 16 NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_fifo_local_1 NOLIST
             hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref i_u_fifo_local_1 NOLIST
+            hLiteral 16 NOLIST
+          ]
+          hPostfix ++ [
+            hVarref i_u_fifo_local_1 NOLIST
+          ]
+          hSensvar mc_proc [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref data_scclang_global_0 NOLIST
+              hVarref i_u_fifo_local_1 NOLIST
+            ]
+            hNoop always NOLIST
           ]
         ]
       ]
@@ -4304,118 +3337,6 @@
         ]
         hSensvar NONAME [
           hVarref rd_idx_scclang_global_4 NOLIST
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 1 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 2 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 3 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 15 NOLIST
-          ]
           hNoop always NOLIST
         ]
       ]
@@ -4507,11 +3428,6 @@
               hLiteral 4 NOLIST
             ]
           ]
-        ]
-      ]
-      hVardecl _actual_scclang_global_3 [
-        hTypeinfo  NONAME [
-          hType fp_t_11_52_ NOLIST
         ]
       ]
     ]
@@ -4609,7 +3525,7 @@
                 ]
               ]
             ]
-            hMethodCall fp_t11_52__fp_t_func_0 [
+            hVarAssign  NONAME [
               hVarref fp_mc_proc_local_3 NOLIST
               hSigAssignR read [
                 hVarref s_fp##data NOLIST
@@ -4758,31 +3674,6 @@
                 ]
               ]
             ]
-          ]
-        ]
-      ]
-      hFunction fp_t11_52__fp_t_func_0 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType void NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamIO hthis [
-            hTypeinfo  NONAME [
-              hType fp_t_11_52_ NOLIST
-            ]
-          ]
-          hFunctionParamI  NONAME [
-            hTypeinfo  NONAME [
-              hType fp_t_11_52_ NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME [
-          hBinop = [
-            hVarref _actual_scclang_global_3 NOLIST
-            hVarref  NONAME NOLIST
           ]
         ]
       ]
@@ -4954,44 +3845,18 @@
           ]
         ]
       ]
-      hModdecl u_xt_0 [
+      hModdecl u_xt [
         hTypeinfo  NONAME [
-          hType fwd_lift_sc_module_16 NOLIST
+          hType array##4 [
+            hType fwd_lift_sc_module_16 NOLIST
+          ]
         ]
       ]
-      hModdecl u_xt_1 [
+      hModdecl u_yt [
         hTypeinfo  NONAME [
-          hType fwd_lift_sc_module_16 NOLIST
-        ]
-      ]
-      hModdecl u_xt_2 [
-        hTypeinfo  NONAME [
-          hType fwd_lift_sc_module_16 NOLIST
-        ]
-      ]
-      hModdecl u_xt_3 [
-        hTypeinfo  NONAME [
-          hType fwd_lift_sc_module_16 NOLIST
-        ]
-      ]
-      hModdecl u_yt_0 [
-        hTypeinfo  NONAME [
-          hType fwd_lift_sc_module_17 NOLIST
-        ]
-      ]
-      hModdecl u_yt_1 [
-        hTypeinfo  NONAME [
-          hType fwd_lift_sc_module_17 NOLIST
-        ]
-      ]
-      hModdecl u_yt_2 [
-        hTypeinfo  NONAME [
-          hType fwd_lift_sc_module_17 NOLIST
-        ]
-      ]
-      hModdecl u_yt_3 [
-        hTypeinfo  NONAME [
-          hType fwd_lift_sc_module_17 NOLIST
+          hType array##4 [
+            hType fwd_lift_sc_module_17 NOLIST
+          ]
         ]
       ]
     ]
@@ -5560,1457 +4425,261 @@
       ]
     ]
     hModinitblock u_encode_block [
-      hPortbindings u_encode_block [
-        hPortbinding u_xt_0 [
-          hVarref clk NOLIST
-          hVarref clk NOLIST
+      hVardeclrn j_u_encode_block_local_0 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
         ]
-        hPortbinding u_xt_0 [
-          hVarref reset NOLIST
-          hVarref reset NOLIST
+        hLiteral j NOLIST
+      ]
+      hVardeclrn i_u_encode_block_local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
         ]
-        hPortbinding u_xt_0 [
-          hVarref s_valid NOLIST
-          hVarref s_valid NOLIST
-        ]
-        hPortbinding u_xt_0 [
-          hVarref s_ready NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_ready_scclang_global_1 NOLIST
+        hLiteral i NOLIST
+      ]
+      hCStmt  NONAME [
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref j_u_encode_block_local_0 NOLIST
             hLiteral 0 NOLIST
           ]
-        ]
-        hPortbinding u_xt_0 [
-          hVarref m_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_valid_scclang_global_2 NOLIST
-            hLiteral 0 NOLIST
+          hBinop < [
+            hVarref j_u_encode_block_local_0 NOLIST
+            hLiteral 4 NOLIST
           ]
-        ]
-        hPortbinding u_xt_0 [
-          hVarref m_ready NOLIST
-          hVarref m_ready NOLIST
-        ]
-        hPortbinding u_yt_0 [
-          hVarref clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hPortbinding u_yt_0 [
-          hVarref reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hPortbinding u_yt_0 [
-          hVarref s_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_valid_scclang_global_2 NOLIST
-            hLiteral 0 NOLIST
+          hPostfix ++ [
+            hVarref j_u_encode_block_local_0 NOLIST
           ]
-        ]
-        hPortbinding u_yt_0 [
-          hVarref s_ready NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_yt_ready_scclang_global_4 NOLIST
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_0 [
-          hVarref m_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_yt_valid_scclang_global_5 NOLIST
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_0 [
-          hVarref m_ready NOLIST
-          hVarref m_ready NOLIST
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
+          hCStmt  NONAME [
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_xt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField clk NOLIST
+              ]
+              hVarref clk NOLIST
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_xt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField reset NOLIST
+              ]
+              hVarref reset NOLIST
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_xt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField s_valid NOLIST
+              ]
+              hVarref s_valid NOLIST
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_xt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField s_ready NOLIST
+              ]
               hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
+                hVarref c_xt_ready_scclang_global_1 NOLIST
+                hVarref j_u_encode_block_local_0 NOLIST
+              ]
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_xt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField m_valid NOLIST
+              ]
+              hBinop ARRAYSUBSCRIPT [
+                hVarref c_xt_valid_scclang_global_2 NOLIST
+                hVarref j_u_encode_block_local_0 NOLIST
+              ]
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_xt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField m_ready NOLIST
+              ]
+              hVarref m_ready NOLIST
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_yt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField clk NOLIST
+              ]
+              hVarref clk NOLIST
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_yt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField reset NOLIST
+              ]
+              hVarref reset NOLIST
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_yt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField s_valid NOLIST
+              ]
+              hBinop ARRAYSUBSCRIPT [
+                hVarref c_xt_valid_scclang_global_2 NOLIST
                 hLiteral 0 NOLIST
               ]
             ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_yt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField s_ready NOLIST
+              ]
+              hBinop ARRAYSUBSCRIPT [
+                hVarref c_yt_ready_scclang_global_4 NOLIST
+                hVarref j_u_encode_block_local_0 NOLIST
+              ]
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_yt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField m_valid NOLIST
+              ]
+              hBinop ARRAYSUBSCRIPT [
+                hVarref c_yt_valid_scclang_global_5 NOLIST
+                hVarref j_u_encode_block_local_0 NOLIST
+              ]
+            ]
+            hPortbinding  NONAME [
+              hFieldaccess  NONAME [
+                hBinop ARRAYSUBSCRIPT [
+                  hVarref u_yt NOLIST
+                  hVarref j_u_encode_block_local_0 NOLIST
+                ]
+                hField m_ready NOLIST
+              ]
+              hVarref m_ready NOLIST
+            ]
+            hForStmt  NONAME [
+              hVarAssign  NONAME [
+                hVarref i_u_encode_block_local_1 NOLIST
                 hLiteral 0 NOLIST
+              ]
+              hBinop < [
+                hVarref i_u_encode_block_local_1 NOLIST
                 hLiteral 4 NOLIST
               ]
-              hLiteral 0 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 0 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 1 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 0 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 2 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 0 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 3 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 0 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_xt_1 [
-          hVarref clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hPortbinding u_xt_1 [
-          hVarref reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hPortbinding u_xt_1 [
-          hVarref s_valid NOLIST
-          hVarref s_valid NOLIST
-        ]
-        hPortbinding u_xt_1 [
-          hVarref s_ready NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_ready_scclang_global_1 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_xt_1 [
-          hVarref m_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_valid_scclang_global_2 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_xt_1 [
-          hVarref m_ready NOLIST
-          hVarref m_ready NOLIST
-        ]
-        hPortbinding u_yt_1 [
-          hVarref clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hPortbinding u_yt_1 [
-          hVarref reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hPortbinding u_yt_1 [
-          hVarref s_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_valid_scclang_global_2 NOLIST
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_1 [
-          hVarref s_ready NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_yt_ready_scclang_global_4 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_1 [
-          hVarref m_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_yt_valid_scclang_global_5 NOLIST
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_1 [
-          hVarref m_ready NOLIST
-          hVarref m_ready NOLIST
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 1 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 0 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 1 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 1 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 1 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 2 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 1 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 3 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 1 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_xt_2 [
-          hVarref clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hPortbinding u_xt_2 [
-          hVarref reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hPortbinding u_xt_2 [
-          hVarref s_valid NOLIST
-          hVarref s_valid NOLIST
-        ]
-        hPortbinding u_xt_2 [
-          hVarref s_ready NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_ready_scclang_global_1 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_xt_2 [
-          hVarref m_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_valid_scclang_global_2 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_xt_2 [
-          hVarref m_ready NOLIST
-          hVarref m_ready NOLIST
-        ]
-        hPortbinding u_yt_2 [
-          hVarref clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hPortbinding u_yt_2 [
-          hVarref reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hPortbinding u_yt_2 [
-          hVarref s_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_valid_scclang_global_2 NOLIST
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_2 [
-          hVarref s_ready NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_yt_ready_scclang_global_4 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_2 [
-          hVarref m_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_yt_valid_scclang_global_5 NOLIST
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_2 [
-          hVarref m_ready NOLIST
-          hVarref m_ready NOLIST
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 2 NOLIST
+              hPostfix ++ [
+                hVarref i_u_encode_block_local_1 NOLIST
+              ]
+              hCStmt  NONAME [
+                hPortbinding  NONAME [
+                  hBinop ARRAYSUBSCRIPT [
+                    hFieldaccess  NONAME [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref u_xt NOLIST
+                        hVarref j_u_encode_block_local_0 NOLIST
+                      ]
+                      hField s_port NOLIST
+                    ]
+                    hVarref i_u_encode_block_local_1 NOLIST
+                  ]
+                  hBinop ARRAYSUBSCRIPT [
+                    hVarref s_block NOLIST
+                    hBinop + [
+                      hBinop * [
+                        hVarref j_u_encode_block_local_0 NOLIST
+                        hLiteral 4 NOLIST
+                      ]
+                      hVarref i_u_encode_block_local_1 NOLIST
+                    ]
+                  ]
+                ]
+                hPortbinding  NONAME [
+                  hBinop ARRAYSUBSCRIPT [
+                    hFieldaccess  NONAME [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref u_xt NOLIST
+                        hVarref j_u_encode_block_local_0 NOLIST
+                      ]
+                      hField m_port NOLIST
+                    ]
+                    hVarref i_u_encode_block_local_1 NOLIST
+                  ]
+                  hBinop ARRAYSUBSCRIPT [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref c_xt_data_scclang_global_0 NOLIST
+                      hVarref j_u_encode_block_local_0 NOLIST
+                    ]
+                    hVarref i_u_encode_block_local_1 NOLIST
+                  ]
+                ]
+                hPortbinding  NONAME [
+                  hBinop ARRAYSUBSCRIPT [
+                    hFieldaccess  NONAME [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref u_yt NOLIST
+                        hVarref j_u_encode_block_local_0 NOLIST
+                      ]
+                      hField s_port NOLIST
+                    ]
+                    hVarref i_u_encode_block_local_1 NOLIST
+                  ]
+                  hBinop ARRAYSUBSCRIPT [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref c_xt_data_scclang_global_0 NOLIST
+                      hVarref i_u_encode_block_local_1 NOLIST
+                    ]
+                    hVarref j_u_encode_block_local_0 NOLIST
+                  ]
+                ]
+                hPortbinding  NONAME [
+                  hBinop ARRAYSUBSCRIPT [
+                    hFieldaccess  NONAME [
+                      hBinop ARRAYSUBSCRIPT [
+                        hVarref u_yt NOLIST
+                        hVarref j_u_encode_block_local_0 NOLIST
+                      ]
+                      hField m_port NOLIST
+                    ]
+                    hVarref i_u_encode_block_local_1 NOLIST
+                  ]
+                  hBinop ARRAYSUBSCRIPT [
+                    hBinop ARRAYSUBSCRIPT [
+                      hVarref c_yt_data_scclang_global_3 NOLIST
+                      hVarref i_u_encode_block_local_1 NOLIST
+                    ]
+                    hVarref j_u_encode_block_local_0 NOLIST
+                  ]
+                ]
               ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 2 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 0 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 2 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 1 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 2 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 2 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 2 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 3 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 2 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_xt_3 [
-          hVarref clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hPortbinding u_xt_3 [
-          hVarref reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hPortbinding u_xt_3 [
-          hVarref s_valid NOLIST
-          hVarref s_valid NOLIST
-        ]
-        hPortbinding u_xt_3 [
-          hVarref s_ready NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_ready_scclang_global_1 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_xt_3 [
-          hVarref m_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_valid_scclang_global_2 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_xt_3 [
-          hVarref m_ready NOLIST
-          hVarref m_ready NOLIST
-        ]
-        hPortbinding u_yt_3 [
-          hVarref clk NOLIST
-          hVarref clk NOLIST
-        ]
-        hPortbinding u_yt_3 [
-          hVarref reset NOLIST
-          hVarref reset NOLIST
-        ]
-        hPortbinding u_yt_3 [
-          hVarref s_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_xt_valid_scclang_global_2 NOLIST
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_3 [
-          hVarref s_ready NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_yt_ready_scclang_global_4 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_3 [
-          hVarref m_valid NOLIST
-          hBinop ARRAYSUBSCRIPT [
-            hVarref c_yt_valid_scclang_global_5 NOLIST
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt_3 [
-          hVarref m_ready NOLIST
-          hVarref m_ready NOLIST
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 3 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 0 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 0 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 0 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 0 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 3 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 1 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 1 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 1 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 1 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 3 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 2 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 2 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 2 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 2 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hBinop + [
-              hBinop * [
-                hLiteral 3 NOLIST
-                hLiteral 4 NOLIST
-              ]
-              hLiteral 3 NOLIST
-            ]
-          ]
-        ]
-        hPortbinding u_xt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_xt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_xt_data_scclang_global_0 NOLIST
-              hLiteral 3 NOLIST
-            ]
-            hLiteral 3 NOLIST
-          ]
-        ]
-        hPortbinding u_yt [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref m_port [
-              hBinop ARRAYSUBSCRIPT [
-                hVarref u_yt NOLIST
-                hLiteral 3 NOLIST
-              ]
-            ]
-            hLiteral 3 NOLIST
-          ]
-          hBinop ARRAYSUBSCRIPT [
-            hBinop ARRAYSUBSCRIPT [
-              hVarref c_yt_data_scclang_global_3 NOLIST
-              hLiteral 3 NOLIST
             ]
-            hLiteral 3 NOLIST
           ]
         ]
       ]
@@ -7739,7 +5408,7 @@
         ]
       ]
     ]
-    hModinitblock u_xt_0 [
+    hModinitblock u_xt [
       hSenslist mc_proc [
         hSensvar NONAME [
           hVarref m_ready NOLIST
@@ -8509,7 +6178,7 @@
         ]
       ]
     ]
-    hModinitblock u_yt_0 [
+    hModinitblock u_yt [
       hSenslist mc_proc [
         hSensvar NONAME [
           hVarref m_ready NOLIST
@@ -8771,7 +6440,13 @@
       ]
     ]
     hModinitblock u_block_buffer [
-      hPortbindings u_block_buffer [
+      hVardeclrn i_u_block_buffer_local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
+      hCStmt  NONAME [
         hPortbinding u_bbuf [
           hVarref clk NOLIST
           hVarref clk NOLIST
@@ -8804,120 +6479,28 @@
           hVarref empty NOLIST
           hVarref m_valid NOLIST
         ]
-      ]
-      hSenslist mc_proc [
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_block_buffer_local_1 NOLIST
             hLiteral 0 NOLIST
           ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 1 NOLIST
+          hBinop < [
+            hVarref i_u_block_buffer_local_1 NOLIST
+            hLiteral 16 NOLIST
           ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 2 NOLIST
+          hPostfix ++ [
+            hVarref i_u_block_buffer_local_1 NOLIST
           ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 3 NOLIST
+          hSensvar mc_proc [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref s_block NOLIST
+              hVarref i_u_block_buffer_local_1 NOLIST
+            ]
+            hNoop always NOLIST
           ]
-          hNoop always NOLIST
         ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
+      ]
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref c_bo_scclang_global_1 NOLIST
           hNoop always NOLIST
@@ -9044,7 +6627,12 @@
           ]
         ]
       ]
-      hVardecl MAX_DEPTH_scclang_global_7 [
+      hVardecl depth_scclang_global_7 [
+        hTypeinfo  NONAME [
+          hType unsigned_int NOLIST
+        ]
+      ]
+      hVardecl MAX_DEPTH_scclang_global_8 [
         hTypeinfo  NONAME [
           hType int NOLIST
         ]
@@ -9312,11 +6900,31 @@
       ]
     ]
     hModinitblock u_bbuf [
+      hVardeclrn i_u_bbuf_local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
       hCStmt  NONAME [
-        hIfStmt  NONAME [
-          hBinop <= [
-            hLiteral 2 NOLIST
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_bbuf_local_1 NOLIST
             hLiteral 0 NOLIST
+          ]
+          hBinop < [
+            hVarref i_u_bbuf_local_1 NOLIST
+            hLiteral 2 NOLIST
+          ]
+          hPostfix ++ [
+            hVarref i_u_bbuf_local_1 NOLIST
+          ]
+          hSensvar mc_proc [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref data_scclang_global_0 NOLIST
+              hVarref i_u_bbuf_local_1 NOLIST
+            ]
+            hNoop always NOLIST
           ]
         ]
       ]
@@ -9339,20 +6947,6 @@
         ]
         hSensvar NONAME [
           hVarref rd_idx_scclang_global_4 NOLIST
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 0 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref data_scclang_global_0 NOLIST
-            hLiteral 1 NOLIST
-          ]
           hNoop always NOLIST
         ]
       ]
@@ -10412,9 +8006,30 @@
                                     hVarref first_after_bc_ms_proc_local_15 NOLIST
                                     hVarref shiftamt_ms_proc_local_13 NOLIST
                                   ]
-                                  hBinop = [
-                                    hVarref first_after_bc_ms_proc_local_15 NOLIST
-                                    hVarref shiftamt_ms_proc_local_13 NOLIST
+                                  hCStmt  NONAME [
+                                    hIfStmt  NONAME [
+                                      hBinop == [
+                                        hSigAssignR read [
+                                          hVarref bc1_scclang_global_0 NOLIST
+                                        ]
+                                        hLiteral 16 NOLIST
+                                      ]
+                                      hCStmt  NONAME [
+                                        hBinop = [
+                                          hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                          hVarref shiftamt_ms_proc_local_13 NOLIST
+                                        ]
+                                      ]
+                                      hCStmt  NONAME [
+                                        hBinop = [
+                                          hVarref first_after_bc_ms_proc_local_15 NOLIST
+                                          hBinop - [
+                                            hVarref shiftamt_ms_proc_local_13 NOLIST
+                                            hLiteral 1 NOLIST
+                                          ]
+                                        ]
+                                      ]
+                                    ]
                                   ]
                                 ]
                               ]
@@ -10760,119 +8375,35 @@
       ]
     ]
     hModinitblock u_encode_ints [
-      hSenslist mc_proc [
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
+      hVardeclrn i_u_encode_ints_local_1 [
+        hTypeinfo  NONAME [
+          hType int NOLIST
+        ]
+        hLiteral i NOLIST
+      ]
+      hCStmt  NONAME [
+        hForStmt  NONAME [
+          hVarAssign  NONAME [
+            hVarref i_u_encode_ints_local_1 NOLIST
             hLiteral 0 NOLIST
           ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 1 NOLIST
+          hBinop < [
+            hVarref i_u_encode_ints_local_1 NOLIST
+            hLiteral 16 NOLIST
           ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 2 NOLIST
+          hPostfix ++ [
+            hVarref i_u_encode_ints_local_1 NOLIST
           ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 3 NOLIST
+          hSensvar mc_proc [
+            hBinop ARRAYSUBSCRIPT [
+              hVarref s_block NOLIST
+              hVarref i_u_encode_ints_local_1 NOLIST
+            ]
+            hNoop always NOLIST
           ]
-          hNoop always NOLIST
         ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 4 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 5 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 6 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 7 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 8 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 9 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 10 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 11 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 12 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 13 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 14 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
-        hSensvar NONAME [
-          hBinop ARRAYSUBSCRIPT [
-            hVarref s_block NOLIST
-            hLiteral 15 NOLIST
-          ]
-          hNoop always NOLIST
-        ]
+      ]
+      hSenslist mc_proc [
         hSensvar NONAME [
           hVarref k0_scclang_global_4 NOLIST
           hNoop always NOLIST
@@ -11124,9 +8655,6 @@
             ]
           ]
           hCStmt  NONAME [
-            hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__state_t__state_t_func_0 [
-              hVarref ts_mc_proc_local_2 NOLIST
-            ]
             hSigAssignL write [
               hVarref s_ex##ready NOLIST
               hLiteral 0 NOLIST
@@ -11330,7 +8858,7 @@
                       ]
                       hCStmt  NONAME [
                         hIfStmt  NONAME [
-                          hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_1 [
+                          hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_0 [
                             hVarref ts_mc_proc_local_2 NOLIST
                             hSigAssignR read [
                               hVarref s_bc NOLIST
@@ -11401,7 +8929,7 @@
                     ]
                     hBinop = [
                       hVarref fls_done_mc_proc_local_6 NOLIST
-                      hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_2 [
+                      hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_1 [
                         hVarref ts_mc_proc_local_2 NOLIST
                         hBinop && [
                           hVarref add_done_mc_proc_local_4 NOLIST
@@ -11526,7 +9054,7 @@
                             hVarref abits_mc_proc_local_8 NOLIST
                           ]
                         ]
-                        hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_1 [
+                        hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_0 [
                           hVarref ts_mc_proc_local_2 NOLIST
                           hVarref n_mc_proc_local_9 NOLIST
                           hLiteral 0 [
@@ -11557,7 +9085,7 @@
                     ]
                     hBinop = [
                       hVarref fls_done_mc_proc_local_6 NOLIST
-                      hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_2 [
+                      hMethodCall zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_1 [
                         hVarref ts_mc_proc_local_2 NOLIST
                         hVarref pad_done_mc_proc_local_5 NOLIST
                       ]
@@ -11611,29 +9139,14 @@
           ]
         ]
       ]
-      hFunction zhw__encode_streamfp_t11_52_2_bits_t64__state_t__state_t_func_0 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType void NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamIO hthis [
-            hTypeinfo  NONAME [
-              hType state_t_ NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME NOLIST
-      ]
-      hFunction zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_1 [
+      hFunction zhw__encode_streamfp_t11_52_2_bits_t64__pack_bits_func_0 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType bool NOLIST
           ]
         ]
         hFunctionParams  NONAME [
-          hFunctionParamIO ts [
+          hFunctionParamRef ts [
             hTypeinfo  NONAME [
               hType state_t_ NOLIST
             ]
@@ -11735,14 +9248,14 @@
           ]
         ]
       ]
-      hFunction zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_2 [
+      hFunction zhw__encode_streamfp_t11_52_2_bits_t64__out_bits_func_1 [
         hFunctionRetType  NONAME [
           hTypeinfo  NONAME [
             hType bool NOLIST
           ]
         ]
         hFunctionParams  NONAME [
-          hFunctionParamIO ts [
+          hFunctionParamRef ts [
             hTypeinfo  NONAME [
               hType state_t_ NOLIST
             ]
@@ -11788,9 +9301,6 @@
               ]
             ]
             hCStmt  NONAME [
-              hMethodCall bits_t64__bits_t_func_3 [
-                hVarref flit__local_12 NOLIST
-              ]
               hBinop = [
                 hVarref flit__local_12##tdata NOLIST
                 hBinop SLICE [
@@ -11870,21 +9380,6 @@
             ]
           ]
         ]
-      ]
-      hFunction bits_t64__bits_t_func_3 [
-        hFunctionRetType  NONAME [
-          hTypeinfo  NONAME [
-            hType void NOLIST
-          ]
-        ]
-        hFunctionParams  NONAME [
-          hFunctionParamIO hthis [
-            hTypeinfo  NONAME [
-              hType bits_t_64_ NOLIST
-            ]
-          ]
-        ]
-        hCStmt  NONAME NOLIST
       ]
     ]
     hModinitblock u_encode_stream [

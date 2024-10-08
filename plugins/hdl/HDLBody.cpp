@@ -332,19 +332,26 @@ namespace systemc_hdl {
   bool HDLBody::ProcessVarDecl(VarDecl *vardecl) {
     LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl var name is " << vardecl->getName()
 	       << "\n");
-    // create head node for the vardecl
-    hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
-
+ 
     QualType q = vardecl->getType();
     const Type *tp = q.getTypePtr();
     LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl type name is " << q.getAsString()
 	       << "\n");
+    // if (q.getAsString()=="::sc_core::sc_process_handle") { // simulation variable
+    //   h_ret = NULL;
+    //   return true; 
+    // }
+
     FindTemplateTypes *te = new FindTemplateTypes();
 
     te->Enumerate(tp);
     HDLType HDLt;
     std::vector<llvm::APInt> array_sizes =
       sc_ast_matchers::utils::array_type::getConstantArraySizes(vardecl);
+    
+    // create head node for the vardecl
+    hNodep h_varlist = new hNode(hNode::hdlopsEnum::hPortsigvarlist);
+
     HDLt.SCtype2hcode(generate_vname(vardecl->getName().str()),
 		      te->getTemplateArgTreePtr(), &array_sizes,
 		      hNode::hdlopsEnum::hVardecl, h_varlist);
@@ -401,6 +408,10 @@ namespace systemc_hdl {
       LLVM_DEBUG(llvm::dbgs() << "ProcessVarDecl has an init: \n");
       LLVM_DEBUG(declinit->dump(llvm::dbgs(), ast_context_));
       CXXConstructExpr *tmpdeclinit = dyn_cast<CXXConstructExpr>(declinit);
+      if ((tmpdeclinit != NULL) &&(tmpdeclinit->getConstructor()->hasTrivialBody())) {
+	isuserdefinedclass = false; // no need to generate a method for it
+      }
+	
       if (isuserdefinedclass && (tmpdeclinit != NULL)) {
 	// For user-defined classes:
 	// If there is an initializer, define the method for the initializer and
@@ -410,6 +421,10 @@ namespace systemc_hdl {
 	// constructor method.
 
 	const CXXConstructorDecl *cnstrdcl = tmpdeclinit->getConstructor();
+	// if (cnstrdcl->hasTrivialBody()) {
+	  
+	//   return true; // no real initializer
+	// }
 	string methodname = cnstrdcl->getNameAsString();
 	qualmethodname = cnstrdcl->getQualifiedNameAsString();
 	lutil.make_ident(qualmethodname);
@@ -418,14 +433,13 @@ namespace systemc_hdl {
 	LLVM_DEBUG(cnstrdcl->dump());
 	// add method decl for constructor
 	hNodep h_callp =
-          new hNode(qualmethodname, hNode::hdlopsEnum::hMethodCall);
+	  new hNode(qualmethodname, hNode::hdlopsEnum::hMethodCall);
 	const std::vector<StringRef> tmpmodstr{"sc_module"};
 	if (sc_ast_matchers::utils::isInNamespace(tstp, tmpmodstr)) {
 	  LLVM_DEBUG(llvm::dbgs()
 		     << "user-defined class is defined in sc module\n");
 	} else
-	  h_callp->append(
-			  new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
+	  h_callp->append(new hNode(FindVname(vardecl), hNode::hdlopsEnum::hVarref));
 	methodecls.add_entry((CXXMethodDecl *)cnstrdcl, qualmethodname, h_callp);
 	methodecls.methodobjtypemap[(const CXXMethodDecl *)cnstrdcl] = tstp;
 	TraverseStmt(tmpdeclinit);
@@ -436,6 +450,7 @@ namespace systemc_hdl {
 	//}
 	return true;
       }
+      
 
       TraverseStmt(declinit);
 
@@ -1010,7 +1025,7 @@ namespace systemc_hdl {
 	string newname = FindVname(memberexpr->getMemberDecl());
 	LLVM_DEBUG(llvm::dbgs()
 		   << "member with base expr new name is " << newname << "\n");
-	if ((newname == "") && (thismode != rmodinit)) {
+	if ((newname == "")) { //&& (thismode != rmodinit)) {  TRY this for new portbinding code
 	  LLVM_DEBUG(llvm::dbgs() << "vname lookup of memberdecl is null, "
 		     "assuming field reference\n");
 	  hNodep hfieldref = new hNode(hNode::hdlopsEnum::hFieldaccess);

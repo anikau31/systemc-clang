@@ -96,6 +96,7 @@ namespace systemc_hdl {
     hNodep HnodeDeepCopy(hNodep hp);
     void RemoveSCMethod(hNodep &hp);
     void CleanupInitHcode(hNodep &hp);
+    bool isSimRelated(hNodep hp);
 
     string ExtractModuleName(hNodep hp);
   private:

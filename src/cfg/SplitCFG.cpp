@@ -1155,15 +1155,17 @@ SplitCFG::SplitCFG(clang::ASTContext& context)
     : context_{context},
       next_state_count_{0},
       popping_{false},
+      outter_top_(nullptr),
       has_ternary_op_{false} {}
 // true_path_{false},
 // false_path_{false} {}
 
 SplitCFG::SplitCFG(clang::ASTContext& context,
                    const clang::CXXMethodDecl* method)
-    : context_{context},
+   : context_{context},
       next_state_count_{0},
       popping_{false},
+      outter_top_(nullptr),
       has_ternary_op_{false} {
   //     true_path_{false},
   //      false_path_{false} {
@@ -1275,3 +1277,114 @@ void SplitCFG::identifyConfluenceBlocks() {
 
   outter_top = outter;
 }
+||||||| fa72a6a0
+=======
+
+std::map<SplitCFGBlock*, SplitCFGBlock*> SplitCFG::getConfluenceBlocks() const {
+  return cop_;
+}
+
+std::set<SplitCFGBlock*> SplitCFG::identifySkipBlocks() {
+  llvm::dbgs() << "########### BFS Identify confluence blocks ############ \n";
+  std::queue<SplitCFGBlock*> Q{};
+  std::set<SplitCFGBlock*> discovered{};
+
+  if (!outter_top_) return discovered;
+
+  SplitCFGBlock* v{outter_top_};
+  SplitCFGBlock* target = cop_[outter_top_];
+  llvm::dbgs() << "Outter ternop is BB" << outter_top_->getBlockID() << " and confluence block is BB" << target->getBlockID() << "\n";
+  // if (!source) v = sccfg_[cfg_->getEntry().getBlockID()];
+  // else v = source; 
+
+  discovered.insert(v);
+
+  Q.push(v);
+
+  while (!Q.empty()) {
+    v = Q.front();
+    Q.pop();
+    llvm::dbgs() << "visited " << v->getBlockID() << "\n";
+
+    for (auto succ : v->getCFGBlock()->succs()) {
+      if (succ && (v->getBlockID() != target->getBlockID())) {
+        auto blk{sccfg_[succ->getBlockID()]};
+        if (discovered.find(blk) == discovered.end()) {
+          discovered.insert(blk);
+          Q.push(blk);
+        }
+      }
+    }
+  }
+
+  llvm::dbgs() << "Discovered\n";
+  for (auto disc : discovered ) {
+    llvm::dbgs() << disc->getBlockID() <<"  ";
+
+  }
+  return discovered;
+}
+
+void SplitCFG::identifyConfluenceBlocks() {
+  llvm::dbgs() << "########### Identify confluence blocks ############ \n";
+
+  // ConditionalOperator block => Confluence Block
+  // std::map<SplitFGBlock*, SplitCFGBlock*> cop_;
+  std::vector<SplitCFGBlock*> ternops;
+
+  std::vector<SplitCFGBlock*> S{};
+  std::set<SplitCFGBlock*> discovered{};
+  // Do DFS whenever you reach a conditional operator block.
+  SplitCFGBlock* v = sccfg_[cfg_->getEntry().getBlockID()];
+
+  SplitCFGBlock* outter{nullptr};
+
+  S.push_back(v);
+  while (!S.empty()) {
+    v = S.back();
+    S.pop_back();
+    if (discovered.find(v) == discovered.end()) {
+      discovered.insert(v);
+      llvm::dbgs() << "visited " << v->getBlockID() << "\n";
+
+      // Found ConditionalOperator
+      auto stmt{v->getCFGBlock()->getTerminatorStmt()};
+      if (stmt && clang::dyn_cast<clang::ConditionalOperator>(stmt)) {
+        llvm::dbgs() << "Found a TERNARY OP block\n";
+
+        if (!outter) outter = v;
+
+        cop_.insert(std::make_pair(v, nullptr));
+        ternops.push_back(v);
+
+      } else if (ternops.size() > 0) {
+        auto top_cop{ternops.back()};
+        // Successor is the confluence
+        if (v->getCFGBlock()->succ_size() == 1) {
+          auto conf_blk{*v->getCFGBlock()->succ_begin()};
+          llvm::dbgs() << "Found confluence block of " << conf_blk->getBlockID()
+                       << " from block " << v->getBlockID() << " of "
+                       << top_cop->getBlockID() << "\n";
+          cop_[top_cop] = sccfg_[conf_blk->getBlockID()];
+
+          conf_blk->dump();
+          ternops.pop_back();
+        }
+      }
+
+      for (auto next_v : v->getCFGBlock()->succs()) {
+        if (next_v) S.push_back(sccfg_[next_v->getBlockID()]);
+      }
+    }
+  }
+  // Print the cop map.
+  llvm::dbgs() << "Block ids for COP ";
+  for (auto& co : cop_) {
+    llvm::dbgs() << co.first->getBlockID() << " :=> " << co.second->getBlockID()
+                 << " ;  ";
+  }
+  llvm::dbgs() << "\n";
+
+  outter_top_ = outter;
+}
+>>>>>>> scratchllnl

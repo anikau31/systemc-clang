@@ -46,6 +46,8 @@ def dprint(*arg, **kwargs):
     caller = getframeinfo(stack()[1][0])
     print(os.path.basename(caller.filename), ': L', frameinfo.f_back.f_lineno, ":", "\u001b[31m", *arg, "\u001b[0m", **kwargs)
 
+def terminate_with_no_trace():
+    assert False
 
 def is_tree_type(t, name):
     """Check whether t is lark Tree and whether the tree type is name"""
@@ -71,6 +73,29 @@ def get_ids_in_tree(tree):
             res.append(t.children[0])
     return res
 
+def get_ids_in_tree_types(tree, types=['hvarref']):
+    """get all ids"""
+    __id_types = types
+    if not isinstance(tree, Tree):
+        raise ValueError('Only Tree type is accepted')
+    res = []
+    for t in tree.iter_subtrees():
+        if is_tree_types(t, __id_types):
+            assert t.children[0], 'hvarref should only contain one children'
+            res.append(t.children[0])
+    return res
+
+
+def get_tree_types(tree, types=['hvarref']):
+    """get all ids"""
+    __id_types = types
+    if not isinstance(tree, Tree):
+        raise ValueError('Only Tree type is accepted')
+    res = []
+    for t in tree.iter_subtrees():
+        if is_tree_types(t, __id_types):
+            res.append(t)
+    return res
 
 def get_ids_in_tree_dfs(tree):
     """get all ids"""
@@ -124,3 +149,50 @@ def alternate_ids(tree, ops):
     for idx, _ in enumerate(ids):
         ops[idx](ids[idx])
 
+def map_hvarref_ids(tree, ops):
+    """get all and apply mapping function"""
+    __id_types = ['hvarref']
+    if not isinstance(tree, Tree):
+        raise ValueError('Only Tree type is accepted')
+    # res = []
+    idx = 0
+    for t in tree.iter_subtrees():
+        if is_tree_types(t, __id_types):
+            assert len(t.children) == 1, 'hvarref should only contain one children'
+            mapped_token = ops[idx](t.children[0])
+            assert mapped_token, 'mapping function should return a token'
+            t.children[0] = mapped_token
+            idx += 1
+            # res.append(t.children[0])
+
+
+class ContextManager(object):
+    def __init__(self):
+        self.stack = []
+
+    def __getattr__(self, key):
+        if key in self.__dict__:
+            return self.__dict__[key]
+        for d in reversed(self.stack):
+            if key in d:
+                return d[key]
+        return None
+
+    def search_key_in_outer_context(self, key):
+        if len(self.stack) <= 1:
+            return None
+
+        for d in reversed(self.stack[:-1]):
+            if key in d:
+                return d[key]
+        return None
+
+    def add_values(self, **kwargs):
+        self.stack.append(kwargs)
+        return self
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.stack.pop()

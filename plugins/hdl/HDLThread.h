@@ -36,6 +36,15 @@ namespace systemc_hdl {
   private:
 
     SplitCFG scfg;
+    // additional information about conditional expression a?b:c
+    // subgraphs. we generate hcode for the confluence block terminator
+    // of the outmost cond expr only, and skip split graph nodes that
+    // have a path from outermost cond expr block to confluence block.
+    // path vector is incorrect for intervening nodes of nested cond exprs.
+    
+    std::map<SplitCFGBlock*,SplitCFGBlock*> condexp_confluence_block_map;
+    std::set<SplitCFGBlock*> condexp_skip_block_set;
+    
     hNodep h_ret;   // value returned by each subexpression
     EntryFunctionContainer *efc_;
     hNodep h_top_; // reference to calling hnode pointer
