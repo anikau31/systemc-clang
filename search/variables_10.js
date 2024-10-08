@@ -7,7 +7,7 @@ var searchData=
   ['terminator_5fhas_5fbreak_5f_4',['terminator_has_break_',['../classsystemc__clang_1_1SplitCFGBlock.html#a772fac7440ee0779402916b595a2cb7c',1,'systemc_clang::SplitCFGBlock']]],
   ['terminator_5fhas_5fwait_5f_5',['terminator_has_wait_',['../classsystemc__clang_1_1SplitCFGBlock.html#ab52fd9c5a0ccbcdb63ce5e0bca38d2d2',1,'systemc_clang::SplitCFGBlock']]],
   ['thismode_6',['thismode',['../classsystemc__hdl_1_1HDLBody.html#a1a31c1732af3f4975d36b457bab8be77',1,'systemc_hdl::HDLBody::thismode'],['../classsystemc__hdl_1_1StmtVisitor.html#a01e7b3a0966d6062cf883aef5c78c5d4',1,'systemc_hdl::StmtVisitor::thismode']]],
-  ['thread_5fcomb_7',['thread_comb',['../classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#ae7421797fb55ee27d0641c26da9e2a5c',1,'parselib::transforms::verilog_tranlation::VerilogTranslationPass']]],
+  ['thread_5fcomb_7',['thread_comb',['../classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a51ca707bb031c95d9b811bb1d4d783cc',1,'parselib::transforms::verilog_tranlation::VerilogTranslationPass']]],
   ['thread_5fname_8',['thread_name',['../classparselib_1_1transforms_1_1verilog__tranlation_1_1VerilogTranslationPass.html#a5046e370fe49bdfaefdef8c0d7ad2af5',1,'parselib::transforms::verilog_tranlation::VerilogTranslationPass']]],
   ['thread_5fvname_5fmap_9',['thread_vname_map',['../classsystemc__hdl_1_1HDLThread.html#af41dd2020c801308c2c00ba7d375e5e2',1,'systemc_hdl::HDLThread']]],
   ['threadresetmap_10',['threadresetmap',['../classsystemc__hdl_1_1HDLMain.html#ab3a3c16ef6e852cac81805235543cffe',1,'systemc_hdl::HDLMain']]],
@@ -16,11 +16,12 @@ var searchData=
   ['tree_5f_13',['tree_',['../classsystemc__clang_1_1Tree_1_1const__dft__iterator.html#a1f540c69d3dced2b76bfdaa84fae35ed',1,'systemc_clang::Tree::const_dft_iterator::tree_'],['../classsystemc__clang_1_1Tree_1_1dft__iterator.html#ae35664e60155ef871652d9f88249815a',1,'systemc_clang::Tree::dft_iterator::tree_']]],
   ['true_5fpath_5f_14',['true_path_',['../classsystemc__clang_1_1SplitCFGPathInfo.html#a04292b20222d153484b04c115ea4fc73',1,'systemc_clang::SplitCFGPathInfo']]],
   ['tutil_15',['tutil',['../classHDLType.html#a8f161eb374dfcbd7b0c32626d521b324',1,'HDLType']]],
-  ['type_5fdecl_16',['type_decl',['../structsc__ast__matchers_1_1ModuleInstanceType.html#ab09f623c60a3aed02d2648512beca6e1',1,'sc_ast_matchers::ModuleInstanceType']]],
-  ['type_5fname_17',['type_name',['../classparselib_1_1primitives_1_1vmodule.html#a794aa548e74d218e7aa8a17bed501fb8',1,'parselib::primitives::vmodule']]],
-  ['type_5fname_5f_18',['type_name_',['../classsystemc__clang_1_1TemplateType.html#a056a0a4453a2395e722e9ac87af483a6',1,'systemc_clang::TemplateType']]],
-  ['type_5fparam_5fnames_19',['type_param_names',['../classparselib_1_1transforms_1_1node_1_1TypeDefType.html#a7f63b3be370bf52e5a8d9aae3d65b7e8',1,'parselib::transforms::node::TypeDefType']]],
-  ['type_5fptr_5f_20',['type_ptr_',['../classsystemc__clang_1_1TemplateType.html#aed32832c653df6e1b894e21ee10dd613',1,'systemc_clang::TemplateType']]],
-  ['types_21',['types',['../classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html#a17e7f2f395a64011f0dd9c76082c8d02',1,'parselib.transforms.typedef_expansion.TypedefExpansion.types'],['../classparselib_1_1transforms_1_1typedef__filter_1_1TypeDefFilter.html#a8ac2093c84eed1913be9d4a7348473e7',1,'parselib.transforms.typedef_filter.TypeDefFilter.types']]],
-  ['types_5fseen_22',['types_seen',['../classhnode_1_1util.html#a2eb6cdcc2e5d86e046f47ff9beb00ca3',1,'hnode::util']]]
+  ['type_16',['type',['../classparselib_1_1transforms_1_1interface__generation_1_1PortDecl.html#abd22edde1e95737d30dc7c68aa5902d5',1,'parselib::transforms::interface_generation::PortDecl']]],
+  ['type_5fdecl_17',['type_decl',['../structsc__ast__matchers_1_1ModuleInstanceType.html#ab09f623c60a3aed02d2648512beca6e1',1,'sc_ast_matchers::ModuleInstanceType']]],
+  ['type_5fname_18',['type_name',['../classparselib_1_1primitives_1_1vmodule.html#a794aa548e74d218e7aa8a17bed501fb8',1,'parselib::primitives::vmodule']]],
+  ['type_5fname_5f_19',['type_name_',['../classsystemc__clang_1_1TemplateType.html#a056a0a4453a2395e722e9ac87af483a6',1,'systemc_clang::TemplateType']]],
+  ['type_5fparam_5fnames_20',['type_param_names',['../classparselib_1_1transforms_1_1node_1_1TypeDefType.html#a7f63b3be370bf52e5a8d9aae3d65b7e8',1,'parselib::transforms::node::TypeDefType']]],
+  ['type_5fptr_5f_21',['type_ptr_',['../classsystemc__clang_1_1TemplateType.html#aed32832c653df6e1b894e21ee10dd613',1,'systemc_clang::TemplateType']]],
+  ['types_22',['types',['../classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html#ac18b59b36a36564e2da8d8ef8dd597fa',1,'parselib.transforms.typedef_expansion.TypedefExpansion.types'],['../classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html#a074a738ed41ae9fbe77594bc49b4d75f',1,'parselib.transforms.typedef_expansion.TypedefExpansion.types'],['../classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html#a4755dbdda4c8f80dba6e804be74f0500',1,'parselib.transforms.typedef_expansion.TypedefExpansion.types'],['../classparselib_1_1transforms_1_1typedef__filter_1_1TypeDefFilter.html#a8ac2093c84eed1913be9d4a7348473e7',1,'parselib.transforms.typedef_filter.TypeDefFilter.types']]],
+  ['types_5fseen_23',['types_seen',['../classhnode_1_1util.html#a2eb6cdcc2e5d86e046f47ff9beb00ca3',1,'hnode::util']]]
 ];

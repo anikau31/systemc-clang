@@ -1,13 +1,14 @@
 var searchData=
 [
-  ['templatetypeptr_0',['TemplateTypePtr',['../classsystemc__clang_1_1FindTemplateTypes.html#a36fe33fbaeabb402ed67ab84bfb284c0',1,'systemc_clang::FindTemplateTypes']]],
-  ['timeadvancevectortype_1',['timeAdvanceVectorType',['../classsystemc__clang_1_1Edge.html#a4aa1a27ab14ccfe1b547fd9546926858',1,'systemc_clang::Edge']]],
-  ['timepairtype_2',['timePairType',['../classsystemc__clang_1_1Edge.html#ac7df506142cb6616af813b07f4d61689',1,'systemc_clang::Edge::timePairType'],['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#ad5b1dd2561dc533cb37ffa28c36c42e4',1,'systemc_clang::GlobalSuspensionAutomata::timePairType']]],
-  ['transitiontimemaptype_3',['transitionTimeMapType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a63401a9884f8e9615b695b1dc9555b26',1,'systemc_clang::GlobalSuspensionAutomata']]],
-  ['transitiontimepairtype_4',['transitionTimePairType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#afc94bfa7f93a5a0fb01483dea38046c6',1,'systemc_clang::GlobalSuspensionAutomata']]],
-  ['transitionvectortype_5',['transitionVectorType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a86977643d2ad2505b98f5fa2f412a1ed',1,'systemc_clang::GlobalSuspensionAutomata::transitionVectorType'],['../classsystemc__clang_1_1SuspensionAutomata.html#a37823cbaa98336114b95ee6f8258979f',1,'systemc_clang::SuspensionAutomata::transitionVectorType']]],
-  ['treedftptr_6',['TreeDFTPtr',['../classsystemc__clang_1_1Tree_1_1const__dft__iterator.html#a29f6301c538df3c938c11369ff7019bc',1,'systemc_clang::Tree::const_dft_iterator::TreeDFTPtr'],['../classsystemc__clang_1_1Tree_1_1dft__iterator.html#abd9bfb0afa194a14ea0a6030b0ac3531',1,'systemc_clang::Tree::dft_iterator::TreeDFTPtr']]],
-  ['treenodeptr_7',['TreeNodePtr',['../classsystemc__clang_1_1Tree.html#ae2699cb6a66a0af9debdc1a17d7403f3',1,'systemc_clang::Tree']]],
-  ['twonodepairtype_8',['twoNodePairType',['../classsystemc__clang_1_1Graph.html#a9c540d3b0c52a6759ad3c6e10752255d',1,'systemc_clang::Graph']]],
-  ['type_5fvector_5ft_9',['type_vector_t',['../classsystemc__clang_1_1FindTemplateTypes.html#a7aca95e84873d0dd891c2dc53c492cfd',1,'systemc_clang::FindTemplateTypes']]]
+  ['templatetypeptr_0',['TemplateTypePtr',['../classsystemc__clang_1_1FindTemplateTypes.html#a457745124c9f184d5ed7e205c755ecdb',1,'systemc_clang::FindTemplateTypes']]],
+  ['timeadvancevectortype_1',['timeAdvanceVectorType',['../classsystemc__clang_1_1Edge.html#a46ba19ec7122fdf12adab4e7c7bb9ab1',1,'systemc_clang::Edge']]],
+  ['timepairtype_2',['timePairType',['../classsystemc__clang_1_1Edge.html#ad04ecf3ab7011a8e5b429b3f4785dfa8',1,'systemc_clang::Edge::timePairType'],['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#ad7c43b89d1046ccf4ad2866c61a1d9cf',1,'systemc_clang::GlobalSuspensionAutomata::timePairType']]],
+  ['transitiontimemaptype_3',['transitionTimeMapType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a5e1b142b0478bd0274dac25d2ddf5803',1,'systemc_clang::GlobalSuspensionAutomata']]],
+  ['transitiontimepairtype_4',['transitionTimePairType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a038a060a9099cf57e95dc4ae6af7be04',1,'systemc_clang::GlobalSuspensionAutomata']]],
+  ['transitionvectortype_5',['transitionVectorType',['../classsystemc__clang_1_1GlobalSuspensionAutomata.html#a8937e8d819db81449b75da053f8905da',1,'systemc_clang::GlobalSuspensionAutomata::transitionVectorType'],['../classsystemc__clang_1_1SuspensionAutomata.html#a9cbc1cd5b82b9444b4f6f9fb0458de0e',1,'systemc_clang::SuspensionAutomata::transitionVectorType']]],
+  ['treedftptr_6',['TreeDFTPtr',['../classsystemc__clang_1_1Tree_1_1const__dft__iterator.html#a30026aaea8aac8987d9650322413a916',1,'systemc_clang::Tree::const_dft_iterator::TreeDFTPtr'],['../classsystemc__clang_1_1Tree_1_1dft__iterator.html#acbd0d55cdd7da6d772e9b16fbf238653',1,'systemc_clang::Tree::dft_iterator::TreeDFTPtr']]],
+  ['treenodeptr_7',['TreeNodePtr',['../classsystemc__clang_1_1Tree.html#abacfbb0b1213f0a366b23e23b5e498ca',1,'systemc_clang::Tree']]],
+  ['twonodepairtype_8',['twoNodePairType',['../classsystemc__clang_1_1Graph.html#ae46c0b0e254d4a964de92182094bc497',1,'systemc_clang::Graph']]],
+  ['type_5fvector_5ft_9',['type_vector_t',['../classsystemc__clang_1_1FindTemplateTypes.html#a9305c1a24eca28608e40f47aedf5efa5',1,'systemc_clang::FindTemplateTypes']]],
+  ['types_10',['types',['../classparselib_1_1transforms_1_1typedef__expansion_1_1TypedefExpansion.html#a922cc98d175c4ca327421f745604fc07',1,'parselib::transforms::typedef_expansion::TypedefExpansion']]]
 ];

@@ -10,9 +10,9 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="345,119,281,227,276,224,340,117"/>
 <area shape="rect" id="Node000005" href="$HDLMain_8h.html" title=" " alt="" coords="392,300,544,326"/>
 <area shape="poly" id="edge13_Node000003_Node000005" title=" " alt="" coords="365,119,383,181,397,217,414,251,434,277,455,298,452,301,430,280,409,253,392,219,378,183,360,121"/>
-<area shape="rect" id="Node000007" href="$HDLThread_8h.html" title=" " alt="" coords="196,300,361,326"/>
-<area shape="poly" id="edge14_Node000003_Node000007" title=" " alt="" coords="315,114,281,133,244,158,211,190,185,227,182,239,183,249,196,268,220,284,246,297,243,302,217,289,193,272,178,251,176,238,180,225,206,186,241,154,278,128,313,109"/>
-<area shape="rect" id="Node000009" href="$HDLHnode_8h.html" title=" " alt="" coords="671,153,833,178"/>
+<area shape="rect" id="Node000007" href="$HDLThread_8h.html" title=" " alt="" coords="196,300,360,326"/>
+<area shape="poly" id="edge14_Node000003_Node000007" title=" " alt="" coords="316,114,282,133,245,158,212,190,186,227,183,239,184,249,198,268,221,284,247,297,244,302,218,289,194,272,179,251,178,238,181,225,208,186,242,154,279,128,314,109"/>
+<area shape="rect" id="Node000009" href="$HDLHnode_8h.html" title=" " alt="" coords="670,153,833,178"/>
 <area shape="poly" id="edge10_Node000003_Node000009" title=" " alt="" coords="440,105,685,149,684,155,439,111"/>
 <area shape="rect" id="Node000011" href="$HDLType_8h.html" title=" " alt="" coords="428,153,580,178"/>
 <area shape="poly" id="edge15_Node000003_Node000011" title=" " alt="" coords="397,109,480,150,478,154,394,114"/>
