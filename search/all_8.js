@@ -57,7 +57,7 @@ var searchData=
   ['hdlpluginaction_54',['HDLPluginAction',['../classsystemc__hdl_1_1HDLPluginAction.html',1,'systemc_hdl::HDLPluginAction'],['../classsystemc__hdl_1_1HDLPluginAction.html#aa7261191d6534cc7903802c45729ce96',1,'systemc_hdl::HDLPluginAction::HDLPluginAction()']]],
   ['hdlt_55',['HDLt',['../classsystemc__hdl_1_1HDLMain.html#a3f393848b0c5306a974657203672c20f',1,'systemc_hdl::HDLMain']]],
   ['hdlt_5fuserclassesp_5f_56',['HDLt_userclassesp_',['../classsystemc__hdl_1_1HDLBody.html#a8fc28a0bb01766cbcc67a343d15ead74',1,'systemc_hdl::HDLBody']]],
-  ['hdlthread_57',['HDLThread',['../classsystemc__hdl_1_1HDLThread.html',1,'systemc_hdl::HDLThread'],['../classsystemc__hdl_1_1HDLThread.html#ae97d4747c4c013863af766b8f90961d6',1,'systemc_hdl::HDLThread::HDLThread()']]],
+  ['hdlthread_57',['HDLThread',['../classsystemc__hdl_1_1HDLThread.html',1,'systemc_hdl::HDLThread'],['../classsystemc__hdl_1_1HDLThread.html#a791f0f287789cd3174547879bfb8a4ed',1,'systemc_hdl::HDLThread::HDLThread()']]],
   ['hdlthread_2ecpp_58',['HDLThread.cpp',['../HDLThread_8cpp.html',1,'']]],
   ['hdlthread_2eh_59',['HDLThread.h',['../HDLThread_8h.html',1,'']]],
   ['hdltype_60',['HDLType',['../classHDLType.html',1,'HDLType'],['../classHDLType.html#aaa8e5116a4baaba73ab526315de39c78',1,'HDLType::HDLType()']]],
