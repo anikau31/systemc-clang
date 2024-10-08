@@ -330,6 +330,7 @@ set(CLANG_LIBS
   clangSerialization
   clangCodeGen
   clangParse
+  clangAPINotes
   clangSema
   clangSupport
   clangStaticAnalyzerFrontend
@@ -340,6 +341,15 @@ set(CLANG_LIBS
   clangLex
   clangBasic
   clangASTMatchers
+  clangDynamicASTMatchers
+  clangToolingASTDiff
+  clangToolingCore
+  clangToolingRefactoring
+  clangToolingSyntax
+  clangSupport
+  clangRewriteFrontend
+  clangRewrite
+
   #clangStaticAnalyzerCheckers
   #clangARCMigrate
   #clangRewriteFrontend

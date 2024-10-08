@@ -80,7 +80,7 @@ IndexMapType getArrayInstanceIndex(
                 peel->getArg(0)->IgnoreImplicit());
           }
           llvm::dbgs() << "unwrap 2d dump\n";
-          cexpr->dump();
+          //cexpr->dump();
 
           if (cexpr) {  // auto cexpr =
                         // clang::dyn_cast<clang::CXXConstructExpr>(iexpr_2d)) {
