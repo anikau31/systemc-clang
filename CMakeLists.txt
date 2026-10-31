@@ -4,7 +4,7 @@
 # Credits:
 # https://github.com/andreasfertig/cppinsights/blob/master/CMakeLists.txt
 
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.5)
 # Fix behavior of CMAKE_CXX_STANDARD when targeting macOS.
 if (POLICY CMP0025)
   cmake_policy(SET CMP0025 NEW)
@@ -304,9 +304,9 @@ llvm_config(CLANG_VERSION "--version" "")
 # with respect to llvm-config --libs. 
 #
 # https://github.com/halide/Halide/issues/1112
-llvm_config(LLVM_SYSTEM_LIBS "--system-libs" "")
-message(STATUS "LLVM_SYSTEM_LIBS: ${LLVM_SYSTEM_LIBS}")
-string(REGEX REPLACE "/opt/homebrew/lib/libzstd.1.5.2.dylib" "/usr/local/lib/libzstd.1.dylib" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS})
+#llvm_config(LLVM_SYSTEM_LIBS "--system-libs" "")
+#message(STATUS "LLVM_SYSTEM_LIBS: ${LLVM_SYSTEM_LIBS}")
+#string(REGEX REPLACE "/opt/homebrew/lib/libzstd.1.5.2.dylib" "/usr/local/lib/libzstd.1.dylib" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS})
 message(STATUS "LLVM_SYSTEM_LIBS: ${LLVM_SYSTEM_LIBS}")
 #set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}" )
 set( CMAKE_CXX_FLAGS "${LLVM_CXX_FLAGS}  -fvisibility=hidden -fvisibility-inlines-hidden" )
@@ -327,6 +327,7 @@ set(CLANG_LIBS
   clangFrontendTool
   clangFrontend
   clangDriver
+  clangOptions
   clangSerialization
   clangCodeGen
   clangParse
@@ -336,6 +337,7 @@ set(CLANG_LIBS
   clangStaticAnalyzerFrontend
   clangStaticAnalyzerCore
   clangAnalysis
+  clangAnalysisLifetimeSafety
   clangEdit
   clangAST
   clangLex

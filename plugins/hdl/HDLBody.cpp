@@ -722,7 +722,7 @@ namespace systemc_hdl {
 	       llvm::dbgs() << "implicitobjectargument, ignore implicit follows\n");
     LLVM_DEBUG(objarg->dump(llvm::dbgs(), ast_context_));
     CXXRecordDecl *cdecl = callexpr->getRecordDecl();
-    const Type *typeformethodclass = cdecl->getTypeForDecl();
+    const Type *typeformethodclass = cdecl->getASTContext().getCanonicalTagType(cdecl).getTypePtr();
     LLVM_DEBUG(llvm::dbgs() << "Type pointer from RecordDecl is "
 	       << typeformethodclass << "\n");
 
@@ -994,7 +994,9 @@ namespace systemc_hdl {
     if (FieldDecl *fld = dyn_cast<FieldDecl>(memberexpr->getMemberDecl())) {
       LLVM_DEBUG(llvm::dbgs() << "and field decl parent record pointer is "
 		 << fld->getParent() << "\n");
-      const Type *classrectype = fld->getParent()->getTypeForDecl();
+      const CXXRecordDecl *parent = (CXXRecordDecl *) fld->getParent();
+      const Type *classrectype =
+    parent->getASTContext().getCanonicalTagType(parent).getTypePtr();
       LLVM_DEBUG(llvm::dbgs() << "and field decl parent record type is "
 		 << classrectype << "\n");
       if (isUserClass(classrectype)) {

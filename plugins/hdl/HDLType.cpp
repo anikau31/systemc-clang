@@ -165,7 +165,7 @@ bool HDLType::checkusertype(systemc_clang::TreeNode<systemc_clang::TemplateType>
       // RecordDecl *   tstdp = (tstp->getDecl())->getDefinition();
 
       usertype_info.usertypes[tmps] =
-          ((tstp->getDecl())->getTypeForDecl())->getCanonicalTypeInternal();
+          tstp->getCanonicalTypeInternal();
       usertype_info.userrectypes[tstp] = tmps;  // reverse map from RecType * to generated name
     }
     else usertype_info.usertypes[tmps] =
