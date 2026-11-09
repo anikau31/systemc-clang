@@ -60,6 +60,10 @@ namespace systemc_hdl {
     if ((hp->getopc()==hNode::hdlopsEnum::hBuiltinFunction) &&
 	(hp->getname().find("create_method_process")!=std::string::npos))
       return true;
+    // Support newer SystemC API with declare_method_process
+    if ((hp->getopc()==hNode::hdlopsEnum::hMethodCall) &&
+	(hp->getname().find("declare_method_process")!=std::string::npos))
+      return true;
     return false;
   }
   
